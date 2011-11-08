@@ -68,4 +68,11 @@ $GLOBALS['TL_CRON']['daily'][] = array('Calendar', 'generateFeeds');
  */
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Calendar', 'getSearchablePages');
 
+
+/**
+ * Add permissions
+ */
+$GLOBALS['TL_PERMISSIONS'][] = 'calendars';
+$GLOBALS['TL_PERMISSIONS'][] = 'calendarp';
+
 ?>
