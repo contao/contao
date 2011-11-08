@@ -30,42 +30,15 @@
 
 
 /**
- * Add back end modules
+ * Fields
  */
-array_insert($GLOBALS['BE_MOD']['content'], 2, array
-(
-	'faq' => array
-	(
-		'tables' => array('tl_faq_category', 'tl_faq'),
-		'icon'   => 'system/modules/faq/html/icon.gif'
-	)
-));
+$GLOBALS['TL_LANG']['tl_user']['faqs'] = array('Allowed FAQ categories', 'Here you can grant access to one or more FAQ categories.');
+$GLOBALS['TL_LANG']['tl_user']['faqp'] = array('FAQ category permissions', 'Here you can define the FAQ category permissions.');
 
 
 /**
- * Front end modules
+ * Legends
  */
-array_insert($GLOBALS['FE_MOD'], 3, array
-(
-	'faq' => array
-	(
-		'faqlist'   => 'ModuleFaqList',
-		'faqreader' => 'ModuleFaqReader',
-		'faqpage'   => 'ModuleFaqPage'
-	)
-));
-
-
-/**
- * Register hooks
- */
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('ModuleFaq', 'getSearchablePages');
-
-
-/**
- * Add permissions
- */
-$GLOBALS['TL_PERMISSIONS'][] = 'faqs';
-$GLOBALS['TL_PERMISSIONS'][] = 'faqp';
+$GLOBALS['TL_LANG']['tl_user']['faq_legend'] = 'FAQ permissions';
 
 ?>
