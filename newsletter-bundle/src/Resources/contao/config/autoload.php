@@ -10,12 +10,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
  * Software Foundation website at <http://www.gnu.org/licenses/>.
@@ -29,20 +29,15 @@
 
 
 /**
- * Fields
+ * Register the module classes
  */
-$GLOBALS['TL_LANG']['tl_member']['newsletter'] = array('Newsletter', 'Hier können Sie die Abonnements des Mitglieds verwalten.');
-
-
-/**
- * Legends
- */
-$GLOBALS['TL_LANG']['tl_member']['newsletter_legend'] = 'Abonnements';
-
-
-/**
- * Reference
- */
-$GLOBALS['TL_LANG']['tl_member']['newsletterDetails'] = 'Abonnements';
+Autoloader::addClasses(array
+(
+	'ModuleNewsletterList'   => 'system/modules/newsletter/ModuleNewsletterList.php',
+	'ModuleNewsletterReader' => 'system/modules/newsletter/ModuleNewsletterReader.php',
+	'ModuleSubscribe'        => 'system/modules/newsletter/ModuleSubscribe.php',
+	'ModuleUnsubscribe'      => 'system/modules/newsletter/ModuleUnsubscribe.php',
+	'Newsletter'             => 'system/modules/newsletter/Newsletter.php'
+));
 
 ?>
