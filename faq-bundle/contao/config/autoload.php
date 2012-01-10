@@ -10,12 +10,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
  * Software Foundation website at <http://www.gnu.org/licenses/>.
@@ -29,17 +29,14 @@
 
 
 /**
- * Back end modules
+ * Register the module classes
  */
-$GLOBALS['TL_LANG']['MOD']['faq'] = array('FAQ', 'Manage frequently asked questions.');
-
-
-/**
- * Front end modules
- */
-$GLOBALS['TL_LANG']['FMD']['faq']       = 'FAQ';
-$GLOBALS['TL_LANG']['FMD']['faqlist']   = array('FAQ list', 'Adds a list of frequently asked questions to the page.');
-$GLOBALS['TL_LANG']['FMD']['faqreader'] = array('FAQ reader', 'Shows the answer to a frequently asked question.');
-$GLOBALS['TL_LANG']['FMD']['faqpage']   = array('FAQ page', 'Shows the FAQ list and FAQ reader on the same page.');
+Autoloader::addClasses(array
+(
+	'ModuleFaq'       => 'system/modules/faq/ModuleFaq.php',
+	'ModuleFaqList'   => 'system/modules/faq/ModuleFaqList.php',
+	'ModuleFaqPage'   => 'system/modules/faq/ModuleFaqPage.php',
+	'ModuleFaqReader' => 'system/modules/faq/ModuleFaqReader.php'
+));
 
 ?>
