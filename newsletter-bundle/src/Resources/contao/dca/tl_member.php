@@ -53,7 +53,8 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['newsletter'] = array
 	'save_callback' => array
 	(
 		array('Newsletter', 'synchronize')
-	)
+	),
+	'sql'                     => "blob NULL"
 );
 
 ?>
