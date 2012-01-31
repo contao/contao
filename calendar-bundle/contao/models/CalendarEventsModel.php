@@ -112,7 +112,7 @@ class CalendarEventsModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("($t.id=? OR $t.alias=?) AND pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
+		$arrColumns = array("($t.id=? OR $t.alias=?) AND $t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
 
 		if (!BE_USER_LOGGED_IN)
 		{
@@ -132,8 +132,8 @@ class CalendarEventsModel extends \Model
 	public static function findUpcomingByPid($intId, $intLimit=0)
 	{
 		$time = time();
-
 		$t = static::$strTable;
+
 		$arrColumns = array("$t.pid=? AND ($t.startTime>=$time OR ($t.recurring=1 AND ($t.recurrences=0 OR $t.repeatEnd>=$time))) AND ($t.start='' OR $t.start<$time) AND ($t.stop='' OR $t.stop>$time) AND $t.published=1");
 
 		if ($intLimit > 0)
