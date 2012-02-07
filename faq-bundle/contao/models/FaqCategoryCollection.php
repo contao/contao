@@ -35,47 +35,22 @@ namespace Contao;
 
 
 /**
- * Class FaqModel
+ * Class FaqCategoryCollection
  *
- * Provide methods to find and save FAQs.
+ * Provide methods to handle multiple models.
  * @copyright  Leo Feyer 2005-2012
  * @author     Leo Feyer <http://www.contao.org>
  * @package    Model
  */
-class FaqModel extends \Model
+class FaqCategoryCollection extends \Model_Collection
 {
 
 	/**
 	 * Name of the table
 	 * @var string
 	 */
-	protected static $strTable = 'tl_faq';
+	protected static $strTable = 'tl_faq_category';
 
-
-	/**
-	 * Find a published FAQ from one or more categories by its ID or alias
-	 * @param integer
-	 * @param string
-	 * @param array
-	 * @return Model|null
-	 */
-	public static function findPublishedByParentAndIdOrAlias($intId, $varAlias, $arrPids)
-	{
-		if (!is_array($arrPids) || empty($arrPids))
-		{
-			return null;
-		}
-
-		$t = static::$strTable;
-		$arrColumns = array("($t.id=? OR $t.alias=?) AND pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
-
-		if (!BE_USER_LOGGED_IN)
-		{
-			$arrColumns[] = "$t.published=1";
-		}
-
-		return static::findBy($arrColumns, array($intId, $varAlias));
-	}
 }
 
 ?>

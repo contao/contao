@@ -35,14 +35,14 @@ namespace Contao;
 
 
 /**
- * Class FaqModel
+ * Class FaqCollection
  *
- * Provide methods to find and save FAQs.
+ * Provide methods to handel multiple models.
  * @copyright  Leo Feyer 2005-2012
  * @author     Leo Feyer <http://www.contao.org>
  * @package    Model
  */
-class FaqModel extends \Model
+class FaqCollection extends \Model_Collection
 {
 
 	/**
@@ -53,13 +53,11 @@ class FaqModel extends \Model
 
 
 	/**
-	 * Find a published FAQ from one or more categories by its ID or alias
-	 * @param integer
-	 * @param string
+	 * Find all published FAQs by their parent IDs
 	 * @param array
 	 * @return Model|null
 	 */
-	public static function findPublishedByParentAndIdOrAlias($intId, $varAlias, $arrPids)
+	public static function findPublishedByPids($arrPids)
 	{
 		if (!is_array($arrPids) || empty($arrPids))
 		{
@@ -67,14 +65,7 @@ class FaqModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("($t.id=? OR $t.alias=?) AND pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
-
-		if (!BE_USER_LOGGED_IN)
-		{
-			$arrColumns[] = "$t.published=1";
-		}
-
-		return static::findBy($arrColumns, array($intId, $varAlias));
+		return static::findBy(array("$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")"), null, array('order'=>"$t.pid, $t.sorting"));
 	}
 }
 
