@@ -35,31 +35,29 @@ namespace Contao;
 
 
 /**
- * Class NewsletterModel
+ * Class NewsletterChannelCollection
  *
- * Provide methods to find and save newsletters.
+ * Provide methods to handle multiple models.
  * @copyright  Leo Feyer 2005-2012
  * @author     Leo Feyer <http://www.contao.org>
  * @package    Model
  */
-class NewsletterModel extends \Model
+class NewsletterChannelCollection extends \Model_Collection
 {
 
 	/**
 	 * Name of the table
 	 * @var string
 	 */
-	protected static $strTable = 'tl_newsletter';
+	protected static $strTable = 'tl_newsletter_channel';
 
 
 	/**
-	 * Find sent newsletters by their parent IDs and their ID or alias
-	 * @param integer
-	 * @param string
+	 * Find multiple newsletter channels by their IDs
 	 * @param array
 	 * @return Model|null
 	 */
-	public static function findSentByParentAndIdOrAlias($intId, $varAlias, $arrPids)
+	public static function findByIds($arrPids)
 	{
 		if (!is_array($arrPids) || empty($arrPids))
 		{
@@ -67,15 +65,7 @@ class NewsletterModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("($t.id=? OR $t.alias=?) AND $t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
-
-		if (!BE_USER_LOGGED_IN)
-		{
-			$time = time();
-			$arrColumns[] = "$t.sent=1";
-		}
-
-		return static::findBy($arrColumns, array($intId, $varAlias));
+		return static::findBy(array("$t.id IN(" . implode(',', array_map('intval', $arrPids)) . ")"), null, array('order'=>"$t.title"));
 	}
 }
 
