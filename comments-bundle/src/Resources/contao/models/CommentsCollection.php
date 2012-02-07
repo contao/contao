@@ -35,14 +35,14 @@ namespace Contao;
 
 
 /**
- * Class CommentsModel
+ * Class CommentsCollection
  *
- * Provide methods to find and save comments.
+ * Provide methods to handle multiple models.
  * @copyright  Leo Feyer 2005-2012
  * @author     Leo Feyer <http://www.contao.org>
  * @package    Model
  */
-class CommentsModel extends \Model
+class CommentsCollection extends \Model_Collection
 {
 
 	/**
@@ -51,6 +51,55 @@ class CommentsModel extends \Model
 	 */
 	protected static $strTable = 'tl_comments';
 
+
+	/**
+	 * Find published comments by their source table and parent ID
+	 * @param string
+	 * @param integer
+	 * @param boolean
+	 * @param integer
+	 * @param integer
+	 * @return Model|null
+	 */
+	public static function findPublishedBySourceAndParent($strSource, $intParent, $lbnDesc=false, $intLimit=0, $intOffset=0)
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.source=? AND $t.parent=?");
+
+		if (!BE_USER_LOGGED_IN)
+		{
+			$arrColumns[] = "$t.published=1";
+		}
+
+		$arrOptions = array
+		(
+			'order'  => ($lbnDesc ? "$t.date DESC" : "$t.date"),
+			'limit'  => $intLimit,
+			'offset' => $intOffset
+		);
+
+		return static::findBy($arrColumns, array($strSource, $intParent), $arrOptions);
+	}
+
+
+	/**
+	 * Count published comments by their source table and parent ID
+	 * @param string
+	 * @param integer
+	 * @return Model
+	 */
+	public static function countPublishedBySourceAndParent($strSource, $intParent)
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.source=? AND $t.parent=?");
+
+		if (!BE_USER_LOGGED_IN)
+		{
+			$arrColumns[] = "$t.published=1";
+		}
+
+		return static::countBy($arrColumns, array($strSource, $intParent));
+	}
 }
 
 ?>
