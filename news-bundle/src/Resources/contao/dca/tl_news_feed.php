@@ -23,7 +23,7 @@
  * PHP version 5
  * @copyright  Leo Feyer 2005-2012
  * @author     Leo Feyer <http://www.contao.org>
- * @package    NewsFeed
+ * @package    News
  * @license    LGPL
  * @filesource
  */
