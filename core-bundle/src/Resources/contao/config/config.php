@@ -1,0 +1,305 @@
+<?php
+
+/**
+ * Contao Open Source CMS
+ * Copyright (C) 2005-2012 Leo Feyer
+ *
+ * Formerly known as TYPOlight Open Source CMS.
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation, either
+ * version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this program. If not, please visit the Free
+ * Software Foundation website at <http://www.gnu.org/licenses/>.
+ *
+ * PHP version 5.3
+ * @copyright  Leo Feyer 2005-2012
+ * @author     Leo Feyer <http://www.contao.org>
+ * @package    Backend
+ * @license    LGPL
+ */
+
+
+/**
+ * Back end modules
+ */
+$GLOBALS['BE_MOD'] = array
+(
+	// Content modules
+	'content' => array
+	(
+		'article' => array
+		(
+			'tables' => array('tl_article', 'tl_content'),
+			'table' => array('TableWizard', 'importTable'),
+			'list' => array('ListWizard', 'importList')
+		),
+		'form' => array
+		(
+			'tables' => array('tl_form', 'tl_form_field')
+		)
+	),
+
+	// Design modules
+	'design' => array
+	(
+		'themes' => array
+		(
+			'tables' => array('tl_theme', 'tl_module', 'tl_style_sheet', 'tl_style', 'tl_layout'),
+			'importTheme' => array('Theme', 'importTheme'),
+			'exportTheme' => array('Theme', 'exportTheme'),
+			'import' => array('StyleSheets', 'importStyleSheet')
+		),
+		'page' => array
+		(
+			'tables' => array('tl_page')
+		),
+		'tpl_editor' => array
+		(
+			'tables' => array('tl_templates'),
+			'new_tpl' => array('tl_templates', 'addNewTemplate')
+		)
+	),
+
+	// Account modules
+	'accounts' => array
+	(
+		'member' => array
+		(
+			'tables' => array('tl_member')
+		),
+		'mgroup' => array
+		(
+			'tables' => array('tl_member_group')
+		),
+		'user' => array
+		(
+			'tables' => array('tl_user')
+		),
+		'group' => array
+		(
+			'tables' => array('tl_user_group')
+		)
+	),
+
+	// System modules
+	'system' => array
+	(
+		'files' => array
+		(
+			'tables' => array('tl_files')
+		),
+		'log' => array
+		(
+			'tables' => array('tl_log')
+		),
+		'settings' => array
+		(
+			'tables' => array('tl_settings')
+		),
+		'maintenance' => array
+		(
+			'callback' => 'ModuleMaintenance'
+		),
+		'undo' => array
+		(
+			'tables' => array('tl_undo')
+		)
+	)
+);
+
+
+/**
+ * Form fields
+ */
+$GLOBALS['BE_FFL'] = array
+(
+	'text'           => 'TextField',
+	'password'       => 'Password',
+	'textStore'      => 'TextStore',
+	'textarea'       => 'TextArea',
+	'select'         => 'SelectMenu',
+	'checkbox'       => 'CheckBox',
+	'checkboxWizard' => 'CheckBoxWizard',
+	'radio'          => 'RadioButton',
+	'radioTable'     => 'RadioTable',
+	'inputUnit'      => 'InputUnit',
+	'trbl'           => 'TrblField',
+	'chmod'          => 'ChmodTable',
+	'pageTree'       => 'PageTree',
+	'pageSelector'   => 'PageSelector',
+	'fileTree'       => 'FileTree',
+	'fileSelector'   => 'FileSelector',
+	'tableWizard'    => 'TableWizard',
+	'listWizard'     => 'ListWizard',
+	'optionWizard'   => 'OptionWizard',
+	'moduleWizard'   => 'ModuleWizard',
+	'keyValueWizard' => 'KeyValueWizard',
+	'imageSize'      => 'ImageSize',
+	'timePeriod'     => 'TimePeriod',
+	'metaWizard'     => 'MetaWizard'
+);
+
+
+/**
+ * Page types
+ */
+$GLOBALS['TL_PTY'] = array
+(
+	'regular'   => 'PageRegular',
+	'forward'   => 'PageForward',
+	'redirect'  => 'PageRedirect',
+	'root'      => 'PageRoot',
+	'error_403' => 'PageError403',
+	'error_404' => 'PageError404'
+);
+
+
+/**
+ * Maintenance
+ */
+$GLOBALS['TL_MAINTENANCE'] = array
+(
+	'LiveUpdate',
+	'RebuildIndex',
+	'PurgeData'
+);
+
+
+/**
+ * Purge jobs
+ */
+$GLOBALS['TL_PURGE'] = array
+(
+	'tables' => array
+	(
+		'index' => array
+		(
+			'callback' => array('Automator', 'purgeSearchTables'),
+			'affected' => array('tl_search', 'tl_search_index')
+		),
+		'undo' => array
+		(
+			'callback' => array('Automator', 'purgeUndoTable'),
+			'affected' => array('tl_undo')
+		),
+		'versions' => array
+		(
+			'callback' => array('Automator', 'purgeVersionTable'),
+			'affected' => array('tl_version')
+		)
+	),
+	'folders' => array
+	(
+		'images' => array
+		(
+			'callback' => array('Automator', 'purgeImageCache'),
+			'affected' => array('assets/images')
+		),
+		'scripts' => array
+		(
+			'callback' => array('Automator', 'purgeScriptCache'),
+			'affected' => array('assets/js', 'assets/css')
+		),
+		'pages' => array
+		(
+			'callback' => array('Automator', 'purgePageCache'),
+			'affected' => array('system/cache/html')
+		),
+		'internal' => array
+		(
+			'callback' => array('Automator', 'purgeInternalCache'),
+			'affected' => array('system/cache/dca', 'system/cache/language', 'system/cache/sql')
+		),
+		'temp' => array
+		(
+			'callback' => array('Automator', 'purgeTempFolder'),
+			'affected' => array('system/tmp')
+		)
+	),
+	'custom' => array
+	(
+		'xml' => array
+		(
+			'callback' => array('Automator', 'generateXmlFiles')
+		)
+	)
+);
+
+
+/**
+ * Image crop modes
+ */
+$GLOBALS['TL_CROP'] = array
+(
+	'relative' => array
+	(
+		'proportional', 'box'
+	),
+	'crop' => array
+	(
+		'left_top',    'center_top',    'right_top',
+		'left_center', 'center_center', 'right_center',
+		'left_bottom', 'center_bottom', 'right_bottom'
+	)
+);
+
+
+/**
+ * Cron jobs
+ */
+$GLOBALS['TL_CRON'] = array
+(
+	'monthly' => array
+	(
+		array('Automator', 'purgeImageCache'),
+		array('Automator', 'purgeTempFolder'),
+	),
+	'weekly' => array
+	(
+		array('Automator', 'generateSitemap'),
+		array('Automator', 'purgeScriptCache')
+	),
+	'daily' => array
+	(
+		array('Automator', 'rotateLogs'),
+		array('Automator', 'checkForUpdates')
+	),
+	'hourly' => array()
+);
+
+
+/**
+ * Hooks
+ */
+$GLOBALS['TL_HOOKS'] = array
+(
+	'getSystemMessages' => array
+	(
+		array('Messages', 'versionCheck'),
+		array('Messages', 'lastLogin'),
+		array('Messages', 'topLevelRoot'),
+		array('Messages', 'languageFallback')
+	)
+);
+
+
+/**
+ * Ignore the auto_item keywords when rebuilding the search index URLs
+ */
+$GLOBALS['TL_AUTO_ITEM'] = array('items', 'events');
+
+
+/**
+ * Other global arrays
+ */
+$GLOBALS['TL_MIME'] = array();
+$GLOBALS['TL_PERMISSIONS'] = array();
