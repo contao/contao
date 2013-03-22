@@ -3,271 +3,271 @@
     <body>
       <trans-unit id="tl_news_archive.title.0">
         <source>Title</source>
-        <target>Virsraksts</target>
+        <target>Megnevezés</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.title.1">
         <source>Please enter a news archive title.</source>
-        <target>Lūdzu ievadiet jaunumu arhīva virsrakstu.</target>
+        <target>Adja meg a hírarchívum nevét.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.0">
         <source>Redirect page</source>
-        <target>Pārsūtīšanas lapa</target>
+        <target>Átirányítási oldal</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.1">
         <source>Please choose the news reader page to which visitors will be redirected when clicking a news item.</source>
-        <target>Lūdzu, izvēlieties jaunumu lasītāja lapu, uz kuru apmeklētāji tiks novirzīti, kad noklikšķinās uz jaunumu vienuma.</target>
+        <target>Válassza ki a hírolvasó oldalt, ahová a látogatók át lesznek irányítva a hír olvasásához ha a hírre kattintanak.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.allowComments.0">
         <source>Enable comments</source>
-        <target>Iespējot komentārus</target>
+        <target>Hozzászólások engedélyezése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.allowComments.1">
         <source>Allow visitors to comment news items.</source>
-        <target>Ļauj apmeklētājiem komentēt jaunumu vienumus.</target>
+        <target>Engedélyezi a látogatóknak a hozzászólást a hírhez.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify.0">
         <source>Notify</source>
-        <target>Informēt</target>
+        <target>Értesítés</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify.1">
         <source>Please choose who to notify when comments are added.</source>
-        <target>Lūdzu, izvēlieties, kam paziņot, kad pievienoti komentāri.</target>
+        <target>Válassza ki, hogy ki legyen értesítve ha új hozzászólás érkezik.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.sortOrder.0">
         <source>Sort order</source>
-        <target>Kārtošanas secība</target>
+        <target>Rendezés</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>Pēc noklusējuma komentāri tiek kārtoti augoši, sākot ar vecāko.</target>
+        <target>Alapértelmezés szerint a hozzászólások növekvő sorrendbe vannak rendezve, a legrégebbivel kezdve.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.perPage.0">
         <source>Comments per page</source>
-        <target>Komentāri lapā</target>
+        <target>Hozzászólások oldalanként</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Komentāru skaits lapā. Iestatiet uz 0, lai izslēgtu lapdali.</target>
+        <target>Hozzászólások száma oldalanként. Állítsa 0-ra ha nem szeretné oldalakra bontani a hozzászólásokat.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.moderate.0">
         <source>Moderate comments</source>
-        <target>Cenzēt komentārus</target>
+        <target>Hozzászólások moderálása</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Apstiprināt komentārus pirms tie tiek publicēti mājas lapā.</target>
+        <target>A hozzászólásokat ellenőrizheti, mielőtt kikerülhetnének a honlapra.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.bbcode.0">
         <source>Allow BBCode</source>
-        <target>Atļaut BBCode</target>
+        <target>BBCode engedélyezése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Atļaut apmeklētājiem formatēt komentārus ar BBCode.</target>
+        <target>Engedélyezheti a BBCode használatát a hozzászólások formázására.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.0">
         <source>Require login to comment</source>
-        <target>Lai komentētu, nepieciešams autorizēties</target>
+        <target>Hozzászólás csak bejelentkezve</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>Komentāru saglabāšana atļauta tikai autorizētiem lietotājiem.</target>
+        <target>Csak regisztrált és bejelentkezett látogatók írhatnak hozzászólást.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable the security question</source>
-        <target>Izslēgt drošības jautājuma attēlošanu</target>
+        <target>Biztonsági kérdés kikapcsolása</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>Lietojiet šo iespēju, ja esat atļāvis komentāru saglabāšanu tikai autorizētiem lietotājiem.</target>
+        <target>Csak akkor használja ezt az opciót, ha korlátozza a hozzászólásokat a regisztrált tagok részére.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.protected.0">
         <source>Protect archive</source>
-        <target>Aizsargāt arhīvu</target>
+        <target>Archívum védelme</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.protected.1">
         <source>Show news items to certain member groups only.</source>
-        <target>Rādīt jaunumu vienumus tikai noteiktām biedru grupām.</target>
+        <target>Az adott hírt csak egy bizonyos csoport részére mutatja.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.groups.0">
         <source>Allowed member groups</source>
-        <target>Atļautās biedru grupas</target>
+        <target>Engedélyezett csoportok</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.groups.1">
         <source>These groups will be able to see the news items in this archive.</source>
-        <target>Šīm biedru grupām tiks atļauts apskatīt šī arhīva ziņas.</target>
+        <target>Ezek a csoportok láthatják az adott hírt a hírarchívumban.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.makeFeed.0">
         <source>Generate feed</source>
-        <target>Ģenerēt barotni</target>
+        <target>Hírfolyam készítése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.makeFeed.1">
         <source>Generate an RSS or Atom feed from the news archive.</source>
-        <target>Ģenerēt jaunumu arhīva RSS vai Atom barotni.</target>
+        <target>RSS vagy Atom hírfolyam készítése a hírarchívumból.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.format.0">
         <source>Feed format</source>
-        <target>Barotnes formāts</target>
+        <target>Hírfolyam formátum</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.format.1">
         <source>Please choose a feed format.</source>
-        <target>Lūdzu izvēlieties barotnes formātu.</target>
+        <target>Válassza ki a hírfolyam formátumát.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.language.0">
         <source>Feed language</source>
-        <target>Barotnes valoda</target>
+        <target>Hírfolyam nyelve</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.language.1">
         <source>Please enter the feed language according to the ISO-639 standard (e.g. &lt;em&gt;en&lt;/em&gt; or &lt;em&gt;en-us&lt;/em&gt;).</source>
-        <target>Lūdzu ievadiet valodu atbilstoši ISO-639 standartam (piem. &lt;em&gt;en&lt;/em&gt; vai &lt;em&gt;en-us&lt;/em&gt;).</target>
+        <target>Itt írja ba a hírfolyam nyelvét az ISO-639 szabvány szerint (pl.: &lt;em&gt;hu&lt;/em&gt; vagy &lt;em&gt;hu-hu&lt;/em&gt; a magyar nyelvhez )</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.source.0">
         <source>Export settings</source>
-        <target>Eksporta uzstādījumi</target>
+        <target>Exportálási beállítások</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.source.1">
         <source>Here you can choose what will be exported.</source>
-        <target>Šeit jūs varat izvēlēties, kas tik eksportēts.</target>
+        <target>Itt lehet kiválasztani, mi kerüljün exportálásra. (mi kerüljön a hírfolyamba)</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.maxItems.0">
         <source>Maximum number of items</source>
-        <target>Maksimālais vienumu skaits.</target>
+        <target>Elemek maximális száma</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.maxItems.1">
         <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
-        <target>Šeit jūs varat ierobežot barotnes vienumu skaitu. Uzstādiet uz 0, lai eksportētu visus.</target>
+        <target>Itt tudja korlátozni a hírfolyamba kerülő elemek számát. Állítsa 0-ra ha mindent exportálni akar.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feedBase.0">
         <source>Base URL</source>
-        <target>Pamata URL</target>
+        <target>Alap URL</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feedBase.1">
         <source>Please enter the base URL with protocol (e.g. &lt;em&gt;http://&lt;/em&gt;).</source>
-        <target>Lūdzu ievadiet pamata URL ar protokolu (piem. &lt;em&gt;http://&lt;/em&gt;).</target>
+        <target>Adja meg a protokoll alap URL-jét. (pl.: &lt;em&gt;http://&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.alias.0">
         <source>Feed alias</source>
-        <target>Barotnes alias</target>
+        <target>Hírfolyam álnév</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.alias.1">
         <source>Here you can enter a unique filename (without extension). The XML feed file will be auto-generated in the root directory of your Contao installation, e.g. as &lt;em&gt;name.xml&lt;/em&gt;.</source>
-        <target>Šeit varat norādīt unikāla faila nosaukumu (bez faila paplašinājuma). XML barotns fails tiks automātiski izveidots instalētajā Contao saknes (root) mapē, piemēram kā &lt;em&gt;barotnes_nosaukums.xml&lt;/em&gt;.</target>
+        <target>Itt megadhat egy egyedi fájlnevet (kiterjesztés nélkül). Az XML hírfolyam fájl automatikusan generálódik a gyökér könyvtárba, ahová a Contaot telepítette, pl.: &lt;em&gt;name.xml&lt;/em&gt;</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.description.0">
         <source>Feed description</source>
-        <target>Barotnes apraksts</target>
+        <target>Hírfolyam leírás</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.description.1">
         <source>Please enter a short description of the news feed.</source>
-        <target>Lūdzu ievadiet īsu jaunumu barotnes aprakstu.</target>
+        <target>Írjon egy rövid leírást a hír hírfolyamhoz.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.0">
         <source>Revision date</source>
-        <target>Pārskatīšanas datums</target>
+        <target>Módosítás dátuma</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Pēdējās pārskatīšanas datums un laiks</target>
+        <target>Legutóbbi módosítás dátuma és ideje.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.title_legend">
         <source>Title and redirect page</source>
-        <target>Nosaukums un novirzīšanas lapa</target>
+        <target>Cím és átirányítás</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments_legend">
         <source>Comments</source>
-        <target>Komentāri</target>
+        <target>Hozzászólások</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
-        <target>Piekļuves aizsardzība</target>
+        <target>Hozzáférés védelem</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feed_legend">
         <source>RSS/Atom feed</source>
-        <target>RSS/Atom barotne</target>
+        <target>RSS/Atom hírfolyam</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
-        <target>Sistēmas administrators</target>
+        <target>Rendszer adminisztrátor</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_author">
         <source>Author of the news item</source>
-        <target>Jaunumu vienuma autors</target>
+        <target>A hír szerzője</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_both">
         <source>Author and system administrator</source>
-        <target>Autors un sistēmas administrators</target>
+        <target>A hír szerzője és a Rendszer adminisztrátor</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.source_teaser">
         <source>News teasers</source>
-        <target>Jaunumu ievadi</target>
+        <target>Hír előzetes</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.source_text">
         <source>Full articles</source>
-        <target>Pilni raksti</target>
+        <target>Teljes tartalom</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>
-        <target>Jauns arhīvs</target>
+        <target>Új archívum</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new archive</source>
-        <target>Izveidot jaunu arhīvu</target>
+        <target>Új archívum létrehozása</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show.0">
         <source>Archive details</source>
-        <target>Arhīva detaļas</target>
+        <target>Archívum részletei</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show.1">
         <source>Show the details of archive ID %s</source>
-        <target>Rādīt arhīva ID %s detaļas</target>
+        <target>Az ID %s archívum részleteinek megtekintése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit.0">
         <source>Edit archive</source>
-        <target>Rediģēt arhīvu</target>
+        <target>Archívum szerkesztése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit.1">
         <source>Edit archive ID %s</source>
-        <target>Rediģēt arhīvu ID %s</target>
+        <target>Az ID %s archívum szerkesztése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader.0">
         <source>Edit archive settings</source>
-        <target>Rediģēt arhīva uzstādījumus</target>
+        <target>Archívum beállításainak szerkesztése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader.1">
         <source>Edit the settings of archive ID %s</source>
-        <target>Rediģēt arhīva ID %s uzstādījumus</target>
+        <target>Az ID %s archívum beállításainak szerkesztése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.0">
         <source>Duplicate archive</source>
-        <target>Kopēt arhīvu</target>
+        <target>Archívum duplázása</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.1">
         <source>Duplicate archive ID %s</source>
-        <target>Kopēt arhīvu ID %s</target>
+        <target>Az ID %s archívum duplázása</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete.0">
         <source>Delete archive</source>
-        <target>Dzēst arhīvu</target>
+        <target>Archívum törlése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete.1">
         <source>Delete archive ID %s</source>
-        <target>Dzēst arhīvu ID %s</target>
+        <target>Az ID %s archívum törlése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments.0">
         <source>Comments</source>
-        <target>Komentāri</target>
+        <target>Hozzászólások</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments.1">
         <source>Show comments of archive ID %s</source>
-        <target>Rādīt arhīva ID %s komentārus</target>
+        <target>Az ID %s archívum hozzászólásainak megtekintése</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
         <source>RSS feeds</source>
-        <target>RSS barotnes</target>
+        <target>RSS hírfolyam</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage RSS feeds</source>
-        <target>Pārvaldīt RSS barotnes</target>
+        <target>RSS hírfolyam kezelése</target>
       </trans-unit>
     </body>
   </file>
