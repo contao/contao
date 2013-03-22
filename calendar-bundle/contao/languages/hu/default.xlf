@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="MSC.cal_events">
         <source>%d event(s)</source>
-        <target>%d notikums(i)</target>
+        <target>%d esemény</target>
       </trans-unit>
       <trans-unit id="MSC.cal_previous">
         <source>&amp;lt;</source>
@@ -15,43 +15,43 @@
       </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
-        <target>Šodien nav neviena notikuma.</target>
+        <target>Nincs esemény ezen a napon.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyWeek">
         <source>There are no events for this week.</source>
-        <target>Šonedēļ nav neviena notikuma.</target>
+        <target>Nincs esemény ezen a héten.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyMonth">
         <source>There are no events for this month.</source>
-        <target>Šomēmes nav neviena notikuma.</target>
+        <target>Nincs esemény ebben a hónapban.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyYear">
         <source>There are no events for this year.</source>
-        <target>Šogad nav neviena notikuma.</target>
+        <target>Nincs esemény ebben az évben.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_empty">
         <source>Currently there are no events.</source>
-        <target>Pašlaik notikumu nav.</target>
+        <target>Nincs közelgő esemény.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_days">
         <source>This event is repeated every %s. day</source>
-        <target>Šis notikums atkārtojas katru %s. dienu</target>
+        <target>Ez az esemény ismétlődik minden %s. napon.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_weeks">
         <source>This event is repeated every %s. week</source>
-        <target>Šis notikums atkārtojas katru %s. nedēļu</target>
+        <target>Ez az esemény ismétlődik minden %s. héten.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_months">
         <source>This event is repeated every %s. month</source>
-        <target>Šis notikums atkārtojas katru %s. mēnesi</target>
+        <target>Ez az esemény ismétlődik minden %s. hónapban.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_years">
         <source>This event is repeated every %s. year</source>
-        <target>Šis notikums atkārtojas katru %s. gadu</target>
+        <target>Ez az esemény ismétlődik minden %s. évben.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
-        <target>līdz %s</target>
+        <target>%s-ig</target>
       </trans-unit>
     </body>
   </file>

@@ -3,39 +3,39 @@
     <body>
       <trans-unit id="tl_user.calendars.0">
         <source>Allowed calendars</source>
-        <target>Atļautie kalendāri</target>
+        <target>Koledarji</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars.1">
         <source>Here you can grant access to one or more calendars.</source>
-        <target>Šeit jūs varat piešķirt piekļuvi vienam vai vairākiem kalendāriem.</target>
+        <target>Izberite koledarje, ki jih želite omogočiti za uporabnika.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarp.0">
         <source>Calendar permissions</source>
-        <target>Kalendāra atļaujas</target>
+        <target>Dovoljenja koledar</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarp.1">
         <source>Here you can define the calendar permissions.</source>
-        <target>Šeit jūs varat noteikt kalendāra atļaujas.</target>
+        <target>Tukaj lahko določite dovoljenja za koledar</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
         <source>Allowed RSS feeds</source>
-        <target>Atļautās RSS barotnes</target>
+        <target>Dovoljeni viri RSS</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
-        <target>Šeit jūs varat dot piekļuvi vienai vai vairākām kalendāra barotnēm.</target>
+        <target>Tu lahko dovolite dostop do enega ali več virov koledarjev.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
         <source>RSS feed permissions</source>
-        <target>RSS barotnes atļaujas</target>
+        <target>Dovoljenja virov RSS</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>
-        <target>Šeit jūs varat noteikt jaunumu barotnes atļaujas.</target>
+        <target>Tu lahko določite dovoljenja za vir koledarja.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
         <source>Calendar permissions</source>
-        <target>Kalendāra atļaujas</target>
+        <target>Dovoljenja koledar</target>
       </trans-unit>
     </body>
   </file>
