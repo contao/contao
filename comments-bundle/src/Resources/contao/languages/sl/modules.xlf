@@ -3,27 +3,27 @@
     <body>
       <trans-unit id="CTE.comments.0">
         <source>Comments</source>
-        <target>Komentāri</target>
+        <target>Komentarji</target>
       </trans-unit>
       <trans-unit id="CTE.comments.1">
         <source>Adds a comment form to the page</source>
-        <target>Šis satura elements ļauj jūsu apmeklētājiem pievienot komentārus.</target>
+        <target>Modul omogoča obiskovalcem dodajanje kometarjev.</target>
       </trans-unit>
       <trans-unit id="FMD.comments.0">
         <source>Comments</source>
-        <target>Komentāri</target>
+        <target>Komentarji</target>
       </trans-unit>
       <trans-unit id="FMD.comments.1">
         <source>Manage comments or guestbook entries</source>
-        <target>Pārvaldīt komentārus vai viesu grāmatas ierakstus.</target>
+        <target>Upravljaj komentarje vnosov v knjigi gostov.</target>
       </trans-unit>
       <trans-unit id="MOD.comments.0">
         <source>Comments</source>
-        <target>Komentāri</target>
+        <target>Komentarji</target>
       </trans-unit>
       <trans-unit id="MOD.comments.1">
         <source>Manage comments or guestbook entries</source>
-        <target>Šis modulis ļauj jums pārvaldīt apmeklētāju komentārus.</target>
+        <target>Modul vam omogoča urejanje komentarjev.</target>
       </trans-unit>
     </body>
   </file>
