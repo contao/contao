@@ -3,19 +3,19 @@
     <body>
       <trans-unit id="tl_module.faq_categories.0">
         <source>FAQ categories</source>
-        <target>BUJ kategorijas</target>
+        <target>GyIK kategóriák</target>
       </trans-unit>
       <trans-unit id="tl_module.faq_categories.1">
         <source>Please select one or more FAQ categories.</source>
-        <target>Lūdzu atlasiet BUJ kategorijas, kuras vēlaties iekļaut.</target>
+        <target>Válasszon ki egy vagy több GyIK kategóriát.</target>
       </trans-unit>
       <trans-unit id="tl_module.faq_readerModule.0">
         <source>FAQ reader module</source>
-        <target>BUJ lasītāja modulis</target>
+        <target>GyIK olvasó modúl</target>
       </trans-unit>
       <trans-unit id="tl_module.faq_readerModule.1">
         <source>Automatically switch to the FAQ reader if an item has been selected.</source>
-        <target>Automātiski pāriet uz BUJ lasītāju, ja vienums ir atlasīts.</target>
+        <target>Automatikusan váltson a GyIK olvasóra, ha egy elem ki lett választva.</target>
       </trans-unit>
     </body>
   </file>

@@ -3,23 +3,23 @@
     <body>
       <trans-unit id="tl_user.faqs.0">
         <source>Allowed FAQ categories</source>
-        <target>Atļautās BUJ kategorijas</target>
+        <target>Engedelyezett GyIK kategóriák</target>
       </trans-unit>
       <trans-unit id="tl_user.faqs.1">
         <source>Here you can grant access to one or more FAQ categories.</source>
-        <target>Šeit jūs varat piešķirt piekļuvi vienai vai vairākām BUJ kategorijām.</target>
+        <target>Itt hozzáférést biztosíthat egy vagy több GyIK kategóriához.</target>
       </trans-unit>
       <trans-unit id="tl_user.faqp.0">
         <source>FAQ category permissions</source>
-        <target>BUJ kategoriju atļaujas</target>
+        <target>GyIK kategoria jogosultságok</target>
       </trans-unit>
       <trans-unit id="tl_user.faqp.1">
         <source>Here you can define the FAQ category permissions.</source>
-        <target>Šeit jūs varat definēt BUJ kategorijas atļaujas.</target>
+        <target>Itt megadhatja a GyIK kategóriákhoz kellő jogosultságokat.</target>
       </trans-unit>
       <trans-unit id="tl_user.faq_legend">
         <source>FAQ permissions</source>
-        <target>BUJ atļaujas</target>
+        <target>GyIK jogosultságok</target>
       </trans-unit>
     </body>
   </file>
