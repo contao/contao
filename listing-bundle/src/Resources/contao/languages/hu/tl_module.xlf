@@ -3,75 +3,75 @@
     <body>
       <trans-unit id="tl_module.list_table.0">
         <source>Table</source>
-        <target>Tabula</target>
+        <target>Tábla</target>
       </trans-unit>
       <trans-unit id="tl_module.list_table.1">
         <source>Please choose the source table.</source>
-        <target>Lūdzu izvēlieties avota tabulu.</target>
+        <target>Kérem válassza ki a forrás táblát.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_fields.0">
         <source>Fields</source>
-        <target>Lauki</target>
+        <target>Mező</target>
       </trans-unit>
       <trans-unit id="tl_module.list_fields.1">
         <source>Please enter a comma separated list of the fields you want to list.</source>
-        <target>Lūdzu, ievadiet laukus sarakstā, atdalītus ar komatu.</target>
+        <target>Kérem adjon meg egy vesszőkkel elválasztott listát a listázni kívánt mezőkkel.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_where.0">
         <source>Condition</source>
-        <target>Nosacījums</target>
+        <target>Feltétel</target>
       </trans-unit>
       <trans-unit id="tl_module.list_where.1">
         <source>Here you can enter a condition to filter the results (e.g. &lt;em&gt;published=1&lt;/em&gt; or &lt;em&gt;type!=&quot;admin&quot;&lt;/em&gt;).</source>
-        <target>Šeit varat ievadīt rezultātu filtrēšanas nosacījums (piemēram, &lt;em&gt;published=1&lt;/em&gt; or &lt;em&gt;type!=&quot;admin&quot;&lt;/em&gt;).</target>
+        <target>Itt megadhat egy feltételt, hogy szűrje az eredményeket (pl. &lt;em&gt;published=1&lt;/ em&gt; vagy &lt;em&gt;type!=&quot;Admin&quot;&lt;/ em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.list_search.0">
         <source>Searchable fields</source>
-        <target>Meklējami lauki</target>
+        <target>Kereshető mezők</target>
       </trans-unit>
       <trans-unit id="tl_module.list_search.1">
         <source>Here you can enter a comma seperated list of fields that you want to be searchable.</source>
-        <target>Šeit jūs varat ievadīt ar komatu atdalītu lauku sarakstu, no laukiem, kuros vēlaties ieslēgt meklēšanu.</target>
+        <target>Itt adhat meg egy vesszőkkel elválasztott listát a kereshető mezőkről.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_sort.0">
         <source>Order by</source>
-        <target>Kārtot pēc</target>
+        <target>Rendezés</target>
       </trans-unit>
       <trans-unit id="tl_module.list_sort.1">
         <source>Here you can enter a comma seperated list of fields to sort the results by.</source>
-        <target>Šeit jūs varat ievadīt ar komatu atdalīti lauku sarakstu, lai kārtotu rezultātus.</target>
+        <target>Itt adhat meg egy vesszőkkel elválasztott listát azokról a mezőkről melyek szerint rendezhetővé kívánja tenni a listát.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info.0">
         <source>Details page fields</source>
-        <target>Detaļu lapas lauki</target>
+        <target>Adat oldal mezői</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info.1">
         <source>Enter a comma separated list of the fields you want to show on the details page. Leave blank to disable the feature.</source>
-        <target>Ievadiet ar komatu atdalītus laukus, kurus vēlaties rādīt detaļu lapā. Atstājiet tukšu, lai izslēgtu šo funkciju.</target>
+        <target>Adjon meg egy vesszőkkel elválasztott listát az adat oldalon megjeleníteni kívánt mezőkről. Hagyja üresen a szolgáltatás kikapcsolásához.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_where.0">
         <source>Details page condition</source>
-        <target>Detaļu lapas nosacījums</target>
+        <target>Adat oldal feltételei</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_where.1">
         <source>Here you can enter a condition to filter the results (e.g. &lt;em&gt;published=1&lt;/em&gt; or &lt;em&gt;type!=&quot;admin&quot;&lt;/em&gt;).</source>
-        <target>Šeit varat ievadīt nosacījumus, lai filtrētu rezultātus (piemēram, &lt;em&gt;published=1&lt;/em&gt; or &lt;em&gt;type!=&quot;admin&quot;&lt;/em&gt;).</target>
+        <target>Itt megadhat egy feltételt, hogy kiszűrje az eredményeket (pl. &lt;em&gt;published=1&lt;/em&gt; vagy &lt;em&gt;type!=&quot;admin&quot;&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.list_layout.0">
         <source>List template</source>
-        <target>Saraksta veidne</target>
+        <target>Lista sablon</target>
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
         <source>Here you can select the list template.</source>
-        <target>Varat izvēlēties atbilstošu veidni.</target>
+        <target>Itt lehet kiválasztani a lista sablont.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>
-        <target>Detaļu lapas veidne</target>
+        <target>Adat oldal sablon</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.1">
         <source>Here you can select the details page template.</source>
-        <target>Varat izvēlēties atbilstošu veidni.</target>
+        <target>Itt lehet kiválasztani az adat oldal sablont.</target>
       </trans-unit>
     </body>
   </file>
