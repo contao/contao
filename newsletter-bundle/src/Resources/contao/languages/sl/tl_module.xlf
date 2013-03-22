@@ -3,55 +3,55 @@
     <body>
       <trans-unit id="tl_module.newsletters.0">
         <source>Subscribable newsletters</source>
-        <target>Abonējamie jaunumi</target>
+        <target>E-novice za prijavo</target>
       </trans-unit>
       <trans-unit id="tl_module.newsletters.1">
         <source>Show these channels in the front end form.</source>
-        <target>Parāda kanālus frontend-ā.</target>
+        <target>Prikaži izbrane vrste e-novic na strani.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.0">
         <source>Channels</source>
-        <target>Kanāli</target>
+        <target>Vrsta e-novic</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.1">
         <source>Please select one or more channels.</source>
-        <target>Lūdzu izvēlieties vienu vai vairākus kanālus.</target>
+        <target>Prosimo izberite eno ali več vrst e-novic.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
-        <target>Paslēpt kanālu izvēlni</target>
+        <target>Skrij meni za vrste e-novic</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.1">
         <source>Do not show the channel selection menu.</source>
-        <target>Paslēpj kanālu izvēlni</target>
+        <target>Ne prikazuj izbirnega menija za vrste e-novic.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.0">
         <source>Subscription message</source>
-        <target>Abonēšanas paziņojums</target>
+        <target>Prijavno sporočilo</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) and &lt;em&gt;##link##&lt;/em&gt; (activation link).</source>
-        <target>Jūs varat izmantot aizstājējzīmes &lt;em&gt;##channels##&lt;/em&gt; (kanālu nosaukumus), &lt;em&gt;##domain##&lt;/em&gt; (domēna nosaukumu) un &lt;em&gt;##link##&lt;/em&gt; (aktivizācijas saiti).</target>
+        <target>Uporabite lahko &quot;wildcards&quot; &lt;em&gt;##channels##&lt;/em&gt; (za imena e-novic), &lt;em&gt;##domain##&lt;/em&gt; (ime domene) in &lt;em&gt;##link##&lt;/em&gt; (aktivacijska povezava).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.0">
         <source>Unsubscription message</source>
-        <target>Abonēšanas pārtraukšanas paziņojums</target>
+        <target>Odjavno sporočilo</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
-        <target>Jūs varat izmantot aizstājējzīmes &lt;em&gt;##channels##&lt;/em&gt; (kanālu nosaukumi), &lt;em&gt;##domain##&lt;/em&gt; (domēna nosaukums).</target>
+        <target>Uporabite lahko &quot;wildcards&quot; &lt;em&gt;##channels##&lt;/em&gt; (za imena novic) in &lt;em&gt;##domain##&lt;/em&gt; (ime domene).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
-        <target>Biļetena veidne</target>
+        <target>Predloga e-novic</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select the newsletter template.</source>
-        <target>Varat izvēlēties biļetena veidni.</target>
+        <target>Tukaj lahko izberete predlogo za e-novico.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
-        <target>Jūsu abonements uz %s</target>
+        <target>Vaše naročilo na e-novice na %s</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.1">
         <source>You have subscribed to the following channels on ##domain##:
@@ -60,18 +60,26 @@
 
 Please click ##link## to activate your subscription. If you did not subscribe yourself, please ignore this e-mail.
 </source>
-        <target>Esat abonējis šādus kanālus ##domain##:##channels##Ejiet šeit ##link##, lai aktivizētu savu abonementu. Ja Jūs tos neesat abonēis, lūdzu, ignorējiet šo e-pastu.</target>
+        <target>Naročili ste se na naslednje novice na ##domain##:
+
+##channels##
+
+Prosimo kliknite ##link## za aktivacijo vaše prijave. Če se niste prijavili vi, prosimo ignorirajte ta e-mail.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>
-        <target>Jūsu abonements uz %s</target>
+        <target>Vaša odjava z e-novic na %s</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.1">
         <source>You have unsubscribed from the following channels on ##domain##:
 
 ##channels##
 </source>
-        <target>Jūs esat atteicies no šādu kanālu abonēšanas ##domain##:##channels##</target>
+        <target>Odjavili ste se z e-novic na ##domain##:
+
+##channels##
+</target>
       </trans-unit>
     </body>
   </file>
