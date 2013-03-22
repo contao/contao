@@ -3,19 +3,19 @@
     <body>
       <trans-unit id="MOD.listing.0">
         <source>Listing</source>
-        <target>Saraksti (Listing)</target>
+        <target>Brskanje</target>
       </trans-unit>
       <trans-unit id="MOD.listing.1">
         <source>List the records of any table</source>
-        <target>Jebkuras tabulas ierakstu saraksta apskatīšana.</target>
+        <target>Brskajte vnose katerkoli tabele.</target>
       </trans-unit>
       <trans-unit id="FMD.listing.0">
         <source>Listing</source>
-        <target>Saraksti (Listing)</target>
+        <target>Brskanje</target>
       </trans-unit>
       <trans-unit id="FMD.listing.1">
         <source>Lists the records of any table</source>
-        <target>Jebkuras tabulas ierakstu saraksta apskatīšana.</target>
+        <target>brskajte vnose katerkoli tabele.</target>
       </trans-unit>
     </body>
   </file>
