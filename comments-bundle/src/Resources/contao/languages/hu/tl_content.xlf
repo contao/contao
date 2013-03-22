@@ -3,63 +3,63 @@
     <body>
       <trans-unit id="tl_content.com_order.0">
         <source>Sort order</source>
-        <target>Kārtošanas secība</target>
+        <target>Rendezés</target>
       </trans-unit>
       <trans-unit id="tl_content.com_order.1">
         <source>Please choose the sort order.</source>
-        <target>Lūdzu izvēlieties kārtošanas secību.</target>
+        <target>Válassza ki a rendezés sorrendjét.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_perPage.0">
         <source>Items per page</source>
-        <target>Vienumi lapā</target>
+        <target>Elem oldalanként</target>
       </trans-unit>
       <trans-unit id="tl_content.com_perPage.1">
         <source>The number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Komentāru skaits lapā. Ielikt 0, lai atspējotu lapdali.</target>
+        <target>Hozzászólások száma oldalanként. Állítsa 0-ra a lapozás kikapcsolásához.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.0">
         <source>Moderate</source>
-        <target>Cenzūra</target>
+        <target>Moderálás</target>
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Apstiprināt komentārus pirms tie tiek rādīti mājas lapā.</target>
+        <target>Ellenőrizheti a hozzászólásokat mielőtt megjelennek az oldalon.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.0">
         <source>Allow BBCode</source>
-        <target>Atļaut BBCode</target>
+        <target>BBCode engedélyezése</target>
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Atļaut apmeklētājiem lieot BBCode komentāru formatēšanai.</target>
+        <target>Engedélyezheti a BBCode használatát a látogatók számára a hozzászólások formázásához.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.0">
         <source>Require login to comment</source>
-        <target>Nepieciešams autentificēties, lai komentētu</target>
+        <target>Bejelentkezés szükséges a hozzászóláshoz</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>Tikai autentificēti lietotāji var atstāt savus komentārus.</target>
+        <target>Engedélyezheti, hogy csak hitelesített felhasználók írhassanak hozzászólást.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable the security question</source>
-        <target>Atspējot drošības jautājumu</target>
+        <target>Biztonsági kérdés kikapcsolása</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the security question (not recommended).</source>
-        <target>Izvēlieties šo opciju, lai atspējotu drošības jautājumu (nav ieteicams).</target>
+        <target>Itt tudja kikapcsolni a biztonsági kérdés használatát. (Nem ajánlott!)</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
-        <target>Komentāru salikums</target>
+        <target>Hozzászólás elrendezése</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select the comments template.</source>
-        <target>Šeit jūs varat izvēlēties komentāru salikumu.</target>
+        <target>Itt tudja kiválasztani a hozzászólások sablonját.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>
-        <target>Komentāru iestatījumi</target>
+        <target>Komment beállítások</target>
       </trans-unit>
     </body>
   </file>
