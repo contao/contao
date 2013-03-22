@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_user_group.newsletter_legend">
         <source>Newsletter permissions</source>
-        <target>Apkārtraksta atļaujas</target>
+        <target>Dovoljenja za e-novice</target>
       </trans-unit>
     </body>
   </file>
