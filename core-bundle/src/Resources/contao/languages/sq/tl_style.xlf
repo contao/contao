@@ -3,131 +3,131 @@
     <body>
       <trans-unit id="tl_style.invisible.0">
         <source>Invisible</source>
-        <target>Niewidoczne</target>
+        <target>Padukshëm</target>
       </trans-unit>
       <trans-unit id="tl_style.invisible.1">
         <source>Do not export the format definition.</source>
-        <target>Nie eksportuj definicji formatu.</target>
+        <target>Përkufizim. Mos eksporto definiticionin e formatit.</target>
       </trans-unit>
       <trans-unit id="tl_style.selector.0">
         <source>Selector</source>
-        <target>Selektor</target>
+        <target>Përzgjedhës</target>
       </trans-unit>
       <trans-unit id="tl_style.selector.1">
         <source>The selector defines to which element(s) the format definition applies.</source>
-        <target>Selektor definiuje do jakiego elementu HTML lub to jakiej grupy elementów stosuje się format definicji. Możesz wprowadzić jeden lub więcej - oddzielonych przecinkami - selektorów.</target>
+        <target>Një seleksionues përcakton se për cilin element të HTML ose cilin grup të HTML vlen definicioni i formatit. Mund t'i epeni një apo më shumë se një seleksionues duke i ndarë nga një presje.</target>
       </trans-unit>
       <trans-unit id="tl_style.category.0">
         <source>Category</source>
-        <target>Kategorie</target>
+        <target>Kategori</target>
       </trans-unit>
       <trans-unit id="tl_style.category.1">
         <source>Categories can be used to group format definitions in the back end.</source>
-        <target>Np. wybierasz &quot;nawigacja&quot; a system pokazuje ci tylko te klasy css, które obsługują nawigację.</target>
+        <target>Përdorni kategoria për t'i grupua definicionet e formatit dhe për ta lehtësuar përmbajtjen.</target>
       </trans-unit>
       <trans-unit id="tl_style.comment.0">
         <source>Comment</source>
-        <target>Komentarz</target>
+        <target>Koment</target>
       </trans-unit>
       <trans-unit id="tl_style.comment.1">
         <source>Here you can add a comment.</source>
-        <target>Komentarze będą pokazywane powyżej przekazaniu formatu definicji.</target>
+        <target>Komentet tregohen mbi definicionet e formatit.</target>
       </trans-unit>
       <trans-unit id="tl_style.size.0">
         <source>Size</source>
-        <target>Rozmiar i pozycja</target>
+        <target>Madhësia e pozcionit</target>
       </trans-unit>
       <trans-unit id="tl_style.size.1">
         <source>Width, height, min-width, min-height, max-width and max-height.</source>
-        <target>Edytuj rozmiar i pozycję (szerokość, wysokość, pozycja, overflow, float, clear, display).</target>
+        <target>Përpuno madhësinë dhe pozicionin (gjerësa, lartësia, pozicioni, overflow, float, clear, paraqitja).</target>
       </trans-unit>
       <trans-unit id="tl_style.width.0">
         <source>Width</source>
-        <target>Szerokość</target>
+        <target>Gjerësi</target>
       </trans-unit>
       <trans-unit id="tl_style.width.1">
         <source>Here you can enter the element's width.</source>
-        <target>Wprowadź szerokość i jednostkę elementu.</target>
+        <target>Epeni gjerësinë dhe njësinë e elementit.</target>
       </trans-unit>
       <trans-unit id="tl_style.height.0">
         <source>Height</source>
-        <target>Wysokość</target>
+        <target>Lartësia</target>
       </trans-unit>
       <trans-unit id="tl_style.height.1">
         <source>Here you can enter the element's height.</source>
-        <target>Wprowadź wysokość i jednostkę elementu.</target>
+        <target>Epeni lartësinë dhe njësinë e elementit.</target>
       </trans-unit>
       <trans-unit id="tl_style.minwidth.0">
         <source>Minimum width</source>
-        <target>Minimalna długość</target>
+        <target>Gjerësi minimale</target>
       </trans-unit>
       <trans-unit id="tl_style.minwidth.1">
         <source>Here you can enter the element's minimum width.</source>
-        <target>Wprowadź minimalną długość elementu.</target>
+        <target>Këtu mund të epeni gjerësinë minimale të elementit.</target>
       </trans-unit>
       <trans-unit id="tl_style.minheight.0">
         <source>Minimum height</source>
-        <target>Minimalna wysokość</target>
+        <target>Lartësi minimale</target>
       </trans-unit>
       <trans-unit id="tl_style.minheight.1">
         <source>Here you can enter the element's minimum height.</source>
-        <target>Wprowadź minimalną wysokość elementu.</target>
+        <target>Këtu mund të epeni lartësinë minimale të elementit.</target>
       </trans-unit>
       <trans-unit id="tl_style.maxwidth.0">
         <source>Maximum width</source>
-        <target>Maksymalna długość</target>
+        <target>Gjerësi maksimale</target>
       </trans-unit>
       <trans-unit id="tl_style.maxwidth.1">
         <source>Here you can enter the element's maximum width.</source>
-        <target>Wprowadź maksymalną długość elementu.</target>
+        <target>Këtu mund të epeni gjerësinë maksimale të elementit.</target>
       </trans-unit>
       <trans-unit id="tl_style.maxheight.0">
         <source>Maximum height</source>
-        <target>Maksymalna wysokość</target>
+        <target>Lartësi maksimale</target>
       </trans-unit>
       <trans-unit id="tl_style.maxheight.1">
         <source>Here you can enter the element's maximum height.</source>
-        <target>Wprowadź maksymalną wysokość elementu.</target>
+        <target>Këtu mund të epeni lartësinë maksimale të elementit.</target>
       </trans-unit>
       <trans-unit id="tl_style.positioning.0">
         <source>Position</source>
-        <target>Pozycja</target>
+        <target>Pozicion</target>
       </trans-unit>
       <trans-unit id="tl_style.positioning.1">
         <source>Position, float, clear, overflow and display.</source>
-        <target>Position, float, clear, overflow i display.</target>
+        <target>Pozicion, pluskues, qartë, sipërfaqe dhe shfaqje.</target>
       </trans-unit>
       <trans-unit id="tl_style.trbl.0">
         <source>Position</source>
-        <target>Pozycja</target>
+        <target>Pozicion</target>
       </trans-unit>
       <trans-unit id="tl_style.trbl.1">
         <source>Here you can enter the top, right, bottom and left position.</source>
-        <target>Wprowadź odległość kolejno od: góry, prawej strony, dołu, lewej strony; oraz wybierz jednostkę.</target>
+        <target>Epeni pozicionin e lart, e djathtë, e poshtë dhe të majtë si dhe njësinë e elementit.</target>
       </trans-unit>
       <trans-unit id="tl_style.position.0">
         <source>Position type</source>
-        <target>Typ pozycji</target>
+        <target>Lloji pozicionit</target>
       </trans-unit>
       <trans-unit id="tl_style.position.1">
         <source>Here you can choose the position type.</source>
-        <target>Określa typ pozycji.</target>
+        <target>Cakton llojin e pozicionit.</target>
       </trans-unit>
       <trans-unit id="tl_style.floating.0">
         <source>Float</source>
-        <target>Float</target>
+        <target>Valëvitja</target>
       </trans-unit>
       <trans-unit id="tl_style.floating.1">
         <source>Here you can choose the float type.</source>
-        <target>Pozwala &quot;pływać&quot; elementowi.</target>
+        <target>Mundëson valëvitjen e elementeve tjerë përreth një Float-elementi.</target>
       </trans-unit>
       <trans-unit id="tl_style.clear.0">
         <source>Clear</source>
-        <target>Clear</target>
+        <target>Pastër</target>
       </trans-unit>
       <trans-unit id="tl_style.clear.1">
         <source>Here you can choose the clear type.</source>
-        <target>Kontynuuj normalny przepływ tekstu pod pływającym elementem (floating element).</target>
+        <target>Përfundon valëvitjen e elementeve tjerë.</target>
       </trans-unit>
       <trans-unit id="tl_style.overflow.0">
         <source>Overflow</source>
@@ -135,347 +135,347 @@
       </trans-unit>
       <trans-unit id="tl_style.overflow.1">
         <source>Here you can choose the overflow behaviour.</source>
-        <target>Definiuje jak element będzie wyświetlany, gdy jego zawartość przekracza jego rozmiar.</target>
+        <target>Cakton paraqitjen e elementit, në qoftë se përmbajtja e tejkalon madhësinë e tij.</target>
       </trans-unit>
       <trans-unit id="tl_style.display.0">
         <source>Display</source>
-        <target>Display</target>
+        <target>Paraqitja</target>
       </trans-unit>
       <trans-unit id="tl_style.display.1">
         <source>Here you can choose the display type.</source>
-        <target>Definiuje w jaki sposób ma zostać wyświetlony element.</target>
+        <target>Cakton paraqitjen e elementit.</target>
       </trans-unit>
       <trans-unit id="tl_style.alignment.0">
         <source>Margin, padding and alignment</source>
-        <target>Margines, dopełnienie i wyrównanie</target>
+        <target>Margin, Padding dhe Drejtvendosje</target>
       </trans-unit>
       <trans-unit id="tl_style.alignment.1">
         <source>Margin, padding, align, vertical-align, text-align and whitespace.</source>
-        <target>Margin, padding, align, vertical-align, text-align i whitespace.</target>
+        <target>Margin (distanca e jashtme), padding (distanca e brendshme), reshtimi vertikal, reshtimi tekstual dhe hapësirë e bardhë.</target>
       </trans-unit>
       <trans-unit id="tl_style.margin.0">
         <source>Margin</source>
-        <target>Margines</target>
+        <target>Margin (distanca e jashtme)</target>
       </trans-unit>
       <trans-unit id="tl_style.margin.1">
         <source>Here you can enter the top, right, bottom and left margin.</source>
-        <target>Wprowadź margines kolejno od: góry, prawej strony, dołu, lewej strony; oraz wybierz jednostkę. Margines jest dystansem pomiędzy elementem a innymi go otaczającymi.</target>
+        <target>Epeni distancen e jashtme të lart, të djathtë, të poshtë dhe të majt si dhe njësinë. Distanca e jashtme është distanca e elementit ndaj elementeve fqinjë.</target>
       </trans-unit>
       <trans-unit id="tl_style.padding.0">
         <source>Padding</source>
-        <target>Padding</target>
+        <target>Padding (distanca e brendshme)</target>
       </trans-unit>
       <trans-unit id="tl_style.padding.1">
         <source>Here you can enter the top, right, bottom and left padding.</source>
-        <target>Wprowadź dopełnienie kolejno od: góry, prawej strony, dołu, lewej strony; oraz wybierz jednostkę. Dopełnienie to dystans pomiędzy zawartością elementu i jego obramowaniem.</target>
+        <target>Epeni distancen e brendshme të lart, të djathtë, të poshtë dhe të majt si dhe njësinë. Distanca e brendshme është distanca e elementit ndaj përmbajtës.</target>
       </trans-unit>
       <trans-unit id="tl_style.align.0">
         <source>Element alignment</source>
-        <target>Wyrównanie elementu</target>
+        <target>Drejtvendosja e elementit</target>
       </trans-unit>
       <trans-unit id="tl_style.align.1">
         <source>To align an element, its left and right margin will be overwritten.</source>
-        <target>Podczas wyrównywania elementu jego ustawienia marginesów zostaną zmienione.</target>
+        <target>Për ta drejtvendosë elementin, distance e jashtme në anën e majtë dhe djathtë duhet të zëvendësohen.</target>
       </trans-unit>
       <trans-unit id="tl_style.verticalalign.0">
         <source>Vertical alignment</source>
-        <target>Wyrównanie pionowe</target>
+        <target>Drejtvendosja vertikal</target>
       </trans-unit>
       <trans-unit id="tl_style.verticalalign.1">
         <source>Here you can choose the vertical alignment.</source>
-        <target>Definiuje pionowe wyrównanie.</target>
+        <target>Cakton drejtvendosjen vertikale.</target>
       </trans-unit>
       <trans-unit id="tl_style.textalign.0">
         <source>Text alignment</source>
-        <target>Wyrównanie tekstu</target>
+        <target>Drejtvendosja e tekstit</target>
       </trans-unit>
       <trans-unit id="tl_style.textalign.1">
         <source>Here you can choose the horizontal text alignment.</source>
-        <target>Definiuje poziome wyrównanie tekstu.</target>
+        <target>Cakton drejtvendosjen horizontale të tekstit.</target>
       </trans-unit>
       <trans-unit id="tl_style.whitespace.0">
         <source>White-space</source>
-        <target>White-space</target>
+        <target>Hapësirë e bardhë</target>
       </trans-unit>
       <trans-unit id="tl_style.whitespace.1">
         <source>Here you can define how white-space inside an element is handled.</source>
-        <target>Tutaj możesz określić white-space wewnątrz elementu.</target>
+        <target>Përcakto trajtimin e hapësirës të bardhë brenda një elementi.</target>
       </trans-unit>
       <trans-unit id="tl_style.background.0">
         <source>Background</source>
-        <target>Tło</target>
+        <target>Sfondi</target>
       </trans-unit>
       <trans-unit id="tl_style.background.1">
         <source>Background-color, background-image, background-position, background-repeat, linear-gradient and box-shadow.</source>
-        <target>Edytuj właściwości tła (color, image, position, repeat).</target>
+        <target>Përpuno sfondin (ngjyra, grafika, pozicioni, përsëritja).</target>
       </trans-unit>
       <trans-unit id="tl_style.bgcolor.0">
         <source>Background color and opacity</source>
-        <target>Kolor tła</target>
+        <target>Ngjyra sfondit</target>
       </trans-unit>
       <trans-unit id="tl_style.bgcolor.1">
         <source>Here you can enter a hexadecimal background color (e.g. ff0000 for red) and an optional opacity in percent (e.g. 75).</source>
-        <target>Wprowadź hexadecymalną wartość koloru tła (np. ff0000 dla czerwonego) i opcjonalnie krycie w procentach (np. 75).</target>
+        <target>Epeni ngjyrën e sfondit në mënyrën hexa-decimale (p.sh. ff0000 për kuq).</target>
       </trans-unit>
       <trans-unit id="tl_style.bgimage.0">
         <source>Background image</source>
-        <target>Obrazek tła</target>
+        <target>Grafika e sfondit</target>
       </trans-unit>
       <trans-unit id="tl_style.bgimage.1">
         <source>Here you can enter the path to a background image.</source>
-        <target>Możesz wprowadzić ścieżkę do obrazka, który zostanie użyty jako tło.</target>
+        <target>Epeni burimin e grafikës për sfond.</target>
       </trans-unit>
       <trans-unit id="tl_style.bgposition.0">
         <source>Background position</source>
-        <target>Pozycja tła</target>
+        <target>Pozicioni i sfondit</target>
       </trans-unit>
       <trans-unit id="tl_style.bgposition.1">
         <source>Here you can select the position of the background image.</source>
-        <target>Wybierz typ pozycji tła obrazkowego.</target>
+        <target>Në qoftë se nuk përdorni sfond që përsëritet, atëherë mund ta caktoni pozicionin e tij këtu.</target>
       </trans-unit>
       <trans-unit id="tl_style.bgrepeat.0">
         <source>Background repeat</source>
-        <target>Powtarzanie tła</target>
+        <target>Përsëritja e sfondit</target>
       </trans-unit>
       <trans-unit id="tl_style.bgrepeat.1">
         <source>Here you can select the repeating mode.</source>
-        <target>Wybierz tryb powtarzania.</target>
+        <target>Në qoftë se përdorni sfond që përsëritet, atëherë mund ta caktoni mënyrën e përsëritjes këtu.</target>
       </trans-unit>
       <trans-unit id="tl_style.shadowsize.0">
         <source>Shadow size</source>
-        <target>Wielkość cienia</target>
+        <target>Madhësia hijes</target>
       </trans-unit>
       <trans-unit id="tl_style.shadowsize.1">
         <source>Here you can enter the X and Y offset, an optional blur size and an optional spread radius.</source>
-        <target>Wprowadź offset X i Y, opcjonalnie rozmycie oraz promień rozproszenia.</target>
+        <target>Këtu ju mund të epeni X dhe Y, një madhësi opsionale dhe një radius të përhapur opsionale.</target>
       </trans-unit>
       <trans-unit id="tl_style.shadowcolor.0">
         <source>Shadow color and opacity</source>
-        <target>Kolor cienia</target>
+        <target>Ngjyra hijes dhe pajtejdukshmëriaja</target>
       </trans-unit>
       <trans-unit id="tl_style.shadowcolor.1">
         <source>Here you can enter a hexadecimal shadow color (e.g. ff0000 for red) and an optional opacity in percent (e.g. 75).</source>
-        <target>Wprowadź heksadecymalny kolor cienia (np. ff0000 lub red) i opcjonalnie krycie w procentach (np. 75).</target>
+        <target>Këtu mund të epeni ngjyrën heksadecimale të hijës (p.sh. ff0000 për kuq) dhe përqindjen e një perde opsionale (p.sh. 75).</target>
       </trans-unit>
       <trans-unit id="tl_style.gradientAngle.0">
         <source>Gradient angle</source>
-        <target>Kąt gradientu</target>
+        <target>Kënd pjerrës</target>
       </trans-unit>
       <trans-unit id="tl_style.gradientAngle.1">
         <source>Here you can enter the gradient angle (e.g. &lt;em&gt;0deg&lt;/em&gt;) or the direction (e.g. &lt;em&gt;to bottom&lt;/em&gt; or &lt;em&gt;to top right&lt;/em&gt;).</source>
-        <target>Tutaj możesz wprowadzić kąt gradientu (np. &lt;em&gt;0deg&lt;/em&gt;) lub kierunek (np. &lt;em&gt;to bottom&lt;/em&gt; lub &lt;em&gt;to top right&lt;/em&gt;).</target>
+        <target>Ketu mund të epeni pjerrësin e këndit (p.sh. &lt;em&gt;0deg&lt;/em&gt;) ose drejtimin (p.sh. &lt;em&gt;në fund&lt;/em&gt; ose &lt;em&gt;lart djathtas&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_style.gradientColors.0">
         <source>Gradient colors</source>
-        <target>Kolor gardientu</target>
+        <target>Ngjyra pjerrëse</target>
       </trans-unit>
       <trans-unit id="tl_style.gradientColors.1">
         <source>Here you can enter up to four colors with an optional percentage (e.g. &lt;em&gt;ffc 10% | f90 | f00&lt;/em&gt;).</source>
-        <target>Wprowadź do czterech kolorów z opcjonalnym procentem (np. &lt;em&gt;ffc 10% | f90 | f00&lt;/em&gt;).</target>
+        <target>Këtu mund të epeni deri në katër ngjyra me përqindje fakultative  (p.sh. &lt;em&gt;ffc 10% | f90 | f00&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_style.border.0">
         <source>Border</source>
-        <target>Obramowanie</target>
+        <target>Rami</target>
       </trans-unit>
       <trans-unit id="tl_style.border.1">
         <source>Border-width, border-style, border-color, border-radius, border-collapse and border-spacing.</source>
-        <target>Edytuj właściwości obramowania (width, style, color, collapse).</target>
+        <target>Përpuno vetit e ramit (gjerësia, stili, ngjyra, kolaps).</target>
       </trans-unit>
       <trans-unit id="tl_style.borderwidth.0">
         <source>Border width</source>
-        <target>Szerokość obramowania</target>
+        <target>Gjerësia e ramit</target>
       </trans-unit>
       <trans-unit id="tl_style.borderwidth.1">
         <source>Here you can enter the top, right, bottom and left border width.</source>
-        <target>Wprowadź szerokość kolejno od: góry, prawej strony, dołu, lewej strony; oraz wybierz jednostkę.</target>
+        <target>Epeni gjerësinë e lartë, e djathtë, e poshtë dhe e majtë të ramit si dhe njësinë.</target>
       </trans-unit>
       <trans-unit id="tl_style.borderstyle.0">
         <source>Border style</source>
-        <target>Styl obramowania</target>
+        <target>Stili i ramit</target>
       </trans-unit>
       <trans-unit id="tl_style.borderstyle.1">
         <source>Here you can choose the border style.</source>
-        <target>Wybierz styl obramowania.</target>
+        <target>Zgjidheni stilin e ramit.</target>
       </trans-unit>
       <trans-unit id="tl_style.bordercolor.0">
         <source>Border color and opacity</source>
-        <target>Kolor obramowania</target>
+        <target>Ngjyra e ramit</target>
       </trans-unit>
       <trans-unit id="tl_style.bordercolor.1">
         <source>Here you can enter a hexadecimal border color (e.g. ff0000 for red) and an optional opacity in percent (e.g. 75).</source>
-        <target>Wprowadź hexadecymalną wartość koloru obramowania (np. ff0000 dla czerwonego) i opcjonalnie krycie w procentach (np. 75).</target>
+        <target>Epeni ngjyrën e ramit në mënyrën hexa-decimale (p.sh. ff0000 për kuq).</target>
       </trans-unit>
       <trans-unit id="tl_style.borderradius.0">
         <source>Border radius</source>
-        <target>Promień obramowania</target>
+        <target>Kufiri radius.</target>
       </trans-unit>
       <trans-unit id="tl_style.borderradius.1">
         <source>Here you can enter the top, right, bottom and left border radius.</source>
-        <target>Wprowadź promień obramowania kolejno od: góry, prawej strony, dołu, lewej strony; oraz wybierz jednostkę.</target>
+        <target>Këtu mund të epeni kufirin e radius më lart, djatht, fund ose majtas</target>
       </trans-unit>
       <trans-unit id="tl_style.bordercollapse.0">
         <source>Border handling</source>
-        <target>Typy obramowania tabel</target>
+        <target>Modeli i ramit</target>
       </trans-unit>
       <trans-unit id="tl_style.bordercollapse.1">
         <source>Here you can choose the border handling.</source>
-        <target>Określ czy obramowanie sąsiadujących komórek tabeli ma być wyświetlane jako jedno obramowanie czy jako dwa oddzielne.</target>
+        <target>Cakton se si të paraqiten fushat e përbashkëta të tabeles, si një ram apo si dy rame.</target>
       </trans-unit>
       <trans-unit id="tl_style.borderspacing.0">
         <source>Border spacing</source>
-        <target>Rozstaw obramowania</target>
+        <target>Hapësira kufirit</target>
       </trans-unit>
       <trans-unit id="tl_style.borderspacing.1">
         <source>Here you can enter the border spacing.</source>
-        <target>Wprowadź rozstaw obramowania (border spacing).</target>
+        <target>Këtu mund të epeni hapësirën e kufirit</target>
       </trans-unit>
       <trans-unit id="tl_style.font.0">
         <source>Font</source>
-        <target>Czcionka</target>
+        <target>Germa</target>
       </trans-unit>
       <trans-unit id="tl_style.font.1">
         <source>Font-family, font-size, font-color, line-height, font-style and white-space.</source>
-        <target>Edytuj właściwości czcionki (types, size, style, color, line-height, white-space).</target>
+        <target>Përpuno kompletin e germave (types, size, style, color, line-height, white-space).</target>
       </trans-unit>
       <trans-unit id="tl_style.fontfamily.0">
         <source>Font family</source>
-        <target>Typ czcionki</target>
+        <target>Komplet germash</target>
       </trans-unit>
       <trans-unit id="tl_style.fontfamily.1">
         <source>Here you can enter a comma separated list of font types.</source>
-        <target>Wporwadź typy czcionek oddzielone od siebie przecinkami (np. Arial,Helvetica). Użyj znaków cudzysłowia jeśli nazwa czcionki zawiera puste pola (spacje) i dostarcza co najmniej jednej ogólnej czcionki rodzinnej (font family), np. &lt;em&gt;sans-serif&lt;/em&gt;.</target>
+        <target>Epeni një apo më shumë se një komplet germash duke i ndarë ato me presje. Përdorni thonjëza për emrat e kompleteve që janë me hapësirë dhe përdorni më së paku një komplet gjenerues (p.sh.: &lt;em&gt;sans-serif&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_style.fontsize.0">
         <source>Font size</source>
-        <target>Rozmiar czcionki</target>
+        <target>Madhësia germave</target>
       </trans-unit>
       <trans-unit id="tl_style.fontsize.1">
         <source>Here you can enter the font size.</source>
-        <target>Wprowadź wielkość i jednostkę czcionki.</target>
+        <target>Epeni madhësinë e germave dhe njësinë.</target>
       </trans-unit>
       <trans-unit id="tl_style.fontcolor.0">
         <source>Font color and opacity</source>
-        <target>Kolor czcionki</target>
+        <target>Ngjyra germave</target>
       </trans-unit>
       <trans-unit id="tl_style.fontcolor.1">
         <source>Here you can enter a hexadecimal font color (e.g. ff0000 for red) and an optional opacity in percent (e.g. 75).</source>
-        <target>Wprowadź hexadecymalną wartość koloru czcionki (np. ff0000 dla czerwonego) i opcjonalnie krycie w procentach (np. 75).</target>
+        <target>Epeni ngjyrën e germave në mënyrën hexa-decimale (p.sh. ff0000 për kuq).</target>
       </trans-unit>
       <trans-unit id="tl_style.lineheight.0">
         <source>Line height</source>
-        <target>Odstęp pomiędzy liniami</target>
+        <target>Lartësia e rreshtit</target>
       </trans-unit>
       <trans-unit id="tl_style.lineheight.1">
         <source>Here you can define the line height.</source>
-        <target>Możesz tutaj ustalić wysokość lini elementu.</target>
+        <target>Caktoni lartësinë e reshtit brenda elementit.</target>
       </trans-unit>
       <trans-unit id="tl_style.fontstyle.0">
         <source>Font style</source>
-        <target>Styl czcionki</target>
+        <target>Stil germash</target>
       </trans-unit>
       <trans-unit id="tl_style.fontstyle.1">
         <source>Here you can choose one or more font styles.</source>
-        <target>Wybierz jeden lub więcej stylów czcionki.</target>
+        <target>Zgjidheni një apo më shumë se një stil germash.</target>
       </trans-unit>
       <trans-unit id="tl_style.texttransform.0">
         <source>Text transform</source>
-        <target>Transformacja tekstu</target>
+        <target>Transformimi tekstit</target>
       </trans-unit>
       <trans-unit id="tl_style.texttransform.1">
         <source>Here you can choose a text transformation mode.</source>
-        <target>Wybierz tryb transformacji tekstu.</target>
+        <target>Zgjedhimi i menyrës së transformimit të tekstit.</target>
       </trans-unit>
       <trans-unit id="tl_style.textindent.0">
         <source>Text indent</source>
-        <target>Wcięcie tekstu</target>
+        <target>Dhëmbëzimi tekstit</target>
       </trans-unit>
       <trans-unit id="tl_style.textindent.1">
         <source>Here you can enter a text indentation.</source>
-        <target>Wprowadź wcięcie tekstu.</target>
+        <target>Këtu mund të epeni dhëmbëzimin e tekstit.</target>
       </trans-unit>
       <trans-unit id="tl_style.letterspacing.0">
         <source>Letter spacing</source>
-        <target>Odległość między literami</target>
+        <target>Hapësira germave</target>
       </trans-unit>
       <trans-unit id="tl_style.letterspacing.1">
         <source>Here you can modify the letter spacing (default: 0px).</source>
-        <target>Wprowadź odległość między literami (domyślnie: 0px).</target>
+        <target>Këtu mund të përpunoni hapësirën e germave (normë: 0px)</target>
       </trans-unit>
       <trans-unit id="tl_style.wordspacing.0">
         <source>Word spacing</source>
-        <target>Odległość między słowami</target>
+        <target>Hapësira fjalëve</target>
       </trans-unit>
       <trans-unit id="tl_style.wordspacing.1">
         <source>Here you can modify the word spacing (default: 0px).</source>
-        <target>Wprowadź odległość między słowami (domyślnie: 0px).</target>
+        <target>Këtu mund të përpunoni hapësirën e fjalëve (normë: 0px)</target>
       </trans-unit>
       <trans-unit id="tl_style.list.0">
         <source>List</source>
-        <target>Lista</target>
+        <target>List</target>
       </trans-unit>
       <trans-unit id="tl_style.list.1">
         <source>List-style-type and list-style-image.</source>
-        <target>Edytuj właściwości listy (style, type, image).</target>
+        <target>Përpuno vetit e listës (stili, lloji, grafika).</target>
       </trans-unit>
       <trans-unit id="tl_style.liststyletype.0">
         <source>List symbol</source>
-        <target>Symbol listy</target>
+        <target>Simboli listës</target>
       </trans-unit>
       <trans-unit id="tl_style.liststyletype.1">
         <source>Here you can choose a list symbol.</source>
-        <target>Wybierz symbol listy.</target>
+        <target>Zgjidheni simbolin për elementet e listës.</target>
       </trans-unit>
       <trans-unit id="tl_style.liststyleimage.0">
         <source>Custom symbol</source>
-        <target>Własny symbol</target>
+        <target>Simboli individual</target>
       </trans-unit>
       <trans-unit id="tl_style.liststyleimage.1">
         <source>Here you can enter the path to an individual symbol.</source>
-        <target>Tutaj możesz wprowadzić ścieżkę do indywidualnego symbolu (obrazka).</target>
+        <target>Caktimi për burimin e grafikës, e cila do të përdoret si simbol individual.</target>
       </trans-unit>
       <trans-unit id="tl_style.own.0">
         <source>Custom code</source>
-        <target>Własny kod CSS</target>
+        <target>CSS kodi individual</target>
       </trans-unit>
       <trans-unit id="tl_style.own.1">
         <source>Here you can enter custom CSS code.</source>
-        <target>Tutaj możesz wprowadzić dowolny kod CSS.</target>
+        <target>Këtu mund të epeni CSS kodin individual për definimin e formatit.</target>
       </trans-unit>
       <trans-unit id="tl_style.selector_legend">
         <source>Selector and category</source>
-        <target>Selektor i kategoria</target>
+        <target>Përzgjedhës dhe kategori</target>
       </trans-unit>
       <trans-unit id="tl_style.size_legend">
         <source>Size</source>
-        <target>Rozmiar</target>
+        <target>Madhësi</target>
       </trans-unit>
       <trans-unit id="tl_style.position_legend">
         <source>Position</source>
-        <target>Pozycja</target>
+        <target>Pozicion</target>
       </trans-unit>
       <trans-unit id="tl_style.align_legend">
         <source>Margin and alignment</source>
-        <target>margines i wyrównanie</target>
+        <target>Kufiri dhe rreshtimi</target>
       </trans-unit>
       <trans-unit id="tl_style.background_legend">
         <source>Background settings</source>
-        <target>Ustawienia tła</target>
+        <target>Konfigurimi sfondit</target>
       </trans-unit>
       <trans-unit id="tl_style.border_legend">
         <source>Border settings</source>
-        <target>Ustawienia obramowania</target>
+        <target>Konfigurimi kufirit</target>
       </trans-unit>
       <trans-unit id="tl_style.font_legend">
         <source>Font settings</source>
-        <target>Ustawienia czcionki</target>
+        <target>Konfigurimi germave</target>
       </trans-unit>
       <trans-unit id="tl_style.list_legend">
         <source>List settings</source>
-        <target>Ustawienia listy</target>
+        <target>Konfigurimi listës</target>
       </trans-unit>
       <trans-unit id="tl_style.custom_legend">
         <source>Custom code</source>
-        <target>Własny kod</target>
+        <target>Kod individual</target>
       </trans-unit>
       <trans-unit id="tl_style.normal">
         <source>normal</source>
@@ -483,159 +483,159 @@
       </trans-unit>
       <trans-unit id="tl_style.bold">
         <source>bold</source>
-        <target>bold</target>
+        <target>trashë</target>
       </trans-unit>
       <trans-unit id="tl_style.italic">
         <source>italic</source>
-        <target>italic</target>
+        <target>kursiv</target>
       </trans-unit>
       <trans-unit id="tl_style.underline">
         <source>underlined</source>
-        <target>underline</target>
+        <target>nënvizuar</target>
       </trans-unit>
       <trans-unit id="tl_style.notUnderlined">
         <source>not underlined</source>
-        <target>not underlined</target>
+        <target>ç'nënvizuar</target>
       </trans-unit>
       <trans-unit id="tl_style.line-through">
         <source>line-through</source>
-        <target>line-through</target>
+        <target>vijë-përmes</target>
       </trans-unit>
       <trans-unit id="tl_style.overline">
         <source>overlined</source>
-        <target>overline</target>
+        <target>mbivizuar</target>
       </trans-unit>
       <trans-unit id="tl_style.small-caps">
         <source>small-caps</source>
-        <target>small-caps</target>
+        <target>Kap të vogël</target>
       </trans-unit>
       <trans-unit id="tl_style.disc">
         <source>dot</source>
-        <target>dot</target>
+        <target>Pikë</target>
       </trans-unit>
       <trans-unit id="tl_style.circle">
         <source>circle</source>
-        <target>circle</target>
+        <target>Reth</target>
       </trans-unit>
       <trans-unit id="tl_style.square">
         <source>square</source>
-        <target>square</target>
+        <target>Katror</target>
       </trans-unit>
       <trans-unit id="tl_style.decimal">
         <source>figures</source>
-        <target>figures</target>
+        <target>Shifra</target>
       </trans-unit>
       <trans-unit id="tl_style.upper-roman">
         <source>upper latin figures</source>
-        <target>upper latin figures</target>
+        <target>Shifra latine me shkronja të mëdha</target>
       </trans-unit>
       <trans-unit id="tl_style.lower-roman">
         <source>lower latin figures</source>
-        <target>lower latin figures</target>
+        <target>Shifra latine me shkronja të vogla</target>
       </trans-unit>
       <trans-unit id="tl_style.upper-alpha">
         <source>upper characters</source>
-        <target>upper characters</target>
+        <target>Shkronja të mëdha</target>
       </trans-unit>
       <trans-unit id="tl_style.lower-alpha">
         <source>lower characters</source>
-        <target>lower characters</target>
+        <target>Shkronja të vogla</target>
       </trans-unit>
       <trans-unit id="tl_style.uppercase">
         <source>uppercase</source>
-        <target>uppercase</target>
+        <target>Germa të mëdha</target>
       </trans-unit>
       <trans-unit id="tl_style.lowercase">
         <source>lowercase</source>
-        <target>lowercase</target>
+        <target>Germa të vogla</target>
       </trans-unit>
       <trans-unit id="tl_style.capitalize">
         <source>capitalize</source>
-        <target>capitalize</target>
+        <target>Shndrro në germa të mëdha</target>
       </trans-unit>
       <trans-unit id="tl_style.none">
         <source>none</source>
-        <target>no bullet</target>
+        <target>Pa simbol</target>
       </trans-unit>
       <trans-unit id="tl_style.new.0">
         <source>New format definition</source>
-        <target>Nowy element arkusza</target>
+        <target>Definicion të ri të formatit</target>
       </trans-unit>
       <trans-unit id="tl_style.new.1">
         <source>Create a new format definition</source>
-        <target>Utwórz nowy element arkusza</target>
+        <target>Krijo definicion të ri të formatit</target>
       </trans-unit>
       <trans-unit id="tl_style.show.0">
         <source>Format definition details</source>
-        <target>Formatuj element arkusza</target>
+        <target>Detajet e definicionit</target>
       </trans-unit>
       <trans-unit id="tl_style.show.1">
         <source>Show the details of format definition ID %s</source>
-        <target>Pokaż szczegóły elementu ID %s</target>
+        <target>Trego detajet e definicionit ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style.edit.0">
         <source>Edit format definition</source>
-        <target>Edytuj element arkusza</target>
+        <target>Përpuno definicionin e formait</target>
       </trans-unit>
       <trans-unit id="tl_style.edit.1">
         <source>Edit format definition ID %s</source>
-        <target>Edytuj element arkusza ID %s</target>
+        <target>Përpuno definicionin e formatit ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style.cut.0">
         <source>Move format definition</source>
-        <target>Przenieś element arkusza</target>
+        <target>Shtyrja e definicionit të formatit</target>
       </trans-unit>
       <trans-unit id="tl_style.cut.1">
         <source>Move format definition ID %s</source>
-        <target>Przenieś element arkusza ID %s</target>
+        <target>Shtyn definicionin e formatit ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style.copy.0">
         <source>Duplicate format definition</source>
-        <target>Duplikuj element arkusza</target>
+        <target>Dyfisho definicionin e formatit</target>
       </trans-unit>
       <trans-unit id="tl_style.copy.1">
         <source>Duplicate format definition ID %s</source>
-        <target>Duplikuj element arkusza ID %s</target>
+        <target>Dyfisho defnicionin e formatit ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style.delete.0">
         <source>Delete format definition</source>
-        <target>Usuń element arkusza</target>
+        <target>Shlyej definicionin e formatit</target>
       </trans-unit>
       <trans-unit id="tl_style.delete.1">
         <source>Delete format definition ID %s</source>
-        <target>Usuń element arkusza ID %s</target>
+        <target>Shlyej definicionin e format ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style.editheader.0">
         <source>Edit style sheet</source>
-        <target>Edytuj nagłówek stylu CSS</target>
+        <target>Përpuno hyrjën e Stylesheet</target>
       </trans-unit>
       <trans-unit id="tl_style.editheader.1">
         <source>Edit the style sheet settings</source>
-        <target>Edytuj nagłowek stylu CSS</target>
+        <target>Përpuno hyrjën e këtij styelesheet</target>
       </trans-unit>
       <trans-unit id="tl_style.pasteafter.0">
         <source>Paste at the top</source>
-        <target>Wstaw na początku</target>
+        <target>Fute në fillim</target>
       </trans-unit>
       <trans-unit id="tl_style.pasteafter.1">
         <source>Paste after format definition ID %s</source>
-        <target>Wstaw pod elementem arkusza ID %s</target>
+        <target>Fute pas definicionit të formatit ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style.pastenew.0">
         <source>Add new at the top</source>
-        <target>Utwórz nowy element arkusza na początku</target>
+        <target>Krijo definicion të ri të formatit në fillim</target>
       </trans-unit>
       <trans-unit id="tl_style.pastenew.1">
         <source>Add new after format definition ID %s</source>
-        <target>Wstaw nowy element arkusza pod elementem ID %s</target>
+        <target>Krijo fefinicion të ri të formatit pas definicionit ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style.toggle.0">
         <source>Toggle visibility</source>
-        <target>Włącz lub wyłącz widoczność elementu</target>
+        <target>Toggle dukshmërinë</target>
       </trans-unit>
       <trans-unit id="tl_style.toggle.1">
         <source>Toggle the visibility of format definition ID %s</source>
-        <target>Włącz lub wyłącz widoczność definicji formatu ID %s</target>
+        <target>Toggle dukshmërinë të definicionit së formatit ID %s</target>
       </trans-unit>
     </body>
   </file>
