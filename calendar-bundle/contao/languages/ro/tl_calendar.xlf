@@ -3,199 +3,199 @@
     <body>
       <trans-unit id="tl_calendar.title.0">
         <source>Title</source>
-        <target>Titel</target>
+        <target>Titlu</target>
       </trans-unit>
       <trans-unit id="tl_calendar.title.1">
         <source>Please enter the calendar title.</source>
-        <target>Giv kalenderen en titel.</target>
+        <target>Introduceţi titlul calendarului.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.0">
         <source>Redirect page</source>
-        <target>Hop til side</target>
+        <target>Sari la pagina</target>
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.1">
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
-        <target>Vælg en side som besøgende skal omdirigeres til når de klikker på en begivenhed.</target>
+        <target>Selectaţi pagina către care vor fi redirectaţi vizitatorii atunci când selectează un eveniment.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.0">
         <source>Enable comments</source>
-        <target>Aktiver kommentarer</target>
+        <target>Activează comentarii</target>
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.1">
         <source>Allow visitors to comment events.</source>
-        <target>Tillad besøgende at kommentere begivenheder.</target>
+        <target>Permite vizitatorilor să comenteze evenimente.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify.0">
         <source>Notify</source>
-        <target>Påmind</target>
+        <target>Notifică</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify.1">
         <source>Please choose who to notify when comments are added.</source>
-        <target>Vælg venligst hvem der skal have besked, når kommentarer er tilføjet.</target>
+        <target>Alegeţi cine este notificat în momentul adăugării unui comentartiu.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.sortOrder.0">
         <source>Sort order</source>
-        <target>Sortering</target>
+        <target>Ordine de sortare</target>
       </trans-unit>
       <trans-unit id="tl_calendar.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>Som standard er kommentarer sorteret stigende startende med den ældste.</target>
+        <target>Îniţial comentariile sunt sortate ascendent începând cu cel mai vechi.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.0">
         <source>Comments per page</source>
-        <target>Kommentarer per side</target>
+        <target>Comentarii pe pagină</target>
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Antal kommentarer per side. Sæt til 0 for at deaktivere sideinddeling.</target>
+        <target>Numărul de comentarii pe pagină. Setaţi 0 pentru a dezactiva paginarea.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.0">
         <source>Moderate comments</source>
-        <target>Godkend kommentarer</target>
+        <target>Moderare comentarii</target>
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Godkend kommentarer inden de udgives på websitet.</target>
+        <target>Aprobă comentariile înainte să fie publicate pe website.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.0">
         <source>Allow BBCode</source>
-        <target>Tillad BB-kode</target>
+        <target>Permite BBCode</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Tillad besøgende at formatere deres kommentarer med BB-kode.</target>
+        <target>Permite utilizatorilor să formateze comentariile cu BBCode.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.0">
         <source>Require login to comment</source>
-        <target>Påkræv login for at kommentere</target>
+        <target>Autentificare înainte de comentariu</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>Tillad kun godkendte brugere at oprette kommentarer.</target>
+        <target>Permite adăugarea de comentarii după autentificare.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
         <source>Disable the security question</source>
-        <target>Deaktiver sikkerhedsspørgsmål</target>
+        <target>Deactivează întrebarea de securitate</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>Brug kun denne valgmulighed, hvis du har begrænset kommentarer til at blive oprettet af godkendte brugere.</target>
+        <target>Folosiţi opţiunea aceasta doar dacă este limitată adăugarea de comentarii doar pentru utilizatorii autentificaţi.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.protected.0">
         <source>Protect calendar</source>
-        <target>Beskyt kalender</target>
+        <target>Protejează calendar</target>
       </trans-unit>
       <trans-unit id="tl_calendar.protected.1">
         <source>Show events to certain member groups only.</source>
-        <target>Vis kun begivenheder til bestemt medlemsgrupper.</target>
+        <target>Arată evenimentele doar anumitor gruputi de membri.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.groups.0">
         <source>Allowed member groups</source>
-        <target>Tilladte medlemsgrupper</target>
+        <target>Permite pentru grupuri</target>
       </trans-unit>
       <trans-unit id="tl_calendar.groups.1">
         <source>These groups will be able to see the events in this calendar.</source>
-        <target>Her kan du vælge hvilke grupper der har tilladelse til at se begivenhederne.</target>
+        <target>Aici puteţi alege căror grupuri de membri li se va permite să vizualizeze evenimentele.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.0">
         <source>Revision date</source>
-        <target>Revisionsdato</target>
+        <target>Data reviziei</target>
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Dato og tid for sidste revision</target>
+        <target>Data şi ora ultimei revizii</target>
       </trans-unit>
       <trans-unit id="tl_calendar.title_legend">
         <source>Title and redirect page</source>
-        <target>Titel og omdirigeringsside</target>
+        <target>Titlu şi pagină</target>
       </trans-unit>
       <trans-unit id="tl_calendar.comments_legend">
         <source>Comments</source>
-        <target>Kommentarer</target>
+        <target>Cometarii</target>
       </trans-unit>
       <trans-unit id="tl_calendar.protected_legend">
         <source>Access protection</source>
-        <target>Adgangsbeskyttelse</target>
+        <target>Protecţie acces</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feed_legend">
         <source>RSS/Atom feed</source>
-        <target>RSS/Atom nyhedsstrøm</target>
+        <target>Flux RSS</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_admin">
         <source>System administrator</source>
-        <target>System administrator</target>
+        <target>Administrator</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_author">
         <source>Author of the event</source>
-        <target>Forfatter af begivenheden</target>
+        <target>Autor al evenimetului</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_both">
         <source>Author and system administrator</source>
-        <target>Forfatter og system administrator</target>
+        <target>Autor şi administrator</target>
       </trans-unit>
       <trans-unit id="tl_calendar.source_teaser">
         <source>Event teasers</source>
-        <target>Begivenheds-appetitvækker</target>
+        <target>Rezumate evenimente</target>
       </trans-unit>
       <trans-unit id="tl_calendar.source_text">
         <source>Full articles</source>
-        <target>Hele artikler</target>
+        <target>Articole complete</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New calendar</source>
-        <target>Ny kalender</target>
+        <target>Calendar nou</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>
-        <target>Opret en ny kalender</target>
+        <target>Creează calendar nou</target>
       </trans-unit>
       <trans-unit id="tl_calendar.show.0">
         <source>Calendar details</source>
-        <target>Kalenderdetaljer</target>
+        <target>Detalii calendar</target>
       </trans-unit>
       <trans-unit id="tl_calendar.show.1">
         <source>Show the details of calendar ID %s</source>
-        <target>Vis detaljer for kalender-ID %s</target>
+        <target>Arată detaliile calendarului ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.edit.0">
         <source>Edit calendar</source>
-        <target>Rediger kalender</target>
+        <target>Editează calendar</target>
       </trans-unit>
       <trans-unit id="tl_calendar.edit.1">
         <source>Edit calendar ID %s</source>
-        <target>Rediger kalender-ID %s</target>
+        <target>Editează calendarul ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.0">
         <source>Edit calendar settings</source>
-        <target>Rediger kalender indstillinger</target>
+        <target>Editează setări de calendar</target>
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.1">
         <source>Edit the settings of calendar ID %s</source>
-        <target>Rediger indstillingerne af kalender-ID %s</target>
+        <target>Editează setări pentru calendarul ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.0">
         <source>Duplicate calendar</source>
-        <target>Duplikér kalender</target>
+        <target>Copiază calendar</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.1">
         <source>Duplicate calendar ID %s</source>
-        <target>Duplikér kalender-ID %s</target>
+        <target>Copiază calendarul ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.delete.0">
         <source>Delete calendar</source>
-        <target>Slet kalender</target>
+        <target>Şterge calendar</target>
       </trans-unit>
       <trans-unit id="tl_calendar.delete.1">
         <source>Delete calendar ID %s</source>
-        <target>Slet kalender-ID %s</target>
+        <target>Şterge calendarul ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>
-        <target>RSS feeds</target>
+        <target>Fluxuri RSS</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage RSS feeds</source>
-        <target>Håndter RSS feeds</target>
+        <target>Gestionare fluxuri RSS</target>
       </trans-unit>
     </body>
   </file>
