@@ -3,91 +3,91 @@
     <body>
       <trans-unit id="tl_log.tstamp.0">
         <source>Date</source>
-        <target>Datums</target>
+        <target>Päivämäärä</target>
       </trans-unit>
       <trans-unit id="tl_log.tstamp.1">
         <source>Date and time of the log entry</source>
-        <target>Izveidošanas datums un laiks</target>
+        <target>Lokimerkinnän päivämäärä ja aika</target>
       </trans-unit>
       <trans-unit id="tl_log.source.0">
         <source>Origin</source>
-        <target>Avots</target>
+        <target>Alkuperä</target>
       </trans-unit>
       <trans-unit id="tl_log.source.1">
         <source>Back end or front end</source>
-        <target>Žurnāla ieraksti var tik kārtoti pēc to avotiem ( priekšpuses vai aizmugures ieraksti)</target>
+        <target>Ylläpitopuoli vai sivusto</target>
       </trans-unit>
       <trans-unit id="tl_log.action.0">
         <source>Category</source>
-        <target>Kategorija</target>
+        <target>Luokka</target>
       </trans-unit>
       <trans-unit id="tl_log.action.1">
         <source>Category of the action</source>
-        <target>Darbības kategorija</target>
+        <target>Toiminnon luokka</target>
       </trans-unit>
       <trans-unit id="tl_log.username.0">
         <source>User</source>
-        <target>Lietotājs</target>
+        <target>Käyttäjä</target>
       </trans-unit>
       <trans-unit id="tl_log.username.1">
         <source>Name of the authenticated user</source>
-        <target>Lietotāja vārds</target>
+        <target>Kirjautuneen käyttäjän nimi</target>
       </trans-unit>
       <trans-unit id="tl_log.text.0">
         <source>Details</source>
-        <target>Detaļas</target>
+        <target>Tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_log.text.1">
         <source>Details of the log entry</source>
-        <target>Aktuālā ieraksta detaļas</target>
+        <target>Lokimerkinnän tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_log.func.0">
         <source>Function</source>
-        <target>Funkcija</target>
+        <target>Funktio</target>
       </trans-unit>
       <trans-unit id="tl_log.func.1">
         <source>Name of the initiating function</source>
-        <target>Funkcijas vārds</target>
+        <target>Toimeenpanevan funktion nimi</target>
       </trans-unit>
       <trans-unit id="tl_log.ip.0">
         <source>IP address</source>
-        <target>IP adrese</target>
+        <target>IP-osoite</target>
       </trans-unit>
       <trans-unit id="tl_log.ip.1">
         <source>IP address of the user</source>
-        <target>Pieprasošā IP adrese</target>
+        <target>Käyttäjän IP-osoite</target>
       </trans-unit>
       <trans-unit id="tl_log.browser.0">
         <source>Browser</source>
-        <target>Pārlūkprogramma</target>
+        <target>Selain</target>
       </trans-unit>
       <trans-unit id="tl_log.browser.1">
         <source>Name of the user agent</source>
-        <target>Pieprasošā pārlūkprogramma</target>
+        <target>Käyttäjäagentin nimi</target>
       </trans-unit>
       <trans-unit id="tl_log.BE">
         <source>Back end</source>
-        <target>Aizmugure</target>
+        <target>Ylläpito</target>
       </trans-unit>
       <trans-unit id="tl_log.FE">
         <source>Front end</source>
-        <target>Priekšpuse</target>
+        <target>Sivusto</target>
       </trans-unit>
       <trans-unit id="tl_log.show.0">
         <source>Show details</source>
-        <target>Rādīt detaļas</target>
+        <target>Näytä tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_log.show.1">
         <source>Show the details of entry ID %s</source>
-        <target>Rādīt ieraksta ID %s detaļas</target>
+        <target>Näytä kohteen ID %s tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_log.delete.0">
         <source>Delete</source>
-        <target>Dzēst</target>
+        <target>Poista</target>
       </trans-unit>
       <trans-unit id="tl_log.delete.1">
         <source>Delete entry ID %s</source>
-        <target>Dzēst ierakstu ID %s</target>
+        <target>Poista kohde ID:llä %s</target>
       </trans-unit>
     </body>
   </file>
