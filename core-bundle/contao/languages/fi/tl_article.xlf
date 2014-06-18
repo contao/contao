@@ -3,295 +3,295 @@
     <body>
       <trans-unit id="tl_article.title.0">
         <source>Title</source>
-        <target>Nosaukums</target>
+        <target>Otsikko</target>
       </trans-unit>
       <trans-unit id="tl_article.title.1">
         <source>Please enter the article title.</source>
-        <target>Lūdzu ievadiet raksta nosaukumu.</target>
+        <target>Syötä artikkelille otsikko.</target>
       </trans-unit>
       <trans-unit id="tl_article.alias.0">
         <source>Article alias</source>
-        <target>Raksta aizstājvārds</target>
+        <target>Artikkelin alias</target>
       </trans-unit>
       <trans-unit id="tl_article.alias.1">
         <source>The article alias is a unique reference to the article which can be called instead of its numeric ID.</source>
-        <target>Raksta aizstājvārds ir unikāla atsauce uz rakstu, kas var tikt izsaukta jaunuma ID vietā.</target>
+        <target>Alias on yksilöllinen viite jolla artikkelia voidaan kutsua sen numeerisen tunnisteen sijasta.</target>
       </trans-unit>
       <trans-unit id="tl_article.author.0">
         <source>Author</source>
-        <target>Autors</target>
+        <target>Perustaja</target>
       </trans-unit>
       <trans-unit id="tl_article.author.1">
         <source>Here you can change the author of the article.</source>
-        <target>Šeit jūs varat mainīt raksta autoru.</target>
+        <target>Tähän voit muuttaa artikkelin tekijän.</target>
       </trans-unit>
       <trans-unit id="tl_article.inColumn.0">
         <source>Display in</source>
-        <target>Rādīt</target>
+        <target>Osio jossa näytetään</target>
       </trans-unit>
       <trans-unit id="tl_article.inColumn.1">
         <source>Please choose the layout section you want the article to be displayed in.</source>
-        <target>Lūdzu izvēlieties salikuma sadaļu, kurā tiks rādīts raksts.</target>
+        <target>Ole hyvä ja valitse ulkoasun osio, jossa artikkeli näytetään</target>
       </trans-unit>
       <trans-unit id="tl_article.keywords.0">
         <source>Meta keywords</source>
-        <target>Atslēgvārdi</target>
+        <target>Meta avainsanat</target>
       </trans-unit>
       <trans-unit id="tl_article.keywords.1">
         <source>Here you can enter a list of comma separated keywords. Keywords, however, are no longer relevant to most search engines (including Google).</source>
-        <target>Jūs varat ievadīt vairākus ar komatu atdalītus atslēgvārdus, kurus izmantos meklētājprogrammas, lai atrastu šo lapu. Meklētājprogramma parasti indeksē līdz 800 zīmēm.</target>
+        <target>Tähän voit antaa pilkuilla erotellun listan asiasanoista. Huomaa kuitenkin, että useimmat hakukoneet (kuten Google) eivät enää hyödynnä niitä.</target>
       </trans-unit>
       <trans-unit id="tl_article.teaserCssID.0">
         <source>Teaser CSS ID/class</source>
-        <target>Ievada CSS ID/klase</target>
+        <target>Esikuvauksen CSS-luokka / ID</target>
       </trans-unit>
       <trans-unit id="tl_article.teaserCssID.1">
         <source>Here you can set an ID and one or more classes for the teaser element.</source>
-        <target>Šeit jūs varat iestatīt ID un vienu vai varākas klases ievada elementam.</target>
+        <target>Tähän voit syöttää ID:n ja yhden tai useamman CSS-luokan esikuvauselementille</target>
       </trans-unit>
       <trans-unit id="tl_article.showTeaser.0">
         <source>Show teaser</source>
-        <target>Rādīt ievadu</target>
+        <target>Näytä esikuvaus</target>
       </trans-unit>
       <trans-unit id="tl_article.showTeaser.1">
         <source>Show the article teaser if there are multiple articles.</source>
-        <target>Rādīt ievada tekstu raksta vietā, ja ir vairāki raksti.</target>
+        <target>Näytä esikuvaus jos artikkeleita on useita.</target>
       </trans-unit>
       <trans-unit id="tl_article.teaser.0">
         <source>Article teaser</source>
-        <target>Raksta ievads</target>
+        <target>Artikkelin ote</target>
       </trans-unit>
       <trans-unit id="tl_article.teaser.1">
         <source>The article teaser can also be displayed with the content element &quot;article teaser&quot;.</source>
-        <target>Raksta ievads var arī tikt rādīts ar satura elementu &quot;raksta ievads&quot;.</target>
+        <target>Esikuvauksen voi esittää myös &quot;artikkelin esikuvaus&quot; -sisältöelementillä.</target>
       </trans-unit>
       <trans-unit id="tl_article.printable.0">
         <source>Syndication</source>
-        <target>Drukājams</target>
+        <target>Syötteet</target>
       </trans-unit>
       <trans-unit id="tl_article.printable.1">
         <source>Here you can choose which options are available.</source>
-        <target>Pievienot saiti raksta eksportam kā PDF datne.</target>
+        <target>Tässä voit valita mitkä vaihtoehdot ovat saatavilla.</target>
       </trans-unit>
       <trans-unit id="tl_article.guests.0">
         <source>Show to guests only</source>
-        <target>Rādīt tikai viesiem</target>
+        <target>Näytä vain vierailijoille</target>
       </trans-unit>
       <trans-unit id="tl_article.guests.1">
         <source>Hide the article if a member is logged in.</source>
-        <target>Slēpt rakstu, ja biedrs ir pieslēdzies.</target>
+        <target>Piilota artikkeli jos jäsen on kirjautunut.</target>
       </trans-unit>
       <trans-unit id="tl_article.protected.0">
         <source>Protect article</source>
-        <target>Aizsargāt rakstu</target>
+        <target>Suojaa artikkeli</target>
       </trans-unit>
       <trans-unit id="tl_article.protected.1">
         <source>Show the article to certain member groups only.</source>
-        <target>Rādīt rakstu tikai noteiktām dalībnieku grupām.</target>
+        <target>Näytä artikkeli vain tietyille jäsenryhmille.</target>
       </trans-unit>
       <trans-unit id="tl_article.groups.0">
         <source>Allowed member groups</source>
-        <target>Atļautās biedru grupas</target>
+        <target>Sallitut jäsenryhmät</target>
       </trans-unit>
       <trans-unit id="tl_article.groups.1">
         <source>These groups will be able to see the article.</source>
-        <target>Šīs grupas varēs redzēt rakstu.</target>
+        <target>Nämä ryhmät voivat nähdä artikkelin.</target>
       </trans-unit>
       <trans-unit id="tl_article.cssID.0">
         <source>CSS ID/class</source>
-        <target>CSS ID/klase</target>
+        <target>ID/CSS-luokka</target>
       </trans-unit>
       <trans-unit id="tl_article.cssID.1">
         <source>Here you can set an ID and one or more classes.</source>
-        <target>Šeit jūs varat iestatīt ID un vienu vai vairākas klases.</target>
+        <target>Tähän voit syöttää ID:n sekä yhden tai useamman CSS-luokan.</target>
       </trans-unit>
       <trans-unit id="tl_article.space.0">
         <source>Space in front and after</source>
-        <target>Atstarpe pirms un pēc</target>
+        <target>Tila ennen ja jälkeen</target>
       </trans-unit>
       <trans-unit id="tl_article.space.1">
         <source>Here you can enter the spacing in front of and after the article in pixel. You should try to avoid inline styles and define the spacing in a style sheet, though.</source>
-        <target>Lūdzu ievadiet atstarpi pikseļos pirms un pēc raksta. Ieteicams gan atstarpes definēt stila lapā.</target>
+        <target>Tähän voit syöttää pikseleinä tilan ennen ja jälkeen. Tätä tulisi kuitenkin välttää ja määritellä ne mieluummiin tyylitiedostoon.</target>
       </trans-unit>
       <trans-unit id="tl_article.published.0">
         <source>Publish article</source>
-        <target>Publicēts</target>
+        <target>Julkaise artikkeli</target>
       </trans-unit>
       <trans-unit id="tl_article.published.1">
         <source>Make the article publicly visible on the website.</source>
-        <target>Padarīt rakstu publiski redzamu mājas lapā.</target>
+        <target>Tee artikkeli julkisesti näkyväksi sivustolla.</target>
       </trans-unit>
       <trans-unit id="tl_article.start.0">
         <source>Show from</source>
-        <target>Rādīt no</target>
+        <target>Näytä ajankohdasta lähtien</target>
       </trans-unit>
       <trans-unit id="tl_article.start.1">
         <source>Do not show the article on the website before this day.</source>
-        <target>Nerādīt rakstu mājas lapā pirms šā datuma.</target>
+        <target>Älä näytä artikkelia sivustolla ennen tätä ajankohtaa.</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
-        <target>Rādīt līdz</target>
+        <target>Näytä ajankohtaan asti</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
         <source>Do not show the article on the website on and after this day.</source>
-        <target>Nerādīt rakstu mājas lapā šajā un pēc šī datuma.</target>
+        <target>Älä näytä artikkelia sivustolla tänä ajankohtana ja sen jälkeen.</target>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
         <source>Revision date</source>
-        <target>Pārskatīšanas datums</target>
+        <target>Revisiopäivämäärä</target>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Pēdējās pārskatīšanas datums un laiks</target>
+        <target>Revision päivämäärä ja aika</target>
       </trans-unit>
       <trans-unit id="tl_article.title_legend">
         <source>Title and author</source>
-        <target>Nosaukums un autors</target>
+        <target>Otsikko ja perustaja</target>
       </trans-unit>
       <trans-unit id="tl_article.layout_legend">
         <source>Section and keywords</source>
-        <target>Sadaļa un atslēgvārdi</target>
+        <target>Osio ja avainsanat</target>
       </trans-unit>
       <trans-unit id="tl_article.syndication_legend">
         <source>Syndication</source>
-        <target>Drukājams</target>
+        <target>Syötteet</target>
       </trans-unit>
       <trans-unit id="tl_article.teaser_legend">
         <source>Article teaser</source>
-        <target>Raksta ievads</target>
+        <target>Artikkelin ote</target>
       </trans-unit>
       <trans-unit id="tl_article.protected_legend">
         <source>Access protection</source>
-        <target>Piekļuves aizsardzība</target>
+        <target>Salli suojaus</target>
       </trans-unit>
       <trans-unit id="tl_article.expert_legend">
         <source>Expert settings</source>
-        <target>Eksperta uzstādījumi</target>
+        <target>Erikoisasetukset</target>
       </trans-unit>
       <trans-unit id="tl_article.publish_legend">
         <source>Publish settings</source>
-        <target>Publicēšanas uzstādījumi</target>
+        <target>Julkaisuasetukset</target>
       </trans-unit>
       <trans-unit id="tl_article.print">
         <source>Print the page</source>
-        <target>Drukāt lapu</target>
+        <target>Tulosta tämä sivu</target>
       </trans-unit>
       <trans-unit id="tl_article.pdf">
         <source>Export as PDF</source>
-        <target>Eksportēt kā PDF</target>
+        <target>Vie PDF:nä</target>
       </trans-unit>
       <trans-unit id="tl_article.facebook">
         <source>Share on Facebook</source>
-        <target>Iesaki Facebookā</target>
+        <target>Jaa Facebookissa</target>
       </trans-unit>
       <trans-unit id="tl_article.twitter">
         <source>Share on Twitter</source>
-        <target>Iesaki Twitterī</target>
+        <target>Jaa Twitterissä</target>
       </trans-unit>
       <trans-unit id="tl_article.gplus">
         <source>Share on Google+</source>
-        <target>Iesaki Google+</target>
+        <target>Jaa Google+:ssa</target>
       </trans-unit>
       <trans-unit id="tl_article.header">
         <source>Header</source>
-        <target>Galvene</target>
+        <target>Yläosa</target>
       </trans-unit>
       <trans-unit id="tl_article.left">
         <source>Left column</source>
-        <target>Kreisā kolonna</target>
+        <target>Vasen sarake</target>
       </trans-unit>
       <trans-unit id="tl_article.main">
         <source>Main column</source>
-        <target>Galvenā kolonna</target>
+        <target>Pääsarake</target>
       </trans-unit>
       <trans-unit id="tl_article.right">
         <source>Right column</source>
-        <target>Labā kolonna</target>
+        <target>Oikea sarake</target>
       </trans-unit>
       <trans-unit id="tl_article.footer">
         <source>Footer</source>
-        <target>Kājene</target>
+        <target>Alaosa</target>
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New article</source>
-        <target>Jauns raksts</target>
+        <target>Uusi artikkeli</target>
       </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
-        <target>Izveidot jaunu rakstu</target>
+        <target>Luo uusi artikkeli</target>
       </trans-unit>
       <trans-unit id="tl_article.show.0">
         <source>Article details</source>
-        <target>Raksta detaļas</target>
+        <target>Artikkelin tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_article.show.1">
         <source>Show the details of article ID %s</source>
-        <target>Rādīt raksta ID %s detaļas</target>
+        <target>Näytä artikkelin ID %s tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_article.edit.0">
         <source>Edit article</source>
-        <target>Rediģēt rakstu</target>
+        <target>Muokkaa artikkelia</target>
       </trans-unit>
       <trans-unit id="tl_article.edit.1">
         <source>Edit article ID %s</source>
-        <target>Rediģēt rakstu ID %s</target>
+        <target>Muokkaa artikkelia ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.0">
         <source>Edit article settings</source>
-        <target>Rediģēt raksta uzstādījumus</target>
+        <target>Muokkaa artikkelin asetuksia</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.1">
         <source>Edit the settings of article ID %s</source>
-        <target>Rediģēt raksta ID %s uzstādījumus</target>
+        <target>Muokkaa artikkelin ID %s asetuksia</target>
       </trans-unit>
       <trans-unit id="tl_article.copy.0">
         <source>Duplicate article</source>
-        <target>Dublicēt rakstu</target>
+        <target>Kopioi artikkeli</target>
       </trans-unit>
       <trans-unit id="tl_article.copy.1">
         <source>Duplicate article ID %s</source>
-        <target>Dublicēt rakstu ID %s</target>
+        <target>Kopioi artikkeli ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.cut.0">
         <source>Move article</source>
-        <target>Pārvietot rakstu</target>
+        <target>Siirrä artikkeli</target>
       </trans-unit>
       <trans-unit id="tl_article.cut.1">
         <source>Move article ID %s</source>
-        <target>Pārvietot rakstu ID %s</target>
+        <target>Siirrä artikkeli ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.delete.0">
         <source>Delete article</source>
-        <target>Dzēst rakstu</target>
+        <target>Poista artikkeli</target>
       </trans-unit>
       <trans-unit id="tl_article.delete.1">
         <source>Delete article ID %s</source>
-        <target>Dzēst rakstu ID %s</target>
+        <target>Poista artikkeli ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle.0">
         <source>Publish/unpublish article</source>
-        <target>Publicet/nepublicēt rakstu</target>
+        <target>Julkaise/piilota artikkeli</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle.1">
         <source>Publish/unpublish article ID %s</source>
-        <target>Publicet/nepublicēt rakstu ID %s</target>
+        <target>Julkaise/piilota artikkeli</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.0">
         <source>Paste after</source>
-        <target>Ielīmēt pēc</target>
+        <target>Liitä artikkelin perään</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
-        <target>Ielīmēt pēc raksta ID %s</target>
+        <target>Liitä artikkelin ID %s perään</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.0">
         <source>Paste into</source>
-        <target>Ielīmēt</target>
+        <target>Liitä sivuun</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>
-        <target>Ielīmēt rakstā ID %s</target>
+        <target>Liitä sivuun ID %s</target>
       </trans-unit>
     </body>
   </file>

@@ -3,59 +3,59 @@
     <body>
       <trans-unit id="tl_undo.pid.0">
         <source>User</source>
-        <target>Lietotājs</target>
+        <target>Käyttäjä</target>
       </trans-unit>
       <trans-unit id="tl_undo.pid.1">
         <source>Name of the associated user</source>
-        <target>Saistīta lietotāja vārds</target>
+        <target>Käyttäjän nimi</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.0">
         <source>Source table</source>
-        <target>Tabula</target>
+        <target>Lähdetaulu</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.1">
         <source>Name of the original table</source>
-        <target>Oriģinālās tabulas nosaukums</target>
+        <target>Lähdetaulun nimi</target>
       </trans-unit>
       <trans-unit id="tl_undo.affectedRows.0">
         <source>Affected rows</source>
-        <target>Datu ieraksti</target>
+        <target>Rivien määrä</target>
       </trans-unit>
       <trans-unit id="tl_undo.affectedRows.1">
         <source>Number of records included in the undo step</source>
-        <target>Ietekmēto datu ierakstu skaits</target>
+        <target>Muuttuneiden rivien määrä</target>
       </trans-unit>
       <trans-unit id="tl_undo.query.0">
         <source>Details</source>
-        <target>Detaļas</target>
+        <target>Tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_undo.query.1">
         <source>Details of the undo step</source>
-        <target>Aktuālā ieraksta detaļas</target>
+        <target>Peruutusaskeleen tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_undo.data.0">
         <source>Data</source>
-        <target>Dati</target>
+        <target>Data</target>
       </trans-unit>
       <trans-unit id="tl_undo.data.1">
         <source>Raw data of the undo step</source>
-        <target>Dzēsto ierakstu dati</target>
+        <target>Peruutusaskeleen raakadata</target>
       </trans-unit>
       <trans-unit id="tl_undo.show.0">
         <source>Show details</source>
-        <target>Rādīt detaļas</target>
+        <target>Näytä tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_undo.show.1">
         <source>Show the details of entry ID %s</source>
-        <target>Rādīt ieraksta ID %s</target>
+        <target>Näytä kohteen ID %s tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_undo.undo.0">
         <source>Restore</source>
-        <target>Atsaukt</target>
+        <target>Palauta</target>
       </trans-unit>
       <trans-unit id="tl_undo.undo.1">
         <source>Restore entry ID %s</source>
-        <target>Atsaukt darbību ID %s</target>
+        <target>Palauta kohde ID %s</target>
       </trans-unit>
     </body>
   </file>

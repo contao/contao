@@ -3,111 +3,111 @@
     <body>
       <trans-unit id="tl_member_group.name.0">
         <source>Title</source>
-        <target>Grupas vārds</target>
+        <target>Otsikko</target>
       </trans-unit>
       <trans-unit id="tl_member_group.name.1">
         <source>Please enter the group title.</source>
-        <target>Lūdzu ievadiet unikālu grupas vārdu.</target>
+        <target>Ole hyvä ja anna ryhmälle otsikko.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.redirect.0">
         <source>Redirect on login</source>
-        <target>Virzienmaiņa pieslēdzoties</target>
+        <target>Ohjaa toiselle sivulle kirjautumisen jälkeen</target>
       </trans-unit>
       <trans-unit id="tl_member_group.redirect.1">
         <source>Redirect group members to a custom page when they log in.</source>
-        <target>Novirzīt grupas biedrus uz pielāgotu lapu, kad tie pieslēdzas.</target>
+        <target>Ohjaa ryhmän jäsenet toiselle sivulle kirjautumisen jälkeen.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.jumpTo.0">
         <source>Redirect page</source>
-        <target>Virzienmaiņas lapa</target>
+        <target>Uudelleenohjauksen sivu</target>
       </trans-unit>
       <trans-unit id="tl_member_group.jumpTo.1">
         <source>Please choose the page to which the group members will be redirected.</source>
-        <target>Lūdzu izvēlieties lapu uz kuru grupas biedri tiks novirzīti.</target>
+        <target>Ole hyvä ja valitse sivu jolle ryhmän jäsenet ohjataan.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.disable.0">
         <source>Deactivate</source>
-        <target>Deaktivizēt</target>
+        <target>Poista käytöstä</target>
       </trans-unit>
       <trans-unit id="tl_member_group.disable.1">
         <source>Temporarily disable the group.</source>
-        <target>Uzlaiku atslēgt grupu.</target>
+        <target>Poista ryhmä tilapäisesti käytöstä.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.start.0">
         <source>Activate on</source>
-        <target>Aktivizēt</target>
+        <target>Ota käyttöön ajastetusti</target>
       </trans-unit>
       <trans-unit id="tl_member_group.start.1">
         <source>Automatically activate the group on this day.</source>
-        <target>Automātiski aktivizēt grupu šajā dienā.</target>
+        <target>Ota ryhmä ajastetusti käyttöön tänä ajankohtana.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.0">
         <source>Deactivate on</source>
-        <target>Deaktivizēt</target>
+        <target>Poista käytöstä ajastetusti</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
         <source>Automatically deactivate the group on this day.</source>
-        <target>Automātiski deaktivizēt grupu šajā dienā.</target>
+        <target>Poista ryhmä ajastetusti käytöstä tänä ajankohtana</target>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
         <source>Title</source>
-        <target>Nosaukums</target>
+        <target>Otsikko</target>
       </trans-unit>
       <trans-unit id="tl_member_group.redirect_legend">
         <source>Auto-redirect</source>
-        <target>Automātiski pārvirzīt</target>
+        <target>Automaattinen edelleenohjaus</target>
       </trans-unit>
       <trans-unit id="tl_member_group.disable_legend">
         <source>Account settings</source>
-        <target>Konta uzstādījumi</target>
+        <target>Tilin asetukset</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
         <source>New group</source>
-        <target>Jauna grupa</target>
+        <target>Uusi ryhmä</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.1">
         <source>Create a new group</source>
-        <target>Izveidot jaunu grupu</target>
+        <target>Luo uusi ryhmä</target>
       </trans-unit>
       <trans-unit id="tl_member_group.show.0">
         <source>Group details</source>
-        <target>Grupas detaļas</target>
+        <target>Ryhmän tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_member_group.show.1">
         <source>Show the details of group ID %s</source>
-        <target>Rādīt biedru grupas ID %s detaļas</target>
+        <target>Näytä ryhmän ID %s tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_member_group.edit.0">
         <source>Edit group</source>
-        <target>Rediģēt grupu</target>
+        <target>Muokkaa ryhmää</target>
       </trans-unit>
       <trans-unit id="tl_member_group.edit.1">
         <source>Edit group ID %s</source>
-        <target>Rediģēt biedru grupu ID %s</target>
+        <target>Muokkaa ryhmää ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.copy.0">
         <source>Duplicate group</source>
-        <target>Dublicēt grupu</target>
+        <target>Kahdenna ryhmä</target>
       </trans-unit>
       <trans-unit id="tl_member_group.copy.1">
         <source>Duplicate group ID %s</source>
-        <target>Dublicēt biedru grupu ID %s</target>
+        <target>Kahdenna ryhmä ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.delete.0">
         <source>Delete group</source>
-        <target>Dzēst grupu</target>
+        <target>Poista ryhmä</target>
       </trans-unit>
       <trans-unit id="tl_member_group.delete.1">
         <source>Delete group ID %s</source>
-        <target>Dzēst biedru grupu ID %s</target>
+        <target>Poista ryhmä ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.0">
         <source>Activate/deactivate group</source>
-        <target>Aktivizēt/Deaktivizēt grupu</target>
+        <target>Ota käyttöön / poista käytöstä</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.1">
         <source>Activate/deactivate group ID %s</source>
-        <target>Aktivizēt/Deaktivizēt grupu ID %s</target>
+        <target>Ota käyttöön / poista käytöstä ryhmä ID %s</target>
       </trans-unit>
     </body>
   </file>
