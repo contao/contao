@@ -3,19 +3,19 @@
     <body>
       <trans-unit id="tl_member.newsletter.0">
         <source>Newsletters</source>
-        <target>Apkārtraksti</target>
+        <target>Uutiskirjeet</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter.1">
         <source>Here you can manage the member's subscriptions.</source>
-        <target>Šeit jūs varat pārvaldīt biedra abonementus.</target>
+        <target>Täällä voit hallita jäsenen uutiskirjetilauksia.</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter_legend">
         <source>Subscriptions</source>
-        <target>Abonementi</target>
+        <target>Tilaukset</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletterDetails">
         <source>Subscriptions</source>
-        <target>Abonementi</target>
+        <target>Tilaukset</target>
       </trans-unit>
     </body>
   </file>

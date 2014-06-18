@@ -3,47 +3,47 @@
     <body>
       <trans-unit id="ERR.subscribed">
         <source>You are subscribed to the selected channels already.</source>
-        <target>Jūs jau esat abonējis izvēlētos kanālus.</target>
+        <target>Olet jo tilannut valitut kanavat.</target>
       </trans-unit>
       <trans-unit id="ERR.unsubscribed">
         <source>You are not subscribed to the selected channels.</source>
-        <target>Jūs vēl neesat abonējis izvēlētos kanālus.</target>
+        <target>Et ole tilannut valittuja kanavia.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidToken">
         <source>The activation link is invalid or outdated.</source>
-        <target>Aktivizācijas saite (URL) nav derīga vai ir novecojusi.</target>
+        <target>Aktivointilinkki on vanhentunut tai väärä.</target>
       </trans-unit>
       <trans-unit id="ERR.noChannels">
         <source>Please select at least one channel.</source>
-        <target>Lūdzu izvēlieties vismaz vienu kanālu.</target>
+        <target>Ole hyvä ja valitse vähintään yksi kanava.</target>
       </trans-unit>
       <trans-unit id="MSC.subscribe">
         <source>Subscribe</source>
-        <target>Abonēt</target>
+        <target>Tilaa</target>
       </trans-unit>
       <trans-unit id="MSC.unsubscribe">
         <source>Unsubscribe</source>
-        <target>Atrakstīties</target>
+        <target>Peruuta tilaus</target>
       </trans-unit>
       <trans-unit id="MSC.nl_subject">
         <source>Your subscription on %s</source>
-        <target>Jūsu abonements uz %s</target>
+        <target>Tilauksesi %s</target>
       </trans-unit>
       <trans-unit id="MSC.nl_confirm">
         <source>Thank you for your subscription. You will receive a confirmation e-mail.</source>
-        <target>Paldies par jūsu abonementu. Jūs saņemsiet apstiprinājuma e-pastu.</target>
+        <target>Kiitos tilauksestasi. Saat sähköpostilla vahvistuksen.</target>
       </trans-unit>
       <trans-unit id="MSC.nl_activate">
         <source>Your subscription has been activated.</source>
-        <target>Jūsu abonementa pieteikums ir aktivizēts.</target>
+        <target>Tilauksesi on aktivoitu.</target>
       </trans-unit>
       <trans-unit id="MSC.nl_removed">
         <source>Your subscription has been cancelled.</source>
-        <target>Jūsu abonementa pieteikums ir atcelts.</target>
+        <target>Tilauksesi on peruutettu.</target>
       </trans-unit>
       <trans-unit id="MSC.nl_channels">
         <source>Channels</source>
-        <target>Kanāli</target>
+        <target>Kanavat</target>
       </trans-unit>
     </body>
   </file>

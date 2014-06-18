@@ -3,139 +3,139 @@
     <body>
       <trans-unit id="tl_newsletter_channel.title.0">
         <source>Title</source>
-        <target>Nosaukums</target>
+        <target>Otsikko</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.title.1">
         <source>Please enter the title of the channel.</source>
-        <target>Lūdzu ievadiet kanāla nosaukumu.</target>
+        <target>Syötä kanavalle otsikko.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.jumpTo.0">
         <source>Redirect page</source>
-        <target>Pārsūtīšanas adrese</target>
+        <target>Uudelleenohjauksen sivu</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.jumpTo.1">
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
-        <target>Lūdzu izvēlaties biļetena nolasīšanas lapu, uz kuru apmeklētāji tiks novirzīti, ja klikšķinās uz biļetena.</target>
+        <target>Ole hyvä ja valitse uutiskirjeen lukijasivu, jolle vierailija ohjataan uutiskirjettä klikatessa.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.useSMTP.0">
         <source>Custom SMTP server</source>
-        <target>Specifisks SMTP serveris</target>
+        <target>Muokattu SMTP-palvelin</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.useSMTP.1">
         <source>Use a custom SMTP server for sending newsletters.</source>
-        <target>Izmantot pielāgotu SMTP serveri, lai nosūtītu jaunumus.</target>
+        <target>Käytä muokattua SMTP-palvelinta uutiskirjeiden lähettämiseen.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtpHost.0">
         <source>SMTP hostname</source>
-        <target>SMTP resursdators</target>
+        <target>SMTP-palvelimen osoite</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtpHost.1">
         <source>Please enter the host name of the SMTP server.</source>
-        <target>Norādiet SMTP resursdatoru.</target>
+        <target>Ole hyvä ja anna SMTP-palvelimen osoite.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtpUser.0">
         <source>SMTP username</source>
-        <target>SMTP lietotājvārds</target>
+        <target>SMTP-käyttäjänimi</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtpUser.1">
         <source>Here you can enter the SMTP username.</source>
-        <target>Norādiet SMTP lietotājvārdu.</target>
+        <target>Tähän voit antaa SMTP-käyttäjänimen.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtpPass.0">
         <source>SMTP password</source>
-        <target>SMTP parole</target>
+        <target>SMTP-salasana</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtpPass.1">
         <source>Here you can enter the SMTP password.</source>
-        <target>Norādiet SMTP paroli.</target>
+        <target>Tähän voit antaa SMTP-salasanan</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtpEnc.0">
         <source>SMTP encryption</source>
-        <target>SMTP šifrēšana</target>
+        <target>SMTP-salaus</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtpEnc.1">
         <source>Here you can choose an encryption method (SSL or TLS).</source>
-        <target>Norādiet SMTP šifrēšanas metodi (SSL vai TLS).</target>
+        <target>Tässä voit valita SMTP-salaustavan (SSL tai TLS).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtpPort.0">
         <source>SMTP port number</source>
-        <target>SMTP porta numurs</target>
+        <target>SMTP-portti</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtpPort.1">
         <source>Please enter the port number of the SMTP server.</source>
-        <target>Norādiet SMTP porta numuru.</target>
+        <target>Ole hyvä ja anna SMTP-palvelimen portti.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
-        <target>Pārskatīšanas datums</target>
+        <target>Revisiopäivämäärä</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Pēdējās pārskatīšanas datums un laiks</target>
+        <target>Revision päivämäärä ja aika</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.title_legend">
         <source>Title and redirect</source>
-        <target>Nosaukums un pāradresācija</target>
+        <target>Otsikko ja edelleenohjaus</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtp_legend">
         <source>SMTP configuration</source>
-        <target>SMTP konfigurācija</target>
+        <target>SMTP asetukset</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New channel</source>
-        <target>Jauns kanāls</target>
+        <target>Uusi kanava</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.1">
         <source>Create a new channel</source>
-        <target>Izveidot jaunu kanālu</target>
+        <target>Luo uusi kanava</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.show.0">
         <source>Channel details</source>
-        <target>Kanāla detaļas</target>
+        <target>Kanavan tiedot</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.show.1">
         <source>Show the details of channel ID %s</source>
-        <target>Rādīt kanāla ID %s detaļas</target>
+        <target>Näytä kanavan ID %s tiedot</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.edit.0">
         <source>Edit channel</source>
-        <target>Rediģēt kanālu</target>
+        <target>Muokkaa kanavaa</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.edit.1">
         <source>Edit channel ID %s</source>
-        <target>Rediģēt kanālu ID %s</target>
+        <target>Muokkaa kanavaa ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.editheader.0">
         <source>Edit channel settings</source>
-        <target>Rediģēt kanāla uzstādījumus</target>
+        <target>Muokkaa kanavan asetuksia</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.editheader.1">
         <source>Edit the settings of channel ID %s</source>
-        <target>Rediģēt kanāla ID %s uzstādījumus</target>
+        <target>Muokkaa kanavan ID %s asetuksia</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.copy.0">
         <source>Duplicate channel</source>
-        <target>Kopēt kanālu</target>
+        <target>Kopioi kanava</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.copy.1">
         <source>Duplicate channel ID %s</source>
-        <target>Kopēt kanālu ID %s</target>
+        <target>Kopioi kanava ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.delete.0">
         <source>Delete channel</source>
-        <target>Dzēst kanālu</target>
+        <target>Poista kanava</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.delete.1">
         <source>Delete channel ID %s</source>
-        <target>Dzēst kanālu ID %s</target>
+        <target>Poista kanava ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.recipients.0">
         <source>Edit recipients</source>
-        <target>Rediģēt saņēmējus</target>
+        <target>Muokkaa vastaanottajia</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.recipients.1">
         <source>Edit the recipients of channel ID %s</source>
-        <target>Rediģēt kanāla ID %s saņēmējus</target>
+        <target>Muokkaa kanavan ID %s vastaanottajia</target>
       </trans-unit>
     </body>
   </file>
