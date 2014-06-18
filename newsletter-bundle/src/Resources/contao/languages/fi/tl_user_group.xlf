@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_user_group.newsletter_legend">
         <source>Newsletter permissions</source>
-        <target>Apkārtraksta atļaujas</target>
+        <target>Uutiskirjeen käyttöoikeudet</target>
       </trans-unit>
     </body>
   </file>
