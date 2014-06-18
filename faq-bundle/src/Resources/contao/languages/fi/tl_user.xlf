@@ -3,23 +3,23 @@
     <body>
       <trans-unit id="tl_user.faqs.0">
         <source>Allowed FAQ categories</source>
-        <target>Atļautās BUJ kategorijas</target>
+        <target>Sallitut UKK-luokat</target>
       </trans-unit>
       <trans-unit id="tl_user.faqs.1">
         <source>Here you can grant access to one or more FAQ categories.</source>
-        <target>Šeit jūs varat piešķirt piekļuvi vienai vai vairākām BUJ kategorijām.</target>
+        <target>Täällä voit sallia pääsyn UKK-luokkiin.</target>
       </trans-unit>
       <trans-unit id="tl_user.faqp.0">
         <source>FAQ category permissions</source>
-        <target>BUJ kategoriju atļaujas</target>
+        <target>UKK-luokkien oikeudet</target>
       </trans-unit>
       <trans-unit id="tl_user.faqp.1">
         <source>Here you can define the FAQ category permissions.</source>
-        <target>Šeit jūs varat definēt BUJ kategorijas atļaujas.</target>
+        <target>Täällä voit määritellä käyttöoikeudet UKK-luokille.</target>
       </trans-unit>
       <trans-unit id="tl_user.faq_legend">
         <source>FAQ permissions</source>
-        <target>BUJ atļaujas</target>
+        <target>UKK käyttöoikeudet</target>
       </trans-unit>
     </body>
   </file>

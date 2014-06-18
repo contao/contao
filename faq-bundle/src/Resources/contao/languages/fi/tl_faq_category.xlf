@@ -3,171 +3,171 @@
     <body>
       <trans-unit id="tl_faq_category.title.0">
         <source>Title</source>
-        <target>Nosaukums</target>
+        <target>Otsikko</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.title.1">
         <source>Please enter the category title.</source>
-        <target>Lūdzu, ievadiet kategorijas nosaukumu.</target>
+        <target>Ole hyvä ja anna luokalle otsikko.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.headline.0">
         <source>Headline</source>
-        <target>Virsraksts</target>
+        <target>Otsikko</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.headline.1">
         <source>Please enter the category headline.</source>
-        <target>Lūdzu, ievadiet kategorijas virsrakstu.</target>
+        <target>Ole hyvä ja anna luokalle alaotsikko.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.jumpTo.0">
         <source>Redirect page</source>
-        <target>Pārsūtīšanas lapa</target>
+        <target>Uudelleenohjauksen sivu</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.jumpTo.1">
         <source>Please choose the FAQ reader page to which visitors will be redirected when clicking a FAQ.</source>
-        <target>Lūdzu, izvēlieties BUJ lasītāja lapu, uz kuru tiks novirzīti apmeklētāji, kad uzklikšķinās uz BUJ.</target>
+        <target>Ole hyvä ja valitse UKK-lukijasivu, jolle vierailija ohjataan kysymystä klikattaessa.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.allowComments.0">
         <source>Enable comments</source>
-        <target>Iespējot komentārus</target>
+        <target>Kommentointi käytössä</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.allowComments.1">
         <source>Allow visitors to comment FAQs.</source>
-        <target>Atļaut apmeklētājiem komentēt BUJ.</target>
+        <target>Salli kysymysten kommentointi.ö</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.notify.0">
         <source>Notify</source>
-        <target>Ziņot</target>
+        <target>Ilmoitus</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.notify.1">
         <source>Please choose who to notify when comments are added.</source>
-        <target>Lūdzu, izvēlieties kam paziņot par komentāru pievienošanu.</target>
+        <target>Valitse kenelle ilmoitetaan, kun kommentit on lisätty.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.sortOrder.0">
         <source>Sort order</source>
-        <target>Kārtošanas secība</target>
+        <target>Lajittelujärjestys</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>Pēc noklusējuma komentāri tiek kārtoti dilstoši, sākot ar vecāko.</target>
+        <target>Oletuksena kommentit on lajiteltu nousevaan järjestykseen aloittaen vanhimmasta kommentista.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.perPage.0">
         <source>Comments per page</source>
-        <target>Komentāri lapā</target>
+        <target>Kommentteja per sivu</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Komentāru skaits lapā. Ielikt 0, lai atspējotu lapdali.</target>
+        <target>Kommenttien määrä yhdellä sivulla. Aseta arvo 0, jolloin sivutus on poissa käytöstä.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.moderate.0">
         <source>Moderate comments</source>
-        <target>Komentāru cenzūra</target>
+        <target>Hallinnoi kommentteja</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Apstiprināt komentārus pirms tie tiek publicēti mājas lapā.</target>
+        <target>Hyväksy kommentit ennen kuin ne julkistetaan sivustolla.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.bbcode.0">
         <source>Allow BBCode</source>
-        <target>Atļaut BBCode</target>
+        <target>Salli BBCode</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Atļaut apmeklētājiem lieot BBCode komentāru formatēšanai.</target>
+        <target>Salli vierailijoiden muotoilla kommenttejaan BBCode:lla.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.0">
         <source>Require login to comment</source>
-        <target>Prasīt pieslēgties, lai komentētu</target>
+        <target>Vaadi kirjautuminen kommenttien lisäämiseen</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>Atļaut tikai reģistrētiem lietotājiem izveidot komentārus.</target>
+        <target>Salli vain todennettujen käyttäjien luoda kommentteja.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
         <source>Disable the security question</source>
-        <target>Atspējot drošības jautājumu</target>
+        <target>Ota turvakysymys poisa käytöstä</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>Izmantojiet šo opciju tikai tad, ja jūs esat atļavis komentārus tikai reģistrētiem lietotājiem.</target>
+        <target>Käytä tätä vaihtoehtoa jos kommentointi on rajoitettu vain todennetuille käyttäjille.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.tstamp.0">
         <source>Revision date</source>
-        <target>Pārskatīšanas datums</target>
+        <target>Revisiopäivämäärä</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Pēdējās pārskatīšanas datums un laiks</target>
+        <target>Revision päivämäärä ja aika</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.title_legend">
         <source>Title and redirect</source>
-        <target>Nosaukums un pārsūtīšana</target>
+        <target>Otsikko ja edelleenohjaus</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.comments_legend">
         <source>Comments</source>
-        <target>Komentāri</target>
+        <target>Kommentit</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_admin">
         <source>System administrator</source>
-        <target>Sistēmas administrators</target>
+        <target>Järjestelmän ylläpitäjä</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_author">
         <source>Author of the FAQ</source>
-        <target>BUJ autors</target>
+        <target>UKK:n tekijä</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_both">
         <source>Author and system administrator</source>
-        <target>Autors un sistēmas administrators</target>
+        <target>Luoja ja järjestelmän ylläpitäjä</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.deleteConfirm">
         <source>Deleting category ID %s will also delete all its FAQs! Continue?</source>
-        <target>Izdzēšot kategoriju ID %s tiks izdzēsti arī visi tās BUJi! Turpināt?</target>
+        <target>Luokan ID %s poistaminen poistaa myös kaikki sen kysymykset! Jatketaanko?</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
         <source>New category</source>
-        <target>Jauna kategorija</target>
+        <target>Uusi luokka</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>
-        <target>Izveidot jaunu kategoriju</target>
+        <target>Luo uusi luokka</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.show.0">
         <source>Category details</source>
-        <target>Kategorijas detaļas</target>
+        <target>Luokan tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.show.1">
         <source>Show the details of category ID %s</source>
-        <target>Rādīt kategorijas ID %s detaļas</target>
+        <target>Näytä luokan ID %s tarkemmat tiedot</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.edit.0">
         <source>Edit category</source>
-        <target>Rediģēt kategoriju</target>
+        <target>Muokkaa luokkaa</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.edit.1">
         <source>Edit category ID %s</source>
-        <target>Rediģēt kategoriju ID %s</target>
+        <target>Muokkaa luokkaa ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.editheader.0">
         <source>Edit category settings</source>
-        <target>Rediģēt kategorijas iestatījumus</target>
+        <target>Muokkaa luokan asetuksia</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.editheader.1">
         <source>Edit the settings of category ID %s</source>
-        <target>Rediģēt kategorijas ID %s iestatījumus</target>
+        <target>Muokkaa luokan ID %s asetuksia</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.copy.0">
         <source>Duplicate category</source>
-        <target>Dublicēt kategoriju</target>
+        <target>Kahdenna luokka</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.copy.1">
         <source>Duplicate category ID %s</source>
-        <target>Dublicēt kategoriju ID %s</target>
+        <target>Kahdenna luokka ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.delete.0">
         <source>Delete category</source>
-        <target>Dzēst kategoriju</target>
+        <target>Poista luokka</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.delete.1">
         <source>Delete category ID %s</source>
-        <target>Dzēst kategoriju ID %s</target>
+        <target>Poista luokka ID %s</target>
       </trans-unit>
     </body>
   </file>
