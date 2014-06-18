@@ -3,19 +3,19 @@
     <body>
       <trans-unit id="tl_module.faq_categories.0">
         <source>FAQ categories</source>
-        <target>BUJ kategorijas</target>
+        <target>UKK-luokat</target>
       </trans-unit>
       <trans-unit id="tl_module.faq_categories.1">
         <source>Please select one or more FAQ categories.</source>
-        <target>Lūdzu atlasiet BUJ kategorijas, kuras vēlaties iekļaut.</target>
+        <target>Ole hyvä ja valitse vähintään yksi UKK-luokka.</target>
       </trans-unit>
       <trans-unit id="tl_module.faq_readerModule.0">
         <source>FAQ reader module</source>
-        <target>BUJ lasītāja modulis</target>
+        <target>UKK-lukijamoduuli</target>
       </trans-unit>
       <trans-unit id="tl_module.faq_readerModule.1">
         <source>Automatically switch to the FAQ reader if an item has been selected.</source>
-        <target>Automātiski pāriet uz BUJ lasītāju, ja vienums ir atlasīts.</target>
+        <target>Vaihda automaattisesti UKK-lukijaan kun jokin kysymyksistä on valittu.</target>
       </trans-unit>
     </body>
   </file>

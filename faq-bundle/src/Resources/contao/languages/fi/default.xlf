@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="MSC.faqCreatedBy">
         <source>Last update on %s by %s.</source>
-        <target>Pēdējais jauninājums %s - %s.</target>
+        <target>Viimeksi päivitetty %s, päivittäjä %s.</target>
       </trans-unit>
     </body>
   </file>
