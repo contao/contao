@@ -3,39 +3,39 @@
     <body>
       <trans-unit id="tl_user.calendars.0">
         <source>Allowed calendars</source>
-        <target>Atļautie kalendāri</target>
+        <target>Sallitut kalenterit</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars.1">
         <source>Here you can grant access to one or more calendars.</source>
-        <target>Šeit jūs varat piešķirt piekļuvi vienam vai vairākiem kalendāriem.</target>
+        <target>Tässä voidaan myöntää pääsy yhteen tai useampaan kalenteriin.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarp.0">
         <source>Calendar permissions</source>
-        <target>Kalendāra atļaujas</target>
+        <target>Kalenterin oikeudet</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarp.1">
         <source>Here you can define the calendar permissions.</source>
-        <target>Šeit jūs varat noteikt kalendāra atļaujas.</target>
+        <target>Tässä voidaan määritellä kalenterin oikeudet.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
         <source>Allowed RSS feeds</source>
-        <target>Atļautās RSS barotnes</target>
+        <target>Sallitut RSS syötteet</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
-        <target>Šeit jūs varat dot piekļuvi vienai vai vairākām kalendāra barotnēm.</target>
+        <target>Tässä voidaan myöntää pääsy yhteen tai useampaan syötteeseen.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
         <source>RSS feed permissions</source>
-        <target>RSS barotnes atļaujas</target>
+        <target>RSS syötteen oikeudet</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>
-        <target>Šeit jūs varat noteikt jaunumu barotnes atļaujas.</target>
+        <target>Tässä voidaan määritellä kalenterin syötteen oikeudet.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
         <source>Calendar permissions</source>
-        <target>Kalendāra atļaujas</target>
+        <target>Kalenterin oikeudet</target>
       </trans-unit>
     </body>
   </file>

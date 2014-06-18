@@ -3,55 +3,55 @@
     <body>
       <trans-unit id="MSC.cal_events">
         <source>%d event(s)</source>
-        <target>%d notikums(i)</target>
+        <target>%d tapahtuma(t)</target>
       </trans-unit>
       <trans-unit id="MSC.cal_previous">
         <source>&amp;lt;</source>
-        <target>&lt;</target>
+        <target>&amp;lt;</target>
       </trans-unit>
       <trans-unit id="MSC.cal_next">
         <source>&amp;gt;</source>
-        <target>&gt;</target>
+        <target>&amp;gt;</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
-        <target>Šodien nav neviena notikuma.</target>
+        <target>Tälle päivälle ei ole tapahtumia.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyWeek">
         <source>There are no events for this week.</source>
-        <target>Šonedēļ nav neviena notikuma.</target>
+        <target>Tälle viikolle ei ole tapahtumia.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyMonth">
         <source>There are no events for this month.</source>
-        <target>Šomēmes nav neviena notikuma.</target>
+        <target>Tälle kuulle ei ole tapahtumia.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyYear">
         <source>There are no events for this year.</source>
-        <target>Šogad nav neviena notikuma.</target>
+        <target>Tälle vuodelle ei ole tapahtumia.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_empty">
         <source>Currently there are no events.</source>
-        <target>Pašlaik notikumu nav.</target>
+        <target>Tällä hetkellä ei ole tapahtumia.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_days">
         <source>This event is repeated every %s. day</source>
-        <target>Šis notikums atkārtojas katru %s. dienu</target>
+        <target>Tämä tapahtuma toistetaan joka %s. päivä</target>
       </trans-unit>
       <trans-unit id="MSC.cal_weeks">
         <source>This event is repeated every %s. week</source>
-        <target>Šis notikums atkārtojas katru %s. nedēļu</target>
+        <target>Tämä tapahtuma toistetaan joka %s. viikko</target>
       </trans-unit>
       <trans-unit id="MSC.cal_months">
         <source>This event is repeated every %s. month</source>
-        <target>Šis notikums atkārtojas katru %s. mēnesi</target>
+        <target>Tämä tapahtuma toistetaan joka %s. kuukausi</target>
       </trans-unit>
       <trans-unit id="MSC.cal_years">
         <source>This event is repeated every %s. year</source>
-        <target>Šis notikums atkārtojas katru %s. gadu</target>
+        <target>Tämä tapahtuma toistetaan joka %s. vuosi</target>
       </trans-unit>
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
-        <target>līdz %s</target>
+        <target>saakka %s</target>
       </trans-unit>
     </body>
   </file>
