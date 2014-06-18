@@ -3,359 +3,359 @@
     <body>
       <trans-unit id="MOD.content">
         <source>Content</source>
-        <target>Obsah</target>
+        <target>Sisältö</target>
       </trans-unit>
       <trans-unit id="MOD.article.0">
         <source>Articles</source>
-        <target>Články</target>
+        <target>Artikkelit</target>
       </trans-unit>
       <trans-unit id="MOD.article.1">
         <source>Manage articles and content elements</source>
-        <target>Články sú kontajnerom pre časti obsahu ako text, obrázky alebo odkazy. Každý článok je publikovaný na nejakej stránke. Tento modul umožňuje spravovať články.</target>
+        <target>Hallitse artikkeleita ja sisältöelementtejä</target>
       </trans-unit>
       <trans-unit id="MOD.form.0">
         <source>Form generator</source>
-        <target>Generátor formulárov</target>
+        <target>Lomakegeneraattori</target>
       </trans-unit>
       <trans-unit id="MOD.form.1">
         <source>Create custom forms and store or send the submitted data</source>
-        <target>Tento modul umožňuje vytvoriť ľubovoľný webový formulár.</target>
+        <target>Luo omia lomakkeita joilla lähetetyn datan voi lähettää tai tallentaa</target>
       </trans-unit>
       <trans-unit id="MOD.design">
         <source>Layout</source>
-        <target>Rozloženie</target>
+        <target>Ulkoasu</target>
       </trans-unit>
       <trans-unit id="MOD.themes.0">
         <source>Themes</source>
-        <target>Témy vzhľadu</target>
+        <target>Teemat</target>
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage front end modules, style sheets, page layouts and templates</source>
-        <target>Správa modulov, kaskádovitých štýlov, rozvrhnutia stránok a predlôh frontendu.</target>
+        <target>Hallitse sivuston moduuleja, tyylisivuja, sivujen ulkoasuja ja mallipohjia</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
-        <target>Štruktúra webu</target>
+        <target>Sivuston rakenne</target>
       </trans-unit>
       <trans-unit id="MOD.page.1">
         <source>Set up the site structure of your website(s)</source>
-        <target>Tento modul umožňuje nastaviť štruktúru webu a parametre stránok ako jazyk, vyrovnávacia pamäť a prístupové práva.</target>
+        <target>Muokkaa sivusto(je)si rakennetta</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
-        <target>Šablóny</target>
+        <target>Mallinteet</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Edit templates in the back end</source>
-        <target>Tento modul umožňuje upravovať šablóny z administračného rozhrania.</target>
+        <target>Muokkaa mallipohjia hallintapuolella</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Account manager</source>
-        <target>Správa účtov</target>
+        <target>Tilien hallinta</target>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
-        <target>Členovia</target>
+        <target>Jäsene</target>
       </trans-unit>
       <trans-unit id="MOD.member.1">
         <source>Manage member accounts (front end users)</source>
-        <target>Členovia (registrovaní frontend užívatelia) Vášho webu s prístupom do Vami špecifikovaných stránok. Tento modul Vám umožní editáciu práv členov.</target>
+        <target>Hallitse jäsenten tilejä (sivuston käyttäjät)</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
-        <target>Skupiny členov</target>
+        <target>Jäsenryhmät</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.1">
         <source>Manage member groups (front end user groups)</source>
-        <target>Editujete práva viacerých členov (registrovaných frontend užívateľov), ktorí môžu byť vo viacerých skupinách s rôznym nastavením práv.</target>
+        <target>Hallinnoi jäsenryhmiä (sivuston käyttäjäryhmät)</target>
       </trans-unit>
       <trans-unit id="MOD.user.0">
         <source>Users</source>
-        <target>Užívatelia</target>
+        <target>Käyttäjät</target>
       </trans-unit>
       <trans-unit id="MOD.user.1">
         <source>Manage user accounts (back end users)</source>
-        <target>Týmto modulom môžete vytvoriť/nastaviť účty (backend) užívateľov (správcovia obsahu, administrátori).</target>
+        <target>Hallinnoi käyttäjätilejä (hallintapuolen käyttäjät)</target>
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
-        <target>Skupiny užívateľov</target>
+        <target>Käyttäjäryhmät</target>
       </trans-unit>
       <trans-unit id="MOD.group.1">
         <source>Manage user groups (back end user groups)</source>
-        <target>Týmto modulom môžete vytvoriť/nastaviť práva skupín (backend) užívateľov.</target>
+        <target>Hallinnoi käyttäjäryhmiä (hallintapuolen käyttäjäryhmät)</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
-        <target>Systém</target>
+        <target>Järjestelmä</target>
       </trans-unit>
       <trans-unit id="MOD.files.0">
         <source>File manager</source>
-        <target>Súborový manažér</target>
+        <target>Tiedostoselain</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders or upload new files to the server</source>
-        <target>Tento modul Vám umožní ukladať súbory na server, editovať súbory a priečinky.</target>
+        <target>Hallinnoi tiedostoja ja hakemistoja tai lataa uusia tiedostoja palvelimelle</target>
       </trans-unit>
       <trans-unit id="MOD.log.0">
         <source>System log</source>
-        <target>System log</target>
+        <target>Järjestelmäloki</target>
       </trans-unit>
       <trans-unit id="MOD.log.1">
         <source>Browse the system log and analyze the activity on the website</source>
-        <target>Všetky udalosti systému sa zapisujú do log súboru. Tento modul Vám umožní analýzu týchto zápisov.</target>
+        <target>Selaa järjestelmälokia ja analysoi sivuston liikennettä</target>
       </trans-unit>
       <trans-unit id="MOD.settings.0">
         <source>Settings</source>
-        <target>Nastavenie</target>
+        <target>Asetukset</target>
       </trans-unit>
       <trans-unit id="MOD.settings.1">
         <source>Check and optimize the Contao configuration</source>
-        <target>Tento modul Vám umožní nastavenie/modifikáciu tejto inštalácie, zmenu základných parametrov ako sú formát dátumu, alebo znaková sada.</target>
+        <target>Tarkista ja muuta Contaon asetuksia</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
-        <target>Údržba systému</target>
+        <target>Huolto</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
         <source>Maintain or update Contao</source>
-        <target>Tento modul je určený na údržbu Vašej inštalácie Contao.</target>
+        <target>Huolla tai päivitä Contaota</target>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
-        <target>Späť</target>
+        <target>Palauta</target>
       </trans-unit>
       <trans-unit id="MOD.undo.1">
         <source>Restore deleted records</source>
-        <target>Pokiaľ bol omylom vymazaný záznam v databáze, tento modul Vám umožní daný záznam obnoviť. Nevzťahuje sa na súbory a priečinky.</target>
+        <target>Palauta poistettuja tietueita</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>Personal data</source>
-        <target>Osobné dáta</target>
+        <target>Henkilökohtainen data</target>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>
-        <target>Tento modul Vám umožňuje meniť osobné informácie ako meno, e-mail, heslo ...</target>
+        <target>Muuta henkilökohtaisia tietojasi tai vaihda salasanasi</target>
       </trans-unit>
       <trans-unit id="MOD.tl_style">
         <source>Style sheets</source>
-        <target>Kaskádové štýly - CSS</target>
+        <target>Tyylisivut</target>
       </trans-unit>
       <trans-unit id="MOD.tl_style_sheet">
         <source>Style sheets</source>
-        <target>Kaskádové štýly - CSS</target>
+        <target>Tyylisivut</target>
       </trans-unit>
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
-        <target>Front end moduly</target>
+        <target>Sivuston moduulit</target>
       </trans-unit>
       <trans-unit id="MOD.tl_layout">
         <source>Page layouts</source>
-        <target>Layout stránky</target>
+        <target>Sivujen ulkoasut</target>
       </trans-unit>
       <trans-unit id="MOD.css">
         <source>Style sheets</source>
-        <target>Kaskádové štýly - CSS</target>
+        <target>Tyylisivut</target>
       </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
-        <target>Front end moduly</target>
+        <target>Sivuston moduulit</target>
       </trans-unit>
       <trans-unit id="MOD.layout">
         <source>Page layouts</source>
-        <target>Layout stránky</target>
+        <target>Sivujen ulkoasut</target>
       </trans-unit>
       <trans-unit id="MOD.theme_import">
         <source>Theme import</source>
-        <target>Importovať tému vzhľadu</target>
+        <target>Teeman tuonti</target>
       </trans-unit>
       <trans-unit id="MOD.theme_export">
         <source>Theme export</source>
-        <target>Exportovať tému vzhľadu</target>
+        <target>Teeman vienti</target>
       </trans-unit>
       <trans-unit id="FMD.navigationMenu">
         <source>Navigation</source>
-        <target>Navigácia</target>
+        <target>Valikko</target>
       </trans-unit>
       <trans-unit id="FMD.navigation.0">
         <source>Navigation menu</source>
-        <target>Navigačné menu</target>
+        <target>Valikko</target>
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
         <source>Generates a navigation menu from the site structure</source>
-        <target>Tento modul vytvára navigačné menu webovej stránky.</target>
+        <target>Tuottaa sivustorakenteen pohjalta valikon</target>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
-        <target>Vlastná navigácia</target>
+        <target>Kustomoitu valikko</target>
       </trans-unit>
       <trans-unit id="FMD.customnav.1">
         <source>Generates a custom navigation menu</source>
-        <target>Tento modul vytvára vlastnú navigáciu tvorenú stránkami, ktoré Vy vyberiete.</target>
+        <target>Tuottaa kustomoidun valikon</target>
       </trans-unit>
       <trans-unit id="FMD.breadcrumb.0">
         <source>Breadcrumb navigation</source>
-        <target>Navigácia aktuálnej pozície</target>
+        <target>Murupolk</target>
       </trans-unit>
       <trans-unit id="FMD.breadcrumb.1">
         <source>Generates a breadcrumb navigation menu</source>
-        <target>Tento modul dovoluje vsadiť do webstránok drobnú navigáciu. Príklad &lt;em&gt;Domov &gt; Fórum &gt; Vloženie príspevku&lt;/em&gt;.</target>
+        <target>Tuottaa murupolun</target>
       </trans-unit>
       <trans-unit id="FMD.quicknav.0">
         <source>Quick navigation</source>
-        <target>Rýchla navigácia</target>
+        <target>Pikanavigointi</target>
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
         <source>Generates a drop-down menu from the site structure</source>
-        <target>Tento modul vygeneruje drop down menu zo všetkých stránok, z ktorých je možné dostať sa na určitú stránku.</target>
+        <target>Tuottaa sivustorakenteen perusteella pudotusvalikon</target>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
-        <target>Rýchly odkaz</target>
+        <target>Pikalinkki</target>
       </trans-unit>
       <trans-unit id="FMD.quicklink.1">
         <source>Generates a custom drop-down menu</source>
-        <target>Tento modul vytvára drop down menu z vybraných stránok, čo umožnuje rýchly skok na určitú stránku.</target>
+        <target>Tuottaa kustomoidun pudotusvalikon</target>
       </trans-unit>
       <trans-unit id="FMD.booknav.0">
         <source>Book navigation</source>
-        <target>Knižná navigácia</target>
+        <target>Kirjavalikko</target>
       </trans-unit>
       <trans-unit id="FMD.booknav.1">
         <source>Generates a book navigation menu</source>
-        <target>Tento modul vytvára knižné navigačné menu.</target>
+        <target>Tuottaa kirjavalikon</target>
       </trans-unit>
       <trans-unit id="FMD.articlenav.0">
         <source>Article navigation</source>
-        <target>Navigácia v článkoch</target>
+        <target>Artikkelivalikko</target>
       </trans-unit>
       <trans-unit id="FMD.articlenav.1">
         <source>Generates a pagination menu to navigate articles</source>
-        <target>Tento modul zobrazuje pod článkom stránkovanie, čo umožuje skok na konkrétnu stranu článku.</target>
+        <target>Tuottaa sivutetun valikon, jolla voi selata artikkeleita</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.0">
         <source>Sitemap</source>
-        <target>Mapa stránok</target>
+        <target>Sivukartta</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages in the site structure</source>
-        <target>Tento modul zobrazí všetky dostupné stránky.</target>
+        <target>Tuottaa listan kaikista sivuista sivustorakenteessa</target>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>
-        <target>Užívateľské</target>
+        <target>Käyttäjä</target>
       </trans-unit>
       <trans-unit id="FMD.login.0">
         <source>Login form</source>
-        <target>Prihlasovací formulár</target>
+        <target>Kirjautumislomake</target>
       </trans-unit>
       <trans-unit id="FMD.login.1">
         <source>Generates a login form</source>
-        <target>Tento modul vstavá formulár, pomocou ktorého sa členovia prihlasujú. Ak sa člen prihlási, bude schopný pristupovať k chráneným stránkam.</target>
+        <target>Tuottaa kirjautumislomakkeen</target>
       </trans-unit>
       <trans-unit id="FMD.logout.0">
         <source>Automatic logout</source>
-        <target>Automatické odhlásenie</target>
+        <target>Automaattinen uloskirjaus</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
         <source>Automatically logs out a user</source>
-        <target>Tento modul užívateľa automaticky odhlási.</target>
+        <target>Kirjaa käyttäjän ulos automaattisesti</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
-        <target>Osobné údaje</target>
+        <target>Omat tiedot</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
         <source>Generates a form to edit a user's personal data</source>
-        <target>Tento modul vytvára formulár, pomocou ktorého si môže člen upravovať svoje osobné údaje.</target>
+        <target>Tuottaa lomakkeen, jolla käyttäjä voi muokata omia tietojaan</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
-        <target>Registrácia členov</target>
+        <target>Rekisteröinti</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
         <source>Generates a user registration form</source>
-        <target>Tento modul vytvára formulár, ktorý umožňuje novým členom zaregistrovať sa na Vašej stránke.</target>
+        <target>Tuottaa rekisteröitymislomakkeen</target>
       </trans-unit>
       <trans-unit id="FMD.lostPassword.0">
         <source>Lost password</source>
-        <target>Stratené heslo</target>
+        <target>Hukattu salasana</target>
       </trans-unit>
       <trans-unit id="FMD.lostPassword.1">
         <source>Generates a form to request a new password</source>
-        <target>Tento modul vytvára formulár, ktorý umožňuje členom vyžiadať si nové heslo.</target>
+        <target>Tuottaa lomakkeen, jolla voi pyytää uutta salasanaa</target>
       </trans-unit>
       <trans-unit id="FMD.closeAccount.0">
         <source>Close account</source>
-        <target>Zrušenie účtu</target>
+        <target>Lopeta käyttäjätili</target>
       </trans-unit>
       <trans-unit id="FMD.closeAccount.1">
         <source>Generates a form to delete a member account</source>
-        <target>Tento modul vytvára formulár, ktorý umožňuje členom zrušiť účet.</target>
+        <target>Tuottaa lomakkeen, jolla voi poistaa jäsentilinsä</target>
       </trans-unit>
       <trans-unit id="FMD.application">
         <source>Applications</source>
-        <target>Aplikácie</target>
+        <target>Sovellukse</target>
       </trans-unit>
       <trans-unit id="FMD.form.0">
         <source>Form</source>
-        <target>Formulár</target>
+        <target>Lomake</target>
       </trans-unit>
       <trans-unit id="FMD.form.1">
         <source>Adds a form to the page</source>
-        <target>Tento modul do stránky vstavá formulár. Údaje z formulára môžu byť odoslané cez e-mail, alebo spracované iným modulom.</target>
+        <target>Lisää lomakkeen sivulle</target>
       </trans-unit>
       <trans-unit id="FMD.search.0">
         <source>Search engine</source>
-        <target>Vyhľadávacia mašina</target>
+        <target>Hakukone</target>
       </trans-unit>
       <trans-unit id="FMD.search.1">
         <source>Adds a search form to the page</source>
-        <target>Tento modul umožňuje vyhľadávať v lokálnych stránkach.</target>
+        <target>Lisää sivulle hakukoneen</target>
       </trans-unit>
       <trans-unit id="FMD.articleList.0">
         <source>Article list</source>
-        <target>Zoznam článkov</target>
+        <target>Artikkelilista</target>
       </trans-unit>
       <trans-unit id="FMD.articleList.1">
         <source>Generates a list of articles of a column</source>
-        <target>Tento modul zobrazuje zoznam článkov z určiteho stĺpca.</target>
+        <target>Tuottaa listan artikkeleista</target>
       </trans-unit>
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
-        <target>Rôznorodé</target>
+        <target>Sekalaisia</target>
       </trans-unit>
       <trans-unit id="FMD.flash.0">
         <source>Flash movie</source>
-        <target>Flashový obash</target>
+        <target>Flash-video</target>
       </trans-unit>
       <trans-unit id="FMD.flash.1">
         <source>Embeds a Flash movie into the page</source>
-        <target>Tento modul vsadí do stránok Macromedia Flash.</target>
+        <target>Lisää sivulle Flash-videon</target>
       </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>
-        <target>Náhodný obrázok</target>
+        <target>Satunnainen kuva</target>
       </trans-unit>
       <trans-unit id="FMD.randomImage.1">
         <source>Adds a random image to the page</source>
-        <target>Tento modul vkladá do webstránky náhodný obrázok.</target>
+        <target>Lisää sivulle satunnaisen kuvan</target>
       </trans-unit>
       <trans-unit id="FMD.html.0">
         <source>Custom HTML</source>
-        <target>Vlastný HTML kód</target>
+        <target>Oma HTML</target>
       </trans-unit>
       <trans-unit id="FMD.html.1">
         <source>Allows you to add custom HTML code</source>
-        <target>Tento modul Vám dovolí vložiť nejaký vlastný HTML kód.</target>
+        <target>Antaa sinun lisätä omaa HTML-koodia sivulle</target>
       </trans-unit>
       <trans-unit id="FMD.rss_reader.0">
         <source>RSS reader</source>
-        <target>Čítačka RSS</target>
+        <target>RSS-lukija</target>
       </trans-unit>
       <trans-unit id="FMD.rss_reader.1">
         <source>Adds an RSS feed to the page</source>
-        <target>Tento modul umožnuje importovať RSS zdroje.</target>
+        <target>Lisää sivulle RSS-syötteen</target>
       </trans-unit>
     </body>
   </file>
