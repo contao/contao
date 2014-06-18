@@ -3,23 +3,23 @@
     <body>
       <trans-unit id="tl_user.newsletters.0">
         <source>Allowed channels</source>
-        <target>Atļautie kanāli</target>
+        <target>Täällä voit sallia pääsyn yhteen tai useampaan kanavaan.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsletters.1">
         <source>Here you can grant access to one or more channels.</source>
-        <target>Šeit jūs varat piešķir piekļuvi vienam vai vairākiem kanāliem.</target>
+        <target>Täällä voit sallia pääsyn yhteen tai useampaan kanavaan.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsletterp.0">
         <source>Channel permissions</source>
-        <target>Kanāla atļaujas</target>
+        <target>Täällä voit määritellä kanavat oikeudet.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsletterp.1">
         <source>Here you can define the channel permissions.</source>
-        <target>Šeit jūs varat noteikt kanāla atļaujas.</target>
+        <target>Täällä voit määritellä kanavat oikeudet.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsletter_legend">
         <source>Newsletter permissions</source>
-        <target>Apkārtrakstu atļaujas</target>
+        <target>Uutiskirjeen käyttöoikeudet</target>
       </trans-unit>
     </body>
   </file>
