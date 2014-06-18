@@ -3,39 +3,39 @@
     <body>
       <trans-unit id="tl_user.news.0">
         <source>Allowed archives</source>
-        <target>Jaunumu arhīvi</target>
+        <target>Sallitut arkistot</target>
       </trans-unit>
       <trans-unit id="tl_user.news.1">
         <source>Here you can grant access to one or more news archives.</source>
-        <target>Šeit jūs varat piešķirt piekļuvi vienam vai vairākiem jaunumu arhīviem.</target>
+        <target>Tässä voit myöntää pääsyn yhteen tai useampaan arkistoon.</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
         <source>News permissions</source>
-        <target>Jaunumu atļaujas</target>
+        <target>Uutisten käyttöoikeudet</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
         <source>Here you can define the news permissions.</source>
-        <target>Šeit jūs varat noteikt jaunumu atļaujas.</target>
+        <target>Tässä voit määritellä uutisten oikeudet.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed RSS feeds</source>
-        <target>Atļautās RSS barotnes</target>
+        <target>Sallitut RSS syötteet</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
-        <target>Šeit jūs varat dot piekļuvi vienai vai vairākām jaunumu barotnēm.</target>
+        <target>Tässä voit myöntää pääsyn yhteen tai useampaan syötteeseen.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
         <source>RSS feed permissions</source>
-        <target>RSS barotņes atļaujas</target>
+        <target>RSS syötteen oikeudet</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>
-        <target>Šeit jūs varat noteikt jaunumu barotnes atļaujas.</target>
+        <target>Tässä voit määritellä uutissyötteen oikeudet.</target>
       </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
-        <target>Jaunumu atļaujas</target>
+        <target>Uutisten käyttöoikeudet</target>
       </trans-unit>
     </body>
   </file>
