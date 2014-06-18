@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_user_group.calendars_legend">
         <source>Calendar permissions</source>
-        <target>Kalendāra atļaujas</target>
+        <target>Kalenterin oikeudet</target>
       </trans-unit>
     </body>
   </file>
