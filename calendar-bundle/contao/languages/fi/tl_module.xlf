@@ -3,211 +3,215 @@
     <body>
       <trans-unit id="tl_module.cal_calendar.0">
         <source>Calendars</source>
-        <target>Kalendāri</target>
+        <target>Kalenterit</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_calendar.1">
         <source>Please select one or more calendars.</source>
-        <target>Lūdzu izvēlieties vienu vai vairākus kalendārus.</target>
+        <target>Valitse yksi tai useampi kalenterista.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.0">
         <source>Shortened view</source>
-        <target>Saīsināts skats</target>
+        <target>Lyhennetty näkymä</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.1">
         <source>Show events only once even if they span multiple days.</source>
-        <target>Rādīt notikumus tikai vienu reizi, pat ja tie aptver vairākas dienas.</target>
+        <target>Näyta tapahtumat vain kerran vaikka ne olisivat useampi päiväisiä.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.0">
         <source>Week start day</source>
-        <target>Nedēļas pirmā diena</target>
+        <target>Viikon ensimmäinen päivä</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.1">
         <source>Here you can choose the week start day.</source>
-        <target>Lūdzu izvēlieties nedēļas pirmo dienu.</target>
+        <target>Tässä voidaan määritellä viikon ensimmäinen päivä.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.0">
         <source>Event list format</source>
-        <target>Notikumu saraksta formāts</target>
+        <target>Tapahtumalistauksen muoto</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.1">
         <source>Here you can choose the event list format.</source>
-        <target>Šeit jūs varat izvēlēties notikuma saraksta formātu.</target>
+        <target>Tässä voidaan valita tapahtumalistauksen muoto.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.0">
         <source>Ignore URL parameters</source>
-        <target>Ignorēt URL parametrus</target>
+        <target>Jätä huomioimatta URL:in parametrit</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.1">
         <source>Do not switch the time period based on the date/month/year URL parameters.</source>
-        <target>Nepārslēdziet laika periodus, balstoties uz datums/mēnesis/gads URL parametriem.</target>
+        <target>Älä valitse aikajaksoa perustuen URL:in parametreihin päivä/kuukausi/vuosi.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_order.0">
         <source>Sort order</source>
-        <target>Kārtošanas secība</target>
+        <target>Lajittelujärjestys</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_order.1">
         <source>Here you can choose the sort order.</source>
-        <target>Šeit jūs varat izvēlēties kārtošanas secību.</target>
+        <target>Tässä voidaan määritellä lajittelujärjestys.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.0">
         <source>Event reader module</source>
-        <target>Notikuma lasītāja modulis</target>
+        <target>Tapahtumalukijan moduli</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.1">
         <source>Automatically switch to the event reader if an event has been selected.</source>
-        <target>Automātiski pāriet uz notikumu lasītāju ja notikums ir izvēlēts.</target>
+        <target>Valitse automaattisesti tapahtumalukija, jos tapahtuma on valittu.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.0">
         <source>Number of events</source>
-        <target>Notikumu skaits</target>
+        <target>Tapahtumien määrä</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.1">
         <source>Here you can limit the number of events. Enter 0 to show all.</source>
-        <target>Lūdzu ievadiet maksimālo notikumu skaitu, Ievadiet 0, lai rādītu visus notikumus.</target>
+        <target>Tässä voidaan valita tapahtumien määrä. Aseta 0:ksi, jolloin kaikki näytetään.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.0">
         <source>Event template</source>
-        <target>Notikuma veidne</target>
+        <target>Tapahtuman mallipohja</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
         <source>Here you can select the event template.</source>
-        <target>Šeit jūs varat izvēlēties notikuma veidni.</target>
+        <target>Tässä voidaan valita tapahtuman mallipohja.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
-        <target>Kalendāra veidne</target>
+        <target>Kalenterin mallipohja</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
         <source>Here you can select the calendar template.</source>
-        <target>Šeit jūs varat izvēlēties kalendāra veidni.</target>
+        <target>Tässä voidaan valita kalenterin mallipohja.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>
-        <target>Rādīt notikumu skaitu</target>
+        <target>Näytettävien tapahtumien määrä</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.1">
         <source>Show the number of events of each month in the menu.</source>
-        <target>Rādīt katra mēneša notikumu skaitu izvēlnē.</target>
+        <target>Näytä tapahtumien määrä kunkin kuukauden valikosta.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
-        <target>Notikumu saraksts</target>
+        <target>Tapahtumalista</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_day">
         <source>Day</source>
-        <target>Diena</target>
+        <target>Päivä</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_month">
         <source>Month</source>
-        <target>Mēnesis</target>
+        <target>Kuukausi</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_year">
         <source>Year</source>
-        <target>Gads</target>
+        <target>Vuosi</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_all">
         <source>All events</source>
-        <target>Visi notikumi</target>
+        <target>Kaikki tapahtumat</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_upcoming">
         <source>Upcoming events</source>
-        <target>Gaidāmie notikumi</target>
+        <target>Tulevat tapahtumat</target>
       </trans-unit>
       <trans-unit id="tl_module.next_7">
         <source>+ 1 week</source>
-        <target>+ 1 nedēļa</target>
+        <target>+ 1 viikko</target>
       </trans-unit>
       <trans-unit id="tl_module.next_14">
         <source>+ 2 weeks</source>
-        <target>+ 2 nedēļas</target>
+        <target>+ 2 viikkoa</target>
       </trans-unit>
       <trans-unit id="tl_module.next_30">
         <source>+ 1 month</source>
-        <target>+ 1 mēnesis</target>
+        <target>+  1 kuukausi</target>
       </trans-unit>
       <trans-unit id="tl_module.next_90">
         <source>+ 3 months</source>
-        <target>+ 3 mēneši</target>
+        <target>+ 3 kuukautta</target>
       </trans-unit>
       <trans-unit id="tl_module.next_180">
         <source>+ 6 months</source>
-        <target>+ 6 mēneši</target>
+        <target>+ 6 kuukautta</target>
       </trans-unit>
       <trans-unit id="tl_module.next_365">
         <source>+ 1 year</source>
-        <target>+ 1 gads</target>
+        <target>+ 1 vuosi</target>
       </trans-unit>
       <trans-unit id="tl_module.next_two">
         <source>+ 2 years</source>
-        <target>+ 2 gadi</target>
+        <target>+ 2 vuotta</target>
       </trans-unit>
       <trans-unit id="tl_module.next_cur_month">
         <source>of the current month</source>
-        <target>pašreizējā mēneša</target>
+        <target>kuluvan kuukauden</target>
       </trans-unit>
       <trans-unit id="tl_module.next_cur_year">
         <source>of the current year</source>
-        <target>pašreizējā gada</target>
+        <target>kuluvan vuoden</target>
       </trans-unit>
       <trans-unit id="tl_module.next_next_month">
         <source>of the next month</source>
+        <target>seuraavan kuukauden</target>
       </trans-unit>
       <trans-unit id="tl_module.next_next_year">
         <source>of the next year</source>
+        <target>seuraavan vuoden</target>
       </trans-unit>
       <trans-unit id="tl_module.next_all">
         <source>All upcoming events</source>
-        <target>Visi gaidāmie notikumi</target>
+        <target>Kaikki tulevat tapahtumat</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_past">
         <source>Past events</source>
-        <target>Pagājušie notikumi</target>
+        <target>Menneet tapahtumat</target>
       </trans-unit>
       <trans-unit id="tl_module.past_7">
         <source>- 1 week</source>
-        <target>- 1 nedēļa</target>
+        <target>- 1 viikko</target>
       </trans-unit>
       <trans-unit id="tl_module.past_14">
         <source>- 2 weeks</source>
-        <target>- 2 nedēļas</target>
+        <target>- 2 viikkoa</target>
       </trans-unit>
       <trans-unit id="tl_module.past_30">
         <source>- 1 month</source>
-        <target>- 1 mēnesis</target>
+        <target>- 1 kuukausi</target>
       </trans-unit>
       <trans-unit id="tl_module.past_90">
         <source>- 3 months</source>
-        <target>- 3 mēneši</target>
+        <target>- 3 kuukautta</target>
       </trans-unit>
       <trans-unit id="tl_module.past_180">
         <source>- 6 months</source>
-        <target>- 6 mēneši</target>
+        <target>- 6 kuukautta</target>
       </trans-unit>
       <trans-unit id="tl_module.past_365">
         <source>- 1 year</source>
-        <target>- 1 gads</target>
+        <target>- 1 vuosi</target>
       </trans-unit>
       <trans-unit id="tl_module.past_two">
         <source>- 2 years</source>
-        <target>- 2 gadi</target>
+        <target>- 2 vuotta</target>
       </trans-unit>
       <trans-unit id="tl_module.past_cur_month">
         <source>of the current month</source>
-        <target>pašreizējā mēneša</target>
+        <target>kuluvan kuukauden</target>
       </trans-unit>
       <trans-unit id="tl_module.past_cur_year">
         <source>of the current year</source>
-        <target>pašreizējā gada</target>
+        <target>kuluvan vuoden</target>
       </trans-unit>
       <trans-unit id="tl_module.past_prev_month">
         <source>of the previous month</source>
+        <target>edellisen kuukauden</target>
       </trans-unit>
       <trans-unit id="tl_module.past_prev_year">
         <source>of the previous year</source>
+        <target>edellisen vuoden</target>
       </trans-unit>
       <trans-unit id="tl_module.past_all">
         <source>All past events</source>
-        <target>Visi pagājušie notikumi</target>
+        <target>Kaikki menneet tapahtumat</target>
       </trans-unit>
     </body>
   </file>
