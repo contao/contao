@@ -3,55 +3,55 @@
     <body>
       <trans-unit id="tl_module.newsletters.0">
         <source>Subscribable newsletters</source>
-        <target>Uutiskirjeet, joihin voi liittyä</target>
+        <target>Abonējamie jaunumi</target>
       </trans-unit>
       <trans-unit id="tl_module.newsletters.1">
         <source>Show these channels in the front end form.</source>
-        <target>Näytä nämä kanavat käyttäjäosion lomakkeessa.</target>
+        <target>Parāda kanālus frontend-ā.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.0">
         <source>Channels</source>
-        <target>Kanavat</target>
+        <target>Kanāli</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.1">
         <source>Please select one or more channels.</source>
-        <target>Ole hyvä ja valitse yksi tai useampi kanava.</target>
+        <target>Lūdzu izvēlieties vienu vai vairākus kanālus.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
-        <target>Piilota kanavavalikko</target>
+        <target>Paslēpt kanālu izvēlni</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.1">
         <source>Do not show the channel selection menu.</source>
-        <target>Älä näytä kanavavalikkoa.</target>
+        <target>Paslēpj kanālu izvēlni</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.0">
         <source>Subscription message</source>
-        <target>Liittymisviesti</target>
+        <target>Abonēšanas paziņojums</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) and &lt;em&gt;##link##&lt;/em&gt; (activation link).</source>
-        <target>Voit käyttää villikortteja &lt;em&gt;##channels##&lt;/em&gt; (kanavien nimet), &lt;em&gt;##domain##&lt;/em&gt; (domain) ja &lt;em&gt;##link##&lt;/em&gt; (aktivointilinkki).</target>
+        <target>Jūs varat izmantot aizstājējzīmes &lt;em&gt;##channels##&lt;/em&gt; (kanālu nosaukumus), &lt;em&gt;##domain##&lt;/em&gt; (domēna nosaukumu) un &lt;em&gt;##link##&lt;/em&gt; (aktivizācijas saiti).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.0">
         <source>Unsubscription message</source>
-        <target>Peruutusviesti</target>
+        <target>Abonēšanas pārtraukšanas paziņojums</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
-        <target>Voit käyttää villikortteja &lt;em&gt;##channels##&lt;/em&gt; (kanavien nimet) ja &lt;em&gt;##domain##&lt;/em&gt; (domain).</target>
+        <target>Jūs varat izmantot aizstājējzīmes &lt;em&gt;##channels##&lt;/em&gt; (kanālu nosaukumi), &lt;em&gt;##domain##&lt;/em&gt; (domēna nosaukums).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
-        <target>Uutiskirjeen mallipohja</target>
+        <target>Biļetena veidne</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select the newsletter template.</source>
-        <target>Tästä voit valita uutiskirjeelle mallipohjan.</target>
+        <target>Varat izvēlēties biļetena veidni.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
-        <target>Tilauksesi sivustolla %s</target>
+        <target>Jūsu abonements uz %s</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.1">
         <source>You have subscribed to the following channels on ##domain##:
@@ -60,25 +60,18 @@
 
 Please click ##link## to activate your subscription. If you did not subscribe yourself, please ignore this e-mail.
 </source>
-        <target>Olet tilannut seuraavat kanavat sivustolta ##domain##:
-
-##channels##
-
-Ole hyvä ja klikkaa tästä: ##link## aktivoidaksesi tilauksesi. Jos et itse tehnyt tätä tilausta, voit jättää tämän viestin huomiotta.</target>
+        <target>Esat abonējis šādus kanālus ##domain##:##channels##Ejiet šeit ##link##, lai aktivizētu savu abonementu. Ja Jūs tos neesat abonēis, lūdzu, ignorējiet šo e-pastu.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>
-        <target>Tilauksesi sivustolla %s</target>
+        <target>Jūsu abonements uz %s</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.1">
         <source>You have unsubscribed from the following channels on ##domain##:
 
 ##channels##
 </source>
-        <target>Olet nyt poistunut seuraavilta kanavilta sivustolla ##domain##:
-
-##channels##
-		</target>
+        <target>Jūs esat atteicies no šādu kanālu abonēšanas ##domain##:##channels##</target>
       </trans-unit>
     </body>
   </file>
