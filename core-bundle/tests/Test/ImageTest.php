@@ -15,8 +15,39 @@ namespace Contao\Test;
 use ReflectionClass;
 use Contao\Image;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
+    protected $currentProviderData = array();
+
+    protected function setUp()
+    {
+        eval(
+            'namespace Contao;
+
+            class Config
+            {
+                public static function get($key)
+                {
+                    switch ($key) {
+                        case \'validImageTypes\':
+                            return \'jpeg,jpg\';
+                        break;
+                    }
+                }
+            }'
+        );
+        class_alias('Contao\File', 'File');
+        class_alias('Contao\Files', 'Files');
+        class_alias('Contao\System', 'System');
+        define('TL_ERROR', 'ERROR');
+        define('TL_ROOT', __DIR__);
+
+        parent::setUp();
+    }
+
     private static function callProtectedStatic($class, $method, $arguments = [])
     {
         $classReflection = new ReflectionClass($class);
@@ -25,7 +56,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         return $methodReflection->invokeArgs(null, $arguments);
     }
 
-    public function testGetInvalidImages()
+    public function testGetDeprecatedInvalidImages()
     {
         $this->assertNull(Image::get('', 100, 100));
         $this->assertNull(Image::get(0, 100, 100));
@@ -37,34 +68,59 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      */
     public function testComputeResizeWithoutImportantPart($arguments, $expectedResult)
     {
-        // Zoom parameter
-        $arguments[5] = 0;
-        // Important part parameter
-        $arguments[6] = [
+        $this->currentProviderData = $expectedResult;
+
+        $fileMock = $this->getMockBuilder('File')
+                    ->setMethods(array('__get', 'exists'))
+                    ->setConstructorArgs(array('dummy.jpg'))
+                    ->getMock();
+        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(array($this, 'getMagicGetterValue')));
+
+
+        $imageObj = new Image($fileMock);
+        $imageObj->setZoomLevel(0);
+        $imageObj->setImportantPart([
             'x' => 0,
             'y' => 0,
             'width' => $arguments[2],
             'height' => $arguments[3],
-        ];
+        ]);
 
         $this->assertEquals(
             $expectedResult,
-            self::callProtectedStatic('Contao\\Image', 'computeResize', $arguments)
+            $imageObj->computeResize()
         );
 
-        $arguments[5] = 50;
+        $imageObj->setZoomLevel(50);
+
         $this->assertEquals(
             $expectedResult,
-            self::callProtectedStatic('Contao\\Image', 'computeResize', $arguments),
+            $imageObj->computeResize(),
             'Zoom 50 should return the same results if no important part is specified'
         );
 
-        $arguments[5] = 100;
+        $imageObj->setZoomLevel(100);
+
         $this->assertEquals(
             $expectedResult,
-            self::callProtectedStatic('Contao\\Image', 'computeResize', $arguments),
+            $imageObj->computeResize(),
             'Zoom 100 should return the same results if no important part is specified'
         );
+    }
+
+    public function getMagicGetterValue($key)
+    {
+        switch ($key) {
+            case 'extension':
+                return 'jpg';
+            case 'path':
+                return 'dummy.jpg';
+            case 'width':
+                return $this->currentProviderData['width'];
+            case 'height':
+                return $this->currentProviderData['height'];
+        }
     }
 
     public function getComputeResizeDataWithoutImportantPart()
