@@ -482,12 +482,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $imageObj->setTargetHeight($arguments[1]);
         $imageObj->setResizeMode($arguments[4]);
         $imageObj->setZoomLevel($arguments[5]);
-        $imageObj->setImportantPart([
-            'x' => 0,
-            'y' => 0,
-            'width' => $arguments[2],
-            'height' => $arguments[3],
-        ]);
+        $imageObj->setImportantPart($arguments[6]);
 
 
         $this->assertEquals(
@@ -632,27 +627,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
                 'target_y' => -150,
                 'target_width' => 1000,
                 'target_height' => 500,
-            ]],
-
-            'No dimensions negative zoom' =>
-            [[null, null, 100, 100, null, -100, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]], [
-                'width' => 100,
-                'height' => 100,
-                'target_x' => 0,
-                'target_y' => 0,
-                'target_width' => 100,
-                'target_height' => 100,
-            ]],
-
-            'No dimensions too large zoom' =>
-            [[null, null, 100, 100, null, 1000, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]], [
-                'width' => 60,
-                'height' => 60,
-                'target_x' => -20,
-                'target_y' => -20,
-                'target_width' => 100,
-                'target_height' => 100,
-            ]],
+            ]]
 
         ];
     }
@@ -665,5 +640,35 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(imageistruecolor($image));
         $this->assertEquals(100, imagesx($image));
         $this->assertEquals(100, imagesy($image));
+    }
+
+    /**
+     * @expectedException   InvalidArgumentException
+     */
+    public function testSetZoomOutOfBoundsNegative()
+    {
+        $fileMock = $this->getMockBuilder('File')
+            ->setMethods(array('__get', 'exists'))
+            ->setConstructorArgs(array('dummy.jpg'))
+            ->getMock();
+        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+
+        $imageObj = new Image($fileMock);
+        $imageObj->setZoomLevel(-1);
+    }
+
+    /**
+     * @expectedException   InvalidArgumentException
+     */
+    public function testSetZoomOutOfBoundsPositive()
+    {
+        $fileMock = $this->getMockBuilder('File')
+            ->setMethods(array('__get', 'exists'))
+            ->setConstructorArgs(array('dummy.jpg'))
+            ->getMock();
+        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+
+        $imageObj = new Image($fileMock);
+        $imageObj->setZoomLevel(101);
     }
 }
