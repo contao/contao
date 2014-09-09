@@ -24,21 +24,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        eval(
-            'namespace Contao;
-
-            class Config
-            {
-                public static function get($key)
-                {
-                    switch ($key) {
-                        case \'validImageTypes\':
-                            return \'jpeg,jpg\';
-                        break;
-                    }
-                }
-            }'
-        );
+        $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg';
         class_alias('Contao\File', 'File');
         class_alias('Contao\Files', 'Files');
         class_alias('Contao\System', 'System');
@@ -68,17 +54,22 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      */
     public function testComputeResizeWithoutImportantPart($arguments, $expectedResult)
     {
-        $this->currentProviderData = $expectedResult;
+        $this->currentProviderData['testComputeResizeWithoutImportantPart'] = $arguments;
 
         $fileMock = $this->getMockBuilder('File')
                     ->setMethods(array('__get', 'exists'))
                     ->setConstructorArgs(array('dummy.jpg'))
                     ->getMock();
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
-        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(array($this, 'getMagicGetterValue')));
+        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
+            array($this, 'getMagicGetterValueTestComputeResizeWithoutImportantPart'))
+        );
 
 
         $imageObj = new Image($fileMock);
+        $imageObj->setTargetWidth($arguments[0]);
+        $imageObj->setTargetHeight($arguments[1]);
+        $imageObj->setResizeMode($arguments[4]);
         $imageObj->setZoomLevel(0);
         $imageObj->setImportantPart([
             'x' => 0,
@@ -109,7 +100,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function getMagicGetterValue($key)
+    public function getMagicGetterValueTestComputeResizeWithoutImportantPart($key)
     {
         switch ($key) {
             case 'extension':
@@ -117,9 +108,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             case 'path':
                 return 'dummy.jpg';
             case 'width':
-                return $this->currentProviderData['width'];
+                return $this->currentProviderData['testComputeResizeWithoutImportantPart'][2];
             case 'height':
-                return $this->currentProviderData['height'];
+                return $this->currentProviderData['testComputeResizeWithoutImportantPart'][3];
         }
     }
 
@@ -474,10 +465,49 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      */
     public function testComputeResizeWithImportantPart($arguments, $expectedResult)
     {
+        $this->currentProviderData['testComputeResizeWithImportantPart'] = $arguments;
+
+        $fileMock = $this->getMockBuilder('File')
+            ->setMethods(array('__get', 'exists'))
+            ->setConstructorArgs(array('dummy.jpg'))
+            ->getMock();
+        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
+                array($this, 'getMagicGetterValueTestComputeResizeWithImportantPart'))
+        );
+
+
+        $imageObj = new Image($fileMock);
+        $imageObj->setTargetWidth($arguments[0]);
+        $imageObj->setTargetHeight($arguments[1]);
+        $imageObj->setResizeMode($arguments[4]);
+        $imageObj->setZoomLevel($arguments[5]);
+        $imageObj->setImportantPart([
+            'x' => 0,
+            'y' => 0,
+            'width' => $arguments[2],
+            'height' => $arguments[3],
+        ]);
+
+
         $this->assertEquals(
             $expectedResult,
-            self::callProtectedStatic('Contao\\Image', 'computeResize', $arguments)
+            $imageObj->computeResize()
         );
+    }
+
+    public function getMagicGetterValueTestComputeResizeWithImportantPart($key)
+    {
+        switch ($key) {
+            case 'extension':
+                return 'jpg';
+            case 'path':
+                return 'dummy.jpg';
+            case 'width':
+                return $this->currentProviderData['testComputeResizeWithImportantPart'][2];
+            case 'height':
+                return $this->currentProviderData['testComputeResizeWithImportantPart'][3];
+        }
     }
 
     public function getComputeResizeDataWithImportantPart()
