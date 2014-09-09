@@ -40,6 +40,11 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         return $methodReflection->invokeArgs(null, $arguments);
     }
 
+    private function getDummyMock($magicGetterClosure)
+    {
+
+    }
+
     public function testGetDeprecatedInvalidImages()
     {
         $this->assertNull(Image::get('', 100, 100));
@@ -628,6 +633,82 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(imageistruecolor($image));
         $this->assertEquals(100, imagesx($image));
         $this->assertEquals(100, imagesy($image));
+    }
+
+    public function testSettersAndGetters()
+    {
+        $fileMock = $this->getMockBuilder('File')
+            ->setMethods(array('__get', 'exists'))
+            ->setConstructorArgs(array('dummy.jpg'))
+            ->getMock();
+        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
+            function($key) {
+                switch ($key) {
+                    case 'extension':
+                        return 'jpg';
+                    case 'path':
+                        return 'dummy.jpg';
+                    case 'width':
+                        return 100;
+                    case 'height':
+                        return 100;
+                }
+            }
+        ));
+
+        $imageObj = new Image($fileMock);
+
+        $this->assertFalse($imageObj->getForceOverride());
+        $imageObj->setForceOverride(true);
+        $this->assertTrue($imageObj->getForceOverride());
+
+        $this->assertSame($imageObj->getImportantPart(), [
+            'x' => 0,
+            'y' => 0,
+            'width' => 100,
+            'height' => 100
+        ]);
+        $imageObj->setImportantPart([
+            'x' => 20,
+            'y' => 40,
+            'width' => 80,
+            'height' => 120
+        ]);
+        $this->assertSame($imageObj->getImportantPart(), [
+            'x' => 20,
+            'y' => 40,
+            'width' => 80,
+            'height' => 120
+        ]);
+
+        $this->assertSame($imageObj->getTargetHeight(), 0);
+        $imageObj->setTargetHeight(20);
+        $this->assertSame($imageObj->getTargetHeight(), 20);
+        $imageObj->setTargetHeight(50.125);
+        $this->assertSame($imageObj->getTargetHeight(), 50);
+
+        $this->assertSame($imageObj->getTargetWidth(), 0);
+        $imageObj->setTargetWidth(20);
+        $this->assertSame($imageObj->getTargetWidth(), 20);
+        $imageObj->setTargetWidth(50.125);
+        $this->assertSame($imageObj->getTargetWidth(), 50);
+
+        $this->assertSame($imageObj->getTargetPath(), '');
+        $imageObj->setTargetPath('foobar');
+        $this->assertSame($imageObj->getTargetPath(), 'foobar');
+
+        $this->assertSame($imageObj->getZoomLevel(), 0);
+        $imageObj->setZoomLevel(54);
+        $this->assertSame($imageObj->getZoomLevel(), 54);
+
+        $this->assertSame($imageObj->getResizeMode(), 'crop');
+        $imageObj->setResizeMode('foobar');
+        $this->assertSame($imageObj->getResizeMode(), 'foobar');
+
+        $this->assertSame($imageObj->getOriginalPath(), 'dummy.jpg');
+        $this->assertSame($imageObj->getResizedPath(), '');
+
     }
 
     /**
