@@ -20,8 +20,6 @@ use Contao\Image;
  */
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
-    protected $currentProviderData = array();
-
     protected function setUp()
     {
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg';
@@ -54,16 +52,25 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      */
     public function testComputeResizeWithoutImportantPart($arguments, $expectedResult)
     {
-        $this->currentProviderData['testComputeResizeWithoutImportantPart'] = $arguments;
-
         $fileMock = $this->getMockBuilder('File')
                     ->setMethods(array('__get', 'exists'))
                     ->setConstructorArgs(array('dummy.jpg'))
                     ->getMock();
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            array($this, 'getMagicGetterValueTestComputeResizeWithoutImportantPart'))
-        );
+            function($key) use($arguments) {
+                switch ($key) {
+                    case 'extension':
+                        return 'jpg';
+                    case 'path':
+                        return 'dummy.jpg';
+                    case 'width':
+                        return $arguments[2];
+                    case 'height':
+                        return $arguments[3];
+                }
+            }
+        ));
 
 
         $imageObj = new Image($fileMock);
@@ -98,20 +105,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             $imageObj->computeResize(),
             'Zoom 100 should return the same results if no important part is specified'
         );
-    }
-
-    public function getMagicGetterValueTestComputeResizeWithoutImportantPart($key)
-    {
-        switch ($key) {
-            case 'extension':
-                return 'jpg';
-            case 'path':
-                return 'dummy.jpg';
-            case 'width':
-                return $this->currentProviderData['testComputeResizeWithoutImportantPart'][2];
-            case 'height':
-                return $this->currentProviderData['testComputeResizeWithoutImportantPart'][3];
-        }
     }
 
     public function getComputeResizeDataWithoutImportantPart()
@@ -465,16 +458,25 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      */
     public function testComputeResizeWithImportantPart($arguments, $expectedResult)
     {
-        $this->currentProviderData['testComputeResizeWithImportantPart'] = $arguments;
-
         $fileMock = $this->getMockBuilder('File')
             ->setMethods(array('__get', 'exists'))
             ->setConstructorArgs(array('dummy.jpg'))
             ->getMock();
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-                array($this, 'getMagicGetterValueTestComputeResizeWithImportantPart'))
-        );
+            function($key) use($arguments) {
+                switch ($key) {
+                    case 'extension':
+                        return 'jpg';
+                    case 'path':
+                        return 'dummy.jpg';
+                    case 'width':
+                        return $arguments[2];
+                    case 'height':
+                        return $arguments[3];
+                }
+            }
+        ));
 
 
         $imageObj = new Image($fileMock);
@@ -489,20 +491,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             $expectedResult,
             $imageObj->computeResize()
         );
-    }
-
-    public function getMagicGetterValueTestComputeResizeWithImportantPart($key)
-    {
-        switch ($key) {
-            case 'extension':
-                return 'jpg';
-            case 'path':
-                return 'dummy.jpg';
-            case 'width':
-                return $this->currentProviderData['testComputeResizeWithImportantPart'][2];
-            case 'height':
-                return $this->currentProviderData['testComputeResizeWithImportantPart'][3];
-        }
     }
 
     public function getComputeResizeDataWithImportantPart()
