@@ -708,7 +708,63 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($imageObj->getOriginalPath(), 'dummy.jpg');
         $this->assertSame($imageObj->getResizedPath(), '');
+    }
 
+    /**
+     * @dataProvider getCacheName
+     */
+    public function testGetCacheName($arguments, $expectedCacheName)
+    {
+        $fileMock = $this->getMockBuilder('File')
+            ->setMethods(array('__get', 'exists'))
+            ->setConstructorArgs(array('dummy.jpg'))
+            ->getMock();
+        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
+            function($key) use($arguments) {
+                switch ($key) {
+                    case 'extension':
+                        return 'jpg';
+                    case 'path':
+                        return $arguments[2];
+                    case 'filename':
+                        return $arguments[2];
+                    case 'mtime':
+                        return $arguments[5];
+                }
+            }
+        ));
+
+        $imageObj = new Image($fileMock);
+        $imageObj->setTargetWidth($arguments[0]);
+        $imageObj->setTargetHeight($arguments[1]);
+        $imageObj->setResizeMode($arguments[3]);
+        $imageObj->setZoomLevel($arguments[4]);
+        $imageObj->setImportantPart($arguments[6]);
+
+        $this->assertSame($imageObj->getCacheName(), $expectedCacheName);
+    }
+
+    public function getCacheName()
+    {
+        // target width, target height, file name (path), resize mode, zoom level, mtime, important part
+        // expected cache name
+        return [
+                [
+                    [100, 100, 'dummy.jpg', 'crop', 0, 12345678, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]],
+                    'assets/images/9/dummy.jpg-fd9db329.jpg'
+                ],
+
+                [
+                    [200, 100, 'test.jpg', 'proportional', 50, 87654321, ['x' => 30, 'y' => 20, 'width' => 60, 'height' => 90]],
+                    'assets/images/b/test.jpg-9c8f00bb.jpg'
+                ],
+
+                [
+                    [100, 200, 'other.jpg', 'center_center', 100, 6666666, ['x' => 10, 'y' => 20, 'width' => 70, 'height' => 20]],
+                    'assets/images/2/other.jpg-5709a132.jpg'
+                ]
+            ];
     }
 
     /**
