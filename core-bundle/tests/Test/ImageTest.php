@@ -20,16 +20,30 @@ use Contao\Image;
  */
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
+    var $tempDirectory;
+
     protected function setUp()
     {
+        $this->tempDirectory = __DIR__ . '/../tmp';
+        mkdir($this->tempDirectory);
+
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg';
         class_alias('Contao\File', 'File');
         class_alias('Contao\Files', 'Files');
         class_alias('Contao\System', 'System');
+        class_alias('Contao\Config', 'Config');
         define('TL_ERROR', 'ERROR');
-        define('TL_ROOT', __DIR__);
+        define('TL_ROOT', $this->tempDirectory);
 
         parent::setUp();
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        // Delete temp directory
+        exec('rm -rf ' . escapeshellarg($this->tempDirectory));
     }
 
     public function testGetDeprecatedInvalidImages()
@@ -622,6 +636,39 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100, imagesy($image));
         $this->assertEquals(127, imagecolorsforindex($image, imagecolorat($image, 0, 0))["alpha"], 'Image should be transparent');
         $this->assertEquals(127, imagecolorsforindex($image, imagecolorat($image, 99, 99))["alpha"], 'Image should be transparent');
+    }
+
+    public function testGetGdImageFromFile()
+    {
+        foreach (['gif', 'jpeg', 'png'] as $type) {
+            $image = imagecreatetruecolor(100, 100);
+            imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
+            $method = 'image' . $type;
+            $method($image, $this->tempDirectory . '/test.' . $type);
+            imagedestroy($image);
+
+            $image = Image::getGdImageFromFile(new \File('test.' . $type));
+
+            $this->assertInternalType('resource', $image);
+            $this->assertEquals(100, imagesx($image));
+            $this->assertEquals(100, imagesy($image));
+        }
+    }
+
+    public function testSaveGdImageToFile()
+    {
+        foreach (['gif', 'jpeg', 'png'] as $type) {
+            $file = $this->tempDirectory . '/test.' . $type;
+            $image = imagecreatetruecolor(100, 100);
+            imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
+
+            Image::saveGdImageToFile($image, $file, $type);
+
+            $this->assertFileExists($file);
+
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $this->assertEquals('image/' . $type, $finfo->file($file));
+        }
     }
 
     public function testConvertGdImageToPaletteImage()
