@@ -942,6 +942,14 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             ->setConstructorArgs(array('dummy.jpg'))
             ->getMock();
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
+            function($key) {
+                switch ($key) {
+                    case 'extension':
+                        return 'jpg';
+                }
+            }
+        ));
 
         $imageObj = new Image($fileMock);
         $imageObj->setZoomLevel(-1);
@@ -957,6 +965,14 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             ->setConstructorArgs(array('dummy.jpg'))
             ->getMock();
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
+            function($key) {
+                switch ($key) {
+                    case 'extension':
+                        return 'jpg';
+                }
+            }
+        ));
 
         $imageObj = new Image($fileMock);
         $imageObj->setZoomLevel(101);
