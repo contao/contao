@@ -1055,6 +1055,48 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @dataProvider getLegacyResize
+     */
+    public function testLegacyResize($arguments, $expectedResult)
+    {
+        $result = Image::resize(
+            $arguments[0],
+            $arguments[1],
+            $arguments[2],
+            $arguments[3]
+        );
+
+        $this->assertSame($result, $expectedResult);
+    }
+
+    public function getLegacyResize()
+    {
+        // original image, target width, target height, resize mode
+        // expected result
+
+        return [
+
+            'No empty image path returns false' =>
+                [
+                    ['', 100, 100, 'crop'],
+                    false
+                ],
+
+            'Inexistent file returns false' =>
+                [
+                    ['foobar.jpg', 100, 100, 'crop'],
+                    false
+                ],
+
+            'No resize necessary returns true' =>
+                [
+                    ['dummy.jpg', 200, 200, 'crop', null, false],
+                    true
+                ]
+        ];
+    }
+
     public function testExecuteResizeNoResizeNeeded()
     {
         $file = new File('dummy.jpg');
