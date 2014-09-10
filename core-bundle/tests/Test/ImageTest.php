@@ -12,7 +12,7 @@
 
 namespace Contao\Test;
 
-use ReflectionClass;
+use Contao\File;
 use Contao\Image;
 
 /**
@@ -40,7 +40,8 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         }');
 
 
-        $GLOBALS['TL_CONFIG']['gdMaxImgWidth']  = 3000;
+        $GLOBALS['TL_CONFIG']['debugMode'] = false;
+        $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg';
         class_alias('Contao\File', 'File');
@@ -1052,5 +1053,118 @@ class ImageTest extends \PHPUnit_Framework_TestCase
                     'target/path/dummy.jpg'
                 ]
         ];
+    }
+
+    public function testExecuteResizeNoResizeNeeded()
+    {
+        $file = new File('dummy.jpg');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(200)->setTargetHeight(200);
+
+        $imageObj->executeResize();
+
+        $resultFile = new File($imageObj->getResizedPath());
+
+        $this->assertSame($resultFile->width, 200);
+        $this->assertSame($resultFile->height, 200);
+    }
+
+    public function testExecuteResizeStandardCropResize()
+    {
+        $file = new File('dummy.jpg');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+
+        $imageObj->executeResize();
+
+        $resultFile = new File($imageObj->getResizedPath());
+
+        $this->assertSame($resultFile->width, 100);
+        $this->assertSame($resultFile->height, 100);
+    }
+
+    public function testExecuteResizeStandardCropResizeAndTarget()
+    {
+        $file = new File('dummy.jpg');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)
+            ->setTargetHeight(100)
+            ->setTargetPath('dummy_foobar.jpg');
+
+        $imageObj->executeResize();
+
+        $resultFile = new File($imageObj->getResizedPath());
+
+        $this->assertSame($resultFile->width, 100);
+        $this->assertSame($resultFile->height, 100);
+        $this->assertSame($resultFile->path, 'dummy_foobar.jpg');
+    }
+
+    public function testExecuteResizeStandardCropResizeAndFileExistsAlready()
+    {
+        $file = new File('dummy.jpg');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)
+            ->setTargetHeight(100)
+            ->setTargetPath('dummy_foobar.jpg');
+
+        $imageObj->executeResize();
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+
+        $imageObj->executeResize();
+
+        $resultFile = new File($imageObj->getResizedPath());
+
+        $this->assertSame($resultFile->width, 100);
+        $this->assertSame($resultFile->height, 100);
+    }
+
+    public function testExecuteResizeHook()
+    {
+        $GLOBALS['TL_HOOKS']['getImage'][] = ['Contao\Test\ImageTest', 'getImageHookCallback'];
+        $file = new File('dummy.jpg');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)
+            ->setTargetHeight(100);
+
+        $imageObj->executeResize();
+
+        $this->assertSame($imageObj->getResizedPath(),
+            'dummy.jpg%3B100%3B100%3Bcrop%3B%3BContao%5CFile%3B%3BContao%5CImage'
+        );
+    }
+
+    public static function getImageHookCallback(
+        $originalPath,
+        $targetWidth,
+        $targetHeight,
+        $resizeMode,
+        $cacheName,
+        $fileObj,
+        $targetPath,
+        $imageObj
+    ) {
+        return $originalPath
+            . ';'
+            . $targetWidth
+            . ';'
+            . $targetHeight
+            . ';'
+            . $resizeMode
+            . ';'
+            //. $cacheName  Did not include cache name as it is dynamic (mtime)
+            . ';'
+            . get_class($fileObj)
+            . ';'
+            . $targetPath
+            . ';'
+            . get_class($imageObj);
     }
 }
