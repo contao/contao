@@ -763,6 +763,32 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testConvertGdImageToPaletteImageFromTrueColor()
+    {
+        $image = imagecreatetruecolor(100, 100);
+
+        for ($x = 0; $x < 100; $x++) {
+            for ($y = 0; $y < 100; $y++) {
+                imagefilledrectangle($image, $x, $y, $x + 1, $y + 1, imagecolorallocatealpha($image, $x, $y, 0, 0));
+            }
+        }
+
+        // Bottom right pixel transparent
+        imagealphablending($image, false);
+        imagefilledrectangle($image, 99, 99, 100, 100, imagecolorallocatealpha($image, 0, 0, 0, 127));
+
+        $image = Image::convertGdImageToPaletteImage($image);
+
+        $this->assertInternalType('resource', $image);
+        $this->assertFalse(imageistruecolor($image));
+        $this->assertEquals(256, imagecolorstotal($image));
+        $this->assertEquals(
+            127,
+            imagecolorsforindex($image, imagecolorat($image, 99, 99))["alpha"],
+            'Bottom right pixel should be transparent'
+        );
+    }
+
     public function testCountGdImageColors()
     {
         $image = imagecreatetruecolor(100, 100);
