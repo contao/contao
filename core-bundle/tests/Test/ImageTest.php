@@ -26,11 +26,26 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     {
         $this->tempDirectory = __DIR__ . '/../tmp';
         mkdir($this->tempDirectory);
+        mkdir($this->tempDirectory . '/assets');
+        mkdir($this->tempDirectory . '/assets/images');
+        foreach ([0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'] as $subdir) {
+            mkdir($this->tempDirectory . '/assets/images/' . $subdir);
+        }
 
+        copy(__DIR__ . '/../Fixtures/dummy.jpg', $this->tempDirectory . '/dummy.jpg');
+
+        eval('class SystemTest extends Contao\System
+        {
+            public static function log($strText, $strFunction, $strCategory) {}
+        }');
+
+
+        $GLOBALS['TL_CONFIG']['gdMaxImgWidth']  = 3000;
+        $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg';
         class_alias('Contao\File', 'File');
         class_alias('Contao\Files', 'Files');
-        class_alias('Contao\System', 'System');
+        class_alias('SystemTest', 'System');
         class_alias('Contao\Config', 'Config');
         define('TL_ERROR', 'ERROR');
         define('TL_ROOT', $this->tempDirectory);
@@ -945,5 +960,49 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         $imageObj = new Image($fileMock);
         $imageObj->setZoomLevel(101);
+    }
+
+    /**
+     * @dataProvider getLegacyGet
+     */
+    public function testLegacyGet($arguments, $expectedResult)
+    {
+        $result = Image::get(
+            $arguments[0],
+            $arguments[1],
+            $arguments[2],
+            $arguments[3],
+            $arguments[4],
+            $arguments[5]
+        );
+
+        $this->assertSame($result, $expectedResult);
+    }
+
+    public function getLegacyGet()
+    {
+        // original image, target width, target height, resize mode, target, force override
+        // expected result
+
+        return [
+
+            'No empty image path returns null' =>
+                [
+                    ['', 100, 100, 'crop', null, false],
+                    null
+                ],
+
+            'Inexistent file returns null' =>
+                [
+                    ['foobar.jpg', 100, 100, 'crop', null, false],
+                    null
+                ],
+
+            'No resize necessary returns same path' =>
+                [
+                    ['dummy.jpg', 200, 200, 'crop', null, false],
+                    'dummy.jpg'
+                ]
+        ];
     }
 }
