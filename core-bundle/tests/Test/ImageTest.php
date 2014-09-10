@@ -1018,6 +1018,12 @@ class ImageTest extends \PHPUnit_Framework_TestCase
                 [
                     ['dummy.jpg', 200, 200, 'crop', null, false],
                     'dummy.jpg'
+                ],
+
+            'No resize necessary with target path' =>
+                [
+                    ['dummy.jpg', 200, 200, 'crop', 'target/path/dummy.jpg', false],
+                    'target/path/dummy.jpg'
                 ]
         ];
     }
