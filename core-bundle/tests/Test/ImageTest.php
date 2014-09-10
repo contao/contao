@@ -32,19 +32,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
     }
 
-    private static function callProtectedStatic($class, $method, $arguments = [])
-    {
-        $classReflection = new ReflectionClass($class);
-        $methodReflection = $classReflection->getMethod($method);
-        $methodReflection->setAccessible(true);
-        return $methodReflection->invokeArgs(null, $arguments);
-    }
-
-    private function getDummyMock($magicGetterClosure)
-    {
-
-    }
-
     public function testGetDeprecatedInvalidImages()
     {
         $this->assertNull(Image::get('', 100, 100));
@@ -627,12 +614,78 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateGdImage()
     {
-        $image = self::callProtectedStatic('Contao\\Image', 'createGdImage', [100, 100]);
+        $image = Image::createGdImage(100, 100);
 
         $this->assertInternalType('resource', $image);
         $this->assertTrue(imageistruecolor($image));
         $this->assertEquals(100, imagesx($image));
         $this->assertEquals(100, imagesy($image));
+        $this->assertEquals(127, imagecolorsforindex($image, imagecolorat($image, 0, 0))["alpha"], 'Image should be transparent');
+        $this->assertEquals(127, imagecolorsforindex($image, imagecolorat($image, 99, 99))["alpha"], 'Image should be transparent');
+    }
+
+    public function testConvertGdImageToPaletteImage()
+    {
+        $image = imagecreatetruecolor(100, 100);
+
+        // Whole image black
+        imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
+
+        // Bottom right quater transparent
+        imagealphablending($image, false);
+        imagefilledrectangle($image, 50, 50, 100, 100, imagecolorallocatealpha($image, 0, 0, 0, 127));
+
+        $image = Image::convertGdImageToPaletteImage($image);
+
+        $this->assertInternalType('resource', $image);
+        $this->assertFalse(imageistruecolor($image));
+        $this->assertEquals(
+            ['red' => 0, 'green' => 0, 'blue' => 0, 'alpha' => 0],
+            imagecolorsforindex($image, imagecolorat($image, 0, 0)),
+            'Left top pixel should be black'
+        );
+        $this->assertEquals(
+            127,
+            imagecolorsforindex($image, imagecolorat($image, 75, 75))["alpha"],
+            'Bottom right quater should be transparent'
+        );
+    }
+
+    public function testCountGdImageColors()
+    {
+        $image = imagecreatetruecolor(100, 100);
+        imagealphablending($image, false);
+
+        imagefill($image, 0, 0, imagecolorallocatealpha($image, 255, 0, 0, 0));
+        imagefilledrectangle($image, 50, 0, 100, 50, imagecolorallocatealpha($image, 0, 255, 0, 0));
+        imagefilledrectangle($image, 0, 50, 50, 100, imagecolorallocatealpha($image, 0, 0, 255, 0));
+        imagefilledrectangle($image, 50, 50, 100, 100, imagecolorallocatealpha($image, 0, 0, 0, 127));
+
+        $this->assertEquals(4, Image::countGdImageColors($image));
+        $this->assertEquals(4, Image::countGdImageColors($image, 256));
+        $this->assertEquals(2, Image::countGdImageColors($image, 1));
+    }
+
+    public function testIsGdImageSemitransparent()
+    {
+        $image = imagecreatetruecolor(100, 100);
+        imagealphablending($image, false);
+
+        imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
+
+        $this->assertFalse(Image::isGdImageSemitransparent($image));
+
+        imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 127));
+        $this->assertFalse(Image::isGdImageSemitransparent($image));
+
+        imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 126));
+        $this->assertTrue(Image::isGdImageSemitransparent($image));
+
+        imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 1));
+        $this->assertTrue(Image::isGdImageSemitransparent($image));
+
+        imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
+        $this->assertFalse(Image::isGdImageSemitransparent($image));
     }
 
     public function testSettersAndGetters()
