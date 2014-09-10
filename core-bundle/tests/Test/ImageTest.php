@@ -46,6 +46,63 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         exec('rm -rf ' . escapeshellarg($this->tempDirectory));
     }
 
+    public function testConstruct()
+    {
+        $fileMock = $this->getMockBuilder('File')
+            ->setMethods(array('__get', 'exists'))
+            ->setConstructorArgs(array('dummy.jpg'))
+            ->getMock();
+        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
+            function($key) {
+                switch ($key) {
+                    case 'extension':
+                        return 'jpg';
+                    case 'path':
+                        return 'dummy.jpg';
+                }
+            }
+        ));
+
+        $this->assertInstanceOf('Contao\Image', new Image($fileMock));
+    }
+
+    /**
+     * @expectedException   InvalidArgumentException
+     */
+    public function testConstructWithInexistentFile()
+    {
+        $fileMock = $this->getMockBuilder('File')
+            ->setMethods(array('__get', 'exists'))
+            ->setConstructorArgs(array('dummy.jpg'))
+            ->getMock();
+        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(false));
+
+        new Image($fileMock);
+    }
+
+    /**
+     * @expectedException   InvalidArgumentException
+     */
+    public function testConstructWithInvalidExtension()
+    {
+        $fileMock = $this->getMockBuilder('File')
+            ->setMethods(array('__get', 'exists'))
+            ->setConstructorArgs(array('dummy.jpg'))
+            ->getMock();
+        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
+            function($key) {
+                switch ($key) {
+                    case 'extension':
+                        return 'foobar';
+                }
+            }
+        ));
+
+        new Image($fileMock);
+    }
+
     public function testGetDeprecatedInvalidImages()
     {
         $this->assertNull(Image::get('', 100, 100));
