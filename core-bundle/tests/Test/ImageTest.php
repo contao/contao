@@ -83,13 +83,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $imageObj->setTargetWidth($arguments[0]);
         $imageObj->setTargetHeight($arguments[1]);
         $imageObj->setResizeMode($arguments[4]);
-        $imageObj->setZoomLevel(0);
-        $imageObj->setImportantPart([
-            'x' => 0,
-            'y' => 0,
-            'width' => $arguments[2],
-            'height' => $arguments[3],
-        ]);
 
         $this->assertEquals(
             $expectedResult,
