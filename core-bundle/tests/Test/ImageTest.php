@@ -1275,4 +1275,30 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             . ';'
             . get_class($imageObj);
     }
+
+    /**
+     * @dataProvider getGetPixelValueData
+     */
+    public function testGetPixelValue($value, $expected)
+    {
+        $this->assertSame($expected, Image::getPixelValue($value));
+    }
+
+    public function getGetPixelValueData()
+    {
+        return [
+            'No unit' =>
+                ['1234.5', 1235],
+            'px' =>
+                ['1234.5px', 1235],
+            'em' =>
+                ['1em', 16],
+            'pt' =>
+                ['12pt', 16],
+            'percent' =>
+                ['100%', 16],
+            'invalid' =>
+                ['abc', 0],
+        ];
+    }
 }
