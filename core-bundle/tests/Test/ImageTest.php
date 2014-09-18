@@ -28,6 +28,8 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         mkdir($this->tempDirectory);
         mkdir($this->tempDirectory . '/assets');
         mkdir($this->tempDirectory . '/assets/images');
+        mkdir($this->tempDirectory . '/system');
+        mkdir($this->tempDirectory . '/system/tmp');
         foreach ([0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'] as $subdir) {
             mkdir($this->tempDirectory . '/assets/images/' . $subdir);
         }
@@ -43,7 +45,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
-        $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg';
+        $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
         class_alias('Contao\File', 'File');
         class_alias('Contao\Files', 'Files');
         class_alias('SystemTest', 'System');
@@ -1165,6 +1167,70 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($resultFile->width, 100);
         $this->assertSame($resultFile->height, 100);
+    }
+
+    public function testExecuteResizeSvg()
+    {
+        file_put_contents(
+            $this->tempDirectory . '/dummy.svg',
+            '<?xml version="1.0" encoding="utf-8"?>
+            <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+            <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                width="200px"
+                height="100px"
+                viewBox="100 100 400 200"
+            ></svg>'
+        );
+        $file = new File('dummy.svg');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+
+        $imageObj->executeResize();
+
+        $resultFile = new File($imageObj->getResizedPath());
+
+        $this->assertEquals(100, $resultFile->width);
+        $this->assertEquals(100, $resultFile->height);
+
+        $doc = new \DOMDocument();
+        $doc->loadXML($resultFile->getContent());
+        $this->assertEquals('200 100 200 200', $doc->documentElement->getAttribute('viewBox'));
+    }
+
+    public function testExecuteResizeSvgz()
+    {
+        file_put_contents(
+            $this->tempDirectory . '/dummy.svgz',
+            gzencode(
+                '<?xml version="1.0" encoding="utf-8"?>
+                <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                <svg
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="200px"
+                    height="100px"
+                    viewBox="100 100 400 200"
+                ></svg>'
+            )
+        );
+        $file = new File('dummy.svgz');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+
+        $imageObj->executeResize();
+
+        $resultFile = new File($imageObj->getResizedPath());
+
+        $this->assertEquals(100, $resultFile->width);
+        $this->assertEquals(100, $resultFile->height);
+
+        $doc = new \DOMDocument();
+        $doc->loadXML(gzdecode($resultFile->getContent()));
+        $this->assertEquals('200 100 200 200', $doc->documentElement->getAttribute('viewBox'));
     }
 
     public function testExecuteResizeHook()
