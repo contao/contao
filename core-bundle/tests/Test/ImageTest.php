@@ -946,17 +946,17 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         return [
                 [
                     [100, 100, 'dummy.jpg', 'crop', 0, 12345678, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]],
-                    'assets/images/9/dummy.jpg-fd9db329.jpg'
+                    'assets/images/c/dummy.jpg-fc94db8c.jpg'
                 ],
 
                 [
                     [200, 100, 'test.jpg', 'proportional', 50, 87654321, ['x' => 30, 'y' => 20, 'width' => 60, 'height' => 90]],
-                    'assets/images/b/test.jpg-9c8f00bb.jpg'
+                    'assets/images/3/test.jpg-4e7b07e3.jpg'
                 ],
 
                 [
                     [100, 200, 'other.jpg', 'center_center', 100, 6666666, ['x' => 10, 'y' => 20, 'width' => 70, 'height' => 20]],
-                    'assets/images/2/other.jpg-5709a132.jpg'
+                    'assets/images/f/other.jpg-1fe4f44f.jpg'
                 ]
             ];
     }
@@ -1197,7 +1197,11 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
-        $this->assertEquals('200 100 200 200', $doc->documentElement->getAttribute('viewBox'));
+        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     public function testExecuteResizeSvgz()
@@ -1230,7 +1234,11 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         $doc = new \DOMDocument();
         $doc->loadXML(gzdecode($resultFile->getContent()));
-        $this->assertEquals('200 100 200 200', $doc->documentElement->getAttribute('viewBox'));
+        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     public function testExecuteResizeHook()
