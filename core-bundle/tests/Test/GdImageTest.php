@@ -25,7 +25,9 @@ class GdImageTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->tempDirectory = __DIR__ . '/../tmp';
-        mkdir($this->tempDirectory);
+        if (!is_dir($this->tempDirectory)) {
+            mkdir($this->tempDirectory);
+        }
 
         class_alias('Contao\File', 'File');
         class_alias('Contao\Files', 'Files');
@@ -79,6 +81,13 @@ class GdImageTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(100, imagesx($image->getResource()));
             $this->assertEquals(100, imagesy($image->getResource()));
         }
+    }
+
+    public function testFromFileInvalidType()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        GdImage::fromFile(new \File('test.xyz'));
     }
 
     public function testSaveToFile()
