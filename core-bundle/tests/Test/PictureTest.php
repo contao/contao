@@ -87,7 +87,7 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
     }
 
-    public function testGetData()
+    public function testGetTemplateData()
     {
         $picture = new Picture(new \File('dummy.jpg'));
         $picture->setImageSize((object)[
@@ -97,7 +97,7 @@ class PictureTest extends \PHPUnit_Framework_TestCase
             'zoom' => 0,
         ]);
 
-        $pictureData = $picture->getData();
+        $pictureData = $picture->getTemplateData();
 
         $this->assertEquals(200, $pictureData['img']['width']);
         $this->assertEquals(200, $pictureData['img']['height']);
@@ -106,7 +106,7 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $pictureData['sources']);
     }
 
-    public function testGetDataImgOnly()
+    public function testGetTemplateDataImgOnly()
     {
         $picture = new Picture(new \File('dummy.jpg'));
         $picture->setImageSize((object)[
@@ -116,7 +116,7 @@ class PictureTest extends \PHPUnit_Framework_TestCase
             'zoom' => 0,
         ]);
 
-        $pictureData = $picture->getData();
+        $pictureData = $picture->getTemplateData();
 
         $this->assertEquals(100, $pictureData['img']['width']);
         $this->assertEquals(100, $pictureData['img']['height']);
@@ -124,7 +124,7 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $pictureData['sources']);
     }
 
-    public function testGetDataWithSources()
+    public function testGetTemplateDataWithSources()
     {
         $picture = new Picture(new \File('dummy.jpg'));
         $picture->setImageSize((object)[
@@ -150,7 +150,7 @@ class PictureTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $pictureData = $picture->getData();
+        $pictureData = $picture->getTemplateData();
 
         $this->assertEquals(100, $pictureData['img']['width']);
         $this->assertEquals(100, $pictureData['img']['height']);
@@ -165,7 +165,7 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($pictureData['sources'][1]['src'], $pictureData['sources'][1]['srcset'], 'Attributes src and srcset should be equal');
     }
 
-    public function testGetDataWithDensities()
+    public function testGetTemplateDataWithDensities()
     {
         $picture = new Picture(new \File('dummy.jpg'));
         $picture->setImageSize((object)[
@@ -176,7 +176,7 @@ class PictureTest extends \PHPUnit_Framework_TestCase
             'densities' => '0.5x, 2x',
         ]);
 
-        $pictureData = $picture->getData();
+        $pictureData = $picture->getTemplateData();
 
         $this->assertEquals(100, $pictureData['img']['width']);
         $this->assertEquals(100, $pictureData['img']['height']);
@@ -188,7 +188,7 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $pictureData['sources']);
     }
 
-    public function testGetDataWithDensitiesSizes()
+    public function testGetTemplateDataWithDensitiesSizes()
     {
         $picture = new Picture(new \File('dummy.jpg'));
         $picture->setImageSize((object)[
@@ -200,7 +200,7 @@ class PictureTest extends \PHPUnit_Framework_TestCase
             'sizes' => '100vw',
         ]);
 
-        $pictureData = $picture->getData();
+        $pictureData = $picture->getTemplateData();
 
         $this->assertEquals(100, $pictureData['img']['width']);
         $this->assertEquals(100, $pictureData['img']['height']);
