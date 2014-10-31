@@ -1,0 +1,27 @@
+{
+    "name": "contao/news-bundle",
+    "type": "library",
+    "description": "Contao 4 news bundle",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "symfony/framework-bundle": "~2.5",
+        "contao/core-bundle": "dev-develop"
+    },
+    "autoload": {
+        "classmap": [
+            "contao/classes/",
+            "contao/models/",
+            "contao/modules/"
+        ],
+        "psr-4": {
+            "Contao\\NewsBundle\\": "src/"
+        }
+    }
+}

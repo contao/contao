@@ -1,0 +1,9 @@
+{
+    "bundles": {
+        "Contao\\NewsBundle\\ContaoNewsBundle": {
+            "replace": ["news"],
+            "environments": ["all"],
+            "load-after": ["ContaoCoreBundle"]
+        }
+    }
+}
