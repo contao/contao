@@ -1,0 +1,11 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <ul>
+    <?php foreach ($this->articles as $article): ?>
+      <li><a href="<?php echo $this->request; ?>#<?php echo $article['id']; ?>" title="<?php echo $article['title']; ?>"><?php echo $article['link']; ?></a></li>
+    <?php endforeach; ?>
+  </ul>
+
+<?php $this->endblock(); ?>

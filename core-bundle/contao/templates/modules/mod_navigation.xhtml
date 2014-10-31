@@ -1,0 +1,11 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <a href="<?php echo $this->request; ?>#<?php echo $this->skipId; ?>" class="invisible"><?php echo $this->skipNavigation; ?></a>
+
+  <?php echo $this->items; ?>
+
+  <a id="<?php echo $this->skipId; ?>" class="invisible">&nbsp;</a>
+
+<?php $this->endblock(); ?>
