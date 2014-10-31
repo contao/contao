@@ -1,0 +1,10 @@
+tools:
+    external_code_coverage: true
+        timeout: 600
+    php_sim: true
+    php_pdepend: true
+    php_analyzer: true
+
+filter:
+    paths: [src/*]
+    excluded_paths: [src/Resources/*]

@@ -1,0 +1,8 @@
+{
+    "bundles": {
+        "Contao\\CoreBundle\\ContaoCoreBundle": {
+            "class": "Contao\\CoreBundle\\ContaoCoreBundle",
+            "name": "ContaoCoreBundle"
+        }
+    }
+}
