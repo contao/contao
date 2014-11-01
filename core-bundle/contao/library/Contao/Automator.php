@@ -307,14 +307,14 @@ class Automator extends \System
 		// Delete the old files
 		if (!$blnReturn)
 		{
-			foreach (scan(TL_ROOT . '/share') as $file)
+			foreach (scan(TL_ROOT . '/web/share') as $file)
 			{
-				if (is_dir(TL_ROOT . '/share/' . $file))
+				if (is_dir(TL_ROOT . '/web/share/' . $file))
 				{
 					continue; // see #6652
 				}
 
-				$objFile = new \File('share/' . $file);
+				$objFile = new \File('web/share/' . $file);
 
 				if ($objFile->extension == 'xml' && !in_array($objFile->filename, $arrFeeds))
 				{
@@ -390,7 +390,7 @@ class Automator extends \System
 		// Create the XML file
 		while ($objRoot->next())
 		{
-			$objFile = new \File('share/' . $objRoot->sitemapName . '.xml');
+			$objFile = new \File('web/share/' . $objRoot->sitemapName . '.xml');
 
 			$objFile->truncate();
 			$objFile->append('<?xml version="1.0" encoding="UTF-8"?>');
