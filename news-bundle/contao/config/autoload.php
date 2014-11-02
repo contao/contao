@@ -10,6 +10,25 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
+// Classes
+ClassLoader::addClasses(array
+(
+	// Classes
+	'Contao\News'              => 'vendor/contao/news-bundle/contao/classes/News.php',
+
+	// Models
+	'Contao\NewsArchiveModel'  => 'vendor/contao/news-bundle/contao/models/NewsArchiveModel.php',
+	'Contao\NewsFeedModel'     => 'vendor/contao/news-bundle/contao/models/NewsFeedModel.php',
+	'Contao\NewsModel'         => 'vendor/contao/news-bundle/contao/models/NewsModel.php',
+
+	// Modules
+	'Contao\ModuleNews'        => 'vendor/contao/news-bundle/contao/modules/ModuleNews.php',
+	'Contao\ModuleNewsArchive' => 'vendor/contao/news-bundle/contao/modules/ModuleNewsArchive.php',
+	'Contao\ModuleNewsList'    => 'vendor/contao/news-bundle/contao/modules/ModuleNewsList.php',
+	'Contao\ModuleNewsMenu'    => 'vendor/contao/news-bundle/contao/modules/ModuleNewsMenu.php',
+	'Contao\ModuleNewsReader'  => 'vendor/contao/news-bundle/contao/modules/ModuleNewsReader.php',
+));
+
 // Templates
 TemplateLoader::addFiles(array
 (

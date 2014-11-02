@@ -15,11 +15,6 @@
         "contao/core-bundle": "dev-develop"
     },
     "autoload": {
-        "classmap": [
-            "contao/classes/",
-            "contao/models/",
-            "contao/modules/"
-        ],
         "psr-4": {
             "Contao\\NewsBundle\\": "src/"
         }
