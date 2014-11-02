@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -107,15 +103,7 @@ abstract class ModuleNews extends \Module
 		// Clean the RTE output
 		if ($objArticle->teaser != '')
 		{
-			if ($objPage->outputFormat == 'xhtml')
-			{
-				$objTemplate->teaser = \String::toXhtml($objArticle->teaser);
-			}
-			else
-			{
-				$objTemplate->teaser = \String::toHtml5($objArticle->teaser);
-			}
-
+			$objTemplate->teaser = \String::toHtml5($objArticle->teaser);
 			$objTemplate->teaser = \String::encodeEmail($objTemplate->teaser);
 		}
 
@@ -389,13 +377,11 @@ abstract class ModuleNews extends \Module
 			$strArticleUrl = ampersand($objArticle->url);
 		}
 
-		global $objPage;
-
 		// External link
 		return sprintf('<a href="%s" title="%s"%s>%s</a>',
 						$strArticleUrl,
 						specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
-						($objArticle->target ? (($objPage->outputFormat == 'xhtml') ? ' onclick="return !window.open(this.href)"' : ' target="_blank"') : ''),
+						($objArticle->target ? ' target="_blank"' : ''),
 						$strLink);
 	}
 }
