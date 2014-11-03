@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -225,7 +221,7 @@ class FormSelectMenu extends \Widget
 		$arrOptions = array();
 		$blnHasGroups = false;
 
-		// Add empty option (XHTML) if there are none
+		// Add empty option if there are none
 		if (empty($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value' => '', 'label' => '-'));
@@ -297,7 +293,7 @@ class FormSelectMenu extends \Widget
 			$this->varValue = $this->varValue[0];
 		}
 
-		// Add empty option (XHTML) if there are none
+		// Add empty option if there are none
 		if (empty($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value'=>'', 'label'=>'-'));

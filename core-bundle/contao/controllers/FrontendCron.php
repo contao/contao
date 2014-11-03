@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -164,6 +160,6 @@ class FrontendCron extends \Frontend
 	 */
 	protected function updateCronTxt($time)
 	{
-		\File::putContent('system/cron/cron.txt', $time);
+		\File::putContent('web/system/cron/cron.txt', $time);
 	}
 }

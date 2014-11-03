@@ -37,10 +37,11 @@ class Message
 	 * Add an error message
 	 *
 	 * @param string $strMessage The error message
+	 * @param string $strScope   An optional message scope
 	 */
-	public static function addError($strMessage)
+	public static function addError($strMessage, $strScope=TL_MODE)
 	{
-		static::add($strMessage, 'TL_ERROR');
+		static::add($strMessage, 'TL_ERROR', $strScope);
 	}
 
 
@@ -48,10 +49,11 @@ class Message
 	 * Add a confirmation message
 	 *
 	 * @param string $strMessage The confirmation message
+	 * @param string $strScope   An optional message scope
 	 */
-	public static function addConfirmation($strMessage)
+	public static function addConfirmation($strMessage, $strScope=TL_MODE)
 	{
-		static::add($strMessage, 'TL_CONFIRM');
+		static::add($strMessage, 'TL_CONFIRM', $strScope);
 	}
 
 
@@ -59,10 +61,11 @@ class Message
 	 * Add a new message
 	 *
 	 * @param string $strMessage The new message
+	 * @param string $strScope   An optional message scope
 	 */
-	public static function addNew($strMessage)
+	public static function addNew($strMessage, $strScope=TL_MODE)
 	{
-		static::add($strMessage, 'TL_NEW');
+		static::add($strMessage, 'TL_NEW', $strScope);
 	}
 
 
@@ -70,10 +73,11 @@ class Message
 	 * Add an info message
 	 *
 	 * @param string $strMessage The info message
+	 * @param string $strScope   An optional message scope
 	 */
-	public static function addInfo($strMessage)
+	public static function addInfo($strMessage, $strScope=TL_MODE)
 	{
-		static::add($strMessage, 'TL_INFO');
+		static::add($strMessage, 'TL_INFO', $strScope);
 	}
 
 
@@ -81,10 +85,11 @@ class Message
 	 * Add a preformatted message
 	 *
 	 * @param string $strMessage The preformatted message
+	 * @param string $strScope   An optional message scope
 	 */
-	public static function addRaw($strMessage)
+	public static function addRaw($strMessage, $strScope=TL_MODE)
 	{
-		static::add($strMessage, 'TL_RAW');
+		static::add($strMessage, 'TL_RAW', $strScope);
 	}
 
 
@@ -93,10 +98,11 @@ class Message
 	 *
 	 * @param string $strMessage The message text
 	 * @param string $strType    The message type
+	 * @param string $strScope   An optional message scope
 	 *
 	 * @throws \Exception If $strType is not a valid message type
 	 */
-	public static function add($strMessage, $strType)
+	public static function add($strMessage, $strType, $strScope=TL_MODE)
 	{
 		if ($strMessage == '')
 		{
@@ -108,39 +114,63 @@ class Message
 			throw new \Exception("Invalid message type $strType");
 		}
 
-		if (!is_array($_SESSION[$strType]))
+		if (!is_array($_SESSION['MESSAGES'][$strScope][$strType]))
 		{
-			$_SESSION[$strType] = array();
+			$_SESSION['MESSAGES'][$strScope][$strType] = array();
 		}
 
-		$_SESSION[$strType][] = $strMessage;
+		$_SESSION['MESSAGES'][$strScope][$strType][] = $strMessage;
 	}
 
 
 	/**
-	 * Return all messages as HTML
+	 * Return the messages with a wrapping container as HTML
 	 *
-	 * @param boolean $blnDcLayout If true, the line breaks are different
-	 * @param boolean $blnNoWrapper If true, there will be no wrapping DIV
+	 * @param string $strScope An optional message scope
 	 *
 	 * @return string The messages HTML markup
 	 */
-	public static function generate($blnDcLayout=false, $blnNoWrapper=false)
+	public static function generate($strScope=TL_MODE)
 	{
-		$strMessages = '';
+		$strMessages = static::generateUnwrapped($strScope);
 
-		// Regular messages
+		if ($strMessages != '')
+		{
+			$strMessages = '<div class="tl_message">' . $strMessages . '</div>';
+		}
+
+		return $strMessages;
+	}
+
+
+	/**
+	 * Return the messages as HTML
+	 *
+	 * @param string $strScope An optional message scope
+	 *
+	 * @return string The messages HTML markup
+	 */
+	public static function generateUnwrapped($strScope=TL_MODE)
+	{
+		if (empty($_SESSION['MESSAGES'][$strScope]))
+		{
+			return '';
+		}
+
+		$strMessages = '';
+		$arrMessages = &$_SESSION['MESSAGES'][$strScope];
+
 		foreach (static::getTypes() as $strType)
 		{
-			if (!is_array($_SESSION[$strType]))
+			if (!is_array($arrMessages[$strType]))
 			{
 				continue;
 			}
 
 			$strClass = strtolower($strType);
-			$_SESSION[$strType] = array_unique($_SESSION[$strType]);
+			$arrMessages[$strType] = array_unique($arrMessages[$strType]);
 
-			foreach ($_SESSION[$strType] as $strMessage)
+			foreach ($arrMessages[$strType] as $strMessage)
 			{
 				if ($strType == 'TL_RAW')
 				{
@@ -148,25 +178,17 @@ class Message
 				}
 				else
 				{
-					$strMessages .= sprintf('<p class="%s">%s</p>%s', $strClass, $strMessage, "\n");
+					$strMessages .= '<p class="' . $strClass . '">' . $strMessage . '</p>';
 				}
 			}
 
 			if (!$_POST)
 			{
-				$_SESSION[$strType] = array();
+				$arrMessages[$strType] = array();
 			}
 		}
 
-		$strMessages = trim($strMessages);
-
-		// Wrapping container
-		if (!$blnNoWrapper && $strMessages != '')
-		{
-			$strMessages = sprintf('%s<div class="tl_message">%s%s%s</div>%s', ($blnDcLayout ? "\n\n" : "\n"), "\n", $strMessages, "\n", ($blnDcLayout ? '' : "\n"));
-		}
-
-		return $strMessages;
+		return trim($strMessages);
 	}
 
 

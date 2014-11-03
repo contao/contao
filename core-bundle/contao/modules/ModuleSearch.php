@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -151,7 +147,7 @@ class ModuleSearch extends \Module
 			// Load the cached result
 			if (file_exists(TL_ROOT . '/' . $strCacheFile))
 			{
-				$objFile = new \File($strCacheFile, true);
+				$objFile = new \File($strCacheFile);
 
 				if ($objFile->mtime > time() - 1800)
 				{
@@ -286,7 +282,7 @@ class ModuleSearch extends \Module
 				if (!empty($arrContext))
 				{
 					$objTemplate->context = trim(\String::substrHtml(implode('…', $arrContext), $this->totalLength));
-					$objTemplate->context = preg_replace('/(\PL)(' . implode('|', $arrMatches) . ')(\PL)/ui', '$1<span class="highlight">$2</span>$3', $objTemplate->context);
+					$objTemplate->context = preg_replace('/(\PL)(' . implode('|', $arrMatches) . ')(\PL)/ui', '$1<strong class="highlight">$2</strong>$3', $objTemplate->context);
 
 					$objTemplate->hasContext = true;
 				}

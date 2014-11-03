@@ -576,7 +576,7 @@ class tl_files extends Backend
 			return '';
 		}
 
-		$objFile = new File($strDecoded, true);
+		$objFile = new File($strDecoded);
 
 		if (!in_array($objFile->extension, trimsplit(',', Config::get('editableFiles'))))
 		{
@@ -632,41 +632,43 @@ class tl_files extends Backend
 			return '';
 		}
 
-		$blnProtected = file_exists(TL_ROOT . '/' . $strPath . '/.htaccess');
+		$blnPublic = file_exists(TL_ROOT . '/' . $strPath . '/.public');
 
 		// Protect or unprotect the folder
 		if (Input::post('FORM_SUBMIT') == 'tl_files')
 		{
-			if (Input::post('protected'))
+			if (Input::post($dc->inputName))
 			{
-				if (!$blnProtected)
+				if (!$blnPublic)
 				{
-					$blnProtected = true;
+					$blnPublic = true;
+
 					$objFolder = new Folder($strPath);
-					$objFolder->protect();
+					$objFolder->unprotect();
+
+					$this->import('Automator');
+					$this->Automator->generateSymlinks();
 				}
 			}
 			else
 			{
-				if ($blnProtected)
+				if ($blnPublic)
 				{
-					$blnProtected = false;
+					$blnPublic = false;
+
 					$objFolder = new Folder($strPath);
-					$objFolder->unprotect();
+					$objFolder->protect();
+
+					$this->import('Automator');
+					$this->Automator->generateSymlinks();
 				}
 			}
-		}
-
-		// Show a note for non-Apache servers
-		if (strpos(Environment::get('serverSoftware'), 'Apache') === false)
-		{
-			Message::addInfo($GLOBALS['TL_LANG']['tl_files']['htaccessInfo']);
 		}
 
 		return '
 <div class="' . $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx">
   <div id="ctrl_' . $dc->field . '" class="tl_checkbox_single_container">
-    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->field . '_0" class="tl_checkbox" value="1"' . ($blnProtected ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"> <label for="opt_' . $dc->field . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
+    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->field . '_0" class="tl_checkbox" value="1"' . ($blnPublic ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"> <label for="opt_' . $dc->field . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
   </div>' . (Config::get('showHelp') ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['protected'][1] . '</p>' : '') . '
 </div>';

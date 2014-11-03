@@ -887,16 +887,19 @@ abstract class Model
 		if (strncmp($name, 'findBy', 6) === 0)
 		{
 			array_unshift($args, lcfirst(substr($name, 6)));
+
 			return call_user_func_array('static::findBy', $args);
 		}
 		elseif (strncmp($name, 'findOneBy', 9) === 0)
 		{
 			array_unshift($args, lcfirst(substr($name, 9)));
+
 			return call_user_func_array('static::findOneBy', $args);
 		}
 		elseif (strncmp($name, 'countBy', 7) === 0)
 		{
 			array_unshift($args, lcfirst(substr($name, 7)));
+
 			return call_user_func_array('static::countBy', $args);
 		}
 

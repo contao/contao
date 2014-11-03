@@ -221,7 +221,7 @@ class Combiner extends \System
 				{
 					$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
 
-					$objFile = new \File($strPath, true);
+					$objFile = new \File($strPath);
 					$objFile->write($this->handleScssLess($content, $arrFile));
 					$objFile->close();
 
@@ -258,7 +258,7 @@ class Combiner extends \System
 		}
 
 		// Create the file
-		$objFile = new \File('assets/' . $strTarget . '/' . $strKey . $this->strMode, true);
+		$objFile = new \File('assets/' . $strTarget . '/' . $strKey . $this->strMode);
 		$objFile->truncate();
 
 		foreach ($this->arrFiles as $arrFile)
@@ -390,7 +390,7 @@ class Combiner extends \System
 			$strData = $chunks[$i+1];
 
 			// Skip absolute links and embedded images (see #5082)
-			if (strncmp($strData, 'data:', 5) !== 0 && strncmp($strData, 'http://', 7) !== 0 && strncmp($strData, 'https://', 8) !== 0 && strncmp($strData, '/', 1) !== 0 && strncmp($strData, 'assets/css3pie/', 15) !== 0)
+			if (strncmp($strData, 'data:', 5) !== 0 && strncmp($strData, 'http://', 7) !== 0 && strncmp($strData, 'https://', 8) !== 0 && strncmp($strData, '/', 1) !== 0)
 			{
 				// Make the paths relative to the root (see #4161)
 				if (strncmp($strData, '../', 3) !== 0)

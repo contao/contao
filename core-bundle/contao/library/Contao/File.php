@@ -69,22 +69,15 @@ class File extends \System
 	 */
 	protected $arrImageSize = array();
 
-	/**
-	 * Do not create the file
-	 * @var string
-	 */
-	protected $blnDoNotCreate = false;
-
 
 	/**
 	 * Instantiate a new file object
 	 *
-	 * @param string  $strFile        The file path
-	 * @param boolean $blnDoNotCreate If true, the file will not be autocreated
+	 * @param string $strFile The file path
 	 *
 	 * @throws \Exception If $strFile is a directory
 	 */
-	public function __construct($strFile, $blnDoNotCreate=false)
+	public function __construct($strFile)
 	{
 		// Handle open_basedir restrictions
 		if ($strFile == '.')
@@ -101,7 +94,6 @@ class File extends \System
 		$this->import('Files');
 
 		$this->strFile = $strFile;
-		$this->blnDoNotCreate = $blnDoNotCreate;
 		$strFolder = dirname($strFile);
 
 		// Check whether we need to sync the database
@@ -122,11 +114,6 @@ class File extends \System
 					break;
 				}
 			}
-		}
-
-		if (!$blnDoNotCreate)
-		{
-			$this->createIfNotExists();
 		}
 	}
 
@@ -400,7 +387,7 @@ class File extends \System
 	 */
 	public function exists()
 	{
-		return $this->blnDoNotCreate ? file_exists(TL_ROOT . '/' . $this->strFile) : true;
+		return file_exists(TL_ROOT . '/' . $this->strFile);
 	}
 
 
@@ -500,29 +487,26 @@ class File extends \System
 	 */
 	public function close()
 	{
-		$return = $this->Files->fclose($this->resFile);
+		$this->Files->fclose($this->resFile);
 
-		// Move the temporary file to its destination
-		if ($this->blnDoNotCreate)
+		// Create the file path
+		if (!file_exists(TL_ROOT . '/' . $this->strFile))
 		{
-			// Create the file path
-			if (!file_exists(TL_ROOT . '/' . $this->strFile))
+			// Handle open_basedir restrictions
+			if (($strFolder = dirname($this->strFile)) == '.')
 			{
-				// Handle open_basedir restrictions
-				if (($strFolder = dirname($this->strFile)) == '.')
-				{
-					$strFolder = '';
-				}
-
-				// Create the parent folder
-				if (!is_dir(TL_ROOT . '/' . $strFolder))
-				{
-					new \Folder($strFolder);
-				}
+				$strFolder = '';
 			}
 
-			$return = $this->Files->rename($this->strTmp, $this->strFile);
+			// Create the parent folder
+			if (!is_dir(TL_ROOT . '/' . $strFolder))
+			{
+				new \Folder($strFolder);
+			}
 		}
+
+		// Move the temporary file to its destination
+		$return = $this->Files->rename($this->strTmp, $this->strFile);
 
 		// Update the database
 		if ($this->blnSyncDb)
@@ -740,33 +724,23 @@ class File extends \System
 	{
 		if (!is_resource($this->resFile))
 		{
-			if (!$this->blnDoNotCreate)
+			$this->strTmp = 'system/tmp/' . md5(uniqid(mt_rand(), true));
+
+			// Copy the contents of the original file to append data
+			if (strncmp($strMode, 'a', 1) === 0 && file_exists(TL_ROOT . '/' . $this->strFile))
 			{
-				// Open the original file
-				if (($this->resFile = $this->Files->fopen($this->strFile, $strMode)) == false)
-				{
-					return false;
-				}
+				$this->Files->copy($this->strFile, $this->strTmp);
 			}
-			else
+
+			// Open the temporary file
+			if (($this->resFile = $this->Files->fopen($this->strTmp, $strMode)) == false)
 			{
-				$this->strTmp = 'system/tmp/' . md5(uniqid(mt_rand(), true));
-
-				// Copy the contents of the original file to append data
-				if (strncmp($strMode, 'a', 1) === 0 && file_exists(TL_ROOT . '/' . $this->strFile))
-				{
-					$this->Files->copy($this->strFile, $this->strTmp);
-				}
-
-				// Open the temporary file
-				if (($this->resFile = $this->Files->fopen($this->strTmp, $strMode)) == false)
-				{
-					return false;
-				}
+				return false;
 			}
 		}
 
 		fputs($this->resFile, $varData);
+
 		return true;
 	}
 
@@ -795,6 +769,7 @@ class File extends \System
 	protected function getMimeType()
 	{
 		$arrMime = $this->getMimeInfo();
+
 		return $arrMime[0];
 	}
 
@@ -807,6 +782,7 @@ class File extends \System
 	protected function getIcon()
 	{
 		$arrMime = $this->getMimeInfo();
+
 		return $arrMime[1];
 	}
 

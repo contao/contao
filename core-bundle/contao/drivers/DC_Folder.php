@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -309,7 +305,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Call recursive function tree()
 		if (empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
 		{
-			$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, false, ($blnClipboard ? $arrClipboard : false));
+			$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false));
 		}
 		else
 		{
@@ -317,7 +313,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			{
 				if ($this->arrFilemounts[$i] != '' && is_dir(TL_ROOT . '/' . $this->arrFilemounts[$i]))
 				{
-					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, false, ($blnClipboard ? $arrClipboard : false));
+					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false));
 				}
 			}
 		}
@@ -1130,7 +1126,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 							$this->varValue = basename($pathinfo['basename'], $this->strExtension);
 						}
 
-						// Fix Unix system files like .htaccess
+						// Fix hidden Unix system files
 						if (strncmp($this->varValue, '.', 1) === 0)
 						{
 							$this->strExtension = '';
@@ -1420,7 +1416,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 						$this->strExtension = ($pathinfo['extension'] != '') ? '.'.$pathinfo['extension'] : '';
 						$this->varValue = basename($pathinfo['basename'], $this->strExtension);
 
-						// Fix Unix system files like .htaccess
+						// Fix hidden Unix system files
 						if (strncmp($this->varValue, '.', 1) === 0)
 						{
 							$this->strExtension = '';
@@ -1673,7 +1669,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		$objFile = new \File($this->intId, true);
+		$objFile = new \File($this->intId);
 
 		// Check whether file type is editable
 		if (!in_array($objFile->extension, trimsplit(',', \Config::get('editableFiles'))))
@@ -1780,8 +1776,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Load the code editor configuration
 			ob_start();
 			include TL_ROOT . '/system/config/ace.php';
-			$codeEditor = ob_get_contents();
-			ob_end_clean();
+			$codeEditor = ob_get_clean();
 		}
 
 		// Versions overview
@@ -1855,22 +1850,29 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		// Remove the protection
-		if (file_exists(TL_ROOT . '/' . $this->intId . '/.htaccess'))
-		{
-			$objFolder = new \Folder($this->intId);
-			$objFolder->unprotect();
-			$this->log('The protection from folder "'.$this->intId.'" has been removed', __METHOD__, TL_FILES);
-			$this->redirect($this->getReferer());
-		}
-		// Protect the folder
-		else
+		// Protect or unprotect the folder
+		if (file_exists(TL_ROOT . '/' . $this->intId . '/.public'))
 		{
 			$objFolder = new \Folder($this->intId);
 			$objFolder->protect();
+
+			$this->import('Automator');
+			$this->Automator->generateSymlinks();
+
 			$this->log('Folder "'.$this->intId.'" has been protected', __METHOD__, TL_FILES);
-			$this->redirect($this->getReferer());
 		}
+		else
+		{
+			$objFolder = new \Folder($this->intId);
+			$objFolder->unprotect();
+
+			$this->import('Automator');
+			$this->Automator->generateSymlinks();
+
+			$this->log('The protection from folder "'.$this->intId.'" has been removed', __METHOD__, TL_FILES);
+		}
+
+		$this->redirect($this->getReferer());
 	}
 
 
@@ -2200,10 +2202,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
 
+		$blnProtected = !file_exists(TL_ROOT . '/' . $strFolder . '/.public');
+
 		$this->import('Files');
 		$this->import('BackendUser', 'User');
 
-		return $this->generateTree(TL_ROOT.'/'.$strFolder, ($level * 20), false, false, ($blnClipboard ? $arrClipboard : false));
+		return $this->generateTree(TL_ROOT.'/'.$strFolder, ($level * 20), false, $blnProtected, ($blnClipboard ? $arrClipboard : false));
 	}
 
 
@@ -2216,7 +2220,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * @param array
 	 * @return string
 	 */
-	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=false, $arrClipboard=null)
+	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null)
 	{
 		static $session;
 		$session = $this->Session->getData();
@@ -2246,7 +2250,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		{
 			foreach (scan($path) as $v)
 			{
-				if ($v == '.svn' || $v == '.DS_Store')
+				if ($v == '.svn' || $v == '.DS_Store' || $v == '.public')
 				{
 					continue;
 				}
@@ -2317,7 +2321,14 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$return .= '<a href="'.$this->addToUrl('tg='.$md5).'" title="'.specialchars($alt).'" onclick="Backend.getScrollOffset(); return AjaxRequest.toggleFileManager(this, \'filetree_'.$md5.'\', \''.$currentFolder.'\', '.$level.')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
 			}
 
-			$protected = ($blnProtected === true || array_search('.htaccess', $content) !== false) ? true : false;
+			$protected = $blnProtected;
+
+			// Check whether the folder is public
+			if ($protected === true && array_search('.public', $content) !== false)
+			{
+				$protected = false;
+			}
+
 			$folderImg = ($session['filetree'][$md5] == 1 && $countFiles > 0) ? ($protected ? 'folderOP.gif' : 'folderO.gif') : ($protected ? 'folderCP.gif' : 'folderC.gif');
 
 			// Add the current folder
@@ -2365,7 +2376,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$popupHeight = 161;
 			$currentFile = str_replace(TL_ROOT.'/', '', $files[$h]);
 
-			$objFile = new \File($currentFile, true);
+			$objFile = new \File($currentFile);
 
 			if (!empty($this->arrValidFileTypes) && !in_array($objFile->extension, $this->arrValidFileTypes))
 			{

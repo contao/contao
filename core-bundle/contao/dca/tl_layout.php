@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections,sPosition;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder;{picturefill_legend:hide},picturefill;{feed_legend:hide},newsfeeds,calendarfeeds;{modules_legend},modules;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head;{jquery_legend},addJQuery;{mootools_legend},addMooTools;{script_legend:hide},analytics,script;{static_legend},static'
+		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections,sPosition;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder;{picturefill_legend:hide},picturefill;{feed_legend:hide},newsfeeds,calendarfeeds;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
 	),
 
 	// Subpalettes
@@ -319,7 +319,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'sorting'                 => true,
 			'flag'                    => 11,
 			'inputType'               => 'select',
-			'options'                 => array('html5', 'xhtml_strict', 'xhtml_trans'),
+			'options'                 => array('html5'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
@@ -332,13 +332,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
-		),
-		'picturefill' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['picturefill'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'viewport' => array
 		(
@@ -442,6 +435,13 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
+		'picturefill' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['picturefill'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'sql'                     => "char(1) NOT NULL default ''"
+		),
 		'analytics' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['analytics'],
@@ -450,6 +450,16 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'checkboxWizard',
 			'options_callback'        => array('tl_layout', 'getAnalyticsTemplates'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
+			'eval'                    => array('multiple'=>true),
+			'sql'                     => "text NULL"
+		),
+		'scripts' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['scripts'],
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'checkboxWizard',
+			'options_callback'        => array('tl_layout', 'getScriptTemplates'),
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
@@ -651,6 +661,16 @@ class tl_layout extends Backend
 	public function getJqueryTemplates()
 	{
 		return $this->getTemplateGroup('j_');
+	}
+
+
+	/**
+	 * Return all script templates as array
+	 * @return array
+	 */
+	public function getScriptTemplates()
+	{
+		return $this->getTemplateGroup('js_');
 	}
 
 

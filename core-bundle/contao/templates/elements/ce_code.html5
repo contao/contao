@@ -2,6 +2,6 @@
 
 <?php $this->block('content'); ?>
 
-  <pre class="<?php echo $this->shClass; ?>"><?php echo $this->code; ?></pre>
+  <pre><code class="<?= $this->cssClass ?>"><?= $this->code ?></code></pre>
 
 <?php $this->endblock(); ?>

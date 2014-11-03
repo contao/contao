@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -92,7 +88,7 @@ class ModuleRandomImage extends \Module
 			// Single files
 			if ($objFiles->type == 'file')
 			{
-				$objFile = new \File($objFiles->path, true);
+				$objFile = new \File($objFiles->path);
 
 				if (!$objFile->isImage)
 				{
@@ -137,7 +133,7 @@ class ModuleRandomImage extends \Module
 						continue;
 					}
 
-					$objFile = new \File($objSubfiles->path, true);
+					$objFile = new \File($objSubfiles->path);
 
 					if (!$objFile->isImage)
 					{

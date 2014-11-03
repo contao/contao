@@ -30,7 +30,7 @@ namespace Contao;
  * @author    Leo Feyer <https://github.com/leofeyer>
  * @copyright Leo Feyer 2005-2014
  */
-abstract class Template extends \BaseTemplate
+abstract class Template extends \View
 {
 
 	/**
@@ -256,14 +256,14 @@ abstract class Template extends \BaseTemplate
 		// Minify the markup
 		$this->strBuffer = $this->minifyHtml($this->strBuffer);
 
-		header('Vary: User-Agent', false);
-		header('Content-Type: ' . $this->strContentType . '; charset=' . \Config::get('characterSet'));
-
 		// Add the debug bar
 		if (\Config::get('debugMode') && !\Config::get('hideDebugBar') && !isset($_GET['popup']))
 		{
 			$this->strBuffer = str_replace('</body>', $this->getDebugBar() . '</body>', $this->strBuffer);
 		}
+
+		header('Vary: User-Agent', false);
+		header('Content-Type: ' . $this->strContentType . '; charset=' . \Config::get('characterSet'));
 
 		echo $this->strBuffer;
 
@@ -331,8 +331,7 @@ abstract class Template extends \BaseTemplate
 
 		ob_start();
 		print_r($GLOBALS['TL_DEBUG']);
-		$strDebug .= ob_get_contents();
-		ob_end_clean();
+		$strDebug .= ob_get_clean();
 
 		unset($GLOBALS['TL_DEBUG']);
 
@@ -343,14 +342,13 @@ abstract class Template extends \BaseTemplate
 					. "$(document.body).setStyle('margin-bottom',$('contao-debug').hasClass('closed')?'60px':'320px');"
 					. "$('debug-tog').addEvent('click',function(e) {"
 						. "$('contao-debug').toggleClass('closed');"
-						. "Cookie.write('CONTAO_CONSOLE',$('contao-debug').hasClass('closed')?'closed':'',{path:'" . (TL_PATH ?: '/') . "'});"
+						. "Cookie.write('CONTAO_CONSOLE',$('contao-debug').hasClass('closed')?'closed':'',{path:'" . (\Environment::get('path') ?: '/') . "'});"
 						. "$(document.body).setStyle('margin-bottom',$('contao-debug').hasClass('closed')?'60px':'320px');"
 					. "});"
 					. "window.addEvent('resize',function() {"
 						. "$$('#contao-debug>*').setStyle('width',window.getSize().x);"
 					. "});"
-				. "})(document.id);",
-				($this->strFormat == 'xhtml')
+				. "})(document.id);"
 			)
 			. "\n<!-- indexer::continue -->\n\n"
 		;
@@ -433,36 +431,27 @@ abstract class Template extends \BaseTemplate
 	/**
 	 * Generate the markup for a style sheet tag
 	 *
-	 * @param string  $href  The script path
-	 * @param string  $media The media type string
-	 * @param boolean $xhtml True if the output shall be XHTML compliant
+	 * @param string $href  The script path
+	 * @param string $media The media type string
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateStyleTag($href, $media=null, $xhtml=false)
+	public static function generateStyleTag($href, $media=null)
 	{
-		return '<link' . ($xhtml ? ' type="text/css"' : '') . ' rel="stylesheet" href="' . $href . '"' . (($media && $media != 'all') ? ' media="' . $media . '"' : '') . ($xhtml ? ' />' : '>');
+		return '<link rel="stylesheet" href="' . $href . '"' . (($media && $media != 'all') ? ' media="' . $media . '"' : '') . '>';
 	}
 
 
 	/**
 	 * Generate the markup for inline CSS code
 	 *
-	 * @param string  $script The CSS code
-	 * @param boolean $xhtml  True if the output shall be XHTML compliant
+	 * @param string $script The CSS code
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateInlineStyle($script, $xhtml=false)
+	public static function generateInlineStyle($script)
 	{
-		if ($xhtml)
-		{
-			return '<style type="text/css">' . "\n/* <![CDATA[ */\n" . $script . "\n/* ]]> */\n" . '</style>';
-		}
-		else
-		{
-			return '<style>' . $script . '</style>';
-		}
+		return '<style>' . $script . '</style>';
 	}
 
 
@@ -470,51 +459,41 @@ abstract class Template extends \BaseTemplate
 	 * Generate the markup for a JavaScript tag
 	 *
 	 * @param string  $src   The script path
-	 * @param boolean $xhtml True if the output shall be XHTML compliant
 	 * @param boolean $async True to add the async attribute
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $xhtml=false, $async=false)
+	public static function generateScriptTag($src, $async=false)
 	{
-		return '<script' . ($xhtml ? ' type="text/javascript"' : '') . ' src="' . $src . '"' . ($async && !$xhtml ? ' async' : '') . '></script>';
+		return '<script src="' . $src . '"' . ($async ? ' async' : '') . '></script>';
 	}
 
 
 	/**
 	 * Generate the markup for an inline JavaScript
 	 *
-	 * @param string  $script The JavaScript code
-	 * @param boolean $xhtml  True if the output shall be XHTML compliant
+	 * @param string $script The JavaScript code
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateInlineScript($script, $xhtml=false)
+	public static function generateInlineScript($script)
 	{
-		if ($xhtml)
-		{
-			return '<script type="text/javascript">' . "\n/* <![CDATA[ */\n" . $script . "\n/* ]]> */\n" . '</script>';
-		}
-		else
-		{
-			return '<script>' . $script . '</script>';
-		}
+		return '<script>' . $script . '</script>';
 	}
 
 
 	/**
 	 * Generate the markup for an RSS feed tag
 	 *
-	 * @param string  $href   The script path
-	 * @param string  $format The feed format
-	 * @param string  $title  The feed title
-	 * @param boolean $xhtml  True if the output shall be XHTML compliant
+	 * @param string $href   The script path
+	 * @param string $format The feed format
+	 * @param string $title  The feed title
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateFeedTag($href, $format, $title, $xhtml=false)
+	public static function generateFeedTag($href, $format, $title)
 	{
-		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . specialchars($title) . '"' . ($xhtml ? ' />' : '>');
+		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . specialchars($title) . '">';
 	}
 
 
@@ -541,18 +520,5 @@ abstract class Template extends \BaseTemplate
 
 			flush();
 		}
-	}
-
-
-	/**
-	 * Print the IE6 warning
-	 *
-	 * @return string The warning message
-	 *
-	 * @deprecated The IE6 warning is now in the templates (e.g. be_install)
-	 */
-	public function showIE6warning()
-	{
-		return ''; // Backwards compatibility
 	}
 }

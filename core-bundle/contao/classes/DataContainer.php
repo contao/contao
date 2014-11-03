@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -328,7 +324,7 @@ class DataContainer extends \Backend
 					}
 
 					// Convert file paths in src attributes (see #5965)
-					if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
+					if ($varValue && isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
 					{
 						$varValue = \String::srcToInsertTag($varValue);
 					}
@@ -371,7 +367,7 @@ class DataContainer extends \Backend
 					break;
 			}
 
-			$wizard .= ' <img src="assets/mootools/datepicker/' . $GLOBALS['TL_ASSETS']['DATEPICKER'] . '/icon.gif" width="20" height="20" alt="" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']).'" id="toggle_' . $objWidget->id . '" style="vertical-align:-6px;cursor:pointer">
+			$wizard .= ' <img src="assets/datepicker/images/icon.gif" width="20" height="20" alt="" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']).'" id="toggle_' . $objWidget->id . '" style="vertical-align:-6px;cursor:pointer">
   <script>
     window.addEvent("domready", function() {
       new Picker.Date($("ctrl_' . $objWidget->id . '"), {
@@ -474,8 +470,7 @@ class DataContainer extends \Backend
 
 			ob_start();
 			include TL_ROOT . '/system/config/' . $file . '.php';
-			$updateMode = ob_get_contents();
-			ob_end_clean();
+			$updateMode = ob_get_clean();
 		}
 
 		// Handle multi-select fields in "override all" mode
@@ -503,7 +498,7 @@ class DataContainer extends \Backend
 			{
 				$image = 'placeholder.png';
 
-				if ($objFile->isSvgImage || $objFile->height <= $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] && $objFile->width <= $GLOBALS['TL_CONFIG']['gdMaxImgWidth'])
+				if ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth'))
 				{
 					if ($objFile->width > 699 || $objFile->height > 524)
 					{

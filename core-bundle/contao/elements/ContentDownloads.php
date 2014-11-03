@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -126,7 +122,7 @@ class ContentDownloads extends \ContentElement
 			// Single files
 			if ($objFiles->type == 'file')
 			{
-				$objFile = new \File($objFiles->path, true);
+				$objFile = new \File($objFiles->path);
 
 				if (!in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
 				{
@@ -202,7 +198,7 @@ class ContentDownloads extends \ContentElement
 						continue;
 					}
 
-					$objFile = new \File($objSubfiles->path, true);
+					$objFile = new \File($objSubfiles->path);
 
 					if (!in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
 					{

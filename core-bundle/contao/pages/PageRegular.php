@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -256,26 +252,12 @@ class PageRegular extends \Frontend
 	 */
 	protected function createTemplate($objPage, $objLayout)
 	{
-		$blnXhtml = ($objPage->outputFormat == 'xhtml');
 		$this->Template = new \FrontendTemplate($objPage->template);
-
-		// Generate the DTD
-		if ($blnXhtml)
-		{
-			if ($objPage->outputVariant == 'strict')
-			{
-				$this->Template->doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
-			}
-			else
-			{
-				$this->Template->doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
-			}
-		}
-
-		$arrFramework = deserialize($objLayout->framework);
 
 		$this->Template->viewport = '';
 		$this->Template->framework = '';
+
+		$arrFramework = deserialize($objLayout->framework);
 
 		// Generate the CSS framework
 		if (is_array($arrFramework) && in_array('layout.css', $arrFramework))
@@ -284,7 +266,7 @@ class PageRegular extends \Frontend
 
 			if (in_array('responsive.css', $arrFramework))
 			{
-				$this->Template->viewport = '<meta name="viewport" content="width=device-width,initial-scale=1.0"' . ($blnXhtml ? ' />' : '>') . "\n";
+				$this->Template->viewport = '<meta name="viewport" content="width=device-width,initial-scale=1.0">' . "\n";
 			}
 
 			// Wrapper
@@ -356,14 +338,14 @@ class PageRegular extends \Frontend
 			// Add the layout specific CSS
 			if ($strFramework != '')
 			{
-				$this->Template->framework = \Template::generateInlineStyle($strFramework, $blnXhtml) . "\n";
+				$this->Template->framework = \Template::generateInlineStyle($strFramework) . "\n";
 			}
 		}
 
 		// Overwrite the viewport tag (see #6251)
 		if ($objLayout->viewport != '')
 		{
-			$this->Template->viewport = '<meta name="viewport" content="' . $objLayout->viewport . '"' . ($blnXhtml ? ' />' : '>') . "\n";
+			$this->Template->viewport = '<meta name="viewport" content="' . $objLayout->viewport . '">' . "\n";
 		}
 
 		$this->Template->mooScripts = '';
@@ -385,17 +367,24 @@ class PageRegular extends \Frontend
 		{
 			if ($objLayout->jSource == 'j_googleapis' || $objLayout->jSource == 'j_fallback')
 			{
-				$this->Template->mooScripts .= \Template::generateScriptTag('//code.jquery.com/jquery-' . $GLOBALS['TL_ASSETS']['JQUERY'] . '.min.js', $blnXhtml) . "\n";
-
-				// Local fallback (thanks to DyaGa)
-				if ($objLayout->jSource == 'j_fallback')
+				if (($strVersion = \System::getComponentVersion('contao-components/jquery')) !== null)
 				{
-					$this->Template->mooScripts .= \Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . TL_ASSETS_URL . 'assets/jquery/core/' . $GLOBALS['TL_ASSETS']['JQUERY'] . '/jquery.min.js">\x3C/script>\')', $blnXhtml) . "\n";
+					$this->Template->mooScripts .= \Template::generateScriptTag('//code.jquery.com/jquery-' . $strVersion . '.min.js') . "\n";
+
+					// Local fallback (thanks to DyaGa)
+					if ($objLayout->jSource == 'j_fallback')
+					{
+						$this->Template->mooScripts .= \Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . TL_ASSETS_URL . 'assets/jquery/js/jquery.min.js">\x3C/script>\')') . "\n";
+					}
+				}
+				else
+				{
+					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/jquery/js/jquery.min.js|static';
 				}
 			}
 			else
 			{
-				$GLOBALS['TL_JAVASCRIPT'][] = 'assets/jquery/core/' . $GLOBALS['TL_ASSETS']['JQUERY'] . '/jquery.min.js|static';
+				$GLOBALS['TL_JAVASCRIPT'][] = 'assets/jquery/js/jquery.min.js|static';
 			}
 		}
 
@@ -404,33 +393,40 @@ class PageRegular extends \Frontend
 		{
 			if ($objLayout->mooSource == 'moo_googleapis' || $objLayout->mooSource == 'moo_fallback')
 			{
-				$this->Template->mooScripts .= \Template::generateScriptTag('//ajax.googleapis.com/ajax/libs/mootools/' . $GLOBALS['TL_ASSETS']['MOOTOOLS'] . '/mootools-yui-compressed.js', $blnXhtml) . "\n";
-
-				// Local fallback (thanks to DyaGa)
-				if ($objLayout->mooSource == 'moo_fallback')
+				if (($strVersion = \System::getComponentVersion('contao-components/mootools')) !== null)
 				{
-					$this->Template->mooScripts .= \Template::generateInlineScript('window.MooTools || document.write(\'<script src="' . TL_ASSETS_URL . 'assets/mootools/core/' . $GLOBALS['TL_ASSETS']['MOOTOOLS'] . '/mootools-core.js">\x3C/script>\')', $blnXhtml) . "\n";
-				}
+					$this->Template->mooScripts .= \Template::generateScriptTag('//ajax.googleapis.com/ajax/libs/mootools/' . $strVersion . '/mootools-yui-compressed.js') . "\n";
 
-				$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/core/' . $GLOBALS['TL_ASSETS']['MOOTOOLS'] . '/mootools-more.js|static';
-				$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/core/' . $GLOBALS['TL_ASSETS']['MOOTOOLS'] . '/mootools-mobile.js|static';
+					// Local fallback (thanks to DyaGa)
+					if ($objLayout->mooSource == 'moo_fallback')
+					{
+						$this->Template->mooScripts .= \Template::generateInlineScript('window.MooTools || document.write(\'<script src="' . TL_ASSETS_URL . 'assets/mootools/js/mootools-core.min.js">\x3C/script>\')') . "\n";
+					}
+
+					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools-more.min.js|static';
+					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools-mobile.min.js|static';
+				}
+				else
+				{
+					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools.min.js|static';
+				}
 			}
 			else
 			{
-				$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/core/' . $GLOBALS['TL_ASSETS']['MOOTOOLS'] . '/mootools.js|static';
+				$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools.min.js|static';
 			}
 		}
 
 		// Load MooTools core for the debug bar (see #5195)
 		if (\Config::get('debugMode') && !$objLayout->addMooTools)
 		{
-			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/core/' . $GLOBALS['TL_ASSETS']['MOOTOOLS'] . '/mootools-core.js|static';
+			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools-core.min.js|static';
 		}
 
 		// Picturefill
 		if ($objLayout->picturefill)
 		{
-			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/respimage/' . $GLOBALS['TL_ASSETS']['RESPIMAGE'] . '/respimage.min.js|static';
+			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/respimage/js/respimage.min.js|static';
 		}
 
 		// Check whether TL_APPEND_JS exists (see #4890)
@@ -465,20 +461,18 @@ class PageRegular extends \Frontend
 	 * Create all header scripts
 	 * @param object
 	 * @param object
-	 * @throws \Exception
 	 */
 	protected function createHeaderScripts($objPage, $objLayout)
 	{
 		$strStyleSheets = '';
 		$strCcStyleSheets = '';
 		$arrStyleSheets = deserialize($objLayout->stylesheet);
-		$blnXhtml = ($objPage->outputFormat == 'xhtml');
 		$arrFramework = deserialize($objLayout->framework);
 
 		// Google web fonts
 		if ($objLayout->webfonts != '')
 		{
-			$strStyleSheets .= \Template::generateStyleTag('//fonts.googleapis.com/css?family=' . str_replace('|', '%7C', $objLayout->webfonts), 'all', $blnXhtml) . "\n";
+			$strStyleSheets .= \Template::generateStyleTag('//fonts.googleapis.com/css?family=' . str_replace('|', '%7C', $objLayout->webfonts), 'all') . "\n";
 		}
 
 		// Add the Contao CSS framework style sheets
@@ -488,7 +482,7 @@ class PageRegular extends \Frontend
 			{
 				if ($strFile != 'tinymce.css')
 				{
-					$GLOBALS['TL_FRAMEWORK_CSS'][] = 'assets/contao/css/' . $strFile;
+					$GLOBALS['TL_FRAMEWORK_CSS'][] = 'assets/contao/css/' . basename($strFile, '.css') . '.min.css';
 				}
 			}
 		}
@@ -532,12 +526,12 @@ class PageRegular extends \Frontend
 
 							if ($objFile !== null)
 							{
-								$strStyleSheet = \Template::generateStyleTag(TL_ASSETS_URL . $objFile->path, $media, $blnXhtml);
+								$strStyleSheet = \Template::generateStyleTag(TL_ASSETS_URL . $objFile->path, $media);
 							}
 						}
 						else
 						{
-							$strStyleSheet = \Template::generateStyleTag(TL_ASSETS_URL . 'assets/css/' . $objStylesheets->name . '.css', $media, $blnXhtml);
+							$strStyleSheet = \Template::generateStyleTag(TL_ASSETS_URL . 'assets/css/' . $objStylesheets->name . '.css', $media);
 						}
 
 						if ($objStylesheets->cc)
@@ -638,7 +632,7 @@ class PageRegular extends \Frontend
 		// Add the debug style sheet
 		if (\Config::get('debugMode'))
 		{
-			$strStyleSheets .= \Template::generateStyleTag($this->addStaticUrlTo('assets/contao/css/debug.css'), 'all', $blnXhtml) . "\n";
+			$strStyleSheets .= \Template::generateStyleTag($this->addStaticUrlTo('assets/contao/css/debug.min.css'), 'all') . "\n";
 		}
 
 		// Always add conditional style sheets at the end
@@ -656,7 +650,7 @@ class PageRegular extends \Frontend
 			{
 				while($objFeeds->next())
 				{
-					$strStyleSheets .= \Template::generateFeedTag(($objFeeds->feedBase ?: \Environment::get('base')) . 'share/' . $objFeeds->alias . '.xml', $objFeeds->format, $objFeeds->title, $blnXhtml) . "\n";
+					$strStyleSheets .= \Template::generateFeedTag(($objFeeds->feedBase ?: \Environment::get('base')) . 'share/' . $objFeeds->alias . '.xml', $objFeeds->format, $objFeeds->title) . "\n";
 				}
 			}
 		}
@@ -670,7 +664,7 @@ class PageRegular extends \Frontend
 			{
 				while($objFeeds->next())
 				{
-					$strStyleSheets .= \Template::generateFeedTag(($objFeeds->feedBase ?: \Environment::get('base')) . 'share/' . $objFeeds->alias . '.xml', $objFeeds->format, $objFeeds->title, $blnXhtml) . "\n";
+					$strStyleSheets .= \Template::generateFeedTag(($objFeeds->feedBase ?: \Environment::get('base')) . 'share/' . $objFeeds->alias . '.xml', $objFeeds->format, $objFeeds->title) . "\n";
 				}
 			}
 		}
@@ -731,6 +725,21 @@ class PageRegular extends \Frontend
 
 			// Add a placeholder for dynamic scripts (see #4203)
 			$strScripts .= '[[TL_MOOTOOLS]]';
+		}
+
+		// Add the framework agnostic JavaScripts
+		if ($objLayout->scripts != '')
+		{
+			$arrScripts = deserialize($objLayout->scripts, true);
+
+			foreach ($arrScripts as $strTemplate)
+			{
+				if ($strTemplate != '')
+				{
+					$objTemplate = new \FrontendTemplate($strTemplate);
+					$strScripts .= $objTemplate->parse();
+				}
+			}
 		}
 
 		// Add a placeholder for dynamic scripts (see #4203, #5583)

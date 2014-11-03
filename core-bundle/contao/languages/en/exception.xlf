@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.1">
-  <file datatype="php" original="system/modules/core/languages/en/explain.php" source-language="en">
+  <file datatype="php" original="contao/languages/en/explain.php" source-language="en">
     <body>
       <trans-unit id="XPT.error">
         <source>An error occurred</source>
@@ -50,14 +50,8 @@
       <trans-unit id="XPT.incompleteInstallation">
         <source>The installation has not been completed, therefore Contao cannot work properly.</source>
       </trans-unit>
-      <trans-unit id="XPT.incompleteFixOne">
-        <source>Point your browser to the following URL:</source>
-      </trans-unit>
-      <trans-unit id="XPT.installPath">
-        <source>path-to-installation</source>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteFixTwo">
-        <source>This will open the Contao install tool, which will guide you through the installation process.</source>
+      <trans-unit id="XPT.incompleteFix">
+        <source>Please open the Contao install tool by pointing your browser to &lt;code&gt;contao/install.php&lt;/code&gt; or, if you have not yet set the document root, to &lt;code&gt;web/contao/install.php&lt;/code&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href="https://contao.org/manual/installation.html" target="_blank"&gt;Contao manual&lt;/a&gt;.</source>
@@ -124,6 +118,18 @@
       </trans-unit>
       <trans-unit id="XPT.maintenance">
         <source>The website is currently down for maintenance. Please come back later.</source>
+      </trans-unit>
+      <trans-unit id="XPT.insecureRoot">
+        <source>Your installation is not secure, because non-public resources are publicy available via HTTP.</source>
+      </trans-unit>
+      <trans-unit id="XPT.insecureFix">
+        <source>Please set the document root to the &lt;code&gt;web/&lt;/code&gt; subfolder. This is usually done in the domain routing section of your server administration panel or in the vhosts file of your web server.</source>
+      </trans-unit>
+      <trans-unit id="XPT.insecureExplainOne">
+        <source>Contao 4 does not rely on &lt;code&gt;.htaccess&lt;/code&gt; files anymore and uses a public subfolder as document root instead. If you cannot set the document root to this subfolder, you can bypass this check by adding the following line to your local configuration file:</source>
+      </trans-unit>
+      <trans-unit id="XPT.insecureExplainTwo">
+        <source>However, please note that you &lt;strong&gt;must take additional measures&lt;/strong&gt; to secure your installation in this case. If you do not, any file, including user and configuration files, will be publicy accessible!</source>
       </trans-unit>
     </body>
   </file>

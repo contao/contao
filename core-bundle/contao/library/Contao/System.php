@@ -12,6 +12,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\HttpKernel\ContaoKernelInterface;
+use Symfony\Component\DependencyInjection\Container;
+
 
 /**
  * Abstract library base class
@@ -66,6 +69,12 @@ abstract class System
 	 * @var array
 	 */
 	protected static $arrLanguageFiles = array();
+
+	/**
+	 * The Symfony kernel
+	 * @var ContaoKernelInterface
+	 */
+	protected static $objKernel;
 
 	/**
 	 * Available image sizes
@@ -304,17 +313,17 @@ abstract class System
 			}
 			else
 			{
-				foreach (\ModuleLoader::getActive() as $strModule)
+				foreach (\System::getKernel()->getContaoBundles() as $bundle)
 				{
-					$strFile = 'system/modules/' . $strModule . '/languages/' . $strCreateLang . '/' . $strName;
+					$strFile = $bundle->getContaoResourcesPath() . '/languages/' . $strCreateLang . '/' . $strName;
 
-					if (file_exists(TL_ROOT . '/' . $strFile . '.xlf'))
+					if (file_exists($strFile . '.xlf'))
 					{
 						static::convertXlfToPhp($strFile . '.xlf', $strCreateLang, true);
 					}
-					elseif (file_exists(TL_ROOT . '/' . $strFile . '.php'))
+					elseif (file_exists($strFile . '.php'))
 					{
-						include TL_ROOT . '/' . $strFile . '.php';
+						include $strFile . '.php';
 					}
 				}
 			}
@@ -354,7 +363,26 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			static::$arrLanguages[$strLanguage] = (is_dir(TL_ROOT . '/system/modules/core/languages/' . $strLanguage) || is_dir(TL_ROOT . '/system/cache/language/' . $strLanguage) || in_array($strLanguage, array_unique(array_map('basename', glob(TL_ROOT . '/system/modules/*/languages/*')))));
+			$blnIsInstalled = is_dir(TL_ROOT . '/vendor/contao/core-bundle/contao/languages/' . $strLanguage);
+
+			if (!$blnIsInstalled)
+			{
+				$blnIsInstalled = is_dir(TL_ROOT . '/system/cache/language/' . $strLanguage);
+			}
+
+			if (!$blnIsInstalled)
+			{
+				foreach (static::getKernel()->getContaoBundles() as $bundle)
+				{
+					if (is_dir(TL_ROOT . '/' . $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage))
+					{
+						$blnIsInstalled = true;
+						break;
+					}
+				}
+			}
+
+			static::$arrLanguages[$strLanguage] = $blnIsInstalled;
 		}
 
 		return static::$arrLanguages[$strLanguage];
@@ -423,7 +451,7 @@ abstract class System
 		}
 
 		asort($arrAux);
-		$arrBackendLanguages = scan(TL_ROOT . '/system/modules/core/languages');
+		$arrBackendLanguages = scan(TL_ROOT . '/vendor/contao/core-bundle/contao/languages');
 
 		foreach (array_keys($arrAux) as $strKey)
 		{
@@ -489,7 +517,6 @@ abstract class System
 			try
 			{
 				$sizes = array();
-
 				$imageSize = \Database::getInstance()->query("SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name");
 
 				while ($imageSize->next())
@@ -538,7 +565,7 @@ abstract class System
 	{
 		if ($strPath == '')
 		{
-			$strPath = TL_PATH ?: '/'; // see #4390
+			$strPath = \Environment::get('path') ?: '/'; // see #4390
 		}
 
 		$objCookie = new \stdClass();
@@ -640,7 +667,13 @@ abstract class System
 	 */
 	protected static function readPhpFileWithoutTags($strName)
 	{
-		$strCode = rtrim(file_get_contents(TL_ROOT . '/' . $strName));
+		// Convert to absolute path
+		if (strpos($strName, TL_ROOT . '/') === false)
+		{
+			$strName = TL_ROOT . '/' . $strName;
+		}
+
+		$strCode = rtrim(file_get_contents($strName));
 
 		// Opening tag
 		if (strncmp($strCode, '<?php', 5) === 0)
@@ -673,16 +706,22 @@ abstract class System
 	 *
 	 * @return string The PHP code
 	 */
-	protected static function convertXlfToPhp($strName, $strLanguage, $blnLoad=false)
+	public static function convertXlfToPhp($strName, $strLanguage, $blnLoad=false)
 	{
 		// Read the .xlf file
 		$xml = new \DOMDocument();
 		$xml->preserveWhiteSpace = false;
 
-		// Use loadXML() instead of load() (see 7192)
-		$xml->loadXML(file_get_contents(TL_ROOT . '/' . $strName));
+		// Convert to absolute path
+		if (strpos($strName, TL_ROOT . '/') === false)
+		{
+			$strName = TL_ROOT . '/' . $strName;
+		}
 
-		$return = "\n// $strName\n";
+		// Use loadXML() instead of load() (see 7192)
+		$xml->loadXML(file_get_contents($strName));
+
+		$return = "\n// " . str_replace(TL_ROOT . '/', '', $strName) . "\n";
 		$units = $xml->getElementsByTagName('trans-unit');
 
 		// Set up the quotekey function
@@ -778,46 +817,257 @@ abstract class System
 
 
 	/**
-	 * Enable a back end module
+	 * Return the installed version of a component
 	 *
-	 * @param string $strName The module name
+	 * @param string $strName The component name
 	 *
-	 * @return boolean True if the module was enabled
+	 * @return string|null The version number or null
 	 */
-	public static function enableModule($strName)
+	public static function getComponentVersion($strName)
 	{
-		$objFile = new \File('system/modules/' . $strName . '/.skip', true);
+		$strCacheFile = 'system/cache/packages/installed.php';
 
-		if (!$objFile->exists())
+		// Try to load from cache
+		if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
 		{
-			return false;
+			$arrPackages = include TL_ROOT . '/' . $strCacheFile;
+
+			return $arrPackages[$strName];
 		}
 
-		$objFile->delete();
-		return true;
+		$objJson = json_decode(file_get_contents(TL_ROOT . '/vendor/composer/installed.json'), true);
+
+		// Try to find a matching package
+		foreach ($objJson as $objPackage)
+		{
+			if ($objPackage['name'] == $strName)
+			{
+				$strVersion = substr($objPackage['version_normalized'], 0, strrpos($objPackage['version_normalized'], '.'));
+
+				if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $strVersion))
+				{
+					return $strVersion;
+				}
+			}
+		}
+
+		return null;
 	}
 
 
 	/**
-	 * Disable a back end module
-	 *
-	 * @param string $strName The module name
-	 *
-	 * @return boolean True if the module was disabled
+	 * Initialize the system
 	 */
-	public static function disableModule($strName)
+	public static function boot()
 	{
-		$objFile = new \File('system/modules/' . $strName . '/.skip', true);
+		global $objConfig;
 
-		if ($objFile->exists())
+		if ($objConfig !== null)
 		{
-			return false;
+			return;
 		}
 
-		$objFile->write('Remove this file to enable the module');
-		$objFile->close();
+		if (!defined('TL_MODE'))
+		{
+			define('TL_MODE', 'FE');
+		}
 
-		return true;
+		define('TL_START', microtime(true));
+		define('TL_REFERER_ID', substr(md5(TL_START), 0, 8));
+		define('TL_ROOT', dirname(static::getKernel()->getRootDir()));
+
+		// Define the TL_SCRIPT constant (backwards compatibility)
+		if (!defined('TL_SCRIPT'))
+		{
+			define('TL_SCRIPT', null);
+		}
+
+		// Define the login status constants in the back end (see #4099, #5279)
+		if (TL_MODE == 'BE')
+		{
+			define('BE_USER_LOGGED_IN', false);
+			define('FE_USER_LOGGED_IN', false);
+		}
+
+		require TL_ROOT . '/system/helper/functions.php';
+		require TL_ROOT . '/system/config/constants.php';
+		require TL_ROOT . '/system/helper/interface.php';
+		require TL_ROOT . '/system/helper/exception.php';
+
+		// Try to disable the PHPSESSID
+		@ini_set('session.use_trans_sid', 0);
+		@ini_set('session.cookie_httponly', true);
+
+		// Set the error and exception handler
+		@set_error_handler('__error');
+		@set_exception_handler('__exception');
+
+		// Log PHP errors
+		@ini_set('error_log', TL_ROOT . '/system/logs/error.log');
+
+		// Preload the configuration (see #5872)
+		\Config::preload();
+
+		// Override the SwiftMailer defaults
+		\Swift::init(function() {
+			$preferences = \Swift_Preferences::getInstance();
+			$preferences->setTempDir(TL_ROOT . '/system/tmp')->setCacheType('disk');
+			$preferences->setCharset(\Config::get('characterSet'));
+		});
+
+		// Alias the class and template loader (backwards compatibility)
+		class_alias('Contao\\ClassLoader', 'ClassLoader');
+		class_alias('Contao\\TemplateLoader', 'TemplateLoader');
+
+		// Try to load the modules
+		try
+		{
+			\ClassLoader::scanAndRegister();
+		}
+		catch (\UnresolvableDependenciesException $e)
+		{
+			die($e->getMessage()); // see #6343
+		}
+
+		// Define the relative path to the installation (see #5339)
+		if (\Config::has('websitePath') && TL_SCRIPT != 'contao/install.php')
+		{
+			\Environment::set('path', \Config::get('websitePath'));
+		}
+		elseif (TL_MODE == 'BE')
+		{
+			\Environment::set('path', preg_replace('/\/contao\/[a-z]+\.php$/i', '', \Environment::get('scriptName')));
+		}
+
+		define('TL_PATH', \Environment::get('path')); // backwards compatibility
+
+		// Start the session
+		@session_set_cookie_params(0, (\Environment::get('path') ?: '/')); // see #5339
+		@session_start();
+
+		// Set the default language
+		if (!isset($_SESSION['TL_LANGUAGE']))
+		{
+			$langs = \Environment::get('httpAcceptLanguage');
+			array_push($langs, 'en'); // see #6533
+
+			foreach ($langs as $lang)
+			{
+				if (is_dir(TL_ROOT . '/vendor/contao/module-core/contao/languages/' . str_replace('-', '_', $lang)))
+				{
+					$_SESSION['TL_LANGUAGE'] = $lang;
+					break;
+				}
+			}
+
+			unset($langs, $lang);
+		}
+
+		$GLOBALS['TL_LANGUAGE'] = $_SESSION['TL_LANGUAGE'];
+
+		// Show the "insecure document root" message
+		if (PHP_SAPI != 'cli' && TL_SCRIPT != 'contao/install.php' && substr(\Environment::get('path'), -4) == '/web' && !\Config::get('ignoreInsecureRoot'))
+		{
+			die_nicely('be_insecure', 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
+		}
+
+		$objConfig = \Config::getInstance();
+
+		// Show the "incomplete installation" message
+		if (PHP_SAPI != 'cli' && TL_SCRIPT != 'contao/install.php' && !$objConfig->isComplete())
+		{
+			die_nicely('be_incomplete', 'The installation has not been completed. Open the Contao install tool to continue.');
+		}
+
+		\Input::initialize();
+
+		// Always show error messages if logged into the install tool (see #5001)
+		if (\Input::cookie('TL_INSTALL_AUTH') && !empty($_SESSION['TL_INSTALL_AUTH']) && \Input::cookie('TL_INSTALL_AUTH') == $_SESSION['TL_INSTALL_AUTH'] && $_SESSION['TL_INSTALL_EXPIRE'] > time())
+		{
+			\Config::set('displayErrors', 1);
+		}
+
+		// Configure the error handling
+		@ini_set('display_errors', (\Config::get('displayErrors') ? 1 : 0));
+		error_reporting((\Config::get('displayErrors') || \Config::get('logErrors')) ? \Config::get('errorReporting') : 0);
+
+		// Set the timezone
+		@ini_set('date.timezone', \Config::get('timeZone'));
+		@date_default_timezone_set(\Config::get('timeZone'));
+
+		// Set the mbstring encoding
+		if (USE_MBSTRING && function_exists('mb_regex_encoding'))
+		{
+			mb_regex_encoding(\Config::get('characterSet'));
+		}
+
+		// HOOK: add custom logic (see #5665)
+		if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && is_array($GLOBALS['TL_HOOKS']['initializeSystem']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback)
+			{
+				\System::importStatic($callback[0])->$callback[1]();
+			}
+		}
+
+		// Include the custom initialization file
+		if (file_exists(TL_ROOT . '/system/config/initconfig.php'))
+		{
+			include TL_ROOT . '/system/config/initconfig.php';
+		}
+
+		\RequestToken::initialize();
+
+		// Check the request token upon POST requests
+		if ($_POST && !\RequestToken::validate(\Input::post('REQUEST_TOKEN')))
+		{
+			// Force a JavaScript redirect upon Ajax requests (IE requires absolute link)
+			if (\Environment::get('isAjaxRequest'))
+			{
+				header('HTTP/1.1 204 No Content');
+				header('X-Ajax-Location: ' . \Environment::get('base') . 'contao/');
+			}
+			else
+			{
+				header('HTTP/1.1 400 Bad Request');
+				die_nicely('be_referer', 'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">go back</a> and try again.');
+			}
+
+			exit;
+		}
+	}
+
+
+	/**
+	 * Set the Symfony kernel
+	 *
+	 * @param ContaoKernelInterface $kernel The kernel object
+	 */
+	public static function setKernel(ContaoKernelInterface $kernel)
+	{
+		static::$objKernel = $kernel;
+	}
+
+
+	/**
+	 * Return the Symfony kernel
+	 *
+	 * @return ContaoKernelInterface
+	 */
+	public static function getKernel()
+	{
+		return static::$objKernel;
+	}
+
+
+	/**
+	 * Return the Symfony dependency injection container
+	 *
+	 * @return Container
+	 */
+	public static function getContainer()
+	{
+		return static::$objKernel->getContainer();
 	}
 
 
@@ -959,16 +1209,15 @@ abstract class System
 	/**
 	 * Return all messages as HTML
 	 *
-	 * @param boolean $blnDcLayout If true, the line breaks are different
-	 * @param boolean $blnNoWrapper If true, there will be no wrapping DIV
+	 * @param string $strScope An optional message scope
 	 *
 	 * @return string The messages HTML markup
 	 *
 	 * @deprecated Use Message::generate() instead
 	 */
-	protected function getMessages($blnDcLayout=false, $blnNoWrapper=false)
+	protected function getMessages($strScope=TL_MODE)
 	{
-		return \Message::generate($blnDcLayout, $blnNoWrapper);
+		return \Message::generate($strScope);
 	}
 
 
@@ -1113,5 +1362,33 @@ abstract class System
 	public static function getModelClassFromTable($strTable)
 	{
 		return \Model::getClassFromTable($strTable);
+	}
+
+
+	/**
+	 * Enable a back end module
+	 *
+	 * @param string $strName The module name
+	 *
+	 * @return boolean True if the module was enabled
+	 *
+	 * @deprecated Use Composer to add or remove modules
+	 */
+	public static function enableModule($strName)
+	{
+	}
+
+
+	/**
+	 * Disable a back end module
+	 *
+	 * @param string $strName The module name
+	 *
+	 * @return boolean True if the module was disabled
+	 *
+	 * @deprecated Use Composer to add or remove modules
+	 */
+	public static function disableModule($strName)
+	{
 	}
 }

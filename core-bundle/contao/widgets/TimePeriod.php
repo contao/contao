@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -136,7 +132,7 @@ class TimePeriod extends \Widget
 	{
 		$arrUnits = array();
 
-		// Add an empty option (XHTML) if there are none (see #5067)
+		// Add an empty option if there are none (see #5067)
 		if (empty($this->arrUnits))
 		{
 			$this->arrUnits = array(array('value'=>'', 'label'=>'-'));

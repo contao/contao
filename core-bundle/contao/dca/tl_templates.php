@@ -206,6 +206,43 @@ class tl_templates extends Backend
 	 */
 	public function addNewTemplate()
 	{
+		$arrAllTemplates = array();
+		$arrAllowed = trimsplit(',', Config::get('templateFiles'));
+
+		// Get all templates
+		foreach (System::getKernel()->getContaoBundles() as $bundle)
+		{
+			$strModule = $bundle->getName();
+			$strFolder = $bundle->getContaoResourcesPath() . '/templates';
+
+			// Continue if there is no templates folder
+			if ($strModule == 'repository' || !is_dir($strFolder))
+			{
+				continue;
+			}
+
+			// Find all templates
+			$objFiles = new SortedIterator(
+				new RecursiveIteratorIterator(
+					new RecursiveDirectoryIterator(
+						$strFolder,
+						FilesystemIterator::UNIX_PATHS|FilesystemIterator::FOLLOW_SYMLINKS|FilesystemIterator::SKIP_DOTS
+					)
+				)
+			);
+
+			foreach ($objFiles as $objFile)
+			{
+				$strExtension = pathinfo($objFile->getFilename(), PATHINFO_EXTENSION);
+
+				if (in_array($strExtension, $arrAllowed))
+				{
+					$strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
+					$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
+				}
+			}
+		}
+
 		$strError = '';
 
 		// Copy an existing template
@@ -214,17 +251,28 @@ class tl_templates extends Backend
 			$strOriginal = Input::post('original');
 			$strTarget = str_replace('../', '', Input::post('target'));
 
-			// Validate the source path
-			if (strncmp($strOriginal, 'system/modules/', 15) !== 0 || !file_exists(TL_ROOT . '/' . $strOriginal))
+			// Validate the target path
+			if (strncmp($strTarget, 'templates', 9) !== 0 || !is_dir(TL_ROOT . '/' . $strTarget))
 			{
-				$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['invalid'], $strOriginal);
+				$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['invalid'], $strTarget);
 			}
 			else
 			{
-				// Validate the target path
-				if (strncmp($strTarget, 'templates', 9) !== 0 || !is_dir(TL_ROOT . '/' . $strTarget))
+				$blnFound = false;
+
+				// Validate the source path
+				foreach ($arrAllTemplates as $arrTemplates)
 				{
-					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['invalid'], $strTarget);
+					if (isset($arrTemplates[$strOriginal]))
+					{
+						$blnFound = true;
+						break;
+					}
+				}
+
+				if (!$blnFound)
+				{
+					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['invalid'], $strOriginal);
 				}
 				else
 				{
@@ -245,40 +293,6 @@ class tl_templates extends Backend
 			}
 		}
 
-		$arrAllTemplates = array();
-		$arrAllowed = trimsplit(',', Config::get('templateFiles'));
-
-		// Get all templates
-		foreach (ModuleLoader::getActive() as $strModule)
-		{
-			// Continue if there is no templates folder
-			if ($strModule == 'repository' || !is_dir(TL_ROOT . '/system/modules/' . $strModule . '/templates'))
-			{
-				continue;
-			}
-
-			// Find all templates
-			$objFiles = new SortedIterator(
-				new RecursiveIteratorIterator(
-					new RecursiveDirectoryIterator(
-						TL_ROOT . '/system/modules/' . $strModule . '/templates',
-						FilesystemIterator::UNIX_PATHS|FilesystemIterator::FOLLOW_SYMLINKS|FilesystemIterator::SKIP_DOTS
-					)
-				)
-			);
-
-			foreach ($objFiles as $objFile)
-			{
-				$strExtension = pathinfo($objFile->getFilename(), PATHINFO_EXTENSION);
-
-				if (in_array($strExtension, $arrAllowed))
-				{
-					$strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
-					$arrAllTemplates[$strModule][basename($strRelpath)] = $strRelpath;
-				}
-			}
-		}
-
 		$strAllTemplates = '';
 
 		// Group the templates by module
@@ -288,7 +302,7 @@ class tl_templates extends Backend
 
 			foreach ($v as $kk=>$vv)
 			{
-				$strAllTemplates .= sprintf('<option value="%s"%s>%s</option>', $vv, ((Input::post('original') == $vv) ? ' selected="selected"' : ''), $kk);
+				$strAllTemplates .= sprintf('<option value="%s"%s>%s</option>', $kk, ((Input::post('original') == $kk) ? ' selected="selected"' : ''), $vv);
 			}
 
 			$strAllTemplates .= '</optgroup>';

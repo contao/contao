@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -27,6 +23,12 @@ namespace Contao;
  */
 class BackendInstall extends \Backend
 {
+
+	/**
+	 * @var Template
+	 */
+	protected $Template;
+
 
 	/**
 	 * Initialize the controller
@@ -51,6 +53,13 @@ class BackendInstall extends \Backend
 	 */
 	public function run()
 	{
+		// Generate the symlinks
+		if (!is_link(TL_ROOT . '/web/assets'))
+		{
+			$this->import('Automator');
+			$this->Automator->generateSymlinks();
+		}
+
 		$this->Template = new \BackendTemplate('be_install');
 
 		// Lock the tool if there are too many login attempts
@@ -60,13 +69,6 @@ class BackendInstall extends \Backend
 			$this->outputAndExit();
 		}
 
-		// Store the FTP login credentials
-		if (\Input::post('FORM_SUBMIT') == 'tl_ftp')
-		{
-			$this->storeFtpCredentials();
-		}
-
-		// Import the Files object AFTER storing the FTP settings
 		$this->import('Files');
 
 		// If the files are not writeable, the SMH is required
@@ -78,10 +80,7 @@ class BackendInstall extends \Backend
 		$this->Template->lcfWriteable = true;
 
 		// Create the local configuration files if not done yet
-		if (!\Config::get('useFTP'))
-		{
-			$this->createLocalConfigurationFiles();
-		}
+		$this->createLocalConfigurationFiles();
 
 		// Show the license text
 		if (!\Config::get('licenseAccepted'))
@@ -203,117 +202,6 @@ class BackendInstall extends \Backend
 
 
 	/**
-	 * Store the FTP login credentials
-	 */
-	protected function storeFtpCredentials()
-	{
-		if (\Config::get('installPassword') != '')
-		{
-			return;
-		}
-
-		\Config::set('useFTP', true);
-		\Config::set('ftpHost', \Input::post('host'));
-		\Config::set('ftpPath', \Input::post('path'));
-		\Config::set('ftpUser', \Input::post('username', true));
-
-		if (\Input::postRaw('password') != '*****')
-		{
-			\Config::set('ftpPass', \Input::postRaw('password'));
-		}
-
-		\Config::set('ftpSSL', \Input::post('ssl'));
-		\Config::set('ftpPort', (int) \Input::post('port'));
-
-		// Add a trailing slash
-		if (\Config::get('ftpPath') != '' && substr(\Config::get('ftpPath'), -1) != '/')
-		{
-			\Config::set('ftpPath', \Config::get('ftpPath') . '/');
-		}
-
-		// Re-insert the data into the form
-		$this->Template->ftpHost = \Config::get('ftpHost');
-		$this->Template->ftpPath = \Config::get('ftpPath');
-		$this->Template->ftpUser = \Config::get('ftpUser');
-		$this->Template->ftpPass = (\Config::get('ftpPass') != '') ? '*****' : '';
-		$this->Template->ftpSSL  = \Config::get('ftpSSL');
-		$this->Template->ftpPort = \Config::get('ftpPort');
-
-		$ftp_connect = (\Config::get('ftpSSL') && function_exists('ftp_ssl_connect')) ? 'ftp_ssl_connect' : 'ftp_connect';
-
-		// Try to connect and locate the Contao directory
-		if (($resFtp = $ftp_connect(\Config::get('ftpHost'), \Config::get('ftpPort'), 5)) == false)
-		{
-			$this->Template->ftpHostError = true;
-			$this->outputAndExit();
-		}
-		elseif (!ftp_login($resFtp, \Config::get('ftpUser'), \Config::get('ftpPass')))
-		{
-			$this->Template->ftpUserError = true;
-			$this->outputAndExit();
-		}
-		elseif (ftp_size($resFtp, \Config::get('ftpPath') . 'assets/contao/css/debug.css') == -1)
-		{
-			$this->Template->ftpPathError = true;
-			$this->outputAndExit();
-		}
-
-		// Update the local configuration file
-		else
-		{
-			$this->import('Files');
-
-			// The system/tmp folder must be writable for fopen()
-			if (!is_writable(TL_ROOT . '/system/tmp'))
-			{
-				$this->Files->chmod('system/tmp', 0777);
-			}
-
-			// The assets/images folder must be writable for image*()
-			if (!is_writable(TL_ROOT . '/assets/images'))
-			{
-				$this->Files->chmod('assets/images', 0777);
-			}
-
-			$folders = array('0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f');
-
-			foreach ($folders as $folder)
-			{
-				if (!is_writable(TL_ROOT . '/assets/images/' . $folder))
-				{
-					$this->Files->chmod('assets/images/' . $folder, 0777);
-				}
-			}
-
-			// The system/logs folder must be writable for error_log()
-			if (!is_writable(TL_ROOT . '/system/logs'))
-			{
-				$this->Files->chmod('system/logs', 0777);
-			}
-
-			// Create the local configuration files
-			$this->createLocalConfigurationFiles();
-
-			// Save the FTP credentials
-			\Config::persist('useFTP', true);
-			\Config::persist('ftpHost', \Config::get('ftpHost'));
-			\Config::persist('ftpPath', \Config::get('ftpPath'));
-			\Config::persist('ftpUser', \Config::get('ftpUser'));
-
-			if (\Input::postRaw('password') != '*****')
-			{
-				\Config::persist('ftpPass', \Config::get('ftpPass'));
-			}
-
-			\Config::persist('ftpSSL', \Config::get('ftpSSL'));
-			\Config::persist('ftpPort', \Config::get('ftpPort'));
-
-			$this->reload();
-		}
-	}
-
-
-	/**
 	 * Accept the license
 	 */
 	protected function acceptLicense()
@@ -351,7 +239,7 @@ class BackendInstall extends \Backend
 		else
 		{
 			list($strPassword, $strSalt) = explode(':', \Config::get('installPassword'));
-			$blnAuthenticated = ($strSalt == '') ? ($strPassword == sha1(\Input::postRaw('password'))) : ($strPassword == sha1($strSalt . \Input::postRaw('password')));
+			$blnAuthenticated = ($strSalt == '') ? ($strPassword === sha1(\Input::postRaw('password'))) : ($strPassword === sha1($strSalt . \Input::postRaw('password')));
 
 			if ($blnAuthenticated)
 			{
@@ -825,28 +713,14 @@ class BackendInstall extends \Backend
 	 */
 	protected function storeRelativePath()
 	{
-		if (TL_PATH === null)
+		if (\Environment::get('path') === null)
 		{
 			return;
 		}
 
-		if (file_exists(TL_ROOT . '/system/config/pathconfig.php'))
+		if (\Config::get('websitePath') !== \Environment::get('path'))
 		{
-			$strPath = include TL_ROOT . '/system/config/pathconfig.php';
-
-			if (TL_PATH == $strPath)
-			{
-				return;
-			}
-		}
-
-		try
-		{
-			\File::putContent('system/config/pathconfig.php', '<?php' . "\n\n// Relative path to the installation\nreturn " . var_export(TL_PATH, true) . ";\n");
-		}
-		catch (\Exception $e)
-		{
-			log_message($e->getMessage());
+			\Config::persist('websitePath', \Environment::get('path'));
 		}
 	}
 
@@ -867,7 +741,6 @@ class BackendInstall extends \Backend
 		$this->Template->expandNode = $GLOBALS['TL_LANG']['MSC']['expandNode'];
 		$this->Template->collapseNode = $GLOBALS['TL_LANG']['MSC']['collapseNode'];
 		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
-		$this->Template->ie6warning = sprintf($GLOBALS['TL_LANG']['ERR']['ie6warning'], '<a href="http://ie6countdown.com">', '</a>');
 		$this->Template->hasComposer = is_dir(TL_ROOT . '/system/modules/!composer');
 
 		$this->Template->output();
@@ -886,10 +759,20 @@ class BackendInstall extends \Backend
 			\Config::persist('maintenanceMode', true);
 		}
 
-		if (!\Config::get('coreOnlyMode') && count(array_diff(scan(TL_ROOT . '/system/modules'), array('core', 'calendar', 'comments', 'devtools', 'faq', 'listing', 'news', 'newsletter', 'repository'))) > 0)
+		if (!\Config::get('coreOnlyMode'))
 		{
-			\Config::set('coreOnlyMode', true);
-			\Config::persist('coreOnlyMode', true);
+			$modules = array();
+
+			foreach (\System::getKernel()->getContaoBundles() as $bundle)
+			{
+				$modules[] = $bundle->getName();
+			}
+
+			if (count(array_diff($modules, array('ContaoCoreBundle', 'calendar', 'comments', 'devtools', 'faq', 'listing', 'news', 'newsletter', 'repository'))) > 0)
+			{
+				\Config::set('coreOnlyMode', true);
+				\Config::persist('coreOnlyMode', true);
+			}
 		}
 	}
 
@@ -1150,6 +1033,28 @@ class BackendInstall extends \Backend
 			}
 
 			$this->Template->is33Update = true;
+			$this->outputAndExit();
+		}
+	}
+
+
+	/**
+	 * Version 4.0.0 update
+	 */
+	protected function update40()
+	{
+		if ($this->Database->tableExists('tl_layout') && !$this->Database->fieldExists('scripts', 'tl_layout'))
+		{
+			$this->enableSafeMode();
+
+			if (\Input::post('FORM_SUBMIT') == 'tl_40update')
+			{
+				$this->import('Contao\\Database\\Updater', 'Updater');
+				$this->Updater->run40Update();
+				$this->reload();
+			}
+
+			$this->Template->is40Update = true;
 			$this->outputAndExit();
 		}
 	}

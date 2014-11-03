@@ -120,7 +120,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'accordionSingle'             => '{type_legend},type;{moo_legend},mooHeadline,mooStyle,mooClasses;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop',
 		'sliderStart'                 => '{type_legend},type,headline;{slider_legend},sliderDelay,sliderSpeed,sliderStartSlide,sliderContinuous;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop',
 		'sliderStop'                  => '{type_legend},type,headline;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests;{invisible_legend:hide},invisible,start,stop',
-		'code'                        => '{type_legend},type,headline;{text_legend},highlight,shClass,code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop',
+		'code'                        => '{type_legend},type,headline;{text_legend},highlight,code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop',
 		'markdown'                    => '{type_legend},type,headline;{text_legend},code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop',
 		'hyperlink'                   => '{type_legend},type,headline;{link_legend},url,target,linkTitle,embed,titleText,rel;{imglink_legend:hide},useImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop',
 		'toplink'                     => '{type_legend},type,linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop',
@@ -436,18 +436,9 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['highlight'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options'                 => array('ApacheConf', 'AS3', 'Bash', 'C', 'CSharp', 'CSS', 'Delphi', 'Diff', 'Groovy', 'HTML', 'Java', 'JavaFx', 'JavaScript', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'Scala', 'SQL', 'Text', 'VB', 'XHTML', 'XML'),
-			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'XML'),
+			'eval'                    => array('includeBlankOption'=>true),
 			'sql'                     => "varchar(32) NOT NULL default ''"
-		),
-		'shClass' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['shClass'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50', 'helpwizard'=>true),
-			'explanation'             => 'highlighter',
-			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'code' => array
 		(
@@ -1059,13 +1050,17 @@ class tl_content extends Backend
 
 		switch ($objCte->type)
 		{
+			case 'code':
+				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'js_highlight'));
+				break;
+
 			case 'gallery':
 				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplates'], 'moo_mediabox', 'j_colorbox'));
 				break;
 
 			case 'sliderStart':
 			case 'sliderStop':
-				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplates'], 'moo_slider', 'j_slider'));
+				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'js_slider'));
 				break;
 
 			case 'accordionSingle':
@@ -1648,7 +1643,7 @@ class tl_content extends Backend
 			return $varValue;
 		}
 
-		$objFile = \FilesModel::findByUuid($varValue);
+		$objFile = FilesModel::findByUuid($varValue);
 
 		if ($objFile !== null)
 		{
@@ -1670,8 +1665,8 @@ class tl_content extends Backend
 
 					if (isset($arrMeta[$strLanguage]))
 					{
-						\Input::setPost('alt', $arrMeta[$strLanguage]['title']);
-						\Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
+						Input::setPost('alt', $arrMeta[$strLanguage]['title']);
+						Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
 					}
 				}
 			}

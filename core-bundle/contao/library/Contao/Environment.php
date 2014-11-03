@@ -30,6 +30,7 @@ namespace Contao;
  */
 class Environment
 {
+	const PHP_SAPI = PHP_SAPI;
 
 	/**
 	 * Object instance (Singleton)
@@ -86,13 +87,22 @@ class Environment
 
 
 	/**
+	 * Reset the internal cache
+	 */
+	public static function reset()
+	{
+		static::$arrCache = array();
+	}
+
+
+	/**
 	 * Return the absolute path to the script (e.g. /home/www/html/website/index.php)
 	 *
 	 * @return string The absolute path to the script
 	 */
 	protected static function scriptFilename()
 	{
-		return str_replace('//', '/', str_replace('\\', '/', (PHP_SAPI == 'cgi' || PHP_SAPI == 'isapi' || PHP_SAPI == 'cgi-fcgi' || PHP_SAPI == 'fpm-fcgi') && ($_SERVER['ORIG_PATH_TRANSLATED'] ? $_SERVER['ORIG_PATH_TRANSLATED'] : $_SERVER['PATH_TRANSLATED']) ? ($_SERVER['ORIG_PATH_TRANSLATED'] ? $_SERVER['ORIG_PATH_TRANSLATED'] : $_SERVER['PATH_TRANSLATED']) : ($_SERVER['ORIG_SCRIPT_FILENAME'] ? $_SERVER['ORIG_SCRIPT_FILENAME'] : $_SERVER['SCRIPT_FILENAME'])));
+		return str_replace('//', '/', str_replace('\\', '/', (static::PHP_SAPI == 'cgi' || static::PHP_SAPI == 'isapi' || static::PHP_SAPI == 'cgi-fcgi' || static::PHP_SAPI == 'fpm-fcgi') && (@$_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) ? (@$_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) : (@$_SERVER['ORIG_SCRIPT_FILENAME'] ?: $_SERVER['SCRIPT_FILENAME'])));
 	}
 
 
@@ -103,7 +113,7 @@ class Environment
 	 */
 	protected static function scriptName()
 	{
-		return (PHP_SAPI == 'cgi' || PHP_SAPI == 'isapi' || PHP_SAPI == 'cgi-fcgi' || PHP_SAPI == 'fpm-fcgi') && ($_SERVER['ORIG_PATH_INFO'] ? $_SERVER['ORIG_PATH_INFO'] : $_SERVER['PATH_INFO']) ? ($_SERVER['ORIG_PATH_INFO'] ? $_SERVER['ORIG_PATH_INFO'] : $_SERVER['PATH_INFO']) : ($_SERVER['ORIG_SCRIPT_NAME'] ? $_SERVER['ORIG_SCRIPT_NAME'] : $_SERVER['SCRIPT_NAME']);
+		return (static::PHP_SAPI == 'cgi' || static::PHP_SAPI == 'isapi' || static::PHP_SAPI == 'cgi-fcgi' || static::PHP_SAPI == 'fpm-fcgi') && (@$_SERVER['ORIG_PATH_INFO'] ?: $_SERVER['PATH_INFO']) ? (@$_SERVER['ORIG_PATH_INFO'] ?: $_SERVER['PATH_INFO']) : (@$_SERVER['ORIG_SCRIPT_NAME'] ?: $_SERVER['SCRIPT_NAME']);
 	}
 
 
@@ -149,7 +159,7 @@ class Environment
 
 		foreach ($arrSfnSegments as $k=>$v)
 		{
-			if ($arrSnSegments[$k] != $v)
+			if (@$arrSnSegments[$k] != $v)
 			{
 				$arrUriSegments[] = $v;
 			}
@@ -285,7 +295,7 @@ class Environment
 	 */
 	protected static function httpXForwardedHost()
 	{
-		return preg_replace('/[^A-Za-z0-9\[\]\.:-]/', '', $_SERVER['HTTP_X_FORWARDED_HOST']);
+		return preg_replace('/[^A-Za-z0-9\[\]\.:-]/', '', @$_SERVER['HTTP_X_FORWARDED_HOST']);
 	}
 
 
@@ -296,7 +306,7 @@ class Environment
 	 */
 	protected static function ssl()
 	{
-		return ($_SERVER['SSL_SESSION_ID'] || $_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1);
+		return (@$_SERVER['SSL_SESSION_ID'] || @$_SERVER['HTTPS'] == 'on' || @$_SERVER['HTTPS'] == 1);
 	}
 
 
@@ -345,12 +355,12 @@ class Environment
 		}
 
 		$strXip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		$arrTrusted = trimsplit(',', \Config::get('proxyServerIps'));
+        $arrTrusted = array_map('trim', explode(',', \Config::get('proxyServerIps')));
 
 		// Generate an array of X-Forwarded-For IPs
 		if (strpos($strXip, ',') !== false)
 		{
-			$arrIps = trimsplit(',', $strXip);
+			$arrIps = array_map('trim', explode(',', $strXip));
 		}
 		else
 		{
@@ -395,11 +405,16 @@ class Environment
 	/**
 	 * Return the relative path to the base directory (e.g. /path)
 	 *
+	 * The real path is being set during the Contao initialization process, so
+	 * this method is only called if static::$arrCache['path'] is not set. It is
+	 * required to prevent the Environment class from returning the value of the
+	 * global $_SERVER['path'] variable.
+	 *
 	 * @return string The relative path to the installation
 	 */
 	protected static function path()
 	{
-		return TL_PATH;
+		return '';
 	}
 
 
@@ -410,7 +425,7 @@ class Environment
 	 */
 	protected static function script()
 	{
-		return preg_replace('/^' . preg_quote(TL_PATH, '/') . '\/?/', '', static::get('scriptName'));
+		return preg_replace('/^' . preg_quote(static::get('path'), '/') . '\/?/', '', static::get('scriptName'));
 	}
 
 
@@ -421,7 +436,7 @@ class Environment
 	 */
 	protected static function request()
 	{
-		$strRequest = preg_replace('/^' . preg_quote(TL_PATH, '/') . '\/?/', '', static::get('requestUri'));
+		$strRequest = preg_replace('/^' . preg_quote(static::get('path'), '/') . '\/?/', '', static::get('requestUri'));
 
 		// From version 2.9, do not fallback to $this->script
 		// anymore if the request string is empty (see #1844).
@@ -459,7 +474,7 @@ class Environment
 	 */
 	protected static function base()
 	{
-		return static::get('url') . TL_PATH . '/';
+		return static::get('url') . static::get('path') . '/';
 	}
 
 
@@ -481,7 +496,7 @@ class Environment
 	 */
 	protected static function isAjaxRequest()
 	{
-		return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
+		return @$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
 	}
 
 

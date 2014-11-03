@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -155,7 +151,7 @@ class ModuleQuicknav extends \Module
 				// Check hidden pages
 				if (!$objSubpages->hide || $this->showHidden)
 				{
-					if ($objSubpages->domain != '' && $objSubpages->domain != Environment::get('host'))
+					if ($objSubpages->domain != '' && $objSubpages->domain != \Environment::get('host'))
 					{
 						$objSubpages->current()->loadDetails();
 					}

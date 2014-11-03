@@ -111,7 +111,7 @@ class String
 	 */
 	public static function substrHtml($strString, $intNumberOfChars)
 	{
-		$strReturn = '';
+		$strReturn = "";
 		$intCharCount = 0;
 		$arrOpenTags = array();
 		$arrTagBuffer = array();
@@ -516,14 +516,13 @@ class String
 
 		// Replace tokens
 		$strReturn = str_replace('?><br />', '?>', $strReturn);
-		$strReturn = preg_replace('/##([A-Za-z0-9_]+)##/i', '<?php echo $arrData[\'$1\']; ?>', $strReturn);
-		$strReturn = str_replace("]; ?>\n", '] . "\n"; ?>' . "\n", $strReturn); // see #7178
+		$strReturn = preg_replace('/##([A-Za-z0-9_]+)##/i', '<?= $arrData[\'$1\'] ?>', $strReturn);
+		$strReturn = str_replace("] ?>\n", '] . "\n" ?>' . "\n", $strReturn); // see #7178
 
 		// Eval the code
 		ob_start();
 		$blnEval = eval("?>" . $strReturn);
-		$strReturn = ob_get_contents();
-		ob_end_clean();
+		$strReturn = ob_get_clean();
 
 		// Throw an exception if there is an eval() error
 		if ($blnEval === false)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.1">
-  <file datatype="php" original="system/modules/core/languages/en/tl_layout.php" source-language="en">
+  <file datatype="php" original="contao/languages/en/tl_layout.php" source-language="en">
     <body>
       <trans-unit id="tl_layout.name.0">
         <source>Title</source>
@@ -228,7 +228,7 @@
         <source>Viewport</source>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
-        <source>Here you can overwrite the viewport content (defaults to &lt;em&gt;width=device-width,initial-scale=1.0&lt;/em&gt;).</source>
+        <source>Here you can add a custom viewport (e.g. &lt;em&gt;initial-scale=1.0&lt;/em&gt;).</source>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>
@@ -290,11 +290,17 @@
       <trans-unit id="tl_layout.picturefill.1">
         <source>Include the image polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) in the layout.</source>
       </trans-unit>
+      <trans-unit id="tl_layout.scripts.0">
+        <source>JavaScript templates</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.scripts.1">
+        <source>Here you can select one or more JavaScript templates.</source>
+      </trans-unit>
       <trans-unit id="tl_layout.analytics.0">
         <source>Analytics templates</source>
       </trans-unit>
       <trans-unit id="tl_layout.analytics.1">
-        <source>Here you can activate the analytics templates (e.g. for Google Analytics or Piwik). Note that you have to adjust those templates and add your analytics ID before you can use them!</source>
+        <source>Here you can select one or more analytics templates.</source>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>
@@ -383,12 +389,6 @@
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
       </trans-unit>
-      <trans-unit id="tl_layout.xhtml_strict">
-        <source>XHTML Strict</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.xhtml_trans">
-        <source>XHTML Transitional</source>
-      </trans-unit>
       <trans-unit id="tl_layout.top">
         <source>Before the wrapper</source>
       </trans-unit>
@@ -411,7 +411,7 @@
         <source>Edit the module</source>
       </trans-unit>
       <trans-unit id="tl_layout.analytics_google">
-        <source>Google</source>
+        <source>Google Analytics</source>
       </trans-unit>
       <trans-unit id="tl_layout.analytics_piwik">
         <source>Piwik</source>

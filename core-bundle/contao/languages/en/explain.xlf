@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.1">
-  <file datatype="php" original="system/modules/core/languages/en/explain.php" source-language="en">
+  <file datatype="php" original="contao/languages/en/explain.php" source-language="en">
     <body>
       <trans-unit id="XPL.insertTags.0.0">
         <source>Rich Text Editor</source>
@@ -67,12 +67,6 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.7.1">
         <source>12 hours without leading zeros and minutes, e.g. 8:36</source>
-      </trans-unit>
-      <trans-unit id="XPL.highlighter.0.0">
-        <source>Rich Text Editor</source>
-      </trans-unit>
-      <trans-unit id="XPL.highlighter.0.1">
-        <source>For more information about how to configure the syntax highlighter please visit &lt;a href="http://alexgorbatchev.com/SyntaxHighlighter/manual/configuration/#syntaxhighlighterdefaults" title="SyntaxHighlighter by Alex Gorbatchev" target="_blank"&gt;http://alexgorbatchev.com&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPL.imageSizeDensities.0.0">
         <source>Sizes attribute</source>

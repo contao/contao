@@ -470,7 +470,7 @@ class tl_member extends Backend
 	public function getActiveGroups()
 	{
 		$arrGroups = array();
-		$objGroup = \MemberGroupModel::findAllActive();
+		$objGroup = MemberGroupModel::findAllActive();
 
 		if ($objGroup !== null)
 		{

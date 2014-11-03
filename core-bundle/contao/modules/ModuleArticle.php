@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -73,19 +69,12 @@ class ModuleArticle extends \Module
 			$this->Template->setData($this->arrData);
 		}
 
-		$alias = $this->alias ?: 'article';
+		$id = 'article-' . $this->id;
 
-		if (in_array($alias, array('article', 'top', 'wrapper', 'header', 'container', 'left', 'main', 'right', 'footer')))
-		{
-			$alias .= '-' . $this->id;
-		}
-
-		$alias = standardize($alias);
-
-		// Generate the cssID if it is not set
+		// Generate the CSS ID if it is not set
 		if ($this->cssID[0] == '')
 		{
-			$this->cssID = array($alias, $this->cssID[1]);
+			$this->cssID = array($id, $this->cssID[1]);
 		}
 
 		$this->Template->column = $this->inColumn;
@@ -95,14 +84,7 @@ class ModuleArticle extends \Module
 		$this->Template->date = \Date::parse($objPage->datimFormat, $this->tstamp);
 
 		// Clean the RTE output
-		if ($objPage->outputFormat == 'xhtml')
-		{
-			$this->teaser = \String::toXhtml($this->teaser);
-		}
-		else
-		{
-			$this->teaser = \String::toHtml5($this->teaser);
-		}
+		$this->teaser = \String::toHtml5($this->teaser);
 
 		// Show the teaser only
 		if ($this->multiMode && $this->showTeaser)
@@ -110,7 +92,7 @@ class ModuleArticle extends \Module
 			$this->Template = new \FrontendTemplate('mod_article_teaser');
 			$this->Template->setData($this->arrData);
 
-			$this->cssID = array($alias, '');
+			$this->cssID = array($id, '');
 			$arrCss = deserialize($this->teaserCssID);
 
 			// Override the CSS ID and class
@@ -118,7 +100,7 @@ class ModuleArticle extends \Module
 			{
 				if ($arrCss[0] == '')
 				{
-					$arrCss[0] = $alias;
+					$arrCss[0] = $id;
 				}
 
 				$this->cssID = $arrCss;

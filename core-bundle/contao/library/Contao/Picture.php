@@ -245,7 +245,7 @@ class Picture
 							->executeResize()
 							->getResizedPath();
 
-			$fileObj = new \File($src, true);
+			$fileObj = new \File($src);
 
 			if (empty($attributes['src']))
 			{

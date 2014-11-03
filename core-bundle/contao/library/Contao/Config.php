@@ -135,10 +135,9 @@ class Config
 		}
 		else
 		{
-			// Get the module configuration files
-			foreach (\ModuleLoader::getActive() as $strModule)
+			foreach (\System::getKernel()->getContaoBundles() as $bundle)
 			{
-				$strFile = TL_ROOT . '/system/modules/' . $strModule . '/config/config.php';
+				$strFile = $bundle->getContaoResourcesPath() . '/config/config.php';
 
 				if (file_exists($strFile))
 				{
@@ -152,6 +151,8 @@ class Config
 		{
 			include TL_ROOT . '/system/config/localconfig.php';
 		}
+
+		static::loadParameters();
 	}
 
 
@@ -360,6 +361,19 @@ class Config
 
 
 	/**
+	 * Check whether a configuration value exists
+	 *
+	 * @param string $strKey The short key (e.g. "displayErrors")
+	 *
+	 * @return boolean True if the configuration value exists
+	 */
+	public static function has($strKey)
+	{
+		return array_key_exists($strKey, $GLOBALS['TL_CONFIG']);
+	}
+
+
+	/**
 	 * Return a configuration value
 	 *
 	 * @param string $strKey The short key (e.g. "displayErrors")
@@ -442,7 +456,42 @@ class Config
 			include TL_ROOT . '/system/config/localconfig.php';
 		}
 
+		static::loadParameters();
+
 		static::$blnHasLcf = $blnHasLcf;
+	}
+
+
+	/**
+	 * Override the database and SMTP parameters
+	 */
+	protected static function loadParameters()
+	{
+		$container = \System::getKernel()->getContainer();
+
+		if ($container === null)
+		{
+			return;
+		}
+
+		$arrMap = array(
+			'dbHost'     => 'database_host',
+			'dbPort'     => 'database_port',
+			'dbDatabase' => 'database_name',
+			'dbUser'     => 'database_user',
+			'dbPass'     => 'database_password',
+			'smtpHost'   => 'mailer_host',
+			'smtpUser'   => 'mailer_user',
+			'smtpPass'   => 'mailer_password'
+		);
+
+		foreach ($arrMap as $strKey=>$strParam)
+		{
+			if ($container->hasParameter($strParam))
+			{
+				$GLOBALS['TL_CONFIG'][$strKey] = $container->getParameter($strParam);
+			}
+		}
 	}
 
 

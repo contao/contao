@@ -208,8 +208,8 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_article']['author'],
 			'default'                 => BackendUser::getInstance()->id,
-			'exclude'                 => true,
 			'search'                  => true,
+			'exclude'                 => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),

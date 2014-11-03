@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -108,7 +104,7 @@ class ContentGallery extends \ContentElement
 			// Single files
 			if ($objFiles->type == 'file')
 			{
-				$objFile = new \File($objFiles->path, true);
+				$objFile = new \File($objFiles->path);
 
 				if (!$objFile->isImage)
 				{
@@ -168,7 +164,7 @@ class ContentGallery extends \ContentElement
 						continue;
 					}
 
-					$objFile = new \File($objSubfiles->path, true);
+					$objFile = new \File($objSubfiles->path);
 
 					if (!$objFile->isImage)
 					{

@@ -81,13 +81,13 @@ class DcaLoader extends \Controller
 		}
 		else
 		{
-			foreach (\ModuleLoader::getActive() as $strModule)
+			foreach (\System::getKernel()->getContaoBundles() as $bundle)
 			{
-				$strFile = 'system/modules/' . $strModule . '/dca/' . $this->strTable . '.php';
+				$strFile = $bundle->getContaoResourcesPath() . '/dca/' . $this->strTable . '.php';
 
-				if (file_exists(TL_ROOT . '/' . $strFile))
+				if (file_exists($strFile))
 				{
-					include TL_ROOT . '/' . $strFile;
+					include $strFile;
 				}
 			}
 		}

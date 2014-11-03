@@ -14,13 +14,13 @@ namespace Contao;
 
 
 /**
- * Provides shared logic for template classes
+ * Provides shared logic for views
  *
  * @package   Library
  * @author    Leo Feyer <https://github.com/leofeyer>
  * @copyright Leo Feyer 2005-2014
  */
-abstract class BaseTemplate extends \Controller
+abstract class View extends \Controller
 {
 
 	/**
@@ -246,8 +246,7 @@ abstract class BaseTemplate extends \Controller
 		else
 		{
 			// Capture the block content
-			$this->arrBlocks[$name][] = ob_get_contents();
-			ob_end_clean();
+			$this->arrBlocks[$name][] = ob_get_clean();
 
 			// Start a new output buffer
 			ob_start();

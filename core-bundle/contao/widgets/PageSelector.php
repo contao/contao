@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -283,7 +279,7 @@ class PageSelector extends \Widget
 
 	/**
 	 * Recursively render the pagetree
-	 * @param int
+	 * @param integer
 	 * @param integer
 	 * @param boolean
 	 * @param boolean

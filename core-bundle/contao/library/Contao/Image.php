@@ -115,7 +115,7 @@ class Image
 		}
 
 		$this->fileObj = $file;
-		$arrAllowedTypes = array_map('trim', explode(',', Config::get('validImageTypes')));
+		$arrAllowedTypes = array_map('trim', explode(',', \Config::get('validImageTypes')));
 
 		// Check the file type
 		if (!in_array($this->fileObj->extension, $arrAllowedTypes))
@@ -195,7 +195,7 @@ class Image
 	/**
 	 * Set the target height
 	 *
-	 * @param int $targetHeight The target height
+	 * @param integer $targetHeight The target height
 	 *
 	 * @return $this The image object
 	 */
@@ -210,7 +210,7 @@ class Image
 	/**
 	 * Get the target height
 	 *
-	 * @return int The target height
+	 * @return integer The target height
 	 */
 	public function getTargetHeight()
 	{
@@ -221,7 +221,7 @@ class Image
 	/**
 	 * Set the target width
 	 *
-	 * @param int $targetWidth The target width
+	 * @param integer $targetWidth The target width
 	 *
 	 * @return $this The image object
 	 */
@@ -236,7 +236,7 @@ class Image
 	/**
 	 * Get the target width
 	 *
-	 * @return int The target width
+	 * @return integer The target width
 	 */
 	public function getTargetWidth()
 	{
@@ -273,7 +273,7 @@ class Image
 	/**
 	 * Set the zoom level
 	 *
-	 * @param int $zoomLevel The zoom level
+	 * @param integer $zoomLevel The zoom level
 	 *
 	 * @return $this The object instance
 	 *
@@ -297,7 +297,7 @@ class Image
 	/**
 	 * Get the zoom level
 	 *
-	 * @return int The zoom level
+	 * @return integer The zoom level
 	 */
 	public function getZoomLevel()
 	{
@@ -500,12 +500,6 @@ class Image
 			$this->executeResizeGd();
 		}
 
-		// Set the file permissions when the Safe Mode Hack is used
-		if (\Config::get('useFTP'))
-		{
-			\Files::getInstance()->chmod($this->getCacheName(), \Config::get('defaultFileChmod'));
-		}
-
 		// Resize the original image
 		if ($this->getTargetPath())
 		{
@@ -590,7 +584,7 @@ class Image
 			$xml = $doc->saveXML();
 		}
 
-		$objCacheFile = new \File($this->getCacheName(), true);
+		$objCacheFile = new \File($this->getCacheName());
 		$objCacheFile->write($xml);
 		$objCacheFile->close();
 	}
@@ -822,7 +816,7 @@ class Image
 			return '';
 		}
 
-		$objFile = new \File($src, true);
+		$objFile = new \File($src);
 
 		return '<img src="' . $static . \System::urlEncode($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
 	}
@@ -856,7 +850,7 @@ class Image
 	{
 		if (is_string($image))
 		{
-			$image = new \File(rawurldecode($image), true);
+			$image = new \File(rawurldecode($image));
 		}
 
 		$imageObj = new static($image);

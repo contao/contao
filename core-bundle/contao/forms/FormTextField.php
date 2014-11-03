@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -123,40 +119,37 @@ class FormTextField extends \Widget
 				break;
 
 			case 'type':
-				// Use the HTML5 types (see #4138) but not the date, time and datetime types (see #5918)
 				if ($this->hideInput)
 				{
 					return 'password';
 				}
 
-				if ($this->strFormat != 'xhtml')
+				// Use the HTML5 types (see #4138) but not the date, time and datetime types (see #5918)
+				switch ($this->rgxp)
 				{
-					switch ($this->rgxp)
-					{
-						case 'digit':
-							// Allow floats (see #7257)
-							if (!isset($this->arrAttributes['step']))
-							{
-								$this->addAttribute('step', 'any');
-							}
-							// NO break; here
+					case 'digit':
+						// Allow floats (see #7257)
+						if (!isset($this->arrAttributes['step']))
+						{
+							$this->addAttribute('step', 'any');
+						}
+						// NO break; here
 
-						case 'natural':
-							return 'number';
-							break;
+					case 'natural':
+						return 'number';
+						break;
 
-						case 'phone':
-							return 'tel';
-							break;
+					case 'phone':
+						return 'tel';
+						break;
 
-						case 'email':
-							return 'email';
-							break;
+					case 'email':
+						return 'email';
+						break;
 
-						case 'url':
-							return 'url';
-							break;
-					}
+					case 'url':
+						return 'url';
+						break;
 				}
 
 				return 'text';

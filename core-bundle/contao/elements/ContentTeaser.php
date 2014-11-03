@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -80,8 +76,6 @@ class ContentTeaser extends \ContentElement
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$link = '/articles/';
 		$objArticle = $this->objArticle;
 
@@ -94,14 +88,7 @@ class ContentTeaser extends \ContentElement
 		$this->Template->href = $this->generateFrontendUrl($this->objParent->row(), $link);
 
 		// Clean the RTE output
-		if ($objPage->outputFormat == 'xhtml')
-		{
-			$this->Template->text = \String::toXhtml($objArticle->teaser);
-		}
-		else
-		{
-			$this->Template->text = \String::toHtml5($objArticle->teaser);
-		}
+		$this->Template->text = \String::toHtml5($objArticle->teaser);
 
 		$this->Template->headline = $objArticle->title;
 		$this->Template->readMore = specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));

@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -36,7 +32,7 @@ class ContentYouTube extends \ContentElement
 
 
 	/**
-	 * Extend the parent method
+	 * Show the YouTube link in the back end
 	 * @return string
 	 */
 	public function generate()

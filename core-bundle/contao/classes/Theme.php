@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -68,7 +64,7 @@ class Theme extends \Backend
 						continue;
 					}
 
-					$objFile = new \File($strFile, true);
+					$objFile = new \File($strFile);
 
 					// Skip anything but .cto files
 					if ($objFile->extension != 'cto')
@@ -758,7 +754,7 @@ class Theme extends \Backend
 		$objArchive->close();
 
 		// Open the "save as …" dialogue
-		$objFile = new \File('system/tmp/'. $strTmp, true);
+		$objFile = new \File('system/tmp/'. $strTmp);
 		$objFile->sendToBrowser($strName . '.cto');
 	}
 

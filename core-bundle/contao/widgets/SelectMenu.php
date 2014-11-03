@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -118,7 +114,7 @@ class SelectMenu extends \Widget
 			$strClass = 'tl_mselect';
 		}
 
-		// Add an empty option (XHTML) if there are none
+		// Add an empty option if there are none
 		if (empty($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value'=>'', 'label'=>'-'));

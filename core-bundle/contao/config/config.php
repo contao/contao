@@ -329,7 +329,7 @@ $GLOBALS['TL_PURGE'] = array
 		'internal' => array
 		(
 			'callback' => array('Automator', 'purgeInternalCache'),
-			'affected' => array('system/cache/config', 'system/cache/dca', 'system/cache/language', 'system/cache/sql')
+			'affected' => array('system/cache/config', 'system/cache/dca', 'system/cache/language', 'system/cache/packages', 'system/cache/sql')
 		),
 		'temp' => array
 		(
@@ -342,6 +342,10 @@ $GLOBALS['TL_PURGE'] = array
 		'xml' => array
 		(
 			'callback' => array('Automator', 'generateXmlFiles')
+		),
+		'symlinks' => array
+		(
+			'callback' => array('Automator', 'generateSymlinks')
 		)
 	)
 );
@@ -438,32 +442,6 @@ $GLOBALS['TL_WRAPPERS'] = array
 		'accordionSingle'
 	),
 	'separator' => array()
-);
-
-
-/**
- * Asset versions
- */
-$GLOBALS['TL_ASSETS'] = array
-(
-	'ACE'          => '1.1.6',
-	'CSS3PIE'      => '1.0.0',
-	'DROPZONE'     => '3.8.5',
-	'HIGHLIGHTER'  => '3.0.83',
-	'HTML5SHIV'    => '3.7.0',
-	'RESPIMAGE'    => '0.9.6',
-	'SWIPE'        => '2.0',
-	'JQUERY'       => '1.11.0',
-	'JQUERY_UI'    => '1.10.4',
-	'COLORBOX'     => '1.5.8',
-	'MEDIAELEMENT' => '2.14.2',
-	'TABLESORTER'  => '2.0.5',
-	'MOOTOOLS'     => '1.5.1',
-	'COLORPICKER'  => '1.4',
-	'DATEPICKER'   => '2.2.0',
-	'MEDIABOX'     => '1.4.6',
-	'SIMPLEMODAL'  => '1.2',
-	'SLIMBOX'      => '1.8'
 );
 
 

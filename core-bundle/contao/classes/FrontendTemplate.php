@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -40,7 +36,6 @@ class FrontendTemplate extends \Template
 		if ($objPage->outputFormat != '')
 		{
 			$this->strFormat = $objPage->outputFormat;
-			$this->strTagEnding = ($this->strFormat == 'xhtml') ? ' />' : '>';
 		}
 
 		$strBuffer = parent::parse();
@@ -116,9 +111,6 @@ class FrontendTemplate extends \Template
 
 		// Send the response to the client
 		parent::output();
-
-		// Add the output to the search index
-		$this->addToSearchIndex();
 	}
 
 
@@ -162,7 +154,7 @@ class FrontendTemplate extends \Template
 		}
 
 		// Use the section tag in HTML5
-		$this->tag = ($key == 'main' && $this->strFormat != 'xhtml') ? 'section' : 'div';
+		$this->tag = ($key == 'main') ? 'section' : 'div';
 
 		if ($template === null)
 		{
@@ -238,7 +230,7 @@ class FrontendTemplate extends \Template
 
 			// Create the cache file
 			$strMd5CacheKey = md5($strCacheKey);
-			$objFile = new \File('system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html', true);
+			$objFile = new \File('system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html');
 			$objFile->write('<?php' . " /* $strCacheKey */ \$expire = $intCache; \$content = '{$this->strContentType}'; \$type = '{$objPage->type}'; ?>\n");
 			$objFile->append($this->minifyHtml($strBuffer), '');
 			$objFile->close();
@@ -267,46 +259,11 @@ class FrontendTemplate extends \Template
 
 	/**
 	 * Add the template output to the search index
+	 *
+	 * @deprecated Now uses the kernel.terminate event
 	 */
 	protected function addToSearchIndex()
 	{
-		global $objPage;
-
-		// Index page if searching is allowed and there is no back end user
-		if (\Config::get('enableSearch') && $objPage->type == 'regular' && !BE_USER_LOGGED_IN && !$objPage->noSearch)
-		{
-			// Index protected pages if enabled
-			if (\Config::get('indexProtected') || (!FE_USER_LOGGED_IN && !$objPage->protected))
-			{
-				$blnIndex = true;
-
-				// Do not index the page if certain parameters are set
-				foreach (array_keys($_GET) as $key)
-				{
-					if (in_array($key, $GLOBALS['TL_NOINDEX_KEYS']) || strncmp($key, 'page_', 5) === 0)
-					{
-						$blnIndex = false;
-						break;
-					}
-				}
-
-				if ($blnIndex)
-				{
-					$arrData = array
-					(
-						'url' => \Environment::get('request'),
-						'content' => $this->strBuffer,
-						'title' => $objPage->pageTitle ?: $objPage->title,
-						'protected' => ($objPage->protected ? '1' : ''),
-						'groups' => $objPage->groups,
-						'pid' => $objPage->id,
-						'language' => $objPage->language
-					);
-
-					\Search::indexPage($arrData);
-				}
-			}
-		}
 	}
 
 

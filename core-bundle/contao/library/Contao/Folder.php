@@ -299,26 +299,26 @@ class Folder extends \System
 
 
 	/**
-	 * Protect the folder by adding an .htaccess file
+	 * Protect the folder by removing the .public file
 	 */
 	public function protect()
 	{
-		if (!file_exists(TL_ROOT . '/' . $this->strFolder . '/.htaccess'))
+		if (file_exists(TL_ROOT . '/' . $this->strFolder . '/.public'))
 		{
-			\File::putContent($this->strFolder . '/.htaccess', "<IfModule !mod_authz_core.c>\n  Order deny,allow\n  Deny from all\n</IfModule>\n<IfModule mod_authz_core.c>\n  Require all denied\n</IfModule>");
+			$objFile = new \File($this->strFolder . '/.public');
+			$objFile->delete();
 		}
 	}
 
 
 	/**
-	 * Unprotect the folder by removing the .htaccess file
+	 * Unprotect the folder by adding a .public file
 	 */
 	public function unprotect()
 	{
-		if (file_exists(TL_ROOT . '/' . $this->strFolder . '/.htaccess'))
+		if (!file_exists(TL_ROOT . '/' . $this->strFolder . '/.public'))
 		{
-			$objFile = new \File($this->strFolder . '/.htaccess', true);
-			$objFile->delete();
+			\File::putContent($this->strFolder . '/.public', "");
 		}
 	}
 
@@ -387,7 +387,7 @@ class Folder extends \System
 			}
 			else
 			{
-				$objFile = new \File($this->strFolder . '/' . $strFile, true);
+				$objFile = new \File($this->strFolder . '/' . $strFile);
 				$intSize += $objFile->size;
 			}
 		}

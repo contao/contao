@@ -10,11 +10,9 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
+
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -637,6 +635,51 @@ abstract class Frontend extends \Controller
 		else
 		{
 			return 86400; // daily
+		}
+	}
+
+
+	/**
+	 * Index a page if applicable
+	 *
+	 * @param \PageModel $objPage     The page model
+	 * @param Response   $objResponse The response object
+	 */
+	public static function indexPageIfApplicable(\PageModel $objPage, Response $objResponse)
+	{
+		// Index page if searching is allowed and there is no back end user
+		if (\Config::get('enableSearch') && $objPage->type == 'regular' && !BE_USER_LOGGED_IN && !$objPage->noSearch)
+		{
+			// Index protected pages if enabled
+			if (\Config::get('indexProtected') || (!FE_USER_LOGGED_IN && !$objPage->protected))
+			{
+				$blnIndex = true;
+
+				// Do not index the page if certain parameters are set
+				foreach (array_keys($_GET) as $key)
+				{
+					if (in_array($key, $GLOBALS['TL_NOINDEX_KEYS']) || strncmp($key, 'page_', 5) === 0)
+					{
+						$blnIndex = false;
+						break;
+					}
+				}
+
+				if ($blnIndex)
+				{
+					$arrData = array(
+						'url'       => \Environment::get('request'),
+						'content'   => $objResponse->getContent(),
+						'title'     => $objPage->pageTitle ?: $objPage->title,
+						'protected' => ($objPage->protected ? '1' : ''),
+						'groups'    => $objPage->groups,
+						'pid'       => $objPage->id,
+						'language'  => $objPage->language
+					);
+
+					\Search::indexPage($arrData);
+				}
+			}
 		}
 	}
 }

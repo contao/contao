@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -48,17 +44,17 @@ abstract class Backend extends \Controller
 	{
 		if (\Config::get('coreOnlyMode'))
 		{
-			return 'default'; // see #6505
+			return 'flexible'; // see #6505
 		}
 
 		$theme = \Config::get('backendTheme');
 
-		if ($theme != '' && $theme != 'default' && is_dir(TL_ROOT . '/system/themes/' . $theme))
+		if ($theme != '' && $theme != 'flexible' && is_dir(TL_ROOT . '/system/themes/' . $theme))
 		{
 			return $theme;
 		}
 
-		return 'default';
+		return 'flexible';
 	}
 
 
@@ -100,7 +96,7 @@ abstract class Backend extends \Controller
 		}
 
 		// The translation exists
-		if (file_exists(TL_ROOT . '/assets/tinymce4/langs/' . $lang . '.js'))
+		if (file_exists(TL_ROOT . '/assets/tinymce4/js/langs/' . $lang . '.js'))
 		{
 			return $lang;
 		}
@@ -108,7 +104,7 @@ abstract class Backend extends \Controller
 		if (($short = substr($GLOBALS['TL_LANGUAGE'], 0, 2)) != $lang)
 		{
 			// Try the short tag, e.g. "de" instead of "de_CH"
-			if (file_exists(TL_ROOT . '/assets/tinymce4/langs/' . $short . '.js'))
+			if (file_exists(TL_ROOT . '/assets/tinymce4/js/langs/' . $short . '.js'))
 			{
 				return $short;
 			}
@@ -116,7 +112,7 @@ abstract class Backend extends \Controller
 		elseif (($long = $short . '_' . strtoupper($short)) != $lang)
 		{
 			// Try the long tag, e.g. "fr_FR" instead of "fr" (see #6952)
-			if (file_exists(TL_ROOT . '/assets/tinymce4/langs/' . $long . '.js'))
+			if (file_exists(TL_ROOT . '/assets/tinymce4/js/langs/' . $long . '.js'))
 			{
 				return $long;
 			}
@@ -248,36 +244,33 @@ abstract class Backend extends \Controller
 	protected function handleRunOnce()
 	{
 		$this->import('Files');
-		$arrFiles = array('system/runonce.php');
+		$arrFiles = array(TL_ROOT . '/system/runonce.php');
 
 		// Always scan all folders and not just the active modules (see #4200)
-		foreach (scan(TL_ROOT . '/system/modules') as $strModule)
+		foreach (\System::getKernel()->getContaoBundles() as $bundle)
 		{
-			if (substr($strModule, 0, 1) == '.' || !is_dir(TL_ROOT . '/system/modules/' . $strModule))
-			{
-				continue;
-			}
-
-			$arrFiles[] = 'system/modules/' . $strModule . '/config/runonce.php';
+			$arrFiles[] = $bundle->getContaoResourcesPath() . '/config/runonce.php';
 		}
 
 		// Check whether a runonce file exists
 		foreach ($arrFiles as $strFile)
 		{
-			if (file_exists(TL_ROOT . '/' . $strFile))
+			if (file_exists($strFile))
 			{
 				try
 				{
-					include TL_ROOT . '/' . $strFile;
+					include $strFile;
 				}
 				catch (\Exception $e) {}
 
-				if (!$this->Files->delete($strFile))
+				$strRelpath = str_replace(TL_ROOT . '/', '', $strFile);
+
+				if (!$this->Files->delete($strRelpath))
 				{
-					throw new \Exception("The $strFile file cannot be deleted. Please remove the file manually and correct the file permission settings on your server.");
+					throw new \Exception("The file $strRelpath cannot be deleted. Please remove the file manually and correct the file permission settings on your server.");
 				}
 
-				$this->log("File $strFile ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
+				$this->log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
 			}
 		}
 	}
@@ -673,7 +666,7 @@ abstract class Backend extends \Controller
 			{
 				if ($objPages->dns != '')
 				{
-					$domain = ($objPages->useSSL ? 'https://' : 'http://') . $objPages->dns . TL_PATH . '/';
+					$domain = ($objPages->useSSL ? 'https://' : 'http://') . $objPages->dns . \Environment::get('path') . '/';
 				}
 				else
 				{
@@ -826,7 +819,7 @@ abstract class Backend extends \Controller
 	 * @param boolean
 	 * @return string
 	 */
-	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public static function addPageIcon($row, $label, \DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
 	{
 		if ($blnProtected)
 		{
@@ -842,7 +835,7 @@ abstract class Backend extends \Controller
 		}
 
 		// Mark root pages
-		if ($row['type'] == 'root' || Input::get('do') == 'article')
+		if ($row['type'] == 'root' || \Input::get('do') == 'article')
 		{
 			$label = '<strong>' . $label . '</strong>';
 		}

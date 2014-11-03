@@ -10,11 +10,9 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
+
+use Michelf\MarkdownExtra;
 
 
 /**
@@ -58,20 +56,20 @@ class BackendChangelog extends \Backend
 		$strBuffer = str_replace("\r", '', $strBuffer);
 
 		// Convert to HTML
-		$strBuffer = \Michelf\MarkdownExtra::defaultTransform($strBuffer);
+		$strBuffer = MarkdownExtra::defaultTransform($strBuffer);
 
 		// Add the template
-		$this->Template = new \BackendTemplate('be_changelog');
+		$objTemplate = new \BackendTemplate('be_changelog');
 
 		// Assign the template variables
-		$this->Template->content = $strBuffer;
-		$this->Template->theme = \Backend::getTheme();
-		$this->Template->base = \Environment::get('base');
-		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
-		$this->Template->title = specialchars($GLOBALS['TL_LANG']['MSC']['changelog']);
-		$this->Template->charset = \Config::get('characterSet');
+		$objTemplate->content = $strBuffer;
+		$objTemplate->theme = \Backend::getTheme();
+		$objTemplate->base = \Environment::get('base');
+		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
+		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['changelog']);
+		$objTemplate->charset = \Config::get('characterSet');
 
 		\Config::set('debugMode', false);
-		$this->Template->output();
+		$objTemplate->output();
 	}
 }

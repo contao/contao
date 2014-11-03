@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -141,8 +137,9 @@ class Automator extends \System
 				$objFolder->purge();
 
 				// Restore the index.html file
-				$objFile = new \File('templates/index.html', true);
-				$objFile->copyTo('assets/images/' . $dir . '/index.html');
+				$objFile = new \File('assets/images/' . $dir . '/index.html');
+				$objFile->write("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Blank page</title>\n</head>\n<body>\n</body>\n</html>");
+				$objFile->close();
 			}
 		}
 
@@ -167,8 +164,9 @@ class Automator extends \System
 			$objFolder->purge();
 
 			// Restore the index.html file
-			$objFile = new \File('templates/index.html', true);
-			$objFile->copyTo($dir . '/index.html');
+			$objFile = new \File($dir . '/index.html');
+			$objFile->write("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Blank page</title>\n</head>\n<body>\n</body>\n</html>");
+			$objFile->close();
 		}
 
 		// Recreate the internal style sheets
@@ -219,7 +217,7 @@ class Automator extends \System
 		// Check whether the cache exists
 		if (is_dir(TL_ROOT . '/system/cache/dca'))
 		{
-			foreach (array('config', 'dca', 'language', 'sql') as $dir)
+			foreach (array('config', 'dca', 'language', 'packages', 'sql') as $dir)
 			{
 				// Purge the folder
 				$objFolder = new \Folder('system/cache/' . $dir);
@@ -242,7 +240,7 @@ class Automator extends \System
 		$objFolder->purge();
 
 		// Restore the .gitignore file
-		$objFile = new \File('system/logs/.gitignore', true);
+		$objFile = new \File('system/logs/.gitignore');
 		$objFile->copyTo('system/tmp/.gitignore');
 
 		// Add a log entry
@@ -316,7 +314,7 @@ class Automator extends \System
 					continue; // see #6652
 				}
 
-				$objFile = new \File('share/' . $file, true);
+				$objFile = new \File('share/' . $file);
 
 				if ($objFile->extension == 'xml' && !in_array($objFile->filename, $arrFeeds))
 				{
@@ -392,14 +390,14 @@ class Automator extends \System
 		// Create the XML file
 		while ($objRoot->next())
 		{
-			$objFile = new \File('share/' . $objRoot->sitemapName . '.xml', true);
+			$objFile = new \File('share/' . $objRoot->sitemapName . '.xml');
 
 			$objFile->truncate();
 			$objFile->append('<?xml version="1.0" encoding="UTF-8"?>');
 			$objFile->append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">');
 
 			// Set the domain (see #6421)
-			$strDomain = ($objRoot->useSSL ? 'https://' : 'http://') . ($objRoot->dns ?: \Environment::get('host')) . TL_PATH . '/';
+			$strDomain = ($objRoot->useSSL ? 'https://' : 'http://') . ($objRoot->dns ?: \Environment::get('host')) . \Environment::get('path') . '/';
 
 			// Find the searchable pages
 			$arrPages = \Backend::findSearchablePages($objRoot->id, $strDomain, true, $objRoot->language);
@@ -442,7 +440,7 @@ class Automator extends \System
 
 		foreach ($arrFiles as $strFile)
 		{
-			$objFile = new \File('system/logs/' . $strFile . '.9', true);
+			$objFile = new \File('system/logs/' . $strFile . '.9');
 
 			// Delete the oldest file
 			if ($objFile->exists())
@@ -457,15 +455,115 @@ class Automator extends \System
 
 				if (file_exists(TL_ROOT . '/' . $strGzName))
 				{
-					$objFile = new \File($strGzName, true);
+					$objFile = new \File($strGzName);
 					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));
 				}
 			}
 
 			// Add .1 to the latest file
-			$objFile = new \File('system/logs/' . $strFile, true);
+			$objFile = new \File('system/logs/' . $strFile);
 			$objFile->renameTo('system/logs/' . $strFile . '.1');
 		}
+	}
+
+
+	/**
+	 * Generate the symlinks in the web/ folder
+	 */
+	public function generateSymlinks()
+	{
+		$this->import('Files');
+		$strUploadPath = \Config::get('uploadPath');
+
+		// Remove the files directory in the document root
+		if (is_dir(TL_ROOT . '/web/' . $strUploadPath))
+		{
+			$this->Files->rrdir('web/' . $strUploadPath);
+		}
+
+		$this->generateFilesSymlinks($strUploadPath);
+
+		// Remove the system/modules directory in the document root
+		if (is_dir(TL_ROOT . '/web/system/modules'))
+		{
+			$this->Files->rrdir('web/system/modules');
+		}
+
+		// Remove the vendor directory in the document root
+		if (is_dir(TL_ROOT . '/web/vendor'))
+		{
+			$this->Files->rrdir('web/vendor');
+		}
+
+		$arrPublic = $this->getPublicModuleFolders();
+
+		// Symlink the public extension subfolders
+		foreach ($arrPublic as $strPath)
+		{
+			$target = str_repeat('../', substr_count($strPath, '/') + 1);
+			$this->Files->symlink($target . $strPath, 'web/' . $strPath);
+		}
+
+		// Symlink the tinymce.css file
+		if (file_exists(TL_ROOT . '/' . $strUploadPath . '/tinymce.css'))
+		{
+			$this->Files->symlink('../../files/tinymce.css', 'web/' . $strUploadPath . '/tinymce.css');
+		}
+
+		// Symlink the assets and themes directory
+		$this->Files->symlink('../assets', 'web/assets');
+		$this->Files->symlink('../../system/themes', 'web/system/themes');
+	}
+
+
+	/**
+	 * Recursively create the files symlinks
+	 *
+	 * @param string $strPath The current path
+	 */
+	protected function generateFilesSymlinks($strPath)
+	{
+		if (file_exists(TL_ROOT . '/' . $strPath . '/.public'))
+		{
+			$strPrefix = str_repeat('../', substr_count($strPath, '/') + 1);
+			$this->Files->symlink($strPrefix . $strPath, 'web/' . $strPath);
+		}
+		else
+		{
+			foreach (scan(TL_ROOT . '/' . $strPath) as $res)
+			{
+				if (is_dir(TL_ROOT . '/' . $strPath . '/' . $res))
+				{
+					$this->generateFilesSymlinks($strPath . '/' . $res);
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * Return all public module folders as array
+	 *
+	 * @return array An array of public folders
+	 */
+	protected function getPublicModuleFolders()
+	{
+		$arrPublic = array();
+
+		foreach (\System::getKernel()->getContaoBundles() as $bundle)
+		{
+			foreach ($bundle->getPublicFolders() as $strPath)
+			{
+				if (strpos($strPath, '../') !== false)
+				{
+					$strPath = realpath($strPath);
+				}
+
+				$arrPublic[] = str_replace(TL_ROOT . '/', '', $strPath);
+            }
+		}
+
+		return $arrPublic;
 	}
 
 
@@ -482,6 +580,7 @@ class Automator extends \System
 		$this->generateDcaCache();
 		$this->generateLanguageCache();
 		$this->generateDcaExtracts();
+		$this->generatePackageCache();
 	}
 
 
@@ -491,14 +590,14 @@ class Automator extends \System
 	public function generateConfigCache()
 	{
 		// Generate the class/template laoder cache file
-		$objCacheFile = new \File('system/cache/config/autoload.php', true);
+		$objCacheFile = new \File('system/cache/config/autoload.php');
 		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-		foreach (\ModuleLoader::getActive() as $strModule)
+		foreach (\System::getKernel()->getContaoBundles() as $bundle)
 		{
-			$strFile = 'system/modules/' . $strModule . '/config/autoload.php';
+			$strFile = $bundle->getContaoResourcesPath() . '/config/autoload.php';
 
-			if (file_exists(TL_ROOT . '/' . $strFile))
+			if (file_exists($strFile))
 			{
 				$objCacheFile->append(static::readPhpFileWithoutTags($strFile));
 			}
@@ -507,45 +606,15 @@ class Automator extends \System
 		// Close the file (moves it to its final destination)
 		$objCacheFile->close();
 
-		// Generate the module loader cache file
-		$objCacheFile = new \File('system/cache/config/modules.php', true);
-		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
-
-		$strContent = "\n\n";
-		$strContent .= "/**\n * Active modules\n */\n";
-		$strContent .= "static::\$active = array\n";
-		$strContent .= "(\n";
-
-		foreach (\ModuleLoader::getActive() as $strModule)
-		{
-			$strContent .= "\t'$strModule',\n";
-		}
-
-		$strContent .= ");\n\n";
-		$strContent .= "/**\n * Disabled modules\n */\n";
-		$strContent .= "static::\$disabled = array\n";
-		$strContent .= "(\n";
-
-		foreach (\ModuleLoader::getDisabled() as $strModule)
-		{
-			$strContent .= "\t'$strModule',\n";
-		}
-
-		$strContent .= ");";
-		$objCacheFile->append($strContent);
-
-		// Close the file (moves it to its final destination)
-		$objCacheFile->close();
-
 		// Generate the config cache file
-		$objCacheFile = new \File('system/cache/config/config.php', true);
+		$objCacheFile = new \File('system/cache/config/config.php');
 		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-		foreach (\ModuleLoader::getActive() as $strModule)
+		foreach (\System::getKernel()->getContaoBundles() as $bundle)
 		{
-			$strFile = 'system/modules/' . $strModule . '/config/config.php';
+			$strFile = $bundle->getContaoResourcesPath() . '/config/config.php';
 
-			if (file_exists(TL_ROOT . '/' . $strFile))
+			if (file_exists($strFile))
 			{
 				$objCacheFile->append(static::readPhpFileWithoutTags($strFile));
 			}
@@ -567,16 +636,16 @@ class Automator extends \System
 		$arrFiles = array();
 
 		// Parse all active modules
-		foreach (\ModuleLoader::getActive() as $strModule)
+		foreach (\System::getKernel()->getContaoBundles() as $bundle)
 		{
-			$strDir = 'system/modules/' . $strModule . '/dca';
+			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 
-			if (!is_dir(TL_ROOT . '/' . $strDir))
+			if (!is_dir($strDir))
 			{
 				continue;
 			}
 
-			foreach (scan(TL_ROOT . '/' . $strDir) as $strFile)
+			foreach (scan($strDir) as $strFile)
 			{
 				// Ignore non PHP files and files which have been included before
 				if (strncmp($strFile, '.', 1) === 0 || substr($strFile, -4) != '.php' || in_array($strFile, $arrFiles))
@@ -592,15 +661,15 @@ class Automator extends \System
 		foreach ($arrFiles as $strName)
 		{
 			// Generate the cache file
-			$objCacheFile = new \File('system/cache/dca/' . $strName . '.php', true);
+			$objCacheFile = new \File('system/cache/dca/' . $strName . '.php');
 			$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
 			// Parse all active modules
-			foreach (\ModuleLoader::getActive() as $strModule)
+			foreach (\System::getKernel()->getContaoBundles() as $bundle)
 			{
-				$strFile = 'system/modules/' . $strModule . '/dca/' . $strName . '.php';
+				$strFile = $bundle->getContaoResourcesPath() . '/dca/' . $strName . '.php';
 
-				if (file_exists(TL_ROOT . '/' . $strFile))
+				if (file_exists($strFile))
 				{
 					$objCacheFile->append(static::readPhpFileWithoutTags($strFile));
 				}
@@ -620,7 +689,7 @@ class Automator extends \System
 	 */
 	public function generateLanguageCache()
 	{
-		$arrLanguages = array('en');
+		$arrLanguages = array();
 		$objLanguages = \Database::getInstance()->query("SELECT language FROM tl_member UNION SELECT language FROM tl_user UNION SELECT REPLACE(language, '-', '_') FROM tl_page WHERE type='root'");
 
 		// Only cache the languages which are in use (see #6013)
@@ -647,16 +716,16 @@ class Automator extends \System
 			$arrFiles = array();
 
 			// Parse all active modules
-			foreach (\ModuleLoader::getActive() as $strModule)
+			foreach (\System::getKernel()->getContaoBundles() as $bundle)
 			{
-				$strDir = 'system/modules/' . $strModule . '/languages/' . $strLanguage;
+				$strDir = $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage;
 
-				if (!is_dir(TL_ROOT . '/' . $strDir))
+				if (!is_dir($strDir))
 				{
 					continue;
 				}
 
-				foreach (scan(TL_ROOT . '/' . $strDir) as $strFile)
+				foreach (scan($strDir) as $strFile)
 				{
 					if (strncmp($strFile, '.', 1) === 0 || (substr($strFile, -4) != '.php' && substr($strFile, -4) != '.xlf') || in_array($strFile, $arrFiles))
 					{
@@ -689,19 +758,19 @@ class Automator extends \System
 						   . " */\n";
 
 				// Generate the cache file
-				$objCacheFile = new \File($strCacheFile, true);
+				$objCacheFile = new \File($strCacheFile);
 				$objCacheFile->write(sprintf($strHeader, $strLanguage));
 
 				// Parse all active modules and append to the cache file
-				foreach (\ModuleLoader::getActive() as $strModule)
+				foreach (\System::getKernel()->getContaoBundles() as $bundle)
 				{
-					$strFile = 'system/modules/' . $strModule . '/languages/' . $strLanguage . '/' . $strName;
+					$strFile = $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage . '/' . $strName;
 
-					if (file_exists(TL_ROOT . '/' . $strFile . '.xlf'))
+					if (file_exists($strFile . '.xlf'))
 					{
 						$objCacheFile->append(static::convertXlfToPhp($strFile . '.xlf', $strLanguage));
 					}
-					elseif (file_exists(TL_ROOT . '/' . $strFile . '.php'))
+					elseif (file_exists($strFile . '.php'))
 					{
 						$objCacheFile->append(static::readPhpFileWithoutTags($strFile . '.php'));
 					}
@@ -726,16 +795,16 @@ class Automator extends \System
 		$arrExtracts = array();
 
 		// Only check the active modules (see #4541)
-		foreach (\ModuleLoader::getActive() as $strModule)
+		foreach (\System::getKernel()->getContaoBundles() as $bundle)
 		{
-			$strDir = 'system/modules/' . $strModule . '/dca';
+			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 
-			if (!is_dir(TL_ROOT . '/' . $strDir))
+			if (!is_dir($strDir))
 			{
 				continue;
 			}
 
-			foreach (scan(TL_ROOT . '/' . $strDir) as $strFile)
+			foreach (scan($strDir) as $strFile)
 			{
 				// Ignore non PHP files and files which have been included before
 				if (strncmp($strFile, '.', 1) === 0 || substr($strFile, -4) != '.php' || in_array($strFile, $included))
@@ -759,7 +828,7 @@ class Automator extends \System
 		foreach ($arrExtracts as $strTable=>$objExtract)
 		{
 			// Create the file
-			$objFile = new \File('system/cache/sql/' . $strTable . '.php', true);
+			$objFile = new \File('system/cache/sql/' . $strTable . '.php');
 			$objFile->write("<?php\n\n");
 
 			// Meta
@@ -831,5 +900,31 @@ class Automator extends \System
 
 		// Add a log entry
 		$this->log('Generated the DCA extracts', __METHOD__, TL_CRON);
+	}
+
+
+	/**
+	 * Create the packages cache
+	 */
+	public function generatePackageCache()
+	{
+		$objFile = new \File('system/cache/packages/installed.php');
+		$objFile->write("<?php\n\nreturn array\n\t(");
+
+		$objJson = json_decode(file_get_contents(TL_ROOT . '/vendor/composer/installed.json'));
+
+		foreach ($objJson as $objPackage)
+		{
+			$strName = str_replace("'", "\\'", $objPackage->name);
+			$strVersion = substr($objPackage->version_normalized, 0, strrpos($objPackage->version_normalized, '.'));
+
+			if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $strVersion))
+			{
+				$objFile->append("\t'$strName' => '$strVersion',");
+			}
+		}
+
+		$objFile->append(');');
+		$objFile->close();
 	}
 }

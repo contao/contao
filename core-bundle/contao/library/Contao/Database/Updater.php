@@ -306,18 +306,6 @@ class Updater extends \Controller
 			$this->createContentElement($objEvents, 'tl_calendar_events', 'details');
 		}
 
-		// Add an .htaccess file to the modules' html folders so they can be accessed via HTTP
-		foreach (scan(TL_ROOT . '/system/modules') as $strFolder)
-		{
-			if (is_dir(TL_ROOT . '/system/modules/' . $strFolder) && is_dir(TL_ROOT . '/system/modules/' . $strFolder . '/html'))
-			{
-				if (!file_exists(TL_ROOT . '/system/modules/' . $strFolder . '/html/.htaccess'))
-				{
-					\File::putContent('system/modules/' . $strFolder . '/html/.htaccess', "<IfModule !mod_authz_core.c>\n  Order allow,deny\n  Allow from all\n</IfModule>\n<IfModule mod_authz_core.c>\n  Require all granted\n</IfModule>");
-				}
-			}
-		}
-
 		// Convert the gradient angle syntax (see #4569)
 		if ($this->Database->fieldExists('gradientAngle', 'tl_style'))
 		{
@@ -582,6 +570,65 @@ class Updater extends \Controller
 
 
 	/**
+	 * Version 4.0.0 update
+	 */
+	public function run40Update()
+	{
+		// Adjust the framework agnostic scripts
+		$this->Database->query("ALTER TABLE `tl_layout` ADD `scripts` text NULL");
+		$objLayout = $this->Database->query("SELECT id, addJQuery, jquery, addMooTools, mootools FROM tl_layout WHERE framework!=''");
+
+		while ($objLayout->next())
+		{
+			$arrScripts = array();
+
+			// Check whether j_slider is enabled
+			if ($objLayout->addJQuery)
+			{
+				$jquery = deserialize($objLayout->jquery);
+
+				if (!empty($jquery) && is_array($jquery))
+				{
+					if (($key = array_search('j_slider', $jquery)) !== false)
+					{
+						$arrScripts[] = 'js_slider';
+						unset($jquery[$key]);
+
+						$this->Database->prepare("UPDATE tl_layout SET jquery=? WHERE id=?")
+									   ->execute(serialize(array_values($jquery)), $objLayout->id);
+					}
+				}
+			}
+
+			// Check whether moo_slider is enabled
+			if ($objLayout->addMooTools)
+			{
+				$mootools = deserialize($objLayout->mootools);
+
+				if (!empty($mootools) && is_array($mootools))
+				{
+					if (($key = array_search('moo_slider', $mootools)) !== false)
+					{
+						$arrScripts[] = 'js_slider';
+						unset($mootools[$key]);
+
+						$this->Database->prepare("UPDATE tl_layout SET mootools=? WHERE id=?")
+									   ->execute(serialize(array_values($mootools)), $objLayout->id);
+					}
+				}
+			}
+
+			// Enable the js_slider template
+			if (!empty($arrScripts))
+			{
+				$this->Database->prepare("UPDATE tl_layout SET scripts=? WHERE id=?")
+							   ->execute(serialize(array_values(array_unique($arrScripts))), $objLayout->id);
+			}
+		}
+	}
+
+
+	/**
 	 * Scan the upload folder and create the database entries
 	 *
 	 * @param string  $strPath The target folder
@@ -648,7 +695,7 @@ class Updater extends \Controller
 				}
 			}
 
-			$objFile = new \File($strFile, true);
+			$objFile = new \File($strFile);
 			$strUuid = $this->Database->getUuid();
 
 			$this->Database->prepare("INSERT INTO tl_files (pid, tstamp, uuid, name, type, path, extension, hash) VALUES (?, ?, ?, ?, 'file', ?, ?, ?)")
@@ -680,16 +727,16 @@ class Updater extends \Controller
 		$arrFiles = array();
 
 		// Parse all modules (see #6058)
-		foreach (scan(TL_ROOT . '/system/modules') as $strModule)
+		foreach (\System::getKernel()->getContaoBundles() as $bundle)
 		{
-			$strDir = 'system/modules/' . $strModule . '/dca';
+			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 
-			if (!is_dir(TL_ROOT . '/' . $strDir))
+			if (!is_dir($strDir))
 			{
 				continue;
 			}
 
-			foreach (scan(TL_ROOT . '/' . $strDir) as $strFile)
+			foreach (scan($strDir) as $strFile)
 			{
 				// Ignore non PHP files and files which have been included before
 				if (substr($strFile, -4) != '.php' || in_array($strFile, $arrFiles))

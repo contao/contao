@@ -36,7 +36,7 @@ class SyncExclude extends \RecursiveFilterIterator
 	 * Ignored files
 	 * @var array
 	 */
-	protected $arrIgnore = array('.DS_Store', '.svn');
+	protected $arrIgnore = array('.DS_Store', '.public', '.git', '.svn');
 
 
 	/**

@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -310,7 +306,7 @@ abstract class Module extends \Frontend
 						// DO NOT ADD A break; STATEMENT
 
 					default:
-						if ($objSubpages->domain != '' && $objSubpages->domain != Environment::get('host'))
+						if ($objSubpages->domain != '' && $objSubpages->domain != \Environment::get('host'))
 						{
 							$objSubpages->current()->loadDetails();
 						}
@@ -360,7 +356,7 @@ abstract class Module extends \Frontend
 				// Override the link target
 				if ($objSubpages->type == 'redirect' && $objSubpages->target)
 				{
-					$row['target'] = ($objPage->outputFormat == 'xhtml') ? ' onclick="return !window.open(this.href)"' : ' target="_blank"';
+					$row['target'] = ' target="_blank"';
 				}
 
 				$items[] = $row;

@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -40,17 +36,8 @@ class ContentAccordion extends \ContentElement
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
-		// Clean RTE output
-		if ($objPage->outputFormat == 'xhtml')
-		{
-			$this->text = \String::toXhtml($this->text);
-		}
-		else
-		{
-			$this->text = \String::toHtml5($this->text);
-		}
+		// Clean the RTE output
+		$this->text = \String::toHtml5($this->text);
 
 		$this->Template->text = \String::encodeEmail($this->text);
 		$this->Template->addImage = false;

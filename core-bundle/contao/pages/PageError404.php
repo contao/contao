@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -40,7 +36,7 @@ class PageError404 extends \Frontend
 		// Add a log entry
 		if ($blnUnusedGet)
 		{
-			$this->log('The request for page ID "' . $pageId . '" contained unused GET parameters: "' . implode('", "', Input::getUnusedGet()) . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
+			$this->log('The request for page ID "' . $pageId . '" contained unused GET parameters: "' . implode('", "', \Input::getUnusedGet()) . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
 		}
 		elseif ($strDomain !== null || $strHost !== null)
 		{
@@ -87,30 +83,27 @@ class PageError404 extends \Frontend
 			die_nicely('be_no_page', 'Page not found');
 		}
 
-		// Generate the error page
-		if (!$obj404->autoforward || !$obj404->jumpTo)
-		{
-			global $objPage;
-
-			$objPage = $obj404->loadDetails();
-			$objHandler = new $GLOBALS['TL_PTY']['regular']();
-
-			header('HTTP/1.1 404 Not Found');
-			$objHandler->generate($objPage);
-
-			exit;
-		}
-
 		// Forward to another page
-		$objNextPage = \PageModel::findPublishedById($obj404->jumpTo);
-
-		if ($objNextPage === null)
+		if ($obj404->autoforward && $obj404->jumpTo)
 		{
-			header('HTTP/1.1 404 Not Found');
-			$this->log('Forward page ID "' . $obj404->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
-			die_nicely('be_no_forward', 'Forward page not found');
+			$objNextPage = \PageModel::findPublishedById($obj404->jumpTo);
+
+			if ($objNextPage === null)
+			{
+				header('HTTP/1.1 404 Not Found');
+				$this->log('Forward page ID "' . $obj404->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
+				die_nicely('be_no_forward', 'Forward page not found');
+			}
+
+			$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj404->redirect == 'temporary') ? 302 : 301));
 		}
 
-		$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj404->redirect == 'temporary') ? 302 : 301));
+		global $objPage;
+
+		$objPage = $obj404->loadDetails();
+		$objHandler = new $GLOBALS['TL_PTY']['regular']();
+
+		header('HTTP/1.1 404 Not Found');
+		$objHandler->generate($objPage);
 	}
 }

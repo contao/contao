@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -57,18 +53,6 @@ class FormHeadline extends \Widget
 	 */
 	public function generate()
 	{
-		global $objPage;
-
-		// Clean RTE output
-		if ($objPage->outputFormat == 'xhtml')
-		{
-			$this->text = \String::toXhtml($this->text);
-		}
-		else
-		{
-			$this->text = \String::toHtml5($this->text);
-		}
-
-		return $this->text;
+		return \String::toHtml5($this->text);
 	}
 }

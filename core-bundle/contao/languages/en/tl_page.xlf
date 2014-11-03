@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.1">
-  <file datatype="php" original="system/modules/core/languages/en/tl_page.php" source-language="en">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en">
     <body>
       <trans-unit id="tl_page.title.0">
         <source>Page name</source>
@@ -105,10 +105,10 @@
         <source>Please enter the name of the sitemap file without extension.</source>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
-        <source>Use HTTPS in sitemaps</source>
+        <source>Use HTTPS</source>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>Generate the sitemap URLs of this website with &lt;em&gt;https://&lt;/em&gt;.</source>
+        <source>Generate the URLs with &lt;em&gt;https://&lt;/em&gt; (e.g. in sitemaps).</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -93,7 +89,7 @@ class FrontendUser extends \User
 		if (!isset($_GET['pdf']) && !isset($_GET['file']) && !isset($_GET['id']) && $session['referer']['current'] != \Environment::get('requestUri'))
 		{
 			$session['referer']['last'] = $session['referer']['current'];
-			$session['referer']['current'] = substr(\Environment::get('requestUri'), strlen(TL_PATH) + 1);
+			$session['referer']['current'] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
 		}
 
 		$this->Session->setData($session);

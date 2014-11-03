@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -76,7 +72,7 @@ class BackendTemplate extends \Template
 		// Add the debug style sheet
 		if (\Config::get('debugMode'))
 		{
-			$this->stylesheets .= '<link rel="stylesheet" href="' . $this->addStaticUrlTo('assets/contao/css/debug.css') . '">' . "\n";
+			$this->stylesheets .= \Template::generateStyleTag($this->addStaticUrlTo('assets/contao/css/debug.min.css')) . "\n";
 		}
 
 		// JavaScripts
@@ -87,7 +83,7 @@ class BackendTemplate extends \Template
 			foreach (array_unique($GLOBALS['TL_JAVASCRIPT']) as $javascript)
 			{
 				$options = \String::resolveFlaggedUrl($javascript);
-				$strJavaScripts .= \Template::generateScriptTag($this->addStaticUrlTo($javascript), false, $options->async) . "\n";
+				$strJavaScripts .= \Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async) . "\n";
 			}
 
 			$this->javascripts = $strJavaScripts;
@@ -141,7 +137,7 @@ class BackendTemplate extends \Template
 					. 'picker:"' . $GLOBALS['TL_LANG']['MSC']['pickerNoSelection'] . '"'
 				. '},'
 				. 'script_url:"' . TL_ASSETS_URL . '",'
-				. 'path:"' . TL_PATH . '",'
+				. 'path:"' . \Environment::get('path') . '",'
 				. 'request_token:"' . REQUEST_TOKEN . '",'
 				. 'referer_id:"' . TL_REFERER_ID . '"'
 			. '};';

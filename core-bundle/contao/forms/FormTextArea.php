@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -151,28 +147,6 @@ class FormTextArea extends \Widget
 				return parent::__get($strKey);
 				break;
 		}
-	}
-
-
-	/**
-	 * Return all attributes as string
-	 *
-	 * @param array $arrStrip An optional array with attributes to strip
-	 *
-	 * @return string The attributes string
-	 */
-	public function getAttributes($arrStrip=array())
-	{
-		global $objPage;
-		$arrStrip = array();
-
-		// XHTML does not support maxlength
-		if ($objPage->outputFormat == 'xhtml')
-		{
-			$arrStrip[] = 'maxlength';
-		}
-
-		return parent::getAttributes($arrStrip);
 	}
 
 

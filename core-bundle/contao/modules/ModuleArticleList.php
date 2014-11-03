@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -55,6 +51,7 @@ class ModuleArticleList extends \Module
 		}
 
 		$strBuffer = parent::generate();
+
 		return !empty($this->Template->articles) ? $strBuffer : '';
 	}
 
@@ -104,13 +101,12 @@ class ModuleArticleList extends \Module
 			}
 
 			$cssID = deserialize($objArticles->cssID, true);
-			$alias = $objArticles->alias ?: $objArticles->title;
 
 			$articles[] = array
 			(
 				'link' => $objArticles->title,
 				'title' => specialchars($objArticles->title),
-				'id' => $cssID[0] ?: standardize($alias),
+				'id' => $cssID[0] ?: 'article-' . $objArticles->id,
 				'articleId' => $objArticles->id
 			);
 		}

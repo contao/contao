@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -33,6 +29,11 @@ class BackendMain extends \Backend
 	 * @var object
 	 */
 	protected $objAjax;
+
+	/**
+	 * @var Template
+	 */
+	protected $Template;
 
 
 	/**
@@ -149,7 +150,7 @@ class BackendMain extends \Backend
 		\System::loadLanguageFile('explain');
 
 		$objTemplate = new \BackendTemplate('be_welcome');
-		$objTemplate->messages = \Message::generate(false, true);
+		$objTemplate->messages = \Message::generateUnwrapped();
 
 		// HOOK: add custom messages
 		if (isset($GLOBALS['TL_HOOKS']['getSystemMessages']) && is_array($GLOBALS['TL_HOOKS']['getSystemMessages']))

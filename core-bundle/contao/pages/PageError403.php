@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -58,30 +54,27 @@ class PageError403 extends \Frontend
 			die_nicely('be_forbidden', 'Forbidden');
 		}
 
-		// Generate the error page
-		if (!$obj403->autoforward || !$obj403->jumpTo)
-		{
-			global $objPage;
-
-			$objPage = $obj403->loadDetails();
-			$objHandler = new $GLOBALS['TL_PTY']['regular']();
-
-			header('HTTP/1.1 403 Forbidden');
-			$objHandler->generate($objPage);
-
-			exit;
-		}
-
 		// Forward to another page
-		$objNextPage = \PageModel::findPublishedById($obj403->jumpTo);
-
-		if ($objNextPage === null)
+		if ($obj403->autoforward && $obj403->jumpTo)
 		{
-			header('HTTP/1.1 403 Forbidden');
-			$this->log('Forward page ID "' . $obj403->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
-			die_nicely('be_no_forward', 'Forward page not found');
+			$objNextPage = \PageModel::findPublishedById($obj403->jumpTo);
+
+			if ($objNextPage === null)
+			{
+				header('HTTP/1.1 403 Forbidden');
+				$this->log('Forward page ID "' . $obj403->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
+				die_nicely('be_no_forward', 'Forward page not found');
+			}
+
+			$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj403->redirect == 'temporary') ? 302 : 301));
 		}
 
-		$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj403->redirect == 'temporary') ? 302 : 301));
+		global $objPage;
+
+		$objPage = $obj403->loadDetails();
+		$objHandler = new $GLOBALS['TL_PTY']['regular']();
+
+		header('HTTP/1.1 403 Forbidden');
+		$objHandler->generate($objPage);
 	}
 }

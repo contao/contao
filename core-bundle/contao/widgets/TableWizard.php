@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -274,7 +270,7 @@ class TableWizard extends \Widget
 
 			foreach ($arrUploaded as $strCsvFile)
 			{
-				$objFile = new \File($strCsvFile, true);
+				$objFile = new \File($strCsvFile);
 
 				if ($objFile->extension != 'csv')
 				{

@@ -36,10 +36,7 @@ class ClassLoader
 	 * Known namespaces
 	 * @var array
 	 */
-	protected static $namespaces = array
-	(
-		'Contao'
-	);
+	protected static $namespaces = array('Contao');
 
 	/**
 	 * Known classes
@@ -217,13 +214,13 @@ class ClassLoader
 		}
 		else
 		{
-			foreach (\ModuleLoader::getActive() as $module)
+			foreach (\System::getKernel()->getContaoBundles() as $bundle)
 			{
-				$file = 'system/modules/' . $module . '/config/autoload.php';
+				$strFile = $bundle->getContaoResourcesPath() . '/config/autoload.php';
 
-				if (file_exists(TL_ROOT . '/' . $file))
+				if (file_exists($strFile))
 				{
-					include TL_ROOT . '/' . $file;
+					include $strFile;
 				}
 			}
 		}

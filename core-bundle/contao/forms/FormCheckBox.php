@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -240,7 +236,7 @@ class FormCheckBox extends \Widget
 		if ($this->strLabel != '')
 		{
 			return sprintf('<fieldset id="ctrl_%s" class="checkbox_container%s"><legend>%s%s%s</legend>%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
-	        				$this->strId,
+							$this->strId,
 							(($this->strClass != '') ? ' ' . $this->strClass : ''),
 							($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].'</span> ' : ''),
 							$this->strLabel,
@@ -252,7 +248,7 @@ class FormCheckBox extends \Widget
 		}
 		else
 		{
-	        return sprintf('<fieldset id="ctrl_%s" class="checkbox_container%s">%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
+			return sprintf('<fieldset id="ctrl_%s" class="checkbox_container%s">%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
 							$this->strId,
 							(($this->strClass != '') ? ' ' . $this->strClass : ''),
 							$this->strError,

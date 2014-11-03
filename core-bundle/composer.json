@@ -27,21 +27,6 @@
         "phpunit/phpunit": "~3.7"
     },
     "autoload": {
-        "classmap": [
-            "contao/classes/",
-            "contao/controllers/",
-            "contao/drivers/",
-            "contao/elements/",
-            "contao/forms/",
-            "contao/hybrids/",
-            "contao/library/",
-            "contao/maintenance/",
-            "contao/models/",
-            "contao/modules/",
-            "contao/pages/",
-            "contao/uploader/",
-            "contao/widgets/"
-        ],
         "psr-4": {
             "Contao\\CoreBundle\\": "src/"
         }

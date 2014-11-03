@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -152,7 +148,7 @@ class BackendUser extends \User
 					$session[$key][TL_REFERER_ID] = end($session[$key]);
 				}
 
-				$session[$key][TL_REFERER_ID]['current'] = substr(\Environment::get('requestUri'), strlen(TL_PATH) + 1);
+				$session[$key][TL_REFERER_ID]['current'] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
 			}
 		}
 

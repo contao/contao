@@ -130,7 +130,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{media_legend},media,mediaQuery;{vars_legend},vars;{expert_legend:hide},disablePie,embedImages,cc'
+		'default'                     => '{title_legend},name;{media_legend},media,mediaQuery;{vars_legend},vars;{expert_legend:hide},embedImages,cc'
 	),
 
 	// Fields
@@ -159,13 +159,6 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 			'flag'                    => 1,
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'alnum', 'maxlength'=>64, 'spaceToUnderscore'=>true),
 			'sql'                     => "varchar(64) NULL"
-		),
-		'disablePie' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_style_sheet']['disablePie'],
-			'inputType'               => 'checkbox',
-			'exclude'                 => true,
-			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'embedImages' => array
 		(

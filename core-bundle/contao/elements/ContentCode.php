@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -36,7 +32,7 @@ class ContentCode extends \ContentElement
 
 
 	/**
-	 * Return if the highlighter plugin is not loaded
+	 * Show the raw code in the back end
 	 * @return string
 	 */
 	public function generate()
@@ -62,59 +58,16 @@ class ContentCode extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$this->Template->code = htmlspecialchars($this->code);
-
-		// Syntax highlighter
-		if ($this->highlight)
+		if ($this->highlight == 'C#')
 		{
-			$arrMapper = array
-			(
-				'ApacheConf' => 'shBrushApacheConf',
-				'AS3'        => 'shBrushAS3',
-				'Bash'       => 'shBrushBash',
-				'C'          => 'shBrushCpp',
-				'CSharp'     => 'shBrushCSharp',
-				'CSS'        => 'shBrushCss',
-				'Delphi'     => 'shBrushDelphi',
-				'Diff'       => 'shBrushDiff',
-				'Groovy'     => 'shBrushGroovy',
-				'HTML'       => 'shBrushXml',
-				'Java'       => 'shBrushJava',
-				'JavaFX'     => 'shBrushJavaFX',
-				'JavaScript' => 'shBrushJScript',
-				'Perl'       => 'shBrushPerl',
-				'PHP'        => 'shBrushPhp',
-				'PowerShell' => 'shBrushPowerShell',
-				'Python'     => 'shBrushPython',
-				'Ruby'       => 'shBrushRuby',
-				'Scala'      => 'shBrushScala',
-				'SQL'        => 'shBrushSql',
-				'Text'       => 'shBrushPlain',
-				'VB'         => 'shBrushVb',
-				'XHTML'      => 'shBrushXml',
-				'XML'        => 'shBrushXml'
-			);
-
-			$this->Template->shClass = 'brush: ' . strtolower($this->highlight);
-
-			if ($this->shClass)
-			{
-				$this->Template->shClass .= '; ' . $this->shClass;
-			}
-
-			// Add the style sheet
-			$GLOBALS['TL_CSS'][] = 'assets/highlighter/' . $GLOBALS['TL_ASSETS']['HIGHLIGHTER'] . '/shCore.css|static';
-
-			// Add the JavaScripts
-			$GLOBALS['TL_HIGHLIGHTER'][] = 'assets/highlighter/' . $GLOBALS['TL_ASSETS']['HIGHLIGHTER'] . '/XRegExp.js';
-			$GLOBALS['TL_HIGHLIGHTER'][] = 'assets/highlighter/' . $GLOBALS['TL_ASSETS']['HIGHLIGHTER'] . '/shCore.js';
-			$GLOBALS['TL_HIGHLIGHTER'][] = 'assets/highlighter/' . $GLOBALS['TL_ASSETS']['HIGHLIGHTER'] . '/' . $arrMapper[$this->highlight] . '.js';
-
-			// The shBrushXml.js file is required for the "html-script" option (see #4748)
-			if ($this->shClass != '' && strpos($this->shClass, 'html-script') !== false)
-			{
-				$GLOBALS['TL_HIGHLIGHTER'][] = 'assets/highlighter/' . $GLOBALS['TL_ASSETS']['HIGHLIGHTER'] . '/shBrushXml.js';
-			}
+			$this->highlight = 'csharp';
 		}
+		elseif ($this->highlight == 'C++')
+		{
+			$this->highlight = 'cpp';
+		}
+
+		$this->Template->code = htmlspecialchars($this->code);
+		$this->Template->cssClass = strtolower($this->highlight) ?: 'nohighlight';
 	}
 }

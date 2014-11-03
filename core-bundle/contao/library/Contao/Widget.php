@@ -40,7 +40,7 @@ namespace Contao;
  * @author    Leo Feyer <https://github.com/leofeyer>
  * @copyright Leo Feyer 2005-2014
  */
-abstract class Widget extends \BaseTemplate
+abstract class Widget extends \View
 {
 
 	/**
@@ -145,7 +145,6 @@ abstract class Widget extends \BaseTemplate
 			if ($objPage->outputFormat != '')
 			{
 				$this->strFormat = $objPage->outputFormat;
-				$this->strTagEnding = ($this->strFormat == 'xhtml') ? ' />' : '>';
 			}
 		}
 
@@ -202,7 +201,6 @@ abstract class Widget extends \BaseTemplate
 	 * * useHomeDir:        store uploaded files in the user's home directory
 	 * * trailingSlash:     add or remove a trailing slash
 	 * * spaceToUnderscore: convert spaces to underscores
-	 * * nullIfEmpty:       set to NULL if the value is empty
 	 * * doNotTrim:         do not trim the user input
 	 *
 	 * @param string $strKey   The property name
@@ -322,7 +320,6 @@ abstract class Widget extends \BaseTemplate
 			case 'storeValues':
 			case 'trailingSlash':
 			case 'spaceToUnderscore':
-			case 'nullIfEmpty':
 			case 'doNotTrim':
 				$this->arrConfiguration[$strKey] = $varValue ? true : false;
 				break;
@@ -391,9 +388,9 @@ abstract class Widget extends \BaseTemplate
 				{
 					return \Encryption::encrypt($this->varValue);
 				}
-				elseif ($this->arrConfiguration['nullIfEmpty'] && $this->varValue == '')
+				elseif ($this->varValue == '')
 				{
-					return null;
+					return $this->getEmptyStringOrNull();
 				}
 				return $this->varValue;
 				break;
@@ -730,45 +727,15 @@ abstract class Widget extends \BaseTemplate
 			return '';
 		}
 
-		$blnIsXhtml = false;
-
-		if (TL_MODE == 'FE')
-		{
-			global $objPage;
-
-			if ($objPage->outputFormat == 'xhtml')
-			{
-				$blnIsXhtml = true;
-			}
-		}
-
-		if ($blnIsXhtml)
-		{
-			if ($strKey == 'autofocus' || $strKey == 'placeholder' || $strKey == 'required')
-			{
-				return '';
-			}
-		}
-
 		$varValue = $this->arrAttributes[$strKey];
 
 		if ($strKey == 'disabled' || $strKey == 'readonly' || $strKey == 'required' || $strKey == 'autofocus' || $strKey == 'multiple')
 		{
-			if (TL_MODE == 'FE') // see #3878
-			{
-				return $blnIsXhtml ? ' ' . $strKey . '="' . $varValue . '"' : ' ' . $strKey;
-			}
-			elseif ($strKey == 'disabled' || $strKey == 'readonly' || $strKey == 'multiple') // see #4131
-			{
-				return ' ' . $strKey;
-			}
+			return ' ' . $strKey;
 		}
-		else
+		elseif ($varValue != '')
 		{
-			if ($varValue != '')
-			{
-				return ' ' . $strKey . '="' . $varValue . '"';
-			}
+			return ' ' . $strKey . '="' . $varValue . '"';
 		}
 
 		return '';
@@ -1232,19 +1199,7 @@ abstract class Widget extends \BaseTemplate
 			return '';
 		}
 
-		$attribute = ' selected';
-
-		if (TL_MODE == 'FE')
-		{
-			global $objPage;
-
-			if ($objPage->outputFormat == 'xhtml')
-			{
-				$attribute = ' selected="selected"';
-			}
-		}
-
-		return (is_array($varValues) ? in_array($strOption, $varValues) : $strOption == $varValues) ? $attribute : '';
+		return (is_array($varValues) ? in_array($strOption, $varValues) : $strOption == $varValues) ? ' selected' : '';
 	}
 
 
@@ -1263,19 +1218,7 @@ abstract class Widget extends \BaseTemplate
 			return '';
 		}
 
-		$attribute = ' checked';
-
-		if (TL_MODE == 'FE')
-		{
-			global $objPage;
-
-			if ($objPage->outputFormat == 'xhtml')
-			{
-				$attribute = ' checked="checked"';
-			}
-		}
-
-		return (is_array($varValues) ? in_array($strOption, $varValues) : $strOption == $varValues) ? $attribute : '';
+		return (is_array($varValues) ? in_array($strOption, $varValues) : $strOption == $varValues) ? ' checked' : '';
 	}
 
 
@@ -1518,9 +1461,49 @@ abstract class Widget extends \BaseTemplate
 		{
 			return 0;
 		}
-		else
+
+		return '';
+	}
+
+
+	/**
+	 * Return either an empty string or null based on the SQL string
+	 *
+	 * @return string|int|null The empty value
+	 */
+	public function getEmptyStringOrNull()
+	{
+		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']))
 		{
 			return '';
 		}
+
+		return static::getEmptyStringOrNullByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']);
+	}
+
+
+	/**
+	 * Return either an empty string or null based on the SQL string
+	 *
+	 * @param string $sql The SQL string
+	 *
+	 * @return string|null The empty string or null
+	 */
+	public static function getEmptyStringOrNullByFieldType($sql)
+	{
+		if ($sql == '')
+		{
+			return '';
+		}
+
+		// Strip the field type definition
+		list(, $def) = explode(' ', $sql, 2);
+
+		if (strpos($def, 'NULL') !== false && strpos($def, 'NOT NULL') === false)
+		{
+			return null;
+		}
+
+		return '';
 	}
 }

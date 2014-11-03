@@ -10,11 +10,9 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
+
+use Michelf\MarkdownExtra;
 
 
 /**
@@ -36,7 +34,7 @@ class ContentMarkdown extends \ContentElement
 
 
 	/**
-	 * Return if the highlighter plugin is not loaded
+	 * Show the raw markdown code in the back end
 	 * @return string
 	 */
 	public function generate()
@@ -62,7 +60,7 @@ class ContentMarkdown extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$this->code = \Michelf\MarkdownExtra::defaultTransform($this->code);
+		$this->code = MarkdownExtra::defaultTransform($this->code);
 		$this->Template->content = strip_tags($this->code, \Config::get('allowedTags'));
 	}
 }

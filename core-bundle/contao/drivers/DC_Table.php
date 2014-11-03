@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -117,7 +113,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * Initialize the object
 	 * @param string
 	 * @param array
-	 * @throws \Exception
 	 */
 	public function __construct($strTable, $arrModule=array())
 	{
@@ -248,7 +243,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		if (!empty($this->ctable) && !\Input::get('act') && !\Input::get('key') && !\Input::get('token') && TL_SCRIPT == 'contao/main.php' && !\Environment::get('isAjaxRequest'))
 		{
 			$session = $this->Session->get('referer');
-			$session[TL_REFERER_ID][$this->strTable] = substr(\Environment::get('requestUri'), strlen(TL_PATH) + 1);
+			$session[TL_REFERER_ID][$this->strTable] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
 			$this->Session->set('referer', $session);
 		}
 	}
@@ -1475,11 +1470,11 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($this, $insertID);
+						$this->$callback[0]->$callback[1]($insertID, $this);
 					}
 					elseif (is_callable($callback))
 					{
-						$callback($this, $insertID);
+						$callback($insertID, $this);
 					}
 				}
 			}
@@ -2877,7 +2872,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 				if (!is_array($varValue) || empty($varValue))
 				{
-					$varValue = $arrData['eval']['nullIfEmpty'] ? null : '';
+					$varValue = \Widget::getEmptyStringOrNullByFieldType($arrData['sql']);
 				}
 				elseif (isset($arrData['eval']['csv']))
 				{
@@ -5031,7 +5026,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 			$arrProcedure = $this->procedure;
 			$arrValues = $this->values;
-
 			$query = "SELECT COUNT(*) AS count FROM " . $this->strTable;
 
 			if (!empty($this->root) && is_array($this->root))
@@ -5065,7 +5059,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 
 				$blnIsMaxResultsPerPage = true;
-				Config::set('resultsPerPage', \Config::get('maxResultsPerPage'));
+				\Config::set('resultsPerPage', \Config::get('maxResultsPerPage'));
 				$session['filter'][$filter]['limit'] = \Config::get('maxResultsPerPage');
 			}
 

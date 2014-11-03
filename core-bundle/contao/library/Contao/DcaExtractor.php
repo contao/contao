@@ -22,7 +22,7 @@ namespace Contao;
  *
  * Usage:
  *
- *     $user = new DcaExtractor('tl_user');
+ *     $user = DcaExtractor::getInstance('tl_user');
  *
  *     if ($user->hasRelations())
  *     {
@@ -104,7 +104,7 @@ class DcaExtractor extends \Controller
 	 *
 	 * @throws \Exception If $strTable is empty
 	 */
-	public function __construct($strTable)
+	protected function __construct($strTable)
 	{
 		if ($strTable == '')
 		{
@@ -126,6 +126,12 @@ class DcaExtractor extends \Controller
 			$this->createExtract();
 		}
 	}
+
+
+	/**
+	 * Prevent cloning of the object (Singleton)
+	 */
+	final public function __clone() {}
 
 
 	/**
@@ -445,7 +451,7 @@ class DcaExtractor extends \Controller
 		}
 		if (empty($sql['charset']))
 		{
-			$sql['charset'] = $GLOBALS['TL_CONFIG']['dbCharset'];
+			$sql['charset'] = \Config::get('dbCharset');
 		}
 
 		// Meta
