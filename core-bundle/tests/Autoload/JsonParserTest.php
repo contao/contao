@@ -39,7 +39,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $parser = new JsonParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../../Fixtures/Autoload/JsonParser/regular/autoload.json',
+            __DIR__ . '/../Fixtures/JsonParser/regular/autoload.json',
             'relativePath',
             'relativePathName'
         );
@@ -68,7 +68,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $parser = new JsonParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../../Fixtures/Autoload/JsonParser/no-keys-defined/autoload.json',
+            __DIR__ . '/../Fixtures/JsonParser/no-keys-defined/autoload.json',
             'relativePath',
             'relativePathName'
         );
@@ -98,7 +98,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $parser = new JsonParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../../Fixtures/Autoload/JsonParser/invalid/autoload.json',
+            __DIR__ . '/../Fixtures/JsonParser/invalid/autoload.json',
             'relativePath',
             'relativePathName'
         );
@@ -116,7 +116,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $parser = new JsonParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../../Fixtures/Autoload/JsonParser/no-bundles-key/autoload.json',
+            __DIR__ . '/../Fixtures/JsonParser/no-bundles-key/autoload.json',
             'relativePath',
             'relativePathName'
         );

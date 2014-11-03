@@ -40,7 +40,7 @@ class IniParserTest extends TestCase
         $parser = new IniParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../../Fixtures/Autoload/IniParser/dummy-module-with-requires',
+            __DIR__ . '/../Fixtures/IniParser/dummy-module-with-requires',
             'relativePath',
             'relativePathName'
         );
@@ -69,7 +69,7 @@ class IniParserTest extends TestCase
         $parser = new IniParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../../Fixtures/Autoload/IniParser/dummy-module-without-autoload',
+            __DIR__ . '/../Fixtures/IniParser/dummy-module-without-autoload',
             'relativePath',
             'relativePathName'
         );
@@ -98,7 +98,7 @@ class IniParserTest extends TestCase
         $parser = new IniParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../../Fixtures/Autoload/IniParser/dummy-module-without-requires',
+            __DIR__ . '/../Fixtures/IniParser/dummy-module-without-requires',
             'relativePath',
             'relativePathName'
         );
@@ -128,7 +128,7 @@ class IniParserTest extends TestCase
         $parser = new IniParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../../Fixtures/Autoload/IniParser/dummy-module-with-invalid-autoload',
+            __DIR__ . '/../Fixtures/IniParser/dummy-module-with-invalid-autoload',
             'relativePath',
             'relativePathName'
         );

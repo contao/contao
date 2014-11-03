@@ -5,8 +5,7 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 error_reporting(E_ALL);
@@ -26,6 +25,6 @@ if (
     exit(1);
 }
 
-$loader->addPsr4('Contao\\CoreBundle\\', __DIR__);
+$loader->addPsr4('Contao\\CoreBundle\\Test\\', __DIR__);
 
 return $loader;
