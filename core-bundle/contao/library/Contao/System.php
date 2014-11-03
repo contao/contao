@@ -1039,24 +1039,15 @@ abstract class System
 
 
 	/**
-	 * Set the Symfony kernel
-	 *
-	 * @param ContaoKernelInterface $kernel The kernel object
-	 */
-	public static function setKernel(ContaoKernelInterface $kernel)
-	{
-		static::$objKernel = $kernel;
-	}
-
-
-	/**
 	 * Return the Symfony kernel
 	 *
 	 * @return ContaoKernelInterface
 	 */
 	public static function getKernel()
 	{
-		return static::$objKernel;
+		global $kernel;
+
+		return $kernel; # FIXME: replace with getContainer()->getKernel()
 	}
 
 
@@ -1067,7 +1058,9 @@ abstract class System
 	 */
 	public static function getContainer()
 	{
-		return static::$objKernel->getContainer();
+		global $kernel;
+
+		return $kernel->getContainer();
 	}
 
 

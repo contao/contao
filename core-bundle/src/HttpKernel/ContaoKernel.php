@@ -11,7 +11,6 @@
 
 namespace Contao\CoreBundle\HttpKernel;
 
-use Contao\System;
 use Contao\CoreBundle\Autoload\BundleAutoloader;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddBundlesToCachePass;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundleInterface;
@@ -34,16 +33,6 @@ abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
      * @var array
      */
     protected $contaoBundles = [];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function boot()
-    {
-        System::setKernel($this);
-
-        parent::boot();
-    }
 
     /**
      * {@inheritdoc}
