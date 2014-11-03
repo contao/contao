@@ -10,22 +10,16 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Register the classes
- */
+// Classes
 ClassLoader::addClasses(array
 (
 	// Modules
-	'Contao\ModuleListing' => 'system/modules/listing/modules/ModuleListing.php',
+	'Contao\ModuleListing' => 'vendor/contao/listing-bundle/contao/modules/ModuleListing.php',
 ));
 
-
-/**
- * Register the templates
- */
+// Templates
 TemplateLoader::addFiles(array
 (
-	'info_default' => 'system/modules/listing/templates/info',
-	'list_default' => 'system/modules/listing/templates/listing',
+	'info_default' => 'vendor/contao/listing-bundle/contao/templates/info',
+	'list_default' => 'vendor/contao/listing-bundle/contao/templates/listing',
 ));

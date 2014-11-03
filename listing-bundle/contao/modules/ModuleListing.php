@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -191,12 +187,9 @@ class ModuleListing extends \Module
 
 		$strQuery .= $strWhere;
 
-		// Do not use $this in anonymous functions in PHP 5.3 (see #7078)
-		$table = $this->list_table;
-
 		// Cast date fields to int (see #5609)
-		$isInt = function($field) use($table) {
-			return $GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'] == 'date' || $GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'] == 'time' || $GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'] == 'datim';
+		$isInt = function($field) {
+			return $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'date' || $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'time' || $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'datim';
 		};
 
 		// Order by
@@ -471,9 +464,8 @@ class ModuleListing extends \Module
 		// URLs
 		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'url' && preg_match('@^(https?://|ftp://)@i', $value))
 		{
-			global $objPage;
 			$value = \Idna::decode($value); // see #5946
-			$value = '<a href="' . $value . '"' . (($objPage->outputFormat == 'xhtml') ? ' onclick="return !window.open(this.href)"' : ' target="_blank"') . '>' . $value . '</a>';
+			$value = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
 		}
 
 		// E-mail addresses
