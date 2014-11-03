@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -116,15 +112,8 @@ class ModuleFaqReader extends \Module
 
 		$this->Template->question = $objFaq->question;
 
-		// Clean RTE output
-		if ($objPage->outputFormat == 'xhtml')
-		{
-			$objFaq->answer = \String::toXhtml($objFaq->answer);
-		}
-		else
-		{
-			$objFaq->answer = \String::toHtml5($objFaq->answer);
-		}
+		// Clean the RTE output
+		$objFaq->answer = \String::toHtml5($objFaq->answer);
 
 		$this->Template->answer = \String::encodeEmail($objFaq->answer);
 		$this->Template->addImage = false;
@@ -170,7 +159,7 @@ class ModuleFaqReader extends \Module
 		$this->Template->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], \Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
 		// HOOK: comments extension required
-		if ($objFaq->noComments || !in_array('comments', ModuleLoader::getActive()))
+		if ($objFaq->noComments || !in_array('comments', \ModuleLoader::getActive()))
 		{
 			$this->Template->allowComments = false;
 			return;

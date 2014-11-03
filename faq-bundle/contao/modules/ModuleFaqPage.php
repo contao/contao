@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -86,15 +82,8 @@ class ModuleFaqPage extends \Module
 		{
 			$objTemp = (object) $objFaq->row();
 
-			// Clean RTE output
-			if ($objPage->outputFormat == 'xhtml')
-			{
-				$objTemp->answer = \String::toXhtml($objFaq->answer);
-			}
-			else
-			{
-				$objTemp->answer = \String::toHtml5($objFaq->answer);
-			}
+			// Clean the RTE output
+			$objTemp->answer = \String::toHtml5($objFaq->answer);
 
 			$objTemp->answer = \String::encodeEmail($objTemp->answer);
 			$objTemp->addImage = false;
