@@ -1,0 +1,9 @@
+{
+    "bundles": {
+        "Contao\\CommentsBundle\\ContaoCommentsBundle": {
+            "replace": ["comments"],
+            "environments": ["all"],
+            "load-after": ["ContaoCoreBundle"]
+        }
+    }
+}
