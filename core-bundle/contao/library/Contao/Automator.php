@@ -550,7 +550,7 @@ class Automator extends \System
 	{
 		$arrPublic = array();
 
-		foreach (\System::getKernel()->getContaoBundles() as $bundle)
+		foreach (\System::getKernel()->getContaoBundles() as $bundle) # FIXME
 		{
 			foreach ($bundle->getPublicFolders() as $strPath)
 			{
@@ -563,7 +563,7 @@ class Automator extends \System
             }
 		}
 
-		return $arrPublic;
+		return array_filter($arrPublic);
 	}
 
 
