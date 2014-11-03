@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -320,7 +316,7 @@ class Calendar extends \Frontend
 					}
 
 					// Set the domain (see #6421)
-					$domain = ($objParent->rootUseSSL ? 'https://' : 'http://') . ($objParent->domain ?: \Environment::get('host')) . TL_PATH . '/';
+					$domain = ($objParent->rootUseSSL ? 'https://' : 'http://') . ($objParent->domain ?: \Environment::get('host')) . \Environment::get('path') . '/';
 
 					// Generate the URL
 					$arrProcessed[$objCalendar->jumpTo] = $domain . $this->generateFrontendUrl($objParent->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ?  '/%s' : '/events/%s'), $objParent->language);
@@ -424,14 +420,7 @@ class Calendar extends \Frontend
 		$arrEvent['title'] = $title;
 
 		// Clean the RTE output
-		if ($objPage->outputFormat == 'xhtml')
-		{
-			$arrEvent['teaser'] = \String::toXhtml($objEvent->teaser);
-		}
-		else
-		{
-			$arrEvent['teaser'] = \String::toHtml5($objEvent->teaser);
-		}
+		$arrEvent['teaser'] = \String::toHtml5($objEvent->teaser);
 
 		// Reset the enclosures (see #5685)
 		$arrEvent['enclosure'] = array();

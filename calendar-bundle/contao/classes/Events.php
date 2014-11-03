@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -264,20 +260,13 @@ abstract class Events extends \Module
 		// Override the link target
 		if ($objEvents->source == 'external' && $objEvents->target)
 		{
-			$arrEvent['target'] = ($objPage->outputFormat == 'xhtml') ? ' onclick="return !window.open(this.href)"' : ' target="_blank"';
+			$arrEvent['target'] = ' target="_blank"';
 		}
 
 		// Clean the RTE output
 		if ($arrEvent['teaser'] != '')
 		{
-			if ($objPage->outputFormat == 'xhtml')
-			{
-				$arrEvent['teaser'] = \String::toXhtml($arrEvent['teaser']);
-			}
-			else
-			{
-				$arrEvent['teaser'] = \String::toHtml5($arrEvent['teaser']);
-			}
+			$arrEvent['teaser'] = \String::toHtml5($arrEvent['teaser']);
 		}
 
 		// Display the "read more" button for external/article links

@@ -10,43 +10,37 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Register the classes
- */
+// Classes
 ClassLoader::addClasses(array
 (
 	// Classes
-	'Contao\Calendar'            => 'system/modules/calendar/classes/Calendar.php',
-	'Contao\Events'              => 'system/modules/calendar/classes/Events.php',
+	'Contao\Calendar'            => 'vendor/contao/calendar-bundle/contao/classes/Calendar.php',
+	'Contao\Events'              => 'vendor/contao/calendar-bundle/contao/classes/Events.php',
 
 	// Models
-	'Contao\CalendarEventsModel' => 'system/modules/calendar/models/CalendarEventsModel.php',
-	'Contao\CalendarFeedModel'   => 'system/modules/calendar/models/CalendarFeedModel.php',
-	'Contao\CalendarModel'       => 'system/modules/calendar/models/CalendarModel.php',
+	'Contao\CalendarEventsModel' => 'vendor/contao/calendar-bundle/contao/models/CalendarEventsModel.php',
+	'Contao\CalendarFeedModel'   => 'vendor/contao/calendar-bundle/contao/models/CalendarFeedModel.php',
+	'Contao\CalendarModel'       => 'vendor/contao/calendar-bundle/contao/models/CalendarModel.php',
 
 	// Modules
-	'Contao\ModuleCalendar'      => 'system/modules/calendar/modules/ModuleCalendar.php',
-	'Contao\ModuleEventlist'     => 'system/modules/calendar/modules/ModuleEventlist.php',
-	'Contao\ModuleEventMenu'     => 'system/modules/calendar/modules/ModuleEventMenu.php',
-	'Contao\ModuleEventReader'   => 'system/modules/calendar/modules/ModuleEventReader.php',
+	'Contao\ModuleCalendar'      => 'vendor/contao/calendar-bundle/contao/modules/ModuleCalendar.php',
+	'Contao\ModuleEventlist'     => 'vendor/contao/calendar-bundle/contao/modules/ModuleEventlist.php',
+	'Contao\ModuleEventMenu'     => 'vendor/contao/calendar-bundle/contao/modules/ModuleEventMenu.php',
+	'Contao\ModuleEventReader'   => 'vendor/contao/calendar-bundle/contao/modules/ModuleEventReader.php',
 ));
 
-
-/**
- * Register the templates
- */
-TemplateLoader::addFiles(array
+// Templates
+TemplateLoader::addFiles( array
 (
-	'cal_default'        => 'system/modules/calendar/templates/calendar',
-	'cal_mini'           => 'system/modules/calendar/templates/calendar',
-	'event_full'         => 'system/modules/calendar/templates/events',
-	'event_list'         => 'system/modules/calendar/templates/events',
-	'event_teaser'       => 'system/modules/calendar/templates/events',
-	'event_upcoming'     => 'system/modules/calendar/templates/events',
-	'mod_calendar'       => 'system/modules/calendar/templates/modules',
-	'mod_event'          => 'system/modules/calendar/templates/modules',
-	'mod_eventlist'      => 'system/modules/calendar/templates/modules',
-	'mod_eventmenu'      => 'system/modules/calendar/templates/modules',
-	'mod_eventmenu_year' => 'system/modules/calendar/templates/modules',
+	'cal_default'        => 'vendor/contao/calendar-bundle/contao/templates/calendar',
+	'cal_mini'           => 'vendor/contao/calendar-bundle/contao/templates/calendar',
+	'event_full'         => 'vendor/contao/calendar-bundle/contao/templates/events',
+	'event_list'         => 'vendor/contao/calendar-bundle/contao/templates/events',
+	'event_teaser'       => 'vendor/contao/calendar-bundle/contao/templates/events',
+	'event_upcoming'     => 'vendor/contao/calendar-bundle/contao/templates/events',
+	'mod_calendar'       => 'vendor/contao/calendar-bundle/contao/templates/modules',
+	'mod_event'          => 'vendor/contao/calendar-bundle/contao/templates/modules',
+	'mod_eventlist'      => 'vendor/contao/calendar-bundle/contao/templates/modules',
+	'mod_eventmenu'      => 'vendor/contao/calendar-bundle/contao/templates/modules',
+	'mod_eventmenu_year' => 'vendor/contao/calendar-bundle/contao/templates/modules',
 ));
