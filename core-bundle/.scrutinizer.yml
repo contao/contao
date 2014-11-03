@@ -1,5 +1,5 @@
 tools:
-    external_code_coverage: true
+    external_code_coverage:
         timeout: 600
     php_sim: true
     php_pdepend: true
