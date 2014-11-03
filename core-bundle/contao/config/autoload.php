@@ -145,6 +145,7 @@ ClassLoader::addClasses(array
 	'Contao\Idna'                      => 'vendor/contao/core-bundle/contao/library/Contao/Idna.php',
 	'Contao\Image'                     => 'vendor/contao/core-bundle/contao/library/Contao/Image.php',
 	'Contao\Input'                     => 'vendor/contao/core-bundle/contao/library/Contao/Input.php',
+	'Contao\InsertTags'                => 'vendor/contao/core-bundle/contao/library/Contao/InsertTags.php',
 	'Contao\Message'                   => 'vendor/contao/core-bundle/contao/library/Contao/Message.php',
 	'Contao\Model\Collection'          => 'vendor/contao/core-bundle/contao/library/Contao/Model/Collection.php',
 	'Contao\Model\QueryBuilder'        => 'vendor/contao/core-bundle/contao/library/Contao/Model/QueryBuilder.php',
