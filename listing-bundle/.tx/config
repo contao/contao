@@ -1,0 +1,13 @@
+[main]
+host = https://www.transifex.com
+type = XLIFF
+
+[contao.v4_0-listing-modules]
+source_file = contao/languages/en/modules.xlf
+source_lang = en
+file_filter = contao/languages/<lang>/modules.xlf
+
+[contao.v4_0-listing-tl_module]
+source_file = contao/languages/en/tl_module.xlf
+source_lang = en
+file_filter = contao/languages/<lang>/tl_module.xlf
