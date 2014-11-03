@@ -30,7 +30,7 @@ ClassLoader::addClasses(array
 ));
 
 // Templates
-TemplateLoader::addFiles( array
+TemplateLoader::addFiles(array
 (
 	'cal_default'        => 'vendor/contao/calendar-bundle/contao/templates/calendar',
 	'cal_mini'           => 'vendor/contao/calendar-bundle/contao/templates/calendar',
