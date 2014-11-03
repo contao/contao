@@ -5,16 +5,23 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Test\Autoload;
 
 use Contao\CoreBundle\Autoload\Config;
 
+/**
+ * Tests the Config class.
+ *
+ * @author Yanick Witschi <https://github.com/Toflar>
+ */
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Tests the object instantiation.
+     */
     public function testInstanceOf()
     {
         $config = new Config();
@@ -22,6 +29,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Autoload\Config', $config);
     }
 
+    /**
+     * Tests the class name getter and setter.
+     */
     public function testSetAndGetClass()
     {
         $config = new Config();
@@ -30,6 +40,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foobar', $config->getClass());
     }
 
+    /**
+     * Tests the bundle name getter and setter.
+     */
     public function testSetAndGetName()
     {
         $config = new Config();
@@ -38,6 +51,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foobar', $config->getName());
     }
 
+    /**
+     * Tests the replaces getter and setter.
+     */
     public function testSetAndGetReplace()
     {
         $config = new Config();
@@ -46,6 +62,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['foobar'], $config->getReplace());
     }
 
+    /**
+     * Tests the environments getter and setter.
+     */
     public function testSetAndGetEnvironments()
     {
         $config = new Config();
@@ -54,6 +73,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['foobar'], $config->getEnvironments());
     }
 
+    /**
+     * Tests the load-after getter and setter.
+     */
     public function testSetAndGetLoadAfter()
     {
         $config = new Config();

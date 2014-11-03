@@ -5,16 +5,23 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Test\Autoload;
 
 use Contao\CoreBundle\Autoload\BundleAutoloader;
 
+/**
+ * Tests the BundleAutoloader class.
+ *
+ * @author Yanick Witschi <https://github.com/Toflar>
+ */
 class BundleAutoloaderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Test the object instantiation.
+     */
     public function testInstanceOf()
     {
         $bundleLoader = new BundleAutoloader('rootDir', 'env');
@@ -22,17 +29,20 @@ class BundleAutoloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Autoload\BundleAutoloader', $bundleLoader);
     }
 
+    /**
+     * Test the load() method.
+     */
     public function testLoad()
     {
         $bundleLoader = new BundleAutoloader(
-            __DIR__ . '/../../fixtures/Autoload/BundleAutoloader/dummyRootDirName',
+            __DIR__ . '/../../Fixtures/Autoload/BundleAutoloader/dummyRootDirName',
             'all'
         );
 
         $this->assertSame(
             [
-                'ContaoCoreBundle'  => 'Contao\CoreBundle\ContaoCoreBundle',
-                'legacy-module'     => null
+                'ContaoCoreBundle' => 'Contao\CoreBundle\ContaoCoreBundle',
+                'legacy-module'    => null
             ],
             $bundleLoader->load()
         );

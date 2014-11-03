@@ -5,8 +5,7 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Autoload;
@@ -14,7 +13,7 @@ namespace Contao\CoreBundle\Autoload;
 use Contao\CoreBundle\Exception\UnresolvableLoadingOrderException;
 
 /**
- * Resolves the bundles map from the configuration objects
+ * Converts the configuration objects into the bundles map.
  *
  * @author Leo Feyer <https://contao.org>
  */
@@ -26,7 +25,7 @@ class ConfigResolver
     protected $configs = [];
 
     /**
-     * Adds a configuration object
+     * Adds a configuration object.
      *
      * @param ConfigInterface $config The configuration object
      *
@@ -40,7 +39,7 @@ class ConfigResolver
     }
 
     /**
-     * Returns a bundles map for an environment
+     * Returns the bundles map for an environment.
      *
      * @param string $environment The environment
      *
@@ -58,7 +57,7 @@ class ConfigResolver
         }
 
         $loadingOrder    = $this->buildLoadingOrder();
-        $replaces        = $this->buildReplaceMap();
+        $replaces        = $this->buildReplacesMap();
         $normalizedOrder = $this->normalizeLoadingOrder($loadingOrder, $replaces);
         $resolvedOrder   = $this->resolveLoadingOrder($normalizedOrder);
 
@@ -66,11 +65,11 @@ class ConfigResolver
     }
 
     /**
-     * Builds the replaces from the configuration objects
+     * Builds the replaces map from the configuration objects.
      *
      * @return array The replaces array
      */
-    protected function buildReplaceMap()
+    protected function buildReplacesMap()
     {
         $replace = [];
 
@@ -86,7 +85,7 @@ class ConfigResolver
     }
 
     /**
-     * Builds the loading order from the configuration objects
+     * Builds the loading order array from the configuration objects.
      *
      * @return array The loading order array
      */
@@ -111,12 +110,12 @@ class ConfigResolver
     }
 
     /**
-     * Checks whether a bundle should be loaded in an environment
+     * Checks whether a bundle should be loaded in an environment.
      *
      * @param array  $environments The bundle environments
      * @param string $environment  The current environment
      *
-     * @return bool True if the environment matches the bundle environments
+     * @return bool True if the bundle environments match the environment
      */
     protected function matchesEnvironment(array $environments, $environment)
     {
@@ -124,12 +123,12 @@ class ConfigResolver
     }
 
     /**
-     * Orders the bundles in a given order
+     * Reorders the bundles array in a given order.
      *
      * @param array $bundles The bundles array
      * @param array $ordered The given order
      *
-     * @return array The ordered bundles
+     * @return array The ordered bundles array
      */
     protected function order(array $bundles, array $ordered)
     {
@@ -145,7 +144,7 @@ class ConfigResolver
     }
 
     /**
-     * Normalizes the loading order array
+     * Normalizes the loading order array.
      *
      * @param array $loadingOrder The loading order array
      * @param array $replace      The replaces map
@@ -166,7 +165,7 @@ class ConfigResolver
     }
 
     /**
-     * Replaces the legacy bundle names with their new name
+     * Replaces the legacy bundle names with their new names.
      *
      * @param array $loadAfter The load-after array
      * @param array $replace   The replaces array
@@ -181,7 +180,7 @@ class ConfigResolver
     }
 
     /**
-     * Tries to resolve the loading order
+     * Tries to resolve the normalized loading order.
      *
      * @param array $loadingOrder The normalized loading order array
      *
@@ -208,7 +207,7 @@ class ConfigResolver
     }
 
     /**
-     * Tries to resolve the loading order
+     * Tries to resolve the normalized loading order.
      *
      * @param array $loadingOrder The normalized loading order array
      * @param array $ordered      An array of already ordered bundles
@@ -221,8 +220,8 @@ class ConfigResolver
         $failed = true;
 
         foreach ($loadingOrder as $name => $requires) {
-            if (true === $this->canBeResolved($requires, $available, $ordered)) {
-                $failed    = false;
+            if (true === $this->resolveRequirements($requires, $available, $ordered)) {
+                $failed = false;
                 $ordered[] = $name;
 
                 unset($loadingOrder[$name]);
@@ -233,7 +232,7 @@ class ConfigResolver
     }
 
     /**
-     * Checks whether the requirements of a bundle can be resolved
+     * Checks whether the requirements of a bundle can be resolved.
      *
      * @param array $requires  The requirements array
      * @param array $available The installed bundle names
@@ -241,7 +240,7 @@ class ConfigResolver
      *
      * @return bool True if the requirements can be resolved
      */
-    protected function canBeResolved(array $requires, array $available, array $ordered)
+    protected function resolveRequirements(array $requires, array $available, array $ordered)
     {
         if (empty($requires)) {
             return true;

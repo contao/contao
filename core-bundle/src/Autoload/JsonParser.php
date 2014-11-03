@@ -5,8 +5,7 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Autoload;
@@ -14,7 +13,7 @@ namespace Contao\CoreBundle\Autoload;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Converts a JSON configuration file into a configuration array
+ * Converts a .json configuration file into a configuration array.
  *
  * @author Leo Feyer <https://contao.org>
  */
@@ -40,11 +39,11 @@ class JsonParser implements ParserInterface
     }
 
     /**
-     * Parses the file and returns the configuration array
+     * Parses a configuration file and returns the normalized configuration array.
      *
      * @param SplFileInfo $file The file object
      *
-     * @return array The configuration array
+     * @return array The normalized configuration array
      *
      * @throws \InvalidArgumentException If $file is not a file
      * @throws \RuntimeException         If the file cannot be decoded or there are no bundles
@@ -58,7 +57,7 @@ class JsonParser implements ParserInterface
         $json = json_decode($file->getContents(), true);
 
         if (null === $json) {
-            throw new \RuntimeException("File $file cannot be decoded");
+            throw new \RuntimeException("File $file cannot be decoded" . $this->getLastJsonError());
         }
 
         if (empty($json['bundles'])) {
@@ -69,11 +68,11 @@ class JsonParser implements ParserInterface
     }
 
     /**
-     * Normalize the configuration array
+     * Normalize the configuration array.
      *
      * @param array $options The configuration array
      *
-     * @return array The normalized array
+     * @return array The normalized configuration array
      */
     protected function normalize(array $options)
     {
@@ -93,9 +92,9 @@ class JsonParser implements ParserInterface
     }
 
     /**
-     * Checks whether there is a "replace" section
+     * Checks whether the configuration contains a "replace" section.
      *
-     * @param array $options The options array
+     * @param array $options The configuration array
      *
      * @return bool True if there is a "replace" section
      */
@@ -105,9 +104,9 @@ class JsonParser implements ParserInterface
     }
 
     /**
-     * Checks whether there is an "environments" section
+     * Checks whether the configuration contains an "environments" section.
      *
-     * @param array $options The options array
+     * @param array $options The configuration array
      *
      * @return bool True if there is an "environments" section
      */
@@ -117,14 +116,24 @@ class JsonParser implements ParserInterface
     }
 
     /**
-     * Checks whether there is a "load-after" section
+     * Checks whether the configuration contains a "load-after" section.
      *
-     * @param array $options The options array
+     * @param array $options The configuration array
      *
      * @return bool True if there is a "load-after" section
      */
     protected function hasLoadAfter(array $options)
     {
         return isset($options['load-after']) && is_array($options['load-after']);
+    }
+
+    /**
+     * Return the last JSON error message (not supported in PHP 5.4)
+     *
+     * @return string The last JSON error message
+     */
+    protected function getLastJsonError()
+    {
+        return function_exists('json_last_error_msg') ? json_last_error_msg() : '';
     }
 }

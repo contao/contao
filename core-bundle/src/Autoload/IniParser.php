@@ -5,8 +5,7 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Autoload;
@@ -14,7 +13,7 @@ namespace Contao\CoreBundle\Autoload;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Converts an INI configuration file into a configuration array
+ * Converts an .ini configuration file into a configuration array.
  *
  * @author Leo Feyer <https://contao.org>
  */
@@ -31,11 +30,11 @@ class IniParser implements ParserInterface
     }
 
     /**
-     * Parses the file and returns the options array
+     * Parses a configuration file and returns the normalized configuration array.
      *
      * @param SplFileInfo $file The file object
      *
-     * @return array The configuration array
+     * @return array The normalized configuration array
      */
     protected function doParse(SplFileInfo $file)
     {
@@ -57,7 +56,7 @@ class IniParser implements ParserInterface
     }
 
     /**
-     * Parses the file and returns the configuration array
+     * Parses an .ini file and returns the configuration array.
      *
      * @param string $file The file path
      *
@@ -77,11 +76,11 @@ class IniParser implements ParserInterface
     }
 
     /**
-     * Normalize the configuration array
+     * Normalizes the configuration array.
      *
      * @param array $ini The configuration array
      *
-     * @return array The normalized array
+     * @return array The normalized configuration array
      */
     protected function normalize(array $ini)
     {
@@ -102,9 +101,9 @@ class IniParser implements ParserInterface
     }
 
     /**
-     * Check whether there is a "requires" section
+     * Checks whether the configuration contains a "requires" section.
      *
-     * @param array $ini The autoload.ini configuration
+     * @param array $ini The configuration array
      *
      * @return bool True if there is a "requires" section
      */

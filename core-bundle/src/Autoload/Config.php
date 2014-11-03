@@ -5,14 +5,13 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Autoload;
 
 /**
- * Provides methods to access the configuration
+ * Provides methods to get and set the bundle configuration.
  *
  * @author Leo Feyer <https://contao.org>
  */

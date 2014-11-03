@@ -5,8 +5,7 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Autoload;
@@ -15,7 +14,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Finds the autoload bundles
+ * Finds the autoload bundles and adds them to the resolver.
  *
  * @author Leo Feyer <https://contao.org>
  */
@@ -32,7 +31,7 @@ class BundleAutoloader
     protected $environment;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $rootDir     The kernel root directory
      * @param string $environment The current environment
@@ -44,7 +43,7 @@ class BundleAutoloader
     }
 
     /**
-     * Returns an ordered bundle map
+     * Returns an ordered bundle map for the current environment.
      *
      * @return array The bundles map
      */
@@ -59,7 +58,7 @@ class BundleAutoloader
     }
 
     /**
-     * Finds the autoload.json files
+     * Finds the autoload.json files of the bundles.
      *
      * @return Finder The finder object
      */
@@ -75,7 +74,7 @@ class BundleAutoloader
     }
 
     /**
-     * Finds the Contao legacy modules
+     * Finds the Contao legacy modules in system/module.
      *
      * @return Finder The finder object
      */
@@ -91,7 +90,7 @@ class BundleAutoloader
     }
 
     /**
-     * Adds bundles to the resolver
+     * Adds one configuration object per bundle to the resolver.
      *
      * @param ConfigResolver  $resolver The resolver object
      * @param Finder          $files    The finder object
@@ -99,15 +98,31 @@ class BundleAutoloader
      */
     protected function addBundlesToResolver(ConfigResolver $resolver, Finder $files, ParserInterface $parser)
     {
-        $factory = new ConfigFactory();
-
         /** @var SplFileInfo $file */
         foreach ($files as $file) {
             $configs = $parser->parse($file);
 
             foreach ($configs['bundles'] as $config) {
-                $resolver->add($factory->create($config));
+                $resolver->add($this->createConfigObject($config));
             }
         }
+    }
+
+    /**
+     * Creates a configuration object and returns it.
+     *
+     * @param array $config The configuration array
+     *
+     * @return Config The configuration object
+     */
+    protected function createConfigObject(array $config)
+    {
+        return Config::create()
+            ->setName($config['name'])
+            ->setClass($config['class'])
+            ->setReplace($config['replace'])
+            ->setEnvironments($config['environments'])
+            ->setLoadAfter($config['load-after'])
+        ;
     }
 }

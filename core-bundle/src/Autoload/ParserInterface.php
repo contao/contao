@@ -5,8 +5,7 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Autoload;
@@ -14,18 +13,18 @@ namespace Contao\CoreBundle\Autoload;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Configuration parser interface
+ * Configuration parser interface.
  *
  * @author Leo Feyer <https://contao.org>
  */
 interface ParserInterface
 {
     /**
-     * Parses a configuration file
+     * Parses a configuration file and returns the normalized configuration array.
      *
      * @param SplFileInfo $file The file object
      *
-     * @return array A normalized configuration array
+     * @return array The normalized configuration array
      */
     public function parse(SplFileInfo $file);
 }

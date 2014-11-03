@@ -5,7 +5,7 @@
             "name": "ContaoCoreBundle",
             "replace": [],
             "environments": ["all"],
-            "load-after" :[]
+            "load-after": []
         }
     }
 }

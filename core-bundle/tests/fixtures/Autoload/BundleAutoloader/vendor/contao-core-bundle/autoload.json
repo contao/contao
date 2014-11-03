@@ -1,11 +1,9 @@
 {
     "bundles": {
         "Contao\\CoreBundle\\ContaoCoreBundle": {
-            "class": "Contao\\CoreBundle\\ContaoCoreBundle",
-            "name": "ContaoCoreBundle",
             "replace": [],
             "environments": ["all"],
-            "load-after" :[]
+            "load-after": []
         }
     }
 }
