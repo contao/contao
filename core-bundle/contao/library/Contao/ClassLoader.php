@@ -214,7 +214,9 @@ class ClassLoader
 		}
 		else
 		{
-			foreach (\System::getKernel()->getContaoBundles() as $bundle)
+			global $kernel;
+
+			foreach ($kernel->getContaoBundles() as $bundle)
 			{
 				$strFile = $bundle->getContaoResourcesPath() . '/config/autoload.php';
 

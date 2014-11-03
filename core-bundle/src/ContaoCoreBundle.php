@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle;
 
-use Contao\System;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -26,7 +25,7 @@ class ContaoCoreBundle extends ContaoBundle
      */
     public function boot()
     {
-        System::boot();
+        require_once __DIR__ . '/../contao/bootstrap.php';
     }
 
     /**
@@ -34,6 +33,6 @@ class ContaoCoreBundle extends ContaoBundle
      */
     public function build(ContainerBuilder $container)
     {
-        System::boot();
+        require_once __DIR__ . '/../contao/bootstrap.php';
     }
 }

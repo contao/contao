@@ -467,7 +467,11 @@ class Config
 	 */
 	protected static function loadParameters()
 	{
-		$container = \System::getKernel()->getContainer();
+		global $kernel;
+
+		// Do not use System::getContainer() here, because the Config class is
+		// initialized before the class loader and System is not yet available
+		$container = $kernel->getContainer();
 
 		if ($container === null)
 		{
