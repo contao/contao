@@ -10,33 +10,27 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Register the classes
- */
+// Classes
 ClassLoader::addClasses(array
 (
 	// Classes
-	'Contao\Comments'            => 'system/modules/comments/classes/Comments.php',
+	'Contao\Comments'            => 'vendor/contao/comments-bundle/contao/classes/Comments.php',
 
 	// Elements
-	'Contao\ContentComments'     => 'system/modules/comments/elements/ContentComments.php',
+	'Contao\ContentComments'     => 'vendor/contao/comments-bundle/contao/elements/ContentComments.php',
 
 	// Models
-	'Contao\CommentsModel'       => 'system/modules/comments/models/CommentsModel.php',
-	'Contao\CommentsNotifyModel' => 'system/modules/comments/models/CommentsNotifyModel.php',
+	'Contao\CommentsModel'       => 'vendor/contao/comments-bundle/contao/models/CommentsModel.php',
+	'Contao\CommentsNotifyModel' => 'vendor/contao/comments-bundle/contao/models/CommentsNotifyModel.php',
 
 	// Modules
-	'Contao\ModuleComments'      => 'system/modules/comments/modules/ModuleComments.php',
+	'Contao\ModuleComments'      => 'vendor/contao/comments-bundle/contao/modules/ModuleComments.php',
 ));
 
-
-/**
- * Register the templates
- */
+// Templates
 TemplateLoader::addFiles(array
 (
-	'com_default'      => 'system/modules/comments/templates/comments',
-	'ce_comments'      => 'system/modules/comments/templates/elements',
-	'mod_comment_form' => 'system/modules/comments/templates/modules',
+	'com_default'      => 'vendor/contao/comments-bundle/contao/templates/comments',
+	'ce_comments'      => 'vendor/contao/comments-bundle/contao/templates/elements',
+	'mod_comment_form' => 'vendor/contao/comments-bundle/contao/templates/modules',
 ));

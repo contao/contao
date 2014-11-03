@@ -10,10 +10,6 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
-/**
- * Run in a custom namespace, so the class can be replaced
- */
 namespace Contao;
 
 
@@ -117,15 +113,7 @@ class Comments extends \Frontend
 				$objPartial->setData($objComments->row());
 
 				// Clean the RTE output
-				if ($objPage->outputFormat == 'xhtml')
-				{
-					$objPartial->comment = \String::toXhtml($objComments->comment);
-				}
-				else
-				{
-					$objPartial->comment = \String::toHtml5($objComments->comment);
-				}
-
+				$objPartial->comment = \String::toHtml5($objComments->comment);
 				$objPartial->comment = trim(str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $objPartial->comment));
 
 				$objPartial->datim = \Date::parse($objPage->datimFormat, $objComments->date);
@@ -148,14 +136,7 @@ class Comments extends \Frontend
 						$objPartial->author = $objAuthor;
 
 						// Clean the RTE output
-						if ($objPage->outputFormat == 'xhtml')
-						{
-							$objPartial->reply = \String::toXhtml($objPartial->reply);
-						}
-						else
-						{
-							$objPartial->reply = \String::toHtml5($objPartial->reply);
-						}
+						$objPartial->reply = \String::toHtml5($objPartial->reply);
 					}
 				}
 
@@ -492,8 +473,7 @@ class Comments extends \Frontend
 	 */
 	public function convertLineFeeds($strComment)
 	{
-		global $objPage;
-		$strComment = nl2br_pre($strComment, ($objPage->outputFormat == 'xhtml'));
+		$strComment = nl2br_pre($strComment);
 
 		// Use paragraphs to generate new lines
 		if (strncmp('<p>', $strComment, 3) !== 0)
