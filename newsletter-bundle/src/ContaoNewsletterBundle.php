@@ -17,7 +17,7 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
  *
  * @author Leo Feyer <https://contao.org>
  */
-class NewsletterBundle extends ContaoBundle
+class ContaoNewsletterBundle extends ContaoBundle
 {
     /**
      * {@inheritdoc}
