@@ -11,9 +11,11 @@
 namespace Contao\CoreBundle\Test\HttpKernel;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddBundlesToCachePass;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\HttpKernel\ContaoKernelInterface;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the ContaoKernel class.
@@ -94,7 +96,9 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
             $bundles
         );
 
-        $this->kernel->writeBundleCache();
+        // Write the bundles cache
+        $pass = new AddBundlesToCachePass($this->kernel);
+        $pass->process(new ContainerBuilder());
 
         $this->assertFileExists(__DIR__ . '/../Fixtures/HttpKernel/vendor/cache/test');
     }
