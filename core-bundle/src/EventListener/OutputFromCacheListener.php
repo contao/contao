@@ -27,7 +27,7 @@ class OutputFromCacheListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $response = \Frontend::loadFromCache();
+        $response = \Frontend::getResponseFromCache();
 
         if (null !== $response) {
             $event->setResponse($response);

@@ -684,10 +684,10 @@ abstract class Frontend extends \Controller
 
 
 	/**
-	 * Check whether there is a cached version of the page and return it
+	 * Check whether there is a cached version of the page and return a response object
 	 * @return Response|null
 	 */
-	public static function outputFromCache()
+	public static function getResponseFromCache()
 	{
 		// Build the page if a user is (potentially) logged in or there is POST data
 		if (!empty($_POST) || \Input::cookie('FE_USER_AUTH') || \Input::cookie('FE_AUTO_LOGIN') || $_SESSION['DISABLE_CACHE'] || isset($_SESSION['LOGIN_ERROR']) || \Config::get('debugMode'))
