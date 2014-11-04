@@ -24,7 +24,7 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstanceOf()
+    public function testInstantiation()
     {
         $resolver = new ConfigResolver();
 
@@ -34,7 +34,7 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests adding a configuration object to the resolver.
      */
-    public function testAdd()
+    public function testAddToResolver()
     {
         $resolver = new ConfigResolver();
         $config   = new Config();
@@ -62,11 +62,11 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * FIXME
+     * Tests an unresolvable loading order.
      *
      * @expectedException \Contao\CoreBundle\Exception\UnresolvableLoadingOrderException
      */
-    public function testCannotBeResolved()
+    public function testUnresolvableLoadingOrder()
     {
         $resolver = new ConfigResolver();
 
@@ -82,9 +82,9 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * FIXME
+     * Provides a static bundles map to test against.
      *
-     * @return array The configuration array
+     * @return array The bundles map
      */
     public function getBundlesMapForEnvironmentProvider()
     {
@@ -149,7 +149,7 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Returns a configuration object.
+     * Creates a configuration object and returns it.
      *
      * @param string $name  The bundle name
      * @param string $class The bundle class name

@@ -24,7 +24,7 @@ class IniParserTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstanceOf()
+    public function testInstantiation()
     {
         $parser = new IniParser();
 
@@ -33,9 +33,9 @@ class IniParserTest extends TestCase
     }
 
     /**
-     * FIXME
+     * Tests parsing an autoload.ini file with requires.
      */
-    public function testDummyModuleWithRequires()
+    public function testFileWithRequires()
     {
         $parser = new IniParser();
 
@@ -62,38 +62,9 @@ class IniParserTest extends TestCase
     }
 
     /**
-     * FIXME
+     * Tests parsing an autoload.ini file without requires.
      */
-    public function testDummyModuleWithoutAutoload()
-    {
-        $parser = new IniParser();
-
-        $file = new SplFileInfo(
-            __DIR__ . '/../Fixtures/IniParser/dummy-module-without-autoload',
-            'relativePath',
-            'relativePathName'
-        );
-
-        $this->assertSame(
-            [
-                'bundles' => [
-                    [
-                        'class'         => null,
-                        'name'          => 'dummy-module-without-autoload',
-                        'replace'       => [],
-                        'environments'  => ['all'],
-                        'load-after'    => []
-                    ]
-                ]
-            ],
-            $parser->parse($file)
-        );
-    }
-
-    /**
-     * FIXME
-     */
-    public function testDummyModuleWithoutRequires()
+    public function testFileWithoutRequires()
     {
         $parser = new IniParser();
 
@@ -119,9 +90,9 @@ class IniParserTest extends TestCase
     }
 
     /**
-     * FIXME
+     * Tests parsing an autoload.ini file with invalid syntax.
      */
-    public function testDummyModuleWithHorribleBrokenIni()
+    public function testFileWithInvalidSyntax()
     {
         $this->disableErrorReporting();
 
@@ -133,8 +104,7 @@ class IniParserTest extends TestCase
             'relativePathName'
         );
 
-        $this->disableErrorReporting(); # FIXME: enableErrorReporting?
-
+        $this->disableErrorReporting();
         $this->setExpectedException('RuntimeException', "File $file/config/autoload.ini cannot be decoded");
 
         $parser->parse($file);

@@ -23,7 +23,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstanceOf()
+    public function testInstantiation()
     {
         $parser = new JsonParser();
 
@@ -32,9 +32,9 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * FIXME
+     * Tests parsing a regular autoload.json file.
      */
-    public function testDefaultAutoload()
+    public function testRegularFile()
     {
         $parser = new JsonParser();
 
@@ -61,9 +61,9 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * FIXME
+     * Tests parsing an autoload.json file without keys.
      */
-    public function testNoKeysDefinedAutoload()
+    public function testFileWithoutKeys()
     {
         $parser = new JsonParser();
 
@@ -89,11 +89,11 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * FIXME
+     * Tests parsing an invalid .json file.
      *
      * @expectedException \RuntimeException
      */
-    public function testInvalidJsonWillThrowException()
+    public function testInvalidFile()
     {
         $parser = new JsonParser();
 
@@ -107,11 +107,11 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * FIXME
+     * Tests parsing a .json file without bundles key.
      *
      * @expectedException \RuntimeException
      */
-    public function testNoBundlesKeyInJsonWillThrowException()
+    public function testFileWithoutBundlesKeys()
     {
         $parser = new JsonParser();
 
@@ -125,11 +125,11 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * FIXME
+     * Tests parsing a non-existent file.
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testWillThrowExceptionIfFileNotExists()
+    public function testNonExistentFile()
     {
         $parser = new JsonParser();
         $file   = new SplFileInfo('iDoNotExist', 'relativePath', 'relativePathName');

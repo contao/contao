@@ -22,7 +22,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstanceOf()
+    public function testInstantiation()
     {
         $config = new Config();
 

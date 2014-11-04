@@ -20,9 +20,9 @@ use Contao\CoreBundle\Autoload\BundleAutoloader;
 class BundleAutoloaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test the object instantiation.
+     * Tests the object instantiation.
      */
-    public function testInstanceOf()
+    public function testInstantiation()
     {
         $bundleLoader = new BundleAutoloader('rootDir', 'env');
 
@@ -30,7 +30,7 @@ class BundleAutoloaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the load() method.
+     * Tests the load() method.
      */
     public function testLoad()
     {
