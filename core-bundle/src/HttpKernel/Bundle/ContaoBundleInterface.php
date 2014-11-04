@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\HttpKernel\Bundle;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
- * Adds specific methods to the bundle interface.
+ * Contao bundle interface.
  *
  * @author Leo Feyer <https://contao.org>
  */
@@ -22,7 +22,7 @@ interface ContaoBundleInterface extends BundleInterface
     /**
      * Returns the folders which shall be made public.
      *
-     * @return array The folders which shall be symlinked
+     * @return array The public folders array
      */
     public function getPublicFolders();
 

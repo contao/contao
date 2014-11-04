@@ -641,9 +641,8 @@ abstract class Frontend extends \Controller
 
 	/**
 	 * Index a page if applicable
-	 *
-	 * @param \PageModel $objPage     The page model
-	 * @param Response   $objResponse The response object
+	 * @param \PageModel
+	 * @param Response
 	 */
 	public static function indexPageIfApplicable(\PageModel $objPage, Response $objResponse)
 	{
@@ -681,5 +680,160 @@ abstract class Frontend extends \Controller
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Check whether there is a cached version of the page and return it
+	 * @return Response|null
+	 */
+	public static function outputFromCache()
+	{
+		// Build the page if a user is (potentially) logged in or there is POST data
+		if (!empty($_POST) || \Input::cookie('FE_USER_AUTH') || \Input::cookie('FE_AUTO_LOGIN') || $_SESSION['DISABLE_CACHE'] || isset($_SESSION['LOGIN_ERROR']) || \Config::get('debugMode'))
+		{
+			return null;
+		}
+
+		// If the request string is empty, look for a cached page matching the
+		// primary browser language. This is a compromise between not caching
+		// empty requests at all and considering all browser languages, which
+		// is not possible for various reasons.
+		if (\Environment::get('request') == '' || \Environment::get('request') == 'index.php')
+		{
+			// Return if the language is added to the URL and the empty domain will be redirected
+			if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty'))
+			{
+				return null;
+			}
+
+			$arrLanguage = \Environment::get('httpAcceptLanguage');
+			$strCacheKey = \Environment::get('base') .'empty.'. $arrLanguage[0];
+		}
+		else
+		{
+			$strCacheKey = \Environment::get('base') . \Environment::get('request');
+		}
+
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['getCacheKey']) && is_array($GLOBALS['TL_HOOKS']['getCacheKey']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getCacheKey'] as $callback)
+			{
+				$strCacheKey = \System::importStatic($callback[0])->$callback[1]($strCacheKey);
+			}
+		}
+
+		$blnFound = false;
+		$strCacheFile = null;
+
+		// Check for a mobile layout
+		if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
+		{
+			$strCacheKey = md5($strCacheKey . '.mobile');
+			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strCacheKey, 0, 1) . '/' . $strCacheKey . '.html';
+
+			if (file_exists($strCacheFile))
+			{
+				$blnFound = true;
+			}
+		}
+
+		// Check for a regular layout
+		if (!$blnFound)
+		{
+			$strCacheKey = md5($strCacheKey);
+			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strCacheKey, 0, 1) . '/' . $strCacheKey . '.html';
+
+			if (file_exists($strCacheFile))
+			{
+				$blnFound = true;
+			}
+		}
+
+		// Return if the file does not exist
+		if (!$blnFound)
+		{
+			return null;
+		}
+
+		$expire = null;
+		$content = null;
+		$type = null;
+
+		// Include the file
+		ob_start();
+		require_once $strCacheFile;
+
+		// The file has expired
+		if ($expire < time())
+		{
+			ob_end_clean();
+			return null;
+		}
+
+		// Read the buffer
+		$strBuffer = ob_get_clean();
+
+		// Session required to determine the referer
+		$session = \Session::getInstance();
+		$data = $session->getData();
+
+		// Set the new referer
+		if (!isset($_GET['pdf']) && !isset($_GET['file']) && !isset($_GET['id']) && $data['referer']['current'] != \Environment::get('requestUri'))
+		{
+			$data['referer']['last'] = $data['referer']['current'];
+			$data['referer']['current'] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
+		}
+
+		// Store the session data
+		$session->setData($data);
+
+		// Load the default language file (see #2644)
+		\System::loadLanguageFile('default');
+
+		// Replace the insert tags and then re-replace the request_token
+		// tag in case a form element has been loaded via insert tag
+		$strBuffer = \Controller::replaceInsertTags($strBuffer, false);
+		$strBuffer = str_replace(array('{{request_token}}', '[{]', '[}]'), array(REQUEST_TOKEN, '{{', '}}'), $strBuffer);
+
+		// Content type
+		if (!$content)
+		{
+			$content = 'text/html';
+		}
+
+		$response = new Response($strBuffer);
+
+		// Send the status header (see #6585)
+		if ($type == 'error_403')
+		{
+			$response->setStatusCode(Response::HTTP_FORBIDDEN);
+		}
+		elseif ($type == 'error_404')
+		{
+			$response->setStatusCode(Response::HTTP_NOT_FOUND);
+		}
+
+		$response->headers->set('Vary', 'User-Agent', false);
+		$response->headers->set('Content-Type', $content . '; charset=' . \Config::get('characterSet'));
+
+		// Send the cache headers
+		if ($expire !== null && (\Config::get('cacheMode') == 'both' || \Config::get('cacheMode') == 'browser'))
+		{
+			$response->headers->set('Cache-Control', 'public, max-age=' . ($expire - time()));
+			$response->headers->set('Expires', gmdate('D, d M Y H:i:s', $expire) . ' GMT');
+			$response->headers->set('Last-Modified', gmdate('D, d M Y H:i:s', time()) . ' GMT');
+			$response->headers->set('Pragma', 'public');
+		}
+		else
+		{
+			$response->headers->set('Cache-Control', ['no-cache', 'pre-check=0, post-check=0']);
+			$response->headers->set('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
+			$response->headers->set('Expires', 'Fri, 06 Jun 1975 15:10:00 GMT');
+			$response->headers->set('Pragma', 'no-cache');
+		}
+
+		return $response;
 	}
 }

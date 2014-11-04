@@ -5,8 +5,7 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\DependencyInjection;
@@ -17,7 +16,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Registers the bundle services
+ * Registers the bundle services in the DIC.
  *
  * @author Leo Feyer <https://contao.org>
  */

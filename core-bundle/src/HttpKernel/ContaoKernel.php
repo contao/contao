@@ -5,8 +5,7 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\HttpKernel;
@@ -18,7 +17,7 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
- * Custom Contao kernel
+ * Defines a custom Contao kernel which can autoload bundles.
  *
  * @author Leo Feyer <https://contao.org>
  */
@@ -55,22 +54,6 @@ abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
     /**
      * {@inheritdoc}
      */
-    public function getContaoBundles()
-    {
-        if (empty($this->contaoBundles)) {
-            foreach ($this->getBundles() as $bundle) {
-                if ($bundle instanceof ContaoBundleInterface) {
-                    $this->contaoBundles[] = $bundle;
-                }
-            }
-        }
-
-        return $this->contaoBundles;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function writeBundleCache()
     {
         file_put_contents(
@@ -90,7 +73,23 @@ abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
     }
 
     /**
-     * Generates the bundles map
+     * {@inheritdoc}
+     */
+    public function getContaoBundles()
+    {
+        if (empty($this->contaoBundles)) {
+            foreach ($this->getBundles() as $bundle) {
+                if ($bundle instanceof ContaoBundleInterface) {
+                    $this->contaoBundles[] = $bundle;
+                }
+            }
+        }
+
+        return $this->contaoBundles;
+    }
+
+    /**
+     * Generates the bundles map.
      *
      * @return array The bundles map
      */

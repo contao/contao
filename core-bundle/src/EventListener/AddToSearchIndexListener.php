@@ -5,24 +5,22 @@
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\Frontend;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
 /**
- * Adds a page to the search index
+ * Adds a page to the search index after the response has been sent.
  *
  * @author Leo Feyer <https://contao.org>
  */
 class AddToSearchIndexListener
 {
     /**
-     * Adds a page to the search index
+     * Forwards the request to the Frontend class if there is a page object.
      *
      * @param PostResponseEvent $event The event object
      */
@@ -30,10 +28,8 @@ class AddToSearchIndexListener
     {
         global $objPage;
 
-        if (null === $objPage) {
-            return;
+        if (null !== $objPage) {
+            \Frontend::indexPageIfApplicable($objPage, $event->getResponse());
         }
-
-        Frontend::indexPageIfApplicable($objPage, $event->getResponse());
     }
 }
