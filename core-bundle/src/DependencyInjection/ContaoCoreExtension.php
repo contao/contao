@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Registers the bundle services in the DIC.
+ * Adds the bundle services to the container.
  *
  * @author Leo Feyer <https://contao.org>
  */
