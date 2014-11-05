@@ -11,7 +11,7 @@ Protect the `DcaExtractor` constructor (use `getInstance()` instead).
 Return `null` if a widget is empty and the DB field is nullable (see #17).
 
 ### Changed
-Remove the JS library dependencies (see #23).
+Remove the JS library dependencies from the library agnostic scripts (see #23).
 
 ### Changed
 Replace the syntax highlighter component with highlight.js.
