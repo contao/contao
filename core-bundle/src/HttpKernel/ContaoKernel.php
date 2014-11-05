@@ -39,7 +39,7 @@ abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
     public function addAutoloadBundles(&$bundles)
     {
         if (empty($this->bundlesMap)) {
-            $this->bundlesMap = $this->generateBundlesMap();
+            $this->bundlesMap = $this->generateBundlesMap($bundles);
         }
 
         foreach ($this->bundlesMap as $package => $class) {
@@ -91,13 +91,21 @@ abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
     /**
      * Generates the bundles map.
      *
+     * @param array $bundles The bundles array
+     *
      * @return array The bundles map
      */
-    protected function generateBundlesMap()
+    protected function generateBundlesMap(array $bundles)
     {
         $autoloader = new BundleAutoloader($this->getRootDir(), $this->getEnvironment());
+        $bundlesMap = $autoloader->load();
 
-        return $autoloader->load();
+        // Unset bundles which are loaded in the app kernel
+        foreach ($bundles as $bundle) {
+            unset($bundlesMap[$bundle->getName()]);
+        }
+
+        return $bundlesMap;
     }
 
     /**

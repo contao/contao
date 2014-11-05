@@ -84,12 +84,17 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
      */
     public function testAutoloadBundles()
     {
-        $bundles = [];
+        $frameworkBundle = new FrameworkBundle();
+
+        $bundles = [
+            $frameworkBundle
+        ];
 
         $this->kernel->addAutoloadBundles($bundles);
 
         $this->assertEquals(
             [
+                $frameworkBundle,
                 new ContaoCoreBundle(),
                 new ContaoModuleBundle('legacy-module', __DIR__ . '/../Fixtures/HttpKernel/vendor')
             ],
@@ -114,6 +119,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         $bundlesMap = $this->reflection->getProperty('bundlesMap');
         $bundlesMap->setAccessible(true);
 
+        // The FrameworkBundle should not be in the bundles map
         $this->assertEquals(
             [
                 'ContaoCoreBundle' => 'Contao\CoreBundle\ContaoCoreBundle',
