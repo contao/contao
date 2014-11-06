@@ -18,5 +18,10 @@
         "psr-4": {
             "Contao\\NewsBundle\\": "src/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "4.0.x-dev"
+        }
     }
 }
