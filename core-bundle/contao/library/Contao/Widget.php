@@ -40,8 +40,10 @@ namespace Contao;
  * @author    Leo Feyer <https://github.com/leofeyer>
  * @copyright Leo Feyer 2005-2014
  */
-abstract class Widget extends \View
+abstract class Widget extends \Controller
 {
+	use \TemplateInheritance;
+
 
 	/**
 	 * Id
@@ -629,7 +631,7 @@ abstract class Widget extends \View
 			$this->strTemplate = $this->customTpl;
 		}
 
-		$strBuffer = parent::parse();
+		$strBuffer = $this->inherit();
 
 		// HOOK: add custom parse filters (see #5553)
 		if (isset($GLOBALS['TL_HOOKS']['parseWidget']) && is_array($GLOBALS['TL_HOOKS']['parseWidget']))

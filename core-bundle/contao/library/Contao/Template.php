@@ -30,8 +30,10 @@ namespace Contao;
  * @author    Leo Feyer <https://github.com/leofeyer>
  * @copyright Leo Feyer 2005-2014
  */
-abstract class Template extends \View
+abstract class Template extends \Controller
 {
+	use \TemplateInheritance;
+
 
 	/**
 	 * Output buffer
@@ -239,7 +241,7 @@ abstract class Template extends \View
 			}
 		}
 
-		return parent::parse();
+		return $this->inherit();
 	}
 
 
