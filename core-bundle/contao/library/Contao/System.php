@@ -401,7 +401,7 @@ abstract class System
 		$arrAux = array();
 
 		static::loadLanguageFile('countries');
-		include TL_ROOT . '/system/config/countries.php';
+		include TL_ROOT . '/vendor/contao/core-bundle/contao/config/countries.php';
 
 		foreach ($countries as $strKey=>$strName)
 		{
@@ -443,7 +443,7 @@ abstract class System
 		$langsNative = array();
 
 		static::loadLanguageFile('languages');
-		include TL_ROOT . '/system/config/languages.php';
+		include TL_ROOT . '/vendor/contao/core-bundle/contao/config/languages.php';
 
 		foreach ($languages as $strKey=>$strName)
 		{
@@ -491,7 +491,7 @@ abstract class System
 		$arrReturn = array();
 		$timezones = array();
 
-		require TL_ROOT . '/system/config/timezones.php';
+		require TL_ROOT . '/vendor/contao/core-bundle/contao/config/timezones.php';
 
 		foreach ($timezones as $strGroup=>$arrTimezones)
 		{

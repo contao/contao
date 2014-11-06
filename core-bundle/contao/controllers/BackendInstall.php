@@ -65,12 +65,12 @@ class BackendInstall extends \Backend
 		$this->import('Files');
 
 		// If the files are not writeable, the SMH is required
-		if (!$this->Files->is_writeable('system/config/default.php'))
+		if (!$this->Files->is_writeable('system/config/constants.php'))
 		{
 			$this->outputAndExit();
 		}
 
-		$this->Template->lcfWriteable = true;
+		$this->Template->lcfWriteable = true; # FIXME: adjust the texts (no more SMH)
 
 		// Create the local configuration files if not done yet
 		$this->createLocalConfigurationFiles();

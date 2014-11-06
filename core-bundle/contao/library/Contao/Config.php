@@ -446,9 +446,9 @@ class Config
 	public static function preload()
 	{
 		// Load the default files
-		include TL_ROOT . '/system/config/default.php';
-		include TL_ROOT . '/system/config/agents.php';
-		include TL_ROOT . '/system/config/mimetypes.php';
+		include TL_ROOT . '/vendor/contao/core-bundle/contao/config/default.php';
+		include TL_ROOT . '/vendor/contao/core-bundle/contao/config/agents.php';
+		include TL_ROOT . '/vendor/contao/core-bundle/contao/config/mimetypes.php';
 
 		// Include the local configuration file
 		if (($blnHasLcf = file_exists(TL_ROOT . '/system/config/localconfig.php')) === true)
