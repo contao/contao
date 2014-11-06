@@ -53,13 +53,6 @@ class BackendInstall extends \Backend
 	 */
 	public function run()
 	{
-		// Generate the symlinks
-		if (!is_link(TL_ROOT . '/web/assets'))
-		{
-			$this->import('Automator');
-			$this->Automator->generateSymlinks();
-		}
-
 		$this->Template = new \BackendTemplate('be_install');
 
 		// Lock the tool if there are too many login attempts

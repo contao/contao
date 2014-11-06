@@ -119,13 +119,21 @@ if (!isset($_SESSION['TL_LANGUAGE']))
 
 $GLOBALS['TL_LANGUAGE'] = $_SESSION['TL_LANGUAGE'];
 
+// Fully load the configuration
+$objConfig = Config::getInstance();
+
+// Generate the symlinks before any potential output
+if (!$objConfig->isComplete() && !is_link(TL_ROOT . '/system/themes/flexible'))
+{
+	$automator = new Automator();
+	$automator->generateSymlinks();
+}
+
 // Show the "insecure document root" message
 if (PHP_SAPI != 'cli' && TL_SCRIPT != 'contao/install.php' && substr(Environment::get('path'), -4) == '/web' && !Config::get('ignoreInsecureRoot'))
 {
 	die_nicely('be_insecure', 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
 }
-
-$objConfig = Config::getInstance();
 
 // Show the "incomplete installation" message
 if (PHP_SAPI != 'cli' && TL_SCRIPT != 'contao/install.php' && !$objConfig->isComplete())

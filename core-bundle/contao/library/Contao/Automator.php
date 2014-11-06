@@ -504,6 +504,8 @@ class Automator extends \System
 			$this->Files->symlink($target . $strPath, 'web/' . $strPath);
 		}
 
+		$this->symlinkThemes();
+
 		// Symlink the tinymce.css file
 		if (file_exists(TL_ROOT . '/' . $strUploadPath . '/tinymce.css'))
 		{
@@ -564,6 +566,35 @@ class Automator extends \System
 		}
 
 		return array_filter($arrPublic);
+	}
+
+
+	/**
+	 * Symlink the themes into system/themes
+	 */
+	protected function symlinkThemes()
+	{
+		foreach (\System::getKernel()->getContaoBundles() as $bundle) # FIXME
+		{
+			$strPath = $bundle->getContaoResourcesPath() . '/themes';
+
+			if (is_dir($strPath))
+			{
+				foreach (scan($strPath) as $strTheme)
+				{
+					if (is_dir($strPath . '/' . $strTheme))
+					{
+						if (strpos($strPath, '../') !== false)
+						{
+							$strPath = realpath($strPath);
+						}
+
+						$strPath = str_replace(TL_ROOT . '/', '', $strPath) . '/' . $strTheme;
+						$this->Files->symlink('../../' . $strPath, 'system/themes/' . basename($strPath));
+					}
+				}
+			}
+		}
 	}
 
 
