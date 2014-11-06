@@ -848,6 +848,7 @@ abstract class System
 				{
 					return $strVersion;
 				}
+				// FIXME: else if isset(branch-alias) 1.3.x-dev -> 1.3.9999999
 			}
 		}
 

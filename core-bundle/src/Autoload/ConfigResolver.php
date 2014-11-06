@@ -92,9 +92,7 @@ class ConfigResolver
     protected function buildLoadingOrder()
     {
         // Make sure the core bundle comes first
-        $loadingOrder = [
-            'ContaoCoreBundle' => []
-        ];
+        $loadingOrder = ['ContaoCoreBundle' => []];
 
         foreach ($this->configs as $bundle) {
             $name = $bundle->getName();

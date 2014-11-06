@@ -86,9 +86,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
     {
         $frameworkBundle = new FrameworkBundle();
 
-        $bundles = [
-            $frameworkBundle
-        ];
+        $bundles = [$frameworkBundle];
 
         $this->kernel->addAutoloadBundles($bundles);
 

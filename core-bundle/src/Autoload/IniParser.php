@@ -24,9 +24,7 @@ class IniParser implements ParserInterface
      */
     public function parse(SplFileInfo $file)
     {
-        return [
-            'bundles' => [$this->doParse($file)]
-        ];
+        return ['bundles' => [$this->doParse($file)]];
     }
 
     /**

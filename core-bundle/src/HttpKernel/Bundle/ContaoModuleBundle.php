@@ -41,9 +41,7 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
      */
     public function getPublicFolders()
     {
-        return [
-            $this->getContaoResourcesPath() . '/assets'
-        ];
+        return [$this->getContaoResourcesPath() . '/assets'];
     }
 
     /**
