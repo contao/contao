@@ -14,6 +14,7 @@ use Contao\CoreBundle\Autoload\BundleAutoloader;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddBundlesToCachePass;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundleInterface;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
@@ -89,7 +90,7 @@ abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
     }
 
     /**
-     * Generates the bundles map.
+     * Generates the bundles map and filters the app kernel bundles.
      *
      * @param array $bundles The bundles array
      *
@@ -100,7 +101,7 @@ abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
         $autoloader = new BundleAutoloader($this->getRootDir(), $this->getEnvironment());
         $bundlesMap = $autoloader->load();
 
-        // Unset bundles which are loaded in the app kernel
+        /** @var BundleInterface $bundle */
         foreach ($bundles as $bundle) {
             unset($bundlesMap[$bundle->getName()]);
         }
