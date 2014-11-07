@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Test;
 
 /**
- * # FIXME
+ * Adds a test case which allows to disable error reporting.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
