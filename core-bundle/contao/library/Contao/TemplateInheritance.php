@@ -14,13 +14,13 @@ namespace Contao;
 
 
 /**
- * Provides shared logic for views
+ * Provides the template inheritance logic
  *
  * @package   Library
  * @author    Leo Feyer <https://github.com/leofeyer>
  * @copyright Leo Feyer 2005-2014
  */
-abstract class View extends \Controller
+trait TemplateInheritance
 {
 
 	/**
@@ -71,7 +71,7 @@ abstract class View extends \Controller
 	 *
 	 * @return string The template markup
 	 */
-	public function parse()
+	public function inherit()
 	{
 		$strBuffer = '';
 
@@ -82,7 +82,7 @@ abstract class View extends \Controller
 		while ($this->strParent !== null)
 		{
 			$strCurrent = $this->strParent;
-			$strParent = $this->strDefault ?: $this->getTemplate($this->strParent, $this->strFormat);
+			$strParent = $this->strDefault ?: \Controller::getTemplate($this->strParent, $this->strFormat);
 
 			// Reset the flags
 			$this->strParent = null;
@@ -110,7 +110,7 @@ abstract class View extends \Controller
 		// Add start and end markers in debug mode
 		if (\Config::get('debugMode'))
 		{
-			$strRelPath = str_replace(TL_ROOT . '/', '', $this->getTemplate($this->strTemplate, $this->strFormat));
+			$strRelPath = str_replace(TL_ROOT . '/', '', \Controller::getTemplate($this->strTemplate, $this->strFormat));
 			$strBuffer = "\n<!-- TEMPLATE START: $strRelPath -->\n$strBuffer\n<!-- TEMPLATE END: $strRelPath -->\n";
 		}
 
