@@ -53,7 +53,9 @@ class ModuleLoader
 	{
 		if (empty(static::$active))
 		{
-			foreach (\System::getKernel()->getContaoBundles() as $bundle)
+			global $kernel;
+
+			foreach ($kernel->getContaoBundles() as $bundle)
 			{
 				static::$active[] = $bundle->getName();
 			}

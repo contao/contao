@@ -306,9 +306,11 @@ class tl_user_group extends Backend
 	 */
 	public function getExcludedFields()
 	{
+		global $kernel;
+
 		$included = array();
 
-		foreach (System::getKernel()->getContaoBundles() as $bundle)
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 

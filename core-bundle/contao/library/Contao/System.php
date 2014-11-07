@@ -313,7 +313,9 @@ abstract class System
 			}
 			else
 			{
-				foreach (\System::getKernel()->getContaoBundles() as $bundle)
+				global $kernel;
+
+				foreach ($kernel->getContaoBundles() as $bundle)
 				{
 					$strFile = $bundle->getContaoResourcesPath() . '/languages/' . $strCreateLang . '/' . $strName;
 
@@ -853,19 +855,6 @@ abstract class System
 		}
 
 		return null;
-	}
-
-
-	/**
-	 * Return the Symfony kernel
-	 *
-	 * @return ContaoKernelInterface
-	 */
-	public static function getKernel()
-	{
-		global $kernel;
-
-		return $kernel; # FIXME: replace with getContainer()->getKernel()
 	}
 
 

@@ -724,10 +724,12 @@ class Updater extends \Controller
 	 */
 	public function updateFileTreeFields()
 	{
+		global $kernel;
+
 		$arrFiles = array();
 
 		// Parse all modules (see #6058)
-		foreach (\System::getKernel()->getContaoBundles() as $bundle)
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 

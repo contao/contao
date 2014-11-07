@@ -206,11 +206,13 @@ class tl_templates extends Backend
 	 */
 	public function addNewTemplate()
 	{
+		global $kernel;
+
 		$arrAllTemplates = array();
 		$arrAllowed = trimsplit(',', Config::get('templateFiles'));
 
 		// Get all templates
-		foreach (System::getKernel()->getContaoBundles() as $bundle)
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			$strModule = $bundle->getName();
 			$strFolder = $bundle->getContaoResourcesPath() . '/templates';

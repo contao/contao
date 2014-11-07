@@ -754,9 +754,11 @@ class BackendInstall extends \Backend
 
 		if (!\Config::get('coreOnlyMode'))
 		{
+			global $kernel;
+
 			$modules = array();
 
-			foreach (\System::getKernel()->getContaoBundles() as $bundle)
+			foreach ($kernel->getContaoBundles() as $bundle)
 			{
 				$modules[] = $bundle->getName();
 			}
