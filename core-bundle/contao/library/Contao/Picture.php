@@ -82,7 +82,7 @@ class Picture
 	{
 		if (is_string($file))
 		{
-			$file = new \File(rawurldecode($file), true);
+			$file = new \File(rawurldecode($file));
 		}
 
 		$picture = new static($file);

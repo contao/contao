@@ -1378,7 +1378,7 @@ abstract class Controller extends \System
 	{
 		try
 		{
-			$objFile = new \File($arrItem['singleSRC'], true);
+			$objFile = new \File($arrItem['singleSRC']);
 		}
 		catch (\Exception $e)
 		{
@@ -1437,7 +1437,7 @@ abstract class Controller extends \System
 
 			if ($src !== $arrItem['singleSRC'])
 			{
-				$objFile = new \File(rawurldecode($src), true);
+				$objFile = new \File(rawurldecode($src));
 			}
 		}
 		catch (\Exception $e)

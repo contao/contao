@@ -1366,7 +1366,7 @@ class StyleSheets extends \Backend
 		uksort($vars, 'length_sort_desc');
 
 		// Create the file
-		$objFile = new \File('system/tmp/' . md5(uniqid(mt_rand(), true)), true);
+		$objFile = new \File('system/tmp/' . md5(uniqid(mt_rand(), true)));
 		$objFile->write('/* ' . $objStyleSheet->name . ".css */\n");
 
 		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!=1 ORDER BY sorting")
