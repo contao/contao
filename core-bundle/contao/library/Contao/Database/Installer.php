@@ -272,6 +272,8 @@ class Installer extends \Controller
 	 */
 	public function getFromDca()
 	{
+		global $kernel;
+
 		$return = array();
 		$included = array();
 
@@ -280,7 +282,7 @@ class Installer extends \Controller
 		\Config::set('bypassCache', true);
 
 		// Only check the active modules (see #4541)
-		foreach (\System::getKernel()->getContaoBundles() as $bundle)
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 
@@ -333,11 +335,13 @@ class Installer extends \Controller
 	 */
 	public function getFromFile()
 	{
+		global $kernel;
+
 		$table = '';
 		$return = array();
 
 		// Only check the active modules (see #4541)
-		foreach (\System::getKernel()->getContaoBundles() as $bundle)
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			// Ignore the database.sql of the not renamed core modules
 			if (in_array($bundle->getName(), array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))

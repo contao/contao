@@ -135,7 +135,9 @@ class Config
 		}
 		else
 		{
-			foreach (\System::getKernel()->getContaoBundles() as $bundle)
+			global $kernel;
+
+			foreach ($kernel->getContaoBundles() as $bundle)
 			{
 				$strFile = $bundle->getContaoResourcesPath() . '/config/config.php';
 

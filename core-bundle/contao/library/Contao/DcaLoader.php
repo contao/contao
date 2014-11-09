@@ -81,7 +81,9 @@ class DcaLoader extends \Controller
 		}
 		else
 		{
-			foreach (\System::getKernel()->getContaoBundles() as $bundle)
+			global $kernel;
+
+			foreach ($kernel->getContaoBundles() as $bundle)
 			{
 				$strFile = $bundle->getContaoResourcesPath() . '/dca/' . $this->strTable . '.php';
 

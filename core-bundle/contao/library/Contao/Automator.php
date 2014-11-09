@@ -550,9 +550,11 @@ class Automator extends \System
 	 */
 	protected function getPublicModuleFolders()
 	{
+		global $kernel;
+
 		$arrPublic = array();
 
-		foreach (\System::getKernel()->getContaoBundles() as $bundle) # FIXME
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			foreach ($bundle->getPublicFolders() as $strPath)
 			{
@@ -574,7 +576,9 @@ class Automator extends \System
 	 */
 	protected function symlinkThemes()
 	{
-		foreach (\System::getKernel()->getContaoBundles() as $bundle) # FIXME
+		global $kernel;
+
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			$strPath = $bundle->getContaoResourcesPath() . '/themes';
 
@@ -620,11 +624,13 @@ class Automator extends \System
 	 */
 	public function generateConfigCache()
 	{
+		global $kernel;
+
 		// Generate the class/template laoder cache file
 		$objCacheFile = new \File('system/cache/config/autoload.php');
 		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-		foreach (\System::getKernel()->getContaoBundles() as $bundle)
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			$strFile = $bundle->getContaoResourcesPath() . '/config/autoload.php';
 
@@ -641,7 +647,7 @@ class Automator extends \System
 		$objCacheFile = new \File('system/cache/config/config.php');
 		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-		foreach (\System::getKernel()->getContaoBundles() as $bundle)
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			$strFile = $bundle->getContaoResourcesPath() . '/config/config.php';
 
@@ -664,10 +670,12 @@ class Automator extends \System
 	 */
 	public function generateDcaCache()
 	{
+		global $kernel;
+
 		$arrFiles = array();
 
 		// Parse all active modules
-		foreach (\System::getKernel()->getContaoBundles() as $bundle)
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 
@@ -696,7 +704,7 @@ class Automator extends \System
 			$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
 			// Parse all active modules
-			foreach (\System::getKernel()->getContaoBundles() as $bundle)
+			foreach ($kernel->getContaoBundles() as $bundle)
 			{
 				$strFile = $bundle->getContaoResourcesPath() . '/dca/' . $strName . '.php';
 
@@ -720,6 +728,8 @@ class Automator extends \System
 	 */
 	public function generateLanguageCache()
 	{
+		global $kernel;
+
 		$arrLanguages = array();
 		$objLanguages = \Database::getInstance()->query("SELECT language FROM tl_member UNION SELECT language FROM tl_user UNION SELECT REPLACE(language, '-', '_') FROM tl_page WHERE type='root'");
 
@@ -747,7 +757,7 @@ class Automator extends \System
 			$arrFiles = array();
 
 			// Parse all active modules
-			foreach (\System::getKernel()->getContaoBundles() as $bundle)
+			foreach ($kernel->getContaoBundles() as $bundle)
 			{
 				$strDir = $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage;
 
@@ -793,7 +803,7 @@ class Automator extends \System
 				$objCacheFile->write(sprintf($strHeader, $strLanguage));
 
 				// Parse all active modules and append to the cache file
-				foreach (\System::getKernel()->getContaoBundles() as $bundle)
+				foreach ($kernel->getContaoBundles() as $bundle)
 				{
 					$strFile = $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage . '/' . $strName;
 
@@ -822,11 +832,13 @@ class Automator extends \System
 	 */
 	public function generateDcaExtracts()
 	{
+		global $kernel;
+
 		$included = array();
 		$arrExtracts = array();
 
 		// Only check the active modules (see #4541)
-		foreach (\System::getKernel()->getContaoBundles() as $bundle)
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 

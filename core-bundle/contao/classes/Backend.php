@@ -243,11 +243,13 @@ abstract class Backend extends \Controller
 	 */
 	protected function handleRunOnce()
 	{
+		global $kernel;
+
 		$this->import('Files');
 		$arrFiles = array(TL_ROOT . '/system/runonce.php');
 
 		// Always scan all folders and not just the active modules (see #4200)
-		foreach (\System::getKernel()->getContaoBundles() as $bundle)
+		foreach ($kernel->getContaoBundles() as $bundle)
 		{
 			$arrFiles[] = $bundle->getContaoResourcesPath() . '/config/runonce.php';
 		}
