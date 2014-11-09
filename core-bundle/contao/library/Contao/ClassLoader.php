@@ -150,9 +150,9 @@ class ClassLoader
 		}
 
 		// Find the class in the registered namespaces
-		elseif (($namespaced = self::findClass($class)) != false)
+		elseif (($namespaced = self::findClass($class)) !== false)
 		{
-			if (!class_exists($namespaced, false))
+			if (!class_exists($namespaced, false) && !interface_exists($namespaced, false) && !trait_exists($namespaced, false))
 			{
 				if (\Config::get('debugMode'))
 				{
