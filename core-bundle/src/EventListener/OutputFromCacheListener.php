@@ -17,6 +17,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  *
  * @author Leo Feyer <https://contao.org>
  * @author Andreas Schempp <http://terminal42.ch>
+ *
+ * @codeCoverageIgnore
  */
 class OutputFromCacheListener
 {
