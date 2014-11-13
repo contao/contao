@@ -57,18 +57,13 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->kernel = $this->getMockForAbstractClass('Contao\CoreBundle\HttpKernel\ContaoKernel');
+        $this->kernel = $this->getMockForAbstractClass('Contao\CoreBundle\HttpKernel\ContaoKernel', ['test', false]);
         $this->reflection = new \ReflectionClass($this->kernel);
 
         // Set the root directory
         $rootDir = $this->reflection->getProperty('rootDir');
         $rootDir->setAccessible(true);
         $rootDir->setValue($this->kernel, __DIR__ . '/../Fixtures/HttpKernel/vendor');
-
-        // Set the environment
-        $environment = $this->reflection->getProperty('environment');
-        $environment->setAccessible(true);
-        $environment->setValue($this->kernel, 'test');
     }
 
     /**
