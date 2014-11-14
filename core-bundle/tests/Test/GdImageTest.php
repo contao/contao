@@ -29,6 +29,7 @@ class GdImageTest extends \PHPUnit_Framework_TestCase
             mkdir($this->tempDirectory);
         }
 
+        class_alias('Contao\System', 'System');
         class_alias('Contao\File', 'File');
         class_alias('Contao\Files', 'Files');
         class_alias('Contao\Config', 'Config');

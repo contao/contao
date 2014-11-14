@@ -26,5 +26,6 @@ if (
 }
 
 $loader->addPsr4('Contao\\CoreBundle\\Test\\', __DIR__);
+$loader->addPsr4('Contao\\', __DIR__.'/../contao/library/Contao');
 
 return $loader;

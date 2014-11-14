@@ -46,10 +46,11 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
+        class_alias('SystemTest', 'System');
         class_alias('Contao\Image', 'Image');
+        class_alias('Contao\GdImage', 'GdImage');
         class_alias('Contao\File', 'File');
         class_alias('Contao\Files', 'Files');
-        class_alias('SystemTest', 'System');
         class_alias('Contao\Config', 'Config');
         define('TL_ERROR', 'ERROR');
         define('TL_ROOT', $this->tempDirectory);
