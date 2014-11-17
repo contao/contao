@@ -150,7 +150,7 @@ class ClassLoader
 		}
 
 		// Find the class in the registered namespaces
-		elseif (($namespaced = self::findClass($class)) !== false)
+		elseif (($namespaced = self::findClass($class)) !== null)
 		{
 			if (!class_exists($namespaced, false) && !interface_exists($namespaced, false) && !trait_exists($namespaced, false))
 			{
@@ -174,7 +174,7 @@ class ClassLoader
 	 *
 	 * @param string $class The class name
 	 *
-	 * @return string The full path including the namespace
+	 * @return string|null The full path including the namespace or null
 	 */
 	protected static function findClass($class)
 	{
@@ -186,7 +186,7 @@ class ClassLoader
 			}
 		}
 
-		return '';
+		return null;
 	}
 
 
