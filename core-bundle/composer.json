@@ -14,14 +14,14 @@
         "leafo/lessphp": "~0.4",
         "leafo/scssphp": "dev-master",
         "leafo/scssphp-compass": "dev-master",
-        "mabrahamde/idna-converter": "dev-master",
         "michelf/php-markdown": "~1.4",
         "phpspec/php-diff": "~1.0",
         "simplepie/simplepie": "~1.3",
         "swiftmailer/swiftmailer": "~5.2",
         "symfony/finder": "~2.5",
         "symfony/framework-bundle": "~2.5",
-        "tecnick.com/tcpdf": "~6.0"
+        "tecnick.com/tcpdf": "~6.0",
+        "true/punycode": "~1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7"

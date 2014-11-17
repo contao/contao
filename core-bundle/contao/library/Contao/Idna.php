@@ -12,6 +12,8 @@
 
 namespace Contao;
 
+use True\Punycode;
+
 
 /**
  * An idna_encode adapter class
@@ -41,9 +43,9 @@ class Idna
 	 */
 	public static function encode($strDomain)
 	{
-		$objIdn = new \idna_convert(array('idn_version'=>2008));
+		$objPunycode = new Punycode();
 
-		return $objIdn->encode($strDomain);
+		return $objPunycode->encode($strDomain);
 	}
 
 
@@ -56,9 +58,9 @@ class Idna
 	 */
 	public static function decode($strDomain)
 	{
-		$objIdn = new \idna_convert(array('idn_version'=>2008));
+		$objPunycode = new Punycode();
 
-		return $objIdn->decode($strDomain);
+		return $objPunycode->decode($strDomain);
 	}
 
 
