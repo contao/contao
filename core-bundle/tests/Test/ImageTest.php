@@ -910,6 +910,8 @@ class ImageTest extends \PHPUnit_Framework_TestCase
                     null
                 ],
 
+            /* Currently not testable, see core-bundle#25
+
             'No resize necessary returns same path' =>
                 [
                     ['dummy.jpg', 200, 200, 'crop', null, false],
@@ -921,6 +923,8 @@ class ImageTest extends \PHPUnit_Framework_TestCase
                     ['dummy.jpg', 200, 200, 'crop', 'target/path/dummy.jpg', false],
                     'target/path/dummy.jpg'
                 ]
+            */
+
         ];
     }
 
@@ -958,11 +962,15 @@ class ImageTest extends \PHPUnit_Framework_TestCase
                     false
                 ],
 
+            /* Currently not testable, see core-bundle#25
+
             'No resize necessary returns true' =>
                 [
                     ['dummy.jpg', 200, 200, 'crop', null, false],
                     true
                 ]
+            */
+
         ];
     }
 
