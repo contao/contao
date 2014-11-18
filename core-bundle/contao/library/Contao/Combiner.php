@@ -344,21 +344,23 @@ class Combiner extends \System
 				TL_ROOT . '/vendor/contao-components/compass/css'
 			));
 
-			$objCompiler->setFormatter((\Config::get('debugMode') ? 'scss_formatter' : 'scss_formatter_compressed'));
+			$objCompiler->setFormatter((\Config::get('debugMode') ? 'Leafo\ScssPhp\Formatter\Expanded' : 'Leafo\ScssPhp\Formatter\Compressed'));
+
+			return $this->fixPaths($objCompiler->compile($content), $arrFile);
 		}
 		else
 		{
-			$objCompiler = new \lessc();
-
-			$objCompiler->setImportDir(array
+			$arrOptions = array
 			(
-				TL_ROOT . '/' . dirname($arrFile['name'])
-			));
+				'compress' => !\Config::get('debugMode'),
+				'import_dirs' => array(TL_ROOT . '/' . dirname($arrFile['name']))
+			);
 
-			$objCompiler->setFormatter((\Config::get('debugMode') ? 'lessjs' : 'compressed'));
+			$objParser = new \Less_Parser($arrOptions);
+            $objParser->parse($content);
+
+			return $this->fixPaths($objParser->getCss(), $arrFile);
 		}
-
-		return $this->fixPaths($objCompiler->compile($content), $arrFile);
 	}
 
 
