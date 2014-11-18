@@ -357,7 +357,7 @@ class Combiner extends \System
 			);
 
 			$objParser = new \Less_Parser($arrOptions);
-            $objParser->parse($content);
+			$objParser->parse($content);
 
 			return $this->fixPaths($objParser->getCss(), $arrFile);
 		}
