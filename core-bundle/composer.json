@@ -12,8 +12,7 @@
     "require": {
         "php": ">=5.4.0",
         "leafo/lessphp": "~0.4",
-        "leafo/scssphp": "dev-master",
-        "leafo/scssphp-compass": "dev-master",
+        "leafo/scssphp": "~0.1",
         "michelf/php-markdown": "~1.4",
         "phpspec/php-diff": "~1.0",
         "simplepie/simplepie": "~1.3",

@@ -12,6 +12,8 @@
 
 namespace Contao;
 
+use Leafo\ScssPhp\Compiler;
+
 
 /**
  * Combines .css or .js files into one single file
@@ -334,13 +336,12 @@ class Combiner extends \System
 	{
 		if ($arrFile['extension'] == self::SCSS)
 		{
-			$objCompiler = new \scssc();
-			new \scss_compass($objCompiler);
+			$objCompiler = new Compiler();
 
 			$objCompiler->setImportPaths(array
 			(
 				TL_ROOT . '/' . dirname($arrFile['name']),
-				TL_ROOT . '/vendor/leafo/scssphp-compass/stylesheets'
+				TL_ROOT . '/vendor/contao-components/compass/css'
 			));
 
 			$objCompiler->setFormatter((\Config::get('debugMode') ? 'scss_formatter' : 'scss_formatter_compressed'));
