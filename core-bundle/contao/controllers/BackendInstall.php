@@ -221,7 +221,7 @@ class BackendInstall extends \Backend
 		// The password has been generated with crypt()
 		if (\Encryption::test(\Config::get('installPassword')))
 		{
-			if (\Encryption::verify(\Input::postRaw('password'), \Config::get('installPassword')))
+			if (\Encryption::verify(\Input::postUnsafeRaw('password'), \Config::get('installPassword')))
 			{
 				$this->setAuthCookie();
 				\Config::persist('installCount', 0);
@@ -232,12 +232,12 @@ class BackendInstall extends \Backend
 		else
 		{
 			list($strPassword, $strSalt) = explode(':', \Config::get('installPassword'));
-			$blnAuthenticated = ($strSalt == '') ? ($strPassword === sha1(\Input::postRaw('password'))) : ($strPassword === sha1($strSalt . \Input::postRaw('password')));
+			$blnAuthenticated = ($strSalt == '') ? ($strPassword === sha1(\Input::postUnsafeRaw('password'))) : ($strPassword === sha1($strSalt . \Input::postUnsafeRaw('password')));
 
 			if ($blnAuthenticated)
 			{
 				// Store a crypt() version of the password
-				$strPassword = \Encryption::hash(\Input::postRaw('password'));
+				$strPassword = \Encryption::hash(\Input::postUnsafeRaw('password'));
 				\Config::persist('installPassword', $strPassword);
 
 				$this->setAuthCookie();
@@ -259,10 +259,10 @@ class BackendInstall extends \Backend
 	 */
 	protected function storeInstallToolPassword()
 	{
-		$strPassword = \Input::postRaw('password');
+		$strPassword = \Input::postUnsafeRaw('password');
 
 		// The passwords do not match
-		if ($strPassword != \Input::postRaw('confirm_password'))
+		if ($strPassword != \Input::postUnsafeRaw('confirm_password'))
 		{
 			$this->Template->passwordError = $GLOBALS['TL_LANG']['ERR']['passwordMatch'];
 		}

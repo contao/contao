@@ -659,6 +659,11 @@ class String
 
 		for ($i=1; $i<count($chunks); $i++)
 		{
+			if (empty($chunks[$i]))
+			{
+				continue;
+			}
+
 			switch ($chunks[$i])
 			{
 				case 'static':
@@ -667,10 +672,6 @@ class String
 
 				case 'async':
 					$options->async = true;
-					break;
-
-				case empty($chunks[$i]):
-					// Ignore
 					break;
 
 				case is_numeric($chunks[$i]):

@@ -381,9 +381,9 @@ class Files
 
 
 	/**
-	 * Validate a path (must not contain ../ fragments)
+	 * Validate a path
 	 *
-	 * @throws \Exception If the given paths are not valid
+	 * @throws \RuntimeException If the given paths are not valid
 	 */
 	protected function validate()
 	{
@@ -391,11 +391,11 @@ class Files
 		{
 			if ($strPath == '') // see #5795
 			{
-				throw new \Exception('No file or folder name given');
+				throw new \RuntimeException('No file or folder name given');
 			}
-			elseif (strpos($strPath, '../') !== false)
+			elseif (\Validator::isInsecurePath($strPath))
 			{
-				throw new \Exception('Invalid file or folder name ' . $strPath);
+				throw new \RuntimeException('Invalid file or folder name ' . $strPath);
 			}
 		}
 	}

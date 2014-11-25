@@ -45,7 +45,8 @@ abstract class Controller extends \System
 	 *
 	 * @return string The path to the template file
 	 *
-	 * @throws \Exception If $strFormat is unknown
+	 * @throws \InvalidArgumentException If $strFormat is unknown
+	 * @throws \RuntimeException         If the template group folder is insecure
 	 */
 	public static function getTemplate($strTemplate, $strFormat='html5')
 	{
@@ -54,7 +55,7 @@ abstract class Controller extends \System
 
 		if (!in_array($strFormat, $arrAllowed))
 		{
-			throw new \Exception("Invalid output format $strFormat");
+			throw new \InvalidArgumentException('Invalid output format ' . $strFormat);
 		}
 
 		$strTemplate = basename($strTemplate);
@@ -63,11 +64,15 @@ abstract class Controller extends \System
 		if (TL_MODE == 'FE')
 		{
 			global $objPage;
-			$strCustom = str_replace('../', '', $objPage->templateGroup);
 
-			if ($strCustom != '')
+			if ($objPage->templateGroup != '')
 			{
-				return \TemplateLoader::getPath($strTemplate, $strFormat, $strCustom);
+				if (\Validator::isInsecurePath($objPage->templateGroup))
+				{
+					throw new \RuntimeException('Invalid path ' . $objPage->templateGroup);
+				}
+
+				return \TemplateLoader::getPath($strTemplate, $strFormat, $objPage->templateGroup);
 			}
 		}
 

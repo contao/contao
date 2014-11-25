@@ -926,8 +926,11 @@ class InsertTags extends \Controller
 					}
 					else
 					{
-						// Sanitize the path
-						$strFile = str_replace('../', '', $strFile);
+						// Check the path
+						if (\Validator::isInsecurePath($strFile))
+						{
+							throw new \RuntimeException('Invalid path ' . $strFile);
+						}
 					}
 
 					// Check the maximum image width
@@ -1009,8 +1012,11 @@ class InsertTags extends \Controller
 						$strFile = $arrChunks[0];
 					}
 
-					// Sanitize path
-					$strFile = str_replace('../', '', $strFile);
+					// Check the path
+					if (\Validator::isInsecurePath($strFile))
+					{
+						throw new \RuntimeException('Invalid path ' . $strFile);
+					}
 
 					// Include .php, .tpl, .xhtml and .html5 files
 					if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && file_exists(TL_ROOT . '/templates/' . $strFile))
@@ -1074,8 +1080,6 @@ class InsertTags extends \Controller
 						case 'ltrim':
 						case 'utf8_romanize':
 						case 'strrev':
-						case 'base64_encode':
-						case 'base64_decode':
 						case 'urlencode':
 						case 'rawurlencode':
 							$arrCache[$strTag] = $flag($arrCache[$strTag]);
