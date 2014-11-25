@@ -944,7 +944,8 @@ class InsertTags extends \Controller
 					try
 					{
 						$dimensions = '';
-						$src = \Image::get($strFile, $width, $height, $mode);
+						$imageObj = \Image::create($strFile, array($width, $height, $mode));
+						$src = $imageObj->executeResize()->getResizedPath();
 						$objFile = new \File($src);
 
 						// Add the image dimensions
