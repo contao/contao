@@ -26,10 +26,6 @@ class AddToSearchIndexListener
      */
     public function onKernelTerminate(PostResponseEvent $event)
     {
-        global $objPage;
-
-        if (null !== $objPage) {
-            \Frontend::indexPageIfApplicable($objPage, $event->getResponse());
-        }
+        \Frontend::indexPageIfApplicable($event->getResponse());
     }
 }

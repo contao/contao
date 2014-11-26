@@ -641,11 +641,17 @@ abstract class Frontend extends \Controller
 
 	/**
 	 * Index a page if applicable
-	 * @param \PageModel
 	 * @param Response
 	 */
-	public static function indexPageIfApplicable(\PageModel $objPage, Response $objResponse)
+	public static function indexPageIfApplicable(Response $objResponse)
 	{
+		global $objPage;
+
+		if ($objPage === null)
+		{
+			return;
+		}
+
 		// Index page if searching is allowed and there is no back end user
 		if (\Config::get('enableSearch') && $objPage->type == 'regular' && !BE_USER_LOGGED_IN && !$objPage->noSearch)
 		{

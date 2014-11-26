@@ -39,7 +39,7 @@ class OutputFromCacheListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnKernelRequest()
     {
-        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel');
+        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request();
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener = new OutputFromCacheListener();

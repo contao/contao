@@ -39,14 +39,11 @@ class AddToSearchIndexListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnKernelRequest()
     {
-        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel');
+        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request();
         $response = new Response();
         $event    = new PostResponseEvent($kernel, $request, $response);
         $listener = new AddToSearchIndexListener();
-
-        global $objPage;
-        $objPage = new \stdClass();
 
         $listener->onKernelTerminate($event);
     }

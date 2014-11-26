@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Frontend
 {
-    public static function indexPageIfApplicable($objPage, Response $objResponse)
+    public static function indexPageIfApplicable(Response $objResponse)
     {
         return true;
     }
