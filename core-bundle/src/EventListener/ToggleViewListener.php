@@ -35,7 +35,7 @@ class ToggleViewListener
             return;
         }
 
-        $state    = (string) $request->query->get('toggle_view');
+        $state    = $request->query->get('toggle_view');
         $referer  = \System::getReferer();
         $response = new RedirectResponse($referer, 303);
 
