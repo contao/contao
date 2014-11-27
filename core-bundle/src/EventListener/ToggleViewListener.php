@@ -32,11 +32,11 @@ class ToggleViewListener
         $request = $event->getRequest();
 
         if ($request->query->has('toggle_view')) {
-            $state = $request->query->get('toggle_view');
+            $state = (string) $request->query->get('toggle_view');
             $referer = \System::getReferer();
             $response = new RedirectResponse($referer, 303);
 
-            if ($state == 'mobile') {
+            if ('mobile' === $state) {
                 $cookie = new Cookie('TL_VIEW', 'mobile', 0);
             } else {
                 $cookie = new Cookie('TL_VIEW', 'desktop', 0);
