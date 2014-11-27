@@ -57,7 +57,7 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
     public function testDesktopView()
     {
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request  = new Request(array('toggle_view' => 'desktop'));
+        $request  = new Request(['toggle_view' => 'desktop']);
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener = new ToggleViewListener();
 
@@ -73,7 +73,7 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
     public function testMobileView()
     {
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request  = new Request(array('toggle_view' => 'mobile'));
+        $request  = new Request(['toggle_view' => 'mobile']);
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener = new ToggleViewListener();
 
@@ -89,7 +89,7 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
     public function testInvalidView()
     {
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request  = new Request(array('toggle_view' => 'foobar'));
+        $request  = new Request(['toggle_view' => 'foobar']);
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener = new ToggleViewListener();
 
@@ -107,7 +107,7 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function assertCookieValue(Response $response, $expectedValue)
     {
-        $hasCookie = false;
+        $hasCookie   = false;
         $actualValue = null;
 
         /** @type Cookie[] $cookies */
