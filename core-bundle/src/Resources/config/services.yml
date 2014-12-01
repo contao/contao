@@ -1,6 +1,11 @@
 services:
+    contao.listener.toggle_view:
+        class: Contao\CoreBundle\EventListener\ToggleViewListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 150 }
+
     contao.listener.output_from_cache:
-        class:     Contao\CoreBundle\EventListener\OutputFromCacheListener
+        class: Contao\CoreBundle\EventListener\OutputFromCacheListener
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 200 }
 

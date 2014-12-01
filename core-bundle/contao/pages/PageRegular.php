@@ -201,21 +201,6 @@ class PageRegular extends \Frontend
 	{
 		$blnMobile = ($objPage->mobileLayout && \Environment::get('agent')->mobile);
 
-		// Set the cookie
-		if (isset($_GET['toggle_view']))
-		{
-			if (\Input::get('toggle_view') == 'mobile')
-			{
-				$this->setCookie('TL_VIEW', 'mobile', 0);
-			}
-			else
-			{
-				$this->setCookie('TL_VIEW', 'desktop', 0);
-			}
-
-			$this->redirect($this->getReferer());
-		}
-
 		// Override the autodetected value
 		if (\Input::cookie('TL_VIEW') == 'mobile')
 		{
