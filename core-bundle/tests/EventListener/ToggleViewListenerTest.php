@@ -115,7 +115,7 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
 
         foreach ($cookies as $cookie) {
             if ('TL_VIEW' === $cookie->getName()) {
-                $hasCookie = true;
+                $hasCookie   = true;
                 $actualValue = $cookie->getValue();
                 break;
             }
