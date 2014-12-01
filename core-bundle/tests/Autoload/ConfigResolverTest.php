@@ -110,7 +110,7 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     'name1' => 'class1',
-                ]
+                ],
             ],
             'Test load after order' => [
                 'dev',
@@ -121,7 +121,7 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
                 [
                     'name1' => 'class1',
                     'name2' => 'class2'
-                ]
+                ],
             ],
             'Test replaces' => [
                 'dev',
@@ -132,7 +132,7 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     'name3' => 'class3'
-                ]
+                ],
             ],
             'Test load after a bundle that does not exist but is replaced by new one' => [
                 'dev',
@@ -143,7 +143,7 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
                 [
                     'name5' => 'class5',
                     'name4' => 'class4'
-                ]
+                ],
             ]
         ];
     }

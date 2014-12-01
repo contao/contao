@@ -42,7 +42,7 @@ class BundleAutoloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 'ContaoCoreBundle' => 'Contao\CoreBundle\ContaoCoreBundle',
-                'legacy-module'    => null
+                'legacy-module'    => null,
             ],
             $bundleLoader->load()
         );

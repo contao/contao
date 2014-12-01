@@ -41,7 +41,7 @@ class IniParser implements ParserInterface
             'name'         => $file->getBasename(),
             'replace'      => [],
             'environments' => ['all'],
-            'load-after'   => []
+            'load-after'   => [],
         ];
 
         $path = $file . '/config/autoload.ini';

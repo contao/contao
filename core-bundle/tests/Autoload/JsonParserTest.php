@@ -52,9 +52,9 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
                         'name'          => 'ContaoCoreBundle',
                         'replace'       => [],
                         'environments'  => ['all'],
-                        'load-after'    => []
-                    ]
-                ]
+                        'load-after'    => [],
+                    ],
+                ],
             ],
             $parser->parse($file)
         );
@@ -81,9 +81,9 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
                         'name'          => 'ContaoCoreBundle',
                         'replace'       => [],
                         'environments'  => ['all'],
-                        'load-after'    => []
-                    ]
-                ]
+                        'load-after'    => [],
+                    ],
+                ],
             ],
             $parser->parse($file));
     }

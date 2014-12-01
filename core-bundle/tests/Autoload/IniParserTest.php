@@ -53,9 +53,9 @@ class IniParserTest extends TestCase
                         'name'          => 'dummy-module-with-requires',
                         'replace'       => [],
                         'environments'  => ['all'],
-                        'load-after'    => ['core', 'news', 'calendar']
-                    ]
-                ]
+                        'load-after'    => ['core', 'news', 'calendar'],
+                    ],
+                ],
             ],
             $parser->parse($file)
         );
@@ -82,9 +82,9 @@ class IniParserTest extends TestCase
                         'name'          => 'dummy-module-without-requires',
                         'replace'       => [],
                         'environments'  => ['all'],
-                        'load-after'    => []
-                    ]
-                ]
+                        'load-after'    => [],
+                    ],
+                ],
             ],
             $parser->parse($file));
     }

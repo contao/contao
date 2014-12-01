@@ -89,7 +89,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
             [
                 $frameworkBundle,
                 new ContaoCoreBundle(),
-                new ContaoModuleBundle('legacy-module', __DIR__ . '/../Fixtures/HttpKernel/vendor')
+                new ContaoModuleBundle('legacy-module', __DIR__ . '/../Fixtures/HttpKernel/vendor'),
             ],
             $bundles
         );
@@ -116,7 +116,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'ContaoCoreBundle' => 'Contao\CoreBundle\ContaoCoreBundle',
-                'legacy-module'    => null
+                'legacy-module'    => null,
             ],
             $bundlesMap->getValue($this->kernel)
         );
@@ -142,14 +142,14 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 new FrameworkBundle(),
-                new ContaoCoreBundle()
+                new ContaoCoreBundle(),
             ],
             $this->kernel->getBundles()
         );
 
         $this->assertEquals(
             [
-                new ContaoCoreBundle()
+                new ContaoCoreBundle(),
             ],
             $this->kernel->getContaoBundles()
         );

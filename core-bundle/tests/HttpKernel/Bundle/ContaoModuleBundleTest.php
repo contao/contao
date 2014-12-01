@@ -47,7 +47,7 @@ class ContaoModuleBundleTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             [
-                dirname(__DIR__) . '/system/modules/legacy-module/assets'
+                dirname(__DIR__) . '/system/modules/legacy-module/assets',
             ],
             $this->bundle->getPublicFolders()
         );
