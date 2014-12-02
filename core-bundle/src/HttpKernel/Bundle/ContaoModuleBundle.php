@@ -48,7 +48,7 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
 
         /** @var SplFileInfo $file */
         foreach ($files as $file) {
-            if ($this->hasRequireGranted($file)) {
+            if ($this->isPublicFolder($file)) {
                 $dirs[] = $file->getPath();
             }
         }
@@ -92,30 +92,45 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
     }
 
     /**
-     * Checks whether the .htaccess file grants access via HTTP
+     * Checks whether the .htaccess file grants access via HTTP.
      *
      * @param SplFileInfo $file The file object
      *
      * @return bool True if the .htaccess file grants access via HTTP
      */
-    protected function hasRequireGranted(SplFileInfo $file)
+    protected function isPublicFolder(SplFileInfo $file)
     {
         $content = array_filter(file($file));
 
         foreach ($content as $line) {
-
-            // Ignore comments
-            if (0 === strncmp('#', trim($line), 1)) {
-                continue;
-            }
-
-            if (false !== stripos($line, 'Allow from all')) {
+            if ($this->hasRequireGranted($line)) {
                 return true;
             }
+        }
 
-            if (false !== stripos($line, 'Require all granted')) {
-                return true;
-            }
+        return false;
+    }
+
+    /**
+     * Scans a line for an access definition.
+     *
+     * @param string $line The line
+     *
+     * @return bool True if the line has an access definition
+     */
+    protected function hasRequireGranted($line)
+    {
+        // Ignore comments
+        if (0 === strncmp('#', trim($line), 1)) {
+            return false;
+        }
+
+        if (false !== stripos($line, 'Allow from all')) {
+            return true;
+        }
+
+        if (false !== stripos($line, 'Require all granted')) {
+            return true;
         }
 
         return false;
