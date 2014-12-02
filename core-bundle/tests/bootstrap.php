@@ -25,6 +25,11 @@ if (
     exit(1);
 }
 
+$loader->addClassmap([
+    'Frontend' => __DIR__ . '/Fixtures/system/library/Frontend.php',
+    'System'   => __DIR__ . '/Fixtures/system/library/System.php',
+]);
+
 $loader->addPsr4('Contao\\CoreBundle\\Test\\', __DIR__);
 
 return $loader;

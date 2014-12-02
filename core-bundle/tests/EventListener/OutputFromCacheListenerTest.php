@@ -11,18 +11,17 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\OutputFromCacheListener;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-
-require_once __DIR__ . '/../Fixtures/EventListener/Frontend.php';
 
 /**
  * Tests the OutputFromCacheListener class.
  *
  * @author Leo Feyer <https://contao.org>
  */
-class OutputFromCacheListenerTest extends \PHPUnit_Framework_TestCase
+class OutputFromCacheListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.

@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\HttpKernel\Bundle;
 
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -41,7 +43,17 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
      */
     public function getPublicFolders()
     {
-        return [$this->getContaoResourcesPath() . '/assets'];
+        $dirs  = [];
+        $files = $this->findHtaccessFiles();
+
+        /** @var SplFileInfo $file */
+        foreach ($files as $file) {
+            if ($this->hasRequireGranted($file)) {
+                $dirs[] = $file->getPath();
+            }
+        }
+
+        return $dirs;
     }
 
     /**
@@ -62,5 +74,50 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
         }
 
         return $this->path;
+    }
+
+    /**
+     * Finds the .htaccess files in the Contao resources.
+     *
+     * @return Finder The finder object
+     */
+    protected function findHtaccessFiles()
+    {
+        return Finder::create()
+            ->files()
+            ->name('.htaccess')
+            ->ignoreDotFiles(false)
+            ->in($this->getContaoResourcesPath())
+        ;
+    }
+
+    /**
+     * Checks whether the .htaccess file grants access via HTTP
+     *
+     * @param SplFileInfo $file The file object
+     *
+     * @return bool True if the .htaccess file grants access via HTTP
+     */
+    protected function hasRequireGranted(SplFileInfo $file)
+    {
+        $content = array_filter(file($file));
+
+        foreach ($content as $line) {
+
+            // Ignore comments
+            if (0 === strncmp('#', trim($line), 1)) {
+                continue;
+            }
+
+            if (false !== stripos($line, 'Allow from all')) {
+                return true;
+            }
+
+            if (false !== stripos($line, 'Require all granted')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

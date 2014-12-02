@@ -13,13 +13,14 @@ namespace Contao\CoreBundle\Test\Autoload;
 use Contao\CoreBundle\Autoload\Config;
 use Contao\CoreBundle\Autoload\ConfigInterface;
 use Contao\CoreBundle\Autoload\ConfigResolver;
+use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the ConfigResolver class.
  *
  * @author Yanick Witschi <https://github.com/Toflar>
  */
-class ConfigResolverTest extends \PHPUnit_Framework_TestCase
+class ConfigResolverTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -69,12 +70,8 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
     public function testUnresolvableLoadingOrder()
     {
         $resolver = new ConfigResolver();
-
-        $config1 = $this->getConfig('name1', 'class1')
-            ->setLoadAfter(['name2']);
-
-        $config2 = $this->getConfig('name2', 'class2')
-            ->setLoadAfter(['name1']);
+        $config1  = $this->getConfig('name1', 'class1')->setLoadAfter(['name2']);
+        $config2  = $this->getConfig('name2', 'class2')->setLoadAfter(['name1']);
 
         $resolver->add($config1)->add($config2);
 
@@ -89,18 +86,10 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
     public function getBundlesMapForEnvironmentProvider()
     {
         $config1 = $this->getConfig('name1', 'class1');
-
-        $config2 = $this->getConfig('name2', 'class2')
-            ->setLoadAfter(['name1']);
-
-        $config3 = $this->getConfig('name3', 'class3')
-            ->setReplace(['name1', 'name2']);
-
-        $config4 = $this->getConfig('name4', 'class4')
-            ->setLoadAfter(['core']);
-
-        $config5 = $this->getConfig('name5', 'class5')
-            ->setReplace(['core']);
+        $config2 = $this->getConfig('name2', 'class2')->setLoadAfter(['name1']);
+        $config3 = $this->getConfig('name3', 'class3')->setReplace(['name1', 'name2']);
+        $config4 = $this->getConfig('name4', 'class4')->setLoadAfter(['core']);
+        $config5 = $this->getConfig('name5', 'class5')->setReplace(['core']);
 
         return [
             'Test default configs' => [

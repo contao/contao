@@ -1,9 +1,0 @@
-{
-    "bundles": {
-        "Contao\\CoreBundle\\ContaoCoreBundle": {
-            "replace": [],
-            "environments": ["all"],
-            "load-after": []
-        }
-    }
-}

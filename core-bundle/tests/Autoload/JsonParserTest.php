@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\Autoload;
 
 use Contao\CoreBundle\Autoload\JsonParser;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * @author Yanick Witschi <https://github.com/Toflar>
  */
-class JsonParserTest extends \PHPUnit_Framework_TestCase
+class JsonParserTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -39,7 +40,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $parser = new JsonParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../Fixtures/JsonParser/regular/autoload.json',
+            $this->getRootDir() . '/system/parser/regular/autoload.json',
             'relativePath',
             'relativePathName'
         );
@@ -68,7 +69,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $parser = new JsonParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../Fixtures/JsonParser/no-keys-defined/autoload.json',
+            $this->getRootDir() . '/system/parser/no-keys-defined/autoload.json',
             'relativePath',
             'relativePathName'
         );
@@ -98,7 +99,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $parser = new JsonParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../Fixtures/JsonParser/invalid/autoload.json',
+            $this->getRootDir() . '/system/parser/invalid/autoload.json',
             'relativePath',
             'relativePathName'
         );
@@ -116,7 +117,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $parser = new JsonParser();
 
         $file = new SplFileInfo(
-            __DIR__ . '/../Fixtures/JsonParser/no-bundles-key/autoload.json',
+            $this->getRootDir() . '/system/parser/no-bundles-key/autoload.json',
             'relativePath',
             'relativePathName'
         );

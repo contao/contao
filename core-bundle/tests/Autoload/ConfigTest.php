@@ -11,13 +11,14 @@
 namespace Contao\CoreBundle\Test\Autoload;
 
 use Contao\CoreBundle\Autoload\Config;
+use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the Config class.
  *
  * @author Yanick Witschi <https://github.com/Toflar>
  */
-class ConfigTest extends \PHPUnit_Framework_TestCase
+class ConfigTest extends TestCase
 {
     /**
      * Tests the object instantiation.

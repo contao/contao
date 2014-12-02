@@ -11,13 +11,14 @@
 namespace Contao\CoreBundle\Test\HttpKernel\Bundle;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
+use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the ContaoModuleBundle class.
  *
  * @author Leo Feyer <https://contao.org>
  */
-class ContaoModuleBundleTest extends \PHPUnit_Framework_TestCase
+class ContaoModuleBundleTest extends TestCase
 {
     /**
      * @var ContaoModuleBundle
@@ -29,7 +30,7 @@ class ContaoModuleBundleTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->bundle = new ContaoModuleBundle('legacy-module', __DIR__);
+        $this->bundle = new ContaoModuleBundle('legacy-module', $this->getRootDir() . '/app');
     }
 
     /**
@@ -45,10 +46,18 @@ class ContaoModuleBundleTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPublicFolders()
     {
-        $this->assertEquals(
-            [
-                dirname(__DIR__) . '/system/modules/legacy-module/assets',
-            ],
+        $this->assertContains(
+            $this->getRootDir() . '/system/modules/legacy-module/assets',
+            $this->bundle->getPublicFolders()
+        );
+
+        $this->assertContains(
+            $this->getRootDir() . '/system/modules/legacy-module/html',
+            $this->bundle->getPublicFolders()
+        );
+
+        $this->assertNotContains(
+            $this->getRootDir() . '/system/modules/legacy-module/private',
             $this->bundle->getPublicFolders()
         );
     }
@@ -59,7 +68,7 @@ class ContaoModuleBundleTest extends \PHPUnit_Framework_TestCase
     public function testGetContaoResourcesPath()
     {
         $this->assertEquals(
-            dirname(__DIR__) . '/system/modules/legacy-module',
+            $this->getRootDir() . '/system/modules/legacy-module',
             $this->bundle->getContaoResourcesPath()
         );
     }
@@ -70,7 +79,7 @@ class ContaoModuleBundleTest extends \PHPUnit_Framework_TestCase
     public function testGetPath()
     {
         $this->assertEquals(
-            dirname(__DIR__) . '/system/modules/legacy-module',
+            $this->getRootDir() . '/system/modules/legacy-module',
             $this->bundle->getPath()
         );
     }
