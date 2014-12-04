@@ -24,6 +24,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * Returns the path to the fixtures directory.
+     *
+     * @return string The root directory path
      */
     public function getRootDir()
     {
