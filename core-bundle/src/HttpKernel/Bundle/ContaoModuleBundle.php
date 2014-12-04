@@ -10,8 +10,6 @@
 
 namespace Contao\CoreBundle\HttpKernel\Bundle;
 
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -25,6 +23,11 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
      * @var string
      */
     protected $rootDir;
+
+    /**
+     * @var array
+     */
+    protected $publicDirs;
 
     /**
      * Sets the module name and application root directory.
@@ -43,17 +46,13 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
      */
     public function getPublicFolders()
     {
-        $dirs  = [];
-        $files = $this->findHtaccessFiles();
+        if (null === $this->publicDirs) {
+            $scanner = new HtaccessScanner($this->getContaoResourcesPath());
 
-        /** @var SplFileInfo $file */
-        foreach ($files as $file) {
-            if ($this->isPublicFolder($file)) {
-                $dirs[] = $file->getPath();
-            }
+            $this->publicDirs = $scanner->findPublicFolders();
         }
 
-        return $dirs;
+        return $this->publicDirs;
     }
 
     /**
@@ -74,65 +73,5 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
         }
 
         return $this->path;
-    }
-
-    /**
-     * Finds the .htaccess files in the Contao resources.
-     *
-     * @return Finder The finder object
-     */
-    protected function findHtaccessFiles()
-    {
-        return Finder::create()
-            ->files()
-            ->name('.htaccess')
-            ->ignoreDotFiles(false)
-            ->in($this->getContaoResourcesPath())
-        ;
-    }
-
-    /**
-     * Checks whether the .htaccess file grants access via HTTP.
-     *
-     * @param SplFileInfo $file The file object
-     *
-     * @return bool True if the .htaccess file grants access via HTTP
-     */
-    protected function isPublicFolder(SplFileInfo $file)
-    {
-        $content = array_filter(file($file));
-
-        foreach ($content as $line) {
-            if ($this->hasRequireGranted($line)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Scans a line for an access definition.
-     *
-     * @param string $line The line
-     *
-     * @return bool True if the line has an access definition
-     */
-    protected function hasRequireGranted($line)
-    {
-        // Ignore comments
-        if (0 === strncmp('#', trim($line), 1)) {
-            return false;
-        }
-
-        if (false !== stripos($line, 'Allow from all')) {
-            return true;
-        }
-
-        if (false !== stripos($line, 'Require all granted')) {
-            return true;
-        }
-
-        return false;
     }
 }
