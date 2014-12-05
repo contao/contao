@@ -21,7 +21,7 @@ use Symfony\Component\Finder\SplFileInfo;
 class HtaccessAnalyzer
 {
     /**
-     * @var string
+     * @var SplFileInfo
      */
     protected $file;
 
