@@ -14,60 +14,31 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- *
+ * Analyzes an .htaccess file.
  *
  * @author Leo Feyer <https://contao.org>
  */
-class HtaccessScanner
+class HtaccessAnalyzer
 {
     /**
      * @var string
      */
-    protected $rootDir;
+    protected $file;
 
     /**
-     * Sets the root directory.
+     * Stores the file object.
      *
-     * @param string $rootDir The application root directory
-     */
-    public function __construct($rootDir)
-    {
-        $this->rootDir = $rootDir;
-    }
-
-    /**
-     * Finds the public folders.
+     * @param SplFileInfo $file The file object
      *
-     * @return array The public folders
+     * @throws \RuntimeException If the file is not readable
      */
-    public function findPublicFolders()
+    public function __construct(SplFileInfo $file)
     {
-        $dirs  = [];
-        $files = $this->findHtaccessFiles();
-
-        /** @var SplFileInfo $file */
-        foreach ($files as $file) {
-            if ($this->isPublicFolder($file)) {
-                $dirs[] = $file->getPath();
-            }
+        if (!$file->isReadable()) {
+            throw new \RuntimeException("File $file not readable");
         }
 
-        return $dirs;
-    }
-
-    /**
-     * Finds the .htaccess files in the root directory.
-     *
-     * @return Finder The finder object
-     */
-    protected function findHtaccessFiles()
-    {
-        return Finder::create()
-            ->files()
-            ->name('.htaccess')
-            ->ignoreDotFiles(false)
-            ->in($this->rootDir)
-        ;
+        $this->file = $file;
     }
 
     /**
@@ -77,9 +48,9 @@ class HtaccessScanner
      *
      * @return bool True if the .htaccess file grants access via HTTP
      */
-    protected function isPublicFolder(SplFileInfo $file)
+    public function grantsAcces()
     {
-        $content = array_filter(file($file));
+        $content = array_filter(file($this->file));
 
         foreach ($content as $line) {
             if ($this->hasRequireGranted($line)) {
