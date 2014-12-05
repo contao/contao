@@ -8,6 +8,3 @@ nbproject/
 
 # Vendor
 /vendor/
-
-# Tests
-/tests/Fixtures/app/cache/*
