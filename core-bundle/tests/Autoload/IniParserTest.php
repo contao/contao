@@ -91,6 +91,8 @@ class IniParserTest extends TestCase
 
     /**
      * Tests parsing an autoload.ini file with invalid syntax.
+     *
+     * @expectedException \RuntimeException
      */
     public function testFileWithInvalidSyntax()
     {
@@ -101,8 +103,6 @@ class IniParserTest extends TestCase
             'relativePath',
             'relativePathName'
         );
-
-        $this->setExpectedException('RuntimeException', "File $file/config/autoload.ini cannot be decoded");
 
         $errorReporting = error_reporting(0);
 

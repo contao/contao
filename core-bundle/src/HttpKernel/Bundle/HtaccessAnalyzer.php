@@ -30,12 +30,12 @@ class HtaccessAnalyzer
      *
      * @param SplFileInfo $file The file object
      *
-     * @throws \RuntimeException If the file is not readable
+     * @throws \InvalidArgumentException If $file is not a file
      */
     public function __construct(SplFileInfo $file)
     {
-        if (!$file->isReadable()) {
-            throw new \RuntimeException("File $file not readable");
+        if (!$file->isFile()) {
+            throw new \InvalidArgumentException("$file is not a file");
         }
 
         $this->file = $file;
