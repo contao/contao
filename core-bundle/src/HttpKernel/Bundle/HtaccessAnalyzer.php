@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\HttpKernel\Bundle;
 
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -43,8 +42,6 @@ class HtaccessAnalyzer
 
     /**
      * Checks whether the .htaccess file grants access via HTTP.
-     *
-     * @param SplFileInfo $file The file object
      *
      * @return bool True if the .htaccess file grants access via HTTP
      */
