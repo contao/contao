@@ -56,7 +56,7 @@ class HtaccessAnalyzerTest extends TestCase
     {
         $htaccess = new HtaccessAnalyzer($this->file);
 
-        $this->assertTrue($htaccess->grantsAcces());
+        $this->assertTrue($htaccess->grantsAccess());
     }
 
     /**

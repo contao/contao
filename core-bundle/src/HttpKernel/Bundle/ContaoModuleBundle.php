@@ -89,7 +89,7 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
         foreach ($files as $file) {
             $htaccess = new HtaccessAnalyzer($file);
 
-            if ($htaccess->grantsAcces()) {
+            if ($htaccess->grantsAccess()) {
                 $dirs[] = $file->getPath();
             }
         }

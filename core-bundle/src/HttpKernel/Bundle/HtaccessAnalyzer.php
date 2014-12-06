@@ -45,7 +45,7 @@ class HtaccessAnalyzer
      *
      * @return bool True if the .htaccess file grants access via HTTP
      */
-    public function grantsAcces()
+    public function grantsAccess()
     {
         $content = array_filter(file($this->file));
 
