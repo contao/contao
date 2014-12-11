@@ -354,7 +354,7 @@ abstract class Model
 	 * @return \Model The model object
 	 *
 	 * @throws \InvalidArgumentException If an argument is passed
-	 * @throws \LogicException           If the model cannot be saved
+	 * @throws \RuntimeException         If the model cannot be saved
 	 */
 	public function save()
 	{
@@ -367,7 +367,7 @@ abstract class Model
 		// The instance cannot be saved
 		if ($this->blnPreventSaving)
 		{
-			throw new \LogicException('The model instance has been detached and cannot be saved');
+			throw new \RuntimeException('The model instance has been detached and cannot be saved');
 		}
 
 		$objDatabase = \Database::getInstance();
