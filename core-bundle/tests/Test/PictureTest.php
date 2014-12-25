@@ -213,4 +213,25 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('(\\.jpg\\s+200w(,|$))', $pictureData['img']['srcset']);
         $this->assertEquals([], $pictureData['sources']);
     }
+
+    public function testGetTemplateDataUrlEncoded()
+    {
+        copy(__DIR__ . '/../Fixtures/dummy.jpg', $this->tempDirectory . '/dummy with spaces.jpg');
+
+        $picture = new Picture(new \File('dummy with spaces.jpg'));
+        $picture->setImageSize((object)[
+            'width' => 0,
+            'height' => 0,
+            'resizeMode' => '',
+            'zoom' => 0,
+        ]);
+
+        $pictureData = $picture->getTemplateData();
+
+        $this->assertEquals(200, $pictureData['img']['width']);
+        $this->assertEquals(200, $pictureData['img']['height']);
+        $this->assertEquals('dummy%20with%20spaces.jpg', $pictureData['img']['src']);
+        $this->assertEquals('dummy%20with%20spaces.jpg', $pictureData['img']['srcset']);
+        $this->assertEquals([], $pictureData['sources']);
+    }
 }
