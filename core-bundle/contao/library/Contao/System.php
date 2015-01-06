@@ -374,7 +374,9 @@ abstract class System
 
 			if (!$blnIsInstalled)
 			{
-				foreach (static::getKernel()->getContaoBundles() as $bundle)
+				global $kernel;
+
+				foreach ($kernel->getContaoBundles() as $bundle)
 				{
 					if (is_dir(TL_ROOT . '/' . $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage))
 					{
