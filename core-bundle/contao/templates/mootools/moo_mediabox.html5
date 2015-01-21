@@ -14,13 +14,14 @@ $GLOBALS['TL_CSS'][] = 'assets/mediabox/css/mediabox-black.min.css|static';
       });
       $$(links).mediabox({
         // Put custom options here
+        clickBlock: false
       }, function(el) {
-    	  return [el.href, el.title, el.getAttribute('data-lightbox')];
+        return [el.href, el.title, el.getAttribute('data-lightbox')];
       }, function(el) {
         var data = this.getAttribute('data-lightbox').split(' ');
         return (this == el) || (data[0] && el.getAttribute('data-lightbox').match(data[0]));
       });
-      $('mbImage').addEvent('swipe', function(e) {
+      $('mbMedia').addEvent('swipe', function(e) {
         (e.direction == 'left') ? $('mbNextLink').fireEvent('click') : $('mbPrevLink').fireEvent('click');
       });
     });
