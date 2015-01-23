@@ -19,7 +19,7 @@
       <?php endif; ?>
 
       <?php if ($this->caption): ?>
-        <figcaption class="caption" style="width:<?= $this->arrSize[0] ?>px"><?= $this->caption ?></figcaption>
+        <figcaption class="caption"><?= $this->caption ?></figcaption>
       <?php endif; ?>
 
     </figure>
