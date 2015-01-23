@@ -29,7 +29,7 @@
                 <?php endif; ?>
 
                 <?php if ($faq->caption): ?>
-                  <figcaption class="caption" style="width:<?= $faq->arrSize[0] ?>px"><?= $faq->caption ?></figcaption>
+                  <figcaption class="caption"><?= $faq->caption ?></figcaption>
                 <?php endif; ?>
 
               </figure>
