@@ -3,11 +3,9 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2014 Leo Feyer
+ * Copyright (c) 2005-2015 Leo Feyer
  *
- * @package Core
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 
@@ -158,6 +156,10 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 			'search'                  => true,
 			'flag'                    => 1,
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'alnum', 'maxlength'=>64, 'spaceToUnderscore'=>true),
+			'save_callback' => array
+			(
+				array('tl_style_sheet', 'romanizeName')
+			),
 			'sql'                     => "varchar(64) NULL"
 		),
 		'embedImages' => array
@@ -213,12 +215,9 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 
 
 /**
- * Class tl_style_sheet
- *
  * Provide miscellaneous methods that are used by the data configuration array.
- * @copyright  Leo Feyer 2005-2014
- * @author     Leo Feyer <https://contao.org>
- * @package    Core
+ *
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_style_sheet extends Backend
 {
@@ -329,6 +328,17 @@ class tl_style_sheet extends Backend
 		{
 			return '<div class="tl_content_left">'. $row['name'] . $cc ."</div>\n";
 		}
+	}
+
+
+	/**
+	 * Romanize the file name (see #7526)
+	 * @param mixed
+	 * @return mixed
+	 */
+	public function romanizeName($varValue)
+	{
+		return utf8_romanize($varValue);
 	}
 
 

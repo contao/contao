@@ -3,11 +3,9 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2014 Leo Feyer
+ * Copyright (c) 2005-2015 Leo Feyer
  *
- * @package Library
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao;
@@ -36,9 +34,7 @@ namespace Contao;
  *         echo $user->name;
  *     }
  *
- * @package   Library
- * @author    Leo Feyer <https://github.com/leofeyer>
- * @copyright Leo Feyer 2005-2014
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Model
 {
@@ -784,23 +780,19 @@ abstract class Model
 	 */
 	public static function findOneBy($strColumn, $varValue, array $arrOptions=array())
 	{
-		$intId = is_array($varValue) ? $varValue[0] : $varValue;
-
 		// Try to load from the registry
 		if (empty($arrOptions))
 		{
-			if (is_array($strColumn))
+			$arrColumn = (array) $strColumn;
+
+			if (count($arrColumn) == 1 && $arrColumn[0] == static::$strPk)
 			{
-				if (count($strColumn) == 1 && $strColumn[0] == static::$strPk)
+				$intId = is_array($varValue) ? $varValue[0] : $varValue;
+				$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $intId);
+
+				if ($objModel !== null)
 				{
-					return static::findByPk($intId, $arrOptions);
-				}
-			}
-			else
-			{
-				if ($strColumn == static::$strPk)
-				{
-					return static::findByPk($intId, $arrOptions);
+					return $objModel;
 				}
 			}
 		}

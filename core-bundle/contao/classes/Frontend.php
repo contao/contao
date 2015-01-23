@@ -3,11 +3,9 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2014 Leo Feyer
+ * Copyright (c) 2005-2015 Leo Feyer
  *
- * @package Core
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao;
@@ -16,12 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 
 /**
- * Class Frontend
- *
  * Provide methods to manage front end controllers.
- * @copyright  Leo Feyer 2005-2014
- * @author     Leo Feyer <https://contao.org>
- * @package    Core
+ *
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Frontend extends \Controller
 {
@@ -179,7 +174,7 @@ abstract class Frontend extends \Controller
 				}
 				else
 				{
-					$arrLangs = $arrPages['*']; // Empty domain
+					$arrLangs = $arrPages['*'] ?: array(); // empty domain
 				}
 
 				$arrAliases = array();

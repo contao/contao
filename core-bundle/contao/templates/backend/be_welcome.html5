@@ -37,7 +37,18 @@
             <td><?= $version['pid'] ?></td>
             <td><?= $version['description'] ?: '-' ?></td>
             <td><?= $version['active'] ? '<strong>' . $version['version'] . '</strong>' : $version['version'] ?></td>
-            <td><?php if ($version['deleted']): ?><a href="contao/main.php?do=undo" title="<?= specialchars($GLOBALS['TL_LANG']['MSC']['restore']) ?>"><?= Image::getHtml('undo.gif') ?></a><?php elseif ($version['editUrl'] != ''): ?><a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Image::getHtml('edit.gif', '', 'style="padding:0 2px"') ?></a><?php else: ?><?= Image::getHtml('edit_.gif', '', 'style="padding:0 2px"') ?><?php endif; ?> <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" title="<?= $this->showDifferences ?>" onclick="Backend.openModalIframe({'width':768,'title':'<?= $this->showDifferences ?>','url':this.href});return false"><?= Image::getHtml('diff.gif') ?></a></td>
+            <td>
+              <?php if ($version['deleted']): ?>
+                <a href="contao/main.php?do=undo" title="<?= specialchars($GLOBALS['TL_LANG']['MSC']['restore']) ?>"><?= Image::getHtml('undo.gif', '', 'class="undo"') ?></a>
+              <?php else: ?>
+                <?php if ($version['editUrl'] != ''): ?>
+                  <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Image::getHtml('edit.gif', '', 'style="padding:0 2px"') ?></a>
+                <?php else: ?>
+                  <?= Image::getHtml('edit_.gif', '', 'style="padding:0 2px"') ?>
+                <?php endif; ?>
+                <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" title="<?= $this->showDifferences ?>" onclick="Backend.openModalIframe({'width':768,'title':'<?= $this->showDifferences ?>','url':this.href});return false"><?= Image::getHtml('diff.gif') ?></a>
+              <?php endif; ?>
+            </td>
           </tr>
         <?php endforeach; ?>
       </tbody>

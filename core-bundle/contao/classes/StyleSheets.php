@@ -3,23 +3,18 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2014 Leo Feyer
+ * Copyright (c) 2005-2015 Leo Feyer
  *
- * @package Core
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao;
 
 
 /**
- * Class StyleSheets
- *
  * Provide methods to handle style sheets.
- * @copyright  Leo Feyer 2005-2014
- * @author     Leo Feyer <https://contao.org>
- * @package    Core
+ *
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class StyleSheets extends \Backend
 {
@@ -193,14 +188,21 @@ class StyleSheets extends \Backend
 	 * @param boolean
 	 * @param array
 	 * @param array
+	 * @param boolean
 	 * @return string
 	 */
-	public function compileDefinition($row, $blnWriteToFile=false, $vars=array(), $parent=array())
+	public function compileDefinition($row, $blnWriteToFile=false, $vars=array(), $parent=array(), $export=false)
 	{
 		if ($blnWriteToFile)
 		{
 			$strGlue = '../../';
 			$lb = '';
+			$return = '';
+		}
+		elseif ($export)
+		{
+			$strGlue = '';
+			$lb = "\n    ";
 			$return = '';
 		}
 		else
@@ -211,12 +213,20 @@ class StyleSheets extends \Backend
 		}
 
 		// Comment
-		if (!$blnWriteToFile && $row['comment'] != '')
+		if ((!$blnWriteToFile || $export) && $row['comment'] != '')
 		{
 			$search = array('@^\s*/\*+@', '@\*+/\s*$@');
 			$comment = preg_replace($search, '', $row['comment']);
-			$comment = wordwrap(trim($comment), 72);
-			$return .= "\n" . '<span class="comment">' . $comment . '</span>' . "\n";
+
+			if ($export)
+			{
+				$return .= "\n/* " . $comment . " */\n";
+			}
+			else
+			{
+				$comment = wordwrap(trim($comment), 72);
+				$return .= "\n" . '<span class="comment">' . $comment . '</span>' . "\n";
+			}
 		}
 
 		// Selector
@@ -933,6 +943,10 @@ class StyleSheets extends \Backend
 
 			$return .= '}';
 		}
+		elseif ($export)
+		{
+			$return .= "\n}\n";
+		}
 		else
 		{
 			$return .= "\n}</pre>\n";
@@ -1367,7 +1381,13 @@ class StyleSheets extends \Backend
 
 		// Create the file
 		$objFile = new \File('system/tmp/' . md5(uniqid(mt_rand(), true)));
-		$objFile->write('/* ' . $objStyleSheet->name . ".css */\n");
+		$objFile->write('');
+
+		// Add the media query (see #7560)
+		if ($objStyleSheet->mediaQuery != '')
+		{
+			$objFile->append($objStyleSheet->mediaQuery . ' {');
+		}
 
 		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!=1 ORDER BY sorting")
 										 ->execute($objStyleSheet->id);
@@ -1375,7 +1395,13 @@ class StyleSheets extends \Backend
 		// Append the definition
 		while ($objDefinitions->next())
 		{
-			$objFile->append(strip_tags($this->compileDefinition($objDefinitions->row(), false, $vars, $objStyleSheet->row())), '');
+			$objFile->append($this->compileDefinition($objDefinitions->row(), false, $vars, $objStyleSheet->row(), true), '');
+		}
+
+		// Close the media query
+		if ($objStyleSheet->mediaQuery != '')
+		{
+			$objFile->append('}');
 		}
 
 		$objFile->close();
