@@ -159,7 +159,7 @@ class Versions extends \Controller
 
 		if ($this->strPath !== null)
 		{
-			$objFile = new \File($this->strPath, true);
+			$objFile = new \File($this->strPath);
 
 			if ($objFile->extension == 'svgz')
 			{
