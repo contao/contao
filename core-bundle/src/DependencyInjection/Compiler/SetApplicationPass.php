@@ -25,9 +25,11 @@ class SetApplicationPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->findDefinition('data_collector.config');
+        if ($container->hasDefinition('data_collector.config')) {
+            $definition = $container->findDefinition('data_collector.config');
 
-        $definition->addArgument('Contao');
-        $definition->addArgument(VERSION . '.' . BUILD);
+            $definition->addArgument('Contao');
+            $definition->addArgument(VERSION . '.' . BUILD);
+        }
     }
 }
