@@ -141,7 +141,6 @@ class BackendPage extends \Backend
 			$objTemplate->switchHref = str_replace('contao/page.php', 'contao/file.php', ampersand(\Environment::get('request')));
 		}
 
-		\Config::set('debugMode', false);
 		$objTemplate->output();
 	}
 }

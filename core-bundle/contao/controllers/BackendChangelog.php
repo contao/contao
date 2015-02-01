@@ -64,7 +64,6 @@ class BackendChangelog extends \Backend
 		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['changelog']);
 		$objTemplate->charset = \Config::get('characterSet');
 
-		\Config::set('debugMode', false);
 		$objTemplate->output();
 	}
 }

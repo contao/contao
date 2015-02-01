@@ -145,7 +145,6 @@ class BackendPopup extends \Backend
 		$objTemplate->label_path = $GLOBALS['TL_LANG']['MSC']['filePath'];
 		$objTemplate->download = specialchars($GLOBALS['TL_LANG']['MSC']['fileDownload']);
 
-		\Config::set('debugMode', false);
 		$objTemplate->output();
 	}
 }

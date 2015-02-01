@@ -142,7 +142,6 @@ class BackendSwitch extends \Backend
 		$objTemplate->action = ampersand(\Environment::get('request'));
 		$objTemplate->isAdmin = $this->User->isAdmin;
 
-		\Config::set('debugMode', false);
 		$objTemplate->output();
 	}
 
