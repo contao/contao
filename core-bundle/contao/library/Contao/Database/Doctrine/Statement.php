@@ -307,6 +307,14 @@ class Statement extends \Database\Statement
     {
         throw new \RuntimeException('Not implemented yet');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function debugQuery($objResult=null)
+    {
+        return;
+    }
 }
 
 // Backwards compatibility
