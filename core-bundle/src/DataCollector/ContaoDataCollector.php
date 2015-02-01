@@ -170,29 +170,11 @@ class ContaoDataCollector extends DataCollector
      */
     private function addSummaryData()
     {
-        $intReturned = 0;
-        $intAffected = 0;
-
-        // Count the totals (see #3884)
-        if (is_array($GLOBALS['TL_DEBUG']['database_queries']))
-        {
-            foreach ($GLOBALS['TL_DEBUG']['database_queries'] as $k=>$v)
-            {
-                $intReturned += $v['return_count'];
-                $intAffected += $v['affected_count'];
-                unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['return_count']);
-                unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['affected_count']);
-            }
-        }
-
         $intElapsed = (microtime(true) - TL_START);
 
         $this->data['summary'] = [
             'execution_time' => \System::getFormattedNumber(($intElapsed * 1000), 0),
             'memory'         => \System::getReadableSize(memory_get_peak_usage()),
-            'dbqueries'      => count($GLOBALS['TL_DEBUG']['database_queries']),
-            'rows_returned'  => $intReturned,
-            'rows_affected'  => $intAffected,
             'models'         => \Model\Registry::getInstance()->count()
         ];
     }
