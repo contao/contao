@@ -12,14 +12,12 @@
 
 namespace Contao\Database\Doctrine;
 
-use Contao\Database\Result as AbstractResult;
-
 /**
  * Doctrine database result class
  *
  * @author Tristan Lins <https://github.com/tristanlins>
  */
-class Result extends AbstractResult
+class Result extends \Database\Result
 {
     /**
      * Current result
@@ -136,3 +134,6 @@ class Result extends AbstractResult
         unset($this->resultSet);
     }
 }
+
+// Backwards compatibility
+class_alias('Contao\\Database\\Doctrine\\Result', 'Database_Result');

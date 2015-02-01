@@ -12,7 +12,6 @@
 
 namespace Contao\Database\Doctrine;
 
-use Contao\Database\Statement as AbstractStatement;
 use Doctrine\DBAL\Cache\ArrayStatement;
 
 
@@ -21,7 +20,7 @@ use Doctrine\DBAL\Cache\ArrayStatement;
  *
  * @author Tristan Lins <https://github.com/tristanlins>
  */
-class Statement extends AbstractStatement
+class Statement extends \Database\Statement
 {
     /**
      * Connection ID
@@ -309,3 +308,6 @@ class Statement extends AbstractStatement
         throw new \RuntimeException('Not implemented yet');
     }
 }
+
+// Backwards compatibility
+class_alias('Contao\\Database\\Doctrine\\Statement', 'Database_Statement');
