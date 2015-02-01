@@ -515,9 +515,7 @@ class Config
 			}
 		}
 
-		if ($kernel->isDebug()) {
-			$GLOBALS['TL_CONFIG']['debugMode'] = true;
-		}
+		$GLOBALS['TL_CONFIG']['debugMode'] = $kernel->isDebug();
 	}
 
 
