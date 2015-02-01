@@ -514,6 +514,10 @@ class Config
 				$GLOBALS['TL_CONFIG'][$strKey] = $container->getParameter($strParam);
 			}
 		}
+
+		if ($kernel->isDebug()) {
+			$GLOBALS['TL_CONFIG']['debugMode'] = true;
+		}
 	}
 
 
