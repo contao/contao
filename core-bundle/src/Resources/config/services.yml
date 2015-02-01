@@ -48,3 +48,8 @@ services:
         class: Contao\CoreBundle\Routing\FrontendLoader
         tags:
             - { name: routing.bundle_loader, priority: -250 }
+
+    data_collector.contao:
+            class: Contao\CoreBundle\DataCollector\ContaoDataCollector
+            tags:
+                - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
