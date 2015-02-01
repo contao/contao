@@ -93,6 +93,26 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
+     * Get list of unknown insert tags on the page.
+     *
+     * @return array The unknown insert tags.
+     */
+    public function getUnknownInsertTags()
+    {
+        return $this->getData('unknown_insert_tags');
+    }
+
+    /**
+     * Get list of unknown insert tag flags on the page.
+     *
+     * @return array The unknown insert tag flags.
+     */
+    public function getUnknownInsertTagFlags()
+    {
+        return $this->getData('unknown_insert_tag_flags');
+    }
+
+    /**
      * Get additional data added by unknown sources.
      *
      * @return array The additional data.
@@ -109,6 +129,8 @@ class ContaoDataCollector extends DataCollector
         unset($data['classes_aliased']);
         unset($data['classes_set']);
         unset($data['database_queries']);
+        unset($data['unknown_insert_tags']);
+        unset($data['unknown_insert_tag_flags']);
 
         return $data;
     }

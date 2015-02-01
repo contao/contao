@@ -62,6 +62,38 @@
         </tr>
     </table>
 
+    <h2>Unknown Insert Tags</h2>
+    {% if collector.unknowninserttags %}
+        <table>
+            <tr>
+                <th>Insert Tag</th>
+            </tr>
+            {% for name in collector.unknowninserttags %}
+                <tr>
+                    <td><pre>{{ '{{' }}{{ name }}{{ '}}' }}</pre></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p><em>No unknown insert tags used on the page.</em></p>
+    {% endif %}
+
+    <h2>Unknown Insert Tag Flags</h2>
+    {% if collector.unknowninserttagflags %}
+        <table>
+            <tr>
+                <th>Insert Tag Flag</th>
+            </tr>
+            {% for name in collector.unknowninserttagflags %}
+                <tr>
+                    <td><pre>{{ name }}</pre></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p><em>No unknown insert tag flags used on the page.</em></p>
+    {% endif %}
+
     <h2>Database Queries</h2>
     <ul>
         {% for result in collector.databasequeries %}
