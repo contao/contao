@@ -24,7 +24,7 @@
                     </tr>
                     <tr>
                         <th>Result</th>
-                        <td><pre>{{ result.returned }}</pre></td>
+                        <td><pre>{% if result.affected is defined %}{{ result.affected }}{% else %}{{ result.returned }}{% endif %}</pre></td>
                     </tr>
                     <tr>
                         <th>Explain</th>
