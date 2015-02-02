@@ -24,7 +24,7 @@ class FrontendUser implements UserInterface, EquatableInterface
 
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        return ['ROLE_MEMBER'];
     }
 
     public function getPassword()

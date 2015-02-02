@@ -24,7 +24,13 @@ class BackendUser implements UserInterface, EquatableInterface
 
     public function getRoles()
     {
-        return ['ROLE_ADMIN'];
+        $roles = ['ROLE_USER'];
+
+        if ($this->user->isAdmin) {
+            $roles[] = 'ROLE_ADMIN';
+        }
+
+        return $roles;
     }
 
     public function getPassword()
