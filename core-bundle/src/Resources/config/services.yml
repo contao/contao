@@ -53,3 +53,17 @@ services:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
+
+    backend_user_provider:
+        class: Contao\CoreBundle\Security\User\BackendUserProvider
+
+    frontend_user_provider:
+        class: Contao\CoreBundle\Security\User\FrontendUserProvider
+
+    backend_authenticator:
+        class: Contao\CoreBundle\Security\BackendAuthenticator
+        arguments: ["@backend_user_provider"]
+
+    frontend_authenticator:
+        class: Contao\CoreBundle\Security\FrontendAuthenticator
+        arguments: ["@frontend_user_provider"]
