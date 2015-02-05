@@ -10,8 +10,6 @@
 
 namespace Contao\CoreBundle\HttpKernel\Bundle;
 
-use Symfony\Component\Finder\SplFileInfo;
-
 /**
  * Analyzes an .htaccess file.
  *
@@ -20,18 +18,18 @@ use Symfony\Component\Finder\SplFileInfo;
 class HtaccessAnalyzer
 {
     /**
-     * @var SplFileInfo
+     * @var \SplFileInfo
      */
     protected $file;
 
     /**
      * Stores the file object.
      *
-     * @param SplFileInfo $file The file object
+     * @param \SplFileInfo $file The file object
      *
      * @throws \InvalidArgumentException If $file is not a file
      */
-    public function __construct(SplFileInfo $file)
+    public function __construct(\SplFileInfo $file)
     {
         if (!$file->isFile()) {
             throw new \InvalidArgumentException("$file is not a file");
@@ -67,8 +65,7 @@ class HtaccessAnalyzer
      */
     protected function hasRequireGranted($line)
     {
-        // Ignore comments
-        if (0 === strncmp('#', trim($line), 1)) {
+        if ($this->isComment($line)) {
             return false;
         }
 
@@ -81,5 +78,17 @@ class HtaccessAnalyzer
         }
 
         return false;
+    }
+
+    /**
+     * Checks whether a line is a comment.
+     *
+     * @param string $line The line
+     *
+     * @return bool True if the line is a comment
+     */
+    protected function isComment($line)
+    {
+        return 0 === strncmp('#', ltrim($line), 1);
     }
 }
