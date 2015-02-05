@@ -11,18 +11,17 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-
-require_once __DIR__ . '/../Fixtures/EventListener/Frontend.php';
 
 /**
  * Tests the AddToSearchIndexListener class.
  *
  * @author Leo Feyer <https://contao.org>
  */
-class AddToSearchIndexListenerTest extends \PHPUnit_Framework_TestCase
+class AddToSearchIndexListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.

@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Leo Feyer <https://contao.org>
  */
-class ContaoCoreExtensionTest extends \PHPUnit_Framework_TestCase
+class ContaoCoreExtensionTest extends TestCase
 {
     /**
      * @var ContaoCoreExtension

@@ -11,20 +11,19 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\ToggleViewListener;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-require_once __DIR__ . '/../Fixtures/EventListener/System.php';
-
 /**
  * Tests the ToggleViewListener class.
  *
  * @author Andreas Schempp <https://www.terminal42.ch>
  */
-class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
+class ToggleViewListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.

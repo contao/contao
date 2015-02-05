@@ -11,20 +11,21 @@
 namespace Contao\CoreBundle\Test\Autoload;
 
 use Contao\CoreBundle\Autoload\BundleAutoloader;
+use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the BundleAutoloader class.
  *
  * @author Yanick Witschi <https://github.com/Toflar>
  */
-class BundleAutoloaderTest extends \PHPUnit_Framework_TestCase
+class BundleAutoloaderTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $bundleLoader = new BundleAutoloader('rootDir', 'env');
+        $bundleLoader = new BundleAutoloader($this->getRootDir(), 'test');
 
         $this->assertInstanceOf('Contao\CoreBundle\Autoload\BundleAutoloader', $bundleLoader);
     }
@@ -34,15 +35,14 @@ class BundleAutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoad()
     {
-        $bundleLoader = new BundleAutoloader(
-            __DIR__ . '/../Fixtures/BundleAutoloader/dummyRootDirName',
-            'all'
-        );
+        $bundleLoader = new BundleAutoloader($this->getRootDir() . '/app', 'test');
 
         $this->assertSame(
             [
                 'ContaoCoreBundle' => 'Contao\CoreBundle\ContaoCoreBundle',
                 'legacy-module'    => null,
+                'with-requires'    => null,
+                'without-requires' => null,
             ],
             $bundleLoader->load()
         );

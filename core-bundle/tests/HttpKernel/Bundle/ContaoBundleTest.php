@@ -11,13 +11,14 @@
 namespace Contao\CoreBundle\Test\HttpKernel\Bundle;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the ContaoBundle class.
  *
  * @author Leo Feyer <https://contao.org>
  */
-class ContaoBundleTest extends \PHPUnit_Framework_TestCase
+class ContaoBundleTest extends TestCase
 {
     /**
      * Tests the getPublicFolders() method.
@@ -26,10 +27,7 @@ class ContaoBundleTest extends \PHPUnit_Framework_TestCase
     {
         $bundle = new ContaoCoreBundle();
 
-        $this->assertEquals(
-            [],
-            $bundle->getPublicFolders()
-        );
+        $this->assertEmpty($bundle->getPublicFolders());
     }
 
     /**

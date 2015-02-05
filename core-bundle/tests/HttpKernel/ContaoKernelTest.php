@@ -14,6 +14,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddBundlesToCachePass;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\HttpKernel\ContaoKernelInterface;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -22,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Leo Feyer <https://contao.org>
  */
-class ContaoKernelTest extends \PHPUnit_Framework_TestCase
+class ContaoKernelTest extends TestCase
 {
     /**
      * @var ContaoKernelInterface
@@ -35,24 +36,6 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
     protected $reflection;
 
     /**
-     * Creates the cache directory.
-     */
-    public static function setUpBeforeClass()
-    {
-        mkdir(__DIR__ . '/../Fixtures/HttpKernel/vendor/cache/test', 0755, true);
-    }
-
-    /**
-     * Removes the cache directory.
-     */
-    public static function tearDownAfterClass()
-    {
-        unlink(__DIR__ . '/../Fixtures/HttpKernel/vendor/cache/test/bundles.map');
-        rmdir(__DIR__ . '/../Fixtures/HttpKernel/vendor/cache/test');
-        rmdir(__DIR__ . '/../Fixtures/HttpKernel/vendor/cache');
-    }
-
-    /**
      * Creates a mock object for the abstract ContaoKernel class.
      */
     protected function setUp()
@@ -63,7 +46,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         // Set the root directory
         $rootDir = $this->reflection->getProperty('rootDir');
         $rootDir->setAccessible(true);
-        $rootDir->setValue($this->kernel, __DIR__ . '/../Fixtures/HttpKernel/vendor');
+        $rootDir->setValue($this->kernel, $this->getRootDir() . '/app');
     }
 
     /**
@@ -89,7 +72,9 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
             [
                 $frameworkBundle,
                 new ContaoCoreBundle(),
-                new ContaoModuleBundle('legacy-module', __DIR__ . '/../Fixtures/HttpKernel/vendor'),
+                new ContaoModuleBundle('legacy-module', $this->getRootDir() . '/app'),
+                new ContaoModuleBundle('with-requires', $this->getRootDir() . '/app'),
+                new ContaoModuleBundle('without-requires', $this->getRootDir() . '/app'),
             ],
             $bundles
         );
@@ -97,8 +82,6 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         // Write the bundles cache
         $pass = new AddBundlesToCachePass($this->kernel);
         $pass->process(new ContainerBuilder());
-
-        $this->assertFileExists(__DIR__ . '/../Fixtures/HttpKernel/vendor/cache/test');
     }
 
     /**
@@ -117,6 +100,8 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
             [
                 'ContaoCoreBundle' => 'Contao\CoreBundle\ContaoCoreBundle',
                 'legacy-module'    => null,
+                'with-requires'    => null,
+                'without-requires' => null,
             ],
             $bundlesMap->getValue($this->kernel)
         );
@@ -162,6 +147,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
     {
         $buildContainer = $this->reflection->getMethod('buildContainer');
         $buildContainer->setAccessible(true);
+
         $container = $buildContainer->invoke($this->kernel);
 
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Container', $container);
