@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+
 
 /**
  * Back end install tool.
@@ -755,6 +757,7 @@ class BackendInstall extends \Backend
 
 			foreach ($kernel->getContaoBundles() as $bundle)
 			{
+				/** @var ContaoBundle $bundle */
 				$modules[] = $bundle->getName();
 			}
 

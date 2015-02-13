@@ -107,7 +107,7 @@ class String
 	 */
 	public static function substrHtml($strString, $intNumberOfChars)
 	{
-		$strReturn = "";
+		$strReturn = '';
 		$intCharCount = 0;
 		$arrOpenTags = array();
 		$arrTagBuffer = array();

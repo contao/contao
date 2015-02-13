@@ -51,6 +51,7 @@ namespace Contao;
  * @property string  $mootools
  * @property string  $analytics
  * @property string  $script
+ * @property string  $scripts
  * @property boolean $static
  * @property string  $width
  * @property string  $align

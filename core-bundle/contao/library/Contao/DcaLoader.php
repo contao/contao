@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+
 
 /**
  * Loads a set of DCA files
@@ -81,6 +83,7 @@ class DcaLoader extends \Controller
 
 			foreach ($kernel->getContaoBundles() as $bundle)
 			{
+				/** @var ContaoBundle $bundle */
 				$strFile = $bundle->getContaoResourcesPath() . '/dca/' . $this->strTable . '.php';
 
 				if (file_exists($strFile))

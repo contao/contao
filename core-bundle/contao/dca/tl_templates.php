@@ -225,6 +225,7 @@ class tl_templates extends Backend
 		// Get all templates
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
+			/** @var Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle $bundle */
 			$strModule = $bundle->getName();
 			$strFolder = $bundle->getContaoResourcesPath() . '/templates';
 

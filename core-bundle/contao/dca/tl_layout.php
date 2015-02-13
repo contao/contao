@@ -668,6 +668,7 @@ class tl_layout extends Backend
 
 	/**
 	 * Return all script templates as array
+	 *
 	 * @return array
 	 */
 	public function getScriptTemplates()

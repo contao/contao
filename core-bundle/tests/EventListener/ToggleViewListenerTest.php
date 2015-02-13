@@ -40,6 +40,7 @@ class ToggleViewListenerTest extends TestCase
      */
     public function testNoView()
     {
+        /** @var HttpKernelInterface $kernel */
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request();
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -55,6 +56,7 @@ class ToggleViewListenerTest extends TestCase
      */
     public function testDesktopView()
     {
+        /** @var HttpKernelInterface $kernel */
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request(['toggle_view' => 'desktop']);
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -71,6 +73,7 @@ class ToggleViewListenerTest extends TestCase
      */
     public function testMobileView()
     {
+        /** @var HttpKernelInterface $kernel */
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request(['toggle_view' => 'mobile']);
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -87,6 +90,7 @@ class ToggleViewListenerTest extends TestCase
      */
     public function testInvalidView()
     {
+        /** @var HttpKernelInterface $kernel */
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request(['toggle_view' => 'foobar']);
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);

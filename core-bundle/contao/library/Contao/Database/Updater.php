@@ -10,6 +10,8 @@
 
 namespace Contao\Database;
 
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+
 
 /**
  * Adjust the database if the system is updated.
@@ -727,6 +729,7 @@ class Updater extends \Controller
 		// Parse all modules (see #6058)
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
+			/** @var ContaoBundle $bundle */
 			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 
 			if (!is_dir($strDir))

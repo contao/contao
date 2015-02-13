@@ -700,9 +700,6 @@ abstract class Controller extends \System
 			}
 		}
 
-		/** @var \PageModel $objPage */
-		global $objPage;
-
 		$arrReplace = array();
 		$strScripts = '';
 

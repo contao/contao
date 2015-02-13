@@ -311,6 +311,7 @@ class tl_user_group extends Backend
 
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
+			/** @var Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle $bundle */
 			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 
 			if (!is_dir($strDir))

@@ -10,6 +10,37 @@
 
 error_reporting(E_ALL);
 
+// Define a custom System class via eval() so it does not interfere with the IDE
+eval(<<<HEREDOC
+class System
+{
+    public static function getReferer()
+    {
+        return '/foo/bar';
+    }
+}
+HEREDOC
+);
+
+// Define a custom Frontend class via eval() so it does not interfere with the IDE
+eval(<<<HEREDOC
+use Symfony\Component\HttpFoundation\Response;
+
+class Frontend
+{
+    public static function indexPageIfApplicable(Response \$objResponse)
+    {
+        return true;
+    }
+
+    public static function getResponseFromCache()
+    {
+        return new Response();
+    }
+}
+HEREDOC
+);
+
 $include = function ($file) {
     return file_exists($file) ? include $file : false;
 };
@@ -25,11 +56,7 @@ if (
     exit(1);
 }
 
-$loader->addClassmap([
-    'Frontend' => __DIR__ . '/Fixtures/system/library/Frontend.php',
-    'System'   => __DIR__ . '/Fixtures/system/library/System.php',
-]);
-
+/** @var Composer\Autoload\ClassLoader $loader */
 $loader->addPsr4('Contao\\CoreBundle\\Test\\', __DIR__);
 
 return $loader;

@@ -47,6 +47,10 @@ class ConfigResolverTest extends TestCase
     /**
      * Tests the getBundlesMapForEnvironment() method.
      *
+     * @param string $env            The environment
+     * @param array  $configs        The configurations array
+     * @param array  $expectedResult The expected result
+     *
      * @dataProvider getBundlesMapForEnvironmentProvider
      */
     public function testGetBundlesMapForEnvironment($env, $configs, $expectedResult)

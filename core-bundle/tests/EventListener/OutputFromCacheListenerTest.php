@@ -38,6 +38,7 @@ class OutputFromCacheListenerTest extends TestCase
      */
     public function testOnKernelRequest()
     {
+        /** @var HttpKernelInterface $kernel */
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request();
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);

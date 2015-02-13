@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\HttpKernel\Bundle;
 
-use Contao\CoreBundle\Autoload\IniParser;
 use Contao\CoreBundle\HttpKernel\Bundle\HtaccessAnalyzer;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Finder\SplFileInfo;

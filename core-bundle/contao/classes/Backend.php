@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+
 
 /**
  * Provide methods to manage back end controllers.
@@ -255,6 +257,7 @@ abstract class Backend extends \Controller
 		// Always scan all folders and not just the active modules (see #4200)
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
+			/** @var ContaoBundle $bundle */
 			$arrFiles[] = $bundle->getContaoResourcesPath() . '/config/runonce.php';
 		}
 
@@ -845,12 +848,12 @@ abstract class Backend extends \Controller
 	/**
 	 * Add an image to each page in the tree
 	 *
-	 * @param array         $row
-	 * @param string        $label
-	 * @param DataContainer $dc
-	 * @param string        $imageAttribute
-	 * @param boolean       $blnReturnImage
-	 * @param boolean       $blnProtected
+	 * @param array          $row
+	 * @param string         $label
+	 * @param \DataContainer $dc
+	 * @param string         $imageAttribute
+	 * @param boolean        $blnReturnImage
+	 * @param boolean        $blnProtected
 	 *
 	 * @return string
 	 */

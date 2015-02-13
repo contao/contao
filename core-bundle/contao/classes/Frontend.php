@@ -657,7 +657,8 @@ abstract class Frontend extends \Controller
 
 	/**
 	 * Index a page if applicable
-	 * @param Response
+	 *
+	 * @param Response $objResponse
 	 */
 	public static function indexPageIfApplicable(Response $objResponse)
 	{

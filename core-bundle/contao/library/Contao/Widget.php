@@ -72,7 +72,6 @@ namespace Contao;
  * @property boolean                 $useHomeDir        Store uploaded files in the user's home directory
  * @property boolean                 $trailingSlash     Add or remove a trailing slash
  * @property boolean                 $spaceToUnderscore Convert spaces to underscores
- * @property boolean                 $nullIfEmpty       Set to NULL if the value is empty
  * @property boolean                 $doNotTrim         Do not trim the user input
  * @property string                  $forAttribute      The "for" attribute
  * @property \DataContainer          $dataContainer     The data container object

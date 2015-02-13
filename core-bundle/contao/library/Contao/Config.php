@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+
 
 /**
  * Loads and writes the local configuration file
@@ -135,6 +137,7 @@ class Config
 
 			foreach ($kernel->getContaoBundles() as $bundle)
 			{
+				/** @var ContaoBundle $bundle */
 				$strFile = $bundle->getContaoResourcesPath() . '/config/config.php';
 
 				if (file_exists($strFile))

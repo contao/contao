@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+
 
 /**
  * Loads modules based on their autoload.ini configuration
@@ -53,6 +55,7 @@ class ModuleLoader
 
 			foreach ($kernel->getContaoBundles() as $bundle)
 			{
+				/** @var ContaoBundle $bundle */
 				static::$active[] = $bundle->getName();
 			}
 		}

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+
 
 /**
  * Automatically loads class files based on a mapper array
@@ -214,6 +216,7 @@ class ClassLoader
 
 			foreach ($kernel->getContaoBundles() as $bundle)
 			{
+				/** @var ContaoBundle $bundle */
 				$strFile = $bundle->getContaoResourcesPath() . '/config/autoload.php';
 
 				if (file_exists($strFile))

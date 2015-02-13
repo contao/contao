@@ -15,6 +15,7 @@ use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests the AddToSearchIndexListener class.
@@ -38,6 +39,7 @@ class AddToSearchIndexListenerTest extends TestCase
      */
     public function testOnKernelRequest()
     {
+        /** @var HttpKernelInterface $kernel */
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request();
         $response = new Response();
