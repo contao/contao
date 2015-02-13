@@ -83,9 +83,6 @@ abstract class ModuleNews extends \Module
 	 */
 	protected function parseArticle($objArticle, $blnAddArchive=false, $strClass='', $intCount=0)
 	{
-		/** @var \PageModel $objPage */
-		global $objPage;
-
 		/** @var \FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->news_template);
 
