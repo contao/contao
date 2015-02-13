@@ -30,6 +30,7 @@ class ContentMarkdown extends \ContentElement
 
 	/**
 	 * Show the raw markdown code in the back end
+	 *
 	 * @return string
 	 */
 	public function generate()

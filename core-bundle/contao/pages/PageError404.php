@@ -21,10 +21,11 @@ class PageError404 extends \Frontend
 
 	/**
 	 * Generate an error 404 page
-	 * @param integer
-	 * @param string
-	 * @param string
-	 * @param boolean
+	 *
+	 * @param integer $pageId
+	 * @param string  $strDomain
+	 * @param string  $strHost
+	 * @param boolean $blnUnusedGet
 	 */
 	public function generate($pageId, $strDomain=null, $strHost=null, $blnUnusedGet=false)
 	{
@@ -68,11 +69,11 @@ class PageError404 extends \Frontend
 			}
 		}
 
-		// Look for an 404 page
+		// Look for a 404 page
 		$obj404 = \PageModel::find404ByPid($objRootPage->id);
 
 		// Die if there is no page at all
-		if ($obj404 === null)
+		if (null === $obj404)
 		{
 			header('HTTP/1.1 404 Not Found');
 			die_nicely('be_no_page', 'Page not found');
@@ -83,7 +84,7 @@ class PageError404 extends \Frontend
 		{
 			$objNextPage = \PageModel::findPublishedById($obj404->jumpTo);
 
-			if ($objNextPage === null)
+			if (null === $objNextPage)
 			{
 				header('HTTP/1.1 404 Not Found');
 				$this->log('Forward page ID "' . $obj404->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
@@ -93,9 +94,12 @@ class PageError404 extends \Frontend
 			$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj404->redirect == 'temporary') ? 302 : 301));
 		}
 
+		/** @var \PageModel $objPage */
 		global $objPage;
 
 		$objPage = $obj404->loadDetails();
+
+		/** @var \PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
 		header('HTTP/1.1 404 Not Found');

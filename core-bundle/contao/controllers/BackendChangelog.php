@@ -53,7 +53,7 @@ class BackendChangelog extends \Backend
 		// Convert to HTML
 		$strBuffer = MarkdownExtra::defaultTransform($strBuffer);
 
-		// Add the template
+		/** @var \BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_changelog');
 
 		// Assign the template variables

@@ -28,6 +28,7 @@ class ContentCode extends \ContentElement
 
 	/**
 	 * Show the raw code in the back end
+	 *
 	 * @return string
 	 */
 	public function generate()

@@ -20,7 +20,7 @@ class BackendInstall extends \Backend
 {
 
 	/**
-	 * @var Template
+	 * @var \BackendTemplate|object
 	 */
 	protected $Template;
 

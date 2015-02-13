@@ -21,7 +21,7 @@ class BackendFile extends \Backend
 
 	/**
 	 * Current Ajax object
-	 * @var object
+	 * @var \Ajax
 	 */
 	protected $objAjax;
 
@@ -50,6 +50,7 @@ class BackendFile extends \Backend
 	 */
 	public function run()
 	{
+		/** @var \BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_picker');
 		$objTemplate->main = '';
 
@@ -74,6 +75,7 @@ class BackendFile extends \Backend
 		// Set the active record
 		if ($this->Database->tableExists($strTable))
 		{
+			/** @var \Model $strModel */
 			$strModel = \Model::getClassFromTable($strTable);
 
 			if (class_exists($strModel))
@@ -123,9 +125,11 @@ class BackendFile extends \Backend
 			}
 		}
 
-		// Prepare the widget
-		$class = $GLOBALS['BE_FFL']['fileSelector'];
-		$objFileTree = new $class($class::getAttributesFromDca($GLOBALS['TL_DCA'][$strTable]['fields'][$strField], $strField, $arrValues, $strField, $strTable, $objDca));
+		/** @var \FileSelector $strClass */
+		$strClass = $GLOBALS['BE_FFL']['fileSelector'];
+
+		/** @var \FileSelector $objFileTree */
+		$objFileTree = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$strTable]['fields'][$strField], $strField, $arrValues, $strField, $strTable, $objDca));
 
 		$objTemplate->main = $objFileTree->generate();
 		$objTemplate->theme = \Backend::getTheme();
@@ -143,8 +147,8 @@ class BackendFile extends \Backend
 
 		if (\Input::get('switch'))
 		{
-			$this->Template->switch = $GLOBALS['TL_LANG']['MSC']['pagePicker'];
-			$this->Template->switchHref = str_replace('contao/file.php', 'contao/page.php', ampersand(\Environment::get('request')));
+			$objTemplate->switch = $GLOBALS['TL_LANG']['MSC']['pagePicker'];
+			$objTemplate->switchHref = str_replace('contao/file.php', 'contao/page.php', ampersand(\Environment::get('request')));
 		}
 
 		\Config::set('debugMode', false);

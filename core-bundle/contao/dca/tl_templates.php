@@ -136,12 +136,20 @@ class tl_templates extends Backend
 
 	/**
 	 * Add the breadcrumb menu
+	 *
+	 * @throws RuntimeException
 	 */
 	public function addBreadcrumb()
 	{
 		// Set a new node
 		if (isset($_GET['node']))
 		{
+			// Check the path (thanks to Arnaud Buchoux)
+			if (Validator::isInsecurePath(Input::get('node', true)))
+			{
+				throw new RuntimeException('Insecure path ' . Input::get('node', true));
+			}
+
 			$this->Session->set('tl_templates_node', Input::get('node', true));
 			$this->redirect(preg_replace('/(&|\?)node=[^&]*/', '', Environment::get('request')));
 		}
@@ -153,10 +161,17 @@ class tl_templates extends Backend
 			return;
 		}
 
+		// Check the path (thanks to Arnaud Buchoux)
+		if (Validator::isInsecurePath($strNode))
+		{
+			throw new RuntimeException('Insecure path ' . $strNode);
+		}
+
 		// Currently selected folder does not exist
 		if (!is_dir(TL_ROOT . '/' . $strNode))
 		{
 			$this->Session->set('tl_templates_node', '');
+
 			return;
 		}
 
@@ -197,6 +212,7 @@ class tl_templates extends Backend
 
 	/**
 	 * Create a new template
+	 *
 	 * @return string
 	 */
 	public function addNewTemplate()
@@ -355,8 +371,10 @@ class tl_templates extends Backend
 
 	/**
 	 * Recursively scan the templates directory and return all folders as array
-	 * @param string
-	 * @param integer
+	 *
+	 * @param string  $strFolder
+	 * @param integer $intLevel
+	 *
 	 * @return string
 	 */
 	protected function getTargetFolders($strFolder, $intLevel=1)
@@ -382,12 +400,14 @@ class tl_templates extends Backend
 
 	/**
 	 * Return the edit file source button
-	 * @param array
-	 * @param string
-	 * @param string
-	 * @param string
-	 * @param string
-	 * @param string
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
 	 * @return string
 	 */
 	public function editSource($row, $href, $label, $title, $icon, $attributes)

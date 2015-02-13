@@ -28,6 +28,7 @@ class ContentYouTube extends \ContentElement
 
 	/**
 	 * Show the YouTube link in the back end
+	 *
 	 * @return string
 	 */
 	public function generate()

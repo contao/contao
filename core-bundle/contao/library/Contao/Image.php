@@ -851,6 +851,7 @@ class Image
 			$image = new \File(rawurldecode($image));
 		}
 
+		/** @var \Image $imageObj */
 		$imageObj = new static($image);
 
 		// tl_image_size ID as resize mode
@@ -916,7 +917,6 @@ class Image
 
 		try
 		{
-			/** @var Image $imageObj */
 			$imageObj = static::create($image, array($width, $height, $mode));
 			$imageObj->setTargetPath($target);
 			$imageObj->setForceOverride($force);

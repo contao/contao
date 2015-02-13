@@ -69,6 +69,7 @@ class BackendIndex extends \Backend
 	 */
 	public function run()
 	{
+		/** @var \BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_login');
 
 		// Show a cookie warning

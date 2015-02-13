@@ -57,20 +57,21 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * True if a new version has to be created
-	 * @param boolean
+	 * @var boolean
 	 */
 	protected $blnCreateNewVersion = false;
 
 	/**
 	 * Database assisted
-	 * @param boolean
+	 * @var boolean
 	 */
 	protected $blnIsDbAssisted = false;
 
 
 	/**
 	 * Initialize the object
-	 * @param string
+	 *
+	 * @param string $strTable
 	 */
 	public function __construct($strTable)
 	{
@@ -185,8 +186,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Set an object property
-	 * @param string
-	 * @param mixed
+	 *
+	 * @param string $strKey
+	 * @param mixed  $varValue
 	 */
 	public function __set($strKey, $varValue)
 	{
@@ -205,7 +207,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Return an object property
-	 * @param string
+	 *
+	 * @param string $strKey
+	 *
 	 * @return mixed
 	 */
 	public function __get($strKey)
@@ -235,6 +239,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * List all files and folders of the file system
+	 *
 	 * @return string
 	 */
 	public function showAll()
@@ -419,6 +424,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Automatically switch to showAll
+	 *
 	 * @return string
 	 */
 	public function show()
@@ -459,7 +465,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Move an existing file or folder
-	 * @param string
+	 *
+	 * @param string $source
 	 */
 	public function cut($source=null)
 	{
@@ -585,8 +592,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Recursively duplicate files and folders
-	 * @param string
-	 * @param string
+	 *
+	 * @param string $source
+	 * @param string $destination
 	 */
 	public function copy($source=null, $destination=null)
 	{
@@ -738,7 +746,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Recursively delete files and folders
-	 * @param string
+	 *
+	 * @param string $source
 	 */
 	public function delete($source=null)
 	{
@@ -838,6 +847,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Automatically switch to showAll
+	 *
 	 * @return string
 	 */
 	public function undo()
@@ -848,7 +858,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Move one or more local files to the server
-	 * @param boolean
+	 *
+	 * @param boolean $blnIsAjax
+	 *
 	 * @return string
 	 */
 	public function move($blnIsAjax=false)
@@ -885,6 +897,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$class = 'FileUpload';
 		}
 
+		/** @var \FileUpload $objUploader */
 		$objUploader = new $class();
 
 		// Process the uploaded files
@@ -1018,6 +1031,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Auto-generate a form to rename a file or folder
+	 *
 	 * @return string
 	 */
 	public function edit()
@@ -1046,6 +1060,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		$this->blnCreateNewVersion = false;
+
+		/** @var \FilesModel $objFile */
 		$objVersions = new \Versions($this->strTable, $objFile->id);
 
 		// Compare versions
@@ -1326,6 +1342,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Auto-generate a form to edit all records that are currently shown
+	 *
 	 * @return string
 	 */
 	public function editAll()
@@ -1376,6 +1393,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					$this->objActiveRecord = $objFile;
 				}
 
+				/** @var \FilesModel $objFile */
 				$objVersions = new \Versions($this->strTable, $objFile->id);
 				$objVersions->initialize();
 
@@ -1638,6 +1656,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Load the source editor
+	 *
 	 * @return string
 	 */
 	public function source()
@@ -1737,6 +1756,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				// Update the database
 				if ($this->blnIsDbAssisted)
 				{
+					/** @var \FilesModel $objMeta */
 					$objMeta->hash = $objFile->hash;
 					$objMeta->save();
 
@@ -1772,6 +1792,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			ob_start();
 			include TL_ROOT . '/system/config/ace.php';
 			$codeEditor = ob_get_clean();
+
+			unset($selector, $type);
 		}
 
 		// Versions overview
@@ -1873,7 +1895,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Save the current value
-	 * @param mixed
+	 *
+	 * @param mixed $varValue
+	 *
 	 * @throws \Exception
 	 */
 	protected function save($varValue)
@@ -2066,6 +2090,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Synchronize the file system with the database
+	 *
 	 * @return string
 	 */
 	public function sync()
@@ -2166,6 +2191,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Return the name of the current palette
+	 *
 	 * @return string
 	 */
 	public function getPalette()
@@ -2176,8 +2202,10 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Generate a particular subpart of the tree and return it as HTML string
-	 * @param string
-	 * @param integer
+	 *
+	 * @param string  $strFolder
+	 * @param integer $level
+	 *
 	 * @return string
 	 */
 	public function ajaxTreeView($strFolder, $level)
@@ -2208,11 +2236,13 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Render the file tree and return it as HTML string
-	 * @param string
-	 * @param integer
-	 * @param boolean
-	 * @param boolean
-	 * @param array
+	 *
+	 * @param string  $path
+	 * @param integer $intMargin
+	 * @param boolean $mount
+	 * @param boolean $blnProtected
+	 * @param array   $arrClipboard
+	 *
 	 * @return string
 	 */
 	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null)
@@ -2432,7 +2462,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Return true if the current folder is mounted
-	 * @param string
+	 *
+	 * @param string $strFolder
+	 *
 	 * @return boolean
 	 */
 	protected function isMounted($strFolder)
@@ -2465,7 +2497,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Check a file operation
-	 * @param string
+	 *
+	 * @param string $strFile
+	 *
 	 * @return boolean
 	 */
 	protected function isValid($strFile)
@@ -2528,7 +2562,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Return an array of encrypted folder names
-	 * @param string
+	 *
+	 * @param string $strPath
+	 *
 	 * @return array
 	 */
 	protected function getMD5Folders($strPath)
