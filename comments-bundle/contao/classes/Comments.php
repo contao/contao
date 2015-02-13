@@ -21,14 +21,16 @@ class Comments extends \Frontend
 
 	/**
 	 * Add comments to a template
-	 * @param \FrontendTemplate
-	 * @param \stdClass
-	 * @param string
-	 * @param integer
-	 * @param mixed
+	 *
+	 * @param \FrontendTemplate|object $objTemplate
+	 * @param \stdClass                $objConfig
+	 * @param string                   $strSource
+	 * @param integer                  $intParent
+	 * @param mixed                    $varNotifies
 	 */
 	public function addCommentsToTemplate(\FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
+		/** @var \PageModel $objPage */
 		global $objPage;
 
 		$limit = 0;
@@ -36,6 +38,7 @@ class Comments extends \Frontend
 		$total = 0;
 		$gtotal = 0;
 		$arrComments = array();
+
 		$objTemplate->comments = array(); // see #4064
 
 		// Pagination
@@ -61,13 +64,16 @@ class Comments extends \Frontend
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$objConfig->perPage), 1))
 			{
+				/** @var \PageModel $objPage */
 				global $objPage;
+
 				$objPage->noSearch = 1;
 				$objPage->cache = 0;
 
 				// Send a 404 header
 				header('HTTP/1.1 404 Not Found');
 				$objTemplate->allowComments = false;
+
 				return;
 			}
 
@@ -102,6 +108,7 @@ class Comments extends \Frontend
 				$objConfig->template = 'com_default';
 			}
 
+			/** @var \FrontendTemplate|object $objPartial */
 			$objPartial = new \FrontendTemplate($objConfig->template);
 
 			while ($objComments->next())
@@ -155,11 +162,12 @@ class Comments extends \Frontend
 
 	/**
 	 * Add a form to create new comments
-	 * @param \FrontendTemplate
-	 * @param \stdClass
-	 * @param string
-	 * @param integer
-	 * @param mixed
+	 *
+	 * @param \FrontendTemplate|object $objTemplate
+	 * @param \stdClass                $objConfig
+	 * @param string                   $strSource
+	 * @param integer                  $intParent
+	 * @param mixed                    $varNotifies
 	 */
 	protected function renderCommentForm(\FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
@@ -178,6 +186,7 @@ class Comments extends \Frontend
 		if (\Input::get('token'))
 		{
 			static::changeSubscriptionStatus($objTemplate);
+
 			return;
 		}
 
@@ -245,6 +254,7 @@ class Comments extends \Frontend
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
 		{
+			/** @var \Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
 
 			// Continue if the class is not defined
@@ -254,6 +264,8 @@ class Comments extends \Frontend
 			}
 
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'];
+
+			/** @var \Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name'], $arrField['value']));
 
 			// Validate the widget
@@ -280,7 +292,9 @@ class Comments extends \Frontend
 		// Do not index or cache the page with the confirmation message
 		if ($_SESSION['TL_COMMENT_ADDED'])
 		{
+			/** @var \PageModel $objPage */
 			global $objPage;
+
 			$objPage->noSearch = 1;
 			$objPage->cache = 0;
 
@@ -399,19 +413,22 @@ class Comments extends \Frontend
 	 * Replace bbcode and return the HTML string
 	 *
 	 * Supports the following tags:
-	 * - [b][/b] bold
-	 * - [i][/i] italic
-	 * - [u][/u] underline
-	 * - [img][/img]
-	 * - [code][/code]
-	 * - [color=#ff0000][/color]
-	 * - [quote][/quote]
-	 * - [quote=tim][/quote]
-	 * - [url][/url]
-	 * - [url=http://][/url]
-	 * - [email][/email]
-	 * - [email=name@example.com][/email]
-	 * @param string
+	 *
+	 * * [b][/b] bold
+	 * * [i][/i] italic
+	 * * [u][/u] underline
+	 * * [img][/img]
+	 * * [code][/code]
+	 * * [color=#ff0000][/color]
+	 * * [quote][/quote]
+	 * * [quote=tim][/quote]
+	 * * [url][/url]
+	 * * [url=http://][/url]
+	 * * [email][/email]
+	 * * [email=name@example.com][/email]
+	 *
+	 * @param string $strComment
+	 *
 	 * @return string
 	 */
 	public function parseBbCode($strComment)
@@ -464,7 +481,9 @@ class Comments extends \Frontend
 
 	/**
 	 * Convert line feeds to <br /> tags
-	 * @param string
+	 *
+	 * @param string $strComment
+	 *
 	 * @return string
 	 */
 	public function convertLineFeeds($strComment)
@@ -491,7 +510,8 @@ class Comments extends \Frontend
 
 	/**
 	 * Add the subscription and send the activation mail (double opt-in)
-	 * @param \CommentsModel
+	 *
+	 * @param \CommentsModel $objComment
 	 */
 	public static function addCommentsSubscription(\CommentsModel $objComment)
 	{
@@ -539,7 +559,8 @@ class Comments extends \Frontend
 
 	/**
 	 * Change the subscription status
-	 * @param \FrontendTemplate
+	 *
+	 * @param \FrontendTemplate|object $objTemplate
 	 */
 	public static function changeSubscriptionStatus(\FrontendTemplate $objTemplate)
 	{
@@ -548,6 +569,7 @@ class Comments extends \Frontend
 		if ($objNotify === null)
 		{
 			$objTemplate->confirm = 'Invalid token';
+
 			return;
 		}
 
@@ -567,7 +589,8 @@ class Comments extends \Frontend
 
 	/**
 	 * Notify the subscribers of new comments
-	 * @param \CommentsModel
+	 *
+	 * @param \CommentsModel $objComment
 	 */
 	public static function notifyCommentsSubscribers(\CommentsModel $objComment)
 	{
