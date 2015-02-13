@@ -216,7 +216,6 @@ class ClassLoader
 
 			foreach ($kernel->getContaoBundles() as $bundle)
 			{
-				/** @var ContaoBundle $bundle */
 				$strFile = $bundle->getContaoResourcesPath() . '/config/autoload.php';
 
 				if (file_exists($strFile))

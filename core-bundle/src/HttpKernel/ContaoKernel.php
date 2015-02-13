@@ -30,7 +30,7 @@ abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
     protected $bundlesMap = [];
 
     /**
-     * @var array
+     * @var ContaoBundleInterface[]
      */
     protected $contaoBundles = [];
 

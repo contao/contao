@@ -280,7 +280,6 @@ class Installer extends \Controller
 		// Only check the active modules (see #4541)
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
-			/** @var ContaoBundle $bundle */
 			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 
 			if (!is_dir($strDir))
@@ -340,7 +339,6 @@ class Installer extends \Controller
 		// Only check the active modules (see #4541)
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
-			/** @var ContaoBundle $bundle */
 			if (in_array($bundle->getName(), array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
 			{
 				continue; // ignore the database.sql of these modules

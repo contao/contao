@@ -55,7 +55,6 @@ class ModuleLoader
 
 			foreach ($kernel->getContaoBundles() as $bundle)
 			{
-				/** @var ContaoBundle $bundle */
 				static::$active[] = $bundle->getName();
 			}
 		}

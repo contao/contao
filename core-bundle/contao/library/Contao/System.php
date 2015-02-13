@@ -330,7 +330,6 @@ abstract class System
 
 				foreach ($kernel->getContaoBundles() as $bundle)
 				{
-					/** @var ContaoBundle $bundle */
 					$strFile = $bundle->getContaoResourcesPath() . '/languages/' . $strCreateLang . '/' . $strName;
 
 					if (file_exists($strFile . '.xlf'))
@@ -392,7 +391,6 @@ abstract class System
 
 				foreach ($kernel->getContaoBundles() as $bundle)
 				{
-					/** @var ContaoBundle $bundle */
 					if (is_dir(TL_ROOT . '/' . $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage))
 					{
 						$blnIsInstalled = true;

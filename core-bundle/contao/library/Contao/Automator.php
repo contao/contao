@@ -553,7 +553,6 @@ class Automator extends \System
 
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
-			/** @var ContaoBundle $bundle */
 			foreach ($bundle->getPublicFolders() as $strPath)
 			{
 				if (strpos($strPath, '../') !== false)
@@ -578,7 +577,6 @@ class Automator extends \System
 
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
-			/** @var ContaoBundle $bundle */
 			$strPath = $bundle->getContaoResourcesPath() . '/themes';
 
 			if (is_dir($strPath))
@@ -631,7 +629,6 @@ class Automator extends \System
 
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
-			/** @var ContaoBundle $bundle */
 			$strFile = $bundle->getContaoResourcesPath() . '/config/autoload.php';
 
 			if (file_exists($strFile))
@@ -677,7 +674,6 @@ class Automator extends \System
 		// Parse all active modules
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
-			/** @var ContaoBundle $bundle */
 			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 
 			if (!is_dir($strDir))
@@ -760,7 +756,6 @@ class Automator extends \System
 			// Parse all active modules
 			foreach ($kernel->getContaoBundles() as $bundle)
 			{
-				/** @var ContaoBundle $bundle */
 				$strDir = $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage;
 
 				if (!is_dir($strDir))
@@ -842,7 +837,6 @@ class Automator extends \System
 		// Only check the active modules (see #4541)
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
-			/** @var ContaoBundle $bundle */
 			$strDir = $bundle->getContaoResourcesPath() . '/dca';
 
 			if (!is_dir($strDir))

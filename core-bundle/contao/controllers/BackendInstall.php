@@ -757,7 +757,6 @@ class BackendInstall extends \Backend
 
 			foreach ($kernel->getContaoBundles() as $bundle)
 			{
-				/** @var ContaoBundle $bundle */
 				$modules[] = $bundle->getName();
 			}
 

@@ -257,7 +257,6 @@ abstract class Backend extends \Controller
 		// Always scan all folders and not just the active modules (see #4200)
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
-			/** @var ContaoBundle $bundle */
 			$arrFiles[] = $bundle->getContaoResourcesPath() . '/config/runonce.php';
 		}
 
