@@ -85,7 +85,7 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
         $dirs  = [];
         $files = $this->findHtaccessFiles();
 
-        /** @var SplFileInfo $file */
+        /** @var SplFileInfo[] $files */
         foreach ($files as $file) {
             $htaccess = new HtaccessAnalyzer($file);
 
