@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
  *
@@ -113,7 +113,7 @@ class ToggleViewListenerTest extends TestCase
         $hasCookie   = false;
         $actualValue = null;
 
-        /** @type Cookie[] $cookies */
+        /** @var Cookie[] $cookies */
         $cookies = $response->headers->getCookies();
 
         foreach ($cookies as $cookie) {

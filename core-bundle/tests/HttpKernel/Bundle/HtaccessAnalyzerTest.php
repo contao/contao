@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *

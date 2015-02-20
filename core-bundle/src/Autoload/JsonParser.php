@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
  *
@@ -128,7 +128,7 @@ class JsonParser implements ParserInterface
     }
 
     /**
-     * Return the last JSON error message (not supported in PHP 5.4)
+     * Return the last JSON error message (not supported in PHP 5.4).
      *
      * @return string The last JSON error message
      */

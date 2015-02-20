@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
  *
@@ -120,7 +120,7 @@ class ContaoKernelTest extends TestCase
             $this->kernel,
             [
                 new FrameworkBundle(),
-                new ContaoCoreBundle()
+                new ContaoCoreBundle(),
             ]
         );
 

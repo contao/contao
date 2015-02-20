@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
  *
@@ -109,11 +109,11 @@ class ConfigResolverTest extends TestCase
                 'dev',
                 [
                     $config1,
-                    $config2
+                    $config2,
                 ],
                 [
                     'name1' => 'class1',
-                    'name2' => 'class2'
+                    'name2' => 'class2',
                 ],
             ],
             'Test replaces' => [
@@ -121,23 +121,23 @@ class ConfigResolverTest extends TestCase
                 [
                     $config1,
                     $config2,
-                    $config3
+                    $config3,
                 ],
                 [
-                    'name3' => 'class3'
+                    'name3' => 'class3',
                 ],
             ],
             'Test load after a bundle that does not exist but is replaced by new one' => [
                 'dev',
                 [
                     $config4,
-                    $config5
+                    $config5,
                 ],
                 [
                     'name5' => 'class5',
-                    'name4' => 'class4'
+                    'name4' => 'class4',
                 ],
-            ]
+            ],
         ];
     }
 
