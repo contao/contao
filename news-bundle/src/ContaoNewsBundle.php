@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
  *
@@ -25,7 +25,7 @@ class ContaoNewsBundle extends ContaoBundle
     public function getPublicFolders()
     {
         return [
-            $this->getPath() . '/../contao/assets'
+            $this->getPath() . '/../contao/assets',
         ];
     }
 }
