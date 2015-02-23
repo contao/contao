@@ -25,6 +25,11 @@ use Symfony\Component\Filesystem\LockHandler;
 class AutomatorCommand extends ContainerAwareCommand
 {
     /**
+     * @var array
+     */
+    protected $commands = [];
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -56,24 +61,17 @@ class AutomatorCommand extends ContainerAwareCommand
             return 0;
         }
 
-        $commands = $this->getCommands();
-        $task     = $input->getArgument('task');
+        $task = $this->getTaskFromInput($input, $output);
 
         // No task given
         if (null === $task) {
-            if ($input->isInteractive()) {
-                $dialog    = $this->getHelper('dialog');
-                $selection = $dialog->select($output, 'Please select a task:', $commands, 0);
-                $task      = $commands[$selection];
-            } else {
-                $output->writeln("No task given (see help contao:automator)");
+            $output->writeln("No task given (see help contao:automator)");
 
-                return 1;
-            }
+            return 1;
         }
 
         // Invalid task
-        if (!in_array($task, $commands)) {
+        if (!in_array($task, $this->getCommands())) {
             $output->writeln("Invalid task $task");
 
             return 1;
@@ -96,6 +94,20 @@ class AutomatorCommand extends ContainerAwareCommand
      */
     private function getCommands()
     {
+        if (empty($this->commands)) {
+            $this->commands = $this->generateCommandMap();
+        }
+
+        return $this->commands;
+    }
+
+    /**
+     * Generates the command map from the Automator class.
+     *
+     * @return array The commands array
+     */
+    private function generateCommandMap()
+    {
         $commands = [];
 
         // Find all public methods
@@ -109,5 +121,32 @@ class AutomatorCommand extends ContainerAwareCommand
         }
 
         return $commands;
+    }
+
+    /**
+     * Returns the task name from the argument list or via an interactive dialog.
+     *
+     * @param InputInterface  $input  The input context
+     * @param OutputInterface $output The output context
+     *
+     * @return string|null The task name or null
+     */
+    private function getTaskFromInput(InputInterface $input, OutputInterface $output)
+    {
+        $task = $input->getArgument('task');
+
+        if (null !== $task) {
+            return $task;
+        }
+
+        if (!$input->isInteractive()) {
+            return null;
+        }
+
+        $commands  = $this->getCommands();
+        $dialog    = $this->getHelper('dialog');
+        $selection = $dialog->select($output, 'Please select a task:', $commands, 0);
+
+        return $commands[$selection];
     }
 }
