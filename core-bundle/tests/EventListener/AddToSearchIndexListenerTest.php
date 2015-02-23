@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Tests the AddToSearchIndexListener class.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class AddToSearchIndexListenerTest extends TestCase
 {

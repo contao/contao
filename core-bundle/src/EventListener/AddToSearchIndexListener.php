@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 /**
  * Adds a page to the search index after the response has been sent.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class AddToSearchIndexListener
 {

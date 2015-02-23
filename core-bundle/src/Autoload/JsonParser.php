@@ -15,7 +15,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * Converts a .json configuration file into a configuration array.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class JsonParser implements ParserInterface
 {

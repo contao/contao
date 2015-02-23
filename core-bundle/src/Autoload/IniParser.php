@@ -15,7 +15,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * Converts an .ini configuration file into a configuration array.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class IniParser implements ParserInterface
 {

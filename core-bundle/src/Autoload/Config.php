@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Autoload;
 /**
  * Provides methods to get and set the bundle configuration.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Config implements ConfigInterface
 {

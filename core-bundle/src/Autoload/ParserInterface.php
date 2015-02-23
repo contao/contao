@@ -15,7 +15,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * Configuration parser interface.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 interface ParserInterface
 {

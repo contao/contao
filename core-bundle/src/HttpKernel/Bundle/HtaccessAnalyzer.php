@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\HttpKernel\Bundle;
 /**
  * Analyzes an .htaccess file.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class HtaccessAnalyzer
 {

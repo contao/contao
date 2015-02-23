@@ -17,8 +17,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 /**
  * Sets the TL_VIEW cookie based on the "toggle_view" query parameter.
  *
- * @author Leo Feyer <https://contao.org>
- * @author Andreas Schempp <https://www.terminal42.ch>
+ * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ToggleViewListener
 {

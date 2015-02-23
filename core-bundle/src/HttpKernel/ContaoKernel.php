@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Kernel;
 /**
  * Defines a custom Contao kernel which can autoload bundles.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
 {

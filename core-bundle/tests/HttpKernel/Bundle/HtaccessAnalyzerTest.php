@@ -17,7 +17,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * Tests the HtaccessAnalyzer class.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class HtaccessAnalyzerTest extends TestCase
 {

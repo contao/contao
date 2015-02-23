@@ -16,7 +16,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * Finds the autoload bundles and adds them to the resolver.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BundleAutoloader
 {

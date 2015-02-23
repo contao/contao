@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Test;
 /**
  * Abstract TestCase class.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {

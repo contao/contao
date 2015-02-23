@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Autoload;
 /**
  * Autoload configuration interface.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 interface ConfigInterface
 {

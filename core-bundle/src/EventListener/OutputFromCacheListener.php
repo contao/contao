@@ -15,8 +15,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 /**
  * Outputs a page from cache without loading a controller.
  *
- * @author Leo Feyer <https://contao.org>
- * @author Andreas Schempp <http://terminal42.ch>
+ * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
 class OutputFromCacheListener
 {

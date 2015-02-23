@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * Contao kernel interface.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 interface ContaoKernelInterface extends KernelInterface
 {

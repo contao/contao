@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 /**
  * Contao bundle interface.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 interface ContaoBundleInterface extends BundleInterface
 {

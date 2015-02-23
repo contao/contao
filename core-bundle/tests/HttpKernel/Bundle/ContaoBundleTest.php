@@ -16,7 +16,7 @@ use Contao\CoreBundle\Test\TestCase;
 /**
  * Tests the ContaoBundle class.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoBundleTest extends TestCase
 {

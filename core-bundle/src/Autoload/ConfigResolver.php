@@ -15,7 +15,7 @@ use Contao\CoreBundle\Exception\UnresolvableLoadingOrderException;
 /**
  * Converts the configuration objects into the bundles map.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ConfigResolver
 {
