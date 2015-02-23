@@ -49,7 +49,7 @@ class Dbafs
 {
     public static function syncFiles()
     {
-        return 'mylog.log';
+        return 'sync.log';
     }
 }
 HEREDOC

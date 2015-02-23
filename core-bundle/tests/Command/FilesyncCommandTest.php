@@ -33,30 +33,33 @@ class FilesyncCommandTest extends TestCase
     }
 
     /**
-     * Tests the output if not locked.
+     * Tests the output.
      */
-    public function testOutputNotLocked()
+    public function testOutput()
     {
         $command = new FilesyncCommand('contao:filesync');
         $tester  = new CommandTester($command);
 
         $tester->execute([]);
 
-        $this->assertEquals("  Synchronization complete (see mylog.log).\n", $tester->getDisplay());
+        $this->assertContains('Synchronization complete (see sync.log).', $tester->getDisplay());
     }
 
     /**
-     * Tests the output if not locked.
+     * Tests the lock.
      */
-    public function testOutputIfLocked()
+    public function testLock()
     {
         $lock = new LockHandler('contao:filesync');
         $lock->lock();
+
         $command = new FilesyncCommand('contao:filesync');
         $tester  = new CommandTester($command);
 
         $tester->execute([]);
 
-        $this->assertEquals("The command is already running in another process.\n", $tester->getDisplay());
+        $this->assertContains('The command is already running in another process.', $tester->getDisplay());
+
+        $lock->release();
     }
 }
