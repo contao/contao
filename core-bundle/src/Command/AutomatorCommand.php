@@ -22,6 +22,7 @@ use Symfony\Component\Filesystem\LockHandler;
  * Runs Automator tasks on the command line.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Yanick Witschi <https://github.com/toflar>
  */
 class AutomatorCommand extends ContainerAwareCommand
 {
@@ -129,7 +130,7 @@ class AutomatorCommand extends ContainerAwareCommand
         $task = $input->getArgument('task');
 
         $commands  = $this->getCommands();
-        
+
         if (null !== $task) {
             if (!in_array($task, $commands)) {
                 throw new \InvalidArgumentException(
