@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Filesystem\LockHandler;
 
 /**
@@ -144,9 +145,11 @@ class AutomatorCommand extends ContainerAwareCommand
         }
 
         $commands  = $this->getCommands();
-        $dialog    = $this->getHelper('dialog');
-        $selection = $dialog->select($output, 'Please select a task:', $commands, 0);
+        $question = new ChoiceQuestion('Please select a task:', $commands, 0);
 
-        return $commands[$selection];
+        /** @var \Symfony\Component\Console\Helper\QuestionHelper $question */
+        $questionHelper    = $this->getHelper('question');
+
+        return $questionHelper->ask($input, $output, $question);
     }
 }
