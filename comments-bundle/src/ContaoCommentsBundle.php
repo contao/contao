@@ -15,7 +15,7 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
 /**
  * Configures the Contao comments bundle.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoCommentsBundle extends ContaoBundle
 {
