@@ -15,7 +15,7 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
 /**
  * Configures the Contao news bundle.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoNewsBundle extends ContaoBundle
 {
