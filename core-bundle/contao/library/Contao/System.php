@@ -876,19 +876,6 @@ abstract class System
 
 
 	/**
-	 * Return the Symfony dependency injection container
-	 *
-	 * @return Container
-	 */
-	public static function getContainer()
-	{
-		global $kernel;
-
-		return $kernel->getContainer();
-	}
-
-
-	/**
 	 * Parse a date format string and translate textual representations
 	 *
 	 * @param string  $strFormat The date format string
