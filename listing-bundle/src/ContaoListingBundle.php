@@ -15,7 +15,7 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
 /**
  * Configures the Contao listing bundle.
  *
- * @author Leo Feyer <https://contao.org>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoListingBundle extends ContaoBundle
 {
