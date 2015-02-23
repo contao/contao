@@ -190,7 +190,7 @@ class Doctrine extends Database
      */
     protected function set_database($strDatabase)
     {
-        throw new \RuntimeException('Not implemented yet');
+        return $this->resConnection->exec("USE $strDatabase");
     }
 
 
