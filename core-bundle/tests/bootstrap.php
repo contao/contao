@@ -41,6 +41,20 @@ class Frontend
 HEREDOC
 );
 
+// Define a custom Dbafs class via eval() so it does not interfere with the IDE
+eval(<<<HEREDOC
+namespace Contao;
+
+class Dbafs
+{
+    public static function syncFiles()
+    {
+        return 'sync.log';
+    }
+}
+HEREDOC
+);
+
 $include = function ($file) {
     return file_exists($file) ? include $file : false;
 };
