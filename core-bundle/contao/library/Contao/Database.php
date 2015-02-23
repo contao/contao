@@ -71,12 +71,12 @@ abstract class Database
 	/**
 	 * Establish the database connection
 	 *
-     * @param array $arrConfig A configuration array
+	 * @param array $arrConfig A configuration array
 	 *
-     * @throws \Exception If a connection cannot be established
-     *
-     * @deprecated Deprecated since Contao 4, to be removed in Contao 5.
-     *             Use the Doctrine connection from Symfony container.
+	 * @throws \Exception If a connection cannot be established
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the Doctrine connection from Symfony container.
 	 */
 	protected function __construct(array $arrConfig)
 	{
@@ -136,9 +136,9 @@ abstract class Database
 	 * @param array $arrCustom A configuration array
 	 *
 	 * @return \Database The Database object
-     *
-     * @deprecated Deprecated since Contao 4, to be removed in Contao 5.
-     *             Use the Doctrine connection from Symfony container.
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the Doctrine connection from Symfony container.
 	 */
 	public static function getInstance(array $arrCustom=null)
 	{

@@ -3,11 +3,9 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2014 Leo Feyer
+ * Copyright (c) 2005-2015 Leo Feyer
  *
- * @package Library
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
 namespace Contao\Database;
@@ -29,6 +27,7 @@ class Doctrine extends Database
      */
     protected $resConnection;
 
+
     /**
      * {@inheritdoc}
      */
@@ -38,6 +37,7 @@ class Doctrine extends Database
         $this->resConnection = $container->get('doctrine.dbal.default_connection');
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -45,6 +45,7 @@ class Doctrine extends Database
     {
         unset($this->resConnection);
     }
+
 
     /**
      * {@inheritdoc}
@@ -56,6 +57,7 @@ class Doctrine extends Database
 
         return $tableNames;
     }
+
 
     /**
      * {@inheritdoc}
@@ -69,6 +71,7 @@ class Doctrine extends Database
             return new \RuntimeException('Not connected');
         }
     }
+
 
     /**
      * {@inheritdoc}
@@ -84,6 +87,7 @@ class Doctrine extends Database
         }
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -91,6 +95,7 @@ class Doctrine extends Database
     {
         $this->resConnection->beginTransaction();
     }
+
 
     /**
      * {@inheritdoc}
@@ -100,6 +105,7 @@ class Doctrine extends Database
         $this->resConnection->commit();
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -108,6 +114,10 @@ class Doctrine extends Database
         $this->resConnection->rollBack();
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     protected function list_fields($strTable)
     {
         $arrReturn = array();
@@ -171,6 +181,7 @@ class Doctrine extends Database
         return $arrReturn;
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -178,6 +189,7 @@ class Doctrine extends Database
     {
         throw new \RuntimeException('Not implemented yet');
     }
+
 
     /**
      * {@inheritdoc}
@@ -193,6 +205,7 @@ class Doctrine extends Database
         $this->resConnection->exec('LOCK TABLES ' . implode(', ', $arrLocks) . ';');
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -200,6 +213,7 @@ class Doctrine extends Database
     {
         $this->resConnection->exec('UNLOCK TABLES;');
     }
+
 
     /**
      * {@inheritdoc}
@@ -214,6 +228,7 @@ class Doctrine extends Database
         return ($status['Data_length'] + $status['Index_length']);
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -226,6 +241,7 @@ class Doctrine extends Database
 
         return $status['Auto_increment'];
     }
+
 
     /**
      * {@inheritdoc}
@@ -244,6 +260,7 @@ class Doctrine extends Database
 
         return array_pop($ids);
     }
+
 
     /**
      * {@inheritdoc}
