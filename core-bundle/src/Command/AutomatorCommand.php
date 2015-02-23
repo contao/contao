@@ -62,18 +62,10 @@ class AutomatorCommand extends ContainerAwareCommand
             return 0;
         }
 
-        $task = $this->getTaskFromInput($input, $output);
-
-        // No task given
-        if (null === $task) {
-            $output->writeln("No task given (see help contao:automator)");
-
-            return 1;
-        }
-
-        // Invalid task
-        if (!in_array($task, $this->getCommands())) {
-            $output->writeln("Invalid task $task");
+        try {
+            $task = $this->getTaskFromInput($input, $output);
+        } catch (\InvalidArgumentException $e) {
+            $output->writeln($e->getMessage() . ' (see help contao:automator)');
 
             return 1;
         }
@@ -136,18 +128,22 @@ class AutomatorCommand extends ContainerAwareCommand
     {
         $task = $input->getArgument('task');
 
+        $commands  = $this->getCommands();
+        
         if (null !== $task) {
+            if (!in_array($task, $commands)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Value "%s" is invalid', $task)
+                );
+            }
+
             return $task;
         }
 
-        if (!$input->isInteractive()) {
-            return null;
-        }
-
-        $commands  = $this->getCommands();
         $question = new ChoiceQuestion('Please select a task:', $commands, 0);
+        $question->setMaxAttempts(1);
 
-        /** @var \Symfony\Component\Console\Helper\QuestionHelper $question */
+        /** @var \Symfony\Component\Console\Helper\QuestionHelper $questionHelper */
         $questionHelper    = $this->getHelper('question');
 
         return $questionHelper->ask($input, $output, $question);
