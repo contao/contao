@@ -14,6 +14,7 @@ use Contao\Database;
 use Contao\Database\Doctrine\Statement;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Doctrine database class
@@ -33,8 +34,10 @@ class Doctrine extends Database
      */
     protected function connect()
     {
-        $container           = System::getContainer();
-        $this->resConnection = $container->get('doctrine.dbal.default_connection');
+        /** @var KernelInterface $kernel */
+        global $kernel;
+
+        $this->resConnection = $kernel->getContainer()->get('doctrine.dbal.default_connection');
     }
 
 
