@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 
 
 /**
@@ -577,6 +578,11 @@ class Automator extends \System
 
 		foreach ($kernel->getContaoBundles() as $bundle)
 		{
+			if ($bundle instanceof ContaoModuleBundle)
+			{
+				continue;
+			}
+
 			$strPath = $bundle->getContaoResourcesPath() . '/themes';
 
 			if (is_dir($strPath))
