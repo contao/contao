@@ -1081,11 +1081,11 @@ abstract class Controller extends \System
 			// Correctly handle the "index" alias (see #3961)
 			if ($arrRow['alias'] == 'index' && $strParams == '')
 			{
-				$strUrl = (\Config::get('rewriteURL') ? '' : 'index.php/') . $strLanguage;
+				$strUrl = (\Config::get('rewriteURL') ? '' : \Environment::get('script') . '/') . $strLanguage;
 			}
 			else
 			{
-				$strUrl = (\Config::get('rewriteURL') ? '' : 'index.php/') . $strLanguage . ($arrRow['alias'] ?: $arrRow['id']) . $strParams . \Config::get('urlSuffix');
+				$strUrl = (\Config::get('rewriteURL') ? '' : \Environment::get('script') . '/') . $strLanguage . ($arrRow['alias'] ?: $arrRow['id']) . $strParams . \Config::get('urlSuffix');
 			}
 		}
 		else
@@ -1102,7 +1102,7 @@ abstract class Controller extends \System
 				}
 			}
 
-			$strUrl = 'index.php?id=' . $arrRow['id'] . $strRequest;
+			$strUrl = \Environment::get('script') . '?id=' . $arrRow['id'] . $strRequest;
 		}
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)
