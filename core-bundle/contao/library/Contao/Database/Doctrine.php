@@ -13,7 +13,9 @@ namespace Contao\Database;
 use Contao\Database;
 use Contao\Database\Doctrine\Statement;
 use Contao\System;
+use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -37,7 +39,24 @@ class Doctrine extends Database
         /** @var KernelInterface $kernel */
         global $kernel;
 
-        $this->resConnection = $kernel->getContainer()->get('doctrine.dbal.default_connection');
+        // This is for BC
+        if ($this->arrConfig['isCustomConfig']) {
+            $config = new Configuration();
+
+            $connectionParams = array(
+                'dbname'    => $this->arrConfig['dbDatabase'],
+                'user'      => $this->arrConfig['dbUser'],
+                'password'  => $this->arrConfig['dbPass'],
+                'host'      => $this->arrConfig['dbHost'],
+
+                // Custom configuration was always limited to one driver only
+                'driver'    => $kernel->getContainer()->getParameter('database_driver')
+            );
+
+            $this->resConnection = DriverManager::getConnection($connectionParams, $config);
+        } else {
+            $this->resConnection = $kernel->getContainer()->get('doctrine.dbal.default_connection');
+        }
     }
 
 

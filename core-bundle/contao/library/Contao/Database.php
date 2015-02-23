@@ -158,7 +158,13 @@ abstract class Database
 
 		if (is_array($arrCustom))
 		{
-			$arrConfig = array_merge($arrConfig, $arrCustom);
+            $arrConfig = array_merge(
+                $arrConfig,
+                array_merge(
+                    $arrCustom,
+                    array('isCustomConfig' => true)
+                )
+            );
 		}
 
 		// Sort the array before generating the key
