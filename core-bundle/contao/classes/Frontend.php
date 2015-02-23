@@ -69,14 +69,14 @@ abstract class Frontend extends \Controller
 			return null;
 		}
 
-		// Get the request string without the index.php fragment
-		if (\Environment::get('request') == 'index.php')
+		// Get the request string without the script name
+		if (\Environment::get('request') == \Environment::get('script'))
 		{
 			$strRequest = '';
 		}
 		else
 		{
-			list($strRequest) = explode('?', str_replace('index.php/', '', \Environment::get('request')), 2);
+			list($strRequest) = explode('?', str_replace(\Environment::get('script') . '/', '', \Environment::get('request')), 2);
 		}
 
 		// URL decode here (see #6232)
@@ -343,7 +343,7 @@ abstract class Frontend extends \Controller
 			// Redirect to the language root (e.g. en/)
 			if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty') && \Environment::get('request') == '')
 			{
-				static::redirect((!\Config::get('rewriteURL') ? 'index.php/' : '') . $objRootPage->language . '/', 301);
+				static::redirect((!\Config::get('rewriteURL') ? \Environment::get('script') . '/' : '') . $objRootPage->language . '/', 301);
 			}
 		}
 
@@ -424,7 +424,7 @@ abstract class Frontend extends \Controller
 		// Do not use aliases
 		if (\Config::get('disableAlias'))
 		{
-			return 'index.php?' . preg_replace('/^&(amp;)?/i', '', $strParams);
+			return \Environment::get('script') . '?' . preg_replace('/^&(amp;)?/i', '', $strParams);
 		}
 
 		/** @var \PageModel $objPage */
@@ -446,7 +446,7 @@ abstract class Frontend extends \Controller
 			$pageLanguage = $objPage->rootLanguage . '/';
 		}
 
-		return (\Config::get('rewriteURL') ? '' : 'index.php/') . $pageLanguage . $pageId . $strParams . \Config::get('urlSuffix');
+		return (\Config::get('rewriteURL') ? '' : \Environment::get('script') . '/') . $pageLanguage . $pageId . $strParams . \Config::get('urlSuffix');
 	}
 
 
@@ -722,7 +722,7 @@ abstract class Frontend extends \Controller
 		// primary browser language. This is a compromise between not caching
 		// empty requests at all and considering all browser languages, which
 		// is not possible for various reasons.
-		if (\Environment::get('request') == '' || \Environment::get('request') == 'index.php')
+		if (\Environment::get('request') == '' || \Environment::get('request') == \Environment::get('script'))
 		{
 			// Return if the language is added to the URL and the empty domain will be redirected
 			if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty'))

@@ -1140,7 +1140,7 @@ abstract class System
 
 
 	/**
-	 * Return the request string without the index.php fragment
+	 * Return the request string without the script name
 	 *
 	 * @param boolean $blnAmpersand If true, ampersands will be encoded
 	 *

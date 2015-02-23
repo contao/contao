@@ -52,14 +52,14 @@ class PageError404 extends \Frontend
 		// Forward if the language should be but is not set (see #4028)
 		if (\Config::get('addLanguageToUrl'))
 		{
-			// Get the request string without the index.php fragment
-			if (\Environment::get('request') == 'index.php')
+			// Get the request string without the script name
+			if (\Environment::get('request') == \Environment::get('script'))
 			{
 				$strRequest = '';
 			}
 			else
 			{
-				$strRequest = str_replace('index.php/', '', \Environment::get('request'));
+				$strRequest = str_replace(\Environment::get('script') . '/', '', \Environment::get('request'));
 			}
 
 			// Only redirect if there is no language fragment (see #4669)

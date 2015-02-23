@@ -463,7 +463,7 @@ class Environment
 	{
 		$strRequest = static::get('request');
 
-		if ($strRequest == 'index.php')
+		if ($strRequest == \Environment::get('script'))
 		{
 			return '';
 		}
