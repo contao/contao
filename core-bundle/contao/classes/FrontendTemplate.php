@@ -204,7 +204,7 @@ class FrontendTemplate extends \Template
 		if ($intCache > 0 && (\Config::get('cacheMode') == 'both' || \Config::get('cacheMode') == 'server'))
 		{
 			// If the request string is empty, use a special cache tag which considers the page language
-			if (\Environment::get('request') == '' || \Environment::get('request') == 'index.php')
+			if (\Environment::get('request') == '' || \Environment::get('request') == \Environment::get('script'))
 			{
 				$strCacheKey = \Environment::get('base') . 'empty.' . $objPage->language;
 			}

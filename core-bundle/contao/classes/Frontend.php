@@ -69,7 +69,7 @@ abstract class Frontend extends \Controller
 			return null;
 		}
 
-		// Get the request string without the script fragment
+		// Get the request string without the script name
 		if (\Environment::get('request') == \Environment::get('script'))
 		{
 			$strRequest = '';
