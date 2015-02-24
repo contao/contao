@@ -12,6 +12,7 @@ namespace Contao;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 
 /**
@@ -1055,20 +1056,29 @@ abstract class Controller extends \System
 	 */
 	protected static function replaceOldBePaths($strContext)
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$router = $kernel->getContainer()->get('router');
+
+		$generate = function ($route) use ($router) {
+			return str_replace(\Environment::get('path') . '/', '', $router->generate($route));
+		};
+
 		$arrMapper = array
 		(
-			'contao/changelog.php' => \Environment::get('script') . '/contao/changelog',
-			'contao/confirm.php'   => \Environment::get('script') . '/contao/confirm',
-			'contao/file.php'      => \Environment::get('script') . '/contao/file',
-			'contao/help.php'      => \Environment::get('script') . '/contao/help',
-			'contao/index.php'     => \Environment::get('script') . '/contao/login',
-			'contao/install.php'   => \Environment::get('script') . '/contao/install',
-			'contao/main.php'      => \Environment::get('script') . '/contao',
-			'contao/page.php'      => \Environment::get('script') . '/contao/page',
-			'contao/password.php'  => \Environment::get('script') . '/contao/password',
-			'contao/popup.php'     => \Environment::get('script') . '/contao/popup',
-			'contao/preview.php'   => \Environment::get('script') . '/contao/preview',
-			'contao/switch.php'    => \Environment::get('script') . '/contao/switch'
+			'contao/changelog.php' => $generate('contao_backend_changelog'),
+			'contao/confirm.php'   => $generate('contao_backend_confirm'),
+			'contao/file.php'      => $generate('contao_backend_file'),
+			'contao/help.php'      => $generate('contao_backend_help'),
+			'contao/index.php'     => $generate('contao_backend_login'),
+			'contao/install.php'   => $generate('contao_backend_install'),
+			'contao/main.php'      => $generate('contao_backend'),
+			'contao/page.php'      => $generate('contao_backend_page'),
+			'contao/password.php'  => $generate('contao_backend_password'),
+			'contao/popup.php'     => $generate('contao_backend_popup'),
+			'contao/preview.php'   => $generate('contao_backend_preview'),
+			'contao/switch.php'    => $generate('contao_backend_switch')
 		);
 
 		return str_replace(array_keys($arrMapper), array_values($arrMapper), $strContext);
@@ -1125,7 +1135,7 @@ abstract class Controller extends \System
 		}
 
 		$strUrl = $objRouter->generate($strRoute, $arrParams);
-		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		$strUrl = str_replace(\Environment::get('path') . '/', '', $strUrl);
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)
 		if ($blnFixDomain && $arrRow['domain'] != '' && $arrRow['domain'] != \Environment::get('host'))
