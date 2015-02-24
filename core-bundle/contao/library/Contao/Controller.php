@@ -1004,9 +1004,7 @@ abstract class Controller extends \System
 		}
 
 		$strLocation = str_replace('&amp;', '&', $strLocation);
-
-		// FIXME: replace old entry points in redirect attempts
-		$strLocation = str_replace('contao/main.php', \Environment::get('script') . '/contao', $strLocation);
+		$strLocation = static::replaceOldBePaths($strLocation);
 
 		// Make the location an absolute URL
 		if (!preg_match('@^https?://@i', $strLocation))
@@ -1048,6 +1046,33 @@ abstract class Controller extends \System
 		exit;
 	}
 
+	/**
+	 * Replace the old back end paths
+	 *
+	 * @param string $strContext The context
+	 *
+	 * @return string The modified context
+	 */
+	protected static function replaceOldBePaths($strContext)
+	{
+		$arrMapper = array
+		(
+			'contao/changelog.php' => \Environment::get('script') . '/contao/changelog',
+			'contao/confirm.php'   => \Environment::get('script') . '/contao/confirm',
+			'contao/file.php'      => \Environment::get('script') . '/contao/file',
+			'contao/help.php'      => \Environment::get('script') . '/contao/help',
+			'contao/index.php'     => \Environment::get('script') . '/contao/login',
+			'contao/install.php'   => \Environment::get('script') . '/contao/install',
+			'contao/main.php'      => \Environment::get('script') . '/contao',
+			'contao/page.php'      => \Environment::get('script') . '/contao/page',
+			'contao/password.php'  => \Environment::get('script') . '/contao/password',
+			'contao/popup.php'     => \Environment::get('script') . '/contao/popup',
+			'contao/preview.php'   => \Environment::get('script') . '/contao/preview',
+			'contao/switch.php'    => \Environment::get('script') . '/contao/switch'
+		);
+
+		return str_replace(array_keys($arrMapper), array_values($arrMapper), $strContext);
+    }
 
 	/**
 	 * Generate an URL depending on the current rewriteURL setting
