@@ -709,7 +709,7 @@ abstract class Backend extends \Controller
 
 						while ($objArticle->next())
 						{
-							$arrPages[] = $domain . static::generateFrontendUrl($objPages->row(), '/articles/' . (($objArticle->alias != '' && !\Config::get('disableAlias')) ? $objArticle->alias : $objArticle->id), $strLanguage);
+							$arrPages[] = $domain . static::generateFrontendUrl($objPages->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id), $strLanguage);
 						}
 					}
 				}

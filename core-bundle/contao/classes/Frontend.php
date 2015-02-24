@@ -59,11 +59,6 @@ abstract class Frontend extends \Controller
 	 */
 	public static function getPageIdFromUrl()
 	{
-		if (\Config::get('disableAlias'))
-		{
-			return is_numeric(\Input::get('id')) ? \Input::get('id') : null;
-		}
-
 		if (\Environment::get('request') == '')
 		{
 			return null;
@@ -393,25 +388,15 @@ abstract class Frontend extends \Controller
 			unset($arrGet['language']);
 		}
 
-		// Determine connector and separator
-		if (\Config::get('disableAlias'))
-		{
-			$strConnector = '&amp;';
-			$strSeparator = '=';
-		}
-		else
-		{
-			$strConnector = '/';
-			$strSeparator = '/';
-		}
-
-		$strParams = '';
+		$strConnector = '/';
+		$strSeparator = '/';
+		$strParams    = '';
 
 		// Compile the parameters string
 		foreach ($arrGet as $k=>$v)
 		{
 			// Omit the key if it is an auto_item key (see #5037)
-			if (!\Config::get('disableAlias') && \Config::get('useAutoItem') && ($k == 'auto_item' || in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
+			if (\Config::get('useAutoItem') && ($k == 'auto_item' || in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
 			{
 				$strParams .= $strConnector . urlencode($v);
 			}
@@ -419,12 +404,6 @@ abstract class Frontend extends \Controller
 			{
 				$strParams .= $strConnector . urlencode($k) . $strSeparator . urlencode($v);
 			}
-		}
-
-		// Do not use aliases
-		if (\Config::get('disableAlias'))
-		{
-			return \Environment::get('script') . '?' . preg_replace('/^&(amp;)?/i', '', $strParams);
 		}
 
 		/** @var \PageModel $objPage */

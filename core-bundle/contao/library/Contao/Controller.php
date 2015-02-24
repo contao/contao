@@ -1058,55 +1058,19 @@ abstract class Controller extends \System
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		if (!\Config::get('disableAlias'))
-		{
-			$strLanguage = '';
+        $strRequest = '';
 
-			if (\Config::get('addLanguageToUrl'))
-			{
-				if ($strForceLang != '')
-				{
-					$strLanguage = $strForceLang . '/';
-				}
-				elseif (isset($arrRow['language']) && $arrRow['type'] == 'root')
-				{
-					$strLanguage = $arrRow['language'] . '/';
-				}
-				elseif (TL_MODE == 'FE')
-				{
-					/** @var \PageModel $objPage */
-					global $objPage;
+        if ($strParams != '')
+        {
+            $arrChunks = explode('/', preg_replace('@^/@', '', $strParams));
 
-					$strLanguage = $objPage->rootLanguage . '/';
-				}
-			}
+            for ($i=0, $c=count($arrChunks); $i<$c; $i=($i+2))
+            {
+                $strRequest .= sprintf('&%s=%s', $arrChunks[$i], $arrChunks[($i+1)]);
+            }
+        }
 
-			// Correctly handle the "index" alias (see #3961)
-			if ($arrRow['alias'] == 'index' && $strParams == '')
-			{
-				$strUrl = (\Config::get('rewriteURL') ? '' : \Environment::get('script') . '/') . $strLanguage;
-			}
-			else
-			{
-				$strUrl = (\Config::get('rewriteURL') ? '' : \Environment::get('script') . '/') . $strLanguage . ($arrRow['alias'] ?: $arrRow['id']) . $strParams . \Config::get('urlSuffix');
-			}
-		}
-		else
-		{
-			$strRequest = '';
-
-			if ($strParams != '')
-			{
-				$arrChunks = explode('/', preg_replace('@^/@', '', $strParams));
-
-				for ($i=0, $c=count($arrChunks); $i<$c; $i=($i+2))
-				{
-					$strRequest .= sprintf('&%s=%s', $arrChunks[$i], $arrChunks[($i+1)]);
-				}
-			}
-
-			$strUrl = \Environment::get('script') . '?id=' . $arrRow['id'] . $strRequest;
-		}
+        $strUrl = \Environment::get('script') . '?id=' . $arrRow['id'] . $strRequest;
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)
 		if ($blnFixDomain && $arrRow['domain'] != '' && $arrRow['domain'] != \Environment::get('host'))
@@ -1613,7 +1577,7 @@ abstract class Controller extends \System
 					$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 				}
 
-				$strHref .= ((\Config::get('disableAlias') || strpos($strHref, '?') !== false) ? '&amp;' : '?') . 'file=' . \System::urlEncode($objFiles->path);
+				$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . \System::urlEncode($objFiles->path);
 
 				$arrMeta = \Frontend::getMetaData($objFiles->meta, $objPage->language);
 

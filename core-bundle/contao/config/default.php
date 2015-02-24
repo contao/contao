@@ -18,7 +18,6 @@ $GLOBALS['TL_CONFIG']['displayErrors']  = false;
 $GLOBALS['TL_CONFIG']['logErrors']      = true;
 $GLOBALS['TL_CONFIG']['rewriteURL']     = false;
 $GLOBALS['TL_CONFIG']['folderUrl']      = false;
-$GLOBALS['TL_CONFIG']['disableAlias']   = false;
 $GLOBALS['TL_CONFIG']['minifyMarkup']   = false;
 $GLOBALS['TL_CONFIG']['gzipScripts']    = false;
 
