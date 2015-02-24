@@ -9,6 +9,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 200 }
 
+    contao.listener.container_scope:
+        class: Contao\CoreBundle\EventListener\ContainerScopeListener
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 254 }
+            - { name: kernel.event_listener, event: kernel.finish_request, method: onKernelFinishRequest, priority: -254 }
+
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         tags:
