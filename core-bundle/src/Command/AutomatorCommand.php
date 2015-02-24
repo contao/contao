@@ -61,25 +61,36 @@ class AutomatorCommand extends ContainerAwareCommand
         if (!$lock->lock()) {
             $output->writeln('The command is already running in another process.');
 
-            return 0;
+            return 1;
         }
 
+        // Run
         try {
-            $task = $this->getTaskFromInput($input, $output);
+            $this->runAutomator($input, $output);
         } catch (\InvalidArgumentException $e) {
             $output->writeln($e->getMessage() . ' (see help contao:automator)');
 
             return 1;
         }
 
-        // Run
-        $automator = new Automator();
-        $automator->$task();
-
         // Release the lock
         $lock->release();
 
         return 0;
+    }
+
+    /**
+     * Runs the Automator.
+     *
+     * @param InputInterface  $input  The input object
+     * @param OutputInterface $output The output object
+     */
+    private function runAutomator(InputInterface $input, OutputInterface $output)
+    {
+        $task = $this->getTaskFromInput($input, $output);
+
+        $automator = new Automator();
+        $automator->$task();
     }
 
     /**

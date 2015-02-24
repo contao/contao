@@ -48,8 +48,9 @@ class AutomatorCommandTest extends TestCase
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getStreamFromInput("\n"));
 
-        $tester->execute(['command' => $command->getName()]);
+        $code = $tester->execute(['command' => $command->getName()]);
 
+        $this->assertEquals(0, $code);
         $this->assertContains('Please select a task:', $tester->getDisplay());
         $this->assertContains('[10]', $tester->getDisplay());
     }
@@ -71,8 +72,9 @@ class AutomatorCommandTest extends TestCase
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getStreamFromInput("\n"));
 
-        $tester->execute(['command' => $command->getName()]);
+        $code = $tester->execute(['command' => $command->getName()]);
 
+        $this->assertEquals(1, $code);
         $this->assertEquals("The command is already running in another process.\n", $tester->getDisplay());
 
         $lock->release();
