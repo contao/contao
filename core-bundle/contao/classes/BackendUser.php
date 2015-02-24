@@ -119,7 +119,9 @@ class BackendUser extends \User
 		{
 			$key = null;
 
-			if (TL_SCRIPT == 'contao/main.php')
+			list($path) = explode('?', \Environment::get('request'), 2);
+
+			if (substr($path, -7) == '/contao')
 			{
 				$key = \Input::get('popup') ? 'popupReferer' : 'referer';
 			}
@@ -221,10 +223,17 @@ class BackendUser extends \User
 			return;
 		}
 
+		list($path) = explode('?', \Environment::get('request'), 2);
+
+		if (substr($path, -13) == '/contao/login')
+		{
+			return false;
+		}
+
 		$strRedirect = 'contao/';
 
 		// Redirect to the last page visited upon login
-		if (TL_SCRIPT == 'contao/main.php' || TL_SCRIPT == 'contao/preview.php')
+		if (substr($path, -7) == '/contao' || substr($path, -15) == '/contao/preview')
 		{
 			$strRedirect .= '?referer=' . base64_encode(\Environment::get('request'));
 		}
