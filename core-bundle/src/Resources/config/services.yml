@@ -4,6 +4,17 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
+    # Attention: the priority for this listener must be higher than any other listener that uses legacy Contao code
+    # Must be lower than route_listener (default: 32)
+    contao.listener.boostrap_legacy:
+        class: Contao\CoreBundle\EventListener\BootstrapLegacyListener
+        arguments:
+            - "@router"
+            - "%kernel.root_dir%"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onBootLegacyForRequest, priority: 30 }
+            - { name: kernel.event_listener, event: console.command, method: onBootLegacyForConsole }
+
     contao.listener.container_scope:
         class: Contao\CoreBundle\EventListener\ContainerScopeListener
         arguments:
@@ -12,22 +23,15 @@ services:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 254 }
             - { name: kernel.event_listener, event: kernel.finish_request, method: onKernelFinishRequest, priority: -254 }
 
-    contao.listener.legacy_script:
-        class: Contao\CoreBundle\EventListener\LegacyScriptListener
-        arguments:
-            - "@router"
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
     contao.listener.output_from_cache:
         class: Contao\CoreBundle\EventListener\OutputFromCacheListener
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 200 }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 150 }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest}
 
     contao.routing.backend_loader:
         parent: routing.bundle_resource_loader

@@ -23,8 +23,11 @@ class FrontendLoader extends Loader
      */
     public function load($resource, $type = null)
     {
-        $addlang = Config::get('addLanguageToUrl');
-        $suffix  = substr(Config::get('urlSuffix'), 1);
+        // FIXME: Make sure the config is only in parameters.yml
+        //$addlang = Config::get('addLanguageToUrl');
+        //$suffix  = substr(Config::get('urlSuffix'), 1);
+        $addlang = true;
+        $suffix = 'html';
 
         $routes = new RouteCollection();
 

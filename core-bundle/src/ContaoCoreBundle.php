@@ -15,6 +15,7 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 
+
 /**
  * Configures the Contao core bundle.
  *
@@ -27,8 +28,6 @@ class ContaoCoreBundle extends ContaoBundle
      */
     public function boot()
     {
-        require_once __DIR__ . '/../contao/bootstrap.php';
-
         // TODO: should the scopes be defined as constant like ContainerInterface::SCOPE_CONTAINER?
         $this->container->addScope(new Scope('frontend', 'request'));
         $this->container->addScope(new Scope('backend', 'request'));
@@ -39,8 +38,6 @@ class ContaoCoreBundle extends ContaoBundle
      */
     public function build(ContainerBuilder $container)
     {
-        require_once __DIR__ . '/../contao/bootstrap.php';
-
         $container->addCompilerPass(new SetApplicationPass());
     }
 }
