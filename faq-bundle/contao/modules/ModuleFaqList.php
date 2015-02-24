@@ -157,11 +157,11 @@ class ModuleFaqList extends \Module
 
 				if ($objTarget !== null)
 				{
-					$this->arrTargets[$jumpTo] = ampersand($this->generateFrontendUrl($objTarget->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ?  '/%s' : '/items/%s')));
+					$this->arrTargets[$jumpTo] = ampersand($this->generateFrontendUrl($objTarget->row(), (\Config::get('useAutoItem') ? '/%s' : '/items/%s')));
 				}
 			}
 		}
 
-		return sprintf($this->arrTargets[$jumpTo], ((!\Config::get('disableAlias') && $objFaq->alias != '') ? $objFaq->alias : $objFaq->id));
+		return sprintf($this->arrTargets[$jumpTo], ($objFaq->alias ?: $objFaq->id));
 	}
 }

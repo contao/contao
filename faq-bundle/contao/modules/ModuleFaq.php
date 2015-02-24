@@ -87,7 +87,7 @@ class ModuleFaq extends \Frontend
 					$domain = ($objParent->rootUseSSL ? 'https://' : 'http://') . ($objParent->domain ?: \Environment::get('host')) . \Environment::get('path') . '/';
 
 					// Generate the URL
-					$arrProcessed[$objFaq->jumpTo] = $domain . $this->generateFrontendUrl($objParent->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ?  '/%s' : '/items/%s'), $objParent->language);
+					$arrProcessed[$objFaq->jumpTo] = $domain . $this->generateFrontendUrl($objParent->row(), (\Config::get('useAutoItem') ? '/%s' : '/items/%s'), $objParent->language);
 				}
 
 				$strUrl = $arrProcessed[$objFaq->jumpTo];
@@ -99,7 +99,7 @@ class ModuleFaq extends \Frontend
 				{
 					while ($objItems->next())
 					{
-						$arrPages[] = sprintf($strUrl, (($objItems->alias != '' && !\Config::get('disableAlias')) ? $objItems->alias : $objItems->id));
+						$arrPages[] = sprintf($strUrl, ($objItems->alias ?: $objItems->id));
 					}
 				}
 			}
