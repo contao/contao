@@ -11,12 +11,10 @@
             "environments": ["all"]
         },
         "Symfony\\Bundle\\TwigBundle\\TwigBundle": {
-            "environments": ["dev", "test"],
-            "load-after": ["ContaoCoreBundle"]
+            "environments": ["dev", "test"]
         },
         "Symfony\\Bundle\\WebProfilerBundle\\WebProfilerBundle": {
-            "environments": ["dev", "test"],
-            "load-after": ["ContaoCoreBundle"]
+            "environments": ["dev", "test"]
         }
     }
 }

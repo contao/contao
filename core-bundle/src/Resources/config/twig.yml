@@ -5,4 +5,4 @@ twig:
 framework:
     templating:
         engines: ['twig']
-    default_locale:  "%locale%"
+    default_locale: "%locale%"

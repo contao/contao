@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
  *
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 /**
- * Set application name and version for web profiler.
+ * Sets the application name and version in the web profiler.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -25,11 +25,13 @@ class SetApplicationPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if ($container->hasDefinition('data_collector.config')) {
-            $definition = $container->findDefinition('data_collector.config');
-
-            $definition->addArgument('Contao');
-            $definition->addArgument(VERSION . '.' . BUILD);
+        if (!$container->hasDefinition('data_collector.config')) {
+            return;
         }
+
+        $definition = $container->findDefinition('data_collector.config');
+
+        $definition->addArgument('Contao');
+        $definition->addArgument(VERSION . '.' . BUILD);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
  *
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Collection Contao debug information for web profiler.
+ * Collects debug information for the web profiler.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -31,16 +31,20 @@ class ContaoDataCollector extends DataCollector
         $this->addSummaryData();
     }
 
-
+    /**
+     * Returns the summary.
+     *
+     * @return array The summary
+     */
     public function getSummary()
     {
         return $this->getData('summary');
     }
 
     /**
-     * Get class aliases.
+     * Returns the aliased classes.
      *
-     * @return array The aliased classes.
+     * @return array The aliased classes
      */
     public function getClassesAliased()
     {
@@ -69,9 +73,9 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Get classes set.
+     * Returns the set classes.
      *
-     * @return array The classes set.
+     * @return array The set classes
      */
     public function getClassesSet()
     {
@@ -83,9 +87,9 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Get database queries.
+     * Returns the database queries.
      *
-     * @return array The database queries.
+     * @return array The database queries
      */
     public function getDatabaseQueries()
     {
@@ -93,9 +97,9 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Get list of unknown insert tags on the page.
+     * Returns the unknown insert tags.
      *
-     * @return array The unknown insert tags.
+     * @return array The insert tags
      */
     public function getUnknownInsertTags()
     {
@@ -103,9 +107,9 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Get list of unknown insert tag flags on the page.
+     * Returns the unknown insert tag flags.
      *
-     * @return array The unknown insert tag flags.
+     * @return array The insert tag flags
      */
     public function getUnknownInsertTagFlags()
     {
@@ -113,9 +117,9 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Get additional data added by unknown sources.
+     * Returns the additional data added by unknown sources.
      *
-     * @return array The additional data.
+     * @return array The additional data
      */
     public function getAdditionalData()
     {
@@ -144,11 +148,11 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Get data from the debug information, making sure it's an array
+     * Returns the debug data as array.
      *
-     * @param string $key
+     * @param string $key The key
      *
-     * @return array
+     * @return array The debug data
      */
     private function getData($key)
     {
@@ -162,7 +166,7 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Build summary data for the current request.
+     * Builds the summary data.
      */
     private function addSummaryData()
     {
