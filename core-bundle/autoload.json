@@ -10,6 +10,9 @@
         "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle": {
             "environments": ["all"]
         },
+        "Symfony\\Bundle\\SecurityBundle\\SecurityBundle": {
+            "environments": ["all"]
+        },
         "Symfony\\Bundle\\TwigBundle\\TwigBundle": {
             "environments": ["dev", "test"]
         },
