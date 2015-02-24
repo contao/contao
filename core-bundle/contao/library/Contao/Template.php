@@ -284,11 +284,10 @@ abstract class Template extends \Controller
 	/**
 	 * Return the debug bar string
 	 *
-     * @return string The debug bar markup
-     *
-     * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0.
-     *             The debug bar is no longer supported, use the Symfony web profiler.
-     */
+	 * @return string The debug bar markup
+	 *
+	 * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0.
+	 */
 	protected function getDebugBar()
 	{
 	}
