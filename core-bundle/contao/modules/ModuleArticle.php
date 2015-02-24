@@ -125,7 +125,7 @@ class ModuleArticle extends \Module
 				$this->cssID = $arrCss;
 			}
 
-			$article = (!\Config::get('disableAlias') && $this->alias != '') ? $this->alias : $this->id;
+			$article = $this->alias ?: $this->id;
 			$href = '/articles/' . (($this->inColumn != 'main') ? $this->inColumn . ':' : '') . $article;
 
 			$this->Template->headline = $this->headline;

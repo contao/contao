@@ -74,11 +74,6 @@ class PageForward extends \Frontend
 		{
 			foreach (array_keys($_GET) as $key)
 			{
-				if (\Config::get('disableAlias') && $key == 'id')
-				{
-					continue;
-				}
-
 				if (\Config::get('addLanguageToUrl') && $key == 'language')
 				{
 					continue;

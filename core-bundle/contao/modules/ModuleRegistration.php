@@ -354,7 +354,7 @@ class ModuleRegistration extends \Module
 			// Prepare the simple token data
 			$arrTokenData = $arrData;
 			$arrTokenData['domain'] = \Idna::decode(\Environment::get('host'));
-			$arrTokenData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((\Config::get('disableAlias') || strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $arrData['activation'];
+			$arrTokenData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $arrData['activation'];
 			$arrTokenData['channels'] = '';
 
 			if (in_array('newsletter', \ModuleLoader::getActive()))
