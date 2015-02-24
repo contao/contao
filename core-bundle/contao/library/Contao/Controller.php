@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 
 /**
  * Abstract parent class for Controllers
@@ -1083,36 +1086,46 @@ abstract class Controller extends \System
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		$strLanguage = '';
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$objRouter = $kernel->getContainer()->get('router');
+		$strRoute  = 'contao_default';
+		$arrParams = [];
+
+		// Correctly handle the "index" alias (see #3961)
+		if ($arrRow['alias'] == 'index' && $strParams == '')
+		{
+			$arrParams['alias'] = '';
+		}
+		else
+		{
+			$arrParams['alias'] = ($arrRow['alias'] ?: $arrRow['id']) . $strParams . \Config::get('urlSuffix');
+		}
 
 		if (\Config::get('addLanguageToUrl'))
 		{
+			$strRoute = 'contao_local';
+
 			if ($strForceLang != '')
 			{
-				$strLanguage = $strForceLang . '/';
+				$arrParams['_locale'] = $strForceLang . '/';
 			}
 			elseif (isset($arrRow['language']) && $arrRow['type'] == 'root')
 			{
-				$strLanguage = $arrRow['language'] . '/';
+				$arrParams['_locale'] = $arrRow['language'] . '/';
 			}
 			elseif (TL_MODE == 'FE')
 			{
 				/** @var \PageModel $objPage */
 				global $objPage;
 
-				$strLanguage = $objPage->rootLanguage . '/';
+				$arrParams['_locale'] = $objPage->rootLanguage . '/';
 			}
 		}
 
-		// Correctly handle the "index" alias (see #3961)
-		if ($arrRow['alias'] == 'index' && $strParams == '')
-		{
-			$strUrl = (\Config::get('rewriteURL') ? '' : \Environment::get('script') . '/') . $strLanguage;
-		}
-		else
-		{
-			$strUrl = (\Config::get('rewriteURL') ? '' : \Environment::get('script') . '/') . $strLanguage . ($arrRow['alias'] ?: $arrRow['id']) . $strParams . \Config::get('urlSuffix');
-		}
+		$strUrl = $objRouter->generate($strRoute, $arrParams);
+		$strUrl = substr($strUrl, strlen(\Environment::get('path'))+1);
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)
 		if ($blnFixDomain && $arrRow['domain'] != '' && $arrRow['domain'] != \Environment::get('host'))

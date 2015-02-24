@@ -55,10 +55,6 @@ class FrontendLoader extends Loader
         $route = new Route($pattern, $defaults, $require);
         $routes->add('contao_default', $route);
 
-        // Empty domain (root)
-        $route = new Route('/', $defaults);
-        $routes->add('contao_root', $route);
-
         return $routes;
     }
 
