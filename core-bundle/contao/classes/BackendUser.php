@@ -119,9 +119,9 @@ class BackendUser extends \User
 
 		if (!isset($_GET['act']) && !isset($_GET['key']) && !isset($_GET['token']) && !isset($_GET['state']) && \Input::get('do') != 'feRedirect' && !\Environment::get('isAjaxRequest'))
 		{
-			$key     = null;
+			$key = null;
 
-            list($path) = explode('?', \Environment::get('request'), 2);
+			list($path) = explode('?', \Environment::get('request'), 2);
 
 			if (substr($path, -7) == '/contao')
 			{
@@ -225,12 +225,12 @@ class BackendUser extends \User
 			return;
 		}
 
-        list($path) = explode('?', \Environment::get('request'), 2);
+		list($path) = explode('?', \Environment::get('request'), 2);
 
-        if (substr($path, -13) == '/contao/login')
-        {
-            return false;
-        }
+		if (substr($path, -13) == '/contao/login')
+		{
+			return false;
+		}
 
 		$strRedirect = 'contao/';
 
