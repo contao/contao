@@ -66,21 +66,4 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertNotEmpty($container->getExtensionConfig('doctrine'));
     }
-
-    /**
-     * Tests prepending an invalid file.
-     *
-     * @expectedException \LogicException
-     */
-    public function testException()
-    {
-        $container  = new ContainerBuilder();
-        $reflection = new \ReflectionClass($this->extension);
-
-        // Make the prependConfig method accessible
-        $method = $reflection->getMethod('prependConfig');
-        $method->setAccessible(true);
-
-        $method->invoke($this->extension, 'foo', $container, 'doctrine.yml');
-    }
 }

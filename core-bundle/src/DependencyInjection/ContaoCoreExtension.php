@@ -49,8 +49,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     /**
      * Prepends the configuration to the container.
      *
-     * @param string           $file         The file name
-     * @param ContainerBuilder $container    The container object
+     * @param string           $file      The file name
+     * @param ContainerBuilder $container The container object
+     *
+     * @throws \LogicException If the parsed file is not an array
      */
     private function prependConfig($file, ContainerBuilder $container)
     {
