@@ -41,9 +41,6 @@ class FrontendIndex extends \Frontend
 				header('HTTP/1.1 503 Service Unavailable');
 				die_nicely('be_unavailable', 'This site is currently down for maintenance. Please come back later.');
 			}
-
-			// Disable the debug mode (see #6450)
-			\Config::set('debugMode', false);
 		}
 	}
 

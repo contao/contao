@@ -170,12 +170,6 @@
       <trans-unit id="tl_settings.allowedTags.1">
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.debugMode.0">
-        <source>Enable debug mode</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.debugMode.1">
-        <source>Print certain runtime information like database queries to the screen.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.maintenanceMode.0">
         <source>Maintenance mode</source>
       </trans-unit>

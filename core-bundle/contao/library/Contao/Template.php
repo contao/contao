@@ -261,12 +261,6 @@ abstract class Template extends \Controller
 		// Minify the markup
 		$this->strBuffer = $this->minifyHtml($this->strBuffer);
 
-		// Add the debug bar
-		if (\Config::get('debugMode') && !\Config::get('hideDebugBar') && !isset($_GET['popup']))
-		{
-			$this->strBuffer = str_replace('</body>', $this->getDebugBar() . '</body>', $this->strBuffer);
-		}
-
 		header('Vary: User-Agent', false);
 		header('Content-Type: ' . $this->strContentType . '; charset=' . \Config::get('characterSet'));
 
@@ -291,74 +285,11 @@ abstract class Template extends \Controller
 	 * Return the debug bar string
 	 *
 	 * @return string The debug bar markup
+	 *
+	 * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0
 	 */
 	protected function getDebugBar()
 	{
-		$intReturned = 0;
-		$intAffected = 0;
-
-		// Count the totals (see #3884)
-		if (is_array($GLOBALS['TL_DEBUG']['database_queries']))
-		{
-			foreach ($GLOBALS['TL_DEBUG']['database_queries'] as $k=>$v)
-			{
-				$intReturned += $v['return_count'];
-				$intAffected += $v['affected_count'];
-				unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['return_count']);
-				unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['affected_count']);
-			}
-		}
-
-		$intElapsed = (microtime(true) - TL_START);
-
-		$strDebug = sprintf(
-			"<!-- indexer::stop -->\n"
-			. '<div id="contao-debug" class="%s">'
-			. '<p>'
-				. '<span class="debug-time">Execution time: %s ms</span>'
-				. '<span class="debug-memory">Memory usage: %s</span>'
-				. '<span class="debug-db">Database queries: %d</span>'
-				. '<span class="debug-rows">Rows: %d returned, %s affected</span>'
-				. '<span class="debug-models">Registered models: %d</span>'
-				. '<span id="debug-tog">&nbsp;</span>'
-			. '</p>'
-			. '<div><pre>',
-			\Input::cookie('CONTAO_CONSOLE'),
-			$this->getFormattedNumber(($intElapsed * 1000), 0),
-			$this->getReadableSize(memory_get_peak_usage()),
-			count($GLOBALS['TL_DEBUG']['database_queries']),
-			$intReturned,
-			$intAffected,
-			\Model\Registry::getInstance()->count()
-		);
-
-		ksort($GLOBALS['TL_DEBUG']);
-
-		ob_start();
-		print_r($GLOBALS['TL_DEBUG']);
-		$strDebug .= ob_get_clean();
-
-		unset($GLOBALS['TL_DEBUG']);
-
-		$strDebug .= '</pre></div></div>'
-			. $this->generateInlineScript(
-				"(function($) {"
-					. "$$('#contao-debug>*').setStyle('width',window.getSize().x);"
-					. "$(document.body).setStyle('margin-bottom',$('contao-debug').hasClass('closed')?'60px':'320px');"
-					. "$('debug-tog').addEvent('click',function(e) {"
-						. "$('contao-debug').toggleClass('closed');"
-						. "Cookie.write('CONTAO_CONSOLE',$('contao-debug').hasClass('closed')?'closed':'',{path:'" . (\Environment::get('path') ?: '/') . "'});"
-						. "$(document.body).setStyle('margin-bottom',$('contao-debug').hasClass('closed')?'60px':'320px');"
-					. "});"
-					. "window.addEvent('resize',function() {"
-						. "$$('#contao-debug>*').setStyle('width',window.getSize().x);"
-					. "});"
-				. "})(document.id);"
-			)
-			. "\n<!-- indexer::continue -->\n\n"
-		;
-
-		return $strDebug;
 	}
 
 

@@ -458,7 +458,6 @@ class Versions extends \Controller
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->action = ampersand(\Environment::get('request'));
 
-		\Config::set('debugMode', false);
 		$objTemplate->output();
 
 		exit;

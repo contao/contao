@@ -179,7 +179,6 @@ class BackendHelp extends \Backend
 		$objTemplate->headline = $arrData['label'][0] ?: $field;
 		$objTemplate->helpWizard = $GLOBALS['TL_LANG']['MSC']['helpWizard'];
 
-		\Config::set('debugMode', false);
 		$objTemplate->output();
 	}
 }

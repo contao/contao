@@ -71,12 +71,6 @@ class BackendTemplate extends \Template
 			$this->stylesheets = $strStyleSheets;
 		}
 
-		// Add the debug style sheet
-		if (\Config::get('debugMode'))
-		{
-			$this->stylesheets .= \Template::generateStyleTag($this->addStaticUrlTo('assets/contao/css/debug.min.css')) . "\n";
-		}
-
 		// JavaScripts
 		if (!empty($GLOBALS['TL_JAVASCRIPT']) && is_array($GLOBALS['TL_JAVASCRIPT']))
 		{

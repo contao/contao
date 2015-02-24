@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle;
 
+use Contao\CoreBundle\DependencyInjection\Compiler\SetApplicationPass;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
@@ -39,5 +40,7 @@ class ContaoCoreBundle extends ContaoBundle
     public function build(ContainerBuilder $container)
     {
         require_once __DIR__ . '/../contao/bootstrap.php';
+
+        $container->addCompilerPass(new SetApplicationPass());
     }
 }

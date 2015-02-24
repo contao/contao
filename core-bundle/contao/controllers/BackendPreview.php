@@ -88,7 +88,6 @@ class BackendPreview extends \Backend
 			}
 		}
 
-		\Config::set('debugMode', false);
 		$objTemplate->output();
 	}
 }

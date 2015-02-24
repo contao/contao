@@ -9,6 +9,12 @@
         },
         "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle": {
             "environments": ["all"]
+        },
+        "Symfony\\Bundle\\TwigBundle\\TwigBundle": {
+            "environments": ["dev", "test"]
+        },
+        "Symfony\\Bundle\\WebProfilerBundle\\WebProfilerBundle": {
+            "environments": ["dev", "test"]
         }
     }
 }

@@ -32,11 +32,24 @@ services:
     contao.routing.backend_loader:
         parent: routing.bundle_resource_loader
         arguments:
-            - '@@ContaoCoreBundle/Resources/config/routing.yml'
+            - "@@ContaoCoreBundle/Resources/config/routing.yml"
         tags:
             - { name: routing.bundle_loader, priority: 200 }
+
+    contao.routing.dev_loader:
+        parent: routing.bundle_resource_loader
+        arguments:
+            - "@@ContaoCoreBundle/Resources/config/routing_dev.yml"
+            - ["dev", "test"]
+        tags:
+            - { name: routing.bundle_loader }
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
         tags:
             - { name: routing.bundle_loader, priority: -250 }
+
+    data_collector.contao:
+        class: Contao\CoreBundle\DataCollector\ContaoDataCollector
+        tags:
+            - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
