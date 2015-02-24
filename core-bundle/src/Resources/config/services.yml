@@ -28,3 +28,10 @@ services:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+    contao.routing.backend_loader:
+        parent: routing.bundle_resource_loader
+        arguments:
+            - '@@ContaoCoreBundle/Resources/config/routing.yml'
+        tags:
+            - { name: routing.bundle_loader, priority: 200 }
