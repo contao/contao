@@ -47,7 +47,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * Adds the configuration to the container.
+     * Prepends the configuration to the container.
      *
      * @param string           $file         The file name
      * @param ContainerBuilder $container    The container object
