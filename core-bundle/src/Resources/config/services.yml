@@ -1,4 +1,11 @@
 services:
+    contao.listener.legacy_script:
+        class: Contao\CoreBundle\EventListener\LegacyScriptListener
+        arguments:
+            - "@router"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
         tags:
