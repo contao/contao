@@ -54,9 +54,9 @@ services:
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
 
-    contao_user_provider:
+    contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
 
-    contao_authenticator:
+    contao.security.authenticator:
         class: Contao\CoreBundle\Security\ContaoAuthenticator
-        arguments: ["@contao_user_provider"]
+        arguments: ["@contao.security.user_provider"]
