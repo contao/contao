@@ -62,7 +62,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.environment', 'test');
-        
+
         $this->extension->prepend($container);
 
         $this->assertNotEmpty($container->getExtensionConfig('doctrine'));

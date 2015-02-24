@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\EventListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
  * Changes the container scope based on the route configuration.
@@ -44,13 +45,7 @@ class ContainerScopeListener
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        if (!$event->getRequest()->attributes->has('_scope')) {
-            return;
-        }
-
-        $scope = $event->getRequest()->attributes->get('_scope');
-
-        if ($this->container->hasScope($scope)) {
+        if (null !== ($scope = $this->getScopeFromEvent($event))) {
             $this->container->enterScope($scope);
         }
     }
@@ -63,14 +58,30 @@ class ContainerScopeListener
      */
     public function onKernelFinishRequest(FinishRequestEvent $event)
     {
+        if (null !== ($scope = $this->getScopeFromEvent($event))) {
+            $this->container->leaveScope($scope);
+        }
+    }
+
+    /**
+     * Returns the scope from the event request.
+     *
+     * @param KernelEvent $event The event object
+     *
+     * @return string|null The scope name
+     */
+    private function getScopeFromEvent(KernelEvent $event)
+    {
         if (!$event->getRequest()->attributes->has('_scope')) {
-            return;
+            return null;
         }
 
         $scope = $event->getRequest()->attributes->get('_scope');
 
         if ($this->container->hasScope($scope)) {
-            $this->container->leaveScope($scope);
+            return $scope;
         }
+
+        return null;
     }
 }
