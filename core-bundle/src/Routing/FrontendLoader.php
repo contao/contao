@@ -40,7 +40,7 @@ class FrontendLoader extends Loader
     public function __construct($prependLocale, $format)
     {
         $this->prependLocale = $prependLocale;
-        $this->format = substr($format, 1);
+        $this->format        = isset($format[2]) ? substr($format, 1) : '';
     }
 
     /**

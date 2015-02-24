@@ -115,6 +115,8 @@ class AutomatorCommand extends ContainerAwareCommand
      */
     private function generateCommandMap()
     {
+        // Can not dynamically load from command class because the application and container are not available
+        // in self::configure() and therefore the legacy Contao classes can not be loaded.
         return [
             'checkForUpdates',
             'purgeSearchTables',

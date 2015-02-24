@@ -15,7 +15,6 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 
-
 /**
  * Configures the Contao core bundle.
  *

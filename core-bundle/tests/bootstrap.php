@@ -23,6 +23,7 @@ class System
 }
 HEREDOC
 );
+class_alias('\Contao\System', 'System');
 
 // Define a custom Frontend class via eval() so it does not interfere with the IDE
 eval(<<<HEREDOC
@@ -44,6 +45,7 @@ class Frontend
 }
 HEREDOC
 );
+class_alias('\Contao\Frontend', 'Frontend');
 
 // Define a custom Dbafs class via eval() so it does not interfere with the IDE
 eval(<<<HEREDOC

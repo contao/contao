@@ -26,12 +26,16 @@ services:
     contao.listener.output_from_cache:
         class: Contao\CoreBundle\EventListener\OutputFromCacheListener
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
+            # priority is temporarily lower than contao.listener.boostrap_legacy as until not depending on legacy code
+            # anymore.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 26 }
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest}
+            # priority is temporarily lower than contao.listener.boostrap_legacy as until not depending on legacy code
+            # anymore.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
 
     contao.routing.backend_loader:
         parent: routing.bundle_resource_loader
