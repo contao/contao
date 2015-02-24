@@ -69,6 +69,7 @@ class AutomatorCommand extends ContainerAwareCommand
             $this->runAutomator($input, $output);
         } catch (\InvalidArgumentException $e) {
             $output->writeln($e->getMessage() . ' (see help contao:automator)');
+            $lock->release();
 
             return 1;
         }
