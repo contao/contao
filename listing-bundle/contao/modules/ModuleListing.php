@@ -242,13 +242,13 @@ class ModuleListing extends \Module
 		{
 			if ($fragment != '' && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, strlen($id)) !== 0)
 			{
-				$strUrl .= ((!$blnQuery && !\Config::get('disableAlias')) ? '?' : '&amp;') . $fragment;
+				$strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
 				$blnQuery = true;
 			}
 		}
 
 		$this->Template->url = $strUrl;
-		$strVarConnector = ($blnQuery || \Config::get('disableAlias')) ? '&amp;' : '?';
+		$strVarConnector = $blnQuery ? '&amp;' : '?';
 
 
 		/**
