@@ -48,7 +48,8 @@ class LegacyScriptListener
 
         $request = $event->getRequest();
         $route   = $request->attributes->get('_route');
+        $params  = $request->attributes->get('_route_params');
 
-        define('TL_SCRIPT', $this->router->generate($route, $request->attributes->all()));
+        define('TL_SCRIPT', $this->router->generate($route, $params));
     }
 }
