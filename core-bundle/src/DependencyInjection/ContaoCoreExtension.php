@@ -26,13 +26,6 @@ use Symfony\Component\Yaml\Yaml;
 class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 {
     /**
-     * @var array
-     */
-    private $configFiles = [
-        'doctrine.yml'
-    ];
-
-    /**
      * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
@@ -50,26 +43,23 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
      */
     public function prepend(ContainerBuilder $container)
     {
-        foreach ($this->configFiles as $file) {
-            $parsedConfig = Yaml::parse(
-                file_get_contents(
-                    __DIR__ . '/../Resources/config/' . $file
-                )
-            );
-
-            $this->prependConfig($parsedConfig, $container, $file);
-        }
+        $this->prependConfig('doctrine.yml', $container);
     }
 
     /**
-     * Adds the configuration to the container.
+     * Prepends the configuration to the container.
      *
-     * @param mixed            $parsedConfig The parsed configuration
-     * @param ContainerBuilder $container    The container object
      * @param string           $file         The file name
+     * @param ContainerBuilder $container    The container object
      */
-    private function prependConfig($parsedConfig, ContainerBuilder $container, $file)
+    private function prependConfig($file, ContainerBuilder $container)
     {
+        $parsedConfig = Yaml::parse(
+            file_get_contents(
+                __DIR__ . '/../Resources/config/' . $file
+            )
+        );
+
         if (!is_array($parsedConfig)) {
             throw new \LogicException("Error parsing $file");
         }
