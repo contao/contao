@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to modify the database.
@@ -236,8 +238,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->root = array_unique($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']);
 		}
 
+        /** @var KernelInterface $kernel */
+        global $kernel;
+
+        $request = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
+        $route   = $request->attributes->get('_route');
+
 		// Store the current referer
-		if (!empty($this->ctable) && !\Input::get('act') && !\Input::get('key') && !\Input::get('token') && TL_SCRIPT == 'contao/main.php' && !\Environment::get('isAjaxRequest'))
+		if (!empty($this->ctable) && !\Input::get('act') && !\Input::get('key') && !\Input::get('token') && $route == 'contao_backend' && !\Environment::get('isAjaxRequest'))
 		{
 			$session = $this->Session->get('referer');
 			$session[TL_REFERER_ID][$this->strTable] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);

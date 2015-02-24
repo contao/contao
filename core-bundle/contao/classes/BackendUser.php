@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to manage back end users.
@@ -117,9 +119,11 @@ class BackendUser extends \User
 
 		if (!isset($_GET['act']) && !isset($_GET['key']) && !isset($_GET['token']) && !isset($_GET['state']) && \Input::get('do') != 'feRedirect' && !\Environment::get('isAjaxRequest'))
 		{
-			$key = null;
+			$key     = null;
 
-			if (TL_SCRIPT == 'contao/main.php')
+            list($path) = explode('?', \Environment::get('request'), 2);
+
+			if (substr($path, -7) == '/contao')
 			{
 				$key = \Input::get('popup') ? 'popupReferer' : 'referer';
 			}
@@ -221,10 +225,17 @@ class BackendUser extends \User
 			return;
 		}
 
+        list($path) = explode('?', \Environment::get('request'), 2);
+
+        if (substr($path, -13) == '/contao/login')
+        {
+            return false;
+        }
+
 		$strRedirect = 'contao/';
 
 		// Redirect to the last page visited upon login
-		if (TL_SCRIPT == 'contao/main.php' || TL_SCRIPT == 'contao/preview.php')
+		if (substr($path, -7) == '/contao' || substr($path, -15) == '/contao/preview')
 		{
 			$strRedirect .= '?referer=' . base64_encode(\Environment::get('request'));
 		}
