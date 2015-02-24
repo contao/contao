@@ -215,7 +215,7 @@ abstract class User extends \System
 	 */
 	public function __toString()
 	{
-		return $this->intId ? $this->username : 'guest';
+		return $this->intId ? $this->username : 'anon.';
 	}
 
 

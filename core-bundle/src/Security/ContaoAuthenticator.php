@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ContaoAuthenticator implements SimplePreAuthenticatorInterface
@@ -32,7 +33,7 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
     {
         return new AnonymousToken(
             $providerKey,
-            'guest'
+            'anon.'
         );
     }
 
@@ -44,10 +45,14 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
             throw new AuthenticationException('ContaoAuthenticator can only handle AnonymousToken');
         }
 
-        $providerKey = $token->getKey();
-        $user        = $this->userProvider->loadUserByUsername($providerKey);
+        try {
+            $providerKey = $token->getKey();
+            $user        = $this->userProvider->loadUserByUsername($providerKey);
 
-        return new ContaoToken($user);
+            return new ContaoToken($user);
+        } catch (UsernameNotFoundException $e) {
+            return $token;
+        }
     }
 
     public function supportsToken(TokenInterface $token, $providerKey)

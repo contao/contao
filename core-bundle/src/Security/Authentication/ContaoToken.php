@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Security\Authentication;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 
 class ContaoToken extends AbstractToken
@@ -27,22 +28,23 @@ class ContaoToken extends AbstractToken
 
         $roles = [];
 
-        if ($user->authenticate()) {
-            $this->setAuthenticated(true);
+        if (!$user->authenticate()) {
+            throw new UsernameNotFoundException('Contao user not found.');
+        }
 
-            if ($user instanceof \FrontendUser) {
-                $roles[] = 'ROLE_MEMBER';
-            } elseif ($user instanceof \BackendUser) {
-                $roles[] = 'ROLE_USER';
+        $this->setAuthenticated(true);
 
-                if ($user->isAdmin) {
-                    $roles[] = 'ROLE_ADMIN';
-                }
+        if ($user instanceof \FrontendUser) {
+            $roles[] = 'ROLE_MEMBER';
+        } elseif ($user instanceof \BackendUser) {
+            $roles[] = 'ROLE_USER';
+
+            if ($user->isAdmin) {
+                $roles[] = 'ROLE_ADMIN';
             }
         }
 
         parent::__construct($roles);
-
     }
 
     /**
