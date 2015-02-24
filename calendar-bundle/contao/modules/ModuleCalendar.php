@@ -123,7 +123,7 @@ class ModuleCalendar extends \Events
 		// Only generate a link if there are events (see #4160)
 		if ($objMinMax->dateFrom !== null && $intPrevYm >= date('Ym', $objMinMax->dateFrom))
 		{
-			$objTemplate->prevHref = $this->strUrl . (\Config::get('disableAlias') ? '?id=' . \Input::get('id') . '&amp;' : '?') . 'month=' . $intPrevYm;
+			$objTemplate->prevHref = $this->strUrl . '?month=' . $intPrevYm;
 			$objTemplate->prevTitle = specialchars($lblPrevious);
 			$objTemplate->prevLink = $GLOBALS['TL_LANG']['MSC']['cal_previous'] . ' ' . $lblPrevious;
 			$objTemplate->prevLabel = $GLOBALS['TL_LANG']['MSC']['cal_previous'];
@@ -141,7 +141,7 @@ class ModuleCalendar extends \Events
 		// Only generate a link if there are events (see #4160)
 		if ($objMinMax->dateTo !== null && $intNextYm <= date('Ym', max($objMinMax->dateTo, $objMinMax->repeatUntil)))
 		{
-			$objTemplate->nextHref = $this->strUrl . (\Config::get('disableAlias') ? '?id=' . \Input::get('id') . '&amp;' : '?') . 'month=' . $intNextYm;
+			$objTemplate->nextHref = $this->strUrl . '?month=' . $intNextYm;
 			$objTemplate->nextTitle = specialchars($lblNext);
 			$objTemplate->nextLink = $lblNext . ' ' . $GLOBALS['TL_LANG']['MSC']['cal_next'];
 			$objTemplate->nextLabel = $GLOBALS['TL_LANG']['MSC']['cal_next'];
@@ -277,7 +277,7 @@ class ModuleCalendar extends \Events
 
 			$arrDays[$strWeekClass][$i]['label'] = $intDay;
 			$arrDays[$strWeekClass][$i]['class'] = 'days active' . $strClass;
-			$arrDays[$strWeekClass][$i]['href'] = $this->strLink . (\Config::get('disableAlias') ? '&amp;' : '?') . 'day=' . $intKey;
+			$arrDays[$strWeekClass][$i]['href'] = $this->strLink . '?day=' . $intKey;
 			$arrDays[$strWeekClass][$i]['title'] = sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), count($arrEvents));
 			$arrDays[$strWeekClass][$i]['events'] = $arrEvents;
 		}

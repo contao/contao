@@ -160,7 +160,7 @@ class Calendar extends \Frontend
 					}
 					else
 					{
-						$arrUrls[$jumpTo] = $this->generateFrontendUrl($objParent->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ?  '/%s' : '/events/%s'), $objParent->language);
+						$arrUrls[$jumpTo] = $this->generateFrontendUrl($objParent->row(), (\Config::get('useAutoItem') ? '/%s' : '/events/%s'), $objParent->language);
 					}
 				}
 
@@ -340,7 +340,7 @@ class Calendar extends \Frontend
 					$domain = ($objParent->rootUseSSL ? 'https://' : 'http://') . ($objParent->domain ?: \Environment::get('host')) . \Environment::get('path') . '/';
 
 					// Generate the URL
-					$arrProcessed[$objCalendar->jumpTo] = $domain . $this->generateFrontendUrl($objParent->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ?  '/%s' : '/events/%s'), $objParent->language);
+					$arrProcessed[$objCalendar->jumpTo] = $domain . $this->generateFrontendUrl($objParent->row(), (\Config::get('useAutoItem') ? '/%s' : '/events/%s'), $objParent->language);
 				}
 
 				$strUrl = $arrProcessed[$objCalendar->jumpTo];
@@ -352,7 +352,7 @@ class Calendar extends \Frontend
 				{
 					while ($objEvents->next())
 					{
-						$arrPages[] = sprintf($strUrl, (($objEvents->alias != '' && !\Config::get('disableAlias')) ? $objEvents->alias : $objEvents->id));
+						$arrPages[] = sprintf($strUrl, ($objEvents->alias ?: $objEvents->id));
 					}
 				}
 			}
@@ -424,7 +424,7 @@ class Calendar extends \Frontend
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 				{
-					$link = $strBase . ampersand($this->generateFrontendUrl($objPid->row(), '/articles/' . ((!\Config::get('disableAlias') && $objArticle->alias != '') ? $objArticle->alias : $objArticle->id)));
+					$link = $strBase . ampersand($this->generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
 		}
@@ -432,7 +432,7 @@ class Calendar extends \Frontend
 		// Link to the default page
 		if ($link == '')
 		{
-			$link = $strBase . sprintf($strUrl, (($objEvent->alias != '' && !\Config::get('disableAlias')) ? $objEvent->alias : $objEvent->id));
+			$link = $strBase . sprintf($strUrl, ($objEvent->alias ?: $objEvent->id));
 		}
 
 		// Store the whole row (see #5085)
