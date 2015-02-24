@@ -273,7 +273,7 @@ abstract class Template extends \Controller
 		echo $this->strBuffer;
 
 		// Flush the output buffers (see #6962)
-		$this->flushAllData();
+		//$this->flushAllData(); // TODO: add a getResponse() method and keep the method call here
 
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['postFlushData']) && is_array($GLOBALS['TL_HOOKS']['postFlushData']))
@@ -505,7 +505,7 @@ abstract class Template extends \Controller
 	/**
 	 * Flush the output buffers
 	 *
-	 * @see Symfony\Component\HttpFoundation\Response
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
 	 */
 	public function flushAllData()
 	{

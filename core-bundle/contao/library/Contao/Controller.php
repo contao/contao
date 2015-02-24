@@ -1002,6 +1002,9 @@ abstract class Controller extends \System
 
 		$strLocation = str_replace('&amp;', '&', $strLocation);
 
+		// FIXME: replace old entry points in redirect attempts
+		$strLocation = str_replace('contao/main.php', \Environment::get('script') . '/contao/', $strLocation);
+
 		// Make the location an absolute URL
 		if (!preg_match('@^https?://@i', $strLocation))
 		{

@@ -22,7 +22,8 @@ define('TL_ROOT', dirname($kernel->getRootDir()));
 // Define the TL_SCRIPT constant (backwards compatibility)
 if (!defined('TL_SCRIPT'))
 {
-	define('TL_SCRIPT', null);
+	// FIXME: TL_SCRIPT should be set here for legacy modules, we currently use a listener which is too late.
+	//define('TL_SCRIPT', null);
 }
 
 // Define the login status constants in the back end (see #4099, #5279)
