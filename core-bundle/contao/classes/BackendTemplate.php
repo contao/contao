@@ -99,6 +99,7 @@ class BackendTemplate extends \Template
 		}
 
 		$strBuffer = $this->parse();
+		$strBuffer = static::replaceOldBePaths($strBuffer);
 
 		// HOOK: add custom output filter
 		if (isset($GLOBALS['TL_HOOKS']['outputBackendTemplate']) && is_array($GLOBALS['TL_HOOKS']['outputBackendTemplate']))
