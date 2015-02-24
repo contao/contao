@@ -1,11 +1,8 @@
 contao_backend:
-    path: /contao{_trailing_slash}
+    path: /contao
     defaults:
         _controller: ContaoCoreBundle:Backend:main
-        _trailing_slash: /
         _scope: backend
-    requirements:
-        _trailing_slash: /?
 
 contao_backend_login:
     path: /contao/login
