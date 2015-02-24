@@ -50,6 +50,9 @@ services:
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
+        arguments:
+            - "%add_language_to_url%"
+            - "%url_suffix%"
         tags:
             - { name: routing.bundle_loader, priority: -250 }
 
