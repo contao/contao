@@ -35,6 +35,19 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     /**
      * {@inheritdoc}
      */
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $loader = new YamlFileLoader(
+            $container,
+            new FileLocator(__DIR__ . '/../Resources/config')
+        );
+
+        $loader->load('services.yml');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function prepend(ContainerBuilder $container)
     {
         foreach ($this->configFiles as $file) {
@@ -46,19 +59,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
             $this->prependConfig($parsedConfig, $container, $file);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
-    {
-        $loader = new YamlFileLoader(
-            $container,
-            new FileLocator(__DIR__ . '/../Resources/config')
-        );
-
-        $loader->load('services.yml');
     }
 
     /**

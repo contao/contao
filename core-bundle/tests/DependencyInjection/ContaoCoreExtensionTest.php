@@ -43,6 +43,19 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
+     * Tests adding the bundle services to the container.
+     */
+    public function testLoad()
+    {
+        $container = new ContainerBuilder();
+
+        $this->extension->load([], $container);
+
+        $this->assertTrue($container->has('contao.listener.output_from_cache'));
+        $this->assertTrue($container->has('contao.listener.add_to_search_index'));
+    }
+
+    /**
      * Tests prepending configuration files to the container.
      */
     public function testPrepend()
@@ -55,15 +68,19 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
-     * Tests adding the bundle services to the container.
+     * Tests prepending an invalid file.
+     *
+     * @expectedException \LogicException
      */
-    public function testLoad()
+    public function testException()
     {
-        $container = new ContainerBuilder();
+        $container  = new ContainerBuilder();
+        $reflection = new \ReflectionClass($this->extension);
 
-        $this->extension->load([], $container);
+        // Make the prependConfig method accessible
+        $method = $reflection->getMethod('prependConfig');
+        $method->setAccessible(true);
 
-        $this->assertTrue($container->has('contao.listener.output_from_cache'));
-        $this->assertTrue($container->has('contao.listener.add_to_search_index'));
+        $method->invoke($this->extension, 'foo', $container, 'doctrine.yml');
     }
 }
