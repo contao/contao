@@ -28,7 +28,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     /**
      * @var array
      */
-    protected $configFiles = [];
+    private $configFiles = [];
 
     /**
      * {@inheritdoc}
@@ -42,9 +42,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 )
             );
 
-            foreach ($parsedConfig as $bundleName => $bundleConfig) {
-                $container->prependExtensionConfig($bundleName, $bundleConfig);
-            }
+            $this->prependConfig($parsedConfig, $container);
         }
     }
 
@@ -59,5 +57,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         );
 
         $loader->load('services.yml');
+    }
+
+    /**
+     * Adds the configuration to the container.
+     *
+     * @param array            $parsedConfig The parsed configuration
+     * @param ContainerBuilder $container    The container object
+     */
+    private function prependConfig(array $parsedConfig, ContainerBuilder $container)
+    {
+        foreach ($parsedConfig as $bundleName => $bundleConfig) {
+            $container->prependExtensionConfig($bundleName, $bundleConfig);
+        }
     }
 }
