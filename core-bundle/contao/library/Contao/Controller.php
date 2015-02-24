@@ -1594,7 +1594,7 @@ abstract class Controller extends \System
 					$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 				}
 
-				$strHref .= ((\Config::get('disableAlias') || strpos($strHref, '?') !== false) ? '&amp;' : '?') . 'file=' . \System::urlEncode($objFiles->path);
+				$strHref .= ((strpos($strHref, '?') !== false) ? '&amp;' : '?') . 'file=' . \System::urlEncode($objFiles->path);
 
 				$arrMeta = \Frontend::getMetaData($objFiles->meta, $objPage->language);
 
