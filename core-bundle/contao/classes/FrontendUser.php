@@ -75,13 +75,15 @@ class FrontendUser extends \User
 
 		$this->strIp = \Environment::get('ip');
 		$this->strHash = \Input::cookie($this->strCookie);
+
+		register_shutdown_function(array($this, 'storeSession'));
 	}
 
 
 	/**
 	 * Set the current referer and save the session
 	 */
-	public function __destruct()
+	public function storeSession()
 	{
 		$session = $this->Session->getData();
 
