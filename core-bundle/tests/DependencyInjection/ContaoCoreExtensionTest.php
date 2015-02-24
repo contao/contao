@@ -51,7 +51,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->extension->prepend($container);
 
-        $this->assertTrue($container->has('doctrine.dbal.default_connection'));
+        $this->assertNotEmpty($container->getExtensionConfig('doctrine'));
     }
 
     /**
