@@ -11,6 +11,7 @@
 error_reporting(E_ALL);
 
 // Define a custom System class via eval() so it does not interfere with the IDE
+// FIXME: namespace Contao;
 eval(<<<HEREDOC
 class System
 {
@@ -23,6 +24,7 @@ HEREDOC
 );
 
 // Define a custom Frontend class via eval() so it does not interfere with the IDE
+// FIXME: namespace Contao;
 eval(<<<HEREDOC
 use Symfony\Component\HttpFoundation\Response;
 
@@ -84,6 +86,31 @@ class Automator
     public function generateDcaExtracts() {}
     public function generatePackageCache() {}
 
+}
+HEREDOC
+);
+
+// Define a custom Config class via eval() so it does not interfere with the IDE
+eval(<<<HEREDOC
+namespace Contao;
+
+class Config
+{
+    private static \$cache = [];
+
+    public static function set(\$key, \$value)
+    {
+        static::\$cache[\$key] = \$value;
+    }
+
+    public static function get(\$key)
+    {
+        if (isset(static::\$cache[\$key])) {
+            return static::\$cache[\$key];
+        }
+
+        return null;
+    }
 }
 HEREDOC
 );
