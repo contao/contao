@@ -32,9 +32,17 @@ services:
     contao.routing.backend_loader:
         parent: routing.bundle_resource_loader
         arguments:
-            - '@@ContaoCoreBundle/Resources/config/routing.yml'
+            - "@@ContaoCoreBundle/Resources/config/routing.yml"
         tags:
             - { name: routing.bundle_loader, priority: 200 }
+
+    contao.routing.dev_loader:
+        parent: routing.bundle_resource_loader
+        arguments:
+            - "@@ContaoCoreBundle/Resources/config/routing_dev.yml"
+            - ["dev", "test"]
+        tags:
+            - { name: routing.bundle_loader }
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
