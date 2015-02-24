@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -127,15 +128,12 @@ class AutomatorCommand extends ContainerAwareCommand
      */
     private function getTaskFromInput(InputInterface $input, OutputInterface $output)
     {
-        $task = $input->getArgument('task');
-
-        $commands  = $this->getCommands();
+        $commands = $this->getCommands();
+        $task     = $input->getArgument('task');
 
         if (null !== $task) {
             if (!in_array($task, $commands)) {
-                throw new \InvalidArgumentException(
-                    sprintf('Value "%s" is invalid', $task)
-                );
+                throw new \InvalidArgumentException("Invalid task $task");
             }
 
             return $task;
@@ -144,9 +142,9 @@ class AutomatorCommand extends ContainerAwareCommand
         $question = new ChoiceQuestion('Please select a task:', $commands, 0);
         $question->setMaxAttempts(1);
 
-        /** @var \Symfony\Component\Console\Helper\QuestionHelper $questionHelper */
-        $questionHelper    = $this->getHelper('question');
+        /** @var QuestionHelper $helper */
+        $helper = $this->getHelper('question');
 
-        return $questionHelper->ask($input, $output, $question);
+        return $helper->ask($input, $output, $question);
     }
 }
