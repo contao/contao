@@ -18,7 +18,7 @@ use Contao\CoreBundle\Routing\FrontendLoader;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoLoaderTest extends \PHPUnit_Framework_TestCase
+class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.
