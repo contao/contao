@@ -1058,19 +1058,19 @@ abstract class Controller extends \System
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-        $strRequest = '';
+		$strRequest = '';
 
-        if ($strParams != '')
-        {
-            $arrChunks = explode('/', preg_replace('@^/@', '', $strParams));
+		if ($strParams != '')
+		{
+			$arrChunks = explode('/', preg_replace('@^/@', '', $strParams));
 
-            for ($i=0, $c=count($arrChunks); $i<$c; $i=($i+2))
-            {
-                $strRequest .= sprintf('&%s=%s', $arrChunks[$i], $arrChunks[($i+1)]);
-            }
-        }
+			for ($i=0, $c=count($arrChunks); $i<$c; $i=($i+2))
+			{
+				$strRequest .= sprintf('&%s=%s', $arrChunks[$i], $arrChunks[($i+1)]);
+			}
+		}
 
-        $strUrl = \Environment::get('script') . '?id=' . $arrRow['id'] . $strRequest;
+		$strUrl = \Environment::get('script') . '?id=' . $arrRow['id'] . $strRequest;
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)
 		if ($blnFixDomain && $arrRow['domain'] != '' && $arrRow['domain'] != \Environment::get('host'))
