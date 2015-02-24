@@ -14,12 +14,15 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Set the current route as TL_SCRIPT constant for legacy code.
+ * Sets the current route as TL_SCRIPT constant (backwards compatibility).
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
 class LegacyScriptListener
 {
+    /**
+     * @var Router
+     */
     private $router;
 
     /**
@@ -33,17 +36,19 @@ class LegacyScriptListener
     }
 
     /**
-     * Set the TL_SCRIPT constant based on current request.
+     * Sets the TL_SCRIPT constant based on current request.
      *
      * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        // Define the TL_SCRIPT constant (backwards compatibility)
-        if (!defined('TL_SCRIPT')) {
-            $request = $event->getRequest();
-            $route   = $request->attributes->get('_route');
-            define('TL_SCRIPT', $this->router->generate($route, $request->attributes->all()));
+        if (defined('TL_SCRIPT')) {
+            return;
         }
+
+        $request = $event->getRequest();
+        $route   = $request->attributes->get('_route');
+
+        define('TL_SCRIPT', $this->router->generate($route, $request->attributes->all()));
     }
 }

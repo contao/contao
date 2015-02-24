@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BackendController
 {
+    // FIXME: add the phpDoc comments
     public function mainAction()
     {
         return $this->getResponseForController(new BackendMain());

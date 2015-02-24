@@ -28,7 +28,7 @@ class ContaoCoreBundle extends ContaoBundle
     {
         require_once __DIR__ . '/../contao/bootstrap.php';
 
-        // TODO: should the scopes be defined as constant like ContainerInterface::SCOPE_CONTAINER ?
+        // TODO: should the scopes be defined as constant like ContainerInterface::SCOPE_CONTAINER?
         $this->container->addScope(new Scope('frontend', 'request'));
         $this->container->addScope(new Scope('backend', 'request'));
     }

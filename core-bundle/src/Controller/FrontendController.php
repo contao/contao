@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendController extends Controller
 {
-
+    // FIXME: add the phpDoc comments
     public function indexAction()
     {
         return $this->getResponseForController(new FrontendIndex());

@@ -15,44 +15,58 @@ use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+// FIXME: add the phpDoc comments
 class FrontendLoader extends Loader
 {
+    /**
+     * {@inheritdoc}
+     */
     public function load($resource, $type = null)
     {
-        $pattern = '/{alias}';
-
-        $defaults = array(
-            '_controller' => 'ContaoCoreBundle:Frontend:index',
-        );
-
-        $requirements = array(
-            'alias' => '.*',
-        );
-
-        if ($GLOBALS['TL_CONFIG']['urlSuffix'] != '') {
-            $pattern .= '.{_format}';
-            $requirements['_format'] = substr(Config::get('urlSuffix'), 1);
-            $defaults['_format'] = substr(Config::get('urlSuffix'), 1);
-        }
-
-        if (Config::get('addLanguageToUrl')) {
-            $pattern = '/{_locale}' . $pattern;
-        }
+        $addlang = Config::get('addLanguageToUrl');
+        $suffix  = substr(Config::get('urlSuffix'), 1);
 
         $routes = new RouteCollection();
-        $route = new Route($pattern, $defaults, $requirements);
-        $routes->add('contao_frontend', $route);
+
+        $defaults = [
+            '_controller' => 'ContaoCoreBundle:Frontend:index'
+        ];
+
+        $pattern = '/{alias}';
+        $require = ['alias' => '.*'];
+
+        // URL suffix
+        if ($suffix) {
+            $pattern .= '.{_format}';
+
+            $require['_format']  = $suffix;
+            $defaults['_format'] = $suffix;
+        }
+
+        // Add language to URL
+        if ($addlang) {
+            $require['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
+
+            $route = new Route('/{_locale}' . $pattern, $defaults, $require);
+            $routes->add('contao_locale', $route);
+        }
+
+        // Default route
+        $route = new Route($pattern, $defaults, $require);
+        $routes->add('contao_default', $route);
+
+        // Empty domain (root)
+        $route = new Route('/', $defaults);
+        $routes->add('contao_root', $route);
 
         return $routes;
     }
 
     /**
-     * The BundleLoader of the integration bundle does not check for support.
-     *
      * {@inheritdoc}
      */
     public function supports($resource, $type = null)
     {
-        return true;
+        return true; // the loader of the integration bundle does not check for support
     }
 }
