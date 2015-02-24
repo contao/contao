@@ -43,6 +43,18 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
+     * Tests prepending configuration files to the container.
+     */
+    public function testPrepend()
+    {
+        $container = new ContainerBuilder();
+
+        $this->extension->prepend($container);
+
+        $this->assertTrue($container->has('doctrine.dbal.default_connection'));
+    }
+
+    /**
      * Tests adding the bundle services to the container.
      */
     public function testLoad()

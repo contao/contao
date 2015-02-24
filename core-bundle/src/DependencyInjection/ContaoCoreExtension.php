@@ -28,7 +28,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     /**
      * @var array
      */
-    private $configFiles = [];
+    private $configFiles = [
+        'doctrine.yml'
+    ];
 
     /**
      * {@inheritdoc}
@@ -42,7 +44,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 )
             );
 
-            $this->prependConfig($parsedConfig, $container);
+            $this->prependConfig($parsedConfig, $container, $file);
         }
     }
 
@@ -62,11 +64,16 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     /**
      * Adds the configuration to the container.
      *
-     * @param array            $parsedConfig The parsed configuration
+     * @param mixed            $parsedConfig The parsed configuration
      * @param ContainerBuilder $container    The container object
+     * @param string           $file         The file name
      */
-    private function prependConfig(array $parsedConfig, ContainerBuilder $container)
+    private function prependConfig($parsedConfig, ContainerBuilder $container, $file)
     {
+        if (!is_array($parsedConfig)) {
+            throw new \LogicException("Error parsing $file");
+        }
+
         foreach ($parsedConfig as $bundleName => $bundleConfig) {
             $container->prependExtensionConfig($bundleName, $bundleConfig);
         }
