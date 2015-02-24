@@ -1062,7 +1062,7 @@ abstract class Controller extends \System
 		$router = $kernel->getContainer()->get('router');
 
 		$generate = function ($route) use ($router) {
-			return str_replace(\Environment::get('path') . '/', '', $router->generate($route));
+			return substr($router->generate($route), strlen(\Environment::get('path')) + 1);
 		};
 
 		$arrMapper = array
@@ -1135,7 +1135,7 @@ abstract class Controller extends \System
 		}
 
 		$strUrl = $objRouter->generate($strRoute, $arrParams);
-		$strUrl = str_replace(\Environment::get('path') . '/', '', $strUrl);
+		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)
 		if ($blnFixDomain && $arrRow['domain'] != '' && $arrRow['domain'] != \Environment::get('host'))
