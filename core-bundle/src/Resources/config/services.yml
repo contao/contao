@@ -35,3 +35,8 @@ services:
             - '@@ContaoCoreBundle/Resources/config/routing.yml'
         tags:
             - { name: routing.bundle_loader, priority: 200 }
+
+    contao.routing.frontend_loader:
+        class: Contao\CoreBundle\Routing\FrontendLoader
+        tags:
+            - { name: routing.bundle_loader, priority: -250 }

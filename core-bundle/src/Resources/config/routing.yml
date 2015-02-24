@@ -72,3 +72,15 @@ contao_backend_switch:
     defaults:
         _controller: ContaoCoreBundle:Backend:switch
         _scope: backend
+
+contao_cron:
+    path: /_contao/cron
+    defaults:
+        _controller: ContaoCoreBundle:Frontend:cron
+        _scope: frontend
+
+contao_share:
+    path: /_contao/share
+    defaults:
+        _controller: ContaoCoreBundle:Frontend:share
+        _scope: frontend
