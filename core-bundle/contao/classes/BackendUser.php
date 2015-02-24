@@ -222,10 +222,6 @@ class BackendUser extends \User
 		{
 			return true;
 		}
-		elseif (TL_SCRIPT == 'contao/index.php')
-		{
-			return false;
-		}
 
 		list($path) = explode('?', \Environment::get('request'), 2);
 
