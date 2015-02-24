@@ -4,6 +4,9 @@
             "replace": ["core"],
             "environments": ["all"]
         },
+        "Contao\\IntegrationBundle\\ContaoIntegrationBundle": {
+            "environments": ["all"]
+        },
         "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle": {
             "environments": ["all"]
         }
