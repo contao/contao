@@ -104,7 +104,7 @@ final class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
             ->files()
             ->name('.htaccess')
             ->ignoreDotFiles(false)
-            ->in($this->getContaoResourcesPath())
+            ->in($this->getPath())
         ;
     }
 }
