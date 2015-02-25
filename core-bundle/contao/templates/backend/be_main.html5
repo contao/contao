@@ -54,7 +54,7 @@
           <span class="header_user_container"><a href="<?= $this->base ?>contao/main.php?do=login&amp;ref=<?= TL_REFERER_ID ?>" class="header_user" title="<?= $this->account ?>"><?= $this->username ?></a></span>
           <span class="header_preview_container"><a href="contao/preview.php<?= $this->frontendFile ?>" target="_blank" class="header_preview" title="<?= $this->previewTitle ?>" accesskey="f"><?= $this->preview ?></a></span>
           <span class="header_home_container"><a href="<?= $this->base ?>contao/main.php" class="header_home" title="<?= $this->homeTitle ?>" accesskey="h"><?= $this->home ?></a></span>
-          <span class="header_logout_container"><a href="<?= $this->base ?>contao/" class="header_logout" title="<?= $this->logoutTitle ?>" accesskey="q"><?= $this->logout ?></a></span>
+          <span class="header_logout_container"><a href="<?= $this->base ?>contao/login" class="header_logout" title="<?= $this->logoutTitle ?>" accesskey="q"><?= $this->logout ?></a></span>
         </div>
         <?php if ($this->isCoreOnlyMode): ?>
           <p class="tl_error tl_permalert"><?php if ($this->isAdmin): ?><a href="<?= $this->coreOnlyHref ?>" class="tl_submit"><?= $this->coreOnlyOff ?></a><?php endif; ?><?= $this->coreOnlyMode ?></p>

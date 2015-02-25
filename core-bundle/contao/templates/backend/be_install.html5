@@ -1325,7 +1325,7 @@ Library.
         <?php endif; ?>
       <?php endif; ?>
 
-      <p id="go_to_login"><a href="contao/" title="<?= $GLOBALS['TL_LANG']['tl_install']['beLogin'] ?>"><?= $GLOBALS['TL_LANG']['tl_install']['beLogin'] ?></a></p>
+      <p id="go_to_login"><a href="contao/login" title="<?= $GLOBALS['TL_LANG']['tl_install']['beLogin'] ?>"><?= $GLOBALS['TL_LANG']['tl_install']['beLogin'] ?></a></p>
 
     </div>
 

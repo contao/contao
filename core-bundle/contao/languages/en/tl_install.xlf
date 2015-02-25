@@ -72,7 +72,7 @@
         <source>Congratulations!</source>
       </trans-unit>
       <trans-unit id="tl_install.completed.1">
-        <source>Now please log into the &lt;a href="contao/"&gt;Contao back end&lt;/a&gt; and check the system settings. Then visit your website to make sure that Contao is working correctly.</source>
+        <source>Now please log into the &lt;a href="contao/login"&gt;Contao back end&lt;/a&gt; and check the system settings. Then visit your website to make sure that Contao is working correctly.</source>
       </trans-unit>
       <trans-unit id="tl_install.filePermissions.0">
         <source>File permission error</source>
