@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-final class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
+final class ContaoModuleBundle extends Bundle
 {
     /**
      * @var array
@@ -49,26 +49,6 @@ final class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
         $container->addCompilerPass(
             new AddContaoResourcesPass($this->getName(), $this->getPath(), $this->findPublicFolders())
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPublicFolders()
-    {
-        if (null === $this->publicDirs) {
-            $this->publicDirs = $this->findPublicFolders();
-        }
-
-        return $this->publicDirs;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getContaoResourcesPath()
-    {
-        return $this->getPath();
     }
 
     /**
