@@ -11,6 +11,8 @@
 namespace Contao\CoreBundle\HttpKernel\Bundle;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -37,6 +39,16 @@ final class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
     {
         $this->name = $name;
         $this->path = dirname($rootDir) . '/system/modules/' . $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(
+            new AddContaoResourcesPass($this->getName(), $this->getPath(), $this->findPublicFolders())
+        );
     }
 
     /**

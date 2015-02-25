@@ -54,6 +54,11 @@ services:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
 
+    contao.resources:
+        class: Contao\CoreBundle\HttpKernel\Bundle\ContaoResourcesProvider
+        arguments:
+            - "%kernel.root_dir%"
+
     contao.web_profiler.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         tags:

@@ -11,6 +11,8 @@
 namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\SetApplicationPass;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
 use Symfony\Component\DependencyInjection\Scope;
 
@@ -36,5 +38,8 @@ class ContaoCoreBundle extends ContaoBundle
     {
         $this->container->addScope(new Scope('frontend', 'request'));
         $this->container->addScope(new Scope('backend', 'request'));
+
+        $container->addCompilerPass(new SetApplicationPass());
+        $container->addCompilerPass(new AddContaoResourcesPass($this->getName(), $this->getPath() . '/../contao'));
     }
 }
