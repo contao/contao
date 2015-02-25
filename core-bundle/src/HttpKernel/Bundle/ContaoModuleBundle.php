@@ -63,7 +63,7 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
      *
      * @return array The public folders
      */
-    protected function findPublicFolders()
+    private function findPublicFolders()
     {
         $dirs  = [];
         $files = $this->findHtaccessFiles();
@@ -85,7 +85,7 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
      *
      * @return Finder The finder object
      */
-    protected function findHtaccessFiles()
+    private function findHtaccessFiles()
     {
         return Finder::create()
             ->files()
