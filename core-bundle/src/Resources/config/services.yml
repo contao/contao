@@ -55,7 +55,7 @@ services:
         public: false
 
     contao.resources:
-        class: Contao\CoreBundle\HttpKernel\Bundle\ContaoResourcesProvider
+        class: Contao\CoreBundle\HttpKernel\Bundle\ResourcesProvider
         arguments:
             - "%kernel.root_dir%"
 

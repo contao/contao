@@ -8,7 +8,9 @@
  * @license LGPL-3.0+
  */
 
-class ContaoResourcesProvider
+namespace Contao\CoreBundle\HttpKernel\Bundle;
+
+class ResourcesProvider
 {
     private $contaoResources = [];
     private $publicFolders = [];
