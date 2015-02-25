@@ -43,12 +43,24 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
      */
     public function prepend(ContainerBuilder $container)
     {
-        $this->prependConfig('doctrine.yml', $container);
-        $this->prependConfig('security.yml', $container);
+        $bundles = $container->get('kernel.bundles');
+
+        if (isset($bundles['doctrine'])) {
+            $this->prependConfig('doctrine.yml', $container);
+        }
+
+        if (isset($bundles['security'])) {
+            $this->prependConfig('security.yml', $container);
+        }
+
+        if (isset($bundles['twig'])) {
+            $this->prependConfig('twig.yml', $container);
+        }
 
         if (in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
-            $this->prependConfig('twig.yml', $container);
-            $this->prependConfig('web_profiler.yml', $container);
+            if (isset($bundles['twig'])) {
+                $this->prependConfig('web_profiler.yml', $container);
+            }
         }
     }
 
