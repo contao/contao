@@ -727,9 +727,9 @@ class Updater extends \Controller
 		$arrFiles = array();
 
 		// Parse all modules (see #6058)
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
 		{
-			$strDir = $bundle->getContaoResourcesPath() . '/dca';
+			$strDir = $path . '/dca';
 
 			if (!is_dir($strDir))
 			{

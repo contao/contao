@@ -278,9 +278,9 @@ class Installer extends \Controller
 		\Config::set('bypassCache', true);
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
 		{
-			$strDir = $bundle->getContaoResourcesPath() . '/dca';
+			$strDir = $path . '/dca';
 
 			if (!is_dir($strDir))
 			{
@@ -337,14 +337,14 @@ class Installer extends \Controller
 		$return = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $name => $path)
 		{
-			if (in_array($bundle->getName(), array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
+			if (in_array($name, array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
 			{
 				continue; // ignore the database.sql of these modules
 			}
 
-			$strFile = $bundle->getContaoResourcesPath() . '/config/database.sql';
+			$strFile = $path . '/config/database.sql';
 
 			if (!file_exists($strFile))
 			{

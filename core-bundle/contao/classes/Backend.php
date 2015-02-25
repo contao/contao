@@ -255,9 +255,10 @@ abstract class Backend extends \Controller
 		$arrFiles = array(TL_ROOT . '/system/runonce.php');
 
 		// Always scan all folders and not just the active modules (see #4200)
-		foreach ($kernel->getContaoBundles() as $bundle)
+        // TODO: I think this comment can be deleted
+		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
 		{
-			$arrFiles[] = $bundle->getContaoResourcesPath() . '/config/runonce.php';
+			$arrFiles[] = $path . '/config/runonce.php';
 		}
 
 		// Check whether a runonce file exists

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -454,6 +455,9 @@ class Automator extends \System
 	 */
 	public function generateSymlinks()
 	{
+        /** @var KernelInterface $kernel */
+        global $kernel;
+
 		$this->import('Files');
 		$strUploadPath = \Config::get('uploadPath');
 
@@ -477,10 +481,8 @@ class Automator extends \System
 			$this->Files->rrdir('web/vendor');
 		}
 
-		$arrPublic = $this->getPublicModuleFolders();
-
 		// Symlink the public extension subfolders
-		foreach ($arrPublic as $strPath)
+		foreach ($kernel->getContainer()->get('contao.resources')->getPublicFolders() as $strPath)
 		{
 			$target = str_repeat('../', substr_count($strPath, '/') + 1);
 			$this->Files->symlink($target . $strPath, 'web/' . $strPath);
@@ -520,48 +522,20 @@ class Automator extends \System
 
 
 	/**
-	 * Return all public module folders as array
-	 *
-	 * @return array An array of public folders
-	 */
-	protected function getPublicModuleFolders()
-	{
-		global $kernel;
-
-		$arrPublic = array();
-
-		foreach ($kernel->getContaoBundles() as $bundle)
-		{
-			foreach ($bundle->getPublicFolders() as $strPath)
-			{
-				if (strpos($strPath, '../') !== false)
-				{
-					$strPath = realpath($strPath);
-				}
-
-				$arrPublic[] = str_replace(TL_ROOT . '/', '', $strPath);
-			}
-		}
-
-		return array_filter($arrPublic);
-	}
-
-
-	/**
 	 * Symlink the themes into system/themes
 	 */
 	protected function symlinkThemes()
 	{
 		global $kernel;
 
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
 		{
-			if ($bundle instanceof ContaoModuleBundle)
+			if (0 === strpos($path, 'system/modules/'))
 			{
 				continue;
 			}
 
-			$strDir = $bundle->getContaoResourcesPath() . '/themes';
+			$strDir = $path . '/themes';
 
 			if (is_dir($strDir))
 			{
@@ -613,9 +587,11 @@ class Automator extends \System
 		$objCacheFile = new \File('system/cache/config/autoload.php');
 		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-		foreach ($kernel->getContaoBundles() as $bundle)
+		$arrResourcesPaths = $kernel->getContainer()->get('contao.resources')->getResourcesPaths();
+
+		foreach ($arrResourcesPaths as $path)
 		{
-			$strFile = $bundle->getContaoResourcesPath() . '/config/autoload.php';
+			$strFile = $path . '/config/autoload.php';
 
 			if (file_exists($strFile))
 			{
@@ -630,9 +606,9 @@ class Automator extends \System
 		$objCacheFile = new \File('system/cache/config/config.php');
 		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($arrResourcesPaths as $path)
 		{
-			$strFile = $bundle->getContaoResourcesPath() . '/config/config.php';
+			$strFile = $path . '/config/config.php';
 
 			if (file_exists($strFile))
 			{
@@ -656,11 +632,12 @@ class Automator extends \System
 		global $kernel;
 
 		$arrFiles = array();
+		$arrResourcesPaths = $kernel->getContainer()->get('contao.resources')->getResourcesPaths();
 
 		// Parse all active modules
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($arrResourcesPaths as $path)
 		{
-			$strDir = $bundle->getContaoResourcesPath() . '/dca';
+			$strDir = $path . '/dca';
 
 			if (!is_dir($strDir))
 			{
@@ -687,9 +664,9 @@ class Automator extends \System
 			$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
 			// Parse all active modules
-			foreach ($kernel->getContaoBundles() as $bundle)
+			foreach ($arrResourcesPaths as $path)
 			{
-				$strFile = $bundle->getContaoResourcesPath() . '/dca/' . $strName . '.php';
+				$strFile = $path . '/dca/' . $strName . '.php';
 
 				if (file_exists($strFile))
 				{
@@ -734,15 +711,16 @@ class Automator extends \System
 		}
 
 		$arrLanguages = array_unique($arrLanguages);
+		$arrResourcesPaths = $kernel->getContainer()->get('contao.resources')->getResourcesPaths();
 
 		foreach ($arrLanguages as $strLanguage)
 		{
 			$arrFiles = array();
 
 			// Parse all active modules
-			foreach ($kernel->getContaoBundles() as $bundle)
+			foreach ($arrResourcesPaths as $path)
 			{
-				$strDir = $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage;
+				$strDir = $path . '/languages/' . $strLanguage;
 
 				if (!is_dir($strDir))
 				{
@@ -786,9 +764,9 @@ class Automator extends \System
 				$objCacheFile->write(sprintf($strHeader, $strLanguage));
 
 				// Parse all active modules and append to the cache file
-				foreach ($kernel->getContaoBundles() as $bundle)
+				foreach ($arrResourcesPaths as $path)
 				{
-					$strFile = $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage . '/' . $strName;
+					$strFile = $path . '/languages/' . $strLanguage . '/' . $strName;
 
 					if (file_exists($strFile . '.xlf'))
 					{
@@ -821,9 +799,9 @@ class Automator extends \System
 		$arrExtracts = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
 		{
-			$strDir = $bundle->getContaoResourcesPath() . '/dca';
+			$strDir = $path . '/dca';
 
 			if (!is_dir($strDir))
 			{
