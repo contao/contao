@@ -39,6 +39,11 @@ class ResourcesProvider
         }
     }
 
+    public function getBundleNames()
+    {
+        return array_keys($this->contaoResources);
+    }
+
     public function getResourcesPaths()
     {
         return $this->contaoResources;

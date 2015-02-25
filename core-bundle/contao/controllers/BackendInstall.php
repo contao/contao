@@ -733,13 +733,9 @@ class BackendInstall extends \Backend
 		{
 			global $kernel;
 
-			$modules = array();
+			$modules = $kernel->getContainer()->get('contao.resources')->getBundleNames();
 
-			foreach ($kernel->getContaoBundles() as $bundle)
-			{
-				$modules[] = $bundle->getName();
-			}
-
+			// FIXME: these names have changed
 			if (count(array_diff($modules, array('ContaoCoreBundle', 'calendar', 'comments', 'devtools', 'faq', 'listing', 'news', 'newsletter', 'repository'))) > 0)
 			{
 				\Config::set('coreOnlyMode', true);

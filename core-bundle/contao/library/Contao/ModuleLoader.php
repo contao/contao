@@ -28,7 +28,7 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
  */
 class ModuleLoader
 {
-
+    // TODO: why do we need these variables anymore?
 	/**
 	 * Active modules
 	 * @var array
@@ -49,17 +49,9 @@ class ModuleLoader
 	 */
 	public static function getActive()
 	{
-		if (empty(static::$active))
-		{
-			global $kernel;
+		global $kernel;
 
-			foreach ($kernel->getContaoBundles() as $bundle)
-			{
-				static::$active[] = $bundle->getName();
-			}
-		}
-
-		return static::$active;
+		return $kernel->getContainer()->get('contao.resources')->getBundleNames();
 	}
 
 
