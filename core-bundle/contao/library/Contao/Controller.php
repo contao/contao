@@ -11,8 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 
 /**
@@ -1085,7 +1083,7 @@ abstract class Controller extends \System
     }
 
 	/**
-	 * Generate an URL depending on the current rewriteURL setting
+	 * Generate a front end URL
 	 *
 	 * @param array   $arrRow       An array of page parameters
 	 * @param string  $strParams    An optional string of URL parameters

@@ -871,7 +871,7 @@ class PageModel extends \Model
 
 
 	/**
-	 * Generate an URL depending on the current rewriteURL setting
+	 * Generate a front end URL
 	 *
 	 * @param string $strParams    An optional string of URL parameters
 	 * @param string $strForceLang Force a certain language

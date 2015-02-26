@@ -128,12 +128,6 @@
       <trans-unit id="tl_settings.privacyAnonymizeGA.1">
         <source>Anonymize the IP addresses that are sent to Google Analytics.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.rewriteURL.0">
-        <source>Rewrite URLs</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.rewriteURL.1">
-        <source>Make Contao generate static URLs without the script name. This feature requires "mod_rewrite", renaming the ".htaccess.default" file to ".htaccess" and adjusting the RewriteBase as necessary.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.addLanguageToUrl.0">
         <source>Add the language to the URL</source>
       </trans-unit>

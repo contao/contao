@@ -73,15 +73,6 @@ class FrontendIndex extends \Frontend
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 			$objHandler->generate($pageId);
 		}
-		// Throw a 404 error if URL rewriting is active and the URL contains the app.php fragment
-		elseif (\Config::get('rewriteURL') && strncmp(\Environment::get('request'), 'app.php/', 8) === 0)
-		{
-			$this->User->authenticate();
-
-			/** @var \PageError403 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-			$objHandler->generate($pageId);
-		}
 
 		// Get the current page object(s)
 		$objPage = \PageModel::findPublishedByIdOrAlias($pageId);

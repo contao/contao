@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -338,7 +339,19 @@ abstract class Frontend extends \Controller
 			// Redirect to the language root (e.g. en/)
 			if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty') && \Environment::get('request') == '')
 			{
-				static::redirect((!\Config::get('rewriteURL') ? \Environment::get('script') . '/' : '') . $objRootPage->language . '/', 301);
+				/** @var KernelInterface $kernel */
+				global $kernel;
+
+				$objRouter = $kernel->getContainer()->get('router');
+
+				$arrParams = array();
+				$arrParams['alias'] = '';
+				$arrParams['_locale'] = $objRootPage->language;
+
+				$strUrl = $objRouter->generate('contao_locale', $arrParams);
+				$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+
+				static::redirect($strUrl, 301);
 			}
 		}
 
@@ -388,9 +401,9 @@ abstract class Frontend extends \Controller
 			unset($arrGet['language']);
 		}
 
+		$strParams    = '';
 		$strConnector = '/';
 		$strSeparator = '/';
-		$strParams    = '';
 
 		// Compile the parameters string
 		foreach ($arrGet as $k=>$v)
@@ -417,15 +430,28 @@ abstract class Frontend extends \Controller
 			$pageId = static::getPageIdFromUrl();
 		}
 
-		$pageLanguage = '';
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$objRouter = $kernel->getContainer()->get('router');
+
+		$arrParams = array();
+		$arrParams['alias'] = $pageId . $strParams . \Config::get('urlSuffix');
 
 		// Add the language
 		if (\Config::get('addLanguageToUrl'))
 		{
-			$pageLanguage = $objPage->rootLanguage . '/';
+			$arrParams['_locale'] = $objPage->rootLanguage;
+			$strUrl = $objRouter->generate('contao_locale', $arrParams);
+		}
+		else
+		{
+			$strUrl = $objRouter->generate('contao_default', $arrParams);
 		}
 
-		return (\Config::get('rewriteURL') ? '' : \Environment::get('script') . '/') . $pageLanguage . $pageId . $strParams . \Config::get('urlSuffix');
+		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+
+		return $strUrl;
 	}
 
 
