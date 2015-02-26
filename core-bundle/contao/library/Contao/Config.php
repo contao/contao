@@ -497,14 +497,16 @@ class Config
 		}
 
 		$arrMap = array(
-			'dbHost'     => 'database_host',
-			'dbPort'     => 'database_port',
-			'dbDatabase' => 'database_name',
-			'dbUser'     => 'database_user',
-			'dbPass'     => 'database_password',
-			'smtpHost'   => 'mailer_host',
-			'smtpUser'   => 'mailer_user',
-			'smtpPass'   => 'mailer_password'
+			'dbHost'           => 'database_host',
+			'dbPort'           => 'database_port',
+			'dbDatabase'       => 'database_name',
+			'dbUser'           => 'database_user',
+			'dbPass'           => 'database_password',
+			'smtpHost'         => 'mailer_host',
+			'smtpUser'         => 'mailer_user',
+			'smtpPass'         => 'mailer_password',
+			'addLanguageToUrl' => 'add_language_to_url',
+			'urlSuffix'        => 'url_suffix'
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)
