@@ -102,6 +102,23 @@ class Config
 {
     private static \$cache = [];
 
+    private static \$instance;
+
+    public static function getInstance()
+    {
+        if (null === static::\$instance)
+        {
+            static::\$instance = new static();
+        }
+
+        return static::\$instance;
+    }
+
+    public static function clear(\$data = array())
+    {
+        static::\$cache = \$data;
+    }
+
     public static function set(\$key, \$value)
     {
         static::\$cache[\$key] = \$value;
@@ -115,9 +132,63 @@ class Config
 
         return null;
     }
+
+    public static function has(\$key)
+    {
+        return isset(static::\$cache[\$key]);
+    }
+
+    public static function preload() {}
+
+    public static function isComplete()
+    {
+        return true;
+    }
 }
 HEREDOC
 );
+
+// Define a custom Environment class via eval() so it does not interfere with the IDE
+eval(<<<HEREDOC
+namespace Contao;
+
+class Environment
+{
+    private static \$cache = [];
+
+    public static function clear(\$data = array())
+    {
+        static::\$cache = \$data;
+    }
+
+    public static function set(\$key, \$value)
+    {
+        static::\$cache[\$key] = \$value;
+    }
+
+    public static function get(\$key)
+    {
+        if (isset(static::\$cache[\$key])) {
+            return static::\$cache[\$key];
+        }
+
+        return null;
+    }
+
+    public static function has(\$key)
+    {
+        return isset(static::\$cache[\$key]);
+    }
+}
+HEREDOC
+);
+class_alias('\Contao\Environment', 'Environment');
+
+require_once __DIR__ . '/../contao/library/Contao/Input.php';
+class_alias('\Contao\Input', 'Input');
+require_once __DIR__ . '/../contao/library/Contao/RequestToken.php';
+class_alias('\Contao\RequestToken', 'RequestToken');
+
 
 $include = function ($file) {
     return file_exists($file) ? include $file : false;
