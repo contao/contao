@@ -33,18 +33,32 @@ require __DIR__ . '/helper/exception.php';
 // Log PHP errors
 @ini_set('error_log', TL_ROOT . '/system/logs/error.log');
 
-// Include some classes required for further processing
-require __DIR__ . '/library/Contao/Config.php';
-class_alias('Contao\\Config', 'Config');
-
-require __DIR__ . '/library/Contao/ClassLoader.php';
-class_alias('Contao\\ClassLoader', 'ClassLoader');
-
-require __DIR__ . '/library/Contao/TemplateLoader.php';
-class_alias('Contao\\TemplateLoader', 'TemplateLoader');
-
-require __DIR__ . '/library/Contao/ModuleLoader.php';
-class_alias('Contao\\ModuleLoader', 'ModuleLoader');
+// Include some classes required for further processing when they have not been loaded yet.
+// They may have been loaded/predefined when coming from a custom entry point and/or unit tests.
+if (!class_exists('Contao\\Config')) {
+    require __DIR__ . '/library/Contao/Config.php';
+}
+if (!class_exists('\\Config')) {
+    class_alias('Contao\\Config', 'Config');
+}
+if (!class_exists('Contao\\ClassLoader')) {
+    require __DIR__ . '/library/Contao/ClassLoader.php';
+}
+if (!class_exists('ClassLoader')) {
+    class_alias('Contao\\ClassLoader', 'ClassLoader');
+}
+if (!class_exists('Contao\\TemplateLoader')) {
+    require __DIR__ . '/library/Contao/TemplateLoader.php';
+}
+if (!class_exists('TemplateLoader')) {
+    class_alias('Contao\\TemplateLoader', 'TemplateLoader');
+}
+if (!class_exists('Contao\\ModuleLoader')) {
+    require __DIR__ . '/library/Contao/ModuleLoader.php';
+}
+if (!class_exists('ModuleLoader')) {
+    class_alias('Contao\\ModuleLoader', 'ModuleLoader');
+}
 
 // Preload the configuration (see #5872)
 Config::preload();
