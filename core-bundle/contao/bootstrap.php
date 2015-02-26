@@ -18,9 +18,9 @@ if (TL_MODE == 'BE')
 	define('FE_USER_LOGGED_IN', false);
 }
 
-require TL_ROOT . '/system/helper/functions.php';
-require TL_ROOT . '/system/helper/interface.php';
-require TL_ROOT . '/system/helper/exception.php';
+require __DIR__ . '/helper/functions.php';
+require __DIR__ . '/helper/interface.php';
+require __DIR__ . '/helper/exception.php';
 
 // Try to disable the PHPSESSID
 @ini_set('session.use_trans_sid', 0);
