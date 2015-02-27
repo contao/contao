@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
 
 /**
  * Loads and writes the local configuration file
@@ -487,11 +485,9 @@ class Config
 	{
 		global $kernel;
 
-		// Do not use System::getContainer() here, because the Config class is
-		// initialized before the class loader and System is not yet available
 		$container = $kernel->getContainer();
 
-		if (null === $container)
+		if ($container === null)
 		{
 			return;
 		}

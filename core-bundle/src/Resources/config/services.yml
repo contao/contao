@@ -4,14 +4,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
-    # Attention: the priority for this listener must be higher than any other listener that uses legacy Contao code
-    # Must be lower than route_listener (default: 32)
     contao.listener.boostrap_legacy:
         class: Contao\CoreBundle\EventListener\BootstrapLegacyListener
         arguments:
             - "@router"
             - "%kernel.root_dir%"
         tags:
+            # Priority must be higher than any other listener that uses the Contao framework and lower than the
+            # priority of the route_listener, which defaults to 32.
             - { name: kernel.event_listener, event: kernel.request, method: onBootLegacyForRequest, priority: 30 }
             - { name: kernel.event_listener, event: console.command, method: onBootLegacyForConsole }
 
@@ -26,15 +26,13 @@ services:
     contao.listener.output_from_cache:
         class: Contao\CoreBundle\EventListener\OutputFromCacheListener
         tags:
-            # priority is temporarily lower than contao.listener.boostrap_legacy as until not depending on legacy code
-            # anymore.
+            # Priority must be lower than the one of the Contao bootstrap listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 26 }
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
         tags:
-            # priority is temporarily lower than contao.listener.boostrap_legacy as until not depending on legacy code
-            # anymore.
+            # Priority must be lower than the one of the Contao bootstrap listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
 
     contao.routing.backend_loader:
