@@ -34,8 +34,8 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
      */
     public function __construct($name, $rootDir)
     {
-        $this->name    = $name;
-        $this->path    = dirname($rootDir) . '/system/modules/' . $this->name;
+        $this->name = $name;
+        $this->path = dirname($rootDir) . '/system/modules/' . $this->name;
     }
 
     /**
