@@ -53,7 +53,9 @@ if (USE_MBSTRING)
  *
  * Unicode version of chr() that handles UTF-8 characters. It is basically
  * used as callback function for utf8_decode_entities().
- * @param int
+ *
+ * @param integer $dec
+ *
  * @return string
  */
 function utf8_chr($dec)
@@ -79,8 +81,10 @@ function utf8_chr($dec)
  *
  * Unicode version of ord() that handles UTF-8 characters. The function has
  * been published by R. Rajesh Jeba Anbiah on php.net.
- * @param string
- * @return int
+ *
+ * @param string $str
+ *
+ * @return integer
  */
 function utf8_ord($str)
 {
@@ -115,14 +119,16 @@ function utf8_ord($str)
  * Use utf8_decode() to convert UTF-8 to ISO-8859-1, otherwise use iconv()
  * or mb_convert_encoding(). Return the original string if none of these
  * libraries is available.
- * @param string
- * @param string
- * @param string
+ *
+ * @param string $str
+ * @param string $to
+ * @param string $from
+ *
  * @return string
  */
 function utf8_convert_encoding($str, $to, $from=null)
 {
-	if (!$str)
+	if ($str == '')
 		return '';
 
 	if (!$from)
@@ -140,6 +146,7 @@ function utf8_convert_encoding($str, $to, $from=null)
 	if (USE_MBSTRING)
 	{
 		@mb_substitute_character('none');
+
 		return @mb_convert_encoding($str, $to, $from);
 	}
 
@@ -160,7 +167,9 @@ function utf8_convert_encoding($str, $to, $from=null)
  *
  * Calls utf8_chr() to convert unicode entities. HTML entities like '&nbsp;'
  * or '&quot;' will not be decoded.
- * @param string
+ *
+ * @param string $str
+ *
  * @return string
  */
 function utf8_decode_entities($str)
@@ -174,7 +183,9 @@ function utf8_decode_entities($str)
 
 /**
  * Callback function for utf8_decode_entities
- * @param array
+ *
+ * @param array $matches
+ *
  * @return string
  */
 function utf8_chr_callback($matches)
@@ -185,7 +196,9 @@ function utf8_chr_callback($matches)
 
 /**
  * Callback function for utf8_decode_entities
- * @param array
+ *
+ * @param array $matches
+ *
  * @return string
  */
 function utf8_hexchr_callback($matches)
@@ -199,13 +212,15 @@ function utf8_hexchr_callback($matches)
  *
  * Use mb_detect_encoding() if available since it seems to be about 20 times
  * faster than using ereg() or preg_match().
- * @param string
+ *
+ * @param string $str
+ *
  * @return string
  */
 function utf8_detect_encoding($str)
 {
 	if (USE_MBSTRING)
-		return mb_detect_encoding($str, ['ASCII', 'ISO-2022-JP', 'UTF-8', 'EUC-JP', 'ISO-8859-1']);
+		return mb_detect_encoding($str, array('ASCII', 'ISO-2022-JP', 'UTF-8', 'EUC-JP', 'ISO-8859-1'));
 
 	if (!preg_match("/[\x80-\xFF]/", $str))
 	{
@@ -230,7 +245,9 @@ function utf8_detect_encoding($str)
  *
  * Use the UTF-8 lookup table to replace non ascii characters with their
  * respective roman character.
- * @param string
+ *
+ * @param string $str
+ *
  * @return string
  */
 function utf8_romanize($str)
@@ -250,8 +267,10 @@ function utf8_romanize($str)
  * Use mb_strlen() if available since it seems to be the fastes way to
  * determine the string length. Otherwise decode the string (will convert
  * non ISO-8859-1 characters to '?') and use strlen().
- * @param string
- * @return int
+ *
+ * @param string $str
+ *
+ * @return integer
  */
 function utf8_strlen($str)
 {
@@ -267,10 +286,12 @@ function utf8_strlen($str)
  *
  * Use mb_strpos() if available. Otherwise combine strpos() and utf8_strlen()
  * to detect the numeric position of the first occurrence.
- * @param string
- * @param string
- * @param int
- * @return int
+ *
+ * @param string  $haystack
+ * @param string  $needle
+ * @param integer $offset
+ *
+ * @return integer
  */
 function utf8_strpos($haystack, $needle, $offset=0)
 {
@@ -307,8 +328,10 @@ function utf8_strpos($haystack, $needle, $offset=0)
  *
  * Use mb_strrchr() if available since it seems to be about eight times
  * faster than combining utf8_substr() and utf8_strrpos().
- * @param string
- * @param string
+ *
+ * @param string $haystack
+ * @param string $needle
+ *
  * @return string
  */
 function utf8_strrchr($haystack, $needle)
@@ -330,8 +353,10 @@ function utf8_strrchr($haystack, $needle)
  *
  * Use mb_strrpos() if available since it is about twice as fast as our
  * workaround. Otherwise use utf8_strlen() to determine the position.
- * @param string
- * @param string
+ *
+ * @param string $haystack
+ * @param string $needle
+ *
  * @return mixed
  */
 function utf8_strrpos($haystack, $needle)
@@ -353,8 +378,10 @@ function utf8_strrpos($haystack, $needle)
  *
  * Use mb_strstr() if available since it seems to be about eight times
  * faster than combining utf8_substr() and utf8_strpos().
- * @param string
- * @param string
+ *
+ * @param string $haystack
+ * @param string $needle
+ *
  * @return string
  */
 function utf8_strstr($haystack, $needle)
@@ -376,7 +403,9 @@ function utf8_strstr($haystack, $needle)
  *
  * Use mb_strtolower() if available, although our workaround does not seem
  * to be significantly slower.
- * @param string
+ *
+ * @param string $str
+ *
  * @return string
  */
 function utf8_strtolower($str)
@@ -398,7 +427,9 @@ function utf8_strtolower($str)
  *
  * Use mb_strtoupper() if available, although our workaround does not seem
  * to be significantly slower.
- * @param string
+ *
+ * @param string $str
+ *
  * @return string
  */
 function utf8_strtoupper($str)
@@ -422,9 +453,11 @@ function utf8_strtoupper($str)
  * our workaround. Otherwise, use PCRE regular expressions with 'u' flag.
  * Thanks to Andreas Gohr <andi@splitbrain.org> for this wonderful algorithm
  * which is the fastes workaround I could find on the internet.
- * @param string
- * @param int
- * @param int
+ *
+ * @param string  $str
+ * @param integer $start
+ * @param integer $length
+ *
  * @return string
  */
 function utf8_substr($str, $start, $length=null)
@@ -522,7 +555,7 @@ function utf8_substr($str, $start, $length=null)
 		}
 	}
 
-	$match = [];
+	$match = array();
 
 	if (!preg_match('#'.$start_pattern.$length_pattern.'#us', $str, $match))
 		return '';
@@ -534,7 +567,8 @@ function utf8_substr($str, $start, $length=null)
 /**
  * Make sure the first letter is uppercase
  *
- * @param string
+ * @param string $str
+ *
  * @return string
  */
 function utf8_ucfirst($str)
@@ -548,12 +582,14 @@ function utf8_ucfirst($str)
  *
  * Unicode version of str_split() that handles UTF-8 characters. The function
  * has been published by saeedco on php.net.
- * @param string
+ *
+ * @param string $str
+ *
  * @return array
  */
 function utf8_str_split($str)
 {
-	$array = [];
+	$array = array();
 
 	for ($i=0; $i<strlen($str);)
 	{
