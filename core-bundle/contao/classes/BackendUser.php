@@ -226,30 +226,31 @@ class BackendUser extends \User
 			return true;
 		}
 
-		list($path) = explode('?', \Environment::get('request'), 2);
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-		if (substr($path, -13) == '/contao/login')
+		$container = $kernel->getContainer();
+		$route     = $container->get('request_stack')->getCurrentRequest()->attributes->get('_route');
+
+		if ($route == 'contao_backend_login')
 		{
 			return false;
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		$parameters = [];
 
 		// Redirect to the last page visited upon login
-		if (substr($path, -7) == '/contao' || substr($path, -15) == '/contao/preview')
+		if ($route == 'contao_backend' || $route == 'contao_backend_preview')
 		{
 			$parameters['referer'] = base64_encode(\Environment::get('request'));
 		}
 
 		\Controller::redirect(
-			$kernel->getContainer()->get('router')->generate(
-                'contao_backend_login',
-                $parameters,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            )
+			$container->get('router')->generate(
+				'contao_backend_login',
+				$parameters,
+				UrlGeneratorInterface::ABSOLUTE_URL
+			)
 		);
 	}
 
