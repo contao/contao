@@ -57,7 +57,7 @@ services:
     contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
 
-    data_collector.contao:
+    contao.web_profiler.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
