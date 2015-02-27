@@ -1,0 +1,21 @@
+security:
+    providers:
+        contao.security.user_provider:
+            id: contao.security.user_provider
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
+            security: false
+
+        backend:
+            pattern: ^/contao
+            stateless: true
+            simple_preauth:
+                authenticator: contao.security.authenticator
+
+        frontend:
+            pattern: ~
+            stateless: true
+            simple_preauth:
+                authenticator: contao.security.authenticator

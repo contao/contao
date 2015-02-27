@@ -53,3 +53,10 @@ services:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
+
+    contao.security.user_provider:
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
+
+    contao.security.authenticator:
+        class: Contao\CoreBundle\Security\ContaoAuthenticator
+        arguments: ["@contao.security.user_provider"]

@@ -44,6 +44,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     public function prepend(ContainerBuilder $container)
     {
         $this->prependConfig('doctrine.yml', $container);
+        $this->prependConfig('security.yml', $container);
 
         if (in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             $this->prependConfig('twig.yml', $container);

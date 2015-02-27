@@ -218,9 +218,9 @@ class BackendUser extends \User
 	public function authenticate()
 	{
 		// Do not redirect if authentication is successful
-		if (parent::authenticate() || TL_SCRIPT == 'contao/index.php')
+		if (parent::authenticate())
 		{
-			return;
+			return true;
 		}
 
 		list($path) = explode('?', \Environment::get('request'), 2);

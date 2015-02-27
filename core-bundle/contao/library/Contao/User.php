@@ -209,6 +209,17 @@ abstract class User extends \System
 
 
 	/**
+	 * Get a string representation of the user
+	 *
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->intId ? $this->username : 'anon.';
+	}
+
+
+	/**
 	 * Instantiate a new user object (Factory)
 	 *
 	 * @return static The object instance
