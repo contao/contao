@@ -211,7 +211,7 @@ abstract class User extends \System
 	/**
 	 * Get a string representation of the user
 	 *
-	 * @return string
+	 * @return string The string representation
 	 */
 	public function __toString()
 	{

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
@@ -10,33 +10,60 @@
 
 namespace Contao\CoreBundle\Security\Authentication;
 
+use Contao\BackendUser;
+use Contao\FrontendUser;
+use Contao\User;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Role\RoleInterface;
 
+/**
+ * Provides a Contao authentication token.
+ *
+ * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
+ */
 class ContaoToken extends AbstractToken
 {
-
     /**
      * Constructor.
      *
-     * @param \User $user A Contao user instance
+     * @param User $user The user object
      */
-    public function __construct(\User $user)
+    public function __construct(User $user)
     {
         $this->setUser($user);
 
-        $roles = [];
-
         if (!$user->authenticate()) {
-            throw new UsernameNotFoundException('Contao user not found.');
+            throw new UsernameNotFoundException('Invalid Contao user given');
         }
 
         $this->setAuthenticated(true);
 
-        if ($user instanceof \FrontendUser) {
+        parent::__construct($this->getRolesFromUser($user));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCredentials()
+    {
+        return '';
+    }
+
+    /**
+     * Returns the roles depending on the user object.
+     *
+     * @param User $user The user object
+     *
+     * @return array The roles
+     */
+    private function getRolesFromUser(User $user)
+    {
+        $roles = [];
+
+        if ($user instanceof FrontendUser) {
             $roles[] = 'ROLE_MEMBER';
-        } elseif ($user instanceof \BackendUser) {
+        } elseif ($user instanceof BackendUser) {
             $roles[] = 'ROLE_USER';
 
             if ($user->isAdmin) {
@@ -44,16 +71,6 @@ class ContaoToken extends AbstractToken
             }
         }
 
-        parent::__construct($roles);
-    }
-
-    /**
-     * Returns the user credentials.
-     *
-     * @return mixed The user credentials
-     */
-    public function getCredentials()
-    {
-        return '';
+        return $roles;
     }
 }

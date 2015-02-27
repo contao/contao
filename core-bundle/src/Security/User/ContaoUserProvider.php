@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
@@ -10,32 +10,36 @@
 
 namespace Contao\CoreBundle\Security\User;
 
+use Contao\BackendUser;
+use Contao\FrontendUser;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
 /**
- * ContaoUserProvider provides Contao frontend or backend user instance
+ * Provides a Contao front end or back end user object.
  *
- * @author Andreas Schempp <andreas.schempp@terminal42.ch>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ContaoUserProvider implements UserProviderInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * return BackendUser|FrontendUser The user object
      */
     public function loadUserByUsername($username)
     {
         if ('backend' === $username) {
-            return \BackendUser::getInstance();
-
-        } elseif ('frontend' === $username) {
-            return \FrontendUser::getInstance();
-
-        } else {
-            throw new UsernameNotFoundException('Can only load "frontend" or "backend" user.');
+            return BackendUser::getInstance();
         }
+
+        if ('frontend' === $username) {
+            return FrontendUser::getInstance();
+        }
+
+        throw new UsernameNotFoundException('Can only load "frontend" or "backend" user');
     }
 
     /**
@@ -43,7 +47,7 @@ class ContaoUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        throw new UnsupportedUserException('Cannot refresh a Contao user.');
+        throw new UnsupportedUserException('Cannot refresh a Contao user');
     }
 
     /**

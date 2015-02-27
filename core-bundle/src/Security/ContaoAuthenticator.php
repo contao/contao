@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2014 Leo Feyer
  *
@@ -20,29 +20,60 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * Authenticates a Contao token.
+ *
+ * @author Andreas Schempp <https://github.com/aschempp>
+ */
 class ContaoAuthenticator implements SimplePreAuthenticatorInterface
 {
+    /**
+     * @var ContaoUserProvider
+     */
     protected $userProvider;
 
+    /**
+     * Constructor.
+     *
+     * @param ContaoUserProvider $userProvider The user provide object
+     */
     public function __construct(ContaoUserProvider $userProvider)
     {
         $this->userProvider = $userProvider;
     }
 
+    /**
+     * Creates an authentication token.
+     *
+     * @param Request $request     The request object
+     * @param string  $providerKey The provider key
+     *
+     * @return AnonymousToken The token object
+     */
     public function createToken(Request $request, $providerKey)
     {
-        return new AnonymousToken(
-            $providerKey,
-            'anon.'
-        );
+        return new AnonymousToken($providerKey, 'anon.');
     }
 
+    /**
+     * Authenticates a token.
+     *
+     * @param TokenInterface        $token        The token object
+     * @param UserProviderInterface $userProvider The user provider object
+     * @param string                $providerKey  The provider key
+     *
+     * @return ContaoToken|TokenInterface The token object
+     *
+     * @throws AuthenticationException If the token cannot be handled
+     */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
         if ($token instanceof ContaoToken) {
             return $token;
-        } elseif (!$token instanceof AnonymousToken) {
-            throw new AuthenticationException('ContaoAuthenticator can only handle AnonymousToken');
+        }
+
+        if (!$token instanceof AnonymousToken) {
+            throw new AuthenticationException('The ContaoAuthenticator can only handle AnonymousToken');
         }
 
         try {
@@ -55,6 +86,14 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
         }
     }
 
+    /**
+     * Checks if the token is supported.
+     *
+     * @param TokenInterface $token       The token object
+     * @param string         $providerKey The provider key
+     *
+     * @return bool True if the token is supported
+     */
     public function supportsToken(TokenInterface $token, $providerKey)
     {
         return $token instanceof ContaoToken || $token instanceof AnonymousToken;
