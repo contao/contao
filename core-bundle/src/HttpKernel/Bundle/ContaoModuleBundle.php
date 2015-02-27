@@ -22,11 +22,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
 {
     /**
-     * @var string
-     */
-    protected $rootDir;
-
-    /**
      * @var array
      */
     protected $publicDirs;
@@ -40,7 +35,7 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
     public function __construct($name, $rootDir)
     {
         $this->name    = $name;
-        $this->rootDir = $rootDir;
+        $this->path    = dirname($rootDir) . '/system/modules/' . $this->name;
     }
 
     /**
@@ -61,18 +56,6 @@ class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
     public function getContaoResourcesPath()
     {
         return $this->getPath();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPath()
-    {
-        if (null === $this->path) {
-            $this->path = dirname($this->rootDir) . '/system/modules/' . $this->name;
-        }
-
-        return $this->path;
     }
 
     /**
