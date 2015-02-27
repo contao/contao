@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\Security\User;
 
+use Contao\BackendUser;
+use Contao\FrontendUser;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -25,16 +27,16 @@ class ContaoUserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @return \BackendUser|\FrontendUser The user object
+     * @return BackendUser|FrontendUser The user object
      */
     public function loadUserByUsername($username)
     {
         if ('backend' === $username) {
-            return \BackendUser::getInstance();
+            return BackendUser::getInstance();
         }
 
         if ('frontend' === $username) {
-            return \FrontendUser::getInstance();
+            return FrontendUser::getInstance();
         }
 
         throw new UsernameNotFoundException('Can only load "frontend" or "backend" user');

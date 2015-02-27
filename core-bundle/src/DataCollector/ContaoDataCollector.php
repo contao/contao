@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
+use Contao\Model\Registry;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -188,12 +190,12 @@ class ContaoDataCollector extends DataCollector
         $intElapsed = (microtime(true) - TL_START);
 
         $this->data['summary'] = [
-            'execution_time' => \System::getFormattedNumber(($intElapsed * 1000), 0),
-            'memory'         => \System::getReadableSize(memory_get_peak_usage()),
+            'execution_time' => System::getFormattedNumber(($intElapsed * 1000), 0),
+            'memory'         => System::getReadableSize(memory_get_peak_usage()),
             'dbqueries'      => count($GLOBALS['TL_DEBUG']['database_queries']),
             'rows_returned'  => $intReturned,
             'rows_affected'  => $intAffected,
-            'models'         => \Model\Registry::getInstance()->count()
+            'models'         => Registry::getInstance()->count()
         ];
     }
 }

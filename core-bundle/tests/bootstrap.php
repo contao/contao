@@ -11,8 +11,9 @@
 error_reporting(E_ALL);
 
 // Define a custom System class via eval() so it does not interfere with the IDE
-// FIXME: namespace Contao;
 eval(<<<HEREDOC
+namespace Contao;
+
 class System
 {
     public static function getReferer()
@@ -24,8 +25,9 @@ HEREDOC
 );
 
 // Define a custom Frontend class via eval() so it does not interfere with the IDE
-// FIXME: namespace Contao;
 eval(<<<HEREDOC
+namespace Contao;
+
 use Symfony\Component\HttpFoundation\Response;
 
 class Frontend

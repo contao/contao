@@ -10,6 +10,9 @@
 
 namespace Contao\CoreBundle\Security\Authentication;
 
+use Contao\BackendUser;
+use Contao\FrontendUser;
+use Contao\User;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Role\RoleInterface;
@@ -25,9 +28,9 @@ class ContaoToken extends AbstractToken
     /**
      * Constructor.
      *
-     * @param \User $user The user object
+     * @param User $user The user object
      */
-    public function __construct(\User $user)
+    public function __construct(User $user)
     {
         $this->setUser($user);
 
@@ -51,17 +54,17 @@ class ContaoToken extends AbstractToken
     /**
      * Returns the roles depending on the user object.
      *
-     * @param \User $user The user object
+     * @param User $user The user object
      *
      * @return RoleInterface[] The roles
      */
-    private function getRolesFromUser(\User $user)
+    private function getRolesFromUser(User $user)
     {
         $roles = [];
 
-        if ($user instanceof \FrontendUser) {
+        if ($user instanceof FrontendUser) {
             $roles[] = 'ROLE_MEMBER';
-        } elseif ($user instanceof \BackendUser) {
+        } elseif ($user instanceof BackendUser) {
             $roles[] = 'ROLE_USER';
 
             if ($user->isAdmin) {

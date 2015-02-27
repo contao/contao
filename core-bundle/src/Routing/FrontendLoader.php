@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Routing;
 
+use Contao\Config;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -22,8 +23,8 @@ class FrontendLoader extends Loader
      */
     public function load($resource, $type = null)
     {
-        $addlang = \Config::get('addLanguageToUrl');
-        $suffix  = substr(\Config::get('urlSuffix'), 1);
+        $addlang = Config::get('addLanguageToUrl');
+        $suffix  = substr(Config::get('urlSuffix'), 1);
 
         $routes = new RouteCollection();
 

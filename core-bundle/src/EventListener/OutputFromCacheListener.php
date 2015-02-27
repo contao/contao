@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\Frontend;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
@@ -27,7 +28,7 @@ class OutputFromCacheListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $response = \Frontend::getResponseFromCache();
+        $response = Frontend::getResponseFromCache();
 
         if (null !== $response) {
             $event->setResponse($response);

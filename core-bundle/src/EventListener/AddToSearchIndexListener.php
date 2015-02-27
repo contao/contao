@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\Frontend;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
 /**
@@ -26,6 +27,6 @@ class AddToSearchIndexListener
      */
     public function onKernelTerminate(PostResponseEvent $event)
     {
-        \Frontend::indexPageIfApplicable($event->getResponse());
+        Frontend::indexPageIfApplicable($event->getResponse());
     }
 }

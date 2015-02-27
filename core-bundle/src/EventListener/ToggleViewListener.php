@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\System;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -36,7 +37,7 @@ class ToggleViewListener
         }
 
         $state    = $request->query->get('toggle_view');
-        $referer  = \System::getReferer();
+        $referer  = System::getReferer();
         $response = new RedirectResponse($referer, 303);
 
         if ('mobile' === $state) {
