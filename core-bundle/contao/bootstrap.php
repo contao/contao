@@ -10,21 +10,6 @@
 
 global $kernel;
 
-if (!defined('TL_MODE'))
-{
-	define('TL_MODE', 'FE');
-}
-
-define('TL_START', microtime(true));
-define('TL_REFERER_ID', substr(md5(TL_START), 0, 8));
-define('TL_ROOT', dirname($kernel->getRootDir()));
-
-// Define the TL_SCRIPT constant (backwards compatibility)
-if (!defined('TL_SCRIPT'))
-{
-	// FIXME: TL_SCRIPT should be set here for legacy modules, we currently use a listener which is too late.
-	//define('TL_SCRIPT', null);
-}
 
 // Define the login status constants in the back end (see #4099, #5279)
 if (TL_MODE == 'BE')
@@ -33,10 +18,9 @@ if (TL_MODE == 'BE')
 	define('FE_USER_LOGGED_IN', false);
 }
 
-require TL_ROOT . '/system/helper/functions.php';
-require TL_ROOT . '/system/config/constants.php';
-require TL_ROOT . '/system/helper/interface.php';
-require TL_ROOT . '/system/helper/exception.php';
+require __DIR__ . '/helper/functions.php';
+require __DIR__ . '/helper/interface.php';
+require __DIR__ . '/helper/exception.php';
 
 // Try to disable the PHPSESSID
 @ini_set('session.use_trans_sid', 0);
@@ -49,18 +33,32 @@ require TL_ROOT . '/system/helper/exception.php';
 // Log PHP errors
 @ini_set('error_log', TL_ROOT . '/system/logs/error.log');
 
-// Include some classes required for further processing
-require __DIR__ . '/library/Contao/Config.php';
-class_alias('Contao\\Config', 'Config');
-
-require __DIR__ . '/library/Contao/ClassLoader.php';
-class_alias('Contao\\ClassLoader', 'ClassLoader');
-
-require __DIR__ . '/library/Contao/TemplateLoader.php';
-class_alias('Contao\\TemplateLoader', 'TemplateLoader');
-
-require __DIR__ . '/library/Contao/ModuleLoader.php';
-class_alias('Contao\\ModuleLoader', 'ModuleLoader');
+// Include some classes required for further processing when they have not been loaded yet.
+// They may have been loaded/predefined when coming from a custom entry point and/or unit tests.
+if (!class_exists('Contao\\Config')) {
+    require __DIR__ . '/library/Contao/Config.php';
+}
+if (!class_exists('\\Config')) {
+    class_alias('Contao\\Config', 'Config');
+}
+if (!class_exists('Contao\\ClassLoader')) {
+    require __DIR__ . '/library/Contao/ClassLoader.php';
+}
+if (!class_exists('ClassLoader')) {
+    class_alias('Contao\\ClassLoader', 'ClassLoader');
+}
+if (!class_exists('Contao\\TemplateLoader')) {
+    require __DIR__ . '/library/Contao/TemplateLoader.php';
+}
+if (!class_exists('TemplateLoader')) {
+    class_alias('Contao\\TemplateLoader', 'TemplateLoader');
+}
+if (!class_exists('Contao\\ModuleLoader')) {
+    require __DIR__ . '/library/Contao/ModuleLoader.php';
+}
+if (!class_exists('ModuleLoader')) {
+    class_alias('Contao\\ModuleLoader', 'ModuleLoader');
+}
 
 // Preload the configuration (see #5872)
 Config::preload();

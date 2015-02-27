@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\Routing;
 
-use Contao\Config;
 use Contao\CoreBundle\Routing\FrontendLoader;
 
 /**
@@ -25,7 +24,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstantiation()
     {
-        $loader = new FrontendLoader();
+        $loader = new FrontendLoader(false, '');
 
         $this->assertInstanceOf('Contao\CoreBundle\Routing\FrontendLoader', $loader);
     }
@@ -35,10 +34,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithoutLanguage()
     {
-        Config::set('urlSuffix', '.html');
-        Config::set('addLanguageToUrl', false);
-
-        $loader     = new FrontendLoader();
+        $loader     = new FrontendLoader(false, '.html');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -59,10 +55,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWitLanguage()
     {
-        Config::set('urlSuffix', '.html');
-        Config::set('addLanguageToUrl', true);
-
-        $loader     = new FrontendLoader();
+        $loader     = new FrontendLoader(true, '.html');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -93,10 +86,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithoutLanguageAndWithoutSuffix()
     {
-        Config::set('urlSuffix', '');
-        Config::set('addLanguageToUrl', false);
-
-        $loader     = new FrontendLoader();
+        $loader     = new FrontendLoader(false, '');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -117,10 +107,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithLanguageAndWithoutSuffix()
     {
-        Config::set('urlSuffix', '');
-        Config::set('addLanguageToUrl', true);
-
-        $loader     = new FrontendLoader();
+        $loader     = new FrontendLoader(true, '');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -151,7 +138,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSupportsContaoFrontend()
     {
-        $loader = new FrontendLoader();
+        $loader = new FrontendLoader(false, '');
 
         $this->assertTrue($loader->supports('.', 'bundles'));
     }
