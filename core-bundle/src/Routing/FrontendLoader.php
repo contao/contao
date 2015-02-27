@@ -14,28 +14,29 @@ use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-// FIXME: add the phpDoc comments
+/**
+ * Adds routes for the Contao front end.
+ *
+ * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
+ */
 class FrontendLoader extends Loader
 {
     /**
-     * Flag determining if the urls shall be prepended with the locale.
-     *
      * @var bool
      */
     private $prependLocale;
 
     /**
-     * The format parameter value to use.
-     *
      * @var string
      */
     private $format;
 
     /**
-     * Create a new instance.
+     * Constructor.
      *
-     * @param bool   $prependLocale Flag determining if the urls shall be prepended with the locale.
-     * @param string $format        The format parameter value to use.
+     * @param bool   $prependLocale Prepend the locale
+     * @param string $format        The URL suffix
      */
     public function __construct($prependLocale, $format)
     {

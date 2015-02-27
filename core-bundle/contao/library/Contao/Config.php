@@ -491,7 +491,7 @@ class Config
 		// initialized before the class loader and System is not yet available
 		$container = $kernel->getContainer();
 
-		if ($container === null)
+		if (null === $container)
 		{
 			return;
 		}
@@ -505,7 +505,7 @@ class Config
 			'smtpHost'         => 'mailer_host',
 			'smtpUser'         => 'mailer_user',
 			'smtpPass'         => 'mailer_password',
-			'addLanguageToUrl' => 'add_language_to_url',
+			'addLanguageToUrl' => 'add_language_to_url', # FIXME: rename to prepend_locale?
 			'urlSuffix'        => 'url_suffix'
 		);
 
