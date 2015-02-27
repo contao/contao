@@ -3,7 +3,9 @@ tools:
         timeout: 600
     php_sim: true
     php_pdepend: true
-    php_analyzer: true
+    php_analyzer:
+        dependency_paths: [contao/]
+    sensiolabs_security_checker: true
 
 filter:
     paths: [src/*]
