@@ -22,299 +22,331 @@ use Doctrine\DBAL\Cache\ArrayStatement;
  */
 class Statement extends \Database\Statement
 {
-    /**
-     * Connection ID
-     *
-     * @var \Doctrine\DBAL\Connection
-     */
-    protected $resConnection;
+	/**
+	 * Connection ID
+	 *
+	 * @var \Doctrine\DBAL\Connection
+	 */
+	protected $resConnection;
 
-    /**
-     * Connection ID
-     *
-     * @var \Doctrine\DBAL\Statement
-     */
-    protected $statement;
+	/**
+	 * Connection ID
+	 *
+	 * @var \Doctrine\DBAL\Statement
+	 */
+	protected $statement;
 
-    /**
-     * @var array
-     */
-    protected $parameters = array();
+	/**
+	 * @var array
+	 */
+	protected $parameters = array();
 
-    /**
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function prepareParameters(array $parameters)
-    {
-        return array_map(
-            array($this, 'prepareParameter'),
-            $parameters
-        );
-    }
+	/**
+	 * @param array $parameters
+	 *
+	 * @return array
+	 */
+	public function prepareParameters(array $parameters)
+	{
+		return array_map
+		(
+			array($this, 'prepareParameter'),
+			$parameters
+		);
+	}
 
-    /**
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function prepareParameter($parameter)
-    {
-        if (is_array($parameter) or is_object($parameter)) {
-            $parameter = serialize($parameter);
-        } else {
-            if (is_bool($parameter)) {
-                $parameter = $parameter ? '1' : '';
-            }
-        }
-        return $parameter;
-    }
+	/**
+	 * @param array $parameters
+	 *
+	 * @return array
+	 */
+	public function prepareParameter($parameter)
+	{
+		if (is_array($parameter) or is_object($parameter))
+		{
+			$parameter = serialize($parameter);
+		}
+		else
+		{
+			if (is_bool($parameter))
+			{
+				$parameter = $parameter ? '1' : '';
+			}
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function prepare($strQuery)
-    {
-        if (!strlen($strQuery)) {
-            throw new \RuntimeException('Empty query string');
-        }
+		return $parameter;
+	}
 
-        $this->resResult = null;
-        $this->strQuery  = ltrim($strQuery);
+	/**
+	 * {@inheritdoc}
+	 */
+	public function prepare($strQuery)
+	{
+		if (!strlen($strQuery))
+		{
+			throw new \RuntimeException('Empty query string');
+		}
 
-        return $this;
-    }
+		$this->resResult = null;
+		$this->strQuery  = ltrim($strQuery);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function set($parameters)
-    {
-        $keys = array();
-        foreach ($parameters as $key => $value) {
-            $value = $this->prepareParameter($value);
+		return $this;
+	}
 
-            $key                = $this->resConnection->quoteIdentifier($key);
-            $keys[$key]         = '?';
-            $this->parameters[] = $value;
-        }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function set($parameters)
+	{
+		$keys = array();
+		foreach ($parameters as $key => $value)
+		{
+			$value = $this->prepareParameter($value);
 
-        // INSERT
-        if (strncasecmp($this->strQuery, 'INSERT', 6) === 0) {
-            $strQuery = sprintf(
-                '(%s) VALUES (%s)',
-                implode(', ', array_keys($keys)),
-                implode(', ', $keys)
-            );
-        } // UPDATE
-        elseif (strncasecmp($this->strQuery, 'UPDATE', 6) === 0) {
-            $arrSet = array();
+			$key                = $this->resConnection->quoteIdentifier($key);
+			$keys[$key]         = '?';
+			$this->parameters[] = $value;
+		}
 
-            foreach ($keys as $key => $identifier) {
-                $arrSet[] = $key . '=' . $identifier;
-            }
+		// INSERT
+		if (strncasecmp($this->strQuery, 'INSERT', 6) === 0)
+		{
+			$strQuery = sprintf(
+				'(%s) VALUES (%s)',
+				implode(', ', array_keys($keys)),
+				implode(', ', $keys)
+			);
+		}
 
-            $strQuery = 'SET ' . implode(', ', $arrSet);
-        } else {
-            throw new \InvalidArgumentException('Cannot handle set on this query');
-        }
+		// UPDATE
+		elseif (strncasecmp($this->strQuery, 'UPDATE', 6) === 0)
+		{
+			$arrSet = array();
 
-        $this->strQuery = str_replace('%s', $strQuery, $this->strQuery);
-        return $this;
-    }
+			foreach ($keys as $key => $identifier)
+			{
+				$arrSet[] = $key . '=' . $identifier;
+			}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function execute()
-    {
-        $parameters = func_get_args();
+			$strQuery = 'SET ' . implode(', ', $arrSet);
+		}
+		else
+		{
+			throw new \InvalidArgumentException('Cannot handle set on this query');
+		}
 
-        if (is_array($parameters[0])) {
-            $parameters = array_values($parameters[0]);
-        }
-        $parameters = $this->prepareParameters($parameters);
+		$this->strQuery = str_replace('%s', $strQuery, $this->strQuery);
+		return $this;
+	}
 
-        $this->parameters = array_values(
-            array_merge(
-                $this->parameters,
-                $parameters
-            )
-        );
+	/**
+	 * {@inheritdoc}
+	 */
+	public function execute()
+	{
+		$parameters = func_get_args();
 
-        $this->statement = $this->resConnection->executeQuery(
-            $this->strQuery,
-            $this->parameters,
-            array(),
-            $this->queryCacheProfile
-        );
+		if (is_array($parameters[0]))
+		{
+			$parameters = array_values($parameters[0]);
+		}
+		$parameters = $this->prepareParameters($parameters);
 
-        if (!preg_match('#^(SELECT|SHOW)#iS', $this->strQuery)) {
-            $this->debugQuery();
-            return $this;
-        }
+		$this->parameters = array_values
+		(
+			array_merge
+			(
+				$this->parameters,
+				$parameters
+			)
+		);
 
-        $result = new Result($this->statement, $this->strQuery);
-        if (!$this->statement instanceof ArrayStatement) {
-            $this->debugQuery($result);
-        }
+		$this->statement = $this->resConnection->executeQuery
+		(
+			$this->strQuery,
+			$this->parameters,
+			array(),
+			$this->queryCacheProfile
+		);
 
-        return $result;
-    }
+		if (!preg_match('#^(SELECT|SHOW)#iS', $this->strQuery))
+		{
+			$this->debugQuery();
+			return $this;
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function executeUncached()
-    {
-        $parameters = func_get_args();
+		$result = new Result($this->statement, $this->strQuery);
+		if (!$this->statement instanceof ArrayStatement)
+		{
+			$this->debugQuery($result);
+		}
 
-        if (is_array($parameters[0])) {
-            $parameters = array_values($parameters[0]);
-        }
-        $parameters = $this->prepareParameters($parameters);
+		return $result;
+	}
 
-        $this->parameters = array_values(
-            array_merge(
-                $this->parameters,
-                $parameters
-            )
-        );
+	/**
+	 * {@inheritdoc}
+	 */
+	public function executeUncached()
+	{
+		$parameters = func_get_args();
 
-        $this->statement = $this->resConnection->executeQuery(
-            $this->strQuery,
-            $this->parameters
-        );
+		if (is_array($parameters[0]))
+		{
+			$parameters = array_values($parameters[0]);
+		}
+		$parameters = $this->prepareParameters($parameters);
 
-        if (!preg_match('#^(SELECT|SHOW)#iS', $this->strQuery)) {
-            $this->debugQuery();
-            return $this;
-        }
+		$this->parameters = array_values
+		(
+			array_merge
+			(
+				$this->parameters,
+				$parameters
+			)
+		);
 
-        $result = new Result($this->statement, $this->strQuery);
-        $this->debugQuery($result);
+		$this->statement = $this->resConnection->executeQuery
+		(
+			$this->strQuery,
+			$this->parameters
+		);
 
-        return $result;
-    }
+		if (!preg_match('#^(SELECT|SHOW)#iS', $this->strQuery))
+		{
+			$this->debugQuery();
+			return $this;
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function executeCached()
-    {
-        $parameters = func_get_args();
+		$result = new Result($this->statement, $this->strQuery);
+		$this->debugQuery($result);
 
-        if (is_array($parameters[0])) {
-            $parameters = array_values($parameters[0]);
-        }
+		return $result;
+	}
 
-        return $this->executeUncached($parameters);
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function executeCached()
+	{
+		$parameters = func_get_args();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function query($strQuery = '')
-    {
-        if (!empty($strQuery)) {
-            $this->strQuery = ltrim($strQuery);
-        }
+		if (is_array($parameters[0]))
+		{
+			$parameters = array_values($parameters[0]);
+		}
 
-        // Make sure there is a query string
-        if ($this->strQuery == '') {
-            throw new \RuntimeException('Empty query string');
-        }
+		return $this->executeUncached($parameters);
+	}
 
-        return $this->execute();
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function query($strQuery = '')
+	{
+		if (!empty($strQuery))
+		{
+			$this->strQuery = ltrim($strQuery);
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function prepare_query($strQuery)
-    {
-        throw new \RuntimeException('Not implemented yet');
-    }
+		// Make sure there is a query string
+		if ($this->strQuery == '')
+		{
+			throw new \RuntimeException('Empty query string');
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function string_escape($strString)
-    {
-        return $this->resConnection->quote($strString);
-    }
+		return $this->execute();
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function limit_query($intRows, $intOffset)
-    {
-        if (strncasecmp($this->strQuery, 'SELECT', 6) === 0) {
-            $this->strQuery .= ' LIMIT ' . $intOffset . ',' . $intRows;
-        } else {
-            $this->strQuery .= ' LIMIT ' . $intRows;
-        }
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function prepare_query($strQuery)
+	{
+		throw new \RuntimeException('Not implemented yet');
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute_query()
-    {
-        throw new \RuntimeException('Not implemented yet');
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function string_escape($strString)
+	{
+		return $this->resConnection->quote($strString);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function get_error()
-    {
-        $info = $this->statement->errorInfo();
-        return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function limit_query($intRows, $intOffset)
+	{
+		if (strncasecmp($this->strQuery, 'SELECT', 6) === 0)
+		{
+			$this->strQuery .= ' LIMIT ' . $intOffset . ',' . $intRows;
+		}
+		else
+		{
+			$this->strQuery .= ' LIMIT ' . $intRows;
+		}
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function affected_rows()
-    {
-        return $this->statement->rowCount();
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function execute_query()
+	{
+		throw new \RuntimeException('Not implemented yet');
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function insert_id()
-    {
-        return $this->resConnection->lastInsertId();
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function get_error()
+	{
+		$info = $this->statement->errorInfo();
+		return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function explain_query()
-    {
-        return $this->resConnection
-            ->executeQuery('EXPLAIN ' . $this->strQuery, $this->parameters)
-            ->fetch();
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function affected_rows()
+	{
+		return $this->statement->rowCount();
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function createResult($resResult, $strQuery)
-    {
-        throw new \RuntimeException('Not implemented yet');
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function insert_id()
+	{
+		return $this->resConnection->lastInsertId();
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function debugQuery($objResult=null)
-    {
-        return;
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function explain_query()
+	{
+		return $this->resConnection
+			->executeQuery('EXPLAIN ' . $this->strQuery, $this->parameters)
+			->fetch();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function createResult($resResult, $strQuery)
+	{
+		throw new \RuntimeException('Not implemented yet');
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function debugQuery($objResult=null)
+	{
+		return;
+	}
 }
 
 // Backwards compatibility
