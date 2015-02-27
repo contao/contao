@@ -44,11 +44,7 @@ abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
         }
 
         foreach ($this->bundlesMap as $package => $class) {
-            if (null !== $class) {
-                $bundles[] = new $class();
-            } else {
-                $bundles[] = new ContaoModuleBundle($package, $this->getRootDir());
-            }
+            $bundles[] = $this->createBundleObject($package, $class);
         }
     }
 
@@ -106,6 +102,23 @@ abstract class ContaoKernel extends Kernel implements ContaoKernelInterface
         }
 
         return $bundlesMap;
+    }
+
+    /**
+     * Creates a bundle object.
+     *
+     * @param string $package The package name
+     * @param string $class   The class name
+     *
+     * @return ContaoBundleInterface
+     */
+    protected function createBundleObject($package, $class)
+    {
+        if (null !== $class) {
+            return new $class();
+        }
+
+        return new ContaoModuleBundle($package, $this->getRootDir());
     }
 
     /**
