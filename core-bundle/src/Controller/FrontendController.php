@@ -10,9 +10,6 @@
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\FrontendCron;
-use Contao\FrontendIndex;
-use Contao\FrontendShare;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,17 +23,17 @@ class FrontendController extends Controller
     // FIXME: add the phpDoc comments
     public function indexAction()
     {
-        return $this->getResponseForController(new FrontendIndex());
+        return $this->getResponseForController(new \FrontendIndex());
     }
 
     public function cronAction()
     {
-        return $this->getResponseForController(new FrontendCron());
+        return $this->getResponseForController(new \FrontendCron());
     }
 
     public function shareAction()
     {
-        return $this->getResponseForController(new FrontendShare());
+        return $this->getResponseForController(new \FrontendShare());
     }
 
     private function getResponseForController($controller)

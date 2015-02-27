@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\Automator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
@@ -90,7 +89,7 @@ class AutomatorCommand extends ContainerAwareCommand
     {
         $task = $this->getTaskFromInput($input, $output);
 
-        $automator = new Automator();
+        $automator = new \Automator();
         $automator->$task();
     }
 

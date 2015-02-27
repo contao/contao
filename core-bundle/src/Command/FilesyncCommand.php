@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\Dbafs;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -49,7 +48,7 @@ class FilesyncCommand extends ContainerAwareCommand
         }
 
         // Run
-        $strLog = Dbafs::syncFiles();
+        $strLog = \Dbafs::syncFiles();
         $output->writeln("  Synchronization complete (see $strLog).");
 
         // Release the lock
