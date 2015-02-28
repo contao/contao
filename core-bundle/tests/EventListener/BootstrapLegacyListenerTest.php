@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
+use Contao\Config;
+use Contao\Environment;
 use Contao\CoreBundle\EventListener\BootstrapLegacyListener;
 use Contao\CoreBundle\HttpKernel\ContaoKernelInterface;
 use Contao\CoreBundle\Test\TestCase;
@@ -38,13 +40,11 @@ class BootstrapLegacyListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\BootstrapLegacyListener', $listener);
     }
 
-    /**
-     * Test that console mode booting works flawless.
-     */
     public function testOnBootLegacyForRequestFrontend()
     {
         global $kernel;
-        /** @var ContaoKernelInterface kernel */
+
+        /** @var ContaoKernelInterface $kernel */
         $kernel = $this->mockKernel();
 
         $listener = new BootstrapLegacyListener(
@@ -55,6 +55,7 @@ class BootstrapLegacyListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'frontend');
+
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener->onBootLegacyForRequest($event);
 
@@ -63,64 +64,11 @@ class BootstrapLegacyListenerTest extends TestCase
         $this->assertEquals($this->getRootDir(), TL_ROOT);
     }
 
-    /**
-     * Test that there is an exception when no route has been set in the request.
-     */
-    public function testOnBootLegacyForRequestExceptionWhenNoRouteFound()
-    {
-        global $kernel;
-        /** @var ContaoKernelInterface kernel */
-        $kernel = $this->mockKernel();
-
-        $listener = new BootstrapLegacyListener(
-            $this->mockRouter('/index.html'),
-            $this->getRootDir() . '/app'
-        );
-
-        $request = new Request();
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
-        $exception = null;
-        try {
-            $listener->onBootLegacyForRequest($event);
-        } catch (\Exception $e) {
-            $exception = $e;
-        }
-
-        $this->isInstanceOf('Symfony\\Component\\Routing\\Exception\\RouteNotFoundException', $exception);
-    }
-
-    /**
-     * Test that console mode booting works flawless.
-     */
-    public function testOnBootLegacyForRequestFrontendFallback()
-    {
-        global $kernel;
-        /** @var ContaoKernelInterface kernel */
-        $kernel = $this->mockKernel();
-
-        $listener = new BootstrapLegacyListener(
-            $this->mockRouter('/index.html'),
-            $this->getRootDir() . '/app'
-        );
-
-        $request = new Request();
-        $request->attributes->set('_route', 'dummy');
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onBootLegacyForRequest($event);
-
-        $this->assertEquals('FE', TL_MODE);
-        $this->assertEquals('/index.html', TL_SCRIPT);
-        $this->assertEquals($this->getRootDir(), TL_ROOT);
-    }
-
-    /**
-     * Test that console mode booting works flawless.
-     */
     public function testOnBootLegacyForRequestBackend()
     {
         global $kernel;
-        /** @var ContaoKernelInterface kernel */
+
+        /** @var ContaoKernelInterface $kernel */
         $kernel = $this->mockKernel();
 
         $listener = new BootstrapLegacyListener(
@@ -131,6 +79,7 @@ class BootstrapLegacyListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'backend');
+
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener->onBootLegacyForRequest($event);
 
@@ -139,13 +88,54 @@ class BootstrapLegacyListenerTest extends TestCase
         $this->assertEquals($this->getRootDir(), TL_ROOT);
     }
 
-    /**
-     * Test that console mode booting works flawless.
-     */
+    public function testOnBootLegacyForRequestWithoutRoute()
+    {
+        global $kernel;
+
+        /** @var ContaoKernelInterface $kernel */
+        $kernel = $this->mockKernel();
+
+        $listener = new BootstrapLegacyListener(
+            $this->mockRouter('/index.html'),
+            $this->getRootDir() . '/app'
+        );
+
+        $this->setExpectedException('\Symfony\Component\Routing\Exception\RouteNotFoundException');
+
+        $request = new Request();
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener->onBootLegacyForRequest($event);
+    }
+
+    public function testOnBootLegacyForRequestFrontendWithoutScope()
+    {
+        global $kernel;
+
+        /** @var ContaoKernelInterface $kernel */
+        $kernel = $this->mockKernel();
+
+        $listener = new BootstrapLegacyListener(
+            $this->mockRouter('/index.html'),
+            $this->getRootDir() . '/app'
+        );
+
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener->onBootLegacyForRequest($event);
+
+        $this->assertEquals('FE', TL_MODE);
+        $this->assertEquals('/index.html', TL_SCRIPT);
+        $this->assertEquals($this->getRootDir(), TL_ROOT);
+    }
+
     public function testOnBootLegacyForConsole()
     {
         global $kernel;
-        /** @var ContaoKernelInterface kernel */
+
+        /** @var ContaoKernelInterface $kernel */
         $kernel = $this->mockKernel();
 
         $listener = new BootstrapLegacyListener(
@@ -161,18 +151,14 @@ class BootstrapLegacyListenerTest extends TestCase
     }
 
     /**
-     * Mock a kernel for use in tests.
+     * Mocks a Contao kernel.
      *
      * @return ContaoKernelInterface
      */
     private function mockKernel()
     {
-        \Contao\Config::clear([
-            'bypassCache' => true
-        ]);
-        \Contao\Environment::clear([
-            'httpAcceptLanguage' => []
-        ]);
+        Config::set('bypassCache', true);
+        Environment::set('httpAcceptLanguage', []);
 
         $kernel = $this->getMock(
             'Contao\CoreBundle\HttpKernel\ContaoKernelInterface',
@@ -182,6 +168,7 @@ class BootstrapLegacyListenerTest extends TestCase
                 'writeBundleCache',
                 'loadBundleCache',
                 'getContaoBundles',
+
                 // KernelInterface
                 'registerBundles',
                 'registerContainerConfiguration',
@@ -200,27 +187,30 @@ class BootstrapLegacyListenerTest extends TestCase
                 'getCacheDir',
                 'getLogDir',
                 'getCharset',
+
                 // HttpKernelInterface
                 'handle',
+
                 // Serializable
                 'serialize',
                 'unserialize',
             ]
         );
+
         $kernel
             ->expects($this->any())
             ->method('getContaoBundles')
-            ->willReturn(array());
+            ->willReturn([]);
 
         return $kernel;
     }
 
     /**
-     * Mock a router returning always the same url.
+     * Mocks a router returning the given URL.
      *
-     * @param string $url The url to be returned when generate() will get called.
+     * @param string $url The URL to return
      *
-     * @return RouterInterface
+     * @return RouterInterface The router object
      */
     private function mockRouter($url)
     {

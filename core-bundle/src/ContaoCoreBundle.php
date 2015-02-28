@@ -37,6 +37,7 @@ class ContaoCoreBundle extends ContaoBundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new SetApplicationPass());
+        // FIXME: Use of undefined constant VERSION - assumed 'VERSION'
+        //$container->addCompilerPass(new SetApplicationPass());
     }
 }

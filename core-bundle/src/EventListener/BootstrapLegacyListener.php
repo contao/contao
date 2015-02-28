@@ -95,49 +95,13 @@ class BootstrapLegacyListener
      */
     private function bootLegacy($mode, $script)
     {
-        // We define these constants here for legacy code only. All of these will get removed in Contao 5 and should
-        // not be used anymore.
-        $this->defineIfNotDefined('TL_MODE', $mode);
-        $this->defineIfNotDefined('TL_START', microtime(true));
-        $this->defineIfNotDefined('TL_REFERER_ID', substr(md5(TL_START), 0, 8));
-        $this->defineIfNotDefined('TL_SCRIPT', $script);
-        $this->defineIfNotDefined('TL_ROOT', dirname($this->rootDir));
-
-        // FIXME: temporarily moved here. Remove the conditions when constants.php deleted in contao/contao.
-        $this->defineIfNotDefined('VERSION', '4.0');
-        $this->defineIfNotDefined('BUILD', '0-do-not-use-constants-for-version-compare-use-bundle-versions');
-        $this->defineIfNotDefined('LONG_TERM_SUPPORT', false);
-
-        // Link constants
-        $this->defineIfNotDefined('LINK_BLUR', ' onclick="this.blur()"');
-        $this->defineIfNotDefined('LINK_NEW_WINDOW', ' onclick="return !window.open(this.href)"');
-        $this->defineIfNotDefined('LINK_NEW_WINDOW_BLUR', ' onclick="this.blur();return !window.open(this.href)"');
-
-        // Log constants
-        $this->defineIfNotDefined('TL_ERROR', 'ERROR');
-        $this->defineIfNotDefined('TL_ACCESS', 'ACCESS');
-        $this->defineIfNotDefined('TL_GENERAL', 'GENERAL');
-        $this->defineIfNotDefined('TL_FILES', 'FILES');
-        $this->defineIfNotDefined('TL_CRON', 'CRON');
-        $this->defineIfNotDefined('TL_FORMS', 'FORMS');
-        $this->defineIfNotDefined('TL_CONFIGURATION', 'CONFIGURATION');
-        $this->defineIfNotDefined('TL_NEWSLETTER', 'NEWSLETTER');
-        $this->defineIfNotDefined('TL_REPOSITORY', 'REPOSITORY');
+        // We define these constants here for reasons of backwards compatibility only.
+        // They will be removed in Contao 5 and should not be used anymore.
+        define('TL_MODE', $mode);
+        define('TL_SCRIPT', $script);
+        define('TL_ROOT', dirname($this->rootDir));
 
         // FIXME: Get rid of the bootstrap.php
         require_once __DIR__ . '/../../contao/bootstrap.php';
-    }
-
-    /**
-     * Define a constant if it has not been defined yet.
-     *
-     * @param string $name  The name of the constant to define.
-     * @param string $value The value to use for the constant.
-     */
-    private function defineIfNotDefined($name, $value)
-    {
-        if (!defined($name)) {
-            define($name, $value);
-        }
     }
 }
