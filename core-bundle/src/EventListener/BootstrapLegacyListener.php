@@ -66,11 +66,11 @@ class BootstrapLegacyListener
         }
 
         $routeName = $request->attributes->get('_route');
-        $mode      = 'FE';
-        if ($request->attributes->has('_scope')
-            && 'backend' === $request->attributes->get('_scope')
-        ) {
+
+        if ($request->attributes->has('_scope') && 'backend' === $request->attributes->get('_scope')) {
             $mode = 'BE';
+        } else {
+            $mode = 'FE';
         }
 
         $this->bootLegacy(

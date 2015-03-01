@@ -18,21 +18,12 @@ namespace Contao\CoreBundle\Test;
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var string
-     */
-    protected $rootDir;
-
-    /**
      * Returns the path to the fixtures directory.
      *
      * @return string The root directory path
      */
     public function getRootDir()
     {
-        if (null === $this->rootDir) {
-            $this->rootDir = __DIR__ . '/Fixtures';
-        }
-
-        return $this->rootDir;
+        return __DIR__ . '/Fixtures';
     }
 }

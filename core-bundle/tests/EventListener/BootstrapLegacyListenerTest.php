@@ -40,6 +40,7 @@ class BootstrapLegacyListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\BootstrapLegacyListener', $listener);
     }
 
+    // FIXME: add phpDoc comments
     public function testOnBootLegacyForRequestFrontend()
     {
         global $kernel;

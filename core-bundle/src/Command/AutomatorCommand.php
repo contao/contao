@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Composer\Autoload\ClassLoader;
 use Contao\Automator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\QuestionHelper;
