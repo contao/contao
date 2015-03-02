@@ -251,7 +251,7 @@ class InitializeSystemListener
                 die_nicely('be_referer', 'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">go back</a> and try again.');
             }
 
-            exit;
+            exit; // FIXME: throw a ResponseException or DieNicelyException instead
         }
     }
 }
