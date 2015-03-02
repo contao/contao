@@ -4,6 +4,17 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
+    contao.listener.initialize_system:
+        class: Contao\CoreBundle\EventListener\InitializeSystemListener
+        arguments:
+            - "@router"
+            - "%kernel.root_dir%"
+        tags:
+            # Priority must be higher than any other listener that uses the Contao framework and lower than the
+            # priority of the route_listener, which defaults to 32.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
+
     contao.listener.container_scope:
         class: Contao\CoreBundle\EventListener\ContainerScopeListener
         arguments:
@@ -12,22 +23,17 @@ services:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 254 }
             - { name: kernel.event_listener, event: kernel.finish_request, method: onKernelFinishRequest, priority: -254 }
 
-    contao.listener.legacy_script:
-        class: Contao\CoreBundle\EventListener\LegacyScriptListener
-        arguments:
-            - "@router"
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
     contao.listener.output_from_cache:
         class: Contao\CoreBundle\EventListener\OutputFromCacheListener
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 200 }
+            # Priority must be lower than the one of the Contao bootstrap listener.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 26 }
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 150 }
+            # Priority must be lower than the one of the Contao bootstrap listener.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
 
     contao.routing.backend_loader:
         parent: routing.bundle_resource_loader
@@ -46,6 +52,9 @@ services:
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
+        arguments:
+            - "%prepend_locale%"
+            - "%url_suffix%"
         tags:
             - { name: routing.bundle_loader, priority: -250 }
 

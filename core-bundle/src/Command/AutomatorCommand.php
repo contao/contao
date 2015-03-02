@@ -115,19 +115,30 @@ class AutomatorCommand extends ContainerAwareCommand
      */
     private function generateCommandMap()
     {
-        $commands = [];
-
-        // Find all public methods
-        $class   = new \ReflectionClass('Contao\\Automator');
-        $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
-
-        foreach ($methods as $method) {
-            if ($method->class == 'Contao\\Automator' && $method->name != '__construct') {
-                $commands[] = $method->name;
-            }
-        }
-
-        return $commands;
+        return [
+            'checkForUpdates',
+            'purgeSearchTables',
+            'purgeUndoTable',
+            'purgeVersionTable',
+            'purgeSystemLog',
+            'purgeImageCache',
+            'purgeScriptCache',
+            'purgePageCache',
+            'purgeSearchCache',
+            'purgeInternalCache',
+            'purgeTempFolder',
+            'generateXmlFiles',
+            'purgeXmlFiles',
+            'generateSitemap',
+            'rotateLogs',
+            'generateSymlinks',
+            'generateInternalCache',
+            'generateConfigCache',
+            'generateDcaCache',
+            'generateLanguageCache',
+            'generateDcaExtracts',
+            'generatePackageCache'
+        ];
     }
 
     /**

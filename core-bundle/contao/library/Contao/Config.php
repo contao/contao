@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
 
 /**
  * Loads and writes the local configuration file
@@ -487,8 +485,6 @@ class Config
 	{
 		global $kernel;
 
-		// Do not use System::getContainer() here, because the Config class is
-		// initialized before the class loader and System is not yet available
 		$container = $kernel->getContainer();
 
 		if ($container === null)
@@ -497,14 +493,16 @@ class Config
 		}
 
 		$arrMap = array(
-			'dbHost'     => 'database_host',
-			'dbPort'     => 'database_port',
-			'dbDatabase' => 'database_name',
-			'dbUser'     => 'database_user',
-			'dbPass'     => 'database_password',
-			'smtpHost'   => 'mailer_host',
-			'smtpUser'   => 'mailer_user',
-			'smtpPass'   => 'mailer_password'
+			'dbHost'           => 'database_host',
+			'dbPort'           => 'database_port',
+			'dbDatabase'       => 'database_name',
+			'dbUser'           => 'database_user',
+			'dbPass'           => 'database_password',
+			'smtpHost'         => 'mailer_host',
+			'smtpUser'         => 'mailer_user',
+			'smtpPass'         => 'mailer_password',
+			'addLanguageToUrl' => 'prepend_locale',
+			'urlSuffix'        => 'url_suffix'
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)
