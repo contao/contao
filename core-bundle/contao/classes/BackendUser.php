@@ -214,6 +214,8 @@ class BackendUser extends \User
 
 	/**
 	 * Redirect to contao/index.php if authentication fails
+	 *
+	 * @return boolean True if the user could be authenticated
 	 */
 	public function authenticate()
 	{
@@ -225,12 +227,12 @@ class BackendUser extends \User
 
 		list($path) = explode('?', \Environment::get('request'), 2);
 
-		if (substr($path, -13) == '/contao/login')
+		if (substr($path, -12) == 'contao/login')
 		{
 			return false;
 		}
 
-		$strRedirect = 'contao/';
+		$strRedirect = 'contao/login';
 
 		// Redirect to the last page visited upon login
 		if (substr($path, -7) == '/contao' || substr($path, -15) == '/contao/preview')
@@ -239,6 +241,8 @@ class BackendUser extends \User
 		}
 
 		\Controller::redirect($strRedirect);
+
+        return false;
 	}
 
 
