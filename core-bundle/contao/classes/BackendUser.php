@@ -247,6 +247,7 @@ class BackendUser extends \User
 			$parameters['referer'] = base64_encode(\Environment::get('request'));
 		}
 
+		// FIXME: throw a ResponseException here instead
 		\Controller::redirect($container->get('router')->generate('contao_backend_login', $parameters, UrlGeneratorInterface::ABSOLUTE_URL));
 
 		return false;
