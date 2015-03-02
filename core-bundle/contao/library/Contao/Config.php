@@ -501,7 +501,7 @@ class Config
 			'smtpHost'         => 'mailer_host',
 			'smtpUser'         => 'mailer_user',
 			'smtpPass'         => 'mailer_password',
-			'addLanguageToUrl' => 'add_language_to_url', # FIXME: rename to prepend_locale?
+			'addLanguageToUrl' => 'prepend_locale',
 			'urlSuffix'        => 'url_suffix'
 		);
 

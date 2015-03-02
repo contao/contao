@@ -4,16 +4,16 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
-    contao.listener.boostrap_legacy:
-        class: Contao\CoreBundle\EventListener\BootstrapLegacyListener
+    contao.listener.initialize_system:
+        class: Contao\CoreBundle\EventListener\InitializeSystemListener
         arguments:
             - "@router"
             - "%kernel.root_dir%"
         tags:
             # Priority must be higher than any other listener that uses the Contao framework and lower than the
             # priority of the route_listener, which defaults to 32.
-            - { name: kernel.event_listener, event: kernel.request, method: onBootLegacyForRequest, priority: 30 }
-            - { name: kernel.event_listener, event: console.command, method: onBootLegacyForConsole }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
     contao.listener.container_scope:
         class: Contao\CoreBundle\EventListener\ContainerScopeListener
@@ -53,7 +53,7 @@ services:
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
         arguments:
-            - "%add_language_to_url%"
+            - "%prepend_locale%"
             - "%url_suffix%"
         tags:
             - { name: routing.bundle_loader, priority: -250 }

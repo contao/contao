@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\Config;
 use Contao\Environment;
-use Contao\CoreBundle\EventListener\BootstrapLegacyListener;
+use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\HttpKernel\ContaoKernelInterface;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,19 +25,19 @@ use Symfony\Component\Routing\RouterInterface;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class BootstrapLegacyListenerTest extends TestCase
+class InitializeSystemListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $listener = new BootstrapLegacyListener(
+        $listener = new InitializeSystemListener(
             $this->getMock('Symfony\Component\Routing\RouterInterface'),
             $this->getRootDir()
         );
 
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\BootstrapLegacyListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\InitializeSystemListener', $listener);
     }
 
     // FIXME: add phpDoc comments
@@ -48,7 +48,7 @@ class BootstrapLegacyListenerTest extends TestCase
         /** @var ContaoKernelInterface $kernel */
         $kernel = $this->mockKernel();
 
-        $listener = new BootstrapLegacyListener(
+        $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
             $this->getRootDir() . '/app'
         );
@@ -58,7 +58,7 @@ class BootstrapLegacyListenerTest extends TestCase
         $request->attributes->set('_scope', 'frontend');
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onBootLegacyForRequest($event);
+        $listener->onKernelRequest($event);
 
         $this->assertEquals('FE', TL_MODE);
         $this->assertEquals('/index.html', TL_SCRIPT);
@@ -72,7 +72,7 @@ class BootstrapLegacyListenerTest extends TestCase
         /** @var ContaoKernelInterface $kernel */
         $kernel = $this->mockKernel();
 
-        $listener = new BootstrapLegacyListener(
+        $listener = new InitializeSystemListener(
             $this->mockRouter('/contao/install'),
             $this->getRootDir() . '/app'
         );
@@ -82,7 +82,7 @@ class BootstrapLegacyListenerTest extends TestCase
         $request->attributes->set('_scope', 'backend');
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onBootLegacyForRequest($event);
+        $listener->onKernelRequest($event);
 
         $this->assertEquals('BE', TL_MODE);
         $this->assertEquals('/contao/install', TL_SCRIPT);
@@ -96,7 +96,7 @@ class BootstrapLegacyListenerTest extends TestCase
         /** @var ContaoKernelInterface $kernel */
         $kernel = $this->mockKernel();
 
-        $listener = new BootstrapLegacyListener(
+        $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
             $this->getRootDir() . '/app'
         );
@@ -106,7 +106,7 @@ class BootstrapLegacyListenerTest extends TestCase
         $request = new Request();
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onBootLegacyForRequest($event);
+        $listener->onKernelRequest($event);
     }
 
     public function testOnBootLegacyForRequestFrontendWithoutScope()
@@ -116,7 +116,7 @@ class BootstrapLegacyListenerTest extends TestCase
         /** @var ContaoKernelInterface $kernel */
         $kernel = $this->mockKernel();
 
-        $listener = new BootstrapLegacyListener(
+        $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
             $this->getRootDir() . '/app'
         );
@@ -125,7 +125,7 @@ class BootstrapLegacyListenerTest extends TestCase
         $request->attributes->set('_route', 'dummy');
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onBootLegacyForRequest($event);
+        $listener->onKernelRequest($event);
 
         $this->assertEquals('FE', TL_MODE);
         $this->assertEquals('/index.html', TL_SCRIPT);
@@ -139,12 +139,12 @@ class BootstrapLegacyListenerTest extends TestCase
         /** @var ContaoKernelInterface $kernel */
         $kernel = $this->mockKernel();
 
-        $listener = new BootstrapLegacyListener(
+        $listener = new InitializeSystemListener(
             $this->getMock('Symfony\Component\Routing\RouterInterface'),
             $this->getRootDir() . '/app'
         );
 
-        $listener->onBootLegacyForConsole();
+        $listener->onConsoleCommand();
 
         $this->assertEquals('FE', TL_MODE);
         $this->assertEquals('console', TL_SCRIPT);
