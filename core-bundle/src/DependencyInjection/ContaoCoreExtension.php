@@ -43,22 +43,27 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
      */
     public function prepend(ContainerBuilder $container)
     {
+        $this->prependBundleConfig('DoctrineBundle', 'doctrine.yml', $container);
+        $this->prependBundleConfig('SecurityBundle', 'security.yml', $container);
+        $this->prependBundleConfig('TwigBundle', 'twig.yml', $container);
+        $this->prependBundleConfig('WebProfilerBundle', 'web_profiler.yml', $container);
+    }
+
+    /**
+     * Prepends a configuration if the given bundle is loaded.
+     *
+     * @param string           $bundle
+     * @param string           $file
+     * @param ContainerBuilder $container
+     *
+     * @throws \LogicException If the parsed file is not an array
+     */
+    private function prependBundleConfig($bundle, $file, ContainerBuilder $container)
+    {
         $bundles = $container->getParameter('kernel.bundles');
 
-        if (isset($bundles['DoctrineBundle'])) {
-            $this->prependConfig('doctrine.yml', $container);
-        }
-
-        if (isset($bundles['SecurityBundle'])) {
-            $this->prependConfig('security.yml', $container);
-        }
-
-        if (isset($bundles['TwigBundle'])) {
-            $this->prependConfig('twig.yml', $container);
-        }
-
-        if (isset($bundles['WebProfilerBundle'])) {
-            $this->prependConfig('web_profiler.yml', $container);
+        if (isset($bundles[$bundle])) {
+            $this->prependConfig($file, $container);
         }
     }
 

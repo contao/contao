@@ -61,7 +61,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testPrepend()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.environment', 'test');
+        $container->setParameter('kernel.bundles', ['DoctrineBundle' => '']);
 
         $this->extension->prepend($container);
 
