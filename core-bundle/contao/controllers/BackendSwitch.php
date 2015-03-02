@@ -179,6 +179,9 @@ class BackendSwitch extends \Backend
 	}
 
 
+	/**
+	 * Disable the profile
+	 */
 	private function disableProfiler()
 	{
 		/** @var KernelInterface $kernel */

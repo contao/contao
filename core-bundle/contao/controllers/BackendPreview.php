@@ -46,8 +46,8 @@ class BackendPreview extends \Backend
 	 */
 	public function run()
 	{
-        /** @var KernelInterface $kernel */
-        global $kernel;
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
 		/** @var \BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_preview');
@@ -57,7 +57,7 @@ class BackendPreview extends \Backend
 		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->site = \Input::get('site', true);
-        $objTemplate->switchHref = $kernel->getContainer()->get('router')->generate('contao_backend_switch');
+		$objTemplate->switchHref = $kernel->getContainer()->get('router')->generate('contao_backend_switch');
 
 		if (\Input::get('url'))
 		{
@@ -69,11 +69,7 @@ class BackendPreview extends \Backend
 		}
 		else
 		{
-			$objTemplate->url = $kernel->getContainer()->get('router')->generate(
-                'contao_default',
-                ['alias' => ''],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
+			$objTemplate->url = $kernel->getContainer()->get('router')->generate('contao_default', array('alias' => ''), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 
 		// Switch to a particular member (see #6546)
