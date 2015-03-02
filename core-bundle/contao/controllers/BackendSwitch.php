@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Switch accounts in the front end preview.
@@ -43,6 +45,8 @@ class BackendSwitch extends \Backend
 	 */
 	public function run()
 	{
+		$this->disableProfiler();
+
 		if (\Environment::get('isAjaxRequest'))
 		{
 			$this->getDatalistOptions();
@@ -172,5 +176,20 @@ class BackendSwitch extends \Backend
 
 		header('Content-type: application/json');
 		die(json_encode($arrUsers));
+	}
+
+
+	/**
+	 * Disable the profile
+	 */
+	private function disableProfiler()
+	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		if ($kernel->getContainer()->has('profiler'))
+		{
+			$kernel->getContainer()->get('profiler')->disable();
+		}
 	}
 }

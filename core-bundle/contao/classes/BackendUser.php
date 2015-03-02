@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 
 /**
  * Provide methods to manage back end users.
@@ -225,24 +228,28 @@ class BackendUser extends \User
 			return true;
 		}
 
-		list($path) = explode('?', \Environment::get('request'), 2);
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-		if (substr($path, -12) == 'contao/login')
+		$container = $kernel->getContainer();
+		$route = $container->get('request_stack')->getCurrentRequest()->attributes->get('_route');
+
+		if ($route == 'contao_backend_login')
 		{
 			return false;
 		}
 
-		$strRedirect = 'contao/login';
+		$parameters = array();
 
 		// Redirect to the last page visited upon login
-		if (substr($path, -7) == '/contao' || substr($path, -15) == '/contao/preview')
+		if ($route == 'contao_backend' || $route == 'contao_backend_preview')
 		{
-			$strRedirect .= '?referer=' . base64_encode(\Environment::get('request'));
+			$parameters['referer'] = base64_encode(\Environment::get('request'));
 		}
 
-		\Controller::redirect($strRedirect);
+		\Controller::redirect($container->get('router')->generate('contao_backend_login', $parameters, UrlGeneratorInterface::ABSOLUTE_URL));
 
-        return false;
+		return false;
 	}
 
 
@@ -428,7 +435,7 @@ class BackendUser extends \User
 		// HOOK: Take custom permissions
 		if (!empty($GLOBALS['TL_PERMISSIONS']) && is_array($GLOBALS['TL_PERMISSIONS']))
 		{
-		    $depends = array_merge($depends, $GLOBALS['TL_PERMISSIONS']);
+			$depends = array_merge($depends, $GLOBALS['TL_PERMISSIONS']);
 		}
 
 		// Overwrite user permissions if only group permissions shall be inherited
