@@ -57,10 +57,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $this->prependConfig('twig.yml', $container);
         }
 
-        if (in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
-            if (isset($bundles['WebProfilerBundle'])) {
-                $this->prependConfig('web_profiler.yml', $container);
-            }
+        if (isset($bundles['WebProfilerBundle'])) {
+            $this->prependConfig('web_profiler.yml', $container);
         }
     }
 
