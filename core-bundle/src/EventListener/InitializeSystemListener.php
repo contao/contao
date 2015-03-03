@@ -26,6 +26,7 @@ use Symfony\Component\Routing\RouterInterface;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  * @author Yanick Witschi <https://github.com/toflar>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InitializeSystemListener
 {
@@ -288,7 +289,7 @@ class InitializeSystemListener
      *
      * @param Config $config The config object
      */
-    private function generateSymlinks($config)
+    private function generateSymlinks(Config $config)
     {
         if (!$config->isComplete() && !is_link(TL_ROOT . '/system/themes/flexible')) {
             $automator = new Automator();
@@ -303,7 +304,7 @@ class InitializeSystemListener
      *
      * @todo Remove the "ignoreInsecureRoot" flag?
      */
-    private function validateInstallation($config)
+    private function validateInstallation(Config $config)
     {
         // Show the "insecure document root" message
         if ('cli' !== PHP_SAPI && 'contao/install.php' !== TL_SCRIPT /* FIXME */ && '/web' !== substr(Environment::get('path'), -4) && !Config::get('ignoreInsecureRoot')) {
@@ -335,8 +336,8 @@ class InitializeSystemListener
      */
     private function setTimezone()
     {
-        @ini_set('date.timezone', Config::get('timeZone'));
-        @date_default_timezone_set(Config::get('timeZone'));
+        $this->iniSet('date.timezone', Config::get('timeZone'));
+        date_default_timezone_set(Config::get('timeZone'));
     }
 
     /**
