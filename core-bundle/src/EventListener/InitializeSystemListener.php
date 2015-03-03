@@ -136,7 +136,9 @@ class InitializeSystemListener
         // Preload the configuration (see #5872)
         Config::preload();
 
-        $this->registerClassLoader();
+        // Register the class loader
+        ClassLoader::scanAndRegister();
+
         $this->setSwiftMailerDefaults();
         $this->setRelativePath();
         $this->startSession();
@@ -209,20 +211,6 @@ class InitializeSystemListener
         if (!class_exists('ModuleLoader', false)) {
             require_once __DIR__ . '/../../contao/library/Contao/ModuleLoader.php';
             class_alias('Contao\\ModuleLoader', 'ModuleLoader');
-        }
-    }
-
-    /**
-     * Registers the class loader.
-     *
-     * @todo Throw a ResponseException instead of dying
-     */
-    private function registerClassLoader()
-    {
-        try {
-            ClassLoader::scanAndRegister();
-        } catch (\UnresolvableDependenciesException $e) {
-            die($e->getMessage()); // see #6343
         }
     }
 
