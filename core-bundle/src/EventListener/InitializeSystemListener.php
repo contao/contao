@@ -74,7 +74,9 @@ class InitializeSystemListener
             $mode = 'FE';
         }
 
-        $this->initialize($mode, $this->router->generate($routeName, $request->attributes->get('_route_params')));
+        $this->setConstants($mode, $this->router->generate($routeName, $request->attributes->get('_route_params')));
+
+        $this->boot();
     }
 
     /**
@@ -82,19 +84,21 @@ class InitializeSystemListener
      */
     public function onConsoleCommand()
     {
-        $this->initialize('FE', 'console');
+        $this->setConstants('FE', 'console');
+
+        $this->boot();
     }
 
     /**
-     * Bootstraps the Contao framework.
+     * Sets the Contao constants.
      *
      * @param string $mode  The scope (BE or FE)
      * @param string $route The route
+     *
+     * @deprecated Deprecated since version 4.0, to be removed in version 5.0.
      */
-    private function initialize($mode, $route)
+    private function setConstants($mode, $route)
     {
-        // We define these constants here for reasons of backwards compatibility only.
-        // They will be removed in Contao 5 and should not be used anymore.
         define('TL_MODE', $mode);
         define('TL_START', microtime(true));
         define('TL_ROOT', dirname($this->rootDir));
@@ -106,70 +110,162 @@ class InitializeSystemListener
             define('BE_USER_LOGGED_IN', false);
             define('FE_USER_LOGGED_IN', false);
         }
+    }
 
+    /**
+     * Boots the Contao framework.
+     */
+    private function boot()
+    {
+        $this->includeHelpers();
+
+        // Try to disable the PHPSESSID
+        $this->iniSet('session.use_trans_sid', 0);
+        $this->iniSet('session.cookie_httponly', true);
+
+        // Set the error and exception handler
+        set_error_handler('__error');
+        set_exception_handler('__exception');
+
+        // Log PHP errors
+        $this->iniSet('error_log', TL_ROOT . '/system/logs/error.log');
+
+        $this->includeBasicClasses();
+
+        // Preload the configuration (see #5872)
+        Config::preload();
+
+        $this->registerClassLoader();
+        $this->setSwiftMailerDefaults();
+        $this->setRelativePath();
+        $this->startSession();
+        $this->setDefaultLanguage();
+
+        // Fully load the configuration
+        $objConfig = Config::getInstance();
+
+        $this->generateSymlinks($objConfig);
+        $this->validateInstallation($objConfig);
+
+        Input::initialize();
+
+        $this->configureErrorHandling();
+        $this->setTimezone();
+
+        // Set the mbstring encoding
+        if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
+            mb_regex_encoding(Config::get('characterSet'));
+        }
+
+        $this->triggerInitializeSystemHook();
+        $this->checkRequestToken();
+    }
+
+    /**
+     * Tries to set a php.ini configuration option.
+     *
+     * @param string $key   The key
+     * @param mixed  $value The value
+     */
+    private function iniSet($key, $value)
+    {
+        if (function_exists('ini_set')) {
+            ini_set($key, $value);
+        }
+    }
+
+    /**
+     * Includes the helper files
+     */
+    private function includeHelpers()
+    {
         require __DIR__ . '/../../contao/helper/functions.php';
         require __DIR__ . '/../../contao/config/constants.php';
         require __DIR__ . '/../../contao/helper/interface.php';
         require __DIR__ . '/../../contao/helper/exception.php';
+    }
 
-        // Try to disable the PHPSESSID
-        @ini_set('session.use_trans_sid', 0);
-        @ini_set('session.cookie_httponly', true);
-
-        // Set the error and exception handler
-        @set_error_handler('__error');
-        @set_exception_handler('__exception');
-
-        // Log PHP errors
-        @ini_set('error_log', TL_ROOT . '/system/logs/error.log');
-
-        // Include the Config class if it does not yet exist
+    /**
+     * Includes the basic classes required for further processing.
+     */
+    private function includeBasicClasses()
+    {
         if (!class_exists('Config', false)) {
             require_once __DIR__ . '/../../contao/library/Contao/Config.php';
             class_alias('Contao\\Config', 'Config');
         }
 
-        // Include some classes required for further processing
-        require_once __DIR__ . '/../../contao/library/Contao/ClassLoader.php';
-        class_alias('Contao\\ClassLoader', 'ClassLoader');
+        if (!class_exists('ClassLoader', false)) {
+            require_once __DIR__ . '/../../contao/library/Contao/ClassLoader.php';
+            class_alias('Contao\\ClassLoader', 'ClassLoader');
+        }
 
-        require_once __DIR__ . '/../../contao/library/Contao/TemplateLoader.php';
-        class_alias('Contao\\TemplateLoader', 'TemplateLoader');
+        if (!class_exists('TemplateLoader', false)) {
+            require_once __DIR__ . '/../../contao/library/Contao/TemplateLoader.php';
+            class_alias('Contao\\TemplateLoader', 'TemplateLoader');
+        }
 
-        require_once __DIR__ . '/../../contao/library/Contao/ModuleLoader.php';
-        class_alias('Contao\\ModuleLoader', 'ModuleLoader');
+        if (!class_exists('ModuleLoader', false)) {
+            require_once __DIR__ . '/../../contao/library/Contao/ModuleLoader.php';
+            class_alias('Contao\\ModuleLoader', 'ModuleLoader');
+        }
+    }
 
-        // Preload the configuration (see #5872)
-        Config::preload();
-
-        // Try to load the modules
+    /**
+     * Registers the class loader.
+     *
+     * @todo Throw a ResponseException instead of dying
+     */
+    private function registerClassLoader()
+    {
         try {
             ClassLoader::scanAndRegister();
         } catch (\UnresolvableDependenciesException $e) {
             die($e->getMessage()); // see #6343
         }
+    }
 
-        // Override the SwiftMailer defaults
-        \Swift::init(function() {
+    /**
+     * Overrides the SwiftMailer defaults.
+     */
+    private function setSwiftMailerDefaults()
+    {
+        \Swift::init(function () {
             $preferences = \Swift_Preferences::getInstance();
             $preferences->setTempDir(TL_ROOT . '/system/tmp')->setCacheType('disk');
             $preferences->setCharset(Config::get('characterSet'));
         });
+    }
 
-        // Define the relative path to the installation (see #5339)
+    /**
+     * Defines the relative path to the installation (see #5339).
+     */
+    private function setRelativePath()
+    {
         if (Config::has('websitePath') && TL_SCRIPT /* FIXME */ != 'contao/install.php') {
             Environment::set('path', Config::get('websitePath'));
         } elseif ('BE' === TL_MODE) {
+            // FIXME: the regular expression will no longer match
             Environment::set('path', preg_replace('/\/contao\/[a-z]+\.php$/i', '', Environment::get('scriptName')));
         }
 
         define('TL_PATH', Environment::get('path')); // backwards compatibility
+    }
 
-        // Start the session
-        @session_set_cookie_params(0, (Environment::get('path') ?: '/')); // see #5339
-        @session_start();
+    /**
+     * Starts the session.
+     */
+    private function startSession()
+    {
+        session_set_cookie_params(0, (Environment::get('path') ?: '/')); // see #5339
+        session_start();
+    }
 
-        // Set the default language
+    /**
+     * Sets the default language.
+     */
+    private function setDefaultLanguage()
+    {
         if (!isset($_SESSION['TL_LANGUAGE'])) {
             $langs = Environment::get('httpAcceptLanguage');
             array_push($langs, 'en'); // see #6533
@@ -185,58 +281,87 @@ class InitializeSystemListener
         }
 
         $GLOBALS['TL_LANGUAGE'] = $_SESSION['TL_LANGUAGE'];
+    }
 
-        // Fully load the configuration
-        $objConfig = Config::getInstance();
-
-        // Generate the symlinks before any potential output
-        if (!$objConfig->isComplete() && !is_link(TL_ROOT . '/system/themes/flexible')) {
+    /**
+     * Generates the symlinks if the configuration has not been completed.
+     *
+     * @param Config $config The config object
+     */
+    private function generateSymlinks($config)
+    {
+        if (!$config->isComplete() && !is_link(TL_ROOT . '/system/themes/flexible')) {
             $automator = new Automator();
             $automator->generateSymlinks();
         }
+    }
 
+    /**
+     * Validates the installation.
+     *
+     * @param Config $config The config object
+     *
+     * @todo Remove the "ignoreInsecureRoot" flag?
+     */
+    private function validateInstallation($config)
+    {
         // Show the "insecure document root" message
         if ('cli' !== PHP_SAPI && 'contao/install.php' !== TL_SCRIPT /* FIXME */ && '/web' !== substr(Environment::get('path'), -4) && !Config::get('ignoreInsecureRoot')) {
             die_nicely('be_insecure', 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
         }
 
         // Show the "incomplete installation" message
-        if ('cli' !== PHP_SAPI && 'contao/install.php' !== TL_SCRIPT /* FIXME */ && !$objConfig->isComplete()) {
+        if ('cli' !== PHP_SAPI && 'contao/install.php' !== TL_SCRIPT /* FIXME */ && !$config->isComplete()) {
             die_nicely('be_incomplete', 'The installation has not been completed. Open the Contao install tool to continue.');
         }
+    }
 
-        Input::initialize();
-
+    /**
+     * Configures the error handling.
+     */
+    private function configureErrorHandling()
+    {
         // Always show error messages if logged into the install tool (see #5001)
         if (Input::cookie('TL_INSTALL_AUTH') && !empty($_SESSION['TL_INSTALL_AUTH']) && Input::cookie('TL_INSTALL_AUTH') == $_SESSION['TL_INSTALL_AUTH'] && $_SESSION['TL_INSTALL_EXPIRE'] > time()) {
             Config::set('displayErrors', 1);
         }
 
-        // Configure the error handling
-        @ini_set('display_errors', (Config::get('displayErrors') ? 1 : 0));
+        $this->iniSet('display_errors', (Config::get('displayErrors') ? 1 : 0));
         error_reporting((Config::get('displayErrors') || Config::get('logErrors')) ? Config::get('errorReporting') : 0);
+    }
 
-        // Set the timezone
+    /**
+     * Sets the time zone.
+     */
+    private function setTimezone()
+    {
         @ini_set('date.timezone', Config::get('timeZone'));
         @date_default_timezone_set(Config::get('timeZone'));
+    }
 
-        // Set the mbstring encoding
-        if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
-            mb_regex_encoding(Config::get('characterSet'));
-        }
-
-        // HOOK: add custom logic (see #5665)
+    /**
+     * Triggers the initializeSystem hook (see #5665).
+     */
+    private function triggerInitializeSystemHook()
+    {
         if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
             foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
                 System::importStatic($callback[0])->$callback[1]();
             }
         }
 
-        // Include the custom initialization file
         if (file_exists(TL_ROOT . '/system/config/initconfig.php')) {
             include TL_ROOT . '/system/config/initconfig.php';
         }
+    }
 
+    /**
+     * Checks the request token.
+     *
+     * @todo Throw a ResponseException or DieNicelyException instead of dying
+     */
+    private function checkRequestToken()
+    {
         RequestToken::initialize();
 
         // Check the request token upon POST requests
@@ -248,10 +373,13 @@ class InitializeSystemListener
                 header('X-Ajax-Location: ' . Environment::get('base') . 'contao/');
             } else {
                 header('HTTP/1.1 400 Bad Request');
-                die_nicely('be_referer', 'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">go back</a> and try again.');
+                die_nicely(
+                    'be_referer',
+                    'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">go back</a> and try again.'
+                );
             }
 
-            exit; // FIXME: throw a ResponseException or DieNicelyException instead
+            exit;
         }
     }
 }
