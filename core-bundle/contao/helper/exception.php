@@ -21,5 +21,7 @@ class UnusedArgumentsException extends Exception {}
  * Class UnresolvableDependenciesException
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since version 4.0, to be removed in version 5.0
  */
 class UnresolvableDependenciesException extends Exception {}
