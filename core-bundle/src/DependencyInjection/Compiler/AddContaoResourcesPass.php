@@ -50,6 +50,9 @@ class AddContaoResourcesPass implements CompilerPassInterface
         $definition = $container->findDefinition('contao.resources');
 
         $definition->addMethodCall('addResourcesPath', [$this->bundleName, $this->resourcesPath]);
-        $definition->addMethodCall('addPublicFolders', [$this->publicFolders]);
+
+        if (!empty($this->publicFolders)) {
+            $definition->addMethodCall('addPublicFolders', [$this->publicFolders]);
+        }
     }
 }
