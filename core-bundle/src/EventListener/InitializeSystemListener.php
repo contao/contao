@@ -368,7 +368,7 @@ class InitializeSystemListener
                 );
             }
 
-            exit;
+            exit; // FIXME: throw a ResponseException instead
         }
     }
 }
