@@ -231,11 +231,10 @@ class InitializeSystemListener
      */
     private function setRelativePath()
     {
-        if (Config::has('websitePath') && TL_SCRIPT /* FIXME */ != 'contao/install.php') {
+        if (Config::has('websitePath') && '/contao/install' !== substr(TL_SCRIPT, -15)) {
             Environment::set('path', Config::get('websitePath'));
         } elseif ('BE' === TL_MODE) {
-            // FIXME: the regular expression will no longer match
-            Environment::set('path', preg_replace('/\/contao\/[a-z]+\.php$/i', '', Environment::get('scriptName')));
+            Environment::set('path', preg_replace('/\/contao\/[a-z]+$/i', '', TL_SCRIPT));
         }
 
         define('TL_PATH', Environment::get('path')); // backwards compatibility
@@ -289,18 +288,20 @@ class InitializeSystemListener
      * Validates the installation.
      *
      * @param Config $config The config object
-     *
-     * @todo Remove the "ignoreInsecureRoot" flag?
      */
     private function validateInstallation(Config $config)
     {
+        if ('cli' === PHP_SAPI || '/contao/install' === substr(TL_SCRIPT, -15)) {
+            return;
+        }
+
         // Show the "insecure document root" message
-        if ('cli' !== PHP_SAPI && 'contao/install.php' !== TL_SCRIPT /* FIXME */ && '/web' !== substr(Environment::get('path'), -4) && !Config::get('ignoreInsecureRoot')) {
+        if ('/web' === substr(Environment::get('path'), -4) && !Config::get('ignoreInsecureRoot')) {
             die_nicely('be_insecure', 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
         }
 
         // Show the "incomplete installation" message
-        if ('cli' !== PHP_SAPI && 'contao/install.php' !== TL_SCRIPT /* FIXME */ && !$config->isComplete()) {
+        if (!$config->isComplete()) {
             die_nicely('be_incomplete', 'The installation has not been completed. Open the Contao install tool to continue.');
         }
     }
@@ -346,8 +347,6 @@ class InitializeSystemListener
 
     /**
      * Checks the request token.
-     *
-     * @todo Throw a ResponseException or DieNicelyException instead of dying
      */
     private function checkRequestToken()
     {

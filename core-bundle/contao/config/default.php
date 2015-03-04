@@ -160,3 +160,4 @@ $GLOBALS['TL_CONFIG']['proxyServerIps']       = '';
 $GLOBALS['TL_CONFIG']['sslProxyDomain']       = '';
 $GLOBALS['TL_CONFIG']['maintenanceMode']      = true;
 $GLOBALS['TL_CONFIG']['errorReporting']       = E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED;
+$GLOBALS['TL_CONFIG']['ignoreInsecureRoot']   = false; // FIXME: remove this option?

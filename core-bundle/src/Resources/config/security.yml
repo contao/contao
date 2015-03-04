@@ -8,6 +8,10 @@ security:
             pattern: ^/(_(profiler|wdt|error)|css|images|js)/
             security: false
 
+        install:
+            pattern: ^/contao/install
+            security: false
+
         backend:
             pattern: ^/contao
             stateless: true

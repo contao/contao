@@ -62,7 +62,7 @@ class BackendInstall extends \Backend
 		$this->import('Files');
 
 		// If the files are not writeable, the SMH is required
-		if (!$this->Files->is_writeable('system/config/constants.php'))
+		if (!$this->Files->is_writeable('system/initialize.php'))
 		{
 			$this->outputAndExit();
 		}

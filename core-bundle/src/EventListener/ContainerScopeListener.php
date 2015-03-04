@@ -50,7 +50,6 @@ class ContainerScopeListener
         }
     }
 
-
     /**
      * Leaves the container scope when finishing the request.
      *
@@ -78,10 +77,10 @@ class ContainerScopeListener
 
         $scope = $event->getRequest()->attributes->get('_scope');
 
-        if ($this->container->hasScope($scope)) {
-            return $scope;
+        if (!$this->container->hasScope($scope)) {
+            return null;
         }
 
-        return null;
+        return $scope;
     }
 }

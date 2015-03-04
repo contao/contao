@@ -27,7 +27,6 @@ class ContaoCoreBundle extends ContaoBundle
      */
     public function boot()
     {
-        // TODO: should the scopes be defined as constant like ContainerInterface::SCOPE_CONTAINER?
         $this->container->addScope(new Scope('frontend', 'request'));
         $this->container->addScope(new Scope('backend', 'request'));
     }
