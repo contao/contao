@@ -14,7 +14,7 @@
             "environments": ["all"]
         },
         "Symfony\\Bundle\\TwigBundle\\TwigBundle": {
-            "environments": ["dev", "test"]
+            "environments": ["all"]
         },
         "Symfony\\Bundle\\WebProfilerBundle\\WebProfilerBundle": {
             "environments": ["dev", "test"]
