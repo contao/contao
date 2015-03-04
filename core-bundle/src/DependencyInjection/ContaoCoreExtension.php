@@ -55,8 +55,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
      * @param string           $bundle
      * @param string           $file
      * @param ContainerBuilder $container
-     *
-     * @throws \LogicException If the parsed file is not an array
      */
     private function prependBundleConfig($bundle, $file, ContainerBuilder $container)
     {

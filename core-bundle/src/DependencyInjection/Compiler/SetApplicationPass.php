@@ -32,6 +32,6 @@ class SetApplicationPass implements CompilerPassInterface
         $definition = $container->findDefinition('data_collector.config');
 
         $definition->addArgument('Contao');
-        $definition->addArgument(VERSION . '.' . BUILD);
+        $definition->addArgument('4.0.0'); // FIXME: output the dist version
     }
 }

@@ -40,8 +40,13 @@ class InitializeSystemListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\InitializeSystemListener', $listener);
     }
 
-    // FIXME: add phpDoc comments
-    public function testOnBootLegacyForRequestFrontend()
+    /**
+     * Tests a front end request.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testFrontend()
     {
         global $kernel;
 
@@ -65,7 +70,13 @@ class InitializeSystemListenerTest extends TestCase
         $this->assertEquals($this->getRootDir(), TL_ROOT);
     }
 
-    public function testOnBootLegacyForRequestBackend()
+    /**
+     * Tests a back end request.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testBackend()
     {
         global $kernel;
 
@@ -89,7 +100,13 @@ class InitializeSystemListenerTest extends TestCase
         $this->assertEquals($this->getRootDir(), TL_ROOT);
     }
 
-    public function testOnBootLegacyForRequestWithoutRoute()
+    /**
+     * Tests a request without route.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRequestWithoutRoute()
     {
         global $kernel;
 
@@ -109,7 +126,13 @@ class InitializeSystemListenerTest extends TestCase
         $listener->onKernelRequest($event);
     }
 
-    public function testOnBootLegacyForRequestFrontendWithoutScope()
+    /**
+     * Tests a request without scope.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRequestWithoutScope()
     {
         global $kernel;
 
@@ -132,7 +155,13 @@ class InitializeSystemListenerTest extends TestCase
         $this->assertEquals($this->getRootDir(), TL_ROOT);
     }
 
-    public function testOnBootLegacyForConsole()
+    /**
+     * Tests a console command.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testConsoleCommand()
     {
         global $kernel;
 
