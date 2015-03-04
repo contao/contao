@@ -22,82 +22,158 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Handles the Contao backend routes.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendController
+class BackendController extends Controller
 {
-    // FIXME: add the phpDoc comments
+    /**
+     * Runs the main back end controller.
+     *
+     * @return Response
+     */
     public function mainAction()
     {
-        return $this->getResponseForController(new BackendMain());
+        $proxy = new ProxyController(new BackendMain());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the back end login form.
+     *
+     * @return Response
+     */
     public function loginAction()
     {
-        return $this->getResponseForController(new BackendIndex());
+        $proxy = new ProxyController(new BackendIndex());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the install tool.
+     *
+     * @return Response
+     */
     public function installAction()
     {
-        return $this->getResponseForController(new BackendInstall());
+        $proxy = new ProxyController(new BackendInstall());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the "set new password" form.
+     *
+     * @return Response
+     */
     public function passwordAction()
     {
-        return $this->getResponseForController(new BackendPassword());
+        $proxy = new ProxyController(new BackendPassword());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the front end preview.
+     *
+     * @return Response
+     */
     public function previewAction()
     {
-        return $this->getResponseForController(new BackendPreview());
+        $proxy = new ProxyController(new BackendPreview());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the change log viewer.
+     *
+     * @return Response
+     */
     public function changelogAction()
     {
-        return $this->getResponseForController(new BackendChangelog());
+        $proxy = new ProxyController(new BackendChangelog());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the "invalid request token" screen.
+     *
+     * @return Response
+     */
     public function confirmAction()
     {
-        return $this->getResponseForController(new BackendConfirm());
+        $proxy = new ProxyController(new BackendConfirm());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the file picker.
+     *
+     * @return Response
+     */
     public function fileAction()
     {
-        return $this->getResponseForController(new BackendFile());
+        $proxy = new ProxyController(new BackendFile());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the help content.
+     *
+     * @return Response
+     */
     public function helpAction()
     {
-        return $this->getResponseForController(new BackendHelp());
+        $proxy = new ProxyController(new BackendHelp());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the page picker.
+     *
+     * @return Response
+     */
     public function pageAction()
     {
-        return $this->getResponseForController(new BackendPage());
+        $proxy = new ProxyController(new BackendPage());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the pop-up content.
+     *
+     * @return Response
+     */
     public function popupAction()
     {
-        return $this->getResponseForController(new BackendPopup());
+        $proxy = new ProxyController(new BackendPopup());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the front end preview switcher.
+     *
+     * @return Response
+     */
     public function switchAction()
     {
-        return $this->getResponseForController(new BackendSwitch());
-    }
+        $proxy = new ProxyController(new BackendSwitch());
 
-    private function getResponseForController($controller)
-    {
-        ob_start();
-
-        $controller->run();
-
-        return new Response(ob_get_clean());
+        return $proxy->run();
     }
 }

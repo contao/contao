@@ -20,31 +20,43 @@ use Symfony\Component\HttpFoundation\Response;
  * Handles the Contao frontend routes.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FrontendController extends Controller
 {
-    // FIXME: add the phpDoc comments
+    /**
+     * Runs the main front end controller.
+     *
+     * @return Response
+     */
     public function indexAction()
     {
-        return $this->getResponseForController(new FrontendIndex());
+        $proxy = new ProxyController(new FrontendIndex());
+
+        return $proxy->run();
     }
 
+    /**
+     * Runs the command scheduler.
+     *
+     * @return Response
+     */
     public function cronAction()
     {
-        return $this->getResponseForController(new FrontendCron());
+        $proxy = new ProxyController(new FrontendCron());
+
+        return $proxy->run();
     }
 
+    /**
+     * Renders the content syndication dialog.
+     *
+     * @return Response
+     */
     public function shareAction()
     {
-        return $this->getResponseForController(new FrontendShare());
-    }
+        $proxy = new ProxyController(new FrontendShare());
 
-    private function getResponseForController($controller)
-    {
-        ob_start();
-
-        $controller->run();
-
-        return new Response(ob_get_clean());
+        return $proxy->run();
     }
 }
