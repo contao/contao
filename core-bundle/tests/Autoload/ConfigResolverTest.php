@@ -47,13 +47,12 @@ class ConfigResolverTest extends TestCase
     /**
      * Tests the getBundlesMapForEnvironment() method.
      *
-     * @param string $env            The environment
      * @param array  $configs        The configurations array
      * @param array  $expectedResult The expected result
      *
      * @dataProvider getBundlesMapForEnvironmentProvider
      */
-    public function testGetBundlesMapForEnvironment($env, $configs, $expectedResult)
+    public function testGetBundlesMapForEnvironment($configs, $expectedResult)
     {
         $resolver = new ConfigResolver();
 
@@ -61,30 +60,43 @@ class ConfigResolverTest extends TestCase
             $resolver->add($config);
         }
 
-        $actualResult = $resolver->getBundlesMapForEnvironment($env);
-
-        $this->assertSame($expectedResult, $actualResult);
+        $this->assertSame($expectedResult, $resolver->getBundlesMapForEnvironment('test'));
     }
 
     /**
-     * Test non-existent load after definition is ignored
+     * Tests an unresolvable loading order.
+     *
+     * @expectedException \Contao\CoreBundle\Exception\UnresolvableLoadingOrderException
+     */
+    public function testUnresolvableLoadingOrder()
+    {
+        $resolver = new ConfigResolver();
+        $config1  = $this->getConfig('name1', 'class1')->setLoadAfter(['name2']);
+        $config2  = $this->getConfig('name2', 'class2')->setLoadAfter(['name1']);
+
+        $resolver->add($config1)->add($config2);
+        $resolver->getBundlesMapForEnvironment('all');
+    }
+
+    /**
+     * Tests that non-existent load-after definition is ignored.
      */
     public function testNonExistentLoadAfterIsIgnored()
     {
-        $config = $this->getConfig('bundle-name', 'bundle-class')->setLoadAfter(['i-do-not-exist-bundle']);
         $resolver = new ConfigResolver();
+        $config   = $this->getConfig('name', 'class')->setLoadAfter(['non-existent']);
+
         $resolver->add($config);
 
-        $this->assertSame(['bundle-name' => 'bundle-class'], $resolver->getBundlesMapForEnvironment('all'));
+        $this->assertSame(['name' => 'class'], $resolver->getBundlesMapForEnvironment('all'));
     }
 
-
     /**
-     * Test circular reference
      *
-     * Tests if the resolver makes sure that if there are two bundles (listing-bundle, core-bundle)
-     * with the same load-after definition (integration-bundle) the load-after definition bundle
-     * (integration-bundle) is loaded after the other two.
+     *
+     * If there are two bundles (e.g. core-bundle and listing-bundle) with the
+     * same load-after definition (e.g. integration-bundle), the load-after
+     * definition bundle (integration-bundle) is loaded after the other two.
      */
     public function testCircularReference()
     {
@@ -110,23 +122,6 @@ class ConfigResolverTest extends TestCase
         $this->assertSame('integration-bundle', $bundlesMapKeys[2]);
     }
 
-
-    /**
-     * Tests an unresolvable loading order.
-     *
-     * @expectedException \Contao\CoreBundle\Exception\UnresolvableLoadingOrderException
-     */
-    public function testUnresolvableLoadingOrder()
-    {
-        $resolver = new ConfigResolver();
-        $config1  = $this->getConfig('name1', 'class1')->setLoadAfter(['name2']);
-        $config2  = $this->getConfig('name2', 'class2')->setLoadAfter(['name1']);
-
-        $resolver->add($config1)->add($config2);
-
-        $resolver->getBundlesMapForEnvironment('all');
-    }
-
     /**
      * Provides a static bundles map to test against.
      *
@@ -139,10 +134,10 @@ class ConfigResolverTest extends TestCase
         $config3 = $this->getConfig('name3', 'class3')->setReplace(['name1', 'name2']);
         $config4 = $this->getConfig('name4', 'class4')->setLoadAfter(['core']);
         $config5 = $this->getConfig('name5', 'class5')->setReplace(['core']);
+        $config6 = $this->getConfig('name6', 'class6')->setLoadAfter(['name1', 'name2']);
 
         return [
             'Test default configs' => [
-                'dev',
                 [
                     $config1,
                 ],
@@ -151,7 +146,6 @@ class ConfigResolverTest extends TestCase
                 ],
             ],
             'Test load after order' => [
-                'dev',
                 [
                     $config1,
                     $config2,
@@ -162,7 +156,6 @@ class ConfigResolverTest extends TestCase
                 ],
             ],
             'Test replaces' => [
-                'dev',
                 [
                     $config1,
                     $config2,
@@ -172,8 +165,7 @@ class ConfigResolverTest extends TestCase
                     'name3' => 'class3',
                 ],
             ],
-            'Test load after a bundle that does not exist but is replaced by new one' => [
-                'dev',
+            'Test load after a bundle that is replaced by new one' => [
                 [
                     $config4,
                     $config5,
@@ -181,6 +173,18 @@ class ConfigResolverTest extends TestCase
                 [
                     'name5' => 'class5',
                     'name4' => 'class4',
+                ],
+            ],
+            'Test multiple load after statements' => [
+                [
+                    $config6,
+                    $config1,
+                    $config2,
+                ],
+                [
+                    'name1' => 'class1',
+                    'name2' => 'class2',
+                    'name6' => 'class6',
                 ],
             ],
         ];
