@@ -67,6 +67,51 @@ class ConfigResolverTest extends TestCase
     }
 
     /**
+     * Test non-existent load after definition is ignored
+     */
+    public function testNonExistentLoadAfterIsIgnored()
+    {
+        $config = $this->getConfig('bundle-name', 'bundle-class')->setLoadAfter(['i-do-not-exist-bundle']);
+        $resolver = new ConfigResolver();
+        $resolver->add($config);
+
+        $this->assertSame(['bundle-name' => 'bundle-class'], $resolver->getBundlesMapForEnvironment('all'));
+    }
+
+
+    /**
+     * Test circular reference
+     *
+     * Tests if the resolver makes sure that if there are two bundles (listing-bundle, core-bundle)
+     * with the same load-after definition (integration-bundle) the load-after definition bundle
+     * (integration-bundle) is loaded after the other two.
+     */
+    public function testCircularReference()
+    {
+        $listingBundleConfig = $this->getConfig('listing-bundle', 'listing-bundle-class');
+        $coreBundleConfig = $this->getConfig('core-bundle', 'core-bundle-class');
+
+        $integrationBundleConfigForListingBundle = $this->getConfig('integration-bundle', 'integration-bundle-class')
+            ->setLoadAfter(['listing-bundle']);
+        $integrationBundleConfigForCoreBundle = $this->getConfig('integration-bundle', 'integration-bundle-class')
+            ->setLoadAfter(['core-bundle']);
+
+
+        $resolver = new ConfigResolver();
+        $resolver->add($listingBundleConfig);
+        $resolver->add($integrationBundleConfigForListingBundle);
+        $resolver->add($coreBundleConfig);
+        $resolver->add($integrationBundleConfigForCoreBundle);
+
+        $bundlesMap = $resolver->getBundlesMapForEnvironment('all');
+        $bundlesMapKeys = array_keys($bundlesMap);
+
+        // We have 3 bundles so the 3rd must be integration-bundle
+        $this->assertSame('integration-bundle', $bundlesMapKeys[2]);
+    }
+
+
+    /**
      * Tests an unresolvable loading order.
      *
      * @expectedException \Contao\CoreBundle\Exception\UnresolvableLoadingOrderException
