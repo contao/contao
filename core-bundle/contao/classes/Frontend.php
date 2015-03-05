@@ -348,7 +348,7 @@ abstract class Frontend extends \Controller
 				$arrParams['alias'] = '';
 				$arrParams['_locale'] = $objRootPage->language;
 
-				$strUrl = $objRouter->generate('contao_locale', $arrParams);
+				$strUrl = $objRouter->generate('contao_frontend', $arrParams);
 				$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 				static::redirect($strUrl, 301);
@@ -442,13 +442,9 @@ abstract class Frontend extends \Controller
 		if (\Config::get('addLanguageToUrl'))
 		{
 			$arrParams['_locale'] = $objPage->rootLanguage;
-			$strUrl = $objRouter->generate('contao_locale', $arrParams);
-		}
-		else
-		{
-			$strUrl = $objRouter->generate('contao_default', $arrParams);
 		}
 
+		$strUrl = $objRouter->generate('contao_frontend', $arrParams);
 		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 		return $strUrl;

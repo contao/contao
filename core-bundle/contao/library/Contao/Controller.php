@@ -1098,7 +1098,6 @@ abstract class Controller extends \System
 		global $kernel;
 
 		$objRouter = $kernel->getContainer()->get('router');
-		$strRoute  = 'contao_default';
 		$arrParams = [];
 
 		// Correctly handle the "index" alias (see #3961)
@@ -1113,8 +1112,6 @@ abstract class Controller extends \System
 
 		if (\Config::get('addLanguageToUrl'))
 		{
-			$strRoute = 'contao_locale';
-
 			if ($strForceLang != '')
 			{
 				$arrParams['_locale'] = $strForceLang;
@@ -1132,7 +1129,7 @@ abstract class Controller extends \System
 			}
 		}
 
-		$strUrl = $objRouter->generate($strRoute, $arrParams);
+		$strUrl = $objRouter->generate('contao_frontend', $arrParams);
 		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)
