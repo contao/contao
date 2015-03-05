@@ -17,19 +17,19 @@ namespace Contao\CoreBundle\HttpKernel\Bundle;
  */
 class ResourcesProvider
 {
-    private $contaoResources = [];
-    private $publicFolders = [];
-    private $rootDir;
+    private $contaoResources;
+    private $publicFolders;
 
     /**
      * Constructor.
      *
-     * @param string $kernelRootDir The kernel root directory
+     * @param array $contaoResources An optional array of Contao resource paths
+     * @param array $publicFolders   An option array of public folders
      */
-    public function __construct($kernelRootDir)
+    public function __construct(array $contaoResources = [], array $publicFolders = [])
     {
-        // We need relative paths starting from "TL_ROOT"
-        $this->rootDir = dirname($kernelRootDir) . '/';
+        $this->contaoResources = $contaoResources;
+        $this->publicFolders   = $publicFolders;
     }
 
     /**
@@ -50,13 +50,7 @@ class ResourcesProvider
      */
     public function addPublicFolders(array $paths)
     {
-        foreach ($paths as $path) {
-            if (strpos($path, '../') !== false) {
-                $path = realpath($path);
-            }
-
-            $this->publicFolders[] = str_replace($this->rootDir, '', $path);
-        }
+        $this->publicFolders = array_merge($this->publicFolders, $paths);
     }
 
     /**

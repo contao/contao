@@ -12,7 +12,9 @@ namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\OptimizeContaoResourcesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SetApplicationPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -42,5 +44,9 @@ class ContaoCoreBundle extends Bundle
 
         $container->addCompilerPass(new SetApplicationPass());
         $container->addCompilerPass(new AddContaoResourcesPass($this->getName(), $this->getPath() . '/../contao'));
+
+        $container->addCompilerPass(
+            new OptimizeContaoResourcesPass($container->getParameter('kernel.root_dir')), PassConfig::TYPE_OPTIMIZE
+        );
     }
 }

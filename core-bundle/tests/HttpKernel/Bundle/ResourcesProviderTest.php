@@ -21,38 +21,39 @@ use Contao\CoreBundle\Test\TestCase;
 class ResourcesProviderTest extends TestCase
 {
     /**
-     * @var ResourcesProvider
-     */
-    protected $service;
-
-    /**
-     * Creates a new Contao module bundle.
-     */
-    protected function setUp()
-    {
-        $this->service = new ResourcesProvider($this->getRootDir() . '/app');
-    }
-
-    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ResourcesProvider', $this->service);
+        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ResourcesProvider', new ResourcesProvider());
+    }
+
+    public function testConstructorArguments()
+    {
+        $provider = new ResourcesProvider(
+            ['testBundle' => 'testPath'],
+            ['publicFolder']
+        );
+
+        $this->assertContains('testBundle', $provider->getBundleNames());
+        $this->assertContains('testPath', $provider->getResourcesPaths());
+        $this->assertContains('publicFolder', $provider->getPublicFolders());
     }
 
     public function testAddResourcesPath()
     {
-        $this->service->addResourcesPath('testBundle', 'testPath');
+        $provider = new ResourcesProvider();
+        $provider->addResourcesPath('testBundle', 'testPath');
 
-        $this->assertContains('testBundle', $this->service->getBundleNames());
-        $this->assertContains('testPath', $this->service->getResourcesPaths());
+        $this->assertContains('testBundle', $provider->getBundleNames());
+        $this->assertContains('testPath', $provider->getResourcesPaths());
     }
 
     public function testAddPublicFolders()
     {
-        $this->service->addPublicFolders([$this->getRootDir() . '/system/modules/legacy-module/config/../assets']);
+        $provider = new ResourcesProvider();
+        $provider->addPublicFolders(['publicFolder']);
 
-        $this->assertContains('system/modules/legacy-module/assets', $this->service->getPublicFolders());
+        $this->assertContains('publicFolder', $provider->getPublicFolders());
     }
 }

@@ -34,7 +34,7 @@ class AddContaoResourcesPassTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass', $pass);
     }
 
-    public function testWithoutService()
+    public function testWithoutDefinition()
     {
         $pass = new AddContaoResourcesPass('', '');
 
