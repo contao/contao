@@ -47,7 +47,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('html', $routes['contao_frontend']->getDefault('_format'));
         $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
         $this->assertEquals('html', $routes['contao_frontend']->getRequirement('_format'));
-        $this->assertEquals('', $routes['contao_fontend']->getRequirement('_locale'));
+        $this->assertEquals('', $routes['contao_frontend']->getRequirement('_locale'));
     }
 
     /**
@@ -83,13 +83,13 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
 
         $routes = $collection->all();
 
-        $this->assertArrayHasKey('contao_fontend', $routes);
-        $this->assertEquals('/{alias}', $routes['contao_fontend']->getPath());
-        $this->assertEquals('ContaoCoreBundle:Frontend:index', $routes['contao_fontend']->getDefault('_controller'));
-        $this->assertEquals('', $routes['contao_fontend']->getDefault('_format'));
-        $this->assertEquals('.*', $routes['contao_fontend']->getRequirement('alias'));
-        $this->assertEquals('', $routes['contao_fontend']->getRequirement('_format'));
-        $this->assertEquals('', $routes['contao_fontend']->getRequirement('_locale'));
+        $this->assertArrayHasKey('contao_frontend', $routes);
+        $this->assertEquals('/{alias}', $routes['contao_frontend']->getPath());
+        $this->assertEquals('ContaoCoreBundle:Frontend:index', $routes['contao_frontend']->getDefault('_controller'));
+        $this->assertEquals('', $routes['contao_frontend']->getDefault('_format'));
+        $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
+        $this->assertEquals('', $routes['contao_frontend']->getRequirement('_format'));
+        $this->assertEquals('', $routes['contao_frontend']->getRequirement('_locale'));
     }
 
     /**
@@ -104,13 +104,13 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
 
         $routes = $collection->all();
 
-        $this->assertArrayHasKey('contao_fontend', $routes);
-        $this->assertEquals('/{_locale}/{alias}', $routes['contao_fontend']->getPath());
-        $this->assertEquals('ContaoCoreBundle:Frontend:index', $routes['contao_fontend']->getDefault('_controller'));
-        $this->assertEquals('', $routes['contao_fontend']->getDefault('_format'));
-        $this->assertEquals('.*', $routes['contao_fontend']->getRequirement('alias'));
-        $this->assertEquals('', $routes['contao_fontend']->getRequirement('_format'));
-        $this->assertEquals('[a-z]{2}(\-[A-Z]{2})?', $routes['contao_fontend']->getRequirement('_locale'));
+        $this->assertArrayHasKey('contao_frontend', $routes);
+        $this->assertEquals('/{_locale}/{alias}', $routes['contao_frontend']->getPath());
+        $this->assertEquals('ContaoCoreBundle:Frontend:index', $routes['contao_frontend']->getDefault('_controller'));
+        $this->assertEquals('', $routes['contao_frontend']->getDefault('_format'));
+        $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
+        $this->assertEquals('', $routes['contao_frontend']->getRequirement('_format'));
+        $this->assertEquals('[a-z]{2}(\-[A-Z]{2})?', $routes['contao_frontend']->getRequirement('_locale'));
     }
 
     /**
