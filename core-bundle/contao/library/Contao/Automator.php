@@ -562,7 +562,7 @@ class Automator extends \System
 				}
 
 				$arrPublic[] = str_replace(TL_ROOT . '/', '', $strPath);
-            }
+			}
 		}
 
 		return array_filter($arrPublic);

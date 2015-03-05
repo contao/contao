@@ -21,7 +21,7 @@ class DropZone extends \FileUpload
 
 	/**
 	 * Generate the markup for the default uploader
-     *
+	 *
 	 * @return string
 	 */
 	public function generateMarkup()

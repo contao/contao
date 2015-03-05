@@ -1080,7 +1080,7 @@ abstract class Controller extends \System
 		);
 
 		return str_replace(array_keys($arrMapper), array_values($arrMapper), $strContext);
-    }
+	}
 
 	/**
 	 * Generate a front end URL

@@ -23,7 +23,7 @@ class PageError403 extends \Frontend
 
 	/**
 	 * Generate an error 403 page
-     *
+	 *
 	 * @param integer            $pageId
 	 * @param \PageModel|integer $objRootPage
 	 */
@@ -45,10 +45,10 @@ class PageError403 extends \Frontend
 
 	/**
 	 * Return a response object
-     *
+	 *
 	 * @param integer            $pageId
 	 * @param \PageModel|integer $objRootPage
-     *
+	 *
 	 * @return Response
 	 */
 	public function getResponse($pageId, $objRootPage=null)
@@ -71,10 +71,10 @@ class PageError403 extends \Frontend
 	 *
 	 * @param integer            $pageId
 	 * @param \PageModel|integer $objRootPage
-     *
-     * @return \PageModel
-     *
-     * @internal
+	 *
+	 * @return \PageModel
+	 *
+	 * @internal
 	 */
 	protected function prepare($pageId, $objRootPage=null)
 	{
@@ -116,6 +116,6 @@ class PageError403 extends \Frontend
 			$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj403->redirect == 'temporary') ? 302 : 301));
 		}
 
-        return $obj403;
+		return $obj403;
 	}
 }

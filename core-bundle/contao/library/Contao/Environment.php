@@ -369,7 +369,7 @@ class Environment
 		}
 
 		$strXip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        $arrTrusted = array_map('trim', explode(',', \Config::get('proxyServerIps')));
+		$arrTrusted = array_map('trim', explode(',', \Config::get('proxyServerIps')));
 
 		// Generate an array of X-Forwarded-For IPs
 		if (strpos($strXip, ',') !== false)
