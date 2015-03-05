@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Back end page picker.
@@ -47,6 +49,8 @@ class BackendPage extends \Backend
 
 	/**
 	 * Run the controller and parse the template
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -141,6 +145,6 @@ class BackendPage extends \Backend
 			$objTemplate->switchHref = str_replace('contao/page.php', 'contao/file.php', ampersand(\Environment::get('request')));
 		}
 
-		$objTemplate->output();
+		return $objTemplate->getResponse();
 	}
 }

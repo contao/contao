@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Main back end controller.
@@ -100,6 +102,8 @@ class BackendMain extends \Backend
 
 	/**
 	 * Run the controller and parse the login template
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -132,7 +136,7 @@ class BackendMain extends \Backend
 			$this->Template->title = $this->Template->headline;
 		}
 
-		$this->output();
+		return $this->output();
 	}
 
 
@@ -187,6 +191,8 @@ class BackendMain extends \Backend
 
 	/**
 	 * Output the template file
+	 *
+	 * @return Response
 	 */
 	protected function output()
 	{
@@ -272,6 +278,6 @@ class BackendMain extends \Backend
 			}
 		}
 
-		$this->Template->output();
+		return $this->Template->getResponse();
 	}
 }

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Parses and outputs template files
@@ -55,6 +57,12 @@ abstract class Template extends \Controller
 	 * @var array
 	 */
 	protected $arrData = array();
+
+	/**
+	 * Compile status
+	 * @var bool
+	 */
+	protected $blnCompiled = false;
 
 
 	/**
@@ -253,13 +261,7 @@ abstract class Template extends \Controller
 	 */
 	public function output()
 	{
-		if (!$this->strBuffer)
-		{
-			$this->strBuffer = $this->parse();
-		}
-
-		// Minify the markup
-		$this->strBuffer = $this->minifyHtml($this->strBuffer);
+		$this->compile();
 
 		header('Vary: User-Agent', false);
 		header('Content-Type: ' . $this->strContentType . '; charset=' . \Config::get('characterSet'));
@@ -267,7 +269,7 @@ abstract class Template extends \Controller
 		echo $this->strBuffer;
 
 		// Flush the output buffers (see #6962)
-		//$this->flushAllData(); // TODO: add a getResponse() method and keep the method call here
+		$this->flushAllData();
 
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['postFlushData']) && is_array($GLOBALS['TL_HOOKS']['postFlushData']))
@@ -282,11 +284,53 @@ abstract class Template extends \Controller
 
 
 	/**
+	 * Return a response object
+	 *
+	 * @return Response The response object
+	 */
+	public function getResponse()
+	{
+		$this->compile();
+
+		$response = new Response($this->strBuffer);
+
+		$response->headers->set('Vary', 'User-Agent', false);
+		$response->headers->set('Content-Type', $this->strContentType . '; charset=' . Config::get('characterSet'));
+
+		return $response;
+	}
+
+
+	/**
+	 * Compile the template
+	 *
+	 * @internal
+	 */
+	protected function compile()
+	{
+		if ($this->blnCompiled)
+		{
+			return;
+		}
+
+		if (!$this->strBuffer)
+		{
+			$this->strBuffer = $this->parse();
+		}
+
+		// Minify the markup
+		$this->strBuffer = $this->minifyHtml($this->strBuffer);
+
+		$this->blnCompiled = true;
+	}
+
+
+	/**
 	 * Return the debug bar string
 	 *
 	 * @return string The debug bar markup
 	 *
-	 * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0
+	 * @deprecated Deprecated since version 4.0, to be removed in version 5.0
 	 */
 	protected function getDebugBar()
 	{
@@ -436,7 +480,7 @@ abstract class Template extends \Controller
 	/**
 	 * Flush the output buffers
 	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
+	 * @deprecated Deprecated since version 4.0, to be removed in version 5.0
 	 */
 	public function flushAllData()
 	{

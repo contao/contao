@@ -40,9 +40,9 @@ class BackendController extends Controller
      */
     public function mainAction()
     {
-        $proxy = new ProxyController(new BackendMain());
+        $controller = new BackendMain();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -52,9 +52,9 @@ class BackendController extends Controller
      */
     public function loginAction()
     {
-        $proxy = new ProxyController(new BackendIndex());
+        $controller = new BackendIndex();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -64,9 +64,12 @@ class BackendController extends Controller
      */
     public function installAction()
     {
-        $proxy = new ProxyController(new BackendInstall());
+        ob_start();
 
-        return $proxy->run();
+        $controller = new BackendInstall();
+        $controller->run();
+
+        return new Response(ob_get_clean());
     }
 
     /**
@@ -76,9 +79,9 @@ class BackendController extends Controller
      */
     public function passwordAction()
     {
-        $proxy = new ProxyController(new BackendPassword());
+        $controller = new BackendPassword();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -88,9 +91,9 @@ class BackendController extends Controller
      */
     public function previewAction()
     {
-        $proxy = new ProxyController(new BackendPreview());
+        $controller = new BackendPreview();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -100,9 +103,9 @@ class BackendController extends Controller
      */
     public function changelogAction()
     {
-        $proxy = new ProxyController(new BackendChangelog());
+        $controller = new BackendChangelog();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -112,9 +115,9 @@ class BackendController extends Controller
      */
     public function confirmAction()
     {
-        $proxy = new ProxyController(new BackendConfirm());
+        $controller = new BackendConfirm();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -124,9 +127,9 @@ class BackendController extends Controller
      */
     public function fileAction()
     {
-        $proxy = new ProxyController(new BackendFile());
+        $controller = new BackendFile();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -136,9 +139,9 @@ class BackendController extends Controller
      */
     public function helpAction()
     {
-        $proxy = new ProxyController(new BackendHelp());
+        $controller = new BackendHelp();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -148,9 +151,9 @@ class BackendController extends Controller
      */
     public function pageAction()
     {
-        $proxy = new ProxyController(new BackendPage());
+        $controller = new BackendPage();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -160,9 +163,9 @@ class BackendController extends Controller
      */
     public function popupAction()
     {
-        $proxy = new ProxyController(new BackendPopup());
+        $controller = new BackendPopup();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -172,8 +175,8 @@ class BackendController extends Controller
      */
     public function switchAction()
     {
-        $proxy = new ProxyController(new BackendSwitch());
+        $controller = new BackendSwitch();
 
-        return $proxy->run();
+        return $controller->run();
     }
 }

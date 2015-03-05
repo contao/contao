@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Class FrontendTemplate
@@ -59,14 +61,49 @@ class FrontendTemplate extends \Template
 
 
 	/**
-	 * Parse the template file, replace insert tags and print it to the screen
+	 * Send the response to the client
 	 *
-	 * @param boolean $blnCheckRequest If true, check for unsued $_GET parameters
-	 *
-	 * @throws \UnusedArgumentsException If there are unused $_GET parameters
+	 * @param bool $blnCheckRequest If true, check for unsued $_GET parameters
 	 */
 	public function output($blnCheckRequest=false)
 	{
+		$this->compile($blnCheckRequest);
+
+		parent::output();
+	}
+
+
+	/**
+	 * Return a response object
+	 *
+	 * @param bool $blnCheckRequest If true, check for unsued $_GET parameters
+	 *
+	 * @return Response The response object
+	 */
+	public function getResponse($blnCheckRequest=false)
+	{
+		$this->compile($blnCheckRequest);
+
+		return parent::getResponse();
+	}
+
+
+	/**
+	 * Compile the template
+	 *
+	 * @param bool $blnCheckRequest If true, check for unsued $_GET parameters
+	 *
+	 * @throws \UnusedArgumentsException If there are unused $_GET parameters
+	 *
+	 * @internal
+	 */
+	protected function compile($blnCheckRequest=false)
+	{
+		if ($this->blnCompiled)
+		{
+			return;
+		}
+
 		$this->keywords = '';
 		$arrKeywords = array_map('trim', explode(',', $GLOBALS['TL_KEYWORDS']));
 
@@ -113,8 +150,7 @@ class FrontendTemplate extends \Template
 			throw new \UnusedArgumentsException();
 		}
 
-		// Send the response to the client
-		parent::output();
+		parent::compile();
 	}
 
 

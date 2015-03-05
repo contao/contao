@@ -47,6 +47,8 @@ class BackendFile extends \Backend
 
 	/**
 	 * Run the controller and parse the template
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -151,6 +153,6 @@ class BackendFile extends \Backend
 			$objTemplate->switchHref = str_replace('contao/file.php', 'contao/page.php', ampersand(\Environment::get('request')));
 		}
 
-		$objTemplate->output();
+		return $objTemplate->getResponse();
 	}
 }

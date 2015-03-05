@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Michelf\MarkdownExtra;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -41,11 +42,13 @@ class BackendChangelog extends \Backend
 
 	/**
 	 * Run the controller
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
 		// Parse the changelog file
-		$strBuffer = file_get_contents(TL_ROOT . '/system/docs/CHANGELOG.md');
+		$strBuffer = file_get_contents(TL_ROOT . '/vendor/contao/core-bundle/CHANGELOG.md');
 
 		// Remove carriage returns (see #4190)
 		$strBuffer = str_replace("\r", '', $strBuffer);
@@ -64,6 +67,6 @@ class BackendChangelog extends \Backend
 		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['changelog']);
 		$objTemplate->charset = \Config::get('characterSet');
 
-		$objTemplate->output();
+		return $objTemplate->getResponse();
 	}
 }

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Handle back end logins and logouts.
@@ -66,6 +68,8 @@ class BackendIndex extends \Backend
 
 	/**
 	 * Run the controller and parse the login template
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -102,6 +106,6 @@ class BackendIndex extends \Backend
 		$objTemplate->disableCron = \Config::get('disableCron');
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 
-		$objTemplate->output();
+		return $objTemplate->getResponse();
 	}
 }

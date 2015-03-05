@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Provide methods to handle a regular front end page.
@@ -26,6 +28,37 @@ class PageRegular extends \Frontend
 	 * @param boolean    $blnCheckRequest
 	 */
 	public function generate($objPage, $blnCheckRequest=false)
+	{
+		$this->prepare($objPage);
+
+		$this->Template->output($blnCheckRequest);
+	}
+
+
+	/**
+	 * Return a response object
+	 *
+	 * @param \PageModel $objPage
+	 * @param boolean    $blnCheckRequest
+	 *
+	 * @return Response
+	 */
+	public function getResponse($objPage, $blnCheckRequest=false)
+	{
+		$this->prepare($objPage);
+
+		return $this->Template->getResponse($blnCheckRequest);
+	}
+
+
+	/**
+	 * Generate a regular page
+	 *
+	 * @param \PageModel $objPage
+	 *
+	 * @internal
+	 */
+	protected function prepare($objPage)
 	{
 		$GLOBALS['TL_KEYWORDS'] = '';
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
@@ -185,9 +218,6 @@ class PageRegular extends \Frontend
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objLayout);
 		$this->createHeaderScripts($objPage, $objLayout);
-
-		// Print the template to the screen
-		$this->Template->output($blnCheckRequest);
 	}
 
 

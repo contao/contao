@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Main front end controller.
@@ -47,6 +49,8 @@ class FrontendIndex extends \Frontend
 
 	/**
 	 * Run the controller
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -64,6 +68,7 @@ class FrontendIndex extends \Frontend
 			$objHandler = new $GLOBALS['TL_PTY']['root']();
 			$pageId = $objHandler->generate($objRootPage->id, true);
 		}
+
 		// Throw a 404 error if the request is not a Contao request (see #2864)
 		elseif ($pageId === false)
 		{
@@ -71,7 +76,8 @@ class FrontendIndex extends \Frontend
 
 			/** @var \PageError404 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-			$objHandler->generate($pageId);
+
+			return $objHandler->getResponse($pageId);
 		}
 
 		// Get the current page object(s)
@@ -135,8 +141,11 @@ class FrontendIndex extends \Frontend
 		if ($objPage === null || ($objPage instanceof \Model\Collection && $objPage->count() != 1))
 		{
 			$this->User->authenticate();
+
+			/** @var \PageError404 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-			$objHandler->generate($pageId);
+
+			return $objHandler->getResponse($pageId);
 		}
 
 		// Make sure $objPage is a Model
@@ -148,6 +157,7 @@ class FrontendIndex extends \Frontend
 		// Load a website root page object (will redirect to the first active regular page)
 		if ($objPage->type == 'root')
 		{
+			/** @var \PageRoot $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['root']();
 			$objHandler->generate($objPage->id);
 		}
@@ -180,8 +190,11 @@ class FrontendIndex extends \Frontend
 		if (\Config::get('addLanguageToUrl') && \Input::get('language') != $objPage->rootLanguage)
 		{
 			$this->User->authenticate();
+
+			/** @var \PageError404 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-			$objHandler->generate($pageId);
+
+			return $objHandler->getResponse($pageId);
 		}
 
 		// Check whether there are domain name restrictions
@@ -191,16 +204,21 @@ class FrontendIndex extends \Frontend
 			if ($objPage->domain != \Environment::get('host'))
 			{
 				$this->User->authenticate();
+
+				/** @var \PageError404 $objHandler */
 				$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-				$objHandler->generate($objPage->id, $objPage->domain, \Environment::get('host'));
+
+				return $objHandler->getResponse($objPage->id, $objPage->domain, \Environment::get('host'));
 			}
 		}
 
 		// Authenticate the user
 		if (!$this->User->authenticate() && $objPage->protected && !BE_USER_LOGGED_IN)
 		{
+			/** @var \PageError403 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_403']();
-			$objHandler->generate($pageId, $objRootPage);
+
+			return $objHandler->getResponse($pageId, $objRootPage);
 		}
 
 		// Check the user groups if the page is protected
@@ -212,12 +230,14 @@ class FrontendIndex extends \Frontend
 			{
 				$this->log('Page "' . $pageId . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
 
+				/** @var \PageError403 $objHandler */
 				$objHandler = new $GLOBALS['TL_PTY']['error_403']();
-				$objHandler->generate($pageId, $objRootPage);
+
+				return $objHandler->getResponse($pageId, $objRootPage);
 			}
 		}
 
-		// Load the page object depending on its type
+		/** @var \PageRegular|\PageError403|\PageError404 $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
 
 		try
@@ -227,23 +247,26 @@ class FrontendIndex extends \Frontend
 			{
 				case 'root':
 				case 'error_404':
-					$objHandler->generate($pageId);
+					return $objHandler->getResponse($pageId);
 					break;
 
 				case 'error_403':
-					$objHandler->generate($pageId, $objRootPage);
+					return $objHandler->getResponse($pageId, $objRootPage);
 					break;
 
 				default:
-					$objHandler->generate($objPage, true);
+					return $objHandler->getResponse($objPage, true);
 					break;
 			}
 		}
+
+		// Render the error page (see #5570)
 		catch (\UnusedArgumentsException $e)
 		{
-			// Render the error page (see #5570)
+			/** @var \PageError404 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-			$objHandler->generate($pageId, null, null, true);
+
+			return $objHandler->getResponse($pageId, null, null, true);
 		}
 	}
 

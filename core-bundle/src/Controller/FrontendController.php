@@ -31,9 +31,9 @@ class FrontendController extends Controller
      */
     public function indexAction()
     {
-        $proxy = new ProxyController(new FrontendIndex());
+        $controller = new FrontendIndex();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -43,9 +43,9 @@ class FrontendController extends Controller
      */
     public function cronAction()
     {
-        $proxy = new ProxyController(new FrontendCron());
+        $controller = new FrontendCron();
 
-        return $proxy->run();
+        return $controller->run();
     }
 
     /**
@@ -55,8 +55,8 @@ class FrontendController extends Controller
      */
     public function shareAction()
     {
-        $proxy = new ProxyController(new FrontendShare());
+        $controller = new FrontendShare();
 
-        return $proxy->run();
+        return $controller->run();
     }
 }

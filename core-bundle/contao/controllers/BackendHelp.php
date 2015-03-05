@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Back end help wizard.
@@ -42,6 +44,8 @@ class BackendHelp extends \Backend
 
 	/**
 	 * Run the controller and parse the template
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -179,6 +183,6 @@ class BackendHelp extends \Backend
 		$objTemplate->headline = $arrData['label'][0] ?: $field;
 		$objTemplate->helpWizard = $GLOBALS['TL_LANG']['MSC']['helpWizard'];
 
-		$objTemplate->output();
+		return $objTemplate->getResponse();
 	}
 }

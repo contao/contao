@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Provide methods to handle an error 404 page.
@@ -28,6 +30,59 @@ class PageError404 extends \Frontend
 	 * @param boolean $blnUnusedGet
 	 */
 	public function generate($pageId, $strDomain=null, $strHost=null, $blnUnusedGet=false)
+	{
+		/** @var \PageModel $objPage */
+		global $objPage;
+
+		$obj404 = $this->prepare($pageId, $strDomain, $strHost, $blnUnusedGet);
+		$objPage = $obj404->loadDetails();
+
+		/** @var \PageRegular $objHandler */
+		$objHandler = new $GLOBALS['TL_PTY']['regular']();
+
+		header('HTTP/1.1 404 Not Found');
+		$objHandler->generate($objPage);
+	}
+
+
+	/**
+	 * Return a response object
+	 *
+	 * @param integer $pageId
+	 * @param string  $strDomain
+	 * @param string  $strHost
+	 * @param boolean $blnUnusedGet
+	 *
+	 * @return Response
+	 */
+	public function getResponse($pageId, $strDomain=null, $strHost=null, $blnUnusedGet=false)
+	{
+		/** @var \PageModel $objPage */
+		global $objPage;
+
+		$obj404 = $this->prepare($pageId, $strDomain, $strHost, $blnUnusedGet);
+		$objPage = $obj404->loadDetails();
+
+		/** @var \PageRegular $objHandler */
+		$objHandler = new $GLOBALS['TL_PTY']['regular']();
+
+		return $objHandler->getResponse($objPage)->setStatusCode(404);
+	}
+
+
+	/**
+	 * Prepare the output
+	 *
+	 * @param integer $pageId
+	 * @param string  $strDomain
+	 * @param string  $strHost
+	 * @param boolean $blnUnusedGet
+	 *
+	 * @return \PageModel
+	 *
+	 * @internal
+	 */
+	protected function prepare($pageId, $strDomain=null, $strHost=null, $blnUnusedGet=false)
 	{
 		// Add a log entry
 		if ($blnUnusedGet)
@@ -94,15 +149,6 @@ class PageError404 extends \Frontend
 			$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj404->redirect == 'temporary') ? 302 : 301));
 		}
 
-		/** @var \PageModel $objPage */
-		global $objPage;
-
-		$objPage = $obj404->loadDetails();
-
-		/** @var \PageRegular $objHandler */
-		$objHandler = new $GLOBALS['TL_PTY']['regular']();
-
-		header('HTTP/1.1 404 Not Found');
-		$objHandler->generate($objPage);
+		return $obj404;
 	}
 }

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Provide methods to handle an error 403 page.
@@ -21,11 +23,60 @@ class PageError403 extends \Frontend
 
 	/**
 	 * Generate an error 403 page
-	 *
-	 * @param integer    $pageId
-	 * @param \PageModel $objRootPage
+     *
+	 * @param integer            $pageId
+	 * @param \PageModel|integer $objRootPage
 	 */
 	public function generate($pageId, $objRootPage=null)
+	{
+		/** @var \PageModel $objPage */
+		global $objPage;
+
+		$obj403 = $this->prepare($pageId, $objRootPage);
+		$objPage = $obj403->loadDetails();
+
+		/** @var \PageRegular $objHandler */
+		$objHandler = new $GLOBALS['TL_PTY']['regular']();
+
+		header('HTTP/1.1 403 Forbidden');
+		$objHandler->generate($objPage);
+	}
+
+
+	/**
+	 * Return a response object
+     *
+	 * @param integer            $pageId
+	 * @param \PageModel|integer $objRootPage
+     *
+	 * @return Response
+	 */
+	public function getResponse($pageId, $objRootPage=null)
+	{
+		/** @var \PageModel $objPage */
+		global $objPage;
+
+		$obj403 = $this->prepare($pageId, $objRootPage);
+		$objPage = $obj403->loadDetails();
+
+		/** @var \PageRegular $objHandler */
+		$objHandler = new $GLOBALS['TL_PTY']['regular']();
+
+		return $objHandler->getResponse($objPage)->setStatusCode(403);
+	}
+
+
+	/**
+	 * Prepare the output
+	 *
+	 * @param integer            $pageId
+	 * @param \PageModel|integer $objRootPage
+     *
+     * @return \PageModel
+     *
+     * @internal
+	 */
+	protected function prepare($pageId, $objRootPage=null)
 	{
 		// Add a log entry
 		$this->log('Access to page ID "' . $pageId . '" denied', __METHOD__, TL_ERROR);
@@ -65,15 +116,6 @@ class PageError403 extends \Frontend
 			$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj403->redirect == 'temporary') ? 302 : 301));
 		}
 
-		/** @var \PageModel $objPage */
-		global $objPage;
-
-		$objPage = $obj403->loadDetails();
-
-		/** @var \PageRegular $objHandler */
-		$objHandler = new $GLOBALS['TL_PTY']['regular']();
-
-		header('HTTP/1.1 403 Forbidden');
-		$objHandler->generate($objPage);
+        return $obj403;
 	}
 }

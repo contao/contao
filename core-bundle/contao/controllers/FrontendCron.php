@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Command scheduler controller.
@@ -34,13 +36,17 @@ class FrontendCron extends \Frontend
 
 	/**
 	 * Run the controller
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
+		$objResponse = new Response();
+
 		// Do not run if there is POST data or the last execution was less than a minute ago
 		if (!empty($_POST) || $this->hasToWait())
 		{
-			return;
+			return $objResponse;
 		}
 
 		$arrLock = array();
@@ -106,6 +112,8 @@ class FrontendCron extends \Frontend
 				$this->log(ucfirst($strInterval) . ' cron jobs complete', __METHOD__, TL_CRON);
 			}
 		}
+
+		return $objResponse;
 	}
 
 

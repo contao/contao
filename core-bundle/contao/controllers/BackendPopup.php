@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Pop-up file preview (file manager).
@@ -53,6 +55,8 @@ class BackendPopup extends \Backend
 
 	/**
 	 * Run the controller and parse the template
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -145,6 +149,6 @@ class BackendPopup extends \Backend
 		$objTemplate->label_path = $GLOBALS['TL_LANG']['MSC']['filePath'];
 		$objTemplate->download = specialchars($GLOBALS['TL_LANG']['MSC']['fileDownload']);
 
-		$objTemplate->output();
+		return $objTemplate->getResponse();
 	}
 }

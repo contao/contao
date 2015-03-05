@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Back end help wizard.
@@ -42,6 +44,8 @@ class BackendPassword extends \Backend
 
 	/**
 	 * Run the controller and parse the password template
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -122,6 +126,6 @@ class BackendPassword extends \Backend
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 
-		$objTemplate->output();
+		return $objTemplate->getResponse();
 	}
 }

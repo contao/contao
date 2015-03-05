@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Share a page via a social network.
@@ -21,6 +24,8 @@ class FrontendShare extends \Frontend
 
 	/**
 	 * Run the controller
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -31,24 +36,24 @@ class FrontendShare extends \Frontend
 				$query .= '&t=' . rawurlencode(\Input::get('t', true));
 				$query .= '&display=popup';
 				$query .= '&redirect_uri=http%3A%2F%2Fwww.facebook.com';
-				header('Location: http://www.facebook.com/sharer/sharer.php' . $query);
-				exit; break;
+
+				return new RedirectResponse('http://www.facebook.com/sharer/sharer.php' . $query);
+				break;
 
 			case 'twitter':
 				$query  = '?url=' . rawurlencode(\Input::get('u', true));
 				$query .= '&text=' . rawurlencode(\Input::get('t', true));
-				header('Location: http://twitter.com/share' . $query);
-				exit; break;
+
+				return new RedirectResponse('http://twitter.com/share' . $query);
+				break;
 
 			case 'gplus':
 				$query  = '?url=' . rawurlencode(\Input::get('u', true));
-				header('Location: https://plus.google.com/share' . $query);
-				exit; break;
 
-			default:
-				header('HTTP/1.1 301 Moved Permanently');
-				header('Location: ../');
-				exit;
+				return new RedirectResponse('https://plus.google.com/share' . $query);
+				break;
 		}
+
+		return new RedirectResponse('../');
 	}
 }

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -43,6 +44,8 @@ class BackendPreview extends \Backend
 
 	/**
 	 * Run the controller and parse the template
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -95,6 +98,6 @@ class BackendPreview extends \Backend
 			}
 		}
 
-		$objTemplate->output();
+		return $objTemplate->getResponse();
 	}
 }

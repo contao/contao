@@ -48,12 +48,17 @@ class BackendTemplate extends \Template
 
 
 	/**
-	 * Parse the template file, add the TinyMCE configuration and print it to the screen
+	 * Compile the template
 	 *
-	 * @throws \Exception
+	 * @internal
 	 */
-	public function output()
+	protected function compile()
 	{
+		if ($this->blnCompiled)
+		{
+			return;
+		}
+
 		// User agent class (see #3074 and #6277)
 		$this->ua = \Environment::get('agent')->class;
 
@@ -112,7 +117,8 @@ class BackendTemplate extends \Template
 		}
 
 		$this->strBuffer = $strBuffer;
-		parent::output();
+
+		parent::compile();
 	}
 
 

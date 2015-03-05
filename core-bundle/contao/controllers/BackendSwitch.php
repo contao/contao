@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -42,6 +43,8 @@ class BackendSwitch extends \Backend
 
 	/**
 	 * Run the controller and parse the template
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -146,7 +149,7 @@ class BackendSwitch extends \Backend
 		$objTemplate->action = ampersand(\Environment::get('request'));
 		$objTemplate->isAdmin = $this->User->isAdmin;
 
-		$objTemplate->output();
+		return $objTemplate->getResponse();
 	}
 
 

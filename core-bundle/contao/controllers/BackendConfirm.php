@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Confirm an invalid token URL.
@@ -42,6 +44,8 @@ class BackendConfirm extends \Backend
 
 	/**
 	 * Run the controller
+	 *
+	 * @return Response
 	 */
 	public function run()
 	{
@@ -145,6 +149,6 @@ class BackendConfirm extends \Backend
 		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['invalidTokenUrl']);
 		$objTemplate->charset = \Config::get('characterSet');
 
-		$objTemplate->output();
+		return $objTemplate->getResponse();
 	}
 }
