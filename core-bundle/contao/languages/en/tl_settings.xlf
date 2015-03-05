@@ -428,9 +428,6 @@
       <trans-unit id="tl_settings.smtp_legend">
         <source>SMTP configuration</source>
       </trans-unit>
-      <trans-unit id="tl_settings.ftp_legend">
-        <source>Safe Mode Hack</source>
-      </trans-unit>
       <trans-unit id="tl_settings.modules_legend">
         <source>Inactive extensions</source>
       </trans-unit>

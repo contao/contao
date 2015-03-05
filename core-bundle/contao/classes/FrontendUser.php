@@ -42,18 +42,6 @@ class FrontendUser extends \User
 	protected $strCookie = 'FE_USER_AUTH';
 
 	/**
-	 * Path to the login script
-	 * @var string
-	 */
-	protected $strLoginScript = 'index.php'; # FIXME ?
-
-	/**
-	 * Path to the protected file
-	 * @var string
-	 */
-	protected $strRedirect = 'index.php'; # FIXME ?
-
-	/**
 	 * Group login page
 	 * @var string
 	 */
