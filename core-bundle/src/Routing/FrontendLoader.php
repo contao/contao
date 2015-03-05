@@ -49,34 +49,26 @@ class FrontendLoader extends Loader
      */
     public function load($resource, $type = null)
     {
-        $routes = new RouteCollection();
-
-        $defaults = [
-            '_controller' => 'ContaoCoreBundle:Frontend:index'
-        ];
-
-        $pattern = '/{alias}';
-        $require = ['alias' => '.*'];
+        $pattern  = '/{alias}';
+        $defaults = ['_controller' => 'ContaoCoreBundle:Frontend:index'];
+        $require  = ['alias' => '.*'];
 
         // URL suffix
         if ($this->format) {
             $pattern .= '.{_format}';
 
-            $require['_format']  = $this->format;
             $defaults['_format'] = $this->format;
+            $require['_format']  = $this->format;
         }
+
+        $routes = new RouteCollection();
 
         // Add language to URL
         if ($this->prependLocale) {
-            $require['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
-
-            $route = new Route('/{_locale}' . $pattern, $defaults, $require);
-            $routes->add('contao_locale', $route);
+            $this->addLocaleRoute($routes, $pattern, $defaults, $require);
         }
 
-        // Default route
-        $route = new Route($pattern, $defaults, $require);
-        $routes->add('contao_default', $route);
+        $this->addDefaultRoute($routes, $pattern, $defaults, $require);
 
         return $routes;
     }
@@ -87,5 +79,31 @@ class FrontendLoader extends Loader
     public function supports($resource, $type = null)
     {
         return true; // the loader of the integration bundle does not check for support
+    }
+
+    /**
+     * @param RouteCollection $routes
+     * @param string          $pattern
+     * @param array           $defaults
+     * @param array           $require
+     */
+    private function addLocaleRoute(RouteCollection $routes, $pattern, array $defaults, array $require)
+    {
+        $require['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
+
+        $route = new Route('/{_locale}' . $pattern, $defaults, $require);
+        $routes->add('contao_locale', $route);
+    }
+
+    /**
+     * @param RouteCollection $routes
+     * @param string          $pattern
+     * @param array           $defaults
+     * @param array           $require
+     */
+    private function addDefaultRoute(RouteCollection $routes, $pattern, array $defaults, array $require)
+    {
+        $route = new Route($pattern, $defaults, $require);
+        $routes->add('contao_default', $route);
     }
 }

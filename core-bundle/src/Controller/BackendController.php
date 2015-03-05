@@ -61,6 +61,8 @@ class BackendController extends Controller
      * Renders the install tool.
      *
      * @return Response
+     *
+     * @todo Make the install tool stand-alone
      */
     public function installAction()
     {

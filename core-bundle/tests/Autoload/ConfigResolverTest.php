@@ -92,37 +92,6 @@ class ConfigResolverTest extends TestCase
     }
 
     /**
-     *
-     *
-     * If there are two bundles (e.g. core-bundle and listing-bundle) with the
-     * same load-after definition (e.g. integration-bundle), the load-after
-     * definition bundle (integration-bundle) is loaded after the other two.
-     */
-    public function testCircularReference()
-    {
-        $listingBundleConfig = $this->getConfig('listing-bundle', 'listing-bundle-class');
-        $coreBundleConfig = $this->getConfig('core-bundle', 'core-bundle-class');
-
-        $integrationBundleConfigForListingBundle = $this->getConfig('integration-bundle', 'integration-bundle-class')
-            ->setLoadAfter(['listing-bundle']);
-        $integrationBundleConfigForCoreBundle = $this->getConfig('integration-bundle', 'integration-bundle-class')
-            ->setLoadAfter(['core-bundle']);
-
-
-        $resolver = new ConfigResolver();
-        $resolver->add($listingBundleConfig);
-        $resolver->add($integrationBundleConfigForListingBundle);
-        $resolver->add($coreBundleConfig);
-        $resolver->add($integrationBundleConfigForCoreBundle);
-
-        $bundlesMap = $resolver->getBundlesMapForEnvironment('all');
-        $bundlesMapKeys = array_keys($bundlesMap);
-
-        // We have 3 bundles so the 3rd must be integration-bundle
-        $this->assertSame('integration-bundle', $bundlesMapKeys[2]);
-    }
-
-    /**
      * Provides a static bundles map to test against.
      *
      * @return array The bundles map

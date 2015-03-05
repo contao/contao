@@ -39,7 +39,7 @@ class ContaoUserProvider implements UserProviderInterface
             return FrontendUser::getInstance();
         }
 
-        throw new UsernameNotFoundException('Can only load "frontend" or "backend" user');
+        throw new UsernameNotFoundException('Can only load user "frontend" or "backend"');
     }
 
     /**

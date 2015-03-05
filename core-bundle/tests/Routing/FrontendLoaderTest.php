@@ -78,7 +78,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('html', $routes['contao_default']->getDefault('_format'));
         $this->assertEquals('.*', $routes['contao_default']->getRequirement('alias'));
         $this->assertEquals('html', $routes['contao_default']->getRequirement('_format'));
-        $this->assertEquals('[a-z]{2}(\-[A-Z]{2})?', $routes['contao_default']->getRequirement('_locale'));
+        $this->assertEquals('', $routes['contao_default']->getRequirement('_locale'));
     }
 
     /**
@@ -130,7 +130,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $routes['contao_default']->getDefault('_format'));
         $this->assertEquals('.*', $routes['contao_default']->getRequirement('alias'));
         $this->assertEquals('', $routes['contao_default']->getRequirement('_format'));
-        $this->assertEquals('[a-z]{2}(\-[A-Z]{2})?', $routes['contao_default']->getRequirement('_locale'));
+        $this->assertEquals('', $routes['contao_default']->getRequirement('_locale'));
     }
 
     /**

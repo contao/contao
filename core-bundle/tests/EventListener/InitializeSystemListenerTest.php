@@ -105,6 +105,7 @@ class InitializeSystemListenerTest extends TestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     * @expectedException \Symfony\Component\Routing\Exception\RouteNotFoundException
      */
     public function testRequestWithoutRoute()
     {
@@ -117,8 +118,6 @@ class InitializeSystemListenerTest extends TestCase
             $this->mockRouter('/index.html'),
             $this->getRootDir() . '/app'
         );
-
-        $this->setExpectedException('\Symfony\Component\Routing\Exception\RouteNotFoundException');
 
         $request = new Request();
 
