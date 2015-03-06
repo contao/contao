@@ -216,7 +216,7 @@ class BackendUser extends \User
 
 
 	/**
-	 * Redirect to contao/index.php if authentication fails
+	 * Redirect to the login screen if authentication fails
 	 *
 	 * @return boolean True if the user could be authenticated
 	 */
