@@ -87,7 +87,7 @@ class InitializeSystemListener
     {
         $this->setConstants('FE', 'console');
 
-        $this->boot();
+        $this->boot(null, null);
     }
 
     /**
@@ -118,7 +118,7 @@ class InitializeSystemListener
      * @param string $routeName The route name
      * @param string $basePath  The URL base path
      */
-    private function boot($routeName = '', $basePath = '')
+    private function boot($routeName, $basePath)
     {
         $this->includeHelpers();
 
@@ -142,7 +142,7 @@ class InitializeSystemListener
         ClassLoader::scanAndRegister();
 
         $this->setSwiftMailerDefaults();
-        $this->setRelativePath($routeName, $basePath);
+        $this->setRelativePath($basePath);
         $this->startSession();
         $this->setDefaultLanguage();
 
@@ -231,17 +231,11 @@ class InitializeSystemListener
     /**
      * Defines the relative path to the installation (see #5339).
      *
-     * @param string $routeName The route name
-     * @param string $basePath  The URL base path
+     * @param string $basePath he URL base path
      */
-    private function setRelativePath($routeName, $basePath)
+    private function setRelativePath($basePath)
     {
-        // FIXME: why not always use the request path? Security?
-        if (Config::has('websitePath') && 'contao_backend_install' !== $routeName) {
-            Environment::set('path', Config::get('websitePath'));
-        } elseif ('BE' === TL_MODE) {
-            Environment::set('path', $basePath);
-        }
+        Environment::set('path', $basePath);
 
         define('TL_PATH', Environment::get('path')); // backwards compatibility
     }

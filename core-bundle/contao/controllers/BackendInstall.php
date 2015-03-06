@@ -103,9 +103,6 @@ class BackendInstall extends \Backend
 			$this->setAuthCookie();
 		}
 
-		// Store the relative path
-		$this->storeRelativePath();
-
 		// Store the install tool password
 		if (\Input::post('FORM_SUBMIT') == 'tl_install')
 		{
@@ -695,23 +692,6 @@ class BackendInstall extends \Backend
 		$_SESSION['TL_INSTALL_EXPIRE'] = (time() + 300);
 		$_SESSION['TL_INSTALL_AUTH'] = md5(uniqid(mt_rand(), true) . (!\Config::get('disableIpCheck') ? \Environment::get('ip') : '') . session_id());
 		$this->setCookie('TL_INSTALL_AUTH', $_SESSION['TL_INSTALL_AUTH'], $_SESSION['TL_INSTALL_EXPIRE'], null, null, false, true);
-	}
-
-
-	/**
-	 * Store the relative path
-	 */
-	protected function storeRelativePath()
-	{
-		if (\Environment::get('path') === null)
-		{
-			return;
-		}
-
-		if (\Config::get('websitePath') !== \Environment::get('path'))
-		{
-			\Config::persist('websitePath', \Environment::get('path'));
-		}
 	}
 
 
