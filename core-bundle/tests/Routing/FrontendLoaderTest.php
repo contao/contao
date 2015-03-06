@@ -24,7 +24,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstantiation()
     {
-        $loader = new FrontendLoader(false, '');
+        $loader = new FrontendLoader(false, '', 'en');
 
         $this->assertInstanceOf('Contao\CoreBundle\Routing\FrontendLoader', $loader);
     }
