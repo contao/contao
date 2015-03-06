@@ -49,7 +49,7 @@ class InitializeSystemListener
     public function __construct(RouterInterface $router, $rootDir)
     {
         $this->router  = $router;
-        $this->rootDir = $rootDir;
+        $this->rootDir = dirname($rootDir);
     }
 
     /**
@@ -95,14 +95,13 @@ class InitializeSystemListener
      *
      * @param string $mode  The scope (BE or FE)
      * @param string $route The route
-     *
-     * @deprecated Deprecated since version 4.0, to be removed in version 5.0.
      */
     private function setConstants($mode, $route)
     {
+        // The constants are deprecated and will be removed in version 5.0.
         define('TL_MODE', $mode);
         define('TL_START', microtime(true));
-        define('TL_ROOT', dirname($this->rootDir));
+        define('TL_ROOT', $this->rootDir);
         define('TL_REFERER_ID', substr(md5(TL_START), 0, 8));
         define('TL_SCRIPT', $route);
 
@@ -129,7 +128,7 @@ class InitializeSystemListener
         set_exception_handler('__exception');
 
         // Log PHP errors
-        $this->iniSet('error_log', TL_ROOT . '/system/logs/error.log');
+        $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
 
         $this->includeBasicClasses();
 
@@ -221,7 +220,7 @@ class InitializeSystemListener
     {
         \Swift::init(function () {
             $preferences = \Swift_Preferences::getInstance();
-            $preferences->setTempDir(TL_ROOT . '/system/tmp')->setCacheType('disk');
+            $preferences->setTempDir($this->rootDir . '/system/tmp')->setCacheType('disk');
             $preferences->setCharset(Config::get('characterSet'));
         });
     }
@@ -278,7 +277,7 @@ class InitializeSystemListener
      */
     private function generateSymlinks(Config $config)
     {
-        if (!$config->isComplete() && !is_link(TL_ROOT . '/system/themes/flexible')) {
+        if (!$config->isComplete() && !is_link($this->rootDir . '/system/themes/flexible')) {
             $automator = new Automator();
             $automator->generateSymlinks();
         }
@@ -340,8 +339,8 @@ class InitializeSystemListener
             }
         }
 
-        if (file_exists(TL_ROOT . '/system/config/initconfig.php')) {
-            include TL_ROOT . '/system/config/initconfig.php';
+        if (file_exists($this->rootDir . '/system/config/initconfig.php')) {
+            include $this->rootDir . '/system/config/initconfig.php';
         }
     }
 
