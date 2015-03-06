@@ -22,7 +22,6 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
  */
 class ContainerScopeListener
 {
-    // FIXME: add tests
     /**
      * @var ContainerInterface
      */
