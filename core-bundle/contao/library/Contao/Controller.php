@@ -1110,6 +1110,7 @@ abstract class Controller extends \System
 			$arrParams['alias'] = ($arrRow['alias'] ?: $arrRow['id']) . $strParams . \Config::get('urlSuffix');
 		}
 
+		// Set the language
 		if ($strForceLang != '')
 		{
 			$arrParams['_locale'] = $strForceLang;

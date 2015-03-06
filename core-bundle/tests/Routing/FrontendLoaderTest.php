@@ -34,7 +34,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithoutLanguage()
     {
-        $loader     = new FrontendLoader(false, '.html');
+        $loader     = new FrontendLoader(false, '.html', 'en');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -55,7 +55,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWitLanguage()
     {
-        $loader     = new FrontendLoader(true, '.html');
+        $loader     = new FrontendLoader(true, '.html', 'en');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -76,7 +76,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithoutLanguageAndWithoutSuffix()
     {
-        $loader     = new FrontendLoader(false, '');
+        $loader     = new FrontendLoader(false, '', 'en');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -97,7 +97,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithLanguageAndWithoutSuffix()
     {
-        $loader     = new FrontendLoader(true, '');
+        $loader     = new FrontendLoader(true, '', 'en');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -118,7 +118,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSupportsContaoFrontend()
     {
-        $loader = new FrontendLoader(false, '');
+        $loader = new FrontendLoader(false, '', 'en');
 
         $this->assertTrue($loader->supports('.', 'bundles'));
     }
