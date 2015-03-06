@@ -1110,23 +1110,20 @@ abstract class Controller extends \System
 			$arrParams['alias'] = ($arrRow['alias'] ?: $arrRow['id']) . $strParams . \Config::get('urlSuffix');
 		}
 
-		if (\Config::get('addLanguageToUrl'))
+		if ($strForceLang != '')
 		{
-			if ($strForceLang != '')
-			{
-				$arrParams['_locale'] = $strForceLang;
-			}
-			elseif (isset($arrRow['language']) && $arrRow['type'] == 'root')
-			{
-				$arrParams['_locale'] = $arrRow['language'];
-			}
-			elseif (TL_MODE == 'FE')
-			{
-				/** @var \PageModel $objPage */
-				global $objPage;
+			$arrParams['_locale'] = $strForceLang;
+		}
+		elseif (isset($arrRow['language']) && $arrRow['type'] == 'root')
+		{
+			$arrParams['_locale'] = $arrRow['language'];
+		}
+		elseif (TL_MODE == 'FE')
+		{
+			/** @var \PageModel $objPage */
+			global $objPage;
 
-				$arrParams['_locale'] = $objPage->rootLanguage;
-			}
+			$arrParams['_locale'] = $objPage->rootLanguage;
 		}
 
 		$strUrl = $objRouter->generate('contao_frontend', $arrParams);
