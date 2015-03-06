@@ -33,15 +33,22 @@ class FrontendLoader extends Loader
     private $format;
 
     /**
+     * @var string
+     */
+    private $defaultLocale;
+
+    /**
      * Constructor.
      *
      * @param bool   $prependLocale Prepend the locale
      * @param string $format        The URL suffix
+     * @param string $defaultLocale The default locale
      */
-    public function __construct($prependLocale, $format)
+    public function __construct($prependLocale, $format, $defaultLocale)
     {
         $this->prependLocale = $prependLocale;
         $this->format        = isset($format[2]) ? substr($format, 1) : '';
+        $this->defaultLocale = $defaultLocale;
     }
 
     /**
@@ -66,6 +73,8 @@ class FrontendLoader extends Loader
             $pattern = '/{_locale}' . $pattern;
 
             $require['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
+        } else {
+            $defaults['_locale'] = $this->defaultLocale;
         }
 
         $routes = new RouteCollection();

@@ -55,6 +55,7 @@ services:
         arguments:
             - "%prepend_locale%"
             - "%url_suffix%"
+            - "%locale%"
         tags:
             - { name: routing.bundle_loader, priority: -250 }
 
