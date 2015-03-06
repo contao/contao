@@ -77,7 +77,7 @@ class InitializeSystemListener
 
         $this->setConstants($mode, $this->router->generate($routeName, $request->attributes->get('_route_params')));
 
-        $this->boot();
+        $this->boot($routeName, $request->getBasePath());
     }
 
     /**
@@ -114,8 +114,11 @@ class InitializeSystemListener
 
     /**
      * Boots the Contao framework.
+     *
+     * @param string $routeName The route name
+     * @param string $basePath  The URL base path
      */
-    private function boot()
+    private function boot($routeName = '', $basePath = '')
     {
         $this->includeHelpers();
 
@@ -139,7 +142,7 @@ class InitializeSystemListener
         ClassLoader::scanAndRegister();
 
         $this->setSwiftMailerDefaults();
-        $this->setRelativePath();
+        $this->setRelativePath($routeName, $basePath);
         $this->startSession();
         $this->setDefaultLanguage();
 
@@ -147,7 +150,7 @@ class InitializeSystemListener
         $objConfig = Config::getInstance();
 
         $this->generateSymlinks($objConfig);
-        $this->validateInstallation($objConfig);
+        $this->validateInstallation($objConfig, $routeName);
 
         Input::initialize();
 
@@ -227,13 +230,17 @@ class InitializeSystemListener
 
     /**
      * Defines the relative path to the installation (see #5339).
+     *
+     * @param string $routeName The route name
+     * @param string $basePath  The URL base path
      */
-    private function setRelativePath()
+    private function setRelativePath($routeName, $basePath)
     {
-        if (Config::has('websitePath') && '/contao/install' !== substr(TL_SCRIPT, -15)) {
+        // FIXME: why not always use the request path? Security?
+        if (Config::has('websitePath') && 'contao_backend_install' !== $routeName) {
             Environment::set('path', Config::get('websitePath'));
         } elseif ('BE' === TL_MODE) {
-            Environment::set('path', preg_replace('/\/contao\/[a-z]+$/i', '', TL_SCRIPT));
+            Environment::set('path', $basePath);
         }
 
         define('TL_PATH', Environment::get('path')); // backwards compatibility
@@ -286,11 +293,12 @@ class InitializeSystemListener
     /**
      * Validates the installation.
      *
-     * @param Config $config The config object
+     * @param Config $config    The config object
+     * @param string $routeName The route name
      */
-    private function validateInstallation(Config $config)
+    private function validateInstallation(Config $config, $routeName)
     {
-        if ('cli' === PHP_SAPI || '/contao/install' === substr(TL_SCRIPT, -15)) {
+        if ('cli' === PHP_SAPI || 'contao_backend_install' === $routeName) {
             return;
         }
 
