@@ -101,7 +101,7 @@
         onComplete: function(txt) {
           if (!txt) txt = 0;
           if (parseInt(txt) < (Date.now()/1000 - 300)) {
-            new Request({url:'system/cron/cron.php'}).send();
+            new Request({url:'<?= $this->route('contao_cron') ?>'}).send();
           }
         }
       }).send();
