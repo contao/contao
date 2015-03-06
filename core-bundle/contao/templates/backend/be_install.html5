@@ -1305,7 +1305,7 @@ Library.
                     <p><?= $GLOBALS['TL_LANG']['tl_install']['repository'][1] ?></p>
                     <?php if (!$this->hasComposer): ?>
                       <div class="tl_submit_container">
-                        <a href="contao/main.php?do=repository_catalog&amp;view=composer" class="tl_submit"><?= $GLOBALS['TL_LANG']['tl_install']['repositoryInstall'] ?></a>
+                        <a href="<?= $this->route('contao_backend', array('do'=>'repository_catalog', 'view'=>'composer')) ?>" class="tl_submit"><?= $GLOBALS['TL_LANG']['tl_install']['repositoryInstall'] ?></a>
                       </div>
                     <?php endif; ?>
                   </div>
@@ -1325,7 +1325,7 @@ Library.
         <?php endif; ?>
       <?php endif; ?>
 
-      <p id="go_to_login"><a href="contao/login" title="<?= $GLOBALS['TL_LANG']['tl_install']['beLogin'] ?>"><?= $GLOBALS['TL_LANG']['tl_install']['beLogin'] ?></a></p>
+      <p id="go_to_login"><a href="<?= $this->route('contao_backend_login') ?>" title="<?= $GLOBALS['TL_LANG']['tl_install']['beLogin'] ?>"><?= $GLOBALS['TL_LANG']['tl_install']['beLogin'] ?></a></p>
 
     </div>
 
