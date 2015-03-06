@@ -58,12 +58,6 @@ abstract class Template extends \Controller
 	 */
 	protected $arrData = array();
 
-	/**
-	 * Compile status
-	 * @var bool
-	 */
-	protected $blnCompiled = false;
-
 
 	/**
 	 * Create a new template object
@@ -308,11 +302,6 @@ abstract class Template extends \Controller
 	 */
 	protected function compile()
 	{
-		if ($this->blnCompiled)
-		{
-			return;
-		}
-
 		if (!$this->strBuffer)
 		{
 			$this->strBuffer = $this->parse();
@@ -320,8 +309,6 @@ abstract class Template extends \Controller
 
 		// Minify the markup
 		$this->strBuffer = $this->minifyHtml($this->strBuffer);
-
-		$this->blnCompiled = true;
 	}
 
 

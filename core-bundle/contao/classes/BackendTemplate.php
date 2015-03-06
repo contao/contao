@@ -54,11 +54,6 @@ class BackendTemplate extends \Template
 	 */
 	protected function compile()
 	{
-		if ($this->blnCompiled)
-		{
-			return;
-		}
-
 		// User agent class (see #3074 and #6277)
 		$this->ua = \Environment::get('agent')->class;
 

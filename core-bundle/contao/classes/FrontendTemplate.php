@@ -99,11 +99,6 @@ class FrontendTemplate extends \Template
 	 */
 	protected function compile($blnCheckRequest=false)
 	{
-		if ($this->blnCompiled)
-		{
-			return;
-		}
-
 		$this->keywords = '';
 		$arrKeywords = array_map('trim', explode(',', $GLOBALS['TL_KEYWORDS']));
 
