@@ -4,6 +4,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
+    contao.listener.container_scope:
+        class: Contao\CoreBundle\EventListener\ContainerScopeListener
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 254 }
+            - { name: kernel.event_listener, event: kernel.finish_request, method: onKernelFinishRequest, priority: -254 }
+
     contao.listener.initialize_system:
         class: Contao\CoreBundle\EventListener\InitializeSystemListener
         arguments:
@@ -15,24 +23,16 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
             - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
-    contao.listener.container_scope:
-        class: Contao\CoreBundle\EventListener\ContainerScopeListener
-        arguments:
-            - "@service_container"
-        tags:
-            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 254 }
-            - { name: kernel.event_listener, event: kernel.finish_request, method: onKernelFinishRequest, priority: -254 }
-
     contao.listener.output_from_cache:
         class: Contao\CoreBundle\EventListener\OutputFromCacheListener
         tags:
-            # Priority must be lower than the one of the Contao bootstrap listener.
+            # Priority must be lower than the one of the Contao initialize system listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 26 }
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
         tags:
-            # Priority must be lower than the one of the Contao bootstrap listener.
+            # Priority must be lower than the one of the Contao initialize system listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
 
     contao.routing.backend_loader:
