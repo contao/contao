@@ -12,9 +12,9 @@ namespace Contao\CoreBundle\Test\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\FrontendUser;
-use Contao\InvalidUser;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Tests the ContaoToken class.
@@ -37,17 +37,46 @@ class ContaoTokenTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
+     * Tests a front end user.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testAuthentication()
+    public function testFrontendUser()
+    {
+        $token = new ContaoToken(FrontendUser::getInstance());
+
+        $this->assertTrue($token->isAuthenticated());
+        $this->assertEquals('', $token->getCredentials());
+
+        $this->assertEquals(
+            [
+                new Role('ROLE_MEMBER'),
+            ],
+            $token->getRoles()
+        );
+    }
+
+    /**
+     * Tests a back end user.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testBackendUser()
     {
         $token = new ContaoToken(BackendUser::getInstance());
 
         $this->assertTrue($token->isAuthenticated());
         $this->assertEquals('', $token->getCredentials());
+
+        $this->assertEquals(
+            [
+                new Role('ROLE_USER'),
+                new Role('ROLE_ADMIN'),
+            ],
+            $token->getRoles()
+        );
     }
 
     /**
@@ -57,7 +86,7 @@ class ContaoTokenTest extends TestCase
      * @preserveGlobalState disabled
      * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
-    public function testInvalidUser()
+    public function testUnauthenticatedUser()
     {
         /** @var FrontendUser|object $user */
         $user = FrontendUser::getInstance();
