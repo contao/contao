@@ -231,7 +231,7 @@ class InitializeSystemListener
     /**
      * Defines the relative path to the installation (see #5339).
      *
-     * @param string $basePath he URL base path
+     * @param string $basePath The URL base path
      */
     private function setRelativePath($basePath)
     {
