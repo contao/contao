@@ -126,7 +126,7 @@
         <source>Please set the document root to the &lt;code&gt;web/&lt;/code&gt; subfolder. This is usually done in the domain routing section of your server administration panel or in the vhosts file of your web server.</source>
       </trans-unit>
       <trans-unit id="XPT.insecureExplain">
-        <source>Contao 4 does not rely on &lt;code&gt;.htaccess&lt;/code&gt; files anymore and uses a public subfolder as document root instead. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensible data such as configuration files.</source>
+        <source>Contao 4 does no longer rely on &lt;code&gt;.htaccess&lt;/code&gt; files to protect folders and uses a public subfolder as document root instead. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensible data such as configuration files.</source>
       </trans-unit>
     </body>
   </file>
