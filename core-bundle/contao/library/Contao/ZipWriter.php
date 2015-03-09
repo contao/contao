@@ -112,12 +112,12 @@ class ZipWriter
 	{
 		if (is_resource($this->resFile))
 		{
-			@fclose($this->resFile);
+			fclose($this->resFile);
 		}
 
 		if (file_exists($this->strTemp))
 		{
-			@unlink($this->strTemp);
+			unlink($this->strTemp);
 		}
 	}
 
@@ -187,8 +187,8 @@ class ZipWriter
 		$intOffset = @ftell($this->resFile);
 
 		// Add file to archive
-		@fputs($this->resFile, implode('', $arrFile));
-		@fputs($this->resFile, $strData);
+		fputs($this->resFile, implode('', $arrFile));
+		fputs($this->resFile, $strData);
 
 		// Start central directory
 		$arrHeader['header_signature']          = self::CENTRAL_DIR_START;
@@ -233,11 +233,11 @@ class ZipWriter
 		$arrArchive['zipfile_comment']        = '';
 
 		// Add central directory and archive header (do not change this order)
-		@fputs($this->resFile, $this->strCentralDir);
-		@fputs($this->resFile, implode('', $arrArchive));
+		fputs($this->resFile, $this->strCentralDir);
+		fputs($this->resFile, implode('', $arrArchive));
 
 		// Close the file before renaming it
-		@fclose($this->resFile);
+		fclose($this->resFile);
 
 		// Check if target file exists
 		if (!file_exists(TL_ROOT . '/' . $this->strFile))

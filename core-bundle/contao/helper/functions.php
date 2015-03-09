@@ -164,7 +164,7 @@ function die_nicely($strTemplate, $strFallback)
  */
 function log_message($strMessage, $strLog='error.log')
 {
-	@error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, TL_ROOT . '/system/logs/' . $strLog);
+	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, TL_ROOT . '/system/logs/' . $strLog);
 }
 
 

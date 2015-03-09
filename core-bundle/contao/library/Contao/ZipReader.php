@@ -154,7 +154,7 @@ class ZipReader
 	 */
 	public function __destruct()
 	{
-		@fclose($this->resFile);
+		fclose($this->resFile);
 	}
 
 
@@ -367,11 +367,11 @@ class ZipReader
 		}
 
 		// Get extra field length
-		@fseek($this->resFile, 24, SEEK_CUR);
+		fseek($this->resFile, 24, SEEK_CUR);
 		$arrEFL = unpack('v', @fread($this->resFile, 2));
 
 		// Reposition pointer
-		@fseek($this->resFile, ($this->arrFiles[$this->intIndex]['file_name_length'] + $arrEFL[1]), SEEK_CUR);
+		fseek($this->resFile, ($this->arrFiles[$this->intIndex]['file_name_length'] + $arrEFL[1]), SEEK_CUR);
 
 		// Empty file
 		if ($this->arrFiles[$this->intIndex]['compressed_size'] < 1)
@@ -463,7 +463,7 @@ class ZipReader
 		while ($fseek != -1 && ($pos = strpos($strBuffer, self::CENTRAL_DIR_END)) === false);
 
 		// Reposition pointer
-		@fseek($this->resFile, ($intOffset + $pos), SEEK_END);
+		fseek($this->resFile, ($intOffset + $pos), SEEK_END);
 		$strSignature = @fread($this->resFile, 4);
 
 		// Read archive header
@@ -492,7 +492,7 @@ class ZipReader
 		$this->arrHeader = $arrHeader;
 
 		// Reposition pointer to begin of the central directory
-		@fseek($this->resFile, $this->arrHeader['offset_start_cd'], SEEK_SET);
+		fseek($this->resFile, $this->arrHeader['offset_start_cd'], SEEK_SET);
 		$strSignature = @fread($this->resFile, 4);
 
 		// Build file list
