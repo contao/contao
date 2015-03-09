@@ -125,11 +125,8 @@
       <trans-unit id="XPT.insecureFix">
         <source>Please set the document root to the &lt;code&gt;web/&lt;/code&gt; subfolder. This is usually done in the domain routing section of your server administration panel or in the vhosts file of your web server.</source>
       </trans-unit>
-      <trans-unit id="XPT.insecureExplainOne">
-        <source>Contao 4 does not rely on &lt;code&gt;.htaccess&lt;/code&gt; files anymore and uses a public subfolder as document root instead. If you cannot set the document root to this subfolder, you can bypass this check by adding the following line to your local configuration file:</source>
-      </trans-unit>
-      <trans-unit id="XPT.insecureExplainTwo">
-        <source>However, please note that you &lt;strong&gt;must take additional measures&lt;/strong&gt; to secure your installation in this case. If you do not, any file, including user and configuration files, will be publicy accessible!</source>
+      <trans-unit id="XPT.insecureExplain">
+        <source>Contao 4 does not rely on &lt;code&gt;.htaccess&lt;/code&gt; files anymore and uses a public subfolder as document root instead. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensible data such as configuration files.</source>
       </trans-unit>
     </body>
   </file>
