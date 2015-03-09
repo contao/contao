@@ -50,14 +50,14 @@ class Image
 	/**
 	 * The target width
 	 *
-	 * @var int
+	 * @var integer
 	 */
 	protected $targetWidth = 0;
 
 	/**
 	 * The target height
 	 *
-	 * @var int
+	 * @var integer
 	 */
 	protected $targetHeight = 0;
 
@@ -85,7 +85,7 @@ class Image
 	/**
 	 * Zoom level (between 0 and 100)
 	 *
-	 * @var int
+	 * @var integer
 	 */
 	protected $zoomLevel = 0;
 
