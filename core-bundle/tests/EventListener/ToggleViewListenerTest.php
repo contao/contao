@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Tests the ToggleViewListener class.
  *
- * @author Andreas Schempp <https://www.terminal42.ch>
+ * @author Andreas Schempp <https:/github.com/aschempp>
  */
 class ToggleViewListenerTest extends TestCase
 {
@@ -103,6 +103,33 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
+     * Tests the cookie path matches the request path
+     */
+    public function testCookiePath()
+    {
+        /** @var HttpKernelInterface $kernel */
+        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $request  = $this->getMock(
+            'Symfony\Component\HttpFoundation\Request',
+            ['getBasePath'],
+            [['toggle_view' => 'desktop']]
+        );
+
+        $request->expects($this->atLeastOnce())->method('getBasePath')->will($this->returnValue('/foo/bar'));
+
+        $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener = new ToggleViewListener();
+
+        $listener->onKernelRequest($event);
+
+        $this->assertTrue($event->hasResponse());
+
+        $cookie = $this->getCookie($event->getResponse());
+
+        $this->assertEquals('/foo/bar', $cookie->getPath());
+    }
+
+    /**
      * Check if response cookie exists and has the correct values.
      *
      * @param Response $response
@@ -110,21 +137,30 @@ class ToggleViewListenerTest extends TestCase
      */
     private function assertCookieValue(Response $response, $expectedValue)
     {
-        $hasCookie   = false;
-        $actualValue = null;
+        $cookie = $this->getCookie($response);
 
+        $this->assertNotNull($cookie);
+        $this->assertEquals($expectedValue, $cookie->getValue());
+    }
+
+    /**
+     * Find the TL_VIEW cookie in a Respone
+     *
+     * @param Response $response
+     *
+     * @return null|Cookie
+     */
+    private function getCookie(Response $response)
+    {
         /** @var Cookie[] $cookies */
         $cookies = $response->headers->getCookies();
 
         foreach ($cookies as $cookie) {
             if ('TL_VIEW' === $cookie->getName()) {
-                $hasCookie   = true;
-                $actualValue = $cookie->getValue();
-                break;
+                return $cookie;
             }
         }
 
-        $this->assertTrue($hasCookie);
-        $this->assertEquals($expectedValue, $actualValue);
+        return null;
     }
 }
