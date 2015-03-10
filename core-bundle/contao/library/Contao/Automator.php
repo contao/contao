@@ -583,14 +583,16 @@ class Automator extends \System
 				continue;
 			}
 
-			$strPath = $bundle->getContaoResourcesPath() . '/themes';
+			$strDir = $bundle->getContaoResourcesPath() . '/themes';
 
-			if (is_dir($strPath))
+			if (is_dir($strDir))
 			{
-				foreach (scan($strPath) as $strTheme)
+				foreach (scan($strDir) as $strTheme)
 				{
-					if (is_dir($strPath . '/' . $strTheme))
+					if (is_dir($strDir . '/' . $strTheme))
 					{
+						$strPath = $strDir;
+
 						if (strpos($strPath, '../') !== false)
 						{
 							$strPath = realpath($strPath);
