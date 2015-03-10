@@ -103,22 +103,21 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests the cookie path matches the request path
+     * Tests the cookie path.
      */
     public function testCookiePath()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request  = $this->getMock(
-            'Symfony\Component\HttpFoundation\Request',
-            ['getBasePath'],
-            [['toggle_view' => 'desktop']]
-        );
+        $kernel     = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $request    = new Request(['toggle_view' => 'desktop']);
+        $event      = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener   = new ToggleViewListener();
+        $reflection = new \ReflectionClass($request);
 
-        $request->expects($this->atLeastOnce())->method('getBasePath')->will($this->returnValue('/foo/bar'));
-
-        $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener();
+        // Set the base path to /foo/bar
+        $basePath = $reflection->getProperty('basePath');
+        $basePath->setAccessible(true);
+        $basePath->setValue($request, '/foo/bar');
 
         $listener->onKernelRequest($event);
 
@@ -130,10 +129,10 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Check if response cookie exists and has the correct values.
+     * Checks if a cookie exists and has the correct value.
      *
-     * @param Response $response
-     * @param string   $expectedValue
+     * @param Response $response      The response object
+     * @param string   $expectedValue The expected value
      */
     private function assertCookieValue(Response $response, $expectedValue)
     {
@@ -144,11 +143,11 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Find the TL_VIEW cookie in a Response
+     * Finds the TL_VIEW cookie in a respinse.
      *
-     * @param Response $response
+     * @param Response $response The response object
      *
-     * @return null|Cookie
+     * @return Cookie|null The cookie object or null
      */
     private function getCookie(Response $response)
     {
