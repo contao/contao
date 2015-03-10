@@ -41,9 +41,9 @@ class ToggleViewListener
         $response = new RedirectResponse($referer, 303);
 
         if ('mobile' === $state) {
-            $cookie = new Cookie('TL_VIEW', 'mobile', 0);
+            $cookie = new Cookie('TL_VIEW', 'mobile', 0, $request->getBasePath());
         } else {
-            $cookie = new Cookie('TL_VIEW', 'desktop', 0);
+            $cookie = new Cookie('TL_VIEW', 'desktop', 0, $request->getBasePath());
         }
 
         $response->headers->setCookie($cookie);
