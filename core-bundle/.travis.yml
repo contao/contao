@@ -9,7 +9,7 @@ sudo: false
 
 install:
     - composer self-update
-    - composer install --prefer-source --dev
+    - composer install --prefer-source
 
 script:
     - ./vendor/bin/phpunit --coverage-clover=coverage.clover
