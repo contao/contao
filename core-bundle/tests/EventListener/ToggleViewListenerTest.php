@@ -144,7 +144,7 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Find the TL_VIEW cookie in a Respone
+     * Find the TL_VIEW cookie in a Response
      *
      * @param Response $response
      *
