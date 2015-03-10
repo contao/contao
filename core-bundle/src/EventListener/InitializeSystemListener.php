@@ -301,7 +301,7 @@ class InitializeSystemListener
         }
 
         // Show the "insecure document root" message
-        if ('/web' === substr(Environment::get('path'), -4) && !Config::get('ignoreInsecureRoot')) {
+        if ('/web' === substr(Environment::get('path'), -4)) {
             die_nicely('be_insecure', 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
         }
 

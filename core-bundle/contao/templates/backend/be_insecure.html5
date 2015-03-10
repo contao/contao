@@ -40,9 +40,7 @@ $lang = (object) $GLOBALS['TL_LANG']['XPT'];
       <p><?= $lang->insecureFix ?></p>
 
       <h3><?= $lang->more ?></h3>
-      <p><?= $lang->insecureExplainOne ?></p>
-      <pre>$GLOBALS['TL_CONFIG']['ignoreInsecureRoot'] = true;</pre>
-      <p><?= $lang->insecureExplainTwo ?></p>
+      <p><?= $lang->insecureExplain ?></p>
 
     </div>
 
