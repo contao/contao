@@ -22,7 +22,7 @@
         "symfony/console": "~2.6",
         "symfony/finder": "~2.6",
         "symfony/framework-bundle": "~2.6",
-        "symfony/swiftmailer-bundle": "~2.6",
+        "symfony/swiftmailer-bundle": "~2.3",
         "tecnick.com/tcpdf": "~6.0",
         "true/punycode": "~1.0",
         "twig/twig": "~1.12,>=1.12.3"
