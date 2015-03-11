@@ -13,6 +13,9 @@
         "Symfony\\Bundle\\SecurityBundle\\SecurityBundle": {
             "environments": ["all"]
         },
+        "Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle": {
+            "environments": ["all"]
+        },
         "Symfony\\Bundle\\TwigBundle\\TwigBundle": {
             "environments": ["all"]
         },

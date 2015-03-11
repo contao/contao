@@ -17,6 +17,7 @@ use Contao\Environment;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
@@ -73,13 +74,10 @@ class InitializeSystemListener
 
         $routeName = $request->attributes->get('_route');
 
-        if ($request->attributes->has('_scope') && 'backend' === $request->attributes->get('_scope')) {
-            $mode = 'BE';
-        } else {
-            $mode = 'FE';
-        }
-
-        $this->setConstants($mode, $this->router->generate($routeName, $request->attributes->get('_route_params')));
+        $this->setConstants(
+            $this->getScopeFromRequest($request),
+            $this->router->generate($routeName, $request->attributes->get('_route_params'))
+        );
 
         $this->boot($routeName, $request->getBasePath());
     }
@@ -95,15 +93,31 @@ class InitializeSystemListener
     }
 
     /**
+     * Returns the request scope.
+     *
+     * @param Request $request The request object
+     *
+     * @return string The request scope
+     */
+    private function getScopeFromRequest(Request $request)
+    {
+        if ($request->attributes->has('_scope') && 'backend' === $request->attributes->get('_scope')) {
+            return 'BE';
+        }
+
+        return 'FE';
+    }
+
+    /**
      * Sets the Contao constants.
      *
-     * @param string $mode  The scope (BE or FE)
+     * @param string $scope The scope (BE or FE)
      * @param string $route The route
      */
-    private function setConstants($mode, $route)
+    private function setConstants($scope, $route)
     {
         // The constants are deprecated and will be removed in version 5.0.
-        define('TL_MODE', $mode);
+        define('TL_MODE', $scope);
         define('TL_START', microtime(true));
         define('TL_ROOT', $this->rootDir);
         define('TL_REFERER_ID', substr(md5(TL_START), 0, 8));
@@ -145,7 +159,6 @@ class InitializeSystemListener
         // Register the class loader
         ClassLoader::scanAndRegister();
 
-        $this->setSwiftMailerDefaults();
         $this->setRelativePath($basePath);
         $this->startSession();
         $this->setDefaultLanguage();
@@ -171,6 +184,17 @@ class InitializeSystemListener
     }
 
     /**
+     * Includes the helper files
+     */
+    private function includeHelpers()
+    {
+        require __DIR__ . '/../../contao/helper/functions.php';
+        require __DIR__ . '/../../contao/config/constants.php';
+        require __DIR__ . '/../../contao/helper/interface.php';
+        require __DIR__ . '/../../contao/helper/exception.php';
+    }
+
+    /**
      * Tries to set a php.ini configuration option.
      *
      * @param string $key   The key
@@ -181,17 +205,6 @@ class InitializeSystemListener
         if (function_exists('ini_set')) {
             ini_set($key, $value);
         }
-    }
-
-    /**
-     * Includes the helper files
-     */
-    private function includeHelpers()
-    {
-        require __DIR__ . '/../../contao/helper/functions.php';
-        require __DIR__ . '/../../contao/config/constants.php';
-        require __DIR__ . '/../../contao/helper/interface.php';
-        require __DIR__ . '/../../contao/helper/exception.php';
     }
 
     /**
@@ -218,18 +231,6 @@ class InitializeSystemListener
             require_once __DIR__ . '/../../contao/library/Contao/ModuleLoader.php';
             class_alias('Contao\\ModuleLoader', 'ModuleLoader');
         }
-    }
-
-    /**
-     * Overrides the SwiftMailer defaults.
-     */
-    private function setSwiftMailerDefaults()
-    {
-        \Swift::init(function () {
-            $preferences = \Swift_Preferences::getInstance();
-            $preferences->setTempDir($this->rootDir . '/system/tmp')->setCacheType('disk');
-            $preferences->setCharset(Config::get('characterSet'));
-        });
     }
 
     /**
@@ -268,8 +269,6 @@ class InitializeSystemListener
                     break;
                 }
             }
-
-            unset($langs, $lang);
         }
 
         $GLOBALS['TL_LANGUAGE'] = $_SESSION['TL_LANGUAGE'];
