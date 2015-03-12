@@ -79,6 +79,11 @@ class Files
 	{
 		$this->validate($strDirectory);
 
+		if (file_exists(TL_ROOT . '/' . $strDirectory))
+		{
+			return true;
+		}
+
 		return mkdir(TL_ROOT . '/' . $strDirectory);
 	}
 
@@ -93,6 +98,11 @@ class Files
 	public function rmdir($strDirectory)
 	{
 		$this->validate($strDirectory);
+
+		if (!file_exists(TL_ROOT . '/' . $strDirectory))
+		{
+			return true;
+		}
 
 		return rmdir(TL_ROOT. '/' . $strDirectory);
 	}
