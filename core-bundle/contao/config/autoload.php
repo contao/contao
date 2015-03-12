@@ -255,6 +255,7 @@ TemplateLoader::addFiles(array
 (
 	'analytics_google'    => 'vendor/contao/core-bundle/contao/templates/analytics',
 	'analytics_piwik'     => 'vendor/contao/core-bundle/contao/templates/analytics',
+	'be_ace'              => 'vendor/contao/core-bundle/contao/templates/backend',
 	'be_changelog'        => 'vendor/contao/core-bundle/contao/templates/backend',
 	'be_confirm'          => 'vendor/contao/core-bundle/contao/templates/backend',
 	'be_diff'             => 'vendor/contao/core-bundle/contao/templates/backend',
@@ -283,6 +284,9 @@ TemplateLoader::addFiles(array
 	'be_rebuild_index'    => 'vendor/contao/core-bundle/contao/templates/backend',
 	'be_referer'          => 'vendor/contao/core-bundle/contao/templates/backend',
 	'be_switch'           => 'vendor/contao/core-bundle/contao/templates/backend',
+	'be_tinyFlash'        => 'vendor/contao/core-bundle/contao/templates/backend',
+	'be_tinyMCE'          => 'vendor/contao/core-bundle/contao/templates/backend',
+	'be_tinyNews'         => 'vendor/contao/core-bundle/contao/templates/backend',
 	'be_unavailable'      => 'vendor/contao/core-bundle/contao/templates/backend',
 	'be_welcome'          => 'vendor/contao/core-bundle/contao/templates/backend',
 	'be_widget'           => 'vendor/contao/core-bundle/contao/templates/backend',
