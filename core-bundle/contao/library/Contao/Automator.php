@@ -128,16 +128,10 @@ class Automator extends \System
 		// Walk through the subfolders
 		foreach (scan(TL_ROOT . '/assets/images') as $dir)
 		{
-			if ($dir != 'index.html' && strncmp($dir, '.', 1) !== 0)
+			if (strncmp($dir, '.', 1) !== 0)
 			{
-				// Purge the folder
 				$objFolder = new \Folder('assets/images/' . $dir);
 				$objFolder->purge();
-
-				// Restore the index.html file
-				$objFile = new \File('assets/images/' . $dir . '/index.html');
-				$objFile->write("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Blank page</title>\n</head>\n<body>\n</body>\n</html>");
-				$objFile->close();
 			}
 		}
 
