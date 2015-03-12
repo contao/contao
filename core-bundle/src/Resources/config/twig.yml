@@ -1,8 +1,0 @@
-twig:
-    debug:            "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
-
-framework:
-    templating:
-        engines: ['twig']
-    default_locale: "%locale%"
