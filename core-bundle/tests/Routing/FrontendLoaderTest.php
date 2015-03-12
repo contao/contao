@@ -120,6 +120,6 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $loader = new FrontendLoader(false, '', 'en');
 
-        $this->assertTrue($loader->supports('.', 'bundles'));
+        $this->assertTrue($loader->supports('.', 'contao_frontend'));
     }
 }

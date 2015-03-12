@@ -54,33 +54,4 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->has('contao.listener.output_from_cache'));
         $this->assertTrue($container->has('contao.listener.add_to_search_index'));
     }
-
-    /**
-     * Tests prepending configuration files to the container.
-     */
-    public function testPrepend()
-    {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.bundles', ['DoctrineBundle' => '']);
-
-        $this->extension->prepend($container);
-
-        $this->assertNotEmpty($container->getExtensionConfig('doctrine'));
-    }
-
-    /**
-     * Tests prepending an empty or invalid configuration file.
-     *
-     * @expectedException \LogicException
-     */
-    public function testInvalidFile()
-    {
-        $container  = new ContainerBuilder();
-        $reflection = new \ReflectionClass($this->extension);
-
-        // Set the root directory
-        $prependConfig = $reflection->getMethod('prependConfig');
-        $prependConfig->setAccessible(true);
-        $prependConfig->invoke($this->extension, '../../../tests/Fixtures/app/config/config.yml', $container);
-    }
 }
