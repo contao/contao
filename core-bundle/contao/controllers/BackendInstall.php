@@ -62,7 +62,7 @@ class BackendInstall extends \Backend
 		$this->import('Files');
 
 		// Check whether the PHP process is allowed to write files
-		if (!$this->Files->is_writeable('system/initialize.php'))
+		if (!$this->Files->is_writeable(str_replace(TL_ROOT . '/', '', __FILE__)))
 		{
 			$this->outputAndExit();
 		}

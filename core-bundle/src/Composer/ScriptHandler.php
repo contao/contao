@@ -33,6 +33,7 @@ class ScriptHandler
         static::addFilesDir($rootDir, $event);
         static::addSystemDirs($rootDir, $event);
         static::addTemplatesDir($rootDir, $event);
+        static::addWebDirs($rootDir, $event);
     }
 
     /**
@@ -43,14 +44,6 @@ class ScriptHandler
      */
     private static function addAssetDirs($rootDir, Event $event)
     {
-        $fs = new Filesystem();
-
-        // Assets
-        if (!$fs->exists($rootDir . '/assets')) {
-            $fs->mkdir($rootDir . '/assets');
-            $event->getIO()->write("Created the assets directory");
-        }
-
         static::addIgnoredDir('assets/css', $rootDir, $event);
         static::addIgnoredDir('assets/images', $rootDir, $event);
         static::addIgnoredDir('assets/js', $rootDir, $event);
@@ -68,7 +61,7 @@ class ScriptHandler
 
         if (!$fs->exists($rootDir . '/files')) {
             $fs->mkdir($rootDir . '/files');
-            $event->getIO()->write("Created the files directory");
+            $event->getIO()->write("Created the <info>files</info> directory");
         }
     }
 
@@ -84,7 +77,7 @@ class ScriptHandler
 
         if (!$fs->exists($rootDir . '/system')) {
             $fs->mkdir($rootDir . '/system');
-            $event->getIO()->write("Created the system directory");
+            $event->getIO()->write("Created the <info>system</info> directory");
         }
 
         static::addIgnoredDir('system/cache', $rootDir, $event);
@@ -107,8 +100,28 @@ class ScriptHandler
 
         if (!$fs->exists($rootDir . '/templates')) {
             $fs->mkdir($rootDir . '/templates');
-            $event->getIO()->write("Created the system directory");
+            $event->getIO()->write("Created the <info>templates</info> directory");
         }
+    }
+
+    /**
+     * Adds the web directories.
+     *
+     * @param string $rootDir The root directory
+     * @param Event  $event   The event boject
+     */
+    private static function addWebDirs($rootDir, Event $event)
+    {
+        $fs = new Filesystem();
+
+        static::addIgnoredDir('web/share', $rootDir, $event);
+
+        if (!$fs->exists($rootDir . '/web/system')) {
+            $fs->mkdir($rootDir . '/system');
+            $event->getIO()->write("Created the <info>web/system</info> directory");
+        }
+
+        static::addIgnoredDir('web/system/cron', $rootDir, $event);
     }
 
     /**
@@ -124,7 +137,7 @@ class ScriptHandler
 
         if (!$fs->exists("$rootDir/$path")) {
             $fs->mkdir("$rootDir/$path");
-            $event->getIO()->write("Created the $path directory");
+            $event->getIO()->write("Created the <info>$path</info> directory");
         }
 
         if (!$fs->exists("$rootDir/$path/.gitignore")) {
@@ -132,7 +145,7 @@ class ScriptHandler
                 "$rootDir/$path/.gitignore",
                 "# Create the folder and ignore its content\n*\n!.gitignore\n"
             );
-            $event->getIO()->write("Added the $path/.gitignore file");
+            $event->getIO()->write("Added the <info>$path/.gitignore</info> file");
         }
     }
 }
