@@ -170,6 +170,15 @@ class GdImage
 			$extension = 'png';
 		}
 
+		// Get the relative path
+		$folder = str_replace(TL_ROOT . '/', '', dirname($path));
+
+		// Create the parent folder
+		if (!is_dir(TL_ROOT . '/' . $folder))
+		{
+			new \Folder($folder);
+		}
+
 		// Create the new image
 		switch ($extension)
 		{
