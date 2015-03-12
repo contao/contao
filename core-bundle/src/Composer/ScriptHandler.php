@@ -29,11 +29,11 @@ class ScriptHandler
     {
         $rootDir = getcwd();
 
-        static::addAssetDirs($rootDir, $event);
-        static::addFilesDir($rootDir, $event);
-        static::addSystemDirs($rootDir, $event);
-        static::addTemplatesDir($rootDir, $event);
-        static::addWebDirs($rootDir, $event);
+        self::addAssetDirs($rootDir, $event);
+        self::addFilesDir($rootDir, $event);
+        self::addSystemDirs($rootDir, $event);
+        self::addTemplatesDir($rootDir, $event);
+        self::addWebDirs($rootDir, $event);
     }
 
     /**
@@ -44,9 +44,9 @@ class ScriptHandler
      */
     private static function addAssetDirs($rootDir, Event $event)
     {
-        static::addIgnoredDir('assets/css', $rootDir, $event);
-        static::addIgnoredDir('assets/images', $rootDir, $event);
-        static::addIgnoredDir('assets/js', $rootDir, $event);
+        self::addIgnoredDir('assets/css', $rootDir, $event);
+        self::addIgnoredDir('assets/images', $rootDir, $event);
+        self::addIgnoredDir('assets/js', $rootDir, $event);
     }
 
     /**
@@ -80,12 +80,12 @@ class ScriptHandler
             $event->getIO()->write("Created the <info>system</info> directory");
         }
 
-        static::addIgnoredDir('system/cache', $rootDir, $event);
-        static::addIgnoredDir('system/config', $rootDir, $event);
-        static::addIgnoredDir('system/logs', $rootDir, $event);
-        static::addIgnoredDir('system/modules', $rootDir, $event);
-        static::addIgnoredDir('system/themes', $rootDir, $event);
-        static::addIgnoredDir('system/tmp', $rootDir, $event);
+        self::addIgnoredDir('system/cache', $rootDir, $event);
+        self::addIgnoredDir('system/config', $rootDir, $event);
+        self::addIgnoredDir('system/logs', $rootDir, $event);
+        self::addIgnoredDir('system/modules', $rootDir, $event);
+        self::addIgnoredDir('system/themes', $rootDir, $event);
+        self::addIgnoredDir('system/tmp', $rootDir, $event);
     }
 
     /**
@@ -114,14 +114,14 @@ class ScriptHandler
     {
         $fs = new Filesystem();
 
-        static::addIgnoredDir('web/share', $rootDir, $event);
+        self::addIgnoredDir('web/share', $rootDir, $event);
 
         if (!$fs->exists($rootDir . '/web/system')) {
             $fs->mkdir($rootDir . '/system');
             $event->getIO()->write("Created the <info>web/system</info> directory");
         }
 
-        static::addIgnoredDir('web/system/cron', $rootDir, $event);
+        self::addIgnoredDir('web/system/cron', $rootDir, $event);
     }
 
     /**
