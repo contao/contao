@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\FrontendCron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -40,6 +41,8 @@ class FrontendController extends Controller
      * Runs the command scheduler.
      *
      * @return Response
+     *
+     * @Route("/_contao/cron", name="contao_frontend_cron", defaults={"_scope" = "frontend"})
      */
     public function cronAction()
     {
@@ -52,6 +55,8 @@ class FrontendController extends Controller
      * Renders the content syndication dialog.
      *
      * @return Response
+     *
+     * @Route("/_contao/share", name="contao_frontend_share", defaults={"_scope" = "frontend"})
      */
     public function shareAction()
     {

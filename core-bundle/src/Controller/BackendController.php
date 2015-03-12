@@ -22,6 +22,7 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,6 +38,8 @@ class BackendController extends Controller
      * Runs the main back end controller.
      *
      * @return Response
+     *
+     * @Route("/contao", name="contao_backend", defaults={"_scope" = "backend"})
      */
     public function mainAction()
     {
@@ -49,6 +52,8 @@ class BackendController extends Controller
      * Renders the back end login form.
      *
      * @return Response
+     *
+     * @Route("/contao/login", name="contao_backend_login", defaults={"_scope" = "backend"})
      */
     public function loginAction()
     {
@@ -63,6 +68,8 @@ class BackendController extends Controller
      * @return Response
      *
      * @todo Make the install tool stand-alone
+     *
+     * @Route("/contao/install", name="contao_backend_install", defaults={"_scope" = "backend"})
      */
     public function installAction()
     {
@@ -78,6 +85,8 @@ class BackendController extends Controller
      * Renders the "set new password" form.
      *
      * @return Response
+     *
+     * @Route("/contao/password", name="contao_backend_password", defaults={"_scope" = "backend"})
      */
     public function passwordAction()
     {
@@ -90,6 +99,8 @@ class BackendController extends Controller
      * Renders the front end preview.
      *
      * @return Response
+     *
+     * @Route("/contao/preview", name="contao_backend_preview", defaults={"_scope" = "backend"})
      */
     public function previewAction()
     {
@@ -102,6 +113,8 @@ class BackendController extends Controller
      * Renders the change log viewer.
      *
      * @return Response
+     *
+     * @Route("/contao/changelog", name="contao_backend_changelog", defaults={"_scope" = "backend"})
      */
     public function changelogAction()
     {
@@ -114,6 +127,8 @@ class BackendController extends Controller
      * Renders the "invalid request token" screen.
      *
      * @return Response
+     *
+     * @Route("/contao/confirm", name="contao_backend_confirm", defaults={"_scope" = "backend"})
      */
     public function confirmAction()
     {
@@ -126,6 +141,8 @@ class BackendController extends Controller
      * Renders the file picker.
      *
      * @return Response
+     *
+     * @Route("/contao/file", name="contao_backend_file", defaults={"_scope" = "backend"})
      */
     public function fileAction()
     {
@@ -138,6 +155,8 @@ class BackendController extends Controller
      * Renders the help content.
      *
      * @return Response
+     *
+     * @Route("/contao/help", name="contao_backend_help", defaults={"_scope" = "backend"})
      */
     public function helpAction()
     {
@@ -150,6 +169,8 @@ class BackendController extends Controller
      * Renders the page picker.
      *
      * @return Response
+     *
+     * @Route("/contao/page", name="contao_backend_page", defaults={"_scope" = "backend"})
      */
     public function pageAction()
     {
@@ -162,6 +183,8 @@ class BackendController extends Controller
      * Renders the pop-up content.
      *
      * @return Response
+     *
+     * @Route("/contao/popup", name="contao_backend_popup", defaults={"_scope" = "backend"})
      */
     public function popupAction()
     {
@@ -174,6 +197,8 @@ class BackendController extends Controller
      * Renders the front end preview switcher.
      *
      * @return Response
+     *
+     * @Route("/contao/switch", name="contao_backend_switch", defaults={"_scope" = "backend"})
      */
     public function switchAction()
     {

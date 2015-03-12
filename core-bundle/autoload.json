@@ -3,24 +3,6 @@
         "Contao\\CoreBundle\\ContaoCoreBundle": {
             "replace": ["core"],
             "environments": ["all"]
-        },
-        "Contao\\IntegrationBundle\\ContaoIntegrationBundle": {
-            "environments": ["all"]
-        },
-        "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle": {
-            "environments": ["all"]
-        },
-        "Symfony\\Bundle\\SecurityBundle\\SecurityBundle": {
-            "environments": ["all"]
-        },
-        "Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle": {
-            "environments": ["all"]
-        },
-        "Symfony\\Bundle\\TwigBundle\\TwigBundle": {
-            "environments": ["all"]
-        },
-        "Symfony\\Bundle\\WebProfilerBundle\\WebProfilerBundle": {
-            "environments": ["dev", "test"]
         }
     }
 }

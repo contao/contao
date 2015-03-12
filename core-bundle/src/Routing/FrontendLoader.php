@@ -88,6 +88,6 @@ class FrontendLoader extends Loader
      */
     public function supports($resource, $type = null)
     {
-        return true; // the loader of the integration bundle does not check for support
+        return 'contao_frontend' === $type;
     }
 }
