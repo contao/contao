@@ -29,6 +29,9 @@
     "require-dev": {
         "phpunit/phpunit": "~4.5"
     },
+    "replace": {
+        "contao/core": "self.version"
+    },
     "autoload": {
         "psr-4": {
             "Contao\\CoreBundle\\": "src/"
