@@ -13,11 +13,11 @@ namespace Contao\CoreBundle\Test\EventListener;
 use Contao\Config;
 use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
-use Contao\CoreBundle\HttpKernel\ContaoKernelInterface;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -50,7 +50,7 @@ class InitializeSystemListenerTest extends TestCase
     {
         global $kernel;
 
-        /** @var ContaoKernelInterface $kernel */
+        /** @var Kernel $kernel */
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
@@ -80,7 +80,7 @@ class InitializeSystemListenerTest extends TestCase
     {
         global $kernel;
 
-        /** @var ContaoKernelInterface $kernel */
+        /** @var Kernel $kernel */
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
@@ -111,7 +111,7 @@ class InitializeSystemListenerTest extends TestCase
     {
         global $kernel;
 
-        /** @var ContaoKernelInterface $kernel */
+        /** @var Kernel $kernel */
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
@@ -135,7 +135,7 @@ class InitializeSystemListenerTest extends TestCase
     {
         global $kernel;
 
-        /** @var ContaoKernelInterface $kernel */
+        /** @var Kernel $kernel */
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
@@ -164,7 +164,7 @@ class InitializeSystemListenerTest extends TestCase
     {
         global $kernel;
 
-        /** @var ContaoKernelInterface $kernel */
+        /** @var Kernel $kernel */
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
@@ -182,7 +182,7 @@ class InitializeSystemListenerTest extends TestCase
     /**
      * Mocks a Contao kernel.
      *
-     * @return ContaoKernelInterface
+     * @return Kernel
      */
     private function mockKernel()
     {
@@ -190,12 +190,9 @@ class InitializeSystemListenerTest extends TestCase
         Environment::set('httpAcceptLanguage', []);
 
         $kernel = $this->getMock(
-            'Contao\CoreBundle\HttpKernel\ContaoKernelInterface',
+            'Symfony\Component\HttpKernel\Kernel',
             [
-                // ContaoKernelInterface
-                'addAutoloadBundles',
-                'writeBundleCache',
-                'loadBundleCache',
+                // AppKernel
                 'getContaoBundles',
 
                 // KernelInterface
@@ -223,7 +220,8 @@ class InitializeSystemListenerTest extends TestCase
                 // Serializable
                 'serialize',
                 'unserialize',
-            ]
+            ],
+            ['test', false]
         );
 
         $kernel
