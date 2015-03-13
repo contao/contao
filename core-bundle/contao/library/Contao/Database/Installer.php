@@ -10,9 +10,6 @@
 
 namespace Contao\Database;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
-
 /**
  * Compares the existing database structure with the DCA table settings and
  * calculates the queries needed to update the database.

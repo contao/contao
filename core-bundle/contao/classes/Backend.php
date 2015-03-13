@@ -10,9 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
-
 /**
  * Provide methods to manage back end controllers.
  *

@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -49,6 +49,7 @@ class ModuleLoader
 	 */
 	public static function getActive()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		return $kernel->getContainer()->get('contao.resource_provider')->getBundleNames();

@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**

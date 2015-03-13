@@ -10,9 +10,6 @@
 
 namespace Contao\Database;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
-
 /**
  * Adjust the database if the system is updated.
  *

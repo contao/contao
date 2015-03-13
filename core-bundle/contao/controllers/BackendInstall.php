@@ -10,9 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
-
 /**
  * Back end install tool.
  *
