@@ -1,7 +1,7 @@
 Contao change log
 =================
 
-Version 4.0.0-alpha3 (2014-XX-XX)
+Version 4.0.0-beta1 (2014-XX-XX)
 ---------------------------------
 
 ### Changed
@@ -37,10 +37,6 @@ Make the public extension folders configurable (see #8).
 ### Fixed
 Correctly symlink the upload folder.
 
-
-Version 4.0.0-alpha2 (2014-06-18)
----------------------------------
-
 ### Changed
 Do not use a constant for the website path (see contao/core#5347).
 
@@ -73,10 +69,6 @@ Use the CSS class `previous` instead of `prev` in the book navigation module.
 
 ### Fixed
 Correctly set the folder protection status when loading subfolders (see #4).
-
-
-Version 4.0.0-alpha1 (2014-06-10)
----------------------------------
 
 ### Changed
 Adjust the logic of the `File` class (see contao/core#5341).

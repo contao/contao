@@ -37,7 +37,7 @@ class VersionCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(VERSION . '.' . BUILD); // FIXME: output the dist version
+        $output->writeln(VERSION . '.' . BUILD);
 
         return 0;
     }
