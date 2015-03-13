@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 /**
  * Adds the bundle services to the container.
@@ -21,12 +21,20 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class ContaoCoreExtension extends Extension
+class ContaoCoreExtension extends ConfigurableExtension
 {
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function getAlias()
+    {
+        return 'contao';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader(
             $container,

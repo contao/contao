@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\SetApplicationPass;
+use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
@@ -22,6 +23,14 @@ use Symfony\Component\DependencyInjection\Scope;
  */
 class ContaoCoreBundle extends ContaoBundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getContainerExtension()
+    {
+        return new ContaoCoreExtension();
+    }
+
     /**
      * {@inheritdoc}
      */
