@@ -309,7 +309,7 @@ class tl_user_group extends Backend
 
 		$included = array();
 
-		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
 		{
 			$strDir = $path . '/dca';
 

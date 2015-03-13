@@ -224,7 +224,7 @@ class InitializeSystemListenerTest extends TestCase
         );
 
         $container = new Container();
-        $container->set('contao.resources', new ResourceProvider());
+        $container->set('contao.resource_provider', new ResourceProvider());
 
         $kernel
             ->expects($this->any())

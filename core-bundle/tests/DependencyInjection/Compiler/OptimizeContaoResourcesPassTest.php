@@ -41,7 +41,7 @@ class OptimizeContaoResourcesPassTest extends TestCase
         $this->container = new ContainerBuilder();
 
         $this->container->setDefinition(
-            'contao.resources',
+            'contao.resource_provider',
             new Definition('Contao\\CoreBundle\\HttpKernel\\Bundle\\ResourceProvider')
         );
     }
@@ -64,7 +64,7 @@ class OptimizeContaoResourcesPassTest extends TestCase
 
     public function testAbsolutePaths()
     {
-        $definition = $this->container->getDefinition('contao.resources');
+        $definition = $this->container->getDefinition('contao.resource_provider');
         $definition->addMethodCall('addResourcesPath', ['testBundle', $this->getRootDir() . '/system/modules/legacy-module']);
         $definition->addMethodCall('addPublicFolders', [[$this->getRootDir() . '/system/modules/legacy-module/assets']]);
 
@@ -76,7 +76,7 @@ class OptimizeContaoResourcesPassTest extends TestCase
 
     public function testRelativePaths()
     {
-        $definition = $this->container->getDefinition('contao.resources');
+        $definition = $this->container->getDefinition('contao.resource_provider');
         $definition->addMethodCall('addResourcesPath', ['testBundle', $this->getRootDir() . '/system/invalid/../modules/legacy-module']);
         $definition->addMethodCall('addPublicFolders', [[$this->getRootDir() . '/system/invalid/../modules/legacy-module/assets']]);
 
@@ -91,7 +91,7 @@ class OptimizeContaoResourcesPassTest extends TestCase
      */
     public function testInvalidResourcesPath()
     {
-        $definition = $this->container->getDefinition('contao.resources');
+        $definition = $this->container->getDefinition('contao.resource_provider');
         $definition->addMethodCall('addResourcesPath', ['testBundle', '/system/invalid']);
 
         $this->pass->process($this->container);
@@ -102,7 +102,7 @@ class OptimizeContaoResourcesPassTest extends TestCase
      */
     public function testInvalidPublicFolders()
     {
-        $definition = $this->container->getDefinition('contao.resources');
+        $definition = $this->container->getDefinition('contao.resource_provider');
         $definition->addMethodCall('addPublicFolders', [['/system/invalid']]);
 
         $this->pass->process($this->container);

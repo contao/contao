@@ -482,7 +482,7 @@ class Automator extends \System
 		}
 
 		// Symlink the public extension subfolders
-		foreach ($kernel->getContainer()->get('contao.resources')->getPublicFolders() as $strPath)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getPublicFolders() as $strPath)
 		{
 			$target = str_repeat('../', substr_count($strPath, '/') + 1);
 			$this->Files->symlink($target . $strPath, 'web/' . $strPath);
@@ -528,7 +528,7 @@ class Automator extends \System
 	{
 		global $kernel;
 
-		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
 		{
 			if (0 === strpos($path, 'system/modules/'))
 			{
@@ -713,7 +713,7 @@ class Automator extends \System
 		}
 
 		$arrLanguages = array_unique($arrLanguages);
-		$arrResourcesPaths = $kernel->getContainer()->get('contao.resources')->getResourcesPaths();
+		$arrResourcesPaths = $kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths();
 
 		foreach ($arrLanguages as $strLanguage)
 		{
@@ -801,7 +801,7 @@ class Automator extends \System
 		$arrExtracts = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
 		{
 			$strDir = $path . '/dca';
 

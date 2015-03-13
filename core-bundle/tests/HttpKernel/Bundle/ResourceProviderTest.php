@@ -25,7 +25,7 @@ class ResourceProviderTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ResourcesProvider', new ResourceProvider());
+        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider', new ResourceProvider());
     }
 
     public function testConstructorArguments()

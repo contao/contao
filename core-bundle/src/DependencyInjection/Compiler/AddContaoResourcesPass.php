@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Adds Contao resources and public folders to the contao.resources service.
+ * Adds Contao resources and public folders to the contao.resource_provider service.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -43,11 +43,11 @@ class AddContaoResourcesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('contao.resources')) {
+        if (!$container->hasDefinition('contao.resource_provider')) {
             return;
         }
 
-        $definition = $container->findDefinition('contao.resources');
+        $definition = $container->findDefinition('contao.resource_provider');
 
         $definition->addMethodCall('addResourcesPath', [$this->bundleName, $this->resourcesPath]);
 

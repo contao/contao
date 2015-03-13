@@ -318,7 +318,7 @@ abstract class System
 			{
 				global $kernel;
 
-				foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
+				foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
 				{
 					$strFile = $path . '/languages/' . $strCreateLang . '/' . $strName;
 
@@ -379,7 +379,7 @@ abstract class System
 			{
 				global $kernel;
 
-				foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
+				foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
 				{
 					if (is_dir(TL_ROOT . '/' . $path . '/languages/' . $strLanguage))
 					{

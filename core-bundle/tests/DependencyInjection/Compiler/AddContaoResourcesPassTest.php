@@ -48,7 +48,7 @@ class AddContaoResourcesPassTest extends TestCase
 
         $pass->process($container);
 
-        $definition = $container->getDefinition('contao.resources');
+        $definition = $container->getDefinition('contao.resource_provider');
         $calls      = $definition->getMethodCalls();
 
         $this->assertEquals('addResourcesPath', $calls[0][0]);
@@ -63,7 +63,7 @@ class AddContaoResourcesPassTest extends TestCase
 
         $pass->process($container);
 
-        $definition = $container->getDefinition('contao.resources');
+        $definition = $container->getDefinition('contao.resource_provider');
         $calls      = $definition->getMethodCalls();
 
         $this->assertEquals('addPublicFolders', $calls[1][0]);
@@ -71,7 +71,7 @@ class AddContaoResourcesPassTest extends TestCase
     }
 
     /**
-     * Returns a container builder including a contao.resources service
+     * Returns a container builder including a contao.resource_provider service
      *
      * @return ContainerBuilder The container builder instance
      */
@@ -80,7 +80,7 @@ class AddContaoResourcesPassTest extends TestCase
         $container = new ContainerBuilder();
 
         $container->setDefinition(
-            'contao.resources',
+            'contao.resource_provider',
             new Definition('Contao\\CoreBundle\\HttpKernel\\Bundle\\ResourceProvider')
         );
 

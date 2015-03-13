@@ -38,13 +38,13 @@ class OptimizeContaoResourcesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('contao.resources')) {
+        if (!$container->hasDefinition('contao.resource_provider')) {
             return;
         }
 
         $resourcesPaths = [];
         $publicFolders  = [];
-        $definition     = $container->getDefinition('contao.resources');
+        $definition     = $container->getDefinition('contao.resource_provider');
         $calls          = $definition->getMethodCalls();
 
         foreach ($calls as $k => $call) {

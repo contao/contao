@@ -51,7 +51,7 @@ class ModuleLoader
 	{
 		global $kernel;
 
-		return $kernel->getContainer()->get('contao.resources')->getBundleNames();
+		return $kernel->getContainer()->get('contao.resource_provider')->getBundleNames();
 	}
 
 

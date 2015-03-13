@@ -278,7 +278,7 @@ class Installer extends \Controller
 		\Config::set('bypassCache', true);
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
 		{
 			$strDir = $path . '/dca';
 
@@ -337,7 +337,7 @@ class Installer extends \Controller
 		$return = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $name => $path)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $name => $path)
 		{
 			if (in_array($name, array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
 			{
