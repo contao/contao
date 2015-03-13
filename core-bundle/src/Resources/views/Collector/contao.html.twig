@@ -6,6 +6,10 @@
     {% endset %}
     {% set text %}
     <div class="sf-toolbar-info-piece">
+        <b>Contao</b>
+        <span>{{ constant('VERSION') }}.{{ constant('BUILD') }}</span>
+    </div>
+    <div class="sf-toolbar-info-piece">
         <b>Execution time</b>
         <span>{{ collector.summary.execution_time }} ms</span>
     </div>
@@ -37,7 +41,6 @@
 {% endblock %}
 
 {% block panel %}
-
     <h2>Summary</h2>
     <table>
         <tr>
@@ -194,5 +197,4 @@
     {{ dump(collector.additionaldata) }}
     </pre>
     {% endif %}
-
 {% endblock %}

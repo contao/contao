@@ -10,10 +10,8 @@
 
 namespace Contao\CoreBundle;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\SetApplicationPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 
 /**
@@ -38,13 +36,5 @@ class ContaoCoreBundle extends ContaoBundle
     {
         $this->container->addScope(new Scope('frontend', 'request'));
         $this->container->addScope(new Scope('backend', 'request'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new SetApplicationPass());
     }
 }
