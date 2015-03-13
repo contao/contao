@@ -20,14 +20,11 @@ window.tinymce && tinymce.init({
   file_browser_callback: function(field_name, url, type, win) {
     Backend.openModalBrowser(field_name, url, type, win);
   },
-  templates: [
-    <?= Backend::getTinyTemplates() ?>
-  ],
   doctype: "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 3.2//EN\">",
-  plugins: "autosave charmap code fullscreen image link lists paste searchreplace tabfocus table template visualblocks",
+  plugins: "autosave charmap code fullscreen image link lists paste searchreplace tabfocus table visualblocks",
   browser_spellcheck: true,
   tabfocus_elements: ":prev,:next",
-  content_css: "<?= Environment::get('path') ?>/system/themes/tinymce.css",
+  importcss_append: true,
   extended_valid_elements: "b/strong,i/em",
   menubar: "file edit insert view format table",
   toolbar: "link unlink | image | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | undo redo | code"

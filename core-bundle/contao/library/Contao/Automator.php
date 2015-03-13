@@ -498,12 +498,6 @@ class Automator extends \System
 
 		$this->symlinkThemes();
 
-		// Symlink the tinymce.css file
-		if (file_exists(TL_ROOT . '/' . $strUploadPath . '/tinymce.css'))
-		{
-			$this->Files->symlink('../../files/tinymce.css', 'web/' . $strUploadPath . '/tinymce.css');
-		}
-
 		// Symlink the assets and themes directory
 		$this->Files->symlink('../assets', 'web/assets');
 		$this->Files->symlink('../../system/themes', 'web/system/themes');
