@@ -133,6 +133,7 @@ class Config
 		}
 		else
 		{
+			/** @var KernelInterface $kernel */
 			global $kernel;
 
 			foreach ($kernel->getContainer()->get('contao.resources')->getResourcesPaths() as $path)

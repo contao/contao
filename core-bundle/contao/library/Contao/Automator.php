@@ -455,8 +455,8 @@ class Automator extends \System
 	 */
 	public function generateSymlinks()
 	{
-        /** @var KernelInterface $kernel */
-        global $kernel;
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
 		$this->import('Files');
 		$strUploadPath = \Config::get('uploadPath');
@@ -581,6 +581,7 @@ class Automator extends \System
 	 */
 	public function generateConfigCache()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		// Generate the class/template laoder cache file
@@ -629,6 +630,7 @@ class Automator extends \System
 	 */
 	public function generateDcaCache()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		$arrFiles = array();
