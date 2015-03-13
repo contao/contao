@@ -50,7 +50,7 @@ class FilesyncCommand extends ContainerAwareCommand
 
         // Run
         $strLog = Dbafs::syncFiles();
-        $output->writeln("  Synchronization complete (see $strLog).");
+        $output->writeln("Synchronization complete (see <info>$strLog</info>).");
 
         // Release the lock
         $lock->release();
