@@ -168,8 +168,6 @@ abstract class DataContainer extends \Backend
 	 * @param string $strPalette
 	 *
 	 * @return string
-	 *
-	 * @throws \Exception
 	 */
 	protected function row($strPalette=null)
 	{
@@ -466,13 +464,6 @@ abstract class DataContainer extends \Backend
 		// Replace the textarea with an RTE instance
 		if (!empty($arrData['eval']['rte']))
 		{
-			list ($file, $type) = explode('|', $arrData['eval']['rte'], 2);
-
-			if (!file_exists(TL_ROOT . '/system/config/' . $file . '.php'))
-			{
-				throw new \Exception(sprintf('Cannot find editor configuration file "%s.php"', $file));
-			}
-
 			// Backwards compatibility
 			$language = substr($GLOBALS['TL_LANGUAGE'], 0, 2);
 
@@ -481,13 +472,16 @@ abstract class DataContainer extends \Backend
 				$language = 'en';
 			}
 
-			$selector = 'ctrl_' . $this->strInputName;
+			list ($file, $type) = explode('|', $arrData['eval']['rte'], 2);
 
-			ob_start();
-			include TL_ROOT . '/system/config/' . $file . '.php';
-			$updateMode = ob_get_clean();
+			/** @var \BackendTemplate|object $objTemplate */
+			$objTemplate = new \BackendTemplate("be_$file");
+			$objTemplate->language = $language;
+			$objTemplate->selector = 'ctrl_' . $this->strInputName;
 
-			unset($file, $type, $language, $selector);
+			$updateMode = $objTemplate->parse();
+
+			unset($file, $type);
 		}
 
 		// Handle multi-select fields in "override all" mode

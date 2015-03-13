@@ -1785,15 +1785,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Prepare the code editor
 		if (\Config::get('useCE'))
 		{
-			$selector = 'ctrl_source';
-			$type = $objFile->extension;
+			/** @var \BackendTemplate|object $objTemplate */
+			$objTemplate = new \BackendTemplate('be_ace');
+			$objTemplate->selector = 'ctrl_source';
+			$objTemplate->type = $objFile->extension;
 
-			// Load the code editor configuration
-			ob_start();
-			include TL_ROOT . '/system/config/ace.php';
-			$codeEditor = ob_get_clean();
-
-			unset($selector, $type);
+			$codeEditor = $objTemplate->parse();
 		}
 
 		// Versions overview

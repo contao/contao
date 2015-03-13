@@ -508,12 +508,6 @@ class PageRegular extends \Frontend
 			}
 		}
 
-		// Add the TinyMCE style sheet
-		if (is_array($arrFramework) && in_array('tinymce.css', $arrFramework) && file_exists(TL_ROOT . '/' . \Config::get('uploadPath') . '/tinymce.css'))
-		{
-			$GLOBALS['TL_FRAMEWORK_CSS'][] = \Config::get('uploadPath') . '/tinymce.css';
-		}
-
 		// Make sure TL_USER_CSS is set
 		if (!is_array($GLOBALS['TL_USER_CSS']))
 		{
