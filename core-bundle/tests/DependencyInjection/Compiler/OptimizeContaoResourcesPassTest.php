@@ -42,7 +42,7 @@ class OptimizeContaoResourcesPassTest extends TestCase
 
         $this->container->setDefinition(
             'contao.resources',
-            new Definition('Contao\\CoreBundle\\HttpKernel\\Bundle\\ResourcesProvider')
+            new Definition('Contao\\CoreBundle\\HttpKernel\\Bundle\\ResourceProvider')
         );
     }
 

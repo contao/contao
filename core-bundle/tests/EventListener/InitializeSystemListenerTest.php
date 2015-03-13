@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\Config;
-use Contao\CoreBundle\HttpKernel\Bundle\ResourcesProvider;
+use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
 use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
@@ -224,7 +224,7 @@ class InitializeSystemListenerTest extends TestCase
         );
 
         $container = new Container();
-        $container->set('contao.resources', new ResourcesProvider());
+        $container->set('contao.resources', new ResourceProvider());
 
         $kernel
             ->expects($this->any())

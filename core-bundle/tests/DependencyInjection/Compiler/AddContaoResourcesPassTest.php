@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Test\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
-use Contao\CoreBundle\HttpKernel\Bundle\ResourcesProvider;
+use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -81,7 +81,7 @@ class AddContaoResourcesPassTest extends TestCase
 
         $container->setDefinition(
             'contao.resources',
-            new Definition('Contao\\CoreBundle\\HttpKernel\\Bundle\\ResourcesProvider')
+            new Definition('Contao\\CoreBundle\\HttpKernel\\Bundle\\ResourceProvider')
         );
 
         return $container;

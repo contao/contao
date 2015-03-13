@@ -10,27 +10,27 @@
 
 namespace Contao\CoreBundle\Test\HttpKernel\Bundle;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ResourcesProvider;
+use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
 use Contao\CoreBundle\Test\TestCase;
 
 /**
- * Tests the ResourcesProviderTest class.
+ * Tests the ResourceProviderTest class.
  *
  * @author Andreas Schempp <http://github.com/aschempp>
  */
-class ResourcesProviderTest extends TestCase
+class ResourceProviderTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ResourcesProvider', new ResourcesProvider());
+        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ResourcesProvider', new ResourceProvider());
     }
 
     public function testConstructorArguments()
     {
-        $provider = new ResourcesProvider(
+        $provider = new ResourceProvider(
             ['testBundle' => 'testPath'],
             ['publicFolder']
         );
@@ -42,7 +42,7 @@ class ResourcesProviderTest extends TestCase
 
     public function testAddResourcesPath()
     {
-        $provider = new ResourcesProvider();
+        $provider = new ResourceProvider();
         $provider->addResourcesPath('testBundle', 'testPath');
 
         $this->assertContains('testBundle', $provider->getBundleNames());
@@ -51,7 +51,7 @@ class ResourcesProviderTest extends TestCase
 
     public function testAddPublicFolders()
     {
-        $provider = new ResourcesProvider();
+        $provider = new ResourceProvider();
         $provider->addPublicFolders(['publicFolder']);
 
         $this->assertContains('publicFolder', $provider->getPublicFolders());

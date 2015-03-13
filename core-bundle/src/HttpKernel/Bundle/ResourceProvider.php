@@ -10,12 +10,14 @@
 
 namespace Contao\CoreBundle\HttpKernel\Bundle;
 
+use Symfony\Component\Finder\Finder;
+
 /**
  * Provides information about Contao resources and public folders.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ResourcesProvider
+class ResourceProvider
 {
     private $contaoResources;
     private $publicFolders;
