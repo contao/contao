@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\Test\HttpKernel\Bundle;
 
-use Contao\CoreBundle\HttpKernel\Bundle\HtaccessAnalyzer;
+use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -45,7 +45,7 @@ class HtaccessAnalyzerTest extends TestCase
     {
         $htaccess = new HtaccessAnalyzer($this->file);
 
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\HtaccessAnalyzer', $htaccess);
+        $this->assertInstanceOf('Contao\CoreBundle\Analyzer\HtaccessAnalyzer', $htaccess);
     }
 
     /**

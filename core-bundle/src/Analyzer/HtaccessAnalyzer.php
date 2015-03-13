@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\HttpKernel\Bundle;
+namespace Contao\CoreBundle\Analyzer;
 
 /**
  * Analyzes an .htaccess file.

@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\HttpKernel\Bundle;
 
+use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
