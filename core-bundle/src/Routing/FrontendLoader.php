@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Routing;
 
 use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -23,11 +24,6 @@ use Symfony\Component\Routing\RouteCollection;
 class FrontendLoader extends Loader
 {
     /**
-     * @var bool
-     */
-    private $prependLocale;
-
-    /**
      * @var string
      */
     private $format;
@@ -38,17 +34,23 @@ class FrontendLoader extends Loader
     private $defaultLocale;
 
     /**
+     * @var bool
+     */
+    private $prependLocale;
+
+    /**
      * Constructor.
      *
-     * @param bool   $prependLocale Prepend the locale
-     * @param string $format        The URL suffix
-     * @param string $defaultLocale The default locale
+     * @param ContainerInterface $container     The DIC
+     * @param string             $defaultLocale The default locale
      */
-    public function __construct($prependLocale, $format, $defaultLocale)
+    public function __construct(ContainerInterface $container, $defaultLocale)
     {
-        $this->prependLocale = $prependLocale;
-        $this->format        = isset($format[2]) ? substr($format, 1) : '';
+        $format       = $container->getParameter('contao.url_suffix');
+        $this->format = isset($format[2]) ? substr($format, 1) : '';
+
         $this->defaultLocale = $defaultLocale;
+        $this->prependLocale = $container->getParameter('contao.prepend_locale');
     }
 
     /**

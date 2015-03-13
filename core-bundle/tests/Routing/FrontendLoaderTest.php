@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\Routing;
 
 use Contao\CoreBundle\Routing\FrontendLoader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the FrontendLoader class.
@@ -24,7 +25,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstantiation()
     {
-        $loader = new FrontendLoader(false, '', 'en');
+        $loader = new FrontendLoader($this->getContainer(false, ''), 'en');
 
         $this->assertInstanceOf('Contao\CoreBundle\Routing\FrontendLoader', $loader);
     }
@@ -34,7 +35,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithoutLanguage()
     {
-        $loader     = new FrontendLoader(false, '.html', 'en');
+        $loader     = new FrontendLoader($this->getContainer(false, '.html'), 'en');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -55,7 +56,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWitLanguage()
     {
-        $loader     = new FrontendLoader(true, '.html', 'en');
+        $loader     = new FrontendLoader($this->getContainer(true, '.html'), 'en');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -76,7 +77,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithoutLanguageAndWithoutSuffix()
     {
-        $loader     = new FrontendLoader(false, '', 'en');
+        $loader     = new FrontendLoader($this->getContainer(false, ''), 'en');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -97,7 +98,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithLanguageAndWithoutSuffix()
     {
-        $loader     = new FrontendLoader(true, '', 'en');
+        $loader     = new FrontendLoader($this->getContainer(true, ''), 'en');
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -118,8 +119,25 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSupportsContaoFrontend()
     {
-        $loader = new FrontendLoader(false, '', 'en');
+        $loader = new FrontendLoader($this->getContainer(false, ''), 'en');
 
         $this->assertTrue($loader->supports('.', 'contao_frontend'));
+    }
+
+    /**
+     * Returns a container object.
+     *
+     * @param bool   $prependLocale Prepend the locale
+     * @param string $urlSuffix     The URL suffix
+     *
+     * @return ContainerBuilder The container object
+     */
+    private function getContainer($prependLocale, $urlSuffix)
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('contao.prepend_locale', $prependLocale);
+        $container->setParameter('contao.url_suffix', $urlSuffix);
+
+        return $container;
     }
 }

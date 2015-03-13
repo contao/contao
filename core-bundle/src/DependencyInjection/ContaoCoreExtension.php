@@ -42,5 +42,8 @@ class ContaoCoreExtension extends ConfigurableExtension
         );
 
         $loader->load('services.yml');
+
+        $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
+        $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
     }
 }
