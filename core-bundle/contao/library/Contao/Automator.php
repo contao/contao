@@ -583,20 +583,15 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
+		$resources = $kernel->getContainer()->get('contao.resource_provider');
+
 		// Generate the class/template laoder cache file
 		$objCacheFile = new \File('system/cache/config/autoload.php');
 		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-		$arrResourcesPaths = $kernel->getContainer()->get('contao.resources')->getResourcesPaths();
-
-		foreach ($arrResourcesPaths as $path)
+		foreach ($resources->findFilesIn('config', 'autoload.php') as $file)
 		{
-			$strFile = $path . '/config/autoload.php';
-
-			if (file_exists($strFile))
-			{
-				$objCacheFile->append(static::readPhpFileWithoutTags($strFile));
-			}
+			$objCacheFile->append(static::readPhpFileWithoutTags($file->getPathname()));
 		}
 
 		// Close the file (moves it to its final destination)
@@ -606,14 +601,9 @@ class Automator extends \System
 		$objCacheFile = new \File('system/cache/config/config.php');
 		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-		foreach ($arrResourcesPaths as $path)
+		foreach ($resources->findFilesIn('config', 'config.php') as $file)
 		{
-			$strFile = $path . '/config/config.php';
-
-			if (file_exists($strFile))
-			{
-				$objCacheFile->append(static::readPhpFileWithoutTags($strFile));
-			}
+			$objCacheFile->append(static::readPhpFileWithoutTags($file->getPathname()));
 		}
 
 		// Close the file (moves it to its final destination)

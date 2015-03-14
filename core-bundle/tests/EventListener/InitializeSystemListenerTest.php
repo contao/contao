@@ -224,7 +224,10 @@ class InitializeSystemListenerTest extends TestCase
         );
 
         $container = new Container();
-        $container->set('contao.resource_provider', new ResourceProvider());
+        $container->set(
+            'contao.resource_provider',
+            new ResourceProvider([$this->getRootDir() . '/system/modules/legacy-module'])
+        );
 
         $kernel
             ->expects($this->any())
