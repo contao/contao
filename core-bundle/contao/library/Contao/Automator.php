@@ -622,51 +622,23 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$arrFiles = array();
-		$arrResourcesPaths = $kernel->getContainer()->get('contao.resources')->getResourcesPaths();
+		/** @var \File[] $cacheFiles */
+		$cacheFiles = [];
 
-		// Parse all active modules
-		foreach ($arrResourcesPaths as $path)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->findFilesIn('dca', '*.php') as $file)
 		{
-			$strDir = $path . '/dca';
+			$fileName = $file->getFilename();
 
-			if (!is_dir($strDir))
-			{
-				continue;
+			if (!isset($cacheFiles[$fileName])) {
+				$cacheFiles[$fileName] = new \File('system/cache/dca/' . $fileName);
+				$cacheFiles[$fileName]->write('<?php '); // add one space to prevent the "unexpected $end" error
 			}
 
-			foreach (scan($strDir) as $strFile)
-			{
-				// Ignore non PHP files and files which have been included before
-				if (strncmp($strFile, '.', 1) === 0 || substr($strFile, -4) != '.php' || in_array($strFile, $arrFiles))
-				{
-					continue;
-				}
-
-				$arrFiles[] = substr($strFile, 0, -4);
-			}
+			$cacheFiles[$fileName]->append(static::readPhpFileWithoutTags($file->getPathname()));
 		}
 
-		// Create one file per table
-		foreach ($arrFiles as $strName)
-		{
-			// Generate the cache file
-			$objCacheFile = new \File('system/cache/dca/' . $strName . '.php');
-			$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
-
-			// Parse all active modules
-			foreach ($arrResourcesPaths as $path)
-			{
-				$strFile = $path . '/dca/' . $strName . '.php';
-
-				if (file_exists($strFile))
-				{
-					$objCacheFile->append(static::readPhpFileWithoutTags($strFile));
-				}
-			}
-
-			// Close the file (moves it to its final destination)
-			$objCacheFile->close();
+		foreach ($cacheFiles as $cacheFile) {
+			$cacheFile->close();
 		}
 
 		// Add a log entry
