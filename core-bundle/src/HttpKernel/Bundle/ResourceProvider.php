@@ -63,6 +63,7 @@ class ResourceProvider
      */
     public function getBundleNames()
     {
+        // FIXME: this method should be removed as soon as we drop coreOnlyMode
         return array_keys($this->contaoResources);
     }
 
