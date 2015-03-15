@@ -38,8 +38,9 @@ services:
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
         arguments:
-            - "@service_container"
+            - "%contao.url_suffix%"
             - "%locale%"
+            - "%contao.prepend_locale%"
         tags:
             - { name: routing.loader }
 

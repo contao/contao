@@ -41,16 +41,15 @@ class FrontendLoader extends Loader
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container     The DIC
-     * @param string             $defaultLocale The default locale
+     * @param string $format        The URL suffix
+     * @param string $defaultLocale The default locale
+     * @param bool   $prependLocale Prepend the locale
      */
-    public function __construct(ContainerInterface $container, $defaultLocale)
+    public function __construct($format, $defaultLocale, $prependLocale)
     {
-        $format       = $container->getParameter('contao.url_suffix');
-        $this->format = isset($format[2]) ? substr($format, 1) : '';
-
+        $this->format        = isset($format[2]) ? substr($format, 1) : '';
         $this->defaultLocale = $defaultLocale;
-        $this->prependLocale = $container->getParameter('contao.prepend_locale');
+        $this->prependLocale = $prependLocale;
     }
 
     /**
