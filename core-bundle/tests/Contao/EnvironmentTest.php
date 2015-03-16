@@ -56,7 +56,7 @@ class EnvironmentTest extends TestCase
             'QUERY_STRING'         => 'do=test',
             'REQUEST_URI'          => '/core/en/academy.html?do=test',
             'SCRIPT_NAME'          => '/core/index.php',
-            'PHP_SELF'             => '/core/index.php'
+            'PHP_SELF'             => '/core/index.php',
         );
 
         $this->runTests();
@@ -94,7 +94,7 @@ class EnvironmentTest extends TestCase
             'ORIG_PATH_INFO'       => '/core/index.php',
             'ORIG_PATH_TRANSLATED' => $this->getRootDir() . '/core/index.php',
             'SCRIPT_URI'           => 'http://localhost/core/en/academy.html',
-            'SCRIPT_URL'           => '/core/en/academy.html'
+            'SCRIPT_URL'           => '/core/en/academy.html',
         );
 
         $this->runTests();
@@ -130,7 +130,7 @@ class EnvironmentTest extends TestCase
             'PHP_SELF'             => '/core/index.php',
             'GATEWAY_INTERFACE'    => 'CGI/1.1',
             'ORIG_PATH_INFO'       => '/core/index.php',
-            'ORIG_PATH_TRANSLATED' => $this->getRootDir() . '/core/index.php'
+            'ORIG_PATH_TRANSLATED' => $this->getRootDir() . '/core/index.php',
         );
 
         $this->runTests();

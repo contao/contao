@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test\Routing;
 
 use Contao\CoreBundle\Routing\FrontendLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the FrontendLoader class.

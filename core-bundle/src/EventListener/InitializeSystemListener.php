@@ -184,7 +184,7 @@ class InitializeSystemListener
     }
 
     /**
-     * Includes the helper files
+     * Includes the helper files.
      */
     private function includeHelpers()
     {

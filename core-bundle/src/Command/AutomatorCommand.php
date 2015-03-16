@@ -137,7 +137,7 @@ class AutomatorCommand extends ContainerAwareCommand
             'generateDcaCache',
             'generateLanguageCache',
             'generateDcaExtracts',
-            'generatePackageCache'
+            'generatePackageCache',
         ];
     }
 

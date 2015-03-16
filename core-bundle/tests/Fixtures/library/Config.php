@@ -8,8 +8,7 @@ class Config
 
     public static function getInstance()
     {
-        if (null === static::$instance)
-        {
+        if (null === static::$instance) {
             static::$instance = new static();
         }
 
@@ -23,8 +22,7 @@ class Config
 
     public static function get($key)
     {
-        if (isset($GLOBALS['TL_CONFIG'][$key]))
-        {
+        if (isset($GLOBALS['TL_CONFIG'][$key])) {
             return $GLOBALS['TL_CONFIG'][$key];
         }
 

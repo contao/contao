@@ -67,7 +67,7 @@ class ContaoDataCollector extends DataCollector
 
             $aliases[$alias] = [
                 'alias'    => $alias,
-                'original' => $original
+                'original' => $original,
             ];
         }
 
@@ -178,10 +178,8 @@ class ContaoDataCollector extends DataCollector
         $intAffected = 0;
 
         // Count the totals (see #3884)
-        if (is_array($GLOBALS['TL_DEBUG']['database_queries']))
-        {
-            foreach ($GLOBALS['TL_DEBUG']['database_queries'] as $k=>$v)
-            {
+        if (is_array($GLOBALS['TL_DEBUG']['database_queries'])) {
+            foreach ($GLOBALS['TL_DEBUG']['database_queries'] as $k => $v) {
                 $intReturned += $v['return_count'];
                 $intAffected += $v['affected_count'];
                 unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['return_count']);
@@ -197,7 +195,7 @@ class ContaoDataCollector extends DataCollector
             'dbqueries'      => count($GLOBALS['TL_DEBUG']['database_queries']),
             'rows_returned'  => $intReturned,
             'rows_affected'  => $intAffected,
-            'models'         => Registry::getInstance()->count()
+            'models'         => Registry::getInstance()->count(),
         ];
     }
 }
