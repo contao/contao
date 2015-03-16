@@ -945,18 +945,27 @@ class Automator extends \System
 	public function generatePackageCache()
 	{
 		$objFile = new \File('system/cache/packages/installed.php');
-		$objFile->write("<?php\n\nreturn array\n\t(");
+		$objFile->write("<?php\n\nreturn array\n(\n");
 
-		$objJson = json_decode(file_get_contents(TL_ROOT . '/vendor/composer/installed.json'));
+		$objJson = json_decode(file_get_contents(TL_ROOT . '/vendor/composer/installed.json'), true);
 
 		foreach ($objJson as $objPackage)
 		{
-			$strName = str_replace("'", "\\'", $objPackage->name);
-			$strVersion = substr($objPackage->version_normalized, 0, strrpos($objPackage->version_normalized, '.'));
+			$strName = str_replace("'", "\\'", $objPackage['name']);
+			$strVersion = substr($objPackage['version_normalized'], 0, strrpos($objPackage['version_normalized'], '.'));
 
 			if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $strVersion))
 			{
 				$objFile->append("\t'$strName' => '$strVersion',");
+			}
+			elseif (isset($objPackage['extra']['branch-alias'][$objPackage['version_normalized']]))
+			{
+				$strVersion = str_replace('x-dev', '9999999', $objPackage['extra']['branch-alias'][$objPackage['version_normalized']]);
+
+				if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $strVersion))
+				{
+					$objFile->append("\t'$strName' => '$strVersion',");
+				}
 			}
 		}
 

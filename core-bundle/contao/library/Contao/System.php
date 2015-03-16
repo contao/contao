@@ -841,23 +841,36 @@ abstract class System
 		{
 			$arrPackages = include TL_ROOT . '/' . $strCacheFile;
 
-			return $arrPackages[$strName];
-		}
-
-		$objJson = json_decode(file_get_contents(TL_ROOT . '/vendor/composer/installed.json'), true);
-
-		// Try to find a matching package
-		foreach ($objJson as $objPackage)
-		{
-			if ($objPackage['name'] == $strName)
+			if (isset($arrPackages[$strName]))
 			{
-				$strVersion = substr($objPackage['version_normalized'], 0, strrpos($objPackage['version_normalized'], '.'));
+				return $arrPackages[$strName];
+			}
+		}
+		else
+		{
+			$objJson = json_decode(file_get_contents(TL_ROOT . '/vendor/composer/installed.json'), true);
 
-				if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $strVersion))
+			// Try to find a matching package
+			foreach ($objJson as $objPackage)
+			{
+				if ($objPackage['name'] == $strName)
 				{
-					return $strVersion;
+					$strVersion = substr($objPackage['version_normalized'], 0, strrpos($objPackage['version_normalized'], '.'));
+
+					if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $strVersion))
+					{
+						return $strVersion;
+					}
+					elseif (isset($objPackage['extra']['branch-alias'][$objPackage['version_normalized']]))
+					{
+						$strVersion = str_replace('x-dev', '9999999', $objPackage['extra']['branch-alias'][$objPackage['version_normalized']]);
+
+						if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $strVersion))
+						{
+							return $strVersion;
+						}
+					}
 				}
-				// FIXME: else if isset(branch-alias) 1.3.x-dev -> 1.3.9999999
 			}
 		}
 
