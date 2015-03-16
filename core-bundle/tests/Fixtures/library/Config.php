@@ -5,7 +5,6 @@ namespace Contao\Fixtures;
 class Config
 {
     private static $instance;
-    private static $cache = [];
 
     public static function getInstance()
     {
@@ -19,14 +18,14 @@ class Config
 
     public static function set($key, $value)
     {
-        static::$cache[$key] = $value;
+        $GLOBALS['TL_CONFIG'][$key] = $value;
     }
 
     public static function get($key)
     {
-        if (isset(static::$cache[$key]))
+        if (isset($GLOBALS['TL_CONFIG'][$key]))
         {
-            return static::$cache[$key];
+            return $GLOBALS['TL_CONFIG'][$key];
         }
 
         return null;
@@ -34,7 +33,7 @@ class Config
 
     public static function has($key)
     {
-        return isset(static::$cache[$key]);
+        return array_key_exists($key, $GLOBALS['TL_CONFIG']);
     }
 
     public static function preload()

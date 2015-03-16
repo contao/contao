@@ -26,13 +26,17 @@ namespace Contao;
  */
 class Environment
 {
-	const PHP_SAPI = PHP_SAPI;
-
 	/**
 	 * Object instance (Singleton)
 	 * @var \Environment
 	 */
 	protected static $objInstance;
+
+	/**
+	 * The SAPI name
+	 * @var string
+	 */
+	protected static $strSapi = PHP_SAPI;
 
 	/**
 	 * Cache
@@ -98,7 +102,7 @@ class Environment
 	 */
 	protected static function scriptFilename()
 	{
-		return str_replace('//', '/', str_replace('\\', '/', (static::PHP_SAPI == 'cgi' || static::PHP_SAPI == 'isapi' || static::PHP_SAPI == 'cgi-fcgi' || static::PHP_SAPI == 'fpm-fcgi') && (@$_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) ? (@$_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) : (@$_SERVER['ORIG_SCRIPT_FILENAME'] ?: $_SERVER['SCRIPT_FILENAME'])));
+		return str_replace('//', '/', str_replace('\\', '/', (static::$strSapi == 'cgi' || static::$strSapi == 'isapi' || static::$strSapi == 'cgi-fcgi' || static::$strSapi == 'fpm-fcgi') && (@$_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) ? (@$_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) : (@$_SERVER['ORIG_SCRIPT_FILENAME'] ?: $_SERVER['SCRIPT_FILENAME'])));
 	}
 
 
@@ -109,7 +113,7 @@ class Environment
 	 */
 	protected static function scriptName()
 	{
-		return (static::PHP_SAPI == 'cgi' || static::PHP_SAPI == 'isapi' || static::PHP_SAPI == 'cgi-fcgi' || static::PHP_SAPI == 'fpm-fcgi') && (@$_SERVER['ORIG_PATH_INFO'] ?: $_SERVER['PATH_INFO']) ? (@$_SERVER['ORIG_PATH_INFO'] ?: $_SERVER['PATH_INFO']) : (@$_SERVER['ORIG_SCRIPT_NAME'] ?: $_SERVER['SCRIPT_NAME']);
+		return (static::$strSapi == 'cgi' || static::$strSapi == 'isapi' || static::$strSapi == 'cgi-fcgi' || static::$strSapi == 'fpm-fcgi') && (@$_SERVER['ORIG_PATH_INFO'] ?: $_SERVER['PATH_INFO']) ? (@$_SERVER['ORIG_PATH_INFO'] ?: $_SERVER['PATH_INFO']) : (@$_SERVER['ORIG_SCRIPT_NAME'] ?: $_SERVER['SCRIPT_NAME']);
 	}
 
 

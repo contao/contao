@@ -35,7 +35,10 @@ spl_autoload_register(function ($class) {
         $class = substr($class, 7);
     }
 
-    if (file_exists(__DIR__ . "/Fixtures/library/$class.php")) {
+    if ('Environment' === $class) {
+        include __DIR__ . "/../contao/library/Contao/$class.php";
+        class_alias("Contao\\$class", $class);
+    } elseif (file_exists(__DIR__ . "/Fixtures/library/$class.php")) {
         include __DIR__ . "/Fixtures/library/$class.php";
         class_alias("Contao\\Fixtures\\$class", "Contao\\$class");
         class_alias("Contao\\Fixtures\\$class", $class);
