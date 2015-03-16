@@ -557,52 +557,6 @@ abstract class Frontend extends \Controller
 
 
 	/**
-	 * Parse the meta.txt file of a folder
-	 *
-	 * @param string  $strPath
-	 * @param boolean $blnIsFile
-	 *
-	 * @deprecated Meta data is now stored in the database
-	 */
-	protected function parseMetaFile($strPath, $blnIsFile=false)
-	{
-		if (in_array($strPath, $this->arrProcessed))
-		{
-			return;
-		}
-
-		$strFile = $strPath . '/meta_' . $GLOBALS['TL_LANGUAGE'] . '.txt';
-
-		if (!file_exists(TL_ROOT . '/' . $strFile))
-		{
-			$strFile = $strPath . '/meta.txt';
-
-			if (!file_exists(TL_ROOT . '/' . $strFile))
-			{
-				return;
-			}
-		}
-
-		$strBuffer = file_get_contents(TL_ROOT . '/' . $strFile);
-		$strBuffer = utf8_convert_encoding($strBuffer, \Config::get('characterSet'));
-		$arrBuffer = array_filter(trimsplit('[\n\r]+', $strBuffer));
-
-		foreach ($arrBuffer as $v)
-		{
-			list($strLabel, $strValue) = array_map('trim', explode('=', $v, 2));
-			$this->arrMeta[$strLabel] = array_map('trim', explode('|', $strValue));
-
-			if (!$blnIsFile || in_array($strPath . '/' . $strLabel, $this->multiSRC)) # FIXME: $this->multiSRC is not used
-			{
-				$this->arrAux[] = $strPath . '/' . $strLabel;
-			}
-		}
-
-		$this->arrProcessed[] = $strPath;
-	}
-
-
-	/**
 	 * Prepare a text to be used in the meta description tag
 	 *
 	 * @param string $strText
