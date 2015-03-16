@@ -1,64 +1,68 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2014 Leo Feyer
+ * Copyright (c) 2005-2015 Leo Feyer
  *
- * @package Library
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
-namespace Contao\Test;
+namespace Contao\CoreBundle\Test\Contao;
 
-use Contao\File;
+use Contao\CoreBundle\Test\TestCase;
 use Contao\Picture;
 
 /**
+ * Tests the Picture class.
+ *
+ * @author Martin Auswöger <https://github.com/ausi>
+ * @author Yanick Witschi <https://github.com/Toflar>
+ *
  * @runTestsInSeparateProcesses
  */
-class PictureTest extends \PHPUnit_Framework_TestCase
+class PictureTest extends TestCase
 {
+    /**
+     * @var string
+     */
     var $tempDirectory;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp()
     {
         $this->tempDirectory = __DIR__ . '/../tmp';
+
         mkdir($this->tempDirectory);
         mkdir($this->tempDirectory . '/assets');
         mkdir($this->tempDirectory . '/assets/images');
-        mkdir($this->tempDirectory . '/system');
-        mkdir($this->tempDirectory . '/system/tmp');
+
         foreach ([0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'] as $subdir) {
             mkdir($this->tempDirectory . '/assets/images/' . $subdir);
         }
 
-        copy(__DIR__ . '/../Fixtures/dummy.jpg', $this->tempDirectory . '/dummy.jpg');
+        mkdir($this->tempDirectory . '/system');
+        mkdir($this->tempDirectory . '/system/tmp');
 
-        eval('class SystemTest extends Contao\System
-        {
-            public static function log($strText, $strFunction, $strCategory) {}
-        }');
-
+        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', $this->tempDirectory . '/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
-        class_alias('SystemTest', 'System');
-        class_alias('Contao\Image', 'Image');
-        class_alias('Contao\GdImage', 'GdImage');
-        class_alias('Contao\File', 'File');
-        class_alias('Contao\Files', 'Files');
-        class_alias('Contao\Config', 'Config');
+
         define('TL_ERROR', 'ERROR');
-        define('TL_ROOT', $this->tempDirectory);
         define('TL_FILES_URL', '');
+        define('TL_ROOT', $this->tempDirectory);
 
         parent::setUp();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function tearDown()
     {
         parent::tearDown();
@@ -67,13 +71,18 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         exec('rm -rf ' . escapeshellarg($this->tempDirectory));
     }
 
-    public function testConstruct()
+    /**
+     * Tests the object instantiation.
+     */
+    public function testInstantiation()
     {
         $fileMock = $this->getMockBuilder('File')
-            ->setMethods(array('__get', 'exists'))
-            ->setConstructorArgs(array('dummy.jpg'))
+            ->setMethods(['__get', 'exists'])
+            ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
+
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
             function($key) {
                 switch ($key) {
@@ -81,6 +90,8 @@ class PictureTest extends \PHPUnit_Framework_TestCase
                         return 'jpg';
                     case 'path':
                         return 'dummy.jpg';
+                    default:
+                        return null;
                 }
             }
         ));
@@ -88,14 +99,18 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
     }
 
+    /**
+     * Tests the getTemplateData() method.
+     */
     public function testGetTemplateData()
     {
         $picture = new Picture(new \File('dummy.jpg'));
-        $picture->setImageSize((object)[
-            'width' => 0,
-            'height' => 0,
+
+        $picture->setImageSize((object) [
+            'width'      => 0,
+            'height'     => 0,
             'resizeMode' => '',
-            'zoom' => 0,
+            'zoom'       => 0,
         ]);
 
         $pictureData = $picture->getTemplateData();
@@ -107,14 +122,18 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $pictureData['sources']);
     }
 
+    /**
+     * Tests the getTemplateData() method with an img tag only.
+     */
     public function testGetTemplateDataImgOnly()
     {
         $picture = new Picture(new \File('dummy.jpg'));
-        $picture->setImageSize((object)[
-            'width' => 100,
-            'height' => 100,
+
+        $picture->setImageSize((object) [
+            'width'      => 100,
+            'height'     => 100,
             'resizeMode' => 'crop',
-            'zoom' => 0,
+            'zoom'       => 0,
         ]);
 
         $pictureData = $picture->getTemplateData();
@@ -125,29 +144,34 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $pictureData['sources']);
     }
 
+    /**
+     * Tests the getTemplateData() method with sources.
+     */
     public function testGetTemplateDataWithSources()
     {
         $picture = new Picture(new \File('dummy.jpg'));
-        $picture->setImageSize((object)[
-            'width' => 100,
-            'height' => 100,
+
+        $picture->setImageSize((object) [
+            'width'      => 100,
+            'height'     => 100,
             'resizeMode' => 'crop',
-            'zoom' => 0,
+            'zoom'       => 0,
         ]);
+
         $picture->setImageSizeItems([
-            (object)[
-                'width' => 50,
-                'height' => 50,
+            (object) [
+                'width'      => 50,
+                'height'     => 50,
                 'resizeMode' => 'crop',
-                'zoom' => 0,
-                'media' => '(max-width: 900px)',
+                'zoom'       => 0,
+                'media'      => '(max-width: 900px)',
             ],
-            (object)[
-                'width' => 25,
-                'height' => 25,
+            (object) [
+                'width'      => 25,
+                'height'     => 25,
                 'resizeMode' => 'crop',
-                'zoom' => 0,
-                'media' => '(max-width: 600px)',
+                'zoom'       => 0,
+                'media'      => '(max-width: 600px)',
             ],
         ]);
 
@@ -166,15 +190,19 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($pictureData['sources'][1]['src'], $pictureData['sources'][1]['srcset'], 'Attributes src and srcset should be equal');
     }
 
+    /**
+     * Tests the getTemplateData() method with densities.
+     */
     public function testGetTemplateDataWithDensities()
     {
         $picture = new Picture(new \File('dummy.jpg'));
-        $picture->setImageSize((object)[
-            'width' => 100,
-            'height' => 100,
+
+        $picture->setImageSize((object) [
+            'width'      => 100,
+            'height'     => 100,
             'resizeMode' => 'crop',
-            'zoom' => 0,
-            'densities' => '0.5x, 2x',
+            'zoom'       => 0,
+            'densities'  => '0.5x, 2x',
         ]);
 
         $pictureData = $picture->getTemplateData();
@@ -189,16 +217,20 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $pictureData['sources']);
     }
 
+    /**
+     * Tests the getTemplateData() method with densities and sizes.
+     */
     public function testGetTemplateDataWithDensitiesSizes()
     {
         $picture = new Picture(new \File('dummy.jpg'));
-        $picture->setImageSize((object)[
-            'width' => 100,
-            'height' => 100,
+
+        $picture->setImageSize((object) [
+            'width'      => 100,
+            'height'     => 100,
             'resizeMode' => 'crop',
-            'zoom' => 0,
-            'densities' => '0.5x, 2x',
-            'sizes' => '100vw',
+            'zoom'       => 0,
+            'densities'  => '0.5x, 2x',
+            'sizes'      => '100vw',
         ]);
 
         $pictureData = $picture->getTemplateData();
@@ -214,16 +246,20 @@ class PictureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $pictureData['sources']);
     }
 
+    /**
+     * Tests the getTemplateData() method with encoded file names.
+     */
     public function testGetTemplateDataUrlEncoded()
     {
-        copy(__DIR__ . '/../Fixtures/dummy.jpg', $this->tempDirectory . '/dummy with spaces.jpg');
+        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', $this->tempDirectory . '/dummy with spaces.jpg');
 
         $picture = new Picture(new \File('dummy with spaces.jpg'));
-        $picture->setImageSize((object)[
-            'width' => 0,
-            'height' => 0,
+
+        $picture->setImageSize((object) [
+            'width'      => 0,
+            'height'     => 0,
             'resizeMode' => '',
-            'zoom' => 0,
+            'zoom'       => 0,
         ]);
 
         $pictureData = $picture->getTemplateData();
