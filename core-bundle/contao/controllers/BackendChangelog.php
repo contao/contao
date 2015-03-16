@@ -48,7 +48,7 @@ class BackendChangelog extends \Backend
 	public function run()
 	{
 		// Parse the changelog file
-		$strBuffer = file_get_contents(TL_ROOT . '/vendor/contao/core-bundle/CHANGELOG.md');
+		$strBuffer = file_get_contents(__DIR__ . '/../../CHANGELOG.md');
 
 		// Remove carriage returns (see #4190)
 		$strBuffer = str_replace("\r", '', $strBuffer);

@@ -323,7 +323,7 @@ class ModuleArticle extends \Module
 		$l['w_page'] = 'page';
 
 		// Include library
-		require_once TL_ROOT . '/vendor/contao/core-bundle/contao/config/tcpdf.php';
+		require_once __DIR__ . '/../config/tcpdf.php';
 
 		// Create new PDF document
 		$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true);

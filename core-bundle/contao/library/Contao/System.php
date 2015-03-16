@@ -10,10 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-use Contao\CoreBundle\HttpKernel\ContaoKernelInterface;
-use Symfony\Component\DependencyInjection\Container;
-
 
 /**
  * Abstract library base class
@@ -82,12 +78,6 @@ abstract class System
 	 * @var array
 	 */
 	protected static $arrLanguageFiles = array();
-
-	/**
-	 * The Symfony kernel
-	 * @var ContaoKernelInterface
-	 */
-	protected static $objKernel;
 
 	/**
 	 * Available image sizes
@@ -378,7 +368,7 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			$blnIsInstalled = is_dir(TL_ROOT . '/vendor/contao/core-bundle/contao/languages/' . $strLanguage);
+			$blnIsInstalled = is_dir(__DIR__ . '/../../languages/' . $strLanguage);
 
 			if (!$blnIsInstalled)
 			{
@@ -418,7 +408,7 @@ abstract class System
 		$arrAux = array();
 
 		static::loadLanguageFile('countries');
-		include TL_ROOT . '/vendor/contao/core-bundle/contao/config/countries.php';
+		include __DIR__ . '/../../config/countries.php';
 
 		foreach ($countries as $strKey=>$strName)
 		{
@@ -460,7 +450,7 @@ abstract class System
 		$langsNative = array();
 
 		static::loadLanguageFile('languages');
-		include TL_ROOT . '/vendor/contao/core-bundle/contao/config/languages.php';
+		include __DIR__ . '/../../config/languages.php';
 
 		foreach ($languages as $strKey=>$strName)
 		{
@@ -468,7 +458,7 @@ abstract class System
 		}
 
 		asort($arrAux);
-		$arrBackendLanguages = scan(TL_ROOT . '/vendor/contao/core-bundle/contao/languages');
+		$arrBackendLanguages = scan(__DIR__ . '/../../languages');
 
 		foreach (array_keys($arrAux) as $strKey)
 		{
@@ -508,7 +498,7 @@ abstract class System
 		$arrReturn = array();
 		$timezones = array();
 
-		require TL_ROOT . '/vendor/contao/core-bundle/contao/config/timezones.php';
+		require __DIR__ . '/../../config/timezones.php';
 
 		foreach ($timezones as $strGroup=>$arrTimezones)
 		{

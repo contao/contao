@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Loads and writes the local configuration file
@@ -462,9 +464,9 @@ class Config
 	public static function preload()
 	{
 		// Load the default files
-		include TL_ROOT . '/vendor/contao/core-bundle/contao/config/default.php';
-		include TL_ROOT . '/vendor/contao/core-bundle/contao/config/agents.php';
-		include TL_ROOT . '/vendor/contao/core-bundle/contao/config/mimetypes.php';
+		include __DIR__ . '/../../config/default.php';
+		include __DIR__ . '/../../config/agents.php';
+		include __DIR__ . '/../../config/mimetypes.php';
 
 		// Include the local configuration file
 		if (($blnHasLcf = file_exists(TL_ROOT . '/system/config/localconfig.php')) === true)
@@ -483,6 +485,7 @@ class Config
 	 */
 	protected static function loadParameters()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		$container = $kernel->getContainer();
@@ -492,7 +495,8 @@ class Config
 			return;
 		}
 
-		$arrMap = array(
+		$arrMap = array
+		(
 			'dbHost'           => 'database_host',
 			'dbPort'           => 'database_port',
 			'dbDatabase'       => 'database_name',
@@ -501,8 +505,8 @@ class Config
 			'smtpHost'         => 'mailer_host',
 			'smtpUser'         => 'mailer_user',
 			'smtpPass'         => 'mailer_password',
-			'addLanguageToUrl' => 'prepend_locale',
-			'urlSuffix'        => 'url_suffix'
+			'addLanguageToUrl' => 'contao.prepend_locale',
+			'urlSuffix'        => 'contao.url_suffix'
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)

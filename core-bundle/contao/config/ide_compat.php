@@ -11,7 +11,10 @@
 // This file is not used in Contao. Its only purpose is to make PHP IDEs like
 // Eclipse, Zend Studio or PHPStorm realize the class origins, since the dynamic
 // class aliasing we are using is a bit too complex for them to understand.
-namespace  {
+namespace {
+    define('TL_ROOT', __DIR__ . '/../../../../../');
+}
+namespace {
 	class Ajax extends \Contao\Ajax {}
 	abstract class Backend extends \Contao\Backend {}
 	abstract class BackendModule extends \Contao\BackendModule {}
