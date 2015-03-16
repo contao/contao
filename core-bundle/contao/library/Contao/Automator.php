@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 
 
@@ -154,11 +153,6 @@ class Automator extends \System
 			// Purge the folder
 			$objFolder = new \Folder($dir);
 			$objFolder->purge();
-
-			// Restore the index.html file
-			$objFile = new \File($dir . '/index.html');
-			$objFile->write("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Blank page</title>\n</head>\n<body>\n</body>\n</html>");
-			$objFile->close();
 		}
 
 		// Recreate the internal style sheets
@@ -230,10 +224,6 @@ class Automator extends \System
 		// Purge the folder
 		$objFolder = new \Folder('system/tmp');
 		$objFolder->purge();
-
-		// Restore the .gitignore file
-		$objFile = new \File('system/logs/.gitignore');
-		$objFile->copyTo('system/tmp/.gitignore');
 
 		// Add a log entry
 		$this->log('Purged the temp folder', __METHOD__, TL_CRON);
