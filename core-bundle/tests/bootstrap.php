@@ -47,5 +47,6 @@ spl_autoload_register(function ($class) {
 
 /** @var Composer\Autoload\ClassLoader $loader */
 $loader->addPsr4('Contao\\CoreBundle\\Test\\', __DIR__);
+$loader->addPsr4('Contao\\', __DIR__.'/../contao/library/Contao');
 
 return $loader;
