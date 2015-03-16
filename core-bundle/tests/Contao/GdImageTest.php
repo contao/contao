@@ -26,7 +26,7 @@ class GdImageTest extends TestCase
     /**
      * @var string
      */
-    var $tempDirectory;
+    protected $tempDirectory;
 
     /**
      * {@inheritdoc}

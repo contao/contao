@@ -26,7 +26,7 @@ class ImageTest extends TestCase
     /**
      * @var string
      */
-    var $tempDirectory;
+    protected $tempDirectory;
 
     /**
      * {@inheritdoc}
@@ -39,7 +39,7 @@ class ImageTest extends TestCase
         mkdir($this->tempDirectory . '/assets');
         mkdir($this->tempDirectory . '/assets/images');
 
-        foreach ([0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'] as $subdir) {
+        foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
             mkdir($this->tempDirectory . '/assets/images/' . $subdir);
         }
 
@@ -83,7 +83,7 @@ class ImageTest extends TestCase
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
 
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function($key) {
+            function ($key) {
                 switch ($key) {
                     case 'extension':
                         return 'jpg';
@@ -130,7 +130,7 @@ class ImageTest extends TestCase
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
 
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function($key) {
+            function ($key) {
                 switch ($key) {
                     case 'extension':
                         return 'foobar';
@@ -168,7 +168,7 @@ class ImageTest extends TestCase
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
 
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function($key) use($arguments) {
+            function ($key) use ($arguments) {
                 switch ($key) {
                     case 'extension':
                         return 'jpg';
@@ -228,7 +228,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Same dimensions' => [
                 [100, 100, 100, 100, null],
@@ -239,7 +239,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Scale down' => [
                 [50, 50, 100, 100, null],
@@ -250,7 +250,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 50,
                     'target_height' => 50,
-                ]
+                ],
             ],
             'Scale up' => [
                 [100, 100, 50, 50, null],
@@ -261,7 +261,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Width only' => [
                 [100, null, 50, 50, null],
@@ -272,7 +272,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Height only' => [
                 [null, 100, 50, 50, null],
@@ -283,7 +283,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Crop landscape' => [
                 [100, 50, 100, 100, null],
@@ -294,7 +294,7 @@ class ImageTest extends TestCase
                     'target_y' => -25,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Crop portrait' => [
                 [50, 100, 100, 100, null],
@@ -305,7 +305,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode proportional landscape' => [
                 [100, 10, 100, 50, 'proportional'],
@@ -316,7 +316,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 50,
-                ]
+                ],
             ],
             'Mode proportional portrait' => [
                 [10, 100, 50, 100, 'proportional'],
@@ -327,7 +327,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 50,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode proportional square' => [
                 [100, 50, 100, 100, 'proportional'],
@@ -338,7 +338,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode box landscape 1' => [
                 [100, 100, 100, 50, 'box'],
@@ -349,7 +349,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 50,
-                ]
+                ],
             ],
             'Mode box landscape 2' => [
                 [100, 10, 100, 50, 'box'],
@@ -360,7 +360,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 20,
                     'target_height' => 10,
-                ]
+                ],
             ],
             'Mode box portrait 1' => [
                 [100, 100, 50, 100, 'box'],
@@ -371,7 +371,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 50,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode box portrait 2' => [
                 [10, 100, 50, 100, 'box'],
@@ -382,7 +382,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 10,
                     'target_height' => 20,
-                ]
+                ],
             ],
             'Mode left_top landscape' => [
                 [100, 100, 100, 50, 'left_top'],
@@ -393,7 +393,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 200,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode left_top portrait' => [
                 [100, 100, 50, 100, 'left_top'],
@@ -404,7 +404,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Mode center_top landscape' => [
                 [100, 100, 100, 50, 'center_top'],
@@ -415,7 +415,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 200,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode center_top portrait' => [
                 [100, 100, 50, 100, 'center_top'],
@@ -426,7 +426,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Mode right_top landscape' => [
                 [100, 100, 100, 50, 'right_top'],
@@ -437,7 +437,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 200,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode right_top portrait' => [
                 [100, 100, 50, 100, 'right_top'],
@@ -448,7 +448,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Mode left_center landscape' => [
                 [100, 100, 100, 50, 'left_center'],
@@ -459,7 +459,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 200,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode left_center portrait' => [
                 [100, 100, 50, 100, 'left_center'],
@@ -470,7 +470,7 @@ class ImageTest extends TestCase
                     'target_y' => -50,
                     'target_width' => 100,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Mode center_center landscape' => [
                 [100, 100, 100, 50, 'center_center'],
@@ -481,7 +481,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 200,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode center_center portrait' => [
                 [100, 100, 50, 100, 'center_center'],
@@ -492,7 +492,7 @@ class ImageTest extends TestCase
                     'target_y' => -50,
                     'target_width' => 100,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Mode right_center landscape' => [
                 [100, 100, 100, 50, 'right_center'],
@@ -503,7 +503,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 200,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode right_center portrait' => [
                 [100, 100, 50, 100, 'right_center'],
@@ -514,7 +514,7 @@ class ImageTest extends TestCase
                     'target_y' => -50,
                     'target_width' => 100,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Mode left_bottom landscape' => [
                 [100, 100, 100, 50, 'left_bottom'],
@@ -525,7 +525,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 200,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode left_bottom portrait' => [
                 [100, 100, 50, 100, 'left_bottom'],
@@ -536,7 +536,7 @@ class ImageTest extends TestCase
                     'target_y' => -100,
                     'target_width' => 100,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Mode center_bottom landscape' => [
                 [100, 100, 100, 50, 'center_bottom'],
@@ -547,7 +547,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 200,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode center_bottom portrait' => [
                 [100, 100, 50, 100, 'center_bottom'],
@@ -558,7 +558,7 @@ class ImageTest extends TestCase
                     'target_y' => -100,
                     'target_width' => 100,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Mode right_bottom landscape' => [
                 [100, 100, 100, 50, 'right_bottom'],
@@ -569,7 +569,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 200,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Mode right_bottom portrait' => [
                 [100, 100, 50, 100, 'right_bottom'],
@@ -580,7 +580,7 @@ class ImageTest extends TestCase
                     'target_y' => -100,
                     'target_width' => 100,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Float values' => [
                 [100.4, 100.4, 50, 50, null],
@@ -591,7 +591,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
         ];
     }
@@ -611,7 +611,7 @@ class ImageTest extends TestCase
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
 
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function($key) use($arguments) {
+            function ($key) use ($arguments) {
                 switch ($key) {
                     case 'extension':
                         return 'jpg';
@@ -658,7 +658,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'No dimensions zoom 50' => [
                 [null, null, 100, 100, null, 50, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]],
@@ -669,7 +669,7 @@ class ImageTest extends TestCase
                     'target_y' => -10,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'No dimensions zoom 100' => [
                 [null, null, 100, 100, null, 100, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]],
@@ -680,7 +680,7 @@ class ImageTest extends TestCase
                     'target_y' => -20,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Width only zoom 0' => [
                 [100, null, 100, 100, null, 0, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]],
@@ -691,7 +691,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Width only zoom 50' => [
                 [100, null, 100, 100, null, 50, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]],
@@ -702,7 +702,7 @@ class ImageTest extends TestCase
                     'target_y' => -13,
                     'target_width' => 125,
                     'target_height' => 125,
-                ]
+                ],
             ],
             'Width only zoom 100' => [
                 [100, null, 100, 100, null, 100, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]],
@@ -713,7 +713,7 @@ class ImageTest extends TestCase
                     'target_y' => -33,
                     'target_width' => 167,
                     'target_height' => 167,
-                ]
+                ],
             ],
             'Same dimensions zoom 0' => [
                 [100, 100, 100, 100, null, 0, ['x' => 25, 'y' => 25, 'width' => 50, 'height' => 50]],
@@ -724,7 +724,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 100,
                     'target_height' => 100,
-                ]
+                ],
             ],
             'Same dimensions zoom 50' => [
                 [100, 100, 100, 100, null, 50, ['x' => 25, 'y' => 25, 'width' => 50, 'height' => 50]],
@@ -735,7 +735,7 @@ class ImageTest extends TestCase
                     'target_y' => -17,
                     'target_width' => 133,
                     'target_height' => 133,
-                ]
+                ],
             ],
             'Same dimensions zoom 100' => [
                 [100, 100, 100, 100, null, 100, ['x' => 25, 'y' => 25, 'width' => 50, 'height' => 50]],
@@ -746,7 +746,7 @@ class ImageTest extends TestCase
                     'target_y' => -50,
                     'target_width' => 200,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Landscape to portrait zoom 0' => [
                 [100, 200, 200, 100, null, 0, ['x' => 140, 'y' => 40, 'width' => 20, 'height' => 20]],
@@ -757,7 +757,7 @@ class ImageTest extends TestCase
                     'target_y' => 0,
                     'target_width' => 400,
                     'target_height' => 200,
-                ]
+                ],
             ],
             'Landscape to portrait zoom 50' => [
                 [100, 200, 200, 100, null, 50, ['x' => 140, 'y' => 40, 'width' => 20, 'height' => 20]],
@@ -768,7 +768,7 @@ class ImageTest extends TestCase
                     'target_y' => -43,
                     'target_width' => 571,
                     'target_height' => 286,
-                ]
+                ],
             ],
             'Landscape to portrait zoom 100' => [
                 [100, 200, 200, 100, null, 100, ['x' => 140, 'y' => 40, 'width' => 20, 'height' => 20]],
@@ -779,7 +779,7 @@ class ImageTest extends TestCase
                     'target_y' => -150,
                     'target_width' => 1000,
                     'target_height' => 500,
-                ]
+                ],
             ],
         ];
     }
@@ -797,7 +797,7 @@ class ImageTest extends TestCase
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
 
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function($key) {
+            function ($key) {
                 switch ($key) {
                     case 'extension':
                         return 'jpg';
@@ -823,21 +823,21 @@ class ImageTest extends TestCase
             'x' => 0,
             'y' => 0,
             'width' => 100,
-            'height' => 100
+            'height' => 100,
         ]);
 
         $imageObj->setImportantPart([
             'x' => 20,
             'y' => 40,
             'width' => 80,
-            'height' => 120
+            'height' => 120,
         ]);
 
         $this->assertSame($imageObj->getImportantPart(), [
             'x' => 20,
             'y' => 40,
             'width' => 80,
-            'height' => 120
+            'height' => 120,
         ]);
 
         $this->assertSame($imageObj->getTargetHeight(), 0);
@@ -883,7 +883,7 @@ class ImageTest extends TestCase
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
 
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function($key) use($arguments) {
+            function ($key) use ($arguments) {
                 switch ($key) {
                     case 'extension':
                         return 'jpg';
@@ -921,15 +921,15 @@ class ImageTest extends TestCase
         return [
             [
                 [100, 100, 'dummy.jpg', 'crop', 0, 12345678, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]],
-                'assets/images/c/dummy.jpg-fc94db8c.jpg'
+                'assets/images/c/dummy.jpg-fc94db8c.jpg',
             ],
             [
                 [200, 100, 'test.jpg', 'proportional', 50, 87654321, ['x' => 30, 'y' => 20, 'width' => 60, 'height' => 90]],
-                'assets/images/3/test.jpg-4e7b07e3.jpg'
+                'assets/images/3/test.jpg-4e7b07e3.jpg',
             ],
             [
                 [100, 200, 'other.jpg', 'center_center', 100, 6666666, ['x' => 10, 'y' => 20, 'width' => 70, 'height' => 20]],
-                'assets/images/f/other.jpg-1fe4f44f.jpg'
+                'assets/images/f/other.jpg-1fe4f44f.jpg',
             ],
         ];
     }
@@ -949,7 +949,7 @@ class ImageTest extends TestCase
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
 
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function($key) {
+            function ($key) {
                 switch ($key) {
                     case 'extension':
                         return 'jpg';
@@ -978,7 +978,7 @@ class ImageTest extends TestCase
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
 
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function($key) {
+            function ($key) {
                 switch ($key) {
                     case 'extension':
                         return 'jpg';
@@ -1023,11 +1023,11 @@ class ImageTest extends TestCase
         return [
             'No empty image path returns null' => [
                 ['', 100, 100, 'crop', null, false],
-                null
+                null,
             ],
             'Inexistent file returns null' => [
                 ['foobar.jpg', 100, 100, 'crop', null, false],
-                null
+                null,
             ],
             // Currently not testable (see contao/core-bundle#25)
             //'No resize necessary returns same path' => [
@@ -1070,11 +1070,11 @@ class ImageTest extends TestCase
         return [
             'No empty image path returns false' => [
                 ['', 100, 100, 'crop'],
-                false
+                false,
             ],
             'Inexistent file returns false' => [
                 ['foobar.jpg', 100, 100, 'crop'],
-                false
+                false,
             ],
             // Currently not testable (see contao/core-bundle#25)
             //'No resize necessary returns true' => [
@@ -1266,7 +1266,8 @@ class ImageTest extends TestCase
      *
      * @return string The image path
      */
-    public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj) {
+    public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj)
+    {
         // Do not include $cacheName as it is dynamic (mtime)
         return $originalPath . ';' . $targetWidth . ';' . $targetHeight . ';' . $resizeMode . ';' . get_class($fileObj) . ';' . $targetPath . ';' . get_class($imageObj);
     }

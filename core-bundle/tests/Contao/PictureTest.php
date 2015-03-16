@@ -26,7 +26,7 @@ class PictureTest extends TestCase
     /**
      * @var string
      */
-    var $tempDirectory;
+    protected $tempDirectory;
 
     /**
      * {@inheritdoc}
@@ -39,7 +39,7 @@ class PictureTest extends TestCase
         mkdir($this->tempDirectory . '/assets');
         mkdir($this->tempDirectory . '/assets/images');
 
-        foreach ([0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'] as $subdir) {
+        foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
             mkdir($this->tempDirectory . '/assets/images/' . $subdir);
         }
 
@@ -84,7 +84,7 @@ class PictureTest extends TestCase
         $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
 
         $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function($key) {
+            function ($key) {
                 switch ($key) {
                     case 'extension':
                         return 'jpg';
