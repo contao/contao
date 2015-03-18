@@ -49,7 +49,7 @@ class OptimizeContaoResourcesPass implements CompilerPassInterface
 
         foreach ($calls as $k => $call) {
             if ('addResourcesPath' === $call[0]) {
-                $resourcesPaths[$call[1][0]] = $this->getRealPath($call[1][1]);
+                $resourcesPaths[$call[1][0]] = $this->validatePath($call[1][1]);
                 unset($calls[$k]);
             } elseif ('addPublicFolders' === $call[0]) {
                 $this->mergePaths($publicFolders, $call[1][0]);
@@ -70,7 +70,7 @@ class OptimizeContaoResourcesPass implements CompilerPassInterface
     private function mergePaths(array &$current, array $new)
     {
         foreach ($new as $path) {
-            $path = $this->getRealPath($path);
+            $path = $this->validatePath($path);
             $path = str_replace($this->rootDir, '', $path);
 
             $current[] = $path;
@@ -78,22 +78,20 @@ class OptimizeContaoResourcesPass implements CompilerPassInterface
     }
 
     /**
-     * Convert relative to absolute paths and check if they exist.
+     * Make sure the given path exists.
      *
-     * @param string $path The relative path
+     * @param string $path The path to be checked.
      *
-     * @return string The absolute path
+     * @return string The path if it was found.
      *
-     * @throws \InvalidArgumentException if the path does not exist
+     * @throws \InvalidArgumentException If the path does not exist
      */
-    private function getRealPath($path)
+    private function validatePath($path)
     {
-        $realPath = realpath($path);
-
-        if (false === $realPath) {
+        if (!is_dir($path)) {
             throw new \InvalidArgumentException(sprintf('Path "%s" does not exist.', $path));
         }
 
-        return $realPath;
+        return $path;
     }
 }

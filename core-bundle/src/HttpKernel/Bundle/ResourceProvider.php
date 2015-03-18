@@ -116,13 +116,13 @@ class ResourceProvider
      *
      * @param string $folder   A folder name in the resources
      * @param string $fileName A file name to be found (can be glob or regex pattern)
-     * @param int    $depth    The depth to search in, default to 0 (only current folder)
+     * @param string $depth    The depth to search in, default to 0 (only current folder)
      *
      * @return Finder|SplFileInfo[] A Finder instance
      *
      * @throws \UnderflowException If no Contao resources paths are available
      */
-    public function findFilesIn($folder, $fileName, $depth = 0)
+    public function findFilesIn($folder, $fileName, $depth = '0')
     {
         $finder = $this->findIn($folder);
         $finder->files()->name($fileName);
