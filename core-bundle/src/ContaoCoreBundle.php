@@ -41,9 +41,14 @@ class ContaoCoreBundle extends Bundle
     {
         $this->container->addScope(new Scope('frontend', 'request'));
         $this->container->addScope(new Scope('backend', 'request'));
+    }
 
-        $container->addCompilerPass(new SetApplicationPass());
-        $container->addCompilerPass(new AddContaoResourcesPass($this->getName(), $this->getPath() . '/../contao'));
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new AddContaoResourcesPass($this->getPath() . '/../contao'));
 
         $container->addCompilerPass(
             new OptimizeContaoResourcesPass($container->getParameter('kernel.root_dir')), PassConfig::TYPE_OPTIMIZE
