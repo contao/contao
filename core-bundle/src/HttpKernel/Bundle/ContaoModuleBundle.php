@@ -25,7 +25,7 @@ final class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
     /**
      * @var array
      */
-    protected $publicDirs;
+    private $publicDirs;
 
     /**
      * Sets the module name and application root directory.

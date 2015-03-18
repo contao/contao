@@ -30,7 +30,7 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
     /**
      * @var ContaoUserProvider
      */
-    protected $userProvider;
+    private $userProvider;
 
     /**
      * Constructor.

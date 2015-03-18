@@ -30,7 +30,7 @@ class AutomatorCommand extends ContainerAwareCommand
     /**
      * @var array
      */
-    protected $commands = [];
+    private $commands = [];
 
     /**
      * {@inheritdoc}
