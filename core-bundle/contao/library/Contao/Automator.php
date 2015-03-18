@@ -589,7 +589,7 @@ class Automator extends \System
 		$objCacheFile = new \File('system/cache/config/autoload.php');
 		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-		foreach ($resources->findFilesIn('config', 'autoload.php') as $file)
+		foreach ($resources->findFiles('config/autoload.php') as $file)
 		{
 			$objCacheFile->append(static::readPhpFileWithoutTags($file->getPathname()));
 		}
@@ -601,7 +601,7 @@ class Automator extends \System
 		$objCacheFile = new \File('system/cache/config/config.php');
 		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-		foreach ($resources->findFilesIn('config', 'config.php') as $file)
+		foreach ($resources->findFiles('config/config.php') as $file)
 		{
 			$objCacheFile->append(static::readPhpFileWithoutTags($file->getPathname()));
 		}
@@ -625,7 +625,7 @@ class Automator extends \System
 		/** @var \File[] $cacheFiles */
 		$cacheFiles = [];
 
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->findFilesIn('dca', '*.php') as $file)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('dca/*.php') as $file)
 		{
 			$fileName = $file->getFilename();
 

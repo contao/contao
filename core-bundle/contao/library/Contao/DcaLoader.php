@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -78,9 +79,10 @@ class DcaLoader extends \Controller
 		}
 		else
 		{
+            /** @var KernelInterface $kernel */
 			global $kernel;
 
-			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFilesIn('dca', $this->strTable . '.php') as $file)
+			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('dca/' . $this->strTable . '.php') as $file)
 			{
 				include $file->getPathname();
 			}

@@ -256,7 +256,7 @@ abstract class Backend extends \Controller
 		$this->import('Files');
 
 		$finder = Finder::create()->in(TL_ROOT . '/system')->files()->depth(0)->name('runonce.php');
-		$finder->append($kernel->getContainer()->get('contao.resource_provider')->findFilesIn('config', 'runonce.php'));
+		$finder->append($kernel->getContainer()->get('contao.resource_provider')->findFiles('config/runonce.php'));
 
 		/** @var SplFileInfo $file */
 		foreach ($finder as $file)

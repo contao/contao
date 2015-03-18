@@ -215,7 +215,7 @@ class ClassLoader
 			/** @var KernelInterface $kernel */
 			global $kernel;
 
-			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFilesIn('config', 'autoload.php') as $file)
+			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('config/autoload.php') as $file)
 			{
 				include $file->getPathname();
 			}

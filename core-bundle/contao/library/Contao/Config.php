@@ -136,7 +136,7 @@ class Config
 			/** @var KernelInterface $kernel */
 			global $kernel;
 
-			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFilesIn('config', 'config.php') as $file)
+			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('config/config.php') as $file)
 			{
 				include $file->getPathname();
 			}
