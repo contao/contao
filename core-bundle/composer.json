@@ -30,8 +30,8 @@
         "phpunit/phpunit": "~4.5",
         "composer/composer": "dev-master"
     },
-    "replace": {
-        "contao/core": "self.version"
+    "conflict": {
+        "contao/core": "*"
     },
     "autoload": {
         "psr-4": {
