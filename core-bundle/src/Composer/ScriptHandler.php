@@ -64,7 +64,7 @@ class ScriptHandler
 
         $fs->mkdir("$rootDir/$path");
 
-        $event->getIO()->write("Created the <info>$path</info> directory");
+        $event->getIO()->write("Created the <info>$path</info> directory.");
     }
 
     /**
@@ -89,6 +89,6 @@ class ScriptHandler
             "# Create the folder and ignore its content\n*\n!.gitignore\n"
         );
 
-        $event->getIO()->write("Added the <info>$path/.gitignore</info> file");
+        $event->getIO()->write("Added the <info>$path/.gitignore</info> file.");
     }
 }
