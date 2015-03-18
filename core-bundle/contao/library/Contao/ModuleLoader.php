@@ -33,7 +33,7 @@ class ModuleLoader
 	 * @var array
 	 */
 	private static $legacy = [
-        'ContaoCoreBundle'       => 'core',
+		'ContaoCoreBundle'       => 'core',
 		'ContaoCalendarBundle'   => 'calendar',
 		'ContaoCommentsBundle'   => 'comments',
 		'ContaoFaqBundle'        => 'faq',
