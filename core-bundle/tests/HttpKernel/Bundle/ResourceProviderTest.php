@@ -31,11 +31,10 @@ class ResourceProviderTest extends TestCase
     public function testConstructorArguments()
     {
         $provider = new ResourceProvider(
-            ['testBundle' => 'testPath'],
+            ['testPath'],
             ['publicFolder']
         );
 
-        $this->assertContains('testBundle', $provider->getBundleNames());
         $this->assertContains('testPath', $provider->getResourcesPaths());
         $this->assertContains('publicFolder', $provider->getPublicFolders());
     }
@@ -43,9 +42,8 @@ class ResourceProviderTest extends TestCase
     public function testAddResourcesPath()
     {
         $provider = new ResourceProvider();
-        $provider->addResourcesPath('testBundle', 'testPath');
+        $provider->addResourcesPath('testPath');
 
-        $this->assertContains('testBundle', $provider->getBundleNames());
         $this->assertContains('testPath', $provider->getResourcesPaths());
     }
 

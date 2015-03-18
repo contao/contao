@@ -38,12 +38,11 @@ class ResourceProvider
     /**
      * Adds resource path of a bundle
      *
-     * @param string $bundleName The bundle name
-     * @param string $path       The resources path
+     * @param string $path The resources path
      */
-    public function addResourcesPath($bundleName, $path)
+    public function addResourcesPath($path)
     {
-        $this->contaoResources[$bundleName] = $path;
+        $this->contaoResources[] = $path;
     }
 
     /**
@@ -54,17 +53,6 @@ class ResourceProvider
     public function addPublicFolders(array $paths)
     {
         $this->publicFolders = array_merge($this->publicFolders, $paths);
-    }
-
-    /**
-     * Returns all bundle names
-     *
-     * @return array The bundle names
-     */
-    public function getBundleNames()
-    {
-        // FIXME: this method should be removed as soon as we drop coreOnlyMode
-        return array_keys($this->contaoResources);
     }
 
     /**

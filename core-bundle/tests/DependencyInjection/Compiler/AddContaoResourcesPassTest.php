@@ -29,14 +29,14 @@ class AddContaoResourcesPassTest extends TestCase
      */
     public function testInstantiation()
     {
-        $pass = new AddContaoResourcesPass('', '');
+        $pass = new AddContaoResourcesPass('');
 
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass', $pass);
     }
 
     public function testWithoutDefinition()
     {
-        $pass = new AddContaoResourcesPass('', '');
+        $pass = new AddContaoResourcesPass('');
 
         $pass->process(new ContainerBuilder());
     }
@@ -44,7 +44,7 @@ class AddContaoResourcesPassTest extends TestCase
     public function testAddResources()
     {
         $container = $this->getContainerBuilder();
-        $pass      = new AddContaoResourcesPass('testBundle', 'testPath');
+        $pass      = new AddContaoResourcesPass('testPath');
 
         $pass->process($container);
 
@@ -52,14 +52,13 @@ class AddContaoResourcesPassTest extends TestCase
         $calls      = $definition->getMethodCalls();
 
         $this->assertEquals('addResourcesPath', $calls[0][0]);
-        $this->assertEquals('testBundle', $calls[0][1][0]);
-        $this->assertEquals('testPath', $calls[0][1][1]);
+        $this->assertEquals('testPath', $calls[0][1][0]);
     }
 
     public function testAddPublicFolders()
     {
         $container = $this->getContainerBuilder();
-        $pass      = new AddContaoResourcesPass('testBundle', 'testPath', ['publicFolder1']);
+        $pass      = new AddContaoResourcesPass('testPath', ['publicFolder1']);
 
         $pass->process($container);
 

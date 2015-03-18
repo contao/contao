@@ -62,23 +62,11 @@ class OptimizeContaoResourcesPassTest extends TestCase
         $this->pass->process(new ContainerBuilder());
     }
 
-    public function testAbsolutePaths()
+    public function testModulePaths()
     {
         $definition = $this->container->getDefinition('contao.resource_provider');
-        $definition->addMethodCall('addResourcesPath', ['testBundle', $this->getRootDir() . '/system/modules/legacy-module']);
+        $definition->addMethodCall('addResourcesPath', [$this->getRootDir() . '/system/modules/legacy-module']);
         $definition->addMethodCall('addPublicFolders', [[$this->getRootDir() . '/system/modules/legacy-module/assets']]);
-
-        $this->pass->process($this->container);
-
-        $this->assertContains($this->getRootDir() . '/system/modules/legacy-module', $definition->getArgument(0));
-        $this->assertContains('system/modules/legacy-module/assets', $definition->getArgument(1));
-    }
-
-    public function testRelativePaths()
-    {
-        $definition = $this->container->getDefinition('contao.resource_provider');
-        $definition->addMethodCall('addResourcesPath', ['testBundle', $this->getRootDir() . '/system/invalid/../modules/legacy-module']);
-        $definition->addMethodCall('addPublicFolders', [[$this->getRootDir() . '/system/invalid/../modules/legacy-module/assets']]);
 
         $this->pass->process($this->container);
 
@@ -92,7 +80,7 @@ class OptimizeContaoResourcesPassTest extends TestCase
     public function testInvalidResourcesPath()
     {
         $definition = $this->container->getDefinition('contao.resource_provider');
-        $definition->addMethodCall('addResourcesPath', ['testBundle', '/system/invalid']);
+        $definition->addMethodCall('addResourcesPath', ['/system/invalid']);
 
         $this->pass->process($this->container);
     }

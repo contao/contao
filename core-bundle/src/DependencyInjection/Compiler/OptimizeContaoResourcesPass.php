@@ -49,7 +49,7 @@ class OptimizeContaoResourcesPass implements CompilerPassInterface
 
         foreach ($calls as $k => $call) {
             if ('addResourcesPath' === $call[0]) {
-                $resourcesPaths[$call[1][0]] = $this->validatePath($call[1][1]);
+                $resourcesPaths[] = $this->validatePath($call[1][0]);
                 unset($calls[$k]);
             } elseif ('addPublicFolders' === $call[0]) {
                 $this->mergePaths($publicFolders, $call[1][0]);

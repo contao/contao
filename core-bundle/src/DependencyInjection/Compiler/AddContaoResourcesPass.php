@@ -27,13 +27,11 @@ class AddContaoResourcesPass implements CompilerPassInterface
     /**
      * Constructor.
      *
-     * @param string $bundleName
      * @param string $resourcesPath
      * @param array  $publicFolders
      */
-    public function __construct($bundleName, $resourcesPath, array $publicFolders = [])
+    public function __construct($resourcesPath, array $publicFolders = [])
     {
-        $this->bundleName    = $bundleName;
         $this->resourcesPath = $resourcesPath;
         $this->publicFolders = $publicFolders;
     }
@@ -49,7 +47,7 @@ class AddContaoResourcesPass implements CompilerPassInterface
 
         $definition = $container->findDefinition('contao.resource_provider');
 
-        $definition->addMethodCall('addResourcesPath', [$this->bundleName, $this->resourcesPath]);
+        $definition->addMethodCall('addResourcesPath', [$this->resourcesPath]);
 
         if (!empty($this->publicFolders)) {
             $definition->addMethodCall('addPublicFolders', [$this->publicFolders]);
