@@ -28,18 +28,19 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class ModuleLoader
 {
-    // TODO: why do we need these variables anymore?
 	/**
-	 * Active modules
+	 * Mapping Symfony bundles to Contao module names
 	 * @var array
 	 */
-	protected static $active = array();
-
-	/**
-	 * Disabled modules
-	 * @var array
-	 */
-	protected static $disabled = array();
+	private static $legacy = [
+        'ContaoCoreBundle'       => 'core',
+		'ContaoCalendarBundle'   => 'calendar',
+		'ContaoCommentsBundle'   => 'comments',
+		'ContaoFaqBundle'        => 'faq',
+		'ContaoListingBundle'    => 'listing',
+		'ContaoNewsBundle'       => 'news',
+		'ContaoNewsletterBundle' => 'newsletter'
+	];
 
 
 	/**
@@ -52,7 +53,17 @@ class ModuleLoader
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		return $kernel->getContainer()->get('contao.resource_provider')->getBundleNames();
+		$bundles = array_keys($kernel->getContainer()->getParameter('kernel.bundles'));
+
+		foreach (static::$legacy as $bundleName => $module)
+		{
+			if (in_array($bundleName, $bundles))
+			{
+				$bundles[] = $module;
+			}
+		}
+
+		return $bundles;
 	}
 
 
