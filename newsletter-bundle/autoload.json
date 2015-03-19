@@ -1,9 +1,0 @@
-{
-    "bundles": {
-        "Contao\\NewsletterBundle\\ContaoNewsletterBundle": {
-            "replace": ["newsletter"],
-            "environments": ["all"],
-            "load-after": ["ContaoCoreBundle"]
-        }
-    }
-}
