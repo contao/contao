@@ -15,6 +15,7 @@ use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Contao\Input;
 use Contao\System;
+use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -192,11 +193,16 @@ class InitializeSystemListener extends ScopeAwareListener
     {
         $this->includeHelpers();
 
-        // Set the error and exception handler
-        set_error_handler('__error');
-        set_exception_handler('__exception');
+        // Try to disable the PHPSESSID
+        $this->iniSet('session.use_trans_sid', 0);
+        $this->iniSet('session.cookie_httponly', true);
 
-        // Log PHP errors
+        // FIXME: Muting errors here is not fine but needed in Contao legacy code. Maybe we can allow more than this.
+        $handler = ErrorHandler::register();
+        $handler->throwAt(E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR, true);
+        $handler->scopeAt(E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR, true);
+
+        // FIXME: We should log PHP errors via symfony logger.
         $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
 
         $this->includeBasicClasses();
