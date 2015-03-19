@@ -32,9 +32,9 @@ class HtaccessAnalyzerTest extends TestCase
     protected function setUp()
     {
         $this->file = new SplFileInfo(
-            $this->getRootDir() . '/system/modules/legacy-module/html/.htaccess',
-            'system/modules/legacy-module/html',
-            'system/modules/legacy-module/html/.htaccess'
+            $this->getRootDir() . '/system/modules/foobar/html/.htaccess',
+            'system/modules/foobar/html',
+            'system/modules/foobar/html/.htaccess'
         );
     }
 

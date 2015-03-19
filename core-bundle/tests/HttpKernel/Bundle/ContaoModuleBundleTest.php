@@ -30,7 +30,7 @@ class ContaoModuleBundleTest extends TestCase
      */
     protected function setUp()
     {
-        $this->bundle = new ContaoModuleBundle('legacy-module', $this->getRootDir() . '/app');
+        $this->bundle = new ContaoModuleBundle('foobar', $this->getRootDir() . '/app');
     }
 
     /**
@@ -47,17 +47,17 @@ class ContaoModuleBundleTest extends TestCase
     public function testGetPublicFolders()
     {
         $this->assertContains(
-            $this->getRootDir() . '/system/modules/legacy-module/assets',
+            $this->getRootDir() . '/system/modules/foobar/assets',
             $this->bundle->getPublicFolders()
         );
 
         $this->assertContains(
-            $this->getRootDir() . '/system/modules/legacy-module/html',
+            $this->getRootDir() . '/system/modules/foobar/html',
             $this->bundle->getPublicFolders()
         );
 
         $this->assertNotContains(
-            $this->getRootDir() . '/system/modules/legacy-module/private',
+            $this->getRootDir() . '/system/modules/foobar/private',
             $this->bundle->getPublicFolders()
         );
     }
@@ -68,7 +68,7 @@ class ContaoModuleBundleTest extends TestCase
     public function testGetContaoResourcesPath()
     {
         $this->assertEquals(
-            $this->getRootDir() . '/system/modules/legacy-module',
+            $this->getRootDir() . '/system/modules/foobar',
             $this->bundle->getContaoResourcesPath()
         );
     }
@@ -79,7 +79,7 @@ class ContaoModuleBundleTest extends TestCase
     public function testGetPath()
     {
         $this->assertEquals(
-            $this->getRootDir() . '/system/modules/legacy-module',
+            $this->getRootDir() . '/system/modules/foobar',
             $this->bundle->getPath()
         );
     }
