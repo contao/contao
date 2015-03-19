@@ -47,11 +47,11 @@ class Session
 	 */
 	protected $arrSession;
 
-    /**
-     * Symfony session service
-     * @var SessionInterface
-     */
-    private $session;
+	/**
+	 * Symfony session service
+	 * @var SessionInterface
+	 */
+	private $session;
 
 
 	/**
@@ -59,14 +59,14 @@ class Session
 	 */
 	protected function __construct()
 	{
-        /** @var KernelInterface $kernel */
-        global $kernel;
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-        /** @var SessionInterface $session */
-        $session = $kernel->getContainer()->get('session');
+		/** @var SessionInterface $session */
+		$session = $kernel->getContainer()->get('session');
 
-        $beBag = new AttributeBag('_contao_be_attributes');
-        $feBag = new AttributeBag('_contao_fe_attributes');
+		$beBag = new AttributeBag('_contao_be_attributes');
+		$feBag = new AttributeBag('_contao_fe_attributes');
 
 		switch (TL_MODE)
 		{
@@ -83,10 +83,10 @@ class Session
 				break;
 		}
 
-        $session->registerBag($beBag);
-        $session->registerBag($feBag);
+		$session->registerBag($beBag);
+		$session->registerBag($feBag);
 
-        $this->session = $session;
+		$this->session = $session;
 	}
 
 
@@ -95,11 +95,11 @@ class Session
 	 */
 	public function __destruct()
 	{
-        /** @var AttributeBagInterface $beBag */
-        $beBag = $this->session->getBag('_contao_be_attributes');
+		/** @var AttributeBagInterface $beBag */
+		$beBag = $this->session->getBag('_contao_be_attributes');
 
-        /** @var AttributeBagInterface $beBag */
-        $feBag = $this->session->getBag('_contao_fe_attributes');
+		/** @var AttributeBagInterface $beBag */
+		$feBag = $this->session->getBag('_contao_fe_attributes');
 
 		switch (TL_MODE)
 		{
@@ -108,7 +108,7 @@ class Session
 				break;
 
 			case 'FE':
-                $feBag->replace($this->arrSession);
+				$feBag->replace($this->arrSession);
 				break;
 
 			default:

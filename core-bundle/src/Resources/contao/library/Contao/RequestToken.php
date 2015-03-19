@@ -52,16 +52,16 @@ class RequestToken
 	 */
 	public static function get()
 	{
-        /** @var KernelInterface $kernel */
-        global $kernel;
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-        /** @var CsrfTokenManagerInterface $tokenManager */
-        $tokenManager = $kernel->getContainer()->get('security.csrf.token_manager');
+		/** @var CsrfTokenManagerInterface $tokenManager */
+		$tokenManager = $kernel->getContainer()->get('security.csrf.token_manager');
 
-        /** @var CsrfToken $token */
-        $token = $tokenManager->getToken('_csrf');
+		/** @var CsrfToken $token */
+		$token = $tokenManager->getToken('_csrf');
 
-        return $token->getValue();
+		return $token->getValue();
 	}
 
 
@@ -74,34 +74,34 @@ class RequestToken
 	 */
 	public static function validate($strToken)
 	{
-        // The feature has been disabled
-        if (\Config::get('disableRefererCheck') || defined('BYPASS_TOKEN_CHECK'))
-        {
-            return true;
-        }
+		// The feature has been disabled
+		if (\Config::get('disableRefererCheck') || defined('BYPASS_TOKEN_CHECK'))
+		{
+			return true;
+		}
 
-        // Check against the whitelist (thanks to Tristan Lins) (see #3164)
-        if (\Config::get('requestTokenWhitelist'))
-        {
-            $strHostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+		// Check against the whitelist (thanks to Tristan Lins) (see #3164)
+		if (\Config::get('requestTokenWhitelist'))
+		{
+			$strHostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 
-            foreach (\Config::get('requestTokenWhitelist') as $strDomain)
-            {
-                if ($strDomain == $strHostname || preg_match('/\.' . preg_quote($strDomain, '/') . '$/', $strHostname))
-                {
-                    return true;
-                }
-            }
-        }
+			foreach (\Config::get('requestTokenWhitelist') as $strDomain)
+			{
+				if ($strDomain == $strHostname || preg_match('/\.' . preg_quote($strDomain, '/') . '$/', $strHostname))
+				{
+					return true;
+				}
+			}
+		}
 
-        /** @var KernelInterface $kernel */
-        global $kernel;
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-        /** @var CsrfTokenManagerInterface $tokenManager */
-        $tokenManager = $kernel->getContainer()->get('security.csrf.token_manager');
+		/** @var CsrfTokenManagerInterface $tokenManager */
+		$tokenManager = $kernel->getContainer()->get('security.csrf.token_manager');
 
-        $token = new CsrfToken('_csrf', $strToken);
+		$token = new CsrfToken('_csrf', $strToken);
 
-        return $tokenManager->isTokenValid($token);
+		return $tokenManager->isTokenValid($token);
 	}
 }
