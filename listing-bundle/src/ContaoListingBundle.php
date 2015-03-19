@@ -26,10 +26,6 @@ class ContaoListingBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(
-            new AddContaoResourcesPass(
-                $this->getPath() . '/../contao'
-            )
-        );
+        $container->addCompilerPass(new AddContaoResourcesPass($this->getPath() . '/../contao'));
     }
 }
