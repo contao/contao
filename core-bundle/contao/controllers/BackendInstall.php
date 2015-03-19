@@ -10,9 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
-
 /**
  * Back end install tool.
  *
@@ -731,16 +728,9 @@ class BackendInstall extends \Backend
 
 		if (!\Config::get('coreOnlyMode'))
 		{
-			global $kernel;
+			$modules = \ModuleLoader::getActive();
 
-			$modules = array();
-
-			foreach ($kernel->getContaoBundles() as $bundle)
-			{
-				$modules[] = $bundle->getName();
-			}
-
-			if (count(array_diff($modules, array('ContaoCoreBundle', 'calendar', 'comments', 'devtools', 'faq', 'listing', 'news', 'newsletter', 'repository'))) > 0)
+			if (count(array_diff($modules, array('core', 'calendar', 'comments', 'faq', 'listing', 'news', 'newsletter'))) > 0)
 			{
 				\Config::set('coreOnlyMode', true);
 				\Config::persist('coreOnlyMode', true);

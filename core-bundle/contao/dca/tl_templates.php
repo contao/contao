@@ -223,12 +223,8 @@ class tl_templates extends Backend
 		$arrAllowed = trimsplit(',', Config::get('templateFiles'));
 
 		// Get all templates
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strModule => $strFolder)
 		{
-			/** @var Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle $bundle */
-			$strModule = $bundle->getName();
-			$strFolder = $bundle->getContaoResourcesPath() . '/templates';
-
 			// Continue if there is no templates folder
 			if ($strModule == 'repository' || !is_dir($strFolder))
 			{

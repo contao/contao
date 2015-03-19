@@ -10,9 +10,6 @@
 
 namespace Contao\Database;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
-
 /**
  * Compares the existing database structure with the DCA table settings and
  * calculates the queries needed to update the database.
@@ -278,9 +275,9 @@ class Installer extends \Controller
 		\Config::set('bypassCache', true);
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
 		{
-			$strDir = $bundle->getContaoResourcesPath() . '/dca';
+			$strDir = $path . '/dca';
 
 			if (!is_dir($strDir))
 			{
@@ -337,14 +334,14 @@ class Installer extends \Controller
 		$return = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $name => $path)
 		{
-			if (in_array($bundle->getName(), array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
+			if (in_array($name, array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
 			{
 				continue; // ignore the database.sql of these modules
 			}
 
-			$strFile = $bundle->getContaoResourcesPath() . '/config/database.sql';
+			$strFile = $path . '/config/database.sql';
 
 			if (!file_exists($strFile))
 			{

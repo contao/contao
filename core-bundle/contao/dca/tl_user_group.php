@@ -309,10 +309,9 @@ class tl_user_group extends Backend
 
 		$included = array();
 
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
 		{
-			/** @var Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle $bundle */
-			$strDir = $bundle->getContaoResourcesPath() . '/dca';
+			$strDir = $path . '/dca';
 
 			if (!is_dir($strDir))
 			{

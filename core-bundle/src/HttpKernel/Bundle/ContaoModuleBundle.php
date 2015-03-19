@@ -11,6 +11,8 @@
 namespace Contao\CoreBundle\HttpKernel\Bundle;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -20,7 +22,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-final class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
+final class ContaoModuleBundle extends Bundle
 {
     /**
      * @var array
@@ -42,21 +44,11 @@ final class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
     /**
      * {@inheritdoc}
      */
-    public function getPublicFolders()
+    public function build(ContainerBuilder $container)
     {
-        if (null === $this->publicDirs) {
-            $this->publicDirs = $this->findPublicFolders();
-        }
-
-        return $this->publicDirs;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getContaoResourcesPath()
-    {
-        return $this->getPath();
+        $container->addCompilerPass(
+            new AddContaoResourcesPass($this->getName(), $this->getPath(), $this->findPublicFolders())
+        );
     }
 
     /**
@@ -92,7 +84,7 @@ final class ContaoModuleBundle extends Bundle implements ContaoBundleInterface
             ->files()
             ->name('.htaccess')
             ->ignoreDotFiles(false)
-            ->in($this->getContaoResourcesPath())
+            ->in($this->getPath())
         ;
     }
 }

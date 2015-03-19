@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -212,16 +212,12 @@ class ClassLoader
 		}
 		else
 		{
+			/** @var KernelInterface $kernel */
 			global $kernel;
 
-			foreach ($kernel->getContaoBundles() as $bundle)
+			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('config/autoload.php') as $file)
 			{
-				$strFile = $bundle->getContaoResourcesPath() . '/config/autoload.php';
-
-				if (file_exists($strFile))
-				{
-					include $strFile;
-				}
+				include $file->getPathname();
 			}
 		}
 

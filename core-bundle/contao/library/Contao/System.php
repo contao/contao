@@ -318,9 +318,9 @@ abstract class System
 			{
 				global $kernel;
 
-				foreach ($kernel->getContaoBundles() as $bundle)
+				foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
 				{
-					$strFile = $bundle->getContaoResourcesPath() . '/languages/' . $strCreateLang . '/' . $strName;
+					$strFile = $path . '/languages/' . $strCreateLang . '/' . $strName;
 
 					if (file_exists($strFile . '.xlf'))
 					{
@@ -379,9 +379,9 @@ abstract class System
 			{
 				global $kernel;
 
-				foreach ($kernel->getContaoBundles() as $bundle)
+				foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
 				{
-					if (is_dir(TL_ROOT . '/' . $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage))
+					if (is_dir(TL_ROOT . '/' . $path . '/languages/' . $strLanguage))
 					{
 						$blnIsInstalled = true;
 						break;
