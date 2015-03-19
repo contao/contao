@@ -9,6 +9,10 @@
  */
 
 namespace Contao;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 
 /**
@@ -24,6 +28,9 @@ namespace Contao;
  *     echo $session->get('foo');
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since version 4.0, to be removed in version 5.0, use
+ * the Symfony Session via the container instead!
  */
 class Session
 {
@@ -40,26 +47,46 @@ class Session
 	 */
 	protected $arrSession;
 
+    /**
+     * Symfony session service
+     * @var SessionInterface
+     */
+    private $session;
+
 
 	/**
 	 * Get the session data
 	 */
 	protected function __construct()
 	{
+        /** @var KernelInterface $kernel */
+        global $kernel;
+
+        /** @var SessionInterface $session */
+        $session = $kernel->getContainer()->get('session');
+
+        $beBag = new AttributeBag('_contao_be_attributes');
+        $feBag = new AttributeBag('_contao_fe_attributes');
+
 		switch (TL_MODE)
 		{
 			case 'BE':
-				$this->arrSession = (array) $_SESSION['BE_DATA'];
+				$this->arrSession = $beBag->all();
 				break;
 
 			case 'FE':
-				$this->arrSession = (array) $_SESSION['FE_DATA'];
+				$this->arrSession = $feBag->all();
 				break;
 
 			default:
 				$this->arrSession = (array) $_SESSION;
 				break;
 		}
+
+        $session->registerBag($beBag);
+        $session->registerBag($feBag);
+
+        $this->session = $session;
 	}
 
 
@@ -68,14 +95,20 @@ class Session
 	 */
 	public function __destruct()
 	{
+        /** @var AttributeBagInterface $beBag */
+        $beBag = $this->session->getBag('_contao_be_attributes');
+
+        /** @var AttributeBagInterface $beBag */
+        $feBag = $this->session->getBag('_contao_fe_attributes');
+
 		switch (TL_MODE)
 		{
 			case 'BE':
-				$_SESSION['BE_DATA'] = $this->arrSession;
+				$beBag->replace($this->arrSession);
 				break;
 
 			case 'FE':
-				$_SESSION['FE_DATA'] = $this->arrSession;
+                $feBag->replace($this->arrSession);
 				break;
 
 			default:

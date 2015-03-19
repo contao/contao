@@ -15,12 +15,13 @@ use Contao\Config;
 use Contao\CoreBundle\Command\ContaoFrameworkDependentInterface;
 use Contao\Environment;
 use Contao\Input;
-use Contao\RequestToken;
 use Contao\System;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Initializes the Contao framework.
@@ -35,6 +36,11 @@ class InitializeSystemListener extends ScopeAwareListener
      * @var RouterInterface
      */
     private $router;
+
+    /**
+     * @var CsrfTokenManagerInterface
+     */
+    private $tokenManager;
 
     /**
      * @var string
@@ -52,10 +58,14 @@ class InitializeSystemListener extends ScopeAwareListener
      * @param RouterInterface $router  The router object
      * @param string          $rootDir The kernel root directory
      */
-    public function __construct(RouterInterface $router, $rootDir)
-    {
-        $this->router  = $router;
-        $this->rootDir = dirname($rootDir);
+    public function __construct(
+        RouterInterface $router,
+        CsrfTokenManagerInterface $tokenManager,
+        $rootDir
+    ) {
+        $this->router       = $router;
+        $this->tokenManager = $tokenManager;
+        $this->rootDir      = dirname($rootDir);
     }
 
     /**
@@ -136,10 +146,6 @@ class InitializeSystemListener extends ScopeAwareListener
     {
         $this->includeHelpers();
 
-        // Try to disable the PHPSESSID
-        $this->iniSet('session.use_trans_sid', 0);
-        $this->iniSet('session.cookie_httponly', true);
-
         // Set the error and exception handler
         set_error_handler('__error');
         set_exception_handler('__exception');
@@ -175,7 +181,7 @@ class InitializeSystemListener extends ScopeAwareListener
         }
 
         $this->triggerInitializeSystemHook();
-        $this->checkRequestToken();
+        $this->handleRequestToken();
     }
 
     /**
@@ -256,15 +262,6 @@ class InitializeSystemListener extends ScopeAwareListener
         Environment::set('path', $basePath);
 
         define('TL_PATH', Environment::get('path')); // backwards compatibility
-    }
-
-    /**
-     * Starts the session.
-     */
-    private function startSession()
-    {
-        session_set_cookie_params(0, (Environment::get('path') ?: '/')); // see #5339
-        session_start();
     }
 
     /**
@@ -351,14 +348,21 @@ class InitializeSystemListener extends ScopeAwareListener
     }
 
     /**
-     * Checks the request token.
+     * handles the request token.
      */
-    private function checkRequestToken()
+    private function handleRequestToken()
     {
-        RequestToken::initialize();
+        // Backwards compatibility
+        if (!defined('REQUEST_TOKEN')) {
+            /** @var CsrfToken $token */
+            $token = $this->tokenManager->getToken('_csrf');
+            define('REQUEST_TOKEN', $token->getValue());
+        }
 
         // Check the request token upon POST requests
-        if ($_POST && !RequestToken::validate(Input::post('REQUEST_TOKEN'))) {
+        $token = new CsrfToken('_csrf', Input::post('REQUEST_TOKEN'));
+
+        if ($_POST && !$this->tokenManager->isTokenValid($token)) {
 
             // Force a JavaScript redirect upon Ajax requests (IE requires absolute link)
             if (Environment::get('isAjaxRequest')) {
