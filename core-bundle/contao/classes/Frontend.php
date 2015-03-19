@@ -659,10 +659,7 @@ abstract class Frontend extends \Controller
 			return null;
 		}
 
-		// If the request string is empty, look for a cached page matching the
-		// primary browser language. This is a compromise between not caching
-		// empty requests at all and considering all browser languages, which
-		// is not possible for various reasons.
+		// Try to map the empty request
 		if (\Environment::get('request') == '' || \Environment::get('request') == \Environment::get('script'))
 		{
 			// Return if the language is added to the URL and the empty domain will be redirected
@@ -671,8 +668,43 @@ abstract class Frontend extends \Controller
 				return null;
 			}
 
+			$strCacheKey = null;
 			$arrLanguage = \Environment::get('httpAcceptLanguage');
-			$strCacheKey = \Environment::get('base') .'empty.'. $arrLanguage[0];
+
+			// Try to get the cache key from the mapper array
+			if (file_exists(TL_ROOT . '/system/cache/config/mapping.php'))
+			{
+				$arrMapper = include TL_ROOT . '/system/cache/config/mapping.php';
+
+				// Try the language specific keys
+				foreach ($arrLanguage as $strLanguage)
+				{
+					$strSpecificKey = \Environment::get('base') . 'empty.' . $strLanguage;
+
+					if (isset($arrMapper[$strSpecificKey]))
+					{
+						$strCacheKey = $arrMapper[$strSpecificKey];
+						break;
+					}
+				}
+
+				// Try the fallback key
+				if ($strCacheKey === null)
+				{
+					$strSpecificKey = \Environment::get('base') . 'empty.fallback';
+
+					if (isset($arrMapper[$strSpecificKey]))
+					{
+						$strCacheKey = $arrMapper[$strSpecificKey];
+					}
+				}
+			}
+
+			// Fall back to the first accepted language
+			if ($strCacheKey === null)
+			{
+				$strCacheKey = \Environment::get('base') . 'empty.' . $arrLanguage[0];
+			}
 		}
 		else
 		{
@@ -694,8 +726,8 @@ abstract class Frontend extends \Controller
 		// Check for a mobile layout
 		if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
 		{
-			$strCacheKey = md5($strCacheKey . '.mobile');
-			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strCacheKey, 0, 1) . '/' . $strCacheKey . '.html';
+			$strMd5CacheKey = md5($strCacheKey . '.mobile');
+			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
 
 			if (file_exists($strCacheFile))
 			{
@@ -706,8 +738,8 @@ abstract class Frontend extends \Controller
 		// Check for a regular layout
 		if (!$blnFound)
 		{
-			$strCacheKey = md5($strCacheKey);
-			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strCacheKey, 0, 1) . '/' . $strCacheKey . '.html';
+			$strMd5CacheKey = md5($strCacheKey);
+			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
 
 			if (file_exists($strCacheFile))
 			{
@@ -733,6 +765,7 @@ abstract class Frontend extends \Controller
 		if ($expire < time())
 		{
 			ob_end_clean();
+
 			return null;
 		}
 

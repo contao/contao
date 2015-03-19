@@ -610,8 +610,40 @@ class Automator extends \System
 		// Close the file (moves it to its final destination)
 		$objCacheFile->close();
 
+		// Generate the page mapping array
+		$arrMapper = array();
+		$objPages = \PageModel::findPublishedRootPages();
+
+		if ($objPages !== null)
+		{
+			while ($objPages->next())
+			{
+				if ($objPages->dns != '')
+				{
+					$strBase = $objPages->useSSL ? 'https://' : 'http://';
+					$strBase .= $objPages->dns . \Environment::get('path') . '/';
+				}
+				else
+				{
+					$strBase = \Environment::get('base');
+				}
+
+				if ($objPages->fallback)
+				{
+					$arrMapper[$strBase . 'empty.fallback'] = $strBase . 'empty.' . $objPages->language;
+				}
+
+				$arrMapper[$strBase . 'empty.' . $objPages->language] = $strBase . 'empty.' . $objPages->language;
+			}
+		}
+
+		// Generate the page mapper file
+		$objCacheFile = new \File('system/cache/config/mapping.php', true);
+		$objCacheFile->write(sprintf("<?php\n\nreturn %s;\n", var_export($arrMapper, true)));
+		$objCacheFile->close();
+
 		// Add a log entry
-		$this->log('Generated the autoload cache', __METHOD__, TL_CRON);
+		$this->log('Generated the config cache', __METHOD__, TL_CRON);
 	}
 
 
@@ -694,14 +726,14 @@ class Automator extends \System
 
 				foreach (scan($strDir) as $strFile)
 				{
-					if (strncmp($strFile, '.', 1) === 0 || (substr($strFile, -4) != '.php' && substr($strFile, -4) != '.xlf') || in_array($strFile, $arrFiles))
+					if (strncmp($strFile, '.', 1) !== 0 && (substr($strFile, -4) == '.php' || substr($strFile, -4) == '.xlf'))
 					{
-						continue;
+						$arrFiles[] = substr($strFile, 0, -4);
 					}
-
-					$arrFiles[] = substr($strFile, 0, -4);
 				}
 			}
+
+			$arrFiles = array_values(array_unique($arrFiles));
 
 			// Create one file per table
 			foreach ($arrFiles as $strName)
