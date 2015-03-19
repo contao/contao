@@ -1,9 +1,0 @@
-{
-    "bundles": {
-        "Contao\\FaqBundle\\ContaoFaqBundle": {
-            "replace": ["faq"],
-            "environments": ["all"],
-            "load-after": ["ContaoCoreBundle"]
-        }
-    }
-}
