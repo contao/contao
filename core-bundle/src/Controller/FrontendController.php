@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @Route(defaults={"_scope" = "frontend"})
  */
 class FrontendController extends Controller
 {
@@ -42,7 +44,7 @@ class FrontendController extends Controller
      *
      * @return Response
      *
-     * @Route("/_contao/cron", name="contao_frontend_cron", defaults={"_scope" = "frontend"})
+     * @Route("/_contao/cron", name="contao_frontend_cron")
      */
     public function cronAction()
     {
@@ -56,7 +58,7 @@ class FrontendController extends Controller
      *
      * @return Response
      *
-     * @Route("/_contao/share", name="contao_frontend_share", defaults={"_scope" = "frontend"})
+     * @Route("/_contao/share", name="contao_frontend_share")
      */
     public function shareAction()
     {

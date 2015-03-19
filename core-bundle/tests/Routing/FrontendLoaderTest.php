@@ -48,6 +48,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
         $this->assertEquals('html', $routes['contao_frontend']->getRequirement('_format'));
         $this->assertEquals('', $routes['contao_frontend']->getRequirement('_locale'));
+        $this->assertEquals('frontend', $routes['contao_frontend']->getDefault('_scope'));
     }
 
     /**
@@ -69,6 +70,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
         $this->assertEquals('html', $routes['contao_frontend']->getRequirement('_format'));
         $this->assertEquals('[a-z]{2}(\-[A-Z]{2})?', $routes['contao_frontend']->getRequirement('_locale'));
+        $this->assertEquals('frontend', $routes['contao_frontend']->getDefault('_scope'));
     }
 
     /**
@@ -90,6 +92,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
         $this->assertEquals('', $routes['contao_frontend']->getRequirement('_format'));
         $this->assertEquals('', $routes['contao_frontend']->getRequirement('_locale'));
+        $this->assertEquals('frontend', $routes['contao_frontend']->getDefault('_scope'));
     }
 
     /**
@@ -111,6 +114,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
         $this->assertEquals('', $routes['contao_frontend']->getRequirement('_format'));
         $this->assertEquals('[a-z]{2}(\-[A-Z]{2})?', $routes['contao_frontend']->getRequirement('_locale'));
+        $this->assertEquals('frontend', $routes['contao_frontend']->getDefault('_scope'));
     }
 
     /**

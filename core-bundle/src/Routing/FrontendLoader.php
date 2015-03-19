@@ -57,7 +57,7 @@ class FrontendLoader extends Loader
     public function load($resource, $type = null)
     {
         $pattern  = '/{alias}';
-        $defaults = ['_controller' => 'ContaoCoreBundle:Frontend:index'];
+        $defaults = ['_controller' => 'ContaoCoreBundle:Frontend:index', '_scope' => 'frontend'];
         $require  = ['alias' => '.*'];
 
         // URL suffix
