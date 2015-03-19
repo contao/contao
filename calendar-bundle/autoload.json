@@ -1,9 +1,0 @@
-{
-    "bundles": {
-        "Contao\\CalendarBundle\\ContaoCalendarBundle": {
-            "replace": ["calendar"],
-            "environments": ["all"],
-            "load-after": ["ContaoCoreBundle"]
-        }
-    }
-}
