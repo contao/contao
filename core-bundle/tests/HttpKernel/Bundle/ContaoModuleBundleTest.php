@@ -42,38 +42,6 @@ class ContaoModuleBundleTest extends TestCase
     }
 
     /**
-     * Tests the getPublicFolders() method.
-     */
-    public function testGetPublicFolders()
-    {
-        $this->assertContains(
-            $this->getRootDir() . '/system/modules/foobar/assets',
-            $this->bundle->getPublicFolders()
-        );
-
-        $this->assertContains(
-            $this->getRootDir() . '/system/modules/foobar/html',
-            $this->bundle->getPublicFolders()
-        );
-
-        $this->assertNotContains(
-            $this->getRootDir() . '/system/modules/foobar/private',
-            $this->bundle->getPublicFolders()
-        );
-    }
-
-    /**
-     * Tests the getContaoResourcesPath() method.
-     */
-    public function testGetContaoResourcesPath()
-    {
-        $this->assertEquals(
-            $this->getRootDir() . '/system/modules/foobar',
-            $this->bundle->getContaoResourcesPath()
-        );
-    }
-
-    /**
      * Tests the getPath() method.
      */
     public function testGetPath()

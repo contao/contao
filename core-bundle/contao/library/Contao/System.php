@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Abstract library base class
@@ -316,11 +318,12 @@ abstract class System
 			}
 			else
 			{
+				/** @var KernelInterface $kernel */
 				global $kernel;
 
-				foreach ($kernel->getContaoBundles() as $bundle)
+				foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
 				{
-					$strFile = $bundle->getContaoResourcesPath() . '/languages/' . $strCreateLang . '/' . $strName;
+					$strFile = $strFolder . '/languages/' . $strCreateLang . '/' . $strName;
 
 					if (file_exists($strFile . '.xlf'))
 					{
@@ -377,11 +380,12 @@ abstract class System
 
 			if (!$blnIsInstalled)
 			{
+				/** @var KernelInterface $kernel */
 				global $kernel;
 
-				foreach ($kernel->getContaoBundles() as $bundle)
+				foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
 				{
-					if (is_dir(TL_ROOT . '/' . $bundle->getContaoResourcesPath() . '/languages/' . $strLanguage))
+					if (is_dir(TL_ROOT . '/' . $strFolder . '/languages/' . $strLanguage))
 					{
 						$blnIsInstalled = true;
 						break;

@@ -10,8 +10,7 @@
 
 namespace Contao\Database;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Compares the existing database structure with the DCA table settings and
@@ -268,6 +267,7 @@ class Installer extends \Controller
 	 */
 	public function getFromDca()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		$return = array();
@@ -278,9 +278,9 @@ class Installer extends \Controller
 		\Config::set('bypassCache', true);
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
 		{
-			$strDir = $bundle->getContaoResourcesPath() . '/dca';
+			$strDir = $strFolder . '/dca';
 
 			if (!is_dir($strDir))
 			{
@@ -337,14 +337,14 @@ class Installer extends \Controller
 		$return = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strModule => $strFolder)
 		{
-			if (in_array($bundle->getName(), array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
+			if (in_array($strModule, array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
 			{
 				continue; // ignore the database.sql of these modules
 			}
 
-			$strFile = $bundle->getContaoResourcesPath() . '/config/database.sql';
+			$strFile = $strFolder . '/config/database.sql';
 
 			if (!file_exists($strFile))
 			{

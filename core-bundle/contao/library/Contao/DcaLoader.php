@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -79,16 +79,12 @@ class DcaLoader extends \Controller
 		}
 		else
 		{
+            /** @var KernelInterface $kernel */
 			global $kernel;
 
-			foreach ($kernel->getContaoBundles() as $bundle)
+			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('dca/' . $this->strTable . '.php') as $file)
 			{
-				$strFile = $bundle->getContaoResourcesPath() . '/dca/' . $this->strTable . '.php';
-
-				if (file_exists($strFile))
-				{
-					include $strFile;
-				}
+				include $file->getPathname();
 			}
 		}
 

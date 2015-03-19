@@ -133,16 +133,12 @@ class Config
 		}
 		else
 		{
+			/** @var KernelInterface $kernel */
 			global $kernel;
 
-			foreach ($kernel->getContaoBundles() as $bundle)
+			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('config/config.php') as $file)
 			{
-				$strFile = $bundle->getContaoResourcesPath() . '/config/config.php';
-
-				if (file_exists($strFile))
-				{
-					include $strFile;
-				}
+				include $file->getPathname();
 			}
 		}
 

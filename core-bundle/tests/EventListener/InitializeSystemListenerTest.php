@@ -11,9 +11,11 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\Config;
+use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
 use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -192,9 +194,6 @@ class InitializeSystemListenerTest extends TestCase
         $kernel = $this->getMock(
             'Symfony\Component\HttpKernel\Kernel',
             [
-                // AppKernel
-                'getContaoBundles',
-
                 // KernelInterface
                 'registerBundles',
                 'registerContainerConfiguration',
@@ -224,10 +223,17 @@ class InitializeSystemListenerTest extends TestCase
             ['test', false]
         );
 
+        $container = new Container();
+
+        $container->set(
+            'contao.resource_provider',
+            new ResourceProvider([$this->getRootDir() . '/system/modules/foobar'])
+        );
+
         $kernel
             ->expects($this->any())
-            ->method('getContaoBundles')
-            ->willReturn([]);
+            ->method('getContainer')
+            ->willReturn($container);
 
         return $kernel;
     }

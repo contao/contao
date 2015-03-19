@@ -10,8 +10,7 @@
 
 namespace Contao\Database;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Adjust the database if the system is updated.
@@ -722,14 +721,15 @@ class Updater extends \Controller
 	 */
 	public function updateFileTreeFields()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		$arrFiles = array();
 
 		// Parse all modules (see #6058)
-		foreach ($kernel->getContaoBundles() as $bundle)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
 		{
-			$strDir = $bundle->getContaoResourcesPath() . '/dca';
+			$strDir = $strFolder . '/dca';
 
 			if (!is_dir($strDir))
 			{

@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -28,18 +28,19 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
  */
 class ModuleLoader
 {
-
 	/**
-	 * Active modules
+	 * Old module names
 	 * @var array
 	 */
-	protected static $active = array();
-
-	/**
-	 * Disabled modules
-	 * @var array
-	 */
-	protected static $disabled = array();
+	private static $legacy = array(
+		'ContaoCoreBundle'       => 'core',
+		'ContaoCalendarBundle'   => 'calendar',
+		'ContaoCommentsBundle'   => 'comments',
+		'ContaoFaqBundle'        => 'faq',
+		'ContaoListingBundle'    => 'listing',
+		'ContaoNewsBundle'       => 'news',
+		'ContaoNewsletterBundle' => 'newsletter'
+	);
 
 
 	/**
@@ -49,17 +50,20 @@ class ModuleLoader
 	 */
 	public static function getActive()
 	{
-		if (empty(static::$active))
-		{
-			global $kernel;
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-			foreach ($kernel->getContaoBundles() as $bundle)
+		$bundles = array_keys($kernel->getContainer()->getParameter('kernel.bundles'));
+
+		foreach (static::$legacy as $bundleName => $module)
+		{
+			if (in_array($bundleName, $bundles))
 			{
-				static::$active[] = $bundle->getName();
+				$bundles[] = $module;
 			}
 		}
 
-		return static::$active;
+		return $bundles;
 	}
 
 

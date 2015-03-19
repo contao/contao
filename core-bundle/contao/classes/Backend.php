@@ -10,8 +10,9 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
-
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Provide methods to manage back end controllers.
@@ -249,37 +250,31 @@ abstract class Backend extends \Controller
 	 */
 	protected function handleRunOnce()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		$this->import('Files');
-		$arrFiles = array(TL_ROOT . '/system/runonce.php');
 
-		// Always scan all folders and not just the active modules (see #4200)
-		foreach ($kernel->getContaoBundles() as $bundle)
-		{
-			$arrFiles[] = $bundle->getContaoResourcesPath() . '/config/runonce.php';
-		}
+		$finder = Finder::create()->in(TL_ROOT . '/system')->files()->depth(0)->name('runonce.php');
+		$finder->append($kernel->getContainer()->get('contao.resource_provider')->findFiles('config/runonce.php'));
 
-		// Check whether a runonce file exists
-		foreach ($arrFiles as $strFile)
+		/** @var SplFileInfo $file */
+		foreach ($finder as $file)
 		{
-			if (file_exists($strFile))
+			try
 			{
-				try
-				{
-					include $strFile;
-				}
-				catch (\Exception $e) {}
-
-				$strRelpath = str_replace(TL_ROOT . '/', '', $strFile);
-
-				if (!$this->Files->delete($strRelpath))
-				{
-					throw new \Exception("The file $strRelpath cannot be deleted. Please remove the file manually and correct the file permission settings on your server.");
-				}
-
-				$this->log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
+				include $file->getPathname();
 			}
+			catch (\Exception $e) {}
+
+			$strRelpath = str_replace(TL_ROOT . '/', '', $file->getPathname());
+
+			if (!$this->Files->delete($strRelpath))
+			{
+				throw new \Exception("The file $strRelpath cannot be deleted. Please remove the file manually and correct the file permission settings on your server.");
+			}
+
+			$this->log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
 		}
 	}
 
