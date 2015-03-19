@@ -17,7 +17,7 @@ array_insert($GLOBALS['BE_MOD']['content'], 2, array
 	'faq' => array
 	(
 		'tables' => array('tl_faq_category', 'tl_faq'),
-		'icon'   => 'vendor/contao/faq-bundle/contao/assets/icon.gif'
+		'icon'   => 'bundles/contaofaq/icon.gif'
 	)
 ));
 
