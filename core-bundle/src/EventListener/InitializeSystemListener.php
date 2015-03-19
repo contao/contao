@@ -13,6 +13,8 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\ClassLoader;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
+use Contao\CoreBundle\Exception\DieNicelyException;
+use Contao\Environment;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\Debug\ErrorHandler;
@@ -327,12 +329,21 @@ class InitializeSystemListener extends ScopeAwareListener
         // Show the "insecure document root" message
         // FIXME: add unit tests for this as soon as die_nicely is an exception
         if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) && '/web' === substr($request->getBasePath(), -4)) {
-            die_nicely('be_insecure', 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
+            throw new DieNicelyException(
+                'be_insecure',
+                'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.',
+                503
+            );
         }
 
         // Show the "incomplete installation" message
         if (!$this->config->isComplete()) {
-            die_nicely('be_incomplete', 'The installation has not been completed. Open the Contao install tool to continue.');
+            // FIXME: This maybe should be removed when localconfig.php is not mandatory anymore.
+            throw new DieNicelyException(
+                'be_incomplete',
+                'The installation has not been completed. Please finish the configuration.',
+                503
+            );
         }
     }
 
@@ -396,15 +407,14 @@ class InitializeSystemListener extends ScopeAwareListener
             if ($request->isXmlHttpRequest()) {
                 header('HTTP/1.1 204 No Content');
                 header('X-Ajax-Location: ' . $this->router->generate('contao_backend'));
-            } else {
-                header('HTTP/1.1 400 Bad Request');
-                die_nicely(
-                    'be_referer',
-                    'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">go back</a> and try again.'
-                );
+                exit; // FIXME: throw a ResponseException instead
             }
 
-            exit; // FIXME: throw a ResponseException instead
+            throw new DieNicelyException(
+                'be_referer',
+                'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">go back</a> and try again.',
+                400
+            );
         }
     }
 

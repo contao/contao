@@ -116,16 +116,16 @@ function __exception(Exception $e)
 
 /**
  * Show a special Contao "what to do in case of an error" message
+ *
+ * @throws \Contao\CoreBundle\Exception\DieNicelyException
+ *
+ * @deprecated Deprecated since Contao 4.0 to be removed in Contao 5.0 - throw a DieNicelyException instead.
+ *
+ * @see \Contao\CoreBundle\Exception\DieNicelyException
  */
 function show_help_message()
 {
-	if (ini_get('display_errors'))
-	{
-		return;
-	}
-
-	header('HTTP/1.1 500 Internal Server Error');
-	die_nicely('be_error', 'An error occurred while executing this script!');
+	throw new \Contao\CoreBundle\Exception\DieNicelyException();
 }
 
 
@@ -134,25 +134,16 @@ function show_help_message()
  *
  * @param string $strTemplate
  * @param string $strFallback
+ *
+ * @throws \Contao\CoreBundle\Exception\DieNicelyException
+ *
+ * @deprecated Deprecated since Contao 4.0 to be removed in Contao 5.0 - throw a DieNicelyException instead.
+ *
+ * @see \Contao\CoreBundle\Exception\DieNicelyException
  */
 function die_nicely($strTemplate, $strFallback)
 {
-	header('Content-type: text/html; charset=utf-8');
-
-	if (file_exists(TL_ROOT . "/templates/$strTemplate.html5"))
-	{
-		include TL_ROOT . "/templates/$strTemplate.html5";
-	}
-	elseif (file_exists(__DIR__ . "/../templates/backend/$strTemplate.html5"))
-	{
-		include __DIR__ . "/../templates/backend/$strTemplate.html5";
-	}
-	else
-	{
-		echo $strFallback;
-	}
-
-	exit;
+	throw new \Contao\CoreBundle\Exception\DieNicelyException($strTemplate, $strFallback);
 }
 
 
