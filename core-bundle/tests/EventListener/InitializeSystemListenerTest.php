@@ -27,6 +27,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Tests the BootstrapLegacyListener class.
@@ -42,6 +43,7 @@ class InitializeSystemListenerTest extends TestCase
     {
         $listener = new InitializeSystemListener(
             $this->getMock('Symfony\Component\Routing\RouterInterface'),
+            $this->getMock('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'),
             $this->getRootDir()
         );
 
@@ -66,6 +68,7 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
+            $this->mockTokenManager(),
             $this->getRootDir() . '/app'
         );
 
@@ -104,6 +107,7 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/contao/install'),
+            $this->mockTokenManager(),
             $this->getRootDir() . '/app'
         );
 
@@ -143,6 +147,7 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
+            $this->mockTokenManager(),
             $this->getRootDir() . '/app'
         );
 
@@ -184,6 +189,7 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
+            $this->mockTokenManager(),
             $this->getRootDir() . '/app'
         );
 
@@ -288,6 +294,7 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->getMock('Symfony\Component\Routing\RouterInterface'),
+            $this->mockTokenManager(),
             $this->getRootDir() . '/app'
         );
 
@@ -431,5 +438,17 @@ class InitializeSystemListenerTest extends TestCase
         ;
 
         return $router;
+    }
+
+    /**
+     * Mocks a CSRF token manager
+     *
+     * @return CsrfTokenManagerInterface The token manager object
+     */
+    private function mockTokenManager()
+    {
+        $tokenManager = $this->getMock('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface');
+
+        return $tokenManager;
     }
 }
