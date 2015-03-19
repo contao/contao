@@ -20,7 +20,7 @@ class HtaccessAnalyzer
     /**
      * @var \SplFileInfo
      */
-    protected $file;
+    private $file;
 
     /**
      * Stores the file object.
@@ -63,7 +63,7 @@ class HtaccessAnalyzer
      *
      * @return bool True if the line has an access definition
      */
-    protected function hasRequireGranted($line)
+    private function hasRequireGranted($line)
     {
         if ($this->isComment($line)) {
             return false;
@@ -87,7 +87,7 @@ class HtaccessAnalyzer
      *
      * @return bool True if the line is a comment
      */
-    protected function isComment($line)
+    private function isComment($line)
     {
         return 0 === strncmp('#', ltrim($line), 1);
     }
