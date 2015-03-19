@@ -10,22 +10,26 @@
 
 namespace Contao\ListingBundle;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoBundle;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Configures the Contao listing bundle.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoListingBundle extends ContaoBundle
+class ContaoListingBundle extends Bundle
 {
     /**
      * {@inheritdoc}
      */
-    public function getPublicFolders()
+    public function build(ContainerBuilder $container)
     {
-        return [
-            $this->getPath() . '/../contao/assets',
-        ];
+        $container->addCompilerPass(
+            new AddContaoResourcesPass(
+                $this->getPath() . '/../contao'
+            )
+        );
     }
 }
