@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
-use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -23,7 +22,6 @@ use Symfony\Component\DependencyInjection\Definition;
  */
 class AddContaoResourcesPassTest extends TestCase
 {
-
     /**
      * Tests the object instantiation.
      */
@@ -34,6 +32,9 @@ class AddContaoResourcesPassTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass', $pass);
     }
 
+    /**
+     * Tests processing the pass without definition.
+     */
     public function testWithoutDefinition()
     {
         $pass = new AddContaoResourcesPass('');
@@ -41,6 +42,9 @@ class AddContaoResourcesPassTest extends TestCase
         $pass->process(new ContainerBuilder());
     }
 
+    /**
+     * Tests adding resources.
+     */
     public function testAddResources()
     {
         $container = $this->getContainerBuilder();
@@ -55,6 +59,9 @@ class AddContaoResourcesPassTest extends TestCase
         $this->assertEquals('testPath', $calls[0][1][0]);
     }
 
+    /**
+     * Tests adding public folders.
+     */
     public function testAddPublicFolders()
     {
         $container = $this->getContainerBuilder();
@@ -70,7 +77,7 @@ class AddContaoResourcesPassTest extends TestCase
     }
 
     /**
-     * Returns a container builder including a contao.resource_provider service
+     * Returns a container builder with the contao.resource_provider service.
      *
      * @return ContainerBuilder The container builder instance
      */

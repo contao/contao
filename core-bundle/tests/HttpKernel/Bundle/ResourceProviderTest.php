@@ -28,6 +28,9 @@ class ResourceProviderTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider', new ResourceProvider());
     }
 
+    /**
+     * Tests adding constructor arguments.
+     */
     public function testConstructorArguments()
     {
         $provider = new ResourceProvider(
@@ -39,6 +42,9 @@ class ResourceProviderTest extends TestCase
         $this->assertContains('publicFolder', $provider->getPublicFolders());
     }
 
+    /**
+     * Tests adding a resources path.
+     */
     public function testAddResourcesPath()
     {
         $provider = new ResourceProvider();
@@ -47,6 +53,9 @@ class ResourceProviderTest extends TestCase
         $this->assertContains('testPath', $provider->getResourcesPaths());
     }
 
+    /**
+     * Tests adding a public folder.
+     */
     public function testAddPublicFolders()
     {
         $provider = new ResourceProvider();

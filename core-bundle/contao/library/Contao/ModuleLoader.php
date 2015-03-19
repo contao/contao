@@ -29,10 +29,10 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class ModuleLoader
 {
 	/**
-	 * Mapping Symfony bundles to Contao module names
+	 * Old module names
 	 * @var array
 	 */
-	private static $legacy = [
+	private static $legacy = array(
 		'ContaoCoreBundle'       => 'core',
 		'ContaoCalendarBundle'   => 'calendar',
 		'ContaoCommentsBundle'   => 'comments',
@@ -40,7 +40,7 @@ class ModuleLoader
 		'ContaoListingBundle'    => 'listing',
 		'ContaoNewsBundle'       => 'news',
 		'ContaoNewsletterBundle' => 'newsletter'
-	];
+	);
 
 
 	/**

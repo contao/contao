@@ -305,13 +305,14 @@ class tl_user_group extends Backend
 	 */
 	public function getExcludedFields()
 	{
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
 		global $kernel;
 
 		$included = array();
 
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
 		{
-			$strDir = $path . '/dca';
+			$strDir = $strFolder . '/dca';
 
 			if (!is_dir($strDir))
 			{

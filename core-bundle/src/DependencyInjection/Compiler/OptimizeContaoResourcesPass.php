@@ -14,23 +14,25 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Verifies and optimizes paths in the contao.resoures service.
+ * Verifies and optimizes the paths in the contao.resoures service.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
 class OptimizeContaoResourcesPass implements CompilerPassInterface
 {
+    /**
+     * @var string
+     */
     private $rootDir;
 
     /**
      * Constructor.
      *
-     * @param string $kernelRootDir The kernel root directory
+     * @param string $rootDir The kernel root directory
      */
-    public function __construct($kernelRootDir)
+    public function __construct($rootDir)
     {
-        // We need relative paths starting from "TL_ROOT"
-        $this->rootDir = dirname($kernelRootDir) . '/';
+        $this->rootDir = dirname($rootDir) . '/';
     }
 
     /**
@@ -64,8 +66,8 @@ class OptimizeContaoResourcesPass implements CompilerPassInterface
     /**
      * Adds relative paths to an array making sure they actually exist.
      *
-     * @param array $current  Current paths
-     * @param array $new      Paths to be added
+     * @param array $current Current paths
+     * @param array $new     Paths to be added
      */
     private function mergePaths(array &$current, array $new)
     {
@@ -78,18 +80,18 @@ class OptimizeContaoResourcesPass implements CompilerPassInterface
     }
 
     /**
-     * Make sure the given path exists.
+     * Ensures that the given path exists.
      *
-     * @param string $path The path to be checked.
+     * @param string $path The path
      *
-     * @return string The path if it was found.
+     * @return string The path
      *
      * @throws \InvalidArgumentException If the path does not exist
      */
     private function validatePath($path)
     {
         if (!is_dir($path)) {
-            throw new \InvalidArgumentException(sprintf('Path "%s" does not exist.', $path));
+            throw new \InvalidArgumentException("Path $path does not exist");
         }
 
         return $path;

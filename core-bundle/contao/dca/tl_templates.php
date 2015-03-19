@@ -217,6 +217,7 @@ class tl_templates extends Backend
 	 */
 	public function addNewTemplate()
 	{
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
 		global $kernel;
 
 		$arrAllTemplates = array();

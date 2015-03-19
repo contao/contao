@@ -20,33 +20,40 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class ResourceProvider
 {
-    private $contaoResources;
+    /**
+     * @var array
+     */
+    private $resourcesPaths;
+
+    /**
+     * @var array
+     */
     private $publicFolders;
 
     /**
      * Constructor.
      *
-     * @param array $contaoResources An optional array of Contao resource paths
-     * @param array $publicFolders   An option array of public folders
+     * @param array $resourcesPath An optional array of Contao resources paths
+     * @param array $publicFolders An option array of public folders
      */
-    public function __construct(array $contaoResources = [], array $publicFolders = [])
+    public function __construct(array $resourcesPath = [], array $publicFolders = [])
     {
-        $this->contaoResources = $contaoResources;
-        $this->publicFolders   = $publicFolders;
+        $this->resourcesPaths = $resourcesPath;
+        $this->publicFolders  = $publicFolders;
     }
 
     /**
-     * Adds resource path of a bundle
+     * Adds a resources path.
      *
      * @param string $path The resources path
      */
     public function addResourcesPath($path)
     {
-        $this->contaoResources[] = $path;
+        $this->resourcesPaths[] = $path;
     }
 
     /**
-     * Adds public folders
+     * Adds public folders.
      *
      * @param array $paths The public folders
      */
@@ -56,17 +63,17 @@ class ResourceProvider
     }
 
     /**
-     * Returns all Contao resources paths
+     * Returns the resources paths.
      *
      * @return array The resources paths
      */
     public function getResourcesPaths()
     {
-        return $this->contaoResources;
+        return $this->resourcesPaths;
     }
 
     /**
-     * Returns the public folders
+     * Returns the public folders.
      *
      * @return array The public folders
      */
@@ -76,23 +83,23 @@ class ResourceProvider
     }
 
     /**
-     * Returns a Finder instance to find files or folders in the Contao resources
+     * Returns a Finder instance to find files or folders in the Contao resources.
      *
-     * @param string $folder A folder name in the resources
+     * @param string $folder The folder name
      *
-     * @return Finder|SplFileInfo[] A Finder instance
+     * @return Finder|SplFileInfo[] The Finder instance
      *
-     * @throws \UnderflowException If no Contao resources paths are available
+     * @throws \RuntimeException If there are no Contao resources paths
      */
     public function findIn($folder)
     {
-        if (empty($this->contaoResources)) {
-            throw new \UnderflowException('No Contao resources paths available.');
+        if (empty($this->resourcesPaths)) {
+            throw new \RuntimeException('No Contao resources paths available');
         }
 
         $finder = Finder::create()->ignoreDotFiles(true)->followLinks();
 
-        foreach ($this->contaoResources as $path) {
+        foreach ($this->resourcesPaths as $path) {
             $finder->in($path . '/' . $folder);
         }
 
@@ -100,13 +107,11 @@ class ResourceProvider
     }
 
     /**
-     * Returns a Finder instance to find files in the given Contao resources folder
+     * Returns a Finder instance to find files in the Contao resources.
      *
-     * @param string $path A file name to be found in a the Contao resources folder.
+     * @param string $path The path
      *
-     * @return Finder|SplFileInfo[] A Finder instance
-     *
-     * @throws \UnderflowException If no Contao resources paths are available
+     * @return Finder|SplFileInfo[] The Finder instance
      */
     public function findFiles($path)
     {

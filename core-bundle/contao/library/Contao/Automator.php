@@ -481,10 +481,10 @@ class Automator extends \System
 		}
 
 		// Symlink the public extension subfolders
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getPublicFolders() as $strPath)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getPublicFolders() as $strFolder)
 		{
-			$target = str_repeat('../', substr_count($strPath, '/') + 1);
-			$this->Files->symlink($target . $strPath, 'web/' . $strPath);
+			$target = str_repeat('../', substr_count($strFolder, '/') + 1);
+			$this->Files->symlink($target . $strFolder, 'web/' . $strFolder);
 		}
 
 		$this->symlinkThemes();
@@ -525,16 +525,17 @@ class Automator extends \System
 	 */
 	protected function symlinkThemes()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
 		{
-			if (0 === strpos($path, 'system/modules/'))
+			if (0 === strpos($strFolder, 'system/modules/'))
 			{
 				continue;
 			}
 
-			$strDir = $path . '/themes';
+			$strDir = $strFolder . '/themes';
 
 			if (is_dir($strDir))
 			{
@@ -651,6 +652,7 @@ class Automator extends \System
 	 */
 	public function generateLanguageCache()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		$arrLanguages = array();
@@ -681,9 +683,9 @@ class Automator extends \System
 			$arrFiles = array();
 
 			// Parse all active modules
-			foreach ($arrResourcesPaths as $path)
+			foreach ($arrResourcesPaths as $strFolder)
 			{
-				$strDir = $path . '/languages/' . $strLanguage;
+				$strDir = $strFolder . '/languages/' . $strLanguage;
 
 				if (!is_dir($strDir))
 				{
@@ -727,9 +729,9 @@ class Automator extends \System
 				$objCacheFile->write(sprintf($strHeader, $strLanguage));
 
 				// Parse all active modules and append to the cache file
-				foreach ($arrResourcesPaths as $path)
+				foreach ($arrResourcesPaths as $strFolder)
 				{
-					$strFile = $path . '/languages/' . $strLanguage . '/' . $strName;
+					$strFile = $strFolder . '/languages/' . $strLanguage . '/' . $strName;
 
 					if (file_exists($strFile . '.xlf'))
 					{
@@ -756,15 +758,16 @@ class Automator extends \System
 	 */
 	public function generateDcaExtracts()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		$included = array();
 		$arrExtracts = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $path)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
 		{
-			$strDir = $path . '/dca';
+			$strDir = $strFolder . '/dca';
 
 			if (!is_dir($strDir))
 			{

@@ -57,24 +57,32 @@ class OptimizeContaoResourcesPassTest extends TestCase
         );
     }
 
+    /**
+     * Tests processing the pass without defintion.
+     */
     public function testWithoutDefinition()
     {
         $this->pass->process(new ContainerBuilder());
     }
 
+    /**
+     * Tests adding a legacy module.
+     */
     public function testModulePaths()
     {
         $definition = $this->container->getDefinition('contao.resource_provider');
-        $definition->addMethodCall('addResourcesPath', [$this->getRootDir() . '/system/modules/legacy-module']);
-        $definition->addMethodCall('addPublicFolders', [[$this->getRootDir() . '/system/modules/legacy-module/assets']]);
+        $definition->addMethodCall('addResourcesPath', [$this->getRootDir() . '/system/modules/foobar']);
+        $definition->addMethodCall('addPublicFolders', [[$this->getRootDir() . '/system/modules/foobar/assets']]);
 
         $this->pass->process($this->container);
 
-        $this->assertContains($this->getRootDir() . '/system/modules/legacy-module', $definition->getArgument(0));
-        $this->assertContains('system/modules/legacy-module/assets', $definition->getArgument(1));
+        $this->assertContains($this->getRootDir() . '/system/modules/foobar', $definition->getArgument(0));
+        $this->assertContains('system/modules/foobar/assets', $definition->getArgument(1));
     }
 
     /**
+     * Tests adding an invalid resource.
+     *
      * @expectedException \InvalidArgumentException
      */
     public function testInvalidResourcesPath()
@@ -86,6 +94,8 @@ class OptimizeContaoResourcesPassTest extends TestCase
     }
 
     /**
+     * Tests adding an invalid public folder.
+     *
      * @expectedException \InvalidArgumentException
      */
     public function testInvalidPublicFolders()

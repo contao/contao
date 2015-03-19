@@ -13,7 +13,6 @@ namespace Contao\CoreBundle;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\OptimizeContaoResourcesPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\SetApplicationPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;

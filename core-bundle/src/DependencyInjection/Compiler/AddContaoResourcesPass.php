@@ -20,15 +20,21 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class AddContaoResourcesPass implements CompilerPassInterface
 {
-    private $bundleName;
+    /**
+     * @var string
+     */
     private $resourcesPath;
+
+    /**
+     * @var array
+     */
     private $publicFolders;
 
     /**
      * Constructor.
      *
-     * @param string $resourcesPath
-     * @param array  $publicFolders
+     * @param string $resourcesPath The Contao resources path
+     * @param array  $publicFolders An array of public folders
      */
     public function __construct($resourcesPath, array $publicFolders = [])
     {
@@ -46,7 +52,6 @@ class AddContaoResourcesPass implements CompilerPassInterface
         }
 
         $definition = $container->findDefinition('contao.resource_provider');
-
         $definition->addMethodCall('addResourcesPath', [$this->resourcesPath]);
 
         if (!empty($this->publicFolders)) {

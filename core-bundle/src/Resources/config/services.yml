@@ -35,6 +35,11 @@ services:
             # Priority must be lower than the one of the Contao initialize system listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
 
+    contao.resource_provider:
+        class: Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider
+        arguments:
+            - "%kernel.root_dir%"
+
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
         arguments:
@@ -53,11 +58,6 @@ services:
     contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
-
-    contao.resource_provider:
-        class: Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider
-        arguments:
-            - "%kernel.root_dir%"
 
     contao.web_profiler.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
