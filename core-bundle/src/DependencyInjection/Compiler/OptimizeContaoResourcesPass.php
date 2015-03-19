@@ -90,6 +90,10 @@ class OptimizeContaoResourcesPass implements CompilerPassInterface
      */
     private function validatePath($path)
     {
+        if (false !== strpos($path, '../')) {
+            $path = realpath($path);
+        }
+
         if (!is_dir($path)) {
             throw new \InvalidArgumentException("Path $path does not exist");
         }
