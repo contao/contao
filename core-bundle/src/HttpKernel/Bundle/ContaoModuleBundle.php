@@ -25,11 +25,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 final class ContaoModuleBundle extends Bundle
 {
     /**
-     * @var array
-     */
-    private $publicDirs;
-
-    /**
      * Sets the module name and application root directory.
      *
      * @param string $name    The module name
