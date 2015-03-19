@@ -348,7 +348,7 @@ class InitializeSystemListener extends ScopeAwareListener
     }
 
     /**
-     * handles the request token.
+     * Handles the request token.
      */
     private function handleRequestToken()
     {
