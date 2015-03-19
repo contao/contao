@@ -47,7 +47,7 @@ final class ContaoModuleBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(
-            new AddContaoResourcesPass($this->getName(), $this->getPath(), $this->findPublicFolders())
+            new AddContaoResourcesPass($this->getPath(), $this->findPublicFolders())
         );
     }
 
