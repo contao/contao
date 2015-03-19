@@ -26,11 +26,6 @@ class ContaoNewsletterBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(
-            new AddContaoResourcesPass(
-                $this->getPath() . '/../contao',
-                [$this->getPath() . '/../contao/assets']
-            )
-        );
+        $container->addCompilerPass(new AddContaoResourcesPass($this->getPath() . '/../contao'));
     }
 }

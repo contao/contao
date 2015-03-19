@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter']['send'],
 				'href'                => 'key=send',
-				'icon'                => 'vendor/contao/newsletter-bundle/contao/assets/icon.gif'
+				'icon'                => 'bundles/contaonewsletter/icon.gif'
 			)
 		)
 	),
