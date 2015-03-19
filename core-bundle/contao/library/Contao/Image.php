@@ -809,12 +809,22 @@ class Image
 			}
 		}
 
-		if (!file_exists(TL_ROOT .'/'. $src))
+		$path = $src;
+
+		if (!file_exists(TL_ROOT . '/' . $src))
 		{
-			return '';
+			// Handle public bundle resources
+			if (file_exists(TL_ROOT . '/web/' . $src))
+			{
+				$path = 'web/' . $src;
+			}
+			else
+			{
+				return '';
+			}
 		}
 
-		$objFile = new \File($src);
+		$objFile = new \File($path);
 
 		return '<img src="' . $static . \System::urlEncode($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
 	}
