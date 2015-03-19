@@ -1,9 +1,0 @@
-{
-    "bundles": {
-        "Contao\\ListingBundle\\ContaoListingBundle": {
-            "replace": ["listing"],
-            "environments": ["all"],
-            "load-after": ["ContaoCoreBundle"]
-        }
-    }
-}
