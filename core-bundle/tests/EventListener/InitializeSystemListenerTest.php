@@ -68,7 +68,7 @@ class InitializeSystemListenerTest extends TestCase
         $listener->onKernelRequest($event);
 
         $this->assertEquals('FE', TL_MODE);
-        $this->assertEquals('/index.html', TL_SCRIPT);
+        $this->assertEquals('index.html', TL_SCRIPT);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
     }
 
@@ -98,7 +98,7 @@ class InitializeSystemListenerTest extends TestCase
         $listener->onKernelRequest($event);
 
         $this->assertEquals('BE', TL_MODE);
-        $this->assertEquals('/contao/install', TL_SCRIPT);
+        $this->assertEquals('contao/install', TL_SCRIPT);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
     }
 
@@ -152,7 +152,7 @@ class InitializeSystemListenerTest extends TestCase
         $listener->onKernelRequest($event);
 
         $this->assertEquals('FE', TL_MODE);
-        $this->assertEquals('/index.html', TL_SCRIPT);
+        $this->assertEquals('index.html', TL_SCRIPT);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
     }
 
