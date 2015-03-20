@@ -45,5 +45,6 @@ class ContaoCoreExtension extends ConfigurableExtension
 
         $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
         $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
+        $container->setParameter('contao.upload_path', $mergedConfig['upload_path']);
     }
 }

@@ -92,12 +92,6 @@
       <trans-unit id="tl_settings.doNotCollapse.1">
         <source>Do not collapse elements in the back end preview.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.urlSuffix.0">
-        <source>URL suffix</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.urlSuffix.1">
-        <source>The URL suffix will be added to the URI string to simulate static documents.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.cacheMode.0">
         <source>Cache mode</source>
       </trans-unit>
@@ -127,12 +121,6 @@
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeGA.1">
         <source>Anonymize the IP addresses that are sent to Google Analytics.</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.addLanguageToUrl.0">
-        <source>Add the language to the URL</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.addLanguageToUrl.1">
-        <source>Add the language string as first URL parameter (e.g. &lt;em&gt;http://example.com/en/&lt;/em&gt;).</source>
       </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
@@ -253,12 +241,6 @@
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgHeight.1">
         <source>Here you can enter the maximum image height that the GD library shall try to handle.</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadPath.0">
-        <source>Files directory</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadPath.1">
-        <source>Here you can set the relative path to the Contao files directory.</source>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>

@@ -32,8 +32,22 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->booleanNode('prepend_locale')->defaultFalse()->end()
-                ->scalarNode('url_suffix')->defaultValue('.html')->end()
+                ->booleanNode('prepend_locale')
+                    ->defaultFalse()
+                ->end()
+                ->scalarNode('url_suffix')
+                    ->defaultValue('.html')
+                ->end()
+                ->scalarNode('upload_path')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->defaultValue('files')
+                    ->validate()
+                    ->ifTrue(function ($v) {
+                        return preg_match('@^(app|assets|contao|plugins|share|system|templates|vendor|web)(/|$)@', $v);
+                    })
+                    ->thenInvalid('%s')
+                ->end()
             ->end()
         ;
 

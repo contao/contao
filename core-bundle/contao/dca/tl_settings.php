@@ -26,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('useSMTP'),
-		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts,coreOnlyMode,bypassCache,maintenanceMode;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},urlSuffix,cacheMode,useAutoItem,addLanguageToUrl,doNotRedirectEmpty,folderUrl;{proxy_legend:hide},proxyServerIps,sslProxyDomain;{privacy_legend:hide},privacyAnonymizeIp,privacyAnonymizeGA;{security_legend},allowedTags,displayErrors,logErrors,disableRefererCheck,disableIpCheck;{files_legend:hide},allowedDownload,validImageTypes,editableFiles,templateFiles,maxImageWidth,jpgQuality,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadPath,uploadTypes,uploadFields,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{smtp_legend:hide},useSMTP;{cron_legend:hide},disableCron;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout,autologin,lockPeriod;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod;{update_legend:hide},liveUpdateBase'
+		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts,coreOnlyMode,bypassCache,maintenanceMode;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},cacheMode,useAutoItem,doNotRedirectEmpty,folderUrl;{proxy_legend:hide},proxyServerIps,sslProxyDomain;{privacy_legend:hide},privacyAnonymizeIp,privacyAnonymizeGA;{security_legend},allowedTags,displayErrors,logErrors,disableRefererCheck,disableIpCheck;{files_legend:hide},allowedDownload,validImageTypes,editableFiles,templateFiles,maxImageWidth,jpgQuality,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,uploadFields,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{smtp_legend:hide},useSMTP;{cron_legend:hide},disableCron;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout,autologin,lockPeriod;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod;{update_legend:hide},liveUpdateBase'
 	),
 
 	// Subpalettes
@@ -153,18 +153,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['doNotCollapse'],
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12')
-		),
-		'urlSuffix' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['urlSuffix'],
-			'inputType'               => 'text',
-			'eval'                    => array('nospace'=>'true', 'tl_class'=>'w50')
-		),
-		'addLanguageToUrl' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['addLanguageToUrl'],
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50')
 		),
 		'doNotRedirectEmpty' => array
 		(
@@ -313,16 +301,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['gdMaxImgHeight'],
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
-		),
-		'uploadPath' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['uploadPath'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'trailingSlash'=>false, 'tl_class'=>'w50'),
-			'save_callback' => array
-			(
-				array('tl_settings', 'checkUploadPath')
-			)
 		),
 		'uploadTypes' => array
 		(
@@ -550,31 +528,6 @@ class tl_settings extends Backend
 		if (strpos($varValue, 'html5') === false)
 		{
 			$varValue .= (($varValue != '') ? ',' : '') . 'html5';
-		}
-
-		return $varValue;
-	}
-
-
-	/**
-	 * Check the upload path
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 *
-	 * @throws Exception
-	 */
-	public function checkUploadPath($varValue)
-	{
-		if ($varValue == '' || Validator::isInsecurePath($varValue))
-		{
-			throw new Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
-		}
-
-		if (preg_match('@^(app|assets|contao|plugins|share|system|templates|vendor|web)(/|$)@', $varValue))
-		{
-			throw new Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
 		}
 
 		return $varValue;

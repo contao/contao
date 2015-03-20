@@ -502,7 +502,8 @@ class Config
 			'smtpUser'         => 'mailer_user',
 			'smtpPass'         => 'mailer_password',
 			'addLanguageToUrl' => 'contao.prepend_locale',
-			'urlSuffix'        => 'contao.url_suffix'
+			'urlSuffix'        => 'contao.url_suffix',
+			'uploadPath'       => 'contao.upload_path'
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)
