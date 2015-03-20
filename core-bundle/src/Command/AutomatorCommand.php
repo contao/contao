@@ -115,7 +115,7 @@ class AutomatorCommand extends LockedCommand
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
-            if ($method->class == 'Contao\\Automator' && $method->name != '__construct') {
+            if ($method->getDeclaringClass() == $class && !$method->isConstructor()) {
                 $commands[] = $method->name;
             }
         }
