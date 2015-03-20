@@ -24,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class GdImageTest extends TestCase
 {
-    const TEMP_DIRECTORY = __DIR__ . '/../../tmp';
+    private static $rootDir = __DIR__ . '/../../tmp';
 
     /**
      * {@inheritdoc}
@@ -32,7 +32,7 @@ class GdImageTest extends TestCase
     public static function setUpBeforeClass()
     {
         $fs = new Filesystem();
-        $fs->mkdir(self::TEMP_DIRECTORY);
+        $fs->mkdir(self::$rootDir);
     }
 
     /**
@@ -41,7 +41,7 @@ class GdImageTest extends TestCase
     public static function tearDownAfterClass()
     {
         $fs = new Filesystem();
-        $fs->remove(self::TEMP_DIRECTORY);
+        $fs->remove(self::$rootDir);
     }
 
     /**
@@ -49,7 +49,7 @@ class GdImageTest extends TestCase
      */
     protected function setUp()
     {
-        define('TL_ROOT', self::TEMP_DIRECTORY);
+        define('TL_ROOT', self::$rootDir);
     }
 
     /**
@@ -89,7 +89,7 @@ class GdImageTest extends TestCase
             imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
 
             $method = 'image' . $type;
-            $method($image, self::TEMP_DIRECTORY . '/test.' . $type);
+            $method($image, self::$rootDir . '/test.' . $type);
             imagedestroy($image);
 
             $image = GdImage::fromFile(new \File('test.' . $type));
@@ -116,7 +116,7 @@ class GdImageTest extends TestCase
     public function testSaveToFile()
     {
         foreach (['gif', 'jpeg', 'png'] as $type) {
-            $file  = self::TEMP_DIRECTORY . '/test.' . $type;
+            $file  = self::$rootDir . '/test.' . $type;
             $image = GdImage::fromDimensions(100, 100);
 
             $image->saveToFile($file);

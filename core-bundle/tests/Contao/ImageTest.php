@@ -24,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class ImageTest extends TestCase
 {
-    const TEMP_DIRECTORY = __DIR__ . '/../../tmp';
+    private static $rootDir = __DIR__ . '/../../tmp';
 
     /**
      * {@inheritdoc}
@@ -32,16 +32,16 @@ class ImageTest extends TestCase
     public static function setUpBeforeClass()
     {
         $fs = new Filesystem();
-        $fs->mkdir(self::TEMP_DIRECTORY);
-        $fs->mkdir(self::TEMP_DIRECTORY . '/assets');
-        $fs->mkdir(self::TEMP_DIRECTORY . '/assets/images');
+        $fs->mkdir(self::$rootDir);
+        $fs->mkdir(self::$rootDir . '/assets');
+        $fs->mkdir(self::$rootDir . '/assets/images');
 
         foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
-            $fs->mkdir(self::TEMP_DIRECTORY . '/assets/images/' . $subdir);
+            $fs->mkdir(self::$rootDir . '/assets/images/' . $subdir);
         }
 
-        $fs->mkdir(self::TEMP_DIRECTORY . '/system');
-        $fs->mkdir(self::TEMP_DIRECTORY . '/system/tmp');
+        $fs->mkdir(self::$rootDir . '/system');
+        $fs->mkdir(self::$rootDir . '/system/tmp');
     }
 
     /**
@@ -50,7 +50,7 @@ class ImageTest extends TestCase
     public static function tearDownAfterClass()
     {
         $fs = new Filesystem();
-        $fs->remove(self::TEMP_DIRECTORY);
+        $fs->remove(self::$rootDir);
     }
 
     /**
@@ -58,7 +58,7 @@ class ImageTest extends TestCase
      */
     protected function setUp()
     {
-        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', self::TEMP_DIRECTORY . '/dummy.jpg');
+        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', self::$rootDir . '/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
@@ -66,7 +66,7 @@ class ImageTest extends TestCase
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
         define('TL_ERROR', 'ERROR');
-        define('TL_ROOT', self::TEMP_DIRECTORY);
+        define('TL_ROOT', self::$rootDir);
     }
 
     /**
@@ -1162,7 +1162,7 @@ class ImageTest extends TestCase
     public function testExecuteResizeSvg()
     {
         file_put_contents(
-            self::TEMP_DIRECTORY . '/dummy.svg',
+            self::$rootDir . '/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1201,7 +1201,7 @@ class ImageTest extends TestCase
     public function testExecuteResizeSvgz()
     {
         file_put_contents(
-            self::TEMP_DIRECTORY . '/dummy.svgz',
+            self::$rootDir . '/dummy.svgz',
             gzencode(
                 '<?xml version="1.0" encoding="utf-8"?>
                 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
