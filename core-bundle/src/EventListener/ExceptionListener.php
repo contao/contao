@@ -50,7 +50,7 @@ class ExceptionListener
             return;
         }
 
-        $this->logException($event);
+        // FIXME: log the exception here if we do not find a better place to log via monolog from outside.
 
         // FIXME: do we really want this?
         // If not in prod, exit here.
