@@ -55,7 +55,7 @@ class BackendIndex extends \Backend
 			$this->reload();
 		}
 
-		// Reload the page once after a logout to create a new session_id()
+		// Reload the page once after a logout to create a new session ID
 		elseif ($this->User->logout())
 		{
 			$this->reload();

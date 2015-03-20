@@ -690,8 +690,9 @@ class File extends \System
 		// @see http://ch2.php.net/manual/en/function.fpassthru.php#74080
 		while (@ob_end_clean());
 
+		// FIXME: Session closing should be irrelevant here when switching to StreamedResponse?
 		// Prevent session locking (see #2804)
-		session_write_close();
+		//session_write_close();
 
 		// Disable zlib.output_compression (see #6717)
 		ini_set('zlib.output_compression', 'Off');

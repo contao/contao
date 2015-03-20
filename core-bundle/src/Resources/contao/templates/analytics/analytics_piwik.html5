@@ -9,7 +9,7 @@ $PiwikPath = 'www.example.com/piwik/';
 
 /**
  * DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING!
- */
+ */// FIXME: Add a helper method here so the manual session check does not need to be done in the template?
 if ($PiwikSite > 0 && $PiwikPath != 'www.example.com/piwik/' && !BE_USER_LOGGED_IN && sha1(session_id() . (!Config::get('disableIpCheck') ? Environment::get('ip') : '') . 'BE_USER_AUTH') != Input::cookie('BE_USER_AUTH')): ?>
 
 <script>
