@@ -40,11 +40,7 @@ class AutomatorCommand extends ContainerAwareCommand
         $this
             ->setName('contao:automator')
             ->setDefinition([
-                new InputArgument(
-                    'task',
-                    InputArgument::OPTIONAL,
-                    "The name of the task:\n  - " . implode("\n  - ", $this->getCommands())
-                ),
+                new InputArgument('task', InputArgument::OPTIONAL, $this),
             ])
             ->setDescription('Runs automator tasks on the command line')
         ;
@@ -78,6 +74,19 @@ class AutomatorCommand extends ContainerAwareCommand
         $lock->release();
 
         return 0;
+    }
+
+    /**
+     * Returns the help text.
+     *
+     * By using the __toString() method, we ensure that the help text is lazy loaded at
+     * a time where the autoloader is available (required by $this->getCommands()).
+     *
+     * @return string The help text
+     */
+    public function __toString()
+    {
+        return "The name of the task:\n  - " . implode("\n  - ", $this->getCommands());
     }
 
     /**
@@ -115,30 +124,19 @@ class AutomatorCommand extends ContainerAwareCommand
      */
     private function generateCommandMap()
     {
-        return [
-            'checkForUpdates',
-            'purgeSearchTables',
-            'purgeUndoTable',
-            'purgeVersionTable',
-            'purgeSystemLog',
-            'purgeImageCache',
-            'purgeScriptCache',
-            'purgePageCache',
-            'purgeSearchCache',
-            'purgeInternalCache',
-            'purgeTempFolder',
-            'generateXmlFiles',
-            'purgeXmlFiles',
-            'generateSitemap',
-            'rotateLogs',
-            'generateSymlinks',
-            'generateInternalCache',
-            'generateConfigCache',
-            'generateDcaCache',
-            'generateLanguageCache',
-            'generateDcaExtracts',
-            'generatePackageCache',
-        ];
+        $commands = [];
+
+        // Find all public methods
+        $class   = new \ReflectionClass('Contao\\Automator');
+        $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+        foreach ($methods as $method) {
+            if ($method->class == 'Contao\\Automator' && $method->name != '__construct') {
+                $commands[] = $method->name;
+            }
+        }
+
+        return $commands;
     }
 
     /**
