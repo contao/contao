@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Test\Contao;
 
 use Contao\CoreBundle\Test\TestCase;
 use Contao\Picture;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Tests the Picture class.
@@ -23,30 +24,41 @@ use Contao\Picture;
  */
 class PictureTest extends TestCase
 {
+    const TEMP_DIRECTORY = __DIR__ . '/../../tmp';
+
     /**
-     * @var string
+     * {@inheritdoc}
      */
-    protected $tempDirectory;
+    public static function setUpBeforeClass()
+    {
+        $fs = new Filesystem();
+        $fs->mkdir(self::TEMP_DIRECTORY);
+        $fs->mkdir(self::TEMP_DIRECTORY . '/assets');
+        $fs->mkdir(self::TEMP_DIRECTORY . '/assets/images');
+
+        foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
+            $fs->mkdir(self::TEMP_DIRECTORY . '/assets/images/' . $subdir);
+        }
+
+        $fs->mkdir(self::TEMP_DIRECTORY . '/system');
+        $fs->mkdir(self::TEMP_DIRECTORY . '/system/tmp');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tearDownAfterClass()
+    {
+        $fs = new Filesystem();
+        $fs->remove(self::TEMP_DIRECTORY);
+    }
 
     /**
      * {@inheritdoc}
      */
     protected function setUp()
     {
-        $this->tempDirectory = __DIR__ . '/../tmp';
-
-        mkdir($this->tempDirectory);
-        mkdir($this->tempDirectory . '/assets');
-        mkdir($this->tempDirectory . '/assets/images');
-
-        foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
-            mkdir($this->tempDirectory . '/assets/images/' . $subdir);
-        }
-
-        mkdir($this->tempDirectory . '/system');
-        mkdir($this->tempDirectory . '/system/tmp');
-
-        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', $this->tempDirectory . '/dummy.jpg');
+        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', self::TEMP_DIRECTORY . '/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
@@ -55,20 +67,7 @@ class PictureTest extends TestCase
 
         define('TL_ERROR', 'ERROR');
         define('TL_FILES_URL', '');
-        define('TL_ROOT', $this->tempDirectory);
-
-        parent::setUp();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        // Delete temp directory
-        exec('rm -rf ' . escapeshellarg($this->tempDirectory));
+        define('TL_ROOT', self::TEMP_DIRECTORY);
     }
 
     /**
@@ -251,7 +250,7 @@ class PictureTest extends TestCase
      */
     public function testGetTemplateDataUrlEncoded()
     {
-        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', $this->tempDirectory . '/dummy with spaces.jpg');
+        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', self::TEMP_DIRECTORY . '/dummy with spaces.jpg');
 
         $picture = new Picture(new \File('dummy with spaces.jpg'));
 

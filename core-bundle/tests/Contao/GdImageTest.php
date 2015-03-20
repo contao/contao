@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Test\Contao;
 
 use Contao\CoreBundle\Test\TestCase;
 use Contao\GdImage;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Tests the GdImage class.
@@ -23,36 +24,32 @@ use Contao\GdImage;
  */
 class GdImageTest extends TestCase
 {
+    const TEMP_DIRECTORY = __DIR__ . '/../../tmp';
+
     /**
-     * @var string
+     * {@inheritdoc}
      */
-    protected $tempDirectory;
+    public static function setUpBeforeClass()
+    {
+        $fs = new Filesystem();
+        $fs->mkdir(self::TEMP_DIRECTORY);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tearDownAfterClass()
+    {
+        $fs = new Filesystem();
+        $fs->remove(self::TEMP_DIRECTORY);
+    }
 
     /**
      * {@inheritdoc}
      */
     protected function setUp()
     {
-        $this->tempDirectory = __DIR__ . '/../tmp';
-
-        if (!is_dir($this->tempDirectory)) {
-            mkdir($this->tempDirectory);
-        }
-
-        define('TL_ROOT', $this->tempDirectory);
-
-        parent::setUp();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        // Delete the temp directory
-        exec('rm -rf ' . escapeshellarg($this->tempDirectory));
+        define('TL_ROOT', self::TEMP_DIRECTORY);
     }
 
     /**
@@ -92,7 +89,7 @@ class GdImageTest extends TestCase
             imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
 
             $method = 'image' . $type;
-            $method($image, $this->tempDirectory . '/test.' . $type);
+            $method($image, self::TEMP_DIRECTORY . '/test.' . $type);
             imagedestroy($image);
 
             $image = GdImage::fromFile(new \File('test.' . $type));
@@ -119,7 +116,7 @@ class GdImageTest extends TestCase
     public function testSaveToFile()
     {
         foreach (['gif', 'jpeg', 'png'] as $type) {
-            $file  = $this->tempDirectory . '/test.' . $type;
+            $file  = self::TEMP_DIRECTORY . '/test.' . $type;
             $image = GdImage::fromDimensions(100, 100);
 
             $image->saveToFile($file);

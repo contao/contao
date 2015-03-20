@@ -6,5 +6,8 @@
 .idea/
 nbproject/
 
+# Components
+/components/
+
 # Vendor
 /vendor/
