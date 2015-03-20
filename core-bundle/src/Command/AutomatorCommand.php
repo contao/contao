@@ -11,13 +11,11 @@
 namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Filesystem\LockHandler;
 
 /**
  * Runs Automator tasks on the command line.
@@ -25,7 +23,7 @@ use Symfony\Component\Filesystem\LockHandler;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class AutomatorCommand extends ContainerAwareCommand
+class AutomatorCommand extends LockedCommand
 {
     /**
      * @var array
@@ -49,29 +47,15 @@ class AutomatorCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $lock = new LockHandler('contao:automator');
-
-        // Set the lock
-        if (!$lock->lock()) {
-            $output->writeln('The command is already running in another process.');
-
-            return 1;
-        }
-
-        // Run
         try {
             $this->runAutomator($input, $output);
         } catch (\InvalidArgumentException $e) {
             $output->writeln($e->getMessage() . ' (see help contao:automator)');
-            $lock->release();
 
             return 1;
         }
-
-        // Release the lock
-        $lock->release();
 
         return 0;
     }

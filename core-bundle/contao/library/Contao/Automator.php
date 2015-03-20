@@ -464,9 +464,7 @@ class Automator extends \System
 
 		$command = new SymlinksCommand();
 		$command->setContainer($container);
-		$command->setOutput(new NullOutput());
-		$command->setRootDir(dirname($container->getParameter('kernel.root_dir')));
-		$command->generateSymlinks();
+		$command->generateSymlinks(dirname($container->getParameter('kernel.root_dir')), new NullOutput());
 	}
 
 

@@ -10,28 +10,43 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\LockHandler;
 
 /**
  * Installs the required Contao directories.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InstallCommand extends ContainerAwareCommand
+class InstallCommand extends LockedCommand
 {
     /**
-     * @var OutputInterface
+     * @var array
      */
-    private $output;
+    private $emptyDirs = [
+        'files',
+        'system',
+        'templates',
+        'web/system',
+    ];
 
     /**
-     * @var string
+     * @var array
      */
-    private $rootDir;
+    private $ignoredDirs = [
+        'assets/css',
+        'assets/images',
+        'assets/js',
+        'system/cache',
+        'system/config',
+        'system/logs',
+        'system/modules',
+        'system/themes',
+        'system/tmp',
+        'web/share',
+        'web/system/cron',
+    ];
 
     /**
      * {@inheritdoc}
@@ -47,109 +62,60 @@ class InstallCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $lock = new LockHandler('contao:install');
+        $fs      = new Filesystem();
+        $rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
 
-        // Set the lock
-        if (!$lock->lock()) {
-            $output->writeln('The command is already running in another process.');
-
-            return 1;
+        foreach ($this->emptyDirs as $path) {
+            $this->addEmptyDir("$rootDir/$path", $fs, $output);
         }
 
-        $this->setOutput($output);
-        $this->setRootDir(dirname($this->getContainer()->getParameter('kernel.root_dir')));
-
-        $this->addContaoDirectories();
-
-        // Release the lock
-        $lock->release();
+        foreach ($this->ignoredDirs as $path) {
+            $this->addIgnoredDir("$rootDir/$path", $fs, $output);
+        }
 
         return 0;
     }
 
     /**
-     * Sets the output object.
-     *
-     * @param OutputInterface $output The output object.
-     */
-    public function setOutput(OutputInterface $output)
-    {
-        $this->output = $output;
-    }
-
-    /**
-     * Sets the root directory.
-     *
-     * @param string $rootDir The root directory
-     */
-    public function setRootDir($rootDir)
-    {
-        $this->rootDir = $rootDir;
-    }
-
-    /**
-     * Adds the Contao directories.
-     */
-    public function addContaoDirectories()
-    {
-        self::addEmptyDir('files');
-        self::addEmptyDir('system');
-        self::addEmptyDir('templates');
-        self::addEmptyDir('web/system');
-
-        self::addIgnoredDir('assets/css');
-        self::addIgnoredDir('assets/images');
-        self::addIgnoredDir('assets/js');
-        self::addIgnoredDir('system/cache');
-        self::addIgnoredDir('system/config');
-        self::addIgnoredDir('system/logs');
-        self::addIgnoredDir('system/modules');
-        self::addIgnoredDir('system/themes');
-        self::addIgnoredDir('system/tmp');
-        self::addIgnoredDir('web/share');
-        self::addIgnoredDir('web/system/cron');
-    }
-
-    /**
      * Adds an empty directory.
      *
-     * @param string $path The path
+     * @param string          $path   The path
+     * @param Filesystem      $fs     The file system object
+     * @param OutputInterface $output The output object
      */
-    private function addEmptyDir($path)
+    private function addEmptyDir($path, Filesystem $fs, OutputInterface $output)
     {
-        $fs = new Filesystem();
-
-        if ($fs->exists($this->rootDir . "/$path")) {
+        if ($fs->exists($path)) {
             return;
         }
 
-        $fs->mkdir($this->rootDir . "/$path");
+        $fs->mkdir($path);
 
-        $this->output->writeln("Created the <comment>$path</comment> directory.");
+        $output->writeln("Created the <comment>$path</comment> directory.");
     }
 
     /**
      * Adds a directory with a .gitignore file.
      *
-     * @param string $path The path
+     * @param string          $path   The path
+     * @param Filesystem      $fs     The file system object
+     * @param OutputInterface $output The output object
      */
-    private function addIgnoredDir($path)
+    private function addIgnoredDir($path, Filesystem $fs, OutputInterface $output)
     {
-        $fs = new Filesystem();
+        $this->addEmptyDir($path, $fs, $output);
 
-        self::addEmptyDir($path);
-
-        if ($fs->exists($this->rootDir . "/$path/.gitignore")) {
+        if ($fs->exists("$path/.gitignore")) {
             return;
         }
 
         $fs->dumpFile(
-            $this->rootDir . "/$path/.gitignore",
+            "$path/.gitignore",
             "# Create the folder and ignore its content\n*\n!.gitignore\n"
         );
 
-        $this->output->writeln("Added the <comment>$path/.gitignore</comment> file.");
+        $output->writeln("Added the <comment>$path/.gitignore</comment> file.");
     }
 }

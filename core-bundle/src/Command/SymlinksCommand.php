@@ -10,11 +10,9 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\LockHandler;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -23,18 +21,8 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class SymlinksCommand extends ContainerAwareCommand
+class SymlinksCommand extends LockedCommand
 {
-    /**
-     * @var OutputInterface
-     */
-    private $output;
-
-    /**
-     * @var string
-     */
-    private $rootDir;
-
     /**
      * {@inheritdoc}
      */
@@ -49,154 +37,130 @@ class SymlinksCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $lock = new LockHandler('contao:symlinks');
-
-        // Set the lock
-        if (!$lock->lock()) {
-            $output->writeln('The command is already running in another process.');
-
-            return 1;
-        }
-
-        $this->setOutput($output);
-        $this->setRootDir(dirname($this->getContainer()->getParameter('kernel.root_dir')));
-
-        $this->generateSymlinks();
-
-        // Release the lock
-        $lock->release();
+        $this->generateSymlinks(dirname($this->getContainer()->getParameter('kernel.root_dir')), $output);
 
         return 0;
     }
 
     /**
-     * Sets the output object.
-     *
-     * @param OutputInterface $output The output object.
-     */
-    public function setOutput(OutputInterface $output)
-    {
-        $this->output = $output;
-    }
-
-    /**
-     * Sets the root directory.
-     *
-     * @param string $rootDir The root directory
-     */
-    public function setRootDir($rootDir)
-    {
-        $this->rootDir = $rootDir;
-    }
-
-    /**
      * Generates the symlinks in the web/ directory.
+     *
+     * @param string          $rootDir The root directory
+     * @param OutputInterface $output  The output object
      */
-    public function generateSymlinks()
+    public function generateSymlinks($rootDir, OutputInterface $output)
     {
         $container  = $this->getContainer();
         $uploadPath = $container->getParameter('contao.upload_path');
         $fs         = new Filesystem();
 
         // Remove the base folders in the document root
-        $fs->remove($this->rootDir . "/web/$uploadPath");
-        $fs->remove($this->rootDir . '/web/system/modules');
-        $fs->remove($this->rootDir . '/web/vendor');
+        $fs->remove("$rootDir/web/$uploadPath");
+        $fs->remove("$rootDir/web/system/modules");
+        $fs->remove("$rootDir/web/vendor");
 
-        $this->symlinkFiles($uploadPath);
+        $this->symlinkFiles($uploadPath, $rootDir, $output);
 
         // Symlink the public extension subfolders
         foreach ($container->get('contao.resource_provider')->getPublicFolders() as $path) {
-            $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path");
+            $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
         }
 
-        $this->symlinkThemes();
+        $this->symlinkThemes($rootDir, $output);
 
         // Symlink the assets and themes directory
-        $this->symlink('../assets', 'web/assets');
-        $this->symlink('../../system/themes', 'web/system/themes');
+        $this->symlink('../assets', 'web/assets', $rootDir, $output);
+        $this->symlink('../../system/themes', 'web/system/themes', $rootDir, $output);
     }
 
     /**
      * Creates the file symlinks.
      *
-     * @param string $uploadPath The upload path
+     * @param string          $uploadPath The upload path
+     * @param string          $rootDir    The root directory
+     * @param OutputInterface $output     The output object
      */
-    private function symlinkFiles($uploadPath)
+    private function symlinkFiles($uploadPath, $rootDir, $output)
     {
         $finder = Finder::create()
             ->ignoreDotFiles(false)
             ->files()
             ->name('.public')
-            ->in($this->rootDir . "/$uploadPath")
+            ->in("$rootDir/$uploadPath")
         ;
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $path = $uploadPath . '/' . $file->getRelativePath();
-            $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path");
+            $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
         }
     }
 
     /**
      * Creates the theme symlinks.
+     *
+     * @param string          $rootDir The root directory
+     * @param OutputInterface $output  The output object
      */
-    private function symlinkThemes()
+    private function symlinkThemes($rootDir, $output)
     {
         $finder = $this->getContainer()->get('contao.resource_provider')->findIn('themes');
 
         /** @var SplFileInfo $fileObj */
         foreach ($finder->directories()->depth(0) as $fileObj) {
-            $path = str_replace($this->rootDir . '/', '', $fileObj->getPathname());
+            $path = str_replace("$rootDir/", '', $fileObj->getPathname());
 
             if (0 === strpos($path, 'system/modules/')) {
                 continue;
             }
 
-            $this->symlink('../../' . $path, 'system/themes/' . basename($path));
+            $this->symlink("../../$path", 'system/themes/' . basename($path), $rootDir, $output);
         }
     }
 
     /**
      * Generates a symlink.
      *
-     * @param string $source The symlink name
-     * @param string $target The symlink target
+     * @param string          $source  The symlink name
+     * @param string          $target  The symlink target
+     * @param string          $rootDir The root directory
+     * @param OutputInterface $output  The output object
      */
-    private function symlink($source, $target)
+    private function symlink($source, $target, $rootDir, OutputInterface $output)
     {
-        $this->validateSymlink($source, $target);
+        $this->validateSymlink($source, $target, $rootDir);
 
         $fs = new Filesystem();
-        $fs->symlink($source, $this->rootDir . "/$target");
+        $fs->symlink($source, "$rootDir/$target");
 
-        $stat = lstat($this->rootDir . "/$target");
+        $stat = lstat("$rootDir/$target");
 
         // Try to fix the UID
         if (function_exists('lchown') && $stat['uid'] !== getmyuid()) {
-            lchown($this->rootDir . "/$target", getmyuid());
+            lchown("$rootDir/$target", getmyuid());
         }
 
         // Try to fix the GID
         if (function_exists('lchgrp') && $stat['gid'] !== getmygid()) {
-            lchgrp($this->rootDir . "/$target", getmygid());
+            lchgrp("$rootDir/$target", getmygid());
         }
 
-        $this->output->writeln("Added <comment>$target</comment> as symlink to <comment>$source</comment>.");
+        $output->writeln("Added <comment>$target</comment> as symlink to <comment>$source</comment>.");
     }
 
     /**
      * Validates a symlink.
      *
-     * @param string $source The symlink name
-     * @param string $target The symlink target
+     * @param string $source  The symlink name
+     * @param string $target  The symlink target
+     * @param string $rootDir The root directory
      *
      * @throws \InvalidArgumentException If the source or target is invalid
      * @throws \LogicException           If the symlink cannot be created
      */
-    private function validateSymlink($source, $target)
+    private function validateSymlink($source, $target, $rootDir)
     {
         if ($source == '') {
             throw new \InvalidArgumentException('The symlink source must not be empty');
@@ -212,7 +176,7 @@ class SymlinksCommand extends ContainerAwareCommand
 
         $fs = new Filesystem();
 
-        if ($fs->exists($this->rootDir . "/$target") && !is_link($this->rootDir . "/$target")) {
+        if ($fs->exists("$rootDir/$target") && !is_link("$rootDir/$target")) {
             throw new \LogicException("The symlink target $target exists and is not a symlink");
         }
     }
