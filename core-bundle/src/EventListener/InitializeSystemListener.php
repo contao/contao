@@ -121,7 +121,7 @@ class InitializeSystemListener
         define('TL_START', microtime(true));
         define('TL_ROOT', $this->rootDir);
         define('TL_REFERER_ID', substr(md5(TL_START), 0, 8));
-        define('TL_SCRIPT', $route);
+        define('TL_SCRIPT', ltrim($route, '/'));
 
         // Define the login status constants in the back end (see #4099, #5279)
         if ('BE' === TL_MODE) {
