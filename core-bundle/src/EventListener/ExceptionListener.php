@@ -11,6 +11,8 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\DieNicelyException;
+use Contao\CoreBundle\Exception\ResponseExceptionInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
@@ -40,6 +42,16 @@ class ExceptionListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
+        // Search if an response is somewhere in the exception list.
+        $response = $this->checkResponseException($event->getException());
+        if ($response instanceof Response) {
+            $event->setResponse($response);
+
+            return;
+        }
+
+        $this->logException($event);
+
         // FIXME: do we really want this?
         // If not in prod, exit here.
         if ($this->environment !== 'prod') {
@@ -107,6 +119,24 @@ class ExceptionListener
 
             return new Response(ob_get_clean(), 500, array('Content-type' => ' text/html; charset=utf-8'));
         }
+
+        return null;
+    }
+
+    /**
+     * Check if the exception or any exception in the chain implements the response exception interface.
+     *
+     * @param \Exception $exception The exception to walk on.
+     *
+     * @return null|Response
+     */
+    private function checkResponseException($exception)
+    {
+        do {
+            if ($exception instanceof ResponseExceptionInterface) {
+                return $exception->getResponse();
+            }
+        } while (null !== ($exception = $exception->getPrevious()));
 
         return null;
     }
