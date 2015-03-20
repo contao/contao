@@ -21,16 +21,36 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 class ExceptionListener
 {
     /**
+     * @var string
+     */
+    private $environment;
+
+    /**
+     * Create a new instance.
+     */
+    public function __construct($environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
      * Forwards the request to the Frontend class if there is a page object.
      *
      * @param GetResponseForExceptionEvent $event The event object
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
+        // FIXME: do we really want this?
+        // If not in prod, exit here.
+        if ($this->environment !== 'prod') {
+            return;
+        }
+
         $exception = $event->getException();
         do {
             if ($exception instanceof DieNicelyException) {
                 $event->setResponse($this->handleDieNicelyException($exception));
+
                 return;
             }
         } while (null !== ($exception = $exception->getPrevious()));
