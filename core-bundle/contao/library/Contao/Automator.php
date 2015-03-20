@@ -10,7 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Command\SymlinksCommand;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Process\PhpExecutableFinder;
 
 
 /**
@@ -457,105 +460,13 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$this->import('Files');
-		$strUploadPath = \Config::get('uploadPath');
+		$container = $kernel->getContainer();
 
-		// Remove the files directory in the document root
-		if (is_dir(TL_ROOT . '/web/' . $strUploadPath))
-		{
-			$this->Files->rrdir('web/' . $strUploadPath);
-		}
-
-		$this->generateFilesSymlinks($strUploadPath);
-
-		// Remove the system/modules directory in the document root
-		if (is_dir(TL_ROOT . '/web/system/modules'))
-		{
-			$this->Files->rrdir('web/system/modules');
-		}
-
-		// Remove the vendor directory in the document root
-		if (is_dir(TL_ROOT . '/web/vendor'))
-		{
-			$this->Files->rrdir('web/vendor');
-		}
-
-		// Symlink the public extension subfolders
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getPublicFolders() as $strFolder)
-		{
-			$target = str_repeat('../', substr_count($strFolder, '/') + 1);
-			$this->Files->symlink($target . $strFolder, 'web/' . $strFolder);
-		}
-
-		$this->symlinkThemes();
-
-		// Symlink the assets and themes directory
-		$this->Files->symlink('../assets', 'web/assets');
-		$this->Files->symlink('../../system/themes', 'web/system/themes');
-	}
-
-
-	/**
-	 * Recursively create the files symlinks
-	 *
-	 * @param string $strPath The current path
-	 */
-	protected function generateFilesSymlinks($strPath)
-	{
-		if (file_exists(TL_ROOT . '/' . $strPath . '/.public'))
-		{
-			$strPrefix = str_repeat('../', substr_count($strPath, '/') + 1);
-			$this->Files->symlink($strPrefix . $strPath, 'web/' . $strPath);
-		}
-		else
-		{
-			foreach (scan(TL_ROOT . '/' . $strPath) as $res)
-			{
-				if (is_dir(TL_ROOT . '/' . $strPath . '/' . $res))
-				{
-					$this->generateFilesSymlinks($strPath . '/' . $res);
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * Symlink the themes into system/themes
-	 */
-	protected function symlinkThemes()
-	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
-		{
-			if (0 === strpos($strFolder, 'system/modules/'))
-			{
-				continue;
-			}
-
-			$strDir = $strFolder . '/themes';
-
-			if (is_dir($strDir))
-			{
-				foreach (scan($strDir) as $strTheme)
-				{
-					if (is_dir($strDir . '/' . $strTheme))
-					{
-						$strPath = $strDir;
-
-						if (strpos($strPath, '../') !== false)
-						{
-							$strPath = realpath($strPath);
-						}
-
-						$strPath = str_replace(TL_ROOT . '/', '', $strPath) . '/' . $strTheme;
-						$this->Files->symlink('../../' . $strPath, 'system/themes/' . basename($strPath));
-					}
-				}
-			}
-		}
+		$command = new SymlinksCommand();
+		$command->setContainer($container);
+		$command->setOutput(new NullOutput());
+		$command->setRootDir(dirname($container->getParameter('kernel.root_dir')));
+		$command->generateSymlinks();
 	}
 
 

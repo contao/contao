@@ -11,7 +11,8 @@
 namespace Contao\CoreBundle\Composer;
 
 use Composer\Script\Event;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 
 /**
  * Sets up the Contao environment in a Symfony app.
@@ -25,70 +26,42 @@ class ScriptHandler
      *
      * @param Event $event The event object
      */
-    public static function addContaoDirectories(Event $event)
+    public static function addDirectories(Event $event)
     {
-        $rootDir = getcwd();
-
-        self::addEmptyDir('files', $rootDir, $event);
-        self::addEmptyDir('system', $rootDir, $event);
-        self::addEmptyDir('templates', $rootDir, $event);
-        self::addEmptyDir('web/system', $rootDir, $event);
-
-        self::addIgnoredDir('assets/css', $rootDir, $event);
-        self::addIgnoredDir('assets/images', $rootDir, $event);
-        self::addIgnoredDir('assets/js', $rootDir, $event);
-        self::addIgnoredDir('system/cache', $rootDir, $event);
-        self::addIgnoredDir('system/config', $rootDir, $event);
-        self::addIgnoredDir('system/logs', $rootDir, $event);
-        self::addIgnoredDir('system/modules', $rootDir, $event);
-        self::addIgnoredDir('system/themes', $rootDir, $event);
-        self::addIgnoredDir('system/tmp', $rootDir, $event);
-        self::addIgnoredDir('web/share', $rootDir, $event);
-        self::addIgnoredDir('web/system/cron', $rootDir, $event);
+        self::executeCommand('contao:install', $event);
     }
 
     /**
-     * Adds an empty directory.
+     * Generates the symlinks.
      *
-     * @param string $path    The path
-     * @param string $rootDir The root directory
-     * @param Event  $event   The event boject
+     * @param Event $event The event object
      */
-    private static function addEmptyDir($path, $rootDir, Event $event)
+    public static function generateSymlinks(Event $event)
     {
-        $fs = new Filesystem();
-
-        if ($fs->exists("$rootDir/$path")) {
-            return;
-        }
-
-        $fs->mkdir("$rootDir/$path");
-
-        $event->getIO()->write("Created the <info>$path</info> directory.");
+        self::executeCommand('contao:symlinks', $event);
     }
 
     /**
-     * Adds a directory with a .gitignore file.
+     * Executes a command.
      *
-     * @param string $path    The path
-     * @param string $rootDir The root directory
-     * @param Event  $event   The event boject
+     * @param string $cmd   The command
+     * @param Event  $event The event object
+     *
+     * @throws \RuntimeException If the PHP executable cannot be found or the command cannot be executed
      */
-    private static function addIgnoredDir($path, $rootDir, Event $event)
+    private static function executeCommand($cmd, Event $event)
     {
-        $fs = new Filesystem();
+        $phpFinder = new PhpExecutableFinder();
 
-        self::addEmptyDir($path, $rootDir, $event);
-
-        if ($fs->exists("$rootDir/$path/.gitignore")) {
-            return;
+        if (false === ($phpPath = $phpFinder->find())) {
+            throw new \RuntimeException('The php executable could not be found');
         }
 
-        $fs->dumpFile(
-            "$rootDir/$path/.gitignore",
-            "# Create the folder and ignore its content\n*\n!.gitignore\n"
-        );
+        $process = new Process("$phpPath app/console --ansi $cmd");
+        $process->run(function ($type, $buffer) use ($event) { $event->getIO()->write($buffer, false); });
 
-        $event->getIO()->write("Added the <info>$path/.gitignore</info> file.");
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException("An error occurred while executing the $cmd command.");
+        }
     }
 }

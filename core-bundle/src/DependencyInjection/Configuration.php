@@ -39,7 +39,6 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('.html')
                 ->end()
                 ->scalarNode('upload_path')
-                    ->isRequired()
                     ->cannotBeEmpty()
                     ->defaultValue('files')
                     ->validate()

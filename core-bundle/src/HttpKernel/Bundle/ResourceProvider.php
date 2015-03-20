@@ -100,7 +100,9 @@ class ResourceProvider
         $finder = Finder::create()->ignoreDotFiles(true)->followLinks();
 
         foreach ($this->resourcesPaths as $path) {
-            $finder->in($path . '/' . $folder);
+            if (is_dir("$path/$folder")) {
+                $finder->in("$path/$folder");
+            }
         }
 
         return $finder;
