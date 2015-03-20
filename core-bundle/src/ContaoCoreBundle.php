@@ -47,7 +47,7 @@ class ContaoCoreBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new AddContaoResourcesPass($this->getPath() . '/../contao'));
+        $container->addCompilerPass(new AddContaoResourcesPass($this->getPath() . '/Resources/contao'));
 
         $container->addCompilerPass(
             new OptimizeContaoResourcesPass($container->getParameter('kernel.root_dir')), PassConfig::TYPE_OPTIMIZE

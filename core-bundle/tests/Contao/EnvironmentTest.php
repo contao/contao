@@ -27,8 +27,8 @@ class EnvironmentTest extends TestCase
     {
         Environment::set('path', '/core');
 
-        require __DIR__ . '/../../contao/config/default.php';
-        require __DIR__ . '/../../contao/config/agents.php';
+        require __DIR__ . '/../../src/Resources/contao/config/default.php';
+        require __DIR__ . '/../../src/Resources/contao/config/agents.php';
     }
 
     /**

@@ -39,8 +39,8 @@ spl_autoload_register(function ($class) {
         include_once __DIR__ . "/Fixtures/library/$class.php";
         class_alias("Contao\\Fixtures\\$class", "Contao\\$class");
         class_alias("Contao\\Fixtures\\$class", $class);
-    } elseif (file_exists(__DIR__ . "/../contao/library/Contao/$class.php")) {
-        include_once __DIR__ . "/../contao/library/Contao/$class.php";
+    } elseif (file_exists(__DIR__ . "/../src/Resources/contao/library/Contao/$class.php")) {
+        include_once __DIR__ . "/../src/Resources/contao/library/Contao/$class.php";
         class_alias("Contao\\$class", $class);
     }
 });

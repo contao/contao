@@ -188,10 +188,10 @@ class InitializeSystemListener
      */
     private function includeHelpers()
     {
-        require __DIR__ . '/../../contao/helper/functions.php';
-        require __DIR__ . '/../../contao/config/constants.php';
-        require __DIR__ . '/../../contao/helper/interface.php';
-        require __DIR__ . '/../../contao/helper/exception.php';
+        require __DIR__ . '/../../src/Resources/contao/helper/functions.php';
+        require __DIR__ . '/../../src/Resources/contao/config/constants.php';
+        require __DIR__ . '/../../src/Resources/contao/helper/interface.php';
+        require __DIR__ . '/../../src/Resources/contao/helper/exception.php';
     }
 
     /**
@@ -213,22 +213,22 @@ class InitializeSystemListener
     private function includeBasicClasses()
     {
         if (!class_exists('Config', false)) {
-            require_once __DIR__ . '/../../contao/library/Contao/Config.php';
+            require_once __DIR__ . '/../../src/Resources/contao/library/Contao/Config.php';
             class_alias('Contao\\Config', 'Config');
         }
 
         if (!class_exists('ClassLoader', false)) {
-            require_once __DIR__ . '/../../contao/library/Contao/ClassLoader.php';
+            require_once __DIR__ . '/../../src/Resources/contao/library/Contao/ClassLoader.php';
             class_alias('Contao\\ClassLoader', 'ClassLoader');
         }
 
         if (!class_exists('TemplateLoader', false)) {
-            require_once __DIR__ . '/../../contao/library/Contao/TemplateLoader.php';
+            require_once __DIR__ . '/../../src/Resources/contao/library/Contao/TemplateLoader.php';
             class_alias('Contao\\TemplateLoader', 'TemplateLoader');
         }
 
         if (!class_exists('ModuleLoader', false)) {
-            require_once __DIR__ . '/../../contao/library/Contao/ModuleLoader.php';
+            require_once __DIR__ . '/../../src/Resources/contao/library/Contao/ModuleLoader.php';
             class_alias('Contao\\ModuleLoader', 'ModuleLoader');
         }
     }
@@ -264,7 +264,7 @@ class InitializeSystemListener
             array_push($langs, 'en'); // see #6533
 
             foreach ($langs as $lang) {
-                if (is_dir(__DIR__ . '/../../contao/languages/' . str_replace('-', '_', $lang))) {
+                if (is_dir(__DIR__ . '/../../src/Resources/contao/languages/' . str_replace('-', '_', $lang))) {
                     $_SESSION['TL_LANGUAGE'] = $lang;
                     break;
                 }
