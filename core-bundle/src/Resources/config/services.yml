@@ -36,6 +36,13 @@ services:
             # Priority must be lower than the one of the toggle_view listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 24 }
 
+    contao.listener.session:
+        class: Contao\CoreBundle\EventListener\SessionListener
+        arguments:
+            - "@session"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 64 }
+
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
         calls:

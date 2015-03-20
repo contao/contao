@@ -12,7 +12,6 @@ namespace Contao;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 
 /**
@@ -47,12 +46,6 @@ class Session
 	 */
 	protected $arrSession;
 
-	/**
-	 * Symfony session service
-	 * @var SessionInterface
-	 */
-	private $session;
-
 
 	/**
 	 * Get the session data
@@ -65,8 +58,11 @@ class Session
 		/** @var SessionInterface $session */
 		$session = $kernel->getContainer()->get('session');
 
-		$beBag = new AttributeBag('_contao_be_attributes');
-		$feBag = new AttributeBag('_contao_fe_attributes');
+		/** @var AttributeBagInterface $beBag */
+		$beBag = $session->getBag('contao_backend');
+
+		/** @var AttributeBagInterface $feBag */
+		$feBag = $session->getBag('contao_frontend');
 
 		switch (TL_MODE)
 		{
@@ -82,11 +78,6 @@ class Session
 				$this->arrSession = (array) $_SESSION;
 				break;
 		}
-
-		$session->registerBag($beBag);
-		$session->registerBag($feBag);
-
-		$this->session = $session;
 	}
 
 
@@ -95,11 +86,17 @@ class Session
 	 */
 	public function __destruct()
 	{
-		/** @var AttributeBagInterface $beBag */
-		$beBag = $this->session->getBag('_contao_be_attributes');
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $session */
+		$session = $kernel->getContainer()->get('session');
 
 		/** @var AttributeBagInterface $beBag */
-		$feBag = $this->session->getBag('_contao_fe_attributes');
+		$beBag = $session->getBag('contao_backend');
+
+		/** @var AttributeBagInterface $feBag */
+		$feBag = $session->getBag('contao_frontend');
 
 		switch (TL_MODE)
 		{
