@@ -17,7 +17,6 @@ use Contao\CoreBundle\Exception\DieNicelyException;
 use Contao\Environment;
 use Contao\Input;
 use Contao\System;
-use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -193,18 +192,18 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     protected function boot(Request $request = null)
     {
+        // Check if we have "simple errors" and make sure to kill them as the legacy code will otherwise break.
+        // This happens (at least) on console.
+        // FIXME: Remove this manipulation of the error levels when we drop legacy code/make it notice free.
+        $this->sanitizeErrorHandling();
+
         $this->includeHelpers();
 
         // Try to disable the PHPSESSID
         $this->iniSet('session.use_trans_sid', 0);
         $this->iniSet('session.cookie_httponly', true);
 
-        // FIXME: Muting errors here is not fine but needed in Contao legacy code. Maybe we can allow more than this.
-        $handler = ErrorHandler::register();
-        $handler->throwAt(E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR, true);
-        $handler->scopeAt(E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR, true);
-
-        // FIXME: We should log PHP errors via symfony logger.
+        // FIXME: We should log PHP errors via symfony logger in the future.
         $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
 
         $this->includeBasicClasses();
@@ -348,11 +347,26 @@ class InitializeSystemListener extends ScopeAwareListener
     }
 
     /**
+     * Ensure we do not have any error level active that could be harmful to the Contao 3 Framework.
+     */
+    private function sanitizeErrorHandling()
+    {
+        // Check if we have "simple errors" and make sure to kill them as the legacy code will otherwise break.
+        // This happens (at least) on console.
+        $level    = error_reporting();
+        $newLevel = $level & ~(E_NOTICE | E_STRICT | E_DEPRECATED);
+        if ($level & $newLevel) {
+            error_reporting($newLevel);
+        }
+    }
+
+    /**
      * Configures the error handling.
      */
     private function configureErrorHandling()
     {
         // Always show error messages if logged into the install tool (see #5001)
+        // FIXME: remove when the install tool is gone.
         if (Input::cookie('TL_INSTALL_AUTH') && !empty($_SESSION['TL_INSTALL_AUTH']) && Input::cookie('TL_INSTALL_AUTH') == $_SESSION['TL_INSTALL_AUTH'] && $_SESSION['TL_INSTALL_EXPIRE'] > time()) {
             $this->config->set('displayErrors', 1);
         }
