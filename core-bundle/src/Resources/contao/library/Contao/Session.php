@@ -41,12 +41,6 @@ class Session
 	protected static $objInstance;
 
 	/**
-	 * Session data
-	 * @var array
-	 */
-	protected $arrSession;
-
-	/**
 	 * Symfony session object
 	 * @var SessionInterface
 	 */
