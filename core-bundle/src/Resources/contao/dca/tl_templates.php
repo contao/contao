@@ -227,7 +227,7 @@ class tl_templates extends Backend
 		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strModule => $strFolder)
 		{
 			// Continue if there is no templates folder
-			if ($strModule == 'repository' || !is_dir($strFolder))
+			if (!is_dir($strFolder))
 			{
 				continue;
 			}

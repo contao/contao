@@ -337,13 +337,8 @@ class Installer extends \Controller
 		$return = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strModule => $strFolder)
+		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
 		{
-			if (in_array($strModule, array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
-			{
-				continue; // ignore the database.sql of these modules
-			}
-
 			$strFile = $strFolder . '/config/database.sql';
 
 			if (!file_exists($strFile))
