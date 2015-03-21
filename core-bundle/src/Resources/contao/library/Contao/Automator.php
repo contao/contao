@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Process\PhpExecutableFinder;
 
 
 /**
