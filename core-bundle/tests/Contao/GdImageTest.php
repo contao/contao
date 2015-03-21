@@ -24,13 +24,15 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class GdImageTest extends TestCase
 {
-    private static $rootDir = __DIR__ . '/../../tmp';
+    private static $rootDir;
 
     /**
      * {@inheritdoc}
      */
     public static function setUpBeforeClass()
     {
+        self::$rootDir = __DIR__ . '/../../tmp';
+
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
     }
