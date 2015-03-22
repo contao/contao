@@ -11,11 +11,18 @@
 namespace Contao\CoreBundle\Config\Dumper;
 
 /**
- * DumperInteface
+ * DumperInteface is the interface implemented by internal cache dumpers.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
 interface DumperInteface
 {
+    /**
+     * Dumps files into given cache file.
+     *
+     * @param array  $files     The files to be dumped
+     * @param string $cacheFile The target cache file
+     * @param array  $options   Options that are used by the dumper
+     */
     public function dump(array $files, $cacheFile, array $options = []);
 }

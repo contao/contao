@@ -32,8 +32,14 @@ class CombinedFileDumper implements DumperInteface
      */
     public function __construct(LoaderInterface $loader, $cacheDir)
     {
+        $realDir = realpath($cacheDir);
+
+        if (false === $realDir) {
+            throw new \InvalidArgumentException(sprintf('Cache directory not found (in %s)', $cacheDir));
+        }
+
         $this->loader   = $loader;
-        $this->cacheDir = $cacheDir;
+        $this->cacheDir = $realDir;
     }
 
     /**
@@ -50,7 +56,9 @@ class CombinedFileDumper implements DumperInteface
         $this->header = $header;
     }
 
-
+    /**
+     * {@inheritdoc}
+     */
     public function dump(array $files, $cacheFile, array $options = [])
     {
         $buffer = $this->header;
@@ -59,6 +67,31 @@ class CombinedFileDumper implements DumperInteface
             $buffer .= $this->loader->load($file, $options['type']);
         }
 
-        file_put_contents($this->cacheDir . DIRECTORY_SEPARATOR . $cacheFile, $buffer);
+        $this->createDirectory(dirname($cacheFile));
+
+        file_put_contents($this->cacheDir . DIRECTORY_SEPARATOR . $cacheFile, $buffer, LOCK_EX);
+    }
+
+    /**
+     * Recursively creates a folder if it does not exist.
+     *
+     * @param string $folder The folder to create, relative to the cache directory
+     */
+    private function createDirectory($folder)
+    {
+        if (empty($folder) || is_dir($this->cacheDir . DIRECTORY_SEPARATOR . $folder)) {
+            return;
+        }
+
+        $relativePath = '';
+
+        // Create the folder
+        foreach (array_filter(explode('/', $folder)) as $name) {
+            $relativePath .= $name . DIRECTORY_SEPARATOR;
+
+            if (!is_dir($this->cacheDir . DIRECTORY_SEPARATOR . $relativePath)) {
+                mkdir($this->cacheDir . DIRECTORY_SEPARATOR . $relativePath);
+            }
+        }
     }
 }
