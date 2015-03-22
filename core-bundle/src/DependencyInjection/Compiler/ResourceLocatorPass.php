@@ -37,10 +37,24 @@ class ResourceLocatorPass implements CompilerPassInterface
         if (count($locatorIds) === 1) {
             $container->setAlias('contao.resource_locator', key($locatorIds));
         } else {
-            $chainLoader = $container->getDefinition('contao.resource_locator.chain');
-            foreach (array_keys($locatorIds) as $id) {
-                $chainLoader->addMethodCall('addLocator', array(new Reference($id)));
+            $chainLoader        = $container->getDefinition('contao.resource_locator.chain');
+            $prioritizedLoaders = array();
+
+            foreach ($locatorIds as $id => $tags) {
+                foreach ($tags as $tag) {
+                    $priority = isset($tag['priority']) ? $tag['priority'] : 0;
+                    $prioritizedLoaders[$priority][] = $id;
+                }
             }
+
+            krsort($prioritizedLoaders);
+
+            foreach ($prioritizedLoaders as $loaders) {
+                foreach ($loaders as $loader) {
+                    $chainLoader->addMethodCall('addLocator', array(new Reference($loader)));
+                }
+            }
+
             $container->setAlias('contao.resource_locator', 'contao.resource_locator.chain');
         }
     }
