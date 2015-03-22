@@ -56,9 +56,33 @@ class FrontendLoader extends Loader
      */
     public function load($resource, $type = null)
     {
-        $pattern  = '/{alias}';
+        $routes   = new RouteCollection();
         $defaults = ['_controller' => 'ContaoCoreBundle:Frontend:index', '_scope' => 'frontend'];
-        $require  = ['alias' => '.*'];
+
+        $this->addFrontendRoute($routes, $defaults);
+        $this->addCatchAllRoute($routes, $defaults);
+
+        return $routes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supports($resource, $type = null)
+    {
+        return 'contao_frontend' === $type;
+    }
+
+    /**
+     * Adds the frontend route which is language-aware.
+     *
+     * @param RouteCollection $routes   A collection of routes
+     * @param array           $defaults Default parameters for the route
+     */
+    private function addFrontendRoute(RouteCollection $routes, array $defaults)
+    {
+        $pattern = '/{alias}';
+        $require = ['alias' => '.*'];
 
         // URL suffix
         if ($this->format) {
@@ -77,17 +101,22 @@ class FrontendLoader extends Loader
             $defaults['_locale'] = $this->defaultLocale;
         }
 
-        $routes = new RouteCollection();
         $routes->add('contao_frontend', new Route($pattern, $defaults, $require));
-
-        return $routes;
     }
 
     /**
-     * {@inheritdoc}
+     * Adds a catch-all route to redirect all request to the Contao frontend controller.
+     *
+     * @param RouteCollection $routes   A collection of routes
+     * @param array           $defaults Default parameters for the route
      */
-    public function supports($resource, $type = null)
+    private function addCatchAllRoute(RouteCollection $routes, array $defaults)
     {
-        return 'contao_frontend' === $type;
+        $pattern = '/{alias}';
+        $require = ['alias' => '.*'];
+
+        $defaults['alias'] = '';
+
+        $routes->add('contao_root', new Route($pattern, $defaults, $require));
     }
 }
