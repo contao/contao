@@ -124,22 +124,12 @@ class Config
 			static::preload();
 		}
 
-		$strCacheFile = 'system/cache/config/config.php';
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-		// Try to load from cache
-		if (!static::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
+		foreach ($kernel->getContainer()->get('contao.cached_resource_locator')->locate('config/config.php') as $file)
 		{
-			include TL_ROOT . '/' . $strCacheFile;
-		}
-		else
-		{
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
-			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('config/config.php') as $file)
-			{
-				include $file->getPathname();
-			}
+			include $file;
 		}
 
 		// Include the local configuration file again

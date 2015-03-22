@@ -46,8 +46,17 @@ services:
         arguments:
             - "@kernel"
 
+    contao.resource_locator.cache:
+            class: Contao\CoreBundle\Config\CombinedFileLocator
+            arguments:
+                - '%kernel.root_dir%/../system/cache'
+                - "@contao.resource_locator"
+
     contao.resource_locator:
         alias: contao.resource_locator.bundles
+
+    contao.cached_resource_locator:
+        alias: contao.resource_locator.cache
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
