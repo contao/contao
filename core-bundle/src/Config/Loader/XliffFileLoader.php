@@ -44,7 +44,7 @@ class XliffFileLoader extends Loader
     {
         $language = $type ?: 'en';
 
-        return $this->convertXlfToPhp($file, $language, $this->addToGlobals);
+        return $this->convertXlfToPhp($file, $language);
     }
 
     /**
@@ -60,11 +60,10 @@ class XliffFileLoader extends Loader
      *
      * @param string  $strName     The name of the .xlf file
      * @param string  $strLanguage The language code
-     * @param boolean $blnLoad     Add the labels to the global language array
      *
      * @return string The PHP code
      */
-    public static function convertXlfToPhp($strName, $strLanguage, $blnLoad=false)
+    private function convertXlfToPhp($strName, $strLanguage)
     {
         // Read the .xlf file
         $xml = new \DOMDocument();
@@ -75,28 +74,6 @@ class XliffFileLoader extends Loader
 
         $return = "\n// " . str_replace(TL_ROOT . '/', '', $strName) . "\n";
         $units = $xml->getElementsByTagName('trans-unit');
-
-        // Set up the quotekey function
-        $quotekey = function($key) {
-            if ($key === '0') {
-                return 0;
-            } elseif (is_numeric($key)) {
-                return intval($key);
-            } else {
-                return "'$key'";
-            }
-        };
-
-        // Set up the quotevalue function
-        $quotevalue = function($value) {
-            $value = str_replace("\n", '\n', $value);
-
-            if (strpos($value, '\n') !== false) {
-                return '"' . str_replace(array('$', '"'), array('\\$', '\\"'), $value) . '"';
-            } else {
-                return "'" . str_replace("'", "\\'", $value) . "'";
-            }
-        };
 
         /** @var \DOMElement[] $units */
         foreach ($units as $unit) {
@@ -109,9 +86,7 @@ class XliffFileLoader extends Loader
             $value = $node->item(0)->nodeValue;
 
             // Some closing </em> tags oddly have an extra space in
-            if (strpos($value, '</ em>') !== false) {
-                $value = str_replace('</ em>', '</em>', $value);
-            }
+            $value = str_replace('</ em>', '</em>', $value);
 
             $chunks = explode('.', $unit->getAttribute('id'));
 
@@ -120,34 +95,96 @@ class XliffFileLoader extends Loader
                 $chunks = array($chunks[0], $chunks[1] . '.' . $chunks[2], $chunks[3]);
             }
 
-            // Create the array entries
-            switch (count($chunks)) {
-                case 2:
-                    $return .= "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $quotekey($chunks[1]) . "] = " . $quotevalue($value) . ";\n";
-
-                    if ($blnLoad) {
-                        $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]] = $value;
-                    }
-                    break;
-
-                case 3:
-                    $return .= "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $quotekey($chunks[1]) . "][" . $quotekey($chunks[2]) . "] = " . $quotevalue($value) . ";\n";
-
-                    if ($blnLoad) {
-                        $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]][$chunks[2]] = $value;
-                    }
-                    break;
-
-                case 4:
-                    $return .= "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $quotekey($chunks[1]) . "][" . $quotekey($chunks[2]) . "][" . $quotekey($chunks[3]) . "] = " . $quotevalue($value) . ";\n";
-
-                    if ($blnLoad) {
-                        $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]][$chunks[2]][$chunks[3]] = $value;
-                    }
-                    break;
-            }
+            $return .= $this->getStringRepresentation($chunks, $value);
+            $this->addGlobal($chunks, $value);
         }
 
         return rtrim($return);
+    }
+
+    /**
+     * Returns a string representation of the global PHP language array
+     *
+     * @param array $chunks
+     * @param mixed $value
+     *
+     * @return string
+     */
+    private function getStringRepresentation(array $chunks, $value)
+    {
+        switch (count($chunks)) {
+            case 2:
+                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . "] = " . $this->quoteValue($value) . ";\n";
+
+            case 3:
+                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . "][" . $this->quoteKey($chunks[2]) . "] = " . $this->quoteValue($value) . ";\n";
+
+            case 4:
+                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . "][" . $this->quoteKey($chunks[2]) . "][" . $this->quoteKey($chunks[3]) . "] = " . $this->quoteValue($value) . ";\n";
+        }
+
+        throw new \OutOfBoundsException('Cannot load less than 2 or more than 4 levels in XLIFF language files.');
+    }
+
+    /**
+     * Adds labels to the global PHP language array if enabled
+     *
+     * @param array $chunks
+     * @param mixed $value
+     */
+    private function addGlobal(array $chunks, $value)
+    {
+        if ($this->addToGlobals)
+        {
+            switch (count($chunks)) {
+                case 2:
+                    $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]] = $value;
+                    break;
+
+                case 3:
+                    $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]][$chunks[2]] = $value;
+                    break;
+
+                case 4:
+                    $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]][$chunks[2]][$chunks[3]] = $value;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Quote array key for PHP string
+     *
+     * @param string $key
+     *
+     * @return int|string
+     */
+    private function quoteKey($key)
+    {
+        if ($key === '0') {
+            return 0;
+        } elseif (is_numeric($key)) {
+            return intval($key);
+        } else {
+            return "'$key'";
+        }
+    }
+
+    /**
+     * Quote value for PHP string
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    private function quoteValue($value)
+    {
+        $value = str_replace("\n", '\n', $value);
+
+        if (strpos($value, '\n') !== false) {
+            return '"' . str_replace(array('$', '"'), array('\\$', '\\"'), $value) . '"';
+        } else {
+            return "'" . str_replace("'", "\\'", $value) . "'";
+        }
     }
 }
