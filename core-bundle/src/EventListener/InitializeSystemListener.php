@@ -301,8 +301,7 @@ class InitializeSystemListener
         }
 
         // Show the "insecure document root" message
-        if ('localhost' !== $request->getHost()
-            && '127.0.0.1' !== $request->getHost()
+        if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1'])
             && '/web' === substr($request->getBasePath(), -4)
         ) {
             die_nicely('be_insecure', 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
