@@ -73,10 +73,11 @@ class InitializeSystemListener
         }
 
         $routeName = $request->attributes->get('_route');
+        $route     = $this->router->generate($routeName, $request->attributes->get('_route_params'));
 
         $this->setConstants(
             $this->getScopeFromRequest($request),
-            $this->router->generate($routeName, $request->attributes->get('_route_params'))
+            substr($route, strlen($request->getBasePath()))
         );
 
         $this->boot($routeName, $request->getBasePath());
