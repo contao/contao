@@ -43,7 +43,7 @@ class FileLocator implements FileLocatorInterface
      *
      * @return string|array The full path to the file or an array of file paths
      *
-     * @throws \InvalidArgumentException When file is not found
+     * @throws \InvalidArgumentException When file is not found and $first is true
      */
     public function locate($name, $currentPath = null, $first = false)
     {
@@ -61,11 +61,11 @@ class FileLocator implements FileLocatorInterface
             }
         }
 
-        if (!$filepaths) {
-            throw new \InvalidArgumentException(sprintf('The file "%s" does not exist (in: %s).', $name, implode(', ', $this->paths)));
+        if (!$first) {
+            return $filepaths;
         }
 
-        return $filepaths;
+        throw new \InvalidArgumentException(sprintf('The file "%s" does not exist (in: %s).', $name, implode(', ', $this->paths)));
     }
 
     /**
