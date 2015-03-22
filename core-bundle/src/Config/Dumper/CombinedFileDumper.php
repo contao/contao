@@ -18,7 +18,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class CombinedFileDumper implements DumperInteface
+class CombinedFileDumper implements DumperInterface
 {
     private $loader;
     private $cacheDir;
