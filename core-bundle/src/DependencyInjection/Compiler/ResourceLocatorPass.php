@@ -27,7 +27,7 @@ class ResourceLocatorPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        // register additional resource locators
+        // Register additional resource locators
         $locatorIds = $container->findTaggedServiceIds('contao.resource_locator');
 
         if (count($locatorIds) === 0) {
