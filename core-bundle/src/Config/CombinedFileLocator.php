@@ -35,18 +35,30 @@ class CombinedFileLocator implements FileLocatorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns a full path for a given file name.
+     *
+     * @param string      $name        The file name to locate
+     * @param string|null $currentPath The current path. Only used for the non-cache locator.
+     * @param bool        $first       If true and no cache file exists, the exception will be thrown.
+     *
+     * @return string|array The full path to the file or an array of file paths
+     *
+     * @throws \InvalidArgumentException When file is not found
      */
     public function locate($name, $currentPath = null, $first = false)
     {
-        $cacheFile = $this->cacheDir . DIRECTORY_SEPARATOR . $name;
+        // FIXME: we should inject this configuration
+        if (!\Config::get('bypassCache')) {
+            $cacheFile = $this->cacheDir . DIRECTORY_SEPARATOR . $name;
 
-        if (file_exists($cacheFile)) {
-            return $first ? $cacheFile : [$cacheFile];
+            if (file_exists($cacheFile)) {
+                return $first ? $cacheFile : [$cacheFile];
+            }
         }
 
-        if (null !== $this->locator) {
-            return $this->locator->locate($name, $currentPath, $first);
+        // If $first is true, the cached file was wanted so don't ask the locator
+        if (!$first && null !== $this->locator) {
+            return $this->locator->locate($name, $currentPath, false);
         }
 
         throw new \InvalidArgumentException(sprintf('The file "%s" does not exist (in: %s).', $name, $this->cacheDir));
