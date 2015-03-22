@@ -94,12 +94,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function symlinkFiles($uploadPath, $rootDir, $output)
     {
-        $finder = Finder::create()
-            ->ignoreDotFiles(false)
-            ->files()
-            ->name('.public')
-            ->in("$rootDir/$uploadPath")
-        ;
+        $finder = $this->findIn('.public', "$rootDir/$uploadPath");
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
@@ -116,12 +111,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function symlinkModules($rootDir, $output)
     {
-        $files = Finder::create()
-            ->ignoreDotFiles(false)
-            ->files()
-            ->name('.htaccess')
-            ->in($rootDir . '/system/modules')
-        ;
+        $files = $this->findIn('.htaccess', $rootDir . '/system/modules');
 
         /** @var SplFileInfo[] $files */
         foreach ($files as $file) {
@@ -219,5 +209,22 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         if ($fs->exists("$rootDir/$target") && !is_link("$rootDir/$target")) {
             throw new \LogicException("The symlink target $target exists and is not a symlink");
         }
+    }
+
+    /**
+     * Returns a finder instance to find files in given path.
+     *
+     * @param string $file A file name
+     * @param string $path An absolute path
+     *
+     * @return Finder The finder instance
+     */
+    private function findIn($file, $path)
+    {
+        return Finder::create()
+            ->ignoreDotFiles(false)
+            ->files()
+            ->name($file)
+            ->in($path);
     }
 }
