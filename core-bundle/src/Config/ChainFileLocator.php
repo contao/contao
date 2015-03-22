@@ -58,7 +58,7 @@ class ChainFileLocator implements FileLocatorInterface
             }
         }
 
-        if (!$first && !empty($files)) {
+        if (!$first) {
             return $files;
         }
 
