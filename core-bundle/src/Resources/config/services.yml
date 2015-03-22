@@ -35,11 +35,6 @@ services:
             # Priority must be lower than the one of the Contao initialize system listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
 
-    contao.resource_provider:
-        class: Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider
-        arguments:
-            - "%kernel.root_dir%"
-
     contao.resource_locator.bundles:
         class: Contao\CoreBundle\Config\FileLocator
         public: false
