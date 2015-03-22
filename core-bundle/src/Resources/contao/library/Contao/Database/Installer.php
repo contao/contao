@@ -278,15 +278,8 @@ class Installer extends \Controller
 		\Config::set('bypassCache', true);
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
 		{
-			$strDir = $strFolder . '/dca';
-
-			if (!is_dir($strDir))
-			{
-				continue;
-			}
-
 			foreach (scan($strDir) as $strFile)
 			{
 				// Ignore non PHP files and files which have been included before
@@ -331,21 +324,15 @@ class Installer extends \Controller
 	 */
 	public function getFromFile()
 	{
+        /** @var KernelInterface $kernel */
 		global $kernel;
 
 		$table = '';
 		$return = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/database.sql') as $strFile)
 		{
-			$strFile = $strFolder . '/config/database.sql';
-
-			if (!file_exists($strFile))
-			{
-				continue;
-			}
-
 			$data = file($strFile);
 
 			foreach ($data as $k=>$v)

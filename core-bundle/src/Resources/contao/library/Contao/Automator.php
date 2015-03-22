@@ -705,15 +705,8 @@ class Automator extends \System
 		$arrExtracts = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
 		{
-			$strDir = $strFolder . '/dca';
-
-			if (!is_dir($strDir))
-			{
-				continue;
-			}
-
 			foreach (scan($strDir) as $strFile)
 			{
 				// Ignore non PHP files and files which have been included before

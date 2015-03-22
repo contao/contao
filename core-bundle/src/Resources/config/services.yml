@@ -40,6 +40,15 @@ services:
         arguments:
             - "%kernel.root_dir%"
 
+    contao.resource_locator.bundles:
+        class: Contao\CoreBundle\Config\FileLocator
+        public: false
+        arguments:
+            - "@kernel"
+
+    contao.resource_locator:
+        alias: contao.resource_locator.bundles
+
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
         arguments:

@@ -321,9 +321,9 @@ abstract class System
 				/** @var KernelInterface $kernel */
 				global $kernel;
 
-				foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
+				foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang) as $strFolder)
 				{
-					$strFile = $strFolder . '/languages/' . $strCreateLang . '/' . $strName;
+					$strFile = $strFolder . '/' . $strName;
 
 					if (file_exists($strFile . '.xlf'))
 					{
@@ -371,26 +371,15 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			$blnIsInstalled = is_dir(__DIR__ . '/../../languages/' . $strLanguage);
-
-			if (!$blnIsInstalled)
-			{
-				$blnIsInstalled = is_dir(TL_ROOT . '/system/cache/language/' . $strLanguage);
-			}
-
-			if (!$blnIsInstalled)
-			{
+			try {
 				/** @var KernelInterface $kernel */
 				global $kernel;
 
-				foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
-				{
-					if (is_dir(TL_ROOT . '/' . $strFolder . '/languages/' . $strLanguage))
-					{
-						$blnIsInstalled = true;
-						break;
-					}
-				}
+				$kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strLanguage, null, true);
+				$blnIsInstalled = true;
+
+			} catch (\InvalidArgumentException $e) {
+				$blnIsInstalled = false;
 			}
 
 			static::$arrLanguages[$strLanguage] = $blnIsInstalled;
