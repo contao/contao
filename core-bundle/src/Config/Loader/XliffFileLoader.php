@@ -55,7 +55,6 @@ class XliffFileLoader extends Loader
         return is_string($resource) && 'xlf' === pathinfo($resource, PATHINFO_EXTENSION);
     }
 
-
     /**
      * Convert an .xlf file into a PHP language file
      *
@@ -122,13 +121,11 @@ class XliffFileLoader extends Loader
             }
 
             // Create the array entries
-            switch (count($chunks))
-            {
+            switch (count($chunks)) {
                 case 2:
                     $return .= "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $quotekey($chunks[1]) . "] = " . $quotevalue($value) . ";\n";
 
-                    if ($blnLoad)
-                    {
+                    if ($blnLoad) {
                         $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]] = $value;
                     }
                     break;
@@ -136,8 +133,7 @@ class XliffFileLoader extends Loader
                 case 3:
                     $return .= "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $quotekey($chunks[1]) . "][" . $quotekey($chunks[2]) . "] = " . $quotevalue($value) . ";\n";
 
-                    if ($blnLoad)
-                    {
+                    if ($blnLoad) {
                         $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]][$chunks[2]] = $value;
                     }
                     break;
@@ -145,8 +141,7 @@ class XliffFileLoader extends Loader
                 case 4:
                     $return .= "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $quotekey($chunks[1]) . "][" . $quotekey($chunks[2]) . "][" . $quotekey($chunks[3]) . "] = " . $quotevalue($value) . ";\n";
 
-                    if ($blnLoad)
-                    {
+                    if ($blnLoad) {
                         $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]][$chunks[2]][$chunks[3]] = $value;
                     }
                     break;
