@@ -41,7 +41,7 @@ class ChainFileLocator implements FileLocatorInterface
     {
         $files = [];
 
-        foreach ($this->locators as $locator) {
+        foreach ($this->getLocators($first) as $locator) {
             try {
                 $file = $locator->locate($name, $currentPath, $first);
 
@@ -63,5 +63,23 @@ class ChainFileLocator implements FileLocatorInterface
         }
 
         throw new \InvalidArgumentException(sprintf('No locator was able to find the file "%s".', $name));
+    }
+
+    /**
+     * If we're looking for all files, revers locator order so that higher priority overwrites lower priority locators.
+     *
+     * @param bool $first
+     *
+     * @return FileLocatorInterface[]
+     */
+    private function getLocators($first)
+    {
+        $locators = $this->locators;
+
+        if (!$first) {
+            array_reverse($locators);
+        }
+
+        return $locators;
     }
 }
