@@ -11,6 +11,11 @@
 namespace Contao;
 
 use Contao\CoreBundle\Command\SymlinksCommand;
+use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
+use Contao\CoreBundle\Config\Loader\PhpFileLoader;
+use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -492,31 +497,11 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$resources = $kernel->getContainer()->get('contao.resource_provider');
+		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
+		$objDumper  = new CombinedFileDumper(new PhpFileLoader(), $kernel->getRootDir() . '/../system/cache');
 
-		// Generate the class/template laoder cache file
-		$objCacheFile = new \File('system/cache/config/autoload.php');
-		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
-
-		foreach ($resources->findFiles('config/autoload.php') as $file)
-		{
-			$objCacheFile->append(static::readPhpFileWithoutTags($file->getPathname()));
-		}
-
-		// Close the file (moves it to its final destination)
-		$objCacheFile->close();
-
-		// Generate the config cache file
-		$objCacheFile = new \File('system/cache/config/config.php');
-		$objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
-
-		foreach ($resources->findFiles('config/config.php') as $file)
-		{
-			$objCacheFile->append(static::readPhpFileWithoutTags($file->getPathname()));
-		}
-
-		// Close the file (moves it to its final destination)
-		$objCacheFile->close();
+		$objDumper->dump($objLocator->locate('config/autoload.php'), 'config/autoload.php');
+		$objDumper->dump($objLocator->locate('config/config.php'), 'config/config.php');
 
 		// Generate the page mapping array
 		$arrMapper = array();
@@ -563,23 +548,30 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var \File[] $cacheFiles */
-		$cacheFiles = [];
+		$arrFiles = array();
+		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
 
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('dca/*.php') as $file)
+		// Parse all active modules
+		foreach ($objLocator->locate('dca') as $strDir)
 		{
-			$fileName = $file->getFilename();
-
-			if (!isset($cacheFiles[$fileName])) {
-				$cacheFiles[$fileName] = new \File('system/cache/dca/' . $fileName);
-				$cacheFiles[$fileName]->write('<?php '); // add one space to prevent the "unexpected $end" error
+			foreach (scan($strDir) as $strFile)
+			{
+				// Ignore non PHP files and files which have been included before
+				if (strncmp($strFile, '.', 1) !== 0 && substr($strFile, -4) == '.php')
+				{
+					$arrFiles[] = $strFile;
+				}
 			}
-
-			$cacheFiles[$fileName]->append(static::readPhpFileWithoutTags($file->getPathname()));
 		}
 
-		foreach ($cacheFiles as $cacheFile) {
-			$cacheFile->close();
+		$arrFiles   = array_values(array_unique($arrFiles));
+		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
+		$objDumper  = new CombinedFileDumper(new PhpFileLoader(), $kernel->getRootDir() . '/../system/cache');
+
+		// Create one file per table
+		foreach ($arrFiles as $strFile)
+		{
+			$objDumper->dump($objLocator->locate('dca/' . $strFile), 'dca/' . $strFile);
 		}
 
 		// Add a log entry
@@ -616,22 +608,42 @@ class Automator extends \System
 		}
 
 		$arrLanguages = array_unique($arrLanguages);
-		$arrResourcesPaths = $kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths();
+		$objLocator   = $kernel->getContainer()->get('contao.resource_locator');
+		$objDumper    = new CombinedFileDumper(
+			new DelegatingLoader(
+				new LoaderResolver(
+					[
+						new PhpFileLoader(),
+						new XliffFileLoader()
+					]
+				)
+			),
+			$kernel->getRootDir() . '/../system/cache'
+		);
+
+		// Add a short header with links to transifex.com
+		$strHeader = "<?php\n\n"
+			. "/**\n"
+			. " * Contao Open Source CMS\n"
+			. " * \n"
+			. " * Copyright (c) 2005-2015 Leo Feyer\n"
+			. " * \n"
+			. " * Core translations are managed using Transifex. To create a new translation\n"
+			. " * or to help to maintain an existing one, please register at transifex.com.\n"
+			. " * \n"
+			. " * @link http://help.transifex.com/intro/translating.html\n"
+			. " * @link https://www.transifex.com/projects/p/contao/language/%s/\n"
+			. " * \n"
+			. " * @license LGPL-3.0+\n"
+			. " */\n";
 
 		foreach ($arrLanguages as $strLanguage)
 		{
 			$arrFiles = array();
 
 			// Parse all active modules
-			foreach ($arrResourcesPaths as $strFolder)
+			foreach ($objLocator->locate('languages/' . $strLanguage) as $strDir)
 			{
-				$strDir = $strFolder . '/languages/' . $strLanguage;
-
-				if (!is_dir($strDir))
-				{
-					continue;
-				}
-
 				foreach (scan($strDir) as $strFile)
 				{
 					if (strncmp($strFile, '.', 1) !== 0 && (substr($strFile, -4) == '.php' || substr($strFile, -4) == '.xlf'))
@@ -646,45 +658,16 @@ class Automator extends \System
 			// Create one file per table
 			foreach ($arrFiles as $strName)
 			{
-				$strCacheFile = 'system/cache/language/' . $strLanguage . '/' . $strName . '.php';
-
-				// Add a short header with links to transifex.com
-				$strHeader = "<?php\n\n"
-						   . "/**\n"
-						   . " * Contao Open Source CMS\n"
-						   . " * \n"
-						   . " * Copyright (c) 2005-2015 Leo Feyer\n"
-						   . " * \n"
-						   . " * Core translations are managed using Transifex. To create a new translation\n"
-						   . " * or to help to maintain an existing one, please register at transifex.com.\n"
-						   . " * \n"
-						   . " * @link http://help.transifex.com/intro/translating.html\n"
-						   . " * @link https://www.transifex.com/projects/p/contao/language/%s/\n"
-						   . " * \n"
-						   . " * @license LGPL-3.0+\n"
-						   . " */\n";
-
-				// Generate the cache file
-				$objCacheFile = new \File($strCacheFile);
-				$objCacheFile->write(sprintf($strHeader, $strLanguage));
-
-				// Parse all active modules and append to the cache file
-				foreach ($arrResourcesPaths as $strFolder)
-				{
-					$strFile = $strFolder . '/languages/' . $strLanguage . '/' . $strName;
-
-					if (file_exists($strFile . '.xlf'))
-					{
-						$objCacheFile->append(static::convertXlfToPhp($strFile . '.xlf', $strLanguage));
-					}
-					elseif (file_exists($strFile . '.php'))
-					{
-						$objCacheFile->append(static::readPhpFileWithoutTags($strFile . '.php'));
-					}
-				}
-
-				// Close the file (moves it to its final destination)
-				$objCacheFile->close();
+				$objDumper->setHeader(sprintf($strHeader, $strLanguage));
+				$objDumper->dump(
+					array_merge(
+						// XLIFF files will overwrite PHP files if both exist in the same bundle
+						$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.php'),
+						$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.xlf')
+					),
+					'language/' . $strLanguage . '/' . $strName . '.php',
+					['type' => $strLanguage]
+				);
 			}
 		}
 
