@@ -92,14 +92,14 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      * @param string          $rootDir    The root directory
      * @param OutputInterface $output     The output object
      */
-    private function symlinkFiles($uploadPath, $rootDir, $output)
+    private function symlinkFiles($uploadPath, $rootDir, OutputInterface $output)
     {
         $finder = $this->findIn('.public', "$rootDir/$uploadPath");
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $path = $uploadPath . '/' . $file->getRelativePath();
-            $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
+            $this->relativeSymlink($path, $rootDir, $output);
         }
     }
 
@@ -109,7 +109,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      * @param string          $rootDir The root directory
      * @param OutputInterface $output  The output object
      */
-    private function symlinkModules($rootDir, $output)
+    private function symlinkModules($rootDir, OutputInterface $output)
     {
         $files = $this->findIn('.htaccess', $rootDir . '/system/modules');
 
@@ -119,7 +119,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
 
             if ($htaccess->grantsAccess()) {
                 $path = $file->getPath();
-                $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
+                $this->relativeSymlink($path, $rootDir, $output);
             }
         }
     }
@@ -130,7 +130,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      * @param string          $rootDir The root directory
      * @param OutputInterface $output  The output object
      */
-    private function symlinkThemes($rootDir, $output)
+    private function symlinkThemes($rootDir, OutputInterface $output)
     {
         try {
             $themes = $this->container->get('contao.resource_locator')->locate('themes');
@@ -148,6 +148,18 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
 
             $this->symlink("../../$path", 'system/themes/' . basename($path), $rootDir, $output);
         }
+    }
+
+    /**
+     * Generates a symlink relative to the given path
+     *
+     * @param string $path    The path to create symlink of
+     * @param string $rootDir The root directory
+     * @param string $output  The output object
+     */
+    private function relativeSymlink($path, $rootDir, OutputInterface $output)
+    {
+        $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
     }
 
     /**
