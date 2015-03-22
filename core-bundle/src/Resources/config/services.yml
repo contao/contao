@@ -40,6 +40,12 @@ services:
         public: false
         arguments:
             - "@kernel"
+        tags:
+            - { name: contao.resource_locator }
+
+    contao.resource_locator.chain:
+        class: Contao\CoreBundle\Config\ChainFileLocator
+        public: false
 
     contao.resource_locator.cache:
             class: Contao\CoreBundle\Config\CombinedFileLocator

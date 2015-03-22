@@ -10,7 +10,9 @@
 
 namespace Contao\CoreBundle;
 
+use Contao\CoreBundle\DependencyInjection\Compiler\ResourceLocatorPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -37,5 +39,15 @@ class ContaoCoreBundle extends Bundle
     {
         $this->container->addScope(new Scope('frontend', 'request'));
         $this->container->addScope(new Scope('backend', 'request'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new ResourceLocatorPass());
     }
 }
