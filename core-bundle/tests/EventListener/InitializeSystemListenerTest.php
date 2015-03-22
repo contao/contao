@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\Config;
 use Contao\CoreBundle\Config\FileLocator;
-use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
 use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
