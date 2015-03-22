@@ -32,7 +32,7 @@ class ToggleViewListener
     {
         $request = $event->getRequest();
 
-        if (!$request->query->has('toggle_view')) {
+        if (!$event->isMasterRequest() || !$request->query->has('toggle_view')) {
             return;
         }
 

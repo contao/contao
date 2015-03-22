@@ -30,6 +30,10 @@ class ContaoDataCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
+        if (!isset($GLOBALS['TL_DEBUG'])) {
+            return;
+        }
+
         $this->data = $GLOBALS['TL_DEBUG'];
 
         $this->addSummaryData();

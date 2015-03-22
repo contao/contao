@@ -28,6 +28,10 @@ class OutputFromCacheListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         $response = Frontend::getResponseFromCache();
 
         if (null !== $response) {
