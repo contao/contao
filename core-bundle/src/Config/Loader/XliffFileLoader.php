@@ -109,6 +109,8 @@ class XliffFileLoader extends Loader
      * @param mixed $value
      *
      * @return string
+     *
+     * @throws \OutOfBoundsException If less than 2 or more than 4 chunks are given.
      */
     private function getStringRepresentation(array $chunks, $value)
     {
@@ -136,19 +138,13 @@ class XliffFileLoader extends Loader
     {
         if ($this->addToGlobals)
         {
-            switch (count($chunks)) {
-                case 2:
-                    $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]] = $value;
-                    break;
+            $data = &$GLOBALS['TL_LANG'];
 
-                case 3:
-                    $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]][$chunks[2]] = $value;
-                    break;
-
-                case 4:
-                    $GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]][$chunks[2]][$chunks[3]] = $value;
-                    break;
+            foreach ($chunks as $key) {
+                $data = &$data[$key];
             }
+
+            $data = $value;
         }
     }
 
