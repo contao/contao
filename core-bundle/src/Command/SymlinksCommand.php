@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Command;
 
+use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -76,12 +77,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         $fs->remove("$rootDir/web/vendor");
 
         $this->symlinkFiles($uploadPath, $rootDir, $output);
-
-        // Symlink the public extension subfolders
-        foreach ($this->container->get('contao.resource_provider')->getPublicFolders() as $path) {
-            $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
-        }
-
+        $this->symlinkModules($rootDir, $output);
         $this->symlinkThemes($rootDir, $output);
 
         // Symlink the assets and themes directory
@@ -109,6 +105,32 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         foreach ($finder as $file) {
             $path = $uploadPath . '/' . $file->getRelativePath();
             $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
+        }
+    }
+
+    /**
+     * Creates symlinks for the public module subfolders.
+     *
+     * @param string          $rootDir The root directory
+     * @param OutputInterface $output  The output object
+     */
+    private function symlinkModules($rootDir, $output)
+    {
+        $files = Finder::create()
+            ->ignoreDotFiles(false)
+            ->files()
+            ->name('.htaccess')
+            ->in($rootDir . '/system/modules')
+        ;
+
+        /** @var SplFileInfo[] $files */
+        foreach ($files as $file) {
+            $htaccess = new HtaccessAnalyzer($file);
+
+            if ($htaccess->grantsAccess()) {
+                $path = $file->getPath();
+                $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
+            }
         }
     }
 
