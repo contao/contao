@@ -265,6 +265,9 @@ abstract class System
 	 */
 	public static function loadLanguageFile($strName, $strLanguage=null, $blnNoCache=false)
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
 		if ($strLanguage === null)
 		{
 			$strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
@@ -311,29 +314,32 @@ abstract class System
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
-			$strCacheFile = 'system/cache/language/' . $strCreateLang . '/' . $strName . '.php';
-
-			// Try to load from cache
-			if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
+			try
 			{
-				include TL_ROOT . '/' . $strCacheFile;
+				include $kernel->getContainer()->get('contao.cached_resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.php', null, true);
 			}
-			else
+			catch (\InvalidArgumentException $e)
 			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
+				$objLocator = $kernel->getContainer()->get('contao.resource_locator');
+				$xlfLoader  = new XliffFileLoader(true);
 
-				foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang) as $strFolder)
+				// XLIFF files will overwrite PHP files if both exist in the same bundle
+				$arrFiles = array_merge
+				(
+					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.php'),
+					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.xlf')
+				);
+
+				foreach ($arrFiles as $strFile)
 				{
-					$strFile = $strFolder . '/' . $strName;
-
-					if (file_exists($strFile . '.xlf'))
+					if (pathinfo($strFile, PATHINFO_EXTENSION) == 'xlf')
 					{
-						static::convertXlfToPhp($strFile . '.xlf', $strCreateLang, true);
+						$xlfLoader->load($strFile, $strCreateLang);
 					}
 					elseif (file_exists($strFile . '.php'))
 					{
-						include $strFile . '.php';
+						// We can't use a loader here as it would change the scope
+						include $strFile;
 					}
 				}
 			}

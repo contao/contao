@@ -665,7 +665,7 @@ class Automator extends \System
 						$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.php'),
 						$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.xlf')
 					),
-					'language/' . $strLanguage . '/' . $strName . '.php',
+					'languages/' . $strLanguage . '/' . $strName . '.php',
 					['type' => $strLanguage]
 				);
 			}
