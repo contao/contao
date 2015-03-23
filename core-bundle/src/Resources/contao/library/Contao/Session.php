@@ -155,10 +155,7 @@ class Session
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());
 
-		foreach ($arrData as $k => $v)
-		{
-			$bag->set($k, $v);
-		}
+		$bag->replace($arrData);
 	}
 
 
