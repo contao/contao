@@ -27,11 +27,10 @@ class AddToSearchIndexListener
      */
     public function onKernelTerminate(PostResponseEvent $event)
     {
+        // FIXME: should be replaced with "Response implements Indexable" (see https://github.com/contao/symfony-todo/issues/3)
         if (!defined('TL_ROOT')) {
             return;
         }
-
-        // TODO: we should also find a way to check for the master reqeust
 
         Frontend::indexPageIfApplicable($event->getResponse());
     }
