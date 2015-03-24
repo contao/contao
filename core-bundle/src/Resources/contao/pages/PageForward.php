@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\DieNicelyException;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException;
 
 /**
  * Provide methods to handle a forward page.
@@ -41,7 +41,7 @@ class PageForward extends \Frontend
 		if ($objNextPage === null)
 		{
 			$this->log('Forward page ID "' . $objPage->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
-			throw new DieNicelyException('be_no_forward', 'Forward page not found', 404);
+			throw new ForwardPageNotFoundHttpException();
 		}
 
 		$strForceLang = null;

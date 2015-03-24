@@ -10,7 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\DieNicelyException;
+use Contao\CoreBundle\Exception\NotFoundHttpException;
+use Contao\CoreBundle\Exception\RootNotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -317,7 +318,7 @@ abstract class Frontend extends \Controller
 			if ($objRootPage === null)
 			{
 				\System::log('No root page found (host "' . $host . '", language "'. \Input::get('language') .'")', __METHOD__, TL_ERROR);
-				throw new DieNicelyException('be_no_root', 'No root page found', 404);
+				throw new NotFoundHttpException('No root page found');
 			}
 		}
 
@@ -333,7 +334,7 @@ abstract class Frontend extends \Controller
 			if ($objRootPage === null)
 			{
 				\System::log('No root page found (host "' . \Environment::get('host') . '", languages "'.implode(', ', \Environment::get('httpAcceptLanguage')).'")', __METHOD__, TL_ERROR);
-				throw new DieNicelyException('be_no_root', 'No root page found', 404);
+				throw new RootNotFoundHttpException();
 			}
 
 			// Redirect to the language root (e.g. en/)

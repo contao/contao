@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\DieNicelyException;
+use Contao\CoreBundle\Exception\RootNotFoundHttpException;
 
 /**
  * Reads and writes pages
@@ -859,7 +859,7 @@ class PageModel extends \Model
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
 			\System::log('Page ID "'. $this->id .'" does not belong to a root page', __METHOD__, TL_ERROR);
-			throw new DieNicelyException('be_no_root', 'No root page found', 404);
+			throw new RootNotFoundHttpException();
 		}
 
 		$this->trail = array_reverse($trail);

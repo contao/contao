@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\DieNicelyException;
+use Contao\CoreBundle\Exception\NoPagesFoundHttpException;
 
 /**
  * Provide methods to handle a website root page.
@@ -37,7 +37,7 @@ class PageRoot extends \Frontend
 		if (null === $objNextPage)
 		{
 			$this->log('No active page found under root page "' . $pageId . '")', __METHOD__, TL_ERROR);
-			throw new DieNicelyException('be_no_active', 'No active pages found', 404);
+			throw new NoPagesFoundHttpException();
 		}
 
 		if (!$blnReturn)

@@ -10,7 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\DieNicelyException;
+use Contao\CoreBundle\Exception\AccessDeniedHttpException;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -98,7 +99,7 @@ class PageError403 extends \Frontend
 		// Die if there is no page at all
 		if (null === $obj403)
 		{
-			throw new DieNicelyException('be_forbidden', 'Forbidden', 403);
+			throw new AccessDeniedHttpException();
 		}
 
 		// Forward to another page
@@ -109,7 +110,7 @@ class PageError403 extends \Frontend
 			if (null === $objNextPage)
 			{
 				$this->log('Forward page ID "' . $obj403->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
-				throw new DieNicelyException('be_no_forward', 'Forward page not found', 403);
+				throw new ForwardPageNotFoundHttpException();
 			}
 
 			$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj403->redirect == 'temporary') ? 302 : 301));

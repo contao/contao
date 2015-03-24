@@ -14,7 +14,7 @@
  *
  * @throws \Contao\CoreBundle\Exception\DieNicelyException
  *
- * @deprecated Deprecated since Contao 4.0 to be removed in Contao 5.0 - throw a DieNicelyException instead.
+ * @fixme To be removed when the last occurences of show_help_message have been tracked down and killed.
  *
  * @see \Contao\CoreBundle\Exception\DieNicelyException
  */
@@ -32,7 +32,7 @@ function show_help_message()
  *
  * @throws \Contao\CoreBundle\Exception\DieNicelyException
  *
- * @deprecated Deprecated since Contao 4.0 to be removed in Contao 5.0 - throw a DieNicelyException instead.
+ * @fixme To be removed when the last occurences of die_nicely have been tracked down and killed.
  *
  * @see \Contao\CoreBundle\Exception\DieNicelyException
  */

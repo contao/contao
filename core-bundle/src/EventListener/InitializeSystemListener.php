@@ -13,7 +13,9 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\ClassLoader;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
-use Contao\CoreBundle\Exception\DieNicelyException;
+use Contao\CoreBundle\Exception\BadRequestTokenException;
+use Contao\CoreBundle\Exception\IncompleteInstallationException;
+use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\Environment;
 use Contao\Input;
 use Contao\System;
@@ -328,21 +330,13 @@ class InitializeSystemListener extends ScopeAwareListener
         // Show the "insecure document root" message
         // FIXME: add unit tests for this as soon as die_nicely is an exception
         if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) && '/web' === substr($request->getBasePath(), -4)) {
-            throw new DieNicelyException(
-                'be_insecure',
-                'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.',
-                503
-            );
+            throw new InsecureInstallationException();
         }
 
         // Show the "incomplete installation" message
         if (!$this->config->isComplete()) {
             // FIXME: This maybe should be removed when localconfig.php is not mandatory anymore.
-            throw new DieNicelyException(
-                'be_incomplete',
-                'The installation has not been completed. Please finish the configuration.',
-                503
-            );
+            throw new IncompleteInstallationException();
         }
     }
 
@@ -424,11 +418,8 @@ class InitializeSystemListener extends ScopeAwareListener
                 exit; // FIXME: throw a ResponseException instead
             }
 
-            throw new DieNicelyException(
-                'be_referer',
-                'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">go back</a> and try again.',
-                400
-            );
+            // FIXME: obsolete when using symfony security?
+            throw new BadRequestTokenException();
         }
     }
 

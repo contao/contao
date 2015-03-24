@@ -265,7 +265,7 @@ abstract class Template extends \Controller
 
 		header('Vary: User-Agent', false);
 		header('Content-Type: ' . $this->strContentType . '; charset=' . \Config::get('characterSet'));
-
+		 // FIXME: would be cool to throw a response exception here but sadly the hook is in the way.
 		echo $this->strBuffer;
 
 		// Flush the output buffers (see #6962)
