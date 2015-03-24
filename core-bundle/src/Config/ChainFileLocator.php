@@ -66,7 +66,7 @@ class ChainFileLocator implements FileLocatorInterface
     }
 
     /**
-     * If we're looking for all files, revers locator order so that higher priority overwrites lower priority locators.
+     * If we're looking for all files, reverse locator order so that higher priority overwrites lower priority locators.
      *
      * @param bool $first
      *
