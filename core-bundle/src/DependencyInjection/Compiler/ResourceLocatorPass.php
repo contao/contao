@@ -27,35 +27,63 @@ class ResourceLocatorPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        // Register additional resource locators
+        $locatorIds = $this->getLocators($container);
+
+        if (count($locatorIds) === 1) {
+            $alias = key($locatorIds);
+        } else {
+            $chainLocator = $container->getDefinition('contao.resource_locator.chain');
+
+            foreach ($this->getPriorizedLocators($locatorIds) as $locators) {
+                foreach ($locators as $locator) {
+                    $chainLocator->addMethodCall('addLocator', array(new Reference($locator)));
+                }
+            }
+
+            $alias = 'contao.resource_locator.chain';
+        }
+
+        $container->setAlias('contao.resource_locator', $alias);
+    }
+
+    /**
+     * Gets tagged locators from container builder.
+     *
+     * @param ContainerBuilder $container
+     *
+     * @return array
+     */
+    private function getLocators(ContainerBuilder $container)
+    {
         $locatorIds = $container->findTaggedServiceIds('contao.resource_locator');
 
         if (count($locatorIds) === 0) {
             throw new LogicException('No Contao resource locators found. You need to tag at least one locator with "contao.resource_locator"');
         }
 
-        if (count($locatorIds) === 1) {
-            $container->setAlias('contao.resource_locator', key($locatorIds));
-        } else {
-            $chainLoader        = $container->getDefinition('contao.resource_locator.chain');
-            $prioritizedLoaders = array();
+        return $locatorIds;
+    }
 
-            foreach ($locatorIds as $id => $tags) {
-                foreach ($tags as $tag) {
-                    $priority = isset($tag['priority']) ? $tag['priority'] : 0;
-                    $prioritizedLoaders[$priority][] = $id;
-                }
+    /**
+     * Order the locators by priority and return nested array of locators.
+     *
+     * @param array $locators
+     *
+     * @return array
+     */
+    private function getPriorizedLocators(array $locators)
+    {
+        $prioritizedLocators = [];
+
+        foreach ($locators as $id => $tags) {
+            foreach ($tags as $tag) {
+                $priority = isset($tag['priority']) ? $tag['priority'] : 0;
+                $prioritizedLocators[$priority][] = $id;
             }
-
-            krsort($prioritizedLoaders);
-
-            foreach ($prioritizedLoaders as $loaders) {
-                foreach ($loaders as $loader) {
-                    $chainLoader->addMethodCall('addLocator', array(new Reference($loader)));
-                }
-            }
-
-            $container->setAlias('contao.resource_locator', 'contao.resource_locator.chain');
         }
+
+        krsort($prioritizedLocators);
+
+        return $prioritizedLocators;
     }
 }
