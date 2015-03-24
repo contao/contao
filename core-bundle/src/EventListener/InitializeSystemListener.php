@@ -301,6 +301,7 @@ class InitializeSystemListener
         }
 
         // Show the "insecure document root" message
+        // FIXME: add unit tests for this as soon as die_nicely is an exception
         if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1'])
             && '/web' === substr($request->getBasePath(), -4)
         ) {
