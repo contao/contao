@@ -13,11 +13,13 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\ClassLoader;
 use Contao\Config;
 use Contao\CoreBundle\Command\ContaoFrameworkDependentInterface;
+use Contao\CoreBundle\Session\Attribute\AttributeBagMirror;
 use Contao\Environment;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -43,6 +45,11 @@ class InitializeSystemListener extends ScopeAwareListener
     private $tokenManager;
 
     /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
      * @var string
      */
     private $rootDir;
@@ -61,10 +68,12 @@ class InitializeSystemListener extends ScopeAwareListener
     public function __construct(
         RouterInterface $router,
         CsrfTokenManagerInterface $tokenManager,
+        SessionInterface $session,
         $rootDir
     ) {
         $this->router       = $router;
         $this->tokenManager = $tokenManager;
+        $this->session      = $session;
         $this->rootDir      = dirname($rootDir);
     }
 
@@ -152,6 +161,9 @@ class InitializeSystemListener extends ScopeAwareListener
 
         // Log PHP errors
         $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
+
+        // Support legacy Session access
+        $this->initializeLegacySessionAccess();
 
         $this->includeBasicClasses();
 
@@ -378,5 +390,18 @@ class InitializeSystemListener extends ScopeAwareListener
 
             exit; // FIXME: throw a ResponseException instead
         }
+    }
+
+    /**
+     * Initializes legacy session access for $_SESSION['FE_DATA'] and
+     * $_SESSION['BE_DATA'].
+     */
+    private function initializeLegacySessionAccess()
+    {
+        $feBag = $this->session->getBag('contao_frontend');
+        $beBag = $this->session->getBag('contao_backend');
+
+        $_SESSION['FE_DATA'] = new AttributeBagMirror($feBag);
+        $_SESSION['BE_DATA'] = new AttributeBagMirror($beBag);
     }
 }

@@ -19,6 +19,7 @@ services:
         arguments:
             - "@router"
             - "@security.csrf.token_manager"
+            - "@session"
             - "%kernel.root_dir%"
         calls:
             - [setContainer, ["@service_container"]]
