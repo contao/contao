@@ -637,15 +637,13 @@ abstract class User extends \System
 		$this->setCookie($this->strCookie, $this->strHash, ($time - 86400), null, null, false, true);
 		$this->strHash = '';
 
-		// FIXME: What do we need to do with the session handling here?
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-		// Destroy the current session
-		session_destroy();
-		session_write_close();
+		/** @var SessionInterface $session */
+		$session = $kernel->getContainer()->get('session');
 
-		// Reset the session cookie
-		$params = session_get_cookie_params();
-		$this->setCookie(session_name(), session_id(), ($time - 86400), $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+		$session->invalidate();
 
 		// Add a log entry
 		if ($this->findBy('id', $intUserid) != false)
