@@ -20,15 +20,18 @@ use Symfony\Component\Config\Loader\Loader;
  */
 class XliffFileLoader extends Loader
 {
+    private $rootDir;
     private $addToGlobals;
 
     /**
      * Constructor.
      *
-     * @param bool $addToGlobals Defines if language labels should be added to $GLOBALS['TL_LANG']
+     * @param string $rootDir      The kernel root directory
+     * @param bool   $addToGlobals Defines if language labels should be added to $GLOBALS['TL_LANG']
      */
-    public function __construct($addToGlobals = false)
+    public function __construct($rootDir, $addToGlobals = false)
     {
+        $this->rootDir      = dirname($rootDir);
         $this->addToGlobals = $addToGlobals;
     }
 
@@ -72,7 +75,7 @@ class XliffFileLoader extends Loader
         // Use loadXML() instead of load() (see contao/core#7192)
         $xml->loadXML(file_get_contents($strName));
 
-        $return = "\n// " . str_replace(TL_ROOT . '/', '', $strName) . "\n";
+        $return = "\n// " . str_replace($this->rootDir . '/', '', $strName) . "\n";
         $units = $xml->getElementsByTagName('trans-unit');
 
         /** @var \DOMElement[] $units */

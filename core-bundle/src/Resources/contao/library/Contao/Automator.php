@@ -623,7 +623,7 @@ class Automator extends \System
 				new LoaderResolver(
 					[
 						new PhpFileLoader(),
-						new XliffFileLoader()
+						new XliffFileLoader($kernel->getRootDir())
 					]
 				)
 			),

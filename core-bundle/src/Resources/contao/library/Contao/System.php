@@ -321,7 +321,7 @@ abstract class System
 			catch (\InvalidArgumentException $e)
 			{
 				$objLocator = $kernel->getContainer()->get('contao.resource_locator');
-				$xlfLoader  = new XliffFileLoader(true);
+				$xlfLoader  = new XliffFileLoader($kernel->getRootDir(), true);
 
 				// XLIFF files will overwrite PHP files if both exist in the same bundle
 				$arrFiles = array_merge
@@ -710,7 +710,7 @@ abstract class System
 			$strName = TL_ROOT . '/' . $strName;
 		}
 
-		$loader = new XliffFileLoader($blnLoad);
+		$loader = new XliffFileLoader($kernel->getRootDir(), $blnLoad);
 
 		return $loader->load($strName, $strLanguage);
 	}
