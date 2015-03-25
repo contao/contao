@@ -41,7 +41,7 @@ class SessionListenerTest extends TestCase
         $session = $this->getSession();
 
         $listener = new SessionListener($session);
-        $listener->onKernelRequest();
+        $listener->registerContaoAttributeBags();
 
         $this->assertInstanceOf(
             'Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag',
