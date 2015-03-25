@@ -9,7 +9,7 @@
  */
 
 namespace Contao\CoreBundle\Session\Attribute;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provides an ArrayAccess mirror for a session AttributeBag.
@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 class AttributeBagMirror implements \ArrayAccess
 {
     /**
-     * @var AttributeBag
+     * @var AttributeBagInterface
      */
     private $targetBag;
 
@@ -28,9 +28,9 @@ class AttributeBagMirror implements \ArrayAccess
     /**
      * Creates an AttributeBagMirror with a target bag
      *
-     * @param AttributeBag $targetBag
+     * @param AttributeBagInterface $targetBag
      */
-    public function __construct(AttributeBag $targetBag)
+    public function __construct(AttributeBagInterface $targetBag)
     {
         $this->targetBag = $targetBag;
     }
