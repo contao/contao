@@ -23,6 +23,10 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -33,6 +37,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  * Tests the BootstrapLegacyListener class.
  *
  * @author Christian Schiffler <https://github.com/discordier>
+ * @author Yanick Witschi <https://github.com/toflar>
  */
 class InitializeSystemListenerTest extends TestCase
 {
@@ -44,6 +49,7 @@ class InitializeSystemListenerTest extends TestCase
         $listener = new InitializeSystemListener(
             $this->getMock('Symfony\Component\Routing\RouterInterface'),
             $this->getMock('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'),
+            $this->mockSession(),
             $this->getRootDir()
         );
 
@@ -69,6 +75,7 @@ class InitializeSystemListenerTest extends TestCase
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
             $this->mockTokenManager(),
+            $this->mockSession(),
             $this->getRootDir() . '/app'
         );
 
@@ -108,6 +115,7 @@ class InitializeSystemListenerTest extends TestCase
         $listener = new InitializeSystemListener(
             $this->mockRouter('/contao/install'),
             $this->mockTokenManager(),
+            $this->mockSession(),
             $this->getRootDir() . '/app'
         );
 
@@ -148,6 +156,7 @@ class InitializeSystemListenerTest extends TestCase
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
             $this->mockTokenManager(),
+            $this->mockSession(),
             $this->getRootDir() . '/app'
         );
 
@@ -190,6 +199,7 @@ class InitializeSystemListenerTest extends TestCase
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
             $this->mockTokenManager(),
+            $this->mockSession(),
             $this->getRootDir() . '/app'
         );
 
@@ -295,6 +305,7 @@ class InitializeSystemListenerTest extends TestCase
         $listener = new InitializeSystemListener(
             $this->getMock('Symfony\Component\Routing\RouterInterface'),
             $this->mockTokenManager(),
+            $this->mockSession(),
             $this->getRootDir() . '/app'
         );
 
@@ -450,5 +461,27 @@ class InitializeSystemListenerTest extends TestCase
         $tokenManager = $this->getMock('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface');
 
         return $tokenManager;
+    }
+
+    /**
+     * Mocks a Symfony session containing the Contao attribute bags
+     *
+     * @return SessionInterface
+     */
+    private function mockSession()
+    {
+        $session = new Session(
+            new MockArraySessionStorage()
+        );
+
+        $beBag = new AttributeBag('_contao_be_attributes');
+        $beBag->setName('contao_backend');
+        $feBag = new AttributeBag('_contao_fe_attributes');
+        $feBag->setName('contao_frontend');
+
+        $session->registerBag($beBag);
+        $session->registerBag($feBag);
+        
+        return $session;
     }
 }
