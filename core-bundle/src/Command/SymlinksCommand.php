@@ -12,6 +12,8 @@ namespace Contao\CoreBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -21,8 +23,21 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class SymlinksCommand extends LockedCommand
+class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface|null
+     */
+    private $container;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -39,7 +54,7 @@ class SymlinksCommand extends LockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->generateSymlinks(dirname($this->getContainer()->getParameter('kernel.root_dir')), $output);
+        $this->generateSymlinks(dirname($this->container->getParameter('kernel.root_dir')), $output);
 
         return 0;
     }
@@ -52,9 +67,8 @@ class SymlinksCommand extends LockedCommand
      */
     public function generateSymlinks($rootDir, OutputInterface $output)
     {
-        $container  = $this->getContainer();
-        $uploadPath = $container->getParameter('contao.upload_path');
         $fs         = new Filesystem();
+        $uploadPath = $this->container->getParameter('contao.upload_path');
 
         // Remove the base folders in the document root
         $fs->remove("$rootDir/web/$uploadPath");
@@ -64,7 +78,7 @@ class SymlinksCommand extends LockedCommand
         $this->symlinkFiles($uploadPath, $rootDir, $output);
 
         // Symlink the public extension subfolders
-        foreach ($container->get('contao.resource_provider')->getPublicFolders() as $path) {
+        foreach ($this->container->get('contao.resource_provider')->getPublicFolders() as $path) {
             $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
         }
 
@@ -106,7 +120,7 @@ class SymlinksCommand extends LockedCommand
      */
     private function symlinkThemes($rootDir, $output)
     {
-        $finder = $this->getContainer()->get('contao.resource_provider')->findIn('themes');
+        $finder = $this->container->get('contao.resource_provider')->findIn('themes');
 
         /** @var SplFileInfo $fileObj */
         foreach ($finder->directories()->depth(0) as $fileObj) {

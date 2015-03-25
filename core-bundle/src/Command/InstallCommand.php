@@ -64,15 +64,14 @@ class InstallCommand extends LockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $fs      = new Filesystem();
-        $rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
+        $fs = new Filesystem();
 
         foreach ($this->emptyDirs as $path) {
-            $this->addEmptyDir("$rootDir/$path", $fs, $output);
+            $this->addEmptyDir(getcwd() . "/$path", $fs, $output);
         }
 
         foreach ($this->ignoredDirs as $path) {
-            $this->addIgnoredDir("$rootDir/$path", $fs, $output);
+            $this->addIgnoredDir(getcwd() . "/$path", $fs, $output);
         }
 
         return 0;
