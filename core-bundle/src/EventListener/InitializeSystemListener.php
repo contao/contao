@@ -19,6 +19,7 @@ use Contao\Input;
 use Contao\System;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
@@ -399,7 +400,10 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     private function initializeLegacySessionAccess()
     {
+        /** @var AttributeBagInterface $feBag */
         $feBag = $this->session->getBag('contao_frontend');
+
+        /** @var AttributeBagInterface $beBag */
         $beBag = $this->session->getBag('contao_backend');
 
         $_SESSION['FE_DATA'] = new AttributeBagMirror($feBag);
