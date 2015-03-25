@@ -374,6 +374,7 @@ class InitializeSystemListener extends ScopeAwareListener
         // Check the request token upon POST requests
         $token = new CsrfToken('_csrf', Input::post('REQUEST_TOKEN'));
 
+        // FIXME: This forces all routes handling POST data to pase a REQUEST_TOKEN
         if ($_POST && !$this->tokenManager->isTokenValid($token)) {
 
             // Force a JavaScript redirect upon Ajax requests (IE requires absolute link)
