@@ -498,7 +498,11 @@ class Automator extends \System
 		global $kernel;
 
 		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
-		$objDumper  = new CombinedFileDumper(new PhpFileLoader(), $kernel->getRootDir() . '/../system/cache');
+		$objDumper  = new CombinedFileDumper(
+            $kernel->getContainer()->get('filesystem'),
+            new PhpFileLoader(),
+            $kernel->getRootDir() . '/../system/cache'
+        );
 
 		$objDumper->dump($objLocator->locate('config/autoload.php'), 'config/autoload.php');
 		$objDumper->dump($objLocator->locate('config/config.php'), 'config/config.php');
@@ -566,7 +570,11 @@ class Automator extends \System
 
 		$arrFiles   = array_values(array_unique($arrFiles));
 		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
-		$objDumper  = new CombinedFileDumper(new PhpFileLoader(), $kernel->getRootDir() . '/../system/cache');
+		$objDumper  = new CombinedFileDumper(
+            $kernel->getContainer()->get('filesystem'),
+            new PhpFileLoader(),
+            $kernel->getRootDir() . '/../system/cache'
+        );
 
 		// Create one file per table
 		foreach ($arrFiles as $strFile)
@@ -610,6 +618,7 @@ class Automator extends \System
 		$arrLanguages = array_unique($arrLanguages);
 		$objLocator   = $kernel->getContainer()->get('contao.resource_locator');
 		$objDumper    = new CombinedFileDumper(
+            $kernel->getContainer()->get('filesystem'),
 			new DelegatingLoader(
 				new LoaderResolver(
 					[

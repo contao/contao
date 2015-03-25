@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Config\Dumper;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * CombinedFileDumper combines multiple files into one PHP file
@@ -22,24 +23,21 @@ class CombinedFileDumper implements DumperInterface
 {
     private $loader;
     private $cacheDir;
+    private $filesystem;
     private $header = '<?php '; // add one space to prevent the "unexpected $end" error
 
     /**
      * Constructor.
      *
-     * @param LoaderInterface $loader   A loader to get PHP content from the files
-     * @param string          $cacheDir The base directory where to put cache files
+     * @param Filesystem      $filesystem A filesystem abstraction
+     * @param LoaderInterface $loader     A loader to get PHP content from the files
+     * @param string          $cacheDir   The base directory where to put cache files
      */
-    public function __construct(LoaderInterface $loader, $cacheDir)
+    public function __construct(Filesystem $filesystem, LoaderInterface $loader, $cacheDir)
     {
-        $realDir = realpath($cacheDir);
-
-        if (false === $realDir) {
-            throw new \InvalidArgumentException(sprintf('Cache directory not found (in %s)', $cacheDir));
-        }
-
-        $this->loader   = $loader;
-        $this->cacheDir = $realDir;
+        $this->filesystem = $filesystem;
+        $this->loader     = $loader;
+        $this->cacheDir   = $cacheDir;
     }
 
     /**
@@ -67,31 +65,6 @@ class CombinedFileDumper implements DumperInterface
             $buffer .= $this->loader->load($file, $options['type']);
         }
 
-        $this->createDirectory(dirname($cacheFile));
-
-        file_put_contents($this->cacheDir . DIRECTORY_SEPARATOR . $cacheFile, $buffer, LOCK_EX);
-    }
-
-    /**
-     * Recursively creates a folder if it does not exist.
-     *
-     * @param string $folder The folder to create, relative to the cache directory
-     */
-    private function createDirectory($folder)
-    {
-        if (empty($folder) || is_dir($this->cacheDir . DIRECTORY_SEPARATOR . $folder)) {
-            return;
-        }
-
-        $relativePath = '';
-
-        // Create the folder
-        foreach (array_filter(explode('/', $folder)) as $name) {
-            $relativePath .= $name . DIRECTORY_SEPARATOR;
-
-            if (!is_dir($this->cacheDir . DIRECTORY_SEPARATOR . $relativePath)) {
-                mkdir($this->cacheDir . DIRECTORY_SEPARATOR . $relativePath);
-            }
-        }
+        $this->filesystem->dumpFile($this->cacheDir . DIRECTORY_SEPARATOR . $cacheFile, $buffer);
     }
 }
