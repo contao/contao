@@ -50,7 +50,7 @@ services:
     contao.resource_locator.cache:
             class: Contao\CoreBundle\Config\CombinedFileLocator
             arguments:
-                - '%kernel.root_dir%/../system/cache'
+                - '%kernel.cache_dir%/contao'
                 - "@contao.resource_locator"
 
     contao.resource_locator:

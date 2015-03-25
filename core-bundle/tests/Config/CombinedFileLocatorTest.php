@@ -36,7 +36,7 @@ class CombinedFileLocatorTest extends TestCase
     protected function setUp()
     {
         $this->locator = new CombinedFileLocator(
-            $this->getRootDir() . '/system/cache',
+            $this->getCacheDir() . '/contao',
             new FileLocator($this->mockKernel())
         );
     }
@@ -54,14 +54,14 @@ class CombinedFileLocatorTest extends TestCase
         $files = $this->locator->locate('config/autoload.php');
 
         $this->assertCount(1, $files);
-        $this->assertContains($this->getRootDir() . '/system/cache/config/autoload.php', $files);
+        $this->assertContains($this->getCacheDir() . '/contao/config/autoload.php', $files);
     }
 
     public function testCacheHitFirst()
     {
         $file = $this->locator->locate('config/autoload.php', null, true);
 
-        $this->assertEquals($this->getRootDir() . '/system/cache/config/autoload.php', $file);
+        $this->assertEquals($this->getCacheDir() . '/contao/config/autoload.php', $file);
     }
 
     public function testCacheMiss()

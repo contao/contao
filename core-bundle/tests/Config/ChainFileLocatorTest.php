@@ -35,7 +35,7 @@ class ChainFileLocatorTest extends TestCase
     protected function setUp()
     {
         $this->locator = new ChainFileLocator();
-        $this->locator->addLocator(new CombinedFileLocator($this->getRootDir() . '/system/cache'));
+        $this->locator->addLocator(new CombinedFileLocator($this->getCacheDir() . '/contao'));
         $this->locator->addLocator(new FileLocator($this->mockKernel()));
     }
 
@@ -52,7 +52,7 @@ class ChainFileLocatorTest extends TestCase
         $files = array_values($this->locator->locate('config/autoload.php'));
 
         $this->assertCount(3, $files);
-        $this->assertEquals($this->getRootDir() . '/system/cache/config/autoload.php', $files[0]);
+        $this->assertEquals($this->getCacheDir() . '/contao/config/autoload.php', $files[0]);
         $this->assertEquals($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/autoload.php', $files[1]);
         $this->assertEquals($this->getRootDir() . '/system/modules/foobar/config/autoload.php', $files[2]);
     }
@@ -61,7 +61,7 @@ class ChainFileLocatorTest extends TestCase
     {
         $file = $this->locator->locate('config/autoload.php', null, true);
 
-        $this->assertEquals($this->getRootDir() . '/system/cache/config/autoload.php', $file);
+        $this->assertEquals($this->getCacheDir() . '/contao/config/autoload.php', $file);
     }
 
     /**
