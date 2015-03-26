@@ -166,7 +166,6 @@ class InitializeSystemListener
         // Fully load the configuration
         $objConfig = Config::getInstance();
 
-        $this->generateSymlinks($objConfig);
         $this->validateInstallation($objConfig, $routeName);
 
         Input::initialize();
@@ -272,19 +271,6 @@ class InitializeSystemListener
         }
 
         $GLOBALS['TL_LANGUAGE'] = $_SESSION['TL_LANGUAGE'];
-    }
-
-    /**
-     * Generates the symlinks if the configuration has not been completed.
-     *
-     * @param Config $config The config object
-     */
-    private function generateSymlinks(Config $config)
-    {
-        if (!$config->isComplete() && !is_link($this->rootDir . '/system/themes/flexible')) {
-            $automator = new Automator();
-            $automator->generateSymlinks();
-        }
     }
 
     /**
