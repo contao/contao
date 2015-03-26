@@ -20,10 +20,9 @@ use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -33,7 +32,7 @@ use Symfony\Component\Routing\RouterInterface;
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InitializeSystemListener
+class InitializeSystemListener extends ContainerAware
 {
     /**
      * @var RouterInterface
@@ -61,35 +60,29 @@ class InitializeSystemListener
      * Initializes the system upon kernel.request.
      *
      * @param GetResponseEvent $event The event object
-     *
-     * @throws RouteNotFoundException If the request does not have a route
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$event->isMasterRequest()) {
+        if (null === $this->container || !$event->isMasterRequest()) {
             return;
         }
 
         $request = $event->getRequest();
+        $scope   = $this->getScopeFromContainer();
 
-        if (!$request->attributes->has('_route')) {
+        if (null === $scope || !$request->attributes->has('_route')) {
             return;
         }
 
         $routeName = $request->attributes->get('_route');
         $route     = $this->router->generate($routeName, $request->attributes->get('_route_params'));
 
-        try {
-            $this->setConstants(
-                $this->getScopeFromRequest($request),
-                substr($route, strlen($request->getBasePath()) + 1)
-            );
+        $this->setConstants(
+            $scope,
+            substr($route, strlen($request->getBasePath()) + 1)
+        );
 
-            $this->boot($request);
-        } catch (MissingMandatoryParametersException $e) {
-            // Does not have a request scope, so we don't boot the Contao framework.
-            return;
-        }
+        $this->boot($request);
     }
 
     /**
@@ -106,25 +99,19 @@ class InitializeSystemListener
     }
 
     /**
-     * Returns the TL_MODE value for the request scope.
-     *
-     * @param Request $request The request object
+     * Returns the TL_MODE value for the container scope.
      *
      * @return string The value for TL_MODE
-     *
-     * @throws MissingMandatoryParametersException if there is no or an unsupported scope
      */
-    private function getScopeFromRequest(Request $request)
+    private function getScopeFromContainer()
     {
-        $scope = $request->attributes->has('_scope') ? $request->attributes->get('_scope') : null;
-
-        if ('backend' === $scope) {
+        if ($this->container->isScopeActive('backend')) {
             return 'BE';
-        } elseif ('frontend' === $scope) {
+        } elseif ($this->container->isScopeActive('frontend')) {
             return 'FE';
+        } else {
+            return null;
         }
-
-        throw new MissingMandatoryParametersException('Cannot initialize the Contao framework without a request scope.');
     }
 
     /**
