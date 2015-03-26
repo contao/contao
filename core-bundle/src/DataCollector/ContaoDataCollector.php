@@ -25,18 +25,48 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  */
 class ContaoDataCollector extends DataCollector
 {
+    private $packages;
+
+    /**
+     * Constructor.
+     *
+     * @param array $packages Installed Composer packages and versions.
+     */
+    public function __construct(array $packages)
+    {
+        $this->packages = $packages;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
+        if (isset($this->packages['contao/core-bundle'])) {
+            $this->data = ['contao_version' => $this->packages['contao/core-bundle']];
+        }
+
         if (!isset($GLOBALS['TL_DEBUG'])) {
             return;
         }
 
-        $this->data = $GLOBALS['TL_DEBUG'];
+        $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
 
         $this->addSummaryData();
+    }
+
+    /**
+     * Returns the Contao version and build.
+     *
+     * @return string
+     */
+    public function getContaoVersion()
+    {
+        if (!isset($this->data['contao_version'])) {
+            return '';
+        }
+
+        return $this->data['contao_version'];
     }
 
     /**
@@ -164,13 +194,11 @@ class ContaoDataCollector extends DataCollector
      */
     private function getData($key)
     {
-        $data = $this->data[$key];
-
-        if (!is_array($data)) {
+        if (!isset($this->data[$key]) || !is_array($this->data[$key])) {
             return [];
         }
 
-        return $data;
+        return $this->data[$key];
     }
 
     /**
