@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\System;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -21,7 +22,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ToggleViewListener
+class ToggleViewListener extends ContainerAware
 {
     /**
      * Toggles the TL_VIEW cookie and redirects back to the referring page.
@@ -32,7 +33,11 @@ class ToggleViewListener
     {
         $request = $event->getRequest();
 
-        if (!$event->isMasterRequest() || !$request->query->has('toggle_view')) {
+        if (!$event->isMasterRequest()
+            || null === $this->container
+            || !$this->container->isScopeActive('frontend')
+            || !$request->query->has('toggle_view')
+        ) {
             return;
         }
 
