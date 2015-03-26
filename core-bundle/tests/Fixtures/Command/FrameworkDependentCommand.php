@@ -1,17 +1,23 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: d.tomasi
- * Date: 26.03.15
- * Time: 14:24
+ * This file is part of Contao.
+ *
+ * Copyright (c) 2005-2015 Leo Feyer
+ *
+ * @license LGPL-3.0+
  */
 
 namespace Contao\Fixtures\Command;
 
-use Contao\CoreBundle\Command\FrameworkDependentCommandInterface;
+use Contao\CoreBundle\Command\ContaoFrameworkDependentInterface;
 use Symfony\Component\Console\Command\Command;
 
-class FrameworkDependentCommand extends Command implements FrameworkDependentCommandInterface{
+/**
+ * Class FrameworkDependentCommand
+ *
+ * @author Dominik Tomasi <https://github.com/dtomasi>
+ */
+class FrameworkDependentCommand extends Command implements ContaoFrameworkDependentInterface{
 
     protected function configure()
     {
