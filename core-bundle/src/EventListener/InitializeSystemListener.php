@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\ClassLoader;
 use Contao\Config;
 use Contao\CoreBundle\Command\ContaoFrameworkDependentInterface;
-use Contao\CoreBundle\Session\Attribute\AttributeBagMirror;
+use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Contao\Environment;
 use Contao\Input;
 use Contao\System;
@@ -406,7 +406,7 @@ class InitializeSystemListener extends ScopeAwareListener
         /** @var AttributeBagInterface $beBag */
         $beBag = $this->session->getBag('contao_backend');
 
-        $_SESSION['FE_DATA'] = new AttributeBagMirror($feBag);
-        $_SESSION['BE_DATA'] = new AttributeBagMirror($beBag);
+        $_SESSION['FE_DATA'] = new AttributeBagAdapter($feBag);
+        $_SESSION['BE_DATA'] = new AttributeBagAdapter($beBag);
     }
 }

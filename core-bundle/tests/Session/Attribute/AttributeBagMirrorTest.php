@@ -9,15 +9,16 @@
  */
 
 namespace Contao\CoreBundle\Test\Session\Attribute;
-use Contao\CoreBundle\Session\Attribute\AttributeBagMirror;
+
+use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 /**
- * Tests the AttributeBagMirror class.
+ * Tests the AttributeBagAdapter class.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class AttributeBagMirrorTest extends \PHPUnit_Framework_TestCase
+class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.
@@ -25,9 +26,9 @@ class AttributeBagMirrorTest extends \PHPUnit_Framework_TestCase
     public function testInstantiation()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $mirror = new AttributeBagMirror($attributeBag);
+        $mirror = new AttributeBagAdapter($attributeBag);
 
-        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\AttributeBagMirror', $mirror);
+        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\AttributeBagAdapter', $mirror);
         $this->assertInstanceOf('ArrayAccess', $mirror);
     }
 
@@ -37,7 +38,7 @@ class AttributeBagMirrorTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSet()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $mirror = new AttributeBagMirror($attributeBag);
+        $mirror = new AttributeBagAdapter($attributeBag);
 
         $mirror['foo'] = 'bar';
 
@@ -50,7 +51,7 @@ class AttributeBagMirrorTest extends \PHPUnit_Framework_TestCase
     public function testOffsetExists()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $mirror = new AttributeBagMirror($attributeBag);
+        $mirror = new AttributeBagAdapter($attributeBag);
 
         $mirror['foo'] = 'bar';
 
@@ -63,7 +64,7 @@ class AttributeBagMirrorTest extends \PHPUnit_Framework_TestCase
     public function testOffsetGet()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $mirror = new AttributeBagMirror($attributeBag);
+        $mirror = new AttributeBagAdapter($attributeBag);
 
         $attributeBag->set('foo', 'bar');
 
@@ -76,7 +77,7 @@ class AttributeBagMirrorTest extends \PHPUnit_Framework_TestCase
     public function testOffsetUnset()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $mirror = new AttributeBagMirror($attributeBag);
+        $mirror = new AttributeBagAdapter($attributeBag);
 
         $attributeBag->set('foo', 'bar');
 

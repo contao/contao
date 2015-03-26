@@ -9,6 +9,7 @@
  */
 
 namespace Contao\CoreBundle\Session\Attribute;
+
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -17,7 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class AttributeBagMirror implements \ArrayAccess
+class AttributeBagAdapter implements \ArrayAccess
 {
     /**
      * @var AttributeBagInterface
@@ -26,7 +27,7 @@ class AttributeBagMirror implements \ArrayAccess
 
 
     /**
-     * Creates an AttributeBagMirror with a target bag
+     * Creates an AttributeBagAdapter with a target bag
      *
      * @param AttributeBagInterface $targetBag
      */
