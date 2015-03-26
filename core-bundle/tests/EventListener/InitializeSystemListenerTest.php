@@ -15,6 +15,10 @@ use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
 use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
+use Contao\Fixtures\Command\FrameworkDependentCommand;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -174,7 +178,14 @@ class InitializeSystemListenerTest extends TestCase
             $this->getRootDir() . '/app'
         );
 
-        $listener->onConsoleCommand();
+
+        $listener->onConsoleCommand(
+            new ConsoleCommandEvent(
+                new FrameworkDependentCommand(),
+                new StringInput(''),
+                new ConsoleOutput()
+            ));
+
 
         $this->assertEquals('FE', TL_MODE);
         $this->assertEquals('console', TL_SCRIPT);
