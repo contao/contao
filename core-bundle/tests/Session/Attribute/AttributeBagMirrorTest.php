@@ -26,10 +26,10 @@ class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
     public function testInstantiation()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $mirror = new AttributeBagAdapter($attributeBag);
+        $adapter = new AttributeBagAdapter($attributeBag);
 
-        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\AttributeBagAdapter', $mirror);
-        $this->assertInstanceOf('ArrayAccess', $mirror);
+        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\AttributeBagAdapter', $adapter);
+        $this->assertInstanceOf('ArrayAccess', $adapter);
     }
 
     /**
@@ -38,9 +38,9 @@ class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSet()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $mirror = new AttributeBagAdapter($attributeBag);
+        $adapter = new AttributeBagAdapter($attributeBag);
 
-        $mirror['foo'] = 'bar';
+        $adapter['foo'] = 'bar';
 
         $this->assertSame('bar', $attributeBag->get('foo'));
     }
@@ -51,11 +51,11 @@ class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
     public function testOffsetExists()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $mirror = new AttributeBagAdapter($attributeBag);
+        $adapter = new AttributeBagAdapter($attributeBag);
 
-        $mirror['foo'] = 'bar';
+        $adapter['foo'] = 'bar';
 
-        $this->assertTrue(isset($mirror['foo']));
+        $this->assertTrue(isset($adapter['foo']));
     }
 
     /**
@@ -64,11 +64,11 @@ class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
     public function testOffsetGet()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $mirror = new AttributeBagAdapter($attributeBag);
+        $adapter = new AttributeBagAdapter($attributeBag);
 
         $attributeBag->set('foo', 'bar');
 
-        $this->assertSame('bar', $mirror['foo']);
+        $this->assertSame('bar', $adapter['foo']);
     }
 
     /**
@@ -77,11 +77,11 @@ class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
     public function testOffsetUnset()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $mirror = new AttributeBagAdapter($attributeBag);
+        $adapter = new AttributeBagAdapter($attributeBag);
 
         $attributeBag->set('foo', 'bar');
 
-        unset($mirror['foo']);
+        unset($adapter['foo']);
 
         $this->assertFalse($attributeBag->has('foo'));
     }
