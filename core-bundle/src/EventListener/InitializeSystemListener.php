@@ -11,8 +11,9 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\ClassLoader;
-use Contao\Config;
+
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
+use Contao\CoreBundle\Config\ConfigAdapter;
 use Contao\Environment;
 use Contao\Input;
 use Contao\System;
@@ -54,6 +55,11 @@ class InitializeSystemListener extends ScopeAwareListener
     private $rootDir;
 
     /**
+     * @var ConfigAdapter
+     */
+    private $config;
+
+    /**
      * @var string
      */
     private $csrfTokenName;
@@ -71,19 +77,22 @@ class InitializeSystemListener extends ScopeAwareListener
      * @param string                    $rootDir       The kernel root directory
      * @param CsrfTokenManagerInterface $tokenManager  The token manager service
      * @param string                    $csrfTokenName The name of the token
+     * @param ConfigAdapter             $config        The config adapter object
      */
     public function __construct(
         RouterInterface $router,
         SessionInterface $session,
         $rootDir,
         CsrfTokenManagerInterface $tokenManager,
-        $csrfTokenName
+        $csrfTokenName,
+        ConfigAdapter $config
     ) {
         $this->router        = $router;
         $this->session       = $session;
         $this->rootDir       = dirname($rootDir);
         $this->tokenManager  = $tokenManager;
         $this->csrfTokenName = $csrfTokenName;
+        $this->config        = $config;
     }
 
     /**
@@ -172,7 +181,7 @@ class InitializeSystemListener extends ScopeAwareListener
         $this->includeBasicClasses();
 
         // Preload the configuration (see #5872)
-        Config::preload();
+        $this->config->preload();
 
         // Register the class loader
         ClassLoader::scanAndRegister();
@@ -182,9 +191,9 @@ class InitializeSystemListener extends ScopeAwareListener
         $this->setDefaultLanguage();
 
         // Fully load the configuration
-        $objConfig = Config::getInstance();
+        $this->config->instantiate();
 
-        $this->validateInstallation($objConfig, $request);
+        $this->validateInstallation($request);
 
         Input::initialize();
 
@@ -193,7 +202,7 @@ class InitializeSystemListener extends ScopeAwareListener
 
         // Set the mbstring encoding
         if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
-            mb_regex_encoding(Config::get('characterSet'));
+            mb_regex_encoding($this->config->get('characterSet'));
         }
 
         $this->triggerInitializeSystemHook();
@@ -303,10 +312,9 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * Validates the installation.
      *
-     * @param Config  $config  The config object
      * @param Request $request The current request if available
      */
-    private function validateInstallation(Config $config, Request $request = null)
+    private function validateInstallation(Request $request = null)
     {
         if (null === $request || 'contao_backend_install' === $request->attributes->get('_route')) {
             return;
@@ -319,7 +327,7 @@ class InitializeSystemListener extends ScopeAwareListener
         }
 
         // Show the "incomplete installation" message
-        if (!$config->isComplete()) {
+        if (!$this->config->isComplete()) {
             die_nicely('be_incomplete', 'The installation has not been completed. Open the Contao install tool to continue.');
         }
     }
@@ -331,11 +339,12 @@ class InitializeSystemListener extends ScopeAwareListener
     {
         // Always show error messages if logged into the install tool (see #5001)
         if (Input::cookie('TL_INSTALL_AUTH') && !empty($_SESSION['TL_INSTALL_AUTH']) && Input::cookie('TL_INSTALL_AUTH') == $_SESSION['TL_INSTALL_AUTH'] && $_SESSION['TL_INSTALL_EXPIRE'] > time()) {
-            Config::set('displayErrors', 1);
+            $this->config->set('displayErrors', 1);
+
         }
 
-        $this->iniSet('display_errors', (Config::get('displayErrors') ? 1 : 0));
-        error_reporting((Config::get('displayErrors') || Config::get('logErrors')) ? Config::get('errorReporting') : 0);
+        $this->iniSet('display_errors', ($this->config->get('displayErrors') ? 1 : 0));
+        error_reporting(($this->config->get('displayErrors') || $this->config->get('logErrors')) ? $this->config->get('errorReporting') : 0);
     }
 
     /**
@@ -343,8 +352,8 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     private function setTimezone()
     {
-        $this->iniSet('date.timezone', Config::get('timeZone'));
-        date_default_timezone_set(Config::get('timeZone'));
+        $this->iniSet('date.timezone', $this->config->get('timeZone'));
+        date_default_timezone_set($this->config->get('timeZone'));
     }
 
     /**
