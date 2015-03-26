@@ -22,6 +22,7 @@ use Contao\System;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -72,18 +73,23 @@ class InitializeSystemListener
         $request = $event->getRequest();
 
         if (!$request->attributes->has('_route')) {
-            throw new RouteNotFoundException('Cannot initialize the Contao framework without a route');
+            return;
         }
 
         $routeName = $request->attributes->get('_route');
         $route     = $this->router->generate($routeName, $request->attributes->get('_route_params'));
 
-        $this->setConstants(
-            $this->getScopeFromRequest($request),
-            substr($route, strlen($request->getBasePath()) + 1)
-        );
+        try {
+            $this->setConstants(
+                $this->getScopeFromRequest($request),
+                substr($route, strlen($request->getBasePath()) + 1)
+            );
 
-        $this->boot($request);
+            $this->boot($request);
+        } catch (MissingMandatoryParametersException $e) {
+            // Does not have a request scope, so we don't boot the Contao framework.
+            return;
+        }
     }
 
     /**
@@ -100,19 +106,25 @@ class InitializeSystemListener
     }
 
     /**
-     * Returns the request scope.
+     * Returns the TL_MODE value for the request scope.
      *
      * @param Request $request The request object
      *
-     * @return string The request scope
+     * @return string The value for TL_MODE
+     *
+     * @throws MissingMandatoryParametersException if there is no or an unsupported scope
      */
     private function getScopeFromRequest(Request $request)
     {
-        if ($request->attributes->has('_scope') && 'backend' === $request->attributes->get('_scope')) {
+        $scope = $request->attributes->has('_scope') ? $request->attributes->get('_scope') : null;
+
+        if ('backend' === $scope) {
             return 'BE';
+        } elseif ('frontend' === $scope) {
+            return 'FE';
         }
 
-        return 'FE';
+        throw new MissingMandatoryParametersException('Cannot initialize the Contao framework without a request scope.');
     }
 
     /**

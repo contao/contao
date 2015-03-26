@@ -111,7 +111,6 @@ class InitializeSystemListenerTest extends TestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @expectedException \Symfony\Component\Routing\Exception\RouteNotFoundException
      */
     public function testRequestWithoutRoute()
     {
@@ -129,6 +128,10 @@ class InitializeSystemListenerTest extends TestCase
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener->onKernelRequest($event);
+
+        $this->assertFalse(defined('TL_MODE'));
+        $this->assertFalse(defined('TL_SCRIPT'));
+        $this->assertFalse(defined('TL_ROOT'));
     }
 
     /**
@@ -155,9 +158,39 @@ class InitializeSystemListenerTest extends TestCase
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener->onKernelRequest($event);
 
-        $this->assertEquals('FE', TL_MODE);
-        $this->assertEquals('index.html', TL_SCRIPT);
-        $this->assertEquals($this->getRootDir(), TL_ROOT);
+        $this->assertFalse(defined('TL_MODE'));
+        $this->assertFalse(defined('TL_SCRIPT'));
+        $this->assertFalse(defined('TL_ROOT'));
+    }
+
+    /**
+     * Tests that the Contao framework is not initialized for subrequests.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testSubRequest()
+    {
+        global $kernel;
+
+        /** @var Kernel $kernel */
+        $kernel = $this->mockKernel();
+
+        $listener = new InitializeSystemListener(
+            $this->mockRouter('/index.html'),
+            $this->getRootDir() . '/app'
+        );
+
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', 'frontend');
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse(defined('TL_MODE'));
+        $this->assertFalse(defined('TL_SCRIPT'));
+        $this->assertFalse(defined('TL_ROOT'));
     }
 
     /**
