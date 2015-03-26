@@ -48,10 +48,11 @@ services:
         public: false
 
     contao.resource_locator.cache:
-            class: Contao\CoreBundle\Config\CombinedFileLocator
-            arguments:
-                - '%kernel.cache_dir%/contao'
-                - "@contao.resource_locator"
+        class: Contao\CoreBundle\Config\CombinedFileLocator
+        public: false
+        arguments:
+            - '%kernel.cache_dir%/contao'
+            - "@contao.resource_locator"
 
     contao.resource_locator:
         alias: contao.resource_locator.bundles
