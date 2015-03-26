@@ -31,6 +31,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
@@ -368,6 +369,9 @@ class InitializeSystemListenerTest extends TestCase
     private function mockKernel()
     {
         Config::set('bypassCache', true);
+        Config::set('timeZone', 'GMT');
+        Config::set('characterSet', 'UTF-8');
+
         Environment::set('httpAcceptLanguage', []);
 
         $kernel = $this->getMock(
@@ -458,7 +462,15 @@ class InitializeSystemListenerTest extends TestCase
      */
     private function mockTokenManager()
     {
-        $tokenManager = $this->getMock('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface');
+        $tokenManager = $this
+            ->getMockBuilder('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface')
+            ->setMethods(array('getToken'))
+            ->getMockForAbstractClass();
+
+        $tokenManager
+            ->expects($this->any())
+            ->method('getToken')
+            ->willReturn(new CsrfToken('_csrf', 'testValue'));
 
         return $tokenManager;
     }
