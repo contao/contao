@@ -324,7 +324,7 @@ class Installer extends \Controller
 	 */
 	public function getFromFile()
 	{
-        /** @var KernelInterface $kernel */
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		$table = '';
