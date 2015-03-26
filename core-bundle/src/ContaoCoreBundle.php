@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle;
 
+use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\OptimizeContaoResourcesPass;
@@ -48,6 +49,10 @@ class ContaoCoreBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new AddContaoResourcesPass($this->getPath() . '/Resources/contao'));
+
+        $container->addCompilerPass(
+            new AddPackagesPass($container->getParameter('kernel.root_dir') . '/../vendor/composer/installed.json')
+        );
 
         $container->addCompilerPass(
             new OptimizeContaoResourcesPass($container->getParameter('kernel.root_dir')), PassConfig::TYPE_OPTIMIZE
