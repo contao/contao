@@ -1,11 +1,12 @@
 [
     {
         "name": "contao/test-bundle1",
-        "version_normalized": "1.0.0"
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0"
     },
     {
         "name": "contao/test-bundle2",
-        "version_normalized": "1.0.x-dev"
+        "version_normalized": "dev-develop"
     },
     {
         "name": "contao/test-bundle3",
