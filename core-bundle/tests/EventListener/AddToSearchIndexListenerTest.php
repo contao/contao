@@ -11,11 +11,15 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
+use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Tests the AddToSearchIndexListener class.
@@ -35,17 +39,57 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * Tests adding a response to the event.
+     * Tests that the listener does nothing if Contao framework is not booted.
      */
-    public function testOnKernelRequest()
+    public function testWithoutContaoFramework()
     {
-        /** @var HttpKernelInterface $kernel */
+        $listener = new AddToSearchIndexListener();
+        $event    = $this->mockPostResponseEvent();
+
+        $event
+            ->expects($this->never())
+            ->method('getResponse');
+
+        $listener->onKernelTerminate($event);
+    }
+
+    /**
+     * Tests the listener does use the response if the Contao framework is booted.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testWithContaoFramework()
+    {
+        $this->bootContaoFramework();
+
+        $listener = new AddToSearchIndexListener();
+        $event    = $this->mockPostResponseEvent();
+
+        $event
+            ->expects($this->once())
+            ->method('getResponse');
+
+        $listener->onKernelTerminate($event);
+    }
+
+
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|PostResponseEvent
+     */
+    private function mockPostResponseEvent()
+    {
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request();
         $response = new Response();
-        $event    = new PostResponseEvent($kernel, $request, $response);
-        $listener = new AddToSearchIndexListener();
 
-        $listener->onKernelTerminate($event);
+        $event    = $this->getMock(
+            'Symfony\Component\HttpKernel\Event\PostResponseEvent',
+            ['getResponse'],
+            [$kernel, $request, $response]
+        );
+
+        return $event;
     }
 }

@@ -58,7 +58,7 @@ class InitializeSystemListenerTest extends TestCase
         global $kernel;
 
         /** @var Kernel $kernel */
-        $kernel = $this->mockKernel();
+        $kernel    = $this->mockKernel();
         $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
@@ -94,7 +94,7 @@ class InitializeSystemListenerTest extends TestCase
         global $kernel;
 
         /** @var Kernel $kernel */
-        $kernel = $this->mockKernel();
+        $kernel    = $this->mockKernel();
         $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
@@ -130,7 +130,7 @@ class InitializeSystemListenerTest extends TestCase
         global $kernel;
 
         /** @var Kernel $kernel */
-        $kernel = $this->mockKernel();
+        $kernel    = $this->mockKernel();
         $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
@@ -162,7 +162,7 @@ class InitializeSystemListenerTest extends TestCase
         global $kernel;
 
         /** @var Kernel $kernel */
-        $kernel = $this->mockKernel();
+        $kernel    = $this->mockKernel();
         $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
@@ -223,7 +223,7 @@ class InitializeSystemListenerTest extends TestCase
         global $kernel;
 
         /** @var Kernel $kernel */
-        $kernel = $this->mockKernel();
+        $kernel    = $this->mockKernel();
         $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
