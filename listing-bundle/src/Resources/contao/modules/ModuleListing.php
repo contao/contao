@@ -144,28 +144,18 @@ class ModuleListing extends \Module
 		 * Validate the page count
 		 */
 		$id = 'page_l' . $this->id;
-		$page = \Input::get($id) ?: 1;
+		$page = (\Input::get($id) !== null) ? \Input::get($id) : 1;
 		$per_page = \Input::get('per_page') ?: $this->perPage;
 
 		// Thanks to Hagen Klemp (see #4485)
-		if ($per_page > 0)
+		if ($per_page > 0 && ($page < 1 || $page > max(ceil($objTotal->count/$per_page), 1)))
 		{
-			if ($page < 1 || $page > max(ceil($objTotal->count/$per_page), 1))
-			{
-				/** @var \PageModel $objPage */
-				global $objPage;
+			/** @var \PageModel $objPage */
+			global $objPage;
 
-				$objPage->noSearch = 1;
-				$objPage->cache = 0;
-
-				$this->Template->thead = array();
-				$this->Template->tbody = array();
-
-				// Send a 404 header
-				header('HTTP/1.1 404 Not Found');
-
-				return;
-			}
+			/** @var \PageError404 $objHandler */
+			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
+			$objHandler->generate($objPage->id);
 		}
 
 
