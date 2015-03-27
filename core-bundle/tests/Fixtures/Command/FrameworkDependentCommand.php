@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of Contao.
  *
@@ -19,7 +20,9 @@ use Symfony\Component\Console\Command\Command;
  */
 class FrameworkDependentCommand extends Command implements ContaoFrameworkDependentInterface
 {
-
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this

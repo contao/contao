@@ -93,7 +93,6 @@ class InitializeSystemListener extends ContainerAware
         $this->setConstants('FE', 'console');
 
         if ($event->getCommand() instanceof ContaoFrameworkDependentInterface) {
-
             $this->boot();
         }
     }

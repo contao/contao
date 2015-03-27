@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of Contao.
  *
@@ -6,6 +7,7 @@
  *
  * @license LGPL-3.0+
  */
+
 namespace Contao\CoreBundle\Command;
 
 /**
@@ -16,5 +18,4 @@ namespace Contao\CoreBundle\Command;
  */
 interface ContaoFrameworkDependentInterface
 {
-
 }
