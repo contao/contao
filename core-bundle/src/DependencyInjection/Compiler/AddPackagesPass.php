@@ -39,10 +39,13 @@ class AddPackagesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $json     = json_decode(file_get_contents($this->configFile), true);
-        $packages = $this->getVersions($json);
+        if (!is_file($this->configFile)) {
+            $json = null;
+        } else {
+            $json = json_decode(file_get_contents($this->configFile), true);
+        }
 
-        $container->setParameter('kernel.packages', $packages);
+        $container->setParameter('kernel.packages', $this->getVersions($json));
     }
 
     /**
@@ -52,7 +55,7 @@ class AddPackagesPass implements CompilerPassInterface
      *
      * @return array
      */
-    private function getVersions(array $composerData)
+    private function getVersions(array $composerData = null)
     {
         $packages = [];
 
@@ -68,7 +71,6 @@ class AddPackagesPass implements CompilerPassInterface
             if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $version)) {
                 $packages[$name] = $version;
             } elseif (isset($package['extra']['branch-alias'][$package['version_normalized']])) {
-                // FIXME: this is wrong, 4.0.x-dev would result in 4.0.999999
                 $version = str_replace('x-dev', '9999999', $package['extra']['branch-alias'][$package['version_normalized']]);
 
                 if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $version)) {
