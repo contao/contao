@@ -17,13 +17,13 @@ use Symfony\Component\Console\Command\Command;
  *
  * @author Dominik Tomasi <https://github.com/dtomasi>
  */
-class FrameworkDependentCommand extends Command implements ContaoFrameworkDependentInterface{
+class FrameworkDependentCommand extends Command implements ContaoFrameworkDependentInterface
+{
 
     protected function configure()
     {
         $this
             ->setName('fixture:frameworkdependent')
-            ->setDescription('Greet someone')
-        ;
+            ->setDescription('Greet someone');
     }
 }

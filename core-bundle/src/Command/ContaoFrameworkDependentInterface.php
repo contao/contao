@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
  *
  * @author Dominik Tomasi <https://github.com/dtomasi>
  */
-interface ContaoFrameworkDependentInterface {
+interface ContaoFrameworkDependentInterface
+{
 
 }
