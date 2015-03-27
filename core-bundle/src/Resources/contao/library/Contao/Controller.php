@@ -194,7 +194,7 @@ abstract class Controller extends \System
 		global $objPage;
 
 		// Articles
-		if ($intId == 0)
+		if (!is_object($intId) && $intId == 0)
 		{
 			// Show a particular article only
 			if ($objPage->type == 'regular' && \Input::get('articles'))
@@ -212,15 +212,11 @@ abstract class Controller extends \System
 					$objArticle = \ArticleModel::findByIdOrAliasAndPid($strArticle, $objPage->id);
 
 					// Send a 404 header if the article does not exist
-					if ($objArticle === null)
+					if (null === $objArticle)
 					{
-						// Do not index the page
-						$objPage->noSearch = 1;
-						$objPage->cache = 0;
-
-						header('HTTP/1.1 404 Not Found');
-
-						return '<p class="error">' . sprintf($GLOBALS['TL_LANG']['MSC']['invalidPage'], $strArticle) . '</p>';
+						/** @var \PageError404 $objHandler */
+						$objHandler = new $GLOBALS['TL_PTY']['error_404']();
+						$objHandler->generate($objPage->id);
 					}
 
 					// Add the "first" and "last" classes (see #2583)
@@ -608,6 +604,15 @@ abstract class Controller extends \System
 		if ($sub > 0)
 		{
 			$image = $objPage->type.'_'.$sub.'.gif';
+		}
+
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['getPageStatusIcon']) && is_array($GLOBALS['TL_HOOKS']['getPageStatusIcon']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getPageStatusIcon'] as $callback)
+			{
+				$image = static::importStatic($callback[0])->$callback[1]($objPage, $image);
+			}
 		}
 
 		return $image;

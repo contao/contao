@@ -298,6 +298,16 @@ abstract class User extends \System
 
 		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);
 
+		// HOOK: post authenticate callback
+		if (isset($GLOBALS['TL_HOOKS']['postAuthenticate']) && is_array($GLOBALS['TL_HOOKS']['postAuthenticate']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback)
+			{
+				$this->import($callback[0], 'objAuth', true);
+				$this->objAuth->$callback[1]($this);
+			}
+		}
+
 		return true;
 	}
 
@@ -494,6 +504,8 @@ abstract class User extends \System
 		// Check whether account is not active yet or anymore
 		elseif ($this->start != '' || $this->stop != '')
 		{
+			$time = \Date::floorToMinute($time);
+
 			if ($this->start != '' && $this->start > $time)
 			{
 				\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
@@ -502,7 +514,7 @@ abstract class User extends \System
 				return false;
 			}
 
-			if ($this->stop != '' && $this->stop < $time)
+			if ($this->stop != '' && $this->stop <= ($time + 60))
 			{
 				\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
 				$this->log('The account was not active anymore (deactivation date: ' . \Date::parse(\Config::get('dateFormat'), $this->stop) . ')', __METHOD__, TL_ACCESS);

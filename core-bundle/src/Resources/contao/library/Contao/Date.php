@@ -558,6 +558,32 @@ class Date
 
 
 	/**
+	 * Return a numeric format string depending on the regular expression name
+	 *
+	 * @return string The numeric format string
+	 */
+	public static function getFormatFromRgxp($strRgxp)
+	{
+		switch ($strRgxp)
+		{
+			case 'date':
+				return static::getNumericDateFormat();
+				break;
+
+			case 'time':
+				return static::getNumericTimeFormat();
+				break;
+
+			case 'datim':
+				return static::getNumericDatimFormat();
+				break;
+		}
+
+		return null;
+	}
+
+
+	/**
 	 * Parse a date format string and translate textual representations
 	 *
 	 * @param string  $strFormat The date format string
@@ -643,5 +669,23 @@ class Date
 		}
 
 		return $strReturn;
+	}
+
+
+	/**
+	 * Round a UNIX timestamp to the full minute
+	 *
+	 * @param integer $intTime The timestamp
+	 *
+	 * @return integer The rounded timestamp
+	 */
+	public static function floorToMinute($intTime=null)
+	{
+		if ($intTime === null)
+		{
+			$intTime = time();
+		}
+
+		return $intTime - ($intTime % 60);
 	}
 }

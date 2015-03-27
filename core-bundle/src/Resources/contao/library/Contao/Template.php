@@ -98,6 +98,11 @@ abstract class Template extends \Controller
 	{
 		if (isset($this->arrData[$strKey]))
 		{
+			if (is_object($this->arrData[$strKey]) && is_callable($this->arrData[$strKey]))
+			{
+				return $this->arrData[$strKey]();
+			}
+
 			return $this->arrData[$strKey];
 		}
 

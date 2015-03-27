@@ -26,6 +26,7 @@ namespace Contao;
  */
 class Environment
 {
+
 	/**
 	 * Object instance (Singleton)
 	 * @var \Environment

@@ -57,6 +57,7 @@ namespace Contao;
  * @method static $this findByIdOrAlias()
  * @method static $this findOneBy()
  * @method static $this findByAutologin()
+ * @method static $this findByUsername()
  * @method static $this findOneByTstamp()
  * @method static $this findOneByFirstname()
  * @method static $this findOneByLastname()
@@ -76,7 +77,6 @@ namespace Contao;
  * @method static $this findOneByLanguage()
  * @method static $this findOneByGroups()
  * @method static $this findOneByLogin()
- * @method static $this findOneByUsername()
  * @method static $this findOneByPassword()
  * @method static $this findOneByAssignDir()
  * @method static $this findOneByHomeDir()
@@ -112,7 +112,6 @@ namespace Contao;
  * @method static \Model\Collection|\MemberModel findByLanguage()
  * @method static \Model\Collection|\MemberModel findByGroups()
  * @method static \Model\Collection|\MemberModel findByLogin()
- * @method static \Model\Collection|\MemberModel findByUsername()
  * @method static \Model\Collection|\MemberModel findByPassword()
  * @method static \Model\Collection|\MemberModel findByAssignDir()
  * @method static \Model\Collection|\MemberModel findByHomeDir()
@@ -193,10 +192,10 @@ class MemberModel extends \Model
 	 */
 	public static function findActiveByEmailAndUsername($strEmail, $strUsername=null, array $arrOptions=array())
 	{
-		$time = time();
 		$t = static::$strTable;
+		$time = \Date::floorToMinute();
 
-		$arrColumns = array("$t.email=? AND $t.login=1 AND ($t.start='' OR $t.start<$time) AND ($t.stop='' OR $t.stop>$time) AND $t.disable=''");
+		$arrColumns = array("$t.email=? AND $t.login='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.disable=''");
 
 		if ($strUsername !== null)
 		{

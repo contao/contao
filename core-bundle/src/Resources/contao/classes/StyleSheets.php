@@ -175,7 +175,7 @@ class StyleSheets extends \Backend
 		$objFile = new \File('assets/css/' . $row['name'] . '.css');
 		$objFile->write('/* ' . $row['name'] . ".css */\n");
 
-		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!=1 ORDER BY sorting")
+		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!='1' ORDER BY sorting")
 										 ->execute($row['id']);
 
 		// Append the definition
@@ -1411,7 +1411,7 @@ class StyleSheets extends \Backend
 			$objFile->append($objStyleSheet->mediaQuery . ' {');
 		}
 
-		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!=1 ORDER BY sorting")
+		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!='1' ORDER BY sorting")
 										 ->execute($objStyleSheet->id);
 
 		// Append the definition

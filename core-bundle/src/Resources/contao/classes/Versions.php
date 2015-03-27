@@ -430,7 +430,7 @@ class Versions extends \Controller
 						}
 
 						$objDiff = new \Diff($from[$k], $to[$k]);
-						$strBuffer .= $objDiff->Render(new \DiffRenderer(array('field'=>($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] ?: (isset($GLOBALS['TL_LANG']['MSC'][$k]) ? (is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k]) : $k)))));
+						$strBuffer .= $objDiff->Render(new DiffRenderer(array('field'=>($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] ?: (isset($GLOBALS['TL_LANG']['MSC'][$k]) ? (is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k]) : $k)))));
 					}
 				}
 			}
@@ -522,9 +522,9 @@ class Versions extends \Controller
 		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE version>1" . (!$objUser->isAdmin ? " AND userid=?" : ""))
 								->execute($objUser->id);
 
-		$intPage   = \Input::get('vp') ?: 1;
-		$intOffset = ($intPage - 1) * 30;
 		$intLast   = ceil($objTotal->count / 30);
+		$intPage   = (\Input::get('vp') !== null) ? \Input::get('vp') : 1;
+		$intOffset = ($intPage - 1) * 30;
 
 		// Validate the page number
 		if ($intPage < 1 || ($intLast > 0 && $intPage > $intLast))

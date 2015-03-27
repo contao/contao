@@ -1989,7 +1989,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Convert date formats into timestamps
 			if ($varValue != '' && in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
 			{
-				$objDate = new \Date($varValue, \Config::get($arrData['eval']['rgxp'] . 'Format'));
+				$objDate = new \Date($varValue, \Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 				$varValue = $objDate->tstamp;
 			}
 
@@ -2272,7 +2272,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		{
 			foreach (scan($path) as $v)
 			{
-				if ($v == '.svn' || $v == '.DS_Store' || $v == '.public')
+				if (strncmp($v, '.', 1) === 0)
 				{
 					continue;
 				}
@@ -2312,24 +2312,15 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$countFiles = count($content);
 
 			// Subtract files that will not be shown
-			if (!empty($this->arrValidFileTypes))
+			foreach ($content as $file)
 			{
-				foreach ($content as $file)
+				if (strncmp($file, '.', 1) === 0)
 				{
-					// Folders
-					if (is_dir($folders[$f] .'/'. $file))
-					{
-						if ($file == '.svn')
-						{
-							--$countFiles;
-						}
-					}
-
-					// Files
-					elseif (!in_array(strtolower(substr($file, (strrpos($file, '.') + 1))), $this->arrValidFileTypes))
-					{
-						--$countFiles;
-					}
+					--$countFiles;
+				}
+				elseif (!empty($this->arrValidFileTypes) && is_file($folders[$f] . '/' . $file) && !in_array(strtolower(substr($file, (strrpos($file, '.') + 1))), $this->arrValidFileTypes))
+				{
+					--$countFiles;
 				}
 			}
 

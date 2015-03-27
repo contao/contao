@@ -39,8 +39,8 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index',
-				'alias' => 'index'
+				'alias' => 'index',
+				'pid,start,stop,published,sorting' => 'index'
 			)
 		)
 	),
@@ -221,7 +221,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'default'                 => 'main',
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_article', 'getActiveLayoutSections'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_article'],
+			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'keywords' => array
@@ -571,8 +571,8 @@ class tl_article extends Backend
 	 */
 	public function addIcon($row, $label)
 	{
-		$time = time();
-		$published = ($row['published'] && ($row['start'] == '' || $row['start'] < $time) && ($row['stop'] == '' || $row['stop'] > $time));
+		$time = \Date::floorToMinute();
+		$published = ($row['published'] && ($row['start'] == '' || $row['start'] <= $time) && ($row['stop'] == '' || $row['stop'] > ($time + 60)));
 
 		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['pid'].'&amp;article='.($row['alias'] ?: $row['id']).'" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['view']).'" target="_blank">'.Image::getHtml('articles'.($published ? '' : '_').'.gif').'</a> '.$label;
 	}
@@ -997,7 +997,7 @@ class tl_article extends Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_article SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_article SET tstamp=". time() .", published='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();

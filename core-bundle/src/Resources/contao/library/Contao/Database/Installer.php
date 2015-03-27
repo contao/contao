@@ -12,6 +12,7 @@ namespace Contao\Database;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 
+
 /**
  * Compares the existing database structure with the DCA table settings and
  * calculates the queries needed to update the database.
@@ -331,6 +332,7 @@ class Installer extends \Controller
 	 */
 	public function getFromFile()
 	{
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		$table = '';

@@ -9,10 +9,7 @@ $GLOBALS['TL_CSS'][] = 'assets/mediabox/css/mediabox-black.min.css|static';
 <script>
   (function($) {
     window.addEvent('domready', function() {
-      var links = $$('a').filter(function(el) {
-        return el.getAttribute('data-lightbox') != null;
-      });
-      $$(links).mediabox({
+      $$('a[data-lightbox]').mediabox({
         // Put custom options here
         clickBlock: false
       }, function(el) {

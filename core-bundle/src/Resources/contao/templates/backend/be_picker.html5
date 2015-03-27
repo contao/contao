@@ -38,10 +38,10 @@
       <?php if ($this->managerHref || $this->switchHref): ?>
         <div id="manager">
           <?php if ($this->switchHref): ?>
-            <a href="<?php echo $this->switchHref; ?>" class="open"><?php echo $this->switch; ?></a>
+            <a href="<?= $this->switchHref ?>" class="open"><?= $this->switch ?></a>
           <?php endif; ?>
           <?php if ($this->managerHref): ?>
-            <a href="<?php echo $this->managerHref; ?>" class="open"><?php echo $this->manager; ?></a>
+            <a href="<?= $this->managerHref ?>" class="open"><?= $this->manager ?></a>
           <?php endif; ?>
         </div>
       <?php endif; ?>

@@ -42,7 +42,13 @@ class Automator extends \System
 			return;
 		}
 
-		$objRequest = new \Request();
+		// HOOK: proxy module
+		if (Config::get('useProxy')) {
+			$objRequest = new \ProxyRequest();
+		} else {
+			$objRequest = new \Request();
+		}
+
 		$objRequest->send(\Config::get('liveUpdateBase') . (LONG_TERM_SUPPORT ? 'lts-version.txt' : 'version.txt'));
 
 		if (!$objRequest->hasError())
@@ -318,7 +324,7 @@ class Automator extends \System
 	 */
 	public function generateSitemap($intId=0)
 	{
-		$time = time();
+		$time = \Date::floorToMinute();
 		$objDatabase = \Database::getInstance();
 
 		$this->purgeXmlFiles();
@@ -345,7 +351,7 @@ class Automator extends \System
 			while ($objRoot->type != 'root' && $intId > 0);
 
 			// Make sure the page is published
-			if (!$objRoot->published || ($objRoot->start != '' && $objRoot->start > $time) || ($objRoot->stop != '' && $objRoot->stop < $time))
+			if (!$objRoot->published || ($objRoot->start != '' && $objRoot->start > $time) || ($objRoot->stop != '' && $objRoot->stop <= ($time + 60)))
 			{
 				return;
 			}
@@ -362,7 +368,7 @@ class Automator extends \System
 		// Get all published root pages
 		else
 		{
-			$objRoot = $objDatabase->execute("SELECT id, dns, language, useSSL, sitemapName FROM tl_page WHERE type='root' AND createSitemap=1 AND sitemapName!='' AND (start='' OR start<$time) AND (stop='' OR stop>$time) AND published=1");
+			$objRoot = $objDatabase->execute("SELECT id, dns, language, useSSL, sitemapName FROM tl_page WHERE type='root' AND createSitemap='1' AND sitemapName!='' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'");
 		}
 
 		// Return if there are no pages
@@ -741,65 +747,11 @@ class Automator extends \System
 			$objFile = new \File('system/cache/sql/' . $strTable . '.php');
 			$objFile->write("<?php\n\n");
 
-			// Meta
-			$arrMeta = $objExtract->getMeta();
-
-			$objFile->append("\$this->arrMeta = array\n(");
-			$objFile->append("\t'engine' => '{$arrMeta['engine']}',");
-			$objFile->append("\t'charset' => '{$arrMeta['charset']}',");
-			$objFile->append(');', "\n\n");
-
-			// Fields
-			$arrFields = $objExtract->getFields();
-			$objFile->append("\$this->arrFields = array\n(");
-
-			foreach ($arrFields as $field=>$sql)
-			{
-				$sql = str_replace('"', '\"', $sql);
-				$objFile->append("\t'$field' => \"$sql\",");
-			}
-
-			$objFile->append(');', "\n\n");
-
-			// Order fields
-			$arrFields = $objExtract->getOrderFields();
-			$objFile->append("\$this->arrOrderFields = array\n(");
-
-			foreach ($arrFields as $field)
-			{
-				$objFile->append("\t'$field',");
-			}
-
-			$objFile->append(');', "\n\n");
-
-			// Keys
-			$arrKeys = $objExtract->getKeys();
-			$objFile->append("\$this->arrKeys = array\n(");
-
-			foreach ($arrKeys as $field=>$type)
-			{
-				$objFile->append("\t'$field' => '$type',");
-			}
-
-			$objFile->append(');', "\n\n");
-
-			// Relations
-			$arrRelations = $objExtract->getRelations();
-			$objFile->append("\$this->arrRelations = array\n(");
-
-			foreach ($arrRelations as $field=>$config)
-			{
-				$objFile->append("\t'$field' => array\n\t(");
-
-				foreach ($config as $k=>$v)
-				{
-					$objFile->append("\t\t'$k' => '$v',");
-				}
-
-				$objFile->append("\t),");
-			}
-
-			$objFile->append(');', "\n\n");
+			$objFile->append(sprintf("\$this->arrMeta = %s;\n", var_export($objExtract->getMeta(), true)));
+			$objFile->append(sprintf("\$this->arrFields = %s;\n", var_export($objExtract->getFields(), true)));
+			$objFile->append(sprintf("\$this->arrOrderFields = %s;\n", var_export($objExtract->getOrderFields(), true)));
+			$objFile->append(sprintf("\$this->arrKeys = %s;\n", var_export($objExtract->getKeys(), true)));
+			$objFile->append(sprintf("\$this->arrRelations = %s;\n", var_export($objExtract->getRelations(), true)));
 
 			// Set the database table flag
 			$objFile->append("\$this->blnIsDbTable = true;", "\n");

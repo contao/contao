@@ -9,7 +9,7 @@
     <?php $this->endblock(); ?>
   </div>
 
-  <div class="<?= $this->prefix; ?> confirm<?php if ($this->class) echo ' ' . $this->class; ?>">
+  <div class="<?= $this->prefix ?> confirm<?php if ($this->class) echo ' ' . $this->class; ?>">
     <?php $this->block('label2'); ?>
     <?php $this->endblock(); ?>
 

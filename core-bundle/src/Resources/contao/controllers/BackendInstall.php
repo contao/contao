@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+
 /**
  * Back end install tool.
  *
@@ -507,7 +508,7 @@ class BackendInstall extends \Backend
 	 */
 	protected function importExampleWebsite()
 	{
-		// Recursively scan for .sql files
+		/** @var \SplFileInfo[] $objFiles */
 		$objFiles = new \RecursiveIteratorIterator(
 			new \Filter\SqlFiles(
 				new \RecursiveDirectoryIterator(
@@ -996,6 +997,42 @@ class BackendInstall extends \Backend
 
 			$this->Template->is33Update = true;
 			$this->outputAndExit();
+		}
+	}
+
+
+	/**
+	 * Version 3.5.0 update
+	 */
+	protected function update35()
+	{
+		if ($this->Database->tableExists('tl_member'))
+		{
+			$strIndex = null;
+
+			foreach ($this->Database->listFields('tl_member') as $arrField)
+			{
+				if ($arrField['name'] == 'username' && $arrField['type'] == 'index')
+				{
+					$strIndex = $arrField['index'];
+					break;
+				}
+			}
+
+			if ($strIndex != 'UNIQUE')
+			{
+				$this->enableSafeMode();
+
+				if (\Input::post('FORM_SUBMIT') == 'tl_35update')
+				{
+					$this->import('Database\\Updater', 'Updater');
+					$this->Updater->run35Update();
+					$this->reload();
+				}
+
+				$this->Template->is35Update = true;
+				$this->outputAndExit();
+			}
 		}
 	}
 

@@ -168,6 +168,8 @@ abstract class DataContainer extends \Backend
 	 * @param string $strPalette
 	 *
 	 * @return string
+	 *
+	 * @throws \Exception
 	 */
 	protected function row($strPalette=null)
 	{

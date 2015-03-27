@@ -66,7 +66,7 @@ class FrontendIndex extends \Frontend
 
 			/** @var \PageRoot $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['root']();
-			$pageId = $objHandler->generate($objRootPage->id, true);
+			$pageId = $objHandler->generate($objRootPage->id, true, true);
 		}
 
 		// Throw a 404 error if the request is not a Contao request (see #2864)
@@ -152,6 +152,17 @@ class FrontendIndex extends \Frontend
 		if ($objPage instanceof \Model\Collection)
 		{
 			$objPage = $objPage->current();
+		}
+
+		// If the page has an alias, it can no longer be called via ID (see #7661)
+		if ($objPage->alias != '' && $pageId == $objPage->id)
+		{
+			$this->User->authenticate();
+
+			/** @var \PageError404 $objHandler */
+			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
+
+			return $objHandler->generate($pageId);
 		}
 
 		// Load a website root page object (will redirect to the first active regular page)
@@ -240,6 +251,12 @@ class FrontendIndex extends \Frontend
 		/** @var \PageRegular|\PageError403|\PageError404 $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
 
+		// Backup some globals (see #7659)
+		$arrHead = $GLOBALS['TL_HEAD'];
+		$arrBody = $GLOBALS['TL_BODY'];
+		$arrMootools = $GLOBALS['TL_MOOTOOLS'];
+		$arrJquery = $GLOBALS['TL_JQUERY'];
+
 		try
 		{
 			// Generate the page
@@ -263,6 +280,12 @@ class FrontendIndex extends \Frontend
 		// Render the error page (see #5570)
 		catch (\UnusedArgumentsException $e)
 		{
+			// Restore the globals (see #7659)
+			$GLOBALS['TL_HEAD'] = $arrHead;
+			$GLOBALS['TL_BODY'] = $arrBody;
+			$GLOBALS['TL_MOOTOOLS'] = $arrMootools;
+			$GLOBALS['TL_JQUERY'] = $arrJquery;
+
 			/** @var \PageError404 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 
