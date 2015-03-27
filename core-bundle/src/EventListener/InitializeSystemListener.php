@@ -42,6 +42,11 @@ class InitializeSystemListener extends ScopeAwareListener
     private $rootDir;
 
     /**
+     * @var bool
+     */
+    private $isBooted = false;
+
+    /**
      * Constructor.
      *
      * @param RouterInterface $router  The router object
@@ -139,6 +144,11 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     private function boot(Request $request = null)
     {
+        // do not boot twice
+        if ($this->booted()) {
+            return;
+        }
+
         $this->includeHelpers();
 
         // Try to disable the PHPSESSID
@@ -181,6 +191,19 @@ class InitializeSystemListener extends ScopeAwareListener
 
         $this->triggerInitializeSystemHook();
         $this->checkRequestToken();
+
+        // set booted
+        $this->isBooted = true;
+    }
+
+    /**
+     * Check is booted
+     *
+     * @return bool
+     */
+    private function booted()
+    {
+        return $this->isBooted;
     }
 
     /**
