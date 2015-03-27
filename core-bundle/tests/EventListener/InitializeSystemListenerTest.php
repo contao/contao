@@ -48,6 +48,34 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
+     * Test if $isBooted is set correctly
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testPreventBootTwice()
+    {
+        global $kernel;
+
+        /** @var Kernel $kernel */
+        $kernel = $this->mockKernel();
+
+        $listener = new InitializeSystemListener(
+            $this->getMock('Symfony\Component\Routing\RouterInterface'),
+            $this->getRootDir()
+        );
+
+        $ref = new \ReflectionClass('Contao\CoreBundle\EventListener\InitializeSystemListener');
+        $boot = $ref->getMethod('boot');
+        $boot->setAccessible(true);
+        $boot->invoke($listener, null, null);
+
+        $isBooted = $ref->getMethod('booted');
+        $isBooted->setAccessible(true);
+        $this->assertTrue($isBooted->invoke($listener));
+    }
+
+    /**
      * Tests a front end request.
      *
      * @runInSeparateProcess

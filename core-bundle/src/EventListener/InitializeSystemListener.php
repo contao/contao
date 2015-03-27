@@ -44,7 +44,7 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * @var bool
      */
-    private $isBooted = false;
+    private static $isBooted = false;
 
     /**
      * Constructor.
@@ -193,7 +193,7 @@ class InitializeSystemListener extends ScopeAwareListener
         $this->checkRequestToken();
 
         // set booted
-        $this->isBooted = true;
+        InitializeSystemListener::$isBooted = true;
     }
 
     /**
@@ -203,7 +203,7 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     private function booted()
     {
-        return $this->isBooted;
+        return InitializeSystemListener::$isBooted;
     }
 
     /**
