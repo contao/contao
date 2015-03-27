@@ -250,6 +250,7 @@ abstract class Events extends \Module
 		$arrEvent['day'] = $strDay;
 		$arrEvent['month'] = $strMonth;
 		$arrEvent['parent'] = $intCalendar;
+		$arrEvent['calendar'] = $objEvents->getRelated('pid');
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
 		$arrEvent['title'] = specialchars($objEvents->title, true);
@@ -280,15 +281,23 @@ abstract class Events extends \Module
 		// Compile the event text
 		else
 		{
-			$objElement = \ContentModel::findPublishedByPidAndTable($objEvents->id, 'tl_calendar_events');
+			$id = $objEvents->id;
 
-			if ($objElement !== null)
+			$arrEvent['details'] = function () use ($id)
 			{
-				while ($objElement->next())
+				$strDetails = '';
+				$objElement = \ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
+
+				if ($objElement !== null)
 				{
-					$arrEvent['details'] .= $this->getContentElement($objElement->current());
+					while ($objElement->next())
+					{
+						$strDetails .= $this->getContentElement($objElement->current());
+					}
 				}
-			}
+
+				return $strDetails;
+			};
 		}
 
 		// Get todays start and end timestamp
