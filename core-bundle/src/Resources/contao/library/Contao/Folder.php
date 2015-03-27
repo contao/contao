@@ -315,7 +315,7 @@ class Folder extends \System
 	{
 		if (!file_exists(TL_ROOT . '/' . $this->strFolder . '/.public'))
 		{
-			\File::putContent($this->strFolder . '/.public', "");
+			\File::putContent($this->strFolder . '/.public', '');
 		}
 	}
 

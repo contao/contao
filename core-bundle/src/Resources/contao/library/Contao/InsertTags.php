@@ -29,6 +29,7 @@ class InsertTags extends \Controller
 	 */
 	public function replace($strBuffer, $blnCache=true)
 	{
+		/** @var \PageModel $objPage */
 		global $objPage;
 
 		// Preserve insert tags
@@ -40,7 +41,10 @@ class InsertTags extends \Controller
 		$tags = preg_split('/\{\{(([^\{\}]*|(?R))*)\}\}/', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		$strBuffer = '';
-		static $arrCache = array();
+
+		// Create one cache per cache setting (see #7700)
+		static $arrItCache;
+		$arrCache = &$arrItCache[$blnCache];
 
 		for ($_rit=0, $_cnt=count($tags); $_rit<$_cnt; $_rit+=3)
 		{

@@ -72,6 +72,7 @@ class BackendPreview extends \Backend
 		}
 		else
 		{
+			// FIXME: contao_root
 			$objTemplate->url = $kernel->getContainer()->get('router')->generate('contao_frontend', array('alias' => ''), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 

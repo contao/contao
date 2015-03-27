@@ -28,11 +28,13 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class ModuleLoader
 {
+
 	/**
 	 * Old module names
 	 * @var array
 	 */
-	private static $legacy = array(
+	private static $legacy = array
+	(
 		'ContaoCoreBundle'       => 'core',
 		'ContaoCalendarBundle'   => 'calendar',
 		'ContaoCommentsBundle'   => 'comments',
