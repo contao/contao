@@ -60,6 +60,7 @@ class FrontendLoader extends Loader
         $defaults = ['_controller' => 'ContaoCoreBundle:Frontend:index', '_scope' => 'frontend'];
 
         $this->addFrontendRoute($routes, $defaults);
+        $this->addRootRoute($routes, $defaults);
         $this->addCatchAllRoute($routes, $defaults);
 
         return $routes;
@@ -105,6 +106,17 @@ class FrontendLoader extends Loader
     }
 
     /**
+     * Adds a route to redirect a user to the installation root.
+     *
+     * @param RouteCollection $routes   A collection of routes
+     * @param array           $defaults Default parameters for the route
+     */
+    private function addRootRoute(RouteCollection $routes, array $defaults)
+    {
+        $routes->add('contao_root', new Route('/', $defaults));
+    }
+
+    /**
      * Adds a catch-all route to redirect all request to the Contao frontend controller.
      *
      * @param RouteCollection $routes   A collection of routes
@@ -112,11 +124,11 @@ class FrontendLoader extends Loader
      */
     private function addCatchAllRoute(RouteCollection $routes, array $defaults)
     {
-        $pattern = '/{alias}';
-        $require = ['alias' => '.*'];
+        $pattern = '/{_url_fragment}';
+        $require = ['_url_fragment' => '.*'];
 
-        $defaults['alias'] = '';
+        $defaults['_url_fragment'] = '';
 
-        $routes->add('contao_root', new Route($pattern, $defaults, $require));
+        $routes->add('contao_catch_all', new Route($pattern, $defaults, $require));
     }
 }
