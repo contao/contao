@@ -73,6 +73,10 @@ class InitializeSystemListenerTest extends TestCase
         $isBooted = $ref->getMethod('booted');
         $isBooted->setAccessible(true);
         $this->assertTrue($isBooted->invoke($listener));
+
+        // invoke boot again
+        $boot->invoke($listener, null, null);
+
     }
 
     /**
