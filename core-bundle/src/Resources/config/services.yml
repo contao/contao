@@ -104,7 +104,7 @@ services:
             - '%kernel.root_dir%'
             - '@doctrine.dbal.default_connection'
 
-    contao.web_profiler.data_collector:
+    contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
             - '%kernel.packages%'
