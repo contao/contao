@@ -87,7 +87,6 @@ abstract class ModuleNews extends \Module
 		$objTemplate = new \FrontendTemplate($this->news_template);
 
 		$objTemplate->setData($objArticle->row());
-
 		$objTemplate->class = (($objArticle->cssClass != '') ? ' ' . $objArticle->cssClass : '') . $strClass;
 		$objTemplate->newsHeadline = $objArticle->headline;
 		$objTemplate->subHeadline = $objArticle->subheadline;
@@ -115,15 +114,23 @@ abstract class ModuleNews extends \Module
 		// Compile the news text
 		else
 		{
-			$objElement = \ContentModel::findPublishedByPidAndTable($objArticle->id, 'tl_news');
+			$id = $objArticle->id;
 
-			if ($objElement !== null)
+			$objTemplate->text = function () use ($id)
 			{
-				while ($objElement->next())
+				$strText = '';
+				$objElement = \ContentModel::findPublishedByPidAndTable($id, 'tl_news');
+
+				if ($objElement !== null)
 				{
-					$objTemplate->text .= $this->getContentElement($objElement->current());
+					while ($objElement->next())
+					{
+						$strText .= $this->getContentElement($objElement->current());
+					}
 				}
-			}
+
+				return $strText;
+			};
 		}
 
 		$arrMeta = $this->getMetaFields($objArticle);

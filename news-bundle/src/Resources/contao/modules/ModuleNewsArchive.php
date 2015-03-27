@@ -108,41 +108,44 @@ class ModuleNewsArchive extends \ModuleNews
 			}
 		}
 
-		// Display year
-		if ($intYear)
+		// Create the date object
+		try
 		{
-			$strDate = $intYear;
-			$objDate = new \Date($strDate, 'Y');
-			$intBegin = $objDate->yearBegin;
-			$intEnd = $objDate->yearEnd;
-			$this->headline .= ' ' . date('Y', $objDate->tstamp);
+			if ($intYear)
+			{
+				$strDate = $intYear;
+				$objDate = new \Date($strDate, 'Y');
+				$intBegin = $objDate->yearBegin;
+				$intEnd = $objDate->yearEnd;
+				$this->headline .= ' ' . date('Y', $objDate->tstamp);
+			}
+			elseif ($intMonth)
+			{
+				$strDate = $intMonth;
+				$objDate = new \Date($strDate, 'Ym');
+				$intBegin = $objDate->monthBegin;
+				$intEnd = $objDate->monthEnd;
+				$this->headline .= ' ' . \Date::parse('F Y', $objDate->tstamp);
+			}
+			elseif ($intDay)
+			{
+				$strDate = $intDay;
+				$objDate = new \Date($strDate, 'Ymd');
+				$intBegin = $objDate->dayBegin;
+				$intEnd = $objDate->dayEnd;
+				$this->headline .= ' ' . \Date::parse($objPage->dateFormat, $objDate->tstamp);
+			}
+			elseif ($this->news_jumpToCurrent == 'all_items')
+			{
+				$intBegin = 0;
+				$intEnd = time();
+			}
 		}
-
-		// Display month
-		elseif ($intMonth)
+		catch (\OutOfBoundsException $e)
 		{
-			$strDate = $intMonth;
-			$objDate = new \Date($strDate, 'Ym');
-			$intBegin = $objDate->monthBegin;
-			$intEnd = $objDate->monthEnd;
-			$this->headline .= ' ' . \Date::parse('F Y', $objDate->tstamp);
-		}
-
-		// Display day
-		elseif ($intDay)
-		{
-			$strDate = $intDay;
-			$objDate = new \Date($strDate, 'Ymd');
-			$intBegin = $objDate->dayBegin;
-			$intEnd = $objDate->dayEnd;
-			$this->headline .= ' ' . \Date::parse($objPage->dateFormat, $objDate->tstamp);
-		}
-
-		// Show all items
-		elseif ($this->news_jumpToCurrent == 'all_items')
-		{
-			$intBegin = 0;
-			$intEnd = time();
+			/** @var \PageError404 $objHandler */
+			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
+			#$objHandler->generate($objPage->id);
 		}
 
 		$this->Template->articles = array();
@@ -159,18 +162,14 @@ class ModuleNewsArchive extends \ModuleNews
 
 				// Get the current page
 				$id = 'page_a' . $this->id;
-				$page = \Input::get($id) ?: 1;
+				$page = (\Input::get($id) !== null) ? \Input::get($id) : 1;
 
 				// Do not index or cache the page if the page number is outside the range
 				if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
 				{
-					$objPage->noSearch = 1;
-					$objPage->cache = 0;
-
-					// Send a 404 header
-					header('HTTP/1.1 404 Not Found');
-
-					return;
+					/** @var \PageError404 $objHandler */
+					$objHandler = new $GLOBALS['TL_PTY']['error_404']();
+					$objHandler->generate($objPage->id);
 				}
 
 				// Set limit and offset
