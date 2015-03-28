@@ -200,7 +200,7 @@ class ExceptionListener
      */
     private function renderErrorTemplate($template, $fallbackMessage = '')
     {
-        // FIXME: make twig templates out of these.
+        // TODO: make twig templates out of these.
         if ($response = $this->tryReadTemplate(sprintf('%s/templates/%s.html5', $this->rootDir, $template))) {
             return $response;
         } elseif ($response = $this->tryReadTemplate(
