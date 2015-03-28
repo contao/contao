@@ -2,6 +2,8 @@
 
 namespace Contao\Fixtures;
 
+use Contao\CoreBundle\Test\LanguageHelper;
+
 class System
 {
     protected static $arrStaticObjects = [];
@@ -59,5 +61,10 @@ class System
         if ($blnForce || !isset($this->arrObjects[$strKey])) {
             $this->arrObjects[$strKey] = (in_array('getInstance', get_class_methods($strClass))) ? call_user_func([$strClass, 'getInstance']) : new $strClass();
         }
+    }
+
+    public static function loadLanguageFile($strName, $strLanguage=null, $blnNoCache=false)
+    {
+        $GLOBALS['TL_LANG'] = new LanguageHelper();
     }
 }
