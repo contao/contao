@@ -10,9 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException;
 use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 /**
  * Main front end controller.
@@ -41,9 +41,7 @@ class FrontendIndex extends \Frontend
 			// Maintenance mode (see #4561 and #6353)
 			if (\Config::get('maintenanceMode'))
 			{
-				throw new ServiceUnavailableHttpException(
-					'This site is currently down for maintenance. Please come back later.'
-				);
+				throw new MaintenanceModeActiveHttpException();
 			}
 		}
 	}
