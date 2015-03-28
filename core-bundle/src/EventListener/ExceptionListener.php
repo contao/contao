@@ -169,12 +169,10 @@ class ExceptionListener
      */
     private function tryToRenderContao404($exception)
     {
-        if ($exception instanceof NotFoundHttpException
-            || $exception instanceof ForwardPageNotFoundHttpException
-            // FIXME: maybe it is useless to try to render a 404 page from within a root page when no root page is published?
-            || $exception instanceof RootNotFoundHttpException
-            || $exception instanceof NoPagesFoundHttpException
-        ) {
+        // FIXME: I guess it is hopeless to render a 404 page from within a root page when no root page is published.
+        // We might want to skip RootNotFoundHttpException then and also NoPagesFoundHttpException is an candidate.
+
+        if ($exception instanceof NotFoundHttpException) {
             static $processing;
 
             if (isset($GLOBALS['TL_PTY']['error_404']) && class_exists($GLOBALS['TL_PTY']['error_404'])) {
