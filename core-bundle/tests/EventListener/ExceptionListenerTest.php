@@ -270,46 +270,4 @@ class ExceptionListenerTest extends TestCase
         $this->assertSame($event->getResponse(), $exception->getResponse());
 
     }
-
-    /**
-     * Mocks a Contao kernel.
-     *
-     * @return Kernel
-     */
-    private function mockKernel()
-    {
-        $kernel = $this->getMock(
-            'Symfony\Component\HttpKernel\Kernel',
-            [
-                // KernelInterface
-                'registerBundles',
-                'registerContainerConfiguration',
-                'boot',
-                'shutdown',
-                'getBundles',
-                'isClassInActiveBundle',
-                'getBundle',
-                'locateResource',
-                'getName',
-                'getEnvironment',
-                'isDebug',
-                'getRootDir',
-                'getContainer',
-                'getStartTime',
-                'getCacheDir',
-                'getLogDir',
-                'getCharset',
-
-                // HttpKernelInterface
-                'handle',
-
-                // Serializable
-                'serialize',
-                'unserialize',
-            ],
-            ['test', false]
-        );
-
-        return $kernel;
-    }
 }
