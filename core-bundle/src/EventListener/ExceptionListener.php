@@ -40,16 +40,16 @@ class ExceptionListener
      * @var array
      */
     private static $exceptionTemplates = [
-        'Contao\CoreBundle\Exception\AccessDeniedHttpException'          => 'be_forbidden',
-        'Contao\CoreBundle\Exception\BadRequestTokenException'           => 'be_referer',
-        'Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException'   => 'be_no_forward',
-        'Contao\CoreBundle\Exception\IncompleteInstallationException'    => 'be_incomplete',
-        'Contao\CoreBundle\Exception\InsecureInstallationException'      => 'be_insecure',
-        'Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException' => 'be_unavailable',
-        'Contao\CoreBundle\Exception\NoLayoutException'                  => 'be_no_layout',
-        'Contao\CoreBundle\Exception\NoPagesFoundHttpException'          => 'be_no_active',
-        'Contao\CoreBundle\Exception\NotFoundHttpException'              => 'be_no_page',
-        'Contao\CoreBundle\Exception\RootNotFoundHttpException'          => 'be_no_root',
+        'Contao\CoreBundle\Exception\AccessDeniedHttpException'           => 'be_forbidden',
+        'Contao\CoreBundle\Exception\BadRequestTokenHttpException'        => 'be_referer',
+        'Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException'    => 'be_no_forward',
+        'Contao\CoreBundle\Exception\IncompleteInstallationHttpException' => 'be_incomplete',
+        'Contao\CoreBundle\Exception\InsecureInstallationHttpException'   => 'be_insecure',
+        'Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException'  => 'be_unavailable',
+        'Contao\CoreBundle\Exception\NoLayoutHttpException'               => 'be_no_layout',
+        'Contao\CoreBundle\Exception\NoPagesFoundHttpException'           => 'be_no_active',
+        'Contao\CoreBundle\Exception\NotFoundHttpException'               => 'be_no_page',
+        'Contao\CoreBundle\Exception\RootNotFoundHttpException'           => 'be_no_root',
     ];
 
     /**

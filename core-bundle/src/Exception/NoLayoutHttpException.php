@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class NoLayoutException extends HttpException
+class NoLayoutHttpException extends HttpException
 {
     /**
      * {@inheritdoc}

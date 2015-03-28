@@ -13,9 +13,9 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\ClassLoader;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
-use Contao\CoreBundle\Exception\BadRequestTokenException;
-use Contao\CoreBundle\Exception\IncompleteInstallationException;
-use Contao\CoreBundle\Exception\InsecureInstallationException;
+use Contao\CoreBundle\Exception\BadRequestTokenHttpException;
+use Contao\CoreBundle\Exception\IncompleteInstallationHttpException;
+use Contao\CoreBundle\Exception\InsecureInstallationHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\Input;
 use Contao\System;
@@ -329,13 +329,13 @@ class InitializeSystemListener extends ScopeAwareListener
 
         // Show the "insecure document root" message
         if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) && '/web' === substr($request->getBasePath(), -4)) {
-            throw new InsecureInstallationException();
+            throw new InsecureInstallationHttpException();
         }
 
         // Show the "incomplete installation" message
         if (!$this->config->isComplete()) {
             // FIXME: This maybe should be removed when localconfig.php is not mandatory anymore.
-            throw new IncompleteInstallationException();
+            throw new IncompleteInstallationHttpException();
         }
     }
 
@@ -416,7 +416,7 @@ class InitializeSystemListener extends ScopeAwareListener
             }
 
             // FIXME: obsolete when using symfony security?
-            throw new BadRequestTokenException();
+            throw new BadRequestTokenHttpException();
         }
     }
 

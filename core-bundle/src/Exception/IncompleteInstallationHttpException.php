@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class IncompleteInstallationException extends ServiceUnavailableHttpException
+class IncompleteInstallationHttpException extends ServiceUnavailableHttpException
 {
     /**
      * {@inheritdoc}

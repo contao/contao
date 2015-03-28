@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\NoLayoutException;
+use Contao\CoreBundle\Exception\NoLayoutHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -250,7 +250,7 @@ class PageRegular extends \Frontend
 		if (null === $objLayout)
 		{
 			$this->log('Could not find layout ID "' . $intId . '"', __METHOD__, TL_ERROR);
-			throw new NoLayoutException();
+			throw new NoLayoutHttpException();
 		}
 
 		$objPage->hasJQuery = $objLayout->addJQuery;

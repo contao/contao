@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class InsecureInstallationException extends ServiceUnavailableHttpException
+class InsecureInstallationHttpException extends ServiceUnavailableHttpException
 {
     /**
      * {@inheritdoc}

@@ -10,8 +10,6 @@
 
 namespace Contao\CoreBundle\Exception;
 
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
 /**
  * This exception is thrown when there is an issue with the request token.
  *
@@ -19,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class BadRequestTokenException extends BadRequestHttpException
+class BadRequestTokenHttpException extends BadRequestHttpException
 {
     /**
      * {@inheritdoc}
