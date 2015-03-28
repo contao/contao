@@ -10,8 +10,6 @@
 
 namespace Contao\CoreBundle\Exception;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 /**
  * This exception is thrown when there can no applicable forward page found.
  *
