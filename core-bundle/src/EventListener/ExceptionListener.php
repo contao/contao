@@ -28,7 +28,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 class ExceptionListener
 {
     /**
-     * @var string
+     * @var bool
      */
     private $renderErrorScreens;
 
