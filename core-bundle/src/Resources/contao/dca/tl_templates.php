@@ -8,7 +8,6 @@
  * @license LGPL-3.0+
  */
 
-
 /**
  * Load default language file
  */
@@ -481,8 +480,7 @@ class tl_templates extends Backend
 
 		\Config::set('debugMode', false);
 
-		$objTemplate->output();
-		exit;
+		throw new \Contao\CoreBundle\Exception\ResponseException($objTemplate->getResponse());
 	}
 
 

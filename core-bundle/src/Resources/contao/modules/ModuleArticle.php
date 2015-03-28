@@ -376,7 +376,7 @@ class ModuleArticle extends \Module
 		// Close and output PDF document
 		$pdf->lastPage();
 		$pdf->Output(standardize(ampersand($this->title, false)) . '.pdf', 'D');
-
+		// FIXME: This has to be changed to a ResponseException somehow - rather write to temp file and stream it then?
 		// Stop script execution
 		exit;
 	}
