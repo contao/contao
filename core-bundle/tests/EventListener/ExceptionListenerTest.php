@@ -11,9 +11,12 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\ExceptionListener;
+use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Test\TestCase;
+use Contao\PageError404;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\Kernel;
@@ -301,5 +304,143 @@ class ExceptionListenerTest extends TestCase
         );
     }
 
+    /**
+     * Test the rendering of the Contao 404 pages.
+     *
+     * @return void
+     */
+    public function testTryToRenderContao404()
+    {
+        $listener  = new ExceptionListener(true, $this->getKernelDir());
+        $exception = new NotFoundHttpException();
+        $event     = new GetResponseForExceptionEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernel::MASTER_REQUEST,
+            $exception
+        );
+        $response = new Response('the mocked response ' . time(), 404);
+
+        PageError404::$getResponse = function() use ($response) { return $response; };
+
+        $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
+
+        $listener->onKernelException($event);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertSame($response, $event->getResponse());
+    }
+
+    /**
+     * Test the rendering of the Contao 404 pages.
+     *
+     * @return void
+     */
+    public function testTryToRenderContao404ThrowsResponseException()
+    {
+        $listener  = new ExceptionListener(true, $this->getKernelDir());
+        $exception = new NotFoundHttpException();
+        $event     = new GetResponseForExceptionEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernel::MASTER_REQUEST,
+            $exception
+        );
+
+        $thrownException = ResponseException::create('internal 404 response exception', 404);
+        PageError404::$getResponse = function() use ($thrownException) { throw $thrownException; };
+
+        $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
+
+        $listener->onKernelException($event);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertEquals(404, $event->getResponse()->getStatusCode());
+    }
+
+    /**
+     * Test the rendering of the Contao 404 pages.
+     *
+     * @return void
+     */
+    public function testTryToRenderContao404ThrowsNotFoundHttpException()
+    {
+        $listener  = new ExceptionListener(true, $this->getKernelDir());
+        $exception = new NotFoundHttpException();
+        $event     = new GetResponseForExceptionEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernel::MASTER_REQUEST,
+            $exception
+        );
+
+        $thrownException = new NotFoundHttpException('internal 404 response exception');
+        PageError404::$getResponse = function() use ($thrownException) { throw $thrownException; };
+
+        $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
+
+        $listener->onKernelException($event);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertEquals(404, $event->getResponse()->getStatusCode());
+    }
+
+    /**
+     * Test the rendering of the Contao 404 pages.
+     *
+     * @return void
+     */
+    public function testTryToRenderContao404ThrowsException()
+    {
+        $listener  = new ExceptionListener(true, $this->getKernelDir());
+        $exception = new NotFoundHttpException();
+        $event     = new GetResponseForExceptionEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernel::MASTER_REQUEST,
+            $exception
+        );
+
+        $thrownException = new \RuntimeException(
+            'This should be thrown as it indicates a bug in exception handling.'
+        );
+        PageError404::$getResponse = function() use ($thrownException) { throw $thrownException; };
+
+        $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
+
+        $realThrownException = null;
+        try {
+            $listener->onKernelException($event);
+        } catch (\Exception $realThrownException) {
+            // Just to keep the exception.
+        }
+        $this->assertSame($thrownException, $realThrownException);
+    }
+
+    /**
+     * Test the rendering of the Contao 404 pages.
+     *
+     * @return void
+     */
+    public function testTryToRenderContao404WillRecurse()
+    {
+        $kernel     = $this->mockKernel();
+        $listener   = new ExceptionListener(true, $this->getKernelDir());
+        $exception  = new NotFoundHttpException();
+        $event      = new GetResponseForExceptionEvent($kernel, new Request(), HttpKernel::MASTER_REQUEST, $exception);
+        $eventAgain = new GetResponseForExceptionEvent($kernel, new Request(), HttpKernel::MASTER_REQUEST, $exception);
+
+
+        PageError404::$getResponse = function() use ($listener, $eventAgain) {
+            $listener->onKernelException($eventAgain);
+        };
+
+          $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
+
+        try {
+            $listener->onKernelException($event);
+        } catch (\Exception $thrownException) {
+            // Just to keep the exception.
+        }
     }
 }
