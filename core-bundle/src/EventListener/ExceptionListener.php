@@ -225,14 +225,11 @@ class ExceptionListener
         // TODO: make twig templates out of these.
         if ($response = $this->tryReadTemplate(sprintf('%s/templates/%s.html5', $this->rootDir, $template))) {
             return $response;
-        } elseif ($response = $this->tryReadTemplate(
-            sprintf('%s/../Resources/contao/templates/backend/%s.html5', __DIR__, $template)
-        )) {
-            return $response;
         }
 
-        // FIXME: this is impossible to happen in real world but we somehow have to test it... :(
-        return $fallbackMessage;
+        return $this->tryReadTemplate(
+            sprintf('%s/../Resources/contao/templates/backend/%s.html5', __DIR__, $template)
+        );
     }
 
     /**
