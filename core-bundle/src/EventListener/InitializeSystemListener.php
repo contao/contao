@@ -16,7 +16,7 @@ use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Contao\CoreBundle\Exception\BadRequestTokenException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
-use Contao\Environment;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
@@ -413,9 +413,7 @@ class InitializeSystemListener extends ScopeAwareListener
         if ($_POST && null !== $request && !$this->tokenManager->isTokenValid($token)) {
             // Force a JavaScript redirect upon Ajax requests (IE requires absolute link)
             if ($request->isXmlHttpRequest()) {
-                header('HTTP/1.1 204 No Content');
-                header('X-Ajax-Location: ' . $this->router->generate('contao_backend'));
-                exit; // FIXME: throw a ResponseException instead
+                throw RedirectResponseException::createAjax($this->router->generate('contao_backend'));
             }
 
             // FIXME: obsolete when using symfony security?
