@@ -10,12 +10,9 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException;
-use Contao\CoreBundle\Exception\NoPagesFoundHttpException;
 use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\ResponseExceptionInterface;
-use Contao\CoreBundle\Exception\RootNotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
