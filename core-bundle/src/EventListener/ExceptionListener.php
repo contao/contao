@@ -180,14 +180,17 @@ class ExceptionListener
                     return null;
                 }
 
+                // Prevent entering this method multiple times causing endless loop.
+                $processing = true;
+
                 try {
                     // FIXME: introduce some contao_frontend_404 route and do a subrequest on it might be more sufficient.
                     /** @var \PageError404 $pageHandler */
                     $pageHandler = new $GLOBALS['TL_PTY']['error_404']();
+                    $response    = $pageHandler->getResponse(false);
+                    $processing  = false;
 
-                    $processing = false;
-
-                    return $pageHandler->getResponse(false);
+                    return $response;
                 } catch (ResponseException $pageException) {
                     $processing = false;
 
