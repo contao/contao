@@ -81,7 +81,10 @@ class ExceptionListener
         $response = $this->checkResponseException($event->getException());
         if ($response instanceof Response) {
             $event->setResponse($response);
-
+            // Set the status code as otherwise the kernel will not know we handled the exception.
+            if (!$response->headers->has('X-Status-Code')) {
+                $response->headers->set('X-Status-Code', $response->getStatusCode());
+            }
             return;
         }
 
