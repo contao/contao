@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\ExceptionListener;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -233,6 +234,36 @@ class ExceptionListenerTest extends TestCase
             file_get_contents($this->getRootDir() . '/templates/' . $templateName . '.html5'),
             $event->getResponse()->getContent()
         );
+    }
+
+    /**
+     * Test that response exceptions are handled correctly.
+     */
+    public function testResponseExceptionIsHandled()
+    {
+        $listener      = new ExceptionListener(true, $this->getKernelDir());
+        $exception     = ResponseException::create('I got chained.');
+        $wrapException = new \RuntimeException(
+            'wrap 1',
+            1,
+            new \LogicException(
+                'It is logical to chain exceptions.',
+                1,
+                $exception
+            )
+        );
+        $event     = new GetResponseForExceptionEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernel::MASTER_REQUEST,
+            $wrapException
+        );
+
+        $listener->onKernelException($event);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertSame($event->getResponse(), $exception->getResponse());
+
     }
 
     /**
