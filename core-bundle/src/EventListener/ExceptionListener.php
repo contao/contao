@@ -80,11 +80,8 @@ class ExceptionListener
         // Search if an response is somewhere in the exception list.
         $response = $this->checkResponseException($event->getException());
         if ($response instanceof Response) {
-            $event->setResponse($response);
-            // Set the status code as otherwise the kernel will not know we handled the exception.
-            if (!$response->headers->has('X-Status-Code')) {
-                $response->headers->set('X-Status-Code', $response->getStatusCode());
-            }
+            $event->setResponse($this->setXStatusCode($response));
+
             return;
         }
 
@@ -97,15 +94,32 @@ class ExceptionListener
         // Search if any exception in the chain is implementing a http exception.
         $response = $this->checkHttpExceptions($exception);
         if ($response instanceof Response) {
-            $event->setResponse($response);
+            $event->setResponse($this->setXStatusCode($response));
 
             return;
         }
 
         // If still nothing worked out, we wrap it in a plain "internal error occured" message.
-        $event->setResponse(
-            new Response($this->renderErrorTemplate('be_error'), 500)
-        );
+        $event->setResponse($this->setXStatusCode(new Response($this->renderErrorTemplate('be_error'), 500)));
+    }
+
+    /**
+     * Ensure we have a proper X-Status-Code set on a response.
+     *
+     * Setting the status code is needed as otherwise the kernel will not know we handled the exception and will set
+     * an status code of 500 ignoring the status of our response.
+     *
+     * @param Response $response
+     *
+     * @return Response
+     */
+    private function setXStatusCode(Response $response)
+    {
+        if (!$response->headers->has('X-Status-Code')) {
+            $response->headers->set('X-Status-Code', $response->getStatusCode());
+        }
+
+        return $response;
     }
 
     /**

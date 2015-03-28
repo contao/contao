@@ -86,6 +86,11 @@ class ExceptionListenerTest extends TestCase
             file_get_contents($this->getRootDir() . '/templates/be_error.html5'),
             $event->getResponse()->getContent()
         );
+        $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+        $this->assertEquals(
+            $event->getResponse()->getStatusCode(),
+            $event->getResponse()->headers->get('X-Status-Code')
+        );
     }
 
     /**
@@ -105,6 +110,11 @@ class ExceptionListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+        $this->assertEquals(
+            $event->getResponse()->getStatusCode(),
+            $event->getResponse()->headers->get('X-Status-Code')
+        );
     }
 
 
@@ -136,6 +146,12 @@ class ExceptionListenerTest extends TestCase
             file_get_contents($this->getRootDir() . '/templates/be_error.html5'),
             $event->getResponse()->getContent()
         );
+        $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+        $this->assertEquals(
+            $event->getResponse()->getStatusCode(),
+            $event->getResponse()->headers->get('X-Status-Code')
+        );
+        $this->assertEquals($event->getResponse()->getStatusCode(), 500);
     }
 
     /**
@@ -179,6 +195,11 @@ class ExceptionListenerTest extends TestCase
         $this->assertEquals(
             file_get_contents($this->getRootDir() . '/templates/' . $templateName . '.html5'),
             $event->getResponse()->getContent()
+        );
+        $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+        $this->assertEquals(
+            $event->getResponse()->getStatusCode(),
+            $event->getResponse()->headers->get('X-Status-Code')
         );
     }
 
@@ -239,6 +260,11 @@ class ExceptionListenerTest extends TestCase
             file_get_contents($this->getRootDir() . '/templates/' . $templateName . '.html5'),
             $event->getResponse()->getContent()
         );
+        $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+        $this->assertEquals(
+            $event->getResponse()->getStatusCode(),
+            $event->getResponse()->headers->get('X-Status-Code')
+        );
     }
 
     /**
@@ -268,6 +294,12 @@ class ExceptionListenerTest extends TestCase
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
         $this->assertSame($event->getResponse(), $exception->getResponse());
+        $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+        $this->assertEquals(
+            $event->getResponse()->getStatusCode(),
+            $event->getResponse()->headers->get('X-Status-Code')
+        );
+    }
 
     }
 }
