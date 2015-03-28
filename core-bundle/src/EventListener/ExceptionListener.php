@@ -32,6 +32,11 @@ class ExceptionListener
     private $renderErrorScreens;
 
     /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
      * Lookup map of all known exception templates in this handler.
      *
      * @var array
@@ -51,10 +56,15 @@ class ExceptionListener
 
     /**
      * Create a new instance.
+     *
+     * @param bool   $renderErrorScreens Flag if the error screens shall be rendered.
+     * @param string $rootDir            The kernel root directory for reading the templates
+     *                                   (only applicable when renderErrorScreens is true).
      */
-    public function __construct($renderErrorScreens)
+    public function __construct($renderErrorScreens, $rootDir)
     {
         $this->renderErrorScreens = $renderErrorScreens;
+        $this->rootDir = dirname($rootDir);
     }
 
     /**
@@ -191,7 +201,7 @@ class ExceptionListener
     private function renderErrorTemplate($template, $fallbackMessage = '')
     {
         // FIXME: make twig templates out of these.
-        if ($response = $this->tryReadTemplate(sprintf('%s/templates/%s.html5', TL_ROOT, $template))) {
+        if ($response = $this->tryReadTemplate(sprintf('%s/templates/%s.html5', $this->rootDir, $template))) {
             return $response;
         } elseif ($response = $this->tryReadTemplate(
             sprintf('%s/../Resources/contao/templates/backend/%s.html5', __DIR__, $template)

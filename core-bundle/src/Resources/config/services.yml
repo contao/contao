@@ -42,6 +42,7 @@ services:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 200 }
         arguments:
             - "%contao.pretty_error_screens%"
+            - "%kernel.root_dir%"
 
     contao.listener.initialize_system:
         class: Contao\CoreBundle\EventListener\InitializeSystemListener
