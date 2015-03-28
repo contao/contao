@@ -51,7 +51,7 @@ class ResponseException extends \RuntimeException implements ResponseExceptionIn
      * @param int   $status  The response status code
      * @param array $headers An array of response headers
      *
-     * @return Response
+     * @return ResponseException
      */
     public static function create($content = '', $status = 200, $headers = array())
     {
