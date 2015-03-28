@@ -318,7 +318,7 @@ abstract class Frontend extends \Controller
 			if ($objRootPage === null)
 			{
 				\System::log('No root page found (host "' . $host . '", language "'. \Input::get('language') .'")', __METHOD__, TL_ERROR);
-				throw new NotFoundHttpException('No root page found');
+				throw new RootNotFoundHttpException();
 			}
 		}
 
