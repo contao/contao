@@ -186,6 +186,8 @@ class ExceptionListenerTest extends TestCase
      * Tests that no template is rendered when there should not.
      *
      * @dataProvider knownContaoExceptions
+     *
+     * @param string $exceptionClass The exception to be handled.
      */
     public function testKnownContaoExceptionDoesNotRenderTemplate($exceptionClass)
     {
@@ -207,6 +209,9 @@ class ExceptionListenerTest extends TestCase
      * Tests that the fallback message is shown when the error screen template is not available.
      *
      * @dataProvider knownContaoExceptions
+     *
+     * @param string $exceptionClass The exception to be handled.
+     * @param string $templateName   The expected template to be rendered.
      */
     public function testWrappedKnownContaoExceptionRendersTemplate($exceptionClass, $templateName)
     {
