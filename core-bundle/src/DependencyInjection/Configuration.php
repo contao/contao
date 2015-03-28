@@ -54,6 +54,8 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('csrf_token_name')
                     ->cannotBeEmpty()
                     ->defaultValue('contao_csrf_token')
+                ->booleanNode('pretty_error_screens')
+                    ->defaultTrue()
                 ->end()
             ->end()
         ;

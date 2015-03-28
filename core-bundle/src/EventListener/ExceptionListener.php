@@ -29,7 +29,7 @@ class ExceptionListener
     /**
      * @var string
      */
-    private $environment;
+    private $renderErrorScreens;
 
     /**
      * Lookup map of all known exception templates in this handler.
@@ -52,9 +52,9 @@ class ExceptionListener
     /**
      * Create a new instance.
      */
-    public function __construct($environment)
+    public function __construct($renderErrorScreens)
     {
-        $this->environment = $environment;
+        $this->renderErrorScreens = $renderErrorScreens;
     }
 
     /**
@@ -76,9 +76,7 @@ class ExceptionListener
 
         // FIXME: log the exception here if we do not find a better place to log via monolog from outside.
 
-        // FIXME: Register extension to only be present in env prod
-        // If not in prod, exit here and let the symfony debug handler take over.
-        if ($this->environment !== 'prod') {
+        if (!$this->renderErrorScreens) {
             return;
         }
 
