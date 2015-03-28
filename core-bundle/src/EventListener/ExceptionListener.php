@@ -149,6 +149,10 @@ class ExceptionListener
      */
     private function checkHttpException($exception)
     {
+        if (!$exception instanceof HttpExceptionInterface) {
+            return null;
+        }
+
         if ($exception instanceof NotFoundHttpException
             || $exception instanceof ForwardPageNotFoundHttpException
             || $exception instanceof RootNotFoundHttpException
@@ -157,16 +161,17 @@ class ExceptionListener
             // TODO: try to handle these via rendering a 404 page first.
         }
 
-        if ($exception instanceof HttpExceptionInterface) {
-            $candidates = array_intersect(class_parents($exception), array_keys(self::$exceptionTemplates));
-            if (!empty($candidates)) {
-                $template = self::$exceptionTemplates[$candidates[0]];
-                return $this->createTemplateResponseFromException($template, $exception);
-            }
+        // Determine if the class or any of the parents is known by us.
+        $candidates = array_intersect(
+            array_merge([get_class($exception)], class_parents($exception)),
+            array_keys(self::$exceptionTemplates)
+        );
+        if (!empty($candidates)) {
+            $template = self::$exceptionTemplates[array_shift($candidates)];
+            return $this->createTemplateResponseFromException($template, $exception);
         }
 
-        // Not one of the default exceptions, do not handle it.
-        // Exception not understood.
+        // Unknown HttpExceptionInterface implementing exception, no way to handle.
         return null;
     }
 
@@ -209,6 +214,7 @@ class ExceptionListener
             return $response;
         }
 
+        // FIXME: this is impossible to happen in real world but we somehow have to test it... :(
         return $fallbackMessage;
     }
 
@@ -222,7 +228,7 @@ class ExceptionListener
     private function tryReadTemplate($template)
     {
         if (file_exists($template)) {
-            // Isolate the template parsing, the root dir will get used in the template.
+            // Isolate the template parsing, the "unused" root dir variable will get used in the template.
             $isolatedRun = function ($template, $rootDir) {
                 ob_start();
                 include $template;
