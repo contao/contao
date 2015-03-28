@@ -104,7 +104,7 @@ class ExceptionListener
 
         // If still nothing worked out, we wrap it in a plain "internal error occured" message.
         $event->setResponse(
-            new Response($this->renderErrorTemplate('be_error', 'An error occurred while executing this script!'), 500)
+            new Response($this->renderErrorTemplate('be_error'), 500)
         );
     }
 
@@ -242,10 +242,7 @@ class ExceptionListener
     private function createTemplateResponseFromException($template, HttpExceptionInterface $exception)
     {
         return new Response(
-            $this->renderErrorTemplate(
-                $template,
-                $exception->getMessage()
-            ),
+            $this->renderErrorTemplate($template),
             $exception->getStatusCode(),
             $exception->getHeaders()
         );
@@ -254,12 +251,11 @@ class ExceptionListener
     /**
      * Try to render an error template.
      *
-     * @param string $template        The template name. Will get searched at standard locations.
-     * @param string $fallbackMessage The fallback message to display when no template has been found.
+     * @param string $template The template name. Will get searched at standard locations.
      *
      * @return string
      */
-    private function renderErrorTemplate($template, $fallbackMessage = '')
+    private function renderErrorTemplate($template)
     {
         // TODO: make twig templates out of these.
         if ($response = $this->tryReadTemplate(sprintf('%s/templates/%s.html5', $this->rootDir, $template))) {
