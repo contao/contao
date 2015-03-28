@@ -17,29 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class ResponseException extends \RuntimeException implements ResponseExceptionInterface
+class ResponseException extends AbstractResponseException
 {
-    /**
-     * The response to use.
-     *
-     * @var Response
-     */
-    private $response;
-
-    /**
-     * Construct the exception.
-     *
-     * @param Response $response   The Response to send
-     *
-     * @param \Exception $previous The previous exception used for the exception chaining
-     */
-    public function __construct($response, \Exception $previous = null)
-    {
-        parent::__construct('Contao Response', 0, $previous);
-
-        $this->response = $response;
-    }
-
     /**
      * Factory method for creating the Response instance internally.
      *
@@ -56,15 +35,5 @@ class ResponseException extends \RuntimeException implements ResponseExceptionIn
     public static function create($content = '', $status = 200, $headers = array())
     {
         return new static(new Response($content, $status, $headers));
-    }
-
-    /**
-     * Retrieve the response.
-     *
-     * @return Response
-     */
-    public function getResponse()
-    {
-        return $this->response;
     }
 }

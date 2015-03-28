@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class RedirectResponseException extends ResponseException
+class RedirectResponseException extends AbstractResponseException
 {
     /**
      * Factory method creating an Response instance internally.
