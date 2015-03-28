@@ -10,8 +10,6 @@
 
 namespace Contao\CoreBundle\Exception;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 /**
  * This exception is thrown no applicable page root has been found.
  *
