@@ -222,10 +222,15 @@ class ExceptionListener
     private function tryReadTemplate($template)
     {
         if (file_exists($template)) {
-            ob_start();
-            include $template;
+            // Isolate the template parsing, the root dir will get used in the template.
+            $isolatedRun = function ($template, $rootDir) {
+                ob_start();
+                include $template;
 
-            return ob_get_clean();
+                return ob_get_clean();
+            };
+
+            return $isolatedRun($template, $this->rootDir);
         }
 
         return null;
