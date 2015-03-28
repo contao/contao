@@ -29,23 +29,25 @@ class ResponseException extends \RuntimeException implements ResponseExceptionIn
     /**
      * Construct the exception.
      *
-     * @param Response $response The Response to send
+     * @param Response $response   The Response to send
+     *
+     * @param \Exception $previous The previous exception used for the exception chaining
      */
-    public function __construct($response)
+    public function __construct($response, \Exception $previous = null)
     {
-        parent::__construct('Contao Response', 0);
+        parent::__construct('Contao Response', 0, $previous);
 
         $this->response = $response;
     }
 
     /**
-     * Factory method for chain-ability and create the Response instance internally.
+     * Factory method for creating the Response instance internally.
      *
      * Example:
      *
-     *     throw ResponseException::create($body, 418);
+     *     throw ResponseException::create('Teapots can not brew coffee!', 418);
      *
-     * @param mixed $content The response content, see setContent()
+     * @param mixed $content The response content
      * @param int   $status  The response status code
      * @param array $headers An array of response headers
      *
