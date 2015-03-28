@@ -10,39 +10,6 @@
 
 
 /**
- * Show a special Contao "what to do in case of an error" message
- *
- * @throws \Contao\CoreBundle\Exception\DieNicelyException
- *
- * @fixme To be removed when the last occurences of show_help_message have been tracked down and killed.
- *
- * @see \Contao\CoreBundle\Exception\DieNicelyException
- */
-function show_help_message()
-{
-	throw new \Contao\CoreBundle\Exception\DieNicelyException();
-}
-
-
-/**
- * Try to die with a template instead of just a message
- *
- * @param string $strTemplate
- * @param string $strFallback
- *
- * @throws \Contao\CoreBundle\Exception\DieNicelyException
- *
- * @fixme To be removed when the last occurences of die_nicely have been tracked down and killed.
- *
- * @see \Contao\CoreBundle\Exception\DieNicelyException
- */
-function die_nicely($strTemplate, $strFallback)
-{
-	throw new \Contao\CoreBundle\Exception\DieNicelyException($strTemplate, $strFallback);
-}
-
-
-/**
  * Add a log entry
  *
  * @param string $strMessage
