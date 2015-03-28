@@ -9,7 +9,7 @@ services:
         arguments:
             - "@service_container"
         tags:
-            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 254 }
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelRequest, priority: 31 }
             - { name: kernel.event_listener, event: kernel.finish_request, method: onKernelFinishRequest, priority: -254 }
 
     contao.listener.initialize_system:
