@@ -141,6 +141,26 @@ class ExceptionListener
     }
 
     /**
+     * Try to render a Contao 404 page first.
+     *
+     * @param \Exception $exception The exception to check.
+     *
+     * @return null|Response
+     */
+    private function tryToRenderContao404($exception)
+    {
+        if ($exception instanceof NotFoundHttpException
+            || $exception instanceof ForwardPageNotFoundHttpException
+            || $exception instanceof RootNotFoundHttpException
+            || $exception instanceof NoPagesFoundHttpException
+        ) {
+            // TODO: try to handle these via rendering a 404 page first.
+        }
+
+        return null;
+     }
+
+    /**
      * Check if the exception is understood by us.
      *
      * @param \Exception $exception The exception to walk on.
@@ -153,12 +173,9 @@ class ExceptionListener
             return null;
         }
 
-        if ($exception instanceof NotFoundHttpException
-            || $exception instanceof ForwardPageNotFoundHttpException
-            || $exception instanceof RootNotFoundHttpException
-            || $exception instanceof NoPagesFoundHttpException
-        ) {
-            // TODO: try to handle these via rendering a 404 page first.
+        $response = $this->tryToRenderContao404($exception);
+        if ($response) {
+            return $response;
         }
 
         // Determine if the class or any of the parents is known by us.
