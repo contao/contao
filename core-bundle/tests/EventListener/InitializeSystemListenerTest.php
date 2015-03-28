@@ -306,6 +306,58 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
+     * Tests a request without scope.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     *
+     * @expectedException \Contao\CoreBundle\Exception\InsecureInstallationException
+     */
+    public function testValidateInstallation()
+    {
+        global $kernel;
+
+        /** @var Kernel $kernel */
+        $kernel = $this->mockKernel();
+
+        $listener = new InitializeSystemListener(
+            $this->mockRouter('/web/app_dev.php?do=test'),
+            $this->getRootDir() . '/app'
+        );
+
+        $request = new Request();
+        $request->server->add([
+            'SERVER_PORT'          => 80,
+            'HTTP_HOST'            => 'localhost',
+            'HTTP_CONNECTION'      => 'close',
+            'HTTP_ACCEPT'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'HTTP_USER_AGENT'      => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36',
+            'HTTP_ACCEPT_ENCODING' => 'gzip,deflate,sdch',
+            'HTTP_ACCEPT_LANGUAGE' => 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4',
+            'HTTP_X_FORWARDED_FOR' => '123.456.789.0',
+            'SERVER_NAME'          => 'localhost',
+            'SERVER_ADDR'          => '127.0.0.1',
+            'REMOTE_ADDR'          => '123.456.789.0',
+            'DOCUMENT_ROOT'        => $this->getRootDir(),
+            'SCRIPT_FILENAME'      => $this->getRootDir() . '/foo/web/app_dev.php',
+            'ORIG_SCRIPT_FILENAME' => '/var/run/localhost.fcgi',
+            'SERVER_PROTOCOL'      => 'HTTP/1.1',
+            'QUERY_STRING'         => 'do=test',
+            'REQUEST_URI'          => '/web/app_dev.php?do=test',
+            'SCRIPT_NAME'          => '/foo/web/app_dev.php',
+            'ORIG_SCRIPT_NAME'     => '/php.fcgi',
+            'PHP_SELF'             => '/foo/web/app_dev.php',
+            'GATEWAY_INTERFACE'    => 'CGI/1.1',
+            'ORIG_PATH_INFO'       => '/foo/web/app_dev.php',
+            'ORIG_PATH_TRANSLATED' => $this->getRootDir() . '/foo/web/app_dev.php',
+        ]);
+        $request->attributes->set('_route', 'dummy');
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener->onKernelRequest($event);
+    }
+
+    /**
      * Tests a console command.
      *
      * @runInSeparateProcess
