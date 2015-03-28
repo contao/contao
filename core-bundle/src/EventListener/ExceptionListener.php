@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException;
 use Contao\CoreBundle\Exception\NoPagesFoundHttpException;
 use Contao\CoreBundle\Exception\NotFoundHttpException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\ResponseExceptionInterface;
 use Contao\CoreBundle\Exception\RootNotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
@@ -146,15 +147,50 @@ class ExceptionListener
      * @param \Exception $exception The exception to check.
      *
      * @return null|Response
+     *
+     * @throws \Exception When anything went really haywire during rendering of the page.
      */
     private function tryToRenderContao404($exception)
     {
         if ($exception instanceof NotFoundHttpException
             || $exception instanceof ForwardPageNotFoundHttpException
+            // FIXME: maybe it is useless to try to render a 404 page from within a root page when no root page is published?
             || $exception instanceof RootNotFoundHttpException
             || $exception instanceof NoPagesFoundHttpException
         ) {
-            // TODO: try to handle these via rendering a 404 page first.
+            static $processing;
+
+            if (isset($GLOBALS['TL_PTY']['error_404']) && class_exists($GLOBALS['TL_PTY']['error_404'])) {
+                if ($processing) {
+                    return null;
+                }
+
+                try {
+                    // FIXME: introduce some contao_frontend_404 route and do a subrequest on it might be more sufficient.
+                    /** @var \PageError404 $pageHandler */
+                    $pageHandler = new $GLOBALS['TL_PTY']['error_404']();
+
+                    $processing = false;
+
+                    return $pageHandler->getResponse(false);
+                } catch (ResponseException $pageException) {
+                    $processing = false;
+
+                    return $pageException->getResponse();
+                } catch (NotFoundHttpException $pageException) {
+                    $processing = false;
+
+                    // We can safely assume that when we get an not found exception when trying to render a not found
+                    // page, that we have to render the internal page.
+                    return null;
+                } catch (\Exception $pageException) {
+                    $processing = false;
+                    // Throwing the page exception here is intentional as we have some error handler problems!
+                    // We should never end up here.
+                    // Fixing error handling code paths is more important than the original exception.
+                    throw $pageException;
+                }
+            }
         }
 
         return null;
