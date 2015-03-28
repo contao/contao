@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class MaintenanceModeActiveHttpException extends ServiceUnavailableHttpException implements TemplateHttpExceptionInterface
+class MaintenanceModeActiveHttpException extends ServiceUnavailableHttpException
 {
     /**
      * {@inheritdoc}
@@ -30,12 +30,5 @@ class MaintenanceModeActiveHttpException extends ServiceUnavailableHttpException
         $code = 0
     ) {
         parent::__construct($retryAfter, $message, $previous, $code);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultTemplate() {
-        return 'be_unavailable';
     }
 }

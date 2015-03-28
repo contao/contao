@@ -15,9 +15,9 @@ use Contao\CoreBundle\Exception\NoPagesFoundHttpException;
 use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Contao\CoreBundle\Exception\ResponseExceptionInterface;
 use Contao\CoreBundle\Exception\RootNotFoundHttpException;
-use Contao\CoreBundle\Exception\TemplateHttpExceptionInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * Handle exceptions and create a proper response containing the error screen when debug mode is not active.
@@ -30,6 +30,24 @@ class ExceptionListener
      * @var string
      */
     private $environment;
+
+    /**
+     * Lookup map of all known exception templates in this handler.
+     *
+     * @var array
+     */
+    private static $exceptionTemplates = [
+        'Contao\CoreBundle\Exception\AccessDeniedHttpException'          => 'be_forbidden',
+        'Contao\CoreBundle\Exception\BadRequestTokenException'           => 'be_referer',
+        'Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException'   => 'be_no_forward',
+        'Contao\CoreBundle\Exception\IncompleteInstallationException'    => 'be_incomplete',
+        'Contao\CoreBundle\Exception\InsecureInstallationException'      => 'be_insecure',
+        'Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException' => 'be_unavailable',
+        'Contao\CoreBundle\Exception\NoLayoutException'                  => 'be_no_layout',
+        'Contao\CoreBundle\Exception\NoPagesFoundHttpException'          => 'be_no_active',
+        'Contao\CoreBundle\Exception\NotFoundHttpException'              => 'be_no_page',
+        'Contao\CoreBundle\Exception\RootNotFoundHttpException'          => 'be_no_root',
+    ];
 
     /**
      * Create a new instance.
@@ -57,13 +75,14 @@ class ExceptionListener
         }
 
         // FIXME: log the exception here if we do not find a better place to log via monolog from outside.
-        // FIXME: do we really want this? Better register a separate listener only in debug?
+
+        // FIXME: Register extension to only be present in env prod
         // If not in prod, exit here and let the symfony debug handler take over.
         if ($this->environment !== 'prod') {
             return;
         }
 
-
+        // Search if any exception in the chain is implementing a http exception.
         $response = $this->checkHttpExceptions($exception);
         if ($response instanceof Response) {
             $event->setResponse($response);
@@ -127,13 +146,18 @@ class ExceptionListener
             || $exception instanceof RootNotFoundHttpException
             || $exception instanceof NoPagesFoundHttpException
         ) {
-            // TODO: try to handle via rendering a 404 page first?
+            // TODO: try to handle these via rendering a 404 page first.
         }
 
-        if ($exception instanceof TemplateHttpExceptionInterface) {
-            return $this->createTemplateResponseFromException($exception->getDefaultTemplate(), $exception);
+        if ($exception instanceof HttpExceptionInterface) {
+            $candidates = array_intersect(class_parents($exception), array_keys(self::$exceptionTemplates));
+            if (!empty($candidates)) {
+                $template = self::$exceptionTemplates[$candidates[0]];
+                return $this->createTemplateResponseFromException($template, $exception);
+            }
         }
 
+        // Not one of the default exceptions, do not handle it.
         // Exception not understood.
         return null;
     }
@@ -141,12 +165,12 @@ class ExceptionListener
     /**
      * Try to create a response for the given template.
      *
-     * @param string                         $template  The name of the template to render.
-     * @param TemplateHttpExceptionInterface $exception The exception to render.
+     * @param string                 $template  The name of the template to render.
+     * @param HttpExceptionInterface $exception The exception to render.
      *
      * @return Response
      */
-    private function createTemplateResponseFromException($template, TemplateHttpExceptionInterface $exception)
+    private function createTemplateResponseFromException($template, HttpExceptionInterface $exception)
     {
         return new Response(
             $this->renderErrorTemplate(
@@ -168,7 +192,7 @@ class ExceptionListener
      */
     private function renderErrorTemplate($template, $fallbackMessage = '')
     {
-        // FIXME: make twig templates out of this.
+        // FIXME: make twig templates out of these.
         if ($response = $this->tryReadTemplate(sprintf('%s/templates/%s.html5', TL_ROOT, $template))) {
             return $response;
         } elseif ($response = $this->tryReadTemplate(

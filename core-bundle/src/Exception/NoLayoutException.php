@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class NoLayoutException extends HttpException implements TemplateHttpExceptionInterface
+class NoLayoutException extends HttpException
 {
     /**
      * {@inheritdoc}
@@ -25,12 +25,5 @@ class NoLayoutException extends HttpException implements TemplateHttpExceptionIn
     public function __construct($message = 'No layout specified', \Exception $previous = null, $code = 0)
     {
         parent::__construct(501, $message, $previous, array(), $code);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultTemplate() {
-        return 'be_no_layout';
     }
 }

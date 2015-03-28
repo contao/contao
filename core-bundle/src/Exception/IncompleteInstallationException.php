@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class IncompleteInstallationException extends ServiceUnavailableHttpException implements TemplateHttpExceptionInterface
+class IncompleteInstallationException extends ServiceUnavailableHttpException
 {
     /**
      * {@inheritdoc}
@@ -29,12 +29,5 @@ class IncompleteInstallationException extends ServiceUnavailableHttpException im
         $code = 0
     ) {
         parent::__construct($retryAfter, $message, $previous, $code);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultTemplate() {
-        return 'be_incomplete';
     }
 }

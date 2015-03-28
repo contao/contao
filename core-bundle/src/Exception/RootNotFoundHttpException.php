@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class RootNotFoundHttpException extends NotFoundHttpException implements TemplateHttpExceptionInterface
+class RootNotFoundHttpException extends NotFoundHttpException
 {
     /**
      * {@inheritdoc}
@@ -25,12 +25,5 @@ class RootNotFoundHttpException extends NotFoundHttpException implements Templat
     public function __construct($message = 'No root page found', \Exception $previous = null, $code = 0)
     {
         parent::__construct($message, $previous, $code);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultTemplate() {
-        return 'be_no_root';
     }
 }

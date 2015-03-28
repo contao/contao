@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException as BaseAcce
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class AccessDeniedHttpException extends BaseAccessDeniedHttpException implements TemplateHttpExceptionInterface
+class AccessDeniedHttpException extends BaseAccessDeniedHttpException
 {
     /**
      * {@inheritdoc}
@@ -25,12 +25,5 @@ class AccessDeniedHttpException extends BaseAccessDeniedHttpException implements
     public function __construct($message = 'Forbidden', \Exception $previous = null, $code = 0)
     {
         parent::__construct($message, $previous, $code);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultTemplate() {
-        return 'be_forbidden';
     }
 }

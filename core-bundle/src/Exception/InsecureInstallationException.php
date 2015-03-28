@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class InsecureInstallationException extends ServiceUnavailableHttpException implements TemplateHttpExceptionInterface
+class InsecureInstallationException extends ServiceUnavailableHttpException
 {
     /**
      * {@inheritdoc}
@@ -31,12 +31,5 @@ class InsecureInstallationException extends ServiceUnavailableHttpException impl
         $code = 0
     ) {
         parent::__construct($retryAfter, $message, $previous, $code);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultTemplate() {
-        return 'be_insecure';
     }
 }

@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class BadRequestTokenException extends BadRequestHttpException implements TemplateHttpExceptionInterface
+class BadRequestTokenException extends BadRequestHttpException
 {
     /**
      * {@inheritdoc}
@@ -30,12 +30,5 @@ class BadRequestTokenException extends BadRequestHttpException implements Templa
         $code = 0
     ) {
         parent::__construct($message, $previous, $code);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultTemplate() {
-        return 'be_referer';
     }
 }
