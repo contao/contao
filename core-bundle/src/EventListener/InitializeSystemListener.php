@@ -79,7 +79,7 @@ class InitializeSystemListener
             $this->router->generate($routeName, $request->attributes->get('_route_params'))
         );
 
-        $this->boot($routeName, $request->getBasePath());
+        $this->boot($request);
     }
 
     /**
@@ -89,7 +89,7 @@ class InitializeSystemListener
     {
         $this->setConstants('FE', 'console');
 
-        $this->boot(null, null);
+        $this->boot();
     }
 
     /**
@@ -133,10 +133,9 @@ class InitializeSystemListener
     /**
      * Boots the Contao framework.
      *
-     * @param string $routeName The route name
-     * @param string $basePath  The URL base path
+     * @param Request $request The current request if available
      */
-    private function boot($routeName, $basePath)
+    private function boot(Request $request = null)
     {
         $this->includeHelpers();
 
@@ -159,14 +158,14 @@ class InitializeSystemListener
         // Register the class loader
         ClassLoader::scanAndRegister();
 
-        $this->setRelativePath($basePath);
+        $this->setRelativePath($request ? $request->getBasePath() : '');
         $this->startSession();
         $this->setDefaultLanguage();
 
         // Fully load the configuration
         $objConfig = Config::getInstance();
 
-        $this->validateInstallation($objConfig, $routeName);
+        $this->validateInstallation($objConfig, $request);
 
         Input::initialize();
 
@@ -276,17 +275,22 @@ class InitializeSystemListener
     /**
      * Validates the installation.
      *
-     * @param Config $config    The config object
-     * @param string $routeName The route name
+     * @param Config  $config  The config object
+     * @param Request $request The current request if available
      */
-    private function validateInstallation(Config $config, $routeName)
+    private function validateInstallation(Config $config, Request $request = null)
     {
-        if ('cli' === PHP_SAPI || 'contao_backend_install' === $routeName) {
+        if (null === $request
+            || 'contao_backend_install' === $request->attributes->get('_route')
+        ) {
             return;
         }
 
         // Show the "insecure document root" message
-        if ('/web' === substr(Environment::get('path'), -4)) {
+        // FIXME: add unit tests for this as soon as die_nicely is an exception
+        if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1'])
+            && '/web' === substr($request->getBasePath(), -4)
+        ) {
             die_nicely('be_insecure', 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
         }
 
