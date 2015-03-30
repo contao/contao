@@ -53,7 +53,7 @@ class ExceptionListener
     ];
 
     /**
-     * Create a new instance.
+     * Constructor.
      *
      * @param bool   $renderErrorScreens Flag if the error screens shall be rendered.
      * @param string $rootDir            The kernel root directory for reading the templates
@@ -66,7 +66,9 @@ class ExceptionListener
     }
 
     /**
-     * Forwards the request to the Frontend class if there is a page object.
+     * Try to handle the exception and create a response for known exception types.
+     *
+     * If the listener is configured to display the pretty error screens, it will do so.
      *
      * @param GetResponseForExceptionEvent $event The event object
      */
