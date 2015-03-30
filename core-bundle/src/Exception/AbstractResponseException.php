@@ -33,7 +33,7 @@ abstract class AbstractResponseException extends \RuntimeException implements Re
      *
      * @param \Exception $previous The previous exception used for the exception chaining
      */
-    public function __construct($response, \Exception $previous = null)
+    public function __construct(Response $response, \Exception $previous = null)
     {
         parent::__construct('Contao Response', 0, $previous);
 
