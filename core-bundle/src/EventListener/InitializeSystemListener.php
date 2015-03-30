@@ -73,10 +73,11 @@ class InitializeSystemListener
         }
 
         $routeName = $request->attributes->get('_route');
+        $route     = $this->router->generate($routeName, $request->attributes->get('_route_params'));
 
         $this->setConstants(
             $this->getScopeFromRequest($request),
-            $this->router->generate($routeName, $request->attributes->get('_route_params'))
+            substr($route, strlen($request->getBasePath())+1)
         );
 
         $this->boot($request);
@@ -121,7 +122,7 @@ class InitializeSystemListener
         define('TL_START', microtime(true));
         define('TL_ROOT', $this->rootDir);
         define('TL_REFERER_ID', substr(md5(TL_START), 0, 8));
-        define('TL_SCRIPT', ltrim($route, '/'));
+        define('TL_SCRIPT', $route);
 
         // Define the login status constants in the back end (see #4099, #5279)
         if ('BE' === TL_MODE) {
