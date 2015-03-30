@@ -77,7 +77,7 @@ class InitializeSystemListener
 
         $this->setConstants(
             $this->getScopeFromRequest($request),
-            substr($route, strlen($request->getBasePath()))
+            substr($route, strlen($request->getBasePath())+1)
         );
 
         $this->boot($routeName, $request->getBasePath());
