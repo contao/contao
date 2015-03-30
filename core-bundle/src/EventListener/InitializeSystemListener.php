@@ -133,7 +133,7 @@ class InitializeSystemListener
     /**
      * Boots the Contao framework.
      *
-     * @param Request $request The current request if available
+     * @param Request $request The request object
      */
     private function boot(Request $request = null)
     {
@@ -280,17 +280,13 @@ class InitializeSystemListener
      */
     private function validateInstallation(Config $config, Request $request = null)
     {
-        if (null === $request
-            || 'contao_backend_install' === $request->attributes->get('_route')
-        ) {
+        if (null === $request || 'contao_backend_install' === $request->attributes->get('_route')) {
             return;
         }
 
         // Show the "insecure document root" message
         // FIXME: add unit tests for this as soon as die_nicely is an exception
-        if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1'])
-            && '/web' === substr($request->getBasePath(), -4)
-        ) {
+        if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) && '/web' === substr($request->getBasePath(), -4)) {
             die_nicely('be_insecure', 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
         }
 
