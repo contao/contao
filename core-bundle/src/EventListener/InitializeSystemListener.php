@@ -10,11 +10,9 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\Automator;
 use Contao\ClassLoader;
 use Contao\Config;
 use Contao\CoreBundle\Command\ContaoFrameworkDependentInterface;
-use Contao\CoreBundle\Command\FrameworkDependentCommandInterface;
 use Contao\Environment;
 use Contao\Input;
 use Contao\RequestToken;
