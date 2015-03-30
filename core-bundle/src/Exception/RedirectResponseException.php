@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Exception;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -34,7 +35,7 @@ class RedirectResponseException extends AbstractResponseException
      */
     public static function create($location, $status = 303, $headers = array())
     {
-        return new static(new Response('', $status, array_merge(['Location' => $location], $headers)));
+        return new static(new RedirectResponse($location, $status, $headers));
     }
 
     /**
