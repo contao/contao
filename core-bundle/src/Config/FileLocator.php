@@ -47,7 +47,7 @@ class FileLocator implements FileLocatorInterface
      */
     public function locate($name, $currentPath = null, $first = false)
     {
-        if ('' == $name) {
+        if ('' === $name) {
             throw new \InvalidArgumentException('An empty file name is not valid to be located.');
         }
 
