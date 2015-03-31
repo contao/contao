@@ -65,7 +65,7 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (true === self::$booted || !$this->isFrontendMasterRequest($event) && !$this->isBackendMasterRequest($event)) {
+        if (true === self::$booted || (!$this->isFrontendScope() && !$this->isBackendScope())) {
             return;
         }
 
