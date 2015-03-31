@@ -12,6 +12,8 @@ namespace Contao\CoreBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -19,8 +21,13 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InstallCommand extends LockedCommand
+class InstallCommand extends LockedCommand implements ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface|null
+     */
+    private $container;
+
     /**
      * @var array
      */
@@ -51,6 +58,14 @@ class InstallCommand extends LockedCommand
     /**
      * {@inheritdoc}
      */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -64,14 +79,15 @@ class InstallCommand extends LockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $fs = new Filesystem();
+        $fs      = new Filesystem();
+        $rootDir = dirname($this->container->getParameter('kernel.root_dir'));
 
         foreach ($this->emptyDirs as $path) {
-            $this->addEmptyDir(getcwd() . "/$path", $fs, $output);
+            $this->addEmptyDir("$rootDir/$path", $fs, $output);
         }
 
         foreach ($this->ignoredDirs as $path) {
-            $this->addIgnoredDir(getcwd() . "/$path", $fs, $output);
+            $this->addIgnoredDir("$rootDir/$path", $fs, $output);
         }
 
         return 0;
