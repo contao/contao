@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Test;
 
 use Contao\Config;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
-use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
 use Contao\Environment;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
@@ -118,11 +117,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->addScope(new Scope('frontend')); // FIXME: Scope('frontend', 'request')?
         $container->addScope(new Scope('backend')); // FIXME: Scope('backend', 'request')?
-
-        $container->set(
-            'contao.resource_provider',
-            new ResourceProvider([$this->getRootDir() . '/system/modules/foobar'])
-        );
 
         $kernel
             ->expects($this->any())

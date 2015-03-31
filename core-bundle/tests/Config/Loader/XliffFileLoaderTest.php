@@ -113,9 +113,9 @@ TXT
             $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf', 'de'
         );
 
-        $this->assertEquals('This is the first source', $GLOBALS['TL_LANG']['MSC']['first']);
-        $this->assertEquals('This is the second source', $GLOBALS['TL_LANG']['MSC']['second'][0]);
-        $this->assertEquals('This is the third source', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
+        $this->assertEquals('This is the first target', $GLOBALS['TL_LANG']['MSC']['first']);
+        $this->assertEquals('This is the second target', $GLOBALS['TL_LANG']['MSC']['second'][0]);
+        $this->assertEquals('This is the third target', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
     }
 
     /**

@@ -284,6 +284,18 @@ class InitializeSystemListenerTest extends TestCase
         $container->addScope(new Scope('frontend'));
         $container->addScope(new Scope('backend'));
 
+        $kernel
+            ->expects($this->any())
+            ->method('getBundles')
+            ->willReturn([])
+        ;
+
+        $kernel
+            ->expects($this->any())
+            ->method('getContainer')
+            ->willReturn($container)
+        ;
+
         $container->set(
             'contao.resource_locator',
             new FileLocator($kernel)
@@ -293,18 +305,6 @@ class InitializeSystemListenerTest extends TestCase
             'contao.cached_resource_locator',
             new FileLocator($kernel)
         );
-
-        $kernel
-            ->expects($this->any())
-            ->method('getContainer')
-            ->willReturn($container)
-        ;
-
-        $kernel
-            ->expects($this->any())
-            ->method('getBundles')
-            ->willReturn([])
-        ;
 
         return $kernel;
     }
