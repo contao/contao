@@ -115,8 +115,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         );
 
         $container = new Container();
-        $container->addScope(new Scope('frontend')); // FIXME: Scope('frontend', 'request')?
-        $container->addScope(new Scope('backend')); // FIXME: Scope('backend', 'request')?
+        $container->addScope(new Scope('frontend'));
+        $container->addScope(new Scope('backend'));
 
         $kernel
             ->expects($this->any())
