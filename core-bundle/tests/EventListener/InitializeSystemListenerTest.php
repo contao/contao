@@ -120,38 +120,6 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
-     * Tests a request without route.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testWithoutRoute()
-    {
-        global $kernel;
-
-        /** @var Kernel $kernel */
-        $kernel    = $this->mockKernel();
-        $container = $kernel->getContainer();
-
-        $listener = new InitializeSystemListener(
-            $this->mockRouter('/index.html'),
-            $this->getRootDir() . '/app'
-        );
-
-        $listener->setContainer($container);
-        $container->enterScope('frontend');
-
-        $request = new Request();
-
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onKernelRequest($event);
-
-        $this->assertFalse(defined('TL_MODE'));
-        $this->assertFalse(defined('TL_SCRIPT'));
-        $this->assertFalse(defined('TL_ROOT'));
-    }
-
-    /**
      * Tests a request without scope.
      *
      * @runInSeparateProcess

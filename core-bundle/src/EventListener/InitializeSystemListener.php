@@ -60,13 +60,12 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $request = $event->getRequest();
-
         if (!$this->isFrontendMasterRequest($event) && !$this->isBackendMasterRequest($event)) {
             return;
         }
 
-        $route = $this->router->generate(
+        $request = $event->getRequest();
+        $route   = $this->router->generate(
             $request->attributes->get('_route'),
             $request->attributes->get('_route_params')
         );
