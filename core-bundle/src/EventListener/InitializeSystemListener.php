@@ -10,16 +10,16 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\Automator;
 use Contao\ClassLoader;
 use Contao\Config;
+use Contao\CoreBundle\Command\ContaoFrameworkDependentInterface;
 use Contao\Environment;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -29,7 +29,7 @@ use Symfony\Component\Routing\RouterInterface;
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InitializeSystemListener
+class InitializeSystemListener extends ScopeAwareListener
 {
     /**
      * @var RouterInterface
@@ -57,26 +57,22 @@ class InitializeSystemListener
      * Initializes the system upon kernel.request.
      *
      * @param GetResponseEvent $event The event object
-     *
-     * @throws RouteNotFoundException If the request does not have a route
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$event->isMasterRequest()) {
+        if (!$this->isFrontendMasterRequest($event) && !$this->isBackendMasterRequest($event)) {
             return;
         }
 
         $request = $event->getRequest();
 
-        if (!$request->attributes->has('_route')) {
-            throw new RouteNotFoundException('Cannot initialize the Contao framework without a route');
-        }
-
-        $routeName = $request->attributes->get('_route');
-        $route     = $this->router->generate($routeName, $request->attributes->get('_route_params'));
+        $route = $this->router->generate(
+            $request->attributes->get('_route'),
+            $request->attributes->get('_route_params')
+        );
 
         $this->setConstants(
-            $this->getScopeFromRequest($request),
+            $this->getScopeFromContainer(),
             substr($route, strlen($request->getBasePath()) + 1)
         );
 
@@ -86,27 +82,32 @@ class InitializeSystemListener
     /**
      * Initializes the system upon console.command.
      */
-    public function onConsoleCommand()
+    public function onConsoleCommand(ConsoleCommandEvent $event)
     {
-        $this->setConstants('FE', 'console');
+        if (!$event->getCommand() instanceof ContaoFrameworkDependentInterface) {
+            return;
+        }
 
+        $this->setConstants('FE', 'console');
         $this->boot();
     }
 
     /**
-     * Returns the request scope.
+     * Returns the TL_MODE value for the container scope.
      *
-     * @param Request $request The request object
-     *
-     * @return string The request scope
+     * @return string The TL_MODE value
      */
-    private function getScopeFromRequest(Request $request)
+    private function getScopeFromContainer()
     {
-        if ($request->attributes->has('_scope') && 'backend' === $request->attributes->get('_scope')) {
+        if ($this->isBackendScope()) {
             return 'BE';
         }
 
-        return 'FE';
+        if ($this->isFrontendScope()) {
+            return 'FE';
+        }
+
+        return null;
     }
 
     /**

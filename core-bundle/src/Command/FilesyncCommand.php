@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FilesyncCommand extends LockedCommand
+class FilesyncCommand extends LockedCommand implements ContaoFrameworkDependentInterface
 {
     /**
      * {@inheritdoc}

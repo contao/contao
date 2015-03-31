@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class VersionCommand extends Command
+class VersionCommand extends Command implements ContaoFrameworkDependentInterface
 {
     /**
      * {@inheritdoc}
@@ -37,7 +37,7 @@ class VersionCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(VERSION . '.' . BUILD);
+        $output->writeln(VERSION . '.' . BUILD); // FIXME: use the packages cache?
 
         return 0;
     }

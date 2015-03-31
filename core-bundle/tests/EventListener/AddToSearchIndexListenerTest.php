@@ -15,7 +15,6 @@ use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests the AddToSearchIndexListener class.
@@ -35,17 +34,59 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * Tests adding a response to the event.
+     * Tests that the listener does nothing if the Contao framework is not booted.
      */
-    public function testOnKernelRequest()
+    public function testWithoutContaoFramework()
     {
-        /** @var HttpKernelInterface $kernel */
+        $listener = new AddToSearchIndexListener();
+        $event    = $this->mockPostResponseEvent();
+
+        $event
+            ->expects($this->never())
+            ->method('getResponse')
+        ;
+
+        $listener->onKernelTerminate($event);
+    }
+
+    /**
+     * Tests that the listener does use the response if the Contao framework is booted.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testWithContaoFramework()
+    {
+        $this->bootContaoFramework();
+
+        $listener = new AddToSearchIndexListener();
+        $event    = $this->mockPostResponseEvent();
+
+        $event
+            ->expects($this->once())
+            ->method('getResponse')
+        ;
+
+        $listener->onKernelTerminate($event);
+    }
+
+    /**
+     * Returns a PostResponseEvent mock object.
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|PostResponseEvent
+     */
+    private function mockPostResponseEvent()
+    {
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request();
         $response = new Response();
-        $event    = new PostResponseEvent($kernel, $request, $response);
-        $listener = new AddToSearchIndexListener();
 
-        $listener->onKernelTerminate($event);
+        $event = $this->getMock(
+            'Symfony\Component\HttpKernel\Event\PostResponseEvent',
+            ['getResponse'],
+            [$kernel, $request, $response]
+        );
+
+        return $event;
     }
 }

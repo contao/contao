@@ -12,6 +12,8 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\ToggleViewListener;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,25 +38,9 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests no response without query parameter.
+     * Tests that there is no response if there is no container.
      */
-    public function testNoView()
-    {
-        /** @var HttpKernelInterface $kernel */
-        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request  = new Request();
-        $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener();
-
-        $listener->onKernelRequest($event);
-
-        $this->assertFalse($event->hasResponse());
-    }
-
-    /**
-     * Tests response with correct cookie on toggle_view=desktop query parameter.
-     */
-    public function testDesktopView()
+    public function testWithoutContainer()
     {
         /** @var HttpKernelInterface $kernel */
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
@@ -62,6 +48,77 @@ class ToggleViewListenerTest extends TestCase
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener = new ToggleViewListener();
 
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse($event->hasResponse());
+    }
+
+    /**
+     * Tests that there is no repsonse if the scope is not "frontend".
+     */
+    public function testNotInFrontend()
+    {
+        /** @var HttpKernelInterface $kernel */
+        $kernel    = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $container = new Container();
+        $request   = new Request(['toggle_view' => 'desktop']);
+        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener  = new ToggleViewListener();
+
+        $container->addScope(new Scope('backend'));
+        $container->enterScope('backend');
+
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->setContainer($container);
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse($event->hasResponse());
+    }
+
+    /**
+     * Tests that there is no repsonse if there are no query parameters.
+     */
+    public function testNoView()
+    {
+        /** @var HttpKernelInterface $kernel */
+        $kernel    = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $container = new Container();
+        $request   = new Request();
+        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener  = new ToggleViewListener();
+
+        $container->addScope(new Scope('frontend'));
+        $container->enterScope('frontend');
+
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->setContainer($container);
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse($event->hasResponse());
+    }
+
+    /**
+     * Tests that there is a repsonse with a correct cookie for the desktop view.
+     */
+    public function testDesktopView()
+    {
+        /** @var HttpKernelInterface $kernel */
+        $kernel    = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $container = new Container();
+        $request   = new Request(['toggle_view' => 'desktop']);
+        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener  = new ToggleViewListener();
+
+        $container->addScope(new Scope('frontend'));
+        $container->enterScope('frontend');
+
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->setContainer($container);
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
@@ -69,16 +126,23 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests response with correct cookie on toggle_view=mobile query parameter.
+     * Tests that there is a repsonse with a correct cookie for the mobile view.
      */
     public function testMobileView()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request  = new Request(['toggle_view' => 'mobile']);
-        $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener();
+        $kernel    = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $container = new Container();
+        $request   = new Request(['toggle_view' => 'mobile']);
+        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener  = new ToggleViewListener();
 
+        $container->addScope(new Scope('frontend'));
+        $container->enterScope('frontend');
+
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->setContainer($container);
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
@@ -86,16 +150,23 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests response with correct cookie on toggle_view=foobar query parameter.
+     * Tests that there is a repsonse with a correct cookie for an invalid view.
      */
     public function testInvalidView()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request  = new Request(['toggle_view' => 'foobar']);
-        $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener();
+        $kernel    = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $container = new Container();
+        $request   = new Request(['toggle_view' => 'foobar']);
+        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener  = new ToggleViewListener();
 
+        $container->addScope(new Scope('frontend'));
+        $container->enterScope('frontend');
+
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->setContainer($container);
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
@@ -109,16 +180,23 @@ class ToggleViewListenerTest extends TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel     = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $container  = new Container();
         $request    = new Request(['toggle_view' => 'desktop']);
         $event      = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener   = new ToggleViewListener();
         $reflection = new \ReflectionClass($request);
+
+        $container->addScope(new Scope('frontend'));
+        $container->enterScope('frontend');
+
+        $request->attributes->set('_route', 'dummy');
 
         // Set the base path to /foo/bar
         $basePath = $reflection->getProperty('basePath');
         $basePath->setAccessible(true);
         $basePath->setValue($request, '/foo/bar');
 
+        $listener->setContainer($container);
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());

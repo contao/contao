@@ -10,11 +10,12 @@
 
 namespace Contao\CoreBundle;
 
-use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\OptimizeContaoResourcesPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -47,10 +48,10 @@ class ContaoCoreBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new AddContaoResourcesPass($this->getPath() . '/Resources/contao'));
+        $rootDir = $container->getParameter('kernel.root_dir');
 
-        $container->addCompilerPass(
-            new OptimizeContaoResourcesPass($container->getParameter('kernel.root_dir')), PassConfig::TYPE_OPTIMIZE
-        );
+        $container->addCompilerPass(new AddContaoResourcesPass($this->getPath() . '/Resources/contao'));
+        $container->addCompilerPass(new AddPackagesPass("$rootDir/../vendor/composer/installed.json"));
+        $container->addCompilerPass(new OptimizeContaoResourcesPass($rootDir), PassConfig::TYPE_OPTIMIZE);
     }
 }

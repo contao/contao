@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -382,12 +383,17 @@ class PageRegular extends \Frontend
 			$GLOBALS['TL_JAVASCRIPT'] = array();
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$arrPackages = $kernel->getContainer()->getParameter('kernel.packages');
+
 		// jQuery scripts
 		if ($objLayout->addJQuery)
 		{
 			if ($objLayout->jSource == 'j_googleapis' || $objLayout->jSource == 'j_fallback')
 			{
-				if (($strVersion = \System::getComponentVersion('contao-components/jquery')) !== null)
+				if (($strVersion = $arrPackages['contao-components/jquery']) !== null)
 				{
 					$this->Template->mooScripts .= \Template::generateScriptTag('//code.jquery.com/jquery-' . $strVersion . '.min.js') . "\n";
 
@@ -413,7 +419,7 @@ class PageRegular extends \Frontend
 		{
 			if ($objLayout->mooSource == 'moo_googleapis' || $objLayout->mooSource == 'moo_fallback')
 			{
-				if (($strVersion = \System::getComponentVersion('contao-components/mootools')) !== null)
+				if (($strVersion = $arrPackages['contao-components/mootools']) !== null)
 				{
 					$this->Template->mooScripts .= \Template::generateScriptTag('//ajax.googleapis.com/ajax/libs/mootools/' . $strVersion . '/mootools-yui-compressed.js') . "\n";
 

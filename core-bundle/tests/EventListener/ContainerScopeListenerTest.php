@@ -16,8 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -38,9 +38,9 @@ class ContainerScopeListenerTest extends TestCase
     }
 
     /**
-     * Tests the onKernelController method.
+     * Tests the onKernelRequest method.
      */
-    public function testOnKernelController()
+    public function testOnKernelRequest()
     {
         $container = new ContainerBuilder();
         $listener  = new ContainerScopeListener($container);
@@ -48,12 +48,11 @@ class ContainerScopeListenerTest extends TestCase
         /** @var HttpKernelInterface $kernel */
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request();
-        $response = new Response();
 
         $container->addScope(new Scope('backend'));
         $request->attributes->set('_scope', 'backend');
 
-        $listener->onKernelController(new FilterControllerEvent($kernel, function () {}, $request, $response));
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
         $this->assertTrue($container->hasScope('backend'));
         $this->assertTrue($container->isScopeActive('backend'));
@@ -93,11 +92,10 @@ class ContainerScopeListenerTest extends TestCase
         /** @var HttpKernelInterface $kernel */
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request();
-        $response = new Response();
 
         $container->addScope(new Scope('backend'));
 
-        $listener->onKernelController(new FilterControllerEvent($kernel, function () {}, $request, $response));
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
         $this->assertTrue($container->hasScope('backend'));
         $this->assertFalse($container->isScopeActive('backend'));
@@ -114,11 +112,10 @@ class ContainerScopeListenerTest extends TestCase
         /** @var HttpKernelInterface $kernel */
         $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request  = new Request();
-        $response = new Response();
 
         $request->attributes->set('_scope', 'backend');
 
-        $listener->onKernelController(new FilterControllerEvent($kernel, function () {}, $request, $response));
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
         $this->assertFalse($container->hasScope('backend'));
         $this->assertFalse($container->isScopeActive('backend'));

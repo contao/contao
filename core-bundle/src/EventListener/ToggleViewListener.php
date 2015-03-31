@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ToggleViewListener
+class ToggleViewListener extends ScopeAwareListener
 {
     /**
      * Toggles the TL_VIEW cookie and redirects back to the referring page.
@@ -32,21 +32,30 @@ class ToggleViewListener
     {
         $request = $event->getRequest();
 
-        if (!$request->query->has('toggle_view')) {
+        if (!$this->isFrontendMasterRequest($event) || !$request->query->has('toggle_view')) {
             return;
         }
 
-        $state    = $request->query->get('toggle_view');
-        $referer  = System::getReferer();
-        $response = new RedirectResponse($referer, 303);
+        $response = new RedirectResponse(System::getReferer(), 303);
+        $response->headers->setCookie($this->getCookie($request->query->get('toggle_view'), $request->getBasePath()));
 
-        if ('mobile' === $state) {
-            $cookie = new Cookie('TL_VIEW', 'mobile', 0, $request->getBasePath());
-        } else {
-            $cookie = new Cookie('TL_VIEW', 'desktop', 0, $request->getBasePath());
+        $event->setResponse($response);
+    }
+
+    /**
+     * Generates the TL_VIEW cookie based on the toggle_view value.
+     *
+     * @param string $value    The cookie value
+     * @param string $basePath The request base path
+     *
+     * @return Cookie The cookie object
+     */
+    private function getCookie($value, $basePath)
+    {
+        if ('mobile' !== $value) {
+            $value = 'desktop';
         }
 
-        $response->headers->setCookie($cookie);
-        $event->setResponse($response);
+        return new Cookie('TL_VIEW', $value, 0, $basePath);
     }
 }
