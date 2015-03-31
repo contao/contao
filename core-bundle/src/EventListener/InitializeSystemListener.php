@@ -65,9 +65,12 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (true === static::$booted || !$this->isFrontendMasterRequest($event) && !$this->isBackendMasterRequest($event)) {
+        if (true === self::$booted || !$this->isFrontendMasterRequest($event) && !$this->isBackendMasterRequest($event)) {
             return;
         }
+
+        // Set before calling any methods to prevent recursive booting
+        self::$booted = true;
 
         $request = $event->getRequest();
 
@@ -89,11 +92,14 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     public function onConsoleCommand(ConsoleCommandEvent $event)
     {
-        if (true === static::$booted
+        if (true === self::$booted
             || (!$event->getCommand() instanceof ContaoFrameworkDependentInterface)
         ) {
             return;
         }
+
+        // Set before calling any methods to prevent recursive booting
+        self::$booted = true;
 
         $this->setConstants('FE', 'console');
         $this->boot();
@@ -122,8 +128,10 @@ class InitializeSystemListener extends ScopeAwareListener
      *
      * @param string $scope The scope (BE or FE)
      * @param string $route The route
+     *
+     * @internal only protected for unit tests
      */
-    private function setConstants($scope, $route)
+    protected function setConstants($scope, $route)
     {
         // The constants are deprecated and will be removed in version 5.0.
         define('TL_MODE', $scope);
@@ -143,11 +151,11 @@ class InitializeSystemListener extends ScopeAwareListener
      * Boots the Contao framework.
      *
      * @param Request $request The request object
+     *
+     * @internal only protected for unit tests
      */
-    private function boot(Request $request = null)
+    protected function boot(Request $request = null)
     {
-        static::$booted = true;
-
         $this->includeHelpers();
 
         // Try to disable the PHPSESSID
