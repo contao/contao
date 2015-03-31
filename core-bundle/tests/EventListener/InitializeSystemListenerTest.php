@@ -20,11 +20,12 @@ use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -55,10 +56,12 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testFrontendRequest()
     {
+        /** @var KernelInterface $kernel */
         global $kernel;
 
-        /** @var Kernel $kernel */
-        $kernel    = $this->mockKernel();
+        $kernel = $this->mockKernel();
+
+        /** @var ContainerInterface $container */
         $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
@@ -91,10 +94,12 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testBackendRequest()
     {
+        /** @var KernelInterface $kernel */
         global $kernel;
 
-        /** @var Kernel $kernel */
-        $kernel    = $this->mockKernel();
+        $kernel = $this->mockKernel();
+
+        /** @var ContainerInterface $container */
         $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
@@ -120,17 +125,20 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
-     * Tests that the Contao framework is initialized on subrequest if master request is not within scope.
+     * Tests that the Contao framework is initialized upon a sub request
+     * if the master request is not within the scope.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
     public function testFrontendSubRequest()
     {
+        /** @var KernelInterface $kernel */
         global $kernel;
 
-        /** @var Kernel $kernel */
-        $kernel    = $this->mockKernel();
+        $kernel = $this->mockKernel();
+
+        /** @var ContainerInterface $container */
         $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
@@ -159,17 +167,19 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
-     * Tests a request without scope.
+     * Tests a request without a scope.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
     public function testWithoutScope()
     {
+        /** @var KernelInterface $kernel */
         global $kernel;
 
-        /** @var Kernel $kernel */
-        $kernel    = $this->mockKernel();
+        $kernel = $this->mockKernel();
+
+        /** @var ContainerInterface $container */
         $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
@@ -197,9 +207,9 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testWithoutContainer()
     {
+        /** @var KernelInterface $kernel */
         global $kernel;
 
-        /** @var Kernel $kernel */
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
@@ -218,17 +228,19 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
-     * Tests the Contao framework is not booted twice on subsequent requests.
+     * Tests that the Contao framework is not booted twice upon kernel.request.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testNotBootedTwiceOnKernelRequest()
+    public function testNotBootedTwiceUponKernelRequest()
     {
+        /** @var KernelInterface $kernel */
         global $kernel;
 
-        /** @var Kernel $kernel */
         $kernel = $this->mockKernel();
+
+        /** @var ContainerInterface $container */
         $container = $kernel->getContainer();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|InitializeSystemListener $listener */
@@ -243,11 +255,13 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener
             ->expects($this->once())
-            ->method('setConstants');
+            ->method('setConstants')
+        ;
 
         $listener
             ->expects($this->once())
-            ->method('boot');
+            ->method('boot')
+        ;
 
         $listener->setContainer($container);
         $container->enterScope('frontend');
@@ -267,9 +281,9 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testConsoleCommand()
     {
+        /** @var KernelInterface $kernel */
         global $kernel;
 
-        /** @var Kernel $kernel */
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
@@ -287,16 +301,16 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
-     * Tests the Contao framework is not booted twice on second console command.
+     * Tests that the Contao framework is not booted twice upon console.command.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testNotBootedTwiceOnConsoleCommand()
+    public function testNotBootedTwiceUponConsoleCommand()
     {
+        /** @var KernelInterface $kernel */
         global $kernel;
 
-        /** @var Kernel $kernel */
         $kernel = $this->mockKernel();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|InitializeSystemListener $listener */
@@ -311,11 +325,13 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener
             ->expects($this->once())
-            ->method('setConstants');
+            ->method('setConstants')
+        ;
 
         $listener
             ->expects($this->once())
-            ->method('boot');
+            ->method('boot')
+        ;
 
         $listener->onConsoleCommand(
             new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
@@ -329,7 +345,7 @@ class InitializeSystemListenerTest extends TestCase
     /**
      * Mocks a Contao kernel.
      *
-     * @return Kernel The kernel mock object
+     * @return KernelInterface The kernel mock object
      */
     private function mockKernel()
     {

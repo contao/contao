@@ -88,9 +88,7 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     public function onConsoleCommand(ConsoleCommandEvent $event)
     {
-        if (true === self::$booted
-            || (!$event->getCommand() instanceof ContaoFrameworkDependentInterface)
-        ) {
+        if (true === self::$booted || (!$event->getCommand() instanceof ContaoFrameworkDependentInterface)) {
             return;
         }
 
@@ -125,7 +123,7 @@ class InitializeSystemListener extends ScopeAwareListener
      * @param string $scope The scope (BE or FE)
      * @param string $route The route
      *
-     * @internal only protected for unit tests
+     * @internal
      */
     protected function setConstants($scope, $route)
     {
@@ -148,7 +146,7 @@ class InitializeSystemListener extends ScopeAwareListener
      *
      * @param Request $request The request object
      *
-     * @internal only protected for unit tests
+     * @internal
      */
     protected function boot(Request $request = null)
     {
