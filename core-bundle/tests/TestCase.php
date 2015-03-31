@@ -117,39 +117,25 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ['test', false]
         );
 
-        $bundle = $this->getMock(
-            'Symfony\Component\HttpKernel\Bundle\Bundle',
-            ['getName', 'getPath'],
-            [],
-            'TestBundle'
-        );
-
-        $bundle
-            ->expects($this->any())
-            ->method('getPath')
-            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle')
-        ;
-
-        $module = new ContaoModuleBundle('foobar', $this->getRootDir() . '/app');
-
-        $kernel
-            ->expects($this->any())
-            ->method('getBundles')
-            ->willReturn([$bundle, $module])
-        ;
-
         $container = new Container();
         $container->addScope(new Scope('frontend'));
         $container->addScope(new Scope('backend'));
 
+        $locator = new FileLocator(
+            [
+                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+            ]
+        );
+
         $container->set(
             'contao.resource_locator',
-            new FileLocator($kernel)
+            $locator
         );
 
         $container->set(
             'contao.cached_resource_locator',
-            new CombinedFileLocator($this->getCacheDir(), new FileLocator($kernel))
+            new CombinedFileLocator($this->getCacheDir(), $locator)
         );
 
         $kernel

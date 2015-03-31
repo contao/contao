@@ -34,7 +34,12 @@ class FileLocatorTest extends TestCase
      */
     protected function setUp()
     {
-        $this->locator = new FileLocator($this->mockKernel());
+        $this->locator = new FileLocator(
+            [
+                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+            ]
+        );
     }
 
     /**
@@ -140,12 +145,8 @@ class FileLocatorTest extends TestCase
         $this->assertContains('foobar', $bundles);
     }
 
-    /**
-     * Returns a mocked kernel object.
-     *
-     * @return Kernel The kernel object.
-     */
-    private function mockKernel()
+
+    public function testFactory()
     {
         $kernel = $this->getMock(
             'Symfony\Component\HttpKernel\Kernel',
@@ -200,6 +201,11 @@ class FileLocatorTest extends TestCase
             ->willReturn([$bundle, $module])
         ;
 
-        return $kernel;
+        $locator = FileLocator::createFromKernelBundles($kernel);
+        $files   = $locator->locate('config/config.php');
+
+        $this->assertCount(2, $files);
+        $this->assertContains($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/config.php', $files);
+        $this->assertContains($this->getRootDir() . '/system/modules/foobar/config/config.php', $files);
     }
 }
