@@ -41,7 +41,7 @@ class ChainFileLocator implements FileLocatorInterface
     {
         $files = [];
 
-        foreach ($this->getLocators($first) as $locator) {
+        foreach ($this->locators as $locator) {
             try {
                 $file = $locator->locate($name, $currentPath, $first);
 
@@ -49,7 +49,10 @@ class ChainFileLocator implements FileLocatorInterface
                     return $file;
                 }
 
-                $files = array_merge($files, (is_array($file) ? $file : [$file]));
+                $files = $this->mergeFiles(
+                    (is_array($file) ? $file : [$file]),
+                    $files
+                );
             } catch (\InvalidArgumentException $e) {
                 // Try the next locator
             }
@@ -63,18 +66,23 @@ class ChainFileLocator implements FileLocatorInterface
     }
 
     /**
-     * Reverses the locator order so that higher priority locators overwrite lower priority ones.
+     * Adds new files to existing array without overwriting existing keys, except if they are numeric.
      *
-     * @param bool $first Whether to return the first occurrence or an array of filenames
+     * @param array $newFiles The files to be added
+     * @param array $allFiles The existing files
      *
-     * @return FileLocatorInterface[] The locators array
+     * @return array Merged list of files
      */
-    private function getLocators($first)
+    private function mergeFiles(array $newFiles, array $allFiles)
     {
-        if (false === $first) {
-            return array_reverse($this->locators);
+        foreach ($newFiles as $k => $v) {
+            if (is_numeric($k)) {
+                $allFiles[] = $v;
+            } elseif (!isset($allFiles[$k])) {
+                $allFiles[$k] = $v;
+            }
         }
 
-        return $this->locators;
+        return $allFiles;
     }
 }

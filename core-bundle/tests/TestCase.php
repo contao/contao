@@ -11,7 +11,10 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\Config;
+use Contao\CoreBundle\Config\CombinedFileLocator;
+use Contao\CoreBundle\Config\FileLocator;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\Environment;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
@@ -114,9 +117,40 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ['test', false]
         );
 
+        $bundle = $this->getMock(
+            'Symfony\Component\HttpKernel\Bundle\Bundle',
+            ['getName', 'getPath'],
+            [],
+            'TestBundle'
+        );
+
+        $bundle
+            ->expects($this->any())
+            ->method('getPath')
+            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle')
+        ;
+
+        $module = new ContaoModuleBundle('foobar', $this->getRootDir() . '/app');
+
+        $kernel
+            ->expects($this->any())
+            ->method('getBundles')
+            ->willReturn([$bundle, $module])
+        ;
+
         $container = new Container();
-        $container->addScope(new Scope('frontend')); // FIXME: Scope('frontend', 'request')?
-        $container->addScope(new Scope('backend')); // FIXME: Scope('backend', 'request')?
+        $container->addScope(new Scope('frontend'));
+        $container->addScope(new Scope('backend'));
+
+        $container->set(
+            'contao.resource_locator',
+            new FileLocator($kernel)
+        );
+
+        $container->set(
+            'contao.cached_resource_locator',
+            new CombinedFileLocator($this->getCacheDir(), new FileLocator($kernel))
+        );
 
         $kernel
             ->expects($this->any())

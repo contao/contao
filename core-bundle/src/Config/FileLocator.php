@@ -30,11 +30,11 @@ class FileLocator implements FileLocatorInterface
     /**
      * Constructor.
      *
-     * @param KernelInterface $kernel A KernelInterface instance
+     * @param array $paths An array of paths with bundle name as key.
      */
-    public function __construct(KernelInterface $kernel)
+    public function __construct(array $paths)
     {
-        $this->paths = $this->findResourcesPaths($kernel->getBundles());
+        $this->paths = $paths;
     }
 
     /**
@@ -68,23 +68,23 @@ class FileLocator implements FileLocatorInterface
     }
 
     /**
-     * Finds the resources paths in an array of bundles.
+     * Create instance of FileLocator with bundle paths from kernel.
      *
-     * @param BundleInterface[] $bundles The bundles array
+     * @param KernelInterface $kernel A KernelInterface instance
      *
-     * @return array The paths array
+     * @return static
      */
-    private function findResourcesPaths(array $bundles)
+    public static function createFromKernelBundles(KernelInterface $kernel)
     {
         $paths = [];
 
-        foreach ($bundles as $bundle) {
-            if (is_dir($path = $this->getResourcesPath($bundle))) {
+        foreach ($kernel->getBundles() as $bundle) {
+            if (is_dir($path = self::getResourcesPath($bundle))) {
                 $paths[$bundle->getName()] = $path;
             }
         }
 
-        return $paths;
+        return new static($paths);
     }
 
     /**
@@ -94,7 +94,7 @@ class FileLocator implements FileLocatorInterface
      *
      * @return string The resources path
      */
-    private function getResourcesPath(BundleInterface $bundle)
+    private static function getResourcesPath(BundleInterface $bundle)
     {
         if ($bundle instanceof ContaoModuleBundle) {
             return $bundle->getPath();

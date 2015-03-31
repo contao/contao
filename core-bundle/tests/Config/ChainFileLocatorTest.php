@@ -55,11 +55,9 @@ class ChainFileLocatorTest extends TestCase
         $files = array_values($this->locator->locate('config/autoload.php'));
 
         $this->assertCount(3, $files);
-        // FIXME: had to change the order because ChainFileLocator::getLocators() did not correctly reverse the
-        // order of the locators. Why do we have to reverse the order at all?
-        $this->assertEquals($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/autoload.php', $files[0]);
-        $this->assertEquals($this->getRootDir() . '/system/modules/foobar/config/autoload.php', $files[1]);
-        $this->assertEquals($this->getCacheDir() . '/contao/config/autoload.php', $files[2]);
+        $this->assertEquals($this->getCacheDir() . '/contao/config/autoload.php', $files[0]);
+        $this->assertEquals($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/autoload.php', $files[1]);
+        $this->assertEquals($this->getRootDir() . '/system/modules/foobar/config/autoload.php', $files[2]);
     }
 
     /**
@@ -123,14 +121,10 @@ class ChainFileLocatorTest extends TestCase
 
         $bundle = $this->getMock(
             'Symfony\Component\HttpKernel\Bundle\Bundle',
-            ['getName', 'getPath']
+            ['getName', 'getPath'],
+            [],
+            'TestBundle'
         );
-
-        $bundle
-            ->expects($this->any())
-            ->method('getName')
-            ->willReturn('test')
-        ;
 
         $bundle
             ->expects($this->any())
