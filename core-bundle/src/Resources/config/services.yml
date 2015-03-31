@@ -46,8 +46,9 @@ services:
     contao.resource_locator.bundles:
         class: Contao\CoreBundle\Config\FileLocator
         public: false
+        factory: [Contao\CoreBundle\Config\FileLocator, createFromKernelBundles]
         arguments:
-            - "@kernel" # FIXME: kernel.bundles?
+            - "@kernel"
         tags:
             - { name: contao.resource_locator }
 
