@@ -120,7 +120,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
                 continue;
             }
 
-            $this->relativeSymlink($file->getPath(), $rootDir, $output);
+            $this->relativeSymlink('system/modules/' . $file->getRelativePath(), $rootDir, $output);
         }
     }
 
