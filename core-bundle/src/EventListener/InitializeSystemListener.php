@@ -65,7 +65,8 @@ class InitializeSystemListener extends ScopeAwareListener
         }
 
         $request = $event->getRequest();
-        $route   = $this->router->generate(
+
+        $route = $this->router->generate(
             $request->attributes->get('_route'),
             $request->attributes->get('_route_params')
         );
@@ -83,22 +84,26 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     public function onConsoleCommand(ConsoleCommandEvent $event)
     {
-        if ($event->getCommand() instanceof ContaoFrameworkDependentInterface) {
-            $this->setConstants('FE', 'console');
-            $this->boot();
+        if (!$event->getCommand() instanceof ContaoFrameworkDependentInterface) {
+            return;
         }
+
+        $this->setConstants('FE', 'console');
+        $this->boot();
     }
 
     /**
      * Returns the TL_MODE value for the container scope.
      *
-     * @return string The value for TL_MODE
+     * @return string The TL_MODE value
      */
     private function getScopeFromContainer()
     {
         if ($this->isBackendScope()) {
             return 'BE';
-        } elseif ($this->isFrontendScope()) {
+        }
+
+        if ($this->isFrontendScope()) {
             return 'FE';
         }
 

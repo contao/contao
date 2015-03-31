@@ -11,8 +11,7 @@
 namespace Contao\CoreBundle\Command;
 
 /**
- * Interface FrameworkDependentCommandInterface
- * Only boot Contao-Framework if Command implements this Interface
+ * Interface for Contao framework dependent commands.
  *
  * @author Dominik Tomasi <https://github.com/dtomasi>
  */

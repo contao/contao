@@ -32,18 +32,12 @@ class ToggleViewListener extends ScopeAwareListener
     {
         $request = $event->getRequest();
 
-        if (!$this->isFrontendMasterRequest($event)
-            || !$request->query->has('toggle_view')
-        ) {
+        if (!$this->isFrontendMasterRequest($event) || !$request->query->has('toggle_view')) {
             return;
         }
 
-        $referer  = System::getReferer();
-        $response = new RedirectResponse($referer, 303);
-
-        $response->headers->setCookie(
-            $this->getCookie($request->query->get('toggle_view'), $request->getBasePath())
-        );
+        $response = new RedirectResponse(System::getReferer(), 303);
+        $response->headers->setCookie($this->getCookie($request->query->get('toggle_view'), $request->getBasePath()));
 
         $event->setResponse($response);
     }
@@ -51,17 +45,17 @@ class ToggleViewListener extends ScopeAwareListener
     /**
      * Generates the TL_VIEW cookie based on the toggle_view value.
      *
-     * @param string $state    The cookie state ("desktop" or "mobile")
+     * @param string $value    The cookie value
      * @param string $basePath The request base path
      *
-     * @return Cookie
+     * @return Cookie The cookie object
      */
-    private function getCookie($state, $basePath)
+    private function getCookie($value, $basePath)
     {
-        if ('mobile' !== $state) {
-            $state = 'desktop';
+        if ('mobile' !== $value) {
+            $value = 'desktop';
         }
 
-        return new Cookie('TL_VIEW', $state, 0, $basePath);
+        return new Cookie('TL_VIEW', $value, 0, $basePath);
     }
 }

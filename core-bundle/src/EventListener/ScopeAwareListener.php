@@ -21,11 +21,11 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 abstract class ScopeAwareListener extends ContainerAware
 {
     /**
-     * Returns wether this is the master request in frontend scope.
+     * Checks whether the request is the master request in the front end scope.
      *
      * @param KernelEvent $event The HttpKernel event
      *
-     * @return bool
+     * @return bool True if the request is the master request in the front end scope
      */
     protected function isFrontendMasterRequest(KernelEvent $event)
     {
@@ -33,11 +33,11 @@ abstract class ScopeAwareListener extends ContainerAware
     }
 
     /**
-     * Returns wether this is the master request in backend scope.
+     * Checks whether the request is the master request in the back end scope.
      *
      * @param KernelEvent $event The HttpKernel event
      *
-     * @return bool
+     * @return bool True the request is the master request in the back end scope
      */
     protected function isBackendMasterRequest(KernelEvent $event)
     {
@@ -45,9 +45,9 @@ abstract class ScopeAwareListener extends ContainerAware
     }
 
     /**
-     * Returns wether the container is in frontend scope.
+     * Checks whether the container is in the front end scope.
      *
-     * @return bool
+     * @return bool True if the container is in the front end scope
      */
     protected function isFrontendScope()
     {
@@ -55,9 +55,9 @@ abstract class ScopeAwareListener extends ContainerAware
     }
 
     /**
-     * Returns wether the container is in backend scope.
+     * Checks whether the container is in the back end scope.
      *
-     * @return bool
+     * @return bool True if the container is in the back end scope
      */
     protected function isBackendScope()
     {

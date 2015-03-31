@@ -37,7 +37,7 @@ class VersionCommand extends Command implements ContaoFrameworkDependentInterfac
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(VERSION . '.' . BUILD);
+        $output->writeln(VERSION . '.' . BUILD); // FIXME: use the packages cache?
 
         return 0;
     }

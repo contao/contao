@@ -59,7 +59,7 @@ class OutputFromCacheListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does not act if scope is not "frontend"
+     * Tests that there is no repsonse if the scope is not "frontend".
      */
     public function testInvalidScope()
     {
@@ -82,7 +82,7 @@ class OutputFromCacheListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does not act without container
+     * Tests that there is no repsonse if there is no container.
      */
     public function testWithoutContainer()
     {

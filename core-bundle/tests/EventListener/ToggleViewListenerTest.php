@@ -38,7 +38,7 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests that there is no response without container
+     * Tests that there is no response if there is no container.
      */
     public function testWithoutContainer()
     {
@@ -56,7 +56,7 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests no response when not in frontend scope
+     * Tests that there is no repsonse if the scope is not "frontend".
      */
     public function testNotInFrontend()
     {
@@ -79,7 +79,7 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests no response without query parameter.
+     * Tests that there is no repsonse if there are no query parameters.
      */
     public function testNoView()
     {
@@ -102,7 +102,7 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests response with correct cookie on toggle_view=desktop query parameter.
+     * Tests that there is a repsonse with a correct cookie for the desktop view.
      */
     public function testDesktopView()
     {
@@ -126,7 +126,7 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests response with correct cookie on toggle_view=mobile query parameter.
+     * Tests that there is a repsonse with a correct cookie for the mobile view.
      */
     public function testMobileView()
     {
@@ -150,7 +150,7 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests response with correct cookie on toggle_view=foobar query parameter.
+     * Tests that there is a repsonse with a correct cookie for an invalid view.
      */
     public function testInvalidView()
     {

@@ -383,10 +383,10 @@ class PageRegular extends \Frontend
 			$GLOBALS['TL_JAVASCRIPT'] = array();
 		}
 
-        /** @var KernelInterface $kernel */
-        global $kernel;
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-        $arrPackages = $kernel->getContainer()->getParameter('kernel.packages');
+		$arrPackages = $kernel->getContainer()->getParameter('kernel.packages');
 
 		// jQuery scripts
 		if ($objLayout->addJQuery)

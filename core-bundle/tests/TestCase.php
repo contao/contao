@@ -39,9 +39,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Initialzed the Contao framework.
+     * Initializes the Contao framework.
      *
-     * @param string $scope The container scope ("frontend" or "backend")
+     * @param string $scope The container scope
      */
     protected function bootContaoFramework($scope = 'frontend')
     {
@@ -55,7 +55,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $router
             ->expects($this->any())
             ->method('generate')
-            ->willReturn('/index.html');
+            ->willReturn('/index.html')
+        ;
 
         $listener = new InitializeSystemListener(
             $router,
@@ -63,19 +64,19 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         );
 
         $listener->setContainer($container);
+
         $container->enterScope($scope);
 
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onKernelRequest($event);
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
     }
 
     /**
      * Mocks a Contao kernel.
      *
-     * @return Kernel
+     * @return Kernel The kernel object
      */
     private function mockKernel()
     {
@@ -115,8 +116,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         );
 
         $container = new Container();
-        $container->addScope(new Scope('frontend'));
-        $container->addScope(new Scope('backend'));
+        $container->addScope(new Scope('frontend')); // FIXME: Scope('frontend', 'request')?
+        $container->addScope(new Scope('backend')); // FIXME: Scope('backend', 'request')?
 
         $container->set(
             'contao.resource_provider',
@@ -126,7 +127,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $kernel
             ->expects($this->any())
             ->method('getContainer')
-            ->willReturn($container);
+            ->willReturn($container)
+        ;
 
         return $kernel;
     }

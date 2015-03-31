@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\Frontend;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**

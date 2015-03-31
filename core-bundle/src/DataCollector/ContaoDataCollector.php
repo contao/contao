@@ -25,12 +25,15 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  */
 class ContaoDataCollector extends DataCollector
 {
+    /**
+     * @var array
+     */
     private $packages;
 
     /**
      * Constructor.
      *
-     * @param array $packages Installed Composer packages and versions.
+     * @param array $packages Installed Composer packages and versions
      */
     public function __construct(array $packages)
     {

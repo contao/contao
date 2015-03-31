@@ -26,11 +26,14 @@ class AddPackagesPassTest extends TestCase
      */
     public function testInstantiation()
     {
-        $pass = new AddPackagesPass($this->getRootDir() . '/vendor/composer/installed.json');;
+        $pass = new AddPackagesPass($this->getRootDir() . '/vendor/composer/installed.json');
 
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass', $pass);
     }
 
+    /**
+     * Tests processing the pass.
+     */
     public function testProcess()
     {
         $pass      = new AddPackagesPass($this->getRootDir() . '/vendor/composer/installed.json');
@@ -42,14 +45,18 @@ class AddPackagesPassTest extends TestCase
 
         $packages = $container->getParameter('kernel.packages');
 
-        $this->assertTrue(is_array($packages));
+        $this->assertInternalType('array', $packages);
         $this->assertArrayHasKey('contao/test-bundle1', $packages);
         $this->assertArrayNotHasKey('contao/test-bundle2', $packages);
         $this->assertArrayHasKey('contao/test-bundle3', $packages);
+
         $this->assertEquals('1.0.0', $packages['contao/test-bundle1']);
         $this->assertEquals('1.0.9999999', $packages['contao/test-bundle3']);
     }
 
+    /**
+     * Tests processing the pass without the JSON file.
+     */
     public function testFileNotFound()
     {
         $pass      = new AddPackagesPass($this->getRootDir() . '/vendor/composer/invalid.json');
@@ -58,7 +65,10 @@ class AddPackagesPassTest extends TestCase
         $pass->process($container);
 
         $this->assertTrue($container->hasParameter('kernel.packages'));
-        $this->assertTrue(is_array($container->getParameter('kernel.packages')));
+
+        $packages = $container->getParameter('kernel.packages');
+
+        $this->assertInternalType('array', $packages);
         $this->assertEmpty($container->getParameter('kernel.packages'));
     }
 }

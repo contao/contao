@@ -11,11 +11,11 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\Config;
+use Contao\CoreBundle\Command\VersionCommand;
 use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
 use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
-use Contao\Fixtures\Command\FrameworkDependentCommand;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -67,13 +67,13 @@ class InitializeSystemListenerTest extends TestCase
         );
 
         $listener->setContainer($container);
+
         $container->enterScope('frontend');
 
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onKernelRequest($event);
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
         $this->assertTrue(defined('TL_MODE'));
         $this->assertTrue(defined('TL_SCRIPT'));
@@ -103,13 +103,13 @@ class InitializeSystemListenerTest extends TestCase
         );
 
         $listener->setContainer($container);
+
         $container->enterScope('backend');
 
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onKernelRequest($event);
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
         $this->assertTrue(defined('TL_MODE'));
         $this->assertTrue(defined('TL_SCRIPT'));
@@ -143,8 +143,7 @@ class InitializeSystemListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onKernelRequest($event);
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
         $this->assertFalse(defined('TL_MODE'));
         $this->assertFalse(defined('TL_SCRIPT'));
@@ -172,8 +171,7 @@ class InitializeSystemListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onKernelRequest($event);
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
         $this->assertFalse(defined('TL_MODE'));
         $this->assertFalse(defined('TL_SCRIPT'));
@@ -200,13 +198,13 @@ class InitializeSystemListenerTest extends TestCase
         );
 
         $listener->setContainer($container);
+
         $container->enterScope('frontend');
 
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
-        $listener->onKernelRequest($event);
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST));
 
         $this->assertFalse(defined('TL_MODE'));
         $this->assertFalse(defined('TL_SCRIPT'));
@@ -231,14 +229,9 @@ class InitializeSystemListenerTest extends TestCase
             $this->getRootDir() . '/app'
         );
 
-
         $listener->onConsoleCommand(
-            new ConsoleCommandEvent(
-                new FrameworkDependentCommand(),
-                new StringInput(''),
-                new ConsoleOutput()
-            ));
-
+            new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
+        );
 
         $this->assertEquals('FE', TL_MODE);
         $this->assertEquals('console', TL_SCRIPT);
@@ -248,7 +241,7 @@ class InitializeSystemListenerTest extends TestCase
     /**
      * Mocks a Contao kernel.
      *
-     * @return Kernel
+     * @return Kernel The kernel mock object
      */
     private function mockKernel()
     {
@@ -299,7 +292,8 @@ class InitializeSystemListenerTest extends TestCase
         $kernel
             ->expects($this->any())
             ->method('getContainer')
-            ->willReturn($container);
+            ->willReturn($container)
+        ;
 
         return $kernel;
     }
@@ -318,7 +312,8 @@ class InitializeSystemListenerTest extends TestCase
         $router
             ->expects($this->any())
             ->method('generate')
-            ->willReturn($url);
+            ->willReturn($url)
+        ;
 
         return $router;
     }
