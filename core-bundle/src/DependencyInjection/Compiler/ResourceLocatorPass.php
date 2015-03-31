@@ -36,7 +36,7 @@ class ResourceLocatorPass implements CompilerPassInterface
 
             foreach ($this->getPriorizedLocators($locatorIds) as $locators) {
                 foreach ($locators as $locator) {
-                    $chainLocator->addMethodCall('addLocator', array(new Reference($locator)));
+                    $chainLocator->addMethodCall('addLocator', [new Reference($locator)]);
                 }
             }
 
@@ -49,9 +49,11 @@ class ResourceLocatorPass implements CompilerPassInterface
     /**
      * Gets tagged locators from container builder.
      *
-     * @param ContainerBuilder $container
+     * @param ContainerBuilder $container The container object
      *
-     * @return array
+     * @return array The tagged locators
+     *
+     * @throws \LogicException If there are no Contao resource locators
      */
     private function getLocators(ContainerBuilder $container)
     {
@@ -65,11 +67,11 @@ class ResourceLocatorPass implements CompilerPassInterface
     }
 
     /**
-     * Order the locators by priority and return nested array of locators.
+     * Orders the locators by priority and returns a nested array of locators.
      *
-     * @param array $locators
+     * @param array $locators The locators array
      *
-     * @return array
+     * @return array The priorized locators array
      */
     private function getPriorizedLocators(array $locators)
     {

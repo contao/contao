@@ -31,6 +31,9 @@ class XliffFileLoaderTest extends TestCase
         );
     }
 
+    /**
+     * Tests the supports() method.
+     */
     public function testSupports()
     {
         $loader = new XliffFileLoader($this->getRootDir() . '/app');
@@ -48,7 +51,10 @@ class XliffFileLoaderTest extends TestCase
         );
     }
 
-    public function testLoadLocal()
+    /**
+     * Tests loading a file into a string.
+     */
+    public function testLoadIntoString()
     {
         $loader = new XliffFileLoader($this->getRootDir() . '/app', false);
 
@@ -73,79 +79,48 @@ TXT
         $this->assertEquals(
             $source,
             $loader->load(
-                $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
-                'en'
+                $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf', 'en'
             )
         );
 
         $this->assertEquals(
             $target,
             $loader->load(
-                $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
-                'de'
+                $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf', 'de'
             )
         );
     }
 
     /**
+     * Tests loading a file into the global variables.
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testLoadGlobalSource()
+    public function testLoadIntoGlobal()
     {
         $loader = new XliffFileLoader($this->getRootDir() . '/app', true);
 
         $loader->load(
-            $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
-            'en'
+            $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf', 'en'
         );
 
-        $this->assertEquals(
-            $GLOBALS['TL_LANG']['MSC']['first'],
-            'This is the first source'
-        );
-
-        $this->assertEquals(
-            $GLOBALS['TL_LANG']['MSC']['second'][0],
-            'This is the second source'
-        );
-
-        $this->assertEquals(
-            $GLOBALS['TL_LANG']['MSC']['third']['with'][1],
-            'This is the third source'
-        );
-    }
-
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testLoadGlobalTarget()
-    {
-        $loader = new XliffFileLoader($this->getRootDir() . '/app', true);
+        $this->assertEquals('This is the first source', $GLOBALS['TL_LANG']['MSC']['first']);
+        $this->assertEquals('This is the second source', $GLOBALS['TL_LANG']['MSC']['second'][0]);
+        $this->assertEquals('This is the third source', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
 
         $loader->load(
-            $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
-            'de'
+            $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf', 'de'
         );
 
-        $this->assertEquals(
-            $GLOBALS['TL_LANG']['MSC']['first'],
-            'This is the first target'
-        );
-
-        $this->assertEquals(
-            $GLOBALS['TL_LANG']['MSC']['second'][0],
-            'This is the second target'
-        );
-
-        $this->assertEquals(
-            $GLOBALS['TL_LANG']['MSC']['third']['with'][1],
-            'This is the third target'
-        );
+        $this->assertEquals('This is the first source', $GLOBALS['TL_LANG']['MSC']['first']);
+        $this->assertEquals('This is the second source', $GLOBALS['TL_LANG']['MSC']['second'][0]);
+        $this->assertEquals('This is the third source', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
     }
 
     /**
+     * Tests loading a file with too many nesting levels.
+     *
      * @expectedException \OutOfBoundsException
      */
     public function testTooManyLevels()
@@ -153,8 +128,7 @@ TXT
         $loader = new XliffFileLoader($this->getRootDir() . '/app', false);
 
         $loader->load(
-            $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/error.xlf',
-            'en'
+            $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/error.xlf', 'en'
         );
     }
 }

@@ -98,8 +98,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $path = $uploadPath . '/' . $file->getRelativePath();
-            $this->relativeSymlink($path, $rootDir, $output);
+            $this->relativeSymlink($uploadPath . '/' . $file->getRelativePath(), $rootDir, $output);
         }
     }
 
@@ -111,16 +110,17 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function symlinkModules($rootDir, OutputInterface $output)
     {
-        $files = $this->findIn('.htaccess', $rootDir . '/system/modules');
+        $files = $this->findIn('.htaccess', "$rootDir/system/modules");
 
         /** @var SplFileInfo[] $files */
         foreach ($files as $file) {
             $htaccess = new HtaccessAnalyzer($file);
 
-            if ($htaccess->grantsAccess()) {
-                $path = $file->getPath();
-                $this->relativeSymlink($path, $rootDir, $output);
+            if (!$htaccess->grantsAccess()) {
+                continue;
             }
+
+            $this->relativeSymlink($file->getPath(), $rootDir, $output);
         }
     }
 
@@ -135,8 +135,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         try {
             $themes = $this->container->get('contao.resource_locator')->locate('themes');
         } catch (\InvalidArgumentException $e) {
-            // No themes found
-            return;
+            return; // no themes found
         }
 
         foreach ($themes as $dir) {
@@ -151,11 +150,11 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     }
 
     /**
-     * Generates a symlink relative to the given path
+     * Generates a symlink relative to the given path.
      *
-     * @param string $path    The path to create symlink of
-     * @param string $rootDir The root directory
-     * @param string $output  The output object
+     * @param string          $path    The path
+     * @param string          $rootDir The root directory
+     * @param OutputInterface $output  The output object
      */
     private function relativeSymlink($path, $rootDir, OutputInterface $output)
     {
@@ -224,19 +223,15 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     }
 
     /**
-     * Returns a finder instance to find files in given path.
+     * Returns a finder instance to find files in the given path.
      *
-     * @param string $file A file name
-     * @param string $path An absolute path
+     * @param string $file The file name
+     * @param string $path The absolute path
      *
      * @return Finder The finder instance
      */
     private function findIn($file, $path)
     {
-        return Finder::create()
-            ->ignoreDotFiles(false)
-            ->files()
-            ->name($file)
-            ->in($path);
+        return Finder::create()->ignoreDotFiles(false)->files()->name($file)->in($path);
     }
 }

@@ -12,8 +12,8 @@ namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ResourceLocatorPass;
-use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

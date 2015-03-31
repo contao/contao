@@ -13,21 +13,28 @@ namespace Contao\CoreBundle\Config\Loader;
 use Symfony\Component\Config\Loader\Loader;
 
 /**
- * XliffFileLoader reads XLIFF files and converts them to Contao language array
+ * Reads XLIFF files and converts them into Contao language arrays.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class XliffFileLoader extends Loader
 {
+    /**
+     * @var string
+     */
     private $rootDir;
+
+    /**
+     * @var bool
+     */
     private $addToGlobals;
 
     /**
      * Constructor.
      *
      * @param string $rootDir      The kernel root directory
-     * @param bool   $addToGlobals Defines if language labels should be added to $GLOBALS['TL_LANG']
+     * @param bool   $addToGlobals True to add the labels to $GLOBALS['TL_LANG']
      */
     public function __construct($rootDir, $addToGlobals = false)
     {
@@ -36,7 +43,7 @@ class XliffFileLoader extends Loader
     }
 
     /**
-     * Read the contents of a PHP file, stripping the opening and closing PHP tags
+     * Reads the contents of a XLIFF file and returns the PHP code.
      *
      * @param string      $file A PHP file path
      * @param string|null $type The resource type
@@ -45,9 +52,7 @@ class XliffFileLoader extends Loader
      */
     public function load($file, $type = null)
     {
-        $language = $type ?: 'en';
-
-        return $this->convertXlfToPhp($file, $language);
+        return $this->convertXlfToPhp($file, ($type ?: 'en'));
     }
 
     /**
@@ -59,28 +64,30 @@ class XliffFileLoader extends Loader
     }
 
     /**
-     * Convert an .xlf file into a PHP language file
+     * Converts an XLIFF file into a PHP language file.
      *
-     * @param string  $strName     The name of the .xlf file
-     * @param string  $strLanguage The language code
+     * @param string  $name     The name of the XLIFF file
+     * @param string  $language The language code
      *
      * @return string The PHP code
      */
-    private function convertXlfToPhp($strName, $strLanguage)
+    private function convertXlfToPhp($name, $language)
     {
-        // Read the .xlf file
         $xml = new \DOMDocument();
         $xml->preserveWhiteSpace = false;
 
         // Use loadXML() instead of load() (see contao/core#7192)
-        $xml->loadXML(file_get_contents($strName));
+        $xml->loadXML(file_get_contents($name));
 
-        $return = "\n// " . str_replace($this->rootDir . '/', '', $strName) . "\n";
+        $return = "\n// " . str_replace($this->rootDir . '/', '', $name) . "\n";
         $units = $xml->getElementsByTagName('trans-unit');
 
         /** @var \DOMElement[] $units */
         foreach ($units as $unit) {
-            $node = ($strLanguage == 'en') ? $unit->getElementsByTagName('source') : $unit->getElementsByTagName('target');
+            $node = ('en' === $language)
+                ? $unit->getElementsByTagName('source')
+                : $unit->getElementsByTagName('target')
+            ;
 
             if ($node === null || $node->item(0) === null) {
                 continue;
@@ -95,10 +102,11 @@ class XliffFileLoader extends Loader
 
             // Handle keys with dots
             if (preg_match('/tl_layout\.[a-z]+\.css\./', $unit->getAttribute('id'))) {
-                $chunks = array($chunks[0], $chunks[1] . '.' . $chunks[2], $chunks[3]);
+                $chunks = [$chunks[0], $chunks[1] . '.' . $chunks[2], $chunks[3]];
             }
 
             $return .= $this->getStringRepresentation($chunks, $value);
+
             $this->addGlobal($chunks, $value);
         }
 
@@ -106,14 +114,14 @@ class XliffFileLoader extends Loader
     }
 
     /**
-     * Returns a string representation of the global PHP language array
+     * Returns a string representation of the global PHP language array.
      *
-     * @param array $chunks
-     * @param mixed $value
+     * @param array $chunks The path fragments
+     * @param mixed $value  The label
      *
-     * @return string
+     * @return string The string representation of the array
      *
-     * @throws \OutOfBoundsException If less than 2 or more than 4 chunks are given.
+     * @throws \OutOfBoundsException If less than 2 or more than 4 chunks are given
      */
     private function getStringRepresentation(array $chunks, $value)
     {
@@ -132,49 +140,52 @@ class XliffFileLoader extends Loader
     }
 
     /**
-     * Adds labels to the global PHP language array if enabled
+     * Adds the labels to the global PHP language array.
      *
-     * @param array $chunks
-     * @param mixed $value
+     * @param array $chunks The path fragments
+     * @param mixed $value  The label
      */
     private function addGlobal(array $chunks, $value)
     {
-        if ($this->addToGlobals)
-        {
-            $data = &$GLOBALS['TL_LANG'];
-
-            foreach ($chunks as $key) {
-                $data = &$data[$key];
-            }
-
-            $data = $value;
+        if (false === $this->addToGlobals) {
+            return;
         }
+
+        $data = &$GLOBALS['TL_LANG'];
+
+        foreach ($chunks as $key) {
+            $data = &$data[$key];
+        }
+
+        $data = $value;
     }
 
     /**
-     * Quote array key for PHP string
+     * Quotes an array key to be used as PHP string.
      *
-     * @param string $key
+     * @param string $key The key
      *
-     * @return int|string
+     * @return int|string The quoted string
      */
     private function quoteKey($key)
     {
         if ($key === '0') {
             return 0;
-        } elseif (is_numeric($key)) {
-            return intval($key);
-        } else {
-            return "'$key'";
         }
+
+        if (is_numeric($key)) {
+            return intval($key);
+        }
+
+        return "'$key'";
     }
 
     /**
-     * Quote value for PHP string
+     * Quotes a value to be used as PHP string.
      *
-     * @param string $value
+     * @param string $value The value
      *
-     * @return string
+     * @return string The quoted string
      */
     private function quoteValue($value)
     {
@@ -182,8 +193,8 @@ class XliffFileLoader extends Loader
 
         if (strpos($value, '\n') !== false) {
             return '"' . str_replace(array('$', '"'), array('\\$', '\\"'), $value) . '"';
-        } else {
-            return "'" . str_replace("'", "\\'", $value) . "'";
         }
+
+        return "'" . str_replace("'", "\\'", $value) . "'";
     }
 }

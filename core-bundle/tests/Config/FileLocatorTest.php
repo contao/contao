@@ -45,6 +45,9 @@ class FileLocatorTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Config\FileLocator', $this->locator);
     }
 
+    /**
+     * Tests locating a single folder.
+     */
     public function testLocateSingleFolder()
     {
         $folders = $this->locator->locate('dca');
@@ -53,6 +56,9 @@ class FileLocatorTest extends TestCase
         $this->assertContains($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/dca', $folders);
     }
 
+    /**
+     * Tests locating multiple folders.
+     */
     public function testLocateMultipleFolders()
     {
         $folders = $this->locator->locate('config');
@@ -62,6 +68,9 @@ class FileLocatorTest extends TestCase
         $this->assertContains($this->getRootDir() . '/system/modules/foobar/config', $folders);
     }
 
+    /**
+     * Tests locating a single file.
+     */
     public function testLocateSingleFile()
     {
         $files = $this->locator->locate('dca/tl_test.php');
@@ -70,6 +79,9 @@ class FileLocatorTest extends TestCase
         $this->assertContains($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/dca/tl_test.php', $files);
     }
 
+    /**
+     * Tests locating multiple files.
+     */
     public function testLocateMultipleFiles()
     {
         $files = $this->locator->locate('config/config.php');
@@ -80,6 +92,8 @@ class FileLocatorTest extends TestCase
     }
 
     /**
+     * Tests locating an invalid resource.
+     *
      * @expectedException \InvalidArgumentException
      */
     public function testInvalidName()
@@ -87,6 +101,9 @@ class FileLocatorTest extends TestCase
         $this->locator->locate('');
     }
 
+    /**
+     * Tests locating the first folder.
+     */
     public function testFirstFolder()
     {
         $file = $this->locator->locate('config', null, true);
@@ -94,6 +111,9 @@ class FileLocatorTest extends TestCase
         $this->assertEquals($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config', $file);
     }
 
+    /**
+     * Tests locating the first file.
+     */
     public function testFirstFile()
     {
         $file = $this->locator->locate('config/config.php', null, true);
@@ -102,24 +122,19 @@ class FileLocatorTest extends TestCase
     }
 
     /**
+     * Tests locating a non-existing file.
+     *
      * @expectedException \InvalidArgumentException
      */
-    public function testFirstNotFound()
-    {
-        $file = $this->locator->locate('config/test.php', null, true);
-    }
-
     public function testFirstFileNotFound()
     {
-        $file = $this->locator->locate('config/config.php', null, true);
-
-        $this->assertEquals($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/config.php', $file);
+        $this->locator->locate('config/test.php', null, true);
     }
 
     /**
-     * Mocks a kernel.
+     * Returns a mocked kernel object.
      *
-     * @return Kernel
+     * @return Kernel The kernel object.
      */
     private function mockKernel()
     {
@@ -163,19 +178,22 @@ class FileLocatorTest extends TestCase
         $bundle
             ->expects($this->any())
             ->method('getName')
-            ->willReturn('test');
+            ->willReturn('test')
+        ;
 
         $bundle
             ->expects($this->any())
             ->method('getPath')
-            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle');
+            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle')
+        ;
 
         $module = new ContaoModuleBundle('foobar', $this->getRootDir() . '/app');
 
         $kernel
             ->expects($this->any())
             ->method('getBundles')
-            ->willReturn([$bundle, $module]);
+            ->willReturn([$bundle, $module])
+        ;
 
         return $kernel;
     }

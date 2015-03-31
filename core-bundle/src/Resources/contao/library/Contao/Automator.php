@@ -216,7 +216,7 @@ class Automator extends \System
 		// Check whether the cache exists
 		if (is_dir(TL_ROOT . '/system/cache/sql'))
 		{
-			foreach (array('packages', 'sql') as $dir)
+			foreach (array('packages', 'sql') as $dir) // FIXME: packages?
 			{
 				// Purge the folder
 				$objFolder = new \Folder('system/cache/' . $dir);
@@ -503,12 +503,8 @@ class Automator extends \System
 		global $kernel;
 
 		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
-		$objDumper  = new CombinedFileDumper(
-			$kernel->getContainer()->get('filesystem'),
-			new PhpFileLoader(),
-			$kernel->getRootDir() . '/../system/cache'
-		);
 
+		$objDumper = new CombinedFileDumper($kernel->getContainer()->get('filesystem'), new PhpFileLoader(), $kernel->getRootDir() . '/../system/cache');
 		$objDumper->dump($objLocator->locate('config/autoload.php'), 'config/autoload.php');
 		$objDumper->dump($objLocator->locate('config/config.php'), 'config/config.php');
 
@@ -540,6 +536,7 @@ class Automator extends \System
 		}
 
 		// Generate the page mapper file
+		// FIXME: use the FileDumper
 		$objCacheFile = new \File('system/cache/config/mapping.php', true);
 		$objCacheFile->write(sprintf("<?php\n\nreturn %s;\n", var_export($arrMapper, true)));
 		$objCacheFile->close();
@@ -563,6 +560,11 @@ class Automator extends \System
 		// Parse all active modules
 		foreach ($objLocator->locate('dca') as $strDir)
 		{
+			if (!is_dir($strDir))
+			{
+				continue;
+			}
+
 			foreach (scan($strDir) as $strFile)
 			{
 				// Ignore non PHP files and files which have been included before
@@ -573,13 +575,9 @@ class Automator extends \System
 			}
 		}
 
-		$arrFiles   = array_values(array_unique($arrFiles));
+		$arrFiles = array_values(array_unique($arrFiles));
 		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
-		$objDumper  = new CombinedFileDumper(
-			$kernel->getContainer()->get('filesystem'),
-			new PhpFileLoader(),
-			$kernel->getRootDir() . '/../system/cache'
-		);
+		$objDumper = new CombinedFileDumper($kernel->getContainer()->get('filesystem'), new PhpFileLoader(), $kernel->getRootDir() . '/../system/cache');
 
 		// Create one file per table
 		foreach ($arrFiles as $strFile)
@@ -621,17 +619,12 @@ class Automator extends \System
 		}
 
 		$arrLanguages = array_unique($arrLanguages);
-		$objLocator   = $kernel->getContainer()->get('contao.resource_locator');
-		$objDumper    = new CombinedFileDumper(
+		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
+
+		$objDumper = new CombinedFileDumper
+		(
 			$kernel->getContainer()->get('filesystem'),
-			new DelegatingLoader(
-				new LoaderResolver(
-					[
-						new PhpFileLoader(),
-						new XliffFileLoader($kernel->getRootDir())
-					]
-				)
-			),
+			new DelegatingLoader(new LoaderResolver(array(new PhpFileLoader(), new XliffFileLoader($kernel->getRootDir())))),
 			$kernel->getRootDir() . '/../system/cache'
 		);
 
@@ -658,6 +651,11 @@ class Automator extends \System
 			// Parse all active modules
 			foreach ($objLocator->locate('languages/' . $strLanguage) as $strDir)
 			{
+				if (!is_dir($strDir))
+				{
+					continue;
+				}
+
 				foreach (scan($strDir) as $strFile)
 				{
 					if (strncmp($strFile, '.', 1) !== 0 && (substr($strFile, -4) == '.php' || substr($strFile, -4) == '.xlf'))
@@ -673,8 +671,11 @@ class Automator extends \System
 			foreach ($arrFiles as $strName)
 			{
 				$objDumper->setHeader(sprintf($strHeader, $strLanguage));
-				$objDumper->dump(
-					array_merge(
+
+				$objDumper->dump
+					(
+					array_merge
+					(
 						// XLIFF files will overwrite PHP files if both exist in the same bundle
 						$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.php'),
 						$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.xlf')
@@ -704,6 +705,11 @@ class Automator extends \System
 		// Only check the active modules (see #4541)
 		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
 		{
+			if (!is_dir($strDir))
+			{
+				continue;
+			}
+
 			foreach (scan($strDir) as $strFile)
 			{
 				// Ignore non PHP files and files which have been included before

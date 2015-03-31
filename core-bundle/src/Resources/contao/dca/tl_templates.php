@@ -233,6 +233,11 @@ class tl_templates extends Backend
 		// Get all templates
 		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('templates') as $strModule => $strFolder)
 		{
+			if (!is_dir($strFolder))
+			{
+				continue;
+			}
+
 			// Find all templates
 			$objFiles = new SortedIterator(
 				new RecursiveIteratorIterator(

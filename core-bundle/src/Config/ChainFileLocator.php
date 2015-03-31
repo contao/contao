@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Config;
 use Symfony\Component\Config\FileLocatorInterface;
 
 /**
- * ChainFileLocator tries to locate resources using a given set of FileLocatorInterface instances.
+ * Tries to locate resources using a given set of file locators.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -25,9 +25,9 @@ class ChainFileLocator implements FileLocatorInterface
     private $locators = [];
 
     /**
-     * Adds a locator to the stack to find files.
+     * Adds a file locator.
      *
-     * @param FileLocatorInterface $locator A file locator
+     * @param FileLocatorInterface $locator The file locator
      */
     public function addLocator(FileLocatorInterface $locator)
     {
@@ -45,41 +45,36 @@ class ChainFileLocator implements FileLocatorInterface
             try {
                 $file = $locator->locate($name, $currentPath, $first);
 
-                if ($first) {
+                if (true === $first) {
                     return $file;
                 }
 
-                $files = array_merge(
-                    $files,
-                    is_array($file) ? $file : [$file]
-                );
+                $files = array_merge($files, (is_array($file) ? $file : [$file]));
             } catch (\InvalidArgumentException $e) {
                 // Try the next locator
             }
         }
 
-        if (!$first) {
+        if (false === $first) {
             return $files;
         }
 
-        throw new \InvalidArgumentException(sprintf('No locator was able to find the file "%s".', $name));
+        throw new \InvalidArgumentException("No locator was able to find $name");
     }
 
     /**
-     * If we're looking for all files, reverse locator order so that higher priority overwrites lower priority locators.
+     * Reverses the locator order so that higher priority locators overwrite lower priority ones.
      *
-     * @param bool $first
+     * @param bool $first Whether to return the first occurrence or an array of filenames
      *
-     * @return FileLocatorInterface[]
+     * @return FileLocatorInterface[] The locators array
      */
     private function getLocators($first)
     {
-        $locators = $this->locators;
-
-        if (!$first) {
-            array_reverse($locators);
+        if (false === $first) {
+            return array_reverse($this->locators);
         }
 
-        return $locators;
+        return $this->locators;
     }
 }

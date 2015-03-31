@@ -338,8 +338,7 @@ abstract class System
 					}
 					elseif (file_exists($strFile . '.php'))
 					{
-						// We can't use a loader here as it would change the scope
-						include $strFile;
+						include $strFile; // we can't use a loader here as it would change the scope
 					}
 				}
 			}
@@ -379,13 +378,13 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			try {
+			try
+			{
 				/** @var KernelInterface $kernel */
 				global $kernel;
 
 				$kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strLanguage, null, true);
 				$blnIsInstalled = true;
-
 			} catch (\InvalidArgumentException $e) {
 				$blnIsInstalled = false;
 			}
@@ -673,8 +672,7 @@ abstract class System
 	 *
 	 * @return string The PHP code without the PHP tags
 	 *
-	 * @deprecated Deprecated since version 4.0, to be removed in 5.0.
-	 *             Use Contao\CoreBundle\Config\Loader\PhpFileLoader instead.
+	 * @deprecated Deprecated since version 4.0, to be removed in 5.0. Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.
 	 */
 	protected static function readPhpFileWithoutTags($strName)
 	{
@@ -699,11 +697,13 @@ abstract class System
 	 *
 	 * @return string The PHP code
 	 *
-	 * @deprecated Deprecated since version 4.0, to be removed in 5.0.
-	 *             Use Contao\CoreBundle\Config\Loader\XliffFileLoader instead.
+	 * @deprecated Deprecated since version 4.0, to be removed in 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.
 	 */
 	public static function convertXlfToPhp($strName, $strLanguage, $blnLoad=false)
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
 		// Convert to absolute path
 		if (strpos($strName, TL_ROOT . '/') === false)
 		{

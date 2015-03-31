@@ -47,6 +47,9 @@ class ChainFileLocatorTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Config\ChainFileLocator', $this->locator);
     }
 
+    /**
+     * Tests locating all resources.
+     */
     public function testLocateAll()
     {
         $files = array_values($this->locator->locate('config/autoload.php'));
@@ -57,6 +60,9 @@ class ChainFileLocatorTest extends TestCase
         $this->assertEquals($this->getRootDir() . '/system/modules/foobar/config/autoload.php', $files[2]);
     }
 
+    /**
+     * Tests locating the first resource.
+     */
     public function testLocateFirst()
     {
         $file = $this->locator->locate('config/autoload.php', null, true);
@@ -65,6 +71,8 @@ class ChainFileLocatorTest extends TestCase
     }
 
     /**
+     * Tests locating the first resource with a non-existing file.
+     *
      * @expectedException \InvalidArgumentException
      */
     public function testLocateFirstNotFound()
@@ -73,9 +81,9 @@ class ChainFileLocatorTest extends TestCase
     }
 
     /**
-     * Mocks a kernel.
+     * Returns a mocked kernel object.
      *
-     * @return Kernel
+     * @return Kernel The kernel object.
      */
     private function mockKernel()
     {
@@ -119,19 +127,22 @@ class ChainFileLocatorTest extends TestCase
         $bundle
             ->expects($this->any())
             ->method('getName')
-            ->willReturn('test');
+            ->willReturn('test')
+        ;
 
         $bundle
             ->expects($this->any())
             ->method('getPath')
-            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle');
+            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle')
+        ;
 
         $module = new ContaoModuleBundle('foobar', $this->getRootDir() . '/app');
 
         $kernel
             ->expects($this->any())
             ->method('getBundles')
-            ->willReturn([$bundle, $module]);
+            ->willReturn([$bundle, $module])
+        ;
 
         return $kernel;
     }

@@ -14,16 +14,31 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * CombinedFileDumper combines multiple files into one PHP file
+ * Combines multiple files into one PHP file.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class CombinedFileDumper implements DumperInterface
 {
+    /**
+     * @var LoaderInterface
+     */
     private $loader;
+
+    /**
+     * @var string
+     */
     private $cacheDir;
+
+    /**
+     * @var Filesystem
+     */
     private $filesystem;
+
+    /**
+     * @var string
+     */
     private $header = '<?php '; // add one space to prevent the "unexpected $end" error
 
     /**
@@ -41,14 +56,16 @@ class CombinedFileDumper implements DumperInterface
     }
 
     /**
-     * Sets header for PHP files (e.g. a file docblock)
+     * Sets the header for a PHP file (e.g. a file doc block).
      *
      * @param string $header The file header
+     *
+     * @throws \InvalidArgumentException If the file header does not start with an opening PHP tag
      */
     public function setHeader($header)
     {
         if (strpos($header, '<?php') !== 0) {
-            throw new \InvalidArgumentException('File header must start with a PHP open tag.');
+            throw new \InvalidArgumentException('The file header must start with an opening PHP tag');
         }
 
         $this->header = $header;
@@ -66,6 +83,6 @@ class CombinedFileDumper implements DumperInterface
             $buffer .= $this->loader->load($file, $type);
         }
 
-        $this->filesystem->dumpFile($this->cacheDir . DIRECTORY_SEPARATOR . $cacheFile, $buffer);
+        $this->filesystem->dumpFile($this->cacheDir . "/$cacheFile", $buffer);
     }
 }

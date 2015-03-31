@@ -16,12 +16,15 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * FileLoader finds Contao resources in bundle directories.
+ * Finds Contao resources in the bundle directories.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
 class FileLocator implements FileLocatorInterface
 {
+    /**
+     * @var array
+     */
     private $paths;
 
     /**
@@ -35,15 +38,7 @@ class FileLocator implements FileLocatorInterface
     }
 
     /**
-     * Returns full paths for a given file name with bundle name as array key.
-     *
-     * @param string      $name        The file name to locate
-     * @param string|null $currentPath Not used
-     * @param bool        $first       Whether to return the first occurrence or an array of filenames
-     *
-     * @return string|array The full path to the file or an array of file paths
-     *
-     * @throws \InvalidArgumentException When file is not found and $first is true
+     * {@inheritdoc}
      */
     public function locate($name, $currentPath = null, $first = false)
     {
@@ -52,26 +47,32 @@ class FileLocator implements FileLocatorInterface
         }
 
         $filepaths = [];
+
         foreach ($this->paths as $bundle => $path) {
-            if (file_exists($file = $path . DIRECTORY_SEPARATOR . $name)) {
-                if (true === $first) {
-                    return $file;
-                }
-                $filepaths[$bundle] = $file;
+            if (!file_exists($file = "$path/$name")) {
+                continue;
             }
+
+            if (true === $first) {
+                return $file;
+            }
+
+            $filepaths[$bundle] = $file;
         }
 
-        if (!$first) {
+        if (false === $first) {
             return $filepaths;
         }
 
-        throw new \InvalidArgumentException(sprintf('The file "%s" does not exist (in: %s).', $name, implode(', ', $this->paths)));
+        throw new \InvalidArgumentException("The file $name does not exist in " . implode(', ', $this->paths));
     }
 
     /**
-     * @param BundleInterface[] $bundles
+     * Finds the resources paths in an array of bundles.
      *
-     * @return array
+     * @param BundleInterface[] $bundles The bundles array
+     *
+     * @return array The paths array
      */
     private function findResourcesPaths(array $bundles)
     {
@@ -87,18 +88,18 @@ class FileLocator implements FileLocatorInterface
     }
 
     /**
-     * Get the Contao resources path from a bundle
+     * Returns the Contao resources path from a bundle.
      *
-     * @param BundleInterface $bundle
+     * @param BundleInterface $bundle The bundle object
      *
-     * @return string
+     * @return string The resources path
      */
     private function getResourcesPath(BundleInterface $bundle)
     {
         if ($bundle instanceof ContaoModuleBundle) {
             return $bundle->getPath();
-        } else {
-            return $bundle->getPath() . '/Resources/contao';
         }
+
+        return $bundle->getPath() . '/Resources/contao';
     }
 }

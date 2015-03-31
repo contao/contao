@@ -281,6 +281,11 @@ class Installer extends \Controller
 		// Only check the active modules (see #4541)
 		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
 		{
+			if (!is_dir($strDir))
+			{
+				continue;
+			}
+
 			foreach (scan($strDir) as $strFile)
 			{
 				// Ignore non PHP files and files which have been included before

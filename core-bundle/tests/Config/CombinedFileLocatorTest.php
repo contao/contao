@@ -49,6 +49,9 @@ class CombinedFileLocatorTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Config\CombinedFileLocator', $this->locator);
     }
 
+    /**
+     * Tests locating all resources with a cache hit.
+     */
     public function testCacheHit()
     {
         $files = $this->locator->locate('config/autoload.php');
@@ -57,6 +60,9 @@ class CombinedFileLocatorTest extends TestCase
         $this->assertContains($this->getCacheDir() . '/contao/config/autoload.php', $files);
     }
 
+    /**
+     * Tests locating the first resource with a cache hit.
+     */
     public function testCacheHitFirst()
     {
         $file = $this->locator->locate('config/autoload.php', null, true);
@@ -64,6 +70,9 @@ class CombinedFileLocatorTest extends TestCase
         $this->assertEquals($this->getCacheDir() . '/contao/config/autoload.php', $file);
     }
 
+    /**
+     * Tests locating all resources without a cache hit.
+     */
     public function testCacheMiss()
     {
         $files = $this->locator->locate('config/config.php');
@@ -74,6 +83,8 @@ class CombinedFileLocatorTest extends TestCase
     }
 
     /**
+     * Tests locating the first resource without a cache hit.
+     *
      * @expectedException \InvalidArgumentException
      */
     public function testCacheMissFirst()
@@ -82,9 +93,9 @@ class CombinedFileLocatorTest extends TestCase
     }
 
     /**
-     * Mocks a kernel.
+     * Returns a mocked kernel object.
      *
-     * @return Kernel
+     * @return Kernel The kernel object.
      */
     private function mockKernel()
     {
@@ -128,19 +139,22 @@ class CombinedFileLocatorTest extends TestCase
         $bundle
             ->expects($this->any())
             ->method('getName')
-            ->willReturn('test');
+            ->willReturn('test')
+        ;
 
         $bundle
             ->expects($this->any())
             ->method('getPath')
-            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle');
+            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle')
+        ;
 
         $module = new ContaoModuleBundle('foobar', $this->getRootDir() . '/app');
 
         $kernel
             ->expects($this->any())
             ->method('getBundles')
-            ->willReturn([$bundle, $module]);
+            ->willReturn([$bundle, $module])
+        ;
 
         return $kernel;
     }

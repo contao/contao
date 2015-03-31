@@ -41,6 +41,9 @@ class PhpFileLoaderTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Config\Loader\PhpFileLoader', $this->loader);
     }
 
+    /**
+     * Tests the supports() method.
+     */
     public function testSupports()
     {
         $this->assertTrue(
@@ -56,6 +59,9 @@ class PhpFileLoaderTest extends TestCase
         );
     }
 
+    /**
+     * Tests the load() method.
+     */
     public function testLoad()
     {
         $this->assertEquals(
