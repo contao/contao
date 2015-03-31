@@ -64,8 +64,8 @@ class XliffFileLoaderTest extends TestCase
 \$GLOBALS['TL_LANG']['MSC']['first'] = 'This is the first source';
 \$GLOBALS['TL_LANG']['MSC']['second'][0] = 'This is the second source';
 \$GLOBALS['TL_LANG']['MSC']['third']['with'][1] = 'This is the third source';
-TXT
-;
+
+TXT;
 
         $target = <<<TXT
 
@@ -73,8 +73,8 @@ TXT
 \$GLOBALS['TL_LANG']['MSC']['first'] = 'This is the first target';
 \$GLOBALS['TL_LANG']['MSC']['second'][0] = 'This is the second target';
 \$GLOBALS['TL_LANG']['MSC']['third']['with'][1] = 'This is the third target';
-TXT
-        ;
+
+TXT;
 
         $this->assertEquals(
             $source,

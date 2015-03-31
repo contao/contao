@@ -43,7 +43,7 @@ class CombinedFileDumperTest extends TestCase
     public function testDump()
     {
         $dumper = new CombinedFileDumper(
-            $this->mockFilesystem("<?php \necho 'test';"),
+            $this->mockFilesystem("<?php \necho 'test';\n"),
             $this->mockLoader(),
             $this->getCacheDir()
         );
@@ -57,7 +57,7 @@ class CombinedFileDumperTest extends TestCase
     public function testValidHeader()
     {
         $dumper = new CombinedFileDumper(
-            $this->mockFilesystem("<?php \necho 'foo';\necho 'test';"),
+            $this->mockFilesystem("<?php \necho 'foo';\necho 'test';\n"),
             $this->mockLoader(),
             $this->getCacheDir()
         );
@@ -94,9 +94,7 @@ class CombinedFileDumperTest extends TestCase
     {
         $filesystem = $this->getMock(
             'Symfony\Component\Filesystem\Filesystem',
-            [
-                'dumpFile'
-            ]
+            ['dumpFile']
         );
 
         $filesystem
@@ -104,7 +102,6 @@ class CombinedFileDumperTest extends TestCase
             ->method('dumpFile')
             ->with($this->getCacheDir() . '/test.php', $expects)
         ;
-
 
         return $filesystem;
     }
@@ -118,16 +115,14 @@ class CombinedFileDumperTest extends TestCase
     {
         $loader = $this->getMock(
             'Contao\CoreBundle\Config\Loader\PhpFileLoader',
-            [
-                'load'
-            ]
+            ['load']
         );
 
         $loader
             ->expects($this->once())
             ->method('load')
             ->with('test.php', null)
-            ->willReturn("\necho 'test';")
+            ->willReturn("\necho 'test';\n")
         ;
 
         return $loader;

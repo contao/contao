@@ -52,7 +52,7 @@ class PhpFileLoader extends Loader
             $code = substr($code, 0, -2);
         }
 
-        return rtrim($code);
+        return rtrim($code) . "\n";
     }
 
     /**

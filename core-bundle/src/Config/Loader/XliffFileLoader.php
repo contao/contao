@@ -79,7 +79,7 @@ class XliffFileLoader extends Loader
         // Use loadXML() instead of load() (see contao/core#7192)
         $xml->loadXML(file_get_contents($name));
 
-        $return = "\n\n// " . str_replace($this->rootDir . '/', '', $name) . "\n";
+        $return = "\n// " . str_replace($this->rootDir . '/', '', $name) . "\n";
         $units = $xml->getElementsByTagName('trans-unit');
 
         // FIXME: refactor
@@ -111,7 +111,7 @@ class XliffFileLoader extends Loader
             $this->addGlobal($chunks, $value);
         }
 
-        return rtrim($return);
+        return $return;
     }
 
     /**
