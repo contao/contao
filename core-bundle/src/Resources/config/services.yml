@@ -29,12 +29,16 @@ services:
 
     contao.listener.output_from_cache:
         class: Contao\CoreBundle\EventListener\OutputFromCacheListener
+        calls:
+            - [setContainer, ["@service_container"]]
         tags:
             # Priority must be lower than the one of the Contao initialize system listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 24 }
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
+        calls:
+            - [setContainer, ["@service_container"]]
         tags:
             # Priority must be lower than the one of the Contao initialize system listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 26 }
