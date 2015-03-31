@@ -66,19 +66,70 @@ class AddPackagesPass implements CompilerPassInterface
 
         foreach ($composerData as $package) {
             $name = str_replace("'", "\\'", $package['name']);
-            $version = substr($package['version_normalized'], 0, strrpos($package['version_normalized'], '.'));
 
-            if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $version)) {
-                $packages[$name] = $version;
-            } elseif (isset($package['extra']['branch-alias'][$package['version_normalized']])) {
-                $version = str_replace('x-dev', '9999999', $package['extra']['branch-alias'][$package['version_normalized']]);
-
-                if (preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $version)) {
-                    $packages[$name] = $version;
-                }
+            if (!$this->addNormalizedVersion($name, $package, $packages)) {
+                $this->addBranchAliasVersion($name, $package, $packages);
             }
         }
 
         return $packages;
+    }
+
+    /**
+     * Adds version information from "version_normalized".
+     *
+     * @param string $name     The name of the package
+     * @param array  $package  The package configuration
+     * @param array  $packages All packages and versions
+     *
+     * @return bool Wether a version was found and added
+     */
+    private function addNormalizedVersion($name, array $package, array &$packages)
+    {
+        $version = substr($package['version_normalized'], 0, strrpos($package['version_normalized'], '.'));
+
+        if ($this->isValidVersion($version)) {
+            $packages[$name] = $version;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Adds version information from branch alias.
+     *
+     * @param string $name     The name of the package
+     * @param array  $package  The package configuration
+     * @param array  $packages All packages and versions
+     *
+     * @return bool Wether a version was found and added
+     */
+    private function addBranchAliasVersion($name, array $package, array &$packages)
+    {
+        if (isset($package['extra']['branch-alias'][$package['version_normalized']])) {
+            $version = str_replace('x-dev', '9999999', $package['extra']['branch-alias'][$package['version_normalized']]);
+
+            if ($this->isValidVersion($version)) {
+                $packages[$name] = $version;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns wether the given value is a valid version.
+     *
+     * @param string $value The version value
+     *
+     * @return bool Wether the value is a valid version
+     */
+    private function isValidVersion($value)
+    {
+        return (bool) preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $value);
     }
 }
