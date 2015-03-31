@@ -131,6 +131,15 @@ class FileLocatorTest extends TestCase
         $this->locator->locate('config/test.php', null, true);
     }
 
+
+    public function testBundleNames()
+    {
+        $bundles = array_keys($this->locator->locate('config'));
+
+        $this->assertContains('TestBundle', $bundles);
+        $this->assertContains('foobar', $bundles);
+    }
+
     /**
      * Returns a mocked kernel object.
      *
@@ -172,14 +181,10 @@ class FileLocatorTest extends TestCase
 
         $bundle = $this->getMock(
             'Symfony\Component\HttpKernel\Bundle\Bundle',
-            ['getName', 'getPath']
+            ['getName', 'getPath'],
+            [],
+            'TestBundle'
         );
-
-        $bundle
-            ->expects($this->any())
-            ->method('getName')
-            ->willReturn('test')
-        ;
 
         $bundle
             ->expects($this->any())

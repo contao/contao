@@ -133,14 +133,10 @@ class CombinedFileLocatorTest extends TestCase
 
         $bundle = $this->getMock(
             'Symfony\Component\HttpKernel\Bundle\Bundle',
-            ['getName', 'getPath']
+            ['getName', 'getPath'],
+            [],
+            'TestBundle'
         );
-
-        $bundle
-            ->expects($this->any())
-            ->method('getName')
-            ->willReturn('test')
-        ;
 
         $bundle
             ->expects($this->any())
