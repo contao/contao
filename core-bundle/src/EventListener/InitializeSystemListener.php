@@ -105,9 +105,9 @@ class InitializeSystemListener extends ContainerAware
             return 'BE';
         } elseif ($this->container->isScopeActive('frontend')) {
             return 'FE';
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
