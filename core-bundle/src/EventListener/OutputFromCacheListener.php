@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class OutputFromCacheListener extends ContainerAware
+class OutputFromCacheListener extends ScopeAwareListener
 {
     /**
      * Forwards the request to the Frontend class and sets the response if any.
@@ -29,10 +29,7 @@ class OutputFromCacheListener extends ContainerAware
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$event->isMasterRequest()
-            || null === $this->container
-            || !$this->container->isScopeActive('frontend')
-        ) {
+        if (!$this->isFrontendMasterRequest($event)) {
             return;
         }
 

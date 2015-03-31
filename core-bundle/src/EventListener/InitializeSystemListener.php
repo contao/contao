@@ -18,7 +18,6 @@ use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
@@ -30,7 +29,7 @@ use Symfony\Component\Routing\RouterInterface;
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InitializeSystemListener extends ContainerAware
+class InitializeSystemListener extends ScopeAwareListener
 {
     /**
      * @var RouterInterface
@@ -101,9 +100,9 @@ class InitializeSystemListener extends ContainerAware
      */
     private function getScopeFromContainer()
     {
-        if ($this->container->isScopeActive('backend')) {
+        if ($this->isBackendScope()) {
             return 'BE';
-        } elseif ($this->container->isScopeActive('frontend')) {
+        } elseif ($this->isFrontendScope()) {
             return 'FE';
         }
 
