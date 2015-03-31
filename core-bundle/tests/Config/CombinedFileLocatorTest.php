@@ -37,7 +37,12 @@ class CombinedFileLocatorTest extends TestCase
     {
         $this->locator = new CombinedFileLocator(
             $this->getCacheDir() . '/contao',
-            new FileLocator($this->mockKernel())
+            new FileLocator(
+                [
+                    'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+                    'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+                ]
+            )
         );
     }
 
@@ -90,68 +95,5 @@ class CombinedFileLocatorTest extends TestCase
     public function testCacheMissFirst()
     {
         $this->locator->locate('config/config.php', null, true);
-    }
-
-    /**
-     * Returns a mocked kernel object.
-     *
-     * @return Kernel The kernel object.
-     */
-    private function mockKernel()
-    {
-        $kernel = $this->getMock(
-            'Symfony\Component\HttpKernel\Kernel',
-            [
-                // KernelInterface
-                'registerBundles',
-                'registerContainerConfiguration',
-                'boot',
-                'shutdown',
-                'getBundles',
-                'isClassInActiveBundle',
-                'getBundle',
-                'locateResource',
-                'getName',
-                'getEnvironment',
-                'isDebug',
-                'getRootDir',
-                'getContainer',
-                'getStartTime',
-                'getCacheDir',
-                'getLogDir',
-                'getCharset',
-
-                // HttpKernelInterface
-                'handle',
-
-                // Serializable
-                'serialize',
-                'unserialize',
-            ],
-            ['test', false]
-        );
-
-        $bundle = $this->getMock(
-            'Symfony\Component\HttpKernel\Bundle\Bundle',
-            ['getName', 'getPath'],
-            [],
-            'TestBundle'
-        );
-
-        $bundle
-            ->expects($this->any())
-            ->method('getPath')
-            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle')
-        ;
-
-        $module = new ContaoModuleBundle('foobar', $this->getRootDir() . '/app');
-
-        $kernel
-            ->expects($this->any())
-            ->method('getBundles')
-            ->willReturn([$bundle, $module])
-        ;
-
-        return $kernel;
     }
 }
