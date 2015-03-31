@@ -83,6 +83,6 @@ class CombinedFileDumper implements DumperInterface
             $buffer .= $this->loader->load($file, $type);
         }
 
-        $this->filesystem->dumpFile($this->cacheDir . "/$cacheFile", $buffer);
+        $this->filesystem->dumpFile($this->cacheDir . "/$cacheFile", $buffer . "\n");
     }
 }

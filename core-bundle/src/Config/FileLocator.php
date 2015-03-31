@@ -46,25 +46,26 @@ class FileLocator implements FileLocatorInterface
             throw new \InvalidArgumentException('An empty file name is not valid to be located.');
         }
 
-        $filepaths = [];
+        $paths = [];
 
+        // FIXME: refactor
         foreach ($this->paths as $bundle => $path) {
             if (!file_exists($file = "$path/$name")) {
                 continue;
             }
 
-            if (true === $first) {
+            if ($first) {
                 return $file;
             }
 
-            $filepaths[$bundle] = $file;
+            $paths[$bundle] = $file;
         }
 
-        if (false === $first) {
-            return $filepaths;
+        if ($first) {
+            throw new \InvalidArgumentException("The file $name does not exist in " . implode(', ', $this->paths));
         }
 
-        throw new \InvalidArgumentException("The file $name does not exist in " . implode(', ', $this->paths));
+        return $paths;
     }
 
     /**

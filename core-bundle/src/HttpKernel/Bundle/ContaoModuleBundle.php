@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\HttpKernel\Bundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Converts a Contao module in system/modules into a bundle.
+ * Allows to register legacy Contao modules as bundle.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

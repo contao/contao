@@ -55,6 +55,6 @@ class ContaoUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return is_subclass_of($class, 'Contao\User');
+        return is_subclass_of($class, 'Contao\\User');
     }
 }

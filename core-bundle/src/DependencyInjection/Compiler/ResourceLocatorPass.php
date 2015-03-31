@@ -34,7 +34,7 @@ class ResourceLocatorPass implements CompilerPassInterface
         } else {
             $chainLocator = $container->getDefinition('contao.resource_locator.chain');
 
-            foreach ($this->getPriorizedLocators($locatorIds) as $locators) {
+            foreach ($this->getPriorizedLocators($locatorIds) as $locators) { // FIXME: array_flatten?
                 foreach ($locators as $locator) {
                     $chainLocator->addMethodCall('addLocator', [new Reference($locator)]);
                 }

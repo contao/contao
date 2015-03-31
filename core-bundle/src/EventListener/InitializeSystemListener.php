@@ -71,11 +71,7 @@ class InitializeSystemListener extends ScopeAwareListener
             $request->attributes->get('_route_params')
         );
 
-        $this->setConstants(
-            $this->getScopeFromContainer(),
-            substr($route, strlen($request->getBasePath()) + 1)
-        );
-
+        $this->setConstants($this->getContainerScope(), substr($route, strlen($request->getBasePath()) + 1));
         $this->boot($request);
     }
 
@@ -97,7 +93,7 @@ class InitializeSystemListener extends ScopeAwareListener
      *
      * @return string The TL_MODE value
      */
-    private function getScopeFromContainer()
+    private function getContainerScope()
     {
         if ($this->isBackendScope()) {
             return 'BE';

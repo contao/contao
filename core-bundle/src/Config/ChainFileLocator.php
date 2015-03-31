@@ -41,11 +41,12 @@ class ChainFileLocator implements FileLocatorInterface
     {
         $files = [];
 
+        // FIXME: refactor
         foreach ($this->locators as $locator) {
             try {
                 $file = $locator->locate($name, $currentPath, $first);
 
-                if (true === $first) {
+                if ($first) {
                     return $file;
                 }
 
@@ -55,11 +56,11 @@ class ChainFileLocator implements FileLocatorInterface
             }
         }
 
-        if (false === $first) {
-            return $files;
+        if ($first) {
+            throw new \InvalidArgumentException("No locator was able to find $name");
         }
 
-        throw new \InvalidArgumentException("No locator was able to find $name");
+        return $files;
     }
 
     /**

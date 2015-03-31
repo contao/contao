@@ -32,9 +32,7 @@ class OutputFromCacheListener extends ScopeAwareListener
             return;
         }
 
-        $response = Frontend::getResponseFromCache();
-
-        if (null !== $response) {
+        if (null !== ($response = Frontend::getResponseFromCache())) {
             $event->setResponse($response);
         }
     }

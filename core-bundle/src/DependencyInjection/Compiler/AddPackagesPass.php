@@ -42,12 +42,12 @@ class AddPackagesPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if (!is_file($this->jsonFile)) {
-            $json = null;
+            $packages = [];
         } else {
-            $json = json_decode(file_get_contents($this->jsonFile), true);
+            $packages = $this->getVersions(json_decode(file_get_contents($this->jsonFile), true));
         }
 
-        $container->setParameter('kernel.packages', $this->getVersions($json));
+        $container->setParameter('kernel.packages', $packages);
     }
 
     /**
@@ -57,14 +57,9 @@ class AddPackagesPass implements CompilerPassInterface
      *
      * @return array The packages array
      */
-    private function getVersions(array $json = null)
+    private function getVersions(array $json)
     {
         $packages = [];
-
-        // File was not found or invalid JSON
-        if (null === $json) {
-            return [];
-        }
 
         foreach ($json as $package) {
             $this->addVersion($package, $packages);
