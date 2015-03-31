@@ -120,6 +120,45 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
+     * Tests that the Contao framework is initialized on subrequest if master request is not within scope.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testFrontendSubRequest()
+    {
+        global $kernel;
+
+        /** @var Kernel $kernel */
+        $kernel    = $this->mockKernel();
+        $container = $kernel->getContainer();
+
+        $listener = new InitializeSystemListener(
+            $this->mockRouter('/index.html'),
+            $this->getRootDir() . '/app'
+        );
+
+        $listener->setContainer($container);
+
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
+
+        $this->assertFalse(defined('TL_MODE'));
+        $this->assertFalse(defined('TL_SCRIPT'));
+        $this->assertFalse(defined('TL_ROOT'));
+
+        $container->enterScope('frontend');
+
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST));
+
+        $this->assertTrue(defined('TL_MODE'));
+        $this->assertTrue(defined('TL_SCRIPT'));
+        $this->assertTrue(defined('TL_ROOT'));
+    }
+
+    /**
      * Tests a request without scope.
      *
      * @runInSeparateProcess
@@ -179,36 +218,45 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
-     * Tests that the Contao framework is not initialized for subrequests.
+     * Tests the Contao framework is not booted twice on subsequent requests.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testSubRequest()
+    public function testNotBootedTwiceOnKernelRequest()
     {
         global $kernel;
 
         /** @var Kernel $kernel */
-        $kernel    = $this->mockKernel();
+        $kernel = $this->mockKernel();
         $container = $kernel->getContainer();
 
-        $listener = new InitializeSystemListener(
-            $this->mockRouter('/index.html'),
-            $this->getRootDir() . '/app'
+        /** @var \PHPUnit_Framework_MockObject_MockObject|InitializeSystemListener $listener */
+        $listener = $this->getMock(
+            'Contao\CoreBundle\EventListener\InitializeSystemListener',
+            ['setConstants', 'boot'],
+            [
+                $this->getMock('Symfony\Component\Routing\RouterInterface'),
+                $this->getRootDir()
+            ]
         );
 
-        $listener->setContainer($container);
+        $listener
+            ->expects($this->once())
+            ->method('setConstants');
 
+        $listener
+            ->expects($this->once())
+            ->method('boot');
+
+        $listener->setContainer($container);
         $container->enterScope('frontend');
 
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
         $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST));
-
-        $this->assertFalse(defined('TL_MODE'));
-        $this->assertFalse(defined('TL_SCRIPT'));
-        $this->assertFalse(defined('TL_ROOT'));
     }
 
     /**
@@ -236,6 +284,46 @@ class InitializeSystemListenerTest extends TestCase
         $this->assertEquals('FE', TL_MODE);
         $this->assertEquals('console', TL_SCRIPT);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
+    }
+
+    /**
+     * Tests the Contao framework is not booted twice on second console command.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testNotBootedTwiceOnConsoleCommand()
+    {
+        global $kernel;
+
+        /** @var Kernel $kernel */
+        $kernel = $this->mockKernel();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|InitializeSystemListener $listener */
+        $listener = $this->getMock(
+            'Contao\CoreBundle\EventListener\InitializeSystemListener',
+            ['setConstants', 'boot'],
+            [
+                $this->getMock('Symfony\Component\Routing\RouterInterface'),
+                $this->getRootDir()
+            ]
+        );
+
+        $listener
+            ->expects($this->once())
+            ->method('setConstants');
+
+        $listener
+            ->expects($this->once())
+            ->method('boot');
+
+        $listener->onConsoleCommand(
+            new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
+        );
+
+        $listener->onConsoleCommand(
+            new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
+        );
     }
 
     /**
