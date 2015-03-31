@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\EventListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
@@ -40,9 +41,9 @@ class ContainerScopeListener
     /**
      * Enters the container scope when a route has been found.
      *
-     * @param FilterControllerEvent $event
+     * @param GetResponseEvent $event
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelRequest(GetResponseEvent $event)
     {
         if (null !== ($scope = $this->getScopeFromEvent($event))) {
             $this->container->enterScope($scope);

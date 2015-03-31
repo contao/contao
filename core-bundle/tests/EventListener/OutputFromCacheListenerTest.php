@@ -12,6 +12,8 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\OutputFromCacheListener;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -36,16 +38,64 @@ class OutputFromCacheListenerTest extends TestCase
     /**
      * Tests adding a response to the event.
      */
-    public function testOnKernelRequest()
+    public function testFrontendScope()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request  = new Request();
-        $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new OutputFromCacheListener();
+        $kernel    = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $container = new Container();
+        $request   = new Request();
+        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener  = new OutputFromCacheListener();
 
+        $container->addScope(new Scope('frontend'));
+        $container->enterScope('frontend');
+
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->setContainer($container);
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
+    }
+
+    /**
+     * Tests that the listener does not act if scope is not "frontend"
+     */
+    public function testInvalidScope()
+    {
+        /** @var HttpKernelInterface $kernel */
+        $kernel    = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $container = new Container();
+        $request   = new Request();
+        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener  = new OutputFromCacheListener();
+
+        $container->addScope(new Scope('backend'));
+        $container->enterScope('backend');
+
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->setContainer($container);
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse($event->hasResponse());
+    }
+
+    /**
+     * Tests that the listener does not act without container
+     */
+    public function testWithoutContainer()
+    {
+        /** @var HttpKernelInterface $kernel */
+        $kernel    = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $request   = new Request();
+        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener  = new OutputFromCacheListener();
+
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse($event->hasResponse());
     }
 }

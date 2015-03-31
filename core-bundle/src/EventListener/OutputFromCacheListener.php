@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\Frontend;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class OutputFromCacheListener
+class OutputFromCacheListener extends ScopeAwareListener
 {
     /**
      * Forwards the request to the Frontend class and sets the response if any.
@@ -28,6 +29,10 @@ class OutputFromCacheListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if (!$this->isFrontendMasterRequest($event)) {
+            return;
+        }
+
         $response = Frontend::getResponseFromCache();
 
         if (null !== $response) {

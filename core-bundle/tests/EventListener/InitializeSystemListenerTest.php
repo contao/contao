@@ -15,7 +15,12 @@ use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
 use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
+use Contao\Fixtures\Command\FrameworkDependentCommand;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -48,25 +53,31 @@ class InitializeSystemListenerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testFrontend()
+    public function testFrontendRequest()
     {
         global $kernel;
 
         /** @var Kernel $kernel */
-        $kernel = $this->mockKernel();
+        $kernel    = $this->mockKernel();
+        $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
             $this->getRootDir() . '/app'
         );
 
+        $listener->setContainer($container);
+        $container->enterScope('frontend');
+
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_scope', 'frontend');
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener->onKernelRequest($event);
 
+        $this->assertTrue(defined('TL_MODE'));
+        $this->assertTrue(defined('TL_SCRIPT'));
+        $this->assertTrue(defined('TL_ROOT'));
         $this->assertEquals('FE', TL_MODE);
         $this->assertEquals('index.html', TL_SCRIPT);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
@@ -78,53 +89,34 @@ class InitializeSystemListenerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testBackend()
+    public function testBackendRequest()
     {
         global $kernel;
 
         /** @var Kernel $kernel */
-        $kernel = $this->mockKernel();
+        $kernel    = $this->mockKernel();
+        $container = $kernel->getContainer();
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/contao/install'),
             $this->getRootDir() . '/app'
         );
 
+        $listener->setContainer($container);
+        $container->enterScope('backend');
+
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_scope', 'backend');
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener->onKernelRequest($event);
 
+        $this->assertTrue(defined('TL_MODE'));
+        $this->assertTrue(defined('TL_SCRIPT'));
+        $this->assertTrue(defined('TL_ROOT'));
         $this->assertEquals('BE', TL_MODE);
         $this->assertEquals('contao/install', TL_SCRIPT);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
-    }
-
-    /**
-     * Tests a request without route.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @expectedException \Symfony\Component\Routing\Exception\RouteNotFoundException
-     */
-    public function testRequestWithoutRoute()
-    {
-        global $kernel;
-
-        /** @var Kernel $kernel */
-        $kernel = $this->mockKernel();
-
-        $listener = new InitializeSystemListener(
-            $this->mockRouter('/index.html'),
-            $this->getRootDir() . '/app'
-        );
-
-        $request = new Request();
-
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener->onKernelRequest($event);
     }
 
     /**
@@ -133,7 +125,39 @@ class InitializeSystemListenerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testRequestWithoutScope()
+    public function testWithoutScope()
+    {
+        global $kernel;
+
+        /** @var Kernel $kernel */
+        $kernel    = $this->mockKernel();
+        $container = $kernel->getContainer();
+
+        $listener = new InitializeSystemListener(
+            $this->mockRouter('/index.html'),
+            $this->getRootDir() . '/app'
+        );
+
+        $listener->setContainer($container);
+
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse(defined('TL_MODE'));
+        $this->assertFalse(defined('TL_SCRIPT'));
+        $this->assertFalse(defined('TL_ROOT'));
+    }
+
+    /**
+     * Tests that the Contao framework is not initialized without a container.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testWithoutContainer()
     {
         global $kernel;
 
@@ -151,9 +175,42 @@ class InitializeSystemListenerTest extends TestCase
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener->onKernelRequest($event);
 
-        $this->assertEquals('FE', TL_MODE);
-        $this->assertEquals('index.html', TL_SCRIPT);
-        $this->assertEquals($this->getRootDir(), TL_ROOT);
+        $this->assertFalse(defined('TL_MODE'));
+        $this->assertFalse(defined('TL_SCRIPT'));
+        $this->assertFalse(defined('TL_ROOT'));
+    }
+
+    /**
+     * Tests that the Contao framework is not initialized for subrequests.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testSubRequest()
+    {
+        global $kernel;
+
+        /** @var Kernel $kernel */
+        $kernel    = $this->mockKernel();
+        $container = $kernel->getContainer();
+
+        $listener = new InitializeSystemListener(
+            $this->mockRouter('/index.html'),
+            $this->getRootDir() . '/app'
+        );
+
+        $listener->setContainer($container);
+        $container->enterScope('frontend');
+
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse(defined('TL_MODE'));
+        $this->assertFalse(defined('TL_SCRIPT'));
+        $this->assertFalse(defined('TL_ROOT'));
     }
 
     /**
@@ -174,7 +231,14 @@ class InitializeSystemListenerTest extends TestCase
             $this->getRootDir() . '/app'
         );
 
-        $listener->onConsoleCommand();
+
+        $listener->onConsoleCommand(
+            new ConsoleCommandEvent(
+                new FrameworkDependentCommand(),
+                new StringInput(''),
+                new ConsoleOutput()
+            ));
+
 
         $this->assertEquals('FE', TL_MODE);
         $this->assertEquals('console', TL_SCRIPT);
@@ -224,6 +288,8 @@ class InitializeSystemListenerTest extends TestCase
         );
 
         $container = new Container();
+        $container->addScope(new Scope('frontend'));
+        $container->addScope(new Scope('backend'));
 
         $container->set(
             'contao.resource_provider',
