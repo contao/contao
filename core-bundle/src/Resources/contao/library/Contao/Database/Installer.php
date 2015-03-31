@@ -279,10 +279,8 @@ class Installer extends \Controller
 		\Config::set('bypassCache', true);
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
 		{
-			$strDir = $strFolder . '/dca';
-
 			if (!is_dir($strDir))
 			{
 				continue;
@@ -339,20 +337,8 @@ class Installer extends \Controller
 		$return = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strModule => $strFolder)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/database.sql') as $strFile)
 		{
-			if (in_array($strModule, array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
-			{
-				continue; // ignore the database.sql of these modules
-			}
-
-			$strFile = $strFolder . '/config/database.sql';
-
-			if (!file_exists($strFile))
-			{
-				continue;
-			}
-
 			$data = file($strFile);
 
 			foreach ($data as $k=>$v)

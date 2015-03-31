@@ -11,7 +11,7 @@ services:
         tags:
             # Priority must be higher than any other listener that uses the Contao framework and lower than the
             # priority of the route_listener, which defaults to 32.
-            - { name: kernel.event_listener, event: kernel.controller, method: onKernelRequest, priority: 30 }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
             - { name: kernel.event_listener, event: kernel.finish_request, method: onKernelFinishRequest, priority: -254 }
 
     contao.listener.initialize_system:
@@ -43,10 +43,31 @@ services:
             # Priority must be lower than the one of the initialize_system listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 26 }
 
-    contao.resource_provider:
-        class: Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider
+    contao.resource_locator.bundles:
+        class: Contao\CoreBundle\Config\FileLocator
+        public: false
+        factory: [Contao\CoreBundle\Config\FileLocator, createFromKernelBundles]
         arguments:
-            - "%kernel.root_dir%"
+            - "@kernel"
+        tags:
+            - { name: contao.resource_locator }
+
+    contao.resource_locator.chain:
+        class: Contao\CoreBundle\Config\ChainFileLocator
+        public: false
+
+    contao.resource_locator.cache:
+        class: Contao\CoreBundle\Config\CombinedFileLocator
+        public: false
+        arguments:
+            - '%kernel.cache_dir%/contao'
+            - "@contao.resource_locator"
+
+    contao.resource_locator:
+        alias: contao.resource_locator.bundles
+
+    contao.cached_resource_locator:
+        alias: contao.resource_locator.cache
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
@@ -70,6 +91,6 @@ services:
     contao.web_profiler.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
-            - '%kernel.packages%' # FIXME: missing parameter
+            - '%kernel.packages%'
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }

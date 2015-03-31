@@ -70,22 +70,13 @@ class DcaLoader extends \Controller
 		}
 
 		$GLOBALS['loadDataContainer'][$this->strTable] = true; // see #6145
-		$strCacheFile = 'system/cache/dca/' . $this->strTable . '.php';
 
-		// Try to load from cache
-		if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
-		{
-			include TL_ROOT . '/' . $strCacheFile;
-		}
-		else
-		{
-            /** @var KernelInterface $kernel */
-			global $kernel;
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('dca/' . $this->strTable . '.php') as $file)
-			{
-				include $file->getPathname();
-			}
+		foreach ($kernel->getContainer()->get('contao.cached_resource_locator')->locate('dca/' . $this->strTable . '.php') as $file)
+		{
+			include $file;
 		}
 
 		// HOOK: allow to load custom settings

@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Command;
 
+use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -76,12 +77,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         $fs->remove("$rootDir/web/vendor");
 
         $this->symlinkFiles($uploadPath, $rootDir, $output);
-
-        // Symlink the public extension subfolders
-        foreach ($this->container->get('contao.resource_provider')->getPublicFolders() as $path) {
-            $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
-        }
-
+        $this->symlinkModules($rootDir, $output);
         $this->symlinkThemes($rootDir, $output);
 
         // Symlink the assets and themes directory
@@ -96,19 +92,35 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      * @param string          $rootDir    The root directory
      * @param OutputInterface $output     The output object
      */
-    private function symlinkFiles($uploadPath, $rootDir, $output)
+    private function symlinkFiles($uploadPath, $rootDir, OutputInterface $output)
     {
-        $finder = Finder::create()
-            ->ignoreDotFiles(false)
-            ->files()
-            ->name('.public')
-            ->in("$rootDir/$uploadPath")
-        ;
+        $finder = $this->findIn('.public', "$rootDir/$uploadPath");
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $path = $uploadPath . '/' . $file->getRelativePath();
-            $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
+            $this->relativeSymlink($uploadPath . '/' . $file->getRelativePath(), $rootDir, $output);
+        }
+    }
+
+    /**
+     * Creates symlinks for the public module subfolders.
+     *
+     * @param string          $rootDir The root directory
+     * @param OutputInterface $output  The output object
+     */
+    private function symlinkModules($rootDir, OutputInterface $output)
+    {
+        $files = $this->findIn('.htaccess', "$rootDir/system/modules");
+
+        /** @var SplFileInfo[] $files */
+        foreach ($files as $file) {
+            $htaccess = new HtaccessAnalyzer($file);
+
+            if (!$htaccess->grantsAccess()) {
+                continue;
+            }
+
+            $this->relativeSymlink($file->getPath(), $rootDir, $output);
         }
     }
 
@@ -118,13 +130,16 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      * @param string          $rootDir The root directory
      * @param OutputInterface $output  The output object
      */
-    private function symlinkThemes($rootDir, $output)
+    private function symlinkThemes($rootDir, OutputInterface $output)
     {
-        $finder = $this->container->get('contao.resource_provider')->findIn('themes');
+        try {
+            $themes = $this->container->get('contao.resource_locator')->locate('themes');
+        } catch (\InvalidArgumentException $e) {
+            return; // no themes found
+        }
 
-        /** @var SplFileInfo $fileObj */
-        foreach ($finder->directories()->depth(0) as $fileObj) {
-            $path = str_replace("$rootDir/", '', $fileObj->getPathname());
+        foreach ($themes as $dir) {
+            $path = str_replace("$rootDir/", '', $dir);
 
             if (0 === strpos($path, 'system/modules/')) {
                 continue;
@@ -132,6 +147,18 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
 
             $this->symlink("../../$path", 'system/themes/' . basename($path), $rootDir, $output);
         }
+    }
+
+    /**
+     * Generates a symlink relative to the given path.
+     *
+     * @param string          $path    The path
+     * @param string          $rootDir The root directory
+     * @param OutputInterface $output  The output object
+     */
+    private function relativeSymlink($path, $rootDir, OutputInterface $output)
+    {
+        $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
     }
 
     /**
@@ -193,5 +220,18 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         if ($fs->exists("$rootDir/$target") && !is_link("$rootDir/$target")) {
             throw new \LogicException("The symlink target $target exists and is not a symlink");
         }
+    }
+
+    /**
+     * Returns a finder instance to find files in the given path.
+     *
+     * @param string $file The file name
+     * @param string $path The absolute path
+     *
+     * @return Finder The finder instance
+     */
+    private function findIn($file, $path)
+    {
+        return Finder::create()->ignoreDotFiles(false)->files()->name($file)->in($path);
     }
 }

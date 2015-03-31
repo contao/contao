@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Config\Loader\PhpFileLoader;
+use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -263,6 +265,9 @@ abstract class System
 	 */
 	public static function loadLanguageFile($strName, $strLanguage=null, $blnNoCache=false)
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
 		if ($strLanguage === null)
 		{
 			$strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
@@ -309,29 +314,31 @@ abstract class System
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
-			$strCacheFile = 'system/cache/language/' . $strCreateLang . '/' . $strName . '.php';
-
-			// Try to load from cache
-			if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
+			try
 			{
-				include TL_ROOT . '/' . $strCacheFile;
+				include $kernel->getContainer()->get('contao.cached_resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.php', null, true);
 			}
-			else
+			catch (\InvalidArgumentException $e)
 			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
+				$objLocator = $kernel->getContainer()->get('contao.resource_locator');
+				$xlfLoader  = new XliffFileLoader($kernel->getRootDir(), true);
 
-				foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
+				// XLIFF files will overwrite PHP files if both exist in the same bundle
+				$arrFiles = array_merge
+				(
+					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.php'),
+					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.xlf')
+				);
+
+				foreach ($arrFiles as $strFile)
 				{
-					$strFile = $strFolder . '/languages/' . $strCreateLang . '/' . $strName;
-
-					if (file_exists($strFile . '.xlf'))
+					if (pathinfo($strFile, PATHINFO_EXTENSION) == 'xlf')
 					{
-						static::convertXlfToPhp($strFile . '.xlf', $strCreateLang, true);
+						$xlfLoader->load($strFile, $strCreateLang);
 					}
 					elseif (file_exists($strFile . '.php'))
 					{
-						include $strFile . '.php';
+						include $strFile; // we can't use a loader here as it would change the scope
 					}
 				}
 			}
@@ -371,26 +378,15 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			$blnIsInstalled = is_dir(__DIR__ . '/../../languages/' . $strLanguage);
-
-			if (!$blnIsInstalled)
-			{
-				$blnIsInstalled = is_dir(TL_ROOT . '/system/cache/language/' . $strLanguage);
-			}
-
-			if (!$blnIsInstalled)
+			try
 			{
 				/** @var KernelInterface $kernel */
 				global $kernel;
 
-				foreach ($kernel->getContainer()->get('contao.resource_provider')->getResourcesPaths() as $strFolder)
-				{
-					if (is_dir(TL_ROOT . '/' . $strFolder . '/languages/' . $strLanguage))
-					{
-						$blnIsInstalled = true;
-						break;
-					}
-				}
+				$kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strLanguage, null, true);
+				$blnIsInstalled = true;
+			} catch (\InvalidArgumentException $e) {
+				$blnIsInstalled = false;
 			}
 
 			static::$arrLanguages[$strLanguage] = $blnIsInstalled;
@@ -675,6 +671,8 @@ abstract class System
 	 * @param string $strName The name of the PHP file
 	 *
 	 * @return string The PHP code without the PHP tags
+	 *
+	 * @deprecated Deprecated since version 4.0, to be removed in 5.0. Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.
 	 */
 	protected static function readPhpFileWithoutTags($strName)
 	{
@@ -684,27 +682,9 @@ abstract class System
 			$strName = TL_ROOT . '/' . $strName;
 		}
 
-		$strCode = rtrim(file_get_contents($strName));
+		$loader = new PhpFileLoader();
 
-		// Opening tag
-		if (strncmp($strCode, '<?php', 5) === 0)
-		{
-			$strCode = substr($strCode, 5);
-		}
-
-		// die() statement
-		$strCode = str_replace(array(
-			" if (!defined('TL_ROOT')) die('You cannot access this file directly!');",
-			" if (!defined('TL_ROOT')) die('You can not access this file directly!');"
-		), '', $strCode);
-
-		// Closing tag
-		if (substr($strCode, -2) == '?>')
-		{
-			$strCode = substr($strCode, 0, -2);
-		}
-
-		return rtrim($strCode);
+		return $loader->load($strName);
 	}
 
 
@@ -716,12 +696,13 @@ abstract class System
 	 * @param boolean $blnLoad     Add the labels to the global language array
 	 *
 	 * @return string The PHP code
+	 *
+	 * @deprecated Deprecated since version 4.0, to be removed in 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.
 	 */
 	public static function convertXlfToPhp($strName, $strLanguage, $blnLoad=false)
 	{
-		// Read the .xlf file
-		$xml = new \DOMDocument();
-		$xml->preserveWhiteSpace = false;
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
 		// Convert to absolute path
 		if (strpos($strName, TL_ROOT . '/') === false)
@@ -729,103 +710,9 @@ abstract class System
 			$strName = TL_ROOT . '/' . $strName;
 		}
 
-		// Use loadXML() instead of load() (see 7192)
-		$xml->loadXML(file_get_contents($strName));
+		$loader = new XliffFileLoader($kernel->getRootDir(), $blnLoad);
 
-		$return = "\n// " . str_replace(TL_ROOT . '/', '', $strName) . "\n";
-		$units = $xml->getElementsByTagName('trans-unit');
-
-		// Set up the quotekey function
-		$quotekey = function($key)
-		{
-			if ($key === '0')
-			{
-				return 0;
-			}
-			elseif (is_numeric($key))
-			{
-				return intval($key);
-			}
-			else
-			{
-				return "'$key'";
-			}
-		};
-
-		// Set up the quotevalue function
-		$quotevalue = function($value)
-		{
-			$value = str_replace("\n", '\n', $value);
-
-			if (strpos($value, '\n') !== false)
-			{
-				return '"' . str_replace(array('$', '"'), array('\\$', '\\"'), $value) . '"';
-			}
-			else
-			{
-				return "'" . str_replace("'", "\\'", $value) . "'";
-			}
-		};
-
-		/** @var \DOMElement[] $units */
-		foreach ($units as $unit)
-		{
-			$node = ($strLanguage == 'en') ? $unit->getElementsByTagName('source') : $unit->getElementsByTagName('target');
-
-			if ($node === null || $node->item(0) === null)
-			{
-				continue;
-			}
-
-			$value = $node->item(0)->nodeValue;
-
-			// Some closing </em> tags oddly have an extra space in
-			if (strpos($value, '</ em>') !== false)
-			{
-				$value = str_replace('</ em>', '</em>', $value);
-			}
-
-			$chunks = explode('.', $unit->getAttribute('id'));
-
-			// Handle keys with dots
-			if (preg_match('/tl_layout\.[a-z]+\.css\./', $unit->getAttribute('id')))
-			{
-				$chunks = array($chunks[0], $chunks[1] . '.' . $chunks[2], $chunks[3]);
-			}
-
-			// Create the array entries
-			switch (count($chunks))
-			{
-				case 2:
-					$return .= "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $quotekey($chunks[1]) . "] = " . $quotevalue($value) . ";\n";
-
-					if ($blnLoad)
-					{
-						$GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]] = $value;
-					}
-					break;
-
-				case 3:
-					$return .= "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $quotekey($chunks[1]) . "][" . $quotekey($chunks[2]) . "] = " . $quotevalue($value) . ";\n";
-
-					if ($blnLoad)
-					{
-						$GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]][$chunks[2]] = $value;
-					}
-					break;
-
-				case 4:
-					$return .= "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $quotekey($chunks[1]) . "][" . $quotekey($chunks[2]) . "][" . $quotekey($chunks[3]) . "] = " . $quotevalue($value) . ";\n";
-
-					if ($blnLoad)
-					{
-						$GLOBALS['TL_LANG'][$chunks[0]][$chunks[1]][$chunks[2]][$chunks[3]] = $value;
-					}
-					break;
-			}
-		}
-
-		return rtrim($return);
+		return $loader->load($strName, $strLanguage);
 	}
 
 

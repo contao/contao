@@ -10,11 +10,6 @@
 
 namespace Contao\CoreBundle\HttpKernel\Bundle;
 
-use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -34,52 +29,5 @@ final class ContaoModuleBundle extends Bundle
     {
         $this->name = $name;
         $this->path = dirname($rootDir) . '/system/modules/' . $this->name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(
-            new AddContaoResourcesPass($this->getPath(), $this->findPublicFolders())
-        );
-    }
-
-    /**
-     * Finds the public folders.
-     *
-     * @return array The public folders
-     */
-    private function findPublicFolders()
-    {
-        $dirs  = [];
-        $files = $this->findHtaccessFiles();
-
-        /** @var SplFileInfo[] $files */
-        foreach ($files as $file) {
-            $htaccess = new HtaccessAnalyzer($file);
-
-            if ($htaccess->grantsAccess()) {
-                $dirs[] = $file->getPath();
-            }
-        }
-
-        return $dirs;
-    }
-
-    /**
-     * Finds the .htaccess files in the Contao directory.
-     *
-     * @return Finder The finder object
-     */
-    private function findHtaccessFiles()
-    {
-        return Finder::create()
-            ->files()
-            ->name('.htaccess')
-            ->ignoreDotFiles(false)
-            ->in($this->getPath())
-        ;
     }
 }

@@ -254,9 +254,10 @@ class BackendMain extends \Backend
 		$this->Template->isPopup = \Input::get('popup');
 
 		// Hide the cache message in the repository manager (see #5966)
+		// FIXME: remove if the ER2 is no longer supported
 		if (!\Config::get('bypassCache') && $this->User->isAdmin)
 		{
-			$this->Template->needsCacheBuild = ((\Input::get('do') != 'repository_manager' || !isset($_GET['install']) && !isset($_GET['uninstall']) && !isset($_GET['update'])) && !is_dir(TL_ROOT . '/system/cache/dca'));
+			$this->Template->needsCacheBuild = ((\Input::get('do') != 'repository_manager' || !isset($_GET['install']) && !isset($_GET['uninstall']) && !isset($_GET['update'])) && !is_dir(TL_ROOT . '/system/cache/sql'));
 		}
 
 		// Front end preview links

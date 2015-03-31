@@ -11,8 +11,10 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\Config;
+use Contao\CoreBundle\Config\CombinedFileLocator;
+use Contao\CoreBundle\Config\FileLocator;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
-use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\Environment;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
@@ -116,12 +118,22 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         );
 
         $container = new Container();
-        $container->addScope(new Scope('frontend')); // FIXME: Scope('frontend', 'request')?
-        $container->addScope(new Scope('backend')); // FIXME: Scope('backend', 'request')?
+        $container->addScope(new Scope('frontend'));
+        $container->addScope(new Scope('backend'));
+
+        $locator = new FileLocator([
+            'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+            'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+        ]);
 
         $container->set(
-            'contao.resource_provider',
-            new ResourceProvider([$this->getRootDir() . '/system/modules/foobar'])
+            'contao.resource_locator',
+            $locator
+        );
+
+        $container->set(
+            'contao.cached_resource_locator',
+            new CombinedFileLocator($this->getCacheDir(), $locator)
         );
 
         $kernel
@@ -131,5 +143,15 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         ;
 
         return $kernel;
+    }
+
+    /**
+     * Returns the path to the fixtures cache directory.
+     *
+     * @return string The cache directory path
+     */
+    public function getCacheDir()
+    {
+        return __DIR__ . '/Fixtures/app/cache';
     }
 }
