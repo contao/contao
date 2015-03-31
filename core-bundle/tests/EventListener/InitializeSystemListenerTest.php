@@ -48,38 +48,6 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
-     * Test if $isBooted is set correctly
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testPreventBootTwice()
-    {
-        global $kernel;
-
-        /** @var Kernel $kernel */
-        $kernel = $this->mockKernel();
-
-        $listener = new InitializeSystemListener(
-            $this->getMock('Symfony\Component\Routing\RouterInterface'),
-            $this->getRootDir()
-        );
-
-        $ref = new \ReflectionClass('Contao\CoreBundle\EventListener\InitializeSystemListener');
-        $boot = $ref->getMethod('boot');
-        $boot->setAccessible(true);
-        $boot->invoke($listener, null, null);
-
-        $isBooted = $ref->getMethod('booted');
-        $isBooted->setAccessible(true);
-        $this->assertTrue($isBooted->invoke($listener));
-
-        // invoke boot again
-        $boot->invoke($listener, null, null);
-
-    }
-
-    /**
      * Tests a front end request.
      *
      * @runInSeparateProcess
@@ -211,6 +179,48 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
+     * Tests the Contao framework is not booted twice on subsequent requests.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testNotBootedTwiceOnKernelRequest()
+    {
+        global $kernel;
+
+        /** @var Kernel $kernel */
+        $kernel = $this->mockKernel();
+        $container = $kernel->getContainer();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|InitializeSystemListener $listener */
+        $listener = $this->getMock(
+            'Contao\CoreBundle\EventListener\InitializeSystemListener',
+            ['setConstants', 'boot'],
+            [
+                $this->getMock('Symfony\Component\Routing\RouterInterface'),
+                $this->getRootDir()
+            ]
+        );
+
+        $listener
+            ->expects($this->once())
+            ->method('setConstants');
+
+        $listener
+            ->expects($this->once())
+            ->method('boot');
+
+        $listener->setContainer($container);
+        $container->enterScope('frontend');
+
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST));
+    }
+
+    /**
      * Tests that the Contao framework is not initialized for subrequests.
      *
      * @runInSeparateProcess
@@ -268,6 +278,46 @@ class InitializeSystemListenerTest extends TestCase
         $this->assertEquals('FE', TL_MODE);
         $this->assertEquals('console', TL_SCRIPT);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
+    }
+
+    /**
+     * Tests the Contao framework is not booted twice on second console command.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testNotBootedTwiceOnConsoleCommand()
+    {
+        global $kernel;
+
+        /** @var Kernel $kernel */
+        $kernel = $this->mockKernel();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|InitializeSystemListener $listener */
+        $listener = $this->getMock(
+            'Contao\CoreBundle\EventListener\InitializeSystemListener',
+            ['setConstants', 'boot'],
+            [
+                $this->getMock('Symfony\Component\Routing\RouterInterface'),
+                $this->getRootDir()
+            ]
+        );
+
+        $listener
+            ->expects($this->once())
+            ->method('setConstants');
+
+        $listener
+            ->expects($this->once())
+            ->method('boot');
+
+        $listener->onConsoleCommand(
+            new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
+        );
+
+        $listener->onConsoleCommand(
+            new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
+        );
     }
 
     /**
