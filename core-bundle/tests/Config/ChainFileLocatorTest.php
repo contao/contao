@@ -36,13 +36,12 @@ class ChainFileLocatorTest extends TestCase
     {
         $this->locator = new ChainFileLocator();
         $this->locator->addLocator(new CombinedFileLocator($this->getCacheDir() . '/contao'));
+
         $this->locator->addLocator(
-            new FileLocator(
-                [
-                    'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                    'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-                ]
-            )
+            new FileLocator([
+                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+            ])
         );
     }
 

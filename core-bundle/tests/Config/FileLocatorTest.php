@@ -34,12 +34,10 @@ class FileLocatorTest extends TestCase
      */
     protected function setUp()
     {
-        $this->locator = new FileLocator(
-            [
-                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-            ]
-        );
+        $this->locator = new FileLocator([
+            'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+            'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+        ]);
     }
 
     /**

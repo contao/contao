@@ -37,12 +37,10 @@ class CombinedFileLocatorTest extends TestCase
     {
         $this->locator = new CombinedFileLocator(
             $this->getCacheDir() . '/contao',
-            new FileLocator(
-                [
-                    'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                    'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-                ]
-            )
+            new FileLocator([
+                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+            ])
         );
     }
 

@@ -292,22 +292,18 @@ class InitializeSystemListenerTest extends TestCase
 
         $container->set(
             'contao.resource_locator',
-            new FileLocator(
-                [
-                    'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                    'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-                ]
-            )
+            new FileLocator([
+                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+            ])
         );
 
         $container->set(
             'contao.cached_resource_locator',
-            new FileLocator(
-                [
-                    'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                    'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-                ]
-            )
+            new FileLocator([
+                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+            ])
         );
 
         return $kernel;

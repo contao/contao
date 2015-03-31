@@ -121,12 +121,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->addScope(new Scope('frontend'));
         $container->addScope(new Scope('backend'));
 
-        $locator = new FileLocator(
-            [
-                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-            ]
-        );
+        $locator = new FileLocator([
+            'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+            'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+        ]);
 
         $container->set(
             'contao.resource_locator',
