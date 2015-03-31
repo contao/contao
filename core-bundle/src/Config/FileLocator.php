@@ -68,11 +68,11 @@ class FileLocator implements FileLocatorInterface
     }
 
     /**
-     * Create instance of FileLocator with bundle paths from kernel.
+     * Creates a FileLocator instance from the kernel bundles.
      *
-     * @param KernelInterface $kernel A KernelInterface instance
+     * @param KernelInterface $kernel The kernel object
      *
-     * @return static
+     * @return static The FileLocator instance
      */
     public static function createFromKernelBundles(KernelInterface $kernel)
     {
@@ -88,7 +88,7 @@ class FileLocator implements FileLocatorInterface
     }
 
     /**
-     * Returns the Contao resources path from a bundle.
+     * Returns the Contao resources path of a bundle.
      *
      * @param BundleInterface $bundle The bundle object
      *

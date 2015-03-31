@@ -65,7 +65,8 @@ class InitializeSystemListener extends ScopeAwareListener
         }
 
         $request = $event->getRequest();
-        $route   = $this->router->generate(
+
+        $route = $this->router->generate(
             $request->attributes->get('_route'),
             $request->attributes->get('_route_params')
         );

@@ -49,12 +49,9 @@ class ChainFileLocator implements FileLocatorInterface
                     return $file;
                 }
 
-                $files = $this->mergeFiles(
-                    (is_array($file) ? $file : [$file]),
-                    $files
-                );
+                $files = $this->mergeFiles((is_array($file) ? $file : [$file]), $files);
             } catch (\InvalidArgumentException $e) {
-                // Try the next locator
+                continue;
             }
         }
 
@@ -66,12 +63,12 @@ class ChainFileLocator implements FileLocatorInterface
     }
 
     /**
-     * Adds new files to existing array without overwriting existing keys, except if they are numeric.
+     * Adds new files to the existing array without overwriting existing non-numeric keys.
      *
      * @param array $newFiles The files to be added
      * @param array $allFiles The existing files
      *
-     * @return array Merged list of files
+     * @return array The merged files array
      */
     private function mergeFiles(array $newFiles, array $allFiles)
     {
