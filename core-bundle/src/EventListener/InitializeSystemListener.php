@@ -44,7 +44,7 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * @var bool
      */
-    private static $isBooted = false;
+    private static $booted = false;
 
     /**
      * Constructor.
@@ -65,7 +65,7 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$this->isFrontendMasterRequest($event) && !$this->isBackendMasterRequest($event)) {
+        if (true === static::$booted || !$this->isFrontendMasterRequest($event) && !$this->isBackendMasterRequest($event)) {
             return;
         }
 
@@ -89,7 +89,9 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     public function onConsoleCommand(ConsoleCommandEvent $event)
     {
-        if (!$event->getCommand() instanceof ContaoFrameworkDependentInterface) {
+        if (true === static::$booted
+            || (!$event->getCommand() instanceof ContaoFrameworkDependentInterface)
+        ) {
             return;
         }
 
@@ -144,10 +146,7 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     private function boot(Request $request = null)
     {
-        // do not boot twice
-        if ($this->booted()) {
-            return;
-        }
+        static::$booted = true;
 
         $this->includeHelpers();
 
@@ -191,19 +190,6 @@ class InitializeSystemListener extends ScopeAwareListener
 
         $this->triggerInitializeSystemHook();
         $this->checkRequestToken();
-
-        // set booted
-        InitializeSystemListener::$isBooted = true;
-    }
-
-    /**
-     * Check is booted
-     *
-     * @return bool
-     */
-    private function booted()
-    {
-        return InitializeSystemListener::$isBooted;
     }
 
     /**
