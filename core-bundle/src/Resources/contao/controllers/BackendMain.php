@@ -256,7 +256,7 @@ class BackendMain extends \Backend
 		// Hide the cache message in the repository manager (see #5966)
 		if (!\Config::get('bypassCache') && $this->User->isAdmin)
 		{
-			$this->Template->needsCacheBuild = ((\Input::get('do') != 'repository_manager' || !isset($_GET['install']) && !isset($_GET['uninstall']) && !isset($_GET['update'])) && !is_dir(TL_ROOT . '/system/cache/dca'));
+			$this->Template->needsCacheBuild = ((\Input::get('do') != 'repository_manager' || !isset($_GET['install']) && !isset($_GET['uninstall']) && !isset($_GET['update'])) && !is_dir(TL_ROOT . '/system/cache/sql'));
 		}
 
 		// Front end preview links

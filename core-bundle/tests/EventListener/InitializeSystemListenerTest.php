@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\Config;
 use Contao\CoreBundle\Command\VersionCommand;
-use Contao\CoreBundle\HttpKernel\Bundle\ResourceProvider;
+use Contao\CoreBundle\Config\FileLocator;
 use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
@@ -285,14 +285,25 @@ class InitializeSystemListenerTest extends TestCase
         $container->addScope(new Scope('backend'));
 
         $container->set(
-            'contao.resource_provider',
-            new ResourceProvider([$this->getRootDir() . '/system/modules/foobar'])
+            'contao.resource_locator',
+            new FileLocator($kernel)
+        );
+
+        $container->set(
+            'contao.cached_resource_locator',
+            new FileLocator($kernel)
         );
 
         $kernel
             ->expects($this->any())
             ->method('getContainer')
             ->willReturn($container)
+        ;
+
+        $kernel
+            ->expects($this->any())
+            ->method('getBundles')
+            ->willReturn([])
         ;
 
         return $kernel;

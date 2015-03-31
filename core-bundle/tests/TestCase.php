@@ -132,4 +132,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         return $kernel;
     }
+
+    /**
+     * Returns the path to the fixtures cache directory.
+     *
+     * @return string The cache directory path
+     */
+    public function getCacheDir()
+    {
+        return __DIR__ . '/Fixtures/app/cache';
+    }
 }

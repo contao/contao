@@ -140,9 +140,9 @@ class BackendInstall extends \Backend
 		}
 
 		// Purge the internal cache (see #6357)
-		if (is_dir(TL_ROOT . '/system/cache/dca'))
+		if (is_dir(TL_ROOT . '/system/cache/sql'))
 		{
-			foreach (array('config', 'dca', 'language', 'sql') as $dir)
+			foreach (array('sql') as $dir)
 			{
 				$objFolder = new \Folder('system/cache/' . $dir);
 				$objFolder->delete();

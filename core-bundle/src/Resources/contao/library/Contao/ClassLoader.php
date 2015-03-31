@@ -203,22 +203,12 @@ class ClassLoader
 	 */
 	public static function scanAndRegister()
 	{
-		$strCacheFile = 'system/cache/config/autoload.php';
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-		// Try to load from cache
-		if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
+		foreach ($kernel->getContainer()->get('contao.cached_resource_locator')->locate('config/autoload.php') as $file)
 		{
-			include TL_ROOT . '/' . $strCacheFile;
-		}
-		else
-		{
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
-			foreach ($kernel->getContainer()->get('contao.resource_provider')->findFiles('config/autoload.php') as $file)
-			{
-				include $file->getPathname();
-			}
+			include $file;
 		}
 
 		self::register();

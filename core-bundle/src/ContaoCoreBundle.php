@@ -11,11 +11,9 @@
 namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\OptimizeContaoResourcesPass;
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Contao\CoreBundle\DependencyInjection\Compiler\ResourceLocatorPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -23,6 +21,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * Configures the Contao core bundle.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ContaoCoreBundle extends Bundle
 {
@@ -48,10 +47,11 @@ class ContaoCoreBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
+        parent::build($container);
+
         $rootDir = $container->getParameter('kernel.root_dir');
 
-        $container->addCompilerPass(new AddContaoResourcesPass($this->getPath() . '/Resources/contao'));
+        $container->addCompilerPass(new ResourceLocatorPass());
         $container->addCompilerPass(new AddPackagesPass("$rootDir/../vendor/composer/installed.json"));
-        $container->addCompilerPass(new OptimizeContaoResourcesPass($rootDir), PassConfig::TYPE_OPTIMIZE);
     }
 }
