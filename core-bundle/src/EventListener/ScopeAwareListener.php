@@ -33,6 +33,18 @@ abstract class ScopeAwareListener extends ContainerAware
     }
 
     /**
+     * Returns wether this is the master request in backend scope.
+     *
+     * @param KernelEvent $event The HttpKernel event
+     *
+     * @return bool
+     */
+    protected function isBackendMasterRequest(KernelEvent $event)
+    {
+        return $event->isMasterRequest() && $this->isBackendScope();
+    }
+
+    /**
      * Returns wether the container is in frontend scope.
      *
      * @return bool
