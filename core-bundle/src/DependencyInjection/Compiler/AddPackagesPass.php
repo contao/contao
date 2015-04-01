@@ -41,10 +41,14 @@ class AddPackagesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!is_file($this->jsonFile)) {
-            $packages = [];
-        } else {
-            $packages = $this->getVersions(json_decode(file_get_contents($this->jsonFile), true));
+        $packages = [];
+
+        if (is_file($this->jsonFile)) {
+            $json = json_decode(file_get_contents($this->jsonFile), true);
+
+            if (null !== $json) {
+                $packages = $this->getVersions($json);
+            }
         }
 
         $container->setParameter('kernel.packages', $packages);
