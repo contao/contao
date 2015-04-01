@@ -46,21 +46,17 @@ class CombinedFileLocator implements FileLocatorInterface
      */
     public function locate($name, $currentPath = null, $first = false)
     {
-        // FIXME: we should inject this configuration
-        if (!\Config::get('bypassCache') && file_exists($cacheFile = $this->cacheDir . "/$name")) {
+        // FIXME: add an option to bypass the cache?
+        if (file_exists($cacheFile = $this->cacheDir . "/$name")) {
             return $first ? $cacheFile : [$cacheFile];
         }
 
-        if (null === $this->locator) {
-            throw new \RuntimeException('No file locator given.');
-        }
-
-        if ($first) {
-            // FIXME: what if the cache file does not exists?
-            // Why don't we call $this->locator->locate($name, $currentPath, true)?
+        if (true === $first) {
             throw new \InvalidArgumentException("The file $name does not exist in {$this->cacheDir}.");
         }
 
+        // FIXME: this will fail if $first === false and $this->locator === null
+        // Why don't we make the locator mandatory?
         return $this->locator->locate($name, $currentPath, false);
     }
 }
