@@ -40,7 +40,7 @@ class FileLocator implements FileLocatorInterface
     /**
      * {@inheritdoc}
      */
-    public function locate($name, $currentPath = null, $first = false)
+    public function locate($name, $currentPath = null, $first = false) // FIXME: true
     {
         if ('' === $name) {
             throw new \InvalidArgumentException('An empty file name is not valid to be located.');

@@ -79,7 +79,7 @@ class ChainFileLocatorTest extends TestCase
     /**
      * Tests locating the first resource with a non-existing file.
      *
-     * @expectedException \RuntimeException
+     * @expectedException \InvalidArgumentException
      */
     public function testLocateFirstNotFound()
     {
