@@ -138,7 +138,7 @@ class AutomatorCommand extends LockedCommand implements ContaoFrameworkDependent
 
         if (null !== $task) {
             if (!in_array($task, $commands)) {
-                throw new \InvalidArgumentException("Invalid task $task.");
+                throw new \InvalidArgumentException("Invalid task $task"); // no full stop here
             }
 
             return $task;
