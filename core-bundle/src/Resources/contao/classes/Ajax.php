@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,7 +79,7 @@ class Ajax extends \Backend
 				$bemod = $this->Session->get('backend_modules');
 				$bemod[\Input::post('id')] = intval(\Input::post('state'));
 				$this->Session->set('backend_modules', $bemod);
-				throw ResponseException::create('', 204);
+				throw NoContentResponseException::create();
 
 			// Load a navigation menu group
 			case 'loadNavigation':
@@ -112,7 +113,7 @@ class Ajax extends \Backend
 				$nodes = $this->Session->get($this->strAjaxKey);
 				$nodes[$this->strAjaxId] = intval(\Input::post('state'));
 				$this->Session->set($this->strAjaxKey, $nodes);
-				throw ResponseException::create('', 204);
+				throw NoContentResponseException::create();
 
 			// Load nodes of the file or page tree
 			case 'loadStructure':
@@ -138,7 +139,7 @@ class Ajax extends \Backend
 				$fs = $this->Session->get('fieldset_states');
 				$fs[\Input::post('table')][\Input::post('id')] = intval(\Input::post('state'));
 				$this->Session->set('fieldset_states', $fs);
-				throw ResponseException::create('', 204);
+				throw NoContentResponseException::create();
 
 			// Check whether the temporary directory is writeable
 			case 'liveUpdate':
@@ -163,7 +164,7 @@ class Ajax extends \Backend
 						);
 					}
 				}
-				throw ResponseException::create('', 204);
+				throw NoContentResponseException::create();
 
 			// Toggle checkbox groups
 			case 'toggleCheckboxGroup':
@@ -200,7 +201,7 @@ class Ajax extends \Backend
 		if (!$dc instanceof \DC_File && !$dc instanceof \DC_Folder && !$dc instanceof \DC_Table)
 		{
 			$this->executePostActionsHook($dc);
-			throw ResponseException::create('', 204);
+			throw NoContentResponseException::create();
 		}
 
 		switch ($this->strAction)
@@ -343,7 +344,7 @@ class Ajax extends \Backend
 						$dca->toggleFeatured(\Input::post('id'), ((\Input::post('state') == 1) ? true : false));
 					}
 				}
-				throw ResponseException::create('', 204);
+				throw NoContentResponseException::create();
 
 			// Toggle subpalettes
 			case 'toggleSubpalette':
@@ -389,17 +390,17 @@ class Ajax extends \Backend
 						throw ResponseException::create($dc->edit(false, \Input::post('id')));
 					}
 				}
-				throw ResponseException::create('', 204);
+				throw NoContentResponseException::create();
 
 			// DropZone file upload
 			case 'fileupload':
 				$dc->move();
-				throw ResponseException::create('', 204);
+				throw NoContentResponseException::create();
 
 			// HOOK: pass unknown actions to callback functions
 			default:
 				$this->executePostActionsHook($dc);
-				throw ResponseException::create('', 204);
+				throw NoContentResponseException::create();
 		}
 	}
 
