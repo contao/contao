@@ -34,7 +34,7 @@ class ResourceLocatorPass implements CompilerPassInterface
         } else {
             $chainLocator = $container->getDefinition('contao.resource_locator.chain');
 
-            foreach ($this->getPriorizedLocators($locatorIds) as $locators) { // FIXME: array_flatten?
+            foreach ($this->getPriorizedLocators($locatorIds) as $locators) {
                 foreach ($locators as $locator) {
                     $chainLocator->addMethodCall('addLocator', [new Reference($locator)]);
                 }
@@ -60,7 +60,7 @@ class ResourceLocatorPass implements CompilerPassInterface
         $locatorIds = $container->findTaggedServiceIds('contao.resource_locator');
 
         if (count($locatorIds) === 0) {
-            throw new LogicException('No Contao resource locators found. You need to tag at least one locator with "contao.resource_locator"');
+            throw new LogicException('No Contao resource locators found. You need to tag at least one locator with "contao.resource_locator".');
         }
 
         return $locatorIds;

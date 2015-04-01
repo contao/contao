@@ -80,6 +80,8 @@ class FrontendLoader extends Loader
         $routes = new RouteCollection();
         $routes->add('contao_frontend', new Route($pattern, $defaults, $require));
 
+        // FIXME: add the contao_root and contao_catchall routes
+
         return $routes;
     }
 

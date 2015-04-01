@@ -178,7 +178,7 @@ class XliffFileLoader extends Loader
             return intval($key);
         }
 
-        return "'$key'";
+        return "'" . str_replace("'", "\\'", $key) . "'";
     }
 
     /**
@@ -193,7 +193,7 @@ class XliffFileLoader extends Loader
         $value = str_replace("\n", '\n', $value);
 
         if (strpos($value, '\n') !== false) {
-            return '"' . str_replace(array('$', '"'), array('\\$', '\\"'), $value) . '"';
+            return '"' . str_replace(['$', '"'], ['\\$', '\\"'], $value) . '"';
         }
 
         return "'" . str_replace("'", "\\'", $value) . "'";

@@ -79,12 +79,14 @@ class InitializeSystemListener extends ScopeAwareListener
             $request->attributes->get('_route_params')
         );
 
-        $this->setConstants($this->getContainerScope(), substr($route, strlen($request->getBasePath()) + 1));
+        $this->setConstants($this->getModeFromContainerScope(), substr($route, strlen($request->getBasePath()) + 1));
         $this->boot($request);
     }
 
     /**
      * Initializes the system upon console.command.
+     *
+     * @param ConsoleCommandEvent $event The event object
      */
     public function onConsoleCommand(ConsoleCommandEvent $event)
     {
@@ -100,35 +102,17 @@ class InitializeSystemListener extends ScopeAwareListener
     }
 
     /**
-     * Returns the TL_MODE value for the container scope.
-     *
-     * @return string The TL_MODE value
-     */
-    private function getContainerScope()
-    {
-        if ($this->isBackendScope()) {
-            return 'BE';
-        }
-
-        if ($this->isFrontendScope()) {
-            return 'FE';
-        }
-
-        return null;
-    }
-
-    /**
      * Sets the Contao constants.
      *
-     * @param string $scope The scope (BE or FE)
+     * @param string $mode  The mode (BE or FE)
      * @param string $route The route
      *
      * @internal
      */
-    protected function setConstants($scope, $route)
+    protected function setConstants($mode, $route)
     {
         // The constants are deprecated and will be removed in version 5.0.
-        define('TL_MODE', $scope);
+        define('TL_MODE', $mode);
         define('TL_START', microtime(true));
         define('TL_ROOT', $this->rootDir);
         define('TL_REFERER_ID', substr(md5(TL_START), 0, 8));
@@ -192,6 +176,24 @@ class InitializeSystemListener extends ScopeAwareListener
 
         $this->triggerInitializeSystemHook();
         $this->checkRequestToken();
+    }
+
+    /**
+     * Returns the TL_MODE value for the container scope.
+     *
+     * @return string The TL_MODE value
+     */
+    private function getModeFromContainerScope()
+    {
+        if ($this->isBackendScope()) {
+            return 'BE';
+        }
+
+        if ($this->isFrontendScope()) {
+            return 'FE';
+        }
+
+        return null;
     }
 
     /**

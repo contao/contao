@@ -42,26 +42,27 @@ class FileLocator implements FileLocatorInterface
      */
     public function locate($name, $currentPath = null, $first = false)
     {
+        // FIXME: this is almost the same code as in Symfony\Component\Config\FileLocator.
+        // We should try to use the original class now that we have the static factory method.
         if ('' === $name) {
             throw new \InvalidArgumentException('An empty file name is not valid to be located.');
         }
 
         $paths = [];
 
-        // FIXME: refactor
         foreach ($this->paths as $bundle => $path) {
             if (!file_exists($file = "$path/$name")) {
                 continue;
             }
 
-            if ($first) {
+            if (true === $first) {
                 return $file;
             }
 
             $paths[$bundle] = $file;
         }
 
-        if ($first) {
+        if (!$paths) {
             throw new \InvalidArgumentException("The file $name does not exist in " . implode(', ', $this->paths));
         }
 

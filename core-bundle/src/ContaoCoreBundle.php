@@ -38,6 +38,7 @@ class ContaoCoreBundle extends Bundle
      */
     public function boot()
     {
+        // FIXME: add constants (ContaoCoreBundle::SCOPE_FRONTEND)
         $this->container->addScope(new Scope('frontend', 'request'));
         $this->container->addScope(new Scope('backend', 'request'));
     }
