@@ -163,9 +163,6 @@ class InitializeSystemListener extends ScopeAwareListener
         // Log PHP errors
         $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
 
-        // Support legacy Session access
-        $this->initializeLegacySessionAccess();
-
         $this->includeBasicClasses();
 
         // Preload the configuration (see #5872)
@@ -175,7 +172,7 @@ class InitializeSystemListener extends ScopeAwareListener
         ClassLoader::scanAndRegister();
 
         $this->setRelativePath($request ? $request->getBasePath() : '');
-        $this->startSession();
+        $this->initializeLegacySessionAccess();
         $this->setDefaultLanguage();
 
         // Fully load the configuration
