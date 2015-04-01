@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedHttpException;
+use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -984,7 +985,7 @@ abstract class Controller extends \System
 		// Ajax request
 		if (\Environment::get('isAjaxRequest'))
 		{
-			throw RedirectResponseException::createAjax($strLocation);
+			throw AjaxRedirectResponseException::create($strLocation);
 		}
 
 		throw RedirectResponseException::create($strLocation);
@@ -1016,7 +1017,7 @@ abstract class Controller extends \System
 		// Ajax request
 		if (\Environment::get('isAjaxRequest'))
 		{
-			throw RedirectResponseException::createAjax($strLocation);
+			throw AjaxRedirectResponseException::create($strLocation);
 		}
 
 		throw RedirectResponseException::create($strLocation, $intStatus);
