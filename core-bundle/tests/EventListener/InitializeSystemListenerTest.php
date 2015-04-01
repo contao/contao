@@ -317,13 +317,12 @@ class InitializeSystemListenerTest extends TestCase
     {
         global $kernel;
 
-        /** @var Kernel $kernel */
-        $kernel = $this->mockKernel();
-
+        $kernel   = $this->mockKernel();
         $listener = new InitializeSystemListener(
             $this->mockRouter('/web/app_dev.php?do=test'),
             $this->getRootDir() . '/app'
         );
+        $listener->setContainer($kernel->getContainer());
 
         $request = new Request();
         $request->server->add([
@@ -352,6 +351,8 @@ class InitializeSystemListenerTest extends TestCase
             'ORIG_PATH_TRANSLATED' => $this->getRootDir() . '/foo/web/app_dev.php',
         ]);
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', 'backend');
+        $kernel->getContainer()->enterScope('backend');
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener->onKernelRequest($event);
