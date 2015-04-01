@@ -39,7 +39,7 @@ services:
     contao.listener.handle_exception:
         class: Contao\CoreBundle\EventListener\ExceptionListener
         tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 200 }
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
         arguments:
             - "%contao.pretty_error_screens%"
             - "%kernel.root_dir%"
