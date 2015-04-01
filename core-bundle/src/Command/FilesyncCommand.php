@@ -28,7 +28,7 @@ class FilesyncCommand extends LockedCommand implements ContaoFrameworkDependentI
     {
         $this
             ->setName('contao:filesync')
-            ->setDescription('Synchronizes the file system with the database')
+            ->setDescription('Synchronizes the file system with the database.')
         ;
     }
 

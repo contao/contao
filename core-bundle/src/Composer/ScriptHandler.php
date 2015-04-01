@@ -54,7 +54,7 @@ class ScriptHandler
         $phpFinder = new PhpExecutableFinder();
 
         if (false === ($phpPath = $phpFinder->find())) {
-            throw new \RuntimeException('The php executable could not be found');
+            throw new \RuntimeException('The php executable could not be found.');
         }
 
         $process = new Process("$phpPath app/console --ansi $cmd");

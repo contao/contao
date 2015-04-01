@@ -73,7 +73,7 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
         }
 
         if (!$token instanceof AnonymousToken) {
-            throw new AuthenticationException('The ContaoAuthenticator can only handle AnonymousToken');
+            throw new AuthenticationException('The ContaoAuthenticator can only handle AnonymousToken.');
         }
 
         try {

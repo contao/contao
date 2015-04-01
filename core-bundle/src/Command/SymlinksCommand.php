@@ -46,7 +46,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     {
         $this
             ->setName('contao:symlinks')
-            ->setDescription('Symlinks the public resources into the /web directory')
+            ->setDescription('Symlinks the public resources into the /web directory.')
         ;
     }
 
@@ -204,21 +204,21 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     private function validateSymlink($source, $target, $rootDir)
     {
         if ($source == '') {
-            throw new \InvalidArgumentException('The symlink source must not be empty');
+            throw new \InvalidArgumentException('The symlink source must not be empty.');
         }
 
         if ($target == '') {
-            throw new \InvalidArgumentException('The symlink target must not be empty');
+            throw new \InvalidArgumentException('The symlink target must not be empty.');
         }
 
         if (false !== strpos($target, '../')) {
-            throw new \InvalidArgumentException('The symlink target must not be relative');
+            throw new \InvalidArgumentException('The symlink target must not be relative.');
         }
 
         $fs = new Filesystem();
 
         if ($fs->exists("$rootDir/$target") && !is_link("$rootDir/$target")) {
-            throw new \LogicException("The symlink target $target exists and is not a symlink");
+            throw new \LogicException("The symlink target $target exists and is not a symlink.");
         }
     }
 

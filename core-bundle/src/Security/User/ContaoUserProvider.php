@@ -39,7 +39,7 @@ class ContaoUserProvider implements UserProviderInterface
             return FrontendUser::getInstance();
         }
 
-        throw new UsernameNotFoundException('Can only load user "frontend" or "backend"');
+        throw new UsernameNotFoundException('Can only load user "frontend" or "backend".');
     }
 
     /**
@@ -47,7 +47,7 @@ class ContaoUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        throw new UnsupportedUserException('Cannot refresh a Contao user');
+        throw new UnsupportedUserException('Cannot refresh a Contao user.');
     }
 
     /**

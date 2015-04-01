@@ -30,7 +30,7 @@ class FileLocator implements FileLocatorInterface
     /**
      * Constructor.
      *
-     * @param array $paths An array of paths with bundle name as key.
+     * @param array $paths An array of paths with bundle name as key
      */
     public function __construct(array $paths)
     {
@@ -63,7 +63,7 @@ class FileLocator implements FileLocatorInterface
         }
 
         if (!$paths) {
-            throw new \InvalidArgumentException("The file $name does not exist in " . implode(', ', $this->paths));
+            throw new \InvalidArgumentException("The file $name does not exist in " . implode(', ', $this->paths) . '.');
         }
 
         return $paths;

@@ -35,7 +35,7 @@ class ContaoToken extends AbstractToken
         $this->setUser($user);
 
         if (!$user->authenticate()) {
-            throw new UsernameNotFoundException('Invalid Contao user given');
+            throw new UsernameNotFoundException('Invalid Contao user given.');
         }
 
         $this->setAuthenticated(true);

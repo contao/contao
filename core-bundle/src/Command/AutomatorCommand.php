@@ -40,7 +40,7 @@ class AutomatorCommand extends LockedCommand implements ContaoFrameworkDependent
             ->setDefinition([
                 new InputArgument('task', InputArgument::OPTIONAL, $this),
             ])
-            ->setDescription('Runs automator tasks on the command line')
+            ->setDescription('Runs automator tasks on the command line.')
         ;
     }
 
@@ -52,7 +52,7 @@ class AutomatorCommand extends LockedCommand implements ContaoFrameworkDependent
         try {
             $this->runAutomator($input, $output);
         } catch (\InvalidArgumentException $e) {
-            $output->writeln($e->getMessage() . ' (see help contao:automator)');
+            $output->writeln($e->getMessage() . ' (see help contao:automator).');
 
             return 1;
         }
@@ -138,7 +138,7 @@ class AutomatorCommand extends LockedCommand implements ContaoFrameworkDependent
 
         if (null !== $task) {
             if (!in_array($task, $commands)) {
-                throw new \InvalidArgumentException("Invalid task $task");
+                throw new \InvalidArgumentException("Invalid task $task.");
             }
 
             return $task;

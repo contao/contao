@@ -52,13 +52,13 @@ class CombinedFileLocator implements FileLocatorInterface
         }
 
         if (null === $this->locator) {
-            throw new \RuntimeException('No file locator given');
+            throw new \RuntimeException('No file locator given.');
         }
 
         if ($first) {
             // FIXME: what if the cache file does not exists?
             // Why don't we call $this->locator->locate($name, $currentPath, true)?
-            throw new \InvalidArgumentException("The file $name does not exist in {$this->cacheDir}");
+            throw new \InvalidArgumentException("The file $name does not exist in {$this->cacheDir}.");
         }
 
         return $this->locator->locate($name, $currentPath, false);

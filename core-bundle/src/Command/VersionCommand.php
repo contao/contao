@@ -28,7 +28,7 @@ class VersionCommand extends Command implements ContaoFrameworkDependentInterfac
     {
         $this
             ->setName('contao:version')
-            ->setDescription('Outputs the Contao version')
+            ->setDescription('Outputs the Contao version.')
         ;
     }
 

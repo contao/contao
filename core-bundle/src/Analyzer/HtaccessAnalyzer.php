@@ -32,7 +32,7 @@ class HtaccessAnalyzer
     public function __construct(\SplFileInfo $file)
     {
         if (!$file->isFile()) {
-            throw new \InvalidArgumentException("$file is not a file");
+            throw new \InvalidArgumentException("$file is not a file.");
         }
 
         $this->file = $file;
@@ -59,7 +59,7 @@ class HtaccessAnalyzer
     /**
      * Scans a line for an access definition.
      *
-     * @param string $line The line
+     * @param string $line The current line
      *
      * @return bool True if the line has an access definition
      */
@@ -83,7 +83,7 @@ class HtaccessAnalyzer
     /**
      * Checks whether a line is a comment.
      *
-     * @param string $line The line
+     * @param string $line The current line
      *
      * @return bool True if the line is a comment
      */
