@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Exception;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Exception to send a redirect response and exit the execution in the Contao workflow.
@@ -36,23 +35,5 @@ class RedirectResponseException extends AbstractResponseException
     public static function create($location, $status = 303, $headers = array())
     {
         return new static(new RedirectResponse($location, $status, $headers));
-    }
-
-    /**
-     * Factory method creating an ajax Response instance internally.
-     *
-     * Example:
-     *
-     *     throw RedirectResponseException::createAjax('https://example.org/target.html');
-     *
-     * @param string $location The target URL
-     * @param int    $status   The response status code (defaults to 204)
-     * @param array  $headers  An array of response headers
-     *
-     * @return RedirectResponseException
-     */
-    public static function createAjax($location, $status = 204, $headers = array())
-    {
-        return new static(new Response('', $status, array_merge(['X-Ajax-Location' => $location], $headers)));
     }
 }
