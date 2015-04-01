@@ -42,10 +42,11 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('files')
                     ->validate()
-                    ->ifTrue(function ($v) {
-                        return preg_match('@^(app|assets|contao|plugins|share|system|templates|vendor|web)(/|$)@', $v);
-                    })
-                    ->thenInvalid('%s')
+                        ->ifTrue(function ($v) {
+                            return preg_match('@^(app|assets|contao|plugins|share|system|templates|vendor|web)(/|$)@', $v);
+                        })
+                        ->thenInvalid('%s')
+                    ->end()
                 ->end()
             ->end()
         ;
