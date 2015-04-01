@@ -291,7 +291,8 @@ class ExceptionListener
     private function tryReadTemplate($template)
     {
         if (file_exists($template)) {
-            // Isolate the template parsing, the "unused" root dir variable will get used in the template.
+            // Error templates should not derive the $this context so we isolate the parsing,
+            // the "unused" root dir variable will get used in the template.
             $isolatedRun = function ($template, $rootDir) {
                 ob_start();
                 include $template;
