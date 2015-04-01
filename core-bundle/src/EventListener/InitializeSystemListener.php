@@ -56,6 +56,11 @@ class InitializeSystemListener extends ScopeAwareListener
     private $rootDir;
 
     /**
+     * @var string
+     */
+    private $csrfTokenName;
+
+    /**
      * @var bool
      */
     private static $booted = false;
@@ -66,17 +71,20 @@ class InitializeSystemListener extends ScopeAwareListener
      * @param CsrfTokenManagerInterface $tokenManager The token manager service
      * @param SessionInterface          $session The session service
      * @param string                    $rootDir The kernel root directory
+     * @param string                    $csrfTokenName The name of the token to be used
      */
     public function __construct(
         RouterInterface $router,
         CsrfTokenManagerInterface $tokenManager,
         SessionInterface $session,
-        $rootDir
+        $rootDir,
+        $csrfTokenName = null
     ) {
-        $this->router       = $router;
-        $this->tokenManager = $tokenManager;
-        $this->session      = $session;
-        $this->rootDir      = dirname($rootDir);
+        $this->router        = $router;
+        $this->tokenManager  = $tokenManager;
+        $this->session       = $session;
+        $this->rootDir       = dirname($rootDir);
+        $this->csrfTokenName = $csrfTokenName;
     }
 
     /**
@@ -366,12 +374,12 @@ class InitializeSystemListener extends ScopeAwareListener
         // Backwards compatibility
         if (!defined('REQUEST_TOKEN')) {
             /** @var CsrfToken $token */
-            $token = $this->tokenManager->getToken('_csrf');
+            $token = $this->tokenManager->getToken($this->csrfTokenName);
             define('REQUEST_TOKEN', $token->getValue());
         }
 
         // Check the request token upon POST requests
-        $token = new CsrfToken('_csrf', Input::post('REQUEST_TOKEN'));
+        $token = new CsrfToken($this->csrfTokenName, Input::post('REQUEST_TOKEN'));
 
         // FIXME: This forces all routes handling POST data to pase a REQUEST_TOKEN
         if ($_POST && !$this->tokenManager->isTokenValid($token)) {

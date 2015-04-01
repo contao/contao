@@ -21,6 +21,7 @@ services:
             - "@security.csrf.token_manager"
             - "@session"
             - "%kernel.root_dir%"
+            - "%contao.csrf_token_name%"
         calls:
             - [setContainer, ["@service_container"]]
         tags:

@@ -48,6 +48,10 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('%s')
                     ->end()
                 ->end()
+                ->scalarNode('csrf_token_name')
+                    ->cannotBeEmpty()
+                    ->defaultValue('contao_csrf_token')
+                ->end()
             ->end()
         ;
 

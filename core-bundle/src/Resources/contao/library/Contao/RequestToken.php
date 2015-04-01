@@ -59,7 +59,7 @@ class RequestToken
 		$tokenManager = $kernel->getContainer()->get('security.csrf.token_manager');
 
 		/** @var CsrfToken $token */
-		$token = $tokenManager->getToken('_csrf');
+		$token = $tokenManager->getToken($kernel->getContainer()->getParameter('contao.csrf_token_name'));
 
 		return $token->getValue();
 	}
@@ -100,7 +100,7 @@ class RequestToken
 		/** @var CsrfTokenManagerInterface $tokenManager */
 		$tokenManager = $kernel->getContainer()->get('security.csrf.token_manager');
 
-		$token = new CsrfToken('_csrf', $strToken);
+		$token = new CsrfToken($kernel->getContainer()->getParameter('contao.csrf_token_name'), $strToken);
 
 		return $tokenManager->isTokenValid($token);
 	}
