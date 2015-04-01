@@ -10,8 +10,6 @@
 
 namespace Contao\NewsBundle;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\AddContaoResourcesPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -21,11 +19,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class ContaoNewsBundle extends Bundle
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new AddContaoResourcesPass($this->getPath() . '/Resources/contao'));
-    }
 }
