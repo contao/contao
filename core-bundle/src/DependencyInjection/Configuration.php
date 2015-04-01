@@ -58,6 +58,11 @@ class Configuration implements ConfigurationInterface
                 ->booleanNode('pretty_error_screens')
                     ->defaultTrue()
                 ->end()
+                ->integerNode('error_level')
+                    ->min(-1)
+                    ->max(32767)
+                    ->defaultValue(E_ALL ^ (E_NOTICE | E_STRICT | E_DEPRECATED))
+                ->end()
             ->end()
         ;
 

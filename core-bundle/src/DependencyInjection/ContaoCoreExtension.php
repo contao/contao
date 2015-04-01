@@ -48,5 +48,6 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.upload_path', $mergedConfig['upload_path']);
         $container->setParameter('contao.csrf_token_name', $mergedConfig['csrf_token_name']);
         $container->setParameter('contao.pretty_error_screens', $mergedConfig['pretty_error_screens']);
+        $container->setParameter('contao.error_level', $mergedConfig['error_level']);
     }
 }

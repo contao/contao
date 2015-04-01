@@ -340,17 +340,11 @@ class InitializeSystemListener extends ScopeAwareListener
     }
 
     /**
-     * Ensure we do not have any error level active that could be harmful to the Contao 3 Framework.
+     * Set the configured error level.
      */
     private function sanitizeErrorHandling()
     {
-        // Check if we have "simple errors" and make sure to kill them as the legacy code will otherwise break.
-        // This happens (at least) on console.
-        $level    = error_reporting();
-        $newLevel = $level & ~(E_NOTICE | E_STRICT | E_DEPRECATED);
-        if ($level & $newLevel) {
-            error_reporting($newLevel);
-        }
+        error_reporting($this->container->getParameter('contao.error_level'));
     }
 
     /**

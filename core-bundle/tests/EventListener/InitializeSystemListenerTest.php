@@ -379,6 +379,7 @@ class InitializeSystemListenerTest extends TestCase
             'contao_csrf_token',
             $this->mockConfig()
         );
+        $listener->setContainer($kernel->getContainer());
 
         $listener->onConsoleCommand(
             new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
@@ -415,6 +416,7 @@ class InitializeSystemListenerTest extends TestCase
                 $this->mockConfig(),
             ]
         );
+        $listener->setContainer($kernel->getContainer());
 
         $listener
             ->expects($this->once())
@@ -433,5 +435,50 @@ class InitializeSystemListenerTest extends TestCase
         $listener->onConsoleCommand(
             new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
         );
+    }
+
+    /**
+     * Tests that the error level will get updated when configured.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testErrorLevelOverride()
+    {
+        /** @var KernelInterface $kernel */
+        global $kernel;
+
+        $kernel = $this->mockKernel();
+
+        /** @var ContainerInterface $container */
+        $container = $kernel->getContainer();
+
+        $listener = new InitializeSystemListener(
+            $this->mockRouter('/contao/install'),
+            $this->getRootDir() . '/app'
+        );
+
+        $listener->setContainer($container);
+
+        $container->enterScope('backend');
+
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+
+
+        $keeper = error_reporting();
+        $kernel->getContainer()->setParameter('contao.error_level', E_ALL ^ (E_NOTICE | E_STRICT | E_DEPRECATED));
+        error_reporting(E_ALL);
+        $this->assertNotEquals(
+            $kernel->getContainer()->getParameter('contao.error_level'),
+            error_reporting(),
+            'Test is invalid, error level is not changed.'
+        );
+
+        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
+        $this->assertEquals($kernel->getContainer()->getParameter('contao.error_level'), error_reporting());
+
+        // Restore error reporting.
+        error_reporting($keeper);
     }
 }
