@@ -231,7 +231,8 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
-            $this->getRootDir() . '/app'
+            $this->mockTokenManager(),
+            $this->mockSession(),
         );
 
         $request = new Request();
@@ -265,7 +266,9 @@ class InitializeSystemListenerTest extends TestCase
             'Contao\CoreBundle\EventListener\InitializeSystemListener',
             ['setConstants', 'boot'],
             [
-                $this->getMock('Symfony\Component\Routing\RouterInterface'),
+                $this->mockRouter('/index.html'),
+                $this->mockTokenManager(),
+                $this->mockSession(),
                 $this->getRootDir()
             ]
         );
@@ -337,7 +340,9 @@ class InitializeSystemListenerTest extends TestCase
             'Contao\CoreBundle\EventListener\InitializeSystemListener',
             ['setConstants', 'boot'],
             [
-                $this->getMock('Symfony\Component\Routing\RouterInterface'),
+                $this->mockRouter('/index.html'),
+                $this->mockTokenManager(),
+                $this->mockSession(),
                 $this->getRootDir()
             ]
         );
@@ -359,141 +364,5 @@ class InitializeSystemListenerTest extends TestCase
         $listener->onConsoleCommand(
             new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
         );
-    }
-
-    /**
-     * Mocks a Contao kernel.
-     *
-     * @return KernelInterface The kernel mock object
-     */
-    private function mockKernel()
-    {
-        Config::set('bypassCache', true);
-        Config::set('timeZone', 'GMT');
-        Config::set('characterSet', 'UTF-8');
-
-        Environment::set('httpAcceptLanguage', []);
-
-        $kernel = $this->getMock(
-            'Symfony\Component\HttpKernel\Kernel',
-            [
-                // KernelInterface
-                'registerBundles',
-                'registerContainerConfiguration',
-                'boot',
-                'shutdown',
-                'getBundles',
-                'isClassInActiveBundle',
-                'getBundle',
-                'locateResource',
-                'getName',
-                'getEnvironment',
-                'isDebug',
-                'getRootDir',
-                'getContainer',
-                'getStartTime',
-                'getCacheDir',
-                'getLogDir',
-                'getCharset',
-
-                // HttpKernelInterface
-                'handle',
-
-                // Serializable
-                'serialize',
-                'unserialize',
-            ],
-            ['test', false]
-        );
-
-        $container = new Container();
-        $container->addScope(new Scope('frontend'));
-        $container->addScope(new Scope('backend'));
-
-        $kernel
-            ->expects($this->any())
-            ->method('getContainer')
-            ->willReturn($container)
-        ;
-
-        $container->set(
-            'contao.resource_locator',
-            new FileLocator([
-                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-            ])
-        );
-
-        $container->set(
-            'contao.cached_resource_locator',
-            new FileLocator([
-                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-            ])
-        );
-
-        return $kernel;
-    }
-
-    /**
-     * Mocks a router returning the given URL.
-     *
-     * @param string $url The URL to return
-     *
-     * @return RouterInterface The router object
-     */
-    private function mockRouter($url)
-    {
-        $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
-
-        $router
-            ->expects($this->any())
-            ->method('generate')
-            ->willReturn($url)
-        ;
-
-        return $router;
-    }
-
-    /**
-     * Mocks a CSRF token manager
-     *
-     * @return CsrfTokenManagerInterface The token manager object
-     */
-    private function mockTokenManager()
-    {
-        $tokenManager = $this
-            ->getMockBuilder('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface')
-            ->setMethods(array('getToken'))
-            ->getMockForAbstractClass();
-
-        $tokenManager
-            ->expects($this->any())
-            ->method('getToken')
-            ->willReturn(new CsrfToken('_csrf', 'testValue'));
-
-        return $tokenManager;
-    }
-
-    /**
-     * Mocks a Symfony session containing the Contao attribute bags
-     *
-     * @return SessionInterface
-     */
-    private function mockSession()
-    {
-        $session = new Session(
-            new MockArraySessionStorage()
-        );
-
-        $beBag = new AttributeBag('_contao_be_attributes');
-        $beBag->setName('contao_backend');
-        $feBag = new AttributeBag('_contao_fe_attributes');
-        $feBag->setName('contao_frontend');
-
-        $session->registerBag($beBag);
-        $session->registerBag($feBag);
-        
-        return $session;
     }
 }
