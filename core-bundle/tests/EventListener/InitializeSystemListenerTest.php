@@ -276,7 +276,8 @@ class InitializeSystemListenerTest extends TestCase
                 $this->mockRouter('/index.html'),
                 $this->mockTokenManager(),
                 $this->mockSession(),
-                $this->getRootDir()
+                $this->getRootDir(),
+                'contao_csrf_token'
             ]
         );
 
@@ -351,7 +352,8 @@ class InitializeSystemListenerTest extends TestCase
                 $this->mockRouter('/index.html'),
                 $this->mockTokenManager(),
                 $this->mockSession(),
-                $this->getRootDir()
+                $this->getRootDir(),
+                'contao_csrf_token'
             ]
         );
 

@@ -78,7 +78,7 @@ class InitializeSystemListener extends ScopeAwareListener
         CsrfTokenManagerInterface $tokenManager,
         SessionInterface $session,
         $rootDir,
-        $csrfTokenName = null
+        $csrfTokenName
     ) {
         $this->router        = $router;
         $this->tokenManager  = $tokenManager;
