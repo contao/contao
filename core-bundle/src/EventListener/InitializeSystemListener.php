@@ -62,9 +62,10 @@ class InitializeSystemListener extends ScopeAwareListener
 
     /**
      * Constructor.
-     *
-     * @param RouterInterface $router  The router object
-     * @param string          $rootDir The kernel root directory
+     * @param RouterInterface           $router The router service
+     * @param CsrfTokenManagerInterface $tokenManager The token manager service
+     * @param SessionInterface          $session The session service
+     * @param string                    $rootDir The kernel root directory
      */
     public function __construct(
         RouterInterface $router,
