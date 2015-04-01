@@ -46,7 +46,6 @@ class AddPackagesPass implements CompilerPassInterface
         if (is_file($this->jsonFile)) {
             $json = json_decode(file_get_contents($this->jsonFile), true);
 
-            // FIXME: throw an Exception if $json === null?
             if (null !== $json) {
                 $packages = $this->getVersions($json);
             }

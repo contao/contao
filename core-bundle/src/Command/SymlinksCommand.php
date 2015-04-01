@@ -112,7 +112,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     {
         $files = $this->findIn('.htaccess', "$rootDir/system/modules");
 
-        /** @var SplFileInfo[] $files */
+        /** @var SplFileInfo $file */
         foreach ($files as $file) {
             $htaccess = new HtaccessAnalyzer($file);
 

@@ -564,7 +564,6 @@ class Automator extends \System
 		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
 
 		// Parse all active modules
-		// FIXME: why can't we ->locate('dca/*.php')?
 		foreach ($objLocator->locate('dca') as $strDir)
 		{
 			if (!is_dir($strDir))
@@ -716,7 +715,6 @@ class Automator extends \System
 		$arrExtracts = array();
 
 		// Only check the active modules (see #4541)
-		// FIXME: why can't we ->locate('dca/*.php')?
 		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
 		{
 			if (!is_dir($strDir))
