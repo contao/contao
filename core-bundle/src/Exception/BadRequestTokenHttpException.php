@@ -23,7 +23,7 @@ class BadRequestTokenHttpException extends BadRequestHttpException
      * {@inheritdoc}
      */
     public function __construct(
-        $message = 'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">go back</a> and try again.',
+        $message = 'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">reload the page</a> and try again.',
         \Exception $previous = null,
         $code = 0
     ) {
