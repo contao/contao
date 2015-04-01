@@ -62,7 +62,7 @@ class FileLocator implements FileLocatorInterface
             $paths[$bundle] = $file;
         }
 
-        if (!$paths) {
+        if (empty($paths)) {
             throw new \InvalidArgumentException("The file $name does not exist in " . implode(', ', $this->paths) . '.');
         }
 

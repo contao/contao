@@ -55,7 +55,7 @@ class ChainFileLocator implements FileLocatorInterface
             }
         }
 
-        if (!$files) {
+        if (empty($files)) {
             throw new \InvalidArgumentException("No locator was able to find $name");
         }
 
