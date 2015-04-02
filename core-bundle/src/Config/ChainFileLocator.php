@@ -37,49 +37,16 @@ class ChainFileLocator implements FileLocatorInterface
     /**
      * {@inheritdoc}
      */
-    public function locate($name, $currentPath = null, $first = false)
+    public function locate($name, $currentPath = null, $first = true)
     {
-        $files = [];
-
         foreach ($this->locators as $locator) {
             try {
-                $file = $locator->locate($name, $currentPath, $first);
-
-                if (true === $first) {
-                    return $file;
-                }
-
-                $files = $this->mergeFiles((is_array($file) ? $file : [$file]), $files);
+                return $locator->locate($name, $currentPath, $first);
             } catch (\InvalidArgumentException $e) {
                 continue;
             }
         }
 
-        if (empty($files)) {
-            throw new \InvalidArgumentException("No locator was able to find $name");
-        }
-
-        return $files;
-    }
-
-    /**
-     * Adds new files to the existing array without overwriting existing non-numeric keys.
-     *
-     * @param array $newFiles The files to be added
-     * @param array $allFiles The existing files
-     *
-     * @return array The merged files array
-     */
-    private function mergeFiles(array $newFiles, array $allFiles)
-    {
-        foreach ($newFiles as $k => $v) {
-            if (is_numeric($k)) {
-                $allFiles[] = $v;
-            } elseif (!isset($allFiles[$k])) {
-                $allFiles[$k] = $v;
-            }
-        }
-
-        return $allFiles;
+        throw new \InvalidArgumentException("No locator was able to find $name");
     }
 }

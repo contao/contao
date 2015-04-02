@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\Reference;
  * Adds services tagged contao.resource_locator as Contao resource locators.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ResourceLocatorPass implements CompilerPassInterface
 {
@@ -27,23 +28,14 @@ class ResourceLocatorPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $locatorIds = $this->getLocators($container);
+        $locatorIds   = $this->getLocators($container);
+        $chainLocator = $container->getDefinition('contao.resource_locator.chain');
 
-        if (count($locatorIds) === 1) {
-            $alias = key($locatorIds);
-        } else {
-            $chainLocator = $container->getDefinition('contao.resource_locator.chain');
-
-            foreach ($this->getPriorizedLocators($locatorIds) as $locators) {
-                foreach ($locators as $locator) {
-                    $chainLocator->addMethodCall('addLocator', [new Reference($locator)]);
-                }
+        foreach ($this->getPriorizedLocators($locatorIds) as $locators) {
+            foreach ($locators as $locator) {
+                $chainLocator->addMethodCall('addLocator', [new Reference($locator)]);
             }
-
-            $alias = 'contao.resource_locator.chain';
         }
-
-        $container->setAlias('contao.resource_locator', $alias);
     }
 
     /**
