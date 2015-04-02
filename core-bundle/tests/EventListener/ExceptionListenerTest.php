@@ -563,6 +563,75 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
+     * Test that we will fall back to the generic error screen when the framework has not been booted.
+     *
+     * @runInSeparateProcess
+     */
+    public function testErrorWithoutFrameworkUsesLastResort()
+    {
+        $listener = new ExceptionListener(true, $this->mockTwig());
+
+        /** @var \Exception $exception */
+        $exception = new NoPagesFoundHttpException();
+
+        $event = new GetResponseForExceptionEvent(
+            $this->mockKernel(false),
+            new Request(),
+            HttpKernel::MASTER_REQUEST,
+            $exception
+        );
+
+        $listener->onKernelException($event);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+
+        $this->assertEquals('error', $event->getResponse()->getContent());
+        $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+        $this->assertEquals(
+            $event->getResponse()->getStatusCode(),
+            $event->getResponse()->headers->get('X-Status-Code')
+        );
+        $this->assertEquals(500, $event->getResponse()->getStatusCode());
+    }
+
+    /**
+     * Test that we will fall back to the generic error screen when no language strings are available.
+     *
+     * @runInSeparateProcess
+     */
+    public function testErrorWithoutLanguageStringsUsesLastResort()
+    {
+        /** @var ExceptionListener $listener */
+        $listener = $this->getMock(
+            'Contao\CoreBundle\EventListener\ExceptionListener',
+            ['loadLanguageStrings'],
+            [true, $this->mockTwig()]
+        );
+
+        /** @var \Exception $exception */
+        $exception = new NoPagesFoundHttpException();
+
+        $event = new GetResponseForExceptionEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernel::MASTER_REQUEST,
+            $exception
+        );
+
+        $listener->onKernelException($event);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+
+        $this->assertEquals('error', $event->getResponse()->getContent());
+        $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+        $this->assertEquals(
+            $event->getResponse()->getStatusCode(),
+            $event->getResponse()->headers->get('X-Status-Code')
+        );
+        $this->assertEquals(500, $event->getResponse()->getStatusCode());
+    }
+
+    /**
      * Mock the twig engine.
      *
      * @return TwigEngine

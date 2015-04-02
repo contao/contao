@@ -288,6 +288,26 @@ class ExceptionListener
     }
 
     /**
+     * Load the language strings
+     *
+     * @return array|null
+     *
+     * @internal
+     *
+     * FIXME: replace this with a real - non legacy - language string loader.
+     */
+    protected function loadLanguageStrings()
+    {
+        System::loadLanguageFile('exception');
+
+        if (!isset($GLOBALS['TL_LANG']['XPT'])) {
+            return null;
+        }
+
+        return $GLOBALS['TL_LANG']['XPT'];
+    }
+
+    /**
      * Retrieve the values for the template.
      *
      * @param string $view       The name of the view.
@@ -298,17 +318,63 @@ class ExceptionListener
      */
     private function getTemplateParameters($view, $statusCode)
     {
-        System::loadLanguageFile('exception');
+        // System and String are safe to autoload, Environment and Config NOT.
+        if (!(class_exists('Contao\\System', true)
+            && class_exists('Contao\\String', true)
+            && class_exists('Contao\\Environment', false)
+            && class_exists('Contao\\Config', false)
+        )) {
+            return null;
+        }
+
+        $languageStrings = $this->loadLanguageStrings();
+
+        if (null === $languageStrings) {
+            return null;
+        }
 
         return [
             'statusCode' => $statusCode,
-            'error'      => $GLOBALS['TL_LANG']['XPT'],
+            'error'      => $languageStrings,
             'template'   => $view,
             'agentClass' => Environment::get('agent')->class,
             'adminEmail' => String::encodeEmail('mailto:' . Config::get('adminEmail')),
             'base'       => Environment::get('base')
         ];
     }
+
+    /**
+     * Display the error screen as a last resort with embedded values as the system is not booted and nothing available.
+     *
+     * This should only happen on very rare occasions, i.e. when the configuration is really broken and there is an
+     * error in booting the Contao framework, but it may happen.
+     *
+     * @param string $view       The name of the view.
+     *
+     * @param int    $statusCode The HTTP status code.
+     *
+     * @return array
+     */
+    private function lastResort($view, $statusCode)
+    {
+        return [
+            'statusCode'        => $statusCode,
+            'error'             => [
+                'error'         => 'An error occurred',
+                'matter'        => 'What\'s the matter?',
+                'errorOccurred' => 'An error occurred while executing this script. Something does not work properly. Additionally an error occurred while trying to display the error message.',
+                'howToFix'      => 'How can I fix the issue?',
+                'errorFixOne'   => 'Open the &lt;code&gt;app/logs/error.log&lt;/code&gt; file and find the associated error message (usually the last one).',
+                'more'          => 'Tell me more, please',
+                'errorExplain'  => 'The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in in the <code>app/logs/error.log</code> file (see above). If you do not understand the error message or do not know how to fix the problem, search the <a href="https://contao.org/faq.html" target="_blank">Contao FAQs</a> or visit the <a href="https://contao.org/support.html" target="_blank">Contao support page</a>.',
+            ],
+            'template'          => $view,
+            'agentClass'        => '',
+            'adminEmail'        => '',
+            'base'              => ''
+        ];
+    }
+
     /**
      * Try to render an error template.
      *
@@ -326,6 +392,12 @@ class ExceptionListener
 
         $parameters = $this->getTemplateParameters($view, $statusCode);
 
+        // Safety net - ensure that everything is available.
+        if (null === $parameters) {
+            $view       = '@ContaoCore/Error/error.html.twig';
+            $statusCode = 500;
+            $parameters = $this->lastResort($view, $statusCode);
+        }
 
         return $this->setXStatusCode($this->twig->renderResponse($view, $parameters)->setStatusCode($statusCode));
     }
