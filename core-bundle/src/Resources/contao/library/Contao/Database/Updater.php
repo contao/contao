@@ -739,7 +739,7 @@ class Updater extends \Controller
 		$arrFiles = array();
 
 		// Parse all modules (see #6058)
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca', null, false) as $strDir)
 		{
 			if (!is_dir($strDir))
 			{

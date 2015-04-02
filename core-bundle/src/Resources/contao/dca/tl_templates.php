@@ -231,7 +231,7 @@ class tl_templates extends Backend
 		$arrAllowed = trimsplit(',', Config::get('templateFiles'));
 
 		// Get all templates
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('templates') as $strModule => $strFolder)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('templates', null, false) as $strFolder)
 		{
 			if (!is_dir($strFolder))
 			{
@@ -255,6 +255,7 @@ class tl_templates extends Backend
 				if (in_array($strExtension, $arrAllowed))
 				{
 					$strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
+					$strModule = preg_replace('@^(vendor|system/modules)/([^/]+(/.*-bundle)?)/.*$@', '$2', $strRelpath);
 					$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 				}
 			}

@@ -62,10 +62,9 @@ services:
             - "@kernel"
 
     contao.resource_locator.cache:
-        class: Symfony\Component\Config\FileLocator
-        public: false
+        class: Contao\CoreBundle\Config\CacheFileLocator
         arguments:
-            - ['%kernel.cache_dir%/contao']
+            - '%kernel.cache_dir%/contao'
         tags:
             - { name: contao.resource_locator, priority: 32 }
 

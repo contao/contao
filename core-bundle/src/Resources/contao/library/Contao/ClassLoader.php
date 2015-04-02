@@ -206,7 +206,7 @@ class ClassLoader
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		foreach ($kernel->getContainer()->get('contao.cached_resource_locator')->locate('config/autoload.php') as $file)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/autoload.php', null, false) as $file)
 		{
 			include $file;
 		}

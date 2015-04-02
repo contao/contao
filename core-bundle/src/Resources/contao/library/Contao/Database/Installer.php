@@ -279,7 +279,7 @@ class Installer extends \Controller
 		\Config::set('bypassCache', true);
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca', null, false) as $strDir)
 		{
 			if (!is_dir($strDir))
 			{
@@ -337,7 +337,7 @@ class Installer extends \Controller
 		$return = array();
 
 		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/database.sql') as $strFile)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false) as $strFile)
 		{
 			$data = file($strFile);
 

@@ -127,7 +127,7 @@ class Config
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		foreach ($kernel->getContainer()->get('contao.cached_resource_locator')->locate('config/config.php') as $file)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/config.php', null, false) as $file)
 		{
 			include $file;
 		}

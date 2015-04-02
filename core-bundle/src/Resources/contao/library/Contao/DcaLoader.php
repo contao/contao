@@ -74,7 +74,7 @@ class DcaLoader extends \Controller
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		foreach ($kernel->getContainer()->get('contao.cached_resource_locator')->locate('dca/' . $this->strTable . '.php') as $file)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false) as $file)
 		{
 			include $file;
 		}

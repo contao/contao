@@ -311,30 +311,30 @@ abstract class System
 		// Fall back to English
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
+		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
+		$objXliffLoader = new XliffFileLoader($kernel->getRootDir(), true);
+
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
 			try
 			{
-				include $kernel->getContainer()->get('contao.cached_resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.php', null, true);
+				include $kernel->getContainer()->get('contao.resource_locator.cache')->locate('languages/' . $strCreateLang . '/' . $strName . '.php');
 			}
 			catch (\InvalidArgumentException $e)
 			{
-				$objLocator = $kernel->getContainer()->get('contao.resource_locator');
-				$xlfLoader  = new XliffFileLoader($kernel->getRootDir(), true);
-
 				// XLIFF files will overwrite PHP files if both exist in the same bundle
 				$arrFiles = array_merge
 				(
-					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.php'),
-					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.xlf')
+					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.php', null, false),
+					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.xlf', null, false)
 				);
 
 				foreach ($arrFiles as $strFile)
 				{
 					if (pathinfo($strFile, PATHINFO_EXTENSION) == 'xlf')
 					{
-						$xlfLoader->load($strFile, $strCreateLang);
+						$objXliffLoader->load($strFile, $strCreateLang);
 					}
 					elseif (file_exists($strFile . '.php'))
 					{
@@ -378,18 +378,12 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			try
-			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
+			/** @var KernelInterface $kernel */
+			global $kernel;
 
-				$kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strLanguage, null, true);
-				$blnIsInstalled = true;
-			} catch (\InvalidArgumentException $e) {
-				$blnIsInstalled = false;
-			}
+			$arrLanguages = $kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strLanguage);
 
-			static::$arrLanguages[$strLanguage] = $blnIsInstalled;
+			static::$arrLanguages[$strLanguage] = !empty($arrLanguages);
 		}
 
 		return static::$arrLanguages[$strLanguage];

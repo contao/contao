@@ -310,7 +310,7 @@ class tl_user_group extends Backend
 
 		$included = array();
 
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca', null, false) as $strDir)
 		{
 			if (!is_dir($strDir))
 			{
