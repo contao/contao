@@ -10,19 +10,17 @@
 
 namespace Contao\CoreBundle\Test\Config;
 
-use Contao\CoreBundle\Config\BundleFileLocator;
+use Contao\CoreBundle\Config\FileLocatorFactory;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Tests the BundleFileLocator class.
+ * Tests the FileLocatorFactory class.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * TODO: add tests for currentDir parameter
  */
 class BundleFileLocatorTest extends TestCase
 {
@@ -36,7 +34,7 @@ class BundleFileLocatorTest extends TestCase
      */
     protected function setUp()
     {
-        $this->locator = BundleFileLocator::createFromKernelBundles($this->mockKernel());
+        $this->locator = FileLocatorFactory::create($this->mockKernel());
     }
 
     /**

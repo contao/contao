@@ -16,12 +16,12 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Searches the bundle paths for files or folders.
+ * Creates a FileLocator object with the bundle paths.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BundleFileLocator
+class FileLocatorFactory
 {
     /**
      * Creates the FileLocator.
@@ -30,13 +30,13 @@ class BundleFileLocator
      *
      * @return static The FileLocator instance
      */
-    public static function createFromKernelBundles(KernelInterface $kernel)
+    public static function create(KernelInterface $kernel)
     {
         $paths = [];
 
         foreach ($kernel->getBundles() as $bundle) {
             if (is_dir($path = self::getResourcesPath($bundle))) {
-                $paths[$bundle->getName()] = $path;
+                $paths[] = $path;
             }
         }
 

@@ -50,14 +50,14 @@ services:
         class: Contao\CoreBundle\Config\FileLocatorAggregate
         public: false
         arguments:
-            - ["@contao.resource_locator.bundles"]
+            - ["@contao.resource_locator.factory"]
         tags:
             - { name: contao.resource_locator }
 
-    contao.resource_locator.bundles:
-        class: Contao\CoreBundle\Config\BundleFileLocator
+    contao.resource_locator.factory:
+        class: Contao\CoreBundle\Config\FileLocatorFactory
         public: false
-        factory: [Contao\CoreBundle\Config\BundleFileLocator, createFromKernelBundles]
+        factory: [Contao\CoreBundle\Config\FileLocatorFactory, create]
         arguments:
             - "@kernel"
 
