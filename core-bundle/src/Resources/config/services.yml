@@ -42,7 +42,7 @@ services:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
         arguments:
             - "%contao.pretty_error_screens%"
-            - "%kernel.root_dir%"
+            - "@templating"
 
     contao.listener.initialize_system:
         class: Contao\CoreBundle\EventListener\InitializeSystemListener

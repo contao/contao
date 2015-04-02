@@ -1,0 +1,13 @@
+{% extends "@ContaoCore/Error/error_layout.html.twig" %}
+{% block title %}
+    {{ statusCode }} - {{ error.error }}
+{% endblock %}
+{% block matter %}
+    <p>{{ error.errorOccurred }}</p>
+{% endblock %}
+{% block howToFix %}
+    <p>{{ error.errorFixOne|raw }}</p>
+{% endblock %}
+{% block explain %}
+    <p>{{ error.errorExplain|raw }}</p>
+{% endblock %}

@@ -10,9 +10,16 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\Config;
+use Contao\CoreBundle\Exception\NoPagesFoundHttpException;
 use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\ResponseExceptionInterface;
+use Contao\CoreBundle\Exception\RootNotFoundHttpException;
+use Contao\Environment;
+use Contao\String;
+use Contao\System;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -30,9 +37,9 @@ class ExceptionListener
     private $renderErrorScreens;
 
     /**
-     * @var string
+     * @var TwigEngine
      */
-    private $rootDir;
+    private $twig;
 
     /**
      * Lookup map of all known exception templates in this handler.
@@ -40,29 +47,28 @@ class ExceptionListener
      * @var array
      */
     private static $exceptionTemplates = [
-        'Contao\CoreBundle\Exception\AccessDeniedHttpException'           => 'be_forbidden',
-        'Contao\CoreBundle\Exception\BadRequestTokenHttpException'        => 'be_referer',
-        'Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException'    => 'be_no_forward',
-        'Contao\CoreBundle\Exception\IncompleteInstallationHttpException' => 'be_incomplete',
-        'Contao\CoreBundle\Exception\InsecureInstallationHttpException'   => 'be_insecure',
-        'Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException'  => 'be_unavailable',
-        'Contao\CoreBundle\Exception\NoLayoutHttpException'               => 'be_no_layout',
-        'Contao\CoreBundle\Exception\NoPagesFoundHttpException'           => 'be_no_active',
-        'Contao\CoreBundle\Exception\NotFoundHttpException'               => 'be_no_page',
-        'Contao\CoreBundle\Exception\RootNotFoundHttpException'           => 'be_no_root',
+        'Contao\CoreBundle\Exception\AccessDeniedHttpException'           => 'forbidden',
+        'Contao\CoreBundle\Exception\BadRequestTokenHttpException'        => 'referer',
+        'Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException'    => 'no_forward',
+        'Contao\CoreBundle\Exception\IncompleteInstallationHttpException' => 'incomplete',
+        'Contao\CoreBundle\Exception\InsecureInstallationHttpException'   => 'insecure',
+        'Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException'  => 'unavailable',
+        'Contao\CoreBundle\Exception\NoLayoutHttpException'               => 'no_layout',
+        'Contao\CoreBundle\Exception\NoPagesFoundHttpException'           => 'no_active',
+        'Contao\CoreBundle\Exception\NotFoundHttpException'               => 'no_page',
+        'Contao\CoreBundle\Exception\RootNotFoundHttpException'           => 'no_root',
     ];
 
     /**
      * Constructor.
      *
-     * @param bool   $renderErrorScreens Flag if the error screens shall be rendered.
-     * @param string $rootDir            The kernel root directory for reading the templates
-     *                                   (only applicable when renderErrorScreens is true).
+     * @param bool       $renderErrorScreens Flag if the error screens shall be rendered.
+     * @param TwigEngine $twig               The twig rendering engine.
      */
-    public function __construct($renderErrorScreens, $rootDir)
+    public function __construct($renderErrorScreens, TwigEngine $twig)
     {
         $this->renderErrorScreens = $renderErrorScreens;
-        $this->rootDir = dirname($rootDir);
+        $this->twig = $twig;
     }
 
     /**
@@ -99,7 +105,7 @@ class ExceptionListener
         }
 
         // If still nothing worked out, we wrap it in a plain "internal error occured" message.
-        $event->setResponse($this->setXStatusCode(new Response($this->renderErrorTemplate('be_error'), 500)));
+        $event->setResponse($this->renderErrorTemplate('error', 500));
     }
 
     /**
@@ -158,6 +164,31 @@ class ExceptionListener
     }
 
     /**
+     * Check if the Contao 404 should be rendered.
+     *
+     * @return bool
+     */
+    private function isRenderingOfContao404PossibleFor($exception)
+    {
+        // If not an 404 exception or the frontend has not been booted, we can not render.
+        if (!($exception instanceof NotFoundHttpException && defined('BE_USER_LOGGED_IN'))) {
+            return false;
+        }
+
+        // It is hopeless to render a 404 page when no root page or no page at all is published.
+        if ($exception instanceof RootNotFoundHttpException || $exception instanceof NoPagesFoundHttpException) {
+            return false;
+        }
+
+        // If no 404 page handler has been registered, we also can not render.
+        if (!(isset($GLOBALS['TL_PTY']['error_404']) && class_exists($GLOBALS['TL_PTY']['error_404']))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Try to render a Contao 404 page first.
      *
      * @param \Exception $exception The exception to check.
@@ -168,49 +199,44 @@ class ExceptionListener
      */
     private function tryToRenderContao404($exception)
     {
-        // FIXME: I guess it is hopeless to render a 404 page from within a root page when no root page is published.
-        // We might want to skip RootNotFoundHttpException then and also NoPagesFoundHttpException is an candidate.
-
-        if ($exception instanceof NotFoundHttpException) {
-            static $processing;
-
-            if (isset($GLOBALS['TL_PTY']['error_404']) && class_exists($GLOBALS['TL_PTY']['error_404'])) {
-                if ($processing) {
-                    return null;
-                }
-
-                // Prevent entering this method multiple times causing endless loop.
-                $processing = true;
-
-                try {
-                    // FIXME: introduce some contao_frontend_404 route and do a subrequest on it might be more sufficient.
-                    /** @var \PageError404 $pageHandler */
-                    $pageHandler = new $GLOBALS['TL_PTY']['error_404']();
-                    $response    = $pageHandler->getResponse(false);
-                    $processing  = false;
-
-                    return $response;
-                } catch (ResponseException $pageException) {
-                    $processing = false;
-
-                    return $pageException->getResponse();
-                } catch (NotFoundHttpException $pageException) {
-                    $processing = false;
-
-                    // We can safely assume that when we get an not found exception when trying to render a not found
-                    // page, that we have to render the internal page.
-                    return null;
-                } catch (\Exception $pageException) {
-                    $processing = false;
-                    // Throwing the page exception here is intentional as we have some error handler problems!
-                    // We should never end up here.
-                    // Fixing error handling code paths is more important than the original exception.
-                    throw $pageException;
-                }
-            }
+        if (!$this->isRenderingOfContao404PossibleFor($exception)) {
+            return null;
         }
 
-        return null;
+        static $processing;
+        // Exit when we are already trying to render a 404 page but an exception was thrown from within.
+        if ($processing) {
+            return null;
+        }
+
+        // Prevent entering this method multiple times causing endless loop.
+        $processing = true;
+
+        try {
+            // FIXME: introduce some contao_frontend_404 route and do a subrequest on it might be more sufficient.
+            /** @var \PageError404 $pageHandler */
+            $pageHandler = new $GLOBALS['TL_PTY']['error_404']();
+            $response    = $pageHandler->getResponse(false);
+            $processing  = false;
+
+            return $response;
+        } catch (ResponseException $pageException) {
+            $processing = false;
+
+            return $pageException->getResponse();
+        } catch (NotFoundHttpException $pageException) {
+            $processing = false;
+
+            // We can safely assume that when we get an not found exception when trying to render a not found
+            // page, that we have to render the internal page.
+            return null;
+        } catch (\Exception $pageException) {
+            $processing = false;
+            // Throwing the page exception here is intentional as we have some error handler problems!
+            // We should never end up here.
+            // Fixing error handling code paths is more important than the original exception.
+            throw $pageException;
+        }
      }
 
     /**
@@ -255,54 +281,52 @@ class ExceptionListener
      */
     private function createTemplateResponseFromException($template, HttpExceptionInterface $exception)
     {
-        return new Response(
-            $this->renderErrorTemplate($template),
-            $exception->getStatusCode(),
-            $exception->getHeaders()
-        );
+        $response = $this->renderErrorTemplate($template, $exception->getStatusCode());
+        $response->headers->add($exception->getHeaders());
+
+        return $response;
     }
 
+    /**
+     * Retrieve the values for the template.
+     *
+     * @param string $view       The name of the view.
+     *
+     * @param int    $statusCode The HTTP status code.
+     *
+     * @return array|null
+     */
+    private function getTemplateParameters($view, $statusCode)
+    {
+        System::loadLanguageFile('exception');
+
+        return [
+            'statusCode' => $statusCode,
+            'error'      => $GLOBALS['TL_LANG']['XPT'],
+            'template'   => $view,
+            'agentClass' => Environment::get('agent')->class,
+            'adminEmail' => String::encodeEmail('mailto:' . Config::get('adminEmail')),
+            'base'       => Environment::get('base')
+        ];
+    }
     /**
      * Try to render an error template.
      *
      * @param string $template The template name. Will get searched at standard locations.
      *
-     * @return string
+     * @return Response
      */
-    private function renderErrorTemplate($template)
+    private function renderErrorTemplate($template, $statusCode)
     {
-        // TODO: make twig templates out of these.
-        if ($response = $this->tryReadTemplate(sprintf('%s/templates/%s.html5', $this->rootDir, $template))) {
-            return $response;
+        $view = '@ContaoCore/Error/' . $template . '.html.twig';
+        if (!$this->twig->exists($view)) {
+            $view       = '@ContaoCore/Error/error.html.twig';
+            $statusCode = 500;
         }
 
-        return $this->tryReadTemplate(
-            sprintf('%s/../Resources/contao/templates/backend/%s.html5', __DIR__, $template)
-        );
-    }
+        $parameters = $this->getTemplateParameters($view, $statusCode);
 
-    /**
-     * Try to read a template.
-     *
-     * @param string $template The file path to test.
-     *
-     * @return null|string
-     */
-    private function tryReadTemplate($template)
-    {
-        if (file_exists($template)) {
-            // Error templates should not derive the $this context so we isolate the parsing,
-            // the "unused" root dir variable will get used in the template.
-            $isolatedRun = function ($template, $rootDir) {
-                ob_start();
-                include $template;
 
-                return ob_get_clean();
-            };
-
-            return $isolatedRun($template, $this->rootDir);
-        }
-
-        return null;
+        return $this->setXStatusCode($this->twig->renderResponse($view, $parameters)->setStatusCode($statusCode));
     }
 }

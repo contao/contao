@@ -125,7 +125,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         // Initialize the error reporting level to the one defined by phpUnit to not accidentally tamper with it in
         // InitializeSystemListener::sanitizeErrorHandling() if the system should get initialized during the currently
         // running test.
-        $container->setParameter('error_level', error_reporting());
+        $container->setParameter('contao.error_level', error_reporting());
 
         $container->set(
             'contao.resource_finder',

@@ -320,7 +320,10 @@ class InitializeSystemListenerTest extends TestCase
         $kernel   = $this->mockKernel();
         $listener = new InitializeSystemListener(
             $this->mockRouter('/web/app_dev.php?do=test'),
-            $this->getRootDir() . '/app'
+            $this->mockSession(),
+            $this->getRootDir() . '/app',
+            $this->mockTokenManager(),
+            'contao_csrf_token'
         );
         $listener->setContainer($kernel->getContainer());
 
@@ -455,7 +458,10 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/contao/install'),
-            $this->getRootDir() . '/app'
+            $this->mockSession(),
+            $this->getRootDir() . '/app',
+            $this->mockTokenManager(),
+            'contao_csrf_token'
         );
 
         $listener->setContainer($container);
