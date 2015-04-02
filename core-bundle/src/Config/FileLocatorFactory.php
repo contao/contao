@@ -16,21 +16,25 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Creates a FileLocator object with the bundle paths.
+ * Creates FileLocator objects.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FileLocatorFactory
+class FileLocatorFactory implements FileLocatorFactoryInterface
 {
     /**
-     * Creates the FileLocator.
-     *
-     * @param KernelInterface $kernel The kernel object
-     *
-     * @return static The FileLocator instance
+     * {@inheritdoc}
      */
-    public static function create(KernelInterface $kernel)
+    public static function create(array $paths)
+    {
+        return new FileLocator($paths);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function createWithBundlePaths(KernelInterface $kernel)
     {
         $paths = [];
 
@@ -41,6 +45,14 @@ class FileLocatorFactory
         }
 
         return new FileLocator($paths);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function createWithCachePath($cachePath)
+    {
+        return new StrictFileLocator($cachePath);
     }
 
     /**

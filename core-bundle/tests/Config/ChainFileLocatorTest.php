@@ -10,8 +10,8 @@
 
 namespace Contao\CoreBundle\Test\Config;
 
-use Contao\CoreBundle\Config\CacheFileLocator;
 use Contao\CoreBundle\Config\ChainFileLocator;
+use Contao\CoreBundle\Config\StrictFileLocator;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\FileLocatorInterface;
@@ -35,7 +35,7 @@ class ChainFileLocatorTest extends TestCase
     protected function setUp()
     {
         $this->locator = new ChainFileLocator();
-        $this->locator->addLocator(new CacheFileLocator($this->getCacheDir() . '/contao'));
+        $this->locator->addLocator(new StrictFileLocator($this->getCacheDir() . '/contao'));
 
         $this->locator->addLocator(
             new FileLocator([

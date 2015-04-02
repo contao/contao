@@ -34,7 +34,7 @@ class BundleFileLocatorTest extends TestCase
      */
     protected function setUp()
     {
-        $this->locator = FileLocatorFactory::create($this->mockKernel());
+        $this->locator = FileLocatorFactory::createWithBundlePaths($this->mockKernel());
     }
 
     /**
@@ -42,7 +42,13 @@ class BundleFileLocatorTest extends TestCase
      */
     public function testInstantiation()
     {
+        $locator = FileLocatorFactory::create([]);
+        $this->assertInstanceOf('Symfony\Component\Config\FileLocator', $locator);
+
         $this->assertInstanceOf('Symfony\Component\Config\FileLocator', $this->locator);
+
+        $locator = FileLocatorFactory::createWithCachePath($this->getCacheDir());
+        $this->assertInstanceOf('Contao\CoreBundle\Config\StrictFileLocator', $locator);
     }
 
     /**

@@ -10,16 +10,16 @@
 
 namespace Contao\CoreBundle\Test\Config;
 
-use Contao\CoreBundle\Config\CacheFileLocator;
+use Contao\CoreBundle\Config\StrictFileLocator;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Config\FileLocatorInterface;
 
 /**
- * Tests the CacheFileLocatorTest class.
+ * Tests the StrictFileLocator class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class CacheFileLocatorTest extends TestCase
+class StrictFileLocatorTest extends TestCase
 {
     /**
      * @var FileLocatorInterface
@@ -31,7 +31,7 @@ class CacheFileLocatorTest extends TestCase
      */
     protected function setUp()
     {
-        $this->locator = new CacheFileLocator($this->getCacheDir() . '/contao');
+        $this->locator = new StrictFileLocator($this->getCacheDir() . '/contao');
     }
 
     /**
@@ -39,7 +39,7 @@ class CacheFileLocatorTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Config\CacheFileLocator', $this->locator);
+        $this->assertInstanceOf('Contao\CoreBundle\Config\StrictFileLocator', $this->locator);
     }
 
     /**
@@ -73,6 +73,16 @@ class CacheFileLocatorTest extends TestCase
     public function testLocateFolder()
     {
         $this->locator->locate('config');
+    }
+
+    /**
+     * Tests locating multiple folders.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testLocateMultipleFolders()
+    {
+        $this->locator->locate('config', null, false);
     }
 
     /**
