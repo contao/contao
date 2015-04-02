@@ -10,22 +10,22 @@
 
 namespace Contao\CoreBundle\Test\Config;
 
+use Contao\CoreBundle\Config\CacheFileLocator;
 use Contao\CoreBundle\Config\ChainFileLocator;
-use Contao\CoreBundle\Config\CombinedFileLocator;
-use Contao\CoreBundle\Config\FileLocator;
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Test\TestCase;
-use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\FileLocatorInterface;
 
 /**
  * Tests the ChainFileLocator class.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ChainFileLocatorTest extends TestCase
 {
     /**
-     * @var FileLocator
+     * @var FileLocatorInterface
      */
     private $locator;
 
@@ -35,12 +35,12 @@ class ChainFileLocatorTest extends TestCase
     protected function setUp()
     {
         $this->locator = new ChainFileLocator();
-        $this->locator->addLocator(new CombinedFileLocator($this->getCacheDir() . '/contao'));
+        $this->locator->addLocator(new CacheFileLocator($this->getCacheDir() . '/contao'));
 
         $this->locator->addLocator(
             new FileLocator([
-                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
+                $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+                $this->getRootDir() . '/system/modules/foobar'
             ])
         );
     }
@@ -54,35 +54,36 @@ class ChainFileLocatorTest extends TestCase
     }
 
     /**
-     * Tests locating all resources.
+     * Tests locating a cached file.
      */
-    public function testLocateAll()
+    public function testLocateCachedFile()
     {
-        $files = array_values($this->locator->locate('config/autoload.php'));
+        $file = $this->locator->locate('config/autoload.php');
 
-        $this->assertCount(3, $files);
-        $this->assertEquals($this->getCacheDir() . '/contao/config/autoload.php', $files[0]);
-        $this->assertEquals($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/autoload.php', $files[1]);
-        $this->assertEquals($this->getRootDir() . '/system/modules/foobar/config/autoload.php', $files[2]);
-    }
-
-    /**
-     * Tests locating the first resource.
-     */
-    public function testLocateFirst()
-    {
-        $file = $this->locator->locate('config/autoload.php', null, true);
-
+        $this->assertInternalType('string', $file);
         $this->assertEquals($this->getCacheDir() . '/contao/config/autoload.php', $file);
     }
 
     /**
-     * Tests locating the first resource with a non-existing file.
+     * Tests locating a non-cached file.
+     */
+    public function testLocateAll()
+    {
+        $files = $this->locator->locate('config/config.php', null, false);
+
+        $this->assertInternalType('array', $files);
+        $this->assertCount(2, $files);
+        $this->assertEquals($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/config.php', $files[0]);
+        $this->assertEquals($this->getRootDir() . '/system/modules/foobar/config/config.php', $files[1]);
+    }
+
+    /**
+     * Tests locating an invalid resource
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testLocateFirstNotFound()
+    public function testLocateInvalid()
     {
-        $this->locator->locate('config/foo.php', null, true);
+        $this->locator->locate('config/foo.php');
     }
 }

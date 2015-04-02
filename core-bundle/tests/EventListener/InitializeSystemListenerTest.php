@@ -12,10 +12,10 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\Config;
 use Contao\CoreBundle\Command\VersionCommand;
-use Contao\CoreBundle\Config\FileLocator;
 use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -396,14 +396,6 @@ class InitializeSystemListenerTest extends TestCase
 
         $container->set(
             'contao.resource_locator',
-            new FileLocator([
-                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-            ])
-        );
-
-        $container->set(
-            'contao.cached_resource_locator',
             new FileLocator([
                 'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
                 'foobar'     => $this->getRootDir() . '/system/modules/foobar'

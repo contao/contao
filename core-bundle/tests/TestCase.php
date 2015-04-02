@@ -11,11 +11,9 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\CombinedFileLocator;
-use Contao\CoreBundle\Config\FileLocator;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\Environment;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
@@ -129,11 +127,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->set(
             'contao.resource_locator',
             $locator
-        );
-
-        $container->set(
-            'contao.cached_resource_locator',
-            new CombinedFileLocator($this->getCacheDir(), $locator)
         );
 
         $kernel
