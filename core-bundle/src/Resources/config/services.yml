@@ -48,7 +48,6 @@ services:
 
     contao.resource_locator.aggregate:
         class: Contao\CoreBundle\Config\FileLocatorAggregate
-        public: false
         arguments:
             - ["@contao.resource_locator.bundles"]
         tags:
