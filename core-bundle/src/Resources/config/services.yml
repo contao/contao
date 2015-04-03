@@ -48,21 +48,21 @@ services:
 
     contao.resource_locator.aggregate:
         class: Contao\CoreBundle\Config\FileLocatorAggregate
+        public: false
         arguments:
             - ["@contao.resource_locator.bundles"]
         tags:
             - { name: contao.resource_locator }
 
     contao.resource_locator.bundles:
-        class: Contao\CoreBundle\Config\FileLocatorFactory
+        class: Contao\CoreBundle\Config\BundleFileLocator
         public: false
-        factory: [Contao\CoreBundle\Config\FileLocatorFactory, createWithBundlePaths]
         arguments:
             - "@kernel"
 
     contao.resource_locator.cache:
-        class: Contao\CoreBundle\Config\FileLocatorFactory
-        factory: [Contao\CoreBundle\Config\FileLocatorFactory, createWithCachePath]
+        class: Contao\CoreBundle\Config\StrictFileLocator
+        public: false
         arguments:
             - '%kernel.cache_dir%/contao'
         tags:

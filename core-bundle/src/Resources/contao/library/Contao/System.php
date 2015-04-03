@@ -317,18 +317,16 @@ abstract class System
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
-			try
+			$arrFiles = $kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.php', null, false);
+
+			if (count($arrFiles) == 1 && $arrFiles[0] == $kernel->getCacheDir() . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php')
 			{
-				include $kernel->getContainer()->get('contao.resource_locator.cache')->locate('languages/' . $strCreateLang . '/' . $strName . '.php');
+				include $arrFiles[0];
 			}
-			catch (\InvalidArgumentException $e)
+			else
 			{
 				// XLIFF files will overwrite PHP files if both exist in the same bundle
-				$arrFiles = array_merge
-				(
-					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.php', null, false),
-					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.xlf', null, false)
-				);
+				$arrFiles = array_merge($arrFiles, $objLocator->locate('languages/' . $strCreateLang . '/' . $strName . '.xlf', null, false));
 
 				foreach ($arrFiles as $strFile)
 				{

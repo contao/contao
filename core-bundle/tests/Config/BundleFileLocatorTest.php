@@ -10,14 +10,14 @@
 
 namespace Contao\CoreBundle\Test\Config;
 
-use Contao\CoreBundle\Config\FileLocatorFactory;
+use Contao\CoreBundle\Config\BundleFileLocator;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Tests the FileLocatorFactory class.
+ * Tests the BundleFileLocator class.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -34,7 +34,7 @@ class BundleFileLocatorTest extends TestCase
      */
     protected function setUp()
     {
-        $this->locator = FileLocatorFactory::createWithBundlePaths($this->mockKernel());
+        $this->locator = new BundleFileLocator($this->mockKernel());
     }
 
     /**
@@ -42,13 +42,7 @@ class BundleFileLocatorTest extends TestCase
      */
     public function testInstantiation()
     {
-        $locator = FileLocatorFactory::create([]);
-        $this->assertInstanceOf('Symfony\Component\Config\FileLocator', $locator);
-
-        $this->assertInstanceOf('Symfony\Component\Config\FileLocator', $this->locator);
-
-        $locator = FileLocatorFactory::createWithCachePath($this->getCacheDir());
-        $this->assertInstanceOf('Contao\CoreBundle\Config\StrictFileLocator', $locator);
+        $this->assertInstanceOf('Contao\CoreBundle\Config\BundleFileLocator', $this->locator);
     }
 
     /**

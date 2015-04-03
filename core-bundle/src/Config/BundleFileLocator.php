@@ -12,47 +12,46 @@ namespace Contao\CoreBundle\Config;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Creates FileLocator objects.
+ * Locates files within the bundle resources paths.
  *
- * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FileLocatorFactory implements FileLocatorFactoryInterface
+class BundleFileLocator implements FileLocatorInterface
 {
     /**
-     * {@inheritdoc}
+     * @var FileLocatorInterface
      */
-    public static function create(array $paths)
-    {
-        return new FileLocator($paths);
-    }
+    protected $locator;
 
     /**
-     * {@inheritdoc}
+     * Constructor.
+     *
+     * @param KernelInterface $kernel The kernel object
      */
-    public static function createWithBundlePaths(KernelInterface $kernel)
+    public function __construct(KernelInterface $kernel)
     {
         $paths = [];
 
         foreach ($kernel->getBundles() as $bundle) {
-            if (is_dir($path = self::getResourcesPath($bundle))) {
+            if (is_dir($path = $this->getResourcesPath($bundle))) {
                 $paths[] = $path;
             }
         }
 
-        return new FileLocator($paths);
+        $this->locator = new FileLocator($paths);
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function createWithCachePath($cachePath)
+    public function locate($name, $currentPath = null, $first = true)
     {
-        return new StrictFileLocator($cachePath);
+        return $this->locator->locate($name, $currentPath, $first);
     }
 
     /**
@@ -62,7 +61,7 @@ class FileLocatorFactory implements FileLocatorFactoryInterface
      *
      * @return string The resources path
      */
-    private static function getResourcesPath(BundleInterface $bundle)
+    private function getResourcesPath(BundleInterface $bundle)
     {
         if ($bundle instanceof ContaoModuleBundle) {
             return $bundle->getPath();
