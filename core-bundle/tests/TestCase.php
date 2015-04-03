@@ -50,7 +50,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         $kernel    = $this->mockKernel();
         $container = $kernel->getContainer();
-        $router    = $this->getMock('Symfony\Component\Routing\RouterInterface');
+        $router    = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');
 
         $router
             ->expects($this->any())
@@ -84,7 +84,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         Environment::set('httpAcceptLanguage', []);
 
         $kernel = $this->getMock(
-            'Symfony\Component\HttpKernel\Kernel',
+            'Symfony\\Component\\HttpKernel\\Kernel',
             [
                 // KernelInterface
                 'registerBundles',

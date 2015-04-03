@@ -31,7 +31,7 @@ class AutomatorCommandTest extends TestCase
     {
         $command = new AutomatorCommand('contao:automator');
 
-        $this->assertInstanceOf('Contao\CoreBundle\Command\AutomatorCommand', $command);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Command\\AutomatorCommand', $command);
     }
 
     /**

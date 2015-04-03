@@ -42,7 +42,7 @@ class BundleFileLocatorTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Config\BundleFileLocator', $this->locator);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Config\\BundleFileLocator', $this->locator);
     }
 
     /**
@@ -120,7 +120,7 @@ class BundleFileLocatorTest extends TestCase
     private function mockKernel()
     {
         $kernel = $this->getMock(
-            'Symfony\Component\HttpKernel\Kernel',
+            'Symfony\\Component\\HttpKernel\\Kernel',
             [
                 // KernelInterface
                 'registerBundles',
@@ -152,7 +152,7 @@ class BundleFileLocatorTest extends TestCase
         );
 
         $bundle = $this->getMock(
-            'Symfony\Component\HttpKernel\Bundle\Bundle',
+            'Symfony\\Component\\HttpKernel\\Bundle\\Bundle',
             ['getName', 'getPath'],
             [],
             'TestBundle'

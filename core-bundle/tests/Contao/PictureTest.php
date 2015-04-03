@@ -97,7 +97,7 @@ class PictureTest extends TestCase
             }
         ));
 
-        $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
+        $this->assertInstanceOf('Contao\\Picture', new Picture($fileMock));
     }
 
     /**

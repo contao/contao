@@ -28,7 +28,7 @@ class ContaoUserProviderTest extends TestCase
     {
         $provider = new ContaoUserProvider();
 
-        $this->assertInstanceOf('Contao\CoreBundle\Security\User\ContaoUserProvider', $provider);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Security\\User\\ContaoUserProvider', $provider);
     }
 
     /**
@@ -41,7 +41,7 @@ class ContaoUserProviderTest extends TestCase
     {
         $provider = new ContaoUserProvider();
 
-        $this->assertInstanceOf('Contao\BackendUser', $provider->loadUserByUsername('backend'));
+        $this->assertInstanceOf('Contao\\BackendUser', $provider->loadUserByUsername('backend'));
     }
 
     /**
@@ -54,7 +54,7 @@ class ContaoUserProviderTest extends TestCase
     {
         $provider = new ContaoUserProvider();
 
-        $this->assertInstanceOf('Contao\FrontendUser', $provider->loadUserByUsername('frontend'));
+        $this->assertInstanceOf('Contao\\FrontendUser', $provider->loadUserByUsername('frontend'));
     }
 
     /**
@@ -86,6 +86,6 @@ class ContaoUserProviderTest extends TestCase
     {
         $provider = new ContaoUserProvider();
 
-        $this->assertTrue($provider->supportsClass('Contao\FrontendUser'));
+        $this->assertTrue($provider->supportsClass('Contao\\FrontendUser'));
     }
 }

@@ -39,7 +39,7 @@ class StrictFileLocatorTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Config\StrictFileLocator', $this->locator);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Config\\StrictFileLocator', $this->locator);
     }
 
     /**

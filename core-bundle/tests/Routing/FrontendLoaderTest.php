@@ -26,7 +26,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $loader = new FrontendLoader('', 'en', false);
 
-        $this->assertInstanceOf('Contao\CoreBundle\Routing\FrontendLoader', $loader);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Routing\\FrontendLoader', $loader);
     }
 
     /**
@@ -37,7 +37,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $loader     = new FrontendLoader('.html', 'en', false);
         $collection = $loader->load('.', 'bundles');
 
-        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
+        $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
 
         $routes = $collection->all();
 
@@ -59,7 +59,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $loader     = new FrontendLoader('.html', 'en', true);
         $collection = $loader->load('.', 'bundles');
 
-        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
+        $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
 
         $routes = $collection->all();
 
@@ -81,7 +81,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $loader     = new FrontendLoader('', 'en', false);
         $collection = $loader->load('.', 'bundles');
 
-        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
+        $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
 
         $routes = $collection->all();
 
@@ -103,7 +103,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $loader     = new FrontendLoader('', 'en', true);
         $collection = $loader->load('.', 'bundles');
 
-        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
+        $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
 
         $routes = $collection->all();
 

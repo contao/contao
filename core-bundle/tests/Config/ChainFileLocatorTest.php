@@ -50,7 +50,7 @@ class ChainFileLocatorTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Config\ChainFileLocator', $this->locator);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Config\\ChainFileLocator', $this->locator);
     }
 
     /**

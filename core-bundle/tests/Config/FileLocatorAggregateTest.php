@@ -45,7 +45,7 @@ class FileLocatorAggregateTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Config\FileLocatorAggregate', $this->locator);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Config\\FileLocatorAggregate', $this->locator);
     }
 
     /**

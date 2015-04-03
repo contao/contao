@@ -28,7 +28,7 @@ class AddPackagesPassTest extends TestCase
     {
         $pass = new AddPackagesPass($this->getRootDir() . '/vendor/composer/installed.json');
 
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass', $pass);
+        $this->assertInstanceOf('Contao\\CoreBundle\\DependencyInjection\\Compiler\\AddPackagesPass', $pass);
     }
 
     /**
