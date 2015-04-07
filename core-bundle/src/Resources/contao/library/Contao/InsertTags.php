@@ -60,7 +60,7 @@ class InsertTags extends \Controller
 			// Run the replacement again if there are more tags (see #4402)
 			if (strpos($strTag, '{{') !== false)
 			{
-				$strTag = $this->replaceInsertTags($strTag, $blnCache);
+				$strTag = $this->replace($strTag, $blnCache);
 			}
 
 			$flags = explode('|', $strTag);
