@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\Config;
 use Contao\CoreBundle\Command\VersionCommand;
-use Contao\CoreBundle\Config\FileLocator;
+use Contao\CoreBundle\Finder\ResourceFinder;
 use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
@@ -340,77 +340,6 @@ class InitializeSystemListenerTest extends TestCase
         $listener->onConsoleCommand(
             new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
         );
-    }
-
-    /**
-     * Mocks a Contao kernel.
-     *
-     * @return KernelInterface The kernel mock object
-     */
-    private function mockKernel()
-    {
-        Config::set('bypassCache', true);
-        Environment::set('httpAcceptLanguage', []);
-
-        $kernel = $this->getMock(
-            'Symfony\Component\HttpKernel\Kernel',
-            [
-                // KernelInterface
-                'registerBundles',
-                'registerContainerConfiguration',
-                'boot',
-                'shutdown',
-                'getBundles',
-                'isClassInActiveBundle',
-                'getBundle',
-                'locateResource',
-                'getName',
-                'getEnvironment',
-                'isDebug',
-                'getRootDir',
-                'getContainer',
-                'getStartTime',
-                'getCacheDir',
-                'getLogDir',
-                'getCharset',
-
-                // HttpKernelInterface
-                'handle',
-
-                // Serializable
-                'serialize',
-                'unserialize',
-            ],
-            ['test', false]
-        );
-
-        $container = new Container();
-        $container->addScope(new Scope('frontend'));
-        $container->addScope(new Scope('backend'));
-
-        $kernel
-            ->expects($this->any())
-            ->method('getContainer')
-            ->willReturn($container)
-        ;
-
-        $container->set(
-            'contao.resource_locator',
-            new FileLocator([
-                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-            ])
-        );
-
-        $container->set(
-            'contao.cached_resource_locator',
-            new FileLocator([
-                'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-                'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-            ])
-        );
-
-        return $kernel;
     }
 
     /**

@@ -11,10 +11,8 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\CombinedFileLocator;
-use Contao\CoreBundle\Config\FileLocator;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
+use Contao\CoreBundle\Finder\ResourceFinder;
 use Contao\Environment;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
@@ -80,7 +78,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return Kernel The kernel object
      */
-    private function mockKernel()
+    protected function mockKernel()
     {
         Config::set('bypassCache', true);
         Environment::set('httpAcceptLanguage', []);
@@ -117,23 +115,35 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ['test', false]
         );
 
+        $bundle = $this->getMockForAbstractClass(
+            'Symfony\Component\HttpKernel\Bundle\Bundle',
+            [],
+            '',
+            false,
+            true,
+            true,
+            ['getPath']
+        );
+
+        $bundle
+            ->expects($this->any())
+            ->method('getPath')
+            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle')
+        ;
+
+        $kernel
+            ->expects($this->any())
+            ->method('getBundles')
+            ->willReturn([$bundle])
+        ;
+
         $container = new Container();
         $container->addScope(new Scope('frontend'));
         $container->addScope(new Scope('backend'));
 
-        $locator = new FileLocator([
-            'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-            'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-        ]);
-
         $container->set(
-            'contao.resource_locator',
-            $locator
-        );
-
-        $container->set(
-            'contao.cached_resource_locator',
-            new CombinedFileLocator($this->getCacheDir(), $locator)
+            'contao.resource_finder',
+            new ResourceFinder($kernel)
         );
 
         $kernel
