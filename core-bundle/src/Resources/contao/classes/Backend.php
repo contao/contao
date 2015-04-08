@@ -250,20 +250,23 @@ abstract class Backend extends \Controller
 	 */
 	protected function handleRunOnce()
 	{
+		$this->import('Files');
+
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$this->import('Files');
+		/** @var SplFileInfo[] $files */
+		$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('runonce.php');
 
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/runonce.php', TL_ROOT . '/system') as $file)
+		foreach ($files as $file)
 		{
 			try
 			{
-				include $file;
+				include $file->getPathname();
 			}
 			catch (\Exception $e) {}
 
-			$strRelpath = str_replace(TL_ROOT . '/', '', $file);
+			$strRelpath = str_replace(TL_ROOT . '/', '', $file->getPathname());
 
 			if (!$this->Files->delete($strRelpath))
 			{

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -74,9 +75,20 @@ class DcaLoader extends \Controller
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		foreach ($kernel->getContainer()->get('contao.cached_resource_locator')->locate('dca/' . $this->strTable . '.php') as $file)
+		// Try to load from cache
+		if (file_exists($kernel->getCacheDir() . '/contao/dca/' . $this->strTable . '.php'))
 		{
-			include $file;
+			include $kernel->getCacheDir() . '/contao/dca/' . $this->strTable . '.php';
+		}
+		else
+		{
+			/** @var SplFileInfo[] $files */
+			$files = $kernel->getContainer()->get('contao.resource_finder')->in('dca')->files()->name($this->strTable . '.php');
+
+			foreach ($files as $file)
+			{
+				include $file;
+			}
 		}
 
 		// HOOK: allow to load custom settings

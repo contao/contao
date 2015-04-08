@@ -43,31 +43,10 @@ services:
             # Priority must be lower than the one of the initialize_system listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 26 }
 
-    contao.resource_locator.bundles:
-        class: Contao\CoreBundle\Config\FileLocator
-        public: false
-        factory: [Contao\CoreBundle\Config\FileLocator, createFromKernelBundles]
+    contao.resource_finder:
+        class: Contao\CoreBundle\Finder\ResourceFinder
         arguments:
             - "@kernel"
-        tags:
-            - { name: contao.resource_locator }
-
-    contao.resource_locator.chain:
-        class: Contao\CoreBundle\Config\ChainFileLocator
-        public: false
-
-    contao.resource_locator.cache:
-        class: Contao\CoreBundle\Config\CombinedFileLocator
-        public: false
-        arguments:
-            - '%kernel.cache_dir%/contao'
-            - "@contao.resource_locator"
-
-    contao.resource_locator:
-        alias: contao.resource_locator.bundles
-
-    contao.cached_resource_locator:
-        alias: contao.resource_locator.cache
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader

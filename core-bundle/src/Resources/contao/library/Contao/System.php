@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -314,32 +315,29 @@ abstract class System
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
-			try
+			// Try to load from cache
+			if (file_exists($kernel->getCacheDir() . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php'))
 			{
-				include $kernel->getContainer()->get('contao.cached_resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.php', null, true);
+				include $kernel->getCacheDir() . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php';
 			}
-			catch (\InvalidArgumentException $e)
+			else
 			{
-				$objLocator = $kernel->getContainer()->get('contao.resource_locator');
-				$xlfLoader  = new XliffFileLoader($kernel->getRootDir(), true);
+				/** @var SplFileInfo[] $files */
+				$files = $kernel->getContainer()->get('contao.resource_finder')->in('languages/' . $strCreateLang)->files()->name($strName . '.php');
 
-				// XLIFF files will overwrite PHP files if both exist in the same bundle
-				$arrFiles = array_merge
-				(
-					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.php'),
-					$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.xlf')
-				);
-
-				foreach ($arrFiles as $strFile)
+				foreach ($files as $file)
 				{
-					if (pathinfo($strFile, PATHINFO_EXTENSION) == 'xlf')
-					{
-						$xlfLoader->load($strFile, $strCreateLang);
-					}
-					elseif (file_exists($strFile . '.php'))
-					{
-						include $strFile; // we can't use a loader here as it would change the scope
-					}
+					include $file->getPathname();
+				}
+
+				$loader = new XliffFileLoader($kernel->getRootDir(), true);
+
+				/** @var SplFileInfo[] $files */
+				$files = $kernel->getContainer()->get('contao.resource_finder')->in('languages/' . $strCreateLang)->files()->name($strName . '.xlf');
+
+				foreach ($files as $file)
+				{
+					$loader->load($file->getPathname(), $strCreateLang);
 				}
 			}
 		}
@@ -378,18 +376,23 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			try
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
+			if (is_dir(TL_ROOT . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
 			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
-
-				$kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strLanguage, null, true);
-				$blnIsInstalled = true;
-			} catch (\InvalidArgumentException $e) {
-				$blnIsInstalled = false;
+				static::$arrLanguages[$strLanguage] = true;
 			}
-
-			static::$arrLanguages[$strLanguage] = $blnIsInstalled;
+			elseif (is_dir($kernel->getCacheDir() . '/contao/languages/' . $strLanguage))
+			{
+				static::$arrLanguages[$strLanguage] = true;
+			}
+			else
+			{
+				/** @var SplFileInfo[] $files */
+				$files = $kernel->getContainer()->get('contao.resource_finder')->in('languages')->directories()->name($strLanguage);
+				static::$arrLanguages[$strLanguage] = count($files) > 0;
+			}
 		}
 
 		return static::$arrLanguages[$strLanguage];

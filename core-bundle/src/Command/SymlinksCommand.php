@@ -132,20 +132,17 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function symlinkThemes($rootDir, OutputInterface $output)
     {
-        $themes = $this->container->get('contao.resource_locator')->locate('themes');
+        /** @var SplFileInfo[] $themes */
+        $themes = $this->container->get('contao.resource_finder')->in('themes')->directories();
 
         foreach ($themes as $theme) {
-            $path = str_replace("$rootDir/", '', $theme);
+            $path = str_replace("$rootDir/", '', $theme->getPathname());
 
             if (0 === strpos($path, 'system/modules/')) {
                 continue;
             }
 
-            $dirs = $this->findIn('*', $path)->ignoreDotFiles(true)->depth(0)->directories();
-
-            foreach ($dirs as $dir) {
-                $this->symlink("../../$dir", 'system/themes/' . basename($dir), $rootDir, $output);
-            }
+            $this->symlink("../../$path", 'system/themes/' . basename($path), $rootDir, $output);
         }
     }
 

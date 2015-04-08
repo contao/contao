@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -127,9 +128,19 @@ class Config
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		foreach ($kernel->getContainer()->get('contao.cached_resource_locator')->locate('config/config.php') as $file)
+		if (file_exists($kernel->getCacheDir() . '/contao/config/config.php'))
 		{
-			include $file;
+			include $kernel->getCacheDir() . '/contao/config/config.php';
+		}
+		else
+		{
+			/** @var SplFileInfo[] $files */
+			$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('config.php');
+
+			foreach ($files as $file)
+			{
+				include $file->getPathname();
+			}
 		}
 
 		// Include the local configuration file again

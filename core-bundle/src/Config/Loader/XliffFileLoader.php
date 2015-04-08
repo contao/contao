@@ -60,7 +60,7 @@ class XliffFileLoader extends Loader
      */
     public function supports($resource, $type = null)
     {
-        return is_string($resource) && 'xlf' === pathinfo($resource, PATHINFO_EXTENSION);
+        return 'xlf' === pathinfo($resource, PATHINFO_EXTENSION);
     }
 
     /**

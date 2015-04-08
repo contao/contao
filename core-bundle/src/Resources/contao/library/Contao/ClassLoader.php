@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -206,9 +207,20 @@ class ClassLoader
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		foreach ($kernel->getContainer()->get('contao.cached_resource_locator')->locate('config/autoload.php') as $file)
+		// Try to load from cache
+		if (file_exists($kernel->getCacheDir() . '/contao/config/autoload.php'))
 		{
-			include $file;
+			include $kernel->getCacheDir() . '/contao/config/autoload.php';
+		}
+		else
+		{
+			/** @var SplFileInfo[] $files */
+			$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('autoload.php');
+
+			foreach ($files as $file)
+			{
+				include $file->getPathname();
+			}
 		}
 
 		self::register();

@@ -53,7 +53,5 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(
             new AddPackagesPass($container->getParameter('kernel.root_dir') . '/../vendor/composer/installed.json')
         );
-
-        $container->addCompilerPass(new ResourceLocatorPass());
     }
 }

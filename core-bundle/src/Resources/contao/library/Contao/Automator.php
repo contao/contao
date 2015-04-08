@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -502,17 +503,20 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
-
-		$objDumper = new CombinedFileDumper
+		$dumper = new CombinedFileDumper
 		(
 			$kernel->getContainer()->get('filesystem'),
 			new PhpFileLoader(),
-			$kernel->getRootDir() . '/../system/cache'
+			$kernel->getCacheDir() . '/contao'
 		);
 
-		$objDumper->dump($objLocator->locate('config/autoload.php'), 'config/autoload.php');
-		$objDumper->dump($objLocator->locate('config/config.php'), 'config/config.php');
+		/** @var SplFileInfo[] $files */
+		$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('autoload.php');
+		$dumper->dump(iterator_to_array($files), 'config/autoload.php');
+
+		/** @var SplFileInfo[] $files */
+		$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('config.php');
+		$dumper->dump(iterator_to_array($files), 'config/config.php');
 
 		// Generate the page mapping array
 		$arrMapper = array();
@@ -541,9 +545,10 @@ class Automator extends \System
 			}
 		}
 
+		$strRelpath = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+
 		// Generate the page mapper file
-		// FIXME: use the FileDumper
-		$objCacheFile = new \File('system/cache/config/mapping.php', true);
+		$objCacheFile = new \File($strRelpath . '/contao/config/mapping.php', true);
 		$objCacheFile->write(sprintf("<?php\n\nreturn %s;\n", var_export($arrMapper, true)));
 		$objCacheFile->close();
 
@@ -560,41 +565,30 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$arrFiles = array();
-		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
+		$dumper = new CombinedFileDumper
+		(
+			$kernel->getContainer()->get('filesystem'),
+			new PhpFileLoader(),
+			$kernel->getCacheDir() . '/contao'
+		);
 
-		// Parse all active modules
-		foreach ($objLocator->locate('dca') as $strDir)
+		$processed = array();
+
+		/** @var SplFileInfo[] $files */
+		$files = $kernel->getContainer()->get('contao.resource_finder')->in('dca')->files()->name('*.php');
+
+		foreach ($files as $file)
 		{
-			if (!is_dir($strDir))
+			if (in_array($file->getBasename(), $processed))
 			{
 				continue;
 			}
 
-			foreach (scan($strDir) as $strFile)
-			{
-				// Ignore non PHP files and files which have been included before
-				if (strncmp($strFile, '.', 1) !== 0 && substr($strFile, -4) == '.php')
-				{
-					$arrFiles[] = $strFile;
-				}
-			}
-		}
+			$processed[] = $file->getBasename();
 
-		$arrFiles = array_values(array_unique($arrFiles));
-		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
-
-		$objDumper = new CombinedFileDumper
-		(
-			$kernel->getContainer()->get('filesystem'),
-			new PhpFileLoader(),
-			$kernel->getRootDir() . '/../system/cache'
-		);
-
-		// Create one file per table
-		foreach ($arrFiles as $strFile)
-		{
-			$objDumper->dump($objLocator->locate('dca/' . $strFile), 'dca/' . $strFile);
+			/** @var SplFileInfo[] $subfiles */
+			$subfiles = $kernel->getContainer()->get('contao.resource_finder')->in('dca')->files()->name($file->getBasename());
+			$dumper->dump(iterator_to_array($subfiles), 'dca/' . $file->getBasename());
 		}
 
 		// Add a log entry
@@ -631,70 +625,44 @@ class Automator extends \System
 		}
 
 		$arrLanguages = array_unique($arrLanguages);
-		$objLocator = $kernel->getContainer()->get('contao.resource_locator');
 
-		$objDumper = new CombinedFileDumper
+		$dumper = new CombinedFileDumper
 		(
 			$kernel->getContainer()->get('filesystem'),
 			new DelegatingLoader(new LoaderResolver(array(new PhpFileLoader(), new XliffFileLoader($kernel->getRootDir())))),
-			$kernel->getRootDir() . '/../system/cache'
+			$kernel->getCacheDir() . '/contao'
 		);
 
-		// Add a short header with links to transifex.com
-		$strHeader = "<?php\n\n"
-			. "/**\n"
-			. " * Contao Open Source CMS\n"
-			. " * \n"
-			. " * Copyright (c) 2005-2015 Leo Feyer\n"
-			. " * \n"
-			. " * Core translations are managed using Transifex. To create a new translation\n"
-			. " * or to help to maintain an existing one, please register at transifex.com.\n"
-			. " * \n"
-			. " * @link http://help.transifex.com/intro/translating.html\n"
-			. " * @link https://www.transifex.com/projects/p/contao/language/%s/\n"
-			. " * \n"
-			. " * @license LGPL-3.0+\n"
-			. " */\n";
+		$dumper->setHeader("<?php\n");
 
 		foreach ($arrLanguages as $strLanguage)
 		{
-			$arrFiles = array();
+			$processed = array();
 
-			// Parse all active modules
-			foreach ($objLocator->locate('languages/' . $strLanguage) as $strDir)
+			try
 			{
-				if (!is_dir($strDir))
+				/** @var SplFileInfo[] $files */
+				$files = $kernel->getContainer()->get('contao.resource_finder')->in('languages/' . $strLanguage)->files()->name('/\.(php|xlf)$/');
+			}
+			catch (\InvalidArgumentException $e)
+			{
+				continue; // the language does not exist
+			}
+
+			foreach ($files as $file)
+			{
+				$strName = substr($file->getBasename(), 0, -4);
+
+				if (in_array($strName, $processed))
 				{
 					continue;
 				}
 
-				foreach (scan($strDir) as $strFile)
-				{
-					if (strncmp($strFile, '.', 1) !== 0 && (substr($strFile, -4) == '.php' || substr($strFile, -4) == '.xlf'))
-					{
-						$arrFiles[] = substr($strFile, 0, -4);
-					}
-				}
-			}
+				$processed[] = $strName;
 
-			$arrFiles = array_values(array_unique($arrFiles));
-
-			// Create one file per table
-			foreach ($arrFiles as $strName)
-			{
-				$objDumper->setHeader(sprintf($strHeader, $strLanguage));
-
-				$objDumper->dump
-				(
-					// XLIFF files will overwrite PHP files if both exist in the same bundle
-					array_merge
-					(
-						$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.php'),
-						$objLocator->locate('languages/' . $strLanguage . '/' . $strName . '.xlf')
-					),
-					'languages/' . $strLanguage . '/' . $strName . '.php',
-					['type' => $strLanguage]
-				);
+				/** @var SplFileInfo[] $subfiles */
+				$subfiles = $kernel->getContainer()->get('contao.resource_finder')->in('languages/' . $strLanguage)->files()->name('/^' . $strName . '\.(php|xlf)$/');
+				$dumper->dump(iterator_to_array($subfiles), 'languages/' . $strLanguage . '/' . $strName . '.php', array('type'=>$strLanguage));
 			}
 		}
 
@@ -711,42 +679,32 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$included = array();
-		$arrExtracts = array();
+		$processed = array();
 
-		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
+		/** @var SplFileInfo[] $files */
+		$files = $kernel->getContainer()->get('contao.resource_finder')->in('dca')->files()->name('*.php');
+
+		foreach ($files as $file)
 		{
-			if (!is_dir($strDir))
+			if (in_array($file->getBasename(), $processed))
 			{
 				continue;
 			}
 
-			foreach (scan($strDir) as $strFile)
+			$processed[] = $file->getBasename();
+
+			$strTable = $file->getBasename('.php');
+			$objExtract = \DcaExtractor::getInstance($strTable);
+
+			if (!$objExtract->isDbTable())
 			{
-				// Ignore non PHP files and files which have been included before
-				if (strncmp($strFile, '.', 1) === 0 || substr($strFile, -4) != '.php' || in_array($strFile, $included))
-				{
-					continue;
-				}
-
-				$strTable = substr($strFile, 0, -4);
-				$objExtract = \DcaExtractor::getInstance($strTable);
-
-				if ($objExtract->isDbTable())
-				{
-					$arrExtracts[$strTable] = $objExtract;
-				}
-
-				$included[] = $strFile;
+				continue;
 			}
-		}
 
-		/** @var \DcaExtractor[] $arrExtracts */
-		foreach ($arrExtracts as $strTable=>$objExtract)
-		{
+			$strRelpath = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+
 			// Create the file
-			$objFile = new \File('system/cache/sql/' . $strTable . '.php');
+			$objFile = new \File($strRelpath . '/contao/sql/' . $strTable . '.php');
 			$objFile->write("<?php\n\n");
 
 			$objFile->append(sprintf("\$this->arrMeta = %s;\n", var_export($objExtract->getMeta(), true)));

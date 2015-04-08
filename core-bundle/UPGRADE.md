@@ -4,6 +4,12 @@ Contao API changes
 Version 3.* to 4.0
 ------------------
 
+### `system/runonce.php`
+
+The `system/runonce.php` file is no longer supported. If you need to set up a
+`runonce.php` file, put it in the `src/Resources/contao/config/` directory.
+
+
 ### `DcaExtractor`
 
 The `DcaExtractor` class is no longer instantiable via `new DcaExtractor()`.
