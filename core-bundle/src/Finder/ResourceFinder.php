@@ -27,11 +27,11 @@ class ResourceFinder
     /**
      * Constructor.
      *
-     * @param array $paths The resources paths
+     * @param string|array $paths A path or an array of paths where to look for resources
      */
-    public function __construct(array $paths)
+    public function __construct($paths = [])
     {
-        $this->paths = $paths;
+        $this->paths = (array) $paths;
     }
 
     /**

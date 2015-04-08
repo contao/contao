@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Finder\ResourceFinder;
 use Contao\Environment;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
@@ -115,35 +116,18 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ['test', false]
         );
 
-        $bundle = $this->getMockForAbstractClass(
-            'Symfony\Component\HttpKernel\Bundle\Bundle',
-            [],
-            '',
-            false,
-            true,
-            true,
-            ['getPath']
-        );
-
-        $bundle
-            ->expects($this->any())
-            ->method('getPath')
-            ->willReturn($this->getRootDir() . '/vendor/contao/test-bundle')
-        ;
-
-        $kernel
-            ->expects($this->any())
-            ->method('getBundles')
-            ->willReturn([$bundle])
-        ;
-
         $container = new Container();
         $container->addScope(new Scope('frontend'));
         $container->addScope(new Scope('backend'));
 
         $container->set(
             'contao.resource_finder',
-            new ResourceFinder($kernel)
+            new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
+        );
+
+        $container->set(
+            'contao.resource_locator',
+            new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
         );
 
         $kernel
