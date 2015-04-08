@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class VersionCommand extends Command implements ContaoFrameworkDependentInterface
+class VersionCommand extends Command
 {
     /**
      * {@inheritdoc}

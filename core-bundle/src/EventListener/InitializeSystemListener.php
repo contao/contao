@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\ClassLoader;
 use Contao\Config;
-use Contao\CoreBundle\Command\ContaoFrameworkDependentInterface;
 use Contao\Environment;
 use Contao\Input;
 use Contao\RequestToken;
@@ -90,7 +89,7 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     public function onConsoleCommand(ConsoleCommandEvent $event)
     {
-        if (true === self::$booted || (!$event->getCommand() instanceof ContaoFrameworkDependentInterface)) {
+        if (true === self::$booted) {
             return;
         }
 
