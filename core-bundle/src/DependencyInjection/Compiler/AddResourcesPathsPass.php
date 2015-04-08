@@ -27,48 +27,31 @@ class AddResourcesPathsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $paths = [];
-
-        foreach ($this->getBundleObjects($container) as $bundle) {
-            if (is_dir($path = $this->getResourcesPath($bundle))) {
-                $paths[] = $path;
-            }
-        }
-
-        $container->setParameter('kernel.resources_paths', $paths);
-    }
-
-    /**
-     * Return the bundle objects from a list of bundle class names.
-     *
-     * @param ContainerBuilder $container The container object
-     *
-     * @return BundleInterface[] The bundle objects
-     */
-    private function getBundleObjects(ContainerBuilder $container)
-    {
-        $bundles = [];
-
-        foreach ($container->getParameter('kernel.bundles') as $name => $class) {
-            $bundles[] = new $class($name, $container->getParameter('kernel.root_dir'));
-        }
-
-        return $bundles;
+        $container->setParameter('kernel.resources_paths', $this->getResourcesPath($container));
     }
 
     /**
      * Returns the Contao resources path of a bundle.
      *
-     * @param BundleInterface $bundle The bundle object
+     * @param ContainerBuilder $container The container object
      *
-     * @return string The resources path
+     * @return array The resources paths
      */
-    private function getResourcesPath(BundleInterface $bundle)
+    private function getResourcesPath(ContainerBuilder $container)
     {
-        if ($bundle instanceof ContaoModuleBundle) {
-            return $bundle->getPath();
+        $paths   = [];
+        $rootDir = dirname($container->getParameter('kernel.root_dir'));
+
+        foreach ($container->getParameter('kernel.bundles') as $name => $class) {
+            $reflection = new \ReflectionClass($class);
+
+            if ('ContaoModuleBundle' === $reflection->getShortName()) {
+                $paths[] = "$rootDir/system/modules/$name";
+            } elseif (is_dir($dir = dirname($reflection->getFilename()) . '/Resources/contao')) {
+                $paths[] = $dir;
+            }
         }
 
-        return $bundle->getPath() . '/Resources/contao';
+        return $paths;
     }
 }
