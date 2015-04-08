@@ -134,11 +134,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
 
         while ($pages->next()) {
-            $base = '*' . Environment::get('path') . '/';
-
-            if ('' !== $pages->dns) {
-                $base = ($pages->useSSL ? 'https://' : 'http://') . $pages->dns . Environment::get('path') . '/';
-            }
+            $base = ($pages->dns ?: '*') . Environment::get('path') . '/';
 
             if ($pages->fallback) {
                 $mapper[$base . 'empty.fallback'] = $base . 'empty.' . $pages->language;

@@ -680,27 +680,35 @@ abstract class Frontend extends \Controller
 			if (file_exists($strMappingFile))
 			{
 				$arrMapper = include $strMappingFile;
+				$arrPaths = array(\Environment::get('host') . \Environment::get('path'), '*' . \Environment::get('path'));
 
 				// Try the language specific keys
 				foreach ($arrLanguage as $strLanguage)
 				{
-					$strSpecificKey = \Environment::get('base') . 'empty.' . $strLanguage;
-
-					if (isset($arrMapper[$strSpecificKey]))
+					foreach ($arrPaths as $strPath)
 					{
-						$strCacheKey = $arrMapper[$strSpecificKey];
-						break;
+						$strKey = $strPath . '/empty.' . $strLanguage;
+
+						if (isset($arrMapper[$strKey]))
+						{
+							$strCacheKey = $arrMapper[$strKey];
+							break;
+						}
 					}
 				}
 
 				// Try the fallback key
 				if ($strCacheKey === null)
 				{
-					$strSpecificKey = \Environment::get('base') . 'empty.fallback';
-
-					if (isset($arrMapper[$strSpecificKey]))
+					foreach ($arrPaths as $strPath)
 					{
-						$strCacheKey = $arrMapper[$strSpecificKey];
+						$strKey = $strPath . '/empty.fallback';
+
+						if (isset($arrMapper[$strKey]))
+						{
+							$strCacheKey = $arrMapper[$strKey];
+							break;
+						}
 					}
 				}
 			}
