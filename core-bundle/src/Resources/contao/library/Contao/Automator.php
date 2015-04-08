@@ -510,13 +510,10 @@ class Automator extends \System
 			$kernel->getCacheDir() . '/contao'
 		);
 
-		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('autoload.php');
-		$dumper->dump(iterator_to_array($files), 'config/autoload.php');
+		$locator = $kernel->getContainer()->get('contao.resource_locator');
 
-		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('config.php');
-		$dumper->dump(iterator_to_array($files), 'config/config.php');
+		$dumper->dump($locator->locate('config/autoload.php', null, false), 'config/autoload.php');
+		$dumper->dump($locator->locate('config/config.php', null, false), 'config/config.php');
 
 		// Generate the page mapping array
 		$arrMapper = array();
@@ -586,9 +583,8 @@ class Automator extends \System
 
 			$processed[] = $file->getBasename();
 
-			/** @var SplFileInfo[] $subfiles */
-			$subfiles = $kernel->getContainer()->get('contao.resource_finder')->in('dca')->files()->name($file->getBasename());
-			$dumper->dump(iterator_to_array($subfiles), 'dca/' . $file->getBasename());
+			$subfiles = $kernel->getContainer()->get('contao.resource_locator')->locate('dca/' . $file->getBasename(), null, false);
+			$dumper->dump($subfiles, 'dca/' . $file->getBasename());
 		}
 
 		// Add a log entry

@@ -255,18 +255,15 @@ abstract class Backend extends \Controller
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('runonce.php');
-
-		foreach ($files as $file)
+		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/runonce.php', null, false) as $file)
 		{
 			try
 			{
-				include $file->getPathname();
+				include $file;
 			}
 			catch (\Exception $e) {}
 
-			$strRelpath = str_replace(TL_ROOT . '/', '', $file->getPathname());
+			$strRelpath = str_replace(TL_ROOT . '/', '', $file);
 
 			if (!$this->Files->delete($strRelpath))
 			{

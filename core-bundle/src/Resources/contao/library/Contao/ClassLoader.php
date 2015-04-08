@@ -214,12 +214,9 @@ class ClassLoader
 		}
 		else
 		{
-			/** @var SplFileInfo[] $files */
-			$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('autoload.php');
-
-			foreach ($files as $file)
+			foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/autoload.php', null, false) as $file)
 			{
-				include $file->getPathname();
+				include $file;
 			}
 		}
 

@@ -46,7 +46,12 @@ services:
     contao.resource_finder:
         class: Contao\CoreBundle\Finder\ResourceFinder
         arguments:
-            - "@kernel"
+            - "%kernel.resources_paths%"
+
+    contao.resource_locator:
+        class: Symfony\Component\Config\FileLocator
+        arguments:
+            - "%kernel.resources_paths%"
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader

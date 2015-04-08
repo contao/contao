@@ -82,10 +82,7 @@ class DcaLoader extends \Controller
 		}
 		else
 		{
-			/** @var SplFileInfo[] $files */
-			$files = $kernel->getContainer()->get('contao.resource_finder')->in('dca')->files()->name($this->strTable . '.php');
-
-			foreach ($files as $file)
+			foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false) as $file)
 			{
 				include $file;
 			}

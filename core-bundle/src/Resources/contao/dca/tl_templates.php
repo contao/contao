@@ -253,6 +253,7 @@ class tl_templates extends Backend
 				if (in_array($strExtension, $arrAllowed))
 				{
 					$strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
+					// FIXME: this will not work with resources in src/AppBundle
 					$strModule = preg_replace('@^(vendor|system/modules)/([^/]+(/.*-bundle)?)/.*$@', '$2', $strRelpath);
 					$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 				}

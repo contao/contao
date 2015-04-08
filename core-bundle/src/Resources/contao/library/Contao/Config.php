@@ -134,12 +134,9 @@ class Config
 		}
 		else
 		{
-			/** @var SplFileInfo[] $files */
-			$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('config.php');
-
-			foreach ($files as $file)
+			foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/config.php', null, false) as $file)
 			{
-				include $file->getPathname();
+				include $file;
 			}
 		}
 

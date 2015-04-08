@@ -10,10 +10,7 @@
 
 namespace Contao\CoreBundle\Finder;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Creates a Finder object with the bundle paths set.
@@ -25,20 +22,16 @@ class ResourceFinder
     /**
      * @var array
      */
-    private $paths = [];
+    private $paths;
 
     /**
      * Constructor.
      *
-     * @param KernelInterface $kernel The kernel object
+     * @param array $paths The resources paths
      */
-    public function __construct(KernelInterface $kernel)
+    public function __construct(array $paths)
     {
-        foreach ($kernel->getBundles() as $bundle) {
-            if (is_dir($path = $this->getResourcesPath($bundle))) {
-                $this->paths[] = $path;
-            }
-        }
+        $this->paths = $paths;
     }
 
     /**
@@ -57,22 +50,6 @@ class ResourceFinder
         }
 
         return Finder::create()->depth('== 0')->in($paths);
-    }
-
-    /**
-     * Returns the Contao resources path of a bundle.
-     *
-     * @param BundleInterface $bundle The bundle object
-     *
-     * @return string The resources path
-     */
-    private function getResourcesPath(BundleInterface $bundle)
-    {
-        if ($bundle instanceof ContaoModuleBundle) {
-            return $bundle->getPath();
-        }
-
-        return $bundle->getPath() . '/Resources/contao';
     }
 
     /**
