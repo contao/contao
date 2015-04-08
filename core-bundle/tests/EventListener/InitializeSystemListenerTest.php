@@ -10,10 +10,7 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
-use Contao\Config;
 use Contao\CoreBundle\Command\VersionCommand;
-use Contao\CoreBundle\Finder\ResourceFinder;
-use Contao\Environment;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -249,7 +246,7 @@ class InitializeSystemListenerTest extends TestCase
             ['setConstants', 'boot'],
             [
                 $this->getMock('Symfony\Component\Routing\RouterInterface'),
-                $this->getRootDir()
+                $this->getRootDir(),
             ]
         );
 
@@ -319,7 +316,7 @@ class InitializeSystemListenerTest extends TestCase
             ['setConstants', 'boot'],
             [
                 $this->getMock('Symfony\Component\Routing\RouterInterface'),
-                $this->getRootDir()
+                $this->getRootDir(),
             ]
         );
 

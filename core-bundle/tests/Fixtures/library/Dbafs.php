@@ -1,4 +1,5 @@
 <?php
+
 namespace Contao\Fixtures;
 
 class Dbafs
