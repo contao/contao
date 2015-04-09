@@ -5,6 +5,18 @@ Version 4.0.0-beta1 (2014-XX-XX)
 ---------------------------------
 
 ### Changed
+The rich text and code editor configuration files are now real templates, which
+can be customized in the template editor.
+
+### Changed
+The `debugMode` setting has been removed, since the debug mode is automatically
+enabled if the application is called via the `app_dev.php` script.
+
+### Improved
+The `rewriteUrl` setting has been removed, because the application now adds or
+removes the script fragment automatically.
+
+### Changed
 Protect the `DcaExtractor` constructor (use `getInstance()` instead).
 
 ### Changed

@@ -25,6 +25,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *     $arrModules = ModuleLoader::getDisabled();
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0.
  */
 class ModuleLoader
 {

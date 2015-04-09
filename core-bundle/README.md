@@ -13,8 +13,8 @@ for more information.
 Installation
 ------------
 
-The module comes bundled with the [Contao core distribution][2].
+The module comes bundled with the [Contao standard edition][2].
 
 
 [1]: https://contao.org
-[2]: https://github.com/contao/contao
+[2]: https://github.com/contao/standard-edition
