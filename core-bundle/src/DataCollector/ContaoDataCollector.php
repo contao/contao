@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\DataCollector;
 
 use Contao\Model\Registry;
-use Contao\System;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -26,6 +26,16 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class ContaoDataCollector extends DataCollector
 {
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var array
+     */
+    private $bundles;
+
+    /**
      * @var array
      */
     private $packages;
@@ -35,9 +45,11 @@ class ContaoDataCollector extends DataCollector
      *
      * @param array $packages Installed Composer packages and versions
      */
-    public function __construct(array $packages)
+    public function __construct(ContainerInterface $container, array $bundles, array $packages)
     {
-        $this->packages = $packages;
+        $this->container = $container;
+        $this->bundles   = $bundles;
+        $this->packages  = $packages;
     }
 
     /**
@@ -49,13 +61,11 @@ class ContaoDataCollector extends DataCollector
             $this->data = ['contao_version' => $this->packages['contao/core-bundle']];
         }
 
-        if (!isset($GLOBALS['TL_DEBUG'])) {
-            return;
-        }
-
-        $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
-
         $this->addSummaryData();
+
+        if (isset($GLOBALS['TL_DEBUG'])) {
+            $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
+        }
     }
 
     /**
@@ -171,6 +181,7 @@ class ContaoDataCollector extends DataCollector
         }
 
         unset($data['summary']);
+        unset($data['contao_version']);
         unset($data['classes_aliased']);
         unset($data['classes_set']);
         unset($data['database_queries']);
@@ -209,12 +220,71 @@ class ContaoDataCollector extends DataCollector
      */
     private function addSummaryData()
     {
-        $intElapsed = (microtime(true) - TL_START);
+        $framework    = false;
+        $dbQueries    = '';
+        $rowsReturned = 0;
+        $rowsAffected = 0;
+        $modelCount   = '';
+
+        if (isset($GLOBALS['TL_DEBUG'])) {
+            if (is_array($GLOBALS['TL_DEBUG']['database_queries'])) {
+                foreach ($GLOBALS['TL_DEBUG']['database_queries'] as $k => $v) {
+                    $rowsReturned += $v['return_count'];
+                    $rowsAffected += $v['affected_count'];
+                    unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['return_count']);
+                    unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['affected_count']);
+                }
+            }
+
+            $dbQueries  = count($GLOBALS['TL_DEBUG']['database_queries']);
+            $modelCount = Registry::getInstance()->count();
+            $framework  = true;
+        }
 
         $this->data['summary'] = [
-            'execution_time' => \System::getFormattedNumber(($intElapsed * 1000), 0),
-            'memory'         => \System::getReadableSize(memory_get_peak_usage()),
-            'models'         => \Model\Registry::getInstance()->count()
+            'scope'          => $this->getContainerScope(),
+            'framework'      => $framework,
+            'modules'        => $this->getModules(),
+            'dbqueries'      => $dbQueries,
+            'rows_returned'  => $rowsReturned,
+            'rows_affected'  => $rowsAffected,
+            'models'         => $modelCount,
         ];
+    }
+
+    /**
+     * Gets the scope from the container.
+     *
+     * @return string
+     */
+    private function getContainerScope()
+    {
+        if ($this->container->isScopeActive('frontend')) {
+            return 'frontend';
+        }
+
+        if ($this->container->isScopeActive('backend')) {
+            return 'backend';
+        }
+
+        return '';
+    }
+
+    /**
+     * Gets a list of Contao modules (in system/modules).
+     *
+     * @return array
+     */
+    private function getModules()
+    {
+        $modules = [];
+
+        foreach ($this->bundles as $name => $class) {
+            if ('Contao\\CoreBundle\\HttpKernel\\Bundle\\ContaoModuleBundle' === $class) {
+                $modules[] = $name;
+            }
+        }
+
+        return $modules;
     }
 }

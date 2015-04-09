@@ -2,49 +2,70 @@
 
 {% block toolbar %}
     {% set icon %}
+        <span>
         <img width="32" height="28" alt="Contao" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAcCAYAAAAAwr0iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Mjk3OTgyRjFENkZBMTFFNEI5QzREMERCNEU1NjU0OUMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Mjk3OTgyRjJENkZBMTFFNEI5QzREMERCNEU1NjU0OUMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5RjYzOUI5NkQ2RjkxMUU0QjlDNEQwREI0RTU2NTQ5QyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyOTc5ODJGMEQ2RkExMUU0QjlDNEQwREI0RTU2NTQ5QyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PkaO9ToAAAI/SURBVHjaxFfLK0RRGJ+5hGJhssBCQoTyiELKwnukbGQWSlJWUhZS/gFFSilLC8XCQinFQkmZSIlYkJCiUPKeMcpr/E59t44z95w7M9zuV7++8/jO+X5z7u88xhkMBh12WqxeKCspz4MbB1xAMrAAjOwd7H5FMzHma4MbBa6pKQ54BIYw50kIAdgk4KYySzofbXKydfL1Qjsj0qJXNK7DxZUreZbRGMb74GqAN6GLz/OLgI/8HAbvmixvJeABak1I3MP1C82vhhqAJZCfUiROg5sBmrm2ZbgOJHsziC+FSwxLhLQ07JvvSJKz1VoEqoSuVmAa/YPwLGERUA0wUReGvQtg8cAlfsm3JLbcILlunSQsV6Ra4TXgBG4VsZkmc7miEasm1GMUsbdWHEQ8Afb90xWx11YT+DQhcANcWUkgwOpQc5ZkT7P9e2YlAT/5fEX8odUaYFasiN/+h5xB1TZ00CEis30rCehWAB04JYOPgYsIkj3QrTgGeIBzIFV2EuqWDeQYCQ5C/AC5DRS7FEnZcc1itoAjjPFzx/mYeDcYEWCHUZlC8UsmBHqQ9FnSlwGcmn0CZg2KBIzAneITvUgus1T6wYFwCLgVd/w7XLdB1xPQi37ZI7NCeHcoCWSAcZOCxApNOAHMAsNs+6J9U7FyXcJ2D9GA+HAYAlYVJHZkbweD5c+Fa6dqkmwFHkUdYGDfXzc95kihragZ5eEJDJDAvMAa+UZMkPBHDnWkDy/NP8B3Ou3+Y6I5bDbbCfwIMADXoZzjTwikZAAAAABJRU5ErkJggg==">
+        {% if collector.summary.scope %}
+            <span class="sf-toolbar-info-piece-additional sf-toolbar-status">{{ collector.summary.scope }}</span>
+        {% endif %}
+        </span>
     {% endset %}
     {% set text %}
     <div class="sf-toolbar-info-piece">
-        Contao <b>{{ collector.contaoVersion }}</b>
+        <b>Framework</b>
+        {% if collector.summary.framework %}Contao &amp; {% endif %}Symfony
     </div>
+    {% if collector.summary.scope %}
     <div class="sf-toolbar-info-piece">
-        <b>Memory usage</b>
-        <span>{{ collector.summary.memory }}</span>
+        <b>Container Scope</b>
+        {{ collector.summary.scope }}
     </div>
+    {% endif %}
     <div class="sf-toolbar-info-piece">
-        <b>Reg. models</b>
-        <span>{{ collector.summary.models }}</span>
+        <b>Contao Modules</b>
+        {% if collector.summary.modules %}
+            <span class="sf-toolbar-status sf-toolbar-status-red">
+                <abbr title="{{ collector.summary.modules|join(', ') }}">{{ collector.summary.modules|length }}</abbr>
+            </span>
+        {% else %}
+            <span class="sf-toolbar-status sf-toolbar-status-green">0</span>
+        {% endif %}
     </div>
     {% endset %}
-    {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url } %}
+    {% if collector.summary.framework %}
+        {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url } %}
+    {% else %}
+        {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': false } %}
+    {% endif %}
 {% endblock %}
 
 {% block menu %}
+{% if collector.summary.framework %}
     <span class="label">
         <span class="icon"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAcCAYAAAAAwr0iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Mjk3OTgyRjFENkZBMTFFNEI5QzREMERCNEU1NjU0OUMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Mjk3OTgyRjJENkZBMTFFNEI5QzREMERCNEU1NjU0OUMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5RjYzOUI5NkQ2RjkxMUU0QjlDNEQwREI0RTU2NTQ5QyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyOTc5ODJGMEQ2RkExMUU0QjlDNEQwREI0RTU2NTQ5QyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PkaO9ToAAAI/SURBVHjaxFfLK0RRGJ+5hGJhssBCQoTyiELKwnukbGQWSlJWUhZS/gFFSilLC8XCQinFQkmZSIlYkJCiUPKeMcpr/E59t44z95w7M9zuV7++8/jO+X5z7u88xhkMBh12WqxeKCspz4MbB1xAMrAAjOwd7H5FMzHma4MbBa6pKQ54BIYw50kIAdgk4KYySzofbXKydfL1Qjsj0qJXNK7DxZUreZbRGMb74GqAN6GLz/OLgI/8HAbvmixvJeABak1I3MP1C82vhhqAJZCfUiROg5sBmrm2ZbgOJHsziC+FSwxLhLQ07JvvSJKz1VoEqoSuVmAa/YPwLGERUA0wUReGvQtg8cAlfsm3JLbcILlunSQsV6Ra4TXgBG4VsZkmc7miEasm1GMUsbdWHEQ8Afb90xWx11YT+DQhcANcWUkgwOpQc5ZkT7P9e2YlAT/5fEX8odUaYFasiN/+h5xB1TZ00CEis30rCehWAB04JYOPgYsIkj3QrTgGeIBzIFV2EuqWDeQYCQ5C/AC5DRS7FEnZcc1itoAjjPFzx/mYeDcYEWCHUZlC8UsmBHqQ9FnSlwGcmn0CZg2KBIzAneITvUgus1T6wYFwCLgVd/w7XLdB1xPQi37ZI7NCeHcoCWSAcZOCxApNOAHMAsNs+6J9U7FyXcJ2D9GA+HAYAlYVJHZkbweD5c+Fa6dqkmwFHkUdYGDfXzc95kihragZ5eEJDJDAvMAa+UZMkPBHDnWkDy/NP8B3Ou3+Y6I5bDbbCfwIMADXoZzjTwikZAAAAABJRU5ErkJggg==" alt=""></span>
         <strong>Contao</strong>
     </span>
+{% endif %}
 {% endblock %}
 
 {% block panel %}
-    {% if collector.summary %}
+{% if collector.summary.framework %}
     <h2>Summary</h2>
     <table>
         <tr>
-            <th>Execution time</th>
-            <td>{{ collector.summary.execution_time }} ms</td>
-        </tr>
-        <tr>
-            <th>Memory usage</th>
-            <td>{{ collector.summary.memory }}</td>
+            <th>Container Scope</th>
+            <td>
+                {% if collector.summary.scope %}
+                    <span class="sf-toolbar-status sf-toolbar-status-green">{{ collector.summary.scope }}</span>
+                {% else %}
+                    <span class="sf-toolbar-status sf-toolbar-status-red">unknown</span>
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Registered models</th>
             <td>{{ collector.summary.models }}</td>
         </tr>
     </table>
-    {% endif %}
 
     <h2>Unknown Insert Tags</h2>
     {% if collector.unknowninserttags %}
@@ -110,4 +131,5 @@
     {{ dump(collector.additionaldata) }}
     </pre>
     {% endif %}
+{% endif %}
 {% endblock %}
