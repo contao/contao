@@ -46,6 +46,17 @@ services:
             # Priority must be lower than the one of the toggle_view listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 24 }
 
+    contao.listener.referer_id:
+        class: Contao\CoreBundle\EventListener\RefererIdListener
+        arguments:
+            - "@contao.referer_id.manager"
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            # Priority must be higher than the one of the Contao initialize system listener and lower than
+            # the container_scope listener.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 29 }
+
     contao.listener.session:
         class: Contao\CoreBundle\EventListener\SessionListener
         arguments:
@@ -110,3 +121,13 @@ services:
             - '%kernel.packages%'
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
+
+    contao.referer_id.manager:
+         class: '%security.csrf.token_manager.class%'
+         arguments:
+            - '@contao.referer_id.token_generator'
+            - '@security.csrf.token_storage'
+
+    contao.referer_id.token_generator:
+         class: Contao\CoreBundle\RefererId\TokenGenerator
+         public: false
