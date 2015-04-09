@@ -25,10 +25,20 @@ class OrderProfilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        if (!$container->hasDefinition('web_profiler.controller.profiler')
+            || !$container->hasParameter('data_collector.templates')
+        ) {
+            return;
+        }
+
         $controller = $container->getDefinition('web_profiler.controller.profiler');
         $templates  = $container->getParameter('data_collector.templates');
-        $contao     = $templates['contao.data_collector'];
 
+        if (!isset($templates['contao.data_collector'])) {
+            return;
+        }
+
+        $contao = $templates['contao.data_collector'];
         unset($templates['contao.data_collector']);
 
         $templates = array_merge(
