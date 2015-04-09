@@ -9,9 +9,9 @@
  */
 
 namespace Contao;
+
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 
 /**
@@ -31,11 +31,12 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @deprecated Deprecated since version 4.0, to be removed in version 5.0, use
- * the Symfony CSRF service via the container instead!
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0. Use
+ *             the Symfony CSRF service via the container instead.
  */
 class RequestToken
 {
+
 	/**
 	 * Read the token from the session or generate a new one
 	 */
@@ -55,13 +56,9 @@ class RequestToken
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var CsrfTokenManagerInterface $tokenManager */
-		$tokenManager = $kernel->getContainer()->get('security.csrf.token_manager');
+		$name = $kernel->getContainer()->getParameter('contao.csrf_token_name');
 
-		/** @var CsrfToken $token */
-		$token = $tokenManager->getToken($kernel->getContainer()->getParameter('contao.csrf_token_name'));
-
-		return $token->getValue();
+		return $kernel->getContainer()->get('security.csrf.token_manager')->getToken($name)->getValue();
 	}
 
 
@@ -97,11 +94,8 @@ class RequestToken
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var CsrfTokenManagerInterface $tokenManager */
-		$tokenManager = $kernel->getContainer()->get('security.csrf.token_manager');
-
 		$token = new CsrfToken($kernel->getContainer()->getParameter('contao.csrf_token_name'), $strToken);
 
-		return $tokenManager->isTokenValid($token);
+		return $kernel->getContainer()->get('security.csrf.token_manager')->isTokenValid($token);
 	}
 }

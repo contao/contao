@@ -42,10 +42,12 @@ class SessionListener
     {
         $beBag = new AttributeBag('_contao_be_attributes');
         $beBag->setName('contao_backend');
+
+        $this->session->registerBag($beBag);
+
         $feBag = new AttributeBag('_contao_fe_attributes');
         $feBag->setName('contao_frontend');
 
-        $this->session->registerBag($beBag);
         $this->session->registerBag($feBag);
     }
 }

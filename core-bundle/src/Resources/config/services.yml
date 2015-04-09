@@ -26,9 +26,9 @@ services:
         class: Contao\CoreBundle\EventListener\InitializeSystemListener
         arguments:
             - "@router"
-            - "@security.csrf.token_manager"
             - "@session"
             - "%kernel.root_dir%"
+            - "@security.csrf.token_manager"
             - "%contao.csrf_token_name%"
         calls:
             - [setContainer, ["@service_container"]]

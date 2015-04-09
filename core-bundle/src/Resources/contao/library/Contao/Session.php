@@ -9,6 +9,7 @@
  */
 
 namespace Contao;
+
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -28,8 +29,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @deprecated Deprecated since version 4.0, to be removed in version 5.0, use
- * the Symfony Session via the container instead!
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0. Use
+ *             the Symfony Session via the container instead.
  */
 class Session
 {
@@ -45,7 +46,8 @@ class Session
 	 * @var SessionInterface
 	 */
 	private $session;
-    
+
+
 	/**
 	 * Get the session data
 	 */
@@ -53,6 +55,7 @@ class Session
 	{
 		/** @var KernelInterface $kernel */
 		global $kernel;
+
 		$this->session = $kernel->getContainer()->get('session');
 	}
 
@@ -120,7 +123,7 @@ class Session
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());
 
-		return $bag->remove($strKey);
+		$bag->remove($strKey);
 	}
 
 
@@ -181,7 +184,7 @@ class Session
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());
 
-		foreach ($varData as $k => $v)
+		foreach ($varData as $k=>$v)
 		{
 			$bag->set($k, $v);
 		}

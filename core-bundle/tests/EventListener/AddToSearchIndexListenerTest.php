@@ -60,9 +60,9 @@ class AddToSearchIndexListenerTest extends TestCase
     {
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
-            $this->mockTokenManager(),
             $this->mockSession(),
             $this->getRootDir() . '/app',
+            $this->mockTokenManager(),
             'contao_csrf_token'
         );
 

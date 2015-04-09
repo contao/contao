@@ -9,6 +9,7 @@
  */
 
 namespace Contao;
+
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 

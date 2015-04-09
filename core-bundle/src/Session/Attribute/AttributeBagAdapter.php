@@ -13,8 +13,7 @@ namespace Contao\CoreBundle\Session\Attribute;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
- * Provides an ArrayAccess mirror for a session AttributeBag.
- * Used for BC for $_SESSION['FE_DATA'] and $_SESSION['BE_DATA'].
+ * Provides an array access adapter for a session attribute bag.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
@@ -25,11 +24,10 @@ class AttributeBagAdapter implements \ArrayAccess
      */
     private $targetBag;
 
-
     /**
-     * Creates an AttributeBagAdapter with a target bag
+     * Constructor.
      *
-     * @param AttributeBagInterface $targetBag
+     * @param AttributeBagInterface $targetBag The target bag
      */
     public function __construct(AttributeBagInterface $targetBag)
     {
@@ -37,23 +35,15 @@ class AttributeBagAdapter implements \ArrayAccess
     }
 
     /**
-    * ArrayAccess has argument.
-    *
-    * @param string $key Array key.
-    *
-    * @return bool
-    */
+     * {@inheritdoc}
+     */
     public function offsetExists($key)
     {
         return $this->targetBag->has($key);
     }
 
     /**
-     * ArrayAccess for argument getter.
-     *
-     * @param string $key Array key.
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function offsetGet($key)
     {
@@ -61,10 +51,7 @@ class AttributeBagAdapter implements \ArrayAccess
     }
 
     /**
-     * ArrayAccess for argument setter.
-     *
-     * @param string $key   Array key to set.
-     * @param mixed  $value Value.
+     * {@inheritdoc}
      */
     public function offsetSet($key, $value)
     {
@@ -72,9 +59,7 @@ class AttributeBagAdapter implements \ArrayAccess
     }
 
     /**
-     * ArrayAccess for unset argument.
-     *
-     * @param string $key Array key.
+     * {@inheritdoc}
      */
     public function offsetUnset($key)
     {

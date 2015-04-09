@@ -30,11 +30,11 @@ class SessionListenerTest extends TestCase
     {
         $listener = new SessionListener($this->getSession());
 
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\SessionListener', $listener);
+        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\SessionListener', $listener);
     }
 
     /**
-     * Tests attribute bags are registered.
+     * Tests that the attribute bags are registered.
      */
     public function testAttributeBagsRegistered()
     {
@@ -44,24 +44,22 @@ class SessionListenerTest extends TestCase
         $listener->registerContaoAttributeBags();
 
         $this->assertInstanceOf(
-            'Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag',
+            'Symfony\\Component\\HttpFoundation\\Session\\Attribute\\AttributeBag',
             $session->getBag('contao_backend')
         );
         $this->assertInstanceOf(
-            'Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag',
+            'Symfony\\Component\\HttpFoundation\\Session\\Attribute\\AttributeBag',
             $session->getBag('contao_frontend')
         );
     }
 
     /**
-     * Gets a session for unit tests.
+     * Returns a session for the tests.
      *
-     * @return SessionInterface
+     * @return SessionInterface The session object
      */
     private function getSession()
     {
-        return new Session(
-            new MockArraySessionStorage()
-        );
+        return new Session(new MockArraySessionStorage());
     }
 }

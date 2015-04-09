@@ -9,6 +9,7 @@
  */
 
 namespace Contao;
+
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 

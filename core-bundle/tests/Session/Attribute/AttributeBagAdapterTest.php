@@ -25,20 +25,19 @@ class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstantiation()
     {
-        $attributeBag = new AttributeBag('foobar_storageKey');
-        $adapter = new AttributeBagAdapter($attributeBag);
+        $adapter = new AttributeBagAdapter(new AttributeBag('foobar_storageKey'));
 
-        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\AttributeBagAdapter', $adapter);
+        $this->assertInstanceOf('Contao\CoreBundle\\Session\\Attribute\\AttributeBagAdapter', $adapter);
         $this->assertInstanceOf('ArrayAccess', $adapter);
     }
 
     /**
-     * Tests offsetSet.
+     * Tests the offsetSet() method.
      */
     public function testOffsetSet()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $adapter = new AttributeBagAdapter($attributeBag);
+        $adapter      = new AttributeBagAdapter($attributeBag);
 
         $adapter['foo'] = 'bar';
 
@@ -46,12 +45,12 @@ class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests offsetExists.
+     * Tests the offsetExists() method.
      */
     public function testOffsetExists()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $adapter = new AttributeBagAdapter($attributeBag);
+        $adapter      = new AttributeBagAdapter($attributeBag);
 
         $adapter['foo'] = 'bar';
 
@@ -59,12 +58,12 @@ class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests offsetGet.
+     * Tests the offsetGet() method.
      */
     public function testOffsetGet()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $adapter = new AttributeBagAdapter($attributeBag);
+        $adapter      = new AttributeBagAdapter($attributeBag);
 
         $attributeBag->set('foo', 'bar');
 
@@ -72,12 +71,12 @@ class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests offsetUnset.
+     * Tests the offsetUnset() method.
      */
     public function testOffsetUnset()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
-        $adapter = new AttributeBagAdapter($attributeBag);
+        $adapter      = new AttributeBagAdapter($attributeBag);
 
         $attributeBag->set('foo', 'bar');
 

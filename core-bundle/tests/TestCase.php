@@ -64,7 +64,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return __DIR__ . '/Fixtures/app/cache';
     }
 
-
     /**
      * Initializes the Contao framework.
      *
@@ -160,7 +159,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockRouter($url)
     {
-        $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
+        $router = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');
 
         $router
             ->expects($this->any())
@@ -172,15 +171,15 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Mocks a CSRF token manager
+     * Mocks a CSRF token manager.
      *
      * @return CsrfTokenManagerInterface The token manager object
      */
     protected function mockTokenManager()
     {
         $tokenManager = $this
-            ->getMockBuilder('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface')
-            ->setMethods(array('getToken'))
+            ->getMockBuilder('Symfony\\Component\\Security\\Csrf\\CsrfTokenManagerInterface')
+            ->setMethods(['getToken'])
             ->getMockForAbstractClass();
 
         $tokenManager
@@ -192,22 +191,22 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Mocks a Symfony session containing the Contao attribute bags
+     * Mocks a Symfony session containing the Contao attribute bags.
      *
-     * @return SessionInterface
+     * @return SessionInterface The session object
      */
     protected function mockSession()
     {
-        $session = new Session(
-            new MockArraySessionStorage()
-        );
+        $session = new Session(new MockArraySessionStorage());
 
         $beBag = new AttributeBag('_contao_be_attributes');
         $beBag->setName('contao_backend');
+
+        $session->registerBag($beBag);
+
         $feBag = new AttributeBag('_contao_fe_attributes');
         $feBag->setName('contao_frontend');
 
-        $session->registerBag($beBag);
         $session->registerBag($feBag);
 
         return $session;

@@ -65,23 +65,24 @@ class InitializeSystemListener extends ScopeAwareListener
 
     /**
      * Constructor.
-     * @param RouterInterface           $router The router service
-     * @param CsrfTokenManagerInterface $tokenManager The token manager service
-     * @param SessionInterface          $session The session service
-     * @param string                    $rootDir The kernel root directory
-     * @param string                    $csrfTokenName The name of the token to be used
+     *
+     * @param RouterInterface           $router        The router service
+     * @param SessionInterface          $session       The session service
+     * @param string                    $rootDir       The kernel root directory
+     * @param CsrfTokenManagerInterface $tokenManager  The token manager service
+     * @param string                    $csrfTokenName The name of the token
      */
     public function __construct(
         RouterInterface $router,
-        CsrfTokenManagerInterface $tokenManager,
         SessionInterface $session,
         $rootDir,
+        CsrfTokenManagerInterface $tokenManager,
         $csrfTokenName
     ) {
         $this->router        = $router;
-        $this->tokenManager  = $tokenManager;
         $this->session       = $session;
         $this->rootDir       = dirname($rootDir);
+        $this->tokenManager  = $tokenManager;
         $this->csrfTokenName = $csrfTokenName;
     }
 
@@ -369,9 +370,7 @@ class InitializeSystemListener extends ScopeAwareListener
     {
         // Backwards compatibility
         if (!defined('REQUEST_TOKEN')) {
-            /** @var CsrfToken $token */
-            $token = $this->tokenManager->getToken($this->csrfTokenName);
-            define('REQUEST_TOKEN', $token->getValue());
+            define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
         }
 
         // Check the request token upon POST requests
@@ -397,8 +396,7 @@ class InitializeSystemListener extends ScopeAwareListener
     }
 
     /**
-     * Initializes legacy session access for $_SESSION['FE_DATA'] and
-     * $_SESSION['BE_DATA'].
+     * Initializes session access for $_SESSION['FE_DATA'] and $_SESSION['BE_DATA'].
      */
     private function initializeLegacySessionAccess()
     {

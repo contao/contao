@@ -9,6 +9,7 @@
  */
 
 namespace Contao;
+
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -642,7 +643,6 @@ abstract class User extends \System
 
 		/** @var SessionInterface $session */
 		$session = $kernel->getContainer()->get('session');
-
 		$session->invalidate();
 
 		// Add a log entry
