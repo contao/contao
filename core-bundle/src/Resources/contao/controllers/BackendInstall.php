@@ -118,6 +118,7 @@ class BackendInstall extends \Backend
 		}
 
 		// Save the encryption key
+		// FIXME: remove once the kernel secret is used instead
 		if (\Input::post('FORM_SUBMIT') == 'tl_encryption')
 		{
 			\Config::persist('encryptionKey', \Input::post('key'));
@@ -125,6 +126,7 @@ class BackendInstall extends \Backend
 		}
 
 		// Autogenerate an encryption key
+		// FIXME: remove once the kernel secret is used instead
 		if (\Config::get('encryptionKey') == '')
 		{
 			$strKey = md5(uniqid(mt_rand(), true));
@@ -133,27 +135,19 @@ class BackendInstall extends \Backend
 			\Config::persist('encryptionKey', $strKey);
 		}
 
+		// FIXME: remove once the kernel secret is used instead
 		$this->Template->encryptionKey = \Config::get('encryptionKey');
 
 		// Check the minimum length of the encryption key
+		// FIXME: remove once the kernel secret is used instead
 		if (utf8_strlen(\Config::get('encryptionKey')) < 12)
 		{
 			$this->Template->encryptionLength = true;
 			$this->outputAndExit();
 		}
 
-		// Purge the internal cache (see #6357)
-		if (is_dir(TL_ROOT . '/system/cache/sql')) // FIXME: system/cache
-		{
-			foreach (array('sql') as $dir)
-			{
-				$objFolder = new \Folder('system/cache/' . $dir);
-				$objFolder->delete();
-			}
-		}
-
-		// Set up the database connection
-		$this->setUpDatabaseConnection();
+		// Check the database connection
+		$this->checkDatabaseConnection();
 
 		// Run the version-specific database updates
 		$this->runDatabaseUpdates();
@@ -280,70 +274,10 @@ class BackendInstall extends \Backend
 
 
 	/**
-	 * Set up the database connection
+	 * Check the database connection
 	 */
-	protected function setUpDatabaseConnection()
+	protected function checkDatabaseConnection()
 	{
-		$strDrivers = '';
-		$arrDrivers = array('');
-
-		if (class_exists('mysqli', false))
-		{
-			$arrDrivers[] = 'MySQLi';
-		}
-		if (function_exists('mysql_connect'))
-		{
-			$arrDrivers[] = 'MySQL';
-		}
-
-		// If there is another driver defined, add it here as well
-		if (\Config::get('dbDriver') != '' && !in_array(\Config::get('dbDriver'), $arrDrivers))
-		{
-			$arrDrivers[] = \Config::get('dbDriver');
-		}
-
-		foreach ($arrDrivers as $strDriver)
-		{
-			$strDrivers .= sprintf('<option value="%s"%s>%s</option>',
-									$strDriver,
-									(($strDriver == \Config::get('dbDriver')) ? ' selected="selected"' : ''),
-									($strDriver ?: '-'));
-		}
-
-		$this->Template->drivers = $strDrivers;
-		$this->Template->driver = \Config::get('dbDriver');
-		$this->Template->host = \Config::get('dbHost');
-		$this->Template->user = \Config::get('dbUser');
-		$this->Template->pass = (\Config::get('dbPass') != '') ? '*****' : '';
-		$this->Template->port = \Config::get('dbPort');
-		$this->Template->socket = \Config::get('dbSocket');
-		$this->Template->pconnect = \Config::get('dbPconnect');
-		$this->Template->dbcharset = \Config::get('dbCharset');
-		$this->Template->database = \Config::get('dbDatabase');
-
-		// Store the database connection parameters
-		if (\Input::post('FORM_SUBMIT') == 'tl_database_login')
-		{
-			foreach (preg_grep('/^db/', array_keys($_POST)) as $strKey)
-			{
-				if ($strKey == 'dbPass' && \Input::post($strKey, true) == '*****')
-				{
-					continue;
-				}
-
-				\Config::persist($strKey, \Input::post($strKey, true));
-			}
-
-			$this->reload();
-		}
-
-		// No driver selected (see #6088)
-		if (\Config::get('dbDriver') == '')
-		{
-			$this->Template->dbConnection = false;
-			$this->outputAndExit();
-		}
-
 		// Try to connect
 		try
 		{

@@ -945,7 +945,7 @@ Library.
 
           <?php if (!$this->encryption && !$this->encryptionLength): ?>
             <fieldset class="tl_box<?php if ($this->dbConnection): ?> collapsed<?php endif; ?>">
-              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['database'][0] ?></legend>
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['dbCheck'] ?></legend>
               <div>
                 <h3><?= $GLOBALS['TL_LANG']['tl_install']['database'][0] ?></h3>
                 <?php if ($this->dbConnection): ?>
@@ -954,35 +954,6 @@ Library.
                   <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['dbError'] ?></p>
                 <?php endif; ?>
                 <p><?= $GLOBALS['TL_LANG']['tl_install']['database'][1] ?></p>
-                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                  <div class="tl_formbody">
-                    <input type="hidden" name="FORM_SUBMIT" value="tl_database_login">
-                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                    <h4><?= $GLOBALS['TL_LANG']['tl_install']['dbDriver'] ?></h4>
-                    <select name="dbDriver" id="dbDriver" class="tl_select" required><?= $this->drivers ?></select>
-                    <h4><?= $GLOBALS['TL_LANG']['tl_install']['dbHost'] ?></h4>
-                    <input type="text" name="dbHost" id="dbHost" class="tl_text" value="<?= $this->host ?>">
-                    <h4><?= $GLOBALS['TL_LANG']['tl_install']['dbUsername'] ?></h4>
-                    <input type="text" name="dbUser" id="dbUser" class="tl_text" value="<?= $this->user ?>">
-                    <h4><?= $GLOBALS['TL_LANG']['MSC']['password'][0] ?></h4>
-                    <input type="password" name="dbPass" id="dbPass" class="tl_text" value="<?= $this->pass ?>">
-                    <h4><?= $GLOBALS['TL_LANG']['tl_install']['dbDatabase'] ?></h4>
-                    <input type="text" name="dbDatabase" id="dbDatabase" class="tl_text" value="<?= $this->database ?>">
-                    <h4><?= $GLOBALS['TL_LANG']['tl_install']['dbPersistent'] ?></h4>
-                    <select name="dbPconnect" id="dbPconnect" class="tl_select"><option value="false"<?php if (!$this->pconnect) echo ' selected="selected"'; ?>><?= $GLOBALS['TL_LANG']['MSC']['no'] ?></option><option value="true"<?php if ($this->pconnect) echo ' selected="selected"'; ?>><?= $GLOBALS['TL_LANG']['MSC']['yes'] ?></option></select>
-                    <h4><?= $GLOBALS['TL_LANG']['tl_install']['dbCharset'] ?></h4>
-                    <input type="text" name="dbCharset" id="dbCharset" class="tl_text" value="<?= $this->dbcharset ?>">
-                    <h4><?= $GLOBALS['TL_LANG']['tl_install']['dbPort'] ?></h4>
-                    <input type="text" name="dbPort" id="dbPort" class="tl_text" value="<?= $this->port ?>">
-                    <h4><?= $GLOBALS['TL_LANG']['tl_install']['dbSocket'] ?></h4>
-                    <input type="text" name="dbSocket" id="dbSocket" class="tl_text" value="<?= $this->socket ?>">
-                  </div>
-                  <div class="tl_formbody_submit">
-                    <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['dbSave'] ?>" onclick="Backend.getScrollOffset()">
-                    </div>
-                  </div>
-                </form>
               </div>
             </fieldset>
 
@@ -1312,23 +1283,6 @@ Library.
               </fieldset>
 
               <?php if ($this->adminCreated): ?>
-                <fieldset class="tl_box<?php if ($this->hasComposer): ?> collapsed<?php endif; ?>">
-                  <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['repository'][0] ?></legend>
-                  <div>
-                    <h3><?= $GLOBALS['TL_LANG']['tl_install']['repository'][0] ?></h3>
-                    <?php if (!$this->hasComposer): ?>
-                      <p class="tl_info"><?= $GLOBALS['TL_LANG']['tl_install']['repositoryDefault'] ?></p>
-                    <?php else: ?>
-                      <p class="tl_confirm"><?= $GLOBALS['TL_LANG']['tl_install']['repositoryComposer'] ?></p>
-                    <?php endif; ?>
-                    <p><?= $GLOBALS['TL_LANG']['tl_install']['repository'][1] ?></p>
-                    <?php if (!$this->hasComposer): ?>
-                      <div class="tl_submit_container">
-                        <a href="<?= $this->route('contao_backend', array('do'=>'repository_catalog', 'view'=>'composer')) ?>" class="tl_submit"><?= $GLOBALS['TL_LANG']['tl_install']['repositoryInstall'] ?></a>
-                      </div>
-                    <?php endif; ?>
-                  </div>
-                </fieldset>
                 <fieldset class="tl_box last">
                   <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['completed'][0] ?></legend>
                   <div>

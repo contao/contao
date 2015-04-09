@@ -250,7 +250,16 @@ abstract class Backend extends \Controller
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/runonce.php', null, false) as $file)
+		try
+		{
+			$files = $kernel->getContainer()->get('contao.resource_locator')->locate('config/runonce.php', null, false);
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			return;
+		}
+
+		foreach ($files as $file)
 		{
 			try
 			{
