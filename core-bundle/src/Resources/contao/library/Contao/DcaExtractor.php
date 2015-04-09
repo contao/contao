@@ -36,7 +36,7 @@ class DcaExtractor extends \Controller
 
 	/**
 	 * Instances
-	 * @var string
+	 * @var \DcaExtractor[]
 	 */
 	protected static $arrInstances = array();
 

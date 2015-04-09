@@ -74,12 +74,12 @@ class CombinedFileDumper implements DumperInterface
     /**
      * {@inheritdoc}
      */
-    public function dump(array $files, $cacheFile, array $options = [])
+    public function dump($files, $cacheFile, array $options = [])
     {
         $type   = isset($options['type']) ? $options['type'] : null;
         $buffer = $this->header;
 
-        foreach ($files as $file) {
+        foreach ((array) $files as $file) {
             $buffer .= $this->loader->load($file, $type);
         }
 

@@ -20,9 +20,9 @@ interface DumperInterface
     /**
      * Dumps files into a given cache file.
      *
-     * @param array  $files     The files to be dumped
-     * @param string $cacheFile The target cache file
-     * @param array  $options   An options array
+     * @param array|string $files     One or more files
+     * @param string       $cacheFile The target cache file
+     * @param array        $options   The options array
      */
-    public function dump(array $files, $cacheFile, array $options = []);
+    public function dump($files, $cacheFile, array $options = []);
 }
