@@ -43,19 +43,18 @@ class LiveUpdate extends \Backend implements \executable
 		$objTemplate->updateClass = 'tl_confirm';
 		$objTemplate->updateHeadline = $GLOBALS['TL_LANG']['tl_maintenance']['liveUpdate'];
 		$objTemplate->isActive = $this->isActive();
-		$strMessage = ' <a href="contao/changelog.php" onclick="Backend.openModalIframe({\'width\':860,\'title\':\'CHANGELOG\',\'url\':this.href});return false" title="' . specialchars($GLOBALS['TL_LANG']['tl_maintenance']['changelog']) . '"><img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/changelog.gif" width="14" height="14" alt="" style="vertical-align:text-bottom;padding-left:3px"></a>';
 
 		// Newer version available
 		if (\Config::get('latestVersion') && version_compare(VERSION . '.' . BUILD, \Config::get('latestVersion'), '<'))
 		{
 			$objTemplate->updateClass = 'tl_info';
-			$objTemplate->updateMessage = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['newVersion'], \Config::get('latestVersion')) . $strMessage;
+			$objTemplate->updateMessage = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['newVersion'], \Config::get('latestVersion'));
 		}
 		// Current version up to date
 		else
 		{
 			$objTemplate->updateClass = 'tl_confirm';
-			$objTemplate->updateMessage = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['upToDate'], VERSION . '.' . BUILD) . $strMessage;
+			$objTemplate->updateMessage = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['upToDate'], VERSION . '.' . BUILD);
 		}
 
 		// Automatically switch to SSL

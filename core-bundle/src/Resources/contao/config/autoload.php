@@ -40,7 +40,6 @@ ClassLoader::addClasses(array
 	'Contao\Versions'                  => 'vendor/contao/core-bundle/src/Resources/contao/classes/Versions.php',
 
 	// Controllers
-	'Contao\BackendChangelog'          => 'vendor/contao/core-bundle/src/Resources/contao/controllers/BackendChangelog.php',
 	'Contao\BackendConfirm'            => 'vendor/contao/core-bundle/src/Resources/contao/controllers/BackendConfirm.php',
 	'Contao\BackendFile'               => 'vendor/contao/core-bundle/src/Resources/contao/controllers/BackendFile.php',
 	'Contao\BackendHelp'               => 'vendor/contao/core-bundle/src/Resources/contao/controllers/BackendHelp.php',
@@ -256,7 +255,6 @@ TemplateLoader::addFiles(array
 	'analytics_google'    => 'vendor/contao/core-bundle/src/Resources/contao/templates/analytics',
 	'analytics_piwik'     => 'vendor/contao/core-bundle/src/Resources/contao/templates/analytics',
 	'be_ace'              => 'vendor/contao/core-bundle/src/Resources/contao/templates/backend',
-	'be_changelog'        => 'vendor/contao/core-bundle/src/Resources/contao/templates/backend',
 	'be_confirm'          => 'vendor/contao/core-bundle/src/Resources/contao/templates/backend',
 	'be_diff'             => 'vendor/contao/core-bundle/src/Resources/contao/templates/backend',
 	'be_error'            => 'vendor/contao/core-bundle/src/Resources/contao/templates/backend',

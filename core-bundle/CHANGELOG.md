@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-beta1 (2014-XX-XX)
 ---------------------------------
 
+### Removed
+The change log viewer has been removed from the back end (see #152).
+
 ### Changed
 The rich text and code editor configuration files are now real templates, which
 can be customized in the template editor.

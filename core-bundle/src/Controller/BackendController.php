@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\BackendChangelog;
 use Contao\BackendConfirm;
 use Contao\BackendFile;
 use Contao\BackendHelp;
@@ -107,20 +106,6 @@ class BackendController extends Controller
     public function previewAction()
     {
         $controller = new BackendPreview();
-
-        return $controller->run();
-    }
-
-    /**
-     * Renders the change log viewer.
-     *
-     * @return Response
-     *
-     * @Route("/changelog", name="contao_backend_changelog")
-     */
-    public function changelogAction()
-    {
-        $controller = new BackendChangelog();
 
         return $controller->run();
     }

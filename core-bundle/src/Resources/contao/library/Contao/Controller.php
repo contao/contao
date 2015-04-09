@@ -1070,7 +1070,6 @@ abstract class Controller extends \System
 
 		$arrMapper = array
 		(
-			'contao/changelog.php' => $generate('contao_backend_changelog'),
 			'contao/confirm.php'   => $generate('contao_backend_confirm'),
 			'contao/file.php'      => $generate('contao_backend_file'),
 			'contao/help.php'      => $generate('contao_backend_help'),

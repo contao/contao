@@ -28,18 +28,17 @@ Contao 4 only uses a single PHP entry point, namely the `app.php` or
 `app_dev.php` file. The previous PHP entry points have been removed and a route
 has been set up for each one instead.
 
- - `contao/changelog.php` -> `contao_backend_changelog`
- - `contao/confirm.php`   -> `contao_backend_confirm`
- - `contao/file.php`      -> `contao_backend_file`
- - `contao/help.php`      -> `contao_backend_help`
- - `contao/index.php`     -> `contao_backend_login`
- - `contao/install.php`   -> `contao_backend_install`
- - `contao/main.php`      -> `contao_backend`
- - `contao/page.php`      -> `contao_backend_page`
- - `contao/password.php`  -> `contao_backend_password`
- - `contao/popup.php`     -> `contao_backend_popup`
- - `contao/preview.php`   -> `contao_backend_preview`
- - `contao/switch.php`    -> `contao_backend_switch`
+ - `contao/confirm.php`  -> `contao_backend_confirm`
+ - `contao/file.php`     -> `contao_backend_file`
+ - `contao/help.php`     -> `contao_backend_help`
+ - `contao/index.php`    -> `contao_backend_login`
+ - `contao/install.php`  -> `contao_backend_install`
+ - `contao/main.php`     -> `contao_backend`
+ - `contao/page.php`     -> `contao_backend_page`
+ - `contao/password.php` -> `contao_backend_password`
+ - `contao/popup.php`    -> `contao_backend_popup`
+ - `contao/preview.php`  -> `contao_backend_preview`
+ - `contao/switch.php`   -> `contao_backend_switch`
 
 The old paths are replaced automatically in the back end, still you should
 adjust your templates to use `$this->route()` instead:

@@ -44,9 +44,6 @@
       <trans-unit id="tl_maintenance.notWriteable">
         <source>The temporary folder (system/tmp) is not writeable</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.changelog">
-        <source>View the change log</source>
-      </trans-unit>
       <trans-unit id="tl_maintenance.runLiveUpdate">
         <source>Run the update</source>
       </trans-unit>
