@@ -74,7 +74,7 @@ class Automator extends \System
 		$objDatabase->execute("TRUNCATE TABLE tl_search_index");
 
 		// Purge the cache folder
-		$objFolder = new \Folder('system/cache/search');
+		$objFolder = new \Folder('system/cache/search'); // FIXME: system/cache
 		$objFolder->purge();
 
 		// Add a log entry
@@ -181,7 +181,7 @@ class Automator extends \System
 	public function purgePageCache()
 	{
 		// Purge the folder
-		$objFolder = new \Folder('system/cache/html');
+		$objFolder = new \Folder('system/cache/html'); // FIXME: system/cache
 		$objFolder->purge();
 
 		// Add a log entry
@@ -195,32 +195,11 @@ class Automator extends \System
 	public function purgeSearchCache()
 	{
 		// Purge the folder
-		$objFolder = new \Folder('system/cache/search');
+		$objFolder = new \Folder('system/cache/search'); // FIXME: system/cache
 		$objFolder->purge();
 
 		// Add a log entry
 		$this->log('Purged the search cache', __METHOD__, TL_CRON);
-	}
-
-
-	/**
-	 * Purge the internal cache
-	 */
-	public function purgeInternalCache()
-	{
-		// Check whether the cache exists
-		if (is_dir(TL_ROOT . '/system/cache/sql')) // FIXME: system/cache
-		{
-			foreach (array('packages', 'sql') as $dir)
-			{
-				// Purge the folder
-				$objFolder = new \Folder('system/cache/' . $dir);
-				$objFolder->delete();
-			}
-		}
-
-		// Add a log entry
-		$this->log('Purged the internal cache', __METHOD__, TL_CRON);
 	}
 
 
@@ -470,69 +449,5 @@ class Automator extends \System
 		$command = new SymlinksCommand();
 		$command->setContainer($container);
 		$command->generateSymlinks(dirname($container->getParameter('kernel.root_dir')), new NullOutput());
-	}
-
-
-	/**
-	 * Build the internal cache
-	 */
-	public function generateInternalCache()
-	{
-		// Purge
-		$this->purgeInternalCache();
-
-		// Rebuild
-		$this->generateConfigCache();
-		$this->generateDcaCache();
-		$this->generateLanguageCache();
-		$this->generateDcaExtracts();
-	}
-
-
-	/**
-	 * Create the config cache files
-	 */
-	public function generateConfigCache()
-	{
-		// FIXME
-
-		// Add a log entry
-		$this->log('Generated the config cache', __METHOD__, TL_CRON);
-	}
-
-
-	/**
-	 * Create the data container cache files
-	 */
-	public function generateDcaCache()
-	{
-		// FIXME
-
-		// Add a log entry
-		$this->log('Generated the DCA cache', __METHOD__, TL_CRON);
-	}
-
-
-	/**
-	 * Create the language cache files
-	 */
-	public function generateLanguageCache()
-	{
-		// FIXME
-
-		// Add a log entry
-		$this->log('Generated the language cache', __METHOD__, TL_CRON);
-	}
-
-
-	/**
-	 * Create the DCA extract cache files
-	 */
-	public function generateDcaExtracts()
-	{
-		// FIXME
-
-		// Add a log entry
-		$this->log('Generated the DCA extracts', __METHOD__, TL_CRON);
 	}
 }

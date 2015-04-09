@@ -275,10 +275,6 @@ class Installer extends \Controller
 		$return = array();
 		$processed = array();
 
-		// Ignore the internal cache
-		$blnBypassCache = \Config::get('bypassCache');
-		\Config::set('bypassCache', true);
-
 		/** @var SplFileInfo[] $files */
 		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('dca')->files()->name('*.php');
 
@@ -299,9 +295,6 @@ class Installer extends \Controller
 				$return[$strTable] = $objExtract->getDbInstallerArray();
 			}
 		}
-
-		// Restore the cache settings
-		\Config::set('bypassCache', $blnBypassCache);
 
 		// HOOK: allow third-party developers to modify the array (see #6425)
 		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDca']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromDca']))

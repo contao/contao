@@ -16,7 +16,6 @@ use Contao\Environment;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
@@ -84,10 +83,8 @@ class InitializeSystemListener extends ScopeAwareListener
 
     /**
      * Initializes the system upon console.command.
-     *
-     * @param ConsoleCommandEvent $event The event object
      */
-    public function onConsoleCommand(ConsoleCommandEvent $event)
+    public function onConsoleCommand()
     {
         if (true === self::$booted) {
             return;

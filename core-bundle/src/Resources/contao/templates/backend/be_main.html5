@@ -62,9 +62,6 @@
         <?php if ($this->isMaintenanceMode): ?>
           <p class="tl_error tl_permalert"><?php if ($this->isAdmin): ?><a href="<?= $this->maintenanceHref ?>" class="tl_submit"><?= $this->maintenanceOff ?></a><?php endif; ?><?= $this->maintenanceMode ?></p>
         <?php endif; ?>
-        <?php if ($this->needsCacheBuild): ?>
-          <p class="tl_error tl_permalert"><?php if ($this->isAdmin): ?><a href="<?= $this->buildCacheHref ?>" class="tl_submit"><?= $this->buildCacheLink ?></a><?php endif; ?><?= $this->buildCacheText ?></p>
-        <?php endif; ?>
       </div>
     </div>
   <?php endif; ?>

@@ -1,3 +1,3 @@
 <?php
 
-echo 'test';
+$GLOBALS['TL_TEST'] = true;
