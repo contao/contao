@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 
 /**
  * Maintenance module "rebuild index".
@@ -93,8 +96,14 @@ class RebuildIndex extends \Backend implements \executable
 			// Hide unpublished elements
 			$this->setCookie('FE_PREVIEW', 0, ($time - 86400));
 
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
+			/** @var SessionInterface $session */
+			$session = $kernel->getContainer()->get('session');
+
 			// Calculate the hash
-			$strHash = sha1(session_id() . (!\Config::get('disableIpCheck') ? \Environment::get('ip') : '') . 'FE_USER_AUTH');
+			$strHash = sha1($session->getId() . (!\Config::get('disableIpCheck') ? \Environment::get('ip') : '') . 'FE_USER_AUTH');
 
 			// Remove old sessions
 			$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
@@ -105,7 +114,7 @@ class RebuildIndex extends \Backend implements \executable
 			{
 				// Insert a new session
 				$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-							   ->execute(\Input::get('user'), $time, 'FE_USER_AUTH', session_id(), \Environment::get('ip'), $strHash);
+							   ->execute(\Input::get('user'), $time, 'FE_USER_AUTH', $session->getId(), \Environment::get('ip'), $strHash);
 
 				// Set the cookie
 				$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);

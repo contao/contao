@@ -12,13 +12,17 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\ClassLoader;
 use Contao\Config;
+use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Contao\Environment;
 use Contao\Input;
-use Contao\RequestToken;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Initializes the Contao framework.
@@ -35,9 +39,24 @@ class InitializeSystemListener extends ScopeAwareListener
     private $router;
 
     /**
+     * @var CsrfTokenManagerInterface
+     */
+    private $tokenManager;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
      * @var string
      */
     private $rootDir;
+
+    /**
+     * @var string
+     */
+    private $csrfTokenName;
 
     /**
      * @var bool
@@ -47,13 +66,24 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * Constructor.
      *
-     * @param RouterInterface $router  The router object
-     * @param string          $rootDir The kernel root directory
+     * @param RouterInterface           $router        The router service
+     * @param SessionInterface          $session       The session service
+     * @param string                    $rootDir       The kernel root directory
+     * @param CsrfTokenManagerInterface $tokenManager  The token manager service
+     * @param string                    $csrfTokenName The name of the token
      */
-    public function __construct(RouterInterface $router, $rootDir)
-    {
-        $this->router  = $router;
-        $this->rootDir = dirname($rootDir);
+    public function __construct(
+        RouterInterface $router,
+        SessionInterface $session,
+        $rootDir,
+        CsrfTokenManagerInterface $tokenManager,
+        $csrfTokenName
+    ) {
+        $this->router        = $router;
+        $this->session       = $session;
+        $this->rootDir       = dirname($rootDir);
+        $this->tokenManager  = $tokenManager;
+        $this->csrfTokenName = $csrfTokenName;
     }
 
     /**
@@ -132,10 +162,6 @@ class InitializeSystemListener extends ScopeAwareListener
     {
         $this->includeHelpers();
 
-        // Try to disable the PHPSESSID
-        $this->iniSet('session.use_trans_sid', 0);
-        $this->iniSet('session.cookie_httponly', true);
-
         // Set the error and exception handler
         set_error_handler('__error');
         set_exception_handler('__exception');
@@ -152,7 +178,7 @@ class InitializeSystemListener extends ScopeAwareListener
         ClassLoader::scanAndRegister();
 
         $this->setRelativePath($request ? $request->getBasePath() : '');
-        $this->startSession();
+        $this->initializeLegacySessionAccess();
         $this->setDefaultLanguage();
 
         // Fully load the configuration
@@ -171,7 +197,7 @@ class InitializeSystemListener extends ScopeAwareListener
         }
 
         $this->triggerInitializeSystemHook();
-        $this->checkRequestToken();
+        $this->handleRequestToken();
     }
 
     /**
@@ -252,15 +278,6 @@ class InitializeSystemListener extends ScopeAwareListener
         Environment::set('path', $basePath);
 
         define('TL_PATH', Environment::get('path')); // backwards compatibility
-    }
-
-    /**
-     * Starts the session.
-     */
-    private function startSession()
-    {
-        session_set_cookie_params(0, (Environment::get('path') ?: '/')); // see #5339
-        session_start();
     }
 
     /**
@@ -347,14 +364,20 @@ class InitializeSystemListener extends ScopeAwareListener
     }
 
     /**
-     * Checks the request token.
+     * Handles the request token.
      */
-    private function checkRequestToken()
+    private function handleRequestToken()
     {
-        RequestToken::initialize();
+        // Backwards compatibility
+        if (!defined('REQUEST_TOKEN')) {
+            define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
+        }
 
         // Check the request token upon POST requests
-        if ($_POST && !RequestToken::validate(Input::post('REQUEST_TOKEN'))) {
+        $token = new CsrfToken($this->csrfTokenName, Input::post('REQUEST_TOKEN'));
+
+        // FIXME: This forces all routes handling POST data to pase a REQUEST_TOKEN
+        if ($_POST && !$this->tokenManager->isTokenValid($token)) {
 
             // Force a JavaScript redirect upon Ajax requests (IE requires absolute link)
             if (Environment::get('isAjaxRequest')) {
@@ -370,5 +393,20 @@ class InitializeSystemListener extends ScopeAwareListener
 
             exit; // FIXME: throw a ResponseException instead
         }
+    }
+
+    /**
+     * Initializes session access for $_SESSION['FE_DATA'] and $_SESSION['BE_DATA'].
+     */
+    private function initializeLegacySessionAccess()
+    {
+        /** @var AttributeBagInterface $feBag */
+        $feBag = $this->session->getBag('contao_frontend');
+
+        /** @var AttributeBagInterface $beBag */
+        $beBag = $this->session->getBag('contao_backend');
+
+        $_SESSION['FE_DATA'] = new AttributeBagAdapter($feBag);
+        $_SESSION['BE_DATA'] = new AttributeBagAdapter($beBag);
     }
 }

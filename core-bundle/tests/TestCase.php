@@ -11,13 +11,20 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\Config;
-use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\Environment;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Abstract TestCase class.
@@ -33,7 +40,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
         parent::__construct($name, $data, $dataName);
 
-        Config::preload(); // ensure that the fixtures class is used
+        Config::set('timeZone', 'GMT');
+        Config::set('characterSet', 'UTF-8');
     }
 
     /**
@@ -47,9 +55,21 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Initializes the Contao framework.
+     * Returns the path to the fixtures cache directory.
+     *
+     * @return string The cache directory path
      */
-    protected function bootContaoFramework()
+    public function getCacheDir()
+    {
+        return __DIR__ . '/Fixtures/app/cache';
+    }
+
+    /**
+     * Initializes the Contao framework.
+     *
+     * @param InitializeSystemListener $listener The listener instance to be used
+     */
+    protected function bootContaoFramework(InitializeSystemListener $listener)
     {
         /** @var Kernel $kernel */
         global $kernel;
@@ -62,11 +82,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ->method('generate')
             ->willReturn('/index.html')
         ;
-
-        $listener = new InitializeSystemListener(
-            $router,
-            $this->getRootDir() . '/app'
-        );
 
         $listener->onConsoleCommand();
     }
@@ -136,12 +151,64 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Returns the path to the fixtures cache directory.
+     * Mocks a router returning the given URL.
      *
-     * @return string The cache directory path
+     * @param string $url The URL to return
+     *
+     * @return RouterInterface The router object
      */
-    public function getCacheDir()
+    protected function mockRouter($url)
     {
-        return __DIR__ . '/Fixtures/app/cache';
+        $router = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');
+
+        $router
+            ->expects($this->any())
+            ->method('generate')
+            ->willReturn($url)
+        ;
+
+        return $router;
+    }
+
+    /**
+     * Mocks a CSRF token manager.
+     *
+     * @return CsrfTokenManagerInterface The token manager object
+     */
+    protected function mockTokenManager()
+    {
+        $tokenManager = $this
+            ->getMockBuilder('Symfony\\Component\\Security\\Csrf\\CsrfTokenManagerInterface')
+            ->setMethods(['getToken'])
+            ->getMockForAbstractClass();
+
+        $tokenManager
+            ->expects($this->any())
+            ->method('getToken')
+            ->willReturn(new CsrfToken('_csrf', 'testValue'));
+
+        return $tokenManager;
+    }
+
+    /**
+     * Mocks a Symfony session containing the Contao attribute bags.
+     *
+     * @return SessionInterface The session object
+     */
+    protected function mockSession()
+    {
+        $session = new Session(new MockArraySessionStorage());
+
+        $beBag = new AttributeBag('_contao_be_attributes');
+        $beBag->setName('contao_backend');
+
+        $session->registerBag($beBag);
+
+        $feBag = new AttributeBag('_contao_fe_attributes');
+        $feBag->setName('contao_frontend');
+
+        $session->registerBag($feBag);
+
+        return $session;
     }
 }

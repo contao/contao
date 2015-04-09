@@ -26,7 +26,10 @@ services:
         class: Contao\CoreBundle\EventListener\InitializeSystemListener
         arguments:
             - "@router"
+            - "@session"
             - "%kernel.root_dir%"
+            - "@security.csrf.token_manager"
+            - "%contao.csrf_token_name%"
         calls:
             - [setContainer, ["@service_container"]]
         tags:
@@ -42,6 +45,16 @@ services:
         tags:
             # Priority must be lower than the one of the toggle_view listener.
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 24 }
+
+    contao.listener.session:
+        class: Contao\CoreBundle\EventListener\SessionListener
+        arguments:
+            - "@session"
+        tags:
+            # Priority must be lower than Symfony\Bundle\FrameworkBundle\EventListener\SessionListener (default 128)
+            # but higher than the one of the Contao initialize system listener.
+            - { name: kernel.event_listener, event: kernel.request, method: registerContaoAttributeBags, priority: 64 }
+            - { name: kernel.event_listener, event: console.command, method: registerContaoAttributeBags, priority: 64 }
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener

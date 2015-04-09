@@ -21,12 +21,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Tests the BootstrapLegacyListener class.
  *
  * @author Christian Schiffler <https://github.com/discordier>
+ * @author Yanick Witschi <https://github.com/toflar>
  */
 class InitializeSystemListenerTest extends TestCase
 {
@@ -37,7 +37,10 @@ class InitializeSystemListenerTest extends TestCase
     {
         $listener = new InitializeSystemListener(
             $this->getMock('Symfony\\Component\\Routing\\RouterInterface'),
-            $this->getRootDir()
+            $this->mockSession(),
+            $this->getRootDir(),
+            $this->getMock('Symfony\\Component\\Security\\Csrf\\CsrfTokenManagerInterface'),
+            'contao_csrf_token'
         );
 
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\InitializeSystemListener', $listener);
@@ -61,7 +64,10 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
-            $this->getRootDir() . '/app'
+            $this->mockSession(),
+            $this->getRootDir() . '/app',
+            $this->mockTokenManager(),
+            'contao_csrf_token'
         );
 
         $listener->setContainer($container);
@@ -99,7 +105,10 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/contao/install'),
-            $this->getRootDir() . '/app'
+            $this->mockSession(),
+            $this->getRootDir() . '/app',
+            $this->mockTokenManager(),
+            'contao_csrf_token'
         );
 
         $listener->setContainer($container);
@@ -138,7 +147,10 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
-            $this->getRootDir() . '/app'
+            $this->mockSession(),
+            $this->getRootDir() . '/app',
+            $this->mockTokenManager(),
+            'contao_csrf_token'
         );
 
         $listener->setContainer($container);
@@ -179,7 +191,10 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
-            $this->getRootDir() . '/app'
+            $this->mockSession(),
+            $this->getRootDir() . '/app',
+            $this->mockTokenManager(),
+            'contao_csrf_token'
         );
 
         $listener->setContainer($container);
@@ -209,7 +224,10 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/index.html'),
-            $this->getRootDir() . '/app'
+            $this->mockSession(),
+            $this->getRootDir() . '/app',
+            $this->mockTokenManager(),
+            'contao_csrf_token'
         );
 
         $request = new Request();
@@ -243,8 +261,11 @@ class InitializeSystemListenerTest extends TestCase
             'Contao\\CoreBundle\\EventListener\\InitializeSystemListener',
             ['setConstants', 'boot'],
             [
-                $this->getMock('Symfony\\Component\\Routing\\RouterInterface'),
+                $this->mockRouter('/index.html'),
+                $this->mockSession(),
                 $this->getRootDir(),
+                $this->mockTokenManager(),
+                'contao_csrf_token'
             ]
         );
 
@@ -283,7 +304,10 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener = new InitializeSystemListener(
             $this->getMock('Symfony\\Component\\Routing\\RouterInterface'),
-            $this->getRootDir() . '/app'
+            $this->mockSession(),
+            $this->getRootDir() . '/app',
+            $this->mockTokenManager(),
+            'contao_csrf_token'
         );
 
         $listener->onConsoleCommand(
@@ -313,8 +337,11 @@ class InitializeSystemListenerTest extends TestCase
             'Contao\\CoreBundle\\EventListener\\InitializeSystemListener',
             ['setConstants', 'boot'],
             [
-                $this->getMock('Symfony\\Component\\Routing\\RouterInterface'),
+                $this->mockRouter('/index.html'),
+                $this->mockSession(),
                 $this->getRootDir(),
+                $this->mockTokenManager(),
+                'contao_csrf_token'
             ]
         );
 
@@ -335,25 +362,5 @@ class InitializeSystemListenerTest extends TestCase
         $listener->onConsoleCommand(
             new ConsoleCommandEvent(new VersionCommand(), new StringInput(''), new ConsoleOutput())
         );
-    }
-
-    /**
-     * Mocks a router returning the given URL.
-     *
-     * @param string $url The URL to return
-     *
-     * @return RouterInterface The router object
-     */
-    private function mockRouter($url)
-    {
-        $router = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');
-
-        $router
-            ->expects($this->any())
-            ->method('generate')
-            ->willReturn($url)
-        ;
-
-        return $router;
     }
 }

@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -52,8 +54,14 @@ class BackendMain extends \Backend
 		// Password change required
 		if ($this->User->pwChange)
 		{
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
+			/** @var SessionInterface $session */
+			$session = $kernel->getContainer()->get('session');
+
 			$objSession = $this->Database->prepare("SELECT su FROM tl_session WHERE sessionID=? AND pid=?")
-										 ->execute(session_id(), $this->User->id);
+										 ->execute($session->getId(), $this->User->id);
 
 			if (!$objSession->su)
 			{
