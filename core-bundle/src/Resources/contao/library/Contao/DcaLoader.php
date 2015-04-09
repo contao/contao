@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * Loads a set of DCA files
  *
  * The class loads the DCA files of a certain table and stores a combined
- * version in the system/cache directory.
+ * version in the cache directory.
  *
  * Usage:
  *

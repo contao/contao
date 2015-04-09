@@ -215,9 +215,9 @@ class Automator extends \System
 	public function purgeInternalCache()
 	{
 		// Check whether the cache exists
-		if (is_dir(TL_ROOT . '/system/cache/sql'))
+		if (is_dir(TL_ROOT . '/system/cache/sql')) // FIXME: system/cache
 		{
-			foreach (array('packages', 'sql') as $dir) // FIXME: packages?
+			foreach (array('packages', 'sql') as $dir)
 			{
 				// Purge the folder
 				$objFolder = new \Folder('system/cache/' . $dir);

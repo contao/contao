@@ -110,7 +110,7 @@ class DcaExtractor extends \Controller
 		parent::__construct();
 
 		$this->strTable = $strTable;
-		$this->strFile = 'system/cache/sql/' . $strTable . '.php'; // FIXME: $kernel->getCacheDir()
+		$this->strFile = 'system/cache/sql/' . $strTable . '.php'; // FIXME: system/cache
 
 		// Try to load from cache
 		if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $this->strFile))

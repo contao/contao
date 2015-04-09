@@ -672,9 +672,9 @@ abstract class Frontend extends \Controller
 			$arrLanguage = \Environment::get('httpAcceptLanguage');
 
 			// Try to get the cache key from the mapper array
-			if (file_exists(TL_ROOT . '/system/cache/config/mapping.php'))
+			if (file_exists(TL_ROOT . '/system/cache/config/mapping.php')) // FIXME: system/cache
 			{
-				$arrMapper = include TL_ROOT . '/system/cache/config/mapping.php';
+				$arrMapper = include TL_ROOT . '/system/cache/config/mapping.php'; // FIXME: system/cache
 
 				// Try the language specific keys
 				foreach ($arrLanguage as $strLanguage)
@@ -727,7 +727,7 @@ abstract class Frontend extends \Controller
 		if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
 		{
 			$strMd5CacheKey = md5($strCacheKey . '.mobile');
-			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
+			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html'; // FIXME: system/cache
 
 			if (file_exists($strCacheFile))
 			{
@@ -739,7 +739,7 @@ abstract class Frontend extends \Controller
 		if (!$blnFound)
 		{
 			$strMd5CacheKey = md5($strCacheKey);
-			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
+			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html'; // FIXME: system/cache
 
 			if (file_exists($strCacheFile))
 			{
