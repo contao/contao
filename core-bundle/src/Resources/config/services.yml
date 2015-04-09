@@ -44,7 +44,7 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 26 }
 
     contao.resource_finder:
-        class: Contao\CoreBundle\Finder\ResourceFinder
+        class: Contao\CoreBundle\Config\ResourceFinder
         arguments:
             - "%contao.resources_paths%"
 

@@ -10,10 +10,8 @@
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Adds the bundle resources paths to the container.
@@ -43,15 +41,31 @@ class AddResourcesPathsPass implements CompilerPassInterface
         $rootDir = dirname($container->getParameter('kernel.root_dir'));
 
         foreach ($container->getParameter('kernel.bundles') as $name => $class) {
-            $reflection = new \ReflectionClass($class);
-
-            if ('ContaoModuleBundle' === $reflection->getShortName()) {
+            if ('Contao\\CoreBundle\\HttpKernel\\Bundle\\ContaoModuleBundle' === $class) {
                 $paths[] = "$rootDir/system/modules/$name";
-            } elseif (is_dir($dir = dirname($reflection->getFilename()) . '/Resources/contao')) {
-                $paths[] = $dir;
+            } elseif (null !== ($path = $this->getResourcesPathFromClassName($class))) {
+                $paths[] = $path;
             }
         }
 
         return $paths;
+    }
+
+    /**
+     * Returns the resources path from the class name.
+     *
+     * @param string $class The class name
+     *
+     * @return string|null The resources path or null
+     */
+    private function getResourcesPathFromClassName($class)
+    {
+        $reflection = new \ReflectionClass($class);
+
+        if (is_dir($dir = dirname($reflection->getFilename()) . '/Resources/contao')) {
+            return $dir;
+        }
+
+        return null;
     }
 }

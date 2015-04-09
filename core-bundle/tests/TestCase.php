@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Test;
 
 use Contao\Config;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
-use Contao\CoreBundle\Finder\ResourceFinder;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\Environment;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
