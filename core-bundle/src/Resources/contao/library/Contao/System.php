@@ -312,6 +312,9 @@ abstract class System
 		// Fall back to English
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
+		// Prepare the XLIFF loader
+		$xlfLoader = new XliffFileLoader($kernel->getRootDir(), true);
+
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
@@ -322,22 +325,27 @@ abstract class System
 			}
 			else
 			{
-				/** @var SplFileInfo[] $files */
-				$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->files()->name($strName . '.php');
-
-				foreach ($files as $file)
+				try
 				{
-					include $file->getPathname();
+					/** @var SplFileInfo[] $files */
+					$files = $kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.php', null, false);
+
+					foreach ($files as $file)
+					{
+						include $file;
+					}
+				}
+				catch (\InvalidArgumentException $e)
+				{
+					// There are no .php files
 				}
 
-				$loader = new XliffFileLoader($kernel->getRootDir(), true);
-
 				/** @var SplFileInfo[] $files */
-				$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->files()->name($strName . '.xlf');
+				$files = $kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.xlf', null, false);
 
 				foreach ($files as $file)
 				{
-					$loader->load($file->getPathname(), $strCreateLang);
+					$xlfLoader->load($file, $strCreateLang);
 				}
 			}
 		}

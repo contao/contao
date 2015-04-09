@@ -327,11 +327,18 @@ class Installer extends \Controller
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
+		try
+		{
+			/** @var SplFileInfo[] $files */
+			$files = $kernel->getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			return array();
+		}
+
 		$table = '';
 		$return = array();
-
-		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('config')->files()->name('database.sql');
 
 		foreach ($files as $file)
 		{
