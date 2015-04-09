@@ -176,12 +176,6 @@
       <trans-unit id="tl_settings.logErrors.1">
         <source>Write error messages to the error log file (&lt;em&gt;system/logs/error.log&lt;/em&gt;).</source>
       </trans-unit>
-      <trans-unit id="tl_settings.coreOnlyMode.0">
-        <source>Run in safe mode</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.coreOnlyMode.1">
-        <source>Run Contao in safe mode and load only core modules.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.disableIpCheck.0">
         <source>Disable IP check</source>
       </trans-unit>

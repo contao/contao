@@ -42,7 +42,6 @@ class BackendControllerTest extends TestCase
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->installAction());
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->passwordAction());
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->previewAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->changelogAction());
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->confirmAction());
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->fileAction());
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->helpAction());

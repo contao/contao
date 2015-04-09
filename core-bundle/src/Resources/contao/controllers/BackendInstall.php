@@ -727,25 +727,14 @@ class BackendInstall extends \Backend
 
 
 	/**
-	 * Enable the safe mode and switch to maintenance mode
+	 * Enable the maintenance mode
 	 */
-	protected function enableSafeMode()
+	protected function enableMaintenanceMode()
 	{
 		if (!\Config::get('maintenanceMode'))
 		{
 			\Config::set('maintenanceMode', true);
 			\Config::persist('maintenanceMode', true);
-		}
-
-		if (!\Config::get('coreOnlyMode'))
-		{
-			$modules = \ModuleLoader::getActive();
-
-			if (count(array_diff($modules, array('core', 'calendar', 'comments', 'faq', 'listing', 'news', 'newsletter'))) > 0)
-			{
-				\Config::set('coreOnlyMode', true);
-				\Config::persist('coreOnlyMode', true);
-			}
 		}
 	}
 
@@ -757,7 +746,7 @@ class BackendInstall extends \Backend
 	{
 		if ($this->Database->tableExists('tl_layout') && !$this->Database->fieldExists('script', 'tl_layout'))
 		{
-			$this->enableSafeMode();
+			$this->enableMaintenanceMode();
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_28update')
 			{
@@ -779,7 +768,7 @@ class BackendInstall extends \Backend
 	{
 		if ($this->Database->tableExists('tl_layout') && !$this->Database->tableExists('tl_theme'))
 		{
-			$this->enableSafeMode();
+			$this->enableMaintenanceMode();
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_29update')
 			{
@@ -807,7 +796,7 @@ class BackendInstall extends \Backend
 			{
 				if ($arrField['name'] == 'startDate' && $arrField['type'] != 'int')
 				{
-					$this->enableSafeMode();
+					$this->enableMaintenanceMode();
 
 					if (\Input::post('FORM_SUBMIT') == 'tl_292update')
 					{
@@ -831,7 +820,7 @@ class BackendInstall extends \Backend
 	{
 		if ($this->Database->tableExists('tl_style') && !$this->Database->fieldExists('positioning', 'tl_style'))
 		{
-			$this->enableSafeMode();
+			$this->enableMaintenanceMode();
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_210update')
 			{
@@ -854,7 +843,7 @@ class BackendInstall extends \Backend
 		// Step 1: database structure
 		if (!$this->Database->tableExists('tl_files'))
 		{
-			$this->enableSafeMode();
+			$this->enableMaintenanceMode();
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_30update')
 			{
@@ -892,7 +881,7 @@ class BackendInstall extends \Backend
 		// Step 2: scan the upload folder if it is not empty (see #6061)
 		if ($objRow->count < 1 && count(scan(TL_ROOT . '/' . \Config::get('uploadPath'))) > 0)
 		{
-			$this->enableSafeMode();
+			$this->enableMaintenanceMode();
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_30update')
 			{
@@ -911,7 +900,7 @@ class BackendInstall extends \Backend
 		// Step 3: update the database fields
 		elseif (\Config::get('checkFileTree'))
 		{
-			$this->enableSafeMode();
+			$this->enableMaintenanceMode();
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_30update')
 			{
@@ -936,7 +925,7 @@ class BackendInstall extends \Backend
 	{
 		if ($this->Database->tableExists('tl_content') && $this->Database->fieldExists('mooType', 'tl_content'))
 		{
-			$this->enableSafeMode();
+			$this->enableMaintenanceMode();
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_31update')
 			{
@@ -973,7 +962,7 @@ class BackendInstall extends \Backend
 			// Run the version 3.2.0 update
 			if (!$blnDone)
 			{
-				$this->enableSafeMode();
+				$this->enableMaintenanceMode();
 
 				if (\Input::post('FORM_SUBMIT') == 'tl_32update')
 				{
@@ -996,7 +985,7 @@ class BackendInstall extends \Backend
 	{
 		if ($this->Database->tableExists('tl_layout') && !$this->Database->fieldExists('viewport', 'tl_layout'))
 		{
-			$this->enableSafeMode();
+			$this->enableMaintenanceMode();
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_33update')
 			{
@@ -1031,7 +1020,7 @@ class BackendInstall extends \Backend
 
 			if ($strIndex != 'UNIQUE')
 			{
-				$this->enableSafeMode();
+				$this->enableMaintenanceMode();
 
 				if (\Input::post('FORM_SUBMIT') == 'tl_35update')
 				{
@@ -1054,7 +1043,7 @@ class BackendInstall extends \Backend
 	{
 		if ($this->Database->tableExists('tl_layout') && !$this->Database->fieldExists('scripts', 'tl_layout'))
 		{
-			$this->enableSafeMode();
+			$this->enableMaintenanceMode();
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_40update')
 			{

@@ -78,13 +78,6 @@ class BackendMain extends \Backend
 		// Convenience functions
 		if ($this->User->isAdmin)
 		{
-			// Safe mode off
-			if (\Input::get('smo'))
-			{
-				\Config::persist('coreOnlyMode', false);
-				$this->redirect($this->getReferer());
-			}
-
 			// Maintenance mode off
 			if (\Input::get('mmo'))
 			{
@@ -238,10 +231,6 @@ class BackendMain extends \Backend
 		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
 		$this->Template->loadFonts = \Config::get('loadGoogleFonts');
 		$this->Template->isAdmin = $this->User->isAdmin;
-		$this->Template->isCoreOnlyMode = \Config::get('coreOnlyMode');
-		$this->Template->coreOnlyMode = $GLOBALS['TL_LANG']['MSC']['coreOnlyMode'];
-		$this->Template->coreOnlyOff = specialchars($GLOBALS['TL_LANG']['MSC']['coreOnlyOff']);
-		$this->Template->coreOnlyHref = $this->addToUrl('smo=1');
 		$this->Template->isMaintenanceMode = \Config::get('maintenanceMode');
 		$this->Template->maintenanceMode = $GLOBALS['TL_LANG']['MSC']['maintenanceMode'];
 		$this->Template->maintenanceOff = specialchars($GLOBALS['TL_LANG']['MSC']['maintenanceOff']);

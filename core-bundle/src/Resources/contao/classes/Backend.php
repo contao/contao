@@ -42,11 +42,6 @@ abstract class Backend extends \Controller
 	 */
 	public static function getTheme()
 	{
-		if (\Config::get('coreOnlyMode'))
-		{
-			return 'flexible'; // see #6505
-		}
-
 		$theme = \Config::get('backendTheme');
 
 		if ($theme != '' && $theme != 'flexible' && is_dir(TL_ROOT . '/system/themes/' . $theme))
