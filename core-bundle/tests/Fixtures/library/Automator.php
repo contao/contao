@@ -40,10 +40,6 @@ class Automator
     {
     }
 
-    public function purgeInternalCache()
-    {
-    }
-
     public function purgeTempFolder()
     {
     }
@@ -65,30 +61,6 @@ class Automator
     }
 
     public function generateSymlinks()
-    {
-    }
-
-    public function generateInternalCache()
-    {
-    }
-
-    public function generateConfigCache()
-    {
-    }
-
-    public function generateDcaCache()
-    {
-    }
-
-    public function generateLanguageCache()
-    {
-    }
-
-    public function generateDcaExtracts()
-    {
-    }
-
-    public function generatePackageCache()
     {
     }
 }

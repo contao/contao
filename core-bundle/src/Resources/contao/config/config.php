@@ -325,11 +325,6 @@ $GLOBALS['TL_PURGE'] = array
 			'callback' => array('Automator', 'purgeSearchCache'),
 			'affected' => array('system/cache/search')
 		),
-		'internal' => array
-		(
-			'callback' => array('Automator', 'purgeInternalCache'),
-			'affected' => array('system/cache/packages', 'system/cache/sql') // FIXME: system/cache
-		),
 		'temp' => array
 		(
 			'callback' => array('Automator', 'purgeTempFolder'),

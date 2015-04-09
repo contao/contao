@@ -73,8 +73,6 @@ class BackendMain extends \Backend
 			// Safe mode off
 			if (\Input::get('smo'))
 			{
-				$this->import('Automator');
-				$this->Automator->purgeInternalCache();
 				\Config::persist('coreOnlyMode', false);
 				$this->redirect($this->getReferer());
 			}
@@ -83,14 +81,6 @@ class BackendMain extends \Backend
 			if (\Input::get('mmo'))
 			{
 				\Config::persist('maintenanceMode', false);
-				$this->redirect($this->getReferer());
-			}
-
-			// Build internal cache
-			if (\Input::get('bic'))
-			{
-				$this->import('Automator');
-				$this->Automator->generateInternalCache();
 				$this->redirect($this->getReferer());
 			}
 		}
@@ -248,17 +238,7 @@ class BackendMain extends \Backend
 		$this->Template->maintenanceMode = $GLOBALS['TL_LANG']['MSC']['maintenanceMode'];
 		$this->Template->maintenanceOff = specialchars($GLOBALS['TL_LANG']['MSC']['maintenanceOff']);
 		$this->Template->maintenanceHref = $this->addToUrl('mmo=1');
-		$this->Template->buildCacheLink = $GLOBALS['TL_LANG']['MSC']['buildCacheLink'];
-		$this->Template->buildCacheText = $GLOBALS['TL_LANG']['MSC']['buildCacheText'];
-		$this->Template->buildCacheHref = $this->addToUrl('bic=1');
 		$this->Template->isPopup = \Input::get('popup');
-
-		// Hide the cache message in the repository manager (see #5966)
-		// FIXME: remove if the ER2 is no longer supported
-		if (!\Config::get('bypassCache') && $this->User->isAdmin)
-		{
-			$this->Template->needsCacheBuild = ((\Input::get('do') != 'repository_manager' || !isset($_GET['install']) && !isset($_GET['uninstall']) && !isset($_GET['update'])) && !is_dir(TL_ROOT . '/system/cache/sql')); // FIXME: system/cache
-		}
 
 		// Front end preview links
 		if (defined('CURRENT_ID') && CURRENT_ID != '')

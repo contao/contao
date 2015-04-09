@@ -17,9 +17,6 @@ use Contao\Environment;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
@@ -29,6 +26,16 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct($name = null, array $data = array(), $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        Config::preload(); // ensure that the fixtures class is used
+    }
+
     /**
      * Returns the path to the fixtures directory.
      *
@@ -41,17 +48,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * Initializes the Contao framework.
-     *
-     * @param string $scope The container scope
      */
-    protected function bootContaoFramework($scope = 'frontend')
+    protected function bootContaoFramework()
     {
         /** @var Kernel $kernel */
         global $kernel;
 
-        $kernel    = $this->mockKernel();
-        $container = $kernel->getContainer();
-        $router    = $this->getMock('Symfony\Component\Routing\RouterInterface');
+        $kernel = $this->mockKernel();
+        $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
 
         $router
             ->expects($this->any())
@@ -64,14 +68,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $this->getRootDir() . '/app'
         );
 
-        $listener->setContainer($container);
-
-        $container->enterScope($scope);
-
-        $request = new Request();
-        $request->attributes->set('_route', 'dummy');
-
-        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
+        $listener->onConsoleCommand();
     }
 
     /**
@@ -81,7 +78,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockKernel()
     {
-        Config::set('bypassCache', true);
         Environment::set('httpAcceptLanguage', []);
 
         $kernel = $this->getMock(

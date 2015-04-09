@@ -152,12 +152,6 @@
       <trans-unit id="tl_settings.maintenanceMode.1">
         <source>Send a 503 HTTP header and show a maintenance page in the front end.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.bypassCache.0">
-        <source>Bypass the internal cache</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.bypassCache.1">
-        <source>Do not use the internal cache files (e.g. useful when developing extensions).</source>
-      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
       </trans-unit>

@@ -1,4 +1,12 @@
 services:
+    contao.clearer.internal_cache:
+        class: Contao\CoreBundle\Cache\ContaoCacheClearer
+        public: false
+        tags:
+            - { name: kernel.cache_clearer }
+        arguments:
+            - '@filesystem'
+
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         tags:
@@ -71,6 +79,18 @@ services:
     contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
+
+    contao.warmer.internal_cache:
+        class: Contao\CoreBundle\Cache\ContaoCacheWarmer
+        public: false
+        tags:
+            - { name: kernel.cache_warmer }
+        arguments:
+            - '@filesystem'
+            - '@contao.resource_finder'
+            - '@contao.resource_locator'
+            - '%kernel.root_dir%'
+            - '@doctrine.dbal.default_connection'
 
     contao.web_profiler.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector

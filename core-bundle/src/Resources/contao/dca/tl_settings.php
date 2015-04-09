@@ -26,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('useSMTP'),
-		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts,coreOnlyMode,bypassCache,maintenanceMode;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},cacheMode,useAutoItem,doNotRedirectEmpty,folderUrl;{proxy_legend:hide},proxyServerIps,sslProxyDomain;{privacy_legend:hide},privacyAnonymizeIp,privacyAnonymizeGA;{security_legend},allowedTags,displayErrors,logErrors,disableRefererCheck,disableIpCheck;{files_legend:hide},allowedDownload,validImageTypes,editableFiles,templateFiles,maxImageWidth,jpgQuality,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,uploadFields,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{smtp_legend:hide},useSMTP;{cron_legend:hide},disableCron;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout,autologin,lockPeriod;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod;{update_legend:hide},liveUpdateBase'
+		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts,coreOnlyMode,maintenanceMode;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},cacheMode,useAutoItem,doNotRedirectEmpty,folderUrl;{proxy_legend:hide},proxyServerIps,sslProxyDomain;{privacy_legend:hide},privacyAnonymizeIp,privacyAnonymizeGA;{security_legend},allowedTags,displayErrors,logErrors,disableRefererCheck,disableIpCheck;{files_legend:hide},allowedDownload,validImageTypes,editableFiles,templateFiles,maxImageWidth,jpgQuality,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,uploadFields,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{smtp_legend:hide},useSMTP;{cron_legend:hide},disableCron;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout,autologin,lockPeriod;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod;{update_legend:hide},liveUpdateBase'
 	),
 
 	// Subpalettes
@@ -86,11 +86,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['coreOnlyMode'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'save_callback' => array
-			(
-				array('tl_settings', 'changeCoreOnlyMode')
-			)
+			'eval'                    => array('tl_class'=>'w50')
 		),
 		'disableCron' => array
 		(
@@ -221,16 +217,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['maintenanceMode'],
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50')
-		),
-		'bypassCache' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['bypassCache'],
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'save_callback' => array
-			(
-				array('tl_settings', 'purgeInternalCache')
-			)
 		),
 		'displayErrors' => array
 		(
@@ -461,25 +447,6 @@ class tl_settings extends Backend
 {
 
 	/**
-	 * Purge the internal cache when toggling the Contao safe mode
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function changeCoreOnlyMode($varValue)
-	{
-		if ($varValue != Config::get('coreOnlyMode'))
-		{
-			$this->import('Automator');
-			$this->Automator->purgeInternalCache();
-		}
-
-		return $varValue;
-	}
-
-
-	/**
 	 * Remove protected search results if the feature is being disabled
 	 *
 	 * @param mixed $varValue
@@ -546,25 +513,6 @@ class tl_settings extends Backend
 		if ($varValue != '')
 		{
 			$varValue = preg_replace('@https?://@', '', $varValue);
-		}
-
-		return $varValue;
-	}
-
-
-	/**
-	 * Purge the internal caches
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function purgeInternalCache($varValue)
-	{
-		if ($varValue && $varValue !== Config::get('bypassCache'))
-		{
-			$this->import('Automator');
-			$this->Automator->purgeInternalCache();
 		}
 
 		return $varValue;

@@ -16,8 +16,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * Extracts DCA information and cache it
  *
- * The class parses the DCA files and stores various extracts like relations in
- * the system/cache directory. This meta data can then be loaded and used in the
+ * The class parses the DCA files and stores various extracts like relations
+ * in the cache directory. This meta data can then be loaded and used in the
  * application (e.g. the Model classes).
  *
  * Usage:
