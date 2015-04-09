@@ -31,7 +31,7 @@ Using the old paths is deprecated and will no longer work in Contao 5.0.
 
 The `ModuleLoader` class is no longer used and only kept for reasons of
 backwards compatibility. It is deprecated and will be removed in Contao 5.0.
-If you need to obtain a list of installed bundles, use the kernel instead:
+Use the container parameter `kernel.bundles` instead:
 
 ```php
 global $kernel;

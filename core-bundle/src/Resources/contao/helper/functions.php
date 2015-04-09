@@ -458,29 +458,6 @@ function nl2br_pre($str, $xhtml=false)
 
 
 /**
- * Dump variables depending on their type either with var_dump() or print_r()
- */
-function dump()
-{
-	echo "<pre>";
-
-	foreach (func_get_args() as $var)
-	{
-		if (is_array($var) || is_object($var))
-		{
-			print_r($var);
-		}
-		else
-		{
-			var_dump($var);
-		}
-	}
-
-	echo "</pre>";
-}
-
-
-/**
  * Compare two file names using a case insensitive "natural order" algorithm
  *
  * @param string $a

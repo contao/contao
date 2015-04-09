@@ -4,6 +4,12 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### `dump()`
+
+The `dump()` function has been replaced by the Symfony debug bundle. Its output
+will be added to the web profiler.
+
+
 ### `tinymce.css` and `tiny_templates`
 
 The style sheet `files/tinymce.css` and the folder `files/tiny_templates` have
