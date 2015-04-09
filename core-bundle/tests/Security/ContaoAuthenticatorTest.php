@@ -33,7 +33,7 @@ class ContaoAuthenticatorTest extends TestCase
     {
         $authenticator = new ContaoAuthenticator(new ContaoUserProvider());
 
-        $this->assertInstanceOf('Contao\CoreBundle\Security\ContaoAuthenticator', $authenticator);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Security\\ContaoAuthenticator', $authenticator);
     }
 
     /**
@@ -44,7 +44,7 @@ class ContaoAuthenticatorTest extends TestCase
         $authenticator = new ContaoAuthenticator(new ContaoUserProvider());
         $token         = $authenticator->createToken(new Request(), 'frontend');
 
-        $this->assertInstanceOf('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken', $token);
+        $this->assertInstanceOf('Symfony\\Component\\Security\\Core\\Authentication\\Token\\AnonymousToken', $token);
         $this->assertEquals('frontend', $token->getKey());
         $this->assertEquals('anon.', $token->getUsername());
     }
@@ -57,12 +57,12 @@ class ContaoAuthenticatorTest extends TestCase
         $authenticator = new ContaoAuthenticator(new ContaoUserProvider());
 
         $this->assertInstanceOf(
-            'Contao\CoreBundle\Security\Authentication\ContaoToken',
+            'Contao\\CoreBundle\\Security\\Authentication\\ContaoToken',
             $authenticator->authenticateToken(new ContaoToken(FrontendUser::getInstance()), new ContaoUserProvider(), 'frontend')
         );
 
         $this->assertInstanceOf(
-            'Contao\CoreBundle\Security\Authentication\ContaoToken',
+            'Contao\\CoreBundle\\Security\\Authentication\\ContaoToken',
             $authenticator->authenticateToken(new AnonymousToken('frontend', 'anon.'), new ContaoUserProvider(), 'frontend')
         );
 

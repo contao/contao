@@ -27,7 +27,7 @@ class FrontendControllerTest extends TestCase
     {
         $controller = new FrontendController();
 
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\FrontendController', $controller);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Controller\\FrontendController', $controller);
     }
 
     /**
@@ -37,8 +37,8 @@ class FrontendControllerTest extends TestCase
     {
         $controller = new FrontendController();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->indexAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->cronAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->shareAction());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->indexAction());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->cronAction());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->shareAction());
     }
 }

@@ -76,7 +76,7 @@ class ImageTest extends TestCase
      */
     public function testConstruct()
     {
-        $fileMock = $this->getMockBuilder('Contao\File')
+        $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
@@ -96,7 +96,7 @@ class ImageTest extends TestCase
             }
         ));
 
-        $this->assertInstanceOf('Contao\Image', new Image($fileMock));
+        $this->assertInstanceOf('Contao\\Image', new Image($fileMock));
     }
 
     /**
@@ -106,7 +106,7 @@ class ImageTest extends TestCase
      */
     public function testConstructWithNonexistentFile()
     {
-        $fileMock = $this->getMockBuilder('Contao\File')
+        $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
@@ -123,7 +123,7 @@ class ImageTest extends TestCase
      */
     public function testConstructWithInvalidExtension()
     {
-        $fileMock = $this->getMockBuilder('Contao\File')
+        $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
@@ -161,7 +161,7 @@ class ImageTest extends TestCase
      */
     public function testComputeResizeWithoutImportantPart($arguments, $expectedResult)
     {
-        $fileMock = $this->getMockBuilder('Contao\File')
+        $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
@@ -604,7 +604,7 @@ class ImageTest extends TestCase
      */
     public function testComputeResizeWithImportantPart($arguments, $expectedResult)
     {
-        $fileMock = $this->getMockBuilder('Contao\File')
+        $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
@@ -790,7 +790,7 @@ class ImageTest extends TestCase
      */
     public function testSettersAndGetters()
     {
-        $fileMock = $this->getMockBuilder('Contao\File')
+        $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
@@ -876,7 +876,7 @@ class ImageTest extends TestCase
      */
     public function testGetCacheName($arguments, $expectedCacheName)
     {
-        $fileMock = $this->getMockBuilder('Contao\File')
+        $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
@@ -942,7 +942,7 @@ class ImageTest extends TestCase
      */
     public function testSetZoomOutOfBoundsNegative()
     {
-        $fileMock = $this->getMockBuilder('Contao\File')
+        $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
@@ -971,7 +971,7 @@ class ImageTest extends TestCase
      */
     public function testSetZoomOutOfBoundsPositive()
     {
-        $fileMock = $this->getMockBuilder('Contao\File')
+        $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();

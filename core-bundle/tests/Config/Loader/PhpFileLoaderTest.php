@@ -38,7 +38,7 @@ class PhpFileLoaderTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Config\Loader\PhpFileLoader', $this->loader);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Config\\Loader\\PhpFileLoader', $this->loader);
     }
 
     /**

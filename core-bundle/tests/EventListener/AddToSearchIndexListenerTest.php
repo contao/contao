@@ -30,7 +30,7 @@ class AddToSearchIndexListenerTest extends TestCase
     {
         $listener = new AddToSearchIndexListener();
 
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\AddToSearchIndexListener', $listener);
+        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\AddToSearchIndexListener', $listener);
     }
 
     /**
@@ -77,12 +77,12 @@ class AddToSearchIndexListenerTest extends TestCase
      */
     private function mockPostResponseEvent()
     {
-        $kernel   = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
         $request  = new Request();
         $response = new Response();
 
         $event = $this->getMock(
-            'Symfony\Component\HttpKernel\Event\PostResponseEvent',
+            'Symfony\\Component\\HttpKernel\\Event\\PostResponseEvent',
             ['getResponse'],
             [$kernel, $request, $response]
         );

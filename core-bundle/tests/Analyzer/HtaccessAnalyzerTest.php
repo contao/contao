@@ -45,7 +45,7 @@ class HtaccessAnalyzerTest extends TestCase
     {
         $htaccess = new HtaccessAnalyzer($this->file);
 
-        $this->assertInstanceOf('Contao\CoreBundle\Analyzer\HtaccessAnalyzer', $htaccess);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Analyzer\\HtaccessAnalyzer', $htaccess);
     }
 
     /**

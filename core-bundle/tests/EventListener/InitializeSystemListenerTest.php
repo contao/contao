@@ -36,11 +36,11 @@ class InitializeSystemListenerTest extends TestCase
     public function testInstantiation()
     {
         $listener = new InitializeSystemListener(
-            $this->getMock('Symfony\Component\Routing\RouterInterface'),
+            $this->getMock('Symfony\\Component\\Routing\\RouterInterface'),
             $this->getRootDir()
         );
 
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\InitializeSystemListener', $listener);
+        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\InitializeSystemListener', $listener);
     }
 
     /**
@@ -240,10 +240,10 @@ class InitializeSystemListenerTest extends TestCase
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|InitializeSystemListener $listener */
         $listener = $this->getMock(
-            'Contao\CoreBundle\EventListener\InitializeSystemListener',
+            'Contao\\CoreBundle\\EventListener\\InitializeSystemListener',
             ['setConstants', 'boot'],
             [
-                $this->getMock('Symfony\Component\Routing\RouterInterface'),
+                $this->getMock('Symfony\\Component\\Routing\\RouterInterface'),
                 $this->getRootDir(),
             ]
         );
@@ -282,7 +282,7 @@ class InitializeSystemListenerTest extends TestCase
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
-            $this->getMock('Symfony\Component\Routing\RouterInterface'),
+            $this->getMock('Symfony\\Component\\Routing\\RouterInterface'),
             $this->getRootDir() . '/app'
         );
 
@@ -310,10 +310,10 @@ class InitializeSystemListenerTest extends TestCase
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|InitializeSystemListener $listener */
         $listener = $this->getMock(
-            'Contao\CoreBundle\EventListener\InitializeSystemListener',
+            'Contao\\CoreBundle\\EventListener\\InitializeSystemListener',
             ['setConstants', 'boot'],
             [
-                $this->getMock('Symfony\Component\Routing\RouterInterface'),
+                $this->getMock('Symfony\\Component\\Routing\\RouterInterface'),
                 $this->getRootDir(),
             ]
         );
@@ -346,7 +346,7 @@ class InitializeSystemListenerTest extends TestCase
      */
     private function mockRouter($url)
     {
-        $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
+        $router = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');
 
         $router
             ->expects($this->any())
