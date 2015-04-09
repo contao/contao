@@ -138,10 +138,12 @@ class InitializeSystemListener extends ScopeAwareListener
     protected function setConstants($mode, $route)
     {
         // The constants are deprecated and will be removed in version 5.0.
+        $time = microtime(true);
+
         define('TL_MODE', $mode);
-        define('TL_START', microtime(true));
+        define('TL_START', $time);
         define('TL_ROOT', $this->rootDir);
-        define('TL_REFERER_ID', substr(md5(TL_START), 0, 8));
+        define('TL_REFERER_ID', substr(md5($time), 0, 8));
         define('TL_SCRIPT', $route);
 
         // Define the login status constants in the back end (see #4099, #5279)
