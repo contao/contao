@@ -323,7 +323,7 @@ abstract class System
 			else
 			{
 				/** @var SplFileInfo[] $files */
-				$files = $kernel->getContainer()->get('contao.resource_finder')->in('languages/' . $strCreateLang)->files()->name($strName . '.php');
+				$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->files()->name($strName . '.php');
 
 				foreach ($files as $file)
 				{
@@ -333,7 +333,7 @@ abstract class System
 				$loader = new XliffFileLoader($kernel->getRootDir(), true);
 
 				/** @var SplFileInfo[] $files */
-				$files = $kernel->getContainer()->get('contao.resource_finder')->in('languages/' . $strCreateLang)->files()->name($strName . '.xlf');
+				$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->files()->name($strName . '.xlf');
 
 				foreach ($files as $file)
 				{
@@ -390,7 +390,7 @@ abstract class System
 			else
 			{
 				/** @var SplFileInfo[] $files */
-				$files = $kernel->getContainer()->get('contao.resource_finder')->in('languages')->directories()->name($strLanguage);
+				$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('languages')->directories()->name($strLanguage);
 				static::$arrLanguages[$strLanguage] = count($files) > 0;
 			}
 		}

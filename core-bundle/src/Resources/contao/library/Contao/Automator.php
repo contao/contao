@@ -572,7 +572,7 @@ class Automator extends \System
 		$processed = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->in('dca')->files()->name('*.php');
+		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('dca')->files()->name('*.php');
 
 		foreach ($files as $file)
 		{
@@ -638,7 +638,7 @@ class Automator extends \System
 			try
 			{
 				/** @var SplFileInfo[] $files */
-				$files = $kernel->getContainer()->get('contao.resource_finder')->in('languages/' . $strLanguage)->files()->name('/\.(php|xlf)$/');
+				$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('languages/' . $strLanguage)->files()->name('/\.(php|xlf)$/');
 			}
 			catch (\InvalidArgumentException $e)
 			{
@@ -657,7 +657,7 @@ class Automator extends \System
 				$processed[] = $strName;
 
 				/** @var SplFileInfo[] $subfiles */
-				$subfiles = $kernel->getContainer()->get('contao.resource_finder')->in('languages/' . $strLanguage)->files()->name('/^' . $strName . '\.(php|xlf)$/');
+				$subfiles = $kernel->getContainer()->get('contao.resource_finder')->findIn('languages/' . $strLanguage)->files()->name('/^' . $strName . '\.(php|xlf)$/');
 				$dumper->dump(iterator_to_array($subfiles), 'languages/' . $strLanguage . '/' . $strName . '.php', array('type'=>$strLanguage));
 			}
 		}
@@ -678,7 +678,7 @@ class Automator extends \System
 		$processed = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->in('dca')->files()->name('*.php');
+		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('dca')->files()->name('*.php');
 
 		foreach ($files as $file)
 		{

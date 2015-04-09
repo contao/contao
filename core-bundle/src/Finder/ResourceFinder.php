@@ -35,44 +35,48 @@ class ResourceFinder
     }
 
     /**
-     * Returns a new Finder object with the resource paths set.
-     *
-     * @param string $path An optional path
+     * Returns a Finder object with the resource paths set.
      *
      * @return Finder The Finder object
      */
-    public function in($path = null)
+    public function find()
     {
-        $paths = $this->paths;
+        return Finder::create()->depth('== 0')->in($this->paths);
+    }
 
-        if (null !== $path) {
-            $paths = $this->getExistingSubpaths($path);
-        }
-
-        return Finder::create()->depth('== 0')->in($paths);
+    /**
+     * Appends the subpath to the resource paths and returns a Finder object.
+     *
+     * @param string $subpath The subpath
+     *
+     * @return Finder The Finder object
+     */
+    public function findIn($subpath)
+    {
+        return Finder::create()->depth('== 0')->in($this->getExistingSubpaths($subpath));
     }
 
     /**
      * Returns an array of existing subpaths.
      *
-     * @param string $path The path to append
+     * @param string $subpath The path to append
      *
      * @return array The subpaths array
      *
      * @throws \InvalidArgumentException If the subpath does not exist
      */
-    private function getExistingSubpaths($path)
+    private function getExistingSubpaths($subpath)
     {
         $paths = [];
 
-        foreach ($this->paths as $key => $value) {
-            if (is_dir($dir = "$value/$path")) {
+        foreach ($this->paths as $path) {
+            if (is_dir($dir = "$path/$subpath")) {
                 $paths[] = $dir;
             }
         }
 
         if (empty($paths)) {
-            throw new \InvalidArgumentException("The subpath $path does not exists.");
+            throw new \InvalidArgumentException("The subpath $subpath does not exists.");
         }
 
         return $paths;

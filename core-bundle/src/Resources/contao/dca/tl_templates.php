@@ -231,7 +231,7 @@ class tl_templates extends Backend
 		$arrAllowed = trimsplit(',', Config::get('templateFiles'));
 
 		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->in('templates')->directories();
+		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('templates')->directories();
 
 		foreach ($files as $file)
 		{

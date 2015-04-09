@@ -280,7 +280,7 @@ class Installer extends \Controller
 		\Config::set('bypassCache', true);
 
 		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->in('dca')->files()->name('*.php');
+		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('dca')->files()->name('*.php');
 
 		foreach ($files as $file)
 		{
@@ -331,7 +331,7 @@ class Installer extends \Controller
 		$return = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->in('config')->files()->name('database.sql');
+		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('config')->files()->name('database.sql');
 
 		foreach ($files as $file)
 		{

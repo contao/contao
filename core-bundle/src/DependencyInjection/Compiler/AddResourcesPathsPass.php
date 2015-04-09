@@ -27,11 +27,11 @@ class AddResourcesPathsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $container->setParameter('kernel.resources_paths', $this->getResourcesPath($container));
+        $container->setParameter('contao.resources_paths', $this->getResourcesPath($container));
     }
 
     /**
-     * Returns the Contao resources path of a bundle.
+     * Returns the Contao resources paths as array.
      *
      * @param ContainerBuilder $container The container object
      *
