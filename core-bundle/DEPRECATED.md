@@ -20,7 +20,7 @@ Instead of `TL_ROOT` use:
 ```php
 global $kernel;
 
-$rootDir = $kernel->getContainer()->getParameter('kernel.root_dir');
+$rootDir = dirname($kernel->getContainer()->getParameter('kernel.root_dir'));
 ```
 
 Instead of `TL_MODE` to check for `BE` and `FE` use:
