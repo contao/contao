@@ -10,6 +10,7 @@
 
 namespace Contao\Database;
 
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -272,37 +273,30 @@ class Installer extends \Controller
 		global $kernel;
 
 		$return = array();
-		$included = array();
+		$processed = array();
 
 		// Ignore the internal cache
 		$blnBypassCache = \Config::get('bypassCache');
 		\Config::set('bypassCache', true);
 
-		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
+		/** @var SplFileInfo[] $files */
+		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('dca')->files()->name('*.php');
+
+		foreach ($files as $file)
 		{
-			if (!is_dir($strDir))
+			if (in_array($file->getBasename(), $processed))
 			{
 				continue;
 			}
 
-			foreach (scan($strDir) as $strFile)
+			$processed[] = $file->getBasename();
+
+			$strTable = $file->getBasename('.php');
+			$objExtract = \DcaExtractor::getInstance($strTable);
+
+			if ($objExtract->isDbTable())
 			{
-				// Ignore non PHP files and files which have been included before
-				if (substr($strFile, -4) != '.php' || in_array($strFile, $included))
-				{
-					continue;
-				}
-
-				$strTable = substr($strFile, 0, -4);
-				$objExtract = \DcaExtractor::getInstance($strTable);
-
-				if ($objExtract->isDbTable())
-				{
-					$return[$strTable] = $objExtract->getDbInstallerArray();
-				}
-
-				$included[] = $strFile;
+				$return[$strTable] = $objExtract->getDbInstallerArray();
 			}
 		}
 
@@ -333,13 +327,22 @@ class Installer extends \Controller
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
+		try
+		{
+			/** @var SplFileInfo[] $files */
+			$files = $kernel->getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			return array();
+		}
+
 		$table = '';
 		$return = array();
 
-		// Only check the active modules (see #4541)
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/database.sql') as $strFile)
+		foreach ($files as $file)
 		{
-			$data = file($strFile);
+			$data = file($file);
 
 			foreach ($data as $k=>$v)
 			{

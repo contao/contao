@@ -266,7 +266,7 @@ class FrontendTemplate extends \Template
 
 			// Create the cache file
 			$strMd5CacheKey = md5($strCacheKey);
-			$objFile = new \File('system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html');
+			$objFile = new \File('system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html'); // FIXME: system/cache
 			$objFile->write('<?php' . " /* $strCacheKey */ \$expire = $intCache; \$content = '{$this->strContentType}'; \$type = '{$objPage->type}'; ?>\n");
 			$objFile->append($this->minifyHtml($strBuffer), '');
 			$objFile->close();

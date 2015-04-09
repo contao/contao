@@ -60,14 +60,14 @@ class XliffFileLoader extends Loader
      */
     public function supports($resource, $type = null)
     {
-        return is_string($resource) && 'xlf' === pathinfo($resource, PATHINFO_EXTENSION);
+        return 'xlf' === pathinfo($resource, PATHINFO_EXTENSION);
     }
 
     /**
      * Converts an XLIFF file into a PHP language file.
      *
-     * @param string  $name     The name of the XLIFF file
-     * @param string  $language The language code
+     * @param string $name     The name of the XLIFF file
+     * @param string $language The language code
      *
      * @return string The PHP code
      */
@@ -128,13 +128,13 @@ class XliffFileLoader extends Loader
     {
         switch (count($chunks)) {
             case 2:
-                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . "] = " . $this->quoteValue($value) . ";\n";
+                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . '] = ' . $this->quoteValue($value) . ";\n";
 
             case 3:
-                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . "][" . $this->quoteKey($chunks[2]) . "] = " . $this->quoteValue($value) . ";\n";
+                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . '][' . $this->quoteKey($chunks[2]) . '] = ' . $this->quoteValue($value) . ";\n";
 
             case 4:
-                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . "][" . $this->quoteKey($chunks[2]) . "][" . $this->quoteKey($chunks[3]) . "] = " . $this->quoteValue($value) . ";\n";
+                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . '][' . $this->quoteKey($chunks[2]) . '][' . $this->quoteKey($chunks[3]) . '] = ' . $this->quoteValue($value) . ";\n";
         }
 
         throw new \OutOfBoundsException('Cannot load less than 2 or more than 4 levels in XLIFF language files.');

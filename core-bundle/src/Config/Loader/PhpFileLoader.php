@@ -41,7 +41,7 @@ class PhpFileLoader extends Loader
         $code = str_replace(
             [
                 " if (!defined('TL_ROOT')) die('You cannot access this file directly!');",
-                " if (!defined('TL_ROOT')) die('You can not access this file directly!');"
+                " if (!defined('TL_ROOT')) die('You can not access this file directly!');",
             ],
             '',
             $code
@@ -60,6 +60,6 @@ class PhpFileLoader extends Loader
      */
     public function supports($resource, $type = null)
     {
-        return is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION);
+        return 'php' === pathinfo($resource, PATHINFO_EXTENSION);
     }
 }

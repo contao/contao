@@ -257,7 +257,7 @@ class BackendMain extends \Backend
 		// FIXME: remove if the ER2 is no longer supported
 		if (!\Config::get('bypassCache') && $this->User->isAdmin)
 		{
-			$this->Template->needsCacheBuild = ((\Input::get('do') != 'repository_manager' || !isset($_GET['install']) && !isset($_GET['uninstall']) && !isset($_GET['update'])) && !is_dir(TL_ROOT . '/system/cache/sql'));
+			$this->Template->needsCacheBuild = ((\Input::get('do') != 'repository_manager' || !isset($_GET['install']) && !isset($_GET['uninstall']) && !isset($_GET['update'])) && !is_dir(TL_ROOT . '/system/cache/sql')); // FIXME: system/cache
 		}
 
 		// Front end preview links

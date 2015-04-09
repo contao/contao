@@ -140,7 +140,7 @@ class BackendInstall extends \Backend
 		}
 
 		// Purge the internal cache (see #6357)
-		if (is_dir(TL_ROOT . '/system/cache/sql'))
+		if (is_dir(TL_ROOT . '/system/cache/sql')) // FIXME: system/cache
 		{
 			foreach (array('sql') as $dir)
 			{

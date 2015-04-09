@@ -308,29 +308,25 @@ class tl_user_group extends Backend
 		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
 		global $kernel;
 
-		$included = array();
+		$processed = array();
 
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
+		/** @var SplFileInfo[] $files */
+		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('dca')->files()->name('*.php');
+
+		// FIXME: use the cache file if it exists?
+		foreach ($files as $file)
 		{
-			if (!is_dir($strDir))
+			if (in_array($file->getBasename(), $processed))
 			{
 				continue;
 			}
 
-			foreach (scan($strDir) as $strFile)
-			{
-				// Ignore non PHP files and files which have been included before
-				if (substr($strFile, -4) != '.php' || in_array($strFile, $included))
-				{
-					continue;
-				}
+			$processed[] = $file->getBasename();
 
-				$included[] = $strFile;
-				$strTable = substr($strFile, 0, -4);
+			$strTable = $file->getBasename('.php');
 
-				System::loadLanguageFile($strTable);
-				$this->loadDataContainer($strTable);
-			}
+			System::loadLanguageFile($strTable);
+			$this->loadDataContainer($strTable);
 		}
 
 		$arrReturn = array();

@@ -140,7 +140,7 @@ class ModuleSearch extends \Module
 			$arrResult = null;
 			$strChecksum = md5($strKeywords . $strQueryType . $intRootId . $blnFuzzy);
 			$query_starttime = microtime(true);
-			$strCacheFile = 'system/cache/search/' . $strChecksum . '.json';
+			$strCacheFile = 'system/cache/search/' . $strChecksum . '.json'; // FIXME: system/cache
 
 			// Load the cached result
 			if (file_exists(TL_ROOT . '/' . $strCacheFile))

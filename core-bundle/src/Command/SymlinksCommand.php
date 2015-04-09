@@ -94,7 +94,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function symlinkFiles($uploadPath, $rootDir, OutputInterface $output)
     {
-        $finder = $this->findIn('.public', "$rootDir/$uploadPath");
+        $finder = $this->findIn("$rootDir/$uploadPath")->files()->name('.public');
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
@@ -110,7 +110,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function symlinkModules($rootDir, OutputInterface $output)
     {
-        $files = $this->findIn('.htaccess', "$rootDir/system/modules");
+        $files = $this->findIn("$rootDir/system/modules")->files()->name('.htaccess');
 
         /** @var SplFileInfo $file */
         foreach ($files as $file) {
@@ -132,20 +132,17 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function symlinkThemes($rootDir, OutputInterface $output)
     {
-        $themes = $this->container->get('contao.resource_locator')->locate('themes');
+        /** @var SplFileInfo[] $themes */
+        $themes = $this->container->get('contao.resource_finder')->findIn('themes')->directories();
 
         foreach ($themes as $theme) {
-            $path = str_replace("$rootDir/", '', $theme);
+            $path = str_replace("$rootDir/", '', $theme->getPathname());
 
             if (0 === strpos($path, 'system/modules/')) {
                 continue;
             }
 
-            $dirs = $this->findIn('*', $path)->ignoreDotFiles(true)->depth(0)->directories();
-
-            foreach ($dirs as $dir) {
-                $this->symlink("../../$dir", 'system/themes/' . basename($dir), $rootDir, $output);
-            }
+            $this->symlink("../../$path", 'system/themes/' . basename($path), $rootDir, $output);
         }
     }
 
@@ -225,13 +222,12 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     /**
      * Returns a finder instance to find files in the given path.
      *
-     * @param string $file The file name
-     * @param string $path The absolute path
+     * @param string $path The path
      *
-     * @return Finder The finder instance
+     * @return Finder The finder object
      */
-    private function findIn($file, $path)
+    private function findIn($path)
     {
-        return Finder::create()->ignoreDotFiles(false)->files()->name($file)->in($path);
+        return Finder::create()->ignoreDotFiles(false)->in($path);
     }
 }

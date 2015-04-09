@@ -11,11 +11,10 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\CombinedFileLocator;
-use Contao\CoreBundle\Config\FileLocator;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\Environment;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,7 +79,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return Kernel The kernel object
      */
-    private function mockKernel()
+    protected function mockKernel()
     {
         Config::set('bypassCache', true);
         Environment::set('httpAcceptLanguage', []);
@@ -121,19 +120,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->addScope(new Scope('frontend'));
         $container->addScope(new Scope('backend'));
 
-        $locator = new FileLocator([
-            'TestBundle' => $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-            'foobar'     => $this->getRootDir() . '/system/modules/foobar'
-        ]);
-
         $container->set(
-            'contao.resource_locator',
-            $locator
+            'contao.resource_finder',
+            new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
         );
 
         $container->set(
-            'contao.cached_resource_locator',
-            new CombinedFileLocator($this->getCacheDir(), $locator)
+            'contao.resource_locator',
+            new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
         );
 
         $kernel

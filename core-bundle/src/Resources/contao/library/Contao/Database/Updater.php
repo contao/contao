@@ -10,6 +10,7 @@
 
 namespace Contao\Database;
 
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -736,33 +737,20 @@ class Updater extends \Controller
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$arrFiles = array();
+		$processed = array();
 
-		// Parse all modules (see #6058)
-		foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca') as $strDir)
+		/** @var SplFileInfo[] $files */
+		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('dca')->files()->name('*.php');
+
+		foreach ($files as $file)
 		{
-			if (!is_dir($strDir))
+			if (in_array($file->getBasename(), $processed))
 			{
 				continue;
 			}
 
-			foreach (scan($strDir) as $strFile)
-			{
-				// Ignore non PHP files and files which have been included before
-				if (substr($strFile, -4) != '.php' || in_array($strFile, $arrFiles))
-				{
-					continue;
-				}
+			$strTable = $file->getBasename('.php');
 
-				$arrFiles[] = substr($strFile, 0, -4);
-			}
-		}
-
-		$arrFields = array();
-
-		// Find all fileTree fields
-		foreach ($arrFiles as $strTable)
-		{
 			try
 			{
 				$this->loadDataContainer($strTable);
