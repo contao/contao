@@ -671,10 +671,15 @@ abstract class Frontend extends \Controller
 			$strCacheKey = null;
 			$arrLanguage = \Environment::get('httpAcceptLanguage');
 
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
+			$strMappingFile = $kernel->getCacheDir() . '/contao/config/mapping.php';
+
 			// Try to get the cache key from the mapper array
-			if (file_exists(TL_ROOT . '/system/cache/config/mapping.php')) // FIXME: system/cache
+			if (file_exists($strMappingFile))
 			{
-				$arrMapper = include TL_ROOT . '/system/cache/config/mapping.php'; // FIXME: system/cache
+				$arrMapper = include $strMappingFile;
 
 				// Try the language specific keys
 				foreach ($arrLanguage as $strLanguage)
