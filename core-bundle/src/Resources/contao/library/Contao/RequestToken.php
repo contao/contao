@@ -9,6 +9,9 @@
  */
 
 namespace Contao;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 
 /**
@@ -27,49 +30,18 @@ namespace Contao;
  *     }
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since version 4.0, to be removed in version 5.0, use
+ * the Symfony CSRF service via the container instead!
  */
 class RequestToken
 {
-
-	/**
-	 * Object instance (Singleton)
-	 * @var \RequestToken
-	 */
-	protected static $objInstance;
-
-	/**
-	 * Token
-	 * @var string
-	 */
-	protected static $strToken;
-
-
 	/**
 	 * Read the token from the session or generate a new one
 	 */
 	public static function initialize()
 	{
-		static::$strToken = @$_SESSION['REQUEST_TOKEN'];
-
 		// Backwards compatibility
-		if (is_array(static::$strToken))
-		{
-			static::$strToken = null;
-			unset($_SESSION['REQUEST_TOKEN']);
-		}
-
-		// Generate a new token
-		if (static::$strToken == '')
-		{
-			static::$strToken = md5(uniqid(mt_rand(), true));
-			$_SESSION['REQUEST_TOKEN'] = static::$strToken;
-		}
-
-		// Set the REQUEST_TOKEN constant
-		if (!defined('REQUEST_TOKEN'))
-		{
-			define('REQUEST_TOKEN', static::$strToken);
-		}
 	}
 
 
@@ -80,7 +52,16 @@ class RequestToken
 	 */
 	public static function get()
 	{
-		return static::$strToken;
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var CsrfTokenManagerInterface $tokenManager */
+		$tokenManager = $kernel->getContainer()->get('security.csrf.token_manager');
+
+		/** @var CsrfToken $token */
+		$token = $tokenManager->getToken($kernel->getContainer()->getParameter('contao.csrf_token_name'));
+
+		return $token->getValue();
 	}
 
 
@@ -99,12 +80,6 @@ class RequestToken
 			return true;
 		}
 
-		// Validate the token
-		if ($strToken != '' && static::$strToken != '' && $strToken == static::$strToken)
-		{
-			return true;
-		}
-
 		// Check against the whitelist (thanks to Tristan Lins) (see #3164)
 		if (\Config::get('requestTokenWhitelist'))
 		{
@@ -119,43 +94,14 @@ class RequestToken
 			}
 		}
 
-		return false;
-	}
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
+		/** @var CsrfTokenManagerInterface $tokenManager */
+		$tokenManager = $kernel->getContainer()->get('security.csrf.token_manager');
 
-	/**
-	 * Load the token or generate a new one
-	 *
-	 * @deprecated RequestToken is now a static class
-	 */
-	protected function __construct()
-	{
-		static::initialize();
-	}
+		$token = new CsrfToken($kernel->getContainer()->getParameter('contao.csrf_token_name'), $strToken);
 
-
-	/**
-	 * Prevent cloning of the object (Singleton)
-	 *
-	 * @deprecated RequestToken is now a static class
-	 */
-	final public function __clone() {}
-
-
-	/**
-	 * Return the object instance (Singleton)
-	 *
-	 * @return \RequestToken The object instance
-	 *
-	 * @deprecated RequestToken is now a static class
-	 */
-	public static function getInstance()
-	{
-		if (static::$objInstance === null)
-		{
-			static::$objInstance = new static();
-		}
-
-		return static::$objInstance;
+		return $tokenManager->isTokenValid($token);
 	}
 }

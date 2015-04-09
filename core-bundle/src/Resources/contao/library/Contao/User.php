@@ -9,6 +9,8 @@
  */
 
 namespace Contao;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 /**
@@ -253,8 +255,14 @@ abstract class User extends \System
 	 */
 	public function authenticate()
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $session */
+		$session = $kernel->getContainer()->get('session');
+
 		// Check the cookie hash
-		if ($this->strHash != sha1(session_id() . (!\Config::get('disableIpCheck') ? $this->strIp : '') . $this->strCookie))
+		if ($this->strHash != sha1($session->getId() . (!\Config::get('disableIpCheck') ? $this->strIp : '') . $this->strCookie))
 		{
 			return false;
 		}
@@ -273,7 +281,7 @@ abstract class User extends \System
 		$time = time();
 
 		// Validate the session
-		if ($objSession->sessionID != session_id() || (!\Config::get('disableIpCheck') && $objSession->ip != $this->strIp) || $objSession->hash != $this->strHash || ($objSession->tstamp + \Config::get('sessionTimeout')) < $time)
+		if ($objSession->sessionID != $session->getId() || (!\Config::get('disableIpCheck') && $objSession->ip != $this->strIp) || $objSession->hash != $this->strHash || ($objSession->tstamp + \Config::get('sessionTimeout')) < $time)
 		{
 			$this->log('Could not verify the session', __METHOD__, TL_ACCESS);
 
@@ -294,7 +302,7 @@ abstract class User extends \System
 
 		// Update session
 		$this->Database->prepare("UPDATE tl_session SET tstamp=$time WHERE sessionID=?")
-					   ->execute(session_id());
+					   ->execute($session->getId());
 
 		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);
 
@@ -568,10 +576,16 @@ abstract class User extends \System
 	 */
 	protected function generateSession()
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $session */
+		$session = $kernel->getContainer()->get('session');
+
 		$time = time();
 
 		// Generate the cookie hash
-		$this->strHash = sha1(session_id() . (!\Config::get('disableIpCheck') ? $this->strIp : '') . $this->strCookie);
+		$this->strHash = sha1($session->getId() . (!\Config::get('disableIpCheck') ? $this->strIp : '') . $this->strCookie);
 
 		// Clean up old sessions
 		$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
@@ -579,7 +593,7 @@ abstract class User extends \System
 
 		// Save the session in the database
 		$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-					   ->execute($this->intId, $time, $this->strCookie, session_id(), $this->strIp, $this->strHash);
+					   ->execute($this->intId, $time, $this->strCookie, $session->getId(), $this->strIp, $this->strHash);
 
 		// Set the authentication cookie
 		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);
@@ -623,13 +637,13 @@ abstract class User extends \System
 		$this->setCookie($this->strCookie, $this->strHash, ($time - 86400), null, null, false, true);
 		$this->strHash = '';
 
-		// Destroy the current session
-		session_destroy();
-		session_write_close();
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-		// Reset the session cookie
-		$params = session_get_cookie_params();
-		$this->setCookie(session_name(), session_id(), ($time - 86400), $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+		/** @var SessionInterface $session */
+		$session = $kernel->getContainer()->get('session');
+
+		$session->invalidate();
 
 		// Add a log entry
 		if ($this->findBy('id', $intUserid) != false)

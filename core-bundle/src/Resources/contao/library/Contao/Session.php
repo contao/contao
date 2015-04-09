@@ -9,6 +9,9 @@
  */
 
 namespace Contao;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 /**
@@ -24,6 +27,9 @@ namespace Contao;
  *     echo $session->get('foo');
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since version 4.0, to be removed in version 5.0, use
+ * the Symfony Session via the container instead!
  */
 class Session
 {
@@ -35,53 +41,19 @@ class Session
 	protected static $objInstance;
 
 	/**
-	 * Session data
-	 * @var array
+	 * Symfony session object
+	 * @var SessionInterface
 	 */
-	protected $arrSession;
-
-
+	private $session;
+    
 	/**
 	 * Get the session data
 	 */
 	protected function __construct()
 	{
-		switch (TL_MODE)
-		{
-			case 'BE':
-				$this->arrSession = (array) $_SESSION['BE_DATA'];
-				break;
-
-			case 'FE':
-				$this->arrSession = (array) $_SESSION['FE_DATA'];
-				break;
-
-			default:
-				$this->arrSession = (array) $_SESSION;
-				break;
-		}
-	}
-
-
-	/**
-	 * Save the session data
-	 */
-	public function __destruct()
-	{
-		switch (TL_MODE)
-		{
-			case 'BE':
-				$_SESSION['BE_DATA'] = $this->arrSession;
-				break;
-
-			case 'FE':
-				$_SESSION['FE_DATA'] = $this->arrSession;
-				break;
-
-			default:
-				$_SESSION = $this->arrSession;
-				break;
-		}
+		/** @var KernelInterface $kernel */
+		global $kernel;
+		$this->session = $kernel->getContainer()->get('session');
 	}
 
 
@@ -116,7 +88,10 @@ class Session
 	 */
 	public function get($strKey)
 	{
-		return $this->arrSession[$strKey];
+		/** @var AttributeBagInterface $bag */
+		$bag = $this->session->getBag($this->getSessionBagKey());
+
+		return $bag->get($strKey);
 	}
 
 
@@ -128,7 +103,10 @@ class Session
 	 */
 	public function set($strKey, $varValue)
 	{
-		$this->arrSession[$strKey] = $varValue;
+		/** @var AttributeBagInterface $bag */
+		$bag = $this->session->getBag($this->getSessionBagKey());
+
+		$bag->set($strKey, $varValue);
 	}
 
 
@@ -139,7 +117,10 @@ class Session
 	 */
 	public function remove($strKey)
 	{
-		unset($this->arrSession[$strKey]);
+		/** @var AttributeBagInterface $bag */
+		$bag = $this->session->getBag($this->getSessionBagKey());
+
+		return $bag->remove($strKey);
 	}
 
 
@@ -150,7 +131,10 @@ class Session
 	 */
 	public function getData()
 	{
-		return (array) $this->arrSession;
+		/** @var AttributeBagInterface $bag */
+		$bag = $this->session->getBag($this->getSessionBagKey());
+
+		return $bag->all();
 	}
 
 
@@ -168,7 +152,10 @@ class Session
 			throw new \Exception('Array required to set session data');
 		}
 
-		$this->arrSession = $arrData;
+		/** @var AttributeBagInterface $bag */
+		$bag = $this->session->getBag($this->getSessionBagKey());
+
+		$bag->replace($arrData);
 	}
 
 
@@ -191,6 +178,32 @@ class Session
 			throw new \Exception('Array or object required to append session data');
 		}
 
-		$this->arrSession = array_merge($this->arrSession, $varData);
+		/** @var AttributeBagInterface $bag */
+		$bag = $this->session->getBag($this->getSessionBagKey());
+
+		foreach ($varData as $k => $v)
+		{
+			$bag->set($k, $v);
+		}
+	}
+
+	/**
+	 * Gets the correct session bag key depending on the Contao environment
+	 *
+	 * @return string
+	 */
+	private function getSessionBagKey()
+	{
+		switch (TL_MODE)
+		{
+			case 'BE':
+				return 'contao_backend';
+
+			case 'FE':
+				return 'contao_frontend';
+
+			default:
+				return 'attributes';
+		}
 	}
 }

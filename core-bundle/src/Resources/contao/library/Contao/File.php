@@ -9,6 +9,8 @@
  */
 
 namespace Contao;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 
 /**
@@ -686,32 +688,23 @@ class File extends \System
 	 */
 	public function sendToBrowser($filename=null)
 	{
-		// Make sure no output buffer is active
-		// @see http://ch2.php.net/manual/en/function.fpassthru.php#74080
-		while (@ob_end_clean());
+		$response = new BinaryFileResponse(TL_ROOT . '/' . $this->strFile);
 
-		// Prevent session locking (see #2804)
-		session_write_close();
+		$response->setContentDisposition
+		(
+			ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+			$filename,
+			$this->basename
+		);
 
-		// Disable zlib.output_compression (see #6717)
-		ini_set('zlib.output_compression', 'Off');
+		$response->headers->addCacheControlDirective('must-revalidate');
+		$response->headers->addCacheControlDirective('post-check', 0);
+		$response->headers->addCacheControlDirective('pre-check', 0);
 
-		// Open the "save as …" dialogue
-		header('Content-Type: ' . $this->mime);
-		header('Content-Transfer-Encoding: binary');
-		header('Content-Disposition: attachment; filename="' . ($filename ?: $this->basename) . '"');
-		header('Content-Length: ' . $this->filesize);
-		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-		header('Pragma: public');
-		header('Expires: 0');
-		header('Connection: close');
+		$response->headers->set('Connection', 'close');
 
-		// Output the file
-		$resFile = fopen(TL_ROOT . '/' . $this->strFile, 'rb');
-		fpassthru($resFile);
-		fclose($resFile);
-
-		// Stop the script
+		// FIXME: Throw a ResponseException here
+		$response->send();
 		exit;
 	}
 

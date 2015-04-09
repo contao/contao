@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
+use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,7 +58,15 @@ class AddToSearchIndexListenerTest extends TestCase
      */
     public function testWithContaoFramework()
     {
-        $this->bootContaoFramework();
+        $listener = new InitializeSystemListener(
+            $this->mockRouter('/index.html'),
+            $this->mockTokenManager(),
+            $this->mockSession(),
+            $this->getRootDir() . '/app',
+            'contao_csrf_token'
+        );
+
+        $this->bootContaoFramework($listener);
 
         $listener = new AddToSearchIndexListener();
         $event    = $this->mockPostResponseEvent();

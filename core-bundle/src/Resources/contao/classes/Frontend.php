@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -491,7 +492,13 @@ abstract class Frontend extends \Controller
 	 */
 	protected function getLoginStatus($strCookie)
 	{
-		$hash = sha1(session_id() . (!\Config::get('disableIpCheck') ? \Environment::get('ip') : '') . $strCookie);
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $session */
+		$session = $kernel->getContainer()->get('session');
+
+		$hash = sha1($session->getId() . (!\Config::get('disableIpCheck') ? \Environment::get('ip') : '') . $strCookie);
 
 		// Validate the cookie hash
 		if (\Input::cookie($strCookie) == $hash)
@@ -500,7 +507,7 @@ abstract class Frontend extends \Controller
 			$objSession = \SessionModel::findByHashAndName($hash, $strCookie);
 
 			// Validate the session ID and timeout
-			if ($objSession !== null && $objSession->sessionID == session_id() && (\Config::get('disableIpCheck') || $objSession->ip == \Environment::get('ip')) && ($objSession->tstamp + \Config::get('sessionTimeout')) > time())
+			if ($objSession !== null && $objSession->sessionID == $session->getId() && (\Config::get('disableIpCheck') || $objSession->ip == \Environment::get('ip')) && ($objSession->tstamp + \Config::get('sessionTimeout')) > time())
 			{
 				// Disable the cache if a back end user is logged in
 				if (TL_MODE == 'FE' && $strCookie == 'BE_USER_AUTH')
