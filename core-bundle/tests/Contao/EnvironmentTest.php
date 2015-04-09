@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Test\Contao;
 
 use Contao\CoreBundle\Test\TestCase;
 use Contao\Environment;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Tests the Environment class.
@@ -141,6 +142,11 @@ class EnvironmentTest extends TestCase
      */
     protected function runTests()
     {
+        /** @var Kernel $kernel */
+        global $kernel;
+
+        $kernel = $this->mockKernel();
+
         $agent = Environment::get('agent');
 
         $this->assertEquals('mac', $agent->os);
