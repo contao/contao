@@ -75,7 +75,7 @@ class FrontendLoader extends Loader
     }
 
     /**
-     * Adds the frontend route which is language-aware.
+     * Adds the frontend route, which is language-aware.
      *
      * @param RouteCollection $routes   A collection of routes
      * @param array           $defaults Default parameters for the route
@@ -106,7 +106,7 @@ class FrontendLoader extends Loader
     }
 
     /**
-     * Adds a route to redirect a user to the installation root.
+     * Adds a route to redirect a user to the empty domain.
      *
      * @param RouteCollection $routes   A collection of routes
      * @param array           $defaults Default parameters for the route
@@ -117,18 +117,15 @@ class FrontendLoader extends Loader
     }
 
     /**
-     * Adds a catch-all route to redirect all request to the Contao frontend controller.
+     * Adds a catch-all route to redirect all request to the Contao front end controller.
      *
      * @param RouteCollection $routes   A collection of routes
      * @param array           $defaults Default parameters for the route
      */
     private function addCatchAllRoute(RouteCollection $routes, array $defaults)
     {
-        $pattern = '/{_url_fragment}';
-        $require = ['_url_fragment' => '.*'];
-
         $defaults['_url_fragment'] = '';
 
-        $routes->add('contao_catch_all', new Route($pattern, $defaults, $require));
+        $routes->add('contao_catch_all', new Route('/{_url_fragment}', $defaults, ['_url_fragment' => '.*']));
     }
 }
