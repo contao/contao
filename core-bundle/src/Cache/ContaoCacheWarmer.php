@@ -275,8 +275,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             WHERE type='root'
         ";
 
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+
         $languages = [];
-        $statement = $this->connection->query($query);
 
         while ($language = $statement->fetch(\PDO::FETCH_OBJ)) {
             if ('' === $language->language) {
