@@ -148,16 +148,11 @@ class Database
 
 		$arrDefaultConfig = array
 		(
-			'dbDriver'   => \Config::get('dbDriver'),
 			'dbHost'     => \Config::get('dbHost'),
+			'dbPort'     => \Config::get('dbPort'),
 			'dbUser'     => \Config::get('dbUser'),
 			'dbPass'     => \Config::get('dbPass'),
-			'dbDatabase' => \Config::get('dbDatabase'),
-			'dbPconnect' => \Config::get('dbPconnect'),
-			'dbCharset'  => \Config::get('dbCharset'),
-			'dbPort'     => \Config::get('dbPort'),
-			'dbSocket'   => \Config::get('dbSocket'),
-			'dbSqlMode'  => \Config::get('dbSqlMode')
+			'dbDatabase' => \Config::get('dbDatabase')
 		);
 
 		if (is_array($arrCustomConfig))
