@@ -297,9 +297,7 @@ class InitializeSystemListener extends ScopeAwareListener
             }
         }
 
-        if ($this->session->has('TL_LANGUAGE')) {
-            $GLOBALS['TL_LANGUAGE'] = $this->session->get('TL_LANGUAGE');
-        }
+        $GLOBALS['TL_LANGUAGE'] = $this->session->get('TL_LANGUAGE');
     }
 
     /**
