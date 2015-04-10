@@ -10,6 +10,7 @@
     <testsuites>
         <testsuite name="Contao Core Bundle Test Suite">
             <directory>./tests</directory>
+            <exclude>./tests/Fixtures</exclude>
         </testsuite>
     </testsuites>
 
