@@ -179,7 +179,7 @@ class InitializeSystemListener extends ScopeAwareListener
 
         $this->setRelativePath($request ? $request->getBasePath() : '');
         $this->initializeLegacySessionAccess();
-        $this->setDefaultLanguage();
+        $this->setDefaultLanguage($request);
 
         // Fully load the configuration
         $objConfig = Config::getInstance();
@@ -282,22 +282,26 @@ class InitializeSystemListener extends ScopeAwareListener
 
     /**
      * Sets the default language.
+     *
+     * @param Request $request
      */
-    private function setDefaultLanguage()
+    private function setDefaultLanguage(Request $request = null)
     {
-        if (!isset($_SESSION['TL_LANGUAGE'])) {
-            $langs = Environment::get('httpAcceptLanguage');
+        if (!$this->session->has('TL_LANGUAGE')) {
+            $langs = null !== $request ? $request->getLanguages() : [];
             array_push($langs, 'en'); // see #6533
 
             foreach ($langs as $lang) {
                 if (is_dir(__DIR__ . '/../../src/Resources/contao/languages/' . str_replace('-', '_', $lang))) {
-                    $_SESSION['TL_LANGUAGE'] = $lang;
+                    $this->session->set('TL_LANGUAGE', $lang);
                     break;
                 }
             }
         }
 
-        $GLOBALS['TL_LANGUAGE'] = $_SESSION['TL_LANGUAGE'];
+        if ($this->session->has('TL_LANGUAGE')) {
+            $GLOBALS['TL_LANGUAGE'] = $this->session->get('TL_LANGUAGE');
+        }
     }
 
     /**
