@@ -78,7 +78,6 @@ services:
         class: Contao\CoreBundle\Routing\FrontendLoader
         arguments:
             - "%contao.url_suffix%"
-            - "%locale%"
             - "%contao.prepend_locale%"
         tags:
             - { name: routing.loader }

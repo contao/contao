@@ -30,7 +30,7 @@ class FrontendLoader extends Loader
     /**
      * @var string
      */
-    private $defaultLocale;
+    private $defaultLocale = 'en';
 
     /**
      * @var bool
@@ -44,10 +44,9 @@ class FrontendLoader extends Loader
      * @param string $defaultLocale The default locale
      * @param bool   $prependLocale Prepend the locale
      */
-    public function __construct($format, $defaultLocale, $prependLocale)
+    public function __construct($format, $prependLocale)
     {
         $this->format        = isset($format[2]) ? substr($format, 1) : '';
-        $this->defaultLocale = $defaultLocale;
         $this->prependLocale = $prependLocale;
     }
 
