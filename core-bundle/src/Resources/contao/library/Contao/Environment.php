@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Reads the environment variables
@@ -367,38 +369,13 @@ class Environment
 	 */
 	protected static function ip()
 	{
-		// No X-Forwarded-For IP
-		if (empty($_SERVER['HTTP_X_FORWARDED_FOR']) || !preg_match('/^[A-Fa-f0-9, \.\:]+$/', $_SERVER['HTTP_X_FORWARDED_FOR']))
-		{
-			return substr($_SERVER['REMOTE_ADDR'], 0, 64);
-		}
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-		$strXip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		$arrTrusted = array_map('trim', explode(',', \Config::get('proxyServerIps')));
+		/** @var Request $currentRequest */
+		$currentRequest = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
 
-		// Generate an array of X-Forwarded-For IPs
-		if (strpos($strXip, ',') !== false)
-		{
-			$arrIps = array_map('trim', explode(',', $strXip));
-		}
-		else
-		{
-			$arrIps = array($strXip);
-		}
-
-		$arrIps = array_reverse($arrIps);
-
-		// Return the first untrusted IP address (see #5830)
-		foreach ($arrIps as $strIp)
-		{
-			if (!in_array($strIp, $arrTrusted))
-			{
-				return substr($strIp, 0, 64);
-			}
-		}
-
-		// If all X-Forward-For IPs are trusted, return the remote address
-		return substr($_SERVER['REMOTE_ADDR'], 0, 64);
+		return $currentRequest->getClientIp();
 	}
 
 
