@@ -74,6 +74,9 @@ abstract class Database
 	 * @param array $arrConfig A configuration array
 	 *
 	 * @throws \Exception If a connection cannot be established
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the Doctrine connection from Symfony container.
 	 */
 	protected function __construct(array $arrConfig)
 	{
@@ -133,6 +136,9 @@ abstract class Database
 	 * @param array $arrCustom A configuration array
 	 *
 	 * @return \Database The Database object
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the Doctrine connection from Symfony container.
 	 */
 	public static function getInstance(array $arrCustom=null)
 	{
@@ -152,7 +158,13 @@ abstract class Database
 
 		if (is_array($arrCustom))
 		{
-			$arrConfig = array_merge($arrConfig, $arrCustom);
+            $arrConfig = array_merge(
+                $arrConfig,
+                array_merge(
+                    $arrCustom,
+                    array('isCustomConfig' => true)
+                )
+            );
 		}
 
 		// Sort the array before generating the key
