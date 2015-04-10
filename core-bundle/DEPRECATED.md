@@ -15,7 +15,7 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 The constants `TL_ROOT`, `TL_MODE`, `TL_START` and `TL_SCRIPT` have been
 deprecated and will be removed in Contao 5.0.
 
-Instead of `TL_ROOT` use:
+You can use the `kernel.root_dir` instead of `TL_ROOT`:
 
 ```php
 global $kernel;
@@ -23,42 +23,36 @@ global $kernel;
 $rootDir = dirname($kernel->getContainer()->getParameter('kernel.root_dir'));
 ```
 
-Instead of `TL_MODE` to check for `BE` and `FE` use:
+You can check the container scope instead of using `TL_MODE`:
 
 ```php
 global $kernel;
 
-$isFE = $kernel->getContainer()->isScopeActive('frontend');
-$isBE = $kernel->getContainer()->isScopeActive('backend');
+$isBackEnd  = $kernel->getContainer()->isScopeActive('backend');
+$isFrontEnd = $kernel->getContainer()->isScopeActive('frontend');
 ```
 
-Note: You can also extend the `ScopeAwareListener` in your own event listeners.
+You can use the kernel start time instead of `TL_START:
 
-Instead of `TL_START` use:
 ```php
 global $kernel;
 
 $startTime = $kernel->getStartTime();
 ```
 
-Note: This will only work if Symfony is in debug mode (`kernel.debug`).
-
-Instead of `TL_SCRIPT` use the Symfony routing component to generate proper URLs.
-To see the Contao routes, type `$ ./app/console router:debug` on your CLI.
-
-If you used it to check where you currently are like that
-
-```php
-if (TL_SCRIPT == 'contao/main.php') {}
-```
-
-you should now go for something like
+You can use the request stack to get the route instead of using `TL_SCRIPT`:
 
 ```php
 global $kernel;
 
-if ('contao_backend_main' === $kernel->getContainer()->get('request_stack')->getCurrentRequest()->get('_route')) {}
+$route = $kernel->getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
+
+if ('contao_backend_main' === $route) {
+    // Do something
+}
 ```
+
+Type `$ ./app/console router:debug` on the console to see all available routes.
 
 
 ### PHP entry points
