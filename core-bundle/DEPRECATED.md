@@ -12,8 +12,8 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 
 ### Constants
 
-The constants `TL_ROOT`, `TL_MODE`, `TL_START` and `TL_SCRIPT` have been
-deprecated and will be removed in Contao 5.0.
+The constants `TL_ROOT`, `TL_MODE`, `TL_START`, `TL_SCRIPT`  and `TL_REFERER_ID`
+have been deprecated and will be removed in Contao 5.0.
 
 You can use the `kernel.root_dir` instead of `TL_ROOT`:
 
@@ -53,6 +53,16 @@ if ('contao_backend_main' === $route) {
 ```
 
 Type `$ ./app/console router:debug` on the console to see all available routes.
+
+You can use the the request attribute `contao_referer_id` instead of
+using `TL_REFERER_ID`:
+
+```php
+global $kernel;
+
+$refererId = $kernel->getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+
+```
 
 
 ### PHP entry points
