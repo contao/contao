@@ -435,7 +435,6 @@ class Database
 			$strQuery .= " AND id!=?";
 		}
 
-		// FIXME: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens
 		$objUnique = $this->prepare($strQuery)
 						  ->limit(1)
 						  ->execute($varValue, $intId);
