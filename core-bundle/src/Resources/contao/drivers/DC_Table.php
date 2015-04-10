@@ -3823,7 +3823,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 
 	/**
- 	 * Show header of the parent table and list all records of the current table
+	 * Show header of the parent table and list all records of the current table
 	 *
 	 * @return string
 	 */

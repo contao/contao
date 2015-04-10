@@ -165,9 +165,9 @@ class Database
 		$strKey = md5(implode('', $arrConfig));
 
 		if (!isset(static::$arrInstances[$strKey]))
- 		{
+		{
 			static::$arrInstances[$strKey] = new static($arrConfig);
- 		}
+		}
 
 		return static::$arrInstances[$strKey];
 	}
