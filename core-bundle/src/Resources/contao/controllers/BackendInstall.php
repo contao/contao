@@ -117,35 +117,6 @@ class BackendInstall extends \Backend
 			$this->outputAndExit();
 		}
 
-		// Save the encryption key
-		// FIXME: remove once the kernel secret is used instead
-		if (\Input::post('FORM_SUBMIT') == 'tl_encryption')
-		{
-			\Config::persist('encryptionKey', \Input::post('key'));
-			$this->reload();
-		}
-
-		// Autogenerate an encryption key
-		// FIXME: remove once the kernel secret is used instead
-		if (\Config::get('encryptionKey') == '')
-		{
-			$strKey = md5(uniqid(mt_rand(), true));
-
-			\Config::set('encryptionKey', $strKey);
-			\Config::persist('encryptionKey', $strKey);
-		}
-
-		// FIXME: remove once the kernel secret is used instead
-		$this->Template->encryptionKey = \Config::get('encryptionKey');
-
-		// Check the minimum length of the encryption key
-		// FIXME: remove once the kernel secret is used instead
-		if (utf8_strlen(\Config::get('encryptionKey')) < 12)
-		{
-			$this->Template->encryptionLength = true;
-			$this->outputAndExit();
-		}
-
 		// Check the database connection
 		$this->checkDatabaseConnection();
 
