@@ -354,17 +354,6 @@ class Statement
 
 
 	/**
-	 * Debug a query
-	 *
-	 * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0.
-	 */
-	protected function debugQuery()
-	{
-		return;
-	}
-
-
-	/**
 	 * Explain the current query
 	 *
 	 * @return string The explanation string
