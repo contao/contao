@@ -107,68 +107,6 @@ class BackendUser extends \User
 
 		$this->strIp = \Environment::get('ip');
 		$this->strHash = \Input::cookie($this->strCookie);
-
-		register_shutdown_function(array($this, 'storeSession'));
-	}
-
-
-	/**
-	 * Set the current referer and save the session
-	 */
-	public function storeSession()
-	{
-		$session = $this->Session->getData();
-
-		if (!isset($_GET['act']) && !isset($_GET['key']) && !isset($_GET['token']) && !isset($_GET['state']) && \Input::get('do') != 'feRedirect' && !\Environment::get('isAjaxRequest'))
-		{
-			$key = null;
-
-			list($path) = explode('?', \Environment::get('request'), 2);
-
-			if (substr($path, -7) == '/contao')
-			{
-				$key = \Input::get('popup') ? 'popupReferer' : 'referer';
-			}
-
-			if ($key !== null)
-			{
-				if (!is_array($session[$key]) || !is_array($session[$key][TL_REFERER_ID]))
-				{
-					$session[$key][TL_REFERER_ID]['last'] = '';
-				}
-
-				while (count($session[$key]) >= 25)
-				{
-					array_shift($session[$key]);
-				}
-
-				$ref = \Input::get('ref');
-
-				if ($ref != '' && isset($session[$key][$ref]))
-				{
-					if (!isset($session[$key][TL_REFERER_ID]))
-					{
-						$session[$key][TL_REFERER_ID] = array();
-					}
-
-					$session[$key][TL_REFERER_ID] = array_merge($session[$key][TL_REFERER_ID], $session[$key][$ref]);
-					$session[$key][TL_REFERER_ID]['last'] = $session[$key][$ref]['current'];
-				}
-				elseif (count($session[$key]) > 1)
-				{
-					$session[$key][TL_REFERER_ID] = end($session[$key]);
-				}
-
-				$session[$key][TL_REFERER_ID]['current'] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
-			}
-		}
-
-		// Store the session data
-		if ($this->intId != '')
-		{
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET session=? WHERE id=?")
-						   ->execute(serialize($session), $this->intId);
-		}
 	}
 
 
@@ -470,16 +408,6 @@ class BackendUser extends \User
 					}
 				}
 			}
-		}
-
-		// Restore session
-		if (is_array($this->session))
-		{
-			$this->Session->setData($this->session);
-		}
-		else
-		{
-			$this->session = array();
 		}
 
 		// Make sure pagemounts and filemounts are set!
