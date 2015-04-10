@@ -12,6 +12,7 @@ namespace Contao;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 
+
 /**
  * Encrypts and decrypts data
  *
@@ -77,8 +78,7 @@ class Encryption
 			/** @var KernelInterface $kernel */
 			global $kernel;
 
-			$container = $kernel->getContainer();
-			$strKey = $container->getParameter('framework.secret');
+			$strKey = $kernel->getContainer()->getParameter('framework.secret');
 		}
 
 		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size(static::$resTd), MCRYPT_RAND);
@@ -137,8 +137,7 @@ class Encryption
 			/** @var KernelInterface $kernel */
 			global $kernel;
 
-			$container = $kernel->getContainer();
-			$strKey = $container->getParameter('framework.secret');
+			$strKey = $kernel->getContainer()->getParameter('framework.secret');
 		}
 
 		mcrypt_generic_init(static::$resTd, md5($strKey), $iv);
@@ -169,9 +168,7 @@ class Encryption
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$container = $kernel->getContainer();
-
-		if ($container->getParameter('framework.secret') == '')
+		if ($kernel->getContainer()->getParameter('framework.secret') == '')
 		{
 			throw new \Exception('Encryption key not set');
 		}

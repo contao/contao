@@ -915,385 +915,355 @@ Library.
         </fieldset>
 
         <?php if (!$this->setPassword): ?>
-          <fieldset class="tl_box collapsed">
-            <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['keyCreate'] ?></legend>
+          <fieldset class="tl_box<?php if ($this->dbConnection): ?> collapsed<?php endif; ?>">
+            <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['dbCheck'] ?></legend>
             <div>
-              <h3><?= $GLOBALS['TL_LANG']['tl_install']['encryption'][0] ?></h3>
-              <?php if ($this->encryption): ?>
-                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['keyError'] ?></p>
-              <?php elseif ($this->encryptionLength): ?>
-                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['keyLength'] ?></p>
+              <h3><?= $GLOBALS['TL_LANG']['tl_install']['database'][0] ?></h3>
+              <?php if ($this->dbConnection): ?>
+                <p class="tl_confirm"><?= $GLOBALS['TL_LANG']['tl_install']['dbConfirm'] ?></p>
               <?php else: ?>
-                <p class="tl_confirm"><?= $GLOBALS['TL_LANG']['tl_install']['keyConfirm'] ?></p>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['dbError'] ?></p>
               <?php endif; ?>
-              <p><?= $GLOBALS['TL_LANG']['tl_install']['encryption'][1] ?></p>
-              <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                <div class="tl_formbody">
-                  <input type="hidden" name="FORM_SUBMIT" value="tl_encryption">
-                  <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                  <h4><?= $GLOBALS['TL_LANG']['tl_install']['keyCreate'] ?></h4>
-                  <input type="text" name="key" id="key" class="tl_text" value="<?= $this->encryptionKey ?>">
-                </div>
-                <div class="tl_formbody_submit">
-                  <div class="tl_submit_container">
-                    <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['keySave'] ?>" onclick="Backend.getScrollOffset()">
-                  </div>
-                </div>
-              </form>
+              <p><?= $GLOBALS['TL_LANG']['tl_install']['database'][1] ?></p>
             </div>
           </fieldset>
 
-          <?php if (!$this->encryption && !$this->encryptionLength): ?>
-            <fieldset class="tl_box<?php if ($this->dbConnection): ?> collapsed<?php endif; ?>">
-              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['dbCheck'] ?></legend>
+          <?php if ($this->is28Update): ?>
+            <fieldset class="tl_box<?php if (!$this->is28Update): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
               <div>
-                <h3><?= $GLOBALS['TL_LANG']['tl_install']['database'][0] ?></h3>
-                <?php if ($this->dbConnection): ?>
-                  <p class="tl_confirm"><?= $GLOBALS['TL_LANG']['tl_install']['dbConfirm'] ?></p>
-                <?php else: ?>
-                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['dbError'] ?></p>
-                <?php endif; ?>
-                <p><?= $GLOBALS['TL_LANG']['tl_install']['database'][1] ?></p>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
+                <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '2.8', '2.8') ?></p>
+                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                  <div class="tl_formbody_submit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_28update">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.8') ?>" onclick="Backend.getScrollOffset()">
+                    </div>
+                  </div>
+                </form>
               </div>
             </fieldset>
 
-            <?php if ($this->is28Update): ?>
-              <fieldset class="tl_box<?php if (!$this->is28Update): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
-                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '2.8', '2.8') ?></p>
+          <?php elseif ($this->is29Update): ?>
+            <fieldset class="tl_box<?php if (!$this->is29Update): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
+                <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '2.9', '2.9') ?></p>
+                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                  <div class="tl_formbody_submit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_29update">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.9') ?>" onclick="Backend.getScrollOffset()">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
+
+          <?php elseif ($this->is292Update): ?>
+            <fieldset class="tl_box<?php if (!$this->is292Update): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
+                <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '2.9.2', '2.9.2') ?></p>
+                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                  <div class="tl_formbody_submit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_292update">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.9.2') ?>" onclick="Backend.getScrollOffset();">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
+
+          <?php elseif ($this->is210Update): ?>
+            <fieldset class="tl_box<?php if (!$this->is210Update): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
+                <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '2.10', '2.10') ?></p>
+                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                  <div class="tl_formbody_submit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_210update">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.10') ?>" onclick="Backend.getScrollOffset()">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
+
+          <?php elseif ($this->is30Update): ?>
+            <fieldset class="tl_box<?php if (!$this->is30Update): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
+                <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '3.0', '3.0') ?></p>
+                <?php if ($this->filesWarning): ?>
+                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['filesRenamed'] ?></p>
+                  <p><?= $this->filesWarning ?></p>
+                <?php else: ?>
                   <form action="<?= $this->action ?>" class="tl_install_form" method="post">
                     <div class="tl_formbody_submit">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_28update">
+                      <input type="hidden" name="FORM_SUBMIT" value="tl_30update">
                       <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                       <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.8') ?>" onclick="Backend.getScrollOffset()">
+                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrunStep'], '3.0', $this->step) ?>" onclick="Backend.getScrollOffset()">
                       </div>
                     </div>
                   </form>
-                </div>
-              </fieldset>
+                <?php endif; ?>
+              </div>
+            </fieldset>
 
-            <?php elseif ($this->is29Update): ?>
-              <fieldset class="tl_box<?php if (!$this->is29Update): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+          <?php elseif ($this->is31Update): ?>
+            <fieldset class="tl_box<?php if (!$this->is31Update): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
+                <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '3.1', '3.1') ?></p>
+                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                  <div class="tl_formbody_submit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_31update">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.1') ?>" onclick="Backend.getScrollOffset()">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
+
+          <?php elseif ($this->is32Update): ?>
+            <fieldset class="tl_box<?php if (!$this->is32Update): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
+                <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '3.2', '3.2') ?></p>
+                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                  <div class="tl_formbody_submit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_32update">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.2') ?>" onclick="Backend.getScrollOffset()">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
+
+          <?php elseif ($this->is33Update): ?>
+            <fieldset class="tl_box<?php if (!$this->is33Update): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
+                <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '3.3', '3.3') ?></p>
+                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                  <div class="tl_formbody_submit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_33update">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.3') ?>" onclick="Backend.getScrollOffset()">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
+
+          <?php elseif ($this->is35Update): ?>
+            <fieldset class="tl_box<?php if (!$this->is35Update): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
+                <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '3.5', '3.5') ?></p>
+                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                  <div class="tl_formbody_submit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_35update">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.5') ?>" onclick="Backend.getScrollOffset()">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
+
+          <?php elseif ($this->is40Update): ?>
+            <fieldset class="tl_box<?php if (!$this->is40Update): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
+                <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '4.0', '4.0') ?></p>
+                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                  <div class="tl_formbody_submit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_40update">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '4.0') ?>" onclick="Backend.getScrollOffset()">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
+
+          <?php elseif ($this->dbConnection): ?>
+            <fieldset class="tl_box collapsed">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['collation'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['collation'][0] ?></h3>
+                <p class="tl_info"><?= $GLOBALS['TL_LANG']['tl_install']['collationInfo'] ?></p>
+                <p><?= $GLOBALS['TL_LANG']['tl_install']['collation'][1] ?></p>
+                <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                  <div class="tl_formbody">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_collation">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <h4><?= $GLOBALS['TL_LANG']['tl_install']['dbCollation'] ?></h4>
+                    <select name="dbCollation" id="dbCollation" class="tl_select"><?= $this->collations ?></select>
+                  </div>
+                  <div class="tl_formbody_submit">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['saveCollation'] ?>" onclick="Backend.getScrollOffset()">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
+
+            <fieldset class="tl_box<?php if ($this->dbUpToDate): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
+                <?php if (!$this->dbUpToDate): ?>
                   <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '2.9', '2.9') ?></p>
-                  <form action="<?= $this->action ?>" class="tl_install_form" method="post">
+                <?php else: ?>
+                  <p class="tl_confirm"><?= $GLOBALS['TL_LANG']['tl_install']['updateConfirm'] ?></p>
+                <?php endif; ?>
+                <p><?= $GLOBALS['TL_LANG']['tl_install']['update'][1] ?></p>
+                <?php if (!$this->dbUpToDate): ?>
+                  <form action="<?= $this->action ?>" id="sql_form" class="tl_install_form" method="post">
+                    <div class="tl_formbody">
+                      <input type="hidden" name="FORM_SUBMIT" value="tl_tables">
+                      <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>"><?= $this->dbUpdate ?>
+                    </div>
                     <div class="tl_formbody_submit">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_29update">
-                      <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                       <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.9') ?>" onclick="Backend.getScrollOffset()">
+                        <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['updateSave'] ?>" onclick="Backend.getScrollOffset()">
                       </div>
                     </div>
                   </form>
-                </div>
-              </fieldset>
+                <?php endif; ?>
+              </div>
+            </fieldset>
 
-            <?php elseif ($this->is292Update): ?>
-              <fieldset class="tl_box<?php if (!$this->is292Update): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
-                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '2.9.2', '2.9.2') ?></p>
-                  <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                    <div class="tl_formbody_submit">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_292update">
-                      <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                      <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.9.2') ?>" onclick="Backend.getScrollOffset();">
-                      </div>
+            <fieldset class="tl_box">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['template'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['template'][0] ?></h3>
+                <?php if ($this->importException): ?>
+                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['importException'] ?></p>
+                <?php elseif ($this->emptySelection): ?>
+                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['importError'] ?></p>
+                <?php elseif ($this->dateImported): ?>
+                  <p class="tl_confirm"><?php printf($GLOBALS['TL_LANG']['tl_install']['importConfirm'], $this->dateImported); ?></p>
+                <?php else: ?>
+                  <p class="tl_info"><?= $GLOBALS['TL_LANG']['tl_install']['importWarn'] ?></p>
+                <?php endif; ?>
+                <p><?= $GLOBALS['TL_LANG']['tl_install']['template'][1] ?></p>
+                <form action="<?= $this->action ?>" id="tl_static" class="tl_install_form" method="post">
+                  <div class="tl_formbody_submit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_tutorial">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <h4><?= $GLOBALS['TL_LANG']['tl_install']['templates'] ?></h4>
+                    <select name="template" class="tl_select"><?= $this->templates ?></select>
+                    <div class="tl_checkbox_container" style="margin-top:3px">
+                      <input type="checkbox" name="preserve" id="ctrl_preserve" class="tl_checkbox" value="1"> <label for="ctrl_preserve"><?= $GLOBALS['TL_LANG']['tl_install']['doNotTruncate'] ?></label>
                     </div>
-                  </form>
-                </div>
-              </fieldset>
-
-            <?php elseif ($this->is210Update): ?>
-              <fieldset class="tl_box<?php if (!$this->is210Update): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
-                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '2.10', '2.10') ?></p>
-                  <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                    <div class="tl_formbody_submit">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_210update">
-                      <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                      <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.10') ?>" onclick="Backend.getScrollOffset()">
-                      </div>
+                    <div class="tl_checkbox_container" style="margin-top:3px">
+                      <input type="checkbox" name="override" id="ctrl_override" class="tl_checkbox" value="1"> <label for="ctrl_override"><?= $GLOBALS['TL_LANG']['tl_install']['repOverride'] ?></label>
                     </div>
-                  </form>
-                </div>
-              </fieldset>
-
-            <?php elseif ($this->is30Update): ?>
-              <fieldset class="tl_box<?php if (!$this->is30Update): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
-                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '3.0', '3.0') ?></p>
-                  <?php if ($this->filesWarning): ?>
-                    <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['filesRenamed'] ?></p>
-                    <p><?= $this->filesWarning ?></p>
-                  <?php else: ?>
-                    <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                      <div class="tl_formbody_submit">
-                        <input type="hidden" name="FORM_SUBMIT" value="tl_30update">
-                        <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                        <div class="tl_submit_container">
-                          <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrunStep'], '3.0', $this->step) ?>" onclick="Backend.getScrollOffset()">
-                        </div>
-                      </div>
-                    </form>
-                  <?php endif; ?>
-                </div>
-              </fieldset>
-
-            <?php elseif ($this->is31Update): ?>
-              <fieldset class="tl_box<?php if (!$this->is31Update): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
-                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '3.1', '3.1') ?></p>
-                  <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                    <div class="tl_formbody_submit">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_31update">
-                      <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                      <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.1') ?>" onclick="Backend.getScrollOffset()">
-                      </div>
+                  </div>
+                  <div class="tl_formbody_submit">
+                    <div class="tl_submit_container">
+                      <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['importSave'] ?>" onclick="if(!confirm('<?= $GLOBALS['TL_LANG']['tl_install']['importContinue'] ?>'))return false;Backend.getScrollOffset()">
                     </div>
-                  </form>
-                </div>
-              </fieldset>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
 
-            <?php elseif ($this->is32Update): ?>
-              <fieldset class="tl_box<?php if (!$this->is32Update): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
-                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '3.2', '3.2') ?></p>
-                  <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                    <div class="tl_formbody_submit">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_32update">
-                      <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                      <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.2') ?>" onclick="Backend.getScrollOffset()">
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </fieldset>
-
-            <?php elseif ($this->is33Update): ?>
-              <fieldset class="tl_box<?php if (!$this->is33Update): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
-                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '3.3', '3.3') ?></p>
-                  <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                    <div class="tl_formbody_submit">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_33update">
-                      <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                      <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.3') ?>" onclick="Backend.getScrollOffset()">
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </fieldset>
-
-            <?php elseif ($this->is35Update): ?>
-              <fieldset class="tl_box<?php if (!$this->is35Update): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
-                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '3.5', '3.5') ?></p>
-                  <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                    <div class="tl_formbody_submit">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_35update">
-                      <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                      <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.5') ?>" onclick="Backend.getScrollOffset()">
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </fieldset>
-
-            <?php elseif ($this->is40Update): ?>
-              <fieldset class="tl_box<?php if (!$this->is40Update): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
-                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <p><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateX'], '4.0', '4.0') ?></p>
-                  <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                    <div class="tl_formbody_submit">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_40update">
-                      <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                      <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '4.0') ?>" onclick="Backend.getScrollOffset()">
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </fieldset>
-
-            <?php elseif ($this->dbConnection): ?>
-              <fieldset class="tl_box collapsed">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['collation'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['collation'][0] ?></h3>
-                  <p class="tl_info"><?= $GLOBALS['TL_LANG']['tl_install']['collationInfo'] ?></p>
-                  <p><?= $GLOBALS['TL_LANG']['tl_install']['collation'][1] ?></p>
+            <fieldset class="tl_box<?php if ($this->adminCreated): ?> collapsed<?php endif; ?>">
+              <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['admin'][0] ?></legend>
+              <div>
+                <h3><?= $GLOBALS['TL_LANG']['tl_install']['admin'][0] ?></h3>
+                <?php if (!$this->adminCreated): ?>
+                  <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['adminError'] ?></p>
+                <?php else: ?>
+                  <p class="tl_confirm"><?= $GLOBALS['TL_LANG']['tl_install']['adminConfirm'] ?></p>
+                <?php endif; ?>
+                <p><?= $GLOBALS['TL_LANG']['tl_install']['admin'][1] ?></p>
+                <?php if (!$this->adminCreated): ?>
                   <form action="<?= $this->action ?>" class="tl_install_form" method="post">
                     <div class="tl_formbody">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_collation">
+                      <input type="hidden" name="FORM_SUBMIT" value="tl_admin">
                       <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                      <h4><?= $GLOBALS['TL_LANG']['tl_install']['dbCollation'] ?></h4>
-                      <select name="dbCollation" id="dbCollation" class="tl_select"><?= $this->collations ?></select>
+                      <h4><?= $GLOBALS['TL_LANG']['MSC']['username'] ?></h4>
+                      <?php if ($this->usernameError): ?>
+                        <p class="tl_error"><?= $this->usernameError ?></p>
+                      <?php endif; ?>
+                      <input type="text" name="username" id="username" class="tl_text" value="<?= $this->adminUser ?>">
+                      <h4><?= $GLOBALS['TL_LANG']['MSC']['name'] ?></h4>
+                      <input type="text" name="name" id="name" class="tl_text" value="<?= $this->adminName ?>">
+                      <h4><?= $GLOBALS['TL_LANG']['MSC']['emailAddress'] ?></h4>
+                      <?php if ($this->emailError): ?>
+                        <p class="tl_error"><?= $this->emailError ?></p>
+                      <?php endif; ?>
+                      <input type="email" name="email" id="email" class="tl_text" value="<?= $this->adminEmail ?>">
+                      <h4><label for="password"><?= $GLOBALS['TL_LANG']['MSC']['password'][0] ?></label></h4>
+                      <?php if ($this->passwordError): ?>
+                        <p class="tl_error"><?= $this->passwordError ?></p>
+                      <?php endif; ?>
+                      <input type="password" name="pass" id="pass" class="tl_text" value="">
+                      <h4><label for="confirm_password"><?= $GLOBALS['TL_LANG']['MSC']['confirm'][0] ?></label></h4>
+                      <input type="password" name="confirm_pass" id="confirm_pass" class="tl_text" value="">
                     </div>
                     <div class="tl_formbody_submit">
                       <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['saveCollation'] ?>" onclick="Backend.getScrollOffset()">
+                        <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['adminSave'] ?>" onclick="Backend.getScrollOffset()">
                       </div>
                     </div>
                   </form>
-                </div>
-              </fieldset>
+                <?php endif; ?>
+              </div>
+            </fieldset>
 
-              <fieldset class="tl_box<?php if ($this->dbUpToDate): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></legend>
+            <?php if ($this->adminCreated): ?>
+              <fieldset class="tl_box last">
+                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['completed'][0] ?></legend>
                 <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['update'][0] ?></h3>
-                  <?php if (!$this->dbUpToDate): ?>
-                    <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['updateError'] ?></p>
-                  <?php else: ?>
-                    <p class="tl_confirm"><?= $GLOBALS['TL_LANG']['tl_install']['updateConfirm'] ?></p>
-                  <?php endif; ?>
-                  <p><?= $GLOBALS['TL_LANG']['tl_install']['update'][1] ?></p>
-                  <?php if (!$this->dbUpToDate): ?>
-                    <form action="<?= $this->action ?>" id="sql_form" class="tl_install_form" method="post">
-                      <div class="tl_formbody">
-                        <input type="hidden" name="FORM_SUBMIT" value="tl_tables">
-                        <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>"><?= $this->dbUpdate ?>
-                      </div>
-                      <div class="tl_formbody_submit">
-                        <div class="tl_submit_container">
-                          <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['updateSave'] ?>" onclick="Backend.getScrollOffset()">
-                        </div>
-                      </div>
-                    </form>
-                  <?php endif; ?>
+                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['completed'][0] ?></h3>
+                  <p class="tl_confirm"><?= $GLOBALS['TL_LANG']['tl_install']['installConfirm'] ?></p>
+                  <p><?= $GLOBALS['TL_LANG']['tl_install']['completed'][1] ?></p>
                 </div>
               </fieldset>
-
-              <fieldset class="tl_box">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['template'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['template'][0] ?></h3>
-                  <?php if ($this->importException): ?>
-                    <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['importException'] ?></p>
-                  <?php elseif ($this->emptySelection): ?>
-                    <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['importError'] ?></p>
-                  <?php elseif ($this->dateImported): ?>
-                    <p class="tl_confirm"><?php printf($GLOBALS['TL_LANG']['tl_install']['importConfirm'], $this->dateImported); ?></p>
-                  <?php else: ?>
-                    <p class="tl_info"><?= $GLOBALS['TL_LANG']['tl_install']['importWarn'] ?></p>
-                  <?php endif; ?>
-                  <p><?= $GLOBALS['TL_LANG']['tl_install']['template'][1] ?></p>
-                  <form action="<?= $this->action ?>" id="tl_static" class="tl_install_form" method="post">
-                    <div class="tl_formbody_submit">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_tutorial">
-                      <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                      <h4><?= $GLOBALS['TL_LANG']['tl_install']['templates'] ?></h4>
-                      <select name="template" class="tl_select"><?= $this->templates ?></select>
-                      <div class="tl_checkbox_container" style="margin-top:3px">
-                        <input type="checkbox" name="preserve" id="ctrl_preserve" class="tl_checkbox" value="1"> <label for="ctrl_preserve"><?= $GLOBALS['TL_LANG']['tl_install']['doNotTruncate'] ?></label>
-                      </div>
-                      <div class="tl_checkbox_container" style="margin-top:3px">
-                        <input type="checkbox" name="override" id="ctrl_override" class="tl_checkbox" value="1"> <label for="ctrl_override"><?= $GLOBALS['TL_LANG']['tl_install']['repOverride'] ?></label>
-                      </div>
-                    </div>
-                    <div class="tl_formbody_submit">
-                      <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['importSave'] ?>" onclick="if(!confirm('<?= $GLOBALS['TL_LANG']['tl_install']['importContinue'] ?>'))return false;Backend.getScrollOffset()">
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </fieldset>
-
-              <fieldset class="tl_box<?php if ($this->adminCreated): ?> collapsed<?php endif; ?>">
-                <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['admin'][0] ?></legend>
-                <div>
-                  <h3><?= $GLOBALS['TL_LANG']['tl_install']['admin'][0] ?></h3>
-                  <?php if (!$this->adminCreated): ?>
-                    <p class="tl_error"><?= $GLOBALS['TL_LANG']['tl_install']['adminError'] ?></p>
-                  <?php else: ?>
-                    <p class="tl_confirm"><?= $GLOBALS['TL_LANG']['tl_install']['adminConfirm'] ?></p>
-                  <?php endif; ?>
-                  <p><?= $GLOBALS['TL_LANG']['tl_install']['admin'][1] ?></p>
-                  <?php if (!$this->adminCreated): ?>
-                    <form action="<?= $this->action ?>" class="tl_install_form" method="post">
-                      <div class="tl_formbody">
-                        <input type="hidden" name="FORM_SUBMIT" value="tl_admin">
-                        <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-                        <h4><?= $GLOBALS['TL_LANG']['MSC']['username'] ?></h4>
-                        <?php if ($this->usernameError): ?>
-                          <p class="tl_error"><?= $this->usernameError ?></p>
-                        <?php endif; ?>
-                        <input type="text" name="username" id="username" class="tl_text" value="<?= $this->adminUser ?>">
-                        <h4><?= $GLOBALS['TL_LANG']['MSC']['name'] ?></h4>
-                        <input type="text" name="name" id="name" class="tl_text" value="<?= $this->adminName ?>">
-                        <h4><?= $GLOBALS['TL_LANG']['MSC']['emailAddress'] ?></h4>
-                        <?php if ($this->emailError): ?>
-                          <p class="tl_error"><?= $this->emailError ?></p>
-                        <?php endif; ?>
-                        <input type="email" name="email" id="email" class="tl_text" value="<?= $this->adminEmail ?>">
-                        <h4><label for="password"><?= $GLOBALS['TL_LANG']['MSC']['password'][0] ?></label></h4>
-                        <?php if ($this->passwordError): ?>
-                          <p class="tl_error"><?= $this->passwordError ?></p>
-                        <?php endif; ?>
-                        <input type="password" name="pass" id="pass" class="tl_text" value="">
-                        <h4><label for="confirm_password"><?= $GLOBALS['TL_LANG']['MSC']['confirm'][0] ?></label></h4>
-                        <input type="password" name="confirm_pass" id="confirm_pass" class="tl_text" value="">
-                      </div>
-                      <div class="tl_formbody_submit">
-                        <div class="tl_submit_container">
-                          <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['adminSave'] ?>" onclick="Backend.getScrollOffset()">
-                        </div>
-                      </div>
-                    </form>
-                  <?php endif; ?>
-                </div>
-              </fieldset>
-
-              <?php if ($this->adminCreated): ?>
-                <fieldset class="tl_box last">
-                  <legend onclick="this.getParent().toggleClass('collapsed')"><?= $GLOBALS['TL_LANG']['tl_install']['completed'][0] ?></legend>
-                  <div>
-                    <h3><?= $GLOBALS['TL_LANG']['tl_install']['completed'][0] ?></h3>
-                    <p class="tl_confirm"><?= $GLOBALS['TL_LANG']['tl_install']['installConfirm'] ?></p>
-                    <p><?= $GLOBALS['TL_LANG']['tl_install']['completed'][1] ?></p>
-                  </div>
-                </fieldset>
-              <?php endif; ?>
-
             <?php endif; ?>
+
           <?php endif; ?>
         <?php endif; ?>
       <?php endif; ?>
