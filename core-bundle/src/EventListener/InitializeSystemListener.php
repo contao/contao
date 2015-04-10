@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\ClassLoader;
 use Contao\Config;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
-use Contao\Environment;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
