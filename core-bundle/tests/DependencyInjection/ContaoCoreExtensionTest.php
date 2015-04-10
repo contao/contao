@@ -31,6 +31,7 @@ class ContaoCoreExtensionTest extends TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
         $this->extension = new ContaoCoreExtension();
     }
 
