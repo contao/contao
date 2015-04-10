@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\RefererId;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 
 /**
- * Generates a 0 characters short token for referer management in the URL.
+ * Generates an 8 characters short token for referer management in the URL.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
