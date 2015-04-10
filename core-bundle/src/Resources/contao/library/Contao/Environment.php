@@ -405,7 +405,7 @@ class Environment
 	 */
 	protected static function path()
 	{
-	   /** @var KernelInterface $kernel */
+		/** @var KernelInterface $kernel */
 		global $kernel;
 
 		$container = $kernel->getContainer();

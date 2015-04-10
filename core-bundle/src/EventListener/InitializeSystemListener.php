@@ -291,6 +291,7 @@ class InitializeSystemListener extends ScopeAwareListener
 
             foreach ($langs as $lang) {
                 if (is_dir(__DIR__ . '/../../src/Resources/contao/languages/' . str_replace('-', '_', $lang))) {
+                    $_SESSION['TL_LANGUAGE'] = $lang; // backwards compatibility
                     $this->session->set('TL_LANGUAGE', $lang);
                     break;
                 }
