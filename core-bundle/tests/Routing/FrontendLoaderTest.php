@@ -24,7 +24,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstantiation()
     {
-        $loader = new FrontendLoader('', 'en', false);
+        $loader = new FrontendLoader('', false);
 
         $this->assertInstanceOf('Contao\\CoreBundle\\Routing\\FrontendLoader', $loader);
     }
@@ -34,7 +34,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithoutLanguage()
     {
-        $loader     = new FrontendLoader('.html', 'en', false);
+        $loader     = new FrontendLoader('.html', false);
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
@@ -56,7 +56,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWitLanguage()
     {
-        $loader     = new FrontendLoader('.html', 'en', true);
+        $loader     = new FrontendLoader('.html', true);
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
@@ -78,7 +78,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithoutLanguageAndWithoutSuffix()
     {
-        $loader     = new FrontendLoader('', 'en', false);
+        $loader     = new FrontendLoader('', false);
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
@@ -100,7 +100,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithLanguageAndWithoutSuffix()
     {
-        $loader     = new FrontendLoader('', 'en', true);
+        $loader     = new FrontendLoader('', true);
         $collection = $loader->load('.', 'bundles');
 
         $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
@@ -122,7 +122,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSupportsContaoFrontend()
     {
-        $loader = new FrontendLoader('', 'en', false);
+        $loader = new FrontendLoader('', false);
 
         $this->assertTrue($loader->supports('.', 'contao_frontend'));
     }
