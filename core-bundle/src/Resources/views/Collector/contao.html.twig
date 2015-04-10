@@ -9,7 +9,12 @@
         Contao <b>{{ collector.contaoVersion }}</b>
     </div>
     <div class="sf-toolbar-info-piece">
-        <a href="https://docs.contao.org/" rel="help" target="_blank">Contao Documentation</a>
+        <b>Memory usage</b>
+        <span>{{ collector.summary.memory }}</span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+        <b>Reg. models</b>
+        <span>{{ collector.summary.models }}</span>
     </div>
     {% endset %}
     {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url } %}
@@ -33,14 +38,6 @@
         <tr>
             <th>Memory usage</th>
             <td>{{ collector.summary.memory }}</td>
-        </tr>
-        <tr>
-            <th>Database queries</th>
-            <td>{{ collector.summary.dbqueries }}</td>
-        </tr>
-        <tr>
-            <th>Rows</th>
-            <td>{{ collector.summary.rows_returned }} returned, {{ collector.summary.rows_affected }} affected</td>
         </tr>
         <tr>
             <th>Registered models</th>
@@ -80,74 +77,6 @@
     {% else %}
         <p><em>No unknown insert tag flags used on the page.</em></p>
     {% endif %}
-
-    <h2>Database Queries</h2>
-    <ul>
-        {% for result in collector.databasequeries %}
-            <li>
-                <table>
-                    <tr>
-                        <th>Query</th>
-                        <td><pre>{{ result.query }}</pre></td>
-                    </tr>
-                    <tr>
-                        <th>Duration</th>
-                        <td><pre>{{ result.duration }}</pre></td>
-                    </tr>
-                    <tr>
-                        <th>Result</th>
-                        <td><pre>{% if result.affected is defined %}{{ result.affected }}{% else %}{{ result.returned }}{% endif %}</pre></td>
-                    </tr>
-                    <tr>
-                        <th>Explain</th>
-                        <td>
-                            <a href="#" onclick="document.getElementById('contao-query-explain-{{ loop.index }}').style.display = 'block'; this.style.display = 'none'; return false">Show</a>
-                            <div id="contao-query-explain-{{ loop.index }}" style="display: none">
-                                <table>
-                                    <tr>
-                                        <th>Select Type</th>
-                                        <td><pre>{{ result.explain.select_type }}</pre></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Table</th>
-                                        <td><pre>{{ result.explain.table }}</pre></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Type</th>
-                                        <td><pre>{{ result.explain.type }}</pre></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Possible Keys</th>
-                                        <td><pre>{{ result.explain.possible_keys }}</pre></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Key</th>
-                                        <td><pre>{{ result.explain.key }}</pre></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Key Length</th>
-                                        <td><pre>{{ result.explain.key_len }}</pre></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Ref</th>
-                                        <td><pre>{{ result.explain.ref }}</pre></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Rows</th>
-                                        <td><pre>{{ result.explain.rows }}</pre></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Extra</th>
-                                        <td><pre>{{ result.explain.Extra }}</pre></td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </li>
-        {% endfor %}
-    </ul>
 
     <h2>Classes Aliased</h2>
     <table>
