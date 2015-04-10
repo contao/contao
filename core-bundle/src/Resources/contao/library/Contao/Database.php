@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\DriverManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -62,16 +64,34 @@ class Database
 	/**
 	 * Establish the database connection
 	 *
-	 * @param string $strConnection The connection ID
+	 * @param array $arrConfig The configuration array
 	 *
 	 * @throws \Exception If a connection cannot be established
 	 */
-	protected function __construct($strConnection='doctrine.dbal.default_connection')
+	protected function __construct(array $arrConfig)
 	{
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$this->resConnection = $kernel->getContainer()->get($strConnection);
+		// Custom configuration (backwards compatibiltiy)
+		if (!empty($arrConfig))
+		{
+			$arrParams = array
+			(
+				'driver'    => $kernel->getContainer()->getParameter('database_driver'),
+				'host'      => $arrConfig['dbHost'],
+				'port'      => $arrConfig['dbPort'],
+				'user'      => $arrConfig['dbUser'],
+				'password'  => $arrConfig['dbPass'],
+				'dbname'    => $arrConfig['dbDatabase']
+			);
+
+			$this->resConnection = DriverManager::getConnection($arrParams);
+		}
+		else
+		{
+			$this->resConnection = $kernel->getContainer()->get('doctrine.dbal.default_connection');
+		}
 
 		if (!is_object($this->resConnection))
 		{
@@ -118,18 +138,43 @@ class Database
 	/**
 	 * Instantiate the Database object (Factory)
 	 *
-	 * @param string $strConnection The connection ID
+	 * @param array $arrCustomConfig A configuration array
 	 *
 	 * @return \Database The Database object
 	 */
-	public static function getInstance($strConnection='doctrine.dbal.default_connection')
+	public static function getInstance(array $arrCustomConfig=null)
 	{
-		if (!isset(static::$arrInstances[$strConnection]))
+		$arrConfig = array();
+
+		$arrDefaultConfig = array
+		(
+			'dbDriver'   => \Config::get('dbDriver'),
+			'dbHost'     => \Config::get('dbHost'),
+			'dbUser'     => \Config::get('dbUser'),
+			'dbPass'     => \Config::get('dbPass'),
+			'dbDatabase' => \Config::get('dbDatabase'),
+			'dbPconnect' => \Config::get('dbPconnect'),
+			'dbCharset'  => \Config::get('dbCharset'),
+			'dbPort'     => \Config::get('dbPort'),
+			'dbSocket'   => \Config::get('dbSocket'),
+			'dbSqlMode'  => \Config::get('dbSqlMode')
+		);
+
+		if (is_array($arrCustomConfig))
 		{
-			static::$arrInstances[$strConnection] = new static($strConnection);
+			$arrConfig = array_merge($arrDefaultConfig, $arrCustomConfig);
 		}
 
-		return static::$arrInstances[$strConnection];
+		// Sort the array before generating the key
+		ksort($arrConfig);
+		$strKey = md5(implode('', $arrConfig));
+
+		if (!isset(static::$arrInstances[$strKey]))
+ 		{
+			static::$arrInstances[$strKey] = new static($arrConfig);
+ 		}
+
+		return static::$arrInstances[$strKey];
 	}
 
 
