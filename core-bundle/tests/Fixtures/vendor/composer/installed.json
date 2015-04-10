@@ -16,5 +16,14 @@
                 "dev-develop": "1.0.x-dev"
             }
         }
+    },
+    {
+        "name": "contao/test-bundle4",
+        "version_normalized": "dev-develop",
+        "extra": {
+            "branch-alias": {
+                "dev-develop": "invalid-dev"
+            }
+        }
     }
 ]

@@ -54,4 +54,12 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->has('contao.listener.output_from_cache'));
         $this->assertTrue($container->has('contao.listener.add_to_search_index'));
     }
+
+    /**
+     * Tests the getAlias() method.
+     */
+    public function testGetAlias()
+    {
+        $this->assertEquals('contao', $this->extension->getAlias());
+    }
 }

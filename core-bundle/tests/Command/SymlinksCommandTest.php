@@ -33,7 +33,8 @@ class SymlinksCommandTest extends TestCase
     {
         $fs = new Filesystem();
 
-#        $fs->remove($this->getRootDir() . '/web');
+        $fs->remove($this->getRootDir() . '/system/themes');
+        $fs->remove($this->getRootDir() . '/web');
     }
 
     /**
