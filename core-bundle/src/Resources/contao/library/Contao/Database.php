@@ -10,9 +10,14 @@
 
 namespace Contao;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\DriverManager;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
- * Abstract parent class to handle database communication
+ * Handle the database communication
  *
  * The class is responsible for connecting to the database, listing tables and
  * fields, handling transactions and locking tables. It also creates the related
@@ -28,7 +33,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Database
+class Database
 {
 
 	/**
@@ -38,14 +43,8 @@ abstract class Database
 	protected static $arrInstances = array();
 
 	/**
-	 * Connection configuration
-	 * @var array
-	 */
-	protected $arrConfig = array();
-
-	/**
 	 * Connection ID
-	 * @var resource
+	 * @var Connection
 	 */
 	protected $resConnection;
 
@@ -61,26 +60,40 @@ abstract class Database
 	 */
 	protected $arrCache = array();
 
-	/**
-	 * List tables query
-	 * @var string
-	 */
-	protected $strListTables = "SHOW TABLES FROM `%s`";
-
 
 	/**
 	 * Establish the database connection
 	 *
-	 * @param array $arrConfig A configuration array
+	 * @param array $arrConfig The configuration array
 	 *
 	 * @throws \Exception If a connection cannot be established
 	 */
 	protected function __construct(array $arrConfig)
 	{
-		$this->arrConfig = $arrConfig;
-		$this->connect();
+		/** @var KernelInterface $kernel */
+		global $kernel;
 
-		if (!is_resource($this->resConnection) && !is_object($this->resConnection))
+		// Custom configuration (backwards compatibiltiy)
+		if (!empty($arrConfig))
+		{
+			$arrParams = array
+			(
+				'driver'    => $kernel->getContainer()->getParameter('database_driver'),
+				'host'      => $arrConfig['dbHost'],
+				'port'      => $arrConfig['dbPort'],
+				'user'      => $arrConfig['dbUser'],
+				'password'  => $arrConfig['dbPass'],
+				'dbname'    => $arrConfig['dbDatabase']
+			);
+
+			$this->resConnection = DriverManager::getConnection($arrParams);
+		}
+		else
+		{
+			$this->resConnection = $kernel->getContainer()->get('doctrine.dbal.default_connection');
+		}
+
+		if (!is_object($this->resConnection))
 		{
 			throw new \Exception(sprintf('Could not connect to database (%s)', $this->error));
 		}
@@ -88,18 +101,11 @@ abstract class Database
 
 
 	/**
-	 * Close the database connection if it is not permanent
+	 * Close the database connection
 	 */
 	public function __destruct()
 	{
-		if (!$this->arrConfig['dbPconnect'])
-		{
-			$this->disconnect();
-
-			// Unset the reference (see #4772)
-			$strKey = md5(implode('', $this->arrConfig));
-			unset(static::$arrInstances[$strKey]);
-		}
+		unset($this->resConnection);
 	}
 
 
@@ -120,7 +126,9 @@ abstract class Database
 	{
 		if ($strKey == 'error')
 		{
-			return $this->get_error();
+			$info = $this->resConnection->errorInfo();
+
+			return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
 		}
 
 		return null;
@@ -130,29 +138,26 @@ abstract class Database
 	/**
 	 * Instantiate the Database object (Factory)
 	 *
-	 * @param array $arrCustom A configuration array
+	 * @param array $arrCustomConfig A configuration array
 	 *
 	 * @return \Database The Database object
 	 */
-	public static function getInstance(array $arrCustom=null)
+	public static function getInstance(array $arrCustomConfig=null)
 	{
-		$arrConfig = array
+		$arrConfig = array();
+
+		$arrDefaultConfig = array
 		(
-			'dbDriver'   => \Config::get('dbDriver'),
 			'dbHost'     => \Config::get('dbHost'),
+			'dbPort'     => \Config::get('dbPort'),
 			'dbUser'     => \Config::get('dbUser'),
 			'dbPass'     => \Config::get('dbPass'),
-			'dbDatabase' => \Config::get('dbDatabase'),
-			'dbPconnect' => \Config::get('dbPconnect'),
-			'dbCharset'  => \Config::get('dbCharset'),
-			'dbPort'     => \Config::get('dbPort'),
-			'dbSocket'   => \Config::get('dbSocket'),
-			'dbSqlMode'  => \Config::get('dbSqlMode')
+			'dbDatabase' => \Config::get('dbDatabase')
 		);
 
-		if (is_array($arrCustom))
+		if (is_array($arrCustomConfig))
 		{
-			$arrConfig = array_merge($arrConfig, $arrCustom);
+			$arrConfig = array_merge($arrDefaultConfig, $arrCustomConfig);
 		}
 
 		// Sort the array before generating the key
@@ -160,10 +165,9 @@ abstract class Database
 		$strKey = md5(implode('', $arrConfig));
 
 		if (!isset(static::$arrInstances[$strKey]))
-		{
-			$strClass = 'Database\\' . str_replace(' ', '_', ucwords(str_replace('_', ' ', strtolower($arrConfig['dbDriver']))));
-			static::$arrInstances[$strKey] = new $strClass($arrConfig);
-		}
+ 		{
+			static::$arrInstances[$strKey] = new static($arrConfig);
+ 		}
 
 		return static::$arrInstances[$strKey];
 	}
@@ -178,7 +182,9 @@ abstract class Database
 	 */
 	public function prepare($strQuery)
 	{
-		return $this->createStatement($this->resConnection, $this->blnDisableAutocommit)->prepare($strQuery);
+		$objStatement = new \Database\Statement($this->resConnection, $this->blnDisableAutocommit);
+
+		return $objStatement->prepare($strQuery);
 	}
 
 
@@ -204,7 +210,9 @@ abstract class Database
 	 */
 	public function query($strQuery)
 	{
-		return $this->createStatement($this->resConnection, $this->blnDisableAutocommit)->query($strQuery);
+		$objStatement = new \Database\Statement($this->resConnection, $this->blnDisableAutocommit);
+
+		return $objStatement->query($strQuery);
 	}
 
 
@@ -224,12 +232,17 @@ abstract class Database
 			$varSet = implode(',', $varSet);
 		}
 
-		return $this->find_in_set($strKey, $varSet, $blnIsField);
+		if (!$blnIsField)
+		{
+			$varSet = $this->resConnection->quote($varSet);
+		}
+
+		return "FIND_IN_SET(" . $this->resConnection->quoteIdentifier($strKey) . ", " . $varSet . ")";
 	}
 
 
 	/**
-	 * Return all tables of a database as array
+	 * Return all tables as array
 	 *
 	 * @param string  $strDatabase The database name
 	 * @param boolean $blnNoCache  If true, the cache will be bypassed
@@ -238,25 +251,24 @@ abstract class Database
 	 */
 	public function listTables($strDatabase=null, $blnNoCache=false)
 	{
-		if ($strDatabase === null)
+		if ($blnNoCache || !isset($this->arrCache[$strDatabase]))
 		{
-			$strDatabase = $this->arrConfig['dbDatabase'];
+			$strOldDatabase = $this->resConnection->getDatabase();
+
+			// Change the database
+			if ($strDatabase !== null && $strDatabase != $strOldDatabase)
+			{
+				$this->setDatabase($strDatabase);
+			}
+
+			$this->arrCache[$strDatabase] = $this->resConnection->getSchemaManager()->listTableNames();
+
+			// Restore the database
+			if ($strDatabase !== null && $strDatabase != $strOldDatabase)
+			{
+				$this->setDatabase($strOldDatabase);
+			}
 		}
-
-		if (!$blnNoCache && isset($this->arrCache[$strDatabase]))
-		{
-			return $this->arrCache[$strDatabase];
-		}
-
-		$arrReturn = array();
-		$objTables = $this->query(sprintf($this->strListTables, $strDatabase));
-
-		while ($objTables->next())
-		{
-			$arrReturn[] = current($objTables->row());
-		}
-
-		$this->arrCache[$strDatabase] = $arrReturn;
 
 		return $this->arrCache[$strDatabase];
 	}
@@ -292,12 +304,89 @@ abstract class Database
 	 */
 	public function listFields($strTable, $blnNoCache=false)
 	{
-		if (!$blnNoCache && isset($this->arrCache[$strTable]))
+		if ($blnNoCache || !isset($this->arrCache[$strTable]))
 		{
-			return $this->arrCache[$strTable];
-		}
+			$arrReturn = array();
+			$objFields = $this->query("SHOW FULL COLUMNS FROM $strTable");
 
-		$this->arrCache[$strTable] = $this->list_fields($strTable);
+			while ($objFields->next())
+			{
+				$arrTmp = array();
+				$arrChunks = preg_split('/(\([^\)]+\))/', $objFields->Type, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+
+				$arrTmp['name'] = $objFields->Field;
+				$arrTmp['type'] = $arrChunks[0];
+
+				if (!empty($arrChunks[1]))
+				{
+					$arrChunks[1] = str_replace(array('(', ')'), '', $arrChunks[1]);
+
+					// Handle enum fields (see #6387)
+					if ($arrChunks[0] == 'enum')
+					{
+						$arrTmp['length'] = $arrChunks[1];
+					}
+					else
+					{
+						$arrSubChunks = explode(',', $arrChunks[1]);
+						$arrTmp['length'] = trim($arrSubChunks[0]);
+
+						if (!empty($arrSubChunks[1]))
+						{
+							$arrTmp['precision'] = trim($arrSubChunks[1]);
+						}
+					}
+				}
+
+				if (!empty($arrChunks[2]))
+				{
+					$arrTmp['attributes'] = trim($arrChunks[2]);
+				}
+
+				if ($objFields->Key != '')
+				{
+					switch ($objFields->Key)
+					{
+						case 'PRI':
+							$arrTmp['index'] = 'PRIMARY';
+							break;
+
+						case 'UNI':
+							$arrTmp['index'] = 'UNIQUE';
+							break;
+
+						case 'MUL':
+							// Ignore
+							break;
+
+						default:
+							$arrTmp['index'] = 'KEY';
+							break;
+					}
+				}
+
+				// Do not modify the order!
+				$arrTmp['collation'] = $objFields->Collation;
+				$arrTmp['null'] = ($objFields->Null == 'YES') ? 'NULL' : 'NOT NULL';
+				$arrTmp['default'] = $objFields->Default;
+				$arrTmp['extra'] = $objFields->Extra;
+				$arrTmp['origtype'] = $objFields->Type;
+
+				$arrReturn[] = $arrTmp;
+			}
+
+			$objIndex = $this->query("SHOW INDEXES FROM `$strTable`");
+
+			while ($objIndex->next())
+			{
+				$arrReturn[$objIndex->Key_name]['name'] = $objIndex->Key_name;
+				$arrReturn[$objIndex->Key_name]['type'] = 'index';
+				$arrReturn[$objIndex->Key_name]['index_fields'][] = $objIndex->Column_name;
+				$arrReturn[$objIndex->Key_name]['index'] = (($objIndex->Non_unique == 0) ? 'UNIQUE' : 'KEY');
+			}
+
+			$this->arrCache[$strTable] = $arrReturn;
+		}
 
 		return $this->arrCache[$strTable];
 	}
@@ -497,12 +586,10 @@ abstract class Database
 	 * Change the current database
 	 *
 	 * @param string $strDatabase The name of the target database
-	 *
-	 * @return boolean True if the database was changed successfully
 	 */
 	public function setDatabase($strDatabase)
 	{
-		return $this->set_database($strDatabase);
+		$this->resConnection->exec("USE $strDatabase");
 	}
 
 
@@ -511,7 +598,7 @@ abstract class Database
 	 */
 	public function beginTransaction()
 	{
-		$this->begin_transaction();
+		$this->resConnection->beginTransaction();
 	}
 
 
@@ -520,7 +607,7 @@ abstract class Database
 	 */
 	public function commitTransaction()
 	{
-		$this->commit_transaction();
+		$this->resConnection->commit();
 	}
 
 
@@ -529,7 +616,7 @@ abstract class Database
 	 */
 	public function rollbackTransaction()
 	{
-		$this->rollback_transaction();
+		$this->resConnection->rollBack();
 	}
 
 
@@ -540,7 +627,14 @@ abstract class Database
 	 */
 	public function lockTables($arrTables)
 	{
-		$this->lock_tables($arrTables);
+		$arrLocks = array();
+
+		foreach ($arrTables as $table=>$mode)
+		{
+			$arrLocks[] = $this->resConnection->quoteIdentifier($table) . ' ' . $mode;
+		}
+
+		$this->resConnection->exec('LOCK TABLES ' . implode(', ', $arrLocks) . ';');
 	}
 
 
@@ -549,7 +643,7 @@ abstract class Database
 	 */
 	public function unlockTables()
 	{
-		$this->unlock_tables();
+		$this->resConnection->exec('UNLOCK TABLES;');
 	}
 
 
@@ -562,7 +656,10 @@ abstract class Database
 	 */
 	public function getSizeOf($strTable)
 	{
-		return $this->get_size_of($strTable);
+		$statement = $this->resConnection->executeQuery('SHOW TABLE STATUS LIKE ' . $this->resConnection->quote($strTable));
+		$status = $statement->fetch(\PDO::FETCH_ASSOC);
+
+		return ($status['Data_length'] + $status['Index_length']);
 	}
 
 
@@ -575,7 +672,10 @@ abstract class Database
 	 */
 	public function getNextId($strTable)
 	{
-		return $this->get_next_id($strTable);
+		$statement = $this->resConnection->executeQuery('SHOW TABLE STATUS LIKE ' . $this->resConnection->quote($strTable));
+		$status = $statement->fetch(\PDO::FETCH_ASSOC);
+
+		return $status['Auto_increment'];
 	}
 
 
@@ -586,143 +686,16 @@ abstract class Database
 	 */
 	public function getUuid()
 	{
-		return $this->get_uuid();
+		static $ids;
+
+		if (empty($ids))
+		{
+			$statement = $this->resConnection->executeQuery(implode(' UNION ALL ', array_fill(0, 10, "SELECT UNHEX(REPLACE(UUID(), '-', '')) AS uuid")));
+			$ids = $statement->fetchAll(\PDO::FETCH_COLUMN);
+		}
+
+		return array_pop($ids);
 	}
-
-
-	/**
-	 * Connect to the database server and select the database
-	 */
-	abstract protected function connect();
-
-
-	/**
-	 * Disconnect from the database
-	 */
-	abstract protected function disconnect();
-
-
-	/**
-	 * Return the last error message
-	 *
-	 * @return string The error message
-	 */
-	abstract protected function get_error();
-
-
-	/**
-	 * Auto-generate a FIND_IN_SET() statement
-	 *
-	 * @param string  $strKey     The field name
-	 * @param mixed   $varSet     The set to find the key in
-	 * @param boolean $blnIsField If true, the set will not be quoted
-	 *
-	 * @return string The FIND_IN_SET() statement
-	 */
-	abstract protected function find_in_set($strKey, $varSet, $blnIsField=false);
-
-
-	/**
-	 * Return a standardized array with the field information
-	 *
-	 * * name:       field name (e.g. my_field)
-	 * * type:       field type (e.g. "int" or "number")
-	 * * length:     field length (e.g. 20)
-	 * * precision:  precision of a float number (e.g. 5)
-	 * * null:       NULL or NOT NULL
-	 * * default:    default value (e.g. "default_value")
-	 * * attributes: attributes (e.g. "unsigned")
-	 * * index:      PRIMARY, UNIQUE or INDEX
-	 * * extra:      extra information (e.g. auto_increment)
-	 *
-	 * @param string $strTable The table name
-	 *
-	 * @return array An array with the field information
-	 *
-	 * @todo Support all kind of keys (e.g. FULLTEXT or FOREIGN)
-	 */
-	abstract protected function list_fields($strTable);
-
-
-	/**
-	 * Change the current database
-	 *
-	 * @param string $strDatabase The name of the target database
-	 *
-	 * @return boolean True if the database was changed successfully
-	 */
-	abstract protected function set_database($strDatabase);
-
-
-	/**
-	 * Begin a transaction
-	 */
-	abstract protected function begin_transaction();
-
-
-	/**
-	 * Commit a transaction
-	 */
-	abstract protected function commit_transaction();
-
-
-	/**
-	 * Rollback a transaction
-	 */
-	abstract protected function rollback_transaction();
-
-
-	/**
-	 * Lock one or more tables
-	 *
-	 * @param array $arrTables An array of table names
-	 */
-	abstract protected function lock_tables($arrTables);
-
-
-	/**
-	 * Unlock all tables
-	 */
-	abstract protected function unlock_tables();
-
-
-	/**
-	 * Return the table size in bytes
-	 *
-	 * @param string $strTable The table name
-	 *
-	 * @return integer The table size in bytes
-	 */
-	abstract protected function get_size_of($strTable);
-
-
-	/**
-	 * Return the next autoincrement ID of a table
-	 *
-	 * @param string $strTable The table name
-	 *
-	 * @return integer The autoincrement ID
-	 */
-	abstract protected function get_next_id($strTable);
-
-
-	/**
-	 * Return a universal unique identifier
-	 *
-	 * @return string The UUID string
-	 */
-	abstract protected function get_uuid();
-
-
-	/**
-	 * Create a Database\Statement object
-	 *
-	 * @param resource $resConnection        The connection ID
-	 * @param boolean  $blnDisableAutocommit If true, autocommitting will be disabled
-	 *
-	 * @return \Database\Statement The Database\Statement object
-	 */
-	abstract protected function createStatement($resConnection, $blnDisableAutocommit);
 
 
 	/**

@@ -493,9 +493,9 @@ class Config
 		(
 			'dbHost'           => 'database_host',
 			'dbPort'           => 'database_port',
-			'dbDatabase'       => 'database_name',
 			'dbUser'           => 'database_user',
 			'dbPass'           => 'database_password',
+			'dbDatabase'       => 'database_name',
 			'smtpHost'         => 'mailer_host',
 			'smtpUser'         => 'mailer_user',
 			'smtpPass'         => 'mailer_password',

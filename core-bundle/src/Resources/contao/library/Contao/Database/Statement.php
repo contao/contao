@@ -10,6 +10,9 @@
 
 namespace Contao\Database;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
+
 
 /**
  * Create and execute queries
@@ -31,38 +34,26 @@ namespace Contao\Database;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Statement
+class Statement
 {
 
 	/**
 	 * Connection ID
-	 * @var resource
+	 * @var Connection
 	 */
 	protected $resConnection;
 
 	/**
-	 * Database result
-	 * @var resource
+	 * Database statement
+	 * @var DoctrineStatement
 	 */
-	protected $resResult;
+	protected $statement;
 
 	/**
 	 * Query string
 	 * @var string
 	 */
 	protected $strQuery;
-
-	/**
-	 * Query start
-	 * @var int
-	 */
-	protected $intQueryStart;
-
-	/**
-	 * Query end
-	 * @var int
-	 */
-	protected $intQueryEnd;
 
 	/**
 	 * Autocommit indicator
@@ -80,18 +71,11 @@ abstract class Statement
 	/**
 	 * Validate the connection resource and store the query string
 	 *
-	 * @param resource $resConnection        The connection resource
-	 * @param boolean  $blnDisableAutocommit Optionally disable autocommitting
-	 *
-	 * @throws \Exception If $resConnection is not a valid resource
+	 * @param Connection $resConnection        The connection resource
+	 * @param boolean    $blnDisableAutocommit Optionally disable autocommitting
 	 */
-	public function __construct($resConnection, $blnDisableAutocommit=false)
+	public function __construct(Connection $resConnection, $blnDisableAutocommit=false)
 	{
-		if (!is_resource($resConnection) && !is_object($resConnection))
-		{
-			throw new \Exception('Invalid connection resource');
-		}
-
 		$this->resConnection = $resConnection;
 		$this->blnDisableAutocommit = $blnDisableAutocommit;
 	}
@@ -113,15 +97,17 @@ abstract class Statement
 				break;
 
 			case 'error':
-				return $this->get_error();
+				$info = $this->statement->errorInfo();
+
+				return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
 				break;
 
 			case 'affectedRows':
-				return $this->affected_rows();
+				return $this->statement->rowCount();
 				break;
 
 			case 'insertId':
-				return $this->insert_id();
+				return $this->resConnection->lastInsertId();
 				break;
 		}
 
@@ -145,8 +131,7 @@ abstract class Statement
 			throw new \Exception('Empty query string');
 		}
 
-		$this->resResult = null;
-		$this->strQuery = $this->prepare_query(trim($strQuery));
+		$this->strQuery = trim($strQuery);
 
 		// Auto-generate the SET/VALUES subpart
 		if (strncasecmp($this->strQuery, 'INSERT', 6) === 0 || strncasecmp($this->strQuery, 'UPDATE', 6) === 0)
@@ -200,6 +185,7 @@ abstract class Statement
 								implode(', ', array_keys($arrParams)),
 								str_replace('%', '%%', implode(', ', array_values($arrParams))));
 		}
+
 		// UPDATE
 		elseif (strncasecmp($this->strQuery, 'UPDATE', 6) === 0)
 		{
@@ -239,7 +225,14 @@ abstract class Statement
 			$intOffset = 0;
 		}
 
-		$this->limit_query($intRows, $intOffset);
+		if (strncasecmp($this->strQuery, 'SELECT', 6) === 0)
+		{
+			$this->strQuery .= ' LIMIT ' . $intOffset . ',' . $intRows;
+		}
+		else
+		{
+			$this->strQuery .= ' LIMIT ' . $intRows;
+		}
 
 		return $this;
 	}
@@ -271,8 +264,8 @@ abstract class Statement
 	 * @param string $strQuery The query string
 	 *
 	 * @return \Database\Result|\Database\Statement The result object or the statement object if there is no result set
-	 *
-	 * @throws \Exception If the query cannot be executed
+     *
+     * @throws \Exception If the query string is empty
 	 */
 	public function query($strQuery='')
 	{
@@ -287,29 +280,17 @@ abstract class Statement
 			throw new \Exception('Empty query string');
 		}
 
-		$this->intQueryStart = microtime(true);
-
 		// Execute the query
-		if (($this->resResult = $this->execute_query()) == false)
-		{
-			throw new \Exception(sprintf('Query error: %s (%s)', $this->error, $this->strQuery));
-		}
-
-		$this->intQueryEnd = microtime(true);
+		$this->statement = $this->resConnection->executeQuery($this->strQuery);
 
 		// No result set available
-		if (!is_resource($this->resResult) && !is_object($this->resResult))
+		if (strncasecmp($this->strQuery, 'SELECT', 6) !== 0 && strncasecmp($this->strQuery, 'SHOW', 4) !== 0)
 		{
-			$this->debugQuery();
-
 			return $this;
 		}
 
 		// Instantiate a result object
-		$objResult = $this->createResult($this->resResult, $this->strQuery);
-		$this->debugQuery($objResult);
-
-		return $objResult;
+		return new \Database\Result($this->statement, $this->strQuery);
 	}
 
 
@@ -347,7 +328,7 @@ abstract class Statement
 			switch (gettype($v))
 			{
 				case 'string':
-					$arrValues[$k] = $this->string_escape($v);
+					$arrValues[$k] = $this->resConnection->quote($v);
 					break;
 
 				case 'boolean':
@@ -355,11 +336,11 @@ abstract class Statement
 					break;
 
 				case 'object':
-					$arrValues[$k] = $this->string_escape(serialize($v));
+					$arrValues[$k] = $this->resConnection->quote(serialize($v));
 					break;
 
 				case 'array':
-					$arrValues[$k] = $this->string_escape(serialize($v));
+					$arrValues[$k] = $this->resConnection->quote(serialize($v));
 					break;
 
 				default:
@@ -375,43 +356,11 @@ abstract class Statement
 	/**
 	 * Debug a query
 	 *
-	 * @param \Database\Result $objResult An optional result object
+	 * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0.
 	 */
-	protected function debugQuery($objResult=null)
+	protected function debugQuery()
 	{
-		if (!\Config::get('debugMode'))
-		{
-			return;
-		}
-
-		$arrData['query'] = specialchars($this->strQuery);
-
-		if ($objResult === null || strncasecmp($this->strQuery, 'SELECT', 6) !== 0)
-		{
-			if (strncasecmp($this->strQuery, 'SHOW', 4) === 0)
-			{
-				$arrData['return_count'] = $this->affectedRows;
-				$arrData['returned'] = sprintf('%s row(s) returned', $this->affectedRows);
-			}
-			else
-			{
-				$arrData['affected_count'] = $this->affectedRows;
-				$arrData['affected'] = sprintf('%d row(s) affected', $this->affectedRows);
-			}
-		}
-		else
-		{
-			if (($arrExplain = $this->explain()) != false)
-			{
-				$arrData['explain'] = $arrExplain;
-			}
-
-			$arrData['return_count'] = $objResult->numRows;
-			$arrData['returned'] = sprintf('%s row(s) returned', $objResult->numRows);
-		}
-
-		$arrData['duration'] = \System::getFormattedNumber((($this->intQueryEnd - $this->intQueryStart) * 1000), 3) . ' ms';
-		$GLOBALS['TL_DEBUG']['database_queries'][] = $arrData;
+		return;
 	}
 
 
@@ -422,88 +371,8 @@ abstract class Statement
 	 */
 	public function explain()
 	{
-		return $this->explain_query();
+		return $this->resConnection->executeQuery('EXPLAIN ' . $this->strQuery)->fetch();
 	}
-
-
-	/**
-	 * Prepare a query string and return it
-	 *
-	 * @param string $strQuery The query string
-	 *
-	 * @return string The modified query string
-	 */
-	abstract protected function prepare_query($strQuery);
-
-
-	/**
-	 * Escape a string
-	 *
-	 * @param string $strString The unescaped string
-	 *
-	 * @return string The escaped string
-	 */
-	abstract protected function string_escape($strString);
-
-
-	/**
-	 * Add limit and offset to the query string
-	 *
-	 * @param integer $intRows   The maximum number of rows
-	 * @param integer $intOffset The number of rows to skip
-	 */
-	abstract protected function limit_query($intRows, $intOffset);
-
-
-	/**
-	 * Execute the query
-	 *
-	 * @return resource The result resource
-	 */
-	abstract protected function execute_query();
-
-
-	/**
-	 * Return the last error message
-	 *
-	 * @return string The error message
-	 */
-	abstract protected function get_error();
-
-
-	/**
-	 * Return the last insert ID
-	 *
-	 * @return integer The last insert ID
-	 */
-	abstract protected function affected_rows();
-
-
-	/**
-	 * Return the last insert ID
-	 *
-	 * @return integer The last insert ID
-	 */
-	abstract protected function insert_id();
-
-
-	/**
-	 * Explain the current query
-	 *
-	 * @return array The information array
-	 */
-	abstract protected function explain_query();
-
-
-	/**
-	 * Create a Database\Result object
-	 *
-	 * @param resource $resResult The database result
-	 * @param string   $strQuery  The query string
-	 *
-	 * @return \Database\Result The result object
-	 */
-	abstract protected function createResult($resResult, $strQuery);
 
 
 	/**

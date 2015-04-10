@@ -4,6 +4,13 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Custom database drivers
+
+The database classes have been mapped to the Doctrine DBAL, therefore custom
+drivers are no longer supported. If you have been using a custom driver for a
+database other than MySQL, use the corresponding Doctrine driver instead.
+
+
 ### `dump()`
 
 The `dump()` function has been replaced by the Symfony debug bundle. Its output
