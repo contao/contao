@@ -41,7 +41,6 @@ class FrontendLoader extends Loader
      * Constructor.
      *
      * @param string $format        The URL suffix
-     * @param string $defaultLocale The default locale
      * @param bool   $prependLocale Prepend the locale
      */
     public function __construct($format, $prependLocale)
