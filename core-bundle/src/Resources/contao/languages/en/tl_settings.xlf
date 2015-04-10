@@ -98,12 +98,6 @@
       <trans-unit id="tl_settings.cacheMode.1">
         <source>Here you can select the cache mode.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.proxyServerIps.0">
-        <source>Trusted proxy servers</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.proxyServerIps.1">
-        <source>Here you can enter a comma separated list of trusted proxy server IP addresses.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.sslProxyDomain.0">
         <source>SSL proxy domain</source>
       </trans-unit>

@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Test\Contao;
 
 use Contao\CoreBundle\Test\TestCase;
 use Contao\Environment;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Tests the Environment class.
@@ -49,7 +50,6 @@ class EnvironmentTest extends TestCase
             'HTTP_X_FORWARDED_FOR' => '123.456.789.0',
             'SERVER_NAME'          => 'localhost',
             'SERVER_ADDR'          => '127.0.0.1',
-            'REMOTE_ADDR'          => '123.456.789.0',
             'DOCUMENT_ROOT'        => $this->getRootDir(),
             'SCRIPT_FILENAME'      => $this->getRootDir() . '/core/index.php',
             'SERVER_PROTOCOL'      => 'HTTP/1.1',
@@ -80,7 +80,6 @@ class EnvironmentTest extends TestCase
             'HTTP_X_FORWARDED_FOR' => '123.456.789.0',
             'SERVER_NAME'          => 'localhost',
             'SERVER_ADDR'          => '127.0.0.1',
-            'REMOTE_ADDR'          => '123.456.789.0',
             'DOCUMENT_ROOT'        => $this->getRootDir(),
             'SCRIPT_FILENAME'      => $this->getRootDir() . '/core/index.php',
             'ORIG_SCRIPT_FILENAME' => $this->getRootDir() . '/fcgi-bin/php-fcgi-starter',
@@ -118,7 +117,6 @@ class EnvironmentTest extends TestCase
             'HTTP_X_FORWARDED_FOR' => '123.456.789.0',
             'SERVER_NAME'          => 'localhost',
             'SERVER_ADDR'          => '127.0.0.1',
-            'REMOTE_ADDR'          => '123.456.789.0',
             'DOCUMENT_ROOT'        => $this->getRootDir(),
             'SCRIPT_FILENAME'      => $this->getRootDir() . '/core/index.php',
             'ORIG_SCRIPT_FILENAME' => '/var/run/localhost.fcgi',
@@ -141,6 +139,11 @@ class EnvironmentTest extends TestCase
      */
     protected function runTests()
     {
+        /** @var Kernel $kernel */
+        global $kernel;
+
+        $kernel = $this->mockKernel();
+
         $agent = Environment::get('agent');
 
         $this->assertEquals('mac', $agent->os);
