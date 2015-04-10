@@ -127,7 +127,16 @@ class PageError404 extends \Frontend
 				}
 				else
 				{
-					$this->redirect($objRootPage->language . '/' . \Environment::get('request'), 301);
+					if ($strRequest == \Environment::get('request'))
+					{
+						$strRequest = $objRootPage->language . '/' . $strRequest;
+					}
+					else
+					{
+						$strRequest = \Environment::get('script') . '/' . $objRootPage->language . '/' . $strRequest;
+					}
+
+					$this->redirect($strRequest, 301);
 				}
 			}
 		}
