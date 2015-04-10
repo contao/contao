@@ -85,6 +85,8 @@ class Result
 	 *
 	 * @param DoctrineStatement $statement The database statement
 	 * @param string            $strQuery  The query string
+     *
+     * @todo Try to find a solution that works without fetchAll().
 	 */
 	public function __construct(DoctrineStatement $statement, $strQuery)
 	{
@@ -288,7 +290,7 @@ class Result
 	 */
 	public function first()
 	{
-		$this->setIndex(0);
+		$this->intIndex = 0;
 
 		$this->blnDone = false;
 		$this->arrCache = $this->resultSet[$this->intIndex];
@@ -309,10 +311,8 @@ class Result
 			return false;
 		}
 
-		$this->setIndex(--$this->intIndex);
-
 		$this->blnDone = false;
-		$this->arrCache = $this->resultSet[$this->intIndex];
+		$this->arrCache = $this->resultSet[--$this->intIndex];
 
 		return $this;
 	}
@@ -348,7 +348,7 @@ class Result
 	 */
 	public function last()
 	{
-		$this->setIndex($this->count() - 1);
+		$this->intIndex = $this->count() - 1;
 
 		$this->blnDone = true;
 		$this->arrCache = $this->resultSet[$this->intIndex];
@@ -399,34 +399,4 @@ class Result
 
 		return $this;
 	}
-
-
-	/**
-	 * Set the index to a particular value
-	 *
-	 * @param integer $intIndex The row index
-	 *
-	 * @throws \OutOfBoundsException If $intIndex is out of bounds
-	 */
-	protected function setIndex($intIndex)
-    {
-		if ($intIndex < 0)
-		{
-			throw new \OutOfBoundsException("Invalid index $intIndex (must be >= 0)");
-		}
-
-		$intTotal = $this->count();
-
-		if ($intTotal <= 0)
-		{
-			return; // see #6319
-		}
-
-		if ($intIndex >= $intTotal)
-		{
-			throw new \OutOfBoundsException("Invalid index $intIndex (only $intTotal rows in the result set)");
-		}
-
-		$this->intIndex = $intIndex;
-    }
 }
