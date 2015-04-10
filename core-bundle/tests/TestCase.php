@@ -17,6 +17,8 @@ use Contao\Environment;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -93,8 +95,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockKernel()
     {
-        Environment::set('httpAcceptLanguage', []);
-
         $kernel = $this->getMock(
             'Symfony\\Component\\HttpKernel\\Kernel',
             [
@@ -139,6 +139,17 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->set(
             'contao.resource_locator',
             new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
+        );
+
+        $request = new Request();
+        $request->server->set('REMOTE_ADDR', '123.456.789.0');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $container->set(
+            'request_stack',
+            $requestStack
         );
 
         $kernel
