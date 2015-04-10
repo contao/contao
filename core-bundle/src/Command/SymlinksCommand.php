@@ -94,12 +94,12 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function symlinkFiles($uploadPath, $rootDir, OutputInterface $output)
     {
-        $finder = $this->findIn("$rootDir/$uploadPath")->files()->name('.public');
-
-        /** @var SplFileInfo $file */
-        foreach ($finder as $file) {
-            $this->relativeSymlink($uploadPath . '/' . $file->getRelativePath(), $rootDir, $output);
-        }
+        $this->relativeSymlink(
+            $this->findIn("$rootDir/$uploadPath")->files()->name('.public'),
+            $uploadPath,
+            $rootDir,
+            $output
+        );
     }
 
     /**
@@ -110,18 +110,18 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function symlinkModules($rootDir, OutputInterface $output)
     {
-        $files = $this->findIn("$rootDir/system/modules")->files()->name('.htaccess');
-
-        /** @var SplFileInfo $file */
-        foreach ($files as $file) {
+        $filter = function (SplFileInfo $file) {
             $htaccess = new HtaccessAnalyzer($file);
 
-            if (!$htaccess->grantsAccess()) {
-                continue;
-            }
+            return $htaccess->grantsAccess();
+        };
 
-            $this->relativeSymlink('system/modules/' . $file->getRelativePath(), $rootDir, $output);
-        }
+        $this->relativeSymlink(
+            $this->findIn("$rootDir/system/modules")->files()->filter($filter)->name('.htaccess'),
+            'system/modules',
+            $rootDir,
+            $output
+        );
     }
 
     /**
@@ -149,13 +149,18 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     /**
      * Generates a symlink relative to the given path.
      *
-     * @param string          $path    The path
+     * @param Finder          $finder  The finder object
+     * @param string          $prepend The path to prepend
      * @param string          $rootDir The root directory
      * @param OutputInterface $output  The output object
      */
-    private function relativeSymlink($path, $rootDir, OutputInterface $output)
+    private function relativeSymlink(Finder $finder, $prepend, $rootDir, OutputInterface $output)
     {
-        $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
+        /** @var SplFileInfo $file */
+        foreach ($finder as $file) {
+            $path = $prepend . '/' . $file->getRelativePath();
+            $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
+        }
     }
 
     /**
