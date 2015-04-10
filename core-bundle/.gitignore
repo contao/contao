@@ -9,5 +9,8 @@ nbproject/
 # Components
 /components/
 
+# Tests
+/tests/Fixtures/app/cache/contao/
+
 # Vendor
 /vendor/

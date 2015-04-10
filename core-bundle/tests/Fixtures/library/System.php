@@ -7,6 +7,11 @@ class System
     protected static $arrStaticObjects = [];
     protected $arrObjects = [];
 
+    protected function __construct()
+    {
+        // prevent the "Cannot call constructor" error
+    }
+
     public static function getReferer()
     {
         return '/foo/bar';
@@ -31,6 +36,11 @@ class System
         }
 
         return static::$arrStaticObjects[$strKey];
+    }
+
+    public static function loadLanguageFile()
+    {
+
     }
 
     public function __get($strKey)

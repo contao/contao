@@ -22,40 +22,61 @@ use Symfony\Component\Finder\SplFileInfo;
 class HtaccessAnalyzerTest extends TestCase
 {
     /**
-     * @var SplFileInfo
-     */
-    protected $file;
-
-    /**
-     * Creates a file object.
-     */
-    protected function setUp()
-    {
-        $this->file = new SplFileInfo(
-            $this->getRootDir() . '/system/modules/foobar/html/.htaccess',
-            'system/modules/foobar/html',
-            'system/modules/foobar/html/.htaccess'
-        );
-    }
-
-    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $htaccess = new HtaccessAnalyzer($this->file);
+        $file = new SplFileInfo(
+            $this->getRootDir() . '/system/modules/foobar/assets/.htaccess',
+            'system/modules/foobar/assets',
+            'system/modules/foobar/assets/.htaccess'
+        );
+
+        $htaccess = new HtaccessAnalyzer($file);
 
         $this->assertInstanceOf('Contao\\CoreBundle\\Analyzer\\HtaccessAnalyzer', $htaccess);
     }
 
     /**
-     * Tests the grantsAccess() method.
+     * Tests a file that grants access.
      */
     public function testGrantsAccess()
     {
-        $htaccess = new HtaccessAnalyzer($this->file);
+        $file = new SplFileInfo(
+            $this->getRootDir() . '/system/modules/foobar/assets/.htaccess',
+            'system/modules/foobar/assets',
+            'system/modules/foobar/assets/.htaccess'
+        );
+
+        $htaccess = new HtaccessAnalyzer($file);
 
         $this->assertTrue($htaccess->grantsAccess());
+
+        $file = new SplFileInfo(
+            $this->getRootDir() . '/system/modules/foobar/html/.htaccess',
+            'system/modules/foobar/html',
+            'system/modules/foobar/html/.htaccess'
+        );
+
+        $htaccess = new HtaccessAnalyzer($file);
+
+        $this->assertTrue($htaccess->grantsAccess());
+    }
+
+    /**
+     * Tests a file that does not grant access.
+     */
+    public function testDoesNotGrantAccess()
+    {
+        $file = new SplFileInfo(
+            $this->getRootDir() . '/system/modules/foobar/private/.htaccess',
+            'system/modules/foobar/private',
+            'system/modules/foobar/private/.htaccess'
+        );
+
+        $htaccess = new HtaccessAnalyzer($file);
+
+        $this->assertFalse($htaccess->grantsAccess());
     }
 
     /**

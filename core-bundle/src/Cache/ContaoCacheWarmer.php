@@ -65,8 +65,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      * @param FileLocator    $locator    The file locator
      * @param string         $rootDir    The root directory
      * @param Connection     $connection The Doctrine connection
-     *
-     * @internal param Registry $doctrine The doctrine registry
      */
     public function __construct(
         Filesystem $filesystem,
@@ -216,7 +214,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 $processed[] = $name;
 
                 $subfiles = $this->finder->findIn("languages/$language")->files()->name("/^$name\\.(php|xlf)$/");
-                $dumper->dump(iterator_to_array($subfiles), "languages/$language/$name.php", ['type' => $language]);
+
+                try {
+                    $dumper->dump(iterator_to_array($subfiles), "languages/$language/$name.php", ['type' => $language]);
+                } catch (\OutOfBoundsException $e) {
+                    continue;
+                }
             }
         }
     }

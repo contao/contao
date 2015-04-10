@@ -69,8 +69,29 @@ class PhpFileLoaderTest extends TestCase
             $this->loader->load($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/config.php')
         );
 
+        $content = <<<EOF
+
+
+\$GLOBALS['TL_DCA']['tl_test'] = [
+    'config' => [
+        'dataContainer' => 'DC_Table',
+        'sql' => [
+            'keys' => [
+                'id' => 'primary',
+            ],
+        ],
+    ],
+    'fields' => [
+        'id' => [
+            'sql' => "int(10) unsigned NOT NULL auto_increment"
+        ],
+    ],
+];
+
+EOF;
+
         $this->assertEquals(
-            "\n\n\$GLOBALS['TL_TEST'] = true;\n",
+            $content,
             $this->loader->load($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/dca/tl_test.php')
         );
 
