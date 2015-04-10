@@ -76,6 +76,7 @@ class AddToSearchIndexListenerTest extends TestCase
         $event
             ->expects($this->once())
             ->method('getResponse')
+            ->willReturn(new Response())
         ;
 
         $listener->onKernelTerminate($event);
