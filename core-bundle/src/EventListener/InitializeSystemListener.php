@@ -201,10 +201,6 @@ class InitializeSystemListener extends ScopeAwareListener
 
         $this->includeHelpers();
 
-        // Try to disable the PHPSESSID
-        $this->iniSet('session.use_trans_sid', 0);
-        $this->iniSet('session.cookie_httponly', true);
-
         // FIXME: We should log PHP errors via symfony logger in the future.
         $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
 
