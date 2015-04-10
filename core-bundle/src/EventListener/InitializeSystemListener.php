@@ -197,7 +197,7 @@ class InitializeSystemListener extends ScopeAwareListener
         }
 
         $this->triggerInitializeSystemHook();
-        $this->handleRequestToken();
+        $this->handleRequestToken($request);
     }
 
     /**
@@ -275,9 +275,7 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     private function setRelativePath($basePath)
     {
-        Environment::set('path', $basePath);
-
-        define('TL_PATH', Environment::get('path')); // backwards compatibility
+        define('TL_PATH', $basePath); // backwards compatibility
     }
 
     /**
@@ -369,8 +367,10 @@ class InitializeSystemListener extends ScopeAwareListener
 
     /**
      * Handles the request token.
+     *
+     * @param Request $request
      */
-    private function handleRequestToken()
+    private function handleRequestToken(Request $request = null)
     {
         // Backwards compatibility
         if (!defined('REQUEST_TOKEN')) {
@@ -381,12 +381,14 @@ class InitializeSystemListener extends ScopeAwareListener
         $token = new CsrfToken($this->csrfTokenName, Input::post('REQUEST_TOKEN'));
 
         // FIXME: This forces all routes handling POST data to pase a REQUEST_TOKEN
-        if ($_POST && !$this->tokenManager->isTokenValid($token)) {
-
+        if ($_POST
+            && !$this->tokenManager->isTokenValid($token)
+            && null !== $request
+        ) {
             // Force a JavaScript redirect upon Ajax requests (IE requires absolute link)
-            if (Environment::get('isAjaxRequest')) {
+            if ($request->isXmlHttpRequest()) {
                 header('HTTP/1.1 204 No Content');
-                header('X-Ajax-Location: ' . Environment::get('base') . 'contao/');
+                header('X-Ajax-Location: ' . $this->router->generate('contao_backend'));
             } else {
                 header('HTTP/1.1 400 Bad Request');
                 die_nicely(
