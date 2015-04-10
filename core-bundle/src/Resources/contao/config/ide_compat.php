@@ -97,7 +97,7 @@ namespace {
 	class Combiner extends \Contao\Combiner {}
 	class Config extends \Contao\Config {}
 	abstract class Controller extends \Contao\Controller {}
-	abstract class Database extends \Contao\Database {}
+	class Database extends \Contao\Database {}
 	class Date extends \Contao\Date {}
 	class Dbafs extends \Contao\Dbafs {}
 	class DcaExtractor extends \Contao\DcaExtractor {}
@@ -211,19 +211,9 @@ namespace {
 }
 namespace Database {
 	class Installer extends \Contao\Database\Installer {}
-	class Mysql extends \Contao\Database\Mysql {}
-	class Mysqli extends \Contao\Database\Mysqli {}
-	abstract class Result extends \Contao\Database\Result {}
-	abstract class Statement extends \Contao\Database\Statement {}
+	class Result extends \Contao\Database\Result {}
+	class Statement extends \Contao\Database\Statement {}
 	class Updater extends \Contao\Database\Updater {}
-}
-namespace Database\Mysql {
-	class Result extends \Contao\Database\Mysql\Result {}
-	class Statement extends \Contao\Database\Mysql\Statement {}
-}
-namespace Database\Mysqli {
-	class Result extends \Contao\Database\Mysqli\Result {}
-	class Statement extends \Contao\Database\Mysqli\Statement {}
 }
 namespace Filter {
 	class SqlFiles extends \Contao\Filter\SqlFiles {}

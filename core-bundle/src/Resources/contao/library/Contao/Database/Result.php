@@ -10,6 +10,8 @@
 
 namespace Contao\Database;
 
+use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
+
 
 /**
  * Lazy load the result set rows
@@ -32,12 +34,12 @@ namespace Contao\Database;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Result
+class Result
 {
 
 	/**
 	 * Database result
-	 * @var resource
+	 * @var DoctrineStatement
 	 */
 	protected $resResult;
 
@@ -46,6 +48,12 @@ abstract class Result
 	 * @var string
 	 */
 	protected $strQuery;
+
+	/**
+	 * Result set
+	 * @var array
+	 */
+	protected $resultSet;
 
 	/**
 	 * Current row index
@@ -75,20 +83,14 @@ abstract class Result
 	/**
 	 * Validate the connection resource and store the query string
 	 *
-	 * @param resource $resResult The database result
-	 * @param string   $strQuery  The query string
-	 *
-	 * @throws \Exception If $resResult is not a valid resource
+	 * @param DoctrineStatement $statement The database statement
+	 * @param string            $strQuery  The query string
 	 */
-	public function __construct($resResult, $strQuery)
+	public function __construct(DoctrineStatement $statement, $strQuery)
 	{
-		if (!is_resource($resResult) && !is_object($resResult))
-		{
-			throw new \Exception('Invalid result resource');
-		}
-
-		$this->resResult = $resResult;
+		$this->resResult = $statement;
 		$this->strQuery = $strQuery;
+		$this->resultSet = $statement->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 
@@ -97,7 +99,8 @@ abstract class Result
 	 */
 	public function __destruct()
 	{
-		$this->free();
+		$this->resultSet = null;
+		$this->resResult->closeCursor();
 	}
 
 
@@ -153,11 +156,11 @@ abstract class Result
 				break;
 
 			case 'numRows':
-				return $this->num_rows();
+				return $this->count();
 				break;
 
 			case 'numFields':
-				return $this->num_fields();
+				return $this->resResult->columnCount();
 				break;
 
 			case 'isModified':
@@ -187,15 +190,14 @@ abstract class Result
 	 */
 	public function fetchRow()
 	{
-		if (($arrRow = $this->fetch_row()) == false)
+		if ($this->intIndex >= $this->count() - 1)
 		{
 			return false;
 		}
 
-		++$this->intIndex;
-		$this->arrCache = $arrRow;
+		$this->arrCache = array_values($this->resultSet[++$this->intIndex]);
 
-		return $arrRow;
+		return $this->arrCache;
 	}
 
 
@@ -206,15 +208,14 @@ abstract class Result
 	 */
 	public function fetchAssoc()
 	{
-		if (($arrRow = $this->fetch_assoc()) == false)
+		if ($this->intIndex >= $this->count() - 1)
 		{
 			return false;
 		}
 
-		++$this->intIndex;
-		$this->arrCache = $arrRow;
+		$this->arrCache = $this->resultSet[++$this->intIndex];
 
-		return $arrRow;
+		return $this->arrCache;
 	}
 
 
@@ -274,14 +275,9 @@ abstract class Result
 	 */
 	public function fetchField($intOffset=0)
 	{
-		$arrFields = $this->fetch_field($intOffset);
+		$arrFields = array_values($this->resultSet[$this->intIndex]);
 
-		if (is_object($arrFields))
-		{
-			$arrFields = get_object_vars($arrFields);
-		}
-
-		return $arrFields;
+		return $arrFields[$intOffset];
 	}
 
 
@@ -292,16 +288,10 @@ abstract class Result
 	 */
 	public function first()
 	{
-		$this->intIndex = 0;
-		$this->data_seek($this->intIndex);
-
-		if (($arrRow = $this->fetch_assoc()) == false)
-		{
-			return false;
-		}
+		$this->setIndex(0);
 
 		$this->blnDone = false;
-		$this->arrCache = $arrRow;
+		$this->arrCache = $this->resultSet[$this->intIndex];
 
 		return $this;
 	}
@@ -319,16 +309,10 @@ abstract class Result
 			return false;
 		}
 
-		--$this->intIndex;
-		$this->data_seek($this->intIndex);
-
-		if (($arrRow = $this->fetch_assoc()) == false)
-		{
-			return false;
-		}
+		$this->setIndex(--$this->intIndex);
 
 		$this->blnDone = false;
-		$this->arrCache = $arrRow;
+		$this->arrCache = $this->resultSet[$this->intIndex];
 
 		return $this;
 	}
@@ -346,17 +330,14 @@ abstract class Result
 			return false;
 		}
 
-		if (($arrRow = $this->fetch_assoc()) == false)
+		if (($arrRow = $this->fetchAssoc()) !== false)
 		{
-			$this->blnDone = true;
-
-			return false;
+			return $this;
 		}
 
-		++$this->intIndex;
-		$this->arrCache = $arrRow;
+		$this->blnDone = true;
 
-		return $this;
+		return false;
 	}
 
 
@@ -367,16 +348,10 @@ abstract class Result
 	 */
 	public function last()
 	{
-		$this->intIndex = $this->count() - 1;
-		$this->data_seek($this->intIndex);
-
-		if (($arrRow = $this->fetch_assoc()) == false)
-		{
-			return false;
-		}
+		$this->setIndex($this->count() - 1);
 
 		$this->blnDone = true;
-		$this->arrCache = $arrRow;
+		$this->arrCache = $this->resultSet[$this->intIndex];
 
 		return $this;
 	}
@@ -389,7 +364,7 @@ abstract class Result
 	 */
 	public function count()
 	{
-		return $this->num_rows();
+		return count($this->resultSet);
 	}
 
 
@@ -420,7 +395,6 @@ abstract class Result
 	{
 		$this->intIndex = -1;
 		$this->blnDone = false;
-		$this->data_seek(0);
 		$this->arrCache = array();
 
 		return $this;
@@ -428,60 +402,31 @@ abstract class Result
 
 
 	/**
-	 * Fetch the current row as enumerated array
-	 *
-	 * @return array The row as array
-	 */
-	abstract protected function fetch_row();
-
-
-	/**
-	 * Fetch the current row as associative array
-	 *
-	 * @return array The row as associative array
-	 */
-	abstract protected function fetch_assoc();
-
-
-	/**
-	 * Return the number of rows in the result set
-	 *
-	 * @return integer The number of rows
-	 */
-	abstract protected function num_rows();
-
-
-	/**
-	 * Return the number of fields of the result set
-	 *
-	 * @return integer The number of fields
-	 */
-	abstract protected function num_fields();
-
-
-	/**
-	 * Get the column information and return it as array
-	 *
-	 * @param integer $intOffset The field offset
-	 *
-	 * @return array|object An array or object with the column information
-	 */
-	abstract protected function fetch_field($intOffset);
-
-
-	/**
-	 * Navigate to a certain row in the result set
+	 * Set the index to a particular value
 	 *
 	 * @param integer $intIndex The row index
 	 *
 	 * @throws \OutOfBoundsException If $intIndex is out of bounds
 	 */
-	abstract protected function data_seek($intIndex);
+	protected function setIndex($intIndex)
+    {
+		if ($intIndex < 0)
+		{
+			throw new \OutOfBoundsException("Invalid index $intIndex (must be >= 0)");
+		}
 
+		$intTotal = $this->count();
 
-	/**
-	 * Free the result
-	 */
-	abstract public function free();
+		if ($intTotal <= 0)
+		{
+			return; // see #6319
+		}
 
+		if ($intIndex >= $intTotal)
+		{
+			throw new \OutOfBoundsException("Invalid index $intIndex (only $intTotal rows in the result set)");
+		}
+
+		$this->intIndex = $intIndex;
+    }
 }
