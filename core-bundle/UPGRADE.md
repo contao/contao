@@ -107,10 +107,16 @@ method have been removed. If you want to output the messages without the
 wrapping element, use `Message::generateUnwrapped()` instead.
 
 
+### prepareFormData hook
+
+The "prepareFormData" hook now passes `$this` as last argument, just like in
+any other hook.
+
+
 ### `ondelete_callback`
 
 The `ondelete_callback` of the `DC_Table` driver now passes `$this` as last
-argument just like in `DC_Folder` and in any other callback.
+argument, just like in `DC_Folder` and in any other callback.
 
 
 ### Markup changes
