@@ -31,7 +31,7 @@ class ContaoCacheWarmerTest extends TestCase
     private $warmer;
 
     /**
-     * Creates the ContaoCacheWarmer object.
+     * {@inheritdoc}
      */
     protected function setUp()
     {
@@ -40,8 +40,17 @@ class ContaoCacheWarmerTest extends TestCase
             new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
             new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
             $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-            new Connection() // FIXME: mock a connection object
+            $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false)
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function tearDown()
+    {
+        $fs = new Filesystem();
+        $fs->remove($this->getCacheDir() . '/contao');
     }
 
     /**
@@ -64,12 +73,40 @@ class ContaoCacheWarmerTest extends TestCase
 
         $kernel = $this->mockKernel();
 
+        $connection = $this->getMock('Doctrine\\DBAL\\Connection', ['prepare', 'execute', 'fetch'], [], '', false);
+
+        $connection
+            ->expects($this->any())
+            ->method('prepare')
+            ->willReturn($connection)
+        ;
+
+        $class1 = new \stdClass();
+        $class1->language = 'en-US';
+
+        $class2 = new \stdClass();
+        $class2->language = 'en';
+
+        $connection
+            ->expects($this->exactly(3))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls($class1, $class2, false)
+        ;
+
+        $warmer = new ContaoCacheWarmer(
+            new Filesystem(),
+            new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
+            new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
+            $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+            $connection
+        );
+
         // The test DCA file needs TL_ROOT to be defined
         if (!defined('TL_ROOT')) {
             define('TL_ROOT', '');
         }
 
-        $this->warmer->warmUp($this->getCacheDir());
+        $warmer->warmUp($this->getCacheDir());
 
         $this->assertFileExists($this->getCacheDir() . '/contao');
         $this->assertFileExists($this->getCacheDir() . '/contao/config');

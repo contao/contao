@@ -40,7 +40,7 @@ class System
 
     public static function loadLanguageFile()
     {
-
+        // ignore
     }
 
     public function __get($strKey)
