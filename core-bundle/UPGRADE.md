@@ -4,6 +4,41 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Custom database connection
+
+The database classes have been mapped to the Doctrine connection of Symfony. If
+you want to create a custom connection, configure it in the `config.yml` file:
+
+```yml
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                driver:   "%database_driver%"
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "%database_name%"
+                user:     "%database_user%"
+                password: "%database_password%"
+                charset:  UTF8MB4
+            custom:
+                driver:   "%database_driver%"
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "another_database"
+                user:     "%database_user%"
+                password: "%database_password%"
+                charset:  UTF8MB4
+```
+
+Then pass the connection ID to the `Database::getInstance()` method:
+
+```php
+$db = Database::getInstance('doctrine.dbal.custom_connection');
+```
+
+
 ### `dump()`
 
 The `dump()` function has been replaced by the Symfony debug bundle. Its output
