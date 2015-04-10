@@ -166,6 +166,8 @@ class ExceptionListener
     /**
      * Check if the Contao 404 should be rendered.
      *
+     * @param \Exception $exception The exception to test.
+     *
      * @return bool
      */
     private function isRenderingOfContao404PossibleFor($exception)
@@ -378,7 +380,9 @@ class ExceptionListener
     /**
      * Try to render an error template.
      *
-     * @param string $template The template name. Will get searched at standard locations.
+     * @param string $template   The template name. Will get searched at standard locations.
+     *
+     * @param int    $statusCode The HTTP status code to use in the response.
      *
      * @return Response
      */
