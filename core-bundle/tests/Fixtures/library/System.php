@@ -40,11 +40,6 @@ class System
         return static::$arrStaticObjects[$strKey];
     }
 
-    public static function loadLanguageFile()
-    {
-        // ignore
-    }
-
     public function __get($strKey)
     {
         if (!isset($this->arrObjects[$strKey])) {
