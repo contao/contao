@@ -15,7 +15,44 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 The constants `TL_ROOT`, `TL_MODE`, `TL_START` and `TL_SCRIPT` have been
 deprecated and will be removed in Contao 5.0.
 
-// FIXME: show the alternatives
+You can use the `kernel.root_dir` instead of `TL_ROOT`:
+
+```php
+global $kernel;
+
+$rootDir = dirname($kernel->getContainer()->getParameter('kernel.root_dir'));
+```
+
+You can check the container scope instead of using `TL_MODE`:
+
+```php
+global $kernel;
+
+$isBackEnd  = $kernel->getContainer()->isScopeActive('backend');
+$isFrontEnd = $kernel->getContainer()->isScopeActive('frontend');
+```
+
+You can use the kernel start time instead of `TL_START:
+
+```php
+global $kernel;
+
+$startTime = $kernel->getStartTime();
+```
+
+You can use the request stack to get the route instead of using `TL_SCRIPT`:
+
+```php
+global $kernel;
+
+$route = $kernel->getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
+
+if ('contao_backend_main' === $route) {
+    // Do something
+}
+```
+
+Type `$ ./app/console router:debug` on the console to see all available routes.
 
 
 ### PHP entry points
@@ -36,7 +73,7 @@ Use the container parameter `kernel.bundles` instead:
 ```php
 global $kernel;
 
-$bundles = $kernel->getContainer()->get('kernel.bundles');
+$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
 ```
 
 
