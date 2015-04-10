@@ -56,6 +56,16 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
+     * Tests the __toString() method.
+     */
+    public function testToString()
+    {
+        $command = new AutomatorCommand('contao:automator');
+
+        $this->assertContains('The name of the task:', $command->__toString());
+    }
+
+    /**
      * Tests the lock.
      */
     public function testLock()
