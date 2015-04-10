@@ -244,19 +244,33 @@ class Database
 	/**
 	 * Return all tables as array
 	 *
-	 * @param string  $strDatabase No longer used
+	 * @param string  $strDatabase The database name
 	 * @param boolean $blnNoCache  If true, the cache will be bypassed
 	 *
 	 * @return array An array of table names
 	 */
 	public function listTables($strDatabase=null, $blnNoCache=false)
 	{
-		if ($blnNoCache || !isset($this->arrCache['listTables']))
+		if ($blnNoCache || !isset($this->arrCache[$strDatabase]))
 		{
-			$this->arrCache['listTables'] = $this->resConnection->getSchemaManager()->listTableNames();
+			$strOldDatabase = $this->resConnection->getDatabase();
+
+			// Change the database
+			if ($strDatabase !== null && $strDatabase != $strOldDatabase)
+			{
+				$this->setDatabase($strDatabase);
+			}
+
+			$this->arrCache[$strDatabase] = $this->resConnection->getSchemaManager()->listTableNames();
+
+			// Restore the database
+			if ($strDatabase !== null && $strDatabase != $strOldDatabase)
+			{
+				$this->setDatabase($strOldDatabase);
+			}
 		}
 
-		return $this->arrCache['listTables'];
+		return $this->arrCache[$strDatabase];
 	}
 
 
