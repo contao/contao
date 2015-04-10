@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
-use Contao\Config;
 use Contao\CoreBundle\EventListener\ExceptionListener;
 use Contao\CoreBundle\Exception\NoPagesFoundHttpException;
 use Contao\CoreBundle\Exception\NotFoundHttpException;
@@ -24,7 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Tests the ExceptionListenerTest class.
@@ -58,6 +56,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testGenericExceptionWithoutErrorScreen()
     {
+        $this->microBootFramework();
         $listener = new ExceptionListener(false, $this->mockTwig());
 
         $event = new GetResponseForExceptionEvent(
@@ -77,6 +76,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testGenericExceptionWithErrorScreen()
     {
+        $this->microBootFramework();
         $listener = new ExceptionListener(true, $this->mockTwig());
 
         $event = new GetResponseForExceptionEvent(
@@ -103,6 +103,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testUnknownHttpExceptionIsRenderedAsError()
     {
+        $this->microBootFramework();
         $listener = new ExceptionListener(true, $this->mockTwig());
 
         /** @var \Exception $exception */
@@ -136,6 +137,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testNonExistentTemplateIsRenderedAsError()
     {
+        $this->microBootFramework();
         $listener = new ExceptionListener(true, $this->mockTwig(['error']));
 
         /** @var \Exception $exception */
@@ -187,6 +189,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testKnownContaoExceptionRendersTemplate($exceptionClass, $templateName)
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(true, $this->mockTwig());
         $exception = new $exceptionClass();
         $event     = new GetResponseForExceptionEvent(
@@ -216,6 +219,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testKnownContaoExceptionDoesNotRenderTemplate($exceptionClass)
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(false, $this->mockTwig());
         $exception = new $exceptionClass();
         $event     = new GetResponseForExceptionEvent(
@@ -240,6 +244,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testWrappedKnownContaoExceptionRendersTemplate($exceptionClass, $templateName)
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(true, $this->mockTwig());
         $exception = new \RuntimeException(
             'wrap 1',
@@ -273,6 +278,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testResponseExceptionIsHandled()
     {
+        $this->microBootFramework();
         $listener      = new ExceptionListener(true, $this->mockTwig());
         $exception     = ResponseException::create('I got chained.');
         $wrapException = new \RuntimeException(
@@ -307,6 +313,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testTryToRenderContao404()
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(true, $this->mockTwig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
@@ -337,6 +344,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testTryToRenderContao404WillNotRenderForRootNotFoundHttpException()
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(true, $this->mockTwig());
         $exception = new RootNotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
@@ -366,6 +374,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testTryToRenderContao404WillNotRenderForNoPagesFoundHttpException()
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(true, $this->mockTwig());
         $exception = new NoPagesFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
@@ -395,6 +404,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testTryToRenderContao404WillNotRenderWithoutPageHandler()
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(true, $this->mockTwig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
@@ -422,6 +432,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testTryToRenderContao404WillNotRenderWithInvalidPageHandler()
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(true, $this->mockTwig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
@@ -449,6 +460,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testTryToRenderContao404ThrowsResponseException()
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(true, $this->mockTwig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
@@ -480,6 +492,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testTryToRenderContao404ThrowsNotFoundHttpException()
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(true, $this->mockTwig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
@@ -510,6 +523,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testTryToRenderContao404ThrowsException()
     {
+        $this->microBootFramework();
         $listener  = new ExceptionListener(true, $this->mockTwig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
@@ -542,6 +556,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testTryToRenderContao404WillRecurse()
     {
+        $this->microBootFramework();
         $kernel     = $this->mockKernel();
         $listener   = new ExceptionListener(true, $this->mockTwig());
         $exception  = new NotFoundHttpException();
@@ -575,7 +590,7 @@ class ExceptionListenerTest extends TestCase
         $exception = new NoPagesFoundHttpException();
 
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(false),
+            $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
             $exception
@@ -677,5 +692,20 @@ class ExceptionListenerTest extends TestCase
             });
 
         return $twig;
+    }
+
+    /**
+     * Load the legacy classes used by the exception listener.
+     *
+     * @return void
+     */
+    private function microBootFramework()
+    {
+        parent::setUp();
+        if (!defined('BE_USER_LOGGED_IN')) {
+            define('BE_USER_LOGGED_IN', false);
+        }
+        Environment::set('agent', (object)['class' => 'test browser']);
+        Environment::set('base', 'https://example.com/');
     }
 }
