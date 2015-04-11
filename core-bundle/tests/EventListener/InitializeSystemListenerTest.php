@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
+use Contao\Config;
 use Contao\CoreBundle\Command\VersionCommand;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
@@ -54,6 +55,8 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testFrontendRequest()
     {
+        Config::preload();
+
         /** @var KernelInterface $kernel */
         global $kernel;
 
@@ -95,6 +98,8 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testBackendRequest()
     {
+        Config::preload();
+
         /** @var KernelInterface $kernel */
         global $kernel;
 
@@ -137,6 +142,8 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testFrontendSubRequest()
     {
+        Config::preload();
+
         /** @var KernelInterface $kernel */
         global $kernel;
 

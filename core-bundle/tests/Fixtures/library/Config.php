@@ -6,6 +6,12 @@ class Config
 {
     private static $instance;
 
+    protected function __construct()
+    {
+        $GLOBALS['TL_CONFIG']['timeZone'] = 'GMT';
+        $GLOBALS['TL_CONFIG']['characterSet'] = 'UTF-8';
+    }
+
     public static function getInstance()
     {
         if (null === static::$instance) {

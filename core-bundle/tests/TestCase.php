@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\Test;
 use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
-use Contao\Environment;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
@@ -41,9 +40,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-
-        Config::set('timeZone', 'GMT');
-        Config::set('characterSet', 'UTF-8');
     }
 
     /**
@@ -73,6 +69,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function bootContaoFramework(InitializeSystemListener $listener)
     {
+        Config::preload();
+
         /** @var Kernel $kernel */
         global $kernel;
 
