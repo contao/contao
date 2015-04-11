@@ -408,10 +408,7 @@ class Environment
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$container = $kernel->getContainer();
-
-		/** @var Request $request */
-		$request = $container->get('request_stack')->getCurrentRequest();
+		$request = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
 
 		return $request->getBasePath();
 	}
