@@ -401,16 +401,16 @@ class Environment
 	/**
 	 * Return the relative path to the base directory (e.g. /path)
 	 *
-	 * The real path is being set during the Contao initialization process, so
-	 * this method is only called if static::$arrCache['path'] is not set. It is
-	 * required to prevent the Environment class from returning the value of the
-	 * global $_SERVER['path'] variable.
-	 *
 	 * @return string The relative path to the installation
 	 */
 	protected static function path()
 	{
-		return '';
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$request = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
+
+		return $request->getBasePath();
 	}
 
 

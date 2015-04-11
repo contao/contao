@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\ClassLoader;
 use Contao\Config;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
-use Contao\Environment;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
@@ -107,7 +106,9 @@ class InitializeSystemListener extends ScopeAwareListener
             $request->attributes->get('_route_params')
         );
 
-        $this->setConstants($this->getModeFromContainerScope(), substr($route, strlen($request->getBasePath()) + 1));
+        $basePath = $request->getBasePath();
+
+        $this->setConstants($this->getModeFromContainerScope(), substr($route, strlen($basePath) + 1), $basePath);
         $this->boot($request);
     }
 
@@ -130,12 +131,13 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * Sets the Contao constants.
      *
-     * @param string $mode  The mode (BE or FE)
-     * @param string $route The route
+     * @param string $mode     The mode (BE or FE)
+     * @param string $route    The route
+     * @param string $basePath The base path
      *
      * @internal
      */
-    protected function setConstants($mode, $route)
+    protected function setConstants($mode, $route, $basePath = '')
     {
         // The constants are deprecated and will be removed in version 5.0.
         define('TL_MODE', $mode);
@@ -149,6 +151,9 @@ class InitializeSystemListener extends ScopeAwareListener
             define('BE_USER_LOGGED_IN', false);
             define('FE_USER_LOGGED_IN', false);
         }
+
+        // Define the relative path to the installation (see #5339)
+        define('TL_PATH', $basePath);
     }
 
     /**
@@ -177,9 +182,8 @@ class InitializeSystemListener extends ScopeAwareListener
         // Register the class loader
         ClassLoader::scanAndRegister();
 
-        $this->setRelativePath($request ? $request->getBasePath() : '');
         $this->initializeLegacySessionAccess();
-        $this->setDefaultLanguage();
+        $this->setDefaultLanguage($request);
 
         // Fully load the configuration
         $objConfig = Config::getInstance();
@@ -197,7 +201,7 @@ class InitializeSystemListener extends ScopeAwareListener
         }
 
         $this->triggerInitializeSystemHook();
-        $this->handleRequestToken();
+        $this->handleRequestToken($request);
     }
 
     /**
@@ -269,35 +273,26 @@ class InitializeSystemListener extends ScopeAwareListener
     }
 
     /**
-     * Defines the relative path to the installation (see #5339).
-     *
-     * @param string $basePath The URL base path
-     */
-    private function setRelativePath($basePath)
-    {
-        Environment::set('path', $basePath);
-
-        define('TL_PATH', Environment::get('path')); // backwards compatibility
-    }
-
-    /**
      * Sets the default language.
+     *
+     * @param Request $request
      */
-    private function setDefaultLanguage()
+    private function setDefaultLanguage(Request $request = null)
     {
-        if (!isset($_SESSION['TL_LANGUAGE'])) {
-            $langs = Environment::get('httpAcceptLanguage');
+        if (!$this->session->has('TL_LANGUAGE')) {
+            $langs = $request ? $request->getLanguages() : [];
             array_push($langs, 'en'); // see #6533
 
             foreach ($langs as $lang) {
                 if (is_dir(__DIR__ . '/../../src/Resources/contao/languages/' . str_replace('-', '_', $lang))) {
-                    $_SESSION['TL_LANGUAGE'] = $lang;
+                    $this->session->set('TL_LANGUAGE', $lang);
                     break;
                 }
             }
         }
 
-        $GLOBALS['TL_LANGUAGE'] = $_SESSION['TL_LANGUAGE'];
+        $GLOBALS['TL_LANGUAGE']  = $this->session->get('TL_LANGUAGE');
+        $_SESSION['TL_LANGUAGE'] = $this->session->get('TL_LANGUAGE'); // backwards compatibility
     }
 
     /**
@@ -365,8 +360,10 @@ class InitializeSystemListener extends ScopeAwareListener
 
     /**
      * Handles the request token.
+     *
+     * @param Request $request
      */
-    private function handleRequestToken()
+    private function handleRequestToken(Request $request = null)
     {
         // Backwards compatibility
         if (!defined('REQUEST_TOKEN')) {
@@ -377,12 +374,11 @@ class InitializeSystemListener extends ScopeAwareListener
         $token = new CsrfToken($this->csrfTokenName, Input::post('REQUEST_TOKEN'));
 
         // FIXME: This forces all routes handling POST data to pase a REQUEST_TOKEN
-        if ($_POST && !$this->tokenManager->isTokenValid($token)) {
-
+        if ($_POST && null !== $request && !$this->tokenManager->isTokenValid($token)) {
             // Force a JavaScript redirect upon Ajax requests (IE requires absolute link)
-            if (Environment::get('isAjaxRequest')) {
+            if ($request->isXmlHttpRequest()) {
                 header('HTTP/1.1 204 No Content');
-                header('X-Ajax-Location: ' . Environment::get('base') . 'contao/');
+                header('X-Ajax-Location: ' . $this->router->generate('contao_backend'));
             } else {
                 header('HTTP/1.1 400 Bad Request');
                 die_nicely(
