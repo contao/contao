@@ -196,6 +196,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ->method('getToken')
             ->willReturn(new CsrfToken('_csrf', 'testValue'));
 
+        $tokenManager
+            ->expects($this->any())
+            ->method('refreshToken')
+            ->willReturn(new CsrfToken('_csrf', 'testValue'));
+
         return $tokenManager;
     }
 
