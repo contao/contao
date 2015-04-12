@@ -108,7 +108,13 @@ class InitializeSystemListener extends ScopeAwareListener
 
         $basePath = $request->getBasePath();
 
-        $this->setConstants($this->getModeFromContainerScope(), substr($route, strlen($basePath) + 1), $basePath);
+        $this->setConstants(
+            $this->getModeFromContainerScope(),
+            substr($route, strlen($basePath) + 1),
+            $basePath,
+            $request->attributes->get('_contao_referer_id')
+        );
+
         $this->boot($request);
     }
 
@@ -131,19 +137,20 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * Sets the Contao constants.
      *
-     * @param string $mode     The mode (BE or FE)
-     * @param string $route    The route
-     * @param string $basePath The base path
+     * @param string $mode      The mode (BE or FE)
+     * @param string $route     The route
+     * @param string $basePath  The base path
+     * @param string $refererId The referer ID
      *
      * @internal
      */
-    protected function setConstants($mode, $route, $basePath = '')
+    protected function setConstants($mode, $route, $basePath = '', $refererId = '')
     {
         // The constants are deprecated and will be removed in version 5.0.
         define('TL_MODE', $mode);
         define('TL_START', microtime(true));
         define('TL_ROOT', $this->rootDir);
-        define('TL_REFERER_ID', substr(md5(TL_START), 0, 8));
+        define('TL_REFERER_ID', $refererId);
         define('TL_SCRIPT', $route);
 
         // Define the login status constants in the back end (see #4099, #5279)
