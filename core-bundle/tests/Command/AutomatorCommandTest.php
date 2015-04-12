@@ -40,7 +40,7 @@ class AutomatorCommandTest extends TestCase
     public function testOutput()
     {
         $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->getDefaultApplication());
+        $command->setApplication($this->getApplication());
 
         $tester = new CommandTester($command);
 
@@ -74,7 +74,7 @@ class AutomatorCommandTest extends TestCase
         $lock->lock();
 
         $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->getDefaultApplication());
+        $command->setApplication($this->getApplication());
 
         $tester = new CommandTester($command);
 
@@ -96,7 +96,7 @@ class AutomatorCommandTest extends TestCase
     public function testArgument()
     {
         $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->getDefaultApplication());
+        $command->setApplication($this->getApplication());
 
         $tester = new CommandTester($command);
 
@@ -114,7 +114,7 @@ class AutomatorCommandTest extends TestCase
     public function testInvalidTask()
     {
         $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->getDefaultApplication());
+        $command->setApplication($this->getApplication());
 
         $tester = new CommandTester($command);
 
@@ -134,7 +134,7 @@ class AutomatorCommandTest extends TestCase
     public function testInvalidArgument()
     {
         $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->getDefaultApplication());
+        $command->setApplication($this->getApplication());
 
         $tester = new CommandTester($command);
 
@@ -164,11 +164,11 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Returns the default application object.
+     * Returns the application object.
      *
      * @return Application The application object
      */
-    private function getDefaultApplication()
+    private function getApplication()
     {
         $application = new Application();
         $application->setCatchExceptions(true);

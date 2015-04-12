@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Test\Command;
 use Contao\CoreBundle\Command\VersionCommand;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the VersionCommand class.
@@ -36,12 +37,13 @@ class VersionCommandTest extends TestCase
      */
     public function testOutput()
     {
-        define('VERSION', '4.0');
-        define('BUILD', '2');
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.packages', ['contao/core-bundle' => '4.0.2']);
 
         $command = new VersionCommand('contao:version');
-        $tester  = new CommandTester($command);
+        $command->setContainer($container);
 
+        $tester = new CommandTester($command);
         $tester->execute([]);
 
         $this->assertEquals("4.0.2\n", $tester->getDisplay());
