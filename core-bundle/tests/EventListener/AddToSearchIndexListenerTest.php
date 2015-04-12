@@ -63,7 +63,8 @@ class AddToSearchIndexListenerTest extends TestCase
             $this->mockSession(),
             $this->getRootDir() . '/app',
             $this->mockTokenManager(),
-            'contao_csrf_token'
+            'contao_csrf_token',
+            $this->mockConfig()
         );
 
         $this->bootContaoFramework($listener);
