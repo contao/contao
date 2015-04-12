@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\Command;
 
-use Contao\Connection;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Test\TestCase;

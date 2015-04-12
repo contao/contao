@@ -214,7 +214,7 @@ class ContaoDataCollector extends DataCollector
         $this->data['summary'] = [
             'execution_time' => \System::getFormattedNumber(($intElapsed * 1000), 0),
             'memory'         => \System::getReadableSize(memory_get_peak_usage()),
-            'models'         => \Model\Registry::getInstance()->count()
+            'models'         => \Model\Registry::getInstance()->count(),
         ];
     }
 }

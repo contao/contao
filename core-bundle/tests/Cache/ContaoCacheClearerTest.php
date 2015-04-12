@@ -15,11 +15,11 @@ use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Tests the CacheClearerClass class.
+ * Tests the ContaoCacheClearer class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class CacheClearerClassTest extends TestCase
+class ContaoCacheClearerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
