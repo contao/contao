@@ -12,10 +12,10 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 
 ### Constants
 
-The constants `TL_ROOT`, `TL_MODE`, `TL_START`, `TL_SCRIPT`  and `TL_REFERER_ID`
+The constants `TL_ROOT`, `TL_MODE`, `TL_START`, `TL_SCRIPT` and `TL_REFERER_ID`
 have been deprecated and will be removed in Contao 5.0.
 
-You can use the `kernel.root_dir` instead of `TL_ROOT`:
+Use the `kernel.root_dir` instead of `TL_ROOT`:
 
 ```php
 global $kernel;
@@ -23,7 +23,7 @@ global $kernel;
 $rootDir = dirname($kernel->getContainer()->getParameter('kernel.root_dir'));
 ```
 
-You can check the container scope instead of using `TL_MODE`:
+Check the container scope instead of using `TL_MODE`:
 
 ```php
 global $kernel;
@@ -32,7 +32,7 @@ $isBackEnd  = $kernel->getContainer()->isScopeActive('backend');
 $isFrontEnd = $kernel->getContainer()->isScopeActive('frontend');
 ```
 
-You can use the kernel start time instead of `TL_START:
+Use the kernel start time instead of `TL_START`:
 
 ```php
 global $kernel;
@@ -40,7 +40,7 @@ global $kernel;
 $startTime = $kernel->getStartTime();
 ```
 
-You can use the request stack to get the route instead of using `TL_SCRIPT`:
+Use the request stack to get the route instead of using `TL_SCRIPT`:
 
 ```php
 global $kernel;
@@ -52,10 +52,7 @@ if ('contao_backend_main' === $route) {
 }
 ```
 
-Type `$ ./app/console router:debug` on the console to see all available routes.
-
-You can use the the request attribute `contao_referer_id` instead of
-using `TL_REFERER_ID`:
+Use the the request attribute `contao_referer_id` instead of `TL_REFERER_ID`:
 
 ```php
 global $kernel;

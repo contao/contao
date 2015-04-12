@@ -11,13 +11,10 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\RefererIdListener;
-use Contao\CoreBundle\EventListener\ToggleViewListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -54,7 +51,6 @@ class RefererIdListenerTest extends TestCase
         $container->enterScope('backend');
 
         $listener->setContainer($container);
-
         $listener->onKernelRequest($event);
 
         $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));

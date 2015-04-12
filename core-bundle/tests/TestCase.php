@@ -189,17 +189,20 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $tokenManager = $this
             ->getMockBuilder('Symfony\\Component\\Security\\Csrf\\CsrfTokenManagerInterface')
             ->setMethods(['getToken'])
-            ->getMockForAbstractClass();
+            ->getMockForAbstractClass()
+        ;
 
         $tokenManager
             ->expects($this->any())
             ->method('getToken')
-            ->willReturn(new CsrfToken('_csrf', 'testValue'));
+            ->willReturn(new CsrfToken('_csrf', 'testValue'))
+        ;
 
         $tokenManager
             ->expects($this->any())
             ->method('refreshToken')
-            ->willReturn(new CsrfToken('_csrf', 'testValue'));
+            ->willReturn(new CsrfToken('_csrf', 'testValue'))
+        ;
 
         return $tokenManager;
     }

@@ -15,7 +15,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
- * Adds the referer id to the current request.
+ * Adds the referer ID to the current request.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
@@ -29,15 +29,15 @@ class RefererIdListener extends ScopeAwareListener
     /**
      * Constructor.
      *
-     * @param CsrfTokenManagerInterface $tokenManager  The token manager service
+     * @param CsrfTokenManagerInterface $tokenManager The token manager service
      */
-    public function __construct(CsrfTokenManagerInterface $tokenManger)
+    public function __construct(CsrfTokenManagerInterface $tokenManager)
     {
-        $this->tokenManager = $tokenManger;
+        $this->tokenManager = $tokenManager;
     }
 
     /**
-     * Adds the referer id to the request
+     * Adds the referer ID to the request.
      *
      * @param GetResponseEvent $event The event object
      */
