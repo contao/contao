@@ -138,16 +138,6 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Returns the database queries.
-     *
-     * @return array The database queries
-     */
-    public function getDatabaseQueries()
-    {
-        return $this->getData('database_queries');
-    }
-
-    /**
      * Returns the unknown insert tags.
      *
      * @return array The insert tags
@@ -221,22 +211,9 @@ class ContaoDataCollector extends DataCollector
     private function addSummaryData()
     {
         $framework    = false;
-        $dbQueries    = '';
-        $rowsReturned = 0;
-        $rowsAffected = 0;
         $modelCount   = '';
 
         if (isset($GLOBALS['TL_DEBUG'])) {
-            if (is_array($GLOBALS['TL_DEBUG']['database_queries'])) {
-                foreach ($GLOBALS['TL_DEBUG']['database_queries'] as $k => $v) {
-                    $rowsReturned += $v['return_count'];
-                    $rowsAffected += $v['affected_count'];
-                    unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['return_count']);
-                    unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['affected_count']);
-                }
-            }
-
-            $dbQueries  = count($GLOBALS['TL_DEBUG']['database_queries']);
             $modelCount = Registry::getInstance()->count();
             $framework  = true;
         }
@@ -245,9 +222,6 @@ class ContaoDataCollector extends DataCollector
             'scope'          => $this->getContainerScope(),
             'framework'      => $framework,
             'modules'        => $this->getModules(),
-            'dbqueries'      => $dbQueries,
-            'rows_returned'  => $rowsReturned,
-            'rows_affected'  => $rowsAffected,
             'models'         => $modelCount,
         ];
     }
