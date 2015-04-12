@@ -100,7 +100,7 @@ class Config
 	/**
 	 * Return the current object instance (Singleton)
 	 *
-	 * @return \Config The object instance
+	 * @return static The object instance
 	 */
 	public static function getInstance()
 	{
