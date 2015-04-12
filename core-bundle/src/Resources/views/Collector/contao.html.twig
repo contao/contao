@@ -10,26 +10,12 @@
         </span>
     {% endset %}
     {% set text %}
-    <div class="sf-toolbar-info-piece">
-        <b>Framework</b>
-        {% if collector.summary.framework %}Contao &amp; {% endif %}Symfony
-    </div>
     {% if collector.summary.scope %}
     <div class="sf-toolbar-info-piece">
         <b>Container Scope</b>
         {{ collector.summary.scope }}
     </div>
     {% endif %}
-    <div class="sf-toolbar-info-piece">
-        <b>Contao Modules</b>
-        {% if collector.summary.modules %}
-            <span class="sf-toolbar-status sf-toolbar-status-red">
-                <abbr title="{{ collector.summary.modules|join(', ') }}">{{ collector.summary.modules|length }}</abbr>
-            </span>
-        {% else %}
-            <span class="sf-toolbar-status sf-toolbar-status-green">0</span>
-        {% endif %}
-    </div>
     {% endset %}
     {% if collector.summary.framework %}
         {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url } %}

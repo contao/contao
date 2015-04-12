@@ -221,7 +221,6 @@ class ContaoDataCollector extends DataCollector
         $this->data['summary'] = [
             'scope'          => $this->getContainerScope(),
             'framework'      => $framework,
-            'modules'        => $this->getModules(),
             'models'         => $modelCount,
         ];
     }
@@ -242,23 +241,5 @@ class ContaoDataCollector extends DataCollector
         }
 
         return '';
-    }
-
-    /**
-     * Gets a list of Contao modules (in system/modules).
-     *
-     * @return array
-     */
-    private function getModules()
-    {
-        $modules = [];
-
-        foreach ($this->bundles as $name => $class) {
-            if ('Contao\\CoreBundle\\HttpKernel\\Bundle\\ContaoModuleBundle' === $class) {
-                $modules[] = $name;
-            }
-        }
-
-        return $modules;
     }
 }
