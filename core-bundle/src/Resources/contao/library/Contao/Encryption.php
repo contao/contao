@@ -78,7 +78,7 @@ class Encryption
 			/** @var KernelInterface $kernel */
 			global $kernel;
 
-			$strKey = $kernel->getContainer()->getParameter('framework.secret');
+			$strKey = $kernel->getContainer()->getParameter('contao.encryption_key');
 		}
 
 		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size(static::$resTd), MCRYPT_RAND);
@@ -137,7 +137,7 @@ class Encryption
 			/** @var KernelInterface $kernel */
 			global $kernel;
 
-			$strKey = $kernel->getContainer()->getParameter('framework.secret');
+			$strKey = $kernel->getContainer()->getParameter('contao.encryption_key');
 		}
 
 		mcrypt_generic_init(static::$resTd, md5($strKey), $iv);
@@ -163,14 +163,6 @@ class Encryption
 		if ((self::$resTd = mcrypt_module_open(\Config::get('encryptionCipher'), '', \Config::get('encryptionMode'), '')) == false)
 		{
 			throw new \Exception('Error initializing encryption module');
-		}
-
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		if ($kernel->getContainer()->getParameter('framework.secret') == '')
-		{
-			throw new \Exception('Encryption key not set');
 		}
 	}
 
