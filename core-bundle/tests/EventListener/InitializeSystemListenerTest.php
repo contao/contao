@@ -41,7 +41,9 @@ class InitializeSystemListenerTest extends TestCase
             $this->mockSession(),
             $this->getRootDir(),
             $this->getMock('Symfony\\Component\\Security\\Csrf\\CsrfTokenManagerInterface'),
-            'contao_csrf_token'
+            'contao_csrf_token',
+            $this->mockConfig()
+
         );
 
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\InitializeSystemListener', $listener);
@@ -70,7 +72,8 @@ class InitializeSystemListenerTest extends TestCase
             $this->mockSession(),
             $this->getRootDir() . '/app',
             $this->mockTokenManager(),
-            'contao_csrf_token'
+            'contao_csrf_token',
+            $this->mockConfig()
         );
 
         $listener->setContainer($container);
@@ -113,7 +116,8 @@ class InitializeSystemListenerTest extends TestCase
             $this->mockSession(),
             $this->getRootDir() . '/app',
             $this->mockTokenManager(),
-            'contao_csrf_token'
+            'contao_csrf_token',
+            $this->mockConfig()
         );
 
         $listener->setContainer($container);
@@ -157,7 +161,8 @@ class InitializeSystemListenerTest extends TestCase
             $this->mockSession(),
             $this->getRootDir() . '/app',
             $this->mockTokenManager(),
-            'contao_csrf_token'
+            'contao_csrf_token',
+            $this->mockConfig()
         );
 
         $listener->setContainer($container);
@@ -201,7 +206,8 @@ class InitializeSystemListenerTest extends TestCase
             $this->mockSession(),
             $this->getRootDir() . '/app',
             $this->mockTokenManager(),
-            'contao_csrf_token'
+            'contao_csrf_token',
+            $this->mockConfig()
         );
 
         $listener->setContainer($container);
@@ -234,7 +240,8 @@ class InitializeSystemListenerTest extends TestCase
             $this->mockSession(),
             $this->getRootDir() . '/app',
             $this->mockTokenManager(),
-            'contao_csrf_token'
+            'contao_csrf_token',
+            $this->mockConfig()
         );
 
         $request = new Request();
@@ -273,6 +280,7 @@ class InitializeSystemListenerTest extends TestCase
                 $this->getRootDir(),
                 $this->mockTokenManager(),
                 'contao_csrf_token',
+                $this->mockConfig()
             ]
         );
 
@@ -314,7 +322,8 @@ class InitializeSystemListenerTest extends TestCase
             $this->mockSession(),
             $this->getRootDir() . '/app',
             $this->mockTokenManager(),
-            'contao_csrf_token'
+            'contao_csrf_token',
+            $this->mockConfig()
         );
 
         $listener->onConsoleCommand(
@@ -349,6 +358,7 @@ class InitializeSystemListenerTest extends TestCase
                 $this->getRootDir(),
                 $this->mockTokenManager(),
                 'contao_csrf_token',
+                $this->mockConfig(),
             ]
         );
 

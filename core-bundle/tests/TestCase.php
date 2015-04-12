@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\Config;
+use Contao\CoreBundle\Config\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Symfony\Component\Config\FileLocator;
@@ -227,5 +228,23 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $session->registerBag($feBag);
 
         return $session;
+    }
+
+    /**
+     * Mocks a Config adapter.
+     *
+     * @return ConfigAdapter
+     */
+    protected function mockConfig()
+    {
+        $config = $this->getMock('Contao\\CoreBundle\\Config\\ConfigAdapter');
+
+        $config->expects($this->any())
+            ->method('isComplete')
+            ->willReturn(true)
+        ;
+
+        return $config;
+
     }
 }
