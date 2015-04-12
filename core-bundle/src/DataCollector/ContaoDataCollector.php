@@ -10,8 +10,6 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
-use Contao\Model\Registry;
-use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
