@@ -502,7 +502,7 @@ class Config
 			'addLanguageToUrl' => 'contao.prepend_locale',
 			'urlSuffix'        => 'contao.url_suffix',
 			'uploadPath'       => 'contao.upload_path',
-			'encryptionKey'    => 'framework.secret'
+			'encryptionKey'    => 'contao.encryption_key'
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)
