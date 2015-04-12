@@ -15,6 +15,12 @@
         <b>Container Scope</b>
         {{ collector.summary.scope }}
     </div>
+    {% if collector.summary.scope == 'frontend' %}
+    <div class="sf-toolbar-info-piece">
+        <b>Page Layout</b>
+        {{ collector.summary.layout }}
+    </div>
+    {% endif %}
     {% endif %}
     {% endset %}
     {% if collector.summary.framework %}

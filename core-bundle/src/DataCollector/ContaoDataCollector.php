@@ -10,7 +10,9 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
+use Contao\LayoutModel;
 use Contao\Model\Registry;
+use PageRegular;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -212,14 +214,23 @@ class ContaoDataCollector extends DataCollector
     {
         $framework    = false;
         $modelCount   = '';
+        $layout       = 'N/A';
 
         if (isset($GLOBALS['TL_DEBUG'])) {
             $modelCount = Registry::getInstance()->count();
             $framework  = true;
+
+            /** @var PageRegular $objPage */
+            global $objPage;
+
+            if (null !== $layoutModel = LayoutModel::findByPk($objPage->layout)) {
+                $layout = sprintf('%s (ID %s)', $layoutModel->name, $layoutModel->id);
+            }
         }
 
         $this->data['summary'] = [
             'scope'          => $this->getContainerScope(),
+            'layout'         => $layout,
             'framework'      => $framework,
             'models'         => $modelCount,
         ];
