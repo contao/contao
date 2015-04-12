@@ -10,21 +10,30 @@
 
 namespace Contao\CoreBundle\Config;
 
+use Contao\Config;
+
 /**
- * Provides an adapter for the legacy Contao Config class so it can be injected
- * and unit tested.
+ * Provides an adapter for the Contao Config class.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
 class ConfigAdapter
 {
     /**
-     * @var \Config
+     * @var Config
      */
     private $config;
 
     /**
-     * Save the local configuration file
+     * Initializes the Config class.
+     */
+    public function initialize()
+    {
+        $this->config = Config::getInstance();
+    }
+
+    /**
+     * Saves the local configuration file.
      */
     public function save()
     {
@@ -32,9 +41,9 @@ class ConfigAdapter
     }
 
     /**
-     * Return true if the installation is complete.
+     * Returns true if the installation is complete.
      *
-     * @return boolean
+     * @return boolean True if the installation is complete
      */
     public function isComplete()
     {
@@ -42,106 +51,98 @@ class ConfigAdapter
     }
 
     /**
-     * Return all active modules as array
+     * Adds a configuration variable to the local configuration file.
      *
-     * @return array An array of active modules
-     *
-     * @deprecated Use ModuleLoader::getActive() instead
+     * @param string $key   The full variable name
+     * @param mixed  $value The configuration value
      */
-    public function getActiveModules()
+    public function add($key, $value)
     {
-        return $this->config->getActiveModules();
+        $this->config->add($key, $value);
     }
 
     /**
-     * Add a configuration variable to the local configuration file
+     * Alias for Config::add().
      *
-     * @param string $strKey The full variable name
-     * @param mixed  $varValue The configuration value
+     * @param string $key   The full variable name
+     * @param mixed  $value The configuration value
      */
-    public function add($strKey, $varValue)
+    public function update($key, $value)
     {
-        $this->config->add($strKey, $varValue);
+        $this->config->update($key, $value);
     }
 
     /**
-     * Alias for Config::add()
+     * Removes a configuration variable.
      *
-     * @param string $strKey The full variable name
-     * @param mixed  $varValue The configuration value
+     * @param string $key The full variable name
      */
-    public function update($strKey, $varValue)
+    public function delete($key)
     {
-        $this->config->update($strKey, $varValue);
+        $this->config->delete($key);
     }
 
     /**
-     * Remove a configuration variable
+     * Checks whether a configuration value exists.
      *
-     * @param string $strKey The full variable name
+     * @param string $key The short key (e.g. "displayErrors")
+     *
+     * @return boolean True if the configuration value exists
      */
-    public function delete($strKey)
+    public function has($key)
     {
-        $this->config->delete($strKey);
+        return Config::has($key);
     }
 
     /**
-     * Return a configuration value
+     * Returns a configuration value.
      *
-     * @param string $strKey The short key (e.g. "displayErrors")
+     * @param string $key The short key (e.g. "displayErrors")
      *
      * @return mixed|null The configuration value
      */
-    public function get($strKey)
+    public function get($key)
     {
-        return \Config::get($strKey);
+        return Config::get($key);
     }
 
     /**
-     * Temporarily set a configuration value
+     * Temporarily sets a configuration value.
      *
-     * @param string $strKey The short key (e.g. "displayErrors")
-     * @param string $varValue The configuration value
+     * @param string $key   The short key (e.g. "displayErrors")
+     * @param string $value The configuration value
      */
-    public function set($strKey, $varValue)
+    public function set($key, $value)
     {
-        \Config::set($strKey, $varValue);
+        Config::set($key, $value);
     }
 
     /**
-     * Permanently set a configuration value
+     * Permanently sets a configuration value.
      *
-     * @param string $strKey   The short key or full variable name
-     * @param mixed  $varValue The configuration value
+     * @param string $key   The short key or full variable name
+     * @param mixed  $value The configuration value
      */
-    public function persist($strKey, $varValue)
+    public function persist($key, $value)
     {
-        \Config::persist($strKey, $varValue);
+        Config::persist($key, $value);
     }
 
     /**
-     * Permanently remove a configuration value
+     * Permanently removes a configuration value.
      *
-     * @param string $strKey The short key or full variable name
+     * @param string $key The short key or full variable name
      */
-    public function remove($strKey)
+    public function remove($key)
     {
-        \Config::remove($strKey);
+        Config::remove($key);
     }
 
     /**
-     * Preload the default and local configuration
+     * Preloads the default and local configuration.
      */
     public function preload()
     {
-        \Config::preload();
-    }
-
-    /**
-     * Instantiates the legacy Config instance if not already instantiated.
-     */
-    public function instantiate()
-    {
-        $this->config = \Config::getInstance();
+        Config::preload();
     }
 }

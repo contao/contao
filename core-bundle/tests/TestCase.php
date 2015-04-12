@@ -231,7 +231,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Mock config
+     * Mocks a Config adapter.
      *
      * @return ConfigAdapter
      */
@@ -241,7 +241,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         $config->expects($this->any())
             ->method('isComplete')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         return $config;
 

@@ -68,6 +68,16 @@ class InitializeSystemListener extends ScopeAwareListener
     private static $booted = false;
 
     /**
+     * @var array
+     */
+    private $basicClasses = [
+        'Config',
+        'ClassLoader',
+        'TemplateLoader',
+        'ModuleLoader',
+    ];
+
+    /**
      * Constructor.
      *
      * @param RouterInterface           $router        The router service
@@ -201,7 +211,7 @@ class InitializeSystemListener extends ScopeAwareListener
         $this->setDefaultLanguage($request);
 
         // Fully load the configuration
-        $this->config->instantiate();
+        $this->config->initialize();
 
         $this->validateInstallation($request);
 
@@ -266,24 +276,11 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     private function includeBasicClasses()
     {
-        if (!class_exists('Config', false)) {
-            require_once __DIR__ . '/../../src/Resources/contao/library/Contao/Config.php';
-            class_alias('Contao\\Config', 'Config');
-        }
-
-        if (!class_exists('ClassLoader', false)) {
-            require_once __DIR__ . '/../../src/Resources/contao/library/Contao/ClassLoader.php';
-            class_alias('Contao\\ClassLoader', 'ClassLoader');
-        }
-
-        if (!class_exists('TemplateLoader', false)) {
-            require_once __DIR__ . '/../../src/Resources/contao/library/Contao/TemplateLoader.php';
-            class_alias('Contao\\TemplateLoader', 'TemplateLoader');
-        }
-
-        if (!class_exists('ModuleLoader', false)) {
-            require_once __DIR__ . '/../../src/Resources/contao/library/Contao/ModuleLoader.php';
-            class_alias('Contao\\ModuleLoader', 'ModuleLoader');
+        foreach ($this->basicClasses as $class) {
+            if (!class_exists($class, false)) {
+                require_once __DIR__ . "/../../src/Resources/contao/library/Contao/$class.php";
+                class_alias("Contao\\$class", $class);
+            }
         }
     }
 

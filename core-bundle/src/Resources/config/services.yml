@@ -1,4 +1,8 @@
 services:
+    contao.config_adapter:
+        class: Contao\CoreBundle\Config\ConfigAdapter
+        public: false
+
     contao.clearer.internal_cache:
         class: Contao\CoreBundle\Cache\ContaoCacheClearer
         public: false
@@ -30,6 +34,7 @@ services:
             - "%kernel.root_dir%"
             - "@security.csrf.token_manager"
             - "%contao.csrf_token_name%"
+            - "@contao.config_adapter"
         calls:
             - [setContainer, ["@service_container"]]
         tags:
