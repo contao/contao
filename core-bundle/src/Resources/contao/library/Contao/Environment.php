@@ -372,10 +372,15 @@ class Environment
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var Request $currentRequest */
-		$currentRequest = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
+		/** @var Request $request */
+		$request = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
 
-		return $currentRequest->getClientIp();
+		if ($request === null)
+		{
+			return '';
+		}
+
+		return $request->getClientIp();
 	}
 
 
@@ -409,6 +414,11 @@ class Environment
 		global $kernel;
 
 		$request = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request === null)
+		{
+			return '';
+		}
 
 		return $request->getBasePath();
 	}
