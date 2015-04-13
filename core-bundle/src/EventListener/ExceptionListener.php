@@ -10,16 +10,16 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\Config;
+use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Exception\NoPagesFoundHttpException;
 use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\ResponseExceptionInterface;
 use Contao\CoreBundle\Exception\RootNotFoundHttpException;
-use Contao\Environment;
 use Contao\String;
 use Contao\System;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -42,6 +42,11 @@ class ExceptionListener
     private $twig;
 
     /**
+     * @var ConfigAdapter
+     */
+    private $config;
+
+    /**
      * Lookup map of all known exception templates in this handler.
      *
      * @var array
@@ -62,13 +67,15 @@ class ExceptionListener
     /**
      * Constructor.
      *
-     * @param bool       $renderErrorScreens Flag if the error screens shall be rendered.
-     * @param TwigEngine $twig               The twig rendering engine.
+     * @param bool          $renderErrorScreens Flag if the error screens shall be rendered.
+     * @param TwigEngine    $twig               The twig rendering engine.
+     * @param ConfigAdapter $config             The config adapter object
      */
-    public function __construct($renderErrorScreens, TwigEngine $twig)
+    public function __construct($renderErrorScreens, TwigEngine $twig, ConfigAdapter $config)
     {
         $this->renderErrorScreens = $renderErrorScreens;
-        $this->twig = $twig;
+        $this->twig               = $twig;
+        $this->config             = $config;
     }
 
     /**
@@ -97,7 +104,7 @@ class ExceptionListener
         }
 
         // Search if any exception in the chain is implementing a http exception.
-        $response = $this->checkHttpExceptions($exception);
+        $response = $this->checkHttpExceptions($exception, $event->getRequest());
         if ($response instanceof Response) {
             $event->setResponse($this->setXStatusCode($response));
 
@@ -105,7 +112,7 @@ class ExceptionListener
         }
 
         // If still nothing worked out, we wrap it in a plain "internal error occured" message.
-        $event->setResponse($this->renderErrorTemplate('error', 500));
+        $event->setResponse($this->renderErrorTemplate('error', 500, $event->getRequest()));
     }
 
     /**
@@ -150,12 +157,14 @@ class ExceptionListener
      *
      * @param \Exception $exception The exception to walk on.
      *
+     * @param Request $request    The HTTP request.
+     *
      * @return null|Response
      */
-    private function checkHttpExceptions(\Exception $exception)
+    private function checkHttpExceptions(\Exception $exception, $request)
     {
         do {
-            if ($response = $this->checkHttpException($exception)) {
+            if ($response = $this->checkHttpException($exception, $request)) {
                 return $response;
             }
         } while (null !== ($exception = $exception->getPrevious()));
@@ -246,9 +255,11 @@ class ExceptionListener
      *
      * @param \Exception $exception The exception to walk on.
      *
+     * @param Request    $request   The HTTP request.
+     *
      * @return null|Response
      */
-    private function checkHttpException($exception)
+    private function checkHttpException($exception, $request)
     {
         if (!$exception instanceof HttpExceptionInterface) {
             return null;
@@ -266,7 +277,7 @@ class ExceptionListener
         );
         if (!empty($candidates)) {
             $template = self::$exceptionTemplates[array_shift($candidates)];
-            return $this->createTemplateResponseFromException($template, $exception);
+            return $this->createTemplateResponseFromException($template, $exception, $request);
         }
 
         // Unknown HttpExceptionInterface implementing exception, no way to handle.
@@ -277,13 +288,16 @@ class ExceptionListener
      * Try to create a response for the given template.
      *
      * @param string                 $template  The name of the template to render.
+     *
      * @param HttpExceptionInterface $exception The exception to render.
+     *
+     * @param Request                $request   The HTTP request.
      *
      * @return Response
      */
-    private function createTemplateResponseFromException($template, HttpExceptionInterface $exception)
+    private function createTemplateResponseFromException($template, HttpExceptionInterface $exception, $request)
     {
-        $response = $this->renderErrorTemplate($template, $exception->getStatusCode());
+        $response = $this->renderErrorTemplate($template, $exception->getStatusCode(), $request);
         $response->headers->add($exception->getHeaders());
 
         return $response;
@@ -312,23 +326,16 @@ class ExceptionListener
     /**
      * Retrieve the values for the template.
      *
-     * @param string $view       The name of the view.
+     * @param string  $view       The name of the view.
      *
-     * @param int    $statusCode The HTTP status code.
+     * @param int     $statusCode The HTTP status code.
+     *
+     * @param Request $request    The HTTP request.
      *
      * @return array|null
      */
-    private function getTemplateParameters($view, $statusCode)
+    private function getTemplateParameters($view, $statusCode, $request)
     {
-        // System and String are safe to autoload, Environment and Config NOT.
-        if (!(class_exists('Contao\\System', true)
-            && class_exists('Contao\\String', true)
-            && class_exists('Contao\\Environment', false)
-            && class_exists('Contao\\Config', false)
-        )) {
-            return null;
-        }
-
         $languageStrings = $this->loadLanguageStrings();
 
         if (null === $languageStrings) {
@@ -339,9 +346,8 @@ class ExceptionListener
             'statusCode' => $statusCode,
             'error'      => $languageStrings,
             'template'   => $view,
-            'agentClass' => Environment::get('agent')->class,
-            'adminEmail' => String::encodeEmail('mailto:' . Config::get('adminEmail')),
-            'base'       => Environment::get('base')
+            'adminEmail' => String::encodeEmail('mailto:' . $this->config->get('adminEmail')),
+            'base'       => $request->getBasePath()
         ];
     }
 
@@ -380,13 +386,15 @@ class ExceptionListener
     /**
      * Try to render an error template.
      *
-     * @param string $template   The template name. Will get searched at standard locations.
+     * @param string  $template   The template name. Will get searched at standard locations.
      *
-     * @param int    $statusCode The HTTP status code to use in the response.
+     * @param int     $statusCode The HTTP status code to use in the response.
+     *
+     * @param Request $request    The HTTP request.
      *
      * @return Response
      */
-    private function renderErrorTemplate($template, $statusCode)
+    private function renderErrorTemplate($template, $statusCode, $request)
     {
         $view = '@ContaoCore/Error/' . $template . '.html.twig';
         if (!$this->twig->exists($view)) {
@@ -394,7 +402,7 @@ class ExceptionListener
             $statusCode = 500;
         }
 
-        $parameters = $this->getTemplateParameters($view, $statusCode);
+        $parameters = $this->getTemplateParameters($view, $statusCode, $request);
 
         // Safety net - ensure that everything is available.
         if (null === $parameters) {

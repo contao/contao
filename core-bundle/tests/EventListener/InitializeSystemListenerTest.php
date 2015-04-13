@@ -323,7 +323,8 @@ class InitializeSystemListenerTest extends TestCase
             $this->mockSession(),
             $this->getRootDir() . '/app',
             $this->mockTokenManager(),
-            'contao_csrf_token'
+            'contao_csrf_token',
+            $this->mockConfig()
         );
         $listener->setContainer($kernel->getContainer());
 
@@ -461,7 +462,8 @@ class InitializeSystemListenerTest extends TestCase
             $this->mockSession(),
             $this->getRootDir() . '/app',
             $this->mockTokenManager(),
-            'contao_csrf_token'
+            'contao_csrf_token',
+            $this->mockConfig()
         );
 
         $listener->setContainer($container);

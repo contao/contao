@@ -43,6 +43,7 @@ services:
         arguments:
             - "%contao.pretty_error_screens%"
             - "@templating"
+            - "@contao.adapter.config"
 
     contao.listener.initialize_system:
         class: Contao\CoreBundle\EventListener\InitializeSystemListener

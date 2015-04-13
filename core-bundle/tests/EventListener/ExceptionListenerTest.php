@@ -46,7 +46,7 @@ class ExceptionListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $listener = new ExceptionListener(true, $this->mockTwig());
+        $listener = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\ExceptionListener', $listener);
     }
@@ -57,7 +57,7 @@ class ExceptionListenerTest extends TestCase
     public function testGenericExceptionWithoutErrorScreen()
     {
         $this->microBootFramework();
-        $listener = new ExceptionListener(false, $this->mockTwig());
+        $listener = new ExceptionListener(false, $this->mockTwig(), $this->mockConfig());
 
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -77,7 +77,7 @@ class ExceptionListenerTest extends TestCase
     public function testGenericExceptionWithErrorScreen()
     {
         $this->microBootFramework();
-        $listener = new ExceptionListener(true, $this->mockTwig());
+        $listener = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
 
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -104,7 +104,7 @@ class ExceptionListenerTest extends TestCase
     public function testUnknownHttpExceptionIsRenderedAsError()
     {
         $this->microBootFramework();
-        $listener = new ExceptionListener(true, $this->mockTwig());
+        $listener = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
 
         /** @var \Exception $exception */
         $exception = $this->getMockForAbstractClass(
@@ -138,7 +138,7 @@ class ExceptionListenerTest extends TestCase
     public function testNonExistentTemplateIsRenderedAsError()
     {
         $this->microBootFramework();
-        $listener = new ExceptionListener(true, $this->mockTwig(['error']));
+        $listener = new ExceptionListener(true, $this->mockTwig(['error']), $this->mockConfig());
 
         /** @var \Exception $exception */
         $exception = new NoPagesFoundHttpException();
@@ -190,7 +190,7 @@ class ExceptionListenerTest extends TestCase
     public function testKnownContaoExceptionRendersTemplate($exceptionClass, $templateName)
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig());
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new $exceptionClass();
         $event     = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -220,7 +220,7 @@ class ExceptionListenerTest extends TestCase
     public function testKnownContaoExceptionDoesNotRenderTemplate($exceptionClass)
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(false, $this->mockTwig());
+        $listener  = new ExceptionListener(false, $this->mockTwig(), $this->mockConfig());
         $exception = new $exceptionClass();
         $event     = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -245,7 +245,7 @@ class ExceptionListenerTest extends TestCase
     public function testWrappedKnownContaoExceptionRendersTemplate($exceptionClass, $templateName)
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig());
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new \RuntimeException(
             'wrap 1',
             1,
@@ -279,7 +279,7 @@ class ExceptionListenerTest extends TestCase
     public function testResponseExceptionIsHandled()
     {
         $this->microBootFramework();
-        $listener      = new ExceptionListener(true, $this->mockTwig());
+        $listener      = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception     = ResponseException::create('I got chained.');
         $wrapException = new \RuntimeException(
             'wrap 1',
@@ -314,7 +314,7 @@ class ExceptionListenerTest extends TestCase
     public function testTryToRenderContao404()
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig());
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -345,7 +345,7 @@ class ExceptionListenerTest extends TestCase
     public function testTryToRenderContao404WillNotRenderForRootNotFoundHttpException()
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig());
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new RootNotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -375,7 +375,7 @@ class ExceptionListenerTest extends TestCase
     public function testTryToRenderContao404WillNotRenderForNoPagesFoundHttpException()
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig());
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NoPagesFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -405,7 +405,7 @@ class ExceptionListenerTest extends TestCase
     public function testTryToRenderContao404WillNotRenderWithoutPageHandler()
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig());
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -433,7 +433,7 @@ class ExceptionListenerTest extends TestCase
     public function testTryToRenderContao404WillNotRenderWithInvalidPageHandler()
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig());
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -461,7 +461,7 @@ class ExceptionListenerTest extends TestCase
     public function testTryToRenderContao404ThrowsResponseException()
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig());
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -493,7 +493,7 @@ class ExceptionListenerTest extends TestCase
     public function testTryToRenderContao404ThrowsNotFoundHttpException()
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig());
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -524,7 +524,7 @@ class ExceptionListenerTest extends TestCase
     public function testTryToRenderContao404ThrowsException()
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig());
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
         $event     = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -558,7 +558,7 @@ class ExceptionListenerTest extends TestCase
     {
         $this->microBootFramework();
         $kernel     = $this->mockKernel();
-        $listener   = new ExceptionListener(true, $this->mockTwig());
+        $listener   = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception  = new NotFoundHttpException();
         $event      = new GetResponseForExceptionEvent($kernel, new Request(), HttpKernel::MASTER_REQUEST, $exception);
         $eventAgain = new GetResponseForExceptionEvent($kernel, new Request(), HttpKernel::MASTER_REQUEST, $exception);
@@ -578,38 +578,6 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test that we will fall back to the generic error screen when the framework has not been booted.
-     *
-     * @runInSeparateProcess
-     */
-    public function testErrorWithoutFrameworkUsesLastResort()
-    {
-        $listener = new ExceptionListener(true, $this->mockTwig());
-
-        /** @var \Exception $exception */
-        $exception = new NoPagesFoundHttpException();
-
-        $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernel::MASTER_REQUEST,
-            $exception
-        );
-
-        $listener->onKernelException($event);
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
-
-        $this->assertEquals('error', $event->getResponse()->getContent());
-        $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
-        $this->assertEquals(
-            $event->getResponse()->getStatusCode(),
-            $event->getResponse()->headers->get('X-Status-Code')
-        );
-        $this->assertEquals(500, $event->getResponse()->getStatusCode());
-    }
-
-    /**
      * Test that we will fall back to the generic error screen when no language strings are available.
      *
      * @runInSeparateProcess
@@ -620,7 +588,7 @@ class ExceptionListenerTest extends TestCase
         $listener = $this->getMock(
             'Contao\CoreBundle\EventListener\ExceptionListener',
             ['loadLanguageStrings'],
-            [true, $this->mockTwig()]
+            [true, $this->mockTwig(), $this->mockConfig()]
         );
 
         /** @var \Exception $exception */
