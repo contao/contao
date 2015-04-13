@@ -8,9 +8,13 @@
          bootstrap="tests/bootstrap.php"
 >
     <testsuites>
-        <testsuite name="Contao Core Bundle Test Suite">
+        <testsuite name="latest">
             <directory>./tests</directory>
+            <exclude>./tests/Contao</exclude>
             <exclude>./tests/Fixtures</exclude>
+        </testsuite>
+        <testsuite name="legacy">
+            <directory>./tests/Contao</directory>
         </testsuite>
     </testsuites>
 

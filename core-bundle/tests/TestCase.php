@@ -37,14 +37,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * {@inheritdoc}
-     */
-    public function __construct($name = null, array $data = array(), $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-    }
-
-    /**
      * Returns the path to the fixtures directory.
      *
      * @return string The root directory path
