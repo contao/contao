@@ -10,6 +10,10 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
+use Contao\LayoutModel;
+use Contao\Model\Registry;
+use Contao\PageRegular;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -24,6 +28,16 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class ContaoDataCollector extends DataCollector
 {
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var array
+     */
+    private $bundles;
+
+    /**
      * @var array
      */
     private $packages;
@@ -33,9 +47,11 @@ class ContaoDataCollector extends DataCollector
      *
      * @param array $packages Installed Composer packages and versions
      */
-    public function __construct(array $packages)
+    public function __construct(ContainerInterface $container, array $bundles, array $packages)
     {
-        $this->packages = $packages;
+        $this->container = $container;
+        $this->bundles   = $bundles;
+        $this->packages  = $packages;
     }
 
     /**
@@ -47,13 +63,11 @@ class ContaoDataCollector extends DataCollector
             $this->data = ['contao_version' => $this->packages['contao/core-bundle']];
         }
 
-        if (!isset($GLOBALS['TL_DEBUG'])) {
-            return;
-        }
-
-        $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
-
         $this->addSummaryData();
+
+        if (isset($GLOBALS['TL_DEBUG'])) {
+            $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
+        }
     }
 
     /**
@@ -126,16 +140,6 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Returns the database queries.
-     *
-     * @return array The database queries
-     */
-    public function getDatabaseQueries()
-    {
-        return $this->getData('database_queries');
-    }
-
-    /**
      * Returns the unknown insert tags.
      *
      * @return array The insert tags
@@ -169,6 +173,7 @@ class ContaoDataCollector extends DataCollector
         }
 
         unset($data['summary']);
+        unset($data['contao_version']);
         unset($data['classes_aliased']);
         unset($data['classes_set']);
         unset($data['database_queries']);
@@ -207,12 +212,45 @@ class ContaoDataCollector extends DataCollector
      */
     private function addSummaryData()
     {
-        $intElapsed = (microtime(true) - TL_START);
+        $framework    = false;
+        $modelCount   = '';
+        $layout       = 'N/A';
+
+        if (isset($GLOBALS['TL_DEBUG'])) {
+            $modelCount = Registry::getInstance()->count();
+            $framework  = true;
+
+            /** @var PageRegular $objPage */
+            global $objPage;
+
+            if (null !== $layoutModel = LayoutModel::findByPk($objPage->layout)) {
+                $layout = sprintf('%s (ID %s)', $layoutModel->name, $layoutModel->id);
+            }
+        }
 
         $this->data['summary'] = [
-            'execution_time' => \System::getFormattedNumber(($intElapsed * 1000), 0),
-            'memory'         => \System::getReadableSize(memory_get_peak_usage()),
-            'models'         => \Model\Registry::getInstance()->count(),
+            'scope'          => $this->getContainerScope(),
+            'layout'         => $layout,
+            'framework'      => $framework,
+            'models'         => $modelCount,
         ];
+    }
+
+    /**
+     * Gets the scope from the container.
+     *
+     * @return string
+     */
+    private function getContainerScope()
+    {
+        if ($this->container->isScopeActive('frontend')) {
+            return 'frontend';
+        }
+
+        if ($this->container->isScopeActive('backend')) {
+            return 'backend';
+        }
+
+        return '';
     }
 }

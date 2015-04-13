@@ -2,49 +2,62 @@
 
 {% block toolbar %}
     {% set icon %}
-        <img width="32" height="28" alt="Contao" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAcCAYAAAAAwr0iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+VpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ1dWlkOkQzMTcyOEI3ODY5OERFMTFCMTMwQUEwQzAxOTI2NkExIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkZERjgxNDA0QTI0RTExRTQ5QzA2RUM0M0YyOEU4OURBIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkZERjgxNDAzQTI0RTExRTQ5QzA2RUM0M0YyOEU4OURBIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIElsbHVzdHJhdG9yIENTNCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ1dWlkOmY5NWEyZmY0LWMxYTUtOWY0MC04NTk1LWRlNWI1ZGYxNGY2ZCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3MjQ0NEZFN0IwNUJERjExQTUzRjgzRDExNDc0MkVBNSIvPiA8ZGM6dGl0bGU+IDxyZGY6QWx0PiA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPkNvbnRhb19SR0I8L3JkZjpsaT4gPC9yZGY6QWx0PiA8L2RjOnRpdGxlPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqMbMs8AAAK6SURBVHja7FdNjyFhEK6mcRiJzzA+ZrFjJ7ETt5lEwm8Q8yv4BQ572exlbsLN1YWf4ObiIA4uNhJfw4RJhtmZxEeEoLFdb2KCfRtrVly2korut9+ueqqeqrcas1gs4JQighPLyQGwqzc3Nzc/+J9vuG632yEajYJSqTzIcDgchkQisbrE8Xqfy+W+ry4yqzXgcrmm6Fwul0MsFgOTyXRwZPP5HPx+PxQKhTUQ2WxWIkiBRCJheYVAIABGoxEQ3KHKMAwEg0GQyWRod6nsVgpYlgWNRgNer1cwsm63C8lkEmq1Guh0OvD5fKDX66l7kUaPxwOZTGa/GkCUbrcbxGIx0Nqz2WySqHq93vtaKpWCSCQCBoOB3E+nU6jX61AqlaBcLpNrtLs3AIfDAUJnQzweh+FwuGZwNBpBKBQi0VarVeJwNpvBpt29ACAFWPVCAJ6ensieTUGnqKSqee5pe/bOgFQq5QHMqZvx2bZoPnwOoPHBYMC3ED0DWKBvb2/HA4Cp63Y7ghkwmYyk+o+agZeXX4IZuLj4dHwKnp+fySlGE7PZfFwASAFyPJlMqJWMvY4n22ab/dMMoGAWMNo/RqdIBBaLhbTjXzviA+I4bn8AOAtoYrVaod1ub3WGWcJsoaId1Hw+D+l0ejcFKK1Wi68DepovLz8DP1KpzxQKBdzd+UCtVlOnI41WagYQwGxGL8TzcwOoVCpyXmwKRqpQKKnvjsdjagFvjmOiyNXr6ytBTdPb29vVEft+gjqdTsF3+v0+FQCVApRGoyH4NYSDB0EWi0USGZ6Q6Fyr1VI7BNc6nc7+FCxH7/X1V1L5NLm6+kJ0nWd63Tw+PpIhtTMD/AZuubac6zab7UN9jnYqlcrSObeLgvvlRynePzzUSHrPzs4Oco5jPZ//SejibZOP0s09zP8/JqcG8FuAAQAJR2KODkYmIwAAAABJRU5ErkJggg=="><span> {{ collector.contaoVersion }}  </span>
+        <span>
+        <img width="32" height="28" alt="Contao" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAcCAYAAAAAwr0iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Mjk3OTgyRjFENkZBMTFFNEI5QzREMERCNEU1NjU0OUMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Mjk3OTgyRjJENkZBMTFFNEI5QzREMERCNEU1NjU0OUMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5RjYzOUI5NkQ2RjkxMUU0QjlDNEQwREI0RTU2NTQ5QyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyOTc5ODJGMEQ2RkExMUU0QjlDNEQwREI0RTU2NTQ5QyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PkaO9ToAAAI/SURBVHjaxFfLK0RRGJ+5hGJhssBCQoTyiELKwnukbGQWSlJWUhZS/gFFSilLC8XCQinFQkmZSIlYkJCiUPKeMcpr/E59t44z95w7M9zuV7++8/jO+X5z7u88xhkMBh12WqxeKCspz4MbB1xAMrAAjOwd7H5FMzHma4MbBa6pKQ54BIYw50kIAdgk4KYySzofbXKydfL1Qjsj0qJXNK7DxZUreZbRGMb74GqAN6GLz/OLgI/8HAbvmixvJeABak1I3MP1C82vhhqAJZCfUiROg5sBmrm2ZbgOJHsziC+FSwxLhLQ07JvvSJKz1VoEqoSuVmAa/YPwLGERUA0wUReGvQtg8cAlfsm3JLbcILlunSQsV6Ra4TXgBG4VsZkmc7miEasm1GMUsbdWHEQ8Afb90xWx11YT+DQhcANcWUkgwOpQc5ZkT7P9e2YlAT/5fEX8odUaYFasiN/+h5xB1TZ00CEis30rCehWAB04JYOPgYsIkj3QrTgGeIBzIFV2EuqWDeQYCQ5C/AC5DRS7FEnZcc1itoAjjPFzx/mYeDcYEWCHUZlC8UsmBHqQ9FnSlwGcmn0CZg2KBIzAneITvUgus1T6wYFwCLgVd/w7XLdB1xPQi37ZI7NCeHcoCWSAcZOCxApNOAHMAsNs+6J9U7FyXcJ2D9GA+HAYAlYVJHZkbweD5c+Fa6dqkmwFHkUdYGDfXzc95kihragZ5eEJDJDAvMAa+UZMkPBHDnWkDy/NP8B3Ou3+Y6I5bDbbCfwIMADXoZzjTwikZAAAAABJRU5ErkJggg==">
+        {% if collector.summary.scope %}
+            <span class="sf-toolbar-info-piece-additional sf-toolbar-status">{{ collector.summary.scope }}</span>
+        {% endif %}
+        </span>
     {% endset %}
     {% set text %}
+    {% if collector.summary.scope %}
     <div class="sf-toolbar-info-piece">
-        Contao <b>{{ collector.contaoVersion }}</b>
+        <b>Container Scope</b>
+        {{ collector.summary.scope }}
     </div>
+    {% if collector.summary.scope == 'frontend' %}
     <div class="sf-toolbar-info-piece">
-        <b>Memory usage</b>
-        <span>{{ collector.summary.memory }}</span>
+        <b>Page Layout</b>
+        {{ collector.summary.layout }}
     </div>
-    <div class="sf-toolbar-info-piece">
-        <b>Reg. models</b>
-        <span>{{ collector.summary.models }}</span>
-    </div>
+    {% endif %}
+    {% endif %}
     {% endset %}
-    {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url } %}
+    {% if collector.summary.framework %}
+        {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url } %}
+    {% else %}
+        {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': false } %}
+    {% endif %}
 {% endblock %}
 
 {% block menu %}
+{% if collector.summary.framework %}
     <span class="label">
-        <span class="icon"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAcCAYAAAAAwr0iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+VpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ1dWlkOkQzMTcyOEI3ODY5OERFMTFCMTMwQUEwQzAxOTI2NkExIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjA2NDU1NDdBQTIzOTExRTQ4M0Q4RERDOUFBODczMDY0IiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjA2NDU1NDc5QTIzOTExRTQ4M0Q4RERDOUFBODczMDY0IiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIElsbHVzdHJhdG9yIENTNCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ1dWlkOmY5NWEyZmY0LWMxYTUtOWY0MC04NTk1LWRlNWI1ZGYxNGY2ZCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3MjQ0NEZFN0IwNUJERjExQTUzRjgzRDExNDc0MkVBNSIvPiA8ZGM6dGl0bGU+IDxyZGY6QWx0PiA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPkNvbnRhb19SR0I8L3JkZjpsaT4gPC9yZGY6QWx0PiA8L2RjOnRpdGxlPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pn6WnxYAAAM6SURBVHjatFfLSiNRED1JWqMQNT7I0yioSNSNoCK4kfmAwY24diEuxa9w6UoHR/yMLFwJs3ChiAZxQM34jkkQH1FRfCZzz9WOnZ6kOzCdgkOa7nurTtWtqltR+vr6vgP4KeAXgMvlwtzcHHp6emCFrK+vY3p6Gq+vr/pPKYFJRygU+mW32/0CUBQFs7Oz6O3thVUSDAZRU1ODtbU10IYGLoFvdmHUR8PE+Pg4BgYGYLWMjY1BRBqqHQ18dofDASIQCEgC2Wy2LJiampJGVXsqFL6kjI6OoqKiwtSbk5MTLC8v4/DwEDabTXo2MjKCyspKw32dnZ0YHBzExsZG3ntJgIqGh4clUyOJRCJYWFjA+/t77l00GsXq6ipmZmZQXV39z57r62vs7e1hf38f6XQaqsM5AgyD1+tFU1OTIYHT01MsLi7KZ+7RSiwWw9LSEiYmJuQzDfKXRi8vL/PW6vfKCLS0tJh6Ty/VDC4kKysrEno9eo/1Igm43W5TAoXCZ4Uon5loSoBJpg+fJQRo/PHx0ZRAQ0NDeSJApQ8PD6YEGhsby3cEzFQzAqJll+8IXl5ecHubRm1tbdGFPp8XTqczrwdYRuCjzs/Q3d1tsNSG5uZmnJ+fW38ElHg8jq6uLsPF7BepVKo8EUgmk8hkMoaL29rasLm5WR4C9CybzZhEIPTflcBO6vF4ZOK/vb19HcHz8zOurq5QX19fdDMHC36/u7sr2SC7rN/vl9d9IOCX9w6dmJ//gfv7+68IUBKJJOrq3IYKOzo6sL29bVqy/f39onJ8BW/ITCarzgKwayeURCIh88AIvNcLTDZ5aG9vR2trqyzbYnrYd+R6bXNhJZglIsPJsDJ8RnOgkR5+Yz+h7bwIPD094ebmxjACZD40NFTU+3A4LPPESMfFxUXhIyA4cpkdAxsSJyh2TnUfE5TjGcmZ7Wekczb1/f3o6Eg0pLAc08xKkuBNyrVqsrGUja4VEjg+Ps7dK4q+rlmOZ2dx4WWwpDKrqqrKKS5FDg4OPur/0y4JsLf6tIt2d3dFvXosv/0YrVjsj7aZpfi/YFIgqZ3V+TdqZ+e3zFSrwMhubUVlEn/aSdH2XwEGALevMk+9LiI/AAAAAElFTkSuQmCC" alt=""></span>
+        <span class="icon"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAcCAYAAAAAwr0iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Mjk3OTgyRjFENkZBMTFFNEI5QzREMERCNEU1NjU0OUMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Mjk3OTgyRjJENkZBMTFFNEI5QzREMERCNEU1NjU0OUMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5RjYzOUI5NkQ2RjkxMUU0QjlDNEQwREI0RTU2NTQ5QyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyOTc5ODJGMEQ2RkExMUU0QjlDNEQwREI0RTU2NTQ5QyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PkaO9ToAAAI/SURBVHjaxFfLK0RRGJ+5hGJhssBCQoTyiELKwnukbGQWSlJWUhZS/gFFSilLC8XCQinFQkmZSIlYkJCiUPKeMcpr/E59t44z95w7M9zuV7++8/jO+X5z7u88xhkMBh12WqxeKCspz4MbB1xAMrAAjOwd7H5FMzHma4MbBa6pKQ54BIYw50kIAdgk4KYySzofbXKydfL1Qjsj0qJXNK7DxZUreZbRGMb74GqAN6GLz/OLgI/8HAbvmixvJeABak1I3MP1C82vhhqAJZCfUiROg5sBmrm2ZbgOJHsziC+FSwxLhLQ07JvvSJKz1VoEqoSuVmAa/YPwLGERUA0wUReGvQtg8cAlfsm3JLbcILlunSQsV6Ra4TXgBG4VsZkmc7miEasm1GMUsbdWHEQ8Afb90xWx11YT+DQhcANcWUkgwOpQc5ZkT7P9e2YlAT/5fEX8odUaYFasiN/+h5xB1TZ00CEis30rCehWAB04JYOPgYsIkj3QrTgGeIBzIFV2EuqWDeQYCQ5C/AC5DRS7FEnZcc1itoAjjPFzx/mYeDcYEWCHUZlC8UsmBHqQ9FnSlwGcmn0CZg2KBIzAneITvUgus1T6wYFwCLgVd/w7XLdB1xPQi37ZI7NCeHcoCWSAcZOCxApNOAHMAsNs+6J9U7FyXcJ2D9GA+HAYAlYVJHZkbweD5c+Fa6dqkmwFHkUdYGDfXzc95kihragZ5eEJDJDAvMAa+UZMkPBHDnWkDy/NP8B3Ou3+Y6I5bDbbCfwIMADXoZzjTwikZAAAAABJRU5ErkJggg==" alt=""></span>
         <strong>Contao</strong>
     </span>
+{% endif %}
 {% endblock %}
 
 {% block panel %}
-    {% if collector.summary %}
+{% if collector.summary.framework %}
     <h2>Summary</h2>
     <table>
         <tr>
-            <th>Execution time</th>
-            <td>{{ collector.summary.execution_time }} ms</td>
-        </tr>
-        <tr>
-            <th>Memory usage</th>
-            <td>{{ collector.summary.memory }}</td>
+            <th>Container Scope</th>
+            <td>
+                {% if collector.summary.scope %}
+                    <span class="sf-toolbar-status sf-toolbar-status-green">{{ collector.summary.scope }}</span>
+                {% else %}
+                    <span class="sf-toolbar-status sf-toolbar-status-red">unknown</span>
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Registered models</th>
             <td>{{ collector.summary.models }}</td>
         </tr>
     </table>
-    {% endif %}
 
     <h2>Unknown Insert Tags</h2>
     {% if collector.unknowninserttags %}
@@ -110,4 +123,5 @@
     {{ dump(collector.additionaldata) }}
     </pre>
     {% endif %}
+{% endif %}
 {% endblock %}

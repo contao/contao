@@ -131,9 +131,11 @@ services:
             - '%kernel.root_dir%'
             - '@doctrine.dbal.default_connection'
 
-    contao.web_profiler.data_collector:
+    contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
+            - '@service_container'
+            - '%kernel.bundles%'
             - '%kernel.packages%'
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
