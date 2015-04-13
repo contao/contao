@@ -132,6 +132,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
 
         while ($pages->next()) {
+            // FIXME: Environment::get('path') will always be empty on the console!
             $base = ($pages->dns ?: '*') . Environment::get('path') . '/';
 
             if ($pages->fallback) {
