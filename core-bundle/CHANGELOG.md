@@ -1,7 +1,7 @@
 Contao change log
 =================
 
-Version 4.0.0-beta1 (2014-XX-XX)
+Version 4.0.0-beta1 (2014-04-13)
 ---------------------------------
 
 ### Removed
