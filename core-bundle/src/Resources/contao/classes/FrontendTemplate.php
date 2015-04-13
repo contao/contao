@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -264,9 +265,14 @@ class FrontendTemplate extends \Template
 			$strBuffer = $this->replaceInsertTags($this->strBuffer);
 			$strBuffer = $this->replaceDynamicScriptTags($strBuffer); // see #4203
 
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
+			$strCachePath = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+
 			// Create the cache file
 			$strMd5CacheKey = md5($strCacheKey);
-			$objFile = new \File('system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html'); // FIXME: system/cache
+			$objFile = new \File($strCachePath . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html');
 			$objFile->write('<?php' . " /* $strCacheKey */ \$expire = $intCache; \$content = '{$this->strContentType}'; \$type = '{$objPage->type}'; ?>\n");
 			$objFile->append($this->minifyHtml($strBuffer), '');
 			$objFile->close();

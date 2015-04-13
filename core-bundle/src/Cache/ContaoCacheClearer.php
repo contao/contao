@@ -40,6 +40,9 @@ class ContaoCacheClearer implements CacheClearerInterface
      */
     public function clear($cacheDir)
     {
-        $this->filesystem->remove("$cacheDir/contao");
+        $this->filesystem->remove("$cacheDir/contao/config");
+        $this->filesystem->remove("$cacheDir/contao/dca");
+        $this->filesystem->remove("$cacheDir/contao/languages");
+        $this->filesystem->remove("$cacheDir/contao/sql");
     }
 }

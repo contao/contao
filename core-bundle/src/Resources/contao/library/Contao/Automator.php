@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Cache\ContaoCacheClearer;
+use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -73,8 +75,13 @@ class Automator extends \System
 		$objDatabase->execute("TRUNCATE TABLE tl_search");
 		$objDatabase->execute("TRUNCATE TABLE tl_search_index");
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$strCachePath = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+
 		// Purge the cache folder
-		$objFolder = new \Folder('system/cache/search'); // FIXME: system/cache
+		$objFolder = new \Folder($strCachePath . '/contao/search');
 		$objFolder->purge();
 
 		// Add a log entry
@@ -180,8 +187,12 @@ class Automator extends \System
 	 */
 	public function purgePageCache()
 	{
-		// Purge the folder
-		$objFolder = new \Folder('system/cache/html'); // FIXME: system/cache
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$strCacheDir = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+
+		$objFolder = new \Folder($strCacheDir . '/contao/html');
 		$objFolder->purge();
 
 		// Add a log entry
@@ -194,12 +205,32 @@ class Automator extends \System
 	 */
 	public function purgeSearchCache()
 	{
-		// Purge the folder
-		$objFolder = new \Folder('system/cache/search'); // FIXME: system/cache
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$strCacheDir = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+
+		$objFolder = new \Folder($strCacheDir . '/contao/search');
 		$objFolder->purge();
 
 		// Add a log entry
 		$this->log('Purged the search cache', __METHOD__, TL_CRON);
+	}
+
+
+	/**
+	 * Purge the internal cache
+	 */
+	public function purgeInternalCache()
+	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$command = new ContaoCacheClearer($kernel->getContainer()->get('filesystem'));
+		$command->clear($kernel->getCacheDir());
+
+		// Add a log entry
+		$this->log('Purged the internal cache', __METHOD__, TL_CRON);
 	}
 
 
@@ -449,5 +480,31 @@ class Automator extends \System
 		$command = new SymlinksCommand();
 		$command->setContainer($container);
 		$command->generateSymlinks(dirname($container->getParameter('kernel.root_dir')), new NullOutput());
+	}
+
+
+	/**
+	 * Generate the internal cache
+	 */
+	public function generateInternalCache()
+	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$container = $kernel->getContainer();
+
+		$command = new ContaoCacheWarmer
+		(
+			$container->get('filesystem'),
+			$container->get('contao.resource_finder'),
+			$container->get('contao.resource_locator'),
+			$container->getParameter('kernel.root_dir'),
+			$container->get('doctrine.dbal.default_connection')
+		);
+
+		$command->warmUp($kernel->getCacheDir());
+
+		// Add a log entry
+		$this->log('Generated the internal cache', __METHOD__, TL_CRON);
 	}
 }

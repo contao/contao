@@ -319,12 +319,17 @@ $GLOBALS['TL_PURGE'] = array
 		'pages' => array
 		(
 			'callback' => array('Automator', 'purgePageCache'),
-			'affected' => array('system/cache/html')
+			'affected' => array('%s/contao/html')
 		),
 		'search' => array
 		(
 			'callback' => array('Automator', 'purgeSearchCache'),
-			'affected' => array('system/cache/search')
+			'affected' => array('%s/contao/search')
+		),
+		'internal' => array
+		(
+			'callback' => array('Automator', 'purgeInternalCache'),
+			'affected' => array('%s/contao/config', '%s/contao/dca', '%s/contao/languages', '%s/contao/sql')
 		),
 		'temp' => array
 		(

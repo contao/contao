@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Maintenance module "purge data".
@@ -103,6 +106,11 @@ class PurgeData extends \Backend implements \executable
 			}
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$strCachePath = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+
 		// Folders
 		foreach ($GLOBALS['TL_PURGE']['folders'] as $key=>$config)
 		{
@@ -119,26 +127,13 @@ class PurgeData extends \Backend implements \executable
 			foreach ($config['affected'] as $folder)
 			{
 				$total = 0;
+				$folder = sprintf($folder, $strCachePath);
 
 				// Only check existing folders
 				if (is_dir(TL_ROOT . '/' . $folder))
 				{
-					/** @var \SplFileInfo[] $objFiles */
-					$objFiles = new \RecursiveIteratorIterator(
-						new \RecursiveDirectoryIterator(
-							TL_ROOT . '/' . $folder,
-							\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
-						)
-					);
-
-					// Ignore .gitignore and index.html files
-					foreach ($objFiles as $objFile)
-					{
-						if ($objFile->getFilename() != '.gitignore' && $objFile->getFilename() != 'index.html')
-						{
-							++$total;
-						}
-					}
+					$objFiles = Finder::create()->in(TL_ROOT . '/' . $folder)->files();
+					$total = iterator_count($objFiles);
 				}
 
 				$arrJobs[$key]['affected'] .= '<br>' . $folder . ': <span>' . sprintf($GLOBALS['TL_LANG']['MSC']['files'], $total) . '</span>';

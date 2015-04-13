@@ -313,7 +313,6 @@ class tl_user_group extends Backend
 		/** @var SplFileInfo[] $files */
 		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
 
-		// FIXME: use the cache file if it exists?
 		foreach ($files as $file)
 		{
 			if (in_array($file->getBasename(), $processed))

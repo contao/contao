@@ -22,6 +22,15 @@ use Symfony\Component\Filesystem\Filesystem;
 class ContaoCacheClearerTest extends TestCase
 {
     /**
+     * {@inheritdoc}
+     */
+    protected function tearDown()
+    {
+        $fs = new Filesystem();
+        $fs->remove($this->getCacheDir() . '/contao');
+    }
+
+    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
@@ -39,12 +48,12 @@ class ContaoCacheClearerTest extends TestCase
         $fs       = new Filesystem();
         $cacheDir = $this->getCacheDir();
 
-        $fs->mkdir("$cacheDir/contao");
-        $this->assertFileExists("$cacheDir/contao");
+        $fs->mkdir("$cacheDir/contao/config");
+        $this->assertFileExists("$cacheDir/contao/config");
 
         $clearer = new ContaoCacheClearer($fs);
         $clearer->clear($cacheDir);
 
-        $this->assertFileNotExists("$cacheDir/contao");
+        $this->assertFileNotExists("$cacheDir/contao/config");
     }
 }

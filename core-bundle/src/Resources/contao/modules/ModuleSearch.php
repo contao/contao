@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Front end module "search".
@@ -137,10 +139,15 @@ class ModuleSearch extends \Module
 				return;
 			}
 
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
+			$strCachePath = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+
 			$arrResult = null;
 			$strChecksum = md5($strKeywords . $strQueryType . $intRootId . $blnFuzzy);
 			$query_starttime = microtime(true);
-			$strCacheFile = 'system/cache/search/' . $strChecksum . '.json'; // FIXME: system/cache
+			$strCacheFile = $strCachePath . '/contao/search/' . $strChecksum . '.json';
 
 			// Load the cached result
 			if (file_exists(TL_ROOT . '/' . $strCacheFile))

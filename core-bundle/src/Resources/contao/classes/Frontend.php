@@ -666,6 +666,9 @@ abstract class Frontend extends \Controller
 			return null;
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
 		// Try to map the empty request
 		if (\Environment::get('request') == '' || \Environment::get('request') == \Environment::get('script'))
 		{
@@ -677,10 +680,6 @@ abstract class Frontend extends \Controller
 
 			$strCacheKey = null;
 			$arrLanguage = \Environment::get('httpAcceptLanguage');
-
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
 			$strMappingFile = $kernel->getCacheDir() . '/contao/config/mapping.php';
 
 			// Try to get the cache key from the mapper array
@@ -747,7 +746,7 @@ abstract class Frontend extends \Controller
 		if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
 		{
 			$strMd5CacheKey = md5($strCacheKey . '.mobile');
-			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html'; // FIXME: system/cache
+			$strCacheFile = $kernel->getCacheDir() . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
 
 			if (file_exists($strCacheFile))
 			{
@@ -759,7 +758,7 @@ abstract class Frontend extends \Controller
 		if (!$blnFound)
 		{
 			$strMd5CacheKey = md5($strCacheKey);
-			$strCacheFile = TL_ROOT . '/system/cache/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html'; // FIXME: system/cache
+			$strCacheFile = $kernel->getCacheDir() . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
 
 			if (file_exists($strCacheFile))
 			{

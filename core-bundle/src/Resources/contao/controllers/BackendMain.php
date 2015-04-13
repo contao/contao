@@ -84,6 +84,14 @@ class BackendMain extends \Backend
 				\Config::persist('maintenanceMode', false);
 				$this->redirect($this->getReferer());
 			}
+
+			// Build internal cache
+			if (\Input::get('bic'))
+			{
+				$this->import('Automator');
+				$this->Automator->generateInternalCache();
+				$this->redirect($this->getReferer());
+			}
 		}
 
 		\System::loadLanguageFile('default');
@@ -238,8 +246,10 @@ class BackendMain extends \Backend
 		$this->Template->maintenanceMode = $GLOBALS['TL_LANG']['MSC']['maintenanceMode'];
 		$this->Template->maintenanceOff = specialchars($GLOBALS['TL_LANG']['MSC']['maintenanceOff']);
 		$this->Template->maintenanceHref = $this->addToUrl('mmo=1');
-		$this->Template->needsCacheBuild = !is_dir($kernel->getCacheDir() . '/contao');
+		$this->Template->buildCacheLink = $GLOBALS['TL_LANG']['MSC']['buildCacheLink'];
 		$this->Template->buildCacheText = sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], $kernel->getEnvironment());
+		$this->Template->buildCacheHref = $this->addToUrl('bic=1');
+		$this->Template->needsCacheBuild = !is_dir($kernel->getCacheDir() . '/contao/sql');
 		$this->Template->isPopup = \Input::get('popup');
 
 		// Front end preview links
