@@ -122,7 +122,7 @@ class AddPackagesPass implements CompilerPassInterface
             return false;
         }
 
-        $version = str_replace('x-dev', '9999999', $package['extra']['branch-alias'][$package['version_normalized']]);
+        $version = $package['extra']['branch-alias'][$package['version_normalized']];
 
         if (!$this->isValidVersion($version)) {
             return false;
@@ -142,6 +142,6 @@ class AddPackagesPass implements CompilerPassInterface
      */
     private function isValidVersion($version)
     {
-        return (bool) preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $version);
+        return (bool) preg_match('/^[0-9]+\.[0-9]+\.([0-9]+|x-dev)$/', $version);
     }
 }
