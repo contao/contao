@@ -41,7 +41,7 @@ class ResourceFinder
      */
     public function find()
     {
-        return Finder::create()->depth('== 0')->in($this->paths);
+        return Finder::create()->in($this->paths);
     }
 
     /**
@@ -53,7 +53,7 @@ class ResourceFinder
      */
     public function findIn($subpath)
     {
-        return Finder::create()->depth('== 0')->in($this->getExistingSubpaths($subpath));
+        return Finder::create()->in($this->getExistingSubpaths($subpath));
     }
 
     /**

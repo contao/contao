@@ -231,33 +231,14 @@ class tl_templates extends Backend
 		$arrAllowed = trimsplit(',', Config::get('templateFiles'));
 
 		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('templates')->directories();
+		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.(' . implode('|', $arrAllowed) . ')$/');
 
 		foreach ($files as $file)
 		{
-			// Find all templates
-			// FIXME: directly query for the files
-			$objFiles = new SortedIterator(
-				new RecursiveIteratorIterator(
-					new RecursiveDirectoryIterator(
-						$file->getPathname(),
-						FilesystemIterator::UNIX_PATHS|FilesystemIterator::FOLLOW_SYMLINKS|FilesystemIterator::SKIP_DOTS
-					)
-				)
-			);
-
-			foreach ($objFiles as $objFile)
-			{
-				$strExtension = pathinfo($objFile->getFilename(), PATHINFO_EXTENSION);
-
-				if (in_array($strExtension, $arrAllowed))
-				{
-					$strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
-					// FIXME: this will not work with resources in src/AppBundle
-					$strModule = preg_replace('@^(vendor|system/modules)/([^/]+(/.*-bundle)?)/.*$@', '$2', $strRelpath);
-					$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
-				}
-			}
+			$strRelpath = str_replace(TL_ROOT . '/', '', $file->getPathname());
+			// FIXME: this will not work with resources in src/AppBundle
+			$strModule = preg_replace('@^(vendor|system/modules)/([^/]+(/.*-bundle)?)/.*$@', '$2', $strRelpath);
+			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
 
 		$strError = '';

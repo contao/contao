@@ -134,7 +134,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     private function symlinkThemes($rootDir, OutputInterface $output)
     {
         /** @var SplFileInfo[] $themes */
-        $themes = $this->container->get('contao.resource_finder')->findIn('themes')->directories();
+        $themes = $this->container->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
             $path = str_replace("$rootDir/", '', $theme->getPathname());

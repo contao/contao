@@ -398,7 +398,7 @@ abstract class System
 			else
 			{
 				/** @var SplFileInfo[] $files */
-				$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('languages')->directories()->name($strLanguage);
+				$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage);
 				static::$arrLanguages[$strLanguage] = count($files) > 0;
 			}
 		}
