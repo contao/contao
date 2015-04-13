@@ -249,32 +249,6 @@ class Automator extends \System
 
 
 	/**
-	 * Regenerate the XML files
-	 */
-	public function generateXmlFiles()
-	{
-		// Sitemaps
-		$this->generateSitemap();
-
-		// HOOK: add custom jobs
-		if (isset($GLOBALS['TL_HOOKS']['generateXmlFiles']) && is_array($GLOBALS['TL_HOOKS']['generateXmlFiles']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['generateXmlFiles'] as $callback)
-			{
-				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]();
-			}
-		}
-
-		// Also empty the page cache so there are no links to deleted files
-		$this->purgePageCache();
-
-		// Add a log entry
-		$this->log('Regenerated the XML files', __METHOD__, TL_CRON);
-	}
-
-
-	/**
 	 * Remove old XML files from the share directory
 	 *
 	 * @param boolean $blnReturn If true, only return the finds and don't delete
@@ -432,38 +406,28 @@ class Automator extends \System
 
 
 	/**
-	 * Rotate the log files
+	 * Regenerate the XML files
 	 */
-	public function rotateLogs()
+	public function generateXmlFiles()
 	{
-		$arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/system/logs'));
+		// Sitemaps
+		$this->generateSitemap();
 
-		foreach ($arrFiles as $strFile)
+		// HOOK: add custom jobs
+		if (isset($GLOBALS['TL_HOOKS']['generateXmlFiles']) && is_array($GLOBALS['TL_HOOKS']['generateXmlFiles']))
 		{
-			$objFile = new \File('system/logs/' . $strFile . '.9');
-
-			// Delete the oldest file
-			if ($objFile->exists())
+			foreach ($GLOBALS['TL_HOOKS']['generateXmlFiles'] as $callback)
 			{
-				$objFile->delete();
+				$this->import($callback[0]);
+				$this->$callback[0]->$callback[1]();
 			}
-
-			// Rotate the files (e.g. error.log.4 becomes error.log.5)
-			for ($i=8; $i>0; $i--)
-			{
-				$strGzName = 'system/logs/' . $strFile . '.' . $i;
-
-				if (file_exists(TL_ROOT . '/' . $strGzName))
-				{
-					$objFile = new \File($strGzName);
-					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));
-				}
-			}
-
-			// Add .1 to the latest file
-			$objFile = new \File('system/logs/' . $strFile);
-			$objFile->renameTo('system/logs/' . $strFile . '.1');
 		}
+
+		// Also empty the page cache so there are no links to deleted files
+		$this->purgePageCache();
+
+		// Add a log entry
+		$this->log('Regenerated the XML files', __METHOD__, TL_CRON);
 	}
 
 
@@ -506,5 +470,41 @@ class Automator extends \System
 
 		// Add a log entry
 		$this->log('Generated the internal cache', __METHOD__, TL_CRON);
+	}
+
+
+	/**
+	 * Rotate the log files
+	 */
+	public function rotateLogs()
+	{
+		$arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/system/logs'));
+
+		foreach ($arrFiles as $strFile)
+		{
+			$objFile = new \File('system/logs/' . $strFile . '.9');
+
+			// Delete the oldest file
+			if ($objFile->exists())
+			{
+				$objFile->delete();
+			}
+
+			// Rotate the files (e.g. error.log.4 becomes error.log.5)
+			for ($i=8; $i>0; $i--)
+			{
+				$strGzName = 'system/logs/' . $strFile . '.' . $i;
+
+				if (file_exists(TL_ROOT . '/' . $strGzName))
+				{
+					$objFile = new \File($strGzName);
+					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));
+				}
+			}
+
+			// Add .1 to the latest file
+			$objFile = new \File('system/logs/' . $strFile);
+			$objFile->renameTo('system/logs/' . $strFile . '.1');
+		}
 	}
 }
