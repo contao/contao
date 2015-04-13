@@ -361,7 +361,6 @@ class InitializeSystemListener extends ScopeAwareListener
         }
 
         $this->iniSet('display_errors', ($this->config->get('displayErrors') ? 1 : 0));
-        error_reporting(($this->config->get('displayErrors') || $this->config->get('logErrors')) ? $this->config->get('errorReporting') : 0);
     }
 
     /**
