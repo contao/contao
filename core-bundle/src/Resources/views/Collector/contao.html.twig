@@ -2,55 +2,69 @@
 
 {% block toolbar %}
     {% set icon %}
-        <img width="32" height="28" alt="Contao" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAcCAYAAAAAwr0iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+VpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ1dWlkOkQzMTcyOEI3ODY5OERFMTFCMTMwQUEwQzAxOTI2NkExIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkZERjgxNDA0QTI0RTExRTQ5QzA2RUM0M0YyOEU4OURBIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkZERjgxNDAzQTI0RTExRTQ5QzA2RUM0M0YyOEU4OURBIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIElsbHVzdHJhdG9yIENTNCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ1dWlkOmY5NWEyZmY0LWMxYTUtOWY0MC04NTk1LWRlNWI1ZGYxNGY2ZCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3MjQ0NEZFN0IwNUJERjExQTUzRjgzRDExNDc0MkVBNSIvPiA8ZGM6dGl0bGU+IDxyZGY6QWx0PiA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPkNvbnRhb19SR0I8L3JkZjpsaT4gPC9yZGY6QWx0PiA8L2RjOnRpdGxlPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqMbMs8AAAK6SURBVHja7FdNjyFhEK6mcRiJzzA+ZrFjJ7ETt5lEwm8Q8yv4BQ572exlbsLN1YWf4ObiIA4uNhJfw4RJhtmZxEeEoLFdb2KCfRtrVly2korut9+ueqqeqrcas1gs4JQighPLyQGwqzc3Nzc/+J9vuG632yEajYJSqTzIcDgchkQisbrE8Xqfy+W+ry4yqzXgcrmm6Fwul0MsFgOTyXRwZPP5HPx+PxQKhTUQ2WxWIkiBRCJheYVAIABGoxEQ3KHKMAwEg0GQyWRod6nsVgpYlgWNRgNer1cwsm63C8lkEmq1Guh0OvD5fKDX66l7kUaPxwOZTGa/GkCUbrcbxGIx0Nqz2WySqHq93vtaKpWCSCQCBoOB3E+nU6jX61AqlaBcLpNrtLs3AIfDAUJnQzweh+FwuGZwNBpBKBQi0VarVeJwNpvBpt29ACAFWPVCAJ6ensieTUGnqKSqee5pe/bOgFQq5QHMqZvx2bZoPnwOoPHBYMC3ED0DWKBvb2/HA4Cp63Y7ghkwmYyk+o+agZeXX4IZuLj4dHwKnp+fySlGE7PZfFwASAFyPJlMqJWMvY4n22ab/dMMoGAWMNo/RqdIBBaLhbTjXzviA+I4bn8AOAtoYrVaod1ub3WGWcJsoaId1Hw+D+l0ejcFKK1Wi68DepovLz8DP1KpzxQKBdzd+UCtVlOnI41WagYQwGxGL8TzcwOoVCpyXmwKRqpQKKnvjsdjagFvjmOiyNXr6ytBTdPb29vVEft+gjqdTsF3+v0+FQCVApRGoyH4NYSDB0EWi0USGZ6Q6Fyr1VI7BNc6nc7+FCxH7/X1V1L5NLm6+kJ0nWd63Tw+PpIhtTMD/AZuubac6zab7UN9jnYqlcrSObeLgvvlRynePzzUSHrPzs4Oco5jPZ//SejibZOP0s09zP8/JqcG8FuAAQAJR2KODkYmIwAAAABJRU5ErkJggg=="><span> {{ collector.contaoVersion }}  </span>
+        <img width="28" height="26" alt="Contao" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAcCAQAAADVGmdYAAACZUlEQVQ4y81US2gUQRCtycQfRFBQL3oIGFScrdcjESRGJeQk4s2jtwheRCE3kYiHHEREEPGsnkQFQVFBYvCb+FlJgtkQEPQiIoggIaC47m7Gqv7MTMxdnGLpne569apeVw3RP3uSXjPCVX7Lh+1rlB8U/9qImM0IJvAUbzBa2U24hwyZub91tRzH3j32FgUQkRlWP+dLeIWMP3RvJupr/4vBASKKulYQbVqFUfH8Jb8qYUyWkxYSBUhlJw9WTmGvhcUBj36FiL0gTGF+x3ai7mUBwkP4qYfc0mC27g7eZg7iPObs/jihJnRtPnOJygfswQK3bDInzABflRK++oqaFsTTuONrUSO+IEe/0RRQI5TuTAK5UAJ6x9dzkKp02Sa24BK07g2J39S9AlRmkhRxxoJaPnrLOedcDoQZUSOIq9d4tMSxKLkSSJjep2u8tMrUj/pSkGMrmCbxI0295AJMO80Xp9JSE6BXryqvhzxImDpX8hMFhTryWkQMkaThQOPSTcP+nmyX8aUAyjVcFAJjhOey3C7fFI6Ewsur2DzP8i3+pL33TF6nsME3rFaV2nZphvLxDY9x0QyYPbyWdCpqJDOSYY57Cil8VXXLojWcLbe9TNSMSy+rHPeiu5YdtIC66+pkv571teuAdK3njzxthRCXm/m4CXTLOsvvarqmzrqrmSS9kvaEnSexzyaRreVhDOW2zuEubvCxpCMfzNg1mahn70kzP12MtnPyk+z3lMds5Fnxfkl44BP5jl2lOY3zz0tcAPmK/0ZwDx7htdRQ46ESl6zCFOdfDG3lfeI1iYeq9H/9/AHhPHbawQYHsgAAAABJRU5ErkJggg==">
+        <span class="sf-toolbar-info-piece-additional sf-toolbar-status">{{ collector.summary.scope }}</span>
     {% endset %}
     {% set text %}
-    <div class="sf-toolbar-info-piece">
-        Contao <b>{{ collector.contaoVersion }}</b>
-    </div>
-    <div class="sf-toolbar-info-piece">
-        <b>Memory usage</b>
-        <span>{{ collector.summary.memory }}</span>
-    </div>
-    <div class="sf-toolbar-info-piece">
-        <b>Reg. models</b>
-        <span>{{ collector.summary.models }}</span>
-    </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Contao</b>
+            {{ collector.summary.version }}
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Container scope</b>
+            {{ collector.summary.scope }}
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Reg. models</b>
+            <span class="sf-toolbar-status sf-toolbar-status-{{ collector.summary.models > 50 ? 'red' : 'green' }}">{{ collector.summary.models }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Page layout</b>
+            {{ collector.summary.layout }}
+        </div>
     {% endset %}
     {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url } %}
 {% endblock %}
 
 {% block menu %}
     <span class="label">
-        <span class="icon"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAcCAYAAAAAwr0iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+VpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ1dWlkOkQzMTcyOEI3ODY5OERFMTFCMTMwQUEwQzAxOTI2NkExIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjA2NDU1NDdBQTIzOTExRTQ4M0Q4RERDOUFBODczMDY0IiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjA2NDU1NDc5QTIzOTExRTQ4M0Q4RERDOUFBODczMDY0IiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIElsbHVzdHJhdG9yIENTNCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ1dWlkOmY5NWEyZmY0LWMxYTUtOWY0MC04NTk1LWRlNWI1ZGYxNGY2ZCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3MjQ0NEZFN0IwNUJERjExQTUzRjgzRDExNDc0MkVBNSIvPiA8ZGM6dGl0bGU+IDxyZGY6QWx0PiA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPkNvbnRhb19SR0I8L3JkZjpsaT4gPC9yZGY6QWx0PiA8L2RjOnRpdGxlPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pn6WnxYAAAM6SURBVHjatFfLSiNRED1JWqMQNT7I0yioSNSNoCK4kfmAwY24diEuxa9w6UoHR/yMLFwJs3ChiAZxQM34jkkQH1FRfCZzz9WOnZ6kOzCdgkOa7nurTtWtqltR+vr6vgP4KeAXgMvlwtzcHHp6emCFrK+vY3p6Gq+vr/pPKYFJRygU+mW32/0CUBQFs7Oz6O3thVUSDAZRU1ODtbU10IYGLoFvdmHUR8PE+Pg4BgYGYLWMjY1BRBqqHQ18dofDASIQCEgC2Wy2LJiampJGVXsqFL6kjI6OoqKiwtSbk5MTLC8v4/DwEDabTXo2MjKCyspKw32dnZ0YHBzExsZG3ntJgIqGh4clUyOJRCJYWFjA+/t77l00GsXq6ipmZmZQXV39z57r62vs7e1hf38f6XQaqsM5AgyD1+tFU1OTIYHT01MsLi7KZ+7RSiwWw9LSEiYmJuQzDfKXRi8vL/PW6vfKCLS0tJh6Ty/VDC4kKysrEno9eo/1Igm43W5TAoXCZ4Uon5loSoBJpg+fJQRo/PHx0ZRAQ0NDeSJApQ8PD6YEGhsby3cEzFQzAqJll+8IXl5ecHubRm1tbdGFPp8XTqczrwdYRuCjzs/Q3d1tsNSG5uZmnJ+fW38ElHg8jq6uLsPF7BepVKo8EUgmk8hkMoaL29rasLm5WR4C9CybzZhEIPTflcBO6vF4ZOK/vb19HcHz8zOurq5QX19fdDMHC36/u7sr2SC7rN/vl9d9IOCX9w6dmJ//gfv7+68IUBKJJOrq3IYKOzo6sL29bVqy/f39onJ8BW/ITCarzgKwayeURCIh88AIvNcLTDZ5aG9vR2trqyzbYnrYd+R6bXNhJZglIsPJsDJ8RnOgkR5+Yz+h7bwIPD094ebmxjACZD40NFTU+3A4LPPESMfFxUXhIyA4cpkdAxsSJyh2TnUfE5TjGcmZ7Wekczb1/f3o6Eg0pLAc08xKkuBNyrVqsrGUja4VEjg+Ps7dK4q+rlmOZ2dx4WWwpDKrqqrKKS5FDg4OPur/0y4JsLf6tIt2d3dFvXosv/0YrVjsj7aZpfi/YFIgqZ3V+TdqZ+e3zFSrwMhubUVlEn/aSdH2XwEGALevMk+9LiI/AAAAAElFTkSuQmCC" alt=""></span>
+        <span class="icon"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAeCAQAAADwIURrAAAC20lEQVRIx7WWTWgTQRTHZ5P4GYVSetJShVqLbubthlwUBEMVP24iBsSDHvWgUkQvpXiwhyr04kHxoiCKXopezIfGBATpRaFFhIKIIJ6KRaz0oG2y63tvk81MuruBVjOEndmd95s3/zfzZoT4vz9Iwh2oyBcwBcPYNDr1l6PYMw8lKEIF7kIyGDoBLhU5Y3Z3hMaESPXDD8+Cy0QwtMrI+VS/ELm4CsgmEBLDd8pA1MM6ghZ1qMESPqvB0AJBrUtCZNbpPgW2DBxKwFO0WUawC4VgaB4/ze7cqE0da+m91ph8DpNwObNZiGwiF0dcowf0wiJa1fBfCoVat7Spo19wDn77uk0Nbm1+yibsATgtx1nXCChOXx5WoIi0bdZrCae4TDV5P9NjHYVr8AQ+so9UHJ5+MFS+Qk93t6CkmbyJ3f/4xhSWOSXiDg7lvQ31tAKLZp8SDNTNesyBcBWsy29qCHL8dgS0Cj/T2xQoPuUDDeoBHK3dAVqGuj3QgtL0rTFW1O1QIqAlcE2rTdOLjdiuGkrRP96C0hMOMdJZPZQW/4iypChQ2+XC2qGTevRFDKYbRmuATvO+N5T43+uoap1DGaHpgpR6qKzzIVDKTrRem9IUg6FFTn0nPJif3g6wH7qqjjbMHLxHu5ehSwo36nU9VHgefG5T1RvgF7zD/XYVhuyu1B7cyq8joDwNQ8tTDzUBqFaGIRg01/uWqcjFj+Wb3dXCsqonNShuWutKU55cnAIrD4Yn6VJjmsdaqhLc3AKfOFc5nJUIvI9PB8PX/UI0FNOcHFcTNdXkGS1Mt1WB+PsjfJsPh5Ins7s2tB8pcBY+yHn4LmfoDNNXcqZHfg33tMDakQCnFAEaiP2b0jvMPj7BlAFJUZ58KLTKntKqfKubtsmhrQ2zG74wtBp5meAtcGPF4WzQ2a9dMbgun0VfJpJ4eangvipCGS8/vSuwAbcUTI1vULbwa8+/+/0FfI41lT36pN8AAAAASUVORK5CYII=" alt="Contao"></span>
         <strong>Contao</strong>
     </span>
 {% endblock %}
 
 {% block panel %}
-    {% if collector.summary %}
     <h2>Summary</h2>
     <table>
         <tr>
-            <th>Execution time</th>
-            <td>{{ collector.summary.execution_time }} ms</td>
+            <th>Version</th>
+            <td>{{ collector.summary.version }}</td>
         </tr>
         <tr>
-            <th>Memory usage</th>
-            <td>{{ collector.summary.memory }}</td>
+            <th>Container scope</th>
+            <td>
+                {% if collector.summary.scope %}
+                    <span class="sf-toolbar-status sf-toolbar-status-green">{{ collector.summary.scope }}</span>
+                {% else %}
+                    <span class="sf-toolbar-status sf-toolbar-status-red">unknown</span>
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Registered models</th>
             <td>{{ collector.summary.models }}</td>
         </tr>
+        <tr>
+            <th>Page layout</th>
+            <td>{{ collector.summary.layout }}</td>
+        </tr>
     </table>
-    {% endif %}
 
-    <h2>Unknown Insert Tags</h2>
+    <h2>Unknown insert tags</h2>
     {% if collector.unknowninserttags %}
         <table>
             <tr>
-                <th>Insert Tag</th>
+                <th>Insert tag</th>
             </tr>
             {% for name in collector.unknowninserttags %}
                 <tr>
@@ -62,11 +76,11 @@
         <p><em>No unknown insert tags used on the page.</em></p>
     {% endif %}
 
-    <h2>Unknown Insert Tag Flags</h2>
+    <h2>Unknown insert tag flags</h2>
     {% if collector.unknowninserttagflags %}
         <table>
             <tr>
-                <th>Insert Tag Flag</th>
+                <th>Insert tag flag</th>
             </tr>
             {% for name in collector.unknowninserttagflags %}
                 <tr>
@@ -78,7 +92,7 @@
         <p><em>No unknown insert tag flags used on the page.</em></p>
     {% endif %}
 
-    <h2>Classes Aliased</h2>
+    <h2>Classes aliased</h2>
     <table>
         <tr>
             <th>Alias name</th>
@@ -92,7 +106,7 @@
         {% endfor %}
     </table>
 
-    <h2>Classes Set</h2>
+    <h2>Classes set</h2>
     <table>
         <tr>
             <th>Class name</th>
@@ -105,9 +119,9 @@
     </table>
 
     {% if collector.additionaldata %}
-    <h2>Other</h2>
-    <pre>
-    {{ dump(collector.additionaldata) }}
-    </pre>
+        <h2>Other</h2>
+        <pre>
+            {{ dump(collector.additionaldata) }}
+        </pre>
     {% endif %}
 {% endblock %}

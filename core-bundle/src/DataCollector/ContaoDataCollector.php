@@ -10,6 +10,11 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
+use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\LayoutModel;
+use Contao\Model\Registry;
+use Contao\PageRegular;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -24,6 +29,16 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class ContaoDataCollector extends DataCollector
 {
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var array
+     */
+    private $bundles;
+
+    /**
      * @var array
      */
     private $packages;
@@ -31,11 +46,15 @@ class ContaoDataCollector extends DataCollector
     /**
      * Constructor.
      *
-     * @param array $packages Installed Composer packages and versions
+     * @param ContainerInterface $container The container object
+     * @param array              $bundles   The installed bundles
+     * @param array              $packages  The Composer packages
      */
-    public function __construct(array $packages)
+    public function __construct(ContainerInterface $container, array $bundles, array $packages)
     {
-        $this->packages = $packages;
+        $this->container = $container;
+        $this->bundles   = $bundles;
+        $this->packages  = $packages;
     }
 
     /**
@@ -47,19 +66,17 @@ class ContaoDataCollector extends DataCollector
             $this->data = ['contao_version' => $this->packages['contao/core-bundle']];
         }
 
-        if (!isset($GLOBALS['TL_DEBUG'])) {
-            return;
-        }
-
-        $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
-
         $this->addSummaryData();
+
+        if (isset($GLOBALS['TL_DEBUG'])) {
+            $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
+        }
     }
 
     /**
-     * Returns the Contao version and build.
+     * Returns the Contao version and build number.
      *
-     * @return string
+     * @return string The version number
      */
     public function getContaoVersion()
     {
@@ -90,14 +107,14 @@ class ContaoDataCollector extends DataCollector
         $aliases = [];
         $data    = $this->getData('classes_aliased');
 
-        foreach ($data as $v) {
-            $alias    = $v;
+        foreach ($data as $class) {
+            $alias    = $class;
             $original = '';
-            $pos      = strpos($v, '<span');
+            $pos      = strpos($class, '<span');
 
             if (false !== $pos) {
-                $alias    = trim(substr($v, 0, $pos));
-                $original = trim(strip_tags(substr($v, $pos)), ' ()');
+                $alias    = trim(substr($class, 0, $pos));
+                $original = trim(strip_tags(substr($class, $pos)), ' ()');
             }
 
             $aliases[$alias] = [
@@ -123,16 +140,6 @@ class ContaoDataCollector extends DataCollector
         sort($data);
 
         return $data;
-    }
-
-    /**
-     * Returns the database queries.
-     *
-     * @return array The database queries
-     */
-    public function getDatabaseQueries()
-    {
-        return $this->getData('database_queries');
     }
 
     /**
@@ -169,6 +176,7 @@ class ContaoDataCollector extends DataCollector
         }
 
         unset($data['summary']);
+        unset($data['contao_version']);
         unset($data['classes_aliased']);
         unset($data['classes_set']);
         unset($data['database_queries']);
@@ -203,16 +211,50 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Builds the summary data.
+     * Adds the summary data.
      */
     private function addSummaryData()
     {
-        $intElapsed = (microtime(true) - TL_START);
+        $framework    = false;
+        $modelCount   = '';
+        $layout       = 'N/A';
+
+        if (isset($GLOBALS['TL_DEBUG'])) {
+            $modelCount = Registry::getInstance()->count();
+            $framework  = true;
+
+            /** @var PageRegular $objPage */
+            global $objPage;
+
+            if (null !== ($layoutModel = LayoutModel::findByPk($objPage->layout))) {
+                $layout = sprintf('%s (ID %s)', $layoutModel->name, $layoutModel->id);
+            }
+        }
 
         $this->data['summary'] = [
-            'execution_time' => \System::getFormattedNumber(($intElapsed * 1000), 0),
-            'memory'         => \System::getReadableSize(memory_get_peak_usage()),
-            'models'         => \Model\Registry::getInstance()->count(),
+            'version'        => $this->getContaoVersion(),
+            'scope'          => $this->getContainerScope(),
+            'layout'         => $layout,
+            'framework'      => $framework,
+            'models'         => $modelCount,
         ];
+    }
+
+    /**
+     * Returns the scope from the container.
+     *
+     * @return string
+     */
+    private function getContainerScope()
+    {
+        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
+            return ContaoCoreBundle::SCOPE_BACKEND;
+        }
+
+        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
+            return ContaoCoreBundle::SCOPE_FRONTEND;
+        }
+
+        return '';
     }
 }

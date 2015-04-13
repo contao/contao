@@ -11,6 +11,16 @@ services:
         arguments:
             - '@filesystem'
 
+    contao.data_collector:
+        class: Contao\CoreBundle\DataCollector\ContaoDataCollector
+        public: false
+        arguments:
+            - '@service_container'
+            - '%kernel.bundles%'
+            - '%kernel.packages%'
+        tags:
+            - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
+
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         tags:
@@ -130,10 +140,3 @@ services:
             - '@contao.resource_locator'
             - '%kernel.root_dir%'
             - '@doctrine.dbal.default_connection'
-
-    contao.web_profiler.data_collector:
-        class: Contao\CoreBundle\DataCollector\ContaoDataCollector
-        arguments:
-            - '%kernel.packages%'
-        tags:
-            - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
