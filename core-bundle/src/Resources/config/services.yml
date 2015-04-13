@@ -1,6 +1,6 @@
 services:
     contao.config_adapter:
-        class: Contao\CoreBundle\Config\ConfigAdapter
+        class: Contao\CoreBundle\Adapter\ConfigAdapter
         public: false
 
     contao.clearer.internal_cache:

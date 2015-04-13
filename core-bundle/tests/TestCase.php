@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\ConfigAdapter;
+use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
@@ -238,7 +238,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockConfig()
     {
-        $config = $this->getMock('Contao\\CoreBundle\\Config\\ConfigAdapter');
+        $config = $this->getMock('Contao\\CoreBundle\\Adapter\\ConfigAdapter');
 
         $config->expects($this->any())
             ->method('isComplete')

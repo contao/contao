@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\ClassLoader;
-use Contao\CoreBundle\Config\ConfigAdapter;
+use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Contao\Input;
 use Contao\System;

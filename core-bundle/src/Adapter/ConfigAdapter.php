@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Config;
+namespace Contao\CoreBundle\Adapter;
 
 use Contao\Config;
 
