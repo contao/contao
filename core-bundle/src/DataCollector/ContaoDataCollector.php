@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  *
- * @todo Rework when we have the Doctrine driver
+ * @todo Add a unit test.
  */
 class ContaoDataCollector extends DataCollector
 {

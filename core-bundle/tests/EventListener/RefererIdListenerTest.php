@@ -54,6 +54,49 @@ class RefererIdListenerTest extends TestCase
         $listener->setContainer($container);
         $listener->onKernelRequest($event);
 
+        $this->assertTrue($request->attributes->has('_contao_referer_id'));
         $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
+    }
+
+    /**
+     * Tests that the token is not added to a front end request.
+     */
+    public function testTokenNotAddedToFrontendRequest()
+    {
+        /** @var HttpKernelInterface $kernel */
+        $kernel    = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $request   = new Request();
+        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener  = new RefererIdListener($this->mockTokenManager());
+        $container = new Container();
+
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
+
+        $listener->setContainer($container);
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse($request->attributes->has('_contao_referer_id'));
+    }
+
+    /**
+     * Tests that the token is not added to a subrequest.
+     */
+    public function testTokenNotAddedToSubrequest()
+    {
+        /** @var HttpKernelInterface $kernel */
+        $kernel    = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $request   = new Request();
+        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
+        $listener  = new RefererIdListener($this->mockTokenManager());
+        $container = new Container();
+
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+
+        $listener->setContainer($container);
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse($request->attributes->has('_contao_referer_id'));
     }
 }

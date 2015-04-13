@@ -32,6 +32,7 @@ class SymlinksCommandTest extends TestCase
     {
         $fs = new Filesystem();
 
+        $fs->remove($this->getRootDir() . '/system/logs');
         $fs->remove($this->getRootDir() . '/system/themes');
         $fs->remove($this->getRootDir() . '/web');
     }
@@ -73,6 +74,7 @@ class SymlinksCommandTest extends TestCase
         $this->assertContains('Added system/themes/flexible as symlink to ../../vendor/contao/test-bundle/Resources/contao/themes/flexible.', $tester->getDisplay());
         $this->assertContains('Added web/assets as symlink to ../assets.', $tester->getDisplay());
         $this->assertContains('Added web/system/themes as symlink to ../../system/themes.', $tester->getDisplay());
+        $this->assertContains('Added system/logs as symlink to ../app/logs.', $tester->getDisplay());
     }
 
     /**
@@ -92,5 +94,65 @@ class SymlinksCommandTest extends TestCase
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
 
         $lock->release();
+    }
+
+    /**
+     * Tests an empty source file.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testEmptySource()
+    {
+        $command    = new SymlinksCommand('contao:symlinks');
+        $reflection = new \ReflectionClass($command);
+        $method     = $reflection->getMethod('validateSymlink');
+
+        $method->setAccessible(true);
+        $method->invokeArgs($command, ['', 'target', $this->getRootDir()]);
+    }
+
+    /**
+     * Tests an empty target file.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testEmptyTarget()
+    {
+        $command    = new SymlinksCommand('contao:symlinks');
+        $reflection = new \ReflectionClass($command);
+        $method     = $reflection->getMethod('validateSymlink');
+
+        $method->setAccessible(true);
+        $method->invokeArgs($command, ['source', '', $this->getRootDir()]);
+    }
+
+    /**
+     * Tests an invalid target file.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidTarget()
+    {
+        $command    = new SymlinksCommand('contao:symlinks');
+        $reflection = new \ReflectionClass($command);
+        $method     = $reflection->getMethod('validateSymlink');
+
+        $method->setAccessible(true);
+        $method->invokeArgs($command, ['source', '../target', $this->getRootDir()]);
+    }
+
+    /**
+     * Tests an existing target file.
+     *
+     * @expectedException \LogicException
+     */
+    public function testExistingTarget()
+    {
+        $command    = new SymlinksCommand('contao:symlinks');
+        $reflection = new \ReflectionClass($command);
+        $method     = $reflection->getMethod('validateSymlink');
+
+        $method->setAccessible(true);
+        $method->invokeArgs($command, ['source', 'app', $this->getRootDir()]);
     }
 }

@@ -44,8 +44,27 @@ class VersionCommandTest extends TestCase
         $command->setContainer($container);
 
         $tester = new CommandTester($command);
-        $tester->execute([]);
+        $code   = $tester->execute([]);
 
+        $this->assertEquals(0, $code);
         $this->assertEquals("4.0.2\n", $tester->getDisplay());
+    }
+
+    /**
+     * Tests the output without the version set.
+     */
+    public function testOutputWithoutVersion()
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.packages', []);
+
+        $command = new VersionCommand('contao:version');
+        $command->setContainer($container);
+
+        $tester = new CommandTester($command);
+        $code   = $tester->execute([]);
+
+        $this->assertEquals(1, $code);
+        $this->assertEquals('', $tester->getDisplay());
     }
 }

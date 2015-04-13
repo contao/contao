@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\RefererId;
 
 use Contao\CoreBundle\RefererId\TokenGenerator;
+use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 
 /**
  * Tests the TokenGenerator class.
@@ -22,7 +23,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     const ENTROPY = 1000;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var SecureRandomInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $random;
 
@@ -49,7 +50,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->random    = $this->getMock('Symfony\Component\Security\Core\Util\SecureRandomInterface');
+        $this->random    = $this->getMock('Symfony\\Component\\Security\\Core\\Util\\SecureRandomInterface');
         $this->generator = new TokenGenerator($this->random, self::ENTROPY);
     }
 
