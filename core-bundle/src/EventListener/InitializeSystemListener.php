@@ -338,7 +338,6 @@ class InitializeSystemListener extends ScopeAwareListener
         // Always show error messages if logged into the install tool (see #5001)
         if (Input::cookie('TL_INSTALL_AUTH') && !empty($_SESSION['TL_INSTALL_AUTH']) && Input::cookie('TL_INSTALL_AUTH') == $_SESSION['TL_INSTALL_AUTH'] && $_SESSION['TL_INSTALL_EXPIRE'] > time()) {
             $this->config->set('displayErrors', 1);
-
         }
 
         $this->iniSet('display_errors', ($this->config->get('displayErrors') ? 1 : 0));

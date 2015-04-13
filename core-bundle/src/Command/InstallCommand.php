@@ -47,7 +47,6 @@ class InstallCommand extends LockedCommand implements ContainerAwareInterface
         'assets/js',
         'system/cache',
         'system/config',
-        'system/logs',
         'system/modules',
         'system/themes',
         'system/tmp',

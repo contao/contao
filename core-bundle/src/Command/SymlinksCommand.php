@@ -83,6 +83,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         // Symlink the assets and themes directory
         $this->symlink('../assets', 'web/assets', $rootDir, $output);
         $this->symlink('../../system/themes', 'web/system/themes', $rootDir, $output);
+        $this->symlink('../app/logs', 'system/logs', $rootDir, $output);
     }
 
     /**
