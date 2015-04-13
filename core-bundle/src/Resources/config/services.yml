@@ -1,5 +1,5 @@
 services:
-    contao.config_adapter:
+    contao.adapter.config:
         class: Contao\CoreBundle\Adapter\ConfigAdapter
         public: false
 
@@ -44,7 +44,7 @@ services:
             - "%kernel.root_dir%"
             - "@security.csrf.token_manager"
             - "%contao.csrf_token_name%"
-            - "@contao.config_adapter"
+            - "@contao.adapter.config"
         calls:
             - [setContainer, ["@service_container"]]
         tags:
