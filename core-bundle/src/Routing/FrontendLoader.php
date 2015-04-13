@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Routing;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -55,7 +56,11 @@ class FrontendLoader extends Loader
     public function load($resource, $type = null)
     {
         $routes   = new RouteCollection();
-        $defaults = ['_controller' => 'ContaoCoreBundle:Frontend:index', '_scope' => 'frontend'];
+
+        $defaults = [
+            '_controller' => 'ContaoCoreBundle:Frontend:index',
+            '_scope'      => ContaoCoreBundle::SCOPE_FRONTEND,
+        ];
 
         $this->addFrontendRoute($routes, $defaults);
         $this->addRootRoute($routes, $defaults);

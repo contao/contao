@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
@@ -20,18 +21,6 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
  */
 abstract class ScopeAwareListener extends ContainerAware
 {
-    /**
-     * Checks whether the request is the master request in the front end scope.
-     *
-     * @param KernelEvent $event The HttpKernel event
-     *
-     * @return bool True if the request is the master request in the front end scope
-     */
-    protected function isFrontendMasterRequest(KernelEvent $event)
-    {
-        return $event->isMasterRequest() && $this->isFrontendScope();
-    }
-
     /**
      * Checks whether the request is the master request in the back end scope.
      *
@@ -45,13 +34,15 @@ abstract class ScopeAwareListener extends ContainerAware
     }
 
     /**
-     * Checks whether the container is in the front end scope.
+     * Checks whether the request is the master request in the front end scope.
      *
-     * @return bool True if the container is in the front end scope
+     * @param KernelEvent $event The HttpKernel event
+     *
+     * @return bool True if the request is the master request in the front end scope
      */
-    protected function isFrontendScope()
+    protected function isFrontendMasterRequest(KernelEvent $event)
     {
-        return (null !== $this->container && $this->container->isScopeActive('frontend'));
+        return $event->isMasterRequest() && $this->isFrontendScope();
     }
 
     /**
@@ -61,6 +52,16 @@ abstract class ScopeAwareListener extends ContainerAware
      */
     protected function isBackendScope()
     {
-        return (null !== $this->container && $this->container->isScopeActive('backend'));
+        return (null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
+    }
+
+    /**
+     * Checks whether the container is in the front end scope.
+     *
+     * @return bool True if the container is in the front end scope
+     */
+    protected function isFrontendScope()
+    {
+        return (null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND));
     }
 }

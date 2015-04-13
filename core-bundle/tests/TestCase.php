@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Test;
 use Contao\Config;
 use Contao\CoreBundle\Config\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
@@ -127,8 +128,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         );
 
         $container = new Container();
-        $container->addScope(new Scope('frontend'));
-        $container->addScope(new Scope('backend'));
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
 
         $container->set(
             'contao.resource_finder',

@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\ContainerScopeListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -49,13 +50,13 @@ class ContainerScopeListenerTest extends TestCase
         $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
         $request  = new Request();
 
-        $container->addScope(new Scope('backend'));
-        $request->attributes->set('_scope', 'backend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
-        $this->assertTrue($container->hasScope('backend'));
-        $this->assertTrue($container->isScopeActive('backend'));
+        $this->assertTrue($container->hasScope(ContaoCoreBundle::SCOPE_BACKEND));
+        $this->assertTrue($container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
     }
 
     /**
@@ -71,14 +72,14 @@ class ContainerScopeListenerTest extends TestCase
         $request  = new Request();
         $response = new Response();
 
-        $container->addScope(new Scope('backend'));
-        $container->enterScope('backend');
-        $request->attributes->set('_scope', 'backend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener->onKernelFinishRequest(new FinishRequestEvent($kernel, $request, $response));
 
-        $this->assertTrue($container->hasScope('backend'));
-        $this->assertFalse($container->isScopeActive('backend'));
+        $this->assertTrue($container->hasScope(ContaoCoreBundle::SCOPE_BACKEND));
+        $this->assertFalse($container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
     }
 
     /**
@@ -93,12 +94,12 @@ class ContainerScopeListenerTest extends TestCase
         $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
         $request  = new Request();
 
-        $container->addScope(new Scope('backend'));
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
 
         $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
-        $this->assertTrue($container->hasScope('backend'));
-        $this->assertFalse($container->isScopeActive('backend'));
+        $this->assertTrue($container->hasScope(ContaoCoreBundle::SCOPE_BACKEND));
+        $this->assertFalse($container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
     }
 
     /**
@@ -113,11 +114,11 @@ class ContainerScopeListenerTest extends TestCase
         $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
         $request  = new Request();
 
-        $request->attributes->set('_scope', 'backend');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
-        $this->assertFalse($container->hasScope('backend'));
-        $this->assertFalse($container->isScopeActive('backend'));
+        $this->assertFalse($container->hasScope(ContaoCoreBundle::SCOPE_BACKEND));
+        $this->assertFalse($container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
     }
 }

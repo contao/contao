@@ -25,6 +25,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class ContaoCoreBundle extends Bundle
 {
+    const SCOPE_BACKEND  = 'backend';
+    const SCOPE_FRONTEND = 'frontend';
+
     /**
      * {@inheritdoc}
      */
@@ -38,8 +41,8 @@ class ContaoCoreBundle extends Bundle
      */
     public function boot()
     {
-        $this->container->addScope(new Scope('frontend', 'request'));
-        $this->container->addScope(new Scope('backend', 'request'));
+        $this->container->addScope(new Scope(self::SCOPE_BACKEND, 'request'));
+        $this->container->addScope(new Scope(self::SCOPE_FRONTEND, 'request'));
     }
 
     /**

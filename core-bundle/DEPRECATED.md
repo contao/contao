@@ -28,8 +28,8 @@ Check the container scope instead of using `TL_MODE`:
 ```php
 global $kernel;
 
-$isBackEnd  = $kernel->getContainer()->isScopeActive('backend');
-$isFrontEnd = $kernel->getContainer()->isScopeActive('frontend');
+$isBackEnd  = $kernel->getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND);
+$isFrontEnd = $kernel->getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND);
 ```
 
 Use the kernel start time instead of `TL_START`:

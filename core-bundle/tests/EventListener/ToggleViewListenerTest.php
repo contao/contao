@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\ToggleViewListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -67,8 +68,8 @@ class ToggleViewListenerTest extends TestCase
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener  = new ToggleViewListener();
 
-        $container->addScope(new Scope('backend'));
-        $container->enterScope('backend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
 
         $request->attributes->set('_route', 'dummy');
 
@@ -90,8 +91,8 @@ class ToggleViewListenerTest extends TestCase
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener  = new ToggleViewListener();
 
-        $container->addScope(new Scope('frontend'));
-        $container->enterScope('frontend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
         $request->attributes->set('_route', 'dummy');
 
@@ -113,8 +114,8 @@ class ToggleViewListenerTest extends TestCase
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener  = new ToggleViewListener();
 
-        $container->addScope(new Scope('frontend'));
-        $container->enterScope('frontend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
         $request->attributes->set('_route', 'dummy');
 
@@ -137,8 +138,8 @@ class ToggleViewListenerTest extends TestCase
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener  = new ToggleViewListener();
 
-        $container->addScope(new Scope('frontend'));
-        $container->enterScope('frontend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
         $request->attributes->set('_route', 'dummy');
 
@@ -161,8 +162,8 @@ class ToggleViewListenerTest extends TestCase
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener  = new ToggleViewListener();
 
-        $container->addScope(new Scope('frontend'));
-        $container->enterScope('frontend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
         $request->attributes->set('_route', 'dummy');
 
@@ -186,8 +187,8 @@ class ToggleViewListenerTest extends TestCase
         $listener   = new ToggleViewListener();
         $reflection = new \ReflectionClass($request);
 
-        $container->addScope(new Scope('frontend'));
-        $container->enterScope('frontend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
         $request->attributes->set('_route', 'dummy');
 

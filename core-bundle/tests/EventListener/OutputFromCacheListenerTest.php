@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\OutputFromCacheListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -47,8 +48,8 @@ class OutputFromCacheListenerTest extends TestCase
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener  = new OutputFromCacheListener();
 
-        $container->addScope(new Scope('frontend'));
-        $container->enterScope('frontend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
         $request->attributes->set('_route', 'dummy');
 
@@ -70,8 +71,8 @@ class OutputFromCacheListenerTest extends TestCase
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener  = new OutputFromCacheListener();
 
-        $container->addScope(new Scope('backend'));
-        $container->enterScope('backend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
 
         $request->attributes->set('_route', 'dummy');
 

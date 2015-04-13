@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\ScopeAwareListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -52,8 +53,8 @@ class ScopeAwareListenerTest extends TestCase
     public function testIsFrontendMasterRequest()
     {
         $container = new ContainerBuilder();
-        $container->addScope(new Scope('frontend'));
-        $container->enterScope('frontend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
         $this->listener->setContainer($container);
 
@@ -72,8 +73,8 @@ class ScopeAwareListenerTest extends TestCase
     public function testIsBackendMasterRequest()
     {
         $container = new ContainerBuilder();
-        $container->addScope(new Scope('backend'));
-        $container->enterScope('backend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
 
         $this->listener->setContainer($container);
 

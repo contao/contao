@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\Config;
 use Contao\CoreBundle\Command\VersionCommand;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -78,7 +79,7 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener->setContainer($container);
 
-        $container->enterScope('frontend');
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -122,7 +123,7 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener->setContainer($container);
 
-        $container->enterScope('backend');
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
 
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -176,7 +177,7 @@ class InitializeSystemListenerTest extends TestCase
         $this->assertFalse(defined('TL_SCRIPT'));
         $this->assertFalse(defined('TL_ROOT'));
 
-        $container->enterScope('frontend');
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
         $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST));
 
@@ -295,7 +296,7 @@ class InitializeSystemListenerTest extends TestCase
         ;
 
         $listener->setContainer($container);
-        $container->enterScope('frontend');
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
         $request = new Request();
         $request->attributes->set('_route', 'dummy');

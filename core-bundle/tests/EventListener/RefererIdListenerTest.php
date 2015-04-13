@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -47,8 +48,8 @@ class RefererIdListenerTest extends TestCase
         $listener  = new RefererIdListener($this->mockTokenManager());
         $container = new Container();
 
-        $container->addScope(new Scope('backend'));
-        $container->enterScope('backend');
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener->setContainer($container);
         $listener->onKernelRequest($event);
