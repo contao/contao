@@ -52,7 +52,7 @@ if ('contao_backend_main' === $route) {
 }
 ```
 
-Use the the request attribute `contao_referer_id` instead of `TL_REFERER_ID`:
+Use the the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
 
 ```php
 global $kernel;
