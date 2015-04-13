@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageRegular;
@@ -45,7 +46,9 @@ class ContaoDataCollector extends DataCollector
     /**
      * Constructor.
      *
-     * @param array $packages Installed Composer packages and versions
+     * @param ContainerInterface $container The container object
+     * @param array              $bundles   The installed bundles
+     * @param array              $packages  The Composer packages
      */
     public function __construct(ContainerInterface $container, array $bundles, array $packages)
     {
@@ -71,9 +74,9 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Returns the Contao version and build.
+     * Returns the Contao version and build number.
      *
-     * @return string
+     * @return string The version number
      */
     public function getContaoVersion()
     {
@@ -104,14 +107,14 @@ class ContaoDataCollector extends DataCollector
         $aliases = [];
         $data    = $this->getData('classes_aliased');
 
-        foreach ($data as $v) {
-            $alias    = $v;
+        foreach ($data as $class) {
+            $alias    = $class;
             $original = '';
-            $pos      = strpos($v, '<span');
+            $pos      = strpos($class, '<span');
 
             if (false !== $pos) {
-                $alias    = trim(substr($v, 0, $pos));
-                $original = trim(strip_tags(substr($v, $pos)), ' ()');
+                $alias    = trim(substr($class, 0, $pos));
+                $original = trim(strip_tags(substr($class, $pos)), ' ()');
             }
 
             $aliases[$alias] = [
@@ -208,7 +211,7 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Builds the summary data.
+     * Adds the summary data.
      */
     private function addSummaryData()
     {
@@ -223,12 +226,13 @@ class ContaoDataCollector extends DataCollector
             /** @var PageRegular $objPage */
             global $objPage;
 
-            if (null !== $layoutModel = LayoutModel::findByPk($objPage->layout)) {
+            if (null !== ($layoutModel = LayoutModel::findByPk($objPage->layout))) {
                 $layout = sprintf('%s (ID %s)', $layoutModel->name, $layoutModel->id);
             }
         }
 
         $this->data['summary'] = [
+            'version'        => $this->getContaoVersion(),
             'scope'          => $this->getContainerScope(),
             'layout'         => $layout,
             'framework'      => $framework,
@@ -237,18 +241,18 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Gets the scope from the container.
+     * Returns the scope from the container.
      *
      * @return string
      */
     private function getContainerScope()
     {
-        if ($this->container->isScopeActive('frontend')) {
-            return 'frontend';
+        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
+            return ContaoCoreBundle::SCOPE_BACKEND;
         }
 
-        if ($this->container->isScopeActive('backend')) {
-            return 'backend';
+        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
+            return ContaoCoreBundle::SCOPE_FRONTEND;
         }
 
         return '';
