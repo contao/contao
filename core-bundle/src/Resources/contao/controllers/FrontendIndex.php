@@ -41,7 +41,10 @@ class FrontendIndex extends \Frontend
 			// Maintenance mode (see #4561 and #6353)
 			if (\Config::get('maintenanceMode'))
 			{
-				throw new MaintenanceModeActiveHttpException();
+				throw new MaintenanceModeActiveHttpException(
+					null,
+					'This site is currently down for maintenance. Please come back later.'
+				);
 			}
 		}
 	}
@@ -193,7 +196,7 @@ class FrontendIndex extends \Frontend
 		// Do not try to load the 404 page, it can cause an infinite loop!
 		if (!BE_USER_LOGGED_IN && !$objPage->rootIsPublic)
 		{
-			throw new NotFoundHttpException();
+			throw new NotFoundHttpException('Page not found');
 		}
 
 		// Check wether the language matches the root page language

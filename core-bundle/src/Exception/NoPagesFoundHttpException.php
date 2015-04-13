@@ -17,11 +17,4 @@ namespace Contao\CoreBundle\Exception;
  */
 class NoPagesFoundHttpException extends NotFoundHttpException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct($message = 'No active pages found', \Exception $previous = null, $code = 0 )
-    {
-        parent::__construct($message, $previous, $code);
-    }
 }

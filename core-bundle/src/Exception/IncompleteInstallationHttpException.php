@@ -19,15 +19,4 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  */
 class IncompleteInstallationHttpException extends ServiceUnavailableHttpException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(
-        $retryAfter = null,
-        $message = 'The installation has not been completed. Please finish the configuration.',
-        \Exception $previous = null,
-        $code = 0
-    ) {
-        parent::__construct($retryAfter, $message, $previous, $code);
-    }
 }

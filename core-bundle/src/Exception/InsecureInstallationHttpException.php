@@ -21,15 +21,4 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  */
 class InsecureInstallationHttpException extends ServiceUnavailableHttpException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(
-        $retryAfter = null,
-        $message = 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.',
-        \Exception $previous = null,
-        $code = 0
-    ) {
-        parent::__construct($retryAfter, $message, $previous, $code);
-    }
 }

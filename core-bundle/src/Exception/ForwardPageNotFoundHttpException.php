@@ -17,11 +17,4 @@ namespace Contao\CoreBundle\Exception;
  */
 class ForwardPageNotFoundHttpException extends NotFoundHttpException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct($message = 'Forward page not found', \Exception $previous = null, $code = 0 )
-    {
-        parent::__construct($message, $previous, $code);
-    }
 }

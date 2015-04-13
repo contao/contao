@@ -19,11 +19,4 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as BaseNotFound
  */
 class NotFoundHttpException extends BaseNotFoundHttpException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct($message = 'Page not found', \Exception $previous = null, $code = 0 )
-    {
-        parent::__construct($message, $previous, $code);
-    }
 }

@@ -859,7 +859,7 @@ class PageModel extends \Model
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
 			\System::log('Page ID "'. $this->id .'" does not belong to a root page', __METHOD__, TL_ERROR);
-			throw new RootNotFoundHttpException();
+			throw new RootNotFoundHttpException('No root page found');
 		}
 
 		$this->trail = array_reverse($trail);

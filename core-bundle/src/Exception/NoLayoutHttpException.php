@@ -22,7 +22,7 @@ class NoLayoutHttpException extends HttpException
     /**
      * {@inheritdoc}
      */
-    public function __construct($message = 'No layout specified', \Exception $previous = null, $code = 0)
+    public function __construct($message = null, \Exception $previous = null, $code = 0)
     {
         parent::__construct(501, $message, $previous, array(), $code);
     }

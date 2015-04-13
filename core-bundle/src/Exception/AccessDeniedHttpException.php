@@ -19,11 +19,4 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException as BaseAcce
  */
 class AccessDeniedHttpException extends BaseAccessDeniedHttpException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct($message = 'Forbidden', \Exception $previous = null, $code = 0)
-    {
-        parent::__construct($message, $previous, $code);
-    }
 }

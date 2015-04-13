@@ -19,16 +19,4 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  */
 class MaintenanceModeActiveHttpException extends ServiceUnavailableHttpException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(
-        // FIXME: should we initialize this to a sane default?
-        $retryAfter = null,
-        $message = 'This site is currently down for maintenance. Please come back later.',
-        \Exception $previous = null,
-        $code = 0
-    ) {
-        parent::__construct($retryAfter, $message, $previous, $code);
-    }
 }

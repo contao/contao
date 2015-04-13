@@ -19,10 +19,4 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException as BaseBadReq
  */
 class BadRequestHttpException extends BaseBadRequestHttpException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct($message = 'Bad request', \Exception $previous = null, $code = 0) {
-        parent::__construct($message, $previous, $code);
-    }
 }

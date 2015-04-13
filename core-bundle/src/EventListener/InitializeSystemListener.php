@@ -325,13 +325,19 @@ class InitializeSystemListener extends ScopeAwareListener
 
         // Show the "insecure document root" message
         if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) && '/web' === substr($request->getBasePath(), -4)) {
-            throw new InsecureInstallationHttpException();
+            throw new InsecureInstallationHttpException(
+                null,
+                'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.'
+            );
         }
 
         // Show the "incomplete installation" message
         if (!$this->config->isComplete()) {
             // FIXME: This maybe should be removed when localconfig.php is not mandatory anymore.
-            throw new IncompleteInstallationHttpException();
+            throw new IncompleteInstallationHttpException(
+                null,
+                'The installation has not been completed. Please finish the configuration.'
+            );
         }
     }
 
@@ -406,7 +412,10 @@ class InitializeSystemListener extends ScopeAwareListener
             }
 
             // FIXME: obsolete when using symfony security?
-            throw new BadRequestTokenHttpException();
+            throw new BadRequestTokenHttpException(
+                'Invalid request token. Please ' .
+                '<a href="javascript:window.location.href=window.location.href">reload the page</a> and try again.'
+            );
         }
     }
 
