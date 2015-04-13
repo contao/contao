@@ -47,9 +47,6 @@ Removed the MooTools "slimbox" plugin.
 Removed the CSS3PIE plugin.
 
 ### Changed
-`Controller::replaceInsertTags()` is now public static.
-
-### Changed
 Make the public extension folders configurable (see #8).
 
 ### Fixed
