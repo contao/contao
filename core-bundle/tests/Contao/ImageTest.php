@@ -60,6 +60,7 @@ class ImageTest extends TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
         copy(__DIR__ . '/../Fixtures/images/dummy.jpg', self::$rootDir . '/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
