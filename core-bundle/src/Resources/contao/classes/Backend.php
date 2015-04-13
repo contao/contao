@@ -670,7 +670,7 @@ abstract class Backend extends \Controller
 		$arrPages = array();
 
 		// Recursively walk through all subpages
-		while($objPages->next())
+		while ($objPages->next())
 		{
 			// Set domain
 			if ($objPages->type == 'root')

@@ -12,7 +12,12 @@ namespace Contao;
 
 
 /**
- * Replace insert tags
+ * A static class to replace insert tags
+ *
+ * Usage:
+ *
+ *     $it = new InsertTags();
+ *     echo $it->replace($text);
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -22,8 +27,8 @@ class InsertTags extends \Controller
 	/**
 	 * Replace insert tags with their values
 	 *
-	 * @param string $strBuffer The text with the tags to be replaced
-	 * @param boolean   $blnCache  If false, non-cacheable tags will be replaced
+	 * @param string  $strBuffer The text with the tags to be replaced
+	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
 	 *
 	 * @return string The text with the replaced tags
 	 */
@@ -848,6 +853,7 @@ class InsertTags extends \Controller
 
 				// Images
 				case 'image':
+				case 'picture':
 					$width = null;
 					$height = null;
 					$alt = '';
@@ -855,6 +861,8 @@ class InsertTags extends \Controller
 					$rel = '';
 					$strFile = $elements[1];
 					$mode = '';
+					$size = null;
+					$strTemplate = 'picture_default';
 
 					// Take arguments
 					if (strpos($elements[1], '?') !== false)
@@ -892,6 +900,14 @@ class InsertTags extends \Controller
 
 								case 'mode':
 									$mode = $value;
+									break;
+
+								case 'size':
+									$size = (int) $value;
+									break;
+
+								case 'template':
+									$strTemplate = preg_replace('/[^a-z0-9_]/i', '', $value);
 									break;
 							}
 						}
@@ -944,15 +960,32 @@ class InsertTags extends \Controller
 					// Generate the thumbnail image
 					try
 					{
-						$dimensions = '';
-						$imageObj = \Image::create($strFile, array($width, $height, $mode));
-						$src = $imageObj->executeResize()->getResizedPath();
-						$objFile = new \File(rawurldecode($src));
-
-						// Add the image dimensions
-						if (($imgSize = $objFile->imageSize) !== false)
+						// Image
+						if (strtolower($elements[0]) == 'image')
 						{
-							$dimensions = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
+							$dimensions = '';
+							$imageObj = \Image::create($strFile, array($width, $height, $mode));
+							$src = $imageObj->executeResize()->getResizedPath();
+							$objFile = new \File(rawurldecode($src));
+
+							// Add the image dimensions
+							if (($imgSize = $objFile->imageSize) !== false)
+							{
+								$dimensions = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
+							}
+
+							$arrCache[$strTag] = '<img src="' . TL_FILES_URL . $src . '" ' . $dimensions . ' alt="' . $alt . '"' . (($class != '') ? ' class="' . $class . '"' : '') . '>';
+						}
+
+						// Picture
+						else
+						{
+							$picture = \Picture::create($strFile, array(0, 0, $size))->getTemplateData();
+							$picture['alt'] = $alt;
+							$picture['class'] = $class;
+							$pictureTemplate = new \FrontendTemplate($strTemplate);
+							$pictureTemplate->setData($picture);
+							$arrCache[$strTag] = $pictureTemplate->parse();
 						}
 
 						// Generate the HTML markup

@@ -162,10 +162,10 @@ class ModulePersonalData extends \Module
 			{
 				if (is_array($this->User->$field))
 				{
-					 if (empty($this->User->$field))
-					 {
-					 	$arrData['eval']['required'] = true;
-					 }
+					if (empty($this->User->$field))
+					{
+						$arrData['eval']['required'] = true;
+					}
 				}
 				else
 				{
@@ -199,13 +199,17 @@ class ModulePersonalData extends \Module
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $varValue, '', '', $this));
 
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_'.$row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
+			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
 
 			// Increase the row count if it is a password field
 			if ($objWidget instanceof \FormPassword)
 			{
-				++$row;
-				$objWidget->rowClassConfirm = 'row_'.$row . ((($row % 2) == 0) ? ' even' : ' odd');
+				if ($objMember->password != '')
+				{
+					$objWidget->mandatory = false;
+				}
+
+				$objWidget->rowClassConfirm = 'row_' . ++$row . ((($row % 2) == 0) ? ' even' : ' odd');
 			}
 
 			// Validate the form data
