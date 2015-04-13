@@ -31,6 +31,7 @@ class ContaoModuleBundleTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
+
         $this->bundle = new ContaoModuleBundle('foobar', $this->getRootDir() . '/app');
     }
 

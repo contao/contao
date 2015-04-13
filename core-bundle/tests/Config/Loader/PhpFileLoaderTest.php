@@ -30,6 +30,8 @@ class PhpFileLoaderTest extends TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
+
         $this->loader = new PhpFileLoader();
     }
 

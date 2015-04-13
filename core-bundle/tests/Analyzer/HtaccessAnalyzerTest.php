@@ -42,7 +42,6 @@ class HtaccessAnalyzerTest extends TestCase
      */
     public function testGrantsAccess()
     {
-        parent::setUp();
         $file = new SplFileInfo(
             $this->getRootDir() . '/system/modules/foobar/assets/.htaccess',
             'system/modules/foobar/assets',

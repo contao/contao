@@ -34,6 +34,8 @@ class ContaoCacheWarmerTest extends TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
+
         $this->warmer = new ContaoCacheWarmer(
             new Filesystem(),
             new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),

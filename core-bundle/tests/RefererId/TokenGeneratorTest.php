@@ -50,6 +50,8 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
+
         $this->random    = $this->getMock('Symfony\\Component\\Security\\Core\\Util\\SecureRandomInterface');
         $this->generator = new TokenGenerator($this->random, self::ENTROPY);
     }

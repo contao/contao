@@ -36,6 +36,8 @@ class ScopeAwareListenerTest extends TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
+
         $this->listener = $this->getMockForAbstractClass('Contao\\CoreBundle\\EventListener\\ScopeAwareListener');
     }
 

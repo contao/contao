@@ -52,6 +52,7 @@ class GdImageTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
+
         define('TL_ROOT', self::$rootDir);
     }
 
