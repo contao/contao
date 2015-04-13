@@ -194,7 +194,7 @@ fieldset.checkbox_container,fieldset.radio_container {
 	background-color:#f9f9f9;
 	border:1px solid #c8c8c8;
 }
-pre,.tl_textarea.monospace {
+pre,code,.tl_textarea.monospace {
 	font-family:Courier,monospace;
 	font-size:12px;
 	font-size:.75rem;

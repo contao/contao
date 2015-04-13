@@ -226,6 +226,9 @@ h2.sub_headline_index {
 	margin:1px 3px 0 24px;
 	color:#555;
 }
+.tl_permalert code {
+	font-weight:bold;
+}
 
 /* Filter */
 .tl_panel,.tl_version_panel {

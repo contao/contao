@@ -187,6 +187,9 @@ class BackendMain extends \Backend
 	 */
 	protected function output()
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
 		// Default headline
 		if ($this->Template->headline == '')
 		{
@@ -235,6 +238,8 @@ class BackendMain extends \Backend
 		$this->Template->maintenanceMode = $GLOBALS['TL_LANG']['MSC']['maintenanceMode'];
 		$this->Template->maintenanceOff = specialchars($GLOBALS['TL_LANG']['MSC']['maintenanceOff']);
 		$this->Template->maintenanceHref = $this->addToUrl('mmo=1');
+		$this->Template->needsCacheBuild = !is_dir($kernel->getCacheDir() . '/contao');
+		$this->Template->buildCacheText = sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], $kernel->getEnvironment());
 		$this->Template->isPopup = \Input::get('popup');
 
 		// Front end preview links
