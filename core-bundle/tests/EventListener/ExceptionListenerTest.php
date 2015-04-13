@@ -663,17 +663,14 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Load the legacy classes used by the exception listener.
+     * Define the constants needed by the 404 page handler.
      *
      * @return void
      */
     private function microBootFramework()
     {
-        parent::setUp();
         if (!defined('BE_USER_LOGGED_IN')) {
             define('BE_USER_LOGGED_IN', false);
         }
-        Environment::set('agent', (object)['class' => 'test browser']);
-        Environment::set('base', 'https://example.com/');
     }
 }
