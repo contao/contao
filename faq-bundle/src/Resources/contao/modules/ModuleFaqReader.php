@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  * Class ModuleFaqReader
@@ -98,9 +100,7 @@ class ModuleFaqReader extends \Module
 
 		if (null === $objFaq)
 		{
-			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-			$objHandler->generate($objPage->id);
+			throw new NotFoundHttpException('Page not found');
 		}
 
 		// Overwrite the page title and description (see #2853 and #4955)
