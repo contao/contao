@@ -366,7 +366,6 @@ class ExceptionListener
             'template'          => $view,
             'adminEmail'        => '',
             'base'              => '',
-            'agentClass'        => '', // FIXME: there is no agentClass in the getTemplateParameters() method?
         ];
     }
 

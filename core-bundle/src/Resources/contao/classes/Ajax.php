@@ -158,10 +158,7 @@ class Ajax extends \Backend
 					if ($e->getCode() == 0)
 					{
 						\System::loadLanguageFile('tl_maintenance');
-						throw new ResponseException(
-							new Response('<p class="tl_error">' . $GLOBALS['TL_LANG']['tl_maintenance']['notWriteable'] . '</p>'),
-							$e
-						);
+						throw new ResponseException('<p class="tl_error">' . $GLOBALS['TL_LANG']['tl_maintenance']['notWriteable'] . '</p>');
 					}
 				}
 
