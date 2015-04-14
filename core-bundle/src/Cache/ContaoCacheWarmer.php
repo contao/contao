@@ -132,14 +132,13 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
 
         while ($pages->next()) {
-            // FIXME: Environment::get('path') will always be empty on the console!
-            $base = ($pages->dns ?: '*') . Environment::get('path') . '/';
+            $base = ($pages->dns ?: '*');
 
             if ($pages->fallback) {
-                $mapper[$base . 'empty.fallback'] = $base . 'empty.' . $pages->language;
+                $mapper["$base/empty.fallback"] = "$base/empty." . $pages->language;
             }
 
-            $mapper[$base . 'empty.' . $pages->language] = $base . 'empty.' . $pages->language;
+            $mapper["$base/empty." . $pages->language] = "$base/empty." . $pages->language;
         }
 
         $this->filesystem->dumpFile(
