@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -704,9 +705,7 @@ class File extends \System
 
 		$response->headers->set('Connection', 'close');
 
-		// FIXME: Throw a ResponseException here
-		$response->send();
-		exit;
+		throw new ResponseException($response);
 	}
 
 

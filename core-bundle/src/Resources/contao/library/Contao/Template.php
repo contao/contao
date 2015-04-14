@@ -258,6 +258,8 @@ abstract class Template extends \Controller
 
 	/**
 	 * Parse the template file and print it to the screen
+	 *
+	 * @deprecated Throw a ResponseException containing Template::getResponse() instead.
 	 */
 	public function output()
 	{

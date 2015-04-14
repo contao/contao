@@ -10,8 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException;
+use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
-
 
 /**
  * Main front end controller.
@@ -40,8 +41,10 @@ class FrontendIndex extends \Frontend
 			// Maintenance mode (see #4561 and #6353)
 			if (\Config::get('maintenanceMode'))
 			{
-				header('HTTP/1.1 503 Service Unavailable');
-				die_nicely('be_unavailable', 'This site is currently down for maintenance. Please come back later.');
+				throw new MaintenanceModeActiveHttpException(
+					null,
+					'This site is currently down for maintenance. Please come back later.'
+				);
 			}
 		}
 	}
@@ -193,8 +196,7 @@ class FrontendIndex extends \Frontend
 		// Do not try to load the 404 page, it can cause an infinite loop!
 		if (!BE_USER_LOGGED_IN && !$objPage->rootIsPublic)
 		{
-			header('HTTP/1.1 404 Not Found');
-			die_nicely('be_no_page', 'Page not found');
+			throw new NotFoundHttpException('Page not found');
 		}
 
 		// Check wether the language matches the root page language

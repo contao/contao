@@ -122,6 +122,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        // Initialize the error reporting level to the one defined by phpUnit to not accidentally tamper with it in
+        // InitializeSystemListener::sanitizeErrorHandling() if the system should get initialized during the currently
+        // running test.
+        $container->setParameter('contao.error_level', error_reporting());
 
         $container->set(
             'contao.resource_finder',
@@ -230,7 +234,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockConfig()
     {
-        $config = $this->getMock('Contao\\CoreBundle\\Adapter\\ConfigAdapter');
+        $config = $this->getMock('Contao\\CoreBundle\\Adapter\\ConfigAdapter', ['isComplete']);
 
         $config->expects($this->any())
             ->method('isComplete')

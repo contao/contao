@@ -10,6 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\NoContentResponseException;
+use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Exception\BadRequestHttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle Ajax requests.
@@ -75,7 +79,7 @@ class Ajax extends \Backend
 				$bemod = $this->Session->get('backend_modules');
 				$bemod[\Input::post('id')] = intval(\Input::post('state'));
 				$this->Session->set('backend_modules', $bemod);
-				exit; break;
+				throw NoContentResponseException::create();
 
 			// Load a navigation menu group
 			case 'loadNavigation':
@@ -90,8 +94,7 @@ class Ajax extends \Backend
 				$navigation = $this->User->navigation();
 				$objTemplate->modules = $navigation[\Input::post('id')]['modules'];
 
-				echo $objTemplate->parse();
-				exit; break;
+				throw new ResponseException($objTemplate->getResponse());
 
 			// Toggle nodes of the file or page tree
 			case 'toggleStructure':
@@ -110,7 +113,7 @@ class Ajax extends \Backend
 				$nodes = $this->Session->get($this->strAjaxKey);
 				$nodes[$this->strAjaxId] = intval(\Input::post('state'));
 				$this->Session->set($this->strAjaxKey, $nodes);
-				exit; break;
+				throw NoContentResponseException::create();
 
 			// Load nodes of the file or page tree
 			case 'loadStructure':
@@ -136,7 +139,7 @@ class Ajax extends \Backend
 				$fs = $this->Session->get('fieldset_states');
 				$fs[\Input::post('table')][\Input::post('id')] = intval(\Input::post('state'));
 				$this->Session->set('fieldset_states', $fs);
-				exit; break;
+				throw NoContentResponseException::create();
 
 			// Check whether the temporary directory is writeable
 			case 'liveUpdate':
@@ -155,11 +158,13 @@ class Ajax extends \Backend
 					if ($e->getCode() == 0)
 					{
 						\System::loadLanguageFile('tl_maintenance');
-						echo '<p class="tl_error">' . $GLOBALS['TL_LANG']['tl_maintenance']['notWriteable'] . '</p>';
-						exit; break;
+						throw new ResponseException(
+							new Response('<p class="tl_error">' . $GLOBALS['TL_LANG']['tl_maintenance']['notWriteable'] . '</p>'),
+							$e
+						);
 					}
 				}
-				exit; break;
+				throw NoContentResponseException::create();
 
 			// Toggle checkbox groups
 			case 'toggleCheckboxGroup':
@@ -196,20 +201,18 @@ class Ajax extends \Backend
 		if (!$dc instanceof \DC_File && !$dc instanceof \DC_Folder && !$dc instanceof \DC_Table)
 		{
 			$this->executePostActionsHook($dc);
-			exit;
+			throw NoContentResponseException::create();
 		}
 
 		switch ($this->strAction)
 		{
 			// Load nodes of the page structure tree
 			case 'loadStructure':
-				echo $dc->ajaxTreeView($this->strAjaxId, intval(\Input::post('level')));
-				exit; break;
+				throw ResponseException::create($dc->ajaxTreeView($this->strAjaxId, intval(\Input::post('level'))));
 
 			// Load nodes of the file manager tree
 			case 'loadFileManager':
-				echo $dc->ajaxTreeView(\Input::post('folder', true), intval(\Input::post('level')));
-				exit; break;
+				throw ResponseException::create($dc->ajaxTreeView(\Input::post('folder', true), intval(\Input::post('level'))));
 
 			// Load nodes of the page tree
 			case 'loadPagetree':
@@ -221,8 +224,7 @@ class Ajax extends \Backend
 				/** @var \PageSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, null, $strField, $dc->table, $dc));
 
-				echo $objWidget->generateAjax($this->strAjaxId, \Input::post('field'), intval(\Input::post('level')));
-				exit; break;
+				throw ResponseException::create($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), intval(\Input::post('level'))));
 
 			// Load nodes of the file tree
 			case 'loadFiletree':
@@ -237,13 +239,9 @@ class Ajax extends \Backend
 				// Load a particular node
 				if (\Input::post('folder', true) != '')
 				{
-					echo $objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), intval(\Input::post('level')));
+					throw ResponseException::create($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), intval(\Input::post('level'))));
 				}
-				else
-				{
-					echo $objWidget->generate();
-				}
-				exit; break;
+				throw ResponseException::create($objWidget->generate());
 
 			// Reload the page/file picker
 			case 'reloadPagetree':
@@ -262,8 +260,7 @@ class Ajax extends \Backend
 				if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]))
 				{
 					$this->log('Field "' . $strField . '" does not exist in DCA "' . $dc->table . '"', __METHOD__, TL_ERROR);
-					header('HTTP/1.1 400 Bad Request');
-					die('Bad Request');
+					throw new BadRequestHttpException('Bad request');
 				}
 
 				$objRow = null;
@@ -283,8 +280,7 @@ class Ajax extends \Backend
 					if ($objRow->numRows < 1)
 					{
 						$this->log('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"', __METHOD__, TL_ERROR);
-						header('HTTP/1.1 400 Bad Request');
-						die('Bad Request');
+						throw new BadRequestHttpException('Bad request');
 					}
 
 					$varValue = $objRow->$strField;
@@ -335,8 +331,7 @@ class Ajax extends \Backend
 				/** @var \FileTree|\PageTree $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
-				echo $objWidget->generate();
-				exit; break;
+				throw ResponseException::create($objWidget->generate());
 
 			// Feature/unfeature an element
 			case 'toggleFeatured':
@@ -349,7 +344,7 @@ class Ajax extends \Backend
 						$dca->toggleFeatured(\Input::post('id'), ((\Input::post('state') == 1) ? true : false));
 					}
 				}
-				exit; break;
+				throw NoContentResponseException::create();
 
 			// Toggle subpalettes
 			case 'toggleSubpalette':
@@ -359,8 +354,7 @@ class Ajax extends \Backend
 				if (!is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || !in_array(\Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || ($GLOBALS['TL_DCA'][$dc->table]['fields'][\Input::post('field')]['exclude'] && !$this->User->hasAccess($dc->table . '::' . \Input::post('field'), 'alexf')))
 				{
 					$this->log('Field "' . \Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)', __METHOD__, TL_ERROR);
-					header('HTTP/1.1 400 Bad Request');
-					die('Bad Request');
+					throw new BadRequestHttpException('Bad request');
 				}
 
 				if ($dc instanceof DC_Table)
@@ -381,7 +375,7 @@ class Ajax extends \Backend
 
 						if (\Input::post('load'))
 						{
-							echo $dc->edit(false, \Input::post('id'));
+							throw ResponseException::create($dc->edit(false, \Input::post('id')));
 						}
 					}
 				}
@@ -393,20 +387,20 @@ class Ajax extends \Backend
 					if (\Input::post('load'))
 					{
 						\Config::set(\Input::post('field'), $val);
-						echo $dc->edit(false, \Input::post('id'));
+						throw ResponseException::create($dc->edit(false, \Input::post('id')));
 					}
 				}
-				exit; break;
+				throw NoContentResponseException::create();
 
 			// DropZone file upload
 			case 'fileupload':
 				$dc->move();
-				exit; break;
+				throw NoContentResponseException::create();
 
 			// HOOK: pass unknown actions to callback functions
 			default:
 				$this->executePostActionsHook($dc);
-				exit; break;
+				throw NoContentResponseException::create();
 		}
 	}
 
