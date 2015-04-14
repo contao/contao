@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  * Front end module "calendar".
@@ -102,12 +104,7 @@ class ModuleCalendar extends \Events
 		}
 		catch (\OutOfBoundsException $e)
 		{
-			/** @var \PageModel $objPage */
-			global $objPage;
-
-			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-			$objHandler->generate($objPage->id);
+			throw new NotFoundHttpException('Page not found');
 		}
 
 		$time = \Date::floorToMinute();
