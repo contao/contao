@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  * Front end module "news reader".
@@ -100,9 +102,7 @@ class ModuleNewsReader extends \ModuleNews
 
 		if (null === $objArticle)
 		{
-			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-			$objHandler->generate($objPage->id);
+			throw new NotFoundHttpException('Page not found');
 		}
 
 		$arrArticle = $this->parseArticle($objArticle);

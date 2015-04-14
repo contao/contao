@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  * Front end module "news list".
@@ -116,12 +118,7 @@ class ModuleNewsList extends \ModuleNews
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
 			{
-				/** @var \PageModel $objPage */
-				global $objPage;
-
-				/** @var \PageError404 $objHandler */
-				$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-				$objHandler->generate($objPage->id);
+				throw new NotFoundHttpException('Page not found');
 			}
 
 			// Set limit and offset
