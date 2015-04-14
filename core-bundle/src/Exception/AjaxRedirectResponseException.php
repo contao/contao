@@ -20,20 +20,14 @@ use Symfony\Component\HttpFoundation\Response;
 class AjaxRedirectResponseException extends AbstractResponseException
 {
     /**
-     * Factory method creating an ajax Response instance internally.
-     *
-     * Example:
-     *
-     *     throw RedirectResponseException::create('https://example.org/target.html');
+     * Constructor.
      *
      * @param string $location The target URL
      * @param int    $status   The response status code (defaults to 204)
      * @param array  $headers  An array of response headers
-     *
-     * @return RedirectResponseException
      */
-    public static function create($location, $status = 204, $headers = array())
+    public function __construct($location, $status = 204, $headers = [])
     {
-        return new static(new Response('', $status, array_merge(['X-Ajax-Location' => $location], $headers)));
+        parent::__construct(new Response('', $status, array_merge(['X-Ajax-Location' => $location], $headers)));
     }
 }

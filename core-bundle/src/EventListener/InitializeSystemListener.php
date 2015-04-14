@@ -394,7 +394,7 @@ class InitializeSystemListener extends ScopeAwareListener
         // FIXME: This forces all routes handling POST data to pass a REQUEST_TOKEN
         if ($_POST && null !== $request && !$this->tokenManager->isTokenValid($token)) {
             if ($request->isXmlHttpRequest()) {
-                throw AjaxRedirectResponseException::create($this->router->generate('contao_backend'));
+                throw new AjaxRedirectResponseException($this->router->generate('contao_backend'));
             }
 
             throw new BadRequestTokenHttpException(

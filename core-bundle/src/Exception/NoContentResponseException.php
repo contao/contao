@@ -20,19 +20,13 @@ use Symfony\Component\HttpFoundation\Response;
 class NoContentResponseException extends AbstractResponseException
 {
     /**
-     * Factory method for creating the Response instance internally.
+     * Constructor.
      *
-     * Example:
-     *
-     *     throw NoContentResponseException::create();
-     *
-     * @param int   $status  The response status code
+     * @param int   $status  The response status code (defaults to 204)
      * @param array $headers An array of response headers
-     *
-     * @return ResponseException
      */
-    public static function create($status = 204, $headers = array())
+    public function __construct($status = 204, $headers = [])
     {
-        return new static(new Response('', $status, $headers));
+        parent::__construct(new Response('', $status, $headers));
     }
 }

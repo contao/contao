@@ -20,20 +20,14 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class RedirectResponseException extends AbstractResponseException
 {
     /**
-     * Factory method creating an Response instance internally.
-     *
-     * Example:
-     *
-     *     throw RedirectResponseException::create('https://example.org/target.html');
+     * Constructor.
      *
      * @param string $location The target URL
-     * @param int    $status   The response status code (defaults to 303)
+     * @param int    $status   The response status code (defaults to 204)
      * @param array  $headers  An array of response headers
-     *
-     * @return RedirectResponseException
      */
-    public static function create($location, $status = 303, $headers = array())
+    public function __construct($location, $status = 303, $headers = [])
     {
-        return new static(new RedirectResponse($location, $status, $headers));
+        parent::__construct(new RedirectResponse($location, $status, $headers));
     }
 }

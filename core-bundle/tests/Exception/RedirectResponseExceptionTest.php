@@ -13,18 +13,21 @@ namespace Contao\CoreBundle\Test\Exception;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Test\TestCase;
 
+/**
+ * Tests the RedirectResponseException class.
+ *
+ * @author Christian Schiffler <https://github.com/discordier>
+ */
 class RedirectResponseExceptionTest extends TestCase
 {
     /**
-     * Test the creation via static helper.
-     *
-     * @return void
+     * Tests the object instantiation.
      */
-    public function testCreate()
+    public function testInstantiation()
     {
-        $exception = RedirectResponseException::create('http://example.org');
+        $exception = new RedirectResponseException('http://example.org');
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $exception->getResponse());
         $this->assertEquals(303, $exception->getResponse()->getStatusCode());
         $this->assertEquals('http://example.org', $exception->getResponse()->headers->get('Location'));
     }

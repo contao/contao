@@ -13,18 +13,21 @@ namespace Contao\CoreBundle\Test\Exception;
 use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Test\TestCase;
 
+/**
+ * Tests the NoContentResponseException class.
+ *
+ * @author Christian Schiffler <https://github.com/discordier>
+ */
 class NoContentResponseExceptionTest extends TestCase
 {
     /**
-     * Test the creation via static helper.
-     *
-     * @return void
+     * Tests the object instantiation.
      */
-    public function testCreate()
+    public function testInstantiation()
     {
-        $exception = NoContentResponseException::create();
+        $exception = new NoContentResponseException();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $exception->getResponse());
         $this->assertEquals(204, $exception->getResponse()->getStatusCode());
         $this->assertEquals('', $exception->getResponse()->getContent());
     }

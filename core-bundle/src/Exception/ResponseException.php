@@ -20,20 +20,18 @@ use Symfony\Component\HttpFoundation\Response;
 class ResponseException extends AbstractResponseException
 {
     /**
-     * Factory method for creating the Response instance internally.
+     * Constructor.
      *
-     * Example:
-     *
-     *     throw ResponseException::create('Teapots can not brew coffee!', 418);
-     *
-     * @param mixed $content The response content
-     * @param int   $status  The response status code
-     * @param array $headers An array of response headers
-     *
-     * @return ResponseException
+     * @param mixed  $response The response string or object
+     * @param int    $status   The response status code (defaults to 204)
+     * @param array  $headers  An array of response headers
      */
-    public static function create($content = '', $status = 200, $headers = array())
+    public function __construct($response, $status = 200, $headers = [])
     {
-        return new static(new Response($content, $status, $headers));
+        if (!$response instanceof Response) {
+            $response = new Response($response, $status, $headers);
+        }
+
+        parent::__construct($response);
     }
 }

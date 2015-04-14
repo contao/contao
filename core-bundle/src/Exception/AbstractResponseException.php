@@ -32,9 +32,9 @@ abstract class AbstractResponseException extends \RuntimeException implements Re
      */
     public function __construct(Response $response, \Exception $previous = null)
     {
-        parent::__construct('', 0, $previous);
-
         $this->response = $response;
+
+        parent::__construct($response->getContent(), 0, $previous);
     }
 
     /**

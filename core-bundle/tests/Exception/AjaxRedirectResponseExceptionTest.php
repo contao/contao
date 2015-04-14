@@ -13,18 +13,21 @@ namespace Contao\CoreBundle\Test\Exception;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Test\TestCase;
 
+/**
+ * Tests the AjaxRedirectResponseException class.
+ *
+ * @author Christian Schiffler <https://github.com/discordier>
+ */
 class AjaxRedirectResponseExceptionTest extends TestCase
 {
     /**
-     * Test the creation via static helper.
-     *
-     * @return void
+     * Tests the object instantiation.
      */
-    public function testCreate()
+    public function testInstantiation()
     {
-        $exception = AjaxRedirectResponseException::create('http://example.org');
+        $exception = new AjaxRedirectResponseException('http://example.org');
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $exception->getResponse());
         $this->assertEquals(204, $exception->getResponse()->getStatusCode());
         $this->assertEquals('http://example.org', $exception->getResponse()->headers->get('X-Ajax-Location'));
     }

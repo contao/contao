@@ -985,10 +985,10 @@ abstract class Controller extends \System
 		// Ajax request
 		if (\Environment::get('isAjaxRequest'))
 		{
-			throw AjaxRedirectResponseException::create($strLocation);
+			throw new AjaxRedirectResponseException($strLocation);
 		}
 
-		throw RedirectResponseException::create($strLocation);
+		throw new RedirectResponseException($strLocation);
 	}
 
 
@@ -1017,10 +1017,10 @@ abstract class Controller extends \System
 		// Ajax request
 		if (\Environment::get('isAjaxRequest'))
 		{
-			throw AjaxRedirectResponseException::create($strLocation);
+			throw new AjaxRedirectResponseException($strLocation);
 		}
 
-		throw RedirectResponseException::create($strLocation, $intStatus);
+		throw new RedirectResponseException($strLocation, $intStatus);
 	}
 
 	/**

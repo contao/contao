@@ -13,18 +13,21 @@ namespace Contao\CoreBundle\Test\Exception;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Test\TestCase;
 
+/**
+ * Tests the ResponseException class.
+ *
+ * @author Christian Schiffler <https://github.com/discordier>
+ */
 class ResponseExceptionTest extends TestCase
 {
     /**
-     * Test the creation via static helper.
-     *
-     * @return void
+     * Tests the object instantiation.
      */
-    public function testCreate()
+    public function testInstantiation()
     {
-        $exception = ResponseException::create('Hello world');
+        $exception = new ResponseException('Hello world');
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $exception->getResponse());
         $this->assertEquals(200, $exception->getResponse()->getStatusCode());
         $this->assertEquals('Hello world', $exception->getResponse()->getContent());
     }

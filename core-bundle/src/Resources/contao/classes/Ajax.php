@@ -80,7 +80,7 @@ class Ajax extends \Backend
 				$bemod = $this->Session->get('backend_modules');
 				$bemod[\Input::post('id')] = intval(\Input::post('state'));
 				$this->Session->set('backend_modules', $bemod);
-				throw NoContentResponseException::create();
+				throw new NoContentResponseException();
 
 			// Load a navigation menu group
 			case 'loadNavigation':
@@ -113,7 +113,7 @@ class Ajax extends \Backend
 				$nodes = $this->Session->get($this->strAjaxKey);
 				$nodes[$this->strAjaxId] = intval(\Input::post('state'));
 				$this->Session->set($this->strAjaxKey, $nodes);
-				throw NoContentResponseException::create();
+				throw new NoContentResponseException();
 
 			// Load nodes of the file or page tree
 			case 'loadStructure':
@@ -139,7 +139,7 @@ class Ajax extends \Backend
 				$fs = $this->Session->get('fieldset_states');
 				$fs[\Input::post('table')][\Input::post('id')] = intval(\Input::post('state'));
 				$this->Session->set('fieldset_states', $fs);
-				throw NoContentResponseException::create();
+				throw new NoContentResponseException();
 
 			// Check whether the temporary directory is writeable
 			case 'liveUpdate':
@@ -165,7 +165,7 @@ class Ajax extends \Backend
 					}
 				}
 
-				throw NoContentResponseException::create();
+				throw new NoContentResponseException();
 
 			// Toggle checkbox groups
 			case 'toggleCheckboxGroup':
@@ -202,18 +202,18 @@ class Ajax extends \Backend
 		if (!$dc instanceof \DC_File && !$dc instanceof \DC_Folder && !$dc instanceof \DC_Table)
 		{
 			$this->executePostActionsHook($dc);
-			throw NoContentResponseException::create();
+			throw new NoContentResponseException();
 		}
 
 		switch ($this->strAction)
 		{
 			// Load nodes of the page structure tree
 			case 'loadStructure':
-				throw ResponseException::create($dc->ajaxTreeView($this->strAjaxId, intval(\Input::post('level'))));
+				throw new ResponseException($dc->ajaxTreeView($this->strAjaxId, intval(\Input::post('level'))));
 
 			// Load nodes of the file manager tree
 			case 'loadFileManager':
-				throw ResponseException::create($dc->ajaxTreeView(\Input::post('folder', true), intval(\Input::post('level'))));
+				throw new ResponseException($dc->ajaxTreeView(\Input::post('folder', true), intval(\Input::post('level'))));
 
 			// Load nodes of the page tree
 			case 'loadPagetree':
@@ -225,7 +225,7 @@ class Ajax extends \Backend
 				/** @var \PageSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, null, $strField, $dc->table, $dc));
 
-				throw ResponseException::create($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), intval(\Input::post('level'))));
+				throw new ResponseException($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), intval(\Input::post('level'))));
 
 			// Load nodes of the file tree
 			case 'loadFiletree':
@@ -240,10 +240,10 @@ class Ajax extends \Backend
 				// Load a particular node
 				if (\Input::post('folder', true) != '')
 				{
-					throw ResponseException::create($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), intval(\Input::post('level'))));
+					throw new ResponseException($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), intval(\Input::post('level'))));
 				}
 
-				throw ResponseException::create($objWidget->generate());
+				throw new ResponseException($objWidget->generate());
 
 			// Reload the page/file picker
 			case 'reloadPagetree':
@@ -333,7 +333,7 @@ class Ajax extends \Backend
 				/** @var \FileTree|\PageTree $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
-				throw ResponseException::create($objWidget->generate());
+				throw new ResponseException($objWidget->generate());
 
 			// Feature/unfeature an element
 			case 'toggleFeatured':
@@ -347,7 +347,7 @@ class Ajax extends \Backend
 					}
 				}
 
-				throw NoContentResponseException::create();
+				throw new NoContentResponseException();
 
 			// Toggle subpalettes
 			case 'toggleSubpalette':
@@ -378,7 +378,7 @@ class Ajax extends \Backend
 
 						if (\Input::post('load'))
 						{
-							throw ResponseException::create($dc->edit(false, \Input::post('id')));
+							throw new ResponseException($dc->edit(false, \Input::post('id')));
 						}
 					}
 				}
@@ -391,21 +391,21 @@ class Ajax extends \Backend
 					{
 						\Config::set(\Input::post('field'), $val);
 
-						throw ResponseException::create($dc->edit(false, \Input::post('id')));
+						throw new ResponseException($dc->edit(false, \Input::post('id')));
 					}
 				}
 
-				throw NoContentResponseException::create();
+				throw new NoContentResponseException();
 
 			// DropZone file upload
 			case 'fileupload':
 				$dc->move();
-				throw NoContentResponseException::create();
+				throw new NoContentResponseException();
 
 			// HOOK: pass unknown actions to callback functions
 			default:
 				$this->executePostActionsHook($dc);
-				throw NoContentResponseException::create();
+				throw new NoContentResponseException();
 		}
 	}
 

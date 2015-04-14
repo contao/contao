@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Exception;
+namespace Contao\CoreBundle\Test;
 
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 

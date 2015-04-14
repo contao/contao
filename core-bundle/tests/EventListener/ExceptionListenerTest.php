@@ -101,7 +101,7 @@ class ExceptionListenerTest extends TestCase
 
         /** @var \Exception $exception */
         $exception = $this->getMockForAbstractClass(
-            'Contao\\CoreBundle\\Test\\Exception\\ExceptionListenerTestHelperHttpException',
+            'Contao\\CoreBundle\\Test\\ExceptionListenerTestHelperHttpException',
             ['test']
         );
 
@@ -272,7 +272,7 @@ class ExceptionListenerTest extends TestCase
         $this->microBootFramework();
 
         $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
-        $exception = ResponseException::create('I got chained.');
+        $exception = new ResponseException('I got chained.');
 
         $wrapException = new \RuntimeException(
             'wrap 1',
@@ -483,7 +483,7 @@ class ExceptionListenerTest extends TestCase
             $exception
         );
 
-        $thrownException = ResponseException::create('internal 404 response exception', 404);
+        $thrownException = new ResponseException('internal 404 response exception', 404);
 
         PageError404::$getResponse = function() use ($thrownException) { throw $thrownException; };
 
