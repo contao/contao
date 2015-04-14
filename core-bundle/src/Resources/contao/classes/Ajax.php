@@ -12,8 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 
 /**
@@ -160,7 +160,7 @@ class Ajax extends \Backend
 						\System::loadLanguageFile('tl_maintenance');
 						throw new ResponseException(
 							new Response('<p class="tl_error">' . $GLOBALS['TL_LANG']['tl_maintenance']['notWriteable'] . '</p>'),
-							$e // FIXME: this should be an integer ($status)
+							$e
 						);
 					}
 				}

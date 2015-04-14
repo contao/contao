@@ -80,12 +80,14 @@ class ExceptionListener
      * Tries to handle the exception and creates a response for known exception types.
      *
      * @param GetResponseForExceptionEvent $event The event object
+     *
+     * @todo Log the exception here if we do not find a better place to log via Monolog from outside.
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
 
-        // Search if a response is somewhere in the exception list
+        // Search a response in the exception list
         $response = $this->checkResponseException($event->getException());
 
         if ($response instanceof Response) {
@@ -94,13 +96,11 @@ class ExceptionListener
             return;
         }
 
-        // FIXME: log the exception here if we do not find a better place to log via monolog from outside.
-
         if (!$this->renderErrorScreens) {
             return;
         }
 
-        // Search if any exception in the chain is implementing a HTTP exception
+        // Search an HTTP exception in the chain
         $response = $this->checkHttpExceptions($exception, $event->getRequest());
 
         if ($response instanceof Response) {
@@ -109,7 +109,7 @@ class ExceptionListener
             return;
         }
 
-        // If still nothing worked out, we wrap it in a plain "internal error occured" message
+        // Return a plain "internal error" response
         $event->setResponse($this->renderErrorTemplate('error', 500, $event->getRequest()));
     }
 
@@ -151,7 +151,7 @@ class ExceptionListener
     }
 
     /**
-     * Checks if any exception in the chain inherits from HttpException.
+     * Checks if any exception in the chain implements the HttpExceptionInterface interface.
      *
      * @param \Exception $exception The exception object
      * @param Request    $request   The request object
@@ -170,34 +170,40 @@ class ExceptionListener
     }
 
     /**
-     * Checks if the Contao 404 page shall be rendered.
+     * Checks whether we can handle the exception.
      *
      * @param \Exception $exception The exception object
+     * @param Request    $request   The HTTP request.
      *
-     * @return bool True if the Contao 404 page shall be rendered
+     * @return Response|null The response object or null
      */
-    private function isRenderingOfContao404PossibleFor(\Exception $exception)
+    private function checkHttpException(\Exception $exception, Request $request)
     {
-        // Not a 404 exception or the frontend has not been booted
-        if (!$exception instanceof NotFoundHttpException || !defined('BE_USER_LOGGED_IN')) {
-            return false;
+        if (!$exception instanceof HttpExceptionInterface) {
+            return null;
         }
 
-        // No root page or no published page at all
-        if ($exception instanceof RootNotFoundHttpException || $exception instanceof NoPagesFoundHttpException) {
-            return false;
+        if (null !== ($response = $this->tryToRenderContao404($exception))) {
+            return $response;
         }
 
-        // No 404 page handler has been registered
-        if (!isset($GLOBALS['TL_PTY']['error_404']) || !class_exists($GLOBALS['TL_PTY']['error_404'])) {
-            return false;
+        // Determine if the class or any of its parents is known to us
+        $candidates = array_intersect(
+            array_merge([get_class($exception)], class_parents($exception)),
+            array_keys(self::$exceptionTemplates)
+        );
+
+        if (empty($candidates)) {
+            return null;
         }
 
-        return true;
+        $template = self::$exceptionTemplates[array_shift($candidates)];
+
+        return $this->createTemplateResponseFromException($template, $exception, $request);
     }
 
     /**
-     * Tries to render a Contao 404 page first.
+     * Tries to render a Contao 404 page.
      *
      * @param \Exception $exception The exception object
      *
@@ -207,23 +213,22 @@ class ExceptionListener
      */
     private function tryToRenderContao404(\Exception $exception)
     {
-        if (!$this->isRenderingOfContao404PossibleFor($exception)) {
+        if (!$this->exceptionAllowsToRenderContao404($exception)) {
             return null;
         }
 
-        static $processing; // FIXME: make this a class property
+        static $processing;
 
-        // Return when there is an exception while trying to render the 404 page
-        if ($processing) {
+        if (true === $processing) {
             return null;
         }
 
         $processing = true;
 
         try {
-            // FIXME: introducing a contao_frontend_404 route and doing a subrequest on it might be more efficient
             /** @var \PageError404 $pageHandler */
             $pageHandler = new $GLOBALS['TL_PTY']['error_404']();
+            // FIXME: introducing a contao_frontend_404 route and doing a subrequest on it might be more efficient
             $response    = $pageHandler->getResponse(false);
             $processing  = false;
 
@@ -246,42 +251,34 @@ class ExceptionListener
      }
 
     /**
-     * Checks whether we can handle the exception.
+     * Checks if the Contao 404 page can be rendered for a particular exception.
      *
      * @param \Exception $exception The exception object
-     * @param Request    $request   The HTTP request.
      *
-     * @return Response|null The response object or null
+     * @return bool True if the Contao 404 page can be rendered
      */
-    private function checkHttpException(\Exception $exception, Request $request)
+    private function exceptionAllowsToRenderContao404(\Exception $exception)
     {
-        if (!$exception instanceof HttpExceptionInterface) {
-            return null;
+        // Not a 404 exception or the frontend has not been booted
+        if (!$exception instanceof NotFoundHttpException || !defined('BE_USER_LOGGED_IN')) {
+            return false;
         }
 
-        $response = $this->tryToRenderContao404($exception);
-
-        if (null !== $response) {
-            return $response;
+        // No root page or no published page at all
+        if ($exception instanceof RootNotFoundHttpException || $exception instanceof NoPagesFoundHttpException) {
+            return false;
         }
 
-        // Determine if the class or any of its parents is known to us
-        $candidates = array_intersect(
-            array_merge([get_class($exception)], class_parents($exception)),
-            array_keys(self::$exceptionTemplates)
-        );
-
-        if (empty($candidates)) {
-            return null;
+        // No 404 page handler has been registered
+        if (!isset($GLOBALS['TL_PTY']['error_404']) || !class_exists($GLOBALS['TL_PTY']['error_404'])) {
+            return false;
         }
 
-        $template = self::$exceptionTemplates[array_shift($candidates)];
-
-        return $this->createTemplateResponseFromException($template, $exception, $request);
+        return true;
     }
 
     /**
-     * Tries to create a response for the given template.
+     * Returns a response for the given template.
      *
      * @param string                 $template  The name of the template
      * @param HttpExceptionInterface $exception The exception object
@@ -306,6 +303,10 @@ class ExceptionListener
      */
     protected function loadLanguageStrings()
     {
+        if (!class_exists('Contao\\System')) {
+            return null;
+        }
+
         System::loadLanguageFile('exception');
 
         if (!isset($GLOBALS['TL_LANG']['XPT'])) {
@@ -316,7 +317,7 @@ class ExceptionListener
     }
 
     /**
-     * Retrieves the values for the template.
+     * Returns the template parameters.
      *
      * @param string  $view       The name of the view
      * @param int     $statusCode The HTTP status code
@@ -342,7 +343,7 @@ class ExceptionListener
     }
 
     /**
-     * Returns a default set of template parameters in case the Contao framework cannot be booted.
+     * Returns the default template parameters in case the Contao framework cannot be booted.
      *
      * @param string $view       The name of the view
      * @param int    $statusCode The HTTP status code
@@ -370,7 +371,7 @@ class ExceptionListener
     }
 
     /**
-     * Tries to render an error template.
+     * Renders an error template and returns the response object.
      *
      * @param string  $template   The template name
      * @param int     $statusCode The HTTP status code

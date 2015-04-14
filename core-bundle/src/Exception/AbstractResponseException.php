@@ -38,9 +38,7 @@ abstract class AbstractResponseException extends \RuntimeException implements Re
     }
 
     /**
-     * Returns the response.
-     *
-     * @return Response The response object
+     * {@inheritdoc}
      */
     public function getResponse()
     {

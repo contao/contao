@@ -8,16 +8,15 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\EventListener;
+namespace Contao\CoreBundle\Test\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
- * Helper exception class to test that unknown HttpExceptionInterface exceptions are correctly handled.
+ * Helps testing that unknown HTTP exceptions are handled correctly.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-// FIXME: move to Exception namespace
 abstract class ExceptionListenerTestHelperHttpException extends \Exception implements HttpExceptionInterface
 {
 }

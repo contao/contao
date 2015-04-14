@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\Exception;
 
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+
 /**
  * Invalid request token exception.
  *

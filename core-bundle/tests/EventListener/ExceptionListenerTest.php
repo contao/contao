@@ -101,7 +101,7 @@ class ExceptionListenerTest extends TestCase
 
         /** @var \Exception $exception */
         $exception = $this->getMockForAbstractClass(
-            'Contao\\CoreBundle\\Test\\EventListener\\ExceptionListenerTestHelperHttpException',
+            'Contao\\CoreBundle\\Test\\Exception\\ExceptionListenerTestHelperHttpException',
             ['test']
         );
 
