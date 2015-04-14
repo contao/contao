@@ -1,0 +1,14 @@
+
+<?php if ($this->tableless): ?>
+
+  <div class="<?= $this->class ?>">
+    <?= $this->message ?>
+  </div>
+
+<?php else: ?>
+
+  <tr class="<?= $this->class ?>">
+    <td colspan="2"><div class="colspan"><?= $this->message ?></div></td>
+  </tr>
+
+<?php endif; ?>

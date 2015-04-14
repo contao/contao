@@ -1,0 +1,18 @@
+
+<div class="layout_short arc_<?= $this->archive->id ?> block<?= $this->class ?>">
+
+  <?php if ($this->hasMetaFields): ?>
+    <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?></p>
+  <?php endif; ?>
+
+  <h2><?= $this->linkHeadline ?></h2>
+
+  <div class="teaser">
+    <?= $this->teaser ?>
+  </div>
+
+  <?php if ($this->text || $this->teaser): ?>
+    <p class="more"><?= $this->more ?></p>
+  <?php endif; ?>
+
+</div>

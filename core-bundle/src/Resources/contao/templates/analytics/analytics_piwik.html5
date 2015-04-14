@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * To use this script, please fill in your Piwik site ID and Piwik URL below
+ */
+$PiwikSite = 0;
+$PiwikPath = 'www.example.com/piwik/';
+
+
+/**
+ * DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING!
+ */
+// FIXME: Add a helper method here so the manual session check does not need to be done in the template
+/** @var KernelInterface $kernel */
+global $kernel;
+
+/** @var SessionInterface $session */
+$session = $kernel->getContainer()->get('session');
+
+if ($PiwikSite > 0 && $PiwikPath != 'www.example.com/piwik/' && !BE_USER_LOGGED_IN && sha1($session->getId() . (!Config::get('disableIpCheck') ? Environment::get('ip') : '') . 'BE_USER_AUTH') != Input::cookie('BE_USER_AUTH')): ?>
+
+<script>
+  var _paq = _paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u = ('https:' == document.location.protocol ? 'https://' : 'http://') + '<?= $PiwikPath ?>';
+    _paq.push(['setTrackerUrl', u + 'piwik.php']);
+    _paq.push(['setSiteId', <?= $PiwikSite ?>]);
+    var g = document.createElement('script'); g.src = u + 'piwik.js'; g.async = true;
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(g, s);
+  })();
+</script>
+
+<?php endif; ?>

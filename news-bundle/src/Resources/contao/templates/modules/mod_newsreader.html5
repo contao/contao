@@ -1,0 +1,20 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <?= $this->articles ?>
+
+  <!-- indexer::stop -->
+  <p class="back"><a href="<?= $this->referer ?>" title="<?= $this->back ?>"><?= $this->back ?></a></p>
+  <!-- indexer::continue -->
+
+  <?php if ($this->allowComments): ?>
+    <div class="ce_comments block">
+      <<?= $this->hlc ?>><?= $this->addComment ?></<?= $this->hlc ?>>
+      <?= implode('', $this->comments) ?>
+      <?= $this->pagination ?>
+      <?php include $this->getTemplate('mod_comment_form', 'html5'); ?>
+    </div>
+  <?php endif; ?>
+
+<?php $this->endblock(); ?>

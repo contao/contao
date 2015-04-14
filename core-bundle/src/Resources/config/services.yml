@@ -1,0 +1,151 @@
+services:
+    contao.adapter.config:
+        class: Contao\CoreBundle\Adapter\ConfigAdapter
+        public: false
+
+    contao.clearer.internal_cache:
+        class: Contao\CoreBundle\Cache\ContaoCacheClearer
+        public: false
+        tags:
+            - { name: kernel.cache_clearer }
+        arguments:
+            - '@filesystem'
+
+    contao.data_collector:
+        class: Contao\CoreBundle\DataCollector\ContaoDataCollector
+        public: false
+        arguments:
+            - '@service_container'
+            - '%kernel.bundles%'
+            - '%kernel.packages%'
+        tags:
+            - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
+
+    contao.listener.add_to_search_index:
+        class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+    contao.listener.container_scope:
+        class: Contao\CoreBundle\EventListener\ContainerScopeListener
+        arguments:
+            - "@service_container"
+        tags:
+            # Priority must be higher than any other listener that uses the Contao framework and lower than the
+            # priority of the route_listener, which defaults to 32.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+            - { name: kernel.event_listener, event: kernel.finish_request, method: onKernelFinishRequest, priority: -254 }
+
+    contao.listener.exception:
+        class: Contao\CoreBundle\EventListener\ExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+        arguments:
+            - "%contao.pretty_error_screens%"
+            - "@templating"
+            - "@contao.adapter.config"
+
+    contao.listener.initialize_system:
+        class: Contao\CoreBundle\EventListener\InitializeSystemListener
+        arguments:
+            - "@router"
+            - "@session"
+            - "%kernel.root_dir%"
+            - "@security.csrf.token_manager"
+            - "%contao.csrf_token_name%"
+            - "@contao.adapter.config"
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            # Priority must be higher than any other listener that uses the Contao framework and lower than the
+            # priority of the route_listener and the container_scope listener.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 26 }
+            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
+
+    contao.listener.output_from_cache:
+        class: Contao\CoreBundle\EventListener\OutputFromCacheListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            # Priority must be lower than the one of the toggle_view listener.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 22 }
+
+    contao.listener.referer_id:
+        class: Contao\CoreBundle\EventListener\RefererIdListener
+        arguments:
+            - "@contao.referer_id.manager"
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            # Priority must be higher than the one of the Contao initialize system listener and lower than
+            # the container_scope listener.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
+
+    contao.listener.session:
+        class: Contao\CoreBundle\EventListener\SessionListener
+        arguments:
+            - "@session"
+        tags:
+            # Priority must be lower than Symfony\Bundle\FrameworkBundle\EventListener\SessionListener (default 128)
+            # but higher than the one of the Contao initialize system listener.
+            - { name: kernel.event_listener, event: kernel.request, method: registerContaoAttributeBags, priority: 64 }
+            - { name: kernel.event_listener, event: console.command, method: registerContaoAttributeBags, priority: 64 }
+
+    contao.listener.toggle_view:
+        class: Contao\CoreBundle\EventListener\ToggleViewListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            # Priority must be lower than the one of the initialize_system listener.
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 24 }
+
+    contao.referer_id.manager:
+         class: '%security.csrf.token_manager.class%'
+         public: false
+         arguments:
+            - '@contao.referer_id.token_generator'
+            - '@security.csrf.token_storage'
+
+    contao.referer_id.token_generator:
+         class: Contao\CoreBundle\RefererId\TokenGenerator
+         public: false
+
+    contao.resource_finder:
+        class: Contao\CoreBundle\Config\ResourceFinder
+        arguments:
+            - "%contao.resources_paths%"
+
+    contao.resource_locator:
+        class: Symfony\Component\Config\FileLocator
+        arguments:
+            - "%contao.resources_paths%"
+
+    contao.routing.frontend_loader:
+        class: Contao\CoreBundle\Routing\FrontendLoader
+        arguments:
+            - "%contao.url_suffix%"
+            - "%contao.prepend_locale%"
+        tags:
+            - { name: routing.loader }
+
+    contao.security.authenticator:
+        class: Contao\CoreBundle\Security\ContaoAuthenticator
+        public: false
+        arguments:
+            - "@contao.security.user_provider"
+
+    contao.security.user_provider:
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
+        public: false
+
+    contao.warmer.internal_cache:
+        class: Contao\CoreBundle\Cache\ContaoCacheWarmer
+        public: false
+        tags:
+            - { name: kernel.cache_warmer }
+        arguments:
+            - '@filesystem'
+            - '@contao.resource_finder'
+            - '@contao.resource_locator'
+            - '%kernel.root_dir%'
+            - '@doctrine.dbal.default_connection'

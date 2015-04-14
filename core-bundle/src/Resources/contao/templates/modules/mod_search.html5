@@ -1,0 +1,13 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <?= $this->form ?>
+
+  <?php if ($this->header): ?>
+    <p class="header"><?= $this->header ?> (<?= $this->duration ?>)</p>
+  <?php endif; ?>
+
+  <?= $this->results . $this->pagination ?>
+
+<?php $this->endblock(); ?>

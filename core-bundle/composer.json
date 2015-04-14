@@ -1,0 +1,68 @@
+{
+    "name": "contao/core-bundle",
+    "type": "library",
+    "description": "Contao 4 core bundle",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "doctrine/doctrine-bundle": "~1.3",
+        "leafo/scssphp": "~0.1",
+        "michelf/php-markdown": "~1.4",
+        "oyejorge/less.php": "~1.7",
+        "phpspec/php-diff": "~1.0",
+        "simplepie/simplepie": "~1.3",
+        "swiftmailer/swiftmailer": "~5.2",
+        "symfony/console": "~2.6",
+        "symfony/finder": "~2.6",
+        "symfony/framework-bundle": "~2.6",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "tecnick.com/tcpdf": "~6.0",
+        "true/punycode": "~1.0",
+        "twig/twig": "~1.12,>=1.12.3",
+        "contao-components/ace": "~1.1",
+        "contao-components/chosen": "~1.0",
+        "contao-components/colorbox": "~1.5",
+        "contao-components/colorpicker": "~1.4",
+        "contao-components/compass": "~0.12",
+        "contao-components/contao": "~3.4",
+        "contao-components/datepicker": "~2.2",
+        "contao-components/dropzone": "~3.10",
+        "contao-components/highlight": "~8.2",
+        "contao-components/html5shiv": "~3.7",
+        "contao-components/jquery": "~1.11",
+        "contao-components/jquery-ui": "~1.11",
+        "contao-components/mediabox": "~1.4",
+        "contao-components/mediaelement": "~2.15",
+        "contao-components/mootools": "~1.5",
+        "contao-components/respimage": "~1.1",
+        "contao-components/simplemodal": "~1.2",
+        "contao-components/stylect": "~3.4",
+        "contao-components/swipe": "~2.0",
+        "contao-components/tablesort": "~3.4",
+        "contao-components/tablesorter": "~2.0",
+        "contao-components/tinymce4": "~4.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.5",
+        "composer/composer": "dev-master"
+    },
+    "conflict": {
+        "contao/core": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\CoreBundle\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "4.0.x-dev"
+        }
+    }
+}

@@ -1,0 +1,14 @@
+tools:
+    external_code_coverage:
+        timeout: 900
+    php_sim: true
+    php_pdepend: true
+    php_analyzer:
+        dependency_paths:
+            - src/Resources/contao/classes/
+            - src/Resources/contao/library/
+    sensiolabs_security_checker: true
+
+filter:
+    paths: [src/*]
+    excluded_paths: [src/Resources/*]

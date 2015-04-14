@@ -1,0 +1,40 @@
+
+<section class="<?= $this->class ?> ce_accordion ce_text block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+
+  <div class="<?= $this->toggler ?>"<?php if ($this->headlineStyle): ?> style="<?= $this->headlineStyle ?>"<?php endif; ?>>
+    <?= $this->headline ?>
+  </div>
+
+  <div class="<?= $this->accordion ?>"><div>
+
+    <?php if (!$this->addBefore): ?>
+      <?= $this->text ?>
+    <?php endif; ?>
+
+    <?php if ($this->addImage): ?>
+      <figure class="image_container<?= $this->floatClass ?>"<?php if ($this->margin): ?> style="<?= $this->margin ?>"<?php endif; ?>>
+
+        <?php if ($this->href): ?>
+          <a href="<?= $this->href ?>"<?php if ($this->linkTitle): ?> title="<?= $this->linkTitle ?>"<?php endif; ?><?= $this->attributes ?>>
+        <?php endif; ?>
+
+        <?php $this->insert('picture_default', $this->picture); ?>
+
+        <?php if ($this->href): ?>
+          </a>
+        <?php endif; ?>
+
+        <?php if ($this->caption): ?>
+          <figcaption class="caption"><?= $this->caption ?></figcaption>
+        <?php endif; ?>
+
+      </figure>
+    <?php endif; ?>
+
+    <?php if ($this->addBefore): ?>
+      <?= $this->text ?>
+    <?php endif; ?>
+
+  </div></div>
+
+</section>

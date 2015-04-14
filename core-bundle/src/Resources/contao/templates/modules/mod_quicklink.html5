@@ -1,0 +1,19 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <form<?php if ($this->request): ?> action="<?= $this->request ?>"<?php endif; ?> method="post">
+    <div class="formbody">
+      <input type="hidden" name="FORM_SUBMIT" value="tl_quicklink">
+      <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+      <select name="target" class="select">
+        <option value=""><?= $this->title ?></option>
+        <?php foreach ($this->items as $item): ?>
+          <option value="<?= $item['href'] ?>"><?= $item['link'] ?></option>
+        <?php endforeach; ?>
+      </select>
+      <input type="submit" class="submit" value="<?= $this->button ?>">
+    </div>
+  </form>
+
+<?php $this->endblock(); ?>

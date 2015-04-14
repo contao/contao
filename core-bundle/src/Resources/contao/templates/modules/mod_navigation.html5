@@ -1,0 +1,16 @@
+
+<!-- indexer::stop -->
+<nav class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+
+  <?php if ($this->headline): ?>
+    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+  <?php endif; ?>
+
+  <a href="<?= $this->request ?>#<?= $this->skipId ?>" class="invisible"><?= $this->skipNavigation ?></a>
+
+  <?= $this->items ?>
+
+  <a id="<?= $this->skipId ?>" class="invisible">&nbsp;</a>
+
+</nav>
+<!-- indexer::continue -->

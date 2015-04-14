@@ -1,0 +1,2 @@
+
+<?= implode('', $this->elements) ?>

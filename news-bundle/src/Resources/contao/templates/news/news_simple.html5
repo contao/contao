@@ -1,0 +1,5 @@
+
+<div class="layout_simple arc_<?= $this->archive->id ?> block<?= $this->class ?>">
+  <?php if ($this->date): ?><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?php endif; ?>
+  <?= $this->linkHeadline ?>
+</div>
