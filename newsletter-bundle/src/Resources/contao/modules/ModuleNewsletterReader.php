@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  * Front end module "newsletter reader".
@@ -99,9 +101,7 @@ class ModuleNewsletterReader extends \Module
 
 		if (null === $objNewsletter)
 		{
-			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-			$objHandler->generate($objPage->id);
+			throw new NotFoundHttpException('Page not found');
 		}
 
 		// Overwrite the page title (see #2853 and #4955)
