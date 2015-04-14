@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
@@ -74,11 +75,7 @@ class FrontendIndex extends \Frontend
 		elseif ($pageId === false)
 		{
 			$this->User->authenticate();
-
-			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-
-			return $objHandler->getResponse($pageId);
+			throw new NotFoundHttpException('Page not found');
 		}
 
 		// Get the current page object(s)
@@ -142,11 +139,7 @@ class FrontendIndex extends \Frontend
 		if ($objPage === null || ($objPage instanceof \Model\Collection && $objPage->count() != 1))
 		{
 			$this->User->authenticate();
-
-			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-
-			return $objHandler->getResponse($pageId);
+			throw new NotFoundHttpException('Page not found');
 		}
 
 		// Make sure $objPage is a Model
@@ -159,11 +152,7 @@ class FrontendIndex extends \Frontend
 		if ($objPage->alias != '' && $pageId == $objPage->id)
 		{
 			$this->User->authenticate();
-
-			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-
-			return $objHandler->generate($pageId); // FIXME: throw a response exception instead (search for all left-overs)
+			throw new NotFoundHttpException('Page not found');
 		}
 
 		// Load a website root page object (will redirect to the first active regular page)
@@ -201,11 +190,7 @@ class FrontendIndex extends \Frontend
 		if (\Config::get('addLanguageToUrl') && \Input::get('language') != $objPage->rootLanguage)
 		{
 			$this->User->authenticate();
-
-			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-
-			return $objHandler->getResponse($pageId);
+			throw new NotFoundHttpException('Page not found');
 		}
 
 		// Check whether there are domain name restrictions
@@ -215,21 +200,14 @@ class FrontendIndex extends \Frontend
 			if ($objPage->domain != \Environment::get('host'))
 			{
 				$this->User->authenticate();
-
-				/** @var \PageError404 $objHandler */
-				$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-
-				return $objHandler->getResponse($objPage->id, $objPage->domain, \Environment::get('host'));
+				throw new NotFoundHttpException('Page not found');
 			}
 		}
 
 		// Authenticate the user
 		if (!$this->User->authenticate() && $objPage->protected && !BE_USER_LOGGED_IN)
 		{
-			/** @var \PageError403 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_403']();
-
-			return $objHandler->getResponse($pageId, $objRootPage);
+			throw new AccessDeniedHttpException('Access denied');
 		}
 
 		// Check the user groups if the page is protected
@@ -240,11 +218,7 @@ class FrontendIndex extends \Frontend
 			if (!is_array($arrGroups) || empty($arrGroups) || !count(array_intersect($arrGroups, $this->User->groups)))
 			{
 				$this->log('Page "' . $pageId . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
-
-				/** @var \PageError403 $objHandler */
-				$objHandler = new $GLOBALS['TL_PTY']['error_403']();
-
-				return $objHandler->getResponse($pageId, $objRootPage);
+				throw new AccessDeniedHttpException('Access denied');
 			}
 		}
 
@@ -264,11 +238,11 @@ class FrontendIndex extends \Frontend
 			{
 				case 'root':
 				case 'error_404':
-					return $objHandler->getResponse($pageId);
+					return $objHandler->getResponse($pageId); // FIXME: throw new NotFoundHttpException()?
 					break;
 
 				case 'error_403':
-					return $objHandler->getResponse($pageId, $objRootPage);
+					return $objHandler->getResponse($pageId, $objRootPage); // FIXME: throw new AccessDeniedHttpException()?
 					break;
 
 				default:
@@ -287,7 +261,7 @@ class FrontendIndex extends \Frontend
 			$GLOBALS['TL_JQUERY'] = $arrJquery;
 
 			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
+			$objHandler = new $GLOBALS['TL_PTY']['error_404'](); // FIXME: throw new NotFoundHttpException()?
 
 			return $objHandler->getResponse($pageId, null, null, true);
 		}

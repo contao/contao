@@ -218,9 +218,7 @@ abstract class Controller extends \System
 					// Send a 404 header if the article does not exist
 					if (null === $objArticle)
 					{
-						/** @var \PageError404 $objHandler */
-						$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-						$objHandler->generate($objPage->id);
+						throw new NotFoundHttpException('Page not found');
 					}
 
 					// Add the "first" and "last" classes (see #2583)
