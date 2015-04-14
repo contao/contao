@@ -22,9 +22,9 @@ class ResponseException extends AbstractResponseException
     /**
      * Constructor.
      *
-     * @param mixed  $response The response string or object
-     * @param int    $status   The response status code (defaults to 204)
-     * @param array  $headers  An array of response headers
+     * @param mixed $response The response string or object
+     * @param int   $status   The response status code (defaults to 204)
+     * @param array $headers  An array of response headers
      */
     public function __construct($response, $status = 200, $headers = [])
     {

@@ -248,7 +248,7 @@ class ExceptionListener
             // Throw the page exception if we should ever get here
             throw $pageException;
         }
-     }
+    }
 
     /**
      * Checks if the Contao 404 page can be rendered for a particular exception.

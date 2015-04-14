@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 interface ResponseExceptionInterface
 {
     /**
-     * Returns the response object
+     * Returns the response object.
      *
      * @return Response The response object
      */

@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Contao\CoreBundle\Exception\RootNotFoundHttpException;
 
 
 /**
@@ -717,6 +717,8 @@ class PageModel extends \Model
 	 * Get the details of a page including inherited parameters
 	 *
 	 * @return static The page model
+	 *
+	 * @throws RootNotFoundHttpException If no root page is found
 	 */
 	public function loadDetails()
 	{

@@ -39,7 +39,7 @@ class LanguageHelper implements \ArrayAccess
      *
      * @return LanguageHelper The language helper object
      */
-    function __get($key)
+    public function __get($key)
     {
         return $this->offsetGet($key);
     }

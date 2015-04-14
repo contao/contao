@@ -322,7 +322,7 @@ class ExceptionListenerTest extends TestCase
 
         $response = new Response('the mocked response ' . time(), 404);
 
-        PageError404::$getResponse = function() use ($response) { return $response; };
+        PageError404::$getResponse = function () use ($response) { return $response; };
 
         $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
 
@@ -355,7 +355,7 @@ class ExceptionListenerTest extends TestCase
             $exception
         );
 
-        PageError404::$getResponse = function() { return new Response('FAIL!'); };
+        PageError404::$getResponse = function () { return new Response('FAIL!'); };
 
         $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
 
@@ -388,7 +388,7 @@ class ExceptionListenerTest extends TestCase
             $exception
         );
 
-        PageError404::$getResponse = function() { return new Response('FAIL!'); };
+        PageError404::$getResponse = function () { return new Response('FAIL!'); };
 
         $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
 
@@ -485,7 +485,7 @@ class ExceptionListenerTest extends TestCase
 
         $thrownException = new ResponseException('internal 404 response exception', 404);
 
-        PageError404::$getResponse = function() use ($thrownException) { throw $thrownException; };
+        PageError404::$getResponse = function () use ($thrownException) { throw $thrownException; };
 
         $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
 
@@ -521,7 +521,7 @@ class ExceptionListenerTest extends TestCase
 
         $thrownException = new NotFoundHttpException('internal 404 response exception');
 
-        PageError404::$getResponse = function() use ($thrownException) { throw $thrownException; };
+        PageError404::$getResponse = function () use ($thrownException) { throw $thrownException; };
 
         $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
 
@@ -558,7 +558,7 @@ class ExceptionListenerTest extends TestCase
             'This should be thrown as it indicates a bug in exception handling.'
         );
 
-        PageError404::$getResponse = function() use ($thrownException) { throw $thrownException; };
+        PageError404::$getResponse = function () use ($thrownException) { throw $thrownException; };
 
         $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
 
@@ -586,7 +586,7 @@ class ExceptionListenerTest extends TestCase
         $event      = new GetResponseForExceptionEvent($kernel, new Request(), HttpKernel::MASTER_REQUEST, $exception);
         $eventAgain = new GetResponseForExceptionEvent($kernel, new Request(), HttpKernel::MASTER_REQUEST, $exception);
 
-        PageError404::$getResponse = function() use ($listener, $eventAgain) {
+        PageError404::$getResponse = function () use ($listener, $eventAgain) {
             $listener->onKernelException($eventAgain);
         };
 
@@ -705,13 +705,11 @@ class ExceptionListenerTest extends TestCase
 
         $classMap = $reflection->getValue();
 
-        return array_map(function($class) use ($classMap) { return [$class, $classMap[$class]]; }, array_keys($classMap));
+        return array_map(function ($class) use ($classMap) { return [$class, $classMap[$class]]; }, array_keys($classMap));
     }
 
     /**
      * Defines the constants needed by the 404 page handler.
-     *
-     * @return void
      */
     private function microBootFramework()
     {

@@ -30,7 +30,7 @@ class AjaxRedirectResponseException extends AbstractResponseException
     {
         $headers = array_merge(
             [
-                'X-Ajax-Location' => $location
+                'X-Ajax-Location' => $location,
             ],
             $headers
         );

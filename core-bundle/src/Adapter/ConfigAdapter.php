@@ -43,7 +43,7 @@ class ConfigAdapter
     /**
      * Returns true if the installation is complete.
      *
-     * @return boolean True if the installation is complete
+     * @return bool True if the installation is complete
      */
     public function isComplete()
     {
@@ -87,7 +87,7 @@ class ConfigAdapter
      *
      * @param string $key The short key (e.g. "displayErrors")
      *
-     * @return boolean True if the configuration value exists
+     * @return bool True if the configuration value exists
      */
     public function has($key)
     {

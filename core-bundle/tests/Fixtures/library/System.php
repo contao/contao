@@ -58,7 +58,7 @@ class System
         }
     }
 
-    public static function loadLanguageFile($strName, $strLanguage=null, $blnNoCache=false)
+    public static function loadLanguageFile($strName, $strLanguage = null, $blnNoCache = false)
     {
         $GLOBALS['TL_LANG'] = new LanguageHelper();
     }

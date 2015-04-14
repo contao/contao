@@ -281,7 +281,7 @@ class InitializeSystemListenerTest extends TestCase
                 $this->getRootDir(),
                 $this->mockTokenManager(),
                 'contao_csrf_token',
-                $this->mockConfig()
+                $this->mockConfig(),
             ]
         );
 
@@ -478,7 +478,6 @@ class InitializeSystemListenerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
-
 
         $keeper = error_reporting();
         $kernel->getContainer()->setParameter('contao.error_level', E_ALL ^ (E_NOTICE | E_STRICT | E_DEPRECATED));
