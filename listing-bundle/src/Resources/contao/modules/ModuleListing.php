@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  * Provide methods to render content element "listing".
@@ -150,12 +152,7 @@ class ModuleListing extends \Module
 		// Thanks to Hagen Klemp (see #4485)
 		if ($per_page > 0 && ($page < 1 || $page > max(ceil($objTotal->count/$per_page), 1)))
 		{
-			/** @var \PageModel $objPage */
-			global $objPage;
-
-			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-			$objHandler->generate($objPage->id);
+			throw new NotFoundHttpException('Page not found');
 		}
 
 
