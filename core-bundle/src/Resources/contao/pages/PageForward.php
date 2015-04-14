@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException;
+
 
 /**
  * Provide methods to handle a forward page.
@@ -21,6 +23,7 @@ class PageForward extends \Frontend
 
 	/**
 	 * Redirect to an internal page
+     *
 	 * @param \PageModel $objPage
 	 */
 	public function generate($objPage)
@@ -39,9 +42,8 @@ class PageForward extends \Frontend
 		// Forward page does not exist
 		if ($objNextPage === null)
 		{
-			header('HTTP/1.1 404 Not Found');
 			$this->log('Forward page ID "' . $objPage->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
-			die_nicely('be_no_forward', 'Forward page not found');
+			throw new ForwardPageNotFoundHttpException('Forward page not found');
 		}
 
 		$strForceLang = null;

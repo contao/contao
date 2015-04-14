@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
+
 
 /**
  * Provide methods to handle versioning.
@@ -458,9 +460,7 @@ class Versions extends \Controller
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->action = ampersand(\Environment::get('request'));
 
-		$objTemplate->output();
-
-		exit;
+		throw new ResponseException($objTemplate->getResponse());
 	}
 
 

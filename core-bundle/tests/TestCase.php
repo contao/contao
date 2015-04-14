@@ -122,6 +122,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->setParameter('contao.error_level', error_reporting());
 
         $container->set(
             'contao.resource_finder',
@@ -230,7 +231,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockConfig()
     {
-        $config = $this->getMock('Contao\\CoreBundle\\Adapter\\ConfigAdapter');
+        $config = $this->getMock('Contao\\CoreBundle\\Adapter\\ConfigAdapter', ['isComplete']);
 
         $config->expects($this->any())
             ->method('isComplete')

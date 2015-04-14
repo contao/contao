@@ -5,6 +5,9 @@ Version 4.0.0-beta1 (2014-04-13)
 ---------------------------------
 
 ### Removed
+Removed the `show_help_message()` and `die_nicely()` functions.
+
+### Removed
 The `coreOnlyMode` setting has been removed (see #145).
 
 ### Removed

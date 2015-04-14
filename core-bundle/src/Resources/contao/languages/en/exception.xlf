@@ -15,19 +15,16 @@
         <source>Tell me more, please</source>
       </trans-unit>
       <trans-unit id="XPT.hint">
-        <source>To customize this notice, create a custom template file named &lt;em&gt;%s&lt;/em&gt;.</source>
+        <source>To customize this notice, create a custom Twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.errorOccurred">
         <source>An error occurred while executing this script. Something does not work properly.</source>
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
-        <source>Open the &lt;code&gt;system/logs/error.log&lt;/code&gt; file and find the associated error message (usually the last one). You can also add the following line to the local configuration file and reload this page:</source>
-      </trans-unit>
-      <trans-unit id="XPT.errorFixTwo">
-        <source>However, please be aware that &lt;strong&gt;anyone&lt;/strong&gt; will be able to see error messages on your website then!</source>
+        <source>Open the &lt;code&gt;app/logs/error.log&lt;/code&gt; file and find the associated error message (usually the last one).</source>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in in the &lt;code&gt;system/logs/error.log&lt;/code&gt; file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href="https://contao.org/faq.html" target="_blank"&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href="https://contao.org/support.html" target="_blank"&gt;Contao support page&lt;/a&gt;.</source>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in in the &lt;code&gt;app/logs/error.log&lt;/code&gt; file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href="https://contao.org/faq.html" target="_blank"&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href="https://contao.org/support.html" target="_blank"&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -51,7 +48,7 @@
         <source>The installation has not been completed, therefore Contao cannot work properly.</source>
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool by pointing your browser to &lt;code&gt;contao/install.php&lt;/code&gt; or, if you have not yet set the document root, to &lt;code&gt;web/contao/install.php&lt;/code&gt;.</source>
+        <source>Please open the Contao install tool by pointing your browser to &lt;code&gt;/contao/install&lt;/code&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href="https://contao.org/manual/installation.html" target="_blank"&gt;Contao manual&lt;/a&gt;.</source>

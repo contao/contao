@@ -1,0 +1,13 @@
+{% extends "@ContaoCore/Error/error_layout.html.twig" %}
+{% block title %}
+    {{ statusCode }} - {{ error.noLayout }}
+{% endblock %}
+{% block matter %}
+    <p>{{ error.noLayoutSpecified }}</p>
+{% endblock %}
+{% block howToFix %}
+    <p>{{ error.noLayoutFix|format(adminEmail)|raw }}</p>
+{% endblock %}
+{% block explain %}
+    <p>{{ error.noLayoutExplain|raw }}</p>
+{% endblock %}

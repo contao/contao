@@ -13,6 +13,10 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\ClassLoader;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
+use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
+use Contao\CoreBundle\Exception\BadRequestTokenHttpException;
+use Contao\CoreBundle\Exception\IncompleteInstallationHttpException;
+use Contao\CoreBundle\Exception\InsecureInstallationHttpException;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
@@ -190,13 +194,12 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     protected function boot(Request $request = null)
     {
+        // Set the error_reporting level
+        error_reporting($this->container->getParameter('contao.error_level'));
+
         $this->includeHelpers();
 
-        // Set the error and exception handler
-        set_error_handler('__error');
-        set_exception_handler('__exception');
-
-        // Log PHP errors
+        // TODO: use Monolog to log errors
         $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
 
         $this->includeBasicClasses();
@@ -311,6 +314,9 @@ class InitializeSystemListener extends ScopeAwareListener
      * Validates the installation.
      *
      * @param Request $request The current request if available
+     *
+     * @throws InsecureInstallationHttpException   If the document root is not set correctly
+     * @throws IncompleteInstallationHttpException If the installation has not been completed
      */
     private function validateInstallation(Request $request = null)
     {
@@ -319,14 +325,13 @@ class InitializeSystemListener extends ScopeAwareListener
         }
 
         // Show the "insecure document root" message
-        // FIXME: add unit tests for this as soon as die_nicely is an exception
         if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) && '/web' === substr($request->getBasePath(), -4)) {
-            die_nicely('be_insecure', 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
+            throw new InsecureInstallationHttpException(null, 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
         }
 
         // Show the "incomplete installation" message
         if (!$this->config->isComplete()) {
-            die_nicely('be_incomplete', 'The installation has not been completed. Open the Contao install tool to continue.');
+            throw new IncompleteInstallationHttpException(null, 'The installation has not been completed. Open the Contao install tool to continue.');
         }
     }
 
@@ -341,7 +346,7 @@ class InitializeSystemListener extends ScopeAwareListener
         }
 
         $this->iniSet('display_errors', ($this->config->get('displayErrors') ? 1 : 0));
-        error_reporting(($this->config->get('displayErrors') || $this->config->get('logErrors')) ? $this->config->get('errorReporting') : 0);
+        error_reporting(($this->config->get('displayErrors') || $this->config->get('logErrors')) ? $this->container->getParameter('contao.error_level') : 0);
     }
 
     /**
@@ -373,6 +378,8 @@ class InitializeSystemListener extends ScopeAwareListener
      * Handles the request token.
      *
      * @param Request $request
+     *
+     * @throws AjaxRedirectResponseException|BadRequestTokenHttpException If the token is invalid
      */
     private function handleRequestToken(Request $request = null)
     {
@@ -386,19 +393,13 @@ class InitializeSystemListener extends ScopeAwareListener
 
         // FIXME: This forces all routes handling POST data to pass a REQUEST_TOKEN
         if ($_POST && null !== $request && !$this->tokenManager->isTokenValid($token)) {
-            // Force a JavaScript redirect upon Ajax requests (IE requires absolute link)
             if ($request->isXmlHttpRequest()) {
-                header('HTTP/1.1 204 No Content');
-                header('X-Ajax-Location: ' . $this->router->generate('contao_backend'));
-            } else {
-                header('HTTP/1.1 400 Bad Request');
-                die_nicely(
-                    'be_referer',
-                    'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">go back</a> and try again.'
-                );
+                throw new AjaxRedirectResponseException($this->router->generate('contao_backend'));
             }
 
-            exit; // FIXME: throw a ResponseException instead
+            throw new BadRequestTokenHttpException(
+                'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">reload the page</a> and try again.'
+            );
         }
     }
 

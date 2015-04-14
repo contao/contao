@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  * Reads and writes pages
@@ -857,9 +859,8 @@ class PageModel extends \Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			header('HTTP/1.1 404 Not Found');
 			\System::log('Page ID "'. $this->id .'" does not belong to a root page', __METHOD__, TL_ERROR);
-			die_nicely('be_no_root', 'No root page found');
+			throw new RootNotFoundHttpException('No root page found');
 		}
 
 		$this->trail = array_reverse($trail);

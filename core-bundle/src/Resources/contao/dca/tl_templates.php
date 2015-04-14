@@ -8,7 +8,6 @@
  * @license LGPL-3.0+
  */
 
-
 /**
  * Load default language file
  */
@@ -387,9 +386,9 @@ class tl_templates extends Backend
 		}
 
 		// User selected template to compare against
-		if (\Input::post('to') && isset($arrTemplates[\Input::post('to')]))
+		if (Input::post('to') && isset($arrTemplates[Input::post('to')]))
 		{
-			$strCompareName = \Input::post('to');
+			$strCompareName = Input::post('to');
 			$strComparePath = $arrTemplates[$strCompareName] . '/' .$strCompareName . '.' . $strExtension;
 		}
 
@@ -397,8 +396,8 @@ class tl_templates extends Backend
 
 		if ($strComparePath !== null)
 		{
-			$objCurrentFile = new \File($strCurrentPath, true);
-			$objCompareFile = new \File($strComparePath, true);
+			$objCurrentFile = new File($strCurrentPath);
+			$objCompareFile = new File($strComparePath);
 
 			// Abort if one file is missing
 			if (!$objCurrentFile->exists() || !$objCompareFile->exists())
@@ -446,7 +445,7 @@ class tl_templates extends Backend
 			}
 		}
 
-		$objTemplate = new \BackendTemplate('be_diff');
+		$objTemplate = new BackendTemplate('be_diff');
 
 		// Template variables
 		$objTemplate->staticFrom = $strCurrentPath;
@@ -454,16 +453,15 @@ class tl_templates extends Backend
 		$objTemplate->to = $strCompareName;
 		$objTemplate->showLabel = specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->content = $strBuffer;
-		$objTemplate->theme = \Backend::getTheme();
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
-		$objTemplate->charset = \Config::get('characterSet');
+		$objTemplate->charset = Config::get('characterSet');
 
-		\Config::set('debugMode', false);
+		Config::set('debugMode', false);
 
-		$objTemplate->output();
-		exit;
+		throw new Contao\CoreBundle\Exception\ResponseException($objTemplate->getResponse());
 	}
 
 

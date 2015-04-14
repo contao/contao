@@ -67,6 +67,8 @@ class AddToSearchIndexListenerTest extends TestCase
             $this->mockConfig()
         );
 
+        $listener->setContainer($this->mockKernel()->getContainer());
+
         $this->bootContaoFramework($listener);
 
         $listener = new AddToSearchIndexListener();
@@ -75,6 +77,7 @@ class AddToSearchIndexListenerTest extends TestCase
         $event
             ->expects($this->once())
             ->method('getResponse')
+            ->willReturn(new Response())
         ;
 
         $listener->onKernelTerminate($event);
