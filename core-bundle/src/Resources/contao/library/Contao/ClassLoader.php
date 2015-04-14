@@ -132,7 +132,7 @@ class ClassLoader
 	 */
 	public static function load($class)
 	{
-		if (class_exists($class, false) || interface_exists($class, false))
+		if (class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false))
 		{
 			return;
 		}
