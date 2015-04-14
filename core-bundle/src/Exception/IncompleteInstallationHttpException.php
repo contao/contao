@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 /**
- * To be thrown when the configuration has not been completed yet.
+ * Incomplete installation exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

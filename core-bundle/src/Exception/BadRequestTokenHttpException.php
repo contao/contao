@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Exception;
 
 /**
- * This exception is thrown when there is an issue with the request token.
+ * Invalid request token exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

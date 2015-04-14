@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException as BaseAccessDeniedHttpException;
 
 /**
- * This exception is thrown when the access to a resource has been denied.
+ * Access denied exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

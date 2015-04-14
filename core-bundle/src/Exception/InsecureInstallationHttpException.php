@@ -13,9 +13,7 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 /**
- * To be thrown when the installation is not secure enough.
- *
- * i.e.: the web root is incorrectly configured causing the request url to end with "/web".
+ * Insecure installation exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

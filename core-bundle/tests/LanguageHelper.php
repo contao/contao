@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Test;
 
 /**
- * Simple language string adapter that will return the language array keys as result.
+ * Returns the language array keys as array.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
@@ -23,26 +23,33 @@ class LanguageHelper implements \ArrayAccess
     protected $stack;
 
     /**
-     * Create a new instance with the given stack..
+     * Constructor.
      *
      * @param array $stack
      */
-    public function __construct(array $stack = array())
+    public function __construct(array $stack = [])
     {
         $this->stack = $stack;
     }
 
-    function __get($name)
+    /**
+     * Returns the current language helper.
+     *
+     * @param string $key The key
+     *
+     * @return LanguageHelper The language helper object
+     */
+    function __get($key)
     {
-        return $this->offsetGet($name);
+        return $this->offsetGet($key);
     }
 
     /**
-     * Mock method always returning true.
+     * Returns true.
      *
-     * @param mixed $offset
+     * @param mixed $offset The offset
      *
-     * @return bool Always true
+     * @return bool True
      */
     public function offsetExists($offset)
     {
@@ -50,22 +57,22 @@ class LanguageHelper implements \ArrayAccess
     }
 
     /**
-     * Create a sub object with the given name.
+     * Creates a sub object with the given name.
      *
-     * @param mixed $offset
+     * @param mixed $offset The offset
      *
      * @return LanguageHelper
      */
     public function offsetGet($offset)
     {
-        return new LanguageHelper(array_merge($this->stack, array($offset)));
+        return new LanguageHelper(array_merge($this->stack, [$offset]));
     }
 
     /**
-     * Unsupported, throws exception.
+     * Throws an exception.
      *
-     * @param mixed $offset
-     * @param mixed $value
+     * @param mixed $offset The offset
+     * @param mixed $value  The value
      *
      * @throws \LogicException
      */
@@ -75,9 +82,9 @@ class LanguageHelper implements \ArrayAccess
     }
 
     /**
-     * Unsupported, throws exception.
+     * Throws an exception.
      *
-     * @param mixed $offset
+     * @param mixed $offset The offset
      *
      * @throws \LogicException
      */
@@ -86,6 +93,11 @@ class LanguageHelper implements \ArrayAccess
         throw new \LogicException('The language helper is just for retrieving, not for setting.');
     }
 
+    /**
+     * Returns the combined stack as string.
+     *
+     * @return string The combined stack
+     */
     public function __toString()
     {
         return implode('.', $this->stack);

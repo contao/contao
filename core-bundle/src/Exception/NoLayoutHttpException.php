@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * This exception is thrown when no layout has been specified.
+ * No layout specified exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

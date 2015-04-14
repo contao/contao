@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as BaseNotFoundHttpException;
 
 /**
- * This exception is thrown when no applicable page can be found.
+ * Page not found exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

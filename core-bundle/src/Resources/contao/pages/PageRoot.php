@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoPagesFoundHttpException;
 
+
 /**
  * Provide methods to handle a website root page.
  *

@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\RootNotFoundHttpException;
 
+
 /**
  * Reads and writes pages
  *

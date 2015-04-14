@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\NoLayoutHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+
 /**
  * Provide methods to handle a regular front end page.
  *

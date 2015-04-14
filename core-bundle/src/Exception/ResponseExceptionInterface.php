@@ -13,25 +13,23 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Implement this interface in your exceptions to let Contao automatically render the response.
+ * Response exception interface.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
 interface ResponseExceptionInterface
 {
     /**
-     * Return the response object
+     * Returns the response object
      *
-     * @return Response
+     * @return Response The response object
      */
     public function getResponse();
 
     /**
-     * Returns previous Exception (if any)
+     * Returns the previous exception.
      *
-     * @link http://php.net/manual/en/exception.getprevious.php
-     *
-     * @return \Exception the previous Exception if available or null otherwise.
+     * @return \Exception|null The previous exception or null
      */
     public function getPrevious();
 }

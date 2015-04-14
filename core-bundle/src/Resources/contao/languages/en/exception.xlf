@@ -15,7 +15,7 @@
         <source>Tell me more, please</source>
       </trans-unit>
       <trans-unit id="XPT.hint">
-        <source>To customize this notice, create a custom twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
+        <source>To customize this notice, create a custom Twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.errorOccurred">
         <source>An error occurred while executing this script. Something does not work properly.</source>
@@ -48,7 +48,7 @@
         <source>The installation has not been completed, therefore Contao cannot work properly.</source>
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool by pointing your browser to &lt;code&gt;contao/install&lt;/code&gt;.</source>
+        <source>Please open the Contao install tool by pointing your browser to &lt;code&gt;/contao/install&lt;/code&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href="https://contao.org/manual/installation.html" target="_blank"&gt;Contao manual&lt;/a&gt;.</source>

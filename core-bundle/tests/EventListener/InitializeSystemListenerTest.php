@@ -306,7 +306,7 @@ class InitializeSystemListenerTest extends TestCase
     }
 
     /**
-     * Tests a request without scope.
+     * Tests the validateInstallation() method.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
@@ -315,9 +315,11 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testValidateInstallation()
     {
+        /** @var KernelInterface $kernel */
         global $kernel;
 
-        $kernel   = $this->mockKernel();
+        $kernel = $this->mockKernel();
+
         $listener = new InitializeSystemListener(
             $this->mockRouter('/web/app_dev.php?do=test'),
             $this->mockSession(),
@@ -326,9 +328,11 @@ class InitializeSystemListenerTest extends TestCase
             'contao_csrf_token',
             $this->mockConfig()
         );
+
         $listener->setContainer($kernel->getContainer());
 
         $request = new Request();
+
         $request->server->add([
             'SERVER_PORT'          => 80,
             'HTTP_HOST'            => 'localhost',
@@ -340,7 +344,6 @@ class InitializeSystemListenerTest extends TestCase
             'HTTP_X_FORWARDED_FOR' => '123.456.789.0',
             'SERVER_NAME'          => 'localhost',
             'SERVER_ADDR'          => '127.0.0.1',
-            'REMOTE_ADDR'          => '123.456.789.0',
             'DOCUMENT_ROOT'        => $this->getRootDir(),
             'SCRIPT_FILENAME'      => $this->getRootDir() . '/foo/web/app_dev.php',
             'ORIG_SCRIPT_FILENAME' => '/var/run/localhost.fcgi',
@@ -354,11 +357,14 @@ class InitializeSystemListenerTest extends TestCase
             'ORIG_PATH_INFO'       => '/foo/web/app_dev.php',
             'ORIG_PATH_TRANSLATED' => $this->getRootDir() . '/foo/web/app_dev.php',
         ]);
+
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'backend');
+
         $kernel->getContainer()->enterScope('backend');
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
         $listener->onKernelRequest($event);
     }
 

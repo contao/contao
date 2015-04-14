@@ -66,6 +66,7 @@ class AddToSearchIndexListenerTest extends TestCase
             'contao_csrf_token',
             $this->mockConfig()
         );
+
         $listener->setContainer($this->mockKernel()->getContainer());
 
         $this->bootContaoFramework($listener);

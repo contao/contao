@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Exception;
 
 /**
- * This exception is thrown no applicable page root has been found.
+ * No root page found exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

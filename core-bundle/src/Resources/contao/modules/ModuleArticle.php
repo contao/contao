@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+
 /**
  * Provides methodes to handle articles.
  *
@@ -375,6 +376,7 @@ class ModuleArticle extends \Module
 		// Close and output PDF document
 		$pdf->lastPage();
 		$pdf->Output(standardize(ampersand($this->title, false)) . '.pdf', 'D');
+
 		// Stop script execution
 		exit;
 	}

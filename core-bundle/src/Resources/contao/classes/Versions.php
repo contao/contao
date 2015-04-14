@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
 
+
 /**
  * Provide methods to handle versioning.
  *

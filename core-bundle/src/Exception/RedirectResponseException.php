@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Exception to send a redirect response and exit the execution in the Contao workflow.
+ * Sends a redirect response and stops the progam flow.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

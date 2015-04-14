@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Contao\CoreBundle\Exception\RootNotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

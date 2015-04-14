@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\RootNotFoundHttpException;
 use Contao\CoreBundle\Test\TestCase;
-use Contao\Environment;
 use Contao\PageError404;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,31 +31,22 @@ use Symfony\Component\HttpKernel\HttpKernel;
 class ExceptionListenerTest extends TestCase
 {
     /**
-     * Returns the path to the fictional kernel directory.
-     *
-     * @return string The kernel directory path
-     */
-    public function getKernelDir()
-    {
-        return parent::getRootDir() . '/app';
-    }
-
-    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
         $listener = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
 
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ExceptionListener', $listener);
+        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\ExceptionListener', $listener);
     }
 
     /**
-     * Tests that no error screen is generated when none shall be created.
+     * Tests that no error screen is generated if pretty_error_screens is disabled.
      */
     public function testGenericExceptionWithoutErrorScreen()
     {
         $this->microBootFramework();
+
         $listener = new ExceptionListener(false, $this->mockTwig(), $this->mockConfig());
 
         $event = new GetResponseForExceptionEvent(
@@ -72,11 +62,12 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Tests that the generic error screen is generated for all exceptions unknown.
+     * Tests that the generic error screen is generated for an unknown exception.
      */
     public function testGenericExceptionWithErrorScreen()
     {
         $this->microBootFramework();
+
         $listener = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
 
         $event = new GetResponseForExceptionEvent(
@@ -88,10 +79,11 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
 
         $this->assertEquals('error', $event->getResponse()->getContent());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -99,17 +91,18 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test that any unknown exception extending HttpExceptionInterface is rendered as the standard error screen.
+     * Tests that any exception implementing the HttpExceptionInterface is rendered with the standard error screen.
      */
     public function testUnknownHttpExceptionIsRenderedAsError()
     {
         $this->microBootFramework();
+
         $listener = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
 
         /** @var \Exception $exception */
         $exception = $this->getMockForAbstractClass(
-            'Contao\CoreBundle\Test\EventListener\ExceptionListenerTestHelperHttpException',
-            array('test')
+            'Contao\\CoreBundle\\Test\\EventListener\\ExceptionListenerTestHelperHttpException',
+            ['test']
         );
 
         $event = new GetResponseForExceptionEvent(
@@ -121,23 +114,26 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
 
         $this->assertEquals('error', $event->getResponse()->getContent());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
         );
+
         $this->assertEquals(500, $event->getResponse()->getStatusCode());
     }
 
     /**
-     * Test that any unknown exception extending HttpExceptionInterface is rendered as the standard error screen.
+     * Tests that a non existing template is rendered.
      */
     public function testNonExistentTemplateIsRenderedAsError()
     {
         $this->microBootFramework();
+
         $listener = new ExceptionListener(true, $this->mockTwig(['error']), $this->mockConfig());
 
         /** @var \Exception $exception */
@@ -152,47 +148,35 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
 
         $this->assertEquals('error', $event->getResponse()->getContent());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
         );
+
         $this->assertEquals(500, $event->getResponse()->getStatusCode());
     }
 
     /**
-     * Data provider for testing all known Contao exceptions thrown by the framework and rendered via template.
-     */
-    public function knownContaoExceptions()
-    {
-        $reflection = new \ReflectionProperty(
-            'Contao\CoreBundle\EventListener\ExceptionListener',
-            'exceptionTemplates'
-        );
-        $reflection->setAccessible(true);
-
-        $classMap = $reflection->getValue();
-
-        return array_map(function($class) use ($classMap) { return [$class, $classMap[$class]]; }, array_keys($classMap));
-    }
-
-    /**
-     * Tests that the correct error screen template is not rendered.
-     *
-     * @dataProvider knownContaoExceptions
+     * Tests that the correct error screen template is rendered.
      *
      * @param string $exceptionClass The exception to be handled.
      * @param string $templateName   The expected template to be rendered.
+     *
+     * @dataProvider knownContaoExceptions
      */
     public function testKnownContaoExceptionRendersTemplate($exceptionClass, $templateName)
     {
         $this->microBootFramework();
+
         $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new $exceptionClass();
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -201,9 +185,10 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
         $this->assertEquals($templateName, $event->getResponse()->getContent());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -211,18 +196,20 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Tests that no template is rendered when there should not.
-     *
-     * @dataProvider knownContaoExceptions
+     * Tests that no template is rendered if pretty_error_screens is disabled.
      *
      * @param string $exceptionClass The exception to be handled.
+     *
+     * @dataProvider knownContaoExceptions
      */
     public function testKnownContaoExceptionDoesNotRenderTemplate($exceptionClass)
     {
         $this->microBootFramework();
+
         $listener  = new ExceptionListener(false, $this->mockTwig(), $this->mockConfig());
         $exception = new $exceptionClass();
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -235,17 +222,19 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Tests that the fallback message is shown when the error screen template is not available.
-     *
-     * @dataProvider knownContaoExceptions
+     * Tests that the fallback message is shown when the error template is not available.
      *
      * @param string $exceptionClass The exception to be handled.
      * @param string $templateName   The expected template to be rendered.
+     *
+     * @dataProvider knownContaoExceptions
      */
     public function testWrappedKnownContaoExceptionRendersTemplate($exceptionClass, $templateName)
     {
         $this->microBootFramework();
-        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
+
+        $listener = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
+
         $exception = new \RuntimeException(
             'wrap 1',
             1,
@@ -255,7 +244,8 @@ class ExceptionListenerTest extends TestCase
                 new $exceptionClass('I got chained.')
             )
         );
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -264,9 +254,10 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
         $this->assertEquals($templateName, $event->getResponse()->getContent());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -274,13 +265,15 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test that response exceptions are handled correctly.
+     * Tests that response exceptions are handled correctly.
      */
     public function testResponseExceptionIsHandled()
     {
         $this->microBootFramework();
-        $listener      = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
-        $exception     = ResponseException::create('I got chained.');
+
+        $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
+        $exception = ResponseException::create('I got chained.');
+
         $wrapException = new \RuntimeException(
             'wrap 1',
             1,
@@ -290,7 +283,8 @@ class ExceptionListenerTest extends TestCase
                 $exception
             )
         );
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -299,9 +293,10 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
         $this->assertSame($event->getResponse(), $exception->getResponse());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -309,19 +304,22 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test the rendering of the Contao 404 pages.
+     * Tests rendering the Contao 404 page.
      */
     public function testTryToRenderContao404()
     {
         $this->microBootFramework();
+
         $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
             $exception
         );
+
         $response = new Response('the mocked response ' . time(), 404);
 
         PageError404::$getResponse = function() use ($response) { return $response; };
@@ -330,9 +328,10 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
         $this->assertSame($response, $event->getResponse());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -340,14 +339,16 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test the rendering of the Contao 404 pages.
+     * Tests rendering the Contao 404 page without a root page.
      */
-    public function testTryToRenderContao404WillNotRenderForRootNotFoundHttpException()
+    public function testTryToRenderContao404WillNotRenderRootNotFoundHttpException()
     {
         $this->microBootFramework();
+
         $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new RootNotFoundHttpException();
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -360,9 +361,10 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
         $this->assertEquals('no_root', $event->getResponse()->getContent());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -370,14 +372,16 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test the rendering of the Contao 404 pages.
+     * Tests rendering the Contao 404 page without active pages.
      */
-    public function testTryToRenderContao404WillNotRenderForNoPagesFoundHttpException()
+    public function testTryToRenderContao404WillNotRenderNoPagesFoundHttpException()
     {
         $this->microBootFramework();
+
         $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NoPagesFoundHttpException();
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -390,9 +394,10 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
         $this->assertEquals('no_active', $event->getResponse()->getContent());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -400,14 +405,16 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test the rendering of the Contao 404 pages.
+     * Tests rendering the Contao 404 pages without a page handler.
      */
     public function testTryToRenderContao404WillNotRenderWithoutPageHandler()
     {
         $this->microBootFramework();
+
         $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -418,9 +425,10 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
         $this->assertEquals('no_page', $event->getResponse()->getContent());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -428,14 +436,16 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test the rendering of the Contao 404 pages.
+     * Tests rendering the Contao 404 page with an invalid page handler.
      */
     public function testTryToRenderContao404WillNotRenderWithInvalidPageHandler()
     {
         $this->microBootFramework();
+
         $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -446,9 +456,10 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
         $this->assertEquals('no_page', $event->getResponse()->getContent());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -456,14 +467,16 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test the rendering of the Contao 404 pages.
+     * Tests rendering the Contao 404 page with a response exception.
      */
     public function testTryToRenderContao404ThrowsResponseException()
     {
         $this->microBootFramework();
+
         $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -471,16 +484,18 @@ class ExceptionListenerTest extends TestCase
         );
 
         $thrownException = ResponseException::create('internal 404 response exception', 404);
+
         PageError404::$getResponse = function() use ($thrownException) { throw $thrownException; };
 
         $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
         $this->assertEquals(404, $event->getResponse()->getStatusCode());
         $this->assertEquals($thrownException->getResponse(), $event->getResponse());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -488,14 +503,16 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test the rendering of the Contao 404 pages.
+     * Tests rendering the Contao 404 page with a page not found exception.
      */
     public function testTryToRenderContao404ThrowsNotFoundHttpException()
     {
         $this->microBootFramework();
+
         $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -503,15 +520,17 @@ class ExceptionListenerTest extends TestCase
         );
 
         $thrownException = new NotFoundHttpException('internal 404 response exception');
+
         PageError404::$getResponse = function() use ($thrownException) { throw $thrownException; };
 
         $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
         $this->assertEquals(404, $event->getResponse()->getStatusCode());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
@@ -519,14 +538,16 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test the rendering of the Contao 404 pages.
+     * Tests rendering the Contao 404 page with an exception.
      */
     public function testTryToRenderContao404ThrowsException()
     {
         $this->microBootFramework();
+
         $listener  = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception = new NotFoundHttpException();
-        $event     = new GetResponseForExceptionEvent(
+
+        $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernel::MASTER_REQUEST,
@@ -536,6 +557,7 @@ class ExceptionListenerTest extends TestCase
         $thrownException = new \RuntimeException(
             'This should be thrown as it indicates a bug in exception handling.'
         );
+
         PageError404::$getResponse = function() use ($thrownException) { throw $thrownException; };
 
         $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
@@ -546,29 +568,29 @@ class ExceptionListenerTest extends TestCase
         } catch (\Exception $realThrownException) {
             // Just to keep the exception.
         }
-        $this->assertSame($thrownException, $realThrownException);
 
+        $this->assertSame($thrownException, $realThrownException);
         $this->assertNull($event->getResponse());
     }
 
     /**
-     * Test the rendering of the Contao 404 pages.
+     * Tests rendering the Contao 404 page with recursion.
      */
     public function testTryToRenderContao404WillRecurse()
     {
         $this->microBootFramework();
+
         $kernel     = $this->mockKernel();
         $listener   = new ExceptionListener(true, $this->mockTwig(), $this->mockConfig());
         $exception  = new NotFoundHttpException();
         $event      = new GetResponseForExceptionEvent($kernel, new Request(), HttpKernel::MASTER_REQUEST, $exception);
         $eventAgain = new GetResponseForExceptionEvent($kernel, new Request(), HttpKernel::MASTER_REQUEST, $exception);
 
-
         PageError404::$getResponse = function() use ($listener, $eventAgain) {
             $listener->onKernelException($eventAgain);
         };
 
-          $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
+        $GLOBALS['TL_PTY']['error_404'] = 'PageError404';
 
         try {
             $listener->onKernelException($event);
@@ -578,7 +600,7 @@ class ExceptionListenerTest extends TestCase
     }
 
     /**
-     * Test that we will fall back to the generic error screen when no language strings are available.
+     * Tests the fallback to the generic error screen when no language strings are available.
      *
      * @runInSeparateProcess
      */
@@ -603,21 +625,23 @@ class ExceptionListenerTest extends TestCase
 
         $listener->onKernelException($event);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $event->getResponse());
 
         $this->assertEquals('error', $event->getResponse()->getContent());
         $this->assertTrue($event->getResponse()->headers->has('X-Status-Code'));
+
         $this->assertEquals(
             $event->getResponse()->getStatusCode(),
             $event->getResponse()->headers->get('X-Status-Code')
         );
+
         $this->assertEquals(500, $event->getResponse()->getStatusCode());
     }
 
     /**
-     * Mock the twig engine.
+     * Mocks the Twig engine.
      *
-     * @return TwigEngine
+     * @return TwigEngine The Twig engine
      */
     private function mockTwig($templates = null)
     {
@@ -626,27 +650,31 @@ class ExceptionListenerTest extends TestCase
                 'Contao\CoreBundle\EventListener\ExceptionListener',
                 'exceptionTemplates'
             );
+
             $reflection->setAccessible(true);
             $templates = array_merge(['error'], array_values($reflection->getValue()));
         }
 
         $templateMap = [];
+
         foreach ($templates as $template) {
-            $templateMap['@ContaoCore/Error/' . $template . '.html.twig'] = $template;
+            $templateMap["@ContaoCore/Error/$template.html.twig"] = $template;
         }
 
         $twig = $this
-            ->getMockBuilder('Symfony\Bundle\TwigBundle\TwigEngine')
+            ->getMockBuilder('Symfony\\Bundle\\TwigBundle\\TwigEngine')
             ->disableOriginalConstructor()
             ->setMethods(['exists', 'renderResponse'])
-            ->getMock();
+            ->getMock()
+        ;
 
         $twig
             ->expects($this->any())
             ->method('exists')
             ->willReturnCallback(function ($template) use ($templateMap) {
                 return isset($templateMap[$template]);
-            });
+            })
+        ;
 
         $twig
             ->expects($this->any())
@@ -657,13 +685,31 @@ class ExceptionListenerTest extends TestCase
                 }
 
                 return new Response($templateMap[$template]);
-            });
+            })
+        ;
 
         return $twig;
     }
 
     /**
-     * Define the constants needed by the 404 page handler.
+     * Provides the data for testing all known Contao exceptions.
+     */
+    public function knownContaoExceptions()
+    {
+        $reflection = new \ReflectionProperty(
+            'Contao\CoreBundle\EventListener\ExceptionListener',
+            'exceptionTemplates'
+        );
+
+        $reflection->setAccessible(true);
+
+        $classMap = $reflection->getValue();
+
+        return array_map(function($class) use ($classMap) { return [$class, $classMap[$class]]; }, array_keys($classMap));
+    }
+
+    /**
+     * Defines the constants needed by the 404 page handler.
      *
      * @return void
      */

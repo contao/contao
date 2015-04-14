@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Exception;
 
 /**
- * This exception is thrown when there can no applicable forward page found.
+ * Forward page not found exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

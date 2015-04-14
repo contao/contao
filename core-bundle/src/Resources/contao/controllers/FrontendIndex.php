@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException;
 use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 
+
 /**
  * Main front end controller.
  *
@@ -41,10 +42,7 @@ class FrontendIndex extends \Frontend
 			// Maintenance mode (see #4561 and #6353)
 			if (\Config::get('maintenanceMode'))
 			{
-				throw new MaintenanceModeActiveHttpException(
-					null,
-					'This site is currently down for maintenance. Please come back later.'
-				);
+				throw new MaintenanceModeActiveHttpException(null, 'This site is currently down for maintenance. Please come back later.');
 			}
 		}
 	}
@@ -165,7 +163,7 @@ class FrontendIndex extends \Frontend
 			/** @var \PageError404 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 
-			return $objHandler->generate($pageId);
+			return $objHandler->generate($pageId); // FIXME: throw a response exception instead (search for all left-overs)
 		}
 
 		// Load a website root page object (will redirect to the first active regular page)

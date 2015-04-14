@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 /**
- * This exception is thrown when maintenance mode is active.
+ * Maintenance mode exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

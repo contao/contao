@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Response;
 
+
 /**
  * Provide methods to handle Ajax requests.
  *
@@ -93,7 +94,6 @@ class Ajax extends \Backend
 				$objTemplate = new \BackendTemplate('be_navigation');
 				$navigation = $this->User->navigation();
 				$objTemplate->modules = $navigation[\Input::post('id')]['modules'];
-
 				throw new ResponseException($objTemplate->getResponse());
 
 			// Toggle nodes of the file or page tree
@@ -160,10 +160,11 @@ class Ajax extends \Backend
 						\System::loadLanguageFile('tl_maintenance');
 						throw new ResponseException(
 							new Response('<p class="tl_error">' . $GLOBALS['TL_LANG']['tl_maintenance']['notWriteable'] . '</p>'),
-							$e
+							$e // FIXME: this should be an integer ($status)
 						);
 					}
 				}
+
 				throw NoContentResponseException::create();
 
 			// Toggle checkbox groups
@@ -241,6 +242,7 @@ class Ajax extends \Backend
 				{
 					throw ResponseException::create($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), intval(\Input::post('level'))));
 				}
+
 				throw ResponseException::create($objWidget->generate());
 
 			// Reload the page/file picker
@@ -344,6 +346,7 @@ class Ajax extends \Backend
 						$dca->toggleFeatured(\Input::post('id'), ((\Input::post('state') == 1) ? true : false));
 					}
 				}
+
 				throw NoContentResponseException::create();
 
 			// Toggle subpalettes
@@ -387,9 +390,11 @@ class Ajax extends \Backend
 					if (\Input::post('load'))
 					{
 						\Config::set(\Input::post('field'), $val);
+
 						throw ResponseException::create($dc->edit(false, \Input::post('id')));
 					}
 				}
+
 				throw NoContentResponseException::create();
 
 			// DropZone file upload

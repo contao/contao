@@ -17,4 +17,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-abstract class ExceptionListenerTestHelperHttpException extends \Exception implements HttpExceptionInterface {}
+// FIXME: move to Exception namespace
+abstract class ExceptionListenerTestHelperHttpException extends \Exception implements HttpExceptionInterface
+{
+}

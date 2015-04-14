@@ -13,37 +13,34 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Exception to send a response and exit the execution in the Contao workflow.
+ * Parent class for response exceptions.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
 abstract class AbstractResponseException extends \RuntimeException implements ResponseExceptionInterface
 {
     /**
-     * The response to use.
-     *
      * @var Response
      */
     private $response;
 
     /**
-     * Construct the exception.
+     * Constructor.
      *
-     * @param Response $response   The Response to send
-     *
-     * @param \Exception $previous The previous exception used for the exception chaining
+     * @param Response   $response The Response object
+     * @param \Exception $previous The previous exception
      */
     public function __construct(Response $response, \Exception $previous = null)
     {
-        parent::__construct('Contao Response', 0, $previous);
+        parent::__construct('', 0, $previous);
 
         $this->response = $response;
     }
 
     /**
-     * Retrieve the response.
+     * Returns the response.
      *
-     * @return Response
+     * @return Response The response object
      */
     public function getResponse()
     {

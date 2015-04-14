@@ -687,6 +687,8 @@ class File extends \System
 	 * Send the file to the browser
 	 *
 	 * @param string $filename An optional filename
+	 *
+	 * @throws ResponseException
 	 */
 	public function sendToBrowser($filename=null)
 	{

@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Exception to send an empty response and exit the execution in the Contao workflow.
+ * Sends an empty response and stops the program flow.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

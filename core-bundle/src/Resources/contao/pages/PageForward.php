@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException;
 
+
 /**
  * Provide methods to handle a forward page.
  *
@@ -22,6 +23,7 @@ class PageForward extends \Frontend
 
 	/**
 	 * Redirect to an internal page
+     *
 	 * @param \PageModel $objPage
 	 */
 	public function generate($objPage)

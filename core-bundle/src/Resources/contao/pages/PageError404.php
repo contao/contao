@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException;
 use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 
+
 /**
  * Provide methods to handle an error 404 page.
  *

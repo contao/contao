@@ -194,14 +194,12 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     protected function boot(Request $request = null)
     {
-        // Check if we have "simple errors" and make sure to kill them as the legacy code will otherwise break.
-        // This happens (at least) on console.
-        // FIXME: Remove this manipulation of the error levels when we drop legacy code/make it notice free.
-        $this->sanitizeErrorHandling();
+        // Set the error_reporting level
+        error_reporting($this->container->getParameter('contao.error_level'));
 
         $this->includeHelpers();
 
-        // FIXME: We should log PHP errors via symfony logger in the future.
+        // TODO: use Monolog to log errors
         $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
 
         $this->includeBasicClasses();
@@ -316,6 +314,9 @@ class InitializeSystemListener extends ScopeAwareListener
      * Validates the installation.
      *
      * @param Request $request The current request if available
+     *
+     * @throws InsecureInstallationHttpException   If the document root is not set correctly
+     * @throws IncompleteInstallationHttpException If the installation has not been completed
      */
     private function validateInstallation(Request $request = null)
     {
@@ -325,28 +326,13 @@ class InitializeSystemListener extends ScopeAwareListener
 
         // Show the "insecure document root" message
         if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) && '/web' === substr($request->getBasePath(), -4)) {
-            throw new InsecureInstallationHttpException(
-                null,
-                'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.'
-            );
+            throw new InsecureInstallationHttpException(null, 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
         }
 
         // Show the "incomplete installation" message
         if (!$this->config->isComplete()) {
-            // FIXME: This maybe should be removed when localconfig.php is not mandatory anymore.
-            throw new IncompleteInstallationHttpException(
-                null,
-                'The installation has not been completed. Please finish the configuration.'
-            );
+            throw new IncompleteInstallationHttpException(null, 'The installation has not been completed. Open the Contao install tool to continue.');
         }
-    }
-
-    /**
-     * Set the configured error level.
-     */
-    private function sanitizeErrorHandling()
-    {
-        error_reporting($this->container->getParameter('contao.error_level'));
     }
 
     /**
@@ -355,12 +341,12 @@ class InitializeSystemListener extends ScopeAwareListener
     private function configureErrorHandling()
     {
         // Always show error messages if logged into the install tool (see #5001)
-        // FIXME: remove when the install tool is gone.
         if (Input::cookie('TL_INSTALL_AUTH') && !empty($_SESSION['TL_INSTALL_AUTH']) && Input::cookie('TL_INSTALL_AUTH') == $_SESSION['TL_INSTALL_AUTH'] && $_SESSION['TL_INSTALL_EXPIRE'] > time()) {
             $this->config->set('displayErrors', 1);
         }
 
         $this->iniSet('display_errors', ($this->config->get('displayErrors') ? 1 : 0));
+        error_reporting(($this->config->get('displayErrors') || $this->config->get('logErrors')) ? $this->container->getParameter('contao.error_level') : 0);
     }
 
     /**
@@ -392,6 +378,8 @@ class InitializeSystemListener extends ScopeAwareListener
      * Handles the request token.
      *
      * @param Request $request
+     *
+     * @throws AjaxRedirectResponseException|BadRequestTokenHttpException If the token is invalid
      */
     private function handleRequestToken(Request $request = null)
     {
@@ -405,15 +393,12 @@ class InitializeSystemListener extends ScopeAwareListener
 
         // FIXME: This forces all routes handling POST data to pass a REQUEST_TOKEN
         if ($_POST && null !== $request && !$this->tokenManager->isTokenValid($token)) {
-            // Force a JavaScript redirect upon Ajax requests (IE requires absolute link)
             if ($request->isXmlHttpRequest()) {
                 throw AjaxRedirectResponseException::create($this->router->generate('contao_backend'));
             }
 
-            // FIXME: obsolete when using symfony security?
             throw new BadRequestTokenHttpException(
-                'Invalid request token. Please ' .
-                '<a href="javascript:window.location.href=window.location.href">reload the page</a> and try again.'
+                'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">reload the page</a> and try again.'
             );
         }
     }

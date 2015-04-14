@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Exception;
 
 /**
- * This exception is thrown when no active pages can be found.
+ * No active pages found exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */

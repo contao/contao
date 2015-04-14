@@ -13,10 +13,11 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException as BaseBadRequestHttpException;
 
 /**
- * This exception is thrown when there is an issue with the request.
+ * Bad request exception.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
+// FIXME: why don't we use the parent class?
 class BadRequestHttpException extends BaseBadRequestHttpException
 {
 }
