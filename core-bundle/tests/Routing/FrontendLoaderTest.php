@@ -12,13 +12,14 @@ namespace Contao\CoreBundle\Test\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\FrontendLoader;
+use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the FrontendLoader class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
+class FrontendLoaderTest extends TestCase
 {
     /**
      * Tests the object instantiation.

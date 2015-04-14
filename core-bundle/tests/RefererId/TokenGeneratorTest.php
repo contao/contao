@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\RefererId;
 
 use Contao\CoreBundle\RefererId\TokenGenerator;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Core\Util\SecureRandomInterface;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
+class TokenGeneratorTest extends TestCase
 {
     const ENTROPY = 1000;
 

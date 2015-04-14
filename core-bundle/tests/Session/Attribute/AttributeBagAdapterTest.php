@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\Session\Attribute;
 
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
+class AttributeBagAdapterTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -27,7 +28,7 @@ class AttributeBagAdapterTest extends \PHPUnit_Framework_TestCase
     {
         $adapter = new AttributeBagAdapter(new AttributeBag('foobar_storageKey'));
 
-        $this->assertInstanceOf('Contao\CoreBundle\\Session\\Attribute\\AttributeBagAdapter', $adapter);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Session\\Attribute\\AttributeBagAdapter', $adapter);
         $this->assertInstanceOf('ArrayAccess', $adapter);
     }
 
