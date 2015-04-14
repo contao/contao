@@ -28,6 +28,13 @@ class AjaxRedirectResponseException extends AbstractResponseException
      */
     public function __construct($location, $status = 204, $headers = [])
     {
-        parent::__construct(new Response('', $status, array_merge(['X-Ajax-Location' => $location], $headers)));
+        $headers = array_merge(
+            [
+                'X-Ajax-Location' => $location
+            ],
+            $headers
+        );
+
+        parent::__construct(new Response('', $status, $headers));
     }
 }

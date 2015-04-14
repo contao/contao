@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\RootNotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**

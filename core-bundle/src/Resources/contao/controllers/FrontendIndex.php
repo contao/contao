@@ -11,8 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException;
-use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**

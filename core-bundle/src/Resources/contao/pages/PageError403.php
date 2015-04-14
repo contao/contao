@@ -10,9 +10,9 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\AccessDeniedHttpException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 
 /**

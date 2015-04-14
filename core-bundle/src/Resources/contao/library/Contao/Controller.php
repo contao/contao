@@ -10,10 +10,10 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\AccessDeniedHttpException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
-use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 

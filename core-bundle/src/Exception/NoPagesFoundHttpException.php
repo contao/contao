@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\Exception;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * No active pages found exception.
  *

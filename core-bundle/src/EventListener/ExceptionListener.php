@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Exception\NoPagesFoundHttpException;
-use Contao\CoreBundle\Exception\NotFoundHttpException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\ResponseExceptionInterface;
 use Contao\CoreBundle\Exception\RootNotFoundHttpException;
@@ -23,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handles exceptions and creates a proper response with an error screen.
@@ -50,16 +50,16 @@ class ExceptionListener
      * @var array
      */
     private static $exceptionTemplates = [
-        'Contao\CoreBundle\Exception\AccessDeniedHttpException'           => 'forbidden',
-        'Contao\CoreBundle\Exception\BadRequestTokenHttpException'        => 'referer',
-        'Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException'    => 'no_forward',
-        'Contao\CoreBundle\Exception\IncompleteInstallationHttpException' => 'incomplete',
-        'Contao\CoreBundle\Exception\InsecureInstallationHttpException'   => 'insecure',
-        'Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException'  => 'unavailable',
-        'Contao\CoreBundle\Exception\NoLayoutHttpException'               => 'no_layout',
-        'Contao\CoreBundle\Exception\NoPagesFoundHttpException'           => 'no_active',
-        'Contao\CoreBundle\Exception\NotFoundHttpException'               => 'no_page',
-        'Contao\CoreBundle\Exception\RootNotFoundHttpException'           => 'no_root',
+        'Symfony\\Component\\HttpKernel\\Exception\\AccessDeniedHttpException' => 'forbidden',
+        'Contao\\CoreBundle\\Exception\\BadRequestTokenHttpException'          => 'referer',
+        'Contao\\CoreBundle\\Exception\\ForwardPageNotFoundHttpException'      => 'no_forward',
+        'Contao\\CoreBundle\\Exception\\IncompleteInstallationHttpException'   => 'incomplete',
+        'Contao\\CoreBundle\\Exception\\InsecureInstallationHttpException'     => 'insecure',
+        'Contao\\CoreBundle\\Exception\\MaintenanceModeActiveHttpException'    => 'unavailable',
+        'Contao\\CoreBundle\\Exception\\NoLayoutHttpException'                 => 'no_layout',
+        'Contao\\CoreBundle\\Exception\\NoPagesFoundHttpException'             => 'no_active',
+        'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException'     => 'no_page',
+        'Contao\\CoreBundle\\Exception\\RootNotFoundHttpException'             => 'no_root',
     ];
 
     /**
