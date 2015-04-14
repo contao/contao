@@ -217,6 +217,22 @@ class FrontendTemplate extends \Template
 
 
 	/**
+	 * Check whether there is an authenticated back end user
+	 *
+	 * @return boolean True if there is an authenticated back end user
+	 */
+	public function hasAuthenticatedBackendUser()
+	{
+		if (!isset($_COOKIE['BE_USER_AUTH']))
+		{
+			return false;
+		}
+
+		return Input::cookie('BE_USER_AUTH') == $this->getSessionHash('BE_USER_AUTH');
+	}
+
+
+	/**
 	 * Add the template output to the cache and add the cache headers
 	 */
 	protected function addToCache()

@@ -643,6 +643,31 @@ abstract class System
 
 
 	/**
+	 * Return the session hash
+	 *
+	 * @param string $strCookie The cookie name
+	 *
+	 * @return string The session hash
+	 */
+	public static function getSessionHash($strCookie)
+	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$strHash = $kernel->getContainer()->get('session')->getId();
+
+		if (!\Config::get('disableIpCheck'))
+		{
+			$strHash .= \Environment::get('ip');
+		}
+
+		$strHash .= $strCookie;
+
+		return sha1($strHash);
+	}
+
+
+	/**
 	 * Anonymize an IP address by overriding the last chunk
 	 *
 	 * @param string $strIp The IP address

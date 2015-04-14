@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -86,10 +85,7 @@ class BackendPreview extends \Backend
 				/** @var KernelInterface $kernel */
 				global $kernel;
 
-				/** @var SessionInterface $session */
-				$session = $kernel->getContainer()->get('session');
-
-				$strHash = sha1($session->getId() . (!\Config::get('disableIpCheck') ? \Environment::get('ip') : '') . 'FE_USER_AUTH');
+				$strHash = $this->getSessionHash('FE_USER_AUTH');
 
 				// Remove old sessions
 				$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
@@ -97,7 +93,7 @@ class BackendPreview extends \Backend
 
 				// Insert the new session
 				$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-							   ->execute($objUser->id, time(), 'FE_USER_AUTH', $session->getId(), \Environment::get('ip'), $strHash);
+							   ->execute($objUser->id, time(), 'FE_USER_AUTH', $kernel->getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
 
 				// Set the cookie
 				$this->setCookie('FE_USER_AUTH', $strHash, (time() + \Config::get('sessionTimeout')), null, null, false, true);

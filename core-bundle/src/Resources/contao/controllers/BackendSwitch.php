@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -56,14 +55,8 @@ class BackendSwitch extends \Backend
 			$this->getDatalistOptions();
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		/** @var SessionInterface $session */
-		$session = $kernel->getContainer()->get('session');
-
 		$strUser = '';
-		$strHash = sha1($session->getId() . (!\Config::get('disableIpCheck') ? \Environment::get('ip') : '') . 'FE_USER_AUTH');
+		$strHash = $this->getSessionHash('FE_USER_AUTH');
 
 		// Get the front end user
 		if (FE_USER_LOGGED_IN)
@@ -117,9 +110,12 @@ class BackendSwitch extends \Backend
 
 					if ($objUser !== null)
 					{
+						/** @var KernelInterface $kernel */
+						global $kernel;
+
 						// Insert the new session
 						$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-									   ->execute($objUser->id, $time, 'FE_USER_AUTH', $session->getId(), \Environment::get('ip'), $strHash);
+									   ->execute($objUser->id, $time, 'FE_USER_AUTH', $kernel->getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
 
 						// Set the cookie
 						$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);
