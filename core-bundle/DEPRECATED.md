@@ -1,6 +1,13 @@
 Deprecated features
 ===================
 
+### Contao class loader
+
+Even though we are still using the Contao class loader, it has been deprecated
+in favor of the Composer class loader. You should no longer use it and you can
+no longer use it to override arbitrary core classes.
+
+
 ### Using `$this` in configuration files
 
 Using `$this` in configuration files such as `config/config.php` or `dca/*.php`
