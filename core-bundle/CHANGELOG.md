@@ -1,8 +1,16 @@
 Contao change log
 =================
 
+Version 4.0.0-RC1 (2014-05-XX)
+------------------------------
+
+### Improved
+It is now possible to check for an authenticated back end user in a front end
+template using `$this->hasAuthenticatedBackendUser()`.
+
+
 Version 4.0.0-beta1 (2014-04-14)
----------------------------------
+--------------------------------
 
 ### Removed
 Removed the `show_help_message()` and `die_nicely()` functions.
