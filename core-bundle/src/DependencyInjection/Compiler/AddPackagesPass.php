@@ -66,82 +66,11 @@ class AddPackagesPass implements CompilerPassInterface
         $packages = [];
 
         foreach ($json as $package) {
-            $this->addVersion($package, $packages);
+            if (isset($package['version'])) {
+                $packages[$package['name']] = $package['version'];
+            }
         }
 
         return $packages;
-    }
-
-    /**
-     * Adds a version to the packages array.
-     *
-     * @param array $package  The package
-     * @param array $packages The packages array
-     */
-    private function addVersion(array $package, array &$packages)
-    {
-        if (true === $this->addNormalizedVersion($package, $packages)) {
-            return;
-        }
-
-        $this->addBranchAliasVersion($package, $packages);
-    }
-
-    /**
-     * Adds the normalized version.
-     *
-     * @param array $package  The package
-     * @param array $packages The packages array
-     *
-     * @return bool True if a version was found and added
-     */
-    private function addNormalizedVersion(array $package, array &$packages)
-    {
-        $version = substr($package['version_normalized'], 0, strrpos($package['version_normalized'], '.'));
-
-        if (!$this->isValidVersion($version)) {
-            return false;
-        }
-
-        $packages[$package['name']] = $version;
-
-        return true;
-    }
-
-    /**
-     * Adds the branch alias version.
-     *
-     * @param array $package  The package
-     * @param array $packages The packages array
-     *
-     * @return bool True if a version was found and added
-     */
-    private function addBranchAliasVersion(array $package, array &$packages)
-    {
-        if (!isset($package['extra']['branch-alias'][$package['version_normalized']])) {
-            return false;
-        }
-
-        $version = $package['extra']['branch-alias'][$package['version_normalized']];
-
-        if (!$this->isValidVersion($version)) {
-            return false;
-        }
-
-        $packages[$package['name']] = $version;
-
-        return true;
-    }
-
-    /**
-     * Validates a version number.
-     *
-     * @param string $version The version number
-     *
-     * @return bool True the version number is valid
-     */
-    private function isValidVersion($version)
-    {
-        return (bool) preg_match('/^[0-9]+\.[0-9]+\.([0-9]+|x-dev)$/', $version);
     }
 }

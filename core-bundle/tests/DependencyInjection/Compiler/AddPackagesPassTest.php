@@ -47,12 +47,11 @@ class AddPackagesPassTest extends TestCase
 
         $this->assertInternalType('array', $packages);
         $this->assertArrayHasKey('contao/test-bundle1', $packages);
-        $this->assertArrayNotHasKey('contao/test-bundle2', $packages);
-        $this->assertArrayHasKey('contao/test-bundle3', $packages);
-        $this->assertArrayNotHasKey('contao/test-bundle4', $packages);
+        $this->assertArrayHasKey('contao/test-bundle2', $packages);
+        $this->assertArrayNotHasKey('contao/test-bundle3', $packages);
 
         $this->assertEquals('1.0.0', $packages['contao/test-bundle1']);
-        $this->assertEquals('1.0.x-dev', $packages['contao/test-bundle3']);
+        $this->assertEquals('dev-develop', $packages['contao/test-bundle2']);
     }
 
     /**

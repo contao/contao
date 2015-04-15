@@ -1,29 +1,13 @@
 [
     {
         "name": "contao/test-bundle1",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0"
+        "version": "1.0.0"
     },
     {
         "name": "contao/test-bundle2",
-        "version_normalized": "dev-develop"
+        "version": "dev-develop"
     },
     {
-        "name": "contao/test-bundle3",
-        "version_normalized": "dev-develop",
-        "extra": {
-            "branch-alias": {
-                "dev-develop": "1.0.x-dev"
-            }
-        }
-    },
-    {
-        "name": "contao/test-bundle4",
-        "version_normalized": "dev-develop",
-        "extra": {
-            "branch-alias": {
-                "dev-develop": "invalid-dev"
-            }
-        }
+        "name": "contao/test-bundle3"
     }
 ]
