@@ -1,6 +1,6 @@
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ statusCode }} - {{ error.noActive }}
+    {{ statusCode }} {{ error.noActive }}
 {% endblock %}
 {% block matter %}
     <p>{{ error.noActivePages }}</p>

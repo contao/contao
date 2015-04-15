@@ -1,6 +1,6 @@
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ statusCode }} - {{ error.notFound }}
+    {{ statusCode }} {{ error.notFound }}
 {% endblock %}
 {% block matter %}
     <p>{{ error.pageNotFound }}</p>

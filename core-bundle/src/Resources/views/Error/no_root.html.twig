@@ -1,6 +1,6 @@
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ statusCode }} - {{ error.noRoot }}
+    {{ statusCode }} {{ error.noRoot }}
 {% endblock %}
 {% block matter %}
     <p>{{ error.noRootPage }}</p>

@@ -1,6 +1,6 @@
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ statusCode }} - {{ error.forbidden }}
+    {{ statusCode }} {{ error.forbidden }}
 {% endblock %}
 {% block matter %}
     <p>{{ error.notAuthenticated }}</p>

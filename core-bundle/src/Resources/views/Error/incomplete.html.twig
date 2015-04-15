@@ -1,6 +1,6 @@
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ statusCode }} - {{ error.incomplete }}
+    {{ statusCode }} {{ error.incomplete }}
 {% endblock %}
 {% block matter %}
     <p>{{ error.incompleteInstallation }}</p>
