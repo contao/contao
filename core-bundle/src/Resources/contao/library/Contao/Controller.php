@@ -1003,6 +1003,7 @@ abstract class Controller extends \System
 			exit;
 		}
 
+		$strLocation = ltrim($strLocation, '/');
 		$strLocation = str_replace('&amp;', '&', $strLocation);
 		$strLocation = static::replaceOldBePaths($strLocation);
 
