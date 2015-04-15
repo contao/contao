@@ -1,0 +1,11 @@
+services:
+    contao.referer_id.manager:
+         class: "%security.csrf.token_manager.class%"
+         public: false
+         arguments:
+            - "@contao.referer_id.token_generator"
+            - "@security.csrf.token_storage"
+
+    contao.referer_id.token_generator:
+         class: Contao\CoreBundle\RefererId\TokenGenerator
+         public: false

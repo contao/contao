@@ -1,0 +1,10 @@
+services:
+    contao.data_collector:
+        class: Contao\CoreBundle\DataCollector\ContaoDataCollector
+        public: false
+        arguments:
+            - "@service_container"
+            - "%kernel.bundles%"
+            - "%kernel.packages%"
+        tags:
+            - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }

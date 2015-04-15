@@ -1,0 +1,89 @@
+##
+# Listener priorities
+#
+# The priorities of the following listeners must be lower than the one of the
+# Symfony route listener (defaults to 32).
+#
+# - 30: ContainerScopeListener
+# - 28: RefererIdListener
+# - 26: InitializeSystemListener
+# - 24: ToggleViewListener
+# - 22: OutputFromCacheListener
+#
+# Session listener
+#
+# The priority of the session listener must be higher than the other listeners but
+# lower than the one of the Symfony session listener (defaults to 128).
+#
+# - 64: SessionListener
+#
+# Do not change the priorities unless you know what you are doing!
+##
+services:
+    contao.listener.add_to_search_index:
+        class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+    contao.listener.container_scope:
+        class: Contao\CoreBundle\EventListener\ContainerScopeListener
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+            - { name: kernel.event_listener, event: kernel.finish_request, method: onKernelFinishRequest, priority: -254 }
+
+    contao.listener.exception:
+        class: Contao\CoreBundle\EventListener\ExceptionListener
+        arguments:
+            - "%contao.pretty_error_screens%"
+            - "@templating"
+            - "@contao.adapter.config"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    contao.listener.initialize_system:
+        class: Contao\CoreBundle\EventListener\InitializeSystemListener
+        arguments:
+            - "@router"
+            - "@session"
+            - "%kernel.root_dir%"
+            - "@security.csrf.token_manager"
+            - "%contao.csrf_token_name%"
+            - "@contao.adapter.config"
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 26 }
+            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
+
+    contao.listener.output_from_cache:
+        class: Contao\CoreBundle\EventListener\OutputFromCacheListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 22 }
+
+    contao.listener.referer_id:
+        class: Contao\CoreBundle\EventListener\RefererIdListener
+        arguments:
+            - "@contao.referer_id.manager"
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
+
+    contao.listener.session:
+        class: Contao\CoreBundle\EventListener\SessionListener
+        arguments:
+            - "@session"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: registerContaoAttributeBags, priority: 64 }
+            - { name: kernel.event_listener, event: console.command, method: registerContaoAttributeBags, priority: 64 }
+
+    contao.listener.toggle_view:
+        class: Contao\CoreBundle\EventListener\ToggleViewListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 24 }

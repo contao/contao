@@ -41,7 +41,14 @@ class ContaoCoreExtension extends ConfigurableExtension
             new FileLocator(__DIR__ . '/../Resources/config')
         );
 
-        $loader->load('services.yml');
+        $loader->load('adapter.yml');
+        $loader->load('cache.yml');
+        $loader->load('collector.yml');
+        $loader->load('listener.yml');
+        $loader->load('referer.yml');
+        $loader->load('resources.yml');
+        $loader->load('routing.yml');
+        $loader->load('security.yml');
 
         $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
         $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);

@@ -1,0 +1,4 @@
+services:
+    contao.adapter.config:
+        class: Contao\CoreBundle\Adapter\ConfigAdapter
+        public: false
