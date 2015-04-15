@@ -1,0 +1,20 @@
+services:
+    contao.clearer.internal_cache:
+        class: Contao\CoreBundle\Cache\ContaoCacheClearer
+        public: false
+        tags:
+            - { name: kernel.cache_clearer }
+        arguments:
+            - '@filesystem'
+
+    contao.warmer.internal_cache:
+        class: Contao\CoreBundle\Cache\ContaoCacheWarmer
+        public: false
+        tags:
+            - { name: kernel.cache_warmer }
+        arguments:
+            - '@filesystem'
+            - '@contao.resource_finder'
+            - '@contao.resource_locator'
+            - '%kernel.root_dir%'
+            - '@doctrine.dbal.default_connection'
