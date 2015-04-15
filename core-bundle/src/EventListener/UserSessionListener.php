@@ -106,7 +106,8 @@ class UserSessionListener extends ScopeAwareListener
      */
     private function storeBackendSession(Request $request)
     {
-        if (!$this->checkStoreBackendSession($request)) {
+        if (!$this->checkShouldNotModifyBackendSession($request)) {
+            $this->storeSession();
             return;
         }
 
@@ -151,13 +152,13 @@ class UserSessionListener extends ScopeAwareListener
     }
 
     /**
-     * Check if we need to store the session in the back end.
+     * Check if we should not modify the session in the back end.
      *
      * @param Request $request
      *
      * @return bool
      */
-    private function checkStoreBackendSession(Request $request)
+    private function checkShouldNotModifyBackendSession(Request $request)
     {
         if (!$request->query->has('act')
             && !$request->query->has('key')
@@ -184,7 +185,8 @@ class UserSessionListener extends ScopeAwareListener
 
         $refererOld = $bag->get('referer');
 
-        if (!$this->checkStoreFrontendSession($request, $refererOld)) {
+        if (!$this->checkShouldNotModifyFrontendSession($request, $refererOld)) {
+            $this->storeSession();
             return;
         }
 
@@ -199,14 +201,14 @@ class UserSessionListener extends ScopeAwareListener
     }
 
     /**
-     * Check if we need to store the session in the front end.
+     * Check if we should not modify the session in the front end.
      *
      * @param Request $request
      * @param array   $refererOld
      *
      * @return bool
      */
-    private function checkStoreFrontendSession(
+    private function checkShouldNotModifyFrontendSession(
         Request $request,
         $refererOld = null
     ) {
