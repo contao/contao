@@ -220,7 +220,6 @@ class InitializeSystemListener extends ScopeAwareListener
 
         Input::initialize();
 
-        $this->configureErrorHandling();
         $this->setTimezone();
 
         // Set the mbstring encoding
@@ -333,20 +332,6 @@ class InitializeSystemListener extends ScopeAwareListener
         if (!$this->config->isComplete()) {
             throw new IncompleteInstallationHttpException(null, 'The installation has not been completed. Open the Contao install tool to continue.');
         }
-    }
-
-    /**
-     * Configures the error handling.
-     */
-    private function configureErrorHandling()
-    {
-        // Always show error messages if logged into the install tool (see #5001)
-        if (Input::cookie('TL_INSTALL_AUTH') && !empty($_SESSION['TL_INSTALL_AUTH']) && Input::cookie('TL_INSTALL_AUTH') == $_SESSION['TL_INSTALL_AUTH'] && $_SESSION['TL_INSTALL_EXPIRE'] > time()) {
-            $this->config->set('displayErrors', 1);
-        }
-
-        $this->iniSet('display_errors', ($this->config->get('displayErrors') ? 1 : 0));
-        error_reporting(($this->config->get('displayErrors') || $this->config->get('logErrors')) ? $this->container->getParameter('contao.error_level') : 0);
     }
 
     /**

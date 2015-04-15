@@ -238,11 +238,11 @@ class FrontendIndex extends \Frontend
 			{
 				case 'root':
 				case 'error_404':
-					return $objHandler->getResponse($pageId); // FIXME: throw new NotFoundHttpException()?
+					return $objHandler->getResponse($pageId);
 					break;
 
 				case 'error_403':
-					return $objHandler->getResponse($pageId, $objRootPage); // FIXME: throw new AccessDeniedHttpException()?
+					return $objHandler->getResponse($pageId, $objRootPage);
 					break;
 
 				default:
@@ -261,7 +261,7 @@ class FrontendIndex extends \Frontend
 			$GLOBALS['TL_JQUERY'] = $arrJquery;
 
 			/** @var \PageError404 $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['error_404'](); // FIXME: throw new NotFoundHttpException()?
+			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 
 			return $objHandler->getResponse($pageId, null, null, true);
 		}

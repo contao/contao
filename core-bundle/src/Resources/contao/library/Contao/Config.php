@@ -369,7 +369,7 @@ class Config
 	/**
 	 * Check whether a configuration value exists
 	 *
-	 * @param string $strKey The short key (e.g. "displayErrors")
+	 * @param string $strKey The short key
 	 *
 	 * @return boolean True if the configuration value exists
 	 */
@@ -382,7 +382,7 @@ class Config
 	/**
 	 * Return a configuration value
 	 *
-	 * @param string $strKey The short key (e.g. "displayErrors")
+	 * @param string $strKey The short key
 	 *
 	 * @return mixed|null The configuration value
 	 */
@@ -400,7 +400,7 @@ class Config
 	/**
 	 * Temporarily set a configuration value
 	 *
-	 * @param string $strKey   The short key (e.g. "displayErrors")
+	 * @param string $strKey   The short key
 	 * @param string $varValue The configuration value
 	 */
 	public static function set($strKey, $varValue)

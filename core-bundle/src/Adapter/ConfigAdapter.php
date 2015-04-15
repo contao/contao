@@ -85,7 +85,7 @@ class ConfigAdapter
     /**
      * Checks whether a configuration value exists.
      *
-     * @param string $key The short key (e.g. "displayErrors")
+     * @param string $key The short key
      *
      * @return bool True if the configuration value exists
      */
@@ -97,7 +97,7 @@ class ConfigAdapter
     /**
      * Returns a configuration value.
      *
-     * @param string $key The short key (e.g. "displayErrors")
+     * @param string $key The short key
      *
      * @return mixed|null The configuration value
      */
@@ -109,7 +109,7 @@ class ConfigAdapter
     /**
      * Temporarily sets a configuration value.
      *
-     * @param string $key   The short key (e.g. "displayErrors")
+     * @param string $key   The short key
      * @param string $value The configuration value
      */
     public function set($key, $value)

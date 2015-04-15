@@ -37,7 +37,6 @@ class BackendInstall extends \Backend
 		$this->import('Session');
 
 		\Config::set('showHelp', false);
-		\Config::set('displayErrors', false);
 
 		$this->setStaticUrls();
 

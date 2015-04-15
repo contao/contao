@@ -228,7 +228,6 @@ class ExceptionListener
         try {
             /** @var \PageError404 $pageHandler */
             $pageHandler = new $GLOBALS['TL_PTY']['error_404']();
-            // FIXME: introducing a contao_frontend_404 route and doing a subrequest on it might be more efficient
             $response    = $pageHandler->getResponse(false); // FIXME: the class requires a numeric $pageId
             $processing  = false;
 
