@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### Fixed
+Do not check the database driver in `Config::isComplete()` (see #203).
+
 ### Improved
 It is now possible to check for an authenticated back end user in a front end
 template using `$this->hasAuthenticatedBackendUser()`.

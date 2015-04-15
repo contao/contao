@@ -312,11 +312,6 @@ class Config
 			return false;
 		}
 
-		if ($this->get('dbDriver') == '')
-		{
-			return false;
-		}
-
 		return true;
 	}
 
