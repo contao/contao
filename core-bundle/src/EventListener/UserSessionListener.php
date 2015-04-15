@@ -115,38 +115,38 @@ class UserSessionListener extends ScopeAwareListener
         $refererId  = $request->attributes->get('_contao_referer_id');
         /** @var AttributeBagInterface $bag */
         $bag        = $this->getSessionBag();
-        $refererOld = $bag->get('referer');
+        $refererOld = $bag->get($key);
         $refererNew = [];
 
-        if (!is_array($refererOld[$key])
-            || !is_array($refererOld[$key][$refererId])
+        if (!is_array($refererOld)
+            || !is_array($refererOld[$refererId])
         ) {
-            $refererOld[$key][$refererId]['last'] = '';
+            $refererOld[$refererId]['last'] = '';
         }
 
-        while (count($refererOld[$key]) >= 25) {
-            array_shift($refererOld[$key]);
+        while (count($refererOld) >= 25) {
+            array_shift($refererOld);
         }
 
         $ref = $request->query->get('ref');
 
-        if ($ref != '' && isset($refererOld[$key][$ref])) {
-            if (!isset($refererOld[$key][$refererId])) {
-                $refererOld[$key][$refererId] = [];
+        if ($ref != '' && isset($refererOld[$ref])) {
+            if (!isset($refererOld[$refererId])) {
+                $refererOld[$refererId] = [];
             }
 
-            $refererNew[$key][$refererId]         = array_merge(
-                $refererOld[$key][$refererId],
-                $refererOld[$key][$ref]
+            $refererNew[$refererId]         = array_merge(
+                $refererOld[$refererId],
+                $refererOld[$ref]
             );
-            $refererNew[$key][$refererId]['last'] = $refererOld[$key][$ref]['current'];
-        } elseif (count($refererOld[$key]) > 1) {
-            $refererNew[$key][$refererId] = end($refererOld[$key]);
+            $refererNew[$refererId]['last'] = $refererOld[$ref]['current'];
+        } elseif (count($refererOld) > 1) {
+            $refererNew[$refererId] = end($refererOld);
         }
 
-        $refererNew[$key][$refererId]['current'] = $request->getRequestUri();
+        $refererNew[$refererId]['current'] = $request->getRequestUri();
 
-        $this->session->set('referer', $refererNew);
+        $bag->set($key, $refererNew);
 
         $this->storeSession();
     }
