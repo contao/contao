@@ -24,6 +24,20 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 class ContaoCoreExtension extends ConfigurableExtension
 {
     /**
+     * @var array
+     */
+    private $files = [
+        'adapter.yml',
+        'cache.yml',
+        'collector.yml',
+        'listener.yml',
+        'referer_id.yml',
+        'resources.yml',
+        'routing.yml',
+        'security.yml',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     public function getAlias()
@@ -41,14 +55,9 @@ class ContaoCoreExtension extends ConfigurableExtension
             new FileLocator(__DIR__ . '/../Resources/config')
         );
 
-        $loader->load('adapter.yml');
-        $loader->load('cache.yml');
-        $loader->load('collector.yml');
-        $loader->load('listener.yml');
-        $loader->load('referer.yml');
-        $loader->load('resources.yml');
-        $loader->load('routing.yml');
-        $loader->load('security.yml');
+        foreach ($this->files as $file) {
+            $loader->load($file);
+        }
 
         $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
         $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
