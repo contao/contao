@@ -15,11 +15,13 @@ use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -83,7 +85,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a Contao kernel.
      *
-     * @return Kernel The kernel object
+     * @return Kernel|\PHPUnit_Framework_MockObject_MockObject The kernel object
      */
     protected function mockKernel()
     {
@@ -159,7 +161,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @param string $url The URL to return
      *
-     * @return RouterInterface The router object
+     * @return RouterInterface|\PHPUnit_Framework_MockObject_MockObject The router object
      */
     protected function mockRouter($url)
     {
@@ -177,7 +179,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a CSRF token manager.
      *
-     * @return CsrfTokenManagerInterface The token manager object
+     * @return CsrfTokenManagerInterface|\PHPUnit_Framework_MockObject_MockObject The token manager object
      */
     protected function mockTokenManager()
     {
@@ -227,7 +229,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a Config adapter.
      *
-     * @return ConfigAdapter
+     * @return ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject The config adapter
      */
     protected function mockConfig()
     {
@@ -239,5 +241,27 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         ;
 
         return $config;
+    }
+
+    /**
+     * Mocks a Twig engine.
+     *
+     * @return TwigEngine|\PHPUnit_Framework_MockObject_MockObject The Twig engine
+     */
+    protected function mockTwigEngine()
+    {
+        $engine = $this->getMock('Symfony\\Bundle\\TwigBundle\\TwigEngine', ['exists', 'renderResponse']);
+
+        $engine->expects($this->any())
+            ->method('exists')
+            ->willReturn(true)
+        ;
+
+        $engine->expects($this->any())
+            ->method('renderResponse')
+            ->willReturn(new Response())
+        ;
+
+        return $engine;
     }
 }

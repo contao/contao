@@ -2,12 +2,12 @@
 
 namespace Contao\Fixtures;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class PageError404
 {
-    public static $getResponse;
-
-    public function getResponse($pageId, $strDomain = null, $strHost = null, $blnUnusedGet = false)
+    public function getResponse()
     {
-        return call_user_func(static::$getResponse, $pageId, $strDomain, $strHost, $blnUnusedGet);
+        return new Response('', 404);
     }
 }

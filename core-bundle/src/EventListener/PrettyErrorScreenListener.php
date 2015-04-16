@@ -172,26 +172,25 @@ class PrettyErrorScreenListener
      */
     private function checkExceptionChain(GetResponseForExceptionEvent $event)
     {
-        $template  = null;
-        $exception = $event->getException();
+        $template   = null;
+        $exception  = $event->getException();
+        $statusCode = 500;
 
+        // Check the status code
+        if ($exception instanceof HttpException) {
+            $statusCode = $exception->getStatusCode();
+        }
+
+        // Look for a template
         do {
             if (null !== ($template = $this->getTemplateForException($exception))) {
                 break;
             }
         } while (null !== ($exception = $exception->getPrevious()));
 
-        if (null === $template) {
-            return;
+        if (null !== $template) {
+            $event->setResponse($this->renderTemplate($template, $statusCode, $event->getRequest()->getBasePath()));
         }
-
-        $statusCode = 500;
-
-        if ($exception instanceof HttpException) {
-            $statusCode = $exception->getStatusCode();
-        }
-
-        $event->setResponse($this->renderTemplate($template, $statusCode, $event->getRequest()->getBasePath()));
     }
 
     /**

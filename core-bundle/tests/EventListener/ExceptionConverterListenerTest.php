@@ -252,4 +252,24 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Symfony\\Component\\HttpKernel\\Exception\\ServiceUnavailableHttpException', $exception);
         $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\ServiceUnavailableException', $exception->getPrevious());
     }
+
+    /**
+     * Tests converting an unknown exception.
+     */
+    public function testConvertUnknownException()
+    {
+        $event = new GetResponseForExceptionEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new \RuntimeException()
+        );
+
+        $listener = new ExceptionConverterListener();
+        $listener->onKernelException($event);
+
+        $exception = $event->getException();
+
+        $this->assertInstanceOf('RuntimeException', $exception);
+    }
 }
