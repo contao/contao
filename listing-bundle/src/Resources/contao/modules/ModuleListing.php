@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 
 
 /**
@@ -152,7 +152,7 @@ class ModuleListing extends \Module
 		// Thanks to Hagen Klemp (see #4485)
 		if ($per_page > 0 && ($page < 1 || $page > max(ceil($objTotal->count/$per_page), 1)))
 		{
-			throw new NotFoundHttpException('Page not found');
+			throw new PageNotFoundException('Page not found');
 		}
 
 
