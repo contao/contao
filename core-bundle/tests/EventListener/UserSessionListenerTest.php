@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests the UserSessionListener class.
@@ -35,19 +35,29 @@ class UserSessionListenerTest extends TestCase
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\UserSessionListener', $listener);
     }
 
+    /**
+     * Test session bag is never requested when having no master request.
+     */
     public function testListenerSkipIfNoMasterRequestOnKernelRequest()
     {
         $request = new Request();
         $responseEvent = new GetResponseEvent(
             $this->mockKernel(),
             $request,
-            Kernel::SUB_REQUEST
+            HttpKernelInterface::SUB_REQUEST
         );
-        $listener = $this->getListener();
 
-        $this->assertNull($listener->onKernelRequest($responseEvent));
+        $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
+        $session->expects($this->never())->method('getBag');
+
+        $listener = $this->getListener($session);
+        $listener->onKernelRequest($responseEvent);
     }
 
+    /**
+     * Test neither session bag nor doctrine is requested when
+     * having no master request.
+     */
     public function testListenerSkipIfNoMasterRequestOnKernelResponse()
     {
         $request = new Request();
@@ -55,20 +65,37 @@ class UserSessionListenerTest extends TestCase
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
             $request,
-            Kernel::SUB_REQUEST,
+            HttpKernelInterface::SUB_REQUEST,
             $response
         );
-        $listener = $this->getListener();
+        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
+        $session->expects($this->never())->method('getBag');
+        $connection = $this->getMock('Doctrine\\DBAL\\Connection');
+        $connection->expects($this->never())->method('prepare');
+        $connection->expects($this->never())->method('excecute');
 
-        $this->assertNull($listener->onKernelResponse($responseEvent));
+        $listener = $this->getListener($session, $connection);
+
+        $listener->onKernelResponse($responseEvent);
     }
 
 
-    private function getListener()
+    private function getListener($session = null, $connection = null)
     {
-        return new UserSessionListener(
-            $this->mockSession(),
-            $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false)
-        );
+        if (null === $session) {
+            $session = $this->mockSession();
+        }
+
+        if (null === $connection) {
+            $connection = $this->getMock(
+                'Doctrine\\DBAL\\Connection',
+                [],
+                [],
+                '',
+                false
+            );
+        }
+
+        return new UserSessionListener($session, $connection);
     }
 }
