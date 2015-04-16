@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 
 
 /**
@@ -138,7 +138,7 @@ class ModuleEventlist extends \Events
 		}
 		catch (\OutOfBoundsException $e)
 		{
-			throw new NotFoundHttpException('Page not found');
+			throw new PageNotFoundException('Page not found');
 		}
 
 		list($strBegin, $strEnd, $strEmpty) = $this->getDatesFromFormat($this->Date, $this->cal_format);
@@ -202,7 +202,7 @@ class ModuleEventlist extends \Events
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
 			{
-				throw new NotFoundHttpException('Page not found');
+				throw new PageNotFoundException('Page not found');
 			}
 
 			$offset = ($page - 1) * $this->perPage;
