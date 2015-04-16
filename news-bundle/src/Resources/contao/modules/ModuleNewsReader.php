@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 
 
 /**
@@ -102,7 +102,7 @@ class ModuleNewsReader extends \ModuleNews
 
 		if (null === $objArticle)
 		{
-			throw new NotFoundHttpException('Page not found');
+			throw new PageNotFoundException('Page not found');
 		}
 
 		$arrArticle = $this->parseArticle($objArticle);

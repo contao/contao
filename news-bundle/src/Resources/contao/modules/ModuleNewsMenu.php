@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 
 
 /**
@@ -247,7 +247,7 @@ class ModuleNewsMenu extends \ModuleNews
 		}
 		catch (\OutOfBoundsException $e)
 		{
-			throw new NotFoundHttpException('Page not found');
+			throw new PageNotFoundException('Page not found');
 		}
 
 		$intYear = date('Y', $this->Date->tstamp);
