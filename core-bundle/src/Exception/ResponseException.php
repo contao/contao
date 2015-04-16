@@ -35,7 +35,7 @@ class ResponseException extends \RuntimeException
     {
         $this->response = $response;
 
-        parent::__construct($response->getContent(), 0, $previous);
+        parent::__construct('This exception has no message. Use $exception->getResponse() instead.', 0, $previous);
     }
 
     /**
