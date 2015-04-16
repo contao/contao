@@ -85,6 +85,10 @@ class PrettyErrorScreenListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
+        if (!$this->prettyErrorScreens) {
+            return;
+        }
+
         $exception = $event->getException();
 
         switch (true) {
@@ -103,6 +107,10 @@ class PrettyErrorScreenListener
 
             case $exception instanceof ServiceUnavailableHttpException:
                 $this->renderMaintenanceScreen($event);
+                break;
+
+            default:
+                $event->setResponse($this->renderErrorTemplate($event));
                 break;
         }
     }
