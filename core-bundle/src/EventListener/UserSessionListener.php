@@ -115,27 +115,17 @@ class UserSessionListener extends ScopeAwareListener
         $refererId  = $request->attributes->get('_contao_referer_id');
         /** @var AttributeBagInterface $bag */
         $bag        = $this->getSessionBag();
-        $refererOld = $bag->get($key);
+        $refererOld = $this->prepareBackendReferer($bag->get($key), $refererId);
         $refererNew = [];
 
-        if (!is_array($refererOld)
-            || !is_array($refererOld[$refererId])
-        ) {
-            $refererOld[$refererId]['last'] = '';
-        }
+        $ref = $request->query->get('ref', '');
 
-        while (count($refererOld) >= 25) {
-            array_shift($refererOld);
-        }
-
-        $ref = $request->query->get('ref');
-
-        if ($ref != '' && isset($refererOld[$ref])) {
+        if ('' !== $ref && isset($refererOld[$ref])) {
             if (!isset($refererOld[$refererId])) {
                 $refererOld[$refererId] = [];
             }
 
-            $refererNew[$refererId]         = array_merge(
+            $refererNew[$refererId] = array_merge(
                 $refererOld[$refererId],
                 $refererOld[$ref]
             );
@@ -171,6 +161,32 @@ class UserSessionListener extends ScopeAwareListener
         }
 
         return false;
+    }
+
+    /**
+     * Prepares the back end referer array.
+     *
+     * @param array|null $refererOld
+     * @param string     $refererId
+     *
+     * @return array
+     */
+    private function prepareBackendReferer($refererOld = null, $refererId)
+    {
+        if (!is_array($refererOld)
+            || !is_array($refererOld[$refererId])
+        ) {
+            $refererOld = [];
+            $refererOld[$refererId] = [];
+            $refererOld[$refererId]['last'] = '';
+        }
+
+        // Make sure we never have more than 25 different referer ids
+        while (count($refererOld) >= 25) {
+            array_shift($refererOld);
+        }
+
+        return $refererOld;
     }
 
     /**
