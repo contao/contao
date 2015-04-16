@@ -49,6 +49,7 @@ class PrettyErrorScreenListener
      * @var array
      */
     private $mapper = [
+        'Contao\\CoreBundle\\Exception\\AccessDeniedException'           => 'access_denied',
         'Contao\\CoreBundle\\Exception\\ForwardPageNotFoundException'    => 'forward_page_not_found',
         'Contao\\CoreBundle\\Exception\\IncompleteInstallationException' => 'incomplete_installation',
         'Contao\\CoreBundle\\Exception\\InsecureInstallationException'   => 'insecure_installation',
@@ -56,6 +57,7 @@ class PrettyErrorScreenListener
         'Contao\\CoreBundle\\Exception\\NoActivePageFoundException'      => 'no_active_page_found',
         'Contao\\CoreBundle\\Exception\\NoLayoutSpecifiedException'      => 'no_layout_specified',
         'Contao\\CoreBundle\\Exception\\NoRootPageFoundException'        => 'no_root_page_found',
+        'Contao\\CoreBundle\\Exception\\PageNotFoundException'           => 'page_not_found',
         'Contao\\CoreBundle\\Exception\\ServiceUnavailableException'     => 'service_unavailable',
     ];
 
@@ -86,7 +88,7 @@ class PrettyErrorScreenListener
 
         switch (true) {
             case $exception instanceof AccessDeniedHttpException:
-                $this->render403Page($event);
+                $this->renderErrorScreen(403, $event);
                 break;
 
             case $exception instanceof BadRequestHttpException:
@@ -95,7 +97,7 @@ class PrettyErrorScreenListener
                 break;
 
             case $exception instanceof NotFoundHttpException:
-                $this->render404Page($event);
+                $this->renderErrorScreen(404, $event);
                 break;
 
             case $exception instanceof ServiceUnavailableHttpException:
@@ -105,16 +107,12 @@ class PrettyErrorScreenListener
     }
 
     /**
-     * Tries to render a Contao 403 page.
+     * Renders the error screen.
      *
      * @param GetResponseForExceptionEvent $event The event object
      */
-    private function render403Page(GetResponseForExceptionEvent $event)
+    private function renderErrorScreen($type, GetResponseForExceptionEvent $event)
     {
-        if (!isset($GLOBALS['TL_PTY']['error_403']) || !class_exists($GLOBALS['TL_PTY']['error_403'])) {
-            return;
-        }
-
         static $processing;
 
         if (true === $processing) {
@@ -123,41 +121,38 @@ class PrettyErrorScreenListener
 
         $processing = true;
 
-        /** @var \PageError403 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY']['error_403']();
-        $event->setResponse($pageHandler->getResponse(false)); // FIXME: the class requires a numeric $pageId
-
-        // FIXME: fallback to a template if there is no 403 page
+        if (null !== ($response = $this->renderPageHandler($type, $event))) {
+            $event->setResponse($response);
+        } else {
+            $this->checkExceptionChain($event);
+        }
 
         $processing  = false;
     }
 
     /**
-     * Tries to render a Contao 404 page.
+     * Renders a Contao page handler.
      *
      * @param GetResponseForExceptionEvent $event The event object
+     *
+     * @return Response|null The response object or null
      */
-    private function render404Page(GetResponseForExceptionEvent $event)
+    private function renderPageHandler($type, GetResponseForExceptionEvent $event)
     {
-        if (!isset($GLOBALS['TL_PTY']['error_404']) || !class_exists($GLOBALS['TL_PTY']['error_404'])) {
-            return;
+        $type = "error_$type";
+
+        if (!isset($GLOBALS['TL_PTY'][$type]) || !class_exists($GLOBALS['TL_PTY'][$type])) {
+            return null;
         }
 
-        static $processing;
+        /** @var \PageError403 $pageHandler */
+        $pageHandler = new $GLOBALS['TL_PTY'][$type]();
 
-        if (true === $processing) {
-            return;
+        try {
+            return $pageHandler->getResponse(false); // FIXME: the class requires a numeric $pageId
+        } catch (\Exception $e) {
+            return null;
         }
-
-        $processing = true;
-
-        /** @var \PageError404 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY']['error_404']();
-        $event->setResponse($pageHandler->getResponse(false)); // FIXME: the class requires a numeric $pageId
-
-        // FIXME: fallback to a template if there is no 404 page
-
-        $processing  = false;
     }
 
     /**
@@ -181,10 +176,7 @@ class PrettyErrorScreenListener
         $exception = $event->getException();
 
         do {
-            $class = get_class($exception);
-
-            if (isset($this->mapper[$class])) {
-                $template = $this->mapper[$class];
+            if (null !== ($template = $this->getTemplateForException($exception))) {
                 break;
             }
         } while (null !== ($exception = $exception->getPrevious()));
@@ -200,6 +192,24 @@ class PrettyErrorScreenListener
         }
 
         $event->setResponse($this->renderTemplate($template, $statusCode, $event->getRequest()->getBasePath()));
+    }
+
+    /**
+     * Maps an exception to a template.
+     *
+     * @param \Exception $exception The exception object
+     *
+     * @return string|null The template name or null.
+     */
+    private function getTemplateForException(\Exception $exception)
+    {
+        $class = get_class($exception);
+
+        if (isset($this->mapper[$class])) {
+            return $this->mapper[$class];
+        }
+
+        return null;
     }
 
     /**
