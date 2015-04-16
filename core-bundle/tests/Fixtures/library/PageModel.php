@@ -2,10 +2,16 @@
 
 namespace Contao\Fixtures;
 
-use Contao\Result;
-
 class PageModel
 {
+    private $data;
+    private $index = -1;
+
+    protected function __construct(array $data)
+    {
+        $this->data = $data;
+    }
+
     public static function findPublishedRootPages()
     {
         $page1           = new \stdClass();
@@ -18,6 +24,20 @@ class PageModel
         $page2->fallback = '';
         $page2->language = 'en';
 
-        return new Result([$page1, $page2]);
+        return new self([$page1, $page2]);
+    }
+
+    public function __get($key)
+    {
+        return $this->data[$this->index]->$key;
+    }
+
+    public function next()
+    {
+        if (++$this->index >= count($this->data)) {
+            return false;
+        }
+
+        return true;
     }
 }
