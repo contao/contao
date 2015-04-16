@@ -133,11 +133,11 @@ class PrettyErrorScreenListener
     /**
      * Renders a Contao page handler.
      *
-     * @param GetResponseForExceptionEvent $event The event object
+     * @param string $type The error type
      *
      * @return Response|null The response object or null
      */
-    private function renderPageHandler($type, GetResponseForExceptionEvent $event)
+    private function renderPageHandler($type)
     {
         $type = "error_$type";
 
