@@ -28,6 +28,16 @@ class ResponseExceptionTest extends TestCase
     {
         $exception = new ResponseException(new Response('Hello world'));
 
+        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\ResponseException', $exception);
+    }
+
+    /**
+     * Tests the getResponse() method.
+     */
+    public function testGetResponse()
+    {
+        $exception = new ResponseException(new Response('Hello world'));
+
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $exception->getResponse());
         $this->assertEquals(200, $exception->getResponse()->getStatusCode());
         $this->assertEquals('Hello world', $exception->getResponse()->getContent());
