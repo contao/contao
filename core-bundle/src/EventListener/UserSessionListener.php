@@ -65,7 +65,6 @@ class UserSessionListener extends ScopeAwareListener
             return;
         }
 
-        /** @var AttributeBagInterface $bag */
         $bag     = $this->getSessionBag();
         $session = $this->getUserObject()->session;
 
@@ -113,7 +112,6 @@ class UserSessionListener extends ScopeAwareListener
 
         $key        = $request->query->has('popup') ? 'popupReferer' : 'referer';
         $refererId  = $request->attributes->get('_contao_referer_id');
-        /** @var AttributeBagInterface $bag */
         $bag        = $this->getSessionBag();
         $refererOld = $this->prepareBackendReferer($bag->get($key), $refererId);
         $refererNew = [];
@@ -196,7 +194,6 @@ class UserSessionListener extends ScopeAwareListener
      */
     private function storeFrontendSession(Request $request)
     {
-        /** @var AttributeBagInterface $bag */
         $bag = $this->getSessionBag();
 
         $refererOld = $bag->get('referer');
