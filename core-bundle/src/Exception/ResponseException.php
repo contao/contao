@@ -13,25 +13,38 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Sends a response and stops the program flow.
+ * Stores a response object.
  *
  * @author Christian Schiffler <https://github.com/discordier>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ResponseException extends AbstractResponseException
+class ResponseException extends \RuntimeException
 {
+    /**
+     * @var Response
+     */
+    private $response;
+
     /**
      * Constructor.
      *
-     * @param mixed $response The response string or object
-     * @param int   $status   The response status code (defaults to 204)
-     * @param array $headers  An array of response headers
+     * @param Response   $response The Response object
+     * @param \Exception $previous The previous exception
      */
-    public function __construct($response, $status = 200, $headers = [])
+    public function __construct(Response $response, \Exception $previous = null)
     {
-        if (!$response instanceof Response) {
-            $response = new Response($response, $status, $headers);
-        }
+        $this->response = $response;
 
-        parent::__construct($response);
+        parent::__construct($response->getContent(), 0, $previous);
+    }
+
+    /**
+     * Returns the response object.
+     *
+     * @return Response The response object
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 }

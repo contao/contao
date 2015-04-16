@@ -13,21 +13,22 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Sends a redirect response and stops the progam flow.
+ * Initializes a response exception with a redirect response.
  *
  * @author Christian Schiffler <https://github.com/discordier>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
-class RedirectResponseException extends AbstractResponseException
+class RedirectResponseException extends ResponseException
 {
     /**
      * Constructor.
      *
-     * @param string $location The target URL
-     * @param int    $status   The response status code (defaults to 204)
-     * @param array  $headers  An array of response headers
+     * @param string     $location The target URL
+     * @param int        $status   The response status code (defaults to 204)
+     * @param \Exception $previous The previous exception
      */
-    public function __construct($location, $status = 303, $headers = [])
+    public function __construct($location, $status = 303, \Exception $previous = null)
     {
-        parent::__construct(new RedirectResponse($location, $status, $headers));
+        parent::__construct(new RedirectResponse($location, $status), $previous);
     }
 }

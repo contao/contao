@@ -86,6 +86,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 28 }
 
+    contao.listener.response_exception:
+        class: Contao\CoreBundle\EventListener\ResponseExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
     contao.listener.session:
         class: Contao\CoreBundle\EventListener\SessionListener
         arguments:

@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Test\Exception;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests the ResponseException class.
@@ -25,7 +26,7 @@ class ResponseExceptionTest extends TestCase
      */
     public function testInstantiation()
     {
-        $exception = new ResponseException('Hello world');
+        $exception = new ResponseException(new Response('Hello world'));
 
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $exception->getResponse());
         $this->assertEquals(200, $exception->getResponse()->getStatusCode());

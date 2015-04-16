@@ -158,7 +158,7 @@ class Ajax extends \Backend
 					if ($e->getCode() == 0)
 					{
 						\System::loadLanguageFile('tl_maintenance');
-						throw new ResponseException('<p class="tl_error">' . $GLOBALS['TL_LANG']['tl_maintenance']['notWriteable'] . '</p>');
+						throw new ResponseException(new Response('<p class="tl_error">' . $GLOBALS['TL_LANG']['tl_maintenance']['notWriteable'] . '</p>'));
 					}
 				}
 
@@ -206,11 +206,11 @@ class Ajax extends \Backend
 		{
 			// Load nodes of the page structure tree
 			case 'loadStructure':
-				throw new ResponseException($dc->ajaxTreeView($this->strAjaxId, intval(\Input::post('level'))));
+				throw new ResponseException(new Response($dc->ajaxTreeView($this->strAjaxId, intval(\Input::post('level')))));
 
 			// Load nodes of the file manager tree
 			case 'loadFileManager':
-				throw new ResponseException($dc->ajaxTreeView(\Input::post('folder', true), intval(\Input::post('level'))));
+				throw new ResponseException(new Response($dc->ajaxTreeView(\Input::post('folder', true), intval(\Input::post('level')))));
 
 			// Load nodes of the page tree
 			case 'loadPagetree':
@@ -222,7 +222,7 @@ class Ajax extends \Backend
 				/** @var \PageSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, null, $strField, $dc->table, $dc));
 
-				throw new ResponseException($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), intval(\Input::post('level'))));
+				throw new ResponseException(new Response($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), intval(\Input::post('level')))));
 
 			// Load nodes of the file tree
 			case 'loadFiletree':
@@ -237,10 +237,10 @@ class Ajax extends \Backend
 				// Load a particular node
 				if (\Input::post('folder', true) != '')
 				{
-					throw new ResponseException($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), intval(\Input::post('level'))));
+					throw new ResponseException(new Response($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), intval(\Input::post('level')))));
 				}
 
-				throw new ResponseException($objWidget->generate());
+				throw new ResponseException(new Response($objWidget->generate()));
 
 			// Reload the page/file picker
 			case 'reloadPagetree':
@@ -330,7 +330,7 @@ class Ajax extends \Backend
 				/** @var \FileTree|\PageTree $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
-				throw new ResponseException($objWidget->generate());
+				throw new ResponseException(new Response($objWidget->generate()));
 
 			// Feature/unfeature an element
 			case 'toggleFeatured':
@@ -375,7 +375,7 @@ class Ajax extends \Backend
 
 						if (\Input::post('load'))
 						{
-							throw new ResponseException($dc->edit(false, \Input::post('id')));
+							throw new ResponseException(new Response($dc->edit(false, \Input::post('id'))));
 						}
 					}
 				}
@@ -388,7 +388,7 @@ class Ajax extends \Backend
 					{
 						\Config::set(\Input::post('field'), $val);
 
-						throw new ResponseException($dc->edit(false, \Input::post('id')));
+						throw new ResponseException(new Response($dc->edit(false, \Input::post('id'))));
 					}
 				}
 

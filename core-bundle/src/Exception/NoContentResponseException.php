@@ -13,20 +13,19 @@ namespace Contao\CoreBundle\Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Sends an empty response and stops the program flow.
+ * Initializes a response exception with an empty response.
  *
- * @author Christian Schiffler <https://github.com/discordier>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
-class NoContentResponseException extends AbstractResponseException
+class NoContentResponseException extends ResponseException
 {
     /**
      * Constructor.
      *
-     * @param int   $status  The response status code (defaults to 204)
-     * @param array $headers An array of response headers
+     * @param \Exception $previous The previous exception
      */
-    public function __construct($status = 204, $headers = [])
+    public function __construct(\Exception $previous = null)
     {
-        parent::__construct(new Response('', $status, $headers));
+        parent::__construct(new Response('', 204), $previous);
     }
 }
