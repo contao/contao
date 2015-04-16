@@ -15,7 +15,6 @@ use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\DcaExtractor;
-use Contao\Environment;
 use Contao\PageModel;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\Config\FileLocator;
