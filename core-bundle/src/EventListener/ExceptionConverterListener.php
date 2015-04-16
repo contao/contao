@@ -42,7 +42,7 @@ class ExceptionConverterListener
     ];
 
     /**
-     * Adds the referer ID to the request.
+     * Maps known exceptions to HTTP exceptions.
      *
      * @param GetResponseForExceptionEvent $event The event object
      */

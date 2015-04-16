@@ -45,6 +45,8 @@ class ResponseException extends \RuntimeException
      */
     public function getResponse()
     {
+        $this->response->headers->set('X-Status-Code', $this->response->getStatusCode());
+
         return $this->response;
     }
 }

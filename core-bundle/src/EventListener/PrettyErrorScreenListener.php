@@ -26,6 +26,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 /**
  * Renders pretty error screens for exceptions.
  *
+ * @author Christian Schiffler <https://github.com/discordier>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PrettyErrorScreenListener
