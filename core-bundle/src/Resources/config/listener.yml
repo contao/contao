@@ -17,6 +17,14 @@
 #
 # - 64: SessionListener
 #
+# Exception listener
+#
+# The priority of the exception listeners must be higher than the one of the
+# Twig exception listener (defaults to 0).
+#
+# - 64: ExceptionConverterListener
+# - 32: PrettyErrorScreensListener
+#
 # Do not change the priorities unless you know what you are doing!
 ##
 services:
@@ -36,7 +44,7 @@ services:
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
         tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 254 }
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 64 }
 
     contao.listener.initialize_system:
         class: Contao\CoreBundle\EventListener\InitializeSystemListener
@@ -67,7 +75,7 @@ services:
             - "@templating"
             - "@contao.adapter.config"
         tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 32 }
 
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
