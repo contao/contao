@@ -141,7 +141,7 @@ class PrettyErrorScreenListener
 
         $processing = true;
 
-        if (null !== ($response = $this->renderPageHandler($type, $event))) {
+        if (null !== ($response = $this->renderPageHandler($type))) {
             $event->setResponse($response);
         } else {
             $this->renderErrorScreenByException($event);
