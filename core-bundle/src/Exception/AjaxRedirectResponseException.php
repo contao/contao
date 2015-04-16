@@ -27,7 +27,7 @@ class AjaxRedirectResponseException extends ResponseException
      * @param int        $status   The response status code (defaults to 204)
      * @param \Exception $previous The previous exception
      */
-    public function __construct($location, $status = 303, \Exception $previous = null)
+    public function __construct($location, $status = 204, \Exception $previous = null)
     {
         parent::__construct(new Response($location, $status, ['X-Ajax-Location' => $location]), $previous);
     }
