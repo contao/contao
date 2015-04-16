@@ -159,7 +159,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     {
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $path = $prepend . '/' . $file->getRelativePath();
+            $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
             $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
         }
     }
@@ -206,11 +206,11 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function validateSymlink($source, $target, $rootDir)
     {
-        if ($source == '') {
+        if ('' === $source) {
             throw new \InvalidArgumentException('The symlink source must not be empty.');
         }
 
-        if ($target == '') {
+        if ('' === $target) {
             throw new \InvalidArgumentException('The symlink target must not be empty.');
         }
 
