@@ -55,8 +55,8 @@ class ExceptionConverterListener
             return;
         }
 
-        if (null !== ($responseException = $this->convertToHttpException($exception, $this->mapper[$class]))) {
-            $event->setException($responseException);
+        if (null !== ($httpException = $this->convertToHttpException($exception, $this->mapper[$class]))) {
+            $event->setException($httpException);
         }
     }
 
