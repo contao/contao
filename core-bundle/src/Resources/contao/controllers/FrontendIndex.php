@@ -10,10 +10,10 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\MaintenanceModeActiveHttpException;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**
@@ -43,7 +43,7 @@ class FrontendIndex extends \Frontend
 			// Maintenance mode (see #4561 and #6353)
 			if (\Config::get('maintenanceMode'))
 			{
-				throw new MaintenanceModeActiveHttpException(null, 'This site is currently down for maintenance. Please come back later.');
+				throw new ServiceUnavailableException('This site is currently down for maintenance. Please come back later.');
 			}
 		}
 	}
@@ -75,7 +75,7 @@ class FrontendIndex extends \Frontend
 		elseif ($pageId === false)
 		{
 			$this->User->authenticate();
-			throw new NotFoundHttpException('Page not found');
+			throw new PageNotFoundException('Page not found');
 		}
 
 		// Get the current page object(s)
@@ -139,7 +139,7 @@ class FrontendIndex extends \Frontend
 		if ($objPage === null || ($objPage instanceof \Model\Collection && $objPage->count() != 1))
 		{
 			$this->User->authenticate();
-			throw new NotFoundHttpException('Page not found');
+			throw new PageNotFoundException('Page not found');
 		}
 
 		// Make sure $objPage is a Model
@@ -152,7 +152,7 @@ class FrontendIndex extends \Frontend
 		if ($objPage->alias != '' && $pageId == $objPage->id)
 		{
 			$this->User->authenticate();
-			throw new NotFoundHttpException('Page not found');
+			throw new PageNotFoundException('Page not found');
 		}
 
 		// Load a website root page object (will redirect to the first active regular page)
@@ -183,14 +183,14 @@ class FrontendIndex extends \Frontend
 		// Do not try to load the 404 page, it can cause an infinite loop!
 		if (!BE_USER_LOGGED_IN && !$objPage->rootIsPublic)
 		{
-			throw new NotFoundHttpException('Page not found');
+			throw new PageNotFoundException('Page not found');
 		}
 
 		// Check wether the language matches the root page language
 		if (\Config::get('addLanguageToUrl') && \Input::get('language') != $objPage->rootLanguage)
 		{
 			$this->User->authenticate();
-			throw new NotFoundHttpException('Page not found');
+			throw new PageNotFoundException('Page not found');
 		}
 
 		// Check whether there are domain name restrictions
@@ -200,14 +200,14 @@ class FrontendIndex extends \Frontend
 			if ($objPage->domain != \Environment::get('host'))
 			{
 				$this->User->authenticate();
-				throw new NotFoundHttpException('Page not found');
+				throw new PageNotFoundException('Page not found');
 			}
 		}
 
 		// Authenticate the user
 		if (!$this->User->authenticate() && $objPage->protected && !BE_USER_LOGGED_IN)
 		{
-			throw new AccessDeniedHttpException('Access denied');
+			throw new AccessDeniedException('Access denied');
 		}
 
 		// Check the user groups if the page is protected
@@ -218,7 +218,7 @@ class FrontendIndex extends \Frontend
 			if (!is_array($arrGroups) || empty($arrGroups) || !count(array_intersect($arrGroups, $this->User->groups)))
 			{
 				$this->log('Page "' . $pageId . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
-				throw new AccessDeniedHttpException('Access denied');
+				throw new AccessDeniedException('Access denied');
 			}
 		}
 

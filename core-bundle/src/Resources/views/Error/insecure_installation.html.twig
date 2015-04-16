@@ -1,6 +1,6 @@
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ statusCode }} {{ error.error }}
+    {{ error.insecure }}
 {% endblock %}
 {% block matter %}
     <p>{{ error.insecureRoot }}</p>

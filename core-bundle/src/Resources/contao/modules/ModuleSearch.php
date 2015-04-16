@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -240,7 +240,7 @@ class ModuleSearch extends \Module
 				// Do not index or cache the page if the page number is outside the range
 				if ($page < 1 || $page > max(ceil($count/$per_page), 1))
 				{
-					throw new NotFoundHttpException('Page not found');
+					throw new PageNotFoundException('Page not found');
 				}
 
 				$from = (($page - 1) * $per_page) + 1;

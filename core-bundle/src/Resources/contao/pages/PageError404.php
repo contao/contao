@@ -10,9 +10,9 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\ForwardPageNotFoundHttpException;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**
@@ -149,7 +149,7 @@ class PageError404 extends \Frontend
 		// Die if there is no page at all
 		if (null === $obj404)
 		{
-			throw new NotFoundHttpException('Page not found');
+			throw new PageNotFoundException('Page not found');
 		}
 
 		// Forward to another page
@@ -160,7 +160,7 @@ class PageError404 extends \Frontend
 			if (null === $objNextPage)
 			{
 				$this->log('Forward page ID "' . $obj404->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
-				throw new ForwardPageNotFoundHttpException('Forward page not found');
+				throw new ForwardPageNotFoundException('Forward page not found');
 			}
 
 			$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj404->redirect == 'temporary') ? 302 : 301));

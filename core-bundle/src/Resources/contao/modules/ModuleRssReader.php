@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 
 
 /**
@@ -142,7 +142,7 @@ class ModuleRssReader extends \Module
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil(count($arrItems)/$this->perPage), 1))
 			{
-				throw new NotFoundHttpException('Page not found');
+				throw new PageNotFoundException('Page not found');
 			}
 
 			// Set limit and offset

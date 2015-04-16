@@ -1,10 +1,10 @@
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ statusCode }} {{ error.noForward }}
+    {{ error.noRoot }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.noForwardPage }}</p>
+    <p>{{ error.noRootPage }}</p>
 {% endblock %}
 {% block howToFix %}
-    <p>{{ error.noForwardFix|format(adminEmail)|raw }}</p>
+    <p>{{ error.noRootFix|format(base, adminEmail)|raw }}</p>
 {% endblock %}
