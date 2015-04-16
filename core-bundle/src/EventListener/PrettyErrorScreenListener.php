@@ -77,7 +77,7 @@ class PrettyErrorScreenListener
     }
 
     /**
-     * Map the exception to an error screen.
+     * Map an exception to an error screen.
      *
      * @param GetResponseForExceptionEvent $event The event object
      *
@@ -89,30 +89,7 @@ class PrettyErrorScreenListener
             return;
         }
 
-        $exception = $event->getException();
-
-        switch (true) {
-            case $exception instanceof AccessDeniedHttpException:
-                $this->renderErrorScreen(403, $event);
-                break;
-
-            case $exception instanceof BadRequestHttpException:
-            case $exception instanceof InternalServerErrorHttpException:
-                $this->checkExceptionChain($event);
-                break;
-
-            case $exception instanceof NotFoundHttpException:
-                $this->renderErrorScreen(404, $event);
-                break;
-
-            case $exception instanceof ServiceUnavailableHttpException:
-                $this->renderMaintenanceScreen($event);
-                break;
-
-            default:
-                $event->setResponse($this->renderErrorTemplate($event));
-                break;
-        }
+        $this->renderErrorScreen($event);
     }
 
     /**
@@ -120,7 +97,41 @@ class PrettyErrorScreenListener
      *
      * @param GetResponseForExceptionEvent $event The event object
      */
-    private function renderErrorScreen($type, GetResponseForExceptionEvent $event)
+    private function renderErrorScreen(GetResponseForExceptionEvent $event)
+    {
+        $exception = $event->getException();
+
+        switch (true) {
+            case $exception instanceof AccessDeniedHttpException:
+                $this->renderErrorScreenByType(403, $event);
+                break;
+
+            case $exception instanceof BadRequestHttpException:
+            case $exception instanceof InternalServerErrorHttpException:
+                $this->renderErrorScreenByException($event);
+                break;
+
+            case $exception instanceof NotFoundHttpException:
+                $this->renderErrorScreenByType(404, $event);
+                break;
+
+            case $exception instanceof ServiceUnavailableHttpException:
+                $this->renderMaintenanceScreen($event);
+                break;
+
+            default:
+                $event->setResponse($this->renderTemplate('error', 500));
+                break;
+        }
+    }
+
+    /**
+     * Renders the error screen.
+     *
+     * @param int                          $type  The error type
+     * @param GetResponseForExceptionEvent $event The event object
+     */
+    private function renderErrorScreenByType($type, GetResponseForExceptionEvent $event)
     {
         static $processing;
 
@@ -133,7 +144,7 @@ class PrettyErrorScreenListener
         if (null !== ($response = $this->renderPageHandler($type, $event))) {
             $event->setResponse($response);
         } else {
-            $this->checkExceptionChain($event);
+            $this->renderErrorScreenByException($event);
         }
 
         $processing  = false;
@@ -179,9 +190,8 @@ class PrettyErrorScreenListener
      *
      * @param GetResponseForExceptionEvent $event The event object
      */
-    private function checkExceptionChain(GetResponseForExceptionEvent $event)
+    private function renderErrorScreenByException(GetResponseForExceptionEvent $event)
     {
-        $template   = null;
         $exception  = $event->getException();
         $statusCode = 500;
 
