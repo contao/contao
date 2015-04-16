@@ -325,7 +325,7 @@ class InitializeSystemListener extends ScopeAwareListener
 
         // Show the "insecure document root" message
         if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) && '/web' === substr($request->getBasePath(), -4)) {
-            throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
+            throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the /web subfolder.');
         }
 
         // Show the "incomplete installation" message
@@ -382,9 +382,7 @@ class InitializeSystemListener extends ScopeAwareListener
                 throw new AjaxRedirectResponseException($this->router->generate('contao_backend'));
             }
 
-            throw new InvalidRequestTokenException(
-                'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">reload the page</a> and try again.'
-            );
+            throw new InvalidRequestTokenException('Invalid request token.');
         }
     }
 
