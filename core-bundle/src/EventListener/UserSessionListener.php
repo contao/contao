@@ -132,7 +132,7 @@ class UserSessionListener extends ScopeAwareListener
             $refererNew[$refererId] = end($refererOld);
         }
 
-        $refererNew[$refererId]['current'] = $request->getRequestUri();
+        $refererNew[$refererId]['current'] = $this->getRelativeRequestUri($request);
 
         $bag->set($key, $refererNew);
 
@@ -205,7 +205,7 @@ class UserSessionListener extends ScopeAwareListener
 
         $refererNew = [
             'last'      => $refererOld['current'],
-            'current'   => $request->getRequestUri()
+            'current'   => $this->getRelativeRequestUri($request)
         ];
 
         $this->session->set('referer', $refererNew);
@@ -232,7 +232,7 @@ class UserSessionListener extends ScopeAwareListener
         if (!$request->query->has('pdf')
             && !$request->query->has('file')
             && !$request->query->has('id')
-            && $refererOld['current'] !==  $request->getRequestUri()
+            && $refererOld['current'] !==  $this->getRelativeRequestUri($request)
         ) {
             return true;
         }
@@ -282,5 +282,20 @@ class UserSessionListener extends ScopeAwareListener
         return $this->isFrontendScope() ?
             FrontendUser::getInstance() :
             BackendUser::getInstance();
+    }
+
+    /**
+     * Gets the current request URI relative to the base path
+     *
+     * @param   Request $request
+     *
+     * @return  string
+     */
+    private function getRelativeRequestUri(Request $request)
+    {
+        return substr(
+            $request->getRequestUri(),
+            strlen($request->getBasePath()) + 1
+        );
     }
 }
