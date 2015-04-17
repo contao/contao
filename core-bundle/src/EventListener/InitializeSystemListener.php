@@ -12,11 +12,11 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\ClassLoader;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
+use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
-use Contao\CoreBundle\Exception\BadRequestTokenHttpException;
-use Contao\CoreBundle\Exception\IncompleteInstallationHttpException;
-use Contao\CoreBundle\Exception\InsecureInstallationHttpException;
+use Contao\CoreBundle\Exception\IncompleteInstallationException;
+use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
@@ -314,8 +314,8 @@ class InitializeSystemListener extends ScopeAwareListener
      *
      * @param Request $request The current request if available
      *
-     * @throws InsecureInstallationHttpException   If the document root is not set correctly
-     * @throws IncompleteInstallationHttpException If the installation has not been completed
+     * @throws InsecureInstallationException   If the document root is not set correctly
+     * @throws IncompleteInstallationException If the installation has not been completed
      */
     private function validateInstallation(Request $request = null)
     {
@@ -325,12 +325,12 @@ class InitializeSystemListener extends ScopeAwareListener
 
         // Show the "insecure document root" message
         if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) && '/web' === substr($request->getBasePath(), -4)) {
-            throw new InsecureInstallationHttpException(null, 'Your installation is not secure. Please set the document root to the <code>/web</code> subfolder.');
+            throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the /web subfolder.');
         }
 
         // Show the "incomplete installation" message
         if (!$this->config->isComplete()) {
-            throw new IncompleteInstallationHttpException(null, 'The installation has not been completed. Open the Contao install tool to continue.');
+            throw new IncompleteInstallationException('The installation has not been completed. Open the Contao install tool to continue.');
         }
     }
 
@@ -364,7 +364,7 @@ class InitializeSystemListener extends ScopeAwareListener
      *
      * @param Request $request
      *
-     * @throws AjaxRedirectResponseException|BadRequestTokenHttpException If the token is invalid
+     * @throws AjaxRedirectResponseException|InvalidRequestTokenException If the token is invalid
      */
     private function handleRequestToken(Request $request = null)
     {
@@ -382,9 +382,7 @@ class InitializeSystemListener extends ScopeAwareListener
                 throw new AjaxRedirectResponseException($this->router->generate('contao_backend'));
             }
 
-            throw new BadRequestTokenHttpException(
-                'Invalid request token. Please <a href="javascript:window.location.href=window.location.href">reload the page</a> and try again.'
-            );
+            throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
         }
     }
 

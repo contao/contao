@@ -111,10 +111,13 @@
         <source>If you are not logged in, try to &lt;a href="%s"&gt;go to the top level&lt;/a&gt; and look for a login form. If there is no login form or if you are logged in already, &lt;a href="%s"&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
-        <source>We'll be right back</source>
+        <source>Service unavailable</source>
       </trans-unit>
       <trans-unit id="XPT.maintenance">
-        <source>The website is currently down for maintenance. Please come back later.</source>
+        <source>The website is currently not available. Please come back later.</source>
+      </trans-unit>
+      <trans-unit id="XPT.insecure">
+        <source>Insecure document root</source>
       </trans-unit>
       <trans-unit id="XPT.insecureRoot">
         <source>Your installation is not secure, because non-public resources are publicy available via HTTP.</source>

@@ -311,7 +311,7 @@ class InitializeSystemListenerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      *
-     * @expectedException \Contao\CoreBundle\Exception\InsecureInstallationHttpException
+     * @expectedException \Contao\CoreBundle\Exception\InsecureInstallationException
      */
     public function testValidateInstallation()
     {

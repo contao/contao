@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\RootNotFoundHttpException;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 
 
 /**
@@ -718,7 +718,7 @@ class PageModel extends \Model
 	 *
 	 * @return static The page model
 	 *
-	 * @throws RootNotFoundHttpException If no root page is found
+	 * @throws NoRootPageFoundException If no root page is found
 	 */
 	public function loadDetails()
 	{
@@ -862,7 +862,7 @@ class PageModel extends \Model
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
 			\System::log('Page ID "'. $this->id .'" does not belong to a root page', __METHOD__, TL_ERROR);
-			throw new RootNotFoundHttpException('No root page found');
+			throw new NoRootPageFoundException('No root page found');
 		}
 
 		$this->trail = array_reverse($trail);

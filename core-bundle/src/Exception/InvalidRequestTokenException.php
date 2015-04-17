@@ -10,13 +10,11 @@
 
 namespace Contao\CoreBundle\Exception;
 
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
 /**
  * Invalid request token exception.
  *
- * @author Christian Schiffler <https://github.com/discordier>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BadRequestTokenHttpException extends BadRequestHttpException
+class InvalidRequestTokenException extends \RuntimeException
 {
 }

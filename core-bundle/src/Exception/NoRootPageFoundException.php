@@ -10,13 +10,11 @@
 
 namespace Contao\CoreBundle\Exception;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 /**
  * No root page found exception.
  *
- * @author Christian Schiffler <https://github.com/discordier>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
-class RootNotFoundHttpException extends NotFoundHttpException
+class NoRootPageFoundException extends \RuntimeException
 {
 }

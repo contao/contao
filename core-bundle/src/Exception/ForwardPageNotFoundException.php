@@ -10,13 +10,11 @@
 
 namespace Contao\CoreBundle\Exception;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 /**
  * Forward page not found exception.
  *
- * @author Christian Schiffler <https://github.com/discordier>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ForwardPageNotFoundHttpException extends NotFoundHttpException
+class ForwardPageNotFoundException extends \RuntimeException
 {
 }

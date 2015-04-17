@@ -10,10 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -218,7 +218,7 @@ abstract class Controller extends \System
 					// Send a 404 header if the article does not exist
 					if (null === $objArticle)
 					{
-						throw new NotFoundHttpException('Page not found');
+						throw new PageNotFoundException('Page not found');
 					}
 
 					// Add the "first" and "last" classes (see #2583)
@@ -1178,19 +1178,19 @@ abstract class Controller extends \System
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@i', $strFile) || preg_match('@\.+/@i', $strFile) || preg_match('@(://)+@i', $strFile))
 		{
-			throw new NotFoundHttpException('Invalid file name');
+			throw new PageNotFoundException('Invalid file name');
 		}
 
 		// Limit downloads to the files directory
 		if (!preg_match('@^' . preg_quote(\Config::get('uploadPath'), '@') . '@i', $strFile))
 		{
-			throw new NotFoundHttpException('Invalid path');
+			throw new PageNotFoundException('Invalid path');
 		}
 
 		// Check whether the file exists
 		if (!file_exists(TL_ROOT . '/' . $strFile))
 		{
-			throw new NotFoundHttpException('File not found');
+			throw new PageNotFoundException('File not found');
 		}
 
 		$objFile = new \File($strFile);
@@ -1199,7 +1199,7 @@ abstract class Controller extends \System
 		// Check whether the file type is allowed to be downloaded
 		if (!in_array($objFile->extension, $arrAllowedTypes))
 		{
-			throw new AccessDeniedHttpException(sprintf('File type "%s" is not allowed', $objFile->extension));
+			throw new AccessDeniedException(sprintf('File type "%s" is not allowed', $objFile->extension));
 		}
 
 		// HOOK: post download callback

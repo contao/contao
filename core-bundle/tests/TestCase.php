@@ -83,7 +83,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a Contao kernel.
      *
-     * @return Kernel The kernel object
+     * @return Kernel|\PHPUnit_Framework_MockObject_MockObject The kernel object
      */
     protected function mockKernel()
     {
@@ -159,7 +159,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @param string $url The URL to return
      *
-     * @return RouterInterface The router object
+     * @return RouterInterface|\PHPUnit_Framework_MockObject_MockObject The router object
      */
     protected function mockRouter($url)
     {
@@ -177,7 +177,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a CSRF token manager.
      *
-     * @return CsrfTokenManagerInterface The token manager object
+     * @return CsrfTokenManagerInterface|\PHPUnit_Framework_MockObject_MockObject The token manager object
      */
     protected function mockTokenManager()
     {
@@ -227,7 +227,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a Config adapter.
      *
-     * @return ConfigAdapter
+     * @return ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject The config adapter
      */
     protected function mockConfig()
     {

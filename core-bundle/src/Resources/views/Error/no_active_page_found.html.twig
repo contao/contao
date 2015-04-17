@@ -1,10 +1,10 @@
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ statusCode }} {{ error.notFound }}
+    {{ error.noActive }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.pageNotFound }}</p>
+    <p>{{ error.noActivePages }}</p>
 {% endblock %}
 {% block howToFix %}
-    <p>{{ error.notFoundFix|format(base, adminEmail)|raw }}</p>
+    <p>{{ error.noActiveFix|format(adminEmail)|raw }}</p>
 {% endblock %}
