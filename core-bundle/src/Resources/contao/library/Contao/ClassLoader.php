@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 

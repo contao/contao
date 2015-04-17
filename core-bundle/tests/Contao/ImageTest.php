@@ -159,6 +159,9 @@ class ImageTest extends TestCase
     /**
      * Tests resizing without an important part.
      *
+     * @param array $arguments      The arguments
+     * @param array $expectedResult The expected result
+     *
      * @dataProvider getComputeResizeDataWithoutImportantPart
      */
     public function testComputeResizeWithoutImportantPart($arguments, $expectedResult)
@@ -602,6 +605,9 @@ class ImageTest extends TestCase
     /**
      * Tests resizing with an important part.
      *
+     * @param array $arguments      The arguments
+     * @param array $expectedResult The expected result
+     *
      * @dataProvider getComputeResizeDataWithImportantPart
      */
     public function testComputeResizeWithImportantPart($arguments, $expectedResult)
@@ -874,6 +880,9 @@ class ImageTest extends TestCase
     /**
      * Tests the getCacheName() method.
      *
+     * @param array  $arguments         The arguments
+     * @param string $expectedCacheName The expected cache name
+     *
      * @dataProvider getCacheName
      */
     public function testGetCacheName($arguments, $expectedCacheName)
@@ -998,6 +1007,9 @@ class ImageTest extends TestCase
     /**
      * Tests the legacy get() method.
      *
+     * @param array $arguments      The arguments
+     * @param array $expectedResult The expected result
+     *
      * @dataProvider getLegacyGet
      */
     public function testLegacyGet($arguments, $expectedResult)
@@ -1046,6 +1058,9 @@ class ImageTest extends TestCase
 
     /**
      * Tests the legacy resize() method.
+     *
+     * @param array $arguments      The arguments
+     * @param array $expectedResult The expected result
      *
      * @dataProvider getLegacyResize
      */
@@ -1277,6 +1292,9 @@ class ImageTest extends TestCase
 
     /**
      * Tests the getPixelValue() method.
+     *
+     * @param string $value    The pixel value
+     * @param int    $expected The expected value
      *
      * @dataProvider getGetPixelValueData
      */

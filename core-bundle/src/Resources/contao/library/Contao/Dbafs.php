@@ -607,6 +607,7 @@ class Dbafs
 			$arrMapped = array();
 			$arrPidUpdate = array();
 
+			/** @var \Model\Collection|\FilesModel $objFiles */
 			while ($objFiles->next())
 			{
 				$objFound = \FilesModel::findBy(array('hash=?', 'found=2'), $objFiles->hash);

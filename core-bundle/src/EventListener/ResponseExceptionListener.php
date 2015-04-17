@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\ResponseException;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**

@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 
