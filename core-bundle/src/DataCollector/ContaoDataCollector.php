@@ -217,24 +217,16 @@ class ContaoDataCollector extends DataCollector
     {
         $framework    = false;
         $modelCount   = '';
-        $layout       = 'N/A';
 
         if (isset($GLOBALS['TL_DEBUG'])) {
             $modelCount = Registry::getInstance()->count();
             $framework  = true;
-
-            /** @var PageModel $objPage */
-            global $objPage;
-
-            if (null !== ($layoutModel = LayoutModel::findByPk($objPage->layout))) {
-                $layout = sprintf('%s (ID %s)', $layoutModel->name, $layoutModel->id);
-            }
         }
 
         $this->data['summary'] = [
             'version'        => $this->getContaoVersion(),
             'scope'          => $this->getContainerScope(),
-            'layout'         => $layout,
+            'layout'         => $this->getLayoutName() ?: 'N/A',
             'framework'      => $framework,
             'models'         => $modelCount,
         ];
@@ -256,5 +248,28 @@ class ContaoDataCollector extends DataCollector
         }
 
         return '';
+    }
+
+    /**
+     * Gets the name of the current page layout (front end only).
+     *
+     * @return string|null The layout name
+     */
+    private function getLayoutName()
+    {
+        if (!$this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
+            return null;
+        }
+
+        /** @var PageModel $objPage */
+        global $objPage;
+
+        if (null === $objPage
+            || null === ($layoutModel = LayoutModel::findByPk($objPage->layout))
+        ) {
+            return null;
+        }
+
+        return sprintf('%s (ID %s)', $layoutModel->name, $layoutModel->id);
     }
 }
