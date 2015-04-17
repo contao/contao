@@ -10,10 +10,12 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\UserSessionListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -133,6 +135,44 @@ class UserSessionListenerTest extends TestCase
         $listener->onKernelResponse($responseEvent);
     }
 
+
+    public function testSessionReplacedOnKernelRequest()
+    {
+        $sessionValuesToBeSet = [
+            'foo'       => 'bar',
+            'lonesome'  => 'looser'
+        ];
+
+        $request = new Request();
+        $responseEvent = new GetResponseEvent(
+            $this->mockKernel(),
+            $request,
+            HttpKernelInterface::SUB_REQUEST
+        );
+
+        $container = $this->mockContainerWithContaoScopes();
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $session = $this->mockSession();
+
+        $user = $this->getMockBuilder('Contao\\BackendUser')
+            ->setMethods(['__get'])
+            ->getMock();
+        $user->expects($this->any())->method('__get')->with($this->equalTo('session'))->willReturn($sessionValuesToBeSet);
+
+        $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
+        $token->expects($this->any())->method('getUser')->willReturn($user);
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage->expects($this->any())->method('getToken')->willReturn($token);
+
+
+        $listener = $this->getListener($session, null, $tokenStorage);
+        $listener->onKernelRequest($responseEvent);
+
+        /* @var AttributeBagInterface $bag */
+        $bag = $session->getBag('contao_backend');
+
+        $this->assertSame($sessionValuesToBeSet, $bag->all());
+    }
 
     private function getListener(
         $session = null,
