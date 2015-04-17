@@ -382,7 +382,7 @@ class InitializeSystemListener extends ScopeAwareListener
                 throw new AjaxRedirectResponseException($this->router->generate('contao_backend'));
             }
 
-            throw new InvalidRequestTokenException('Invalid request token.');
+            throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
         }
     }
 

@@ -46,7 +46,19 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function setUp()
     {
-        $this->listener = new PrettyErrorScreenListener(true, $this->mockTwigEngine(), $this->mockConfig());
+        $engine = $this->getMock('Symfony\\Bundle\\TwigBundle\\TwigEngine', ['exists', 'renderResponse']);
+
+        $engine->expects($this->any())
+            ->method('exists')
+            ->willReturn(true)
+        ;
+
+        $engine->expects($this->any())
+            ->method('renderResponse')
+            ->willReturn(new Response())
+        ;
+
+        $this->listener = new PrettyErrorScreenListener(true, $engine, $this->mockConfig());
     }
 
     /**

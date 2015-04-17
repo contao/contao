@@ -15,13 +15,11 @@ use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -241,27 +239,5 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         ;
 
         return $config;
-    }
-
-    /**
-     * Mocks a Twig engine.
-     *
-     * @return TwigEngine|\PHPUnit_Framework_MockObject_MockObject The Twig engine
-     */
-    protected function mockTwigEngine()
-    {
-        $engine = $this->getMock('Symfony\\Bundle\\TwigBundle\\TwigEngine', ['exists', 'renderResponse']);
-
-        $engine->expects($this->any())
-            ->method('exists')
-            ->willReturn(true)
-        ;
-
-        $engine->expects($this->any())
-            ->method('renderResponse')
-            ->willReturn(new Response())
-        ;
-
-        return $engine;
     }
 }

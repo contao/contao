@@ -141,7 +141,7 @@ class PrettyErrorScreenListener
 
         $processing = true;
 
-        if (null !== ($response = $this->renderPageHandler($type))) {
+        if (null !== ($response = $this->getResponseFromPageHandler($type))) {
             $event->setResponse($response);
         } else {
             $this->renderErrorScreenByException($event);
@@ -151,13 +151,13 @@ class PrettyErrorScreenListener
     }
 
     /**
-     * Renders a Contao page handler.
+     * Returns the response of a Contao page handler.
      *
      * @param string $type The error type
      *
      * @return Response|null The response object or null
      */
-    private function renderPageHandler($type)
+    private function getResponseFromPageHandler($type)
     {
         $type = "error_$type";
 
@@ -192,24 +192,24 @@ class PrettyErrorScreenListener
      */
     private function renderErrorScreenByException(GetResponseForExceptionEvent $event)
     {
-        $exception  = $event->getException();
         $statusCode = 500;
+        $exception  = $event->getException();
 
-        // Check the status code
+        // Set the status code
         if ($exception instanceof HttpException) {
             $statusCode = $exception->getStatusCode();
         }
 
         // Look for a template
         do {
-            if (null !== ($template = $this->getTemplateForException($exception))) {
-                break;
-            }
-        } while (null !== ($exception = $exception->getPrevious()));
+            $template = $this->getTemplateForException($exception);
+        } while (null === $template && null !== ($exception = $exception->getPrevious()));
 
-        if (null !== $template) {
-            $event->setResponse($this->renderTemplate($template, $statusCode, $event->getRequest()->getBasePath()));
+        if (null === $template) {
+            return;
         }
+
+        $event->setResponse($this->renderTemplate($template, $statusCode, $event->getRequest()->getBasePath()));
     }
 
     /**
