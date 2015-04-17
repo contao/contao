@@ -39,6 +39,18 @@ class HtaccessAnalyzer
     }
 
     /**
+     * Creates a new object instance.
+     *
+     * @param \SplFileInfo $file The file object
+     *
+     * @return static The object instance
+     */
+    public static function create(\SplFileInfo $file)
+    {
+        return new static($file);
+    }
+
+    /**
      * Checks whether the .htaccess file grants access via HTTP.
      *
      * @return bool True if the .htaccess file grants access via HTTP

@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### Fixed
+Create absolute symlinks if relative symlinks are not supported (see #208).
+
 ### Removed
 The "postFlushData" hook has been removed (see #196).
 

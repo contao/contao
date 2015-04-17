@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -81,9 +82,9 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         $this->symlinkThemes($rootDir, $output);
 
         // Symlink the assets and themes directory
-        $this->symlink('../assets', 'web/assets', $rootDir, $output);
-        $this->symlink('../../system/themes', 'web/system/themes', $rootDir, $output);
-        $this->symlink('../app/logs', 'system/logs', $rootDir, $output);
+        $this->symlink('assets', 'web/assets', $rootDir, $output);
+        $this->symlink('system/themes', 'web/system/themes', $rootDir, $output);
+        $this->symlink('app/logs', 'system/logs', $rootDir, $output);
     }
 
     /**
@@ -95,7 +96,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function symlinkFiles($uploadPath, $rootDir, OutputInterface $output)
     {
-        $this->relativeSymlink(
+        $this->createSymlinksFromFinder(
             $this->findIn("$rootDir/$uploadPath")->files()->name('.public'),
             $uploadPath,
             $rootDir,
@@ -112,12 +113,10 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     private function symlinkModules($rootDir, OutputInterface $output)
     {
         $filter = function (SplFileInfo $file) {
-            $htaccess = new HtaccessAnalyzer($file);
-
-            return $htaccess->grantsAccess();
+            return HtaccessAnalyzer::create($file)->grantsAccess();
         };
 
-        $this->relativeSymlink(
+        $this->createSymlinksFromFinder(
             $this->findIn("$rootDir/system/modules")->files()->filter($filter)->name('.htaccess'),
             'system/modules',
             $rootDir,
@@ -143,29 +142,32 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
                 continue;
             }
 
-            $this->symlink("../../$path", 'system/themes/' . basename($path), $rootDir, $output);
+            $this->symlink($path, 'system/themes/' . basename($path), $rootDir, $output);
         }
     }
 
     /**
-     * Generates a symlink relative to the given path.
+     * Generates symlinks from a Finder object.
      *
      * @param Finder          $finder  The finder object
      * @param string          $prepend The path to prepend
      * @param string          $rootDir The root directory
      * @param OutputInterface $output  The output object
      */
-    private function relativeSymlink(Finder $finder, $prepend, $rootDir, OutputInterface $output)
+    private function createSymlinksFromFinder(Finder $finder, $prepend, $rootDir, OutputInterface $output)
     {
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
-            $this->symlink(str_repeat('../', substr_count($path, '/') + 1) . $path, "web/$path", $rootDir, $output);
+            $this->symlink($path, "web/$path", $rootDir, $output);
         }
     }
 
     /**
      * Generates a symlink.
+     *
+     * The method will try to generate relative symlinks and fall back to generating
+     * absolute symlinks if relative symlinks are not supported (see #208).
      *
      * @param string          $source  The symlink name
      * @param string          $target  The symlink target
@@ -177,19 +179,14 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         $this->validateSymlink($source, $target, $rootDir);
 
         $fs = new Filesystem();
-        $fs->symlink($source, "$rootDir/$target");
 
-        $stat = lstat("$rootDir/$target");
-
-        // Try to fix the UID
-        if (function_exists('lchown') && $stat['uid'] !== getmyuid()) {
-            lchown("$rootDir/$target", getmyuid());
+        try {
+            $fs->symlink(rtrim($fs->makePathRelative($source, dirname($target)), '/'), "$rootDir/$target");
+        } catch (IOException $e) {
+            $fs->symlink("$rootDir/$source", "$rootDir/$target");
         }
 
-        // Try to fix the GID
-        if (function_exists('lchgrp') && $stat['gid'] !== getmygid()) {
-            lchgrp("$rootDir/$target", getmygid());
-        }
+        $this->fixSymlinkPermissions($target, $rootDir);
 
         $output->writeln("Added <comment>$target</comment> as symlink to <comment>$source</comment>.");
     }
@@ -222,6 +219,27 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
 
         if ($fs->exists("$rootDir/$target") && !is_link("$rootDir/$target")) {
             throw new \LogicException("The symlink target $target exists and is not a symlink.");
+        }
+    }
+
+    /**
+     * Fixes the symlink permissions.
+     *
+     * @param string $target  The symlink target
+     * @param string $rootDir The root directory
+     */
+    private function fixSymlinkPermissions($target, $rootDir)
+    {
+        $stat = lstat("$rootDir/$target");
+
+        // Try to fix the UID
+        if (function_exists('lchown') && $stat['uid'] !== getmyuid()) {
+            lchown("$rootDir/$target", getmyuid());
+        }
+
+        // Try to fix the GID
+        if (function_exists('lchgrp') && $stat['gid'] !== getmygid()) {
+            lchgrp("$rootDir/$target", getmygid());
         }
     }
 
