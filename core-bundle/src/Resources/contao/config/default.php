@@ -59,8 +59,8 @@ $GLOBALS['TL_CONFIG']['dbDatabase']  = '';
 $GLOBALS['TL_CONFIG']['dbPort']      = 3306;
 $GLOBALS['TL_CONFIG']['dbSocket']    = '';
 $GLOBALS['TL_CONFIG']['dbPconnect']  = false;
-$GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8mb4';
-$GLOBALS['TL_CONFIG']['dbCollation'] = 'utf8mb4_general_ci';
+$GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8';
+$GLOBALS['TL_CONFIG']['dbCollation'] = 'utf8_general_ci';
 $GLOBALS['TL_CONFIG']['dbSqlMode']   = '';
 
 // Encryption

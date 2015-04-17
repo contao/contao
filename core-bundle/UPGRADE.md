@@ -73,11 +73,6 @@ only. This was a workaround for an old IIS server, which has now been dropped.
 More information: https://github.com/contao/core-bundle/issues/118
 
 
-### MySQL 5.5.3+
-
-The minimum MySQL version has been raised to MySQL 5.5.3.
-
-
 ### `system/runonce.php`
 
 The `system/runonce.php` file is no longer supported. If you need to set up a
