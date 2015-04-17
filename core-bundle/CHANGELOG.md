@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### Removed
+The "postFlushData" hook has been removed (see #196).
+
 ### Fixed
 Do not check the database driver in `Config::isComplete()` (see #203).
 
