@@ -95,6 +95,7 @@ services:
         arguments:
             - '@session'
             - '@doctrine.dbal.default_connection'
+            - '@security.token_storage'
         tags:
             # Priority must be lower than contao.listener.session (64)
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

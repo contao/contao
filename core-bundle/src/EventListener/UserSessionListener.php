@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Contao\FrontendUser;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +18,8 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Stores the session data of back end and front end users and restores it on
@@ -39,16 +40,23 @@ class UserSessionListener extends ScopeAwareListener
     private $connection;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * Constructor.
      *
      * @param SessionInterface $session
      */
     public function __construct(
         SessionInterface $session,
-        Connection $connection
+        Connection $connection,
+        TokenStorageInterface $tokenStorage
     ) {
-        $this->session = $session;
-        $this->connection = $connection;
+        $this->session      = $session;
+        $this->connection   = $connection;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -59,7 +67,8 @@ class UserSessionListener extends ScopeAwareListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$this->isFrontendMasterRequest($event)
+        if (!$this->hasUser()
+            && !$this->isFrontendMasterRequest($event)
             && !$this->isBackendMasterRequest($event)
         ) {
             return;
@@ -82,7 +91,8 @@ class UserSessionListener extends ScopeAwareListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->isFrontendMasterRequest($event)
+        if (!$this->hasUser()
+            && !$this->isFrontendMasterRequest($event)
             && !$this->isBackendMasterRequest($event)
         ) {
             return;
@@ -96,6 +106,25 @@ class UserSessionListener extends ScopeAwareListener
         }
 
         $this->storeFrontendSession($request);
+    }
+
+    /**
+     * Check if a user is authenticated
+     *
+     * @return bool
+     */
+    private function hasUser()
+    {
+        $user = $this->tokenStorage->getToken();
+        if (null === $user) {
+            return false;
+        }
+
+        if ($user instanceof AnonymousToken) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -278,10 +307,7 @@ class UserSessionListener extends ScopeAwareListener
      */
     private function getUserObject()
     {
-        // FIXME: Replace with security component
-        return $this->isFrontendScope() ?
-            FrontendUser::getInstance() :
-            BackendUser::getInstance();
+        return $this->tokenStorage->getToken()->getUser();
     }
 
     /**
