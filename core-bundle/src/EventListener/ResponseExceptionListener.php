@@ -34,12 +34,6 @@ class ResponseExceptionListener
             return;
         }
 
-        $response = $exception->getResponse();
-
-        if (!$response instanceof Response) {
-            return;
-        }
-
-        $event->setResponse($response);
+        $event->setResponse($exception->getResponse());
     }
 }
