@@ -69,12 +69,12 @@ class SymlinksCommandTest extends TestCase
         $code = $tester->execute([]);
 
         $this->assertEquals(0, $code);
-        $this->assertContains('Added web/system/modules/foobar/assets as symlink to ../../../../system/modules/foobar/assets.', $tester->getDisplay());
-        $this->assertContains('Added web/system/modules/foobar/html as symlink to ../../../../system/modules/foobar/html.', $tester->getDisplay());
-        $this->assertContains('Added system/themes/flexible as symlink to ../../vendor/contao/test-bundle/Resources/contao/themes/flexible.', $tester->getDisplay());
-        $this->assertContains('Added web/assets as symlink to ../assets.', $tester->getDisplay());
-        $this->assertContains('Added web/system/themes as symlink to ../../system/themes.', $tester->getDisplay());
-        $this->assertContains('Added system/logs as symlink to ../app/logs.', $tester->getDisplay());
+        $this->assertContains('Added web/system/modules/foobar/assets as symlink to system/modules/foobar/assets.', $tester->getDisplay());
+        $this->assertContains('Added web/system/modules/foobar/html as symlink to system/modules/foobar/html.', $tester->getDisplay());
+        $this->assertContains('Added system/themes/flexible as symlink to vendor/contao/test-bundle/Resources/contao/themes/flexible.', $tester->getDisplay());
+        $this->assertContains('Added web/assets as symlink to assets.', $tester->getDisplay());
+        $this->assertContains('Added web/system/themes as symlink to system/themes.', $tester->getDisplay());
+        $this->assertContains('Added system/logs as symlink to app/logs.', $tester->getDisplay());
     }
 
     /**
