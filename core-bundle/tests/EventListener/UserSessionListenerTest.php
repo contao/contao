@@ -35,8 +35,32 @@ class UserSessionListenerTest extends TestCase
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\UserSessionListener', $listener);
     }
 
+
     /**
-     * Test session bag is never requested when having no master request.
+     * Test session bag is never requested when having no user on kernel.request.
+     */
+    public function testListenerSkipIfNoUserOnKernelRequest()
+    {
+        $request = new Request();
+        $responseEvent = new GetResponseEvent(
+            $this->mockKernel(),
+            $request,
+            HttpKernelInterface::SUB_REQUEST
+        );
+
+        $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
+        $session->expects($this->never())->method('getBag');
+
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage->expects($this->once())->method('getToken')->willReturn(null);
+
+        $listener = $this->getListener($session, null, $tokenStorage);
+        $listener->onKernelRequest($responseEvent);
+    }
+
+    /**
+     * Test session bag is never requested when having no master request on
+     * kernel.request.
      */
     public function testListenerSkipIfNoMasterRequestOnKernelRequest()
     {
@@ -56,7 +80,37 @@ class UserSessionListenerTest extends TestCase
 
     /**
      * Test neither session bag nor doctrine is requested when
-     * having no master request.
+     * having no user on kernel.response.
+     */
+    public function testListenerSkipIfNoUserOnKernelResponse()
+    {
+        $request = new Request();
+        $response = new Response();
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            $request,
+            HttpKernelInterface::SUB_REQUEST,
+            $response
+        );
+
+        $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
+        $session->expects($this->never())->method('getBag');
+
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage->expects($this->once())->method('getToken')->willReturn(null);
+
+        $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
+        $connection->expects($this->never())->method('prepare');
+        $connection->expects($this->never())->method('excecute');
+
+        $listener = $this->getListener($session, $connection, $tokenStorage);
+
+        $listener->onKernelResponse($responseEvent);
+    }
+
+    /**
+     * Test neither session bag nor doctrine is requested when
+     * having no master request on kernel.response.
      */
     public function testListenerSkipIfNoMasterRequestOnKernelResponse()
     {
@@ -80,7 +134,10 @@ class UserSessionListenerTest extends TestCase
     }
 
 
-    private function getListener($session = null, $connection = null)
+    private function getListener(
+        $session = null,
+        $connection = null,
+        $tokenStorage = null)
     {
         if (null === $session) {
             $session = $this->mockSession();
@@ -96,6 +153,10 @@ class UserSessionListenerTest extends TestCase
             );
         }
 
-        return new UserSessionListener($session, $connection);
+        if (null === $tokenStorage) {
+            $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        }
+
+        return new UserSessionListener($session, $connection, $tokenStorage);
     }
 }
