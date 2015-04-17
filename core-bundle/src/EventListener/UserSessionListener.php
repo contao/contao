@@ -262,9 +262,8 @@ class UserSessionListener extends ScopeAwareListener
     private function storeSession()
     {
         $user   = $this->getUserObject();
-        $table  = $this->isFrontendScope() ? 'tl_member' : 'tl_user';
 
-        $this->connection->prepare('UPDATE ' . $table . ' SET session=? WHERE id=?')
+        $this->connection->prepare('UPDATE ' . $user->getTable() . ' SET session=? WHERE id=?')
             ->execute([
                     serialize($this->getSessionBag()->all()),
                     $user->id
