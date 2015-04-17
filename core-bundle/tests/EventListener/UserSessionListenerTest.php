@@ -70,7 +70,7 @@ class UserSessionListenerTest extends TestCase
         );
         $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
         $session->expects($this->never())->method('getBag');
-        $connection = $this->getMock('Doctrine\\DBAL\\Connection');
+        $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
         $connection->expects($this->never())->method('prepare');
         $connection->expects($this->never())->method('excecute');
 
