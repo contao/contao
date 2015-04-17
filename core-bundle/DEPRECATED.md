@@ -54,7 +54,7 @@ global $kernel;
 
 $route = $kernel->getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
 
-if ('contao_backend_main' === $route) {
+if ('contao_backend' === $route) {
     // Do something
 }
 ```
