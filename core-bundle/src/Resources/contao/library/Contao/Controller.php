@@ -1003,14 +1003,13 @@ abstract class Controller extends \System
 			exit;
 		}
 
-		$strLocation = ltrim($strLocation, '/');
 		$strLocation = str_replace('&amp;', '&', $strLocation);
 		$strLocation = static::replaceOldBePaths($strLocation);
 
 		// Make the location an absolute URL
 		if (!preg_match('@^https?://@i', $strLocation))
 		{
-			$strLocation = \Environment::get('base') . $strLocation;
+			$strLocation = \Environment::get('base') . ltrim($strLocation, '/');
 		}
 
 		// Ajax request
