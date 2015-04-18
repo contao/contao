@@ -144,8 +144,17 @@ class UserSessionListenerTest extends TestCase
         $listener->onKernelResponse($responseEvent);
     }
 
-
-    public function testSessionReplacedOnKernelRequest()
+    /**
+     * Tests that session values are replaced on kernel.request for both,
+     * front end scope and back end scope.
+     *
+     * @param string $scope
+     * @param string $userClass
+     * @param string $sessionBagName
+     *
+     * @dataProvider scopeProvider
+     */
+    public function testSessionReplacedOnKernelRequest($scope, $userClass, $sessionBagName)
     {
         $sessionValuesToBeSet = [
             'foo'       => 'bar',
@@ -160,10 +169,10 @@ class UserSessionListenerTest extends TestCase
         );
 
         $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $container->enterScope($scope);
         $session = $this->mockSession();
 
-        $user = $this->getMockBuilder('Contao\\BackendUser')
+        $user = $this->getMockBuilder($userClass)
             ->setMethods(['__get'])
             ->getMock();
         $user->expects($this->any())->method('__get')->with($this->equalTo('session'))->willReturn($sessionValuesToBeSet);
@@ -173,12 +182,12 @@ class UserSessionListenerTest extends TestCase
         $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
         $tokenStorage->expects($this->any())->method('getToken')->willReturn($token);
 
-
         $listener = $this->getListener($session, null, $tokenStorage);
+        $listener->setContainer($container);
         $listener->onKernelRequest($responseEvent);
 
         /* @var AttributeBagInterface $bag */
-        $bag = $session->getBag('contao_backend');
+        $bag = $session->getBag($sessionBagName);
 
         $this->assertSame($sessionValuesToBeSet, $bag->all());
     }
@@ -190,6 +199,14 @@ class UserSessionListenerTest extends TestCase
         return [
             [null],
             [$anonymousToken]
+        ];
+    }
+
+    public function scopeProvider()
+    {
+        return [
+            [ContaoCoreBundle::SCOPE_BACKEND, 'Contao\\BackendUser', 'contao_backend'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, 'Contao\\FrontendUser', 'contao_frontend']
         ];
     }
 
