@@ -12,7 +12,7 @@
         </div>
         <div class="sf-toolbar-info-piece">
             <b>Container scope</b>
-            {{ collector.summary.scope }}
+            {{ collector.summary.scope|default('n/a') }}
         </div>
         <div class="sf-toolbar-info-piece">
             <b>Reg. models</b>
@@ -20,7 +20,7 @@
         </div>
         <div class="sf-toolbar-info-piece">
             <b>Page layout</b>
-            {{ collector.summary.layout }}
+            {{ collector.summary.layout|default('n/a') }}
         </div>
     {% endset %}
     {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url } %}

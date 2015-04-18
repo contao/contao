@@ -216,7 +216,7 @@ class ContaoDataCollector extends DataCollector
     private function addSummaryData()
     {
         $framework    = false;
-        $modelCount   = '';
+        $modelCount   = '0';
 
         if (isset($GLOBALS['TL_DEBUG'])) {
             $modelCount = Registry::getInstance()->count();
@@ -226,7 +226,7 @@ class ContaoDataCollector extends DataCollector
         $this->data['summary'] = [
             'version'        => $this->getContaoVersion(),
             'scope'          => $this->getContainerScope(),
-            'layout'         => $this->getLayoutName() ?: 'N/A',
+            'layout'         => $this->getLayoutName(),
             'framework'      => $framework,
             'models'         => $modelCount,
         ];
@@ -258,7 +258,7 @@ class ContaoDataCollector extends DataCollector
     private function getLayoutName()
     {
         if (!$this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
-            return null;
+            return '';
         }
 
         /** @var PageModel $objPage */
@@ -267,7 +267,7 @@ class ContaoDataCollector extends DataCollector
         if (null === $objPage
             || null === ($layoutModel = LayoutModel::findByPk($objPage->layout))
         ) {
-            return null;
+            return '';
         }
 
         return sprintf('%s (ID %s)', $layoutModel->name, $layoutModel->id);
