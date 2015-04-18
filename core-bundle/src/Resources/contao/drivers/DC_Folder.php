@@ -809,7 +809,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		// Add a log entry
-		$this->log('File or folder "'.str_replace(TL_ROOT.'/', '', $source).'" has been deleted', __METHOD__, TL_FILES);
+		$this->log('File or folder "' . str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $source) . '" has been deleted', __METHOD__, TL_FILES);
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -2284,7 +2284,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					if ($v == '__new__')
 					{
-						$this->Files->rmdir(str_replace(TL_ROOT.'/', '', $path) . '/' . $v);
+						$this->Files->rmdir(str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $path) . '/' . $v);
 					}
 					else
 					{
@@ -2305,7 +2305,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		{
 			$md5 = substr(md5($folders[$f]), 0, 8);
 			$content = scan($folders[$f]);
-			$currentFolder = str_replace(TL_ROOT.'/', '', $folders[$f]);
+			$currentFolder = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $folders[$f]);
 			$session['filetree'][$md5] = is_numeric($session['filetree'][$md5]) ? $session['filetree'][$md5] : 0;
 			$currentEncoded = $this->urlEncode($currentFolder);
 			$countFiles = count($content);
@@ -2386,7 +2386,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$thumbnail = '';
 			$popupWidth = 600;
 			$popupHeight = 161;
-			$currentFile = str_replace(TL_ROOT.'/', '', $files[$h]);
+			$currentFile = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $files[$h]);
 
 			$objFile = new \File($currentFile);
 

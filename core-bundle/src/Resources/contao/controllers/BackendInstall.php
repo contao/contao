@@ -62,7 +62,7 @@ class BackendInstall extends \Backend
 		$this->import('Files');
 
 		// Check whether the PHP process is allowed to write files
-		if (!$this->Files->is_writeable(str_replace(TL_ROOT . '/', '', __FILE__)))
+		if (!$this->Files->is_writeable(str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', __FILE__)))
 		{
 			$this->outputAndExit();
 		}
@@ -430,7 +430,7 @@ class BackendInstall extends \Backend
 		// Add the relative paths
 		foreach ($objFiles as $objFile)
 		{
-			$arrTemplates[] = str_replace(TL_ROOT . '/templates/', '', $objFile->getPathname());
+			$arrTemplates[] = str_replace(TL_ROOT . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR, '', $objFile->getPathname());
 		}
 
 		$strTemplates = '<option value="">-</option>';

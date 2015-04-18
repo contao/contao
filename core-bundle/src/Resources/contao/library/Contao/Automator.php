@@ -78,7 +78,7 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$strCachePath = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+		$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
 
 		// Purge the cache folder
 		$objFolder = new \Folder($strCachePath . '/contao/search');
@@ -190,7 +190,7 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$strCacheDir = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
 
 		$objFolder = new \Folder($strCacheDir . '/contao/html');
 		$objFolder->purge();
@@ -208,7 +208,7 @@ class Automator extends \System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$strCacheDir = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
 
 		$objFolder = new \Folder($strCacheDir . '/contao/search');
 		$objFolder->purge();

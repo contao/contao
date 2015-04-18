@@ -143,7 +143,7 @@ class ModuleSearch extends \Module
 			/** @var KernelInterface $kernel */
 			global $kernel;
 
-			$strCachePath = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
 
 			$arrResult = null;
 			$strChecksum = md5($strKeywords . $strQueryType . $intRootId . $blnFuzzy);
