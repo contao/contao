@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 /**
  * Tests the UserSessionListener class.
@@ -40,8 +41,10 @@ class UserSessionListenerTest extends TestCase
 
     /**
      * Test session bag is never requested when having no user on kernel.request.
+     *
+     * @dataProvider noUserProvider
      */
-    public function testListenerSkipIfNoUserOnKernelRequest()
+    public function testListenerSkipIfNoUserOnKernelRequest($return)
     {
         $request = new Request();
         $responseEvent = new GetResponseEvent(
@@ -54,7 +57,7 @@ class UserSessionListenerTest extends TestCase
         $session->expects($this->never())->method('getBag');
 
         $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
-        $tokenStorage->expects($this->once())->method('getToken')->willReturn(null);
+        $tokenStorage->expects($this->once())->method('getToken')->willReturn($return);
 
         $listener = $this->getListener($session, null, $tokenStorage);
         $listener->onKernelRequest($responseEvent);
@@ -83,8 +86,10 @@ class UserSessionListenerTest extends TestCase
     /**
      * Test neither session bag nor doctrine is requested when
      * having no user on kernel.response.
+     *
+     * @dataProvider noUserProvider
      */
-    public function testListenerSkipIfNoUserOnKernelResponse()
+    public function testListenerSkipIfNoUserOnKernelResponse($return)
     {
         $request = new Request();
         $response = new Response();
@@ -99,7 +104,7 @@ class UserSessionListenerTest extends TestCase
         $session->expects($this->never())->method('getBag');
 
         $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
-        $tokenStorage->expects($this->once())->method('getToken')->willReturn(null);
+        $tokenStorage->expects($this->once())->method('getToken')->willReturn($return);
 
         $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
         $connection->expects($this->never())->method('prepare');
@@ -172,6 +177,16 @@ class UserSessionListenerTest extends TestCase
         $bag = $session->getBag('contao_backend');
 
         $this->assertSame($sessionValuesToBeSet, $bag->all());
+    }
+
+
+    public function noUserProvider()
+    {
+        $anonymousToken = new AnonymousToken('key', 'anon.');
+        return [
+            [null],
+            [$anonymousToken]
+        ];
     }
 
     private function getListener(
