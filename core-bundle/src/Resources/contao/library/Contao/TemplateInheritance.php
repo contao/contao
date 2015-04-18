@@ -78,7 +78,7 @@ trait TemplateInheritance
 		while ($this->strParent !== null)
 		{
 			$strCurrent = $this->strParent;
-			$strParent = $this->strDefault ?: \Controller::getTemplate($this->strParent, $this->strFormat);
+			$strParent = $this->strDefault ?: $this->getTemplatePath($this->strParent, $this->strFormat);
 
 			// Reset the flags
 			$this->strParent = null;
@@ -94,7 +94,7 @@ trait TemplateInheritance
 			}
 			elseif ($this->strParent == $strCurrent)
 			{
-				$this->strDefault = \TemplateLoader::getDefaultPath($this->strParent, $this->strFormat);
+				$this->strDefault = $this->getTemplatePath($this->strParent, $this->strFormat, true);
 			}
 
 			ob_end_clean();
@@ -106,7 +106,7 @@ trait TemplateInheritance
 		// Add start and end markers in debug mode
 		if (\Config::get('debugMode'))
 		{
-			$strRelPath = str_replace(TL_ROOT . '/', '', \Controller::getTemplate($this->strTemplate, $this->strFormat));
+			$strRelPath = str_replace(TL_ROOT . '/', '', $this->getTemplatePath($this->strTemplate, $this->strFormat));
 			$strBuffer = "\n<!-- TEMPLATE START: $strRelPath -->\n$strBuffer\n<!-- TEMPLATE END: $strRelPath -->\n";
 		}
 
@@ -277,5 +277,25 @@ trait TemplateInheritance
 		}
 
 		echo $tpl->parse();
+	}
+
+
+	/**
+	 * Find a particular template file and return its path
+	 *
+	 * @param string  $strTemplate The name of the template
+	 * @param string  $strFormat   The file extension
+	 * @param boolean $blnDefault  If true, the default template path is returned
+	 *
+	 * @return string The path to the template file
+	 */
+	protected function getTemplatePath($strTemplate, $strFormat='html5', $blnDefault=false)
+	{
+		if ($blnDefault)
+		{
+			return \TemplateLoader::getDefaultPath($strTemplate, $strFormat);
+		}
+
+		return \Controller::getTemplate($strTemplate, $strFormat);
 	}
 }
