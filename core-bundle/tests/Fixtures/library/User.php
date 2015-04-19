@@ -10,4 +10,6 @@ abstract class User
     }
 
     public function __get($key) {}
+
+    public function getTable() {}
 }

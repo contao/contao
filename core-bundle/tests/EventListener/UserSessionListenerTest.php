@@ -193,6 +193,89 @@ class UserSessionListenerTest extends TestCase
     }
 
 
+    /**
+     * Tests that session values are replaced on kernel.request for both,
+     * front end scope and back end scope.
+     *
+     * @param string     $scope
+     * @param string     $sessionBagName
+     * @param Request    $request
+     * @param array|null $currentReferer
+     * @param array|null $expectedReferer
+     *
+     * @dataProvider sessionStoredOnKernelResponseProvider
+     */
+    public function testSessionStoredOnKernelResponse(
+        $scope,
+        $sessionBagName,
+        $userClass,
+        $userTable,
+        Request $request,
+        $currentReferer,
+        $expectedReferer
+    ) {
+        $response = new Response();
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            $request,
+            HttpKernelInterface::SUB_REQUEST,
+            $response
+        );
+
+        $connection = $this->getMock('Doctrine\\DBAL\\Connection', ['prepare', 'execute'], [], '', false);
+        $connection->expects($this->any())->method('prepare')->willReturnSelf();
+        $connection->expects($this->any())->method('execute');
+
+        $user = $this->getMockBuilder($userClass)
+            ->setMethods(['__get'])
+            ->getMock();
+        $user->expects($this->any())->method('getTable')->willReturn($userTable);
+        $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
+        $token->expects($this->any())->method('getUser')->willReturn($user);
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage->expects($this->any())->method('getToken')->willReturn($token);
+        $refererKey = $request->query->has('popup') ? 'popupReferer' : 'referer';
+        $container = $this->mockContainerWithContaoScopes();
+        $container->enterScope($scope);
+        $session = $this->mockSession();
+        /* @var AttributeBagInterface $bag */
+        $bag = $session->getBag($sessionBagName);
+
+        // Set current referer values
+        $bag->set($refererKey, $currentReferer);
+
+        $listener = $this->getListener($session, $connection, $tokenStorage);
+        $listener->setContainer($container);
+        $listener->onKernelResponse($responseEvent);
+
+        $this->assertSame($expectedReferer, $bag->get($refererKey));
+    }
+
+    public function sessionStoredOnKernelResponseProvider()
+    {
+        $request = new Request();
+        $request->attributes->set('_contao_referer_id', 'dummyTestRefererId');
+        $request->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
+
+        return [
+            'Test current referer null returns correct new referer for back end scope' => [
+                ContaoCoreBundle::SCOPE_BACKEND,
+                'contao_backend',
+                'Contao\\BackendUser',
+                'tl_user',
+                $request,
+                null,
+                [
+                    'dummyTestRefererId' => [
+                        'last'      => '',
+                        // Make sure this one never contains a / at the beginning
+                        'current'   => 'path/of/contao?having&query&string=1'
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public function noUserProvider()
     {
         $anonymousToken = new AnonymousToken('key', 'anon.');

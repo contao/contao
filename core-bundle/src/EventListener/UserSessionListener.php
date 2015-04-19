@@ -142,21 +142,20 @@ class UserSessionListener extends ScopeAwareListener
         $key        = $request->query->has('popup') ? 'popupReferer' : 'referer';
         $refererId  = $request->attributes->get('_contao_referer_id');
         $bag        = $this->getSessionBag();
-        $refererOld = $this->prepareBackendReferer($bag->get($key), $refererId);
-        $refererNew = [];
+        $referer    = $this->prepareBackendReferer($bag->get($key), $refererId);
 
         $ref = $request->query->get('ref', '');
 
         // If the referer param is in the URL and in the session,
         // current is moved to last
-        if ('' !== $ref && isset($refererOld[$ref])) {
-            $refererNew[$refererId]['last'] = $refererOld[$ref]['current'];
+        if ('' !== $ref && isset($referer[$ref])) {
+            $referer[$refererId]['last'] = $referer[$ref]['current'];
         }
 
         // Set new current referer
-        $refererNew[$refererId]['current'] = $this->getRelativeRequestUri($request);
+        $referer[$refererId]['current'] = $this->getRelativeRequestUri($request);
 
-        $bag->set($key, $refererNew);
+        $bag->set($key, $referer);
 
         $this->storeSession();
     }
@@ -283,7 +282,7 @@ class UserSessionListener extends ScopeAwareListener
      */
     private function storeSession()
     {
-        $user   = $this->getUserObject();
+        $user = $this->getUserObject();
 
         $this->connection->prepare('UPDATE ' . $user->getTable() . ' SET session=? WHERE id=?')
             ->execute([
@@ -312,7 +311,7 @@ class UserSessionListener extends ScopeAwareListener
      */
     private function getRelativeRequestUri(Request $request)
     {
-        return substr(
+        return (string) substr(
             $request->getRequestUri(),
             strlen($request->getBasePath()) + 1
         );
