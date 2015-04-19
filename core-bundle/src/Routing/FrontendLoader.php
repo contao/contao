@@ -26,11 +26,6 @@ class FrontendLoader extends Loader
     /**
      * @var string
      */
-    private $format;
-
-    /**
-     * @var string
-     */
     private $defaultLocale = 'en';
 
     /**
@@ -41,12 +36,10 @@ class FrontendLoader extends Loader
     /**
      * Constructor.
      *
-     * @param string $format        The URL suffix
      * @param bool   $prependLocale Prepend the locale
      */
-    public function __construct($format, $prependLocale)
+    public function __construct($prependLocale)
     {
-        $this->format        = isset($format[2]) ? substr($format, 1) : '';
         $this->prependLocale = $prependLocale;
     }
 
@@ -85,16 +78,8 @@ class FrontendLoader extends Loader
      */
     private function addFrontendRoute(RouteCollection $routes, array $defaults)
     {
-        $pattern = '/{alias}';
+        $pattern = '/{alias}%contao.url_suffix%';
         $require = ['alias' => '.*'];
-
-        // URL suffix
-        if ($this->format) {
-            $pattern .= '.{_format}';
-
-            $defaults['_format'] = $this->format;
-            $require['_format']  = $this->format;
-        }
 
         // Add language to URL
         if ($this->prependLocale) {

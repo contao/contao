@@ -34,7 +34,6 @@ services:
         class: Contao\CoreBundle\Routing\FrontendLoader
         public: false
         arguments:
-            - "%contao.url_suffix%"
             - "%contao.prepend_locale%"
         tags:
             - { name: routing.loader }
