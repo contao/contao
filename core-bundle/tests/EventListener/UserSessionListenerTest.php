@@ -310,6 +310,23 @@ class UserSessionListenerTest extends TestCase
                 null,
                 null
             ],
+            'Test referer returns correct new referer for front end scope' => [
+                ContaoCoreBundle::SCOPE_FRONTEND,
+                'contao_frontend',
+                'Contao\\FrontendUser',
+                'tl_member',
+                $requestWithRefInUrl,
+                'referer',
+                [
+                    'last'      => '',
+                    'current'   => 'hi/I/am/your_current_referer.html'
+                ],
+                [
+                    'last'      => 'hi/I/am/your_current_referer.html',
+                    // Make sure this one never contains a / at the beginning
+                    'current'   => 'path/of/contao?having&query&string=1'
+                ]
+            ],
         ];
     }
 

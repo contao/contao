@@ -228,7 +228,7 @@ class UserSessionListener extends ScopeAwareListener
             'current'   => $this->getRelativeRequestUri($request)
         ];
 
-        $this->session->set('referer', $refererNew);
+        $bag->set('referer', $refererNew);
 
         $this->storeSession();
     }
@@ -252,7 +252,9 @@ class UserSessionListener extends ScopeAwareListener
         if (!$request->query->has('pdf')
             && !$request->query->has('file')
             && !$request->query->has('id')
-            && $refererOld['current'] !==  $this->getRelativeRequestUri($request)
+            && (isset($refererOld['current'])
+                && $refererOld['current'] !== $this->getRelativeRequestUri($request)
+            )
         ) {
             return true;
         }
