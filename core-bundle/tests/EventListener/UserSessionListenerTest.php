@@ -211,6 +211,7 @@ class UserSessionListenerTest extends TestCase
         $userClass,
         $userTable,
         Request $request,
+        $refererKey,
         $currentReferer,
         $expectedReferer
     ) {
@@ -234,7 +235,6 @@ class UserSessionListenerTest extends TestCase
         $token->expects($this->any())->method('getUser')->willReturn($user);
         $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
         $tokenStorage->expects($this->any())->method('getToken')->willReturn($token);
-        $refererKey = $request->query->has('popup') ? 'popupReferer' : 'referer';
         $container = $this->mockContainerWithContaoScopes();
         $container->enterScope($scope);
         $session = $this->mockSession();
@@ -264,6 +264,7 @@ class UserSessionListenerTest extends TestCase
                 'Contao\\BackendUser',
                 'tl_user',
                 $request,
+                'referer',
                 null,
                 [
                     'dummyTestRefererId' => [
@@ -272,7 +273,17 @@ class UserSessionListenerTest extends TestCase
                         'current'   => 'path/of/contao?having&query&string=1'
                     ]
                 ]
-            ]
+            ],
+            'Test current referer null returns null for front end scope' => [
+                ContaoCoreBundle::SCOPE_FRONTEND,
+                'contao_frontend',
+                'Contao\\FrontendUser',
+                'tl_member',
+                $request,
+                'referer',
+                null,
+                null
+            ],
         ];
     }
 

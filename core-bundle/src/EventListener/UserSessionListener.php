@@ -218,14 +218,13 @@ class UserSessionListener extends ScopeAwareListener
         $bag = $this->getSessionBag();
 
         $refererOld = $bag->get('referer');
-
         if (!$this->canModifyFrontendSession($request, $refererOld)) {
             $this->storeSession();
             return;
         }
 
         $refererNew = [
-            'last'      => $refererOld['current'],
+            'last'      => (string) $refererOld['current'],
             'current'   => $this->getRelativeRequestUri($request)
         ];
 
