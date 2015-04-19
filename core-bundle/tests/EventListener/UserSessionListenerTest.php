@@ -112,7 +112,7 @@ class UserSessionListenerTest extends TestCase
 
         $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
         $connection->expects($this->never())->method('prepare');
-        $connection->expects($this->never())->method('excecute');
+        $connection->expects($this->never())->method('execute');
 
         $listener = $this->getListener($session, $connection, $tokenStorage);
 
@@ -137,7 +137,7 @@ class UserSessionListenerTest extends TestCase
         $session->expects($this->never())->method('getBag');
         $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
         $connection->expects($this->never())->method('prepare');
-        $connection->expects($this->never())->method('excecute');
+        $connection->expects($this->never())->method('execute');
 
         $listener = $this->getListener($session, $connection);
 
