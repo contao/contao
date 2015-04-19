@@ -147,20 +147,13 @@ class UserSessionListener extends ScopeAwareListener
 
         $ref = $request->query->get('ref', '');
 
+        // If the referer param is in the URL and in the session,
+        // current is moved to last
         if ('' !== $ref && isset($refererOld[$ref])) {
-            if (!isset($refererOld[$refererId])) {
-                $refererOld[$refererId] = [];
-            }
-
-            $refererNew[$refererId] = array_merge(
-                $refererOld[$refererId],
-                $refererOld[$ref]
-            );
             $refererNew[$refererId]['last'] = $refererOld[$ref]['current'];
-        } elseif (count($refererOld) > 1) {
-            $refererNew[$refererId] = end($refererOld);
         }
 
+        // Set new current referer
         $refererNew[$refererId]['current'] = $this->getRelativeRequestUri($request);
 
         $bag->set($key, $refererNew);
