@@ -257,6 +257,11 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_contao_referer_id', 'dummyTestRefererId');
         $request->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
 
+        $requestWithRefInUrl = new Request();
+        $requestWithRefInUrl->attributes->set('_contao_referer_id', 'dummyTestRefererId');
+        $requestWithRefInUrl->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
+        $requestWithRefInUrl->query->set('ref', 'dummyTestRefererId');
+
         return [
             'Test current referer null returns correct new referer for back end scope' => [
                 ContaoCoreBundle::SCOPE_BACKEND,
@@ -269,6 +274,27 @@ class UserSessionListenerTest extends TestCase
                 [
                     'dummyTestRefererId' => [
                         'last'      => '',
+                        // Make sure this one never contains a / at the beginning
+                        'current'   => 'path/of/contao?having&query&string=1'
+                    ]
+                ]
+            ],
+            'Test referer returns correct new referer for back end scope' => [
+                ContaoCoreBundle::SCOPE_BACKEND,
+                'contao_backend',
+                'Contao\\BackendUser',
+                'tl_user',
+                $requestWithRefInUrl,
+                'referer',
+                [
+                    'dummyTestRefererId' => [
+                        'last'      => '',
+                        'current'   => 'hi/I/am/your_current_referer.html'
+                    ]
+                ],
+                [
+                    'dummyTestRefererId' => [
+                        'last'      => 'hi/I/am/your_current_referer.html',
                         // Make sure this one never contains a / at the beginning
                         'current'   => 'path/of/contao?having&query&string=1'
                     ]
