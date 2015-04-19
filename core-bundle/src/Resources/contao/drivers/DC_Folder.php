@@ -1946,7 +1946,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			{
 				foreach (glob(TL_ROOT . '/assets/images/*/' . $this->varValue . '-*' . $this->strExtension) as $strThumbnail)
 				{
-					$this->Files->delete(str_replace(TL_ROOT, '', $strThumbnail));
+					$this->Files->delete(str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $strThumbnail));
 				}
 			}
 
