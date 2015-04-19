@@ -109,7 +109,7 @@ class PurgeData extends \Backend implements \executable
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$strCachePath = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+		$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
 
 		// Folders
 		foreach ($GLOBALS['TL_PURGE']['folders'] as $key=>$config)

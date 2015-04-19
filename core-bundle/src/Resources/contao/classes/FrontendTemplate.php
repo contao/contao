@@ -284,7 +284,7 @@ class FrontendTemplate extends \Template
 			/** @var KernelInterface $kernel */
 			global $kernel;
 
-			$strCachePath = str_replace(TL_ROOT . '/', '', $kernel->getCacheDir());
+			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
 
 			// Create the cache file
 			$strMd5CacheKey = md5($strCacheKey);

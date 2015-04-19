@@ -136,7 +136,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         $themes = $this->container->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
-            $path = str_replace("$rootDir/", '', $theme->getPathname());
+            $path = str_replace($rootDir . DIRECTORY_SEPARATOR, '', $theme->getPathname());
 
             if (0 === strpos($path, 'system/modules/')) {
                 continue;

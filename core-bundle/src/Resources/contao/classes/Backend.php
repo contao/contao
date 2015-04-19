@@ -265,7 +265,7 @@ abstract class Backend extends \Controller
 			}
 			catch (\Exception $e) {}
 
-			$strRelpath = str_replace(TL_ROOT . '/', '', $file);
+			$strRelpath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $file);
 
 			if (!$this->Files->delete($strRelpath))
 			{
