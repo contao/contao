@@ -238,7 +238,7 @@ abstract class User extends \System
 
 
 	/**
-	 * Returns the table name
+	 * Return the table name
 	 *
 	 * @return string
 	 */

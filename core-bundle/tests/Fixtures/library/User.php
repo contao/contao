@@ -9,7 +9,13 @@ abstract class User
         return 'foo';
     }
 
-    public function __get($key) {}
+    public function __get($key)
+    {
 
-    public function getTable() {}
+    }
+
+    public function getTable()
+    {
+
+    }
 }

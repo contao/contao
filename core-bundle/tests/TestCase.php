@@ -239,6 +239,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return $config;
     }
 
+    /**
+     * Mocks a container with scopes.
+     *
+     * @return Container|\PHPUnit_Framework_MockObject_MockObject The container object
+     */
     protected function mockContainerWithContaoScopes()
     {
         $container = new Container();
