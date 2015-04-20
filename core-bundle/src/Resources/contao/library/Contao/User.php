@@ -238,6 +238,17 @@ abstract class User extends \System
 
 
 	/**
+	 * Return the table name
+	 *
+	 * @return string
+	 */
+	public function getTable()
+	{
+		return $this->strTable;
+	}
+
+
+	/**
 	 * Return the current record as associative array
 	 *
 	 * @return array

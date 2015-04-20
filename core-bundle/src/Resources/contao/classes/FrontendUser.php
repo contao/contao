@@ -63,31 +63,6 @@ class FrontendUser extends \User
 
 		$this->strIp = \Environment::get('ip');
 		$this->strHash = \Input::cookie($this->strCookie);
-
-		register_shutdown_function(array($this, 'storeSession'));
-	}
-
-
-	/**
-	 * Set the current referer and save the session
-	 */
-	public function storeSession()
-	{
-		$session = $this->Session->getData();
-
-		if (!isset($_GET['pdf']) && !isset($_GET['file']) && !isset($_GET['id']) && $session['referer']['current'] != \Environment::get('requestUri'))
-		{
-			$session['referer']['last'] = $session['referer']['current'];
-			$session['referer']['current'] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
-		}
-
-		$this->Session->setData($session);
-
-		if ($this->intId)
-		{
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET session=? WHERE id=?")
-						   ->execute(serialize($session), $this->intId);
-		}
 	}
 
 
@@ -324,16 +299,6 @@ class FrontendUser extends \User
 			{
 				$this->strLoginPage = $objGroup->jumpTo;
 			}
-		}
-
-		// Restore session
-		if (is_array($this->session))
-		{
-			$this->Session->setData($this->session);
-		}
-		else
-		{
-			$this->session = array();
 		}
 	}
 }

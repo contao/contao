@@ -119,9 +119,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ['test', false]
         );
 
-        $container = new Container();
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container = $this->mockContainerWithContaoScopes();
         $container->setParameter('contao.error_level', error_reporting());
 
         $container->set(
@@ -239,5 +237,19 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         ;
 
         return $config;
+    }
+
+    /**
+     * Mocks a container with scopes.
+     *
+     * @return Container|\PHPUnit_Framework_MockObject_MockObject The container object
+     */
+    protected function mockContainerWithContaoScopes()
+    {
+        $container = new Container();
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+
+        return $container;
     }
 }

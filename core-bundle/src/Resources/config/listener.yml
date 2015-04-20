@@ -105,3 +105,16 @@ services:
             - [setContainer, ["@service_container"]]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 24 }
+
+    contao.listener.user_session:
+        class: Contao\CoreBundle\EventListener\UserSessionListener
+        arguments:
+            - '@session'
+            - '@doctrine.dbal.default_connection'
+            - '@security.token_storage'
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
