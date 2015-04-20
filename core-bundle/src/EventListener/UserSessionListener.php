@@ -272,11 +272,17 @@ class UserSessionListener extends ScopeAwareListener
     /**
      * Returns the user object depending on the container scope.
      *
-     * @return FrontendUser|BackendUser The user object
+     * @return FrontendUser|BackendUser|null The user object
      */
     private function getUserObject()
     {
-        return $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+
+        if (null === $token) {
+            return null;
+        }
+
+        return $token->getUser();
     }
 
     /**
