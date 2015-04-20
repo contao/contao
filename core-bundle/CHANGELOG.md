@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### New
+Added support for specifying the database key length (see #221).
+
 ### Fixed
 Create absolute symlinks if relative symlinks are not supported (see #208).
 
