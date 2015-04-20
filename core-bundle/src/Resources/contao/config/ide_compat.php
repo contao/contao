@@ -12,7 +12,9 @@
 // Eclipse, Zend Studio or PHPStorm realize the class origins, since the dynamic
 // class aliasing we are using is a bit too complex for them to understand.
 namespace {
-    define('TL_ROOT', __DIR__ . '/../../../../../');
+	define('TL_ROOT', __DIR__ . '/../../../../../');
+	define('TL_ASSETS_URL', 'http://localhost/');
+	define('TL_FILES_URL', 'http://localhost/');
 }
 namespace {
 	class Ajax extends \Contao\Ajax {}
