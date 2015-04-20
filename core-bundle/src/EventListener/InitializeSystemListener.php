@@ -373,17 +373,22 @@ class InitializeSystemListener extends ScopeAwareListener
             define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
         }
 
-        // Check the request token upon POST requests
+        if (!$_POST || null === $request) {
+            return;
+        }
+
         $token = new CsrfToken($this->csrfTokenName, Input::post('REQUEST_TOKEN'));
 
-        // FIXME: This forces all routes handling POST data to pass a REQUEST_TOKEN
-        if ($_POST && null !== $request && !$this->tokenManager->isTokenValid($token)) {
-            if ($request->isXmlHttpRequest()) {
-                throw new AjaxRedirectResponseException($this->router->generate('contao_backend'));
-            }
-
-            throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
+        if ($this->tokenManager->isTokenValid($token)) {
+            return;
         }
+
+        if ($request->isXmlHttpRequest()) {
+            throw new AjaxRedirectResponseException($this->router->generate('contao_backend'));
+        }
+
+        // FIXME: This forces all routes handling POST data to pass a REQUEST_TOKEN
+        throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
     }
 
     /**
