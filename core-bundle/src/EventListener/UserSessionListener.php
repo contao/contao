@@ -64,7 +64,7 @@ class UserSessionListener extends ScopeAwareListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$this->hasUser() && !$this->isFrontendMasterRequest($event) && !$this->isBackendMasterRequest($event)) {
+        if (!$this->hasUser() || !$this->isContaoMasterRequest($event)) {
             return;
         }
 
@@ -82,7 +82,7 @@ class UserSessionListener extends ScopeAwareListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->hasUser() && !$this->isFrontendMasterRequest($event) && !$this->isBackendMasterRequest($event)) {
+        if (!$this->hasUser() || !$this->isContaoMasterRequest($event)) {
             return;
         }
 
@@ -259,10 +259,6 @@ class UserSessionListener extends ScopeAwareListener
     {
         $user = $this->getUserObject();
 
-        if (!is_object($user)) {
-            return;
-        }
-
         $this->connection
             ->prepare('UPDATE ' . $user->getTable() . ' SET session=? WHERE id=?')
             ->execute([serialize($this->getSessionBag()->all()), $user->id])
@@ -276,13 +272,7 @@ class UserSessionListener extends ScopeAwareListener
      */
     private function getUserObject()
     {
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token) {
-            return null;
-        }
-
-        return $token->getUser();
+        return $this->tokenStorage->getToken()->getUser();
     }
 
     /**

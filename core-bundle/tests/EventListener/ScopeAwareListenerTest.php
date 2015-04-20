@@ -50,6 +50,26 @@ class ScopeAwareListenerTest extends TestCase
     }
 
     /**
+     * Tests the isContaoMasterRequest() method.
+     */
+    public function testIsContaoMasterRequest()
+    {
+        $container = new ContainerBuilder();
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
+
+        $this->listener->setContainer($container);
+
+        $event = new KernelEvent($this->mockKernel(), new Request(), HttpKernelInterface::MASTER_REQUEST);
+
+        $reflection = new \ReflectionClass($this->listener);
+        $method = $reflection->getMethod('isContaoMasterRequest');
+        $method->setAccessible(true);
+
+        $this->assertTrue($method->invokeArgs($this->listener, [$event]));
+    }
+
+    /**
      * Tests the isFrontendMasterRequest() method.
      */
     public function testIsFrontendMasterRequest()

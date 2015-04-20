@@ -211,7 +211,7 @@ class UserSessionListenerTest extends TestCase
         $responseEvent = new GetResponseEvent(
             $this->mockKernel(),
             $request,
-            HttpKernelInterface::SUB_REQUEST
+            HttpKernelInterface::MASTER_REQUEST
         );
 
         $container = $this->mockContainerWithContaoScopes();
@@ -258,7 +258,7 @@ class UserSessionListenerTest extends TestCase
 
 
     /**
-     * Testss that the session values are replaced upon kernel.request.
+     * Tests that the session values are replaced upon kernel.request.
      *
      * @param string  $scope           The container scope
      * @param string  $sessionBagName  The session bag name
@@ -283,7 +283,7 @@ class UserSessionListenerTest extends TestCase
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
             $request,
-            HttpKernelInterface::SUB_REQUEST,
+            HttpKernelInterface::MASTER_REQUEST,
             $response
         );
 

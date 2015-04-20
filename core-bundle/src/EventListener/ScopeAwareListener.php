@@ -22,6 +22,18 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 abstract class ScopeAwareListener extends ContainerAware
 {
     /**
+     * Checks whether the request is the master request in one of the Contao scopes.
+     *
+     * @param KernelEvent $event The HttpKernel event
+     *
+     * @return bool True the request is the master request in one of the Contao scopes
+     */
+    protected function isContaoMasterRequest(KernelEvent $event)
+    {
+        return $event->isMasterRequest() && $this->isContaoScope();
+    }
+
+    /**
      * Checks whether the request is the master request in the back end scope.
      *
      * @param KernelEvent $event The HttpKernel event
@@ -43,6 +55,16 @@ abstract class ScopeAwareListener extends ContainerAware
     protected function isFrontendMasterRequest(KernelEvent $event)
     {
         return $event->isMasterRequest() && $this->isFrontendScope();
+    }
+
+    /**
+     * Checks whether the container is in one of the Contao scopes.
+     *
+     * @return bool True if the container is in one of the Contao scopes
+     */
+    protected function isContaoScope()
+    {
+        return $this->isBackendScope() || $this->isFrontendScope();
     }
 
     /**
