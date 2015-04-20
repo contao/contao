@@ -219,16 +219,16 @@ class ContaoDataCollector extends DataCollector
         $modelCount   = '0';
 
         if (isset($GLOBALS['TL_DEBUG'])) {
-            $modelCount = Registry::getInstance()->count();
             $framework  = true;
+            $modelCount = Registry::getInstance()->count();
         }
 
         $this->data['summary'] = [
-            'version'        => $this->getContaoVersion(),
-            'scope'          => $this->getContainerScope(),
-            'layout'         => $this->getLayoutName(),
-            'framework'      => $framework,
-            'models'         => $modelCount,
+            'version'   => $this->getContaoVersion(),
+            'scope'     => $this->getContainerScope(),
+            'layout'    => $this->getLayoutName(),
+            'framework' => $framework,
+            'models'    => $modelCount,
         ];
     }
 
@@ -251,7 +251,7 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Gets the name of the current page layout (front end only).
+     * Returns the name of the current page layout (front end only).
      *
      * @return string|null The layout name
      */
@@ -264,12 +264,11 @@ class ContaoDataCollector extends DataCollector
         /** @var PageModel $objPage */
         global $objPage;
 
-        if (null === $objPage
-            || null === ($layoutModel = LayoutModel::findByPk($objPage->layout))
-        ) {
+        /** @var LayoutModel $layout */
+        if (null === $objPage || null === ($layout = $objPage->getRelated('layout'))) {
             return '';
         }
 
-        return sprintf('%s (ID %s)', $layoutModel->name, $layoutModel->id);
+        return sprintf('%s (ID %s)', $layout->name, $layout->id);
     }
 }
