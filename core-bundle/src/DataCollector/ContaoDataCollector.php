@@ -216,27 +216,19 @@ class ContaoDataCollector extends DataCollector
     private function addSummaryData()
     {
         $framework    = false;
-        $modelCount   = '';
-        $layout       = 'N/A';
+        $modelCount   = '0';
 
         if (isset($GLOBALS['TL_DEBUG'])) {
-            $modelCount = Registry::getInstance()->count();
             $framework  = true;
-
-            /** @var PageModel $objPage */
-            global $objPage;
-
-            if (null !== ($layoutModel = LayoutModel::findByPk($objPage->layout))) {
-                $layout = sprintf('%s (ID %s)', $layoutModel->name, $layoutModel->id);
-            }
+            $modelCount = Registry::getInstance()->count();
         }
 
         $this->data['summary'] = [
-            'version'        => $this->getContaoVersion(),
-            'scope'          => $this->getContainerScope(),
-            'layout'         => $layout,
-            'framework'      => $framework,
-            'models'         => $modelCount,
+            'version'   => $this->getContaoVersion(),
+            'scope'     => $this->getContainerScope(),
+            'layout'    => $this->getLayoutName(),
+            'framework' => $framework,
+            'models'    => $modelCount,
         ];
     }
 
@@ -256,5 +248,27 @@ class ContaoDataCollector extends DataCollector
         }
 
         return '';
+    }
+
+    /**
+     * Returns the name of the current page layout (front end only).
+     *
+     * @return string|null The layout name
+     */
+    private function getLayoutName()
+    {
+        if (!$this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
+            return '';
+        }
+
+        /** @var PageModel $objPage */
+        global $objPage;
+
+        /** @var LayoutModel $layout */
+        if (null === $objPage || null === ($layout = $objPage->getRelated('layout'))) {
+            return '';
+        }
+
+        return sprintf('%s (ID %s)', $layout->name, $layout->id);
     }
 }
