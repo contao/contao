@@ -203,8 +203,8 @@ class UserSessionListener extends ScopeAwareListener
         // Update the referer URL
         if ($this->canModifyFrontendSession($request, $refererOld)) {
             $refererNew = [
-                'last'      => (string) $refererOld['current'],
-                'current'   => $this->getRelativeRequestUri($request)
+                'last'    => (string) $refererOld['current'],
+                'current' => $this->getRelativeRequestUri($request),
             ];
 
             $bag->set('referer', $refererNew);

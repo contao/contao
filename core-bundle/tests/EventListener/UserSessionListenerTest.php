@@ -41,7 +41,6 @@ class UserSessionListenerTest extends TestCase
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\UserSessionListener', $listener);
     }
 
-
     /**
      * Tests that the session bag is not requested when there is no user.
      *
@@ -202,8 +201,8 @@ class UserSessionListenerTest extends TestCase
     public function testSessionReplacedOnKernelRequest($scope, $userClass, $sessionBagName)
     {
         $sessionValuesToBeSet = [
-            'foo'       => 'bar',
-            'lonesome'  => 'looser'
+            'foo'      => 'bar',
+            'lonesome' => 'looser',
         ];
 
         $request = new Request();
@@ -255,7 +254,6 @@ class UserSessionListenerTest extends TestCase
 
         $this->assertSame($sessionValuesToBeSet, $bag->all());
     }
-
 
     /**
      * Tests that the session values are replaced upon kernel.request.
@@ -373,9 +371,9 @@ class UserSessionListenerTest extends TestCase
                 [
                     'dummyTestRefererId' => [
                         'last'    => '',
-                        'current' => 'path/of/contao?having&query&string=1'
-                    ]
-                ]
+                        'current' => 'path/of/contao?having&query&string=1',
+                    ],
+                ],
             ],
             'Test referer returns correct new referer for back end scope' => [
                 ContaoCoreBundle::SCOPE_BACKEND,
@@ -387,15 +385,15 @@ class UserSessionListenerTest extends TestCase
                 [
                     'dummyTestRefererId' => [
                         'last'    => '',
-                        'current' => 'hi/I/am/your_current_referer.html'
-                    ]
+                        'current' => 'hi/I/am/your_current_referer.html',
+                    ],
                 ],
                 [
                     'dummyTestRefererId' => [
                         'last'    => 'hi/I/am/your_current_referer.html',
-                        'current' => 'path/of/contao?having&query&string=1'
-                    ]
-                ]
+                        'current' => 'path/of/contao?having&query&string=1',
+                    ],
+                ],
             ],
             'Test current referer null returns null for front end scope' => [
                 ContaoCoreBundle::SCOPE_FRONTEND,
@@ -405,7 +403,7 @@ class UserSessionListenerTest extends TestCase
                 $request,
                 'referer',
                 null,
-                null
+                null,
             ],
             'Test referer returns correct new referer for front end scope' => [
                 ContaoCoreBundle::SCOPE_FRONTEND,
@@ -416,12 +414,12 @@ class UserSessionListenerTest extends TestCase
                 'referer',
                 [
                     'last'    => '',
-                    'current' => 'hi/I/am/your_current_referer.html'
+                    'current' => 'hi/I/am/your_current_referer.html',
                 ],
                 [
                     'last'    => 'hi/I/am/your_current_referer.html',
-                    'current' => 'path/of/contao?having&query&string=1'
-                ]
+                    'current' => 'path/of/contao?having&query&string=1',
+                ],
             ],
         ];
     }
@@ -437,7 +435,7 @@ class UserSessionListenerTest extends TestCase
 
         return [
             [null],
-            [$anonymousToken]
+            [$anonymousToken],
         ];
     }
 
@@ -450,7 +448,7 @@ class UserSessionListenerTest extends TestCase
     {
         return [
             [ContaoCoreBundle::SCOPE_BACKEND, 'Contao\\BackendUser', 'contao_backend'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, 'Contao\\FrontendUser', 'contao_frontend']
+            [ContaoCoreBundle::SCOPE_FRONTEND, 'Contao\\FrontendUser', 'contao_frontend'],
         ];
     }
 
