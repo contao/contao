@@ -259,6 +259,10 @@ class UserSessionListener extends ScopeAwareListener
     {
         $user = $this->getUserObject();
 
+        if (!is_object($user)) {
+            return;
+        }
+
         $this->connection
             ->prepare('UPDATE ' . $user->getTable() . ' SET session=? WHERE id=?')
             ->execute([serialize($this->getSessionBag()->all()), $user->id])
