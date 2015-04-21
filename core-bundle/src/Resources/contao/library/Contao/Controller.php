@@ -1074,15 +1074,16 @@ abstract class Controller extends \System
 
 		$objRouter = $kernel->getContainer()->get('router');
 		$arrParams = [];
+        $route     = 'contao_frontend';
 
 		// Correctly handle the "index" alias (see #3961)
 		if ($arrRow['alias'] == 'index' && $strParams == '')
 		{
-			$arrParams['alias'] = '';
+			$route = 'contao_root';
 		}
 		else
 		{
-			$arrParams['alias'] = ($arrRow['alias'] ?: $arrRow['id']) . $strParams . \Config::get('urlSuffix');
+			$arrParams['alias'] = ($arrRow['alias'] ?: $arrRow['id']) . $strParams;
 		}
 
 		// Set the language
@@ -1102,7 +1103,7 @@ abstract class Controller extends \System
 			$arrParams['_locale'] = $objPage->rootLanguage;
 		}
 
-		$strUrl = $objRouter->generate('contao_frontend', $arrParams);
+		$strUrl = $objRouter->generate($route, $arrParams);
 		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)
