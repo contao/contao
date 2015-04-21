@@ -1074,7 +1074,7 @@ abstract class Controller extends \System
 
 		$objRouter = $kernel->getContainer()->get('router');
 		$arrParams = [];
-        $route     = 'contao_frontend';
+		$route     = 'contao_frontend';
 
 		// Correctly handle the "index" alias (see #3961)
 		if ($arrRow['alias'] == 'index' && $strParams == '')
