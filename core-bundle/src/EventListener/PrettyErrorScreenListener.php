@@ -107,9 +107,7 @@ class PrettyErrorScreenListener
                 break;
 
             default:
-                if (null !== ($response = $this->renderTemplate('error', 500))) {
-                    $event->setResponse($response);
-                }
+                $this->renderTemplate('error', 500, $event);
                 break;
         }
     }
@@ -173,9 +171,7 @@ class PrettyErrorScreenListener
      */
     private function renderMaintenanceScreen(GetResponseForExceptionEvent $event)
     {
-        if (null !== ($response = $this->renderTemplate('service_unavailable', 503))) {
-            $event->setResponse($response);
-        }
+        $this->renderTemplate('service_unavailable', 503, $event);
     }
 
     /**
@@ -202,9 +198,7 @@ class PrettyErrorScreenListener
             return;
         }
 
-        if (null !== ($response = $this->renderTemplate($template, $statusCode, $event->getRequest()->getBasePath()))) {
-            $event->setResponse($response);
-        }
+        $this->renderTemplate($template, $statusCode, $event);
     }
 
     /**
@@ -228,13 +222,13 @@ class PrettyErrorScreenListener
     /**
      * Renders a template and returns the response object.
      *
-     * @param string $template   The template name
-     * @param int    $statusCode The status code
-     * @param string $basePath   The base path
+     * @param string                       $template   The template name
+     * @param int                          $statusCode The status code
+     * @param GetResponseForExceptionEvent $event      The event
      *
      * @return Response The response object
      */
-    private function renderTemplate($template, $statusCode, $basePath = '')
+    private function renderTemplate($template, $statusCode, GetResponseForExceptionEvent $event)
     {
         if (!$this->prettyErrorScreens) {
             return null;
@@ -243,16 +237,20 @@ class PrettyErrorScreenListener
         $view = "@ContaoCore/Error/$template.html.twig";
 
         if (!$this->twig->exists($view)) {
-            return $this->renderErrorTemplate();
+            $event->setResponse($this->getErrorTemplate());
+
+            return;
         }
 
-        $parameters = $this->getTemplateParameters($view, $statusCode, $basePath);
+        $parameters = $this->getTemplateParameters($view, $statusCode, $event->getRequest()->getBasePath());
 
         if (null === $parameters) {
-            return $this->renderErrorTemplate();
+            $event->setResponse($this->getErrorTemplate());
+
+            return;
         }
 
-        return $this->twig->renderResponse($view, $parameters)->setStatusCode($statusCode);
+        $event->setResponse($this->twig->renderResponse($view, $parameters)->setStatusCode($statusCode));
     }
 
     /**
@@ -260,7 +258,7 @@ class PrettyErrorScreenListener
      *
      * @return Response The response object
      */
-    private function renderErrorTemplate()
+    private function getErrorTemplate()
     {
         $parameters =  [
             'statusCode' => 500,
