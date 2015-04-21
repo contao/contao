@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\String;
 use Contao\System;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -85,20 +86,6 @@ class PrettyErrorScreenListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        if (!$this->prettyErrorScreens) {
-            return;
-        }
-
-        $this->renderErrorScreen($event);
-    }
-
-    /**
-     * Renders the error screen.
-     *
-     * @param GetResponseForExceptionEvent $event The event object
-     */
-    private function renderErrorScreen(GetResponseForExceptionEvent $event)
-    {
         $exception = $event->getException();
 
         switch (true) {
@@ -120,7 +107,9 @@ class PrettyErrorScreenListener
                 break;
 
             default:
-                $event->setResponse($this->renderTemplate('error', 500));
+                if (null !== ($response = $this->renderTemplate('error', 500))) {
+                    $event->setResponse($response);
+                }
                 break;
         }
     }
@@ -165,11 +154,13 @@ class PrettyErrorScreenListener
             return null;
         }
 
-        /** @var \PageError403 $pageHandler */
+        /** @var \PageError404 $pageHandler */
         $pageHandler = new $GLOBALS['TL_PTY'][$type]();
 
         try {
             return $pageHandler->getResponse(false); // FIXME: the class requires a numeric $pageId
+        } catch (RedirectResponseException $e) {
+            return $e->getResponse();
         } catch (\Exception $e) {
             return null;
         }
@@ -182,7 +173,9 @@ class PrettyErrorScreenListener
      */
     private function renderMaintenanceScreen(GetResponseForExceptionEvent $event)
     {
-        $event->setResponse($this->renderTemplate('service_unavailable', 503));
+        if (null !== ($response = $this->renderTemplate('service_unavailable', 503))) {
+            $event->setResponse($response);
+        }
     }
 
     /**
@@ -209,7 +202,9 @@ class PrettyErrorScreenListener
             return;
         }
 
-        $event->setResponse($this->renderTemplate($template, $statusCode, $event->getRequest()->getBasePath()));
+        if (null !== ($response = $this->renderTemplate($template, $statusCode, $event->getRequest()->getBasePath()))) {
+            $event->setResponse($response);
+        }
     }
 
     /**
@@ -241,6 +236,10 @@ class PrettyErrorScreenListener
      */
     private function renderTemplate($template, $statusCode, $basePath = '')
     {
+        if (!$this->prettyErrorScreens) {
+            return null;
+        }
+
         $view = "@ContaoCore/Error/$template.html.twig";
 
         if (!$this->twig->exists($view)) {

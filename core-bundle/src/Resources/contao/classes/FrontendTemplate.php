@@ -252,13 +252,13 @@ class FrontendTemplate extends \Template
 		if ($intCache > 0 && (\Config::get('cacheMode') == 'both' || \Config::get('cacheMode') == 'server'))
 		{
 			// If the request string is empty, use a special cache tag which considers the page language
-			if (\Environment::get('request') == '' || \Environment::get('request') == \Environment::get('script'))
+			if (\Environment::get('relativeRequest') == '')
 			{
 				$strCacheKey = \Environment::get('host') . '/empty.' . $objPage->language;
 			}
 			else
 			{
-				$strCacheKey = \Environment::get('host') . '/' . \Environment::get('request');
+				$strCacheKey = \Environment::get('host') . '/' . \Environment::get('relativeRequest');
 			}
 
 			// HOOK: add custom logic

@@ -447,6 +447,17 @@ class Environment
 
 
 	/**
+	 * Return the request string without the script name (e.g. en/news.html)
+	 *
+	 * @return string The base URL
+	 */
+	protected static function relativeRequest()
+	{
+		return preg_replace('/^' . preg_quote(static::get('script'),  '/') . '\/?/', '', static::get('request'));
+	}
+
+
+	/**
 	 * Return the request string without the index.php fragment
 	 *
 	 * @return string The request string without the index.php fragment
@@ -455,7 +466,7 @@ class Environment
 	{
 		$strRequest = static::get('request');
 
-		if ($strRequest == \Environment::get('script'))
+		if ($strRequest == static::get('script'))
 		{
 			return '';
 		}

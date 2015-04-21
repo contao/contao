@@ -224,7 +224,7 @@ class Pagination
 		}
 
 		$blnQuery = false;
-		$this->strUrl = preg_replace('/\?.*$/', '', \Environment::get('request'));
+		list($this->strUrl) = explode('?', \Environment::get('request'), 2);
 
 		// Prepare the URL
 		foreach (preg_split('/&(amp;)?/', \Environment::get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment)

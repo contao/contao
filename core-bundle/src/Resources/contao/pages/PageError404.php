@@ -101,7 +101,7 @@ class PageError404 extends \Frontend
 		}
 
 		// Check the search index (see #3761)
-		\Search::removeEntry(\Environment::get('request'));
+		\Search::removeEntry(\Environment::get('relativeRequest'));
 
 		// Find the matching root page
 		$objRootPage = $this->getRootPageFromUrl();
@@ -110,14 +110,7 @@ class PageError404 extends \Frontend
 		if (\Config::get('addLanguageToUrl'))
 		{
 			// Get the request string without the script name
-			if (\Environment::get('request') == \Environment::get('script'))
-			{
-				$strRequest = '';
-			}
-			else
-			{
-				$strRequest = str_replace(\Environment::get('script') . '/', '', \Environment::get('request'));
-			}
+			$strRequest = \Environment::get('relativeRequest');
 
 			// Only redirect if there is no language fragment (see #4669)
 			if ($strRequest != '' && !preg_match('@^[a-z]{2}(\-[A-Z]{2})?/@', $strRequest))

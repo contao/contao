@@ -61,20 +61,15 @@ abstract class Frontend extends \Controller
 	 */
 	public static function getPageIdFromUrl()
 	{
-		if (\Environment::get('request') == '')
+		$strRequest = \Environment::get('relativeRequest');
+
+		if ($strRequest == '')
 		{
 			return null;
 		}
 
-		// Get the request string without the script name
-		if (\Environment::get('request') == \Environment::get('script'))
-		{
-			$strRequest = '';
-		}
-		else
-		{
-			list($strRequest) = explode('?', str_replace(\Environment::get('script') . '/', '', \Environment::get('request')), 2);
-		}
+		// Get the request without the query string
+		list($strRequest) = explode('?', $strRequest, 2);
 
 		// URL decode here (see #6232)
 		$strRequest = rawurldecode($strRequest);
@@ -336,7 +331,7 @@ abstract class Frontend extends \Controller
 			}
 
 			// Redirect to the language root (e.g. en/)
-			if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty') && \Environment::get('request') == '')
+			if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty') && \Environment::get('relativeRequest') == '')
 			{
 				/** @var KernelInterface $kernel */
 				global $kernel;
@@ -633,7 +628,7 @@ abstract class Frontend extends \Controller
 				if ($blnIndex)
 				{
 					$arrData = array(
-						'url'       => \Environment::get('request'),
+						'url'       => \Environment::get('relativeRequest'),
 						'content'   => $objResponse->getContent(),
 						'title'     => $objPage->pageTitle ?: $objPage->title,
 						'protected' => ($objPage->protected ? '1' : ''),
@@ -665,7 +660,7 @@ abstract class Frontend extends \Controller
 		global $kernel;
 
 		// Try to map the empty request
-		if (\Environment::get('request') == '' || \Environment::get('request') == \Environment::get('script'))
+		if (\Environment::get('relativeRequest') == '')
 		{
 			// Return if the language is added to the URL and the empty domain will be redirected
 			if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty'))
@@ -722,7 +717,7 @@ abstract class Frontend extends \Controller
 		}
 		else
 		{
-			$strCacheKey = \Environment::get('host') . '/' . \Environment::get('request');
+			$strCacheKey = \Environment::get('host') . '/' . \Environment::get('relativeRequest');
 		}
 
 		// HOOK: add custom logic
