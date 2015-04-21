@@ -74,7 +74,7 @@ class FrontendLoader extends Loader
     private function addFrontendRoute(RouteCollection $routes, array $defaults)
     {
         $pattern = '/{alias}%contao.url_suffix%';
-        $require = ['alias' => '.*'];
+        $require = ['alias' => '.+'];
 
         // Add language to URL
         if ($this->prependLocale) {
@@ -96,7 +96,19 @@ class FrontendLoader extends Loader
      */
     private function addRootRoute(RouteCollection $routes, array $defaults)
     {
-        $routes->add('contao_root', new Route('/', $defaults));
+        $pattern = '/';
+        $require = [];
+
+        // Add language to URL
+        if ($this->prependLocale) {
+            $pattern = '/{_locale}/';
+
+            $require['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
+        } else {
+            $defaults['_locale'] = null;
+        }
+
+        $routes->add('contao_root', new Route($pattern, $defaults, $require));
     }
 
     /**
