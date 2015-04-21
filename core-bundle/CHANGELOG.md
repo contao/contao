@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### Fixed
+Replace the old back end paths when generating Ajax responses (see #212).
+
 ### New
 Added support for specifying the database key length (see #221).
 
