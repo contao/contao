@@ -340,12 +340,19 @@ abstract class System
 					// There are no .php files
 				}
 
-				/** @var SplFileInfo[] $files */
-				$files = $kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.xlf', null, false);
-
-				foreach ($files as $file)
+				try
 				{
-					$xlfLoader->load($file, $strCreateLang);
+					/** @var SplFileInfo[] $files */
+					$files = $kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.xlf', null, false);
+
+					foreach ($files as $file)
+					{
+						$xlfLoader->load($file, $strCreateLang);
+					}
+				}
+				catch (\InvalidArgumentException $e)
+				{
+					// There are no .xlf files
 				}
 			}
 		}

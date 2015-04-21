@@ -5,6 +5,9 @@ Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
 ### Fixed
+Do not throw an exception if there are not XLIFF files (see #211).
+
+### Fixed
 Correctly check for public folders when loading content via Ajax (see #213).
 
 ### Fixed
