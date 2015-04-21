@@ -11,7 +11,10 @@
 namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\FrontendUser;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -22,7 +25,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoUserProvider implements UserProviderInterface
+class ContaoUserProvider extends ContainerAware implements UserProviderInterface
 {
     /**
      * {@inheritdoc}
@@ -31,11 +34,11 @@ class ContaoUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        if ('backend' === $username) {
+        if ('backend' === $username && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
             return BackendUser::getInstance();
         }
 
-        if ('frontend' === $username) {
+        if ('frontend' === $username && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
             return FrontendUser::getInstance();
         }
 
