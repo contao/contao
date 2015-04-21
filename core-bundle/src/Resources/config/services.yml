@@ -1,0 +1,50 @@
+services:
+    contao.data_collector:
+        class: Contao\CoreBundle\DataCollector\ContaoDataCollector
+        public: false
+        arguments:
+            - "@service_container"
+            - "%kernel.bundles%"
+            - "%kernel.packages%"
+        tags:
+            - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
+
+    contao.referer_id.manager:
+         class: "%security.csrf.token_manager.class%"
+         public: false
+         arguments:
+            - "@contao.referer_id.token_generator"
+            - "@security.csrf.token_storage"
+
+    contao.referer_id.token_generator:
+         class: Contao\CoreBundle\RefererId\TokenGenerator
+         public: false
+
+    contao.resource_finder:
+        class: Contao\CoreBundle\Config\ResourceFinder
+        arguments:
+            - "%contao.resources_paths%"
+
+    contao.resource_locator:
+        class: Symfony\Component\Config\FileLocator
+        arguments:
+            - "%contao.resources_paths%"
+
+    contao.routing.frontend_loader:
+        class: Contao\CoreBundle\Routing\FrontendLoader
+        public: false
+        arguments:
+            - "%contao.url_suffix%"
+            - "%contao.prepend_locale%"
+        tags:
+            - { name: routing.loader }
+
+    contao.security.authenticator:
+        class: Contao\CoreBundle\Security\ContaoAuthenticator
+        public: false
+        arguments:
+            - "@contao.security.user_provider"
+
+    contao.security.user_provider:
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
+        public: false
