@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -73,6 +74,11 @@ class BackendIndex extends \Backend
 	 */
 	public function run()
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$request = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
+
 		/** @var \BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_login');
 
@@ -102,6 +108,7 @@ class BackendIndex extends \Backend
 		$objTemplate->username = $GLOBALS['TL_LANG']['tl_user']['username'][0];
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
+		$objTemplate->frontendFile = $request->getBaseUrl() . '/';
 		$objTemplate->disableCron = \Config::get('disableCron');
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 

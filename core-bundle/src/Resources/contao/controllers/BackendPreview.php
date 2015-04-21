@@ -72,7 +72,7 @@ class BackendPreview extends \Backend
 		}
 		else
 		{
-			$objTemplate->url = $kernel->getContainer()->get('router')->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL);
+			$objTemplate->url = $kernel->getContainer()->get('request_stack')->getCurrentRequest()->getBaseUrl() . '/';
 		}
 
 		// Switch to a particular member (see #6546)
