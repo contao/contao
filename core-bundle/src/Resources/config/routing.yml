@@ -1,0 +1,17 @@
+contao:
+    resource: "@ContaoCoreBundle/Controller"
+    type: annotation
+
+# Redirect /contao/ to /contao
+contao_backend_redirect:
+    path: /contao/
+    defaults:
+        _scope: backend
+        _controller: FrameworkBundle:Redirect:redirect
+        route: contao_backend
+        permanent: true
+
+# The fallback route must be the last one!
+contao_frontend:
+    resource: .
+    type: contao_frontend
