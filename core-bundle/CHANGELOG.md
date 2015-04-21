@@ -5,6 +5,9 @@ Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
 ### Fixed
+Correctly check for public folders when loading content via Ajax (see #213).
+
+### Fixed
 Replace the old back end paths when generating Ajax responses (see #212).
 
 ### New

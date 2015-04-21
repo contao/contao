@@ -2221,7 +2221,20 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
 
-		$blnProtected = !file_exists(TL_ROOT . '/' . $strFolder . '/.public');
+		$blnProtected = true;
+		$strPath = $strFolder;
+
+		// Check for public parent folders (see #213)
+		while ($strPath != '' && $strPath != '.')
+		{
+			if (file_exists(TL_ROOT . '/' . $strPath . '/.public'))
+			{
+				$blnProtected = false;
+				break;
+			}
+
+			$strPath = dirname($strPath);
+		}
 
 		$this->import('Files');
 		$this->import('BackendUser', 'User');

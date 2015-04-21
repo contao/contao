@@ -129,14 +129,14 @@ class FileSelector extends \Widget
 	/**
 	 * Generate a particular subpart of the file tree and return it as HTML string
 	 *
-	 * @param integer $folder
+	 * @param integer $strFolder
 	 * @param string  $strField
 	 * @param integer $level
 	 * @param boolean $mount
 	 *
 	 * @return string
 	 */
-	public function generateAjax($folder, $strField, $level, $mount=false)
+	public function generateAjax($strFolder, $strField, $level, $mount=false)
 	{
 		if (!\Environment::get('isAjaxRequest'))
 		{
@@ -177,7 +177,22 @@ class FileSelector extends \Widget
 
 		$this->convertValuesToPaths();
 
-		return $this->renderFiletree(TL_ROOT . '/' . $folder, ($level * 20), $mount);
+		$blnProtected = true;
+		$strPath = $strFolder;
+
+		// Check for public parent folders (see #213)
+		while ($strPath != '' && $strPath != '.')
+		{
+			if (file_exists(TL_ROOT . '/' . $strPath . '/.public'))
+			{
+				$blnProtected = false;
+				break;
+			}
+
+			$strPath = dirname($strPath);
+		}
+
+		return $this->renderFiletree(TL_ROOT . '/' . $strFolder, ($level * 20), $mount, $blnProtected);
 	}
 
 
