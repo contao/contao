@@ -13,6 +13,11 @@ namespace Contao\CoreBundle\Test\Routing;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Tests the FrontendLoader class.
@@ -26,106 +31,186 @@ class FrontendLoaderTest extends TestCase
      */
     public function testInstantiation()
     {
-        $loader = new FrontendLoader('', false);
+        $loader = new FrontendLoader(false);
 
         $this->assertInstanceOf('Contao\\CoreBundle\\Routing\\FrontendLoader', $loader);
     }
 
     /**
-     * Tests with URL suffix and without language.
-     */
-    public function testLoadWithoutLanguage()
-    {
-        $loader     = new FrontendLoader('.html', false);
-        $collection = $loader->load('.', 'bundles');
-
-        $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
-
-        $routes = $collection->all();
-
-        $this->assertArrayHasKey('contao_frontend', $routes);
-        $this->assertEquals('/{alias}.{_format}', $routes['contao_frontend']->getPath());
-        $this->assertEquals('ContaoCoreBundle:Frontend:index', $routes['contao_frontend']->getDefault('_controller'));
-        $this->assertEquals('html', $routes['contao_frontend']->getDefault('_format'));
-        $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
-        $this->assertEquals('html', $routes['contao_frontend']->getRequirement('_format'));
-        $this->assertEquals('', $routes['contao_frontend']->getRequirement('_locale'));
-        $this->assertEquals(ContaoCoreBundle::SCOPE_FRONTEND, $routes['contao_frontend']->getDefault('_scope'));
-    }
-
-    /**
-     * Tests with URL suffix and with language.
-     */
-    public function testLoadWitLanguage()
-    {
-        $loader     = new FrontendLoader('.html', true);
-        $collection = $loader->load('.', 'bundles');
-
-        $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
-
-        $routes = $collection->all();
-
-        $this->assertArrayHasKey('contao_frontend', $routes);
-        $this->assertEquals('/{_locale}/{alias}.{_format}', $routes['contao_frontend']->getPath());
-        $this->assertEquals('ContaoCoreBundle:Frontend:index', $routes['contao_frontend']->getDefault('_controller'));
-        $this->assertEquals('html', $routes['contao_frontend']->getDefault('_format'));
-        $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
-        $this->assertEquals('html', $routes['contao_frontend']->getRequirement('_format'));
-        $this->assertEquals('[a-z]{2}(\-[A-Z]{2})?', $routes['contao_frontend']->getRequirement('_locale'));
-        $this->assertEquals(ContaoCoreBundle::SCOPE_FRONTEND, $routes['contao_frontend']->getDefault('_scope'));
-    }
-
-    /**
-     * Tests without URL suffix and without language.
-     */
-    public function testLoadWithoutLanguageAndWithoutSuffix()
-    {
-        $loader     = new FrontendLoader('', false);
-        $collection = $loader->load('.', 'bundles');
-
-        $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
-
-        $routes = $collection->all();
-
-        $this->assertArrayHasKey('contao_frontend', $routes);
-        $this->assertEquals('/{alias}', $routes['contao_frontend']->getPath());
-        $this->assertEquals('ContaoCoreBundle:Frontend:index', $routes['contao_frontend']->getDefault('_controller'));
-        $this->assertEquals('', $routes['contao_frontend']->getDefault('_format'));
-        $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
-        $this->assertEquals('', $routes['contao_frontend']->getRequirement('_format'));
-        $this->assertEquals('', $routes['contao_frontend']->getRequirement('_locale'));
-        $this->assertEquals(ContaoCoreBundle::SCOPE_FRONTEND, $routes['contao_frontend']->getDefault('_scope'));
-    }
-
-    /**
-     * Tests without URL suffix and with language.
-     */
-    public function testLoadWithLanguageAndWithoutSuffix()
-    {
-        $loader     = new FrontendLoader('', true);
-        $collection = $loader->load('.', 'bundles');
-
-        $this->assertInstanceOf('Symfony\\Component\\Routing\\RouteCollection', $collection);
-
-        $routes = $collection->all();
-
-        $this->assertArrayHasKey('contao_frontend', $routes);
-        $this->assertEquals('/{_locale}/{alias}', $routes['contao_frontend']->getPath());
-        $this->assertEquals('ContaoCoreBundle:Frontend:index', $routes['contao_frontend']->getDefault('_controller'));
-        $this->assertEquals('', $routes['contao_frontend']->getDefault('_format'));
-        $this->assertEquals('.*', $routes['contao_frontend']->getRequirement('alias'));
-        $this->assertEquals('', $routes['contao_frontend']->getRequirement('_format'));
-        $this->assertEquals('[a-z]{2}(\-[A-Z]{2})?', $routes['contao_frontend']->getRequirement('_locale'));
-        $this->assertEquals(ContaoCoreBundle::SCOPE_FRONTEND, $routes['contao_frontend']->getDefault('_scope'));
-    }
-
-    /**
-     * Ensures that the loader supports "bundles".
+     * Ensures that the loader supports "contao_frontend".
      */
     public function testSupportsContaoFrontend()
     {
-        $loader = new FrontendLoader('', false);
+        $loader = new FrontendLoader(false);
 
         $this->assertTrue($loader->supports('.', 'contao_frontend'));
+    }
+
+    public function testContainerScope()
+    {
+        $loader     = new FrontendLoader(false);
+        $collection = $loader->load('.', 'bundles');
+
+        $this->assertEquals(
+            ContaoCoreBundle::SCOPE_FRONTEND,
+            $collection->get('contao_frontend')->getDefault('_scope')
+        );
+
+        $this->assertEquals(
+            ContaoCoreBundle::SCOPE_FRONTEND,
+            $collection->get('contao_index')->getDefault('_scope')
+        );
+    }
+
+    public function testController()
+    {
+        $loader     = new FrontendLoader(false);
+        $collection = $loader->load('.', 'bundles');
+
+        $this->assertEquals(
+            'ContaoCoreBundle:Frontend:index',
+            $collection->get('contao_frontend')->getDefault('_controller')
+        );
+
+        $this->assertEquals(
+            'ContaoCoreBundle:Frontend:index',
+            $collection->get('contao_index')->getDefault('_controller')
+        );
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+     */
+    public function testGenerateFrontendWithMissingAlias()
+    {
+        $loader     = new FrontendLoader(false);
+        $collection = $loader->load('.', 'bundles');
+        $router     = $this->getRouter($collection);
+
+        $router->generate('contao_frontend');
+    }
+
+    public function testGenerateFrontendWithoutLocale()
+    {
+        $loader     = new FrontendLoader(false);
+        $collection = $loader->load('.', 'bundles');
+        $router     = $this->getRouter($collection);
+
+        $this->assertEquals(
+            '/foobar.html',
+            $router->generate('contao_frontend', ['alias' => 'foobar'])
+        );
+
+        $this->assertEquals(
+            '/foobar.html',
+            $router->generate('contao_frontend', ['alias' => 'foobar', '_locale' => 'en'])
+        );
+    }
+
+    public function testGenerateFrontendWithLocale()
+    {
+        $loader     = new FrontendLoader(true);
+        $collection = $loader->load('.', 'bundles');
+        $router     = $this->getRouter($collection);
+
+        $this->assertEquals(
+            '/en/foobar.html',
+            $router->generate('contao_frontend', ['alias' => 'foobar', '_locale' => 'en'])
+        );
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+     */
+    public function testGenerateFrontendWithMissingLocale()
+    {
+        $loader     = new FrontendLoader(true);
+        $collection = $loader->load('.', 'bundles');
+        $router     = $this->getRouter($collection);
+
+        $router->generate('contao_frontend', ['alias' => 'foobar']);
+    }
+
+    public function testGenerateIndexWithoutLocale()
+    {
+        $loader     = new FrontendLoader(false);
+        $collection = $loader->load('.', 'bundles');
+        $router     = $this->getRouter($collection);
+
+        $this->assertEquals(
+            '/',
+            $router->generate('contao_index')
+        );
+
+        $this->assertEquals(
+            '/',
+            $router->generate('contao_index', ['_locale' => 'en'])
+        );
+    }
+
+    public function testGenerateIndexWithLocale()
+    {
+        $loader     = new FrontendLoader(true);
+        $collection = $loader->load('.', 'bundles');
+        $router     = $this->getRouter($collection);
+
+        $this->assertEquals(
+            '/en/',
+            $router->generate('contao_index', ['_locale' => 'en'])
+        );
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+     */
+    public function testGenerateIndexWithMissingLocale()
+    {
+        $loader     = new FrontendLoader(true);
+        $collection = $loader->load('.', 'bundles');
+        $router     = $this->getRouter($collection);
+
+        $router->generate('contao_index');
+    }
+
+    /**
+     * Generates a router using the given RouteCollection.
+     *
+     * @param RouteCollection $collection
+     * @param string          $urlSuffix
+     *
+     * @return Router
+     */
+    private function getRouter(RouteCollection $collection, $urlSuffix = '.html')
+    {
+        $loader = $this->getMock(
+            'Symfony\\Component\\Config\\Loader\\LoaderInterface'
+        );
+
+        $loader
+            ->expects($this->any())
+            ->method('load')
+            ->willReturn($collection)
+        ;
+
+        $container = $this->getMock(
+            'Symfony\\Component\\DependencyInjection\\Container',
+            ['get', 'getParameter']
+        );
+
+        $container
+            ->expects($this->any())
+            ->method('getParameter')
+            ->with('contao.url_suffix')
+            ->willReturn($urlSuffix)
+        ;
+
+        $container
+            ->expects($this->any())
+            ->method('get')
+            ->with('routing.loader')
+            ->willReturn($loader)
+        ;
+
+        return new Router($container, '');
     }
 }
