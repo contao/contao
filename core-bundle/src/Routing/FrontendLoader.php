@@ -24,11 +24,6 @@ use Symfony\Component\Routing\RouteCollection;
 class FrontendLoader extends Loader
 {
     /**
-     * @var string
-     */
-    private $defaultLocale = 'en';
-
-    /**
      * @var bool
      */
     private $prependLocale;
@@ -87,7 +82,7 @@ class FrontendLoader extends Loader
 
             $require['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
         } else {
-            $defaults['_locale'] = $this->defaultLocale;
+            $defaults['_locale'] = null;
         }
 
         $routes->add('contao_frontend', new Route($pattern, $defaults, $require));
