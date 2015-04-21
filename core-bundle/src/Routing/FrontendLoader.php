@@ -51,8 +51,7 @@ class FrontendLoader extends Loader
         ];
 
         $this->addFrontendRoute($routes, $defaults);
-        $this->addRootRoute($routes, $defaults);
-        $this->addCatchAllRoute($routes, $defaults);
+        $this->addIndexRoute($routes, $defaults);
 
         return $routes;
     }
@@ -89,12 +88,12 @@ class FrontendLoader extends Loader
     }
 
     /**
-     * Adds a route to redirect a user to the empty domain.
+     * Adds a route to redirect a user to the index page.
      *
      * @param RouteCollection $routes   A collection of routes
      * @param array           $defaults Default parameters for the route
      */
-    private function addRootRoute(RouteCollection $routes, array $defaults)
+    private function addIndexRoute(RouteCollection $routes, array $defaults)
     {
         $pattern = '/';
         $require = [];
@@ -108,19 +107,6 @@ class FrontendLoader extends Loader
             $defaults['_locale'] = null;
         }
 
-        $routes->add('contao_root', new Route($pattern, $defaults, $require));
-    }
-
-    /**
-     * Adds a catch-all route to redirect all request to the Contao front end controller.
-     *
-     * @param RouteCollection $routes   A collection of routes
-     * @param array           $defaults Default parameters for the route
-     */
-    private function addCatchAllRoute(RouteCollection $routes, array $defaults)
-    {
-        $defaults['_url_fragment'] = '';
-
-        $routes->add('contao_catch_all', new Route('/{_url_fragment}', $defaults, ['_url_fragment' => '.*']));
+        $routes->add('contao_index', new Route($pattern, $defaults, $require));
     }
 }

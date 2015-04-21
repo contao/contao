@@ -338,7 +338,7 @@ abstract class Frontend extends \Controller
 
 				$arrParams = array('_locale' => $objRootPage->language);
 
-				$strUrl = $kernel->getContainer()->get('router')->generate('contao_root', $arrParams);
+				$strUrl = $kernel->getContainer()->get('router')->generate('contao_index', $arrParams);
 				$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 				static::redirect($strUrl, 301);

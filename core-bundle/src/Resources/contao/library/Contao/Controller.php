@@ -1079,7 +1079,7 @@ abstract class Controller extends \System
 		// Correctly handle the "index" alias (see #3961)
 		if ($arrRow['alias'] == 'index' && $strParams == '')
 		{
-			$route = 'contao_root';
+			$route = 'contao_index';
 		}
 		else
 		{
