@@ -421,6 +421,34 @@ class UserSessionListenerTest extends TestCase
                     'current' => 'path/of/contao?having&query&string=1',
                 ],
             ],
+            'Test referers are correctly added to the referers array (see #143)' => [
+                ContaoCoreBundle::SCOPE_BACKEND,
+                'contao_backend',
+                'Contao\\BackendUser',
+                'tl_url',
+                $requestWithRefInUrl,
+                'referer',
+                [
+                    'dummyTestRefererId' => [
+                        'last'    => '',
+                        'current' => 'hi/I/am/your_current_referer.html',
+                    ],
+                    'dummyTestRefererId1' => [
+                        'last'    => '',
+                        'current' => 'hi/I/am/your_current_referer.html',
+                    ],
+                ],
+                [
+                    'dummyTestRefererId' => [
+                        'last'    => 'hi/I/am/your_current_referer.html',
+                        'current' => 'path/of/contao?having&query&string=1',
+                    ],
+                    'dummyTestRefererId1' => [
+                        'last'    => '',
+                        'current' => 'hi/I/am/your_current_referer.html',
+                    ],
+                ],
+            ],
         ];
     }
 

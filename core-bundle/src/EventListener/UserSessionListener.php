@@ -127,18 +127,18 @@ class UserSessionListener extends ScopeAwareListener
             $key       = $request->query->has('popup') ? 'popupReferer' : 'referer';
             $refererId = $request->attributes->get('_contao_referer_id');
             $bag       = $this->getSessionBag();
-            $referer   = $this->prepareBackendReferer($refererId, $bag->get($key));
+            $referers  = $this->prepareBackendReferer($refererId, $bag->get($key));
             $ref       = $request->query->get('ref', '');
 
             // Move current to last if the referer is in both the URL and the session
-            if ('' !== $ref && isset($referer[$ref])) {
-                $referer[$refererId]['last'] = $referer[$ref]['current'];
+            if ('' !== $ref && isset($referers[$ref])) {
+                $referers[$refererId]['last'] = $referers[$ref]['current'];
             }
 
             // Set new current referer
-            $referer[$refererId]['current'] = $this->getRelativeRequestUri($request);
+            $referers[$refererId]['current'] = $this->getRelativeRequestUri($request);
 
-            $bag->set($key, $referer);
+            $bag->set($key, $referers);
         }
 
         $this->storeSession();
@@ -169,25 +169,27 @@ class UserSessionListener extends ScopeAwareListener
     /**
      * Prepares the back end referer array.
      *
-     * @param string $refererId  The referer ID
-     * @param array  $refererOld The old referer data
+     * @param string $refererId The referer ID
+     * @param array  $referers  The old referer data
      *
      * @return array The back end referer URLs
      */
-    private function prepareBackendReferer($refererId, $refererOld = null)
+    private function prepareBackendReferer($refererId, array $referers = null)
     {
-        if (!is_array($refererOld) || !is_array($refererOld[$refererId])) {
-            $refererOld                     = [];
-            $refererOld[$refererId]         = [];
-            $refererOld[$refererId]['last'] = '';
+        if (!is_array($referers)) {
+            $referers = [];
+        }
+
+        if (!isset($referers[$refererId]) || !is_array($referers[$refererId])) {
+            $referers[$refererId] = ['last' => ''];
         }
 
         // Make sure we never have more than 25 different referer URLs
-        while (count($refererOld) >= 25) {
-            array_shift($refererOld);
+        while (count($referers) >= 25) {
+            array_shift($referers);
         }
 
-        return $refererOld;
+        return $referers;
     }
 
     /**
@@ -216,19 +218,19 @@ class UserSessionListener extends ScopeAwareListener
     /**
      * Checks if the front end session can be modified.
      *
-     * @param Request $request    The request object
-     * @param array   $refererOld The old referer data
+     * @param Request $request The request object
+     * @param array   $referer The referer array
      *
      * @return bool True if the front end session can be modified
      */
-    private function canModifyFrontendSession(Request $request, $refererOld = null)
+    private function canModifyFrontendSession(Request $request, array $referer = null)
     {
-        if (null !== $refererOld
+        if (null !== $referer
             && !$request->query->has('pdf')
             && !$request->query->has('file')
             && !$request->query->has('id')
-            && isset($refererOld['current'])
-            && $refererOld['current'] !== $this->getRelativeRequestUri($request)
+            && isset($referer['current'])
+            && $referer['current'] !== $this->getRelativeRequestUri($request)
         ) {
             return true;
         }

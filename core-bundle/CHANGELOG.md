@@ -5,6 +5,9 @@ Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
 ### Fixed
+Correctly store the referer URLs (see #143).
+
+### Fixed
 Handle the new back end URLs in the JavaScript pickers (see #217).
 
 ### Fixed
