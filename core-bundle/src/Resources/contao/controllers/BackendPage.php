@@ -142,7 +142,7 @@ class BackendPage extends \Backend
 		if (\Input::get('switch'))
 		{
 			$objTemplate->switch = $GLOBALS['TL_LANG']['MSC']['filePicker'];
-			$objTemplate->switchHref = str_replace('contao/page.php', 'contao/file.php', ampersand(\Environment::get('request')));
+			$objTemplate->switchHref = str_replace('contao/page?', 'contao/file?', ampersand(\Environment::get('request')));
 		}
 
 		return $objTemplate->getResponse();

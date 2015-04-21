@@ -152,7 +152,7 @@ class BackendFile extends \Backend
 		if (\Input::get('switch'))
 		{
 			$objTemplate->switch = $GLOBALS['TL_LANG']['MSC']['pagePicker'];
-			$objTemplate->switchHref = str_replace('contao/file.php', 'contao/page.php', ampersand(\Environment::get('request')));
+			$objTemplate->switchHref = str_replace('contao/file?', 'contao/page?', ampersand(\Environment::get('request')));
 		}
 
 		return $objTemplate->getResponse();

@@ -5,6 +5,9 @@ Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
 ### Fixed
+Handle the new back end URLs in the JavaScript pickers (see #217).
+
+### Fixed
 Do not throw an exception if there are not XLIFF files (see #211).
 
 ### Fixed

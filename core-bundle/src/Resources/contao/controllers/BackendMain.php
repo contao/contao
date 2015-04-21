@@ -214,7 +214,7 @@ class BackendMain extends \Backend
 		if (\Input::get('popup') && \Input::get('act') != 'show' && (\Input::get('do') == 'page' || \Input::get('do') == 'files') && $this->Session->get('filePickerRef'))
 		{
 			$this->Template->managerHref = $this->Session->get('filePickerRef');
-			$this->Template->manager = (strpos($this->Session->get('filePickerRef'), 'contao/page.php') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
+			$this->Template->manager = (strpos($this->Session->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
 		}
 
 		$this->Template->theme = \Backend::getTheme();
