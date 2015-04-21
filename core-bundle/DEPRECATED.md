@@ -1,6 +1,17 @@
 Deprecated features
 ===================
 
+### Content elements
+
+For reasons of backwards compatibility, it is currently not required to set the
+`tl_content.ptable` column; it will treat an empty column like it had been set
+to `tl_article`.
+
+This behavior has been deprecated in Contao 4.0 and will no longer be supported
+in Contao 5. If you have developed an extension which creates content elements,
+make sure to always set the `ptable` column.
+
+
 ### Contao class loader
 
 Even though we are still using the Contao class loader, it has been deprecated
