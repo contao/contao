@@ -14,7 +14,6 @@ use Contao\BackendUser;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\FrontendUser;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -34,15 +33,15 @@ class ContaoUserProvider extends ContainerAware implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        if ('backend' === $username && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
+        if ($this->isBackend($username)) {
             return BackendUser::getInstance();
         }
 
-        if ('frontend' === $username && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
+        if ($this->isFrontend($username)) {
             return FrontendUser::getInstance();
         }
 
-        throw new UsernameNotFoundException('Can only load user "frontend" or "backend".');
+        throw new UsernameNotFoundException('Can only load "frontend" or "backend" user if container scope is active.');
     }
 
     /**
@@ -59,5 +58,21 @@ class ContaoUserProvider extends ContainerAware implements UserProviderInterface
     public function supportsClass($class)
     {
         return is_subclass_of($class, 'Contao\\User');
+    }
+
+
+    private function isFrontend($username)
+    {
+        return 'frontend' === $username
+            && null !== $this->container
+            && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND);
+    }
+
+
+    private function isBackend($username)
+    {
+        return 'backend' === $username
+            && null !== $this->container
+            && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND);
     }
 }
