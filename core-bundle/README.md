@@ -41,48 +41,14 @@ Add the Contao routes to your `app/config/routing.yml` file:
 
 ```yml
 ContaoCoreBundle:
-    resource: "@ContaoCoreBundle/Controller"
-    type: annotation
-
-# Redirect /contao/ to /contao
-contao_backend_redirect:
-    path: /contao/
-    defaults:
-        _scope: backend
-        _controller: FrameworkBundle:Redirect:redirect
-        route: contao_backend
-        permanent: true
-
-# The fallback route must be the last one!
-contao_frontend:
-    resource: .
-    type: contao_frontend
+    resource: "@ContaoCoreBundle/Resources/config/routing.yml"
 ```
 
 Add the following entries to your `app/config/security.yml` file:
 
 ```yml
-security:
-    providers:
-        contao.security.user_provider:
-            id: contao.security.user_provider
-
-    firewalls:
-        install:
-            pattern: ^/contao/install
-            security: false
-
-        backend:
-            pattern: ^/contao
-            stateless: true
-            simple_preauth:
-                authenticator: contao.security.authenticator
-
-        frontend:
-            pattern: ~
-            stateless: true
-            simple_preauth:
-                authenticator: contao.security.authenticator
+imports:
+    - { resource: "@ContaoCoreBundle/Resources/config/security.yml" }
 ```
 
 
