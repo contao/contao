@@ -10,8 +10,11 @@
 
 namespace Contao\CoreBundle\Test\Security\Authentication;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\Security\Core\User\User;
 
 /**
@@ -41,6 +44,11 @@ class ContaoUserProviderTest extends TestCase
     {
         $provider = new ContaoUserProvider();
 
+        $container = new Container();
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $provider->setContainer($container);
+
         $this->assertInstanceOf('Contao\\BackendUser', $provider->loadUserByUsername('backend'));
     }
 
@@ -54,7 +62,40 @@ class ContaoUserProviderTest extends TestCase
     {
         $provider = new ContaoUserProvider();
 
+        $container = new Container();
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
+        $provider->setContainer($container);
+
         $this->assertInstanceOf('Contao\\FrontendUser', $provider->loadUserByUsername('frontend'));
+    }
+
+    /**
+     * Tests with missing container.
+     *
+     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     */
+    public function testLoadWithoutContainer()
+    {
+        $provider = new ContaoUserProvider();
+        $provider->loadUserByUsername('frontend');
+    }
+
+    /**
+     * Tests with invalid container scope.
+     *
+     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     */
+    public function testLoadWithInvalidScope()
+    {
+        $provider = new ContaoUserProvider();
+
+        $container = new Container();
+        $container->addScope(new Scope('request'));
+        $container->enterScope('request');
+        $provider->setContainer($container);
+
+        $provider->loadUserByUsername('frontend');
     }
 
     /**
