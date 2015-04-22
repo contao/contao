@@ -53,12 +53,7 @@ services:
     contao.listener.initialize_system:
         class: Contao\CoreBundle\EventListener\InitializeSystemListener
         arguments:
-            - "@router"
-            - "@session"
-            - "%kernel.root_dir%"
-            - "@security.csrf.token_manager"
-            - "%contao.csrf_token_name%"
-            - "@contao.adapter.config"
+            - "@contao.framework_initializer"
         calls:
             - [setContainer, ["@service_container"]]
         tags:
@@ -137,4 +132,3 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
-
