@@ -16,6 +16,7 @@ use Contao\User;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Provides a Contao authentication token.
@@ -28,16 +29,15 @@ class ContaoToken extends AbstractToken
     /**
      * Constructor.
      *
-     * @param User $user The user object
+     * @param UserInterface $user The user object
      */
-    public function __construct(User $user)
+    public function __construct(UserInterface $user)
     {
-        $this->setUser($user);
-
-        if (!$user->authenticate()) {
+        if (!$user instanceof User || !$user->authenticate()) {
             throw new UsernameNotFoundException('Invalid Contao user given.');
         }
 
+        $this->setUser($user);
         $this->setAuthenticated(true);
 
         parent::__construct($this->getRolesFromUser($user));
