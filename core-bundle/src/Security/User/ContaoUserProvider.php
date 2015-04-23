@@ -33,11 +33,11 @@ class ContaoUserProvider extends ContainerAware implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        if ($this->isBackend($username)) {
+        if ($this->isBackendUsername($username)) {
             return BackendUser::getInstance();
         }
 
-        if ($this->isFrontend($username)) {
+        if ($this->isFrontendUsername($username)) {
             return FrontendUser::getInstance();
         }
 
@@ -60,16 +60,28 @@ class ContaoUserProvider extends ContainerAware implements UserProviderInterface
         return is_subclass_of($class, 'Contao\\User');
     }
 
-
-    private function isFrontend($username)
+    /**
+     * Checks if the given username can return a frontend user.
+     *
+     * @param $username
+     *
+     * @return bool
+     */
+    private function isFrontendUsername($username)
     {
         return 'frontend' === $username
             && null !== $this->container
             && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND);
     }
 
-
-    private function isBackend($username)
+    /**
+     * Checks if the given username can return a backend user.
+     *
+     * @param $username
+     *
+     * @return bool
+     */
+    private function isBackendUsername($username)
     {
         return 'backend' === $username
             && null !== $this->container
