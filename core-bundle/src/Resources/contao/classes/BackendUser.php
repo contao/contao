@@ -345,6 +345,9 @@ class BackendUser extends \User
 	 */
 	protected function setUserFromDb()
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
 		$this->intId = $this->id;
 
 		// Unserialize values
@@ -357,7 +360,10 @@ class BackendUser extends \User
 		}
 
 		$GLOBALS['TL_USERNAME'] = $this->username;
-		$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
+		$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language); // backwards compatibility
+
+		$kernel->getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
+		$kernel->getContainer()->get('translator')->setLocale($this->language);
 
 		\Config::set('showHelp', $this->showHelp);
 		\Config::set('useRTE', $this->useRTE);
