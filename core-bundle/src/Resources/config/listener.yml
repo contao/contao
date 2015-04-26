@@ -11,9 +11,9 @@
 # The priorites of the following listeners must be lower than the one of the
 # Symfony locale listener (defaults to 16).
 #
-# - 10: InitializeSystemListener
-# - 5:  ToggleViewListener
-# - 5:  OutputFromCacheListener
+# - 10:   InitializeSystemListener
+# - -15:  ToggleViewListener
+# - -20:  OutputFromCacheListener
 #
 # Session listener
 #
@@ -82,7 +82,7 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 5 }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -20 }
 
     contao.listener.pretty_error_screens:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
@@ -120,7 +120,7 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 5 }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -15 }
 
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
