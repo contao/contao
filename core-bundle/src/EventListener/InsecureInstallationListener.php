@@ -32,7 +32,7 @@ class InsecureInstallationListener
      * @throws InsecureInstallationException   If the document root is not set correctly
      * @throws IncompleteInstallationException If the installation has not been completed
      */
-    private function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event)
     {
 
         $request = $event->getRequest();
