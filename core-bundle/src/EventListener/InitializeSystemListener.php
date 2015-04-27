@@ -299,7 +299,7 @@ class InitializeSystemListener extends ScopeAwareListener
             $language = str_replace('_', '-', $request->getLocale());
         }
 
-        $GLOBALS['TL_LANGUAGE']  = $language;
+        $GLOBALS['TL_LANGUAGE']  = $language; // backwards compatibility
         $_SESSION['TL_LANGUAGE'] = $language; // backwards compatibility
     }
 
