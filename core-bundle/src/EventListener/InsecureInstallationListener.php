@@ -25,6 +25,11 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class InsecureInstallationListener
 {
     /**
+     * @var array
+     */
+    protected $secureClientIps = array('127.0.0.1', 'fe80::1', '::1');
+
+    /**
      * Validates the installation.
      *
      * @param GetResponseEvent $event
@@ -34,7 +39,6 @@ class InsecureInstallationListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-
         $request = $event->getRequest();
 
         if (null === $request || 'contao_backend_install' === $request->attributes->get('_route')) {
@@ -42,11 +46,7 @@ class InsecureInstallationListener
         }
 
         // Show the "insecure document root" message
-        if (!in_array($request->getClientIp(), [
-                '127.0.0.1',
-                'fe80::1',
-                '::1'
-            ]) && '/web' === substr($request->getBasePath(), -4)
+        if (!in_array($request->getClientIp(), $this->secureClientIps) && '/web' === substr($request->getBasePath(), -4)
         ) {
             throw new InsecureInstallationException(
                 'Your installation is not secure. Please set the document root to the /web subfolder.'
