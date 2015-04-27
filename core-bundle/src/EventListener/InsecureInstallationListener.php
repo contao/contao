@@ -17,9 +17,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 /**
  * Validates the Installation
  *
- * @author Christian Schiffler <https://github.com/discordier>
- * @author Yanick Witschi <https://github.com/toflar>
- * @author Leo Feyer <https://github.com/leofeyer>
  * @author Dominik Tomasi <https://github.com/dtomasi>
  */
 class InsecureInstallationListener
