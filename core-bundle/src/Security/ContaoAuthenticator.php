@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Security;
 
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
+use Contao\User;
 use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -64,10 +65,14 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
             $providerKey = $token->getKey();
             $user        = $userProvider->loadUserByUsername($providerKey);
 
-            return new ContaoToken($user);
+            if ($user instanceof User) {
+                return new ContaoToken($user);
+            }
         } catch (UsernameNotFoundException $e) {
-            return $token;
+            // Return the old token
         }
+
+        return $token;
     }
 
     /**
