@@ -29,9 +29,9 @@ class ContaoToken extends AbstractToken
     /**
      * Constructor.
      *
-     * @param UserInterface $user The user object
+     * @param User $user The user object
      */
-    public function __construct(UserInterface $user)
+    public function __construct($user)
     {
         if (!$user instanceof User || !$user->authenticate()) {
             throw new UsernameNotFoundException('Invalid Contao user given.');
