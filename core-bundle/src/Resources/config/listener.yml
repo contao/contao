@@ -6,6 +6,7 @@
 #
 # - 30: ContainerScopeListener
 # - 28: RefererIdListener
+# - 27: InsecureInstallationListener
 # - 26: InitializeSystemListener
 # - 24: ToggleViewListener
 # - 22: OutputFromCacheListener
@@ -46,6 +47,11 @@ services:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 96 }
+
+    contao.listener.insecure_installation:
+        class: Contao\CoreBundle\EventListener\InsecureInstallationListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 27 }
 
     contao.listener.initialize_system:
         class: Contao\CoreBundle\EventListener\InitializeSystemListener
