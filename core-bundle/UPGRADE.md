@@ -11,26 +11,26 @@ drivers are no longer supported. If you have been using a custom driver for a
 database other than MySQL, use the corresponding Doctrine driver instead.
 
 
-### `dump()`
+### dump()
 
 The `dump()` function has been replaced by the Symfony debug bundle. Its output
 will be added to the web profiler.
 
 
-### `tinymce.css` and `tiny_templates`
+### tinymce.css and tiny_templates
 
 The style sheet `files/tinymce.css` and the folder `files/tiny_templates` have
 been removed. If you want to use the feature, please adjust the TinyMCE config
 file, which is now a template (e.g. `be_tinyMCE.html5`).
 
 
-### `Frontend::parseMetaFile()`
+### Frontend::parseMetaFile()
 
 The `Frontend::parseMetaFile()` method was deprecated since Contao 3 and has
 been removed in Contao 4.0.
 
 
-### `$_SESSION['TL_USER_LOGGED_IN']`
+### $_SESSION['TL_USER_LOGGED_IN']
 
 The `$_SESSION['TL_USER_LOGGED_IN']` flag has been removed.
 
@@ -73,13 +73,13 @@ only. This was a workaround for an old IIS server, which has now been dropped.
 More information: https://github.com/contao/core-bundle/issues/118
 
 
-### `system/runonce.php`
+### system/runonce.php
 
 The `system/runonce.php` file is no longer supported. If you need to set up a
 `runonce.php` file, put it in the `src/Resources/contao/config/` directory.
 
 
-### `DcaExtractor`
+### DcaExtractor
 
 The `DcaExtractor` class is no longer instantiable via `new DcaExtractor()`.
 Use the `DcaExtractor::getInstance($table)` method instead.
@@ -91,7 +91,7 @@ The MooTools "slimbox" plugin has been removed. Use the MooTools "mediabox" or
 the jQuery "colorbox" plugin instead.
 
 
-### `Message::generate()`
+### Message::generate()
 
 The `Message` class now supports scopes, which can optionally be passed as
 second argument:
@@ -115,7 +115,7 @@ The "prepareFormData" hook now passes `$this` as last argument, just like in
 any other hook.
 
 
-### `ondelete_callback`
+### ondelete_callback
 
 The `ondelete_callback` of the `DC_Table` driver now passes `$this` as last
 argument, just like in `DC_Folder` and in any other callback.
@@ -137,7 +137,7 @@ for the link to the previous page. The pagination menu now uses the CSS class
 The classes "odd" and "even" are now correctly assigned to the table element.
 
 
-### `new File()`
+### new File()
 
 In Contao 3, `new File('tmp.txt')` automatically created the file if it did not
 exist and all write operations such as `$file->write()` or `$file->append()`

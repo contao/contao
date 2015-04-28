@@ -19,7 +19,7 @@ in favor of the Composer class loader. You should no longer use it and you can
 no longer use it to override arbitrary core classes.
 
 
-### Using `$this` in configuration files
+### Using $this in configuration files
 
 Using `$this` in configuration files such as `config/config.php` or `dca/*.php`
 has been deprecated in Contao 4.0 and will no longer work in Contao 5.0.
@@ -89,7 +89,7 @@ has been set up for each one instead.
 Using the old paths is deprecated and will no longer work in Contao 5.0.
 
 
-### `ModuleLoader`
+### ModuleLoader
 
 The `ModuleLoader` class is no longer used and only kept for reasons of
 backwards compatibility. It is deprecated and will be removed in Contao 5.0.
@@ -102,7 +102,7 @@ $bundles = $kernel->getContainer()->getParameter('kernel.bundles');
 ```
 
 
-### `database.sql` files
+### database.sql files
 
 Using `database.sql` files to set up tables is deprecated in Contao 4.0 and
 will no longer be supported in Contao 5.0. Use DCA files instead:
