@@ -49,8 +49,9 @@
         "contao-components/tinymce4": "~4.1"
     },
     "require-dev": {
+        "composer/composer": "dev-master",
         "phpunit/phpunit": "~4.5",
-        "composer/composer": "dev-master"
+        "symfony/phpunit-bridge": "~2.7"
     },
     "conflict": {
         "contao/core": "*"
@@ -64,5 +65,7 @@
         "branch-alias": {
             "dev-develop": "4.0.x-dev"
         }
-    }
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
 }
