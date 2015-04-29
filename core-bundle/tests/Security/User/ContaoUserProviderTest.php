@@ -10,14 +10,18 @@
 
 namespace Contao\CoreBundle\Test\Security\Authentication;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\Security\Core\User\User;
 
 /**
  * Tests the ContaoUserProvider class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ContaoUserProviderTest extends TestCase
 {
@@ -39,7 +43,12 @@ class ContaoUserProviderTest extends TestCase
      */
     public function testLoadUserBackend()
     {
+        $container = new Container();
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+
         $provider = new ContaoUserProvider();
+        $provider->setContainer($container);
 
         $this->assertInstanceOf('Contao\\BackendUser', $provider->loadUserByUsername('backend'));
     }
@@ -52,9 +61,41 @@ class ContaoUserProviderTest extends TestCase
      */
     public function testLoadUserFrontend()
     {
+        $container = new Container();
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
+
         $provider = new ContaoUserProvider();
+        $provider->setContainer($container);
 
         $this->assertInstanceOf('Contao\\FrontendUser', $provider->loadUserByUsername('frontend'));
+    }
+
+    /**
+     * Tests a missing container.
+     *
+     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     */
+    public function testLoadWithoutContainer()
+    {
+        $provider = new ContaoUserProvider();
+        $provider->loadUserByUsername('frontend');
+    }
+
+    /**
+     * Tests an invalid container scope.
+     *
+     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     */
+    public function testLoadWithInvalidScope()
+    {
+        $container = new Container();
+        $container->addScope(new Scope('request'));
+        $container->enterScope('request');
+
+        $provider = new ContaoUserProvider();
+        $provider->setContainer($container);
+        $provider->loadUserByUsername('frontend');
     }
 
     /**
@@ -80,7 +121,7 @@ class ContaoUserProviderTest extends TestCase
     }
 
     /**
-     * Tests the supportsClass method.
+     * Tests the supportsClass() method.
      */
     public function testSupportsClass()
     {

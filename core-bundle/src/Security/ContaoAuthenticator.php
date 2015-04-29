@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Security;
 
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
-use Contao\CoreBundle\Security\User\ContaoUserProvider;
+use Contao\User;
 use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -27,21 +27,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class ContaoAuthenticator implements SimplePreAuthenticatorInterface
 {
-    /**
-     * @var ContaoUserProvider
-     */
-    private $userProvider;
-
-    /**
-     * Constructor.
-     *
-     * @param ContaoUserProvider $userProvider The user provide object
-     */
-    public function __construct(ContaoUserProvider $userProvider)
-    {
-        $this->userProvider = $userProvider;
-    }
-
     /**
      * Creates an authentication token.
      *
@@ -77,13 +62,16 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
         }
 
         try {
-            $providerKey = $token->getKey();
-            $user        = $this->userProvider->loadUserByUsername($providerKey);
-
-            return new ContaoToken($user);
+            $user = $userProvider->loadUserByUsername($token->getKey());
         } catch (UsernameNotFoundException $e) {
             return $token;
         }
+
+        if ($user instanceof User) {
+            return new ContaoToken($user);
+        }
+
+        return $token;
     }
 
     /**

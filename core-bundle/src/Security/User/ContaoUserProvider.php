@@ -11,7 +11,9 @@
 namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\FrontendUser;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -22,7 +24,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoUserProvider implements UserProviderInterface
+class ContaoUserProvider extends ContainerAware implements UserProviderInterface
 {
     /**
      * {@inheritdoc}
@@ -31,11 +33,11 @@ class ContaoUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        if ('backend' === $username) {
+        if ($this->isBackendUsername($username)) {
             return BackendUser::getInstance();
         }
 
-        if ('frontend' === $username) {
+        if ($this->isFrontendUsername($username)) {
             return FrontendUser::getInstance();
         }
 
@@ -56,5 +58,33 @@ class ContaoUserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return is_subclass_of($class, 'Contao\\User');
+    }
+
+    /**
+     * Checks if the given username can be mapped to a front end user.
+     *
+     * @param string $username The username
+     *
+     * @return bool True if the username can be mapped to a front end user
+     */
+    private function isFrontendUsername($username)
+    {
+        return 'frontend' === $username
+            && null !== $this->container
+            && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND);
+    }
+
+    /**
+     * Checks if the given username can be mapped to a back end user.
+     *
+     * @param string $username The username
+     *
+     * @return bool True if the username can be mapped to a back end user
+     */
+    private function isBackendUsername($username)
+    {
+        return 'backend' === $username
+            && null !== $this->container
+            && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND);
     }
 }
