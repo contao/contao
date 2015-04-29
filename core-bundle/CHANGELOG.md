@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### New
+Add schema.org tags where applicable (see #7780).
+
 ### Fixed
 Correctly store the referer URLs (see #143).
 

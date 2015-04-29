@@ -4,6 +4,54 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Template changes
+
+Adding the schema.org tags required to insert an additional `<span>` element
+into the following templates:
+
+`cal_default.html5`
+
+```php
+<!-- OLD -->
+<div class="event">
+  <a href="<?= $event['href'] ?>"><?= $event['link'] ?></a>
+</div>
+
+<!-- NEW -->
+<div class="event" itemscope itemtype="http://schema.org/Event">
+  <a href="<?= $event['href'] ?>" itemprop="url"><span itemprop="name"><?= $event['link'] ?></span></a>
+</div>
+```
+
+`mod_breadcrumb.html5`
+
+```php
+<!-- OLD -->
+<li>
+  <a href="<?= $item['href'] ?>"><?= $item['link'] ?></a>
+</li>
+
+<!-- NEW -->
+<li itemscope itemtype="http://schema.org/ListItem" itemprop="itemListElement">
+  <a href="<?= $item['href'] ?>" itemprop="url"><span itemprop="name"><?= $item['link'] ?></span></a>
+</li>
+```
+
+`nav_default.html5`
+
+```php
+<!-- OLD -->
+<li>
+  <a href="<?= $item['href'] ?>"><?= $item['link'] ?></a>
+</li>
+
+<!-- NEW -->
+<li>
+  <a href="<?= $item['href'] ?>" itemprop="url"><span itemprop="name"><?= $item['link'] ?></span></a>
+</li>
+```
+
+
 ### Custom database drivers
 
 The database classes have been mapped to the Doctrine DBAL, therefore custom
