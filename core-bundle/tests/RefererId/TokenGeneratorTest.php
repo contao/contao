@@ -73,7 +73,7 @@ class TokenGeneratorTest extends TestCase
     {
         $this->random->expects($this->once())
             ->method('nextBytes')
-            ->with(self::ENTROPY/8)
+            ->with(self::ENTROPY / 8)
             ->will($this->returnValue(self::$bytes))
         ;
 

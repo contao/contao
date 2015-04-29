@@ -115,7 +115,7 @@ class ContaoAuthenticatorTest extends TestCase
         $provider
             ->expects($this->any())
             ->method('loadUserByUsername')
-            ->willReturnCallback(function($username) use ($user) {
+            ->willReturnCallback(function ($username) use ($user) {
                 if ('frontend' === $username || 'backend' === $username) {
                     return $user;
                 } else {

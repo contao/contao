@@ -65,7 +65,7 @@ class LanguageHelper implements \ArrayAccess
      */
     public function offsetGet($offset)
     {
-        return new LanguageHelper(array_merge($this->stack, [$offset]));
+        return new static(array_merge($this->stack, [$offset]));
     }
 
     /**
