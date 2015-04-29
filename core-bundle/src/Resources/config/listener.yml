@@ -68,8 +68,8 @@ services:
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleListener
         arguments:
-            - '@contao.resource_finder'
             - '%kernel.default_locale%'
+            - '%kernel.root_dir%'
         arguments:
             - "@service_container"
         tags:

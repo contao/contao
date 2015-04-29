@@ -10,13 +10,10 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Config\ResourceFinder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
  * Makes sure the locale is available in request and persisted in the session.
@@ -26,25 +23,26 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 class LocaleListener extends ScopeAwareListener
 {
     /**
-     * @var ResourceFinder
-     */
-    private $resourceFinder;
-
-    /**
      * @var string
      */
     private $defaultLocale;
 
     /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
      * Constructor.
      *
-     * @param ResourceFinder $resourceFinder
-     * @param string         $defaultLocale The default locale
+     * @param string $defaultLocale The default locale
+     * @param string $rootDir       The kernel root directory
      */
-    public function __construct(ResourceFinder $resourceFinder, $defaultLocale)
+    public function __construct($defaultLocale, $rootDir)
     {
-        $this->resourceFinder = $resourceFinder;
-        $this->defaultLocale  = $defaultLocale;
+        $this->defaultLocale = $defaultLocale;
+        $this->rootDir       = $rootDir;
+
     }
 
     /**
@@ -82,12 +80,20 @@ class LocaleListener extends ScopeAwareListener
      */
     private function getPreferredLocale(Request $request)
     {
+        $finder = Finder::create()
+            ->directories()
+            ->depth(0)
+            ->in([
+                __DIR__ . '../Resources/contao/languages',
+                $this->rootDir . '/Resources/contao/languages'
+            ]);
+
         $languages = array_values(
             array_map(
                 function(SplFileInfo $file) {
                     return $file->getFilename();
                 },
-                iterator_to_array($this->resourceFinder->findIn('languages')->depth(0)->directories())
+                iterator_to_array($finder)
             )
         );
 
