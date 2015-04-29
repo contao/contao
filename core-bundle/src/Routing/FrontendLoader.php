@@ -72,19 +72,11 @@ class FrontendLoader extends Loader
      */
     private function addFrontendRoute(RouteCollection $routes, array $defaults)
     {
-        $pattern = '/{alias}%contao.url_suffix%';
-        $require = ['alias' => '.+'];
+        $route = new Route('/{alias}%contao.url_suffix%', $defaults, ['alias' => '.+']);
 
-        // Add language to URL
-        if ($this->prependLocale) {
-            $pattern = '/{_locale}' . $pattern;
+        $this->addLocaleToRoute($route);
 
-            $require['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
-        } else {
-            $defaults['_locale'] = null;
-        }
-
-        $routes->add('contao_frontend', new Route($pattern, $defaults, $require));
+        $routes->add('contao_frontend', $route);
     }
 
     /**
@@ -95,18 +87,25 @@ class FrontendLoader extends Loader
      */
     private function addIndexRoute(RouteCollection $routes, array $defaults)
     {
-        $pattern = '/';
-        $require = [];
+        $route = new Route('/', $defaults);
 
-        // Add language to URL
+        $this->addLocaleToRoute($route);
+
+        $routes->add('contao_index', $route);
+    }
+
+    /**
+     * Adjust route if prepend_locale is enabled.
+     *
+     * @param Route $route The route
+     */
+    private function addLocaleToRoute(Route $route)
+    {
         if ($this->prependLocale) {
-            $pattern = '/{_locale}/';
-
-            $require['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
+            $route->setPath('/{_locale}/' . $route->getPath());
+            $route->addRequirements(['_locale' => '[a-z]{2}(\-[A-Z]{2})?']);
         } else {
-            $defaults['_locale'] = null;
+            $route->addDefaults(['_locale' => null]);
         }
-
-        $routes->add('contao_index', new Route($pattern, $defaults, $require));
     }
 }
