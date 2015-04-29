@@ -466,19 +466,11 @@ abstract class DataContainer extends \Backend
 		// Replace the textarea with an RTE instance
 		if (!empty($arrData['eval']['rte']))
 		{
-			// Backwards compatibility
-			$language = substr($GLOBALS['TL_LANGUAGE'], 0, 2);
-
-			if (!file_exists(TL_ROOT . '/assets/tinymce/langs/' . $language . '.js'))
-			{
-				$language = 'en';
-			}
-
 			list ($file, $type) = explode('|', $arrData['eval']['rte'], 2);
 
 			/** @var \BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate("be_$file");
-			$objTemplate->language = $language;
+			$objTemplate->language = \Backend::getTinyMceLanguage(); // backwards compatibility
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
 
 			$updateMode = $objTemplate->parse();

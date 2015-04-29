@@ -89,6 +89,8 @@ abstract class Backend extends \Controller
 			return 'en';
 		}
 
+		$lang = str_replace('-', '_', $lang);
+
 		// The translation exists
 		if (file_exists(TL_ROOT . '/assets/tinymce4/js/langs/' . $lang . '.js'))
 		{
