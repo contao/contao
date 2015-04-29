@@ -134,8 +134,8 @@ class ModuleEventReader extends \Events
 		}
 
 		// Generate the <time> tags
-		$strTimeStart = '<time datetime="' . date('Y-m-d\TH:i:sP', $intStartTime) . '">';
-		$strTimeEnd = '<time datetime="' . date('Y-m-d\TH:i:sP', $intEndTime) . '">';
+		$strTimeStart = '<time datetime="' . date('Y-m-d\TH:i:sP', $intStartTime) . '" itemprop="startDate">';
+		$strTimeEnd = '<time datetime="' . date('Y-m-d\TH:i:sP', $intEndTime) . '" itemprop="endDate">';
 		$strTimeClose = '</time>';
 
 		// Get date
