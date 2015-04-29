@@ -12,18 +12,19 @@ namespace Contao\CoreBundle\Test\Security\Authentication;
 
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Security\ContaoAuthenticator;
-use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Test\TestCase;
-use Contao\FrontendUser;
+use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Tests the ContaoAuthenticator class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ContaoAuthenticatorTest extends TestCase
 {
@@ -97,7 +98,11 @@ class ContaoAuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->supportsToken(new PreAuthenticatedToken('foo', 'bar', 'console'), 'console'));
     }
 
-
+    /**
+     * Mocks a user provider object.
+     *
+     * @return UserProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
     private function mockUserProvider()
     {
         $user = $this->mockUser();
@@ -122,7 +127,11 @@ class ContaoAuthenticatorTest extends TestCase
         return $provider;
     }
 
-
+    /**
+     * Mocks a user object.
+     *
+     * @return User|\PHPUnit_Framework_MockObject_MockObject
+     */
     private function mockUser()
     {
         $user = $this->getMock(

@@ -41,7 +41,7 @@ class ContaoUserProvider extends ContainerAware implements UserProviderInterface
             return FrontendUser::getInstance();
         }
 
-        throw new UsernameNotFoundException('Can only load "frontend" or "backend" user if container scope is active.');
+        throw new UsernameNotFoundException('Can only load user "frontend" or "backend".');
     }
 
     /**
@@ -61,11 +61,11 @@ class ContaoUserProvider extends ContainerAware implements UserProviderInterface
     }
 
     /**
-     * Checks if the given username can return a frontend user.
+     * Checks if the given username can be mapped to a front end user.
      *
-     * @param $username
+     * @param string $username The username
      *
-     * @return bool
+     * @return bool True if the username can be mapped to a front end user
      */
     private function isFrontendUsername($username)
     {
@@ -75,11 +75,11 @@ class ContaoUserProvider extends ContainerAware implements UserProviderInterface
     }
 
     /**
-     * Checks if the given username can return a backend user.
+     * Checks if the given username can be mapped to a back end user.
      *
-     * @param $username
+     * @param string $username The username
      *
-     * @return bool
+     * @return bool True if the username can be mapped to a back end user
      */
     private function isBackendUsername($username)
     {
