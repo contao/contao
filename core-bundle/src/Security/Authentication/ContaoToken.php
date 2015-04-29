@@ -32,12 +32,11 @@ class ContaoToken extends AbstractToken
      */
     public function __construct(User $user)
     {
-        $this->setUser($user);
-
         if (!$user->authenticate()) {
             throw new UsernameNotFoundException('Invalid Contao user given.');
         }
 
+        $this->setUser($user);
         $this->setAuthenticated(true);
 
         parent::__construct($this->getRolesFromUser($user));
