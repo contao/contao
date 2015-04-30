@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
@@ -159,7 +159,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             "$cacheDir/contao"
         );
 
-        $processed = array();
+        $processed = [];
 
         /** @var SplFileInfo[] $files */
         $files = $this->finder->findIn('dca')->files()->name('*.php');
@@ -230,7 +230,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     private function generateDcaExtracts($cacheDir)
     {
-        $processed = array();
+        $processed = [];
 
         /** @var SplFileInfo[] $files */
         $files = $this->finder->findIn('dca')->files()->name('*.php');

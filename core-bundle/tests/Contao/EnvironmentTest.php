@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
@@ -39,7 +39,7 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('apache');
 
-        $_SERVER = array(
+        $_SERVER = [
             'SERVER_PORT'          => 80,
             'HTTP_HOST'            => 'localhost',
             'HTTP_CONNECTION'      => 'keep-alive',
@@ -57,7 +57,7 @@ class EnvironmentTest extends TestCase
             'REQUEST_URI'          => '/core/en/academy.html?do=test',
             'SCRIPT_NAME'          => '/core/index.php',
             'PHP_SELF'             => '/core/index.php',
-        );
+        ];
 
         $this->runTests();
     }
@@ -69,7 +69,7 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('cgi_fcgi');
 
-        $_SERVER = array(
+        $_SERVER = [
             'SERVER_PORT'          => 80,
             'HTTP_HOST'            => 'localhost',
             'HTTP_CONNECTION'      => 'close',
@@ -94,7 +94,7 @@ class EnvironmentTest extends TestCase
             'ORIG_PATH_TRANSLATED' => $this->getRootDir() . '/core/index.php',
             'SCRIPT_URI'           => 'http://localhost/core/en/academy.html',
             'SCRIPT_URL'           => '/core/en/academy.html',
-        );
+        ];
 
         $this->runTests();
     }
@@ -106,7 +106,7 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('fpm_fcgi');
 
-        $_SERVER = array(
+        $_SERVER = [
             'SERVER_PORT'          => 80,
             'HTTP_HOST'            => 'localhost',
             'HTTP_CONNECTION'      => 'close',
@@ -129,7 +129,7 @@ class EnvironmentTest extends TestCase
             'GATEWAY_INTERFACE'    => 'CGI/1.1',
             'ORIG_PATH_INFO'       => '/core/index.php',
             'ORIG_PATH_TRANSLATED' => $this->getRootDir() . '/core/index.php',
-        );
+        ];
 
         $this->runTests();
     }
