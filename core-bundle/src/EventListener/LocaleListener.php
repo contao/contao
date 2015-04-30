@@ -59,18 +59,15 @@ class LocaleListener extends ScopeAwareListener
         $request = $event->getRequest();
         $session = $request->getSession();
 
-        if ($locale = $request->attributes->get('_locale')) {
-            $locale = $this->formatLocaleID($locale);
-            $request->attributes->set('_locale', $locale);
-            $session->set('_locale', $locale);
-        } elseif ($locale = $session->get('_locale')) {
-            $request->attributes->set('_locale', $locale);
+        if ($request->attributes->has('_locale')) {
+            $locale = $this->formatLocaleID($request->attributes->get('_locale'));
+        } elseif (null !== $session && $session->has('_locale')) {
+            $locale = $session->get('_locale');
         } else {
             $locale = $this->getPreferredLocale($request);
-
-            $request->attributes->set('_locale', $locale);
-            $session->set('_locale', $locale);
         }
+
+        $this->saveLocale($request, $locale);
     }
 
     /**
@@ -127,5 +124,15 @@ class LocaleListener extends ScopeAwareListener
         }
 
         return $locale;
+    }
+
+
+    private function saveLocale(Request $request, $locale)
+    {
+        $request->attributes->set('_locale', $locale);
+
+        if ($request->hasSession()) {
+            $request->getSession()->set('_locale', $locale);
+        }
     }
 }
