@@ -60,7 +60,7 @@ class LocaleListener extends ScopeAwareListener
         $session = $request->getSession();
 
         if ($locale = $request->attributes->get('_locale')) {
-            $locale = str_replace('-', '_', strtolower($locale));
+            $locale = $this->formatLocaleID($locale);
             $request->attributes->set('_locale', $locale);
             $session->set('_locale', $locale);
         } elseif ($locale = $session->get('_locale')) {
@@ -103,5 +103,29 @@ class LocaleListener extends ScopeAwareListener
         array_unshift($languages, $this->defaultLocale);
 
         return $request->getPreferredLanguage(array_unique($languages));
+    }
+
+    /**
+     * Format a string to represent a locale ID.
+     *
+     * @param $locale
+     *
+     * @return string
+     */
+    private function formatLocaleID($locale)
+    {
+        $values = preg_split('/-|_/', $locale);
+
+        if (count($values) > 2 || strlen($values[0]) > 2 || (isset($values[1]) && strlen($values[1]) > 2)) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a supported locale.', $locale));
+        }
+
+        $locale = strtolower($values[0]);
+
+        if (isset($values[1])) {
+            $locale .= '_' . strtoupper($values[1]);
+        }
+
+        return $locale;
     }
 }
