@@ -11,7 +11,21 @@ contao_backend_redirect:
         route: contao_backend
         permanent: true
 
-# The fallback route must be the last one!
 contao_frontend:
     resource: .
     type: contao_frontend
+
+contao_root:
+    path: /
+    defaults:
+        _scope: frontend
+        _controller: ContaoCoreBundle:Frontend:index
+
+# The catch all route must be the last one!
+contao_catch_all:
+    path: /{_url_fragment}
+    defaults:
+        _scope: frontend
+        _controller: ContaoCoreBundle:Frontend:index
+    requirements:
+        _url_fragment: .*

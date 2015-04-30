@@ -24,16 +24,6 @@ use Symfony\Component\Routing\RouteCollection;
 class FrontendLoader extends Loader
 {
     /**
-     * @var string
-     */
-    private $format;
-
-    /**
-     * @var string
-     */
-    private $defaultLocale = 'en';
-
-    /**
      * @var bool
      */
     private $prependLocale;
@@ -41,12 +31,10 @@ class FrontendLoader extends Loader
     /**
      * Constructor.
      *
-     * @param string $format        The URL suffix
-     * @param bool   $prependLocale Prepend the locale
+     * @param bool $prependLocale Prepend the locale
      */
-    public function __construct($format, $prependLocale)
+    public function __construct($prependLocale)
     {
-        $this->format        = isset($format[2]) ? substr($format, 1) : '';
         $this->prependLocale = $prependLocale;
     }
 
@@ -63,8 +51,7 @@ class FrontendLoader extends Loader
         ];
 
         $this->addFrontendRoute($routes, $defaults);
-        $this->addRootRoute($routes, $defaults);
-        $this->addCatchAllRoute($routes, $defaults);
+        $this->addIndexRoute($routes, $defaults);
 
         return $routes;
     }
@@ -85,50 +72,40 @@ class FrontendLoader extends Loader
      */
     private function addFrontendRoute(RouteCollection $routes, array $defaults)
     {
-        $pattern = '/{alias}';
-        $require = ['alias' => '.*'];
+        $route = new Route('/{alias}%contao.url_suffix%', $defaults, ['alias' => '.+']);
 
-        // URL suffix
-        if ($this->format) {
-            $pattern .= '.{_format}';
+        $this->addLocaleToRoute($route);
 
-            $defaults['_format'] = $this->format;
-            $require['_format']  = $this->format;
-        }
+        $routes->add('contao_frontend', $route);
+    }
 
-        // Add language to URL
+    /**
+     * Adds a route to redirect a user to the index page.
+     *
+     * @param RouteCollection $routes   A collection of routes
+     * @param array           $defaults Default parameters for the route
+     */
+    private function addIndexRoute(RouteCollection $routes, array $defaults)
+    {
+        $route = new Route('/', $defaults);
+
+        $this->addLocaleToRoute($route);
+
+        $routes->add('contao_index', $route);
+    }
+
+    /**
+     * Adds the locale to the route if prepend_locale is enabled.
+     *
+     * @param Route $route The route
+     */
+    private function addLocaleToRoute(Route $route)
+    {
         if ($this->prependLocale) {
-            $pattern = '/{_locale}' . $pattern;
-
-            $require['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
+            $route->setPath('/{_locale}' . $route->getPath());
+            $route->addRequirements(['_locale' => '[a-z]{2}(\-[A-Z]{2})?']);
         } else {
-            $defaults['_locale'] = $this->defaultLocale;
+            $route->addDefaults(['_locale' => null]);
         }
-
-        $routes->add('contao_frontend', new Route($pattern, $defaults, $require));
-    }
-
-    /**
-     * Adds a route to redirect a user to the empty domain.
-     *
-     * @param RouteCollection $routes   A collection of routes
-     * @param array           $defaults Default parameters for the route
-     */
-    private function addRootRoute(RouteCollection $routes, array $defaults)
-    {
-        $routes->add('contao_root', new Route('/', $defaults));
-    }
-
-    /**
-     * Adds a catch-all route to redirect all request to the Contao front end controller.
-     *
-     * @param RouteCollection $routes   A collection of routes
-     * @param array           $defaults Default parameters for the route
-     */
-    private function addCatchAllRoute(RouteCollection $routes, array $defaults)
-    {
-        $defaults['_url_fragment'] = '';
-
-        $routes->add('contao_catch_all', new Route('/{_url_fragment}', $defaults, ['_url_fragment' => '.*']));
     }
 }

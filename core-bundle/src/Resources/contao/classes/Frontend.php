@@ -336,11 +336,9 @@ abstract class Frontend extends \Controller
 				/** @var KernelInterface $kernel */
 				global $kernel;
 
-				$arrParams = array();
-				$arrParams['alias'] = '';
-				$arrParams['_locale'] = $objRootPage->language;
+				$arrParams = array('_locale' => $objRootPage->language);
 
-				$strUrl = $kernel->getContainer()->get('router')->generate('contao_frontend', $arrParams);
+				$strUrl = $kernel->getContainer()->get('router')->generate('contao_index', $arrParams);
 				$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 				static::redirect($strUrl, 301);
@@ -426,7 +424,7 @@ abstract class Frontend extends \Controller
 		global $kernel;
 
 		$arrParams = array();
-		$arrParams['alias'] = $pageId . $strParams . \Config::get('urlSuffix');
+		$arrParams['alias'] = $pageId . $strParams;
 		$arrParams['_locale'] = $objPage->rootLanguage;
 
 		$strUrl = $kernel->getContainer()->get('router')->generate('contao_frontend', $arrParams);
