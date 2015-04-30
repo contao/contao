@@ -63,13 +63,11 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
 
         try {
             $user = $userProvider->loadUserByUsername($token->getKey());
-        } catch (UsernameNotFoundException $e) {
-            return $token;
-        }
 
-        if ($user instanceof User) {
-            return new ContaoToken($user);
-        }
+            if ($user instanceof User) {
+                return new ContaoToken($user);
+            }
+        } catch (UsernameNotFoundException $e) {}
 
         return $token;
     }
