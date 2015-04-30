@@ -60,7 +60,9 @@ class LocaleListener extends ScopeAwareListener
         $session = $request->getSession();
 
         if ($locale = $request->attributes->get('_locale')) {
-            $session->set('_locale', str_replace('-', '_', strtolower($locale)));
+            $locale = str_replace('-', '_', strtolower($locale));
+            $request->attributes->set('_locale', $locale);
+            $session->set('_locale', $locale);
         } elseif ($locale = $session->get('_locale')) {
             $request->attributes->set('_locale', $locale);
         } else {
