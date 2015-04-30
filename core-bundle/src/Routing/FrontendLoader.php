@@ -31,7 +31,7 @@ class FrontendLoader extends Loader
     /**
      * Constructor.
      *
-     * @param bool   $prependLocale Prepend the locale
+     * @param bool $prependLocale Prepend the locale
      */
     public function __construct($prependLocale)
     {
@@ -95,14 +95,14 @@ class FrontendLoader extends Loader
     }
 
     /**
-     * Adjust route if prepend_locale is enabled.
+     * Adds the locale to the route if prepend_locale is enabled.
      *
      * @param Route $route The route
      */
     private function addLocaleToRoute(Route $route)
     {
         if ($this->prependLocale) {
-            $route->setPath('/{_locale}/' . $route->getPath());
+            $route->setPath('/{_locale}' . $route->getPath());
             $route->addRequirements(['_locale' => '[a-z]{2}(\-[A-Z]{2})?']);
         } else {
             $route->addDefaults(['_locale' => null]);

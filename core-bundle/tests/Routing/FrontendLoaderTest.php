@@ -15,8 +15,6 @@ use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -37,15 +35,18 @@ class FrontendLoaderTest extends TestCase
     }
 
     /**
-     * Ensures that the loader supports "contao_frontend".
+     * Tests the supports() method.
      */
-    public function testSupportsContaoFrontend()
+    public function testSupports()
     {
         $loader = new FrontendLoader(false);
 
         $this->assertTrue($loader->supports('.', 'contao_frontend'));
     }
 
+    /**
+     * Tests that the dynamic routes have the correct scope.
+     */
     public function testContainerScope()
     {
         $loader     = new FrontendLoader(false);
@@ -62,6 +63,9 @@ class FrontendLoaderTest extends TestCase
         );
     }
 
+    /**
+     * Tests that the dynamic routes are mapped to the correct controller.
+     */
     public function testController()
     {
         $loader     = new FrontendLoader(false);
@@ -90,6 +94,9 @@ class FrontendLoaderTest extends TestCase
         $router->generate('contao_frontend');
     }
 
+    /**
+     * Tests generating  generating the "contao_frontend" route without locale.
+     */
     public function testGenerateFrontendWithoutLocale()
     {
         $loader     = new FrontendLoader(false);
@@ -107,6 +114,9 @@ class FrontendLoaderTest extends TestCase
         );
     }
 
+    /**
+     * Tests generating  generating the "contao_frontend" route with locale.
+     */
     public function testGenerateFrontendWithLocale()
     {
         $loader     = new FrontendLoader(true);
@@ -120,6 +130,8 @@ class FrontendLoaderTest extends TestCase
     }
 
     /**
+     * Tests generating the "contao_frontend" route with missing locale.
+     *
      * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      */
     public function testGenerateFrontendWithMissingLocale()
@@ -131,6 +143,9 @@ class FrontendLoaderTest extends TestCase
         $router->generate('contao_frontend', ['alias' => 'foobar']);
     }
 
+    /**
+     * Tests generating the "contao_index" route without locale.
+     */
     public function testGenerateIndexWithoutLocale()
     {
         $loader     = new FrontendLoader(false);
@@ -148,6 +163,9 @@ class FrontendLoaderTest extends TestCase
         );
     }
 
+    /**
+     * Tests generating the "contao_index" route with locale.
+     */
     public function testGenerateIndexWithLocale()
     {
         $loader     = new FrontendLoader(true);
@@ -161,6 +179,8 @@ class FrontendLoaderTest extends TestCase
     }
 
     /**
+     * Tests generating the "contao_index" route with missing locale.
+     *
      * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      */
     public function testGenerateIndexWithMissingLocale()
@@ -175,16 +195,14 @@ class FrontendLoaderTest extends TestCase
     /**
      * Generates a router using the given RouteCollection.
      *
-     * @param RouteCollection $collection
-     * @param string          $urlSuffix
+     * @param RouteCollection $collection The route collection
+     * @param string          $urlSuffix  The URL suffix
      *
-     * @return Router
+     * @return Router The router object
      */
     private function getRouter(RouteCollection $collection, $urlSuffix = '.html')
     {
-        $loader = $this->getMock(
-            'Symfony\\Component\\Config\\Loader\\LoaderInterface'
-        );
+        $loader = $this->getMock('Symfony\\Component\\Config\\Loader\\LoaderInterface');
 
         $loader
             ->expects($this->any())
@@ -192,6 +210,7 @@ class FrontendLoaderTest extends TestCase
             ->willReturn($collection)
         ;
 
+        /** @var ContainerInterface|\PHPUnit_Framework_MockObject_MockObject $container */
         $container = $this->getMock(
             'Symfony\\Component\\DependencyInjection\\Container',
             ['get', 'getParameter']
