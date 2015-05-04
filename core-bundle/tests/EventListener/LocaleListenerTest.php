@@ -14,7 +14,6 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\LocaleListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -32,7 +31,7 @@ class LocaleListenerTest extends TestCase
 
     public function setUp()
     {
-        $this->listener = new LocaleListener('en', $this->getRootDir() . '/app');
+        $this->listener = new LocaleListener(['en']);
     }
 
     /**
@@ -94,9 +93,32 @@ class LocaleListenerTest extends TestCase
         $this->assertEquals($expected, $session->get('_locale'));
     }
 
-    public function testFindsFallback()
+    /**
+     * @dataProvider fallbackTestData
+     *
+     * @param string $input
+     * @param string $expected
+     * @param array  $available
+     */
+    public function testFindsFallback($input, $expected, array $available)
     {
-        $this->markTestIncomplete();
+        $listener = new LocaleListener($available);
+        $kernel   = $this->mockKernel();
+        $session  = $this->mockSession();
+        $request  = Request::create('/');
+        $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $request->headers->set('Accept-Language', $input);
+
+        $kernel->getContainer()->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
+        $request->setSession($session);
+        $listener->setContainer($kernel->getContainer());
+
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals($expected, $request->attributes->get('_locale'));
+        $this->assertEquals($expected, $session->get('_locale'));
+
     }
 
     public function testWithoutContainer()
@@ -165,6 +187,18 @@ class LocaleListenerTest extends TestCase
             ['de-CH', 'de_CH'],
             ['de_CH', 'de_CH'],
             ['zh-tw', 'zh_TW']
+        ];
+    }
+
+    public function fallbackTestData()
+    {
+        return [
+            ['de', 'de', ['de', 'en']],
+            ['de, en', 'en', ['en']],
+            ['de', 'en', ['en']],
+            ['de-de, en', 'de', ['de', 'en']],
+            ['de, fr, en', 'fr', ['en', 'fr']],
+            ['fr, de-ch, en', 'de_CH', ['en', 'de_CH']],
         ];
     }
 }
