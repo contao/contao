@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### Changed
+Do not render empty custom sections (see #7742).
+
 ### Fixed
 Convert dates to timestamps when storing front end form data (see #6827).
 
