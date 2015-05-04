@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
@@ -29,6 +29,9 @@ class LocaleListenerTest extends TestCase
      */
     private $listener;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         $this->listener = new LocaleListener(['en']);
@@ -43,23 +46,27 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @dataProvider localeTestData
+     * Tests the onKernelRequest() method with a request attribute.
      *
-     * @param string $input
-     * @param string $expected
+     * @param string $locale   The locale
+     * @param string $expected The expected locale
+     *
+     * @dataProvider localeTestData
      */
-    public function testWithRequestAttribute($input, $expected)
+    public function testWithRequestAttribute($locale, $expected)
     {
-        $kernel  = $this->mockKernel();
-        $session = $this->mockSession();
-        $request = Request::create('/');
-        $event   = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
+        $kernel = $this->mockKernel();
         $kernel->getContainer()->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-        $request->setSession($session);
+
         $this->listener->setContainer($kernel->getContainer());
 
-        $request->attributes->set('_locale', $input);
+        $session = $this->mockSession();
+
+        $request = Request::create('/');
+        $request->setSession($session);
+        $request->attributes->set('_locale', $locale);
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $this->listener->onKernelRequest($event);
 
@@ -68,25 +75,29 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @dataProvider localeTestData
+     * Tests the onKernelRequest() method with the session locale.
      *
-     * @param string $input
-     * @param string $expected
+     * @param string $locale   The locale
+     * @param string $expected The expected locale
+     *
+     * @dataProvider localeTestData
      */
-    public function testWithSessionValue($input, $expected)
+    public function testWithSessionValue($locale, $expected)
     {
-        $kernel  = $this->mockKernel();
-        $session = $this->mockSession();
-        $request = Request::create('/');
-        $event   = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
+        $kernel = $this->mockKernel();
         $kernel->getContainer()->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-        $request->setSession($session);
+
         $this->listener->setContainer($kernel->getContainer());
 
-        // The session values is already formatted, so we're passing in $expected here
+        // The session values are already formatted, so we're passing in $expected here
+        $session = $this->mockSession();
         $session->set('_locale', $expected);
 
+        $request = Request::create('/');
+        $request->setSession($session);
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
         $this->listener->onKernelRequest($event);
 
         $this->assertEquals($expected, $request->attributes->get('_locale'));
@@ -94,61 +105,47 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @dataProvider fallbackTestData
+     * Tests the onKernelRequest() method with an accept language header.
      *
-     * @param string $input
-     * @param string $expected
-     * @param array  $available
+     * @param string $locale    The locale
+     * @param string $expected  The expected locale
+     * @param array  $available The available languages
+     *
+     * @dataProvider acceptLanguageTestData
      */
-    public function testFindsFallback($input, $expected, array $available)
+    public function testWithLanguageHeader($locale, $expected, array $available)
     {
-        $listener = new LocaleListener($available);
-        $kernel   = $this->mockKernel();
-        $session  = $this->mockSession();
-        $request  = Request::create('/');
-        $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
-        $request->headers->set('Accept-Language', $input);
-
+        $kernel = $this->mockKernel();
         $kernel->getContainer()->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-        $request->setSession($session);
-        $listener->setContainer($kernel->getContainer());
 
+        $session  = $this->mockSession();
+
+        $request = Request::create('/');
+        $request->setSession($session);
+        $request->headers->set('Accept-Language', $locale);
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new LocaleListener($available);
+        $listener->setContainer($kernel->getContainer());
         $listener->onKernelRequest($event);
 
         $this->assertEquals($expected, $request->attributes->get('_locale'));
         $this->assertEquals($expected, $session->get('_locale'));
-
     }
 
+    /**
+     * Tests the onKernelRequest() method without container.
+     */
     public function testWithoutContainer()
     {
-        $kernel  = $this->mockKernel();
         $session = $this->mockSession();
+
         $request = Request::create('/');
-        $event   = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
         $request->setSession($session);
-
         $request->attributes->set('_locale', 'zh-TW');
 
-        $this->listener->onKernelRequest($event);
-
-        $this->assertEquals('zh-TW', $request->attributes->get('_locale'));
-        $this->assertFalse($session->has('_locale'));
-    }
-
-    public function testWithoutContaoScope()
-    {
-        $kernel  = $this->mockKernel();
-        $session = $this->mockSession();
-        $request = Request::create('/');
-        $event   = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
-        $request->setSession($session);
-        $this->listener->setContainer($kernel->getContainer());
-
-        $request->attributes->set('_locale', 'zh-TW');
+        $event = new GetResponseEvent($this->mockKernel(), $request, HttpKernelInterface::MASTER_REQUEST);
 
         $this->listener->onKernelRequest($event);
 
@@ -157,28 +154,59 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @dataProvider localeTestData
-     *
-     * @param string $input
-     * @param string $expected
+     * Tests the onKernelRequest() method without Contao scope.
      */
-    public function testWithoutSession($input, $expected)
+    public function testWithoutContaoScope()
     {
-        $kernel  = $this->mockKernel();
-        $request = Request::create('/');
-        $event   = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
-        $this->assertNull($request->getSession());
-
-        $kernel->getContainer()->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-        $request->attributes->set('_locale', $input);
+        $kernel = $this->mockKernel();
 
         $this->listener->setContainer($kernel->getContainer());
+
+        $session = $this->mockSession();
+
+        $request = Request::create('/');
+        $request->setSession($session);
+        $request->attributes->set('_locale', 'zh-TW');
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
         $this->listener->onKernelRequest($event);
 
+        $this->assertEquals('zh-TW', $request->attributes->get('_locale'));
+        $this->assertFalse($session->has('_locale'));
+    }
+
+    /**
+     * Tests the onKernelRequest() method without session.
+     *
+     * @param string $locale   The locale
+     * @param string $expected The expected locale
+     *
+     * @dataProvider localeTestData
+     */
+    public function testWithoutSession($locale, $expected)
+    {
+        $kernel  = $this->mockKernel();
+        $kernel->getContainer()->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
+
+        $this->listener->setContainer($kernel->getContainer());
+
+        $request = Request::create('/');
+        $request->attributes->set('_locale', $locale);
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $this->listener->onKernelRequest($event);
+
+        $this->assertNull($request->getSession());
         $this->assertEquals($expected, $request->attributes->get('_locale'));
     }
 
+    /**
+     * Provides the test data for the locale tests.
+     *
+     * @return array The test data
+     */
     public function localeTestData()
     {
         return [
@@ -186,11 +214,16 @@ class LocaleListenerTest extends TestCase
             ['de', 'de'],
             ['de-CH', 'de_CH'],
             ['de_CH', 'de_CH'],
-            ['zh-tw', 'zh_TW']
+            ['zh-tw', 'zh_TW'],
         ];
     }
 
-    public function fallbackTestData()
+    /**
+     * Provides the test data for the accept language header tests.
+     *
+     * @return array The test data
+     */
+    public function acceptLanguageTestData()
     {
         return [
             ['de', 'de', ['de', 'en']],

@@ -261,9 +261,6 @@ class FrontendUser extends \User
 	 */
 	protected function setUserFromDb()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		$this->intId = $this->id;
 
 		// Unserialize values
@@ -278,7 +275,9 @@ class FrontendUser extends \User
 		// Set language
 		if ($this->language != '')
 		{
-			// FIXME: is the frontend user language ever used?
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
 			$kernel->getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
 			$kernel->getContainer()->get('translator')->setLocale($this->language);
 

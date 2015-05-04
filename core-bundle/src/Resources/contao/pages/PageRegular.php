@@ -62,13 +62,13 @@ class PageRegular extends \Frontend
 	 */
 	protected function prepare($objPage)
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		$GLOBALS['TL_KEYWORDS'] = '';
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
-		$locale  = str_replace('-', '_', $objPage->language);
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$locale = str_replace('-', '_', $objPage->language);
 		$kernel->getContainer()->get('request_stack')->getCurrentRequest()->setLocale($locale);
 		$kernel->getContainer()->get('translator')->setLocale($locale);
 

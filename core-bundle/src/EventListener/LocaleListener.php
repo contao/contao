@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Makes sure the locale is available in request and persisted in the session.
+ * Persists the locale from the accept header or the request in the session.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -30,7 +30,7 @@ class LocaleListener extends ScopeAwareListener
     /**
      * Constructor.
      *
-     * @param array $availableLocales The locales available in the system
+     * @param array $availableLocales The available locales
      */
     public function __construct($availableLocales)
     {
@@ -38,9 +38,9 @@ class LocaleListener extends ScopeAwareListener
     }
 
     /**
-     * Set the default locale based on the request or session.
+     * Sets the default locale based on the request or session.
      *
-     * @param GetResponseEvent $event
+     * @param GetResponseEvent $event The event object
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -49,11 +49,10 @@ class LocaleListener extends ScopeAwareListener
         }
 
         $request = $event->getRequest();
-        $session = $request->getSession();
 
         if ($request->attributes->has('_locale')) {
-            $locale = $this->formatLocaleID($request->attributes->get('_locale'));
-        } elseif (null !== $session && $session->has('_locale')) {
+            $locale = $this->formatLocaleId($request->attributes->get('_locale'));
+        } elseif (null !== ($session = $request->getSession()) && $session->has('_locale')) {
             $locale = $session->get('_locale');
         } else {
             $locale = $request->getPreferredLanguage($this->availableLocales);
@@ -63,20 +62,21 @@ class LocaleListener extends ScopeAwareListener
     }
 
     /**
-     * Format a string to represent a locale ID.
+     * Formats a string to represent a locale ID.
      *
-     * @param $locale
+     * @param string $locale The locale string
      *
-     * @return string
+     * @return string The formatted locale
+     *
+     * @throw \InvalidArgumentException If the given locale is not supported
      */
-    private function formatLocaleID($locale)
+    private function formatLocaleId($locale)
     {
-        $values = preg_split('/-|_/', $locale);
-
-        if (count($values) > 2 || strlen($values[0]) > 2 || (isset($values[1]) && strlen($values[1]) > 2)) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a supported locale.', $locale));
+        if (!preg_match('/^[a-z]{2}([_-][a-z]{2})?$/i', $locale)) {
+            throw new \InvalidArgumentException("$locale is not a supported locale.");
         }
 
+        $values = preg_split('/-|_/', $locale);
         $locale = strtolower($values[0]);
 
         if (isset($values[1])) {
@@ -89,8 +89,8 @@ class LocaleListener extends ScopeAwareListener
     /**
      * Saves the locale in the request attributes and the session (if available).
      *
-     * @param Request $request
-     * @param string  $locale
+     * @param Request $request The request object
+     * @param string  $locale  The locale
      */
     private function saveLocale(Request $request, $locale)
     {
@@ -102,36 +102,34 @@ class LocaleListener extends ScopeAwareListener
     }
 
     /**
-     * Creates an instance of LocaleListener with available languages from ContaoCoreBundle and app/Resources.
+     * Creates a new instance with the installed languages.
      *
      * @param string $defaultLocale The default locale
      * @param string $rootDir       The kernel root directory
      *
-     * @return static A new instance of LocaleListener
+     * @return static The new object instance
      */
     public static function createWithLocales($defaultLocale, $rootDir)
     {
         $dirs = [__DIR__ . '/../Resources/contao/languages'];
 
+        // app/Resources/contao/languages
         if (is_dir($rootDir . '/Resources/contao/languages')) {
             $dirs[] = $rootDir . '/Resources/contao/languages';
         }
 
-        $finder = Finder::create()
-                        ->directories()
-                        ->depth(0)
-                        ->in($dirs);
+        $finder = Finder::create()->directories()->depth(0)->in($dirs);
 
         $languages = array_values(
             array_map(
-                function(SplFileInfo $file) {
+                function (SplFileInfo $file) {
                     return $file->getFilename();
                 },
                 iterator_to_array($finder)
             )
         );
 
-        // The default locale must be the first supported language (also see contao/core#6533)
+        // The default locale must be the first supported language (see contao/core#6533)
         array_unshift($languages, $defaultLocale);
 
         return new static(array_unique($languages));
