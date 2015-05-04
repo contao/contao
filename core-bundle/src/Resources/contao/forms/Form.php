@@ -116,7 +116,7 @@ class Form extends \Hybrid
 		{
 			while ($objFields->next())
 			{
-				$arrFields[] = $objFields->current();
+				$arrFields[$objFields->name] = $objFields->current();
 			}
 		}
 
@@ -464,6 +464,13 @@ class Form extends \Hybrid
 				if ($k != 'cc' && $k != 'id')
 				{
 					$arrSet[$k] = $v;
+
+					// Convert date formats into timestamps (see #6827)
+					if ($arrSet[$k] != '' && in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
+					{
+						$objDate = new \Date($arrSet[$k], \Date::getFormatFromRgxp($arrFields[$k]->rgxp));
+						$arrSet[$k] = $objDate->tstamp;
+					}
 				}
 			}
 

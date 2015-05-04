@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### Fixed
+Convert dates to timestamps when storing front end form data (see #6827).
+
 ### New
 Add schema.org tags where applicable (see #7780).
 

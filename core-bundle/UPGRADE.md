@@ -4,6 +4,12 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Store form data
+
+If a front end form is set up to store the submitted data in the database, date
+and time fields are now automatically converted to Unix timestamps.
+
+
 ### Meta keywords
 
 The meta keywords tag has been removed from the `fe_page.html5` template, as
