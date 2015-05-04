@@ -4,6 +4,22 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Meta keywords
+
+The meta keywords tag has been removed from the `fe_page.html5` template, as
+it does not serve a purpose anymore. If you still want to use it, adjust the
+template as follows:
+
+```php
+<?php $this->extend('fe_page'); ?>
+
+<?php $this->block('meta'): ?>
+  <?php $this->parent(); ?>
+  <meta name="keywords" content="<?= $this->keywords ?>">
+<?php $this->endblock(); ?>
+```
+
+
 ### Template changes
 
 Adding the schema.org tags required to insert an additional `<span>` element
