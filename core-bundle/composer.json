@@ -30,7 +30,7 @@
         "contao-components/colorbox": "~1.5",
         "contao-components/colorpicker": "~1.4",
         "contao-components/compass": "~0.12",
-        "contao-components/contao": "^3.4.4",
+        "contao-components/contao": "^3.4.5",
         "contao-components/datepicker": "~2.2",
         "contao-components/dropzone": "~3.10",
         "contao-components/highlight": "~8.2",
