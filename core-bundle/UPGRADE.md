@@ -200,6 +200,19 @@ for the link to the previous page. The pagination menu now uses the CSS class
 
 The classes "odd" and "even" are now correctly assigned to the table element.
 
+The content syndication links of the `mod_article.html5` template now have CSS
+classes and the class "pdf_link" has been replaced with "syndication":
+
+```html
+<div class="syndication">
+  <a href="..." class="print"></a>
+  <a href="..." class="pdf"></a>
+  <a href="..." class="facebook"></a>
+  <a href="..." class="twitter"></a>
+  <a href="..." class="gplus"></a>
+</div>
+```
+
 
 ### new File()
 
