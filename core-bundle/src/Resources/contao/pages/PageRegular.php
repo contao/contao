@@ -652,12 +652,6 @@ class PageRegular extends \Frontend
 		// Add a placeholder for dynamic style sheets (see #4203)
 		$strStyleSheets .= '[[TL_CSS]]';
 
-		// Add the debug style sheet
-		if (\Config::get('debugMode'))
-		{
-			$strStyleSheets .= \Template::generateStyleTag($this->addStaticUrlTo('assets/contao/css/debug.min.css'), 'all') . "\n";
-		}
-
 		// Always add conditional style sheets at the end
 		$strStyleSheets .= $strCcStyleSheets;
 

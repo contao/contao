@@ -846,7 +846,7 @@ Library.
               <input type="hidden" name="FORM_SUBMIT" value="tl_license">
               <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
               <div class="tl_submit_container">
-                <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['accept'] ?>" onclick="Backend.getScrollOffset()">
+                <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= $GLOBALS['TL_LANG']['tl_install']['accept'] ?></button>
               </div>
             </div>
           </form>
@@ -869,7 +869,7 @@ Library.
             </div>
             <div class="tl_formbody_submit">
               <div class="tl_submit_container">
-                <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['MSC']['login'] ?>">
+                <button type="submit" class="tl_submit"><?= $GLOBALS['TL_LANG']['MSC']['login'] ?></button>
               </div>
             </div>
           </form>
@@ -907,7 +907,7 @@ Library.
               </div>
               <div class="tl_formbody_submit">
                 <div class="tl_submit_container">
-                  <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['passSave'] ?>">
+                  <button type="submit" class="tl_submit"><?= $GLOBALS['TL_LANG']['tl_install']['passSave'] ?></button>
                 </div>
               </div>
             </form>
@@ -940,7 +940,7 @@ Library.
                     <input type="hidden" name="FORM_SUBMIT" value="tl_28update">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.8') ?>" onclick="Backend.getScrollOffset()">
+                      <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.8') ?></button>
                     </div>
                   </div>
                 </form>
@@ -959,7 +959,7 @@ Library.
                     <input type="hidden" name="FORM_SUBMIT" value="tl_29update">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.9') ?>" onclick="Backend.getScrollOffset()">
+                      <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.9') ?></button>
                     </div>
                   </div>
                 </form>
@@ -978,7 +978,7 @@ Library.
                     <input type="hidden" name="FORM_SUBMIT" value="tl_292update">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.9.2') ?>" onclick="Backend.getScrollOffset();">
+                      <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.9.2') ?></button>
                     </div>
                   </div>
                 </form>
@@ -997,7 +997,7 @@ Library.
                     <input type="hidden" name="FORM_SUBMIT" value="tl_210update">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.10') ?>" onclick="Backend.getScrollOffset()">
+                      <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '2.10') ?></button>
                     </div>
                   </div>
                 </form>
@@ -1020,7 +1020,7 @@ Library.
                       <input type="hidden" name="FORM_SUBMIT" value="tl_30update">
                       <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                       <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrunStep'], '3.0', $this->step) ?>" onclick="Backend.getScrollOffset()">
+                        <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrunStep'], '3.0', $this->step) ?></button>
                       </div>
                     </div>
                   </form>
@@ -1040,7 +1040,7 @@ Library.
                     <input type="hidden" name="FORM_SUBMIT" value="tl_31update">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.1') ?>" onclick="Backend.getScrollOffset()">
+                      <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.1') ?></button>
                     </div>
                   </div>
                 </form>
@@ -1059,7 +1059,7 @@ Library.
                     <input type="hidden" name="FORM_SUBMIT" value="tl_32update">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.2') ?>" onclick="Backend.getScrollOffset()">
+                      <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.2') ?></button>
                     </div>
                   </div>
                 </form>
@@ -1078,7 +1078,7 @@ Library.
                     <input type="hidden" name="FORM_SUBMIT" value="tl_33update">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.3') ?>" onclick="Backend.getScrollOffset()">
+                      <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.3') ?></button>
                     </div>
                   </div>
                 </form>
@@ -1097,7 +1097,7 @@ Library.
                     <input type="hidden" name="FORM_SUBMIT" value="tl_35update">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.5') ?>" onclick="Backend.getScrollOffset()">
+                      <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '3.5') ?></button>
                     </div>
                   </div>
                 </form>
@@ -1116,7 +1116,7 @@ Library.
                     <input type="hidden" name="FORM_SUBMIT" value="tl_40update">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '4.0') ?>" onclick="Backend.getScrollOffset()">
+                      <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= sprintf($GLOBALS['TL_LANG']['tl_install']['updateXrun'], '4.0') ?></button>
                     </div>
                   </div>
                 </form>
@@ -1139,7 +1139,7 @@ Library.
                   </div>
                   <div class="tl_formbody_submit">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['saveCollation'] ?>" onclick="Backend.getScrollOffset()">
+                      <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= $GLOBALS['TL_LANG']['tl_install']['saveCollation'] ?></button>
                     </div>
                   </div>
                 </form>
@@ -1164,7 +1164,7 @@ Library.
                     </div>
                     <div class="tl_formbody_submit">
                       <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['updateSave'] ?>" onclick="Backend.getScrollOffset()">
+                        <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= $GLOBALS['TL_LANG']['tl_install']['updateSave'] ?></button>
                       </div>
                     </div>
                   </form>
@@ -1201,7 +1201,7 @@ Library.
                   </div>
                   <div class="tl_formbody_submit">
                     <div class="tl_submit_container">
-                      <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['importSave'] ?>" onclick="if(!confirm('<?= $GLOBALS['TL_LANG']['tl_install']['importContinue'] ?>'))return false;Backend.getScrollOffset()">
+                      <button type="submit" class="tl_submit" onclick="if(!confirm('<?= $GLOBALS['TL_LANG']['tl_install']['importContinue'] ?>'))return false;Backend.getScrollOffset()"><?= $GLOBALS['TL_LANG']['tl_install']['importSave'] ?></button>
                     </div>
                   </div>
                 </form>
@@ -1245,7 +1245,7 @@ Library.
                     </div>
                     <div class="tl_formbody_submit">
                       <div class="tl_submit_container">
-                        <input type="submit" class="tl_submit" value="<?= $GLOBALS['TL_LANG']['tl_install']['adminSave'] ?>" onclick="Backend.getScrollOffset()">
+                        <button type="submit" class="tl_submit" onclick="Backend.getScrollOffset()"><?= $GLOBALS['TL_LANG']['tl_install']['adminSave'] ?></button>
                       </div>
                     </div>
                   </form>

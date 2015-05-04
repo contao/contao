@@ -751,10 +751,9 @@ abstract class Widget extends \Controller
 			return '';
 		}
 
-		return sprintf(' <input type="submit" id="ctrl_%s_submit" class="submit" value="%s"%s',
+		return sprintf(' <button type="submit" id="ctrl_%s_submit" class="submit">%s</button>',
 						$this->strId,
-						specialchars($this->slabel),
-						$this->strTagEnding);
+						$this->slabel);
 	}
 
 

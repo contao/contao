@@ -4,7 +4,7 @@
     <?php if ($this->src): ?>
       <input type="image" src="<?= $this->src ?>" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>" title="<?= specialchars($this->slabel) ?>" alt="<?= specialchars($this->slabel) ?>"<?= $this->getAttributes() ?>>
     <?php else: ?>
-      <input type="submit" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>" value="<?= specialchars($this->slabel) ?>"<?= $this->getAttributes() ?>>
+      <button type="submit" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>"<?= $this->getAttributes() ?>><?= $this->slabel ?></button>
     <?php endif; ?>
   </div>
 
@@ -17,7 +17,7 @@
         <?php if ($this->src): ?>
           <input type="image" src="<?= $this->src ?>" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>" title="<?= specialchars($this->slabel) ?>" alt="<?= specialchars($this->slabel) ?>"<?= $this->getAttributes() ?>>
         <?php else: ?>
-          <input type="submit" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>" value="<?= specialchars($this->slabel) ?>"<?= $this->getAttributes() ?>>
+          <button type="submit" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>"<?= $this->getAttributes() ?>><?= $this->slabel ?></button>
         <?php endif; ?>
       </div>
     </td>

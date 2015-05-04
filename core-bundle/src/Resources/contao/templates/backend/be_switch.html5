@@ -55,8 +55,8 @@
             <option value="hide"><?= $this->lblHide ?></option>
             <option value="show"<?php if ($this->show) echo ' selected="selected"'; ?>><?= $this->lblShow ?></option>
           </select>
-          <input type="submit" class="tl_submit" value="<?= $this->apply ?>">
-          <input type="button" class="tl_submit" value="<?= $this->reload ?>" onclick="parent.frames[1].location.reload()">
+          <button type="submit" class="tl_submit"><?= $this->apply ?></button>
+          <button type="button" class="tl_submit" onclick="parent.frames[1].location.reload()"><?= $this->reload ?></button>
           <a href="javascript:parent.location.href=parent.frames[1].location.href" class="close">&times;</a>
         </div>
       </form>

@@ -6,6 +6,6 @@
     <?php endif; ?>
     <label for="ctrl_keywords_<?= $this->uniqueId ?>" class="invisible"><?= $this->keywordLabel ?></label>
     <input type="search" name="keywords" id="ctrl_keywords_<?= $this->uniqueId ?>" class="text" value="<?= $this->keyword ?>">
-    <input type="submit" id="ctrl_submit_<?= $this->uniqueId ?>" class="submit" value="<?= $this->search ?>">
+    <button type="submit" id="ctrl_submit_<?= $this->uniqueId ?>" class="submit"><?= $this->search ?></button>
   </div>
 </form>

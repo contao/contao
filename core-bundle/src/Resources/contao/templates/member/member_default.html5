@@ -15,7 +15,7 @@
           <?= $this->fields ?>
           <tr class="<?= $this->rowLast ?> row_last">
             <td class="col_0 col_first">&nbsp;</td>
-            <td class="col_1 col_last"><div class="submit_container"><input type="submit" class="submit" value="<?= $this->slabel ?>"></div></td>
+            <td class="col_1 col_last"><div class="submit_container"><button type="submit" class="submit"><?= $this->slabel ?></button></div></td>
           </tr>
         </table>
       <?php else: ?>
@@ -23,7 +23,7 @@
           <?= $this->fields ?>
         </div>
         <div class="submit_container">
-          <input type="submit" class="submit" value="<?= $this->slabel ?>">
+          <button type="submit" class="submit"><?= $this->slabel ?></button>
         </div>
       <?php endif; ?>
     </div>

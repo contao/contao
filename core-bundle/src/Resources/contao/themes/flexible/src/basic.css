@@ -28,17 +28,17 @@ ul,li {
 a,b,body,cite,div,em,h1,h2,h3,h4,h5,h6,i,label,legend,li,ol,p,strong,td,th,u,ul {
 	font-family:Verdana,sans-serif;
 }
-fieldset,form,input,optgroup,select,textarea {
+button,fieldset,form,input,optgroup,select,textarea {
 	font-family:"Trebuchet MS",Verdana,sans-serif;
 }
 
 /* Font size and color */
-a,body,div,label,legend,li,ol,p,td,th,ul,fieldset,form,input,optgroup,select,textarea {
+a,body,button,div,label,legend,li,ol,p,td,th,ul,fieldset,form,input,optgroup,select,textarea {
 	font-size:11px;
 	font-size:.6875rem;
 	color:#444;
 }
-fieldset,form,input,optgroup,select,textarea {
+button,fieldset,form,input,optgroup,select,textarea {
 	font-size:12px;
 	font-size:.75rem;
 }
@@ -363,10 +363,7 @@ a.tl_submit {
 a.tl_submit,a.tl_submit:hover {
 	color:#555;
 }
-.firefox input.tl_submit {
-	padding:2px 12px 2px 13px;
-}
-.opera input.tl_submit {
+.firefox button.tl_submit,.opera button.tl_submit {
 	padding:4px 12px 4px 13px;
 }
 .tl_submit:focus,.tl_submit:hover {

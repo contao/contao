@@ -27,7 +27,7 @@
       <?php endforeach; ?>
 
       <div class="submit_container">
-        <input type="submit" class="submit" value="<?= $this->slabel ?>">
+        <button type="submit" class="submit"><?= $this->slabel ?></button>
       </div>
     </div>
   </form>

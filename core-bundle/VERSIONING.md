@@ -7,9 +7,9 @@ Starting with Contao 4.0, we will be using [semantic versioning][1].
 What does this mean?
 --------------------
 
- - Bugfix releases must only contain backwards compatible bug fixes.
- - Minor releases can contain new backwards compatible features.
- - Any incompatible API change must be release as a new major version.
+ * Bugfix releases must only contain backwards compatible bug fixes.
+ * Minor releases can contain new backwards compatible features.
+ * Any incompatible API change must be release as a new major version.
 
 
 API changes

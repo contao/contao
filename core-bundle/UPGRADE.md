@@ -193,24 +193,32 @@ argument, just like in `DC_Folder` and in any other callback.
 
 ### Markup changes
 
-The navigation menus are now using `<strong>` instead of `<span>` to highlight
-the active menu item. The search module is now using `<mark>` instead of
-`<span>` to hightlight the keywords. The newsletter channel menu is now using
-`<fieldset>` and `<legend>` instead of `<label>` and `<div>`.
+ * The navigation menus are now using `<strong>` instead of `<span>` to
+   highlight the active menu item.
 
-The main section of the `fe_page.html` template now uses the `<main>` tag.
+ * The search module is now using `<mark>` instead of `<span>` to hightlight
+   the keywords.
+
+ * The newsletter channel menu is now using `<fieldset>` and `<legend>`
+   instead of `<label>` and `<div>`.
+
+ * The main section of the `fe_page.html` template now uses the `<main>` tag.
+
+ * Submit buttons now use `<button type="submit">` instead of `<input>`.
 
 
 ### CSS class changes
 
-The book navigation module now uses the CSS class `previous` instead of `prev`
-for the link to the previous page. The pagination menu now uses the CSS class
-`active` instead of `current` for the active menu item.
+ * The book navigation module now uses the CSS class `previous` instead of
+   `prev` for the link to the previous page.
+ 
+ * The pagination menu now uses the CSS class `active` instead of `current` for
+   the active menu item.
 
-The classes "odd" and "even" are now correctly assigned to the table element.
+ * The classes `odd` and `even` are now correctly assigned to tables.
 
-The content syndication links of the `mod_article.html5` template now have CSS
-classes and the class "pdf_link" has been replaced with "syndication":
+ * The content syndication links of the `mod_article.html5` template now have
+   CSS classes and the class "pdf_link" has been replaced with "syndication":
 
 ```html
 <div class="syndication">

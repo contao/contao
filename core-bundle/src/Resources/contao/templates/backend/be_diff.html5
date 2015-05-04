@@ -52,7 +52,7 @@
               <option value="<?= $k ?>"<?php if ($v['version'] == $this->to): ?> selected="selected"<?php endif; ?>><?= $v['info'] ?></option>
             <?php endforeach; ?>
           </select>
-          <input type="submit" class="tl_submit" value="<?= $this->showLabel ?>">
+          <button type="submit" class="tl_submit"><?= $this->showLabel ?></button>
         </div>
       </form>
       <div id="diff">

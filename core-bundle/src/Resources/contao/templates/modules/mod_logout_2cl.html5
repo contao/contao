@@ -15,7 +15,7 @@
           <td class="login_info"><?= $this->loggedInAs ?><br><?= $this->lastLogin ?></td>
         </tr>
         <tr class="row_1 row_last">
-          <td><div class="submit_container"><input type="submit" class="submit" value="<?= $this->slabel ?>"></div></td>
+          <td><div class="submit_container"><button type="submit" class="submit"><?= $this->slabel ?></button></div></td>
         </tr>
       </table>
     </div>

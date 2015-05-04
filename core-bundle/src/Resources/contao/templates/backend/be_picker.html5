@@ -51,7 +51,7 @@
             <input type="hidden" name="FORM_SUBMIT" value="item_selector">
             <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
             <input type="text" name="keyword" id="keyword" value="<?= $this->value ?>" class="tl_text<?php if ($this->value != ''): ?> active<?php endif; ?>">
-            <input type="submit" name="search" value="<?= $this->search ?>" class="tl_submit">
+            <button type="submit" name="search" class="tl_submit"><?= $this->search ?></button>
           </div>
         </form>
       <?php endif; ?>

@@ -12,7 +12,7 @@
           <option value="<?= $item['href'] ?>"><?= $item['link'] ?></option>
         <?php endforeach; ?>
       </select>
-      <input type="submit" class="submit" value="<?= $this->button ?>">
+      <button type="submit" class="submit"><?= $this->button ?></button>
     </div>
   </form>
 

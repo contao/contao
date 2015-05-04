@@ -13,7 +13,7 @@
           <option value="<?= $item['href'] ?>"><?= str_repeat(' &nbsp; ', $item['level']) ?><?= $item['link'] ?></option>
         <?php endforeach; ?>
       </select>
-      <input type="submit" class="submit" value="<?= $this->button ?>">
+      <button type="submit" class="submit"><?= $this->button ?></button>
     </div>
   </form>
 

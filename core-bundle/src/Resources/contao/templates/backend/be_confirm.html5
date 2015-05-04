@@ -52,7 +52,7 @@
             <?php endforeach; ?>
           </dl>
           <p><?= $this->explain ?></p>
-          <p><input type="submit" name="cancel" class="tl_submit" accesskey="s" value="<?= $this->cancel ?>"> <a href="<?= $this->href ?>"><?= $this->continue ?></a></p>
+          <p><button type="submit" name="cancel" class="tl_submit" accesskey="s"><?= $this->cancel ?></button> <a href="<?= $this->href ?>"><?= $this->continue ?></a></p>
         </div>
       </form>
     </div>

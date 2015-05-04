@@ -346,7 +346,7 @@ class tl_templates extends Backend
 
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
-  <input type="submit" name="create" id="create" class="tl_submit" accesskey="s" value="'.specialchars($GLOBALS['TL_LANG']['tl_templates']['newTpl']).'">
+  <button type="submit" name="create" id="create" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['tl_templates']['newTpl'].'</button>
 </div>
 </div>
 </form>';
