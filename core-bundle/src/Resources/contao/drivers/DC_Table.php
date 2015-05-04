@@ -2450,7 +2450,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Reload the page to prevent _POST variables from being sent twice
 			if (\Input::post('FORM_SUBMIT') == $this->strTable && !$this->noReload)
 			{
-				if (\Input::post('saveNclose'))
+				if (isset($_POST['saveNclose']))
 				{
 					\System::setCookie('BE_PAGE_OFFSET', 0, 0);
 					$this->redirect($this->getReferer());
@@ -2768,7 +2768,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Reload the page to prevent _POST variables from being sent twice
 			if (\Input::post('FORM_SUBMIT') == $this->strTable && !$this->noReload)
 			{
-				if (\Input::post('saveNclose'))
+				if (isset($_POST['saveNclose']))
 				{
 					\System::setCookie('BE_PAGE_OFFSET', 0, 0);
 					$this->redirect($this->getReferer());

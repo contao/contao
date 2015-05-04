@@ -1305,7 +1305,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			// Redirect
-			if (\Input::post('saveNclose'))
+			if (isset($_POST['saveNclose']))
 			{
 				\Message::reset();
 				\System::setCookie('BE_PAGE_OFFSET', 0, 0);
@@ -1583,7 +1583,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Reload the page to prevent _POST variables from being sent twice
 			if (\Input::post('FORM_SUBMIT') == $this->strTable && !$this->noReload)
 			{
-				if (\Input::post('saveNclose'))
+				if (isset($_POST['saveNclose']))
 				{
 					\System::setCookie('BE_PAGE_OFFSET', 0, 0);
 					$this->redirect($this->getReferer());
@@ -1770,7 +1770,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				}
 			}
 
-			if (\Input::post('saveNclose'))
+			if (isset($_POST['saveNclose']))
 			{
 				\System::setCookie('BE_PAGE_OFFSET', 0, 0);
 				$this->redirect($this->getReferer());
