@@ -65,6 +65,13 @@ class PageRegular extends \Frontend
 		$GLOBALS['TL_KEYWORDS'] = '';
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$locale = str_replace('-', '_', $objPage->language);
+		$kernel->getContainer()->get('request_stack')->getCurrentRequest()->setLocale($locale);
+		$kernel->getContainer()->get('translator')->setLocale($locale);
+
 		\System::loadLanguageFile('default');
 
 		// Static URLs

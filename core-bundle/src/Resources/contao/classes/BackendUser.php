@@ -357,7 +357,14 @@ class BackendUser extends \User
 		}
 
 		$GLOBALS['TL_USERNAME'] = $this->username;
-		$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
+
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$kernel->getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
+		$kernel->getContainer()->get('translator')->setLocale($this->language);
+
+		$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language); // backwards compatibility
 
 		\Config::set('showHelp', $this->showHelp);
 		\Config::set('useRTE', $this->useRTE);
