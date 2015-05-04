@@ -293,20 +293,14 @@ class InitializeSystemListener extends ScopeAwareListener
      */
     private function setDefaultLanguage(Request $request = null)
     {
-        if (!$this->session->has('TL_LANGUAGE')) {
-            $langs = $request ? $request->getLanguages() : [];
-            array_push($langs, 'en'); // see #6533
+        $language = 'en';
 
-            foreach ($langs as $lang) {
-                if (is_dir(__DIR__ . '/../../src/Resources/contao/languages/' . str_replace('-', '_', $lang))) {
-                    $this->session->set('TL_LANGUAGE', $lang);
-                    break;
-                }
-            }
+        if (null !== $request) {
+            $language = str_replace('_', '-', $request->getLocale());
         }
 
-        $GLOBALS['TL_LANGUAGE']  = $this->session->get('TL_LANGUAGE');
-        $_SESSION['TL_LANGUAGE'] = $this->session->get('TL_LANGUAGE'); // backwards compatibility
+        $GLOBALS['TL_LANGUAGE']  = $language; // backwards compatibility
+        $_SESSION['TL_LANGUAGE'] = $language; // backwards compatibility
     }
 
     /**

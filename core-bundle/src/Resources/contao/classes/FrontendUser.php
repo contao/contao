@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to manage front end users.
@@ -259,6 +261,9 @@ class FrontendUser extends \User
 	 */
 	protected function setUserFromDb()
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
 		$this->intId = $this->id;
 
 		// Unserialize values
@@ -273,7 +278,11 @@ class FrontendUser extends \User
 		// Set language
 		if ($this->language != '')
 		{
-			$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
+			// FIXME: is the frontend user language ever used?
+			$kernel->getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
+			$kernel->getContainer()->get('translator')->setLocale($this->language);
+
+			$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language); // backwards compatibility
 		}
 
 		$GLOBALS['TL_USERNAME'] = $this->username;
