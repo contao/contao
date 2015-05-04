@@ -191,6 +191,8 @@ The navigation menus and the search module are now using `<strong>` instead of
 `<span>` to highlight the active menu item or keyword. The newsletter channel
 menu is now using `<fieldset>` and `<legend>` instead of `<label>` and `<div>`.
 
+The main section of the `fe_page.html` template now uses the `<main>` tag.
+
 
 ### CSS class changes
 

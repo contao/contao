@@ -48,12 +48,12 @@
         <div id="container">
 
           <?php $this->block('main'); ?>
-            <div id="main" itemscope itemtype="http://schema.org/WebPageElement" itemprop="mainContentOfPage">
+            <main id="main" role="main" itemscope itemtype="http://schema.org/WebPageElement" itemprop="mainContentOfPage">
               <div class="inside">
                 <?= $this->main ?>
               </div>
               <?php $this->sections('main'); ?>
-            </div>
+            </main>
           <?php $this->endblock(); ?>
 
           <?php $this->block('left'); ?>
