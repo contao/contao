@@ -193,9 +193,10 @@ argument, just like in `DC_Folder` and in any other callback.
 
 ### Markup changes
 
-The navigation menus and the search module are now using `<strong>` instead of
-`<span>` to highlight the active menu item or keyword. The newsletter channel
-menu is now using `<fieldset>` and `<legend>` instead of `<label>` and `<div>`.
+The navigation menus are now using `<strong>` instead of `<span>` to highlight
+the active menu item. The search module is now using `<mark>` instead of
+`<span>` to hightlight the keywords. The newsletter channel menu is now using
+`<fieldset>` and `<legend>` instead of `<label>` and `<div>`.
 
 The main section of the `fe_page.html` template now uses the `<main>` tag.
 
