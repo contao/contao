@@ -135,11 +135,17 @@ class FrontendIndex extends \Frontend
 			}
 		}
 
-		// Throw a 404 error if the page could not be found or the result is still ambiguous
-		if ($objPage === null || ($objPage instanceof \Model\Collection && $objPage->count() != 1))
+		// Throw a 404 error if the page could not be found
+		if ($objPage === null)
 		{
 			$this->User->authenticate();
 			throw new PageNotFoundException('Page not found');
+		}
+
+		// Throw a 500 error if the result is still ambiguous
+		if ($objPage instanceof \Model\Collection && $objPage->count() != 1)
+		{
+			throw new \LogicException('More than one page found');
 		}
 
 		// Make sure $objPage is a Model
