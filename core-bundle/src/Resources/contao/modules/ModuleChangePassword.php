@@ -90,6 +90,7 @@ class ModuleChangePassword extends \Module
 		$strFields = '';
 		$doNotSubmit = false;
 		$objMember = \MemberModel::findByPk($this->User->id);
+		$strFormId = 'tl_change_password_' . $this->id;
 
 		/** @var \FormTextField $objOldPassword */
 		$objOldPassword = null;
@@ -131,7 +132,7 @@ class ModuleChangePassword extends \Module
 			$$strVar = $objWidget;
 
 			// Validate the widget
-			if (\Input::post('FORM_SUBMIT') == 'tl_change_password')
+			if (\Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
 
@@ -169,7 +170,7 @@ class ModuleChangePassword extends \Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Store the new password
-		if (\Input::post('FORM_SUBMIT') == 'tl_change_password' && !$doNotSubmit)
+		if (\Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
         {
 			$objMember->password = $objNewPassword->value;
 			$objMember->save();
@@ -197,6 +198,7 @@ class ModuleChangePassword extends \Module
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 		$this->Template->tableless = $this->tableless;
+		$this->Template->formId = $strFormId;
 		$this->Template->message = \Message::generate(false, true);
 	}
 }

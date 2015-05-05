@@ -98,6 +98,7 @@ class ModulePassword extends \Module
 		$row = 0;
 		$strFields = '';
 		$doNotSubmit = false;
+		$strFormId = 'tl_lost_password_' . $this->id;
 
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
@@ -122,7 +123,7 @@ class ModulePassword extends \Module
 			++$row;
 
 			// Validate the widget
-			if (\Input::post('FORM_SUBMIT') == 'tl_lost_password')
+			if (\Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
 
@@ -139,7 +140,7 @@ class ModulePassword extends \Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Look for an account and send the password link
-		if (\Input::post('FORM_SUBMIT') == 'tl_lost_password' && !$doNotSubmit)
+		if (\Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
 		{
 			if ($this->reg_skipName)
 			{
@@ -161,7 +162,7 @@ class ModulePassword extends \Module
 			}
 		}
 
-		$this->Template->formId = 'tl_lost_password';
+		$this->Template->formId = $strFormId;
 		$this->Template->username = specialchars($GLOBALS['TL_LANG']['MSC']['username']);
 		$this->Template->email = specialchars($GLOBALS['TL_LANG']['MSC']['emailAddress']);
 		$this->Template->action = \Environment::get('indexFreeRequest');

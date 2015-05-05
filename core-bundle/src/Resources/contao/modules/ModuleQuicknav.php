@@ -47,7 +47,7 @@ class ModuleQuicknav extends \Module
 			return $objTemplate->parse();
 		}
 
-		if (\Input::post('FORM_SUBMIT') == 'tl_quicknav')
+		if (\Input::post('FORM_SUBMIT') == 'tl_quicknav_' . $this->id)
 		{
 			$this->redirect(\Input::post('target', true));
 		}
@@ -91,6 +91,7 @@ class ModuleQuicknav extends \Module
 			}
 		}
 
+		$this->Template->formId = 'tl_quicknav_' . $this->id;
 		$this->Template->targetPage = $GLOBALS['TL_LANG']['MSC']['targetPage'];
 		$this->Template->button = specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicknav'];

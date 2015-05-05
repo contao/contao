@@ -110,6 +110,7 @@ class ModuleRegistration extends \Module
 		$this->Template->tableless = $this->tableless;
 		$objCaptcha = null;
 		$doNotSubmit = false;
+		$strFormId = 'tl_registration_' . $this->id;
 
 		// Predefine the group order (other groups will be appended automatically)
 		$arrGroups = array
@@ -146,7 +147,7 @@ class ModuleRegistration extends \Module
 			/** @var \FormCaptcha $objCaptcha */
 			$objCaptcha = new $strClass($arrCaptcha);
 
-			if (\Input::post('FORM_SUBMIT') == 'tl_registration')
+			if (\Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objCaptcha->validate();
 
@@ -196,7 +197,7 @@ class ModuleRegistration extends \Module
 			}
 
 			// Validate input
-			if (\Input::post('FORM_SUBMIT') == 'tl_registration')
+			if (\Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
 				$varValue = $objWidget->value;
@@ -299,7 +300,7 @@ class ModuleRegistration extends \Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Create new user if there are no errors
-		if (\Input::post('FORM_SUBMIT') == 'tl_registration' && !$doNotSubmit)
+		if (\Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
 		{
 			$this->createNewUser($arrUser);
 		}
@@ -320,7 +321,7 @@ class ModuleRegistration extends \Module
 		}
 
 		$this->Template->categories = $arrGroups;
-		$this->Template->formId = 'tl_registration';
+		$this->Template->formId = $strFormId;
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['register']);
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->captcha = $arrFields['captcha']['captcha']; // backwards compatibility

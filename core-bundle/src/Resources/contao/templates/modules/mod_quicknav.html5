@@ -4,7 +4,7 @@
 
   <form<?php if ($this->request): ?> action="<?= $this->request ?>"<?php endif; ?> method="post">
     <div class="formbody">
-      <input type="hidden" name="FORM_SUBMIT" value="tl_quicknav">
+      <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
       <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
       <label for="ctrl_target" class="invisible"><?= $this->targetPage ?></label>
       <select name="target" id="ctrl_target" class="select">

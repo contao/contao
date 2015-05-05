@@ -48,7 +48,7 @@ class ModuleQuicklink extends \Module
 		}
 
 		// Redirect to selected page
-		if (\Input::post('FORM_SUBMIT') == 'tl_quicklink')
+		if (\Input::post('FORM_SUBMIT') == 'tl_quicklink_' . $this->id)
 		{
 			$this->redirect(\Input::post('target', true));
 		}
@@ -146,6 +146,7 @@ class ModuleQuicklink extends \Module
 		}
 
 		$this->Template->items = $items;
+		$this->Template->formId = 'tl_quicklink_' . $this->id;
 		$this->Template->request = ampersand(\Environment::get('request'), true);
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
 		$this->Template->button = specialchars($GLOBALS['TL_LANG']['MSC']['go']);

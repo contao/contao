@@ -124,6 +124,7 @@ class ModulePersonalData extends \Module
 		$blnModified = false;
 		$objMember = \MemberModel::findByPk($this->User->id);
 		$strTable = $objMember->getTable();
+		$strFormId = 'tl_member_' . $this->id;
 
 		// Initialize the versioning (see #7415)
 		$objVersions = new \Versions($strTable, $objMember->id);
@@ -213,7 +214,7 @@ class ModulePersonalData extends \Module
 			}
 
 			// Validate the form data
-			if (\Input::post('FORM_SUBMIT') == 'tl_member_' . $this->id)
+			if (\Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
 				$varValue = $objWidget->value;
@@ -318,7 +319,7 @@ class ModulePersonalData extends \Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Redirect or reload if there was no error
-		if (\Input::post('FORM_SUBMIT') == 'tl_member_' . $this->id && !$doNotSubmit)
+		if (\Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
 		{
 			// HOOK: updated personal data
 			if (isset($GLOBALS['TL_HOOKS']['updatePersonalData']) && is_array($GLOBALS['TL_HOOKS']['updatePersonalData']))
@@ -371,7 +372,7 @@ class ModulePersonalData extends \Module
 		}
 
 		$this->Template->categories = $arrGroups;
-		$this->Template->formId = 'tl_member_' . $this->id;
+		$this->Template->formId = $strFormId;
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';

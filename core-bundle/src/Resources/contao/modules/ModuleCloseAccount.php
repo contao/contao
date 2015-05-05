@@ -76,8 +76,10 @@ class ModuleCloseAccount extends \Module
 		$objWidget = new \FormTextField(\FormTextField::getAttributesFromDca($arrField, $arrField['name']));
 		$objWidget->rowClass = 'row_0 row_first even';
 
+		$strFormId = 'tl_close_account_' . $this->id;
+
 		// Validate widget
-		if (\Input::post('FORM_SUBMIT') == 'tl_close_account')
+		if (\Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			$objWidget->validate();
 
@@ -145,7 +147,7 @@ class ModuleCloseAccount extends \Module
 
 		$this->Template->fields = $objWidget->parse();
 
-		$this->Template->formId = 'tl_close_account';
+		$this->Template->formId = $strFormId;
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
 		$this->Template->rowLast = 'row_1 row_last odd';

@@ -6,9 +6,9 @@
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
   <?php endif; ?>
 
-  <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="tl_logout" method="post">
+  <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post">
     <div class="formbody">
-      <input type="hidden" name="FORM_SUBMIT" value="tl_logout">
+      <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
       <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
       <p class="login_info"><?= $this->loggedInAs ?><br><?= $this->lastLogin ?></p>
       <div class="submit_container">

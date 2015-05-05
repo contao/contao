@@ -4,6 +4,13 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### FORM_SUBMIT
+
+Every form now appends its numeric ID to the `FORM_SUBMIT` parameter, so custom
+forms used for triggering modules such as the login module have to be adjusted
+to pass the correct form ID (e.g. `tl_login_12` instead of `tl_login`).
+
+
 ### Store form data
 
 If a front end form is set up to store the submitted data in the database, date

@@ -54,7 +54,7 @@ class ModuleLogin extends \Module
 		}
 
 		// Login
-		if (\Input::post('FORM_SUBMIT') == 'tl_login')
+		if (\Input::post('FORM_SUBMIT') == 'tl_login_' . $this->id)
 		{
 			// Check whether username and password are set
 			if (empty($_POST['username']) || empty($_POST['password']))
@@ -115,7 +115,7 @@ class ModuleLogin extends \Module
 		}
 
 		// Logout and redirect to the website root if the current page is protected
-		if (\Input::post('FORM_SUBMIT') == 'tl_logout')
+		if (\Input::post('FORM_SUBMIT') == 'tl_logout_' . $this->id)
 		{
 			/** @var \PageModel $objPage */
 			global $objPage;
@@ -165,6 +165,7 @@ class ModuleLogin extends \Module
 			$this->Template = $objTemplate;
 			$this->Template->setData($this->arrData);
 
+			$this->Template->formId = 'tl_logout_' . $this->id;
 			$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
 			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $this->User->username);
 			$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
@@ -210,6 +211,7 @@ class ModuleLogin extends \Module
 		$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['login']);
 		$this->Template->value = specialchars(\Input::post('username'));
+		$this->Template->formId = 'tl_login_' . $this->id;
 		$this->Template->autologin = ($this->autologin && \Config::get('autologin') > 0);
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 	}

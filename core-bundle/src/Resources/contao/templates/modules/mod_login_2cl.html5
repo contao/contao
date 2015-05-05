@@ -6,12 +6,12 @@
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
   <?php endif; ?>
 
-  <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="tl_login" method="post">
+  <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post">
     <div class="formbody">
       <?php if ($this->message): ?>
         <p class="error"><?= $this->message ?></p>
       <?php endif; ?>
-      <input type="hidden" name="FORM_SUBMIT" value="tl_login">
+      <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
       <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
       <table>
         <tr class="row_0 row_first">

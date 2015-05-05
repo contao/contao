@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### Fixed
+Always append the numeric ID to the `FORM_SUBMIT` variable (see #7286).
+
 ### Changed
 Do not render empty custom sections (see #7742).
 
