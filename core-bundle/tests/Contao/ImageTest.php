@@ -839,14 +839,51 @@ class ImageTest extends TestCase
             'x' => 20,
             'y' => 40,
             'width' => 80,
-            'height' => 120,
+            'height' => 60,
         ]);
 
         $this->assertSame($imageObj->getImportantPart(), [
             'x' => 20,
             'y' => 40,
             'width' => 80,
+            'height' => 60,
+        ]);
+
+        $imageObj->setImportantPart([
+            'x' => -20,
+            'y' => 40.1,
+            'width' => '80',
             'height' => 120,
+        ]);
+
+        $this->assertSame($imageObj->getImportantPart(), [
+            'x' => 0,
+            'y' => 40,
+            'width' => 80,
+            'height' => 60,
+        ]);
+
+        $imageObj->setImportantPart([
+            'x' => 200,
+            'y' => 200,
+            'width' => 200,
+            'height' => 200,
+        ]);
+
+        $this->assertSame($imageObj->getImportantPart(), [
+            'x' => 99,
+            'y' => 99,
+            'width' => 1,
+            'height' => 1,
+        ]);
+
+        $imageObj->setImportantPart(null);
+
+        $this->assertSame($imageObj->getImportantPart(), [
+            'x' => 0,
+            'y' => 0,
+            'width' => 100,
+            'height' => 100,
         ]);
 
         $this->assertSame($imageObj->getTargetHeight(), 0);
@@ -905,6 +942,10 @@ class ImageTest extends TestCase
                         return $arguments[2];
                     case 'mtime':
                         return $arguments[5];
+                    case 'width':
+                        return 200;
+                    case 'height':
+                        return 200;
                     default:
                         return null;
                 }
