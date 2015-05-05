@@ -262,7 +262,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
             $chunks  = explode('/', $dir);
             $test    = $chunks[0];
 
-            for ($i = 1; $i < count($chunks); $i++) {
+            for ($i = 1, $c = count($chunks); $i < $c; $i++) {
                 if (in_array($test, $paths)) {
                     $this->output->writeln("<fg=red>Skipped $dir because $test has been symlinked already.</fg=red>");
 
