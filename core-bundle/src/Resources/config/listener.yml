@@ -8,7 +8,7 @@
 # - 20: RefererIdListener
 # - 20: LocaleListener
 #
-# The priorites of the following listeners must be lower than the one of the
+# The priorities of the following listeners must be lower than the one of the
 # Symfony locale listener (defaults to 16).
 #
 # - 10: InitializeSystemListener

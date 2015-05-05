@@ -196,7 +196,7 @@ argument, just like in `DC_Folder` and in any other callback.
  * The navigation menus are now using `<strong>` instead of `<span>` to
    highlight the active menu item.
 
- * The search module is now using `<mark>` instead of `<span>` to hightlight
+ * The search module is now using `<mark>` instead of `<span>` to highlight
    the keywords.
 
  * The newsletter channel menu is now using `<fieldset>` and `<legend>`
