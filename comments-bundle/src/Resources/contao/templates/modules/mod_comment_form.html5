@@ -32,7 +32,7 @@
             <?= $this->fields['notify']->generateWithError() ?>
           </div>
           <div class="submit_container">
-            <input type="submit" class="submit" value="<?= $this->submit ?>">
+            <button type="submit" class="submit"><?= $this->submit ?></button>
           </div>
         </div>
       </form>
