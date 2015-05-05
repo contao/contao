@@ -120,7 +120,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         };
 
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir . "/system/modules")->files()->filter($filter)->name('.htaccess'),
+            $this->findIn($this->rootDir . '/system/modules')->files()->filter($filter)->name('.htaccess'),
             'system/modules'
         );
     }
@@ -165,8 +165,8 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
      *
-     * @param string $source  The symlink name
-     * @param string $target  The symlink target
+     * @param string $source The symlink name
+     * @param string $target The symlink target
      */
     private function symlink($source, $target)
     {
