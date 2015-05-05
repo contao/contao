@@ -87,6 +87,7 @@ class PageError404 extends \Frontend
 	protected function prepare($pageId, $strDomain=null, $strHost=null, $blnUnusedGet=false)
 	{
 		// Add a log entry
+		// FIXME: logging here doesn't work anymore
 		if ($blnUnusedGet)
 		{
 			$this->log('The request for page ID "' . $pageId . '" contained unused GET parameters: "' . implode('", "', \Input::getUnusedGet()) . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
