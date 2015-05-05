@@ -33,6 +33,16 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     private $container;
 
     /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
+     * @var OutputInterface
+     */
+    private $output;
+
+    /**
      * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
@@ -56,110 +66,96 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->generateSymlinks(dirname($this->container->getParameter('kernel.root_dir')), $output);
+        $this->output  = $output;
+        $this->rootDir = dirname($this->container->getParameter('kernel.root_dir'));
+
+        $this->generateSymlinks();
 
         return 0;
     }
 
     /**
      * Generates the symlinks in the web/ directory.
-     *
-     * @param string          $rootDir The root directory
-     * @param OutputInterface $output  The output object
      */
-    public function generateSymlinks($rootDir, OutputInterface $output)
+    public function generateSymlinks()
     {
         $fs         = new Filesystem();
         $uploadPath = $this->container->getParameter('contao.upload_path');
 
         // Remove the base folders in the document root
-        $fs->remove("$rootDir/web/$uploadPath");
-        $fs->remove("$rootDir/web/system/modules");
-        $fs->remove("$rootDir/web/vendor");
+        $fs->remove($this->rootDir . "/web/$uploadPath");
+        $fs->remove($this->rootDir . '/web/system/modules');
+        $fs->remove($this->rootDir . '/web/vendor');
 
-        $this->symlinkFiles($uploadPath, $rootDir, $output);
-        $this->symlinkModules($rootDir, $output);
-        $this->symlinkThemes($rootDir, $output);
+        $this->symlinkFiles($uploadPath);
+        $this->symlinkModules();
+        $this->symlinkThemes();
 
         // Symlink the assets and themes directory
-        $this->symlink('assets', 'web/assets', $rootDir, $output);
-        $this->symlink('system/themes', 'web/system/themes', $rootDir, $output);
-        $this->symlink('app/logs', 'system/logs', $rootDir, $output);
+        $this->symlink('assets', 'web/assets');
+        $this->symlink('system/themes', 'web/system/themes');
+        $this->symlink('app/logs', 'system/logs');
     }
 
     /**
      * Creates the file symlinks.
      *
-     * @param string          $uploadPath The upload path
-     * @param string          $rootDir    The root directory
-     * @param OutputInterface $output     The output object
+     * @param string $uploadPath The upload path
      */
-    private function symlinkFiles($uploadPath, $rootDir, OutputInterface $output)
+    private function symlinkFiles($uploadPath)
     {
         $this->createSymlinksFromFinder(
-            $this->findIn("$rootDir/$uploadPath")->files()->name('.public'),
-            $uploadPath,
-            $rootDir,
-            $output
+            $this->findIn($this->rootDir . "/$uploadPath")->files()->name('.public'),
+            $uploadPath
         );
     }
 
     /**
      * Creates symlinks for the public module subfolders.
-     *
-     * @param string          $rootDir The root directory
-     * @param OutputInterface $output  The output object
      */
-    private function symlinkModules($rootDir, OutputInterface $output)
+    private function symlinkModules()
     {
         $filter = function (SplFileInfo $file) {
             return HtaccessAnalyzer::create($file)->grantsAccess();
         };
 
         $this->createSymlinksFromFinder(
-            $this->findIn("$rootDir/system/modules")->files()->filter($filter)->name('.htaccess'),
-            'system/modules',
-            $rootDir,
-            $output
+            $this->findIn($this->rootDir . "/system/modules")->files()->filter($filter)->name('.htaccess'),
+            'system/modules'
         );
     }
 
     /**
      * Creates the theme symlinks.
-     *
-     * @param string          $rootDir The root directory
-     * @param OutputInterface $output  The output object
      */
-    private function symlinkThemes($rootDir, OutputInterface $output)
+    private function symlinkThemes()
     {
         /** @var SplFileInfo[] $themes */
         $themes = $this->container->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
-            $path = str_replace($rootDir . DIRECTORY_SEPARATOR, '', $theme->getPathname());
+            $path = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $theme->getPathname());
 
             if (0 === strpos($path, 'system/modules/')) {
                 continue;
             }
 
-            $this->symlink($path, 'system/themes/' . basename($path), $rootDir, $output);
+            $this->symlink($path, 'system/themes/' . basename($path));
         }
     }
 
     /**
      * Generates symlinks from a Finder object.
      *
-     * @param Finder          $finder  The finder object
-     * @param string          $prepend The path to prepend
-     * @param string          $rootDir The root directory
-     * @param OutputInterface $output  The output object
+     * @param Finder $finder  The finder object
+     * @param string $prepend The path to prepend
      */
-    private function createSymlinksFromFinder(Finder $finder, $prepend, $rootDir, OutputInterface $output)
+    private function createSymlinksFromFinder(Finder $finder, $prepend)
     {
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
-            $this->symlink($path, "web/$path", $rootDir, $output);
+            $path = rtrim("$prepend/" . $file->getRelativePath(), '/');
+            $this->symlink($path, "web/$path");
         }
     }
 
@@ -169,39 +165,36 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
      *
-     * @param string          $source  The symlink name
-     * @param string          $target  The symlink target
-     * @param string          $rootDir The root directory
-     * @param OutputInterface $output  The output object
+     * @param string $source  The symlink name
+     * @param string $target  The symlink target
      */
-    private function symlink($source, $target, $rootDir, OutputInterface $output)
+    private function symlink($source, $target)
     {
-        $this->validateSymlink($source, $target, $rootDir);
+        $this->validateSymlink($source, $target);
 
         $fs = new Filesystem();
 
         try {
-            $fs->symlink(rtrim($fs->makePathRelative($source, dirname($target)), '/'), "$rootDir/$target");
+            $fs->symlink(rtrim($fs->makePathRelative($source, dirname($target)), '/'), $this->rootDir . "/$target");
         } catch (IOException $e) {
-            $fs->symlink("$rootDir/$source", "$rootDir/$target");
+            $fs->symlink($this->rootDir . "/$source", $this->rootDir . "/$target");
         }
 
-        $this->fixSymlinkPermissions($target, $rootDir);
+        $this->fixSymlinkPermissions($target);
 
-        $output->writeln("Added <comment>$target</comment> as symlink to <comment>$source</comment>.");
+        $this->output->writeln("Added <comment>$target</comment> as symlink to <comment>$source</comment>.");
     }
 
     /**
      * Validates a symlink.
      *
-     * @param string $source  The symlink name
-     * @param string $target  The symlink target
-     * @param string $rootDir The root directory
+     * @param string $source The symlink name
+     * @param string $target The symlink target
      *
      * @throws \InvalidArgumentException If the source or target is invalid
      * @throws \LogicException           If the symlink cannot be created
      */
-    private function validateSymlink($source, $target, $rootDir)
+    private function validateSymlink($source, $target)
     {
         if ('' === $source) {
             throw new \InvalidArgumentException('The symlink source must not be empty.');
@@ -217,7 +210,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
 
         $fs = new Filesystem();
 
-        if ($fs->exists("$rootDir/$target") && !is_link("$rootDir/$target")) {
+        if ($fs->exists($this->rootDir . "/$target") && !is_link($this->rootDir . "/$target")) {
             throw new \LogicException("The symlink target $target exists and is not a symlink.");
         }
     }
@@ -225,21 +218,20 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     /**
      * Fixes the symlink permissions.
      *
-     * @param string $target  The symlink target
-     * @param string $rootDir The root directory
+     * @param string $target The symlink target
      */
-    private function fixSymlinkPermissions($target, $rootDir)
+    private function fixSymlinkPermissions($target)
     {
-        $stat = lstat("$rootDir/$target");
+        $stat = lstat($this->rootDir . "/$target");
 
         // Try to fix the UID
         if (function_exists('lchown') && $stat['uid'] !== getmyuid()) {
-            lchown("$rootDir/$target", getmyuid());
+            lchown($this->rootDir . "/$target", getmyuid());
         }
 
         // Try to fix the GID
         if (function_exists('lchgrp') && $stat['gid'] !== getmygid()) {
-            lchgrp("$rootDir/$target", getmygid());
+            lchgrp($this->rootDir . "/$target", getmygid());
         }
     }
 
@@ -252,6 +244,35 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function findIn($path)
     {
-        return Finder::create()->ignoreDotFiles(false)->in($path);
+        return Finder::create()->ignoreDotFiles(false)->filter($this->getFilterClosure())->in($path);
+    }
+
+    /**
+     * Returns a closure to filter recursive paths.
+     *
+     * @return \Closure The closure
+     */
+    private function getFilterClosure()
+    {
+        return function (SplFileInfo $file) {
+            static $paths;
+
+            $dir     = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $file->getPath());
+            $paths[] = $dir;
+            $chunks  = explode('/', $dir);
+            $test    = $chunks[0];
+
+            for ($i = 1; $i < count($chunks); $i++) {
+                if (in_array($test, $paths)) {
+                    $this->output->writeln("<fg=red>Skipped $dir because $test has been symlinked already.</fg=red>");
+
+                    return false;
+                }
+
+                $test .= '/' . $chunks[$i];
+            }
+
+            return true;
+        };
     }
 }

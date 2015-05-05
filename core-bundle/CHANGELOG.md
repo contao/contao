@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### Fixes
+Prevent recursion when creating symlinks (see #245).
+
 ### Fixed
 Always append the numeric ID to the `FORM_SUBMIT` variable (see #7286).
 

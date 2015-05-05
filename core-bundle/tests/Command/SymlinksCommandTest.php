@@ -52,9 +52,6 @@ class SymlinksCommandTest extends TestCase
      */
     public function testOutput()
     {
-        $command = new SymlinksCommand('contao:symlinks');
-        $tester  = new CommandTester($command);
-
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
         $container->setParameter('contao.upload_path', 'app');
@@ -64,17 +61,24 @@ class SymlinksCommandTest extends TestCase
             new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
         );
 
+        $command = new SymlinksCommand('contao:symlinks');
         $command->setContainer($container);
 
-        $code = $tester->execute([]);
+        $tester = new CommandTester($command);
+        $code   = $tester->execute([]);
+
+        $expected = <<<EOF
+Added web/system/modules/foobar/assets as symlink to system/modules/foobar/assets.
+Added web/system/modules/foobar/html as symlink to system/modules/foobar/html.
+Skipped system/modules/foobar/html/foo because system/modules/foobar/html has been symlinked already.
+Added system/themes/flexible as symlink to vendor/contao/test-bundle/Resources/contao/themes/flexible.
+Added web/assets as symlink to assets.
+Added web/system/themes as symlink to system/themes.
+Added system/logs as symlink to app/logs.\n
+EOF;
 
         $this->assertEquals(0, $code);
-        $this->assertContains('Added web/system/modules/foobar/assets as symlink to system/modules/foobar/assets.', $tester->getDisplay());
-        $this->assertContains('Added web/system/modules/foobar/html as symlink to system/modules/foobar/html.', $tester->getDisplay());
-        $this->assertContains('Added system/themes/flexible as symlink to vendor/contao/test-bundle/Resources/contao/themes/flexible.', $tester->getDisplay());
-        $this->assertContains('Added web/assets as symlink to assets.', $tester->getDisplay());
-        $this->assertContains('Added web/system/themes as symlink to system/themes.', $tester->getDisplay());
-        $this->assertContains('Added system/logs as symlink to app/logs.', $tester->getDisplay());
+        $this->assertEquals($expected, $tester->getDisplay());
     }
 
     /**
@@ -108,7 +112,7 @@ class SymlinksCommandTest extends TestCase
         $method     = $reflection->getMethod('validateSymlink');
 
         $method->setAccessible(true);
-        $method->invokeArgs($command, ['', 'target', $this->getRootDir()]);
+        $method->invokeArgs($command, ['', 'target']);
     }
 
     /**
@@ -123,7 +127,7 @@ class SymlinksCommandTest extends TestCase
         $method     = $reflection->getMethod('validateSymlink');
 
         $method->setAccessible(true);
-        $method->invokeArgs($command, ['source', '', $this->getRootDir()]);
+        $method->invokeArgs($command, ['source', '']);
     }
 
     /**
@@ -138,7 +142,7 @@ class SymlinksCommandTest extends TestCase
         $method     = $reflection->getMethod('validateSymlink');
 
         $method->setAccessible(true);
-        $method->invokeArgs($command, ['source', '../target', $this->getRootDir()]);
+        $method->invokeArgs($command, ['source', '../target']);
     }
 
     /**
@@ -150,9 +154,13 @@ class SymlinksCommandTest extends TestCase
     {
         $command    = new SymlinksCommand('contao:symlinks');
         $reflection = new \ReflectionClass($command);
-        $method     = $reflection->getMethod('validateSymlink');
 
+        $property = $reflection->getProperty('rootDir');
+        $property->setAccessible(true);
+        $property->setValue($command, $this->getRootDir());
+
+        $method = $reflection->getMethod('validateSymlink');
         $method->setAccessible(true);
-        $method->invokeArgs($command, ['source', 'app', $this->getRootDir()]);
+        $method->invokeArgs($command, ['source', 'app']);
     }
 }
