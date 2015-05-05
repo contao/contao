@@ -74,8 +74,10 @@ class ModuleUnsubscribe extends \Module
 			$this->Template->setData($this->arrData);
 		}
 
+		$strFormId = 'tl_unsubscribe_' . $this->id;
+
 		// Unsubscribe
-		if (\Input::post('FORM_SUBMIT') == 'tl_unsubscribe')
+		if (\Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			$this->removeRecipient();
 		}
@@ -119,7 +121,7 @@ class ModuleUnsubscribe extends \Module
 		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->formId = 'tl_unsubscribe';
+		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
 		$this->Template->hasError = $blnHasError;
 	}

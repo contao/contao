@@ -82,8 +82,10 @@ class ModuleSubscribe extends \Module
 			return;
 		}
 
+		$strFormId = 'tl_subscribe_' . $this->id;
+
 		// Subscribe
-		if (\Input::post('FORM_SUBMIT') == 'tl_subscribe')
+		if (\Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			$this->addRecipient();
 		}
@@ -127,7 +129,7 @@ class ModuleSubscribe extends \Module
 		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->formId = 'tl_subscribe';
+		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
 		$this->Template->hasError = $blnHasError;
 	}
