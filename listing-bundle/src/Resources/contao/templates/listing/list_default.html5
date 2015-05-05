@@ -18,7 +18,7 @@
           </select>
           <label for="ctrl_for" class="invisible"><?= $this->keywords_label ?></label>
           <input type="text" name="for" id="ctrl_for" class="text" value="<?= $this->for ?>">
-          <input type="submit" class="submit" value="<?= $this->search_label ?>">
+          <button type="submit" class="submit"><?= $this->search_label ?></button>
         </div>
       </form>
     </div>
@@ -42,7 +42,7 @@
             <option value="250"<?php if ($this->per_page == 250): ?> selected="selected"<?php endif; ?>>250</option>
             <option value="500"<?php if ($this->per_page == 500): ?> selected="selected"<?php endif; ?>>500</option>
           </select>
-          <input type="submit" class="submit" value="<?= $this->per_page_label ?>">
+          <button type="submit" class="submit"><?= $this->per_page_label ?></button>
         </div>
       </form>
     </div>
