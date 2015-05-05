@@ -31,7 +31,7 @@
         </fieldset>
       <?php endif; ?>
 
-      <input type="submit" name="submit" class="submit" value="<?= $this->submit ?>">
+      <button type="submit" class="submit"><?= $this->submit ?></button>
 
     </div>
   </form>
