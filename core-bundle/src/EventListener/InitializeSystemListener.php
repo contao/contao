@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
-use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;

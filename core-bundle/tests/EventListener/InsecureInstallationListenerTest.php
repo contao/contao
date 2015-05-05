@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
@@ -9,10 +10,6 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
-
-use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Event\ContaoFrameworkBootEvent;
-use Contao\CoreBundle\EventListener\Framework\ValidateInstallationListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,61 +21,107 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * Tests the ValidateInstallationListener class.
  *
  * @author Dominik Tomasi <https://github.com/dtomasi>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ValidateInstallationListenerTest extends TestCase
+class InsecureInstallationListenerTest extends TestCase
 {
+    /**
+     * Tests the object instantiation.
+     */
+    public function testInstantiation()
+    {
+        $listener = new InsecureInstallationListener();
+
+        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\InsecureInstallationListener', $listener);
+    }
 
     /**
-     * Tests the validateInstallation() method.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
+     * Tests the onKernelRequest() method.
      *
      * @expectedException \Contao\CoreBundle\Exception\InsecureInstallationException
      */
-    public function testValidateInstallation()
+    public function testOnKernelRequest()
+    {
+        /** @var KernelInterface $kernel */
+        global $kernel;
+
+        $kernel = $this->mockKernel();
+        $event  = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
+
+        $listener = new InsecureInstallationListener();
+        $listener->onKernelRequest($event);
+    }
+
+    /**
+     * Tests the onKernelRequest() method in the install tool.
+     */
+    public function testOnKernelRequestUponInstallation()
     {
         /** @var KernelInterface $kernel */
         global $kernel;
 
         $kernel = $this->mockKernel();
 
-        $listener = new InsecureInstallationListener();
-
-        $request = new Request();
-
-        $request->server->add([
-            'SERVER_PORT' => 80,
-            'HTTP_HOST' => 'localhost',
-            'HTTP_CONNECTION' => 'close',
-            'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36',
-            'HTTP_ACCEPT_ENCODING' => 'gzip,deflate,sdch',
-            'HTTP_ACCEPT_LANGUAGE' => 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4',
-            'HTTP_X_FORWARDED_FOR' => '123.456.789.0',
-            'SERVER_NAME' => 'localhost',
-            'SERVER_ADDR' => '127.0.0.1',
-            'DOCUMENT_ROOT' => $this->getRootDir(),
-            'SCRIPT_FILENAME' => $this->getRootDir() . '/foo/web/app_dev.php',
-            'ORIG_SCRIPT_FILENAME' => '/var/run/localhost.fcgi',
-            'SERVER_PROTOCOL' => 'HTTP/1.1',
-            'QUERY_STRING' => 'do=test',
-            'REQUEST_URI' => '/web/app_dev.php?do=test',
-            'SCRIPT_NAME' => '/foo/web/app_dev.php',
-            'ORIG_SCRIPT_NAME' => '/php.fcgi',
-            'PHP_SELF' => '/foo/web/app_dev.php',
-            'GATEWAY_INTERFACE' => 'CGI/1.1',
-            'ORIG_PATH_INFO' => '/foo/web/app_dev.php',
-            'ORIG_PATH_TRANSLATED' => $this->getRootDir() . '/foo/web/app_dev.php',
-        ]);
-
-        $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_scope', 'backend');
-
-        $kernel->getContainer()->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $request = $this->getRequestObject();
+        $request->attributes->set('_route', 'contao_backend_install');
 
         $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
 
+        $listener = new InsecureInstallationListener();
         $listener->onKernelRequest($event);
+    }
+
+    /**
+     * Tests the onKernelRequest() method on localhost.
+     */
+    public function testOnKernelRequestOnLocalhost()
+    {
+        /** @var KernelInterface $kernel */
+        global $kernel;
+
+        $kernel = $this->mockKernel();
+
+        $request = $this->getRequestObject();
+        $request->server->set('REMOTE_ADDR', '127.0.0.1');
+
+        $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
+
+        $listener = new InsecureInstallationListener();
+        $listener->onKernelRequest($event);
+    }
+
+    /**
+     * Tests the onKernelRequest() method with a secure document root.
+     */
+    public function testOnKernelRequestWithSecureDocumentRoot()
+    {
+        /** @var KernelInterface $kernel */
+        global $kernel;
+
+        $kernel = $this->mockKernel();
+
+        $request = $this->getRequestObject();
+        $request->server->set('REQUEST_URI', '/app_dev.php?do=test');
+        $request->server->set('SCRIPT_FILENAME', $this->getRootDir() . '/app_dev.php');
+
+        $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
+
+        $listener = new InsecureInstallationListener();
+        $listener->onKernelRequest($event);
+    }
+
+    /**
+     * Returns a request object.
+     *
+     * @return Request The request object
+     */
+    private function getRequestObject()
+    {
+        $request = new Request();
+
+        $request->server->set('REQUEST_URI', '/web/app_dev.php?do=test');
+        $request->server->set('SCRIPT_FILENAME', $this->getRootDir() . '/web/app_dev.php');
+
+        return $request;
     }
 }
