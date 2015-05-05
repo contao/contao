@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
-use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
@@ -309,18 +308,12 @@ class InitializeSystemListener extends ScopeAwareListener
      *
      * @param Request $request The current request if available
      *
-     * @throws InsecureInstallationException   If the document root is not set correctly
      * @throws IncompleteInstallationException If the installation has not been completed
      */
     private function validateInstallation(Request $request = null)
     {
         if (null === $request || 'contao_backend_install' === $request->attributes->get('_route')) {
             return;
-        }
-
-        // Show the "insecure document root" message
-        if (!in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) && '/web' === substr($request->getBasePath(), -4)) {
-            throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the /web subfolder.');
         }
 
         // Show the "incomplete installation" message
