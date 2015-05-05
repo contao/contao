@@ -841,6 +841,7 @@ class ImageTest extends TestCase
             'width' => 80,
             'height' => 60,
         ]);
+
         $this->assertSame($imageObj->getImportantPart(), [
             'x' => 20,
             'y' => 40,
@@ -854,6 +855,7 @@ class ImageTest extends TestCase
             'width' => '80',
             'height' => 120,
         ]);
+
         $this->assertSame($imageObj->getImportantPart(), [
             'x' => 0,
             'y' => 40,
@@ -867,6 +869,7 @@ class ImageTest extends TestCase
             'width' => 200,
             'height' => 200,
         ]);
+
         $this->assertSame($imageObj->getImportantPart(), [
             'x' => 99,
             'y' => 99,
@@ -875,6 +878,7 @@ class ImageTest extends TestCase
         ]);
 
         $imageObj->setImportantPart(null);
+
         $this->assertSame($imageObj->getImportantPart(), [
             'x' => 0,
             'y' => 0,
