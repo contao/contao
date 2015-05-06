@@ -8,9 +8,9 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\RefererId;
+namespace Contao\CoreBundle\Test\Referer;
 
-use Contao\CoreBundle\RefererId\TokenGenerator;
+use Contao\CoreBundle\Referer\TokenGenerator;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 

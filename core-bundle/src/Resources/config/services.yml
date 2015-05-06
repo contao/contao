@@ -17,7 +17,7 @@ services:
             - "@security.csrf.token_storage"
 
     contao.referer_id.token_generator:
-         class: Contao\CoreBundle\RefererId\TokenGenerator
+         class: Contao\CoreBundle\Referer\TokenGenerator
          public: false
 
     contao.resource_finder:

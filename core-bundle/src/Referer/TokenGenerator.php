@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\RefererId;
+namespace Contao\CoreBundle\Referer;
 
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 
