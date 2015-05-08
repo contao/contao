@@ -108,11 +108,7 @@ class UserSessionListener extends ScopeAwareListener
             return false;
         }
 
-        if ($user instanceof AnonymousToken) {
-            return false;
-        }
-
-        return true;
+        return (!$user instanceof AnonymousToken);
     }
 
     /**
@@ -153,17 +149,13 @@ class UserSessionListener extends ScopeAwareListener
      */
     private function canModifyBackendSession(Request $request)
     {
-        if (!$request->query->has('act')
+        return !$request->query->has('act')
             && !$request->query->has('key')
             && !$request->query->has('token')
             && !$request->query->has('state')
             && 'feRedirect' !== $request->query->get('do')
             && !$request->isXmlHttpRequest()
-        ) {
-            return true;
-        }
-
-        return false;
+        ;
     }
 
     /**
@@ -225,17 +217,13 @@ class UserSessionListener extends ScopeAwareListener
      */
     private function canModifyFrontendSession(Request $request, array $referer = null)
     {
-        if (null !== $referer
+        return (null !== $referer)
             && !$request->query->has('pdf')
             && !$request->query->has('file')
             && !$request->query->has('id')
             && isset($referer['current'])
             && $referer['current'] !== $this->getRelativeRequestUri($request)
-        ) {
-            return true;
-        }
-
-        return false;
+        ;
     }
 
     /**

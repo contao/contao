@@ -146,7 +146,7 @@ class PrettyErrorScreenListener
      */
     private function getResponseFromPageHandler($type)
     {
-        $type = "error_$type";
+        $type = 'error_' . $type;
 
         if (!isset($GLOBALS['TL_PTY'][$type]) || !class_exists($GLOBALS['TL_PTY'][$type])) {
             return null;
@@ -232,7 +232,7 @@ class PrettyErrorScreenListener
             return;
         }
 
-        $view = "@ContaoCore/Error/$template.html.twig";
+        $view = '@ContaoCore/Error/' . $template . '.html.twig';
 
         if (!$this->twig->exists($view)) {
             $event->setResponse($this->getErrorTemplate());
