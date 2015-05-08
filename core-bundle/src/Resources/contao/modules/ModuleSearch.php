@@ -257,7 +257,7 @@ class ModuleSearch extends \Module
 			for ($i=($from-1); $i<$to && $i<$count; $i++)
 			{
 				/** @var \FrontendTemplate|object $objTemplate */
-				$objTemplate = new \FrontendTemplate($this->searchTpl ?: 'search_default');
+				$objTemplate = new \FrontendTemplate($this->searchTpl);
 
 				$objTemplate->url = $arrResult[$i]['url'];
 				$objTemplate->link = $arrResult[$i]['title'];
