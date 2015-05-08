@@ -4,7 +4,10 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
-### Fixes
+### Fixed
+Consolidate the templates and module keys (see #247).
+
+### Fixed
 Prevent recursion when creating symlinks (see #245).
 
 ### Fixed
