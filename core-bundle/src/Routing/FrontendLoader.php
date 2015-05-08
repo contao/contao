@@ -43,7 +43,7 @@ class FrontendLoader extends Loader
      */
     public function load($resource, $type = null)
     {
-        $routes   = new RouteCollection();
+        $routes = new RouteCollection();
 
         $defaults = [
             '_controller' => 'ContaoCoreBundle:Frontend:index',

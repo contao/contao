@@ -47,7 +47,7 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
      * @param UserProviderInterface $userProvider The user provider object
      * @param string                $providerKey  The provider key
      *
-     * @return ContaoToken|TokenInterface The token object
+     * @return ContaoToken|AnonymousToken The token object
      *
      * @throws AuthenticationException If the token cannot be handled
      */

@@ -19,7 +19,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class RefererIdListener extends ScopeAwareListener
+class RefererIdListener extends AbstractScopeAwareListener
 {
     /**
      * @var CsrfTokenManagerInterface

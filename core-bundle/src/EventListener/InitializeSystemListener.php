@@ -33,7 +33,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InitializeSystemListener extends ScopeAwareListener
+class InitializeSystemListener extends AbstractScopeAwareListener
 {
     /**
      * @var RouterInterface

@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\EventListener\ScopeAwareListener;
+use Contao\CoreBundle\EventListener\AbstractScopeAwareListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
@@ -20,14 +20,14 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Tests the ScopeAwareListener class.
+ * Tests the AbstractScopeAwareListener class.
  *
  * @author Leo Feyer <https:/github.com/leofeyer>
  */
-class ScopeAwareListenerTest extends TestCase
+class AbstractScopeAwareListenerTest extends TestCase
 {
     /**
-     * @var ScopeAwareListener
+     * @var AbstractScopeAwareListener
      */
     private $listener;
 
@@ -38,7 +38,7 @@ class ScopeAwareListenerTest extends TestCase
     {
         parent::setUp();
 
-        $this->listener = $this->getMockForAbstractClass('Contao\\CoreBundle\\EventListener\\ScopeAwareListener');
+        $this->listener = $this->getMockForAbstractClass('Contao\\CoreBundle\\EventListener\\AbstractScopeAwareListener');
     }
 
     /**
@@ -46,7 +46,7 @@ class ScopeAwareListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\ScopeAwareListener', $this->listener);
+        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\AbstractScopeAwareListener', $this->listener);
     }
 
     /**

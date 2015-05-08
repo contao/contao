@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-abstract class ScopeAwareListener extends ContainerAware
+abstract class AbstractScopeAwareListener extends ContainerAware
 {
     /**
      * Checks whether the request is the master request in one of the Contao scopes.

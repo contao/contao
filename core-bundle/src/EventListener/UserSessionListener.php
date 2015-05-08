@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class UserSessionListener extends ScopeAwareListener
+class UserSessionListener extends AbstractScopeAwareListener
 {
     /**
      * @var SessionInterface

@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class LocaleListener extends ScopeAwareListener
+class LocaleListener extends AbstractScopeAwareListener
 {
     /**
      * @var array
