@@ -23,7 +23,7 @@ class ModuleNewsletterList extends \Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'mod_newsletter_list';
+	protected $strTemplate = 'mod_newsletterlist';
 
 
 	/**
@@ -38,7 +38,7 @@ class ModuleNewsletterList extends \Module
 			/** @var \BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['nl_list'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['newsletterlist'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;

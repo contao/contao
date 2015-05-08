@@ -26,16 +26,16 @@
       <trans-unit id="FMD.unsubscribe.1">
         <source>Generates a form to unsubscribe from one or more channels</source>
       </trans-unit>
-      <trans-unit id="FMD.nl_list.0">
+      <trans-unit id="FMD.newsletterlist.0">
         <source>Newsletter list</source>
       </trans-unit>
-      <trans-unit id="FMD.nl_list.1">
+      <trans-unit id="FMD.newsletterlist.1">
         <source>Adds a list of newsletters to the page</source>
       </trans-unit>
-      <trans-unit id="FMD.nl_reader.0">
+      <trans-unit id="FMD.newsletterreader.0">
         <source>Newsletter reader</source>
       </trans-unit>
-      <trans-unit id="FMD.nl_reader.1">
+      <trans-unit id="FMD.newsletterreader.1">
         <source>Shows the details of a newsletter</source>
       </trans-unit>
     </body>

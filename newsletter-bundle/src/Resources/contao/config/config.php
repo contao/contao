@@ -32,10 +32,10 @@ array_insert($GLOBALS['FE_MOD'], 4, array
 (
 	'newsletter' => array
 	(
-		'subscribe'   => 'ModuleSubscribe',
-		'unsubscribe' => 'ModuleUnsubscribe',
-		'nl_list'     => 'ModuleNewsletterList',
-		'nl_reader'   => 'ModuleNewsletterReader'
+		'subscribe'        => 'ModuleSubscribe',
+		'unsubscribe'      => 'ModuleUnsubscribe',
+		'newsletterlist'   => 'ModuleNewsletterList',
+		'newsletterreader' => 'ModuleNewsletterReader'
 	)
 ));
 
