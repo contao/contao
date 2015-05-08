@@ -300,7 +300,6 @@ TemplateLoader::addFiles(array
 	'ce_headline'         => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
 	'ce_html'             => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
 	'ce_hyperlink'        => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
-	'ce_hyperlink_image'  => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
 	'ce_image'            => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
 	'ce_list'             => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
 	'ce_markdown'         => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
