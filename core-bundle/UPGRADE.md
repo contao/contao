@@ -107,6 +107,13 @@ The following templates have been consolidated:
  * `mod_search_advanced` -> `mod_search`
  * `mod_search_simple`   -> `mod_search`
 
+Generally, we now require the template names to match the content element or
+module keys, so if your module has the key `taskList`, the corresponding
+template should be named `mod_taskList.html5`.
+
+Users can then create custom templates à la `mod_taskList_custom.html`, which
+will be shown in the "custom module template" list.
+
 
 ### Front end module keys
 
