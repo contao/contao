@@ -700,7 +700,7 @@ class tl_article extends Backend
 	 */
 	public function getArticleTemplates()
 	{
-		return $this->getTemplateGroup('mod_');
+		return $this->getTemplateGroup('mod_article');
 	}
 
 

@@ -23,7 +23,7 @@ class ModuleArticlenav extends \Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'mod_article_nav';
+	protected $strTemplate = 'mod_articlenav';
 
 	/**
 	 * Articles

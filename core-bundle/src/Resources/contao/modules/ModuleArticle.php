@@ -76,15 +76,6 @@ class ModuleArticle extends \Module
 		/** @var \PageModel $objPage */
 		global $objPage;
 
-		if ($this->blnNoMarkup)
-		{
-			/** @var \FrontendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('mod_article_plain');
-
-			$this->Template = $objTemplate;
-			$this->Template->setData($this->arrData);
-		}
-
 		$id = 'article-' . $this->id;
 
 		// Generate the CSS ID if it is not set
@@ -94,6 +85,7 @@ class ModuleArticle extends \Module
 		}
 
 		$this->Template->column = $this->inColumn;
+		$this->Template->noMarkup = $this->blnNoMarkup;
 
 		// Add the modification date
 		$this->Template->timestamp = $this->tstamp;
@@ -105,12 +97,6 @@ class ModuleArticle extends \Module
 		// Show the teaser only
 		if ($this->multiMode && $this->showTeaser)
 		{
-			/** @var \FrontendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('mod_article_teaser');
-
-			$this->Template = $objTemplate;
-			$this->Template->setData($this->arrData);
-
 			$this->cssID = array($id, '');
 			$arrCss = deserialize($this->teaserCssID);
 
@@ -128,6 +114,7 @@ class ModuleArticle extends \Module
 			$article = $this->alias ?: $this->id;
 			$href = '/articles/' . (($this->inColumn != 'main') ? $this->inColumn . ':' : '') . $article;
 
+			$this->Template->teaserOnly = true;
 			$this->Template->headline = $this->headline;
 			$this->Template->href = $this->generateFrontendUrl($objPage->row(), $href);
 			$this->Template->teaser = $this->teaser;

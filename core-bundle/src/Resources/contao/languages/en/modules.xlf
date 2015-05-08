@@ -251,10 +251,10 @@
       <trans-unit id="FMD.search.1">
         <source>Adds a search form to the page</source>
       </trans-unit>
-      <trans-unit id="FMD.articleList.0">
+      <trans-unit id="FMD.articlelist.0">
         <source>Article list</source>
       </trans-unit>
-      <trans-unit id="FMD.articleList.1">
+      <trans-unit id="FMD.articlelist.1">
         <source>Generates a list of articles of a column</source>
       </trans-unit>
       <trans-unit id="FMD.miscellaneous">
@@ -278,10 +278,10 @@
       <trans-unit id="FMD.html.1">
         <source>Allows you to add custom HTML code</source>
       </trans-unit>
-      <trans-unit id="FMD.rss_reader.0">
+      <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
       </trans-unit>
-      <trans-unit id="FMD.rss_reader.1">
+      <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
       </trans-unit>
     </body>

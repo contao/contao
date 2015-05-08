@@ -80,7 +80,7 @@ class TemplateLoader
 	 */
 	public static function getPrefixedFiles($prefix)
 	{
-		return array_values(preg_grep('/^' . $prefix . '($|_)/', array_keys(self::$files)));
+		return array_values(preg_grep('/^' . rtrim($prefix, '_') . '($|_)/', array_keys(self::$files)));
 	}
 
 

@@ -29,7 +29,7 @@ class ModuleRandomImage extends \Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'mod_random_image';
+	protected $strTemplate = 'mod_randomImage';
 
 
 	/**
