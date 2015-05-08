@@ -15,6 +15,7 @@ use Contao\FrontendIndex;
 use Contao\FrontendShare;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -56,7 +57,7 @@ class FrontendController extends Controller
     /**
      * Renders the content syndication dialog.
      *
-     * @return Response
+     * @return RedirectResponse
      *
      * @Route("/_contao/share", name="contao_frontend_share")
      */

@@ -263,11 +263,18 @@ class PrettyErrorScreenListener
             'error'      => [
                 'error'         => 'An error occurred',
                 'matter'        => 'What\'s the matter?',
-                'errorOccurred' => 'An error occurred while executing this script. Something does not work properly. Additionally an error occurred while trying to display the error message.',
+                'errorOccurred' => 'An error occurred while executing this script. Something does not work properly. '
+                                 . 'Additionally an error occurred while trying to display the error message.',
                 'howToFix'      => 'How can I fix the issue?',
-                'errorFixOne'   => 'Open the <code>app/logs/error.log</code> file and find the associated error message (usually the last one).',
+                'errorFixOne'   => 'Open the <code>app/logs/error.log</code> file and find the associated error '
+                                 . 'message (usually the last one).',
                 'more'          => 'Tell me more, please',
-                'errorExplain'  => 'The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the <code>app/logs/error.log</code> file (see above). If you do not understand the error message or do not know how to fix the problem, search the <a href="https://contao.org/faq.html" target="_blank">Contao FAQs</a> or visit the <a href="https://contao.org/support.html" target="_blank">Contao support page</a>.',
+                'errorExplain'  => 'The script execution stopped, because something does not work properly. The '
+                                 . 'actual error message is hidden by this notice for security reasons and can be '
+                                 . 'found in the <code>app/logs/error.log</code> file (see above). If you do not '
+                                 . 'understand the error message or do not know how to fix the problem, search the '
+                                 . '<a href="https://contao.org/faq.html" target="_blank">Contao FAQs</a> or visit the '
+                                 . '<a href="https://contao.org/support.html" target="_blank">Contao support page</a>.',
             ],
             'template'   => '@ContaoCore/Error/error.html.twig',
             'base'       => '',

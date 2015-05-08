@@ -230,14 +230,30 @@ class SymlinksCommand extends AbstractLockedCommand implements ContainerAwareInt
         $stat = lstat($this->rootDir . '/' . $target);
 
         // Try to fix the UID
-        if (function_exists('lchown') && $stat['uid'] !== getmyuid()) {
-            lchown($this->rootDir . '/' . $target, getmyuid());
+        if ($stat['uid'] !== getmyuid()) {
+            $this->changeOwnership($target, 'lchown', getmyuid());
         }
 
         // Try to fix the GID
-        if (function_exists('lchgrp') && $stat['gid'] !== getmygid()) {
-            lchgrp($this->rootDir . '/' . $target, getmygid());
+        if ($stat['gid'] !== getmygid()) {
+            $this->changeOwnership($target, 'lchgrp', getmygid());
         }
+    }
+
+    /**
+     * Changes the ownership of a symlink.
+     *
+     * @param string $target   The symlink
+     * @param string $function The function name
+     * @param int    $id       The user or group ID
+     */
+    private function changeOwnership($target, $function, $id)
+    {
+        if (!function_exists($function)) {
+            return;
+        }
+
+        $function($this->rootDir . '/' . $target, $id);
     }
 
     /**

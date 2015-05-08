@@ -318,7 +318,9 @@ class InitializeSystemListener extends ScopeAwareListener
 
         // Show the "incomplete installation" message
         if (!$this->config->isComplete()) {
-            throw new IncompleteInstallationException('The installation has not been completed. Open the Contao install tool to continue.');
+            throw new IncompleteInstallationException(
+                'The installation has not been completed. Open the Contao install tool to continue.'
+            );
         }
     }
 

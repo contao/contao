@@ -27,7 +27,6 @@ class AddToSearchIndexListener
      */
     public function onKernelTerminate(PostResponseEvent $event)
     {
-        // FIXME: replace with "Response implements Indexable" (see https://github.com/contao/symfony-todo/issues/3)
         if (!defined('TL_ROOT')) {
             return;
         }
