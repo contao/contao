@@ -2,8 +2,22 @@
 
 <?php $this->block('content'); ?>
 
-  <?= $this->embed_pre ?>
-  <a href="<?= $this->href ?>" class="hyperlink_txt" title="<?= $this->linkTitle ?>"<?= $this->attribute ?><?= $this->target ?>><?= $this->link ?></a>
-  <?= $this->embed_post ?>
+  <?php if ($this->useImage): ?>
+    <figure class="image_container">
+
+      <?= $this->embed_pre ?>
+      <a href="<?= $this->href ?>" class="hyperlink_img" title="<?= $this->linkTitle ?>"<?= $this->attribute ?><?= $this->target ?>><?php $this->insert('picture_default', $this->picture); ?></a>
+      <?= $this->embed_post ?>
+
+      <?php if ($this->caption): ?>
+        <figcaption class="caption"><?= $this->caption ?></figcaption>
+      <?php endif; ?>
+
+    </figure>
+  <?php else: ?>
+    <?= $this->embed_pre ?>
+    <a href="<?= $this->href ?>" class="hyperlink_txt" title="<?= $this->linkTitle ?>"<?= $this->attribute ?><?= $this->target ?>><?= $this->link ?></a>
+    <?= $this->embed_post ?>
+  <?php endif; ?>
 
 <?php $this->endblock(); ?>

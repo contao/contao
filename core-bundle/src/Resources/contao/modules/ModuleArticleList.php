@@ -23,7 +23,7 @@ class ModuleArticleList extends \Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'mod_article_list';
+	protected $strTemplate = 'mod_articlelist';
 
 
 	/**
@@ -38,7 +38,7 @@ class ModuleArticleList extends \Module
 			/** @var \BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['articleList'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['articlelist'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;

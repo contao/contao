@@ -134,10 +134,10 @@ $GLOBALS['FE_MOD'] = array
 	'miscellaneous' => array
 	(
 		'flash'          => 'ModuleFlash',
-		'articleList'    => 'ModuleArticleList',
+		'articlelist'    => 'ModuleArticleList',
 		'randomImage'    => 'ModuleRandomImage',
 		'html'           => 'ModuleHtml',
-		'rss_reader'     => 'ModuleRssReader'
+		'rssReader'      => 'ModuleRssReader'
 	)
 );
 

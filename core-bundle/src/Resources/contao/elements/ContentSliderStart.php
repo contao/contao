@@ -23,7 +23,7 @@ class ContentSliderStart extends \ContentElement
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'ce_slider_start';
+	protected $strTemplate = 'ce_sliderStart';
 
 
 	/**

@@ -81,6 +81,48 @@ into the following templates:
 ```
 
 
+### Template name changes
+
+The following templates have been renamed to match the content element or
+module key:
+
+ * `ce_accordion`       -> `ce_accordionSingle`
+ * `ce_accordion_start` -> `ce_accordionStart`
+ * `ce_accordion_stop`  -> `ce_accordionStop`
+ * `ce_slider_start`    -> `ce_sliderStart`
+ * `ce_slider_stop`     -> `ce_sliderStop`
+ * `mod_article_list`   -> `mod_articlelist`
+ * `mod_article_nav`    -> `mod_articlenav`
+ * `mod_random_image`   -> `mod_randomImage`
+
+The following templates have been consolidated:
+
+ * `ce_hyperlink_image`  -> `ce_hyperlink`
+ * `mod_article_plain`   -> `mod_article`
+ * `mod_article_teaser`  -> `mod_article`
+ * `mod_login_1cl`       -> `mod_login`
+ * `mod_login_2cl`       -> `mod_login`
+ * `mod_logout_1cl`      -> `mod_login`
+ * `mod_logout_2cl`      -> `mod_login`
+ * `mod_search_advanced` -> `mod_search`
+ * `mod_search_simple`   -> `mod_search`
+
+Generally, we now require the template names to match the content element or
+module keys, so if your module has the key `taskList`, the corresponding
+template should be named `mod_taskList.html5`.
+
+Users can then create custom templates à la `mod_taskList_custom.html`, which
+will be shown in the "custom module template" list.
+
+
+### Front end module keys
+
+The keys of the following front end modules have been changed:
+
+ * `articleList` -> `articlelist`
+ * `rss_reader`  -> `rssReader`
+
+
 ### Custom database drivers
 
 The database classes have been mapped to the Doctrine DBAL, therefore custom

@@ -1389,11 +1389,13 @@ class tl_content extends Backend
 	/**
 	 * Return all content element templates as array
 	 *
+	 * @param DataContainer $dc
+	 *
 	 * @return array
 	 */
-	public function getElementTemplates()
+	public function getElementTemplates(DataContainer $dc)
 	{
-		return $this->getTemplateGroup('ce_');
+		return $this->getTemplateGroup('ce_' . $dc->activeRecord->type);
 	}
 
 
