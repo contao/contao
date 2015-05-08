@@ -25,7 +25,7 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
+class SymlinksCommand extends AbstractLockedCommand implements ContainerAwareInterface
 {
     /**
      * @var ContainerInterface|null
@@ -270,7 +270,11 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
             for ($i = 1, $c = count($chunks); $i < $c; $i++) {
                 if (in_array($test, $paths)) {
                     $this->output->writeln(
-                        sprintf('Skipped <error>%s</error> because <error>%s</error> has been symlinked already.', $dir, $test)
+                        sprintf(
+                            'Skipped <error>%s</error> because <error>%s</error> has been symlinked already.',
+                            $dir,
+                            $test
+                        )
                     );
 
                     return false;

@@ -74,13 +74,14 @@ class XliffFileLoader extends Loader
     private function convertXlfToPhp($name, $language)
     {
         $xml = new \DOMDocument();
+
         $xml->preserveWhiteSpace = false;
 
         // Use loadXML() instead of load() (see contao/core#7192)
         $xml->loadXML(file_get_contents($name));
 
         $return = "\n// " . str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $name) . "\n";
-        $units = $xml->getElementsByTagName('trans-unit');
+        $units  = $xml->getElementsByTagName('trans-unit');
 
         // FIXME: refactor
         /** @var \DOMElement[] $units */
@@ -128,13 +129,28 @@ class XliffFileLoader extends Loader
     {
         switch (count($chunks)) {
             case 2:
-                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . '] = ' . $this->quoteValue($value) . ";\n";
+                return "\$GLOBALS['TL_LANG']['"
+                    . $chunks[0] . "']["
+                    . $this->quoteKey($chunks[1]) . '] = '
+                    . $this->quoteValue($value) . ";\n"
+                ;
 
             case 3:
-                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . '][' . $this->quoteKey($chunks[2]) . '] = ' . $this->quoteValue($value) . ";\n";
+                return "\$GLOBALS['TL_LANG']['"
+                    . $chunks[0] . "']["
+                    . $this->quoteKey($chunks[1]) . ']['
+                    . $this->quoteKey($chunks[2]) . '] = '
+                    . $this->quoteValue($value) . ";\n"
+                ;
 
             case 4:
-                return "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $this->quoteKey($chunks[1]) . '][' . $this->quoteKey($chunks[2]) . '][' . $this->quoteKey($chunks[3]) . '] = ' . $this->quoteValue($value) . ";\n";
+                return "\$GLOBALS['TL_LANG']['"
+                    . $chunks[0] . "']["
+                    . $this->quoteKey($chunks[1]) . ']['
+                    . $this->quoteKey($chunks[2]) . ']['
+                    . $this->quoteKey($chunks[3]) . '] = '
+                    . $this->quoteValue($value) . ";\n"
+                ;
         }
 
         throw new \OutOfBoundsException('Cannot load less than 2 or more than 4 levels in XLIFF language files.');

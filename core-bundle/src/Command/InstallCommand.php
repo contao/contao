@@ -21,7 +21,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InstallCommand extends LockedCommand implements ContainerAwareInterface
+class InstallCommand extends AbstractLockedCommand implements ContainerAwareInterface
 {
     /**
      * @var ContainerInterface|null

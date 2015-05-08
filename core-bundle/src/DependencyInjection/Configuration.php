@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('contao');
+        $rootNode    = $treeBuilder->root('contao');
 
         $rootNode
             ->children()
@@ -43,7 +43,10 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('files')
                     ->validate()
                         ->ifTrue(function ($v) {
-                            return preg_match('@^(app|assets|contao|plugins|share|system|templates|vendor|web)(/|$)@', $v);
+                            return preg_match(
+                                '@^(app|assets|contao|plugins|share|system|templates|vendor|web)(/|$)@',
+                                $v
+                            );
                         })
                         ->thenInvalid('%s')
                     ->end()

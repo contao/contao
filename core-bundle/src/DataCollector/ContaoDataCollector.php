@@ -215,8 +215,8 @@ class ContaoDataCollector extends DataCollector
      */
     private function addSummaryData()
     {
-        $framework    = false;
-        $modelCount   = '0';
+        $framework  = false;
+        $modelCount = '0';
 
         if (isset($GLOBALS['TL_DEBUG'])) {
             $framework  = true;
@@ -253,7 +253,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the name of the current page layout (front end only).
      *
-     * @return string|null The layout name
+     * @return string The layout name
      */
     private function getLayoutName()
     {

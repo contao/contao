@@ -20,7 +20,7 @@ use Symfony\Component\Filesystem\LockHandler;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class LockedCommand extends Command
+abstract class AbstractLockedCommand extends Command
 {
     /**
      * {@inheritdoc}

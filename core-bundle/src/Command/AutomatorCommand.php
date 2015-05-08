@@ -23,7 +23,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class AutomatorCommand extends LockedCommand
+class AutomatorCommand extends AbstractLockedCommand
 {
     /**
      * @var array
