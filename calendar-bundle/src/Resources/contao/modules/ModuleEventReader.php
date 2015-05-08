@@ -25,7 +25,7 @@ class ModuleEventReader extends \Events
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'mod_event';
+	protected $strTemplate = 'mod_eventreader';
 
 
 	/**

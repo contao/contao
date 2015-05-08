@@ -20,6 +20,13 @@ class ModuleEventMenu extends \ModuleCalendar
 {
 
 	/**
+	 * Template
+	 * @var string
+	 */
+	protected $strTemplate = 'mod_eventmenu';
+
+
+	/**
 	 * Display a wildcard in the back end
 	 *
 	 * @return string
@@ -38,6 +45,12 @@ class ModuleEventMenu extends \ModuleCalendar
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
 			return $objTemplate->parse();
+		}
+
+		if ($this->cal_format == 'cal_day')
+		{
+			$this->strTemplate = 'mod_calendar';
+			$this->cal_ctemplate = 'cal_mini';
 		}
 
 		return parent::generate();
@@ -61,7 +74,6 @@ class ModuleEventMenu extends \ModuleCalendar
 				break;
 
 			case 'cal_day':
-				$this->cal_ctemplate = 'cal_mini';
 				parent::compile();
 				break;
 		}
@@ -74,11 +86,6 @@ class ModuleEventMenu extends \ModuleCalendar
 	protected function compileYearlyMenu()
 	{
 		$arrData = array();
-
-		/** @var \FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate('mod_eventmenu_year');
-
-		$this->Template = $objTemplate;
 		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, 2145913200);
 
 		foreach ($arrAllEvents as $intDay=>$arrDay)
@@ -118,6 +125,7 @@ class ModuleEventMenu extends \ModuleCalendar
 			$arrItems[$intYear]['quantity'] = $quantity;
 		}
 
+		$this->Template->yearly = true;
 		$this->Template->items = $arrItems;
 		$this->Template->showQuantity = ($this->cal_showQuantity != '') ? true : false;
 	}
@@ -129,11 +137,6 @@ class ModuleEventMenu extends \ModuleCalendar
 	protected function compileMonthlyMenu()
 	{
 		$arrData = array();
-
-		/** @var \FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate('mod_eventmenu');
-
-		$this->Template = $objTemplate;
 		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, 2145913200);
 
 		foreach ($arrAllEvents as $intDay=>$arrDay)
