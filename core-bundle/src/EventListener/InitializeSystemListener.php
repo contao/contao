@@ -363,7 +363,7 @@ class InitializeSystemListener extends AbstractScopeAwareListener
             define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
         }
 
-        if (!$_POST || null === $request) {
+        if (null === $request || 'POST' !== $request->getRealMethod()) {
             return;
         }
 
