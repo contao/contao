@@ -99,11 +99,6 @@ class ModuleNewsMenu extends \ModuleNews
 		$arrData = array();
 		$time = \Date::floorToMinute();
 
-		/** @var \FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate('mod_newsmenu_year');
-
-		$this->Template = $objTemplate;
-
 		// Get the dates
 		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('intval', $this->news_archives)) . ")" . ((!BE_USER_LOGGED_IN || TL_MODE == 'BE') ? " AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'" : "") . " GROUP BY year ORDER BY year DESC");
 
@@ -141,6 +136,7 @@ class ModuleNewsMenu extends \ModuleNews
 			$arrItems[$intYear]['quantity'] = $quantity;
 		}
 
+		$this->Template->yearly = true;
 		$this->Template->items = $arrItems;
 		$this->Template->showQuantity = ($this->news_showQuantity != '');
 	}
@@ -217,11 +213,6 @@ class ModuleNewsMenu extends \ModuleNews
 		$arrData = array();
 		$time = \Date::floorToMinute();
 
-		/** @var \FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate('mod_newsmenu_day');
-
-		$this->Template = $objTemplate;
-
 		// Get the dates
 		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y%m%d') AS day, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('intval', $this->news_archives)) . ")" . ((!BE_USER_LOGGED_IN || TL_MODE == 'BE') ? " AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'" : "") . " GROUP BY day ORDER BY day DESC");
 
@@ -285,9 +276,9 @@ class ModuleNewsMenu extends \ModuleNews
 			$this->news_startDay = 0;
 		}
 
+		$this->Template->daily = true;
 		$this->Template->days = $this->compileDays();
 		$this->Template->weeks = $this->compileWeeks($arrData, $strUrl);
-
 		$this->Template->showQuantity = ($this->news_showQuantity != '') ? true : false;
 	}
 
