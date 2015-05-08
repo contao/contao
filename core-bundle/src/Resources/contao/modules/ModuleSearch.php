@@ -79,26 +79,23 @@ class ModuleSearch extends \Module
 
 		$strKeywords = trim(\Input::get('keywords'));
 
-		/** @var \FrontendTemplate|object $objFormTemplate */
-		$objFormTemplate = new \FrontendTemplate((($this->searchType == 'advanced') ? 'mod_search_advanced' : 'mod_search_simple'));
-
-		$objFormTemplate->uniqueId = $this->id;
-		$objFormTemplate->queryType = $strQueryType;
-		$objFormTemplate->keyword = specialchars($strKeywords);
-		$objFormTemplate->keywordLabel = $GLOBALS['TL_LANG']['MSC']['keywords'];
-		$objFormTemplate->optionsLabel = $GLOBALS['TL_LANG']['MSC']['options'];
-		$objFormTemplate->search = specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
-		$objFormTemplate->matchAll = specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
-		$objFormTemplate->matchAny = specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
-		$objFormTemplate->action = ampersand(\Environment::get('indexFreeRequest'));
+		$this->Template->uniqueId = $this->id;
+		$this->Template->queryType = $strQueryType;
+		$this->Template->keyword = specialchars($strKeywords);
+		$this->Template->keywordLabel = $GLOBALS['TL_LANG']['MSC']['keywords'];
+		$this->Template->optionsLabel = $GLOBALS['TL_LANG']['MSC']['options'];
+		$this->Template->search = specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
+		$this->Template->matchAll = specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
+		$this->Template->matchAny = specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
+		$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
+		$this->Template->advanced = ($this->searchType == 'advanced');
 
 		// Redirect page
 		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
 		{
-			$objFormTemplate->action = $this->generateFrontendUrl($objTarget->row());
+			$this->Template->action = $this->generateFrontendUrl($objTarget->row());
 		}
 
-		$this->Template->form = $objFormTemplate->parse();
 		$this->Template->pagination = '';
 		$this->Template->results = '';
 

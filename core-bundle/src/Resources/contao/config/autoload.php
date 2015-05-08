@@ -361,8 +361,6 @@ TemplateLoader::addFiles(array
 	'mod_quicknav'        => 'vendor/contao/core-bundle/src/Resources/contao/templates/modules',
 	'mod_random_image'    => 'vendor/contao/core-bundle/src/Resources/contao/templates/modules',
 	'mod_search'          => 'vendor/contao/core-bundle/src/Resources/contao/templates/modules',
-	'mod_search_advanced' => 'vendor/contao/core-bundle/src/Resources/contao/templates/modules',
-	'mod_search_simple'   => 'vendor/contao/core-bundle/src/Resources/contao/templates/modules',
 	'mod_sitemap'         => 'vendor/contao/core-bundle/src/Resources/contao/templates/modules',
 	'moo_accordion'       => 'vendor/contao/core-bundle/src/Resources/contao/templates/mootools',
 	'moo_chosen'          => 'vendor/contao/core-bundle/src/Resources/contao/templates/mootools',
