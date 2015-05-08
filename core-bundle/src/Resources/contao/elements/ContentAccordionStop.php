@@ -23,7 +23,7 @@ class ContentAccordionStop extends \ContentElement
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'ce_accordion_stop';
+	protected $strTemplate = 'ce_accordionStop';
 
 
 	/**

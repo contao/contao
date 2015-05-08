@@ -23,7 +23,7 @@ class ContentAccordion extends \ContentElement
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'ce_accordion';
+	protected $strTemplate = 'ce_accordionSingle';
 
 
 	/**
