@@ -23,7 +23,7 @@ class ModuleLogin extends \Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'mod_login_1cl';
+	protected $strTemplate = 'mod_login';
 
 
 	/**
@@ -153,18 +153,14 @@ class ModuleLogin extends \Module
 	 */
 	protected function compile()
 	{
+		$this->Template->tableless = ($this->cols < 2);
+
 		// Show logout form
 		if (FE_USER_LOGGED_IN)
 		{
 			$this->import('FrontendUser', 'User');
-			$this->strTemplate = ($this->cols > 1) ? 'mod_logout_2cl' : 'mod_logout_1cl';
 
-			/** @var \FrontendTemplate|object $objTemplate */
-			$objTemplate = new \FrontendTemplate($this->strTemplate);
-
-			$this->Template = $objTemplate;
-			$this->Template->setData($this->arrData);
-
+			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
 			$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
 			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $this->User->username);
@@ -180,14 +176,6 @@ class ModuleLogin extends \Module
 
 			return;
 		}
-
-		$this->strTemplate = ($this->cols > 1) ? 'mod_login_2cl' : 'mod_login_1cl';
-
-		/** @var \FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate($this->strTemplate);
-
-		$this->Template = $objTemplate;
-		$this->Template->setData($this->arrData);
 
 		$blnHasError = false;
 
