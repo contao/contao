@@ -32,7 +32,7 @@ class HtaccessAnalyzer
     public function __construct(\SplFileInfo $file)
     {
         if (!$file->isFile()) {
-            throw new \InvalidArgumentException("$file is not a file.");
+            throw new \InvalidArgumentException($file . ' is not a file.');
         }
 
         $this->file = $file;
@@ -81,15 +81,7 @@ class HtaccessAnalyzer
             return false;
         }
 
-        if (false !== stripos($line, 'Allow from all')) {
-            return true;
-        }
-
-        if (false !== stripos($line, 'Require all granted')) {
-            return true;
-        }
-
-        return false;
+        return (false !== stripos($line, 'Allow from all')) || (false !== stripos($line, 'Require all granted'));
     }
 
     /**

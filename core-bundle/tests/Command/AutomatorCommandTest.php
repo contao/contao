@@ -144,7 +144,7 @@ class AutomatorCommandTest extends TestCase
         ]);
 
         $this->assertEquals(1, $code);
-        $this->assertContains('Invalid task fooBar (see help contao:automator)', $tester->getDisplay());
+        $this->assertContains('Invalid task "fooBar" (see help contao:automator)', $tester->getDisplay());
     }
 
     /**

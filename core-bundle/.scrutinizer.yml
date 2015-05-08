@@ -44,7 +44,6 @@ checks:
         parameter_doc_comments: true
         return_doc_comments: true
         avoid_unnecessary_concatenation: true
-        return_doc_comment_if_not_inferrable: true
         function_in_camel_caps: true
 
 coding_style:

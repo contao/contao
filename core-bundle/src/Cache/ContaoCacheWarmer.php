@@ -109,7 +109,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $dumper = new CombinedFileDumper(
             $this->filesystem,
             new PhpFileLoader(),
-            "$cacheDir/contao"
+            $cacheDir . '/contao'
         );
 
         $dumper->dump($this->locator->locate('config/autoload.php', null, false), 'config/autoload.php');
@@ -134,14 +134,14 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             $base = ($pages->dns ?: '*');
 
             if ($pages->fallback) {
-                $mapper["$base/empty.fallback"] = "$base/empty." . $pages->language;
+                $mapper[$base . '/empty.fallback'] = $base . '/empty.' . $pages->language;
             }
 
-            $mapper["$base/empty." . $pages->language] = "$base/empty." . $pages->language;
+            $mapper[$base . '/empty.' . $pages->language] = $base . '/empty.' . $pages->language;
         }
 
         $this->filesystem->dumpFile(
-            "$cacheDir/contao/config/mapping.php",
+            $cacheDir . '/contao/config/mapping.php',
             sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true))
         );
     }
@@ -156,7 +156,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $dumper = new CombinedFileDumper(
             $this->filesystem,
             new PhpFileLoader(),
-            "$cacheDir/contao"
+            $cacheDir . '/contao'
         );
 
         $processed = [];
@@ -188,7 +188,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $dumper = new CombinedFileDumper(
             $this->filesystem,
             new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->rootDir)])),
-            "$cacheDir/contao"
+            $cacheDir . '/contao'
         );
 
         $dumper->setHeader("<?php\n");
@@ -197,7 +197,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             $processed = [];
 
             try {
-                $files = $this->finder->findIn("languages/$language")->files()->name('/\.(php|xlf)$/');
+                $files = $this->finder->findIn('languages/' . $language)->files()->name('/\.(php|xlf)$/');
             } catch (\InvalidArgumentException $e) {
                 continue; // the language does not exist
             }
@@ -212,10 +212,14 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
                 $processed[] = $name;
 
-                $subfiles = $this->finder->findIn("languages/$language")->files()->name("/^$name\\.(php|xlf)$/");
+                $subfiles = $this->finder->findIn('languages/' . $language)->files()->name("/^$name\\.(php|xlf)$/");
 
                 try {
-                    $dumper->dump(iterator_to_array($subfiles), "languages/$language/$name.php", ['type' => $language]);
+                    $dumper->dump(
+                        iterator_to_array($subfiles),
+                        sprintf('languages/%s/%s.php', $language, $name),
+                        ['type' => $language]
+                    );
                 } catch (\OutOfBoundsException $e) {
                     continue;
                 }
@@ -250,7 +254,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             }
 
             $this->filesystem->dumpFile(
-                "$cacheDir/contao/sql/$table.php",
+                sprintf('%s/contao/sql/%s.php', $cacheDir, $table),
                 "<?php\n\n"
                     . sprintf("\$this->arrMeta = %s;\n\n", var_export($extract->getMeta(), true))
                     . sprintf("\$this->arrFields = %s;\n\n", var_export($extract->getFields(), true))

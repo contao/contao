@@ -83,7 +83,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         $uploadPath = $this->container->getParameter('contao.upload_path');
 
         // Remove the base folders in the document root
-        $fs->remove($this->rootDir . "/web/$uploadPath");
+        $fs->remove($this->rootDir . '/web/' . $uploadPath);
         $fs->remove($this->rootDir . '/web/system/modules');
         $fs->remove($this->rootDir . '/web/vendor');
 
@@ -105,7 +105,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     private function symlinkFiles($uploadPath)
     {
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir . "/$uploadPath")->files()->name('.public'),
+            $this->findIn($this->rootDir . '/' . $uploadPath)->files()->name('.public'),
             $uploadPath
         );
     }
@@ -154,8 +154,8 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
     {
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $path = rtrim("$prepend/" . $file->getRelativePath(), '/');
-            $this->symlink($path, "web/$path");
+            $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
+            $this->symlink($path, 'web/' . $path);
         }
     }
 
@@ -175,14 +175,19 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
         $fs = new Filesystem();
 
         try {
-            $fs->symlink(rtrim($fs->makePathRelative($source, dirname($target)), '/'), $this->rootDir . "/$target");
+            $fs->symlink(
+                rtrim($fs->makePathRelative($source, dirname($target)), '/'),
+                $this->rootDir . '/' . $target
+            );
         } catch (IOException $e) {
-            $fs->symlink($this->rootDir . "/$source", $this->rootDir . "/$target");
+            $fs->symlink($this->rootDir . '/' . $source, $this->rootDir . '/' . $target);
         }
 
         $this->fixSymlinkPermissions($target);
 
-        $this->output->writeln("Added <comment>$target</comment> as symlink to <comment>$source</comment>.");
+        $this->output->writeln(
+            sprintf('Added <comment>%s</comment> as symlink to <comment>%s</comment>.', $target, $source)
+        );
     }
 
     /**
@@ -210,8 +215,8 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
 
         $fs = new Filesystem();
 
-        if ($fs->exists($this->rootDir . "/$target") && !is_link($this->rootDir . "/$target")) {
-            throw new \LogicException("The symlink target $target exists and is not a symlink.");
+        if ($fs->exists($this->rootDir . '/' . $target) && !is_link($this->rootDir . '/' . $target)) {
+            throw new \LogicException('The symlink target "' . $target . '" exists and is not a symlink.');
         }
     }
 
@@ -226,12 +231,12 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
 
         // Try to fix the UID
         if (function_exists('lchown') && $stat['uid'] !== getmyuid()) {
-            lchown($this->rootDir . "/$target", getmyuid());
+            lchown($this->rootDir . '/' . $target, getmyuid());
         }
 
         // Try to fix the GID
         if (function_exists('lchgrp') && $stat['gid'] !== getmygid()) {
-            lchgrp($this->rootDir . "/$target", getmygid());
+            lchgrp($this->rootDir . '/' . $target, getmygid());
         }
     }
 
@@ -264,7 +269,9 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
 
             for ($i = 1, $c = count($chunks); $i < $c; $i++) {
                 if (in_array($test, $paths)) {
-                    $this->output->writeln("<fg=red>Skipped $dir because $test has been symlinked already.</fg=red>");
+                    $this->output->writeln(
+                        sprintf('Skipped <error>%s</error> because <error>%s</error> has been symlinked already.', $dir, $test)
+                    );
 
                     return false;
                 }

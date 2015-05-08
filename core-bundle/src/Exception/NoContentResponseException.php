@@ -22,7 +22,7 @@ class NoContentResponseException extends ResponseException
     /**
      * Constructor.
      *
-     * @param \Exception $previous The previous exception
+     * @param \Exception|null $previous The previous exception
      */
     public function __construct(\Exception $previous = null)
     {

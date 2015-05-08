@@ -38,7 +38,7 @@ class FilesyncCommand extends LockedCommand
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
         $strLog = Dbafs::syncFiles();
-        $output->writeln("Synchronization complete (see <info>$strLog</info>).");
+        $output->writeln('Synchronization complete (see <info>' . $strLog . '</info>).');
 
         return 0;
     }

@@ -82,11 +82,11 @@ class InstallCommand extends LockedCommand implements ContainerAwareInterface
         $rootDir = dirname($this->container->getParameter('kernel.root_dir'));
 
         foreach ($this->emptyDirs as $path) {
-            $this->addEmptyDir("$rootDir/$path", $fs, $output);
+            $this->addEmptyDir($rootDir . '/' . $path, $fs, $output);
         }
 
         foreach ($this->ignoredDirs as $path) {
-            $this->addIgnoredDir("$rootDir/$path", $fs, $output);
+            $this->addIgnoredDir($rootDir . '/' . $path, $fs, $output);
         }
 
         return 0;
@@ -107,7 +107,7 @@ class InstallCommand extends LockedCommand implements ContainerAwareInterface
 
         $fs->mkdir($path);
 
-        $output->writeln("Created the <comment>$path</comment> directory.");
+        $output->writeln('Created the <comment>' . $path . '</comment> directory.');
     }
 
     /**
@@ -126,10 +126,10 @@ class InstallCommand extends LockedCommand implements ContainerAwareInterface
         }
 
         $fs->dumpFile(
-            "$path/.gitignore",
+            $path . '/.gitignore',
             "# Create the folder and ignore its content\n*\n!.gitignore\n"
         );
 
-        $output->writeln("Added the <comment>$path/.gitignore</comment> file.");
+        $output->writeln('Added the <comment>' . $path . '/.gitignore</comment> file.');
     }
 }

@@ -37,7 +37,7 @@ class PhpFileLoader extends Loader
             $code = substr($code, 5);
         }
 
-        // die() statement
+        // Access check
         $code = str_replace(
             [
                 " if (!defined('TL_ROOT')) die('You cannot access this file directly!');",

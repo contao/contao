@@ -134,7 +134,7 @@ class PrettyErrorScreenListener
             $this->renderErrorScreenByException($event);
         }
 
-        $processing  = false;
+        $processing = false;
     }
 
     /**
@@ -225,13 +225,11 @@ class PrettyErrorScreenListener
      * @param string                       $template   The template name
      * @param int                          $statusCode The status code
      * @param GetResponseForExceptionEvent $event      The event
-     *
-     * @return Response The response object
      */
     private function renderTemplate($template, $statusCode, GetResponseForExceptionEvent $event)
     {
         if (!$this->prettyErrorScreens) {
-            return null;
+            return;
         }
 
         $view = "@ContaoCore/Error/$template.html.twig";
@@ -260,7 +258,7 @@ class PrettyErrorScreenListener
      */
     private function getErrorTemplate()
     {
-        $parameters =  [
+        $parameters = [
             'statusCode' => 500,
             'error'      => [
                 'error'         => 'An error occurred',

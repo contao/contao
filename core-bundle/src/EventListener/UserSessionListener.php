@@ -169,8 +169,8 @@ class UserSessionListener extends ScopeAwareListener
     /**
      * Prepares the back end referer array.
      *
-     * @param string $refererId The referer ID
-     * @param array  $referers  The old referer data
+     * @param string     $refererId The referer ID
+     * @param array|null $referers  The old referer data
      *
      * @return array The back end referer URLs
      */
@@ -218,8 +218,8 @@ class UserSessionListener extends ScopeAwareListener
     /**
      * Checks if the front end session can be modified.
      *
-     * @param Request $request The request object
-     * @param array   $referer The referer array
+     * @param Request    $request The request object
+     * @param array|null $referer The referer array
      *
      * @return bool True if the front end session can be modified
      */

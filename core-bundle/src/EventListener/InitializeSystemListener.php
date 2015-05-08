@@ -187,7 +187,7 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * Boots the Contao framework.
      *
-     * @param Request $request The request object
+     * @param Request|null $request The request object
      *
      * @internal
      */
@@ -233,7 +233,7 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * Returns the TL_MODE value for the container scope.
      *
-     * @return string The TL_MODE value
+     * @return string|null The TL_MODE value
      */
     private function getModeFromContainerScope()
     {
@@ -288,7 +288,7 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * Sets the default language.
      *
-     * @param Request $request
+     * @param Request|null $request
      */
     private function setDefaultLanguage(Request $request = null)
     {
@@ -306,7 +306,7 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * Validates the installation.
      *
-     * @param Request $request The current request if available
+     * @param Request|null $request The current request if available
      *
      * @throws IncompleteInstallationException If the installation has not been completed
      */
@@ -350,7 +350,7 @@ class InitializeSystemListener extends ScopeAwareListener
     /**
      * Handles the request token.
      *
-     * @param Request $request
+     * @param Request|null $request
      *
      * @throws AjaxRedirectResponseException|InvalidRequestTokenException If the token is invalid
      */
