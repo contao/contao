@@ -279,8 +279,8 @@ class InitializeSystemListener extends ScopeAwareListener
     {
         foreach ($this->basicClasses as $class) {
             if (!class_exists($class, false)) {
-                require_once __DIR__ . "/../../src/Resources/contao/library/Contao/$class.php";
-                class_alias("Contao\\$class", $class);
+                require_once __DIR__ . '/../../src/Resources/contao/library/Contao/' . $class . '.php';
+                class_alias('Contao\\' . $class, $class);
             }
         }
     }

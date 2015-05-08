@@ -70,13 +70,13 @@ class ResourceFinder
         $paths = [];
 
         foreach ($this->paths as $path) {
-            if (is_dir($dir = "$path/$subpath")) {
+            if (is_dir($dir = $path . '/' . $subpath)) {
                 $paths[] = $dir;
             }
         }
 
         if (empty($paths)) {
-            throw new \InvalidArgumentException("The subpath $subpath does not exists.");
+            throw new \InvalidArgumentException('The subpath "' . $subpath . '" does not exists.');
         }
 
         return $paths;

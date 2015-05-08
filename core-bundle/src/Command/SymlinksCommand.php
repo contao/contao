@@ -227,7 +227,7 @@ class SymlinksCommand extends LockedCommand implements ContainerAwareInterface
      */
     private function fixSymlinkPermissions($target)
     {
-        $stat = lstat($this->rootDir . "/$target");
+        $stat = lstat($this->rootDir . '/' . $target);
 
         // Try to fix the UID
         if (function_exists('lchown') && $stat['uid'] !== getmyuid()) {

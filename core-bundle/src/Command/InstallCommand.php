@@ -121,7 +121,7 @@ class InstallCommand extends LockedCommand implements ContainerAwareInterface
     {
         $this->addEmptyDir($path, $fs, $output);
 
-        if ($fs->exists("$path/.gitignore")) {
+        if ($fs->exists($path . '/.gitignore')) {
             return;
         }
 

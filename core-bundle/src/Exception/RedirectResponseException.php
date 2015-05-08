@@ -23,9 +23,9 @@ class RedirectResponseException extends ResponseException
     /**
      * Constructor.
      *
-     * @param string     $location      The target URL
-     * @param int        $status        The response status code (defaults to 303)
-     * @param \Exception $previous|null The previous exception
+     * @param string          $location The target URL
+     * @param int             $status   The response status code (defaults to 303)
+     * @param \Exception|null $previous The previous exception
      */
     public function __construct($location, $status = 303, \Exception $previous = null)
     {

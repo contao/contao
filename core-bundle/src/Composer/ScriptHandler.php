@@ -58,7 +58,12 @@ class ScriptHandler
         }
 
         $process = new Process(sprintf('%s app/console --ansi %s', $phpPath, $cmd));
-        $process->run(function ($type, $buffer) use ($event) { $event->getIO()->write($buffer, false); });
+
+        $process->run(
+            function ($type, $buffer) use ($event) {
+                $event->getIO()->write($buffer, false);
+            }
+        );
 
         if (!$process->isSuccessful()) {
             throw new \RuntimeException('An error occurred while executing the "' . $cmd . '" command.');

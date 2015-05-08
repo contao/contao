@@ -73,7 +73,7 @@ class LocaleListener extends ScopeAwareListener
     private function formatLocaleId($locale)
     {
         if (!preg_match('/^[a-z]{2}([_-][a-z]{2})?$/i', $locale)) {
-            throw new \InvalidArgumentException("$locale is not a supported locale.");
+            throw new \InvalidArgumentException('"' . $locale . '" is not a supported locale.');
         }
 
         $values = preg_split('/-|_/', $locale);

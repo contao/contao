@@ -42,7 +42,7 @@ class AddResourcesPathsPass implements CompilerPassInterface
 
         foreach ($container->getParameter('kernel.bundles') as $name => $class) {
             if ('Contao\\CoreBundle\\HttpKernel\\Bundle\\ContaoModuleBundle' === $class) {
-                $paths[] = "$rootDir/system/modules/$name";
+                $paths[] = sprintf('%s/system/modules/%s', $rootDir, $name);
             } elseif (null !== ($path = $this->getResourcesPathFromClassName($class))) {
                 $paths[] = $path;
             }

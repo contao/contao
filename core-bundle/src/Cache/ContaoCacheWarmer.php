@@ -212,7 +212,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
                 $processed[] = $name;
 
-                $subfiles = $this->finder->findIn('languages/' . $language)->files()->name("/^$name\\.(php|xlf)$/");
+                $subfiles = $this->finder
+                    ->findIn('languages/' . $language)
+                    ->files()
+                    ->name('/^' . $name . '\\.(php|xlf)$/')
+                ;
 
                 try {
                     $dumper->dump(
