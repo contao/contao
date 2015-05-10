@@ -24,7 +24,7 @@ class InsecureInstallationListener
     /**
      * @var array
      */
-    protected $localIps = ['127.0.0.1', 'fe80::1', '::1'];
+    private $localIps = ['127.0.0.1', 'fe80::1', '::1'];
 
     /**
      * Throws an exception if the document root is insecure.
