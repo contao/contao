@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### Changed
+Consolidated the markup of all front end forms (see #249).
+
 ### Fixed
 Consolidate the templates and module keys (see #247).
 
