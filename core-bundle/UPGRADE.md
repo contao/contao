@@ -4,6 +4,11 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Form field "headline"
+
+The form field "headline" has been removed in favor of the "explanation" field.
+
+
 ### FORM_SUBMIT
 
 Every form now appends its numeric ID to the `FORM_SUBMIT` parameter, so custom

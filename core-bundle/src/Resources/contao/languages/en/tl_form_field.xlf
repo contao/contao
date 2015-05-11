@@ -2,12 +2,6 @@
 <xliff version="1.1">
   <file datatype="php" original="contao/languages/en/tl_form_field.php" source-language="en">
     <body>
-      <trans-unit id="FFL.headline.0">
-        <source>Headline</source>
-      </trans-unit>
-      <trans-unit id="FFL.headline.1">
-        <source>A custom field to insert a section headline.</source>
-      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
       </trans-unit>

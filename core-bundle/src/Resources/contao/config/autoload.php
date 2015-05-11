@@ -93,7 +93,6 @@ ClassLoader::addClasses(array
 	'Contao\FormExplanation'           => 'vendor/contao/core-bundle/src/Resources/contao/forms/FormExplanation.php',
 	'Contao\FormFieldset'              => 'vendor/contao/core-bundle/src/Resources/contao/forms/FormFieldset.php',
 	'Contao\FormFileUpload'            => 'vendor/contao/core-bundle/src/Resources/contao/forms/FormFileUpload.php',
-	'Contao\FormHeadline'              => 'vendor/contao/core-bundle/src/Resources/contao/forms/FormHeadline.php',
 	'Contao\FormHidden'                => 'vendor/contao/core-bundle/src/Resources/contao/forms/FormHidden.php',
 	'Contao\FormHtml'                  => 'vendor/contao/core-bundle/src/Resources/contao/forms/FormHtml.php',
 	'Contao\FormPassword'              => 'vendor/contao/core-bundle/src/Resources/contao/forms/FormPassword.php',

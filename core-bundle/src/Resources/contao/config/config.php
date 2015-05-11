@@ -234,7 +234,6 @@ $GLOBALS['BE_FFL'] = array
  */
 $GLOBALS['TL_FFL'] = array
 (
-	'headline'    => 'FormHeadline',
 	'explanation' => 'FormExplanation',
 	'html'        => 'FormHtml',
 	'fieldset'    => 'FormFieldset',

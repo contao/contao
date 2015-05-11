@@ -84,7 +84,6 @@ namespace {
 	class FormExplanation extends \Contao\FormExplanation {}
 	class FormFieldset extends \Contao\FormFieldset {}
 	class FormFileUpload extends \Contao\FormFileUpload {}
-	class FormHeadline extends \Contao\FormHeadline {}
 	class FormHidden extends \Contao\FormHidden {}
 	class FormHtml extends \Contao\FormHtml {}
 	class FormPassword extends \Contao\FormPassword {}
