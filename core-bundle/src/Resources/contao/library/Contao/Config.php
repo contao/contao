@@ -493,6 +493,8 @@ class Config
 			'smtpHost'         => 'mailer_host',
 			'smtpUser'         => 'mailer_user',
 			'smtpPass'         => 'mailer_password',
+			'smtpPort'         => 'mailer_port',
+			'smtpEnc'          => 'mailer_encryption',
 			'addLanguageToUrl' => 'contao.prepend_locale',
 			'encryptionKey'    => 'contao.encryption_key',
 			'urlSuffix'        => 'contao.url_suffix',

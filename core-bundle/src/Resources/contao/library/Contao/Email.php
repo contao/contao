@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * A SwiftMailer adapter class
@@ -40,12 +42,6 @@ namespace Contao;
  */
 class Email
 {
-
-	/**
-	 * Mailer object
-	 * @var \Email
-	 */
-	protected static $objMailer;
 
 	/**
 	 * Message object
@@ -126,35 +122,6 @@ class Email
 	public function __construct()
 	{
 		$this->strCharset = \Config::get('characterSet');
-
-		// Instantiate mailer
-		if (self::$objMailer === null)
-		{
-			if (!\Config::get('useSMTP'))
-			{
-				// Mail
-				$objTransport = \Swift_MailTransport::newInstance();
-			}
-			else
-			{
-				// SMTP
-				$objTransport = \Swift_SmtpTransport::newInstance(\Config::get('smtpHost'), \Config::get('smtpPort'));
-
-				// Encryption
-				if (\Config::get('smtpEnc') == 'ssl' || \Config::get('smtpEnc') == 'tls')
-				{
-					$objTransport->setEncryption(\Config::get('smtpEnc'));
-				}
-
-				// Authentication
-				if (\Config::get('smtpUser') != '')
-				{
-					$objTransport->setUsername(\Config::get('smtpUser'))->setPassword(\Config::get('smtpPass'));
-				}
-			}
-
-			self::$objMailer = \Swift_Mailer::newInstance($objTransport);
-		}
 
 		// Instantiate Swift_Message
 		$this->objMessage = \Swift_Message::newInstance();
@@ -494,8 +461,11 @@ class Email
 		// Set the return path (see #5004)
 		$this->objMessage->setReturnPath($this->strSender);
 
-		// Send e-mail
-		$intSent = self::$objMailer->send($this->objMessage, $this->arrFailures);
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		// Send the e-mail
+		$intSent = $kernel->getContainer()->get('swiftmailer.mailer')->send($this->objMessage, $this->arrFailures);
 
 		// Log failures
 		if (!empty($this->arrFailures))
