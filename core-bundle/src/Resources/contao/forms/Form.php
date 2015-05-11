@@ -116,7 +116,14 @@ class Form extends \Hybrid
 		{
 			while ($objFields->next())
 			{
-				$arrFields[$objFields->name] = $objFields->current();
+				if ($objFields->name != '')
+				{
+					$arrFields[$objFields->name] = $objFields->current();
+				}
+				else
+				{
+					$arrFields[] = $objFields->current();
+				}
 			}
 		}
 
