@@ -56,6 +56,7 @@ class ContaoCoreExtension extends ConfigurableExtension
         }
 
         $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
+        $container->setParameter('contao.encryption_key', $mergedConfig['encryption_key']);
         $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
         $container->setParameter('contao.upload_path', $mergedConfig['upload_path']);
         $container->setParameter('contao.csrf_token_name', $mergedConfig['csrf_token_name']);
