@@ -47,11 +47,15 @@ class ContentAlias extends \ContentElement
 		/** @var \ContentElement $objElement */
 		$objElement = new $strClass($objElement);
 
-		// Overwrite spacing and CSS ID
-		$objElement->origSpace = $objElement->space;
-		$objElement->space = $this->space;
-		$objElement->origCssID = $objElement->cssID;
-		$objElement->cssID = $this->cssID;
+		$cssID = deserialize($objElement->cssID, true);
+
+		// Merge the CSS classes (see #6011)
+		if (!empty($this->cssID[1]))
+		{
+			$cssID[1] = trim($cssID[1] . ' ' . $this->cssID[1]);
+		}
+
+		$objElement->cssID = $cssID;
 
 		return $objElement->generate();
 	}

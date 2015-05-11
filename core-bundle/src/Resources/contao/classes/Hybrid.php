@@ -125,9 +125,21 @@ abstract class Hybrid extends \Frontend
 
 		$this->arrData = $objHybrid->row();
 
-		// Get space and CSS ID from the parent element (!)
-		$this->space = deserialize($objElement->space);
-		$this->cssID = deserialize($objElement->cssID, true);
+		// Get the CSS ID from the parent element (!)
+		$cssID = deserialize($objElement->cssID, true);
+
+		// Merge the CSS classes (see #6011)
+		if (isset($objHybrid->attributes))
+		{
+			$arrAttributes = deserialize($objHybrid->attributes, true);
+
+			if (!empty($arrAttributes[1]))
+			{
+				$cssID[1] = trim($arrAttributes[1] . ' ' . $cssID[1]);
+			}
+		}
+
+		$this->cssID = $cssID;
 
 		$this->typePrefix = $objElement->typePrefix;
 
@@ -213,16 +225,6 @@ abstract class Hybrid extends \Frontend
 		if ($this->objParent instanceof \ContentModel && TL_MODE == 'FE' && !BE_USER_LOGGED_IN && ($this->objParent->invisible || ($this->objParent->start != '' && $this->objParent->start > time()) || ($this->objParent->stop != '' && $this->objParent->stop < time())))
 		{
 			return '';
-		}
-
-		if ($this->arrData['space'][0] != '')
-		{
-			$this->arrStyle[] = 'margin-top:'.$this->arrData['space'][0].'px;';
-		}
-
-		if ($this->arrData['space'][1] != '')
-		{
-			$this->arrStyle[] = 'margin-bottom:'.$this->arrData['space'][1].'px;';
 		}
 
 		$this->Template = new \FrontendTemplate($this->strTemplate);

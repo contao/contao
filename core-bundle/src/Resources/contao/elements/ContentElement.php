@@ -163,7 +163,6 @@ abstract class ContentElement extends \Frontend
 		parent::__construct();
 
 		$this->arrData = $objElement->row();
-		$this->space = deserialize($objElement->space);
 		$this->cssID = deserialize($objElement->cssID, true);
 
 		if ($this->customTpl != '' && TL_MODE == 'FE')
@@ -242,16 +241,6 @@ abstract class ContentElement extends \Frontend
 		if (TL_MODE == 'FE' && !BE_USER_LOGGED_IN && ($this->invisible || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time())))
 		{
 			return '';
-		}
-
-		if ($this->arrData['space'][0] != '')
-		{
-			$this->arrStyle[] = 'margin-top:'.$this->arrData['space'][0].'px;';
-		}
-
-		if ($this->arrData['space'][1] != '')
-		{
-			$this->arrStyle[] = 'margin-bottom:'.$this->arrData['space'][1].'px;';
 		}
 
 		$this->Template = new \FrontendTemplate($this->strTemplate);

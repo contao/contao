@@ -50,11 +50,15 @@ class ContentModule extends \ContentElement
 		/** @var \Module $objModule */
 		$objModule = new $strClass($objModule, $this->strColumn);
 
-		// Overwrite spacing and CSS ID
-		$objModule->origSpace = $objModule->space;
-		$objModule->space = $this->space;
-		$objModule->origCssID = $objModule->cssID;
-		$objModule->cssID = $this->cssID;
+		$cssID = deserialize($objModule->cssID, true);
+
+		// Merge the CSS classes (see #6011)
+		if (!empty($this->cssID[1]))
+		{
+			$cssID[1] = trim($cssID[1] . ' ' . $this->cssID[1]);
+		}
+
+		$objModule->cssID = $cssID;
 
 		return $objModule->generate();
 	}

@@ -86,12 +86,6 @@
       <trans-unit id="tl_article.cssID.1">
         <source>Here you can set an ID and one or more classes.</source>
       </trans-unit>
-      <trans-unit id="tl_article.space.0">
-        <source>Space in front and after</source>
-      </trans-unit>
-      <trans-unit id="tl_article.space.1">
-        <source>Here you can enter the spacing in front of and after the article in pixel. You should try to avoid inline styles and define the spacing in a style sheet, though.</source>
-      </trans-unit>
       <trans-unit id="tl_article.published.0">
         <source>Publish article</source>
       </trans-unit>
