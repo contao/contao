@@ -31,10 +31,16 @@ Edit your `app/config/config.yml` file and add the following:
 ```yml
 # Contao configuration
 contao:
-    prepend_locale: "%prepend_locale%"
-    url_suffix:     "%url_suffix%"
-    upload_path:    "%upload_path%"
+    # Required parameters
+    prepend_locale: true
     encryption_key: "%kernel.secret%"
+
+    # Optional parameters
+    url_suffix:           .html
+    upload_path:          files
+    csrf_token_name:      contao_csrf_token
+    pretty_error_screens: true
+    error_level:          22519 # E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED
 ```
 
 Add the Contao routes to your `app/config/routing.yml` file:
@@ -56,11 +62,25 @@ Meta package
 ------------
 
 There is a meta package at [contao/contao][4], which you can require in your
-`composer.json` instead of requiring all the bundles separately:
+`composer.json` to install all the default bundles at once:
 
 ```json
 "require": {
     "contao/contao": "~4.0"
+}
+```
+
+This is the same as:
+
+```json
+"require": {
+    "contao/calendar-bundle": "~4.0",
+    "contao/comments-bundle": "~4.0",
+    "contao/core-bundle": "~4.0",
+    "contao/faq-bundle": "~4.0",
+    "contao/listing-bundle": "~4.0",
+    "contao/news-bundle": "~4.0",
+    "contao/newsletter-bundle": "~4.0"
 }
 ```
 
