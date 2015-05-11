@@ -53,8 +53,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $params = [
             'contao' => [
-                'encryption_key' => 'foobar'
-            ]
+                'encryption_key' => 'foobar',
+            ],
         ];
 
         $this->extension->load($params, $container);
