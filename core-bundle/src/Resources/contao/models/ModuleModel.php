@@ -38,7 +38,6 @@ namespace Contao;
  * @property string  $cols
  * @property string  $editable
  * @property string  $memberTpl
- * @property boolean $tableless
  * @property integer $form
  * @property string  $queryType
  * @property boolean $fuzzy

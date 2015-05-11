@@ -1,6 +1,6 @@
 
 <!-- indexer::stop -->
-<div class="<?= $this->class ?> <?= $this->tableless ? 'tableless' : 'tableform' ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
 
   <?php if ($this->headline): ?>
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
@@ -10,22 +10,12 @@
     <div class="formbody">
       <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
       <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
-      <?php if (!$this->tableless): ?>
-        <table>
-          <?= $this->fields ?>
-          <tr class="<?= $this->rowLast ?> row_last">
-            <td class="col_0 col_first">&nbsp;</td>
-            <td class="col_1 col_last"><div class="submit_container"><button type="submit" class="submit"><?= $this->slabel ?></button></div></td>
-          </tr>
-        </table>
-      <?php else: ?>
-        <div class="fields">
-          <?= $this->fields ?>
-        </div>
-        <div class="submit_container">
-          <button type="submit" class="submit"><?= $this->slabel ?></button>
-        </div>
-      <?php endif; ?>
+      <div class="fields">
+        <?= $this->fields ?>
+      </div>
+      <div class="submit_container">
+        <button type="submit" class="submit"><?= $this->slabel ?></button>
+      </div>
     </div>
   </form>
 

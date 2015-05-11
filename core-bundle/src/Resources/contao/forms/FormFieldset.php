@@ -15,7 +15,6 @@ namespace Contao;
  * Class FormFieldset
  *
  * @property string  $fsType
- * @property boolean $tableless
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -66,12 +65,6 @@ class FormFieldset extends \Widget
 			return $objTemplate->parse();
 		}
 
-		// Only tableless forms are supported
-		if (!$this->tableless)
-		{
-			return '';
-		}
-
 		return parent::parse($arrAttributes);
 	}
 
@@ -83,12 +76,6 @@ class FormFieldset extends \Widget
 	 */
 	public function generate()
 	{
-		// Only tableless forms are supported
-		if (!$this->tableless)
-		{
-			return '';
-		}
-
 		if ($this->fsType == 'fsStart')
 		{
 			return "  <fieldset" . ($this->strClass ? ' class="' . $this->strClass . '"' : '') . ">\n" . (($this->label != '') ? "  <legend>" . $this->label . "</legend>\n" : '');

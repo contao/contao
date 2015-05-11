@@ -153,8 +153,6 @@ class ModuleLogin extends \Module
 	 */
 	protected function compile()
 	{
-		$this->Template->tableless = ($this->cols < 2);
-
 		// Show logout form
 		if (FE_USER_LOGGED_IN)
 		{

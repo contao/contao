@@ -30,7 +30,6 @@ namespace Contao;
  * @property boolean $novalidate
  * @property string  $attributes
  * @property string  $formID
- * @property boolean $tableless
  * @property boolean $allowTags
  *
  * @method static $this findById()

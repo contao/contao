@@ -43,7 +43,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'mode'                    => 4,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter,search,limit',
-			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject', 'tableless'),
+			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
 			'child_record_callback'   => array('tl_form_field', 'listFormFields')
 		),
 		'global_operations' => array
@@ -619,22 +619,6 @@ class tl_form_field extends Backend
 	public function getFields(DataContainer $dc)
 	{
 		$arrFields = $GLOBALS['TL_FFL'];
-		$intPid = $dc->activeRecord->pid;
-
-		if (Input::get('act') == 'overrideAll')
-		{
-			$intPid = Input::get('id');
-		}
-
-		$objForm = $this->Database->prepare("SELECT tableless FROM tl_form WHERE id=?")
-								  ->limit(1)
-								  ->execute($intPid);
-
-		// Fieldsets are only supported in tableless forms
-		if (!$objForm->tableless)
-		{
-			unset($arrFields['fieldset']);
-		}
 
 		// Add the translation
 		foreach (array_keys($arrFields) as $key)

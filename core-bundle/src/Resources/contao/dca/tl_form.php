@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('sendViaEmail', 'storeValues'),
-		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},tableless,allowTags;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{expert_legend:hide},method,novalidate,attributes,formID'
+		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},allowTags;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{expert_legend:hide},method,novalidate,attributes,formID'
 	),
 
 	// Subpalettes
@@ -257,15 +257,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('nospace'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'tableless' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['tableless'],
-			'exclude'                 => true,
-			'filter'                  => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'allowTags' => array
 		(

@@ -70,7 +70,7 @@ class ModuleCloseAccount extends \Module
 			'name' => 'password',
 			'inputType' => 'text',
 			'label' => $GLOBALS['TL_LANG']['MSC']['password'][0],
-			'eval' => array('hideInput'=>true, 'mandatory'=>true, 'required'=>true, 'tableless'=>$this->tableless)
+			'eval' => array('hideInput'=>true, 'mandatory'=>true, 'required'=>true)
 		);
 
 		$objWidget = new \FormTextField(\FormTextField::getAttributesFromDca($arrField, $arrField['name']));
@@ -151,6 +151,5 @@ class ModuleCloseAccount extends \Module
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
 		$this->Template->rowLast = 'row_1 row_last odd';
-		$this->Template->tableless = $this->tableless;
 	}
 }

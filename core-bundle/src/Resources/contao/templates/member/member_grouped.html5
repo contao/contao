@@ -1,6 +1,6 @@
 
 <!-- indexer::stop -->
-<div class="<?= $this->class ?> <?= $this->tableless ? 'tableless' : 'tableform' ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
 
   <?php if ($this->headline): ?>
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
@@ -15,13 +15,7 @@
         <?php if (!empty($category)): ?>
           <fieldset>
             <legend><?= $legend ?></legend>
-            <?php if (!$this->tableless): ?>
-              <table>
-            <?php endif; ?>
             <?= implode('', $category) ?>
-            <?php if (!$this->tableless): ?>
-              </table>
-            <?php endif; ?>
           </fieldset>
         <?php endif; ?>
       <?php endforeach; ?>

@@ -4,6 +4,17 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Form option "tableless"
+
+The form option "tableless" has been removed, because all forms are now
+tableless by default. Instead, the `form.css` style sheet of the layout builder
+has been enhanced to provide basic formattings for labels and input fields.
+
+By default, labels and input fields are listed underneath each other. However,
+if you add the CSS class `horizontal-form` to a form, they will be aligned in a
+horizontal layout, similar to the old table-based layout.
+
+
 ### Form field "headline"
 
 The form field "headline" has been removed in favor of the "explanation" field.
