@@ -5,6 +5,9 @@ Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
 ### Fixed
+Decode sprintf placeholdes passed to `generateFrontendUrl()` as parameters.
+
+### Fixed
 Consolidate the templates and module keys (see #247).
 
 ### Fixed

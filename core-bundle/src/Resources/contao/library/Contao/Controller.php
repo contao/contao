@@ -1106,6 +1106,18 @@ abstract class Controller extends \System
 		$strUrl = $objRouter->generate($strRoute, $arrParams);
 		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
+		// Decode sprintf placeholders
+		if (strpos($strParams, '%') !== false)
+		{
+			$arrMatches = array();
+			preg_match_all('/%([sducoxXbgGeEfF])/', $strParams, $arrMatches);
+
+			foreach (array_unique($arrMatches[1]) as $v)
+			{
+				$strUrl = str_replace('%25' . $v, '%' . $v, $strUrl);
+			}
+		}
+
 		// Add the domain if it differs from the current one (see #3765 and #6927)
 		if ($blnFixDomain && $arrRow['domain'] != '' && $arrRow['domain'] != \Environment::get('host'))
 		{
