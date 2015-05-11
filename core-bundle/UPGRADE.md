@@ -14,6 +14,8 @@ By default, labels and input fields are listed underneath each other. However,
 if you add the CSS class `horizontal-form` to a form, they will be aligned in a
 horizontal layout, similar to the old table-based layout.
 
+If you add the CSS class `inline-form`, the widgets will be aligned vertically.
+
 
 ### Form field "headline"
 
