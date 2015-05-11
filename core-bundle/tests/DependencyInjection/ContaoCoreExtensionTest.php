@@ -51,7 +51,13 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $this->extension->load([], $container);
+        $params = [
+            'contao' => [
+                'encryption_key' => 'foobar'
+            ]
+        ];
+
+        $this->extension->load($params, $container);
 
         $this->assertTrue($container->has('contao.listener.output_from_cache'));
         $this->assertTrue($container->has('contao.listener.add_to_search_index'));
