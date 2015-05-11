@@ -25,18 +25,13 @@ class PageError404 extends \Frontend
 
 	/**
 	 * Generate an error 404 page
-	 *
-	 * @param integer $pageId
-	 * @param string  $strDomain
-	 * @param string  $strHost
-	 * @param boolean $blnUnusedGet
 	 */
-	public function generate($pageId, $strDomain=null, $strHost=null, $blnUnusedGet=false)
+	public function generate()
 	{
 		/** @var \PageModel $objPage */
 		global $objPage;
 
-		$obj404 = $this->prepare($pageId, $strDomain, $strHost, $blnUnusedGet);
+		$obj404 = $this->prepare();
 		$objPage = $obj404->loadDetails();
 
 		/** @var \PageRegular $objHandler */
@@ -50,19 +45,14 @@ class PageError404 extends \Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param integer $pageId
-	 * @param string  $strDomain
-	 * @param string  $strHost
-	 * @param boolean $blnUnusedGet
-	 *
 	 * @return Response
 	 */
-	public function getResponse($pageId, $strDomain=null, $strHost=null, $blnUnusedGet=false)
+	public function getResponse()
 	{
 		/** @var \PageModel $objPage */
 		global $objPage;
 
-		$obj404 = $this->prepare($pageId, $strDomain, $strHost, $blnUnusedGet);
+		$obj404 = $this->prepare();
 		$objPage = $obj404->loadDetails();
 
 		/** @var \PageRegular $objHandler */
@@ -75,32 +65,12 @@ class PageError404 extends \Frontend
 	/**
 	 * Prepare the output
 	 *
-	 * @param integer $pageId
-	 * @param string  $strDomain
-	 * @param string  $strHost
-	 * @param boolean $blnUnusedGet
-	 *
 	 * @return \PageModel
 	 *
 	 * @internal
 	 */
-	protected function prepare($pageId, $strDomain=null, $strHost=null, $blnUnusedGet=false)
+	protected function prepare()
 	{
-		// Add a log entry
-		// FIXME: logging here doesn't work anymore
-		if ($blnUnusedGet)
-		{
-			$this->log('The request for page ID "' . $pageId . '" contained unused GET parameters: "' . implode('", "', \Input::getUnusedGet()) . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
-		}
-		elseif ($strDomain !== null || $strHost !== null)
-		{
-			$this->log('Page ID "' . $pageId . '" was requested via "' . $strHost . '" but can only be accessed via "' . $strDomain . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
-		}
-		elseif ($pageId != 'favicon.ico' && $pageId != 'robots.txt')
-		{
-			$this->log('No active page for page ID "' . $pageId . '", host "' . \Environment::get('host') . '" and languages "' . implode(', ', \Environment::get('httpAcceptLanguage')) . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
-		}
-
 		// Check the search index (see #3761)
 		\Search::removeEntry(\Environment::get('relativeRequest'));
 

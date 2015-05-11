@@ -139,12 +139,15 @@ class FrontendIndex extends \Frontend
 		if ($objPage === null)
 		{
 			$this->User->authenticate();
+			$this->log('No active page for page ID "' . $pageId . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
+
 			throw new PageNotFoundException('Page not found');
 		}
 
 		// Throw a 500 error if the result is still ambiguous
 		if ($objPage instanceof \Model\Collection && $objPage->count() != 1)
 		{
+			$this->log('More than one page matches page ID "' . $pageId . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
 			throw new \LogicException('More than one page found');
 		}
 
@@ -196,6 +199,8 @@ class FrontendIndex extends \Frontend
 		if (\Config::get('addLanguageToUrl') && \Input::get('language') != $objPage->rootLanguage)
 		{
 			$this->User->authenticate();
+			$this->log('No active page for page ID "' . $pageId . '" and language "' . \Input::get('language') . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
+
 			throw new PageNotFoundException('Page not found');
 		}
 
@@ -206,6 +211,8 @@ class FrontendIndex extends \Frontend
 			if ($objPage->domain != \Environment::get('host'))
 			{
 				$this->User->authenticate();
+				$this->log('Page ID "' . $pageId . '" was requested via "' . \Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
+
 				throw new PageNotFoundException('Page not found');
 			}
 		}
@@ -213,6 +220,7 @@ class FrontendIndex extends \Frontend
 		// Authenticate the user
 		if (!$this->User->authenticate() && $objPage->protected && !BE_USER_LOGGED_IN)
 		{
+			$this->log('Access to page ID "' . $pageId . '" denied (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
 			throw new AccessDeniedException('Access denied');
 		}
 
@@ -223,13 +231,10 @@ class FrontendIndex extends \Frontend
 
 			if (!is_array($arrGroups) || empty($arrGroups) || !count(array_intersect($arrGroups, $this->User->groups)))
 			{
-				$this->log('Page "' . $pageId . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
+				$this->log('Page ID "' . $pageId . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
 				throw new AccessDeniedException('Access denied');
 			}
 		}
-
-		/** @var \PageRegular|\PageError403|\PageError404 $objHandler */
-		$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
 
 		// Backup some globals (see #7659)
 		$arrHead = $GLOBALS['TL_HEAD'];
@@ -242,16 +247,24 @@ class FrontendIndex extends \Frontend
 			// Generate the page
 			switch ($objPage->type)
 			{
-				case 'root':
 				case 'error_404':
-					return $objHandler->getResponse($pageId);
+					/** @var \PageError404 $objHandler */
+					$objHandler = new $GLOBALS['TL_PTY']['error_404']();
+
+					return $objHandler->getResponse();
 					break;
 
 				case 'error_403':
-					return $objHandler->getResponse($pageId, $objRootPage);
+					/** @var \PageError403 $objHandler */
+					$objHandler = new $GLOBALS['TL_PTY']['error_403']();
+
+					return $objHandler->getResponse($objRootPage);
 					break;
 
 				default:
+					/** @var \PageRegular $objHandler */
+					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
+
 					return $objHandler->getResponse($objPage, true);
 					break;
 			}
@@ -269,7 +282,9 @@ class FrontendIndex extends \Frontend
 			/** @var \PageError404 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 
-			return $objHandler->getResponse($pageId, null, null, true);
+			$this->log('The request for page ID "' . $pageId . '" contained unused GET parameters: "' . implode('", "', \Input::getUnusedGet()) . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
+
+			return $objHandler->getResponse();
 		}
 	}
 

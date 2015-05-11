@@ -156,7 +156,7 @@ class PrettyErrorScreenListener
         $pageHandler = new $GLOBALS['TL_PTY'][$type]();
 
         try {
-            return $pageHandler->getResponse(false); // FIXME: the class requires a numeric $pageId
+            return $pageHandler->getResponse();
         } catch (RedirectResponseException $e) {
             return $e->getResponse();
         } catch (\Exception $e) {

@@ -26,15 +26,14 @@ class PageError403 extends \Frontend
 	/**
 	 * Generate an error 403 page
 	 *
-	 * @param integer            $pageId
 	 * @param \PageModel|integer $objRootPage
 	 */
-	public function generate($pageId, $objRootPage=null)
+	public function generate($objRootPage=null)
 	{
 		/** @var \PageModel $objPage */
 		global $objPage;
 
-		$obj403 = $this->prepare($pageId, $objRootPage);
+		$obj403 = $this->prepare($objRootPage);
 		$objPage = $obj403->loadDetails();
 
 		/** @var \PageRegular $objHandler */
@@ -48,17 +47,16 @@ class PageError403 extends \Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param integer            $pageId
 	 * @param \PageModel|integer $objRootPage
 	 *
 	 * @return Response
 	 */
-	public function getResponse($pageId, $objRootPage=null)
+	public function getResponse($objRootPage=null)
 	{
 		/** @var \PageModel $objPage */
 		global $objPage;
 
-		$obj403 = $this->prepare($pageId, $objRootPage);
+		$obj403 = $this->prepare($objRootPage);
 		$objPage = $obj403->loadDetails();
 
 		/** @var \PageRegular $objHandler */
@@ -71,18 +69,14 @@ class PageError403 extends \Frontend
 	/**
 	 * Prepare the output
 	 *
-	 * @param integer            $pageId
 	 * @param \PageModel|integer $objRootPage
 	 *
 	 * @return \PageModel
 	 *
 	 * @internal
 	 */
-	protected function prepare($pageId, $objRootPage=null)
+	protected function prepare($objRootPage=null)
 	{
-		// Add a log entry
-		$this->log('Access to page ID "' . $pageId . '" denied', __METHOD__, TL_ERROR);
-
 		// Use the given root page object if available (thanks to Andreas Schempp)
 		if ($objRootPage === null)
 		{

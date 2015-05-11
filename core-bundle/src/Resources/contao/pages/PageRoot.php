@@ -24,20 +24,20 @@ class PageRoot extends \Frontend
 	/**
 	 * Redirect to the first active regular page
 	 *
-	 * @param integer $pageId
+	 * @param integer $rootPageId
 	 * @param boolean $blnReturn
 	 * @param boolean $blnPreferAlias
 	 *
 	 * @return integer
 	 */
-	public function generate($pageId, $blnReturn=false, $blnPreferAlias=false)
+	public function generate($rootPageId, $blnReturn=false, $blnPreferAlias=false)
 	{
-		$objNextPage = \PageModel::findFirstPublishedByPid($pageId);
+		$objNextPage = \PageModel::findFirstPublishedByPid($rootPageId);
 
 		// No published pages yet
 		if (null === $objNextPage)
 		{
-			$this->log('No active page found under root page "' . $pageId . '")', __METHOD__, TL_ERROR);
+			$this->log('No active page found under root page "' . $rootPageId . '")', __METHOD__, TL_ERROR);
 			throw new NoActivePageFoundException('No active page found under root page.');
 		}
 
