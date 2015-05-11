@@ -13,7 +13,7 @@
       <div class="fields">
         <?= $this->fields ?>
       </div>
-      <div class="submit_container">
+      <div class="widget widget-submit">
         <button type="submit" class="submit"><?= $this->slabel ?></button>
       </div>
     </div>

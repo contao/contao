@@ -282,6 +282,9 @@ argument, just like in `DC_Folder` and in any other callback.
 
  * The classes `odd` and `even` are now correctly assigned to tables.
 
+ * The form submit widget now uses the CSS class `widget widget-submit` instead
+   of `submit_container`.
+
  * The content syndication links of the `mod_article.html5` template now have
    CSS classes and the class "pdf_link" has been replaced with "syndication":
 
