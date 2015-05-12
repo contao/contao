@@ -67,15 +67,7 @@ class Newsletter extends \Backend
 			{
 				$objFiles = \FilesModel::findMultipleByUuids($files);
 
-				if ($objFiles === null)
-				{
-					if (!\Validator::isUuid($files[0]))
-					{
-						$blnAttachmentsFormatError = true;
-						\Message::addError($GLOBALS['TL_LANG']['ERR']['version2format']);
-					}
-				}
-				else
+				if ($objFiles !== null)
 				{
 					while ($objFiles->next())
 					{
