@@ -73,6 +73,8 @@ class Session
 	 */
 	public static function getInstance()
 	{
+		trigger_error('Using Session::getInstance() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+
 		if (static::$objInstance === null)
 		{
 			static::$objInstance = new static();

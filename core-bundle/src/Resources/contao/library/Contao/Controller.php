@@ -1714,6 +1714,8 @@ abstract class Controller extends \System
 	 */
 	public static function getTheme()
 	{
+		trigger_error('Using Controller::getTheme() has been deprecated and will no longer work in Contao 5.0. Use Backend::getTheme() instead.', E_USER_DEPRECATED);
+
 		return \Backend::getTheme();
 	}
 
@@ -1728,6 +1730,8 @@ abstract class Controller extends \System
 	 */
 	public static function getBackendThemes()
 	{
+		trigger_error('Using Controller::getBackendThemes() has been deprecated and will no longer work in Contao 5.0. Use Backend::getThemes() instead.', E_USER_DEPRECATED);
+
 		return \Backend::getThemes();
 	}
 
@@ -1744,6 +1748,8 @@ abstract class Controller extends \System
 	 */
 	public static function getPageDetails($intId)
 	{
+		trigger_error('Using Controller::getPageDetails() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findWithDetails() or PageModel->loadDetails() instead.', E_USER_DEPRECATED);
+
 		if ($intId instanceof \PageModel)
 		{
 			return $intId->loadDetails();
@@ -1811,6 +1817,8 @@ abstract class Controller extends \System
 	 */
 	protected function removeOldFeeds($blnReturn=false)
 	{
+		trigger_error('Using Controller::removeOldFeeds() has been deprecated and will no longer work in Contao 5.0. Use Automator::purgeXmlFiles() instead.', E_USER_DEPRECATED);
+
 		$this->import('Automator');
 		$this->Automator->purgeXmlFiles($blnReturn);
 	}
@@ -1828,6 +1836,8 @@ abstract class Controller extends \System
 	 */
 	protected function classFileExists($strClass)
 	{
+		trigger_error('Using Controller::classFileExists() has been deprecated and will no longer work in Contao 5.0. Use the PHP function class_exists() instead.', E_USER_DEPRECATED);
+
 		return class_exists($strClass);
 	}
 
@@ -1844,6 +1854,8 @@ abstract class Controller extends \System
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
+		trigger_error('Using Controller::restoreBasicEntities() has been deprecated and will no longer work in Contao 5.0. Use String::restoreBasicEntities() instead.', E_USER_DEPRECATED);
+
 		return \String::restoreBasicEntities($strBuffer);
 	}
 
@@ -1863,6 +1875,8 @@ abstract class Controller extends \System
 	 */
 	protected function resizeImage($image, $width, $height, $mode='')
 	{
+		trigger_error('Using Controller::resizeImage() has been deprecated and will no longer work in Contao 5.0. Use Image::resize() instead.', E_USER_DEPRECATED);
+
 		return \Image::resize($image, $width, $height, $mode);
 	}
 
@@ -1884,6 +1898,8 @@ abstract class Controller extends \System
 	 */
 	protected function getImage($image, $width, $height, $mode='', $target=null, $force=false)
 	{
+		trigger_error('Using Controller::getImage() has been deprecated and will no longer work in Contao 5.0. Use Image::get() instead.', E_USER_DEPRECATED);
+
 		return \Image::get($image, $width, $height, $mode, $target, $force);
 	}
 
@@ -1902,6 +1918,8 @@ abstract class Controller extends \System
 	 */
 	public static function generateImage($src, $alt='', $attributes='')
 	{
+		trigger_error('Using Controller::generateImage() has been deprecated and will no longer work in Contao 5.0. Use Image::getHtml() instead.', E_USER_DEPRECATED);
+
 		return \Image::getHtml($src, $alt, $attributes);
 	}
 
@@ -1912,10 +1930,12 @@ abstract class Controller extends \System
 	 * @return boolean
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Specify 'datepicker'=>true in your DCA file instead.
+	 *             Specify "datepicker"=>true in your DCA file instead.
 	 */
 	protected function getDatePickerString()
 	{
+		trigger_error('Using Controller::getDatePickerString() has been deprecated and will no longer work in Contao 5.0. Specify "datepicker"=>true in your DCA file instead.', E_USER_DEPRECATED);
+
 		return true;
 	}
 
@@ -1930,6 +1950,8 @@ abstract class Controller extends \System
 	 */
 	protected function getBackendLanguages()
 	{
+		trigger_error('Using Controller::getBackendLanguages() has been deprecated and will no longer work in Contao 5.0. Use System::getLanguages(true) instead.', E_USER_DEPRECATED);
+
 		return $this->getLanguages(true);
 	}
 
@@ -1947,6 +1969,8 @@ abstract class Controller extends \System
 	 */
 	protected function parseSimpleTokens($strBuffer, $arrData)
 	{
+		trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use String::parseSimpleTokens() instead.', E_USER_DEPRECATED);
+
 		return \String::parseSimpleTokens($strBuffer, $arrData);
 	}
 
@@ -1967,6 +1991,8 @@ abstract class Controller extends \System
 	 */
 	protected function prepareForWidget($arrData, $strName, $varValue=null, $strField='', $strTable='')
 	{
+		trigger_error('Using Controller::prepareForWidget() has been deprecated and will no longer work in Contao 5.0. Use Widget::getAttributesFromDca() instead.', E_USER_DEPRECATED);
+
 		return \Widget::getAttributesFromDca($arrData, $strName, $varValue, $strField, $strTable);
 	}
 
@@ -1989,6 +2015,8 @@ abstract class Controller extends \System
 	 */
 	protected function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
 	{
+		trigger_error('Using Controller::getChildRecords() has been deprecated and will no longer work in Contao 5.0. Use Database::getChildRecords() instead.', E_USER_DEPRECATED);
+
 		return $this->Database->getChildRecords($arrParentIds, $strTable, $blnSorting, $arrReturn, $strWhere);
 	}
 
@@ -2006,6 +2034,8 @@ abstract class Controller extends \System
 	 */
 	protected function getParentRecords($intId, $strTable)
 	{
+		trigger_error('Using Controller::getParentRecords() has been deprecated and will no longer work in Contao 5.0. Use Database::getParentRecords() instead.', E_USER_DEPRECATED);
+
 		return $this->Database->getParentRecords($intId, $strTable);
 	}
 
@@ -2020,6 +2050,8 @@ abstract class Controller extends \System
 	 */
 	protected function printArticleAsPdf($objArticle)
 	{
+		trigger_error('Using Controller::printArticleAsPdf() has been deprecated and will no longer work in Contao 5.0. Use ModuleArticle->generatePdf() instead.', E_USER_DEPRECATED);
+
 		$objArticle = new \ModuleArticle($objArticle);
 		$objArticle->generatePdf();
 	}
@@ -2035,6 +2067,8 @@ abstract class Controller extends \System
 	 */
 	public static function getPageSections()
 	{
+		trigger_error('Using Controller::getPageSections() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		return array('header', 'left', 'right', 'main', 'footer');
 	}
 
@@ -2052,6 +2086,8 @@ abstract class Controller extends \System
 	 */
 	public static function optionSelected($strOption, $varValues)
 	{
+		trigger_error('Using Controller::optionSelected() has been deprecated and will no longer work in Contao 5.0. Use Widget::optionSelected() instead.', E_USER_DEPRECATED);
+
 		return \Widget::optionSelected($strOption, $varValues);
 	}
 
@@ -2069,6 +2105,8 @@ abstract class Controller extends \System
 	 */
 	public static function optionChecked($strOption, $varValues)
 	{
+		trigger_error('Using Controller::optionChecked() has been deprecated and will no longer work in Contao 5.0. Use Widget::optionChecked() instead.', E_USER_DEPRECATED);
+
 		return \Widget::optionChecked($strOption, $varValues);
 	}
 
@@ -2085,6 +2123,8 @@ abstract class Controller extends \System
 	 */
 	public static function findContentElement($strName)
 	{
+		trigger_error('Using Controller::findContentElement() has been deprecated and will no longer work in Contao 5.0. Use ContentElement::findClass() instead.', E_USER_DEPRECATED);
+
 		return \ContentElement::findClass($strName);
 	}
 
@@ -2101,6 +2141,8 @@ abstract class Controller extends \System
 	 */
 	public static function findFrontendModule($strName)
 	{
+		trigger_error('Using Controller::findFrontendModule() has been deprecated and will no longer work in Contao 5.0. Use Module::findClass() instead.', E_USER_DEPRECATED);
+
 		return \Module::findClass($strName);
 	}
 
@@ -2116,6 +2158,8 @@ abstract class Controller extends \System
 	 */
 	protected function createInitialVersion($strTable, $intId)
 	{
+		trigger_error('Using Controller::createInitialVersion() has been deprecated and will no longer work in Contao 5.0. Use Versions->initialize() instead.', E_USER_DEPRECATED);
+
 		$objVersions = new \Versions($strTable, $intId);
 		$objVersions->initialize();
 	}
@@ -2132,6 +2176,8 @@ abstract class Controller extends \System
 	 */
 	protected function createNewVersion($strTable, $intId)
 	{
+		trigger_error('Using Controller::createNewVersion() has been deprecated and will no longer work in Contao 5.0. Use Versions->create() instead.', E_USER_DEPRECATED);
+
 		$objVersions = new \Versions($strTable, $intId);
 		$objVersions->create();
 	}

@@ -42,7 +42,7 @@ class RequestToken
 	 */
 	public static function initialize()
 	{
-		// Backwards compatibility
+		trigger_error('Using RequestToken::initialize() has been deprecated and will no longer work in Contao 5.0. Use the Symfony CSRF service via the container instead.', E_USER_DEPRECATED);
 	}
 
 

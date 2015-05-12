@@ -264,6 +264,8 @@ abstract class Template extends \Controller
 	 */
 	public function output()
 	{
+		trigger_error('Using Template::output() has been deprecated and will no longer work in Contao 5.0. Throw a ResponseException with Template::getResponse() instead.', E_USER_DEPRECATED);
+
 		$this->compile();
 
 		header('Vary: User-Agent', false);
@@ -340,6 +342,7 @@ abstract class Template extends \Controller
 	 */
 	protected function getDebugBar()
 	{
+		trigger_error('Using Template::getDebugBar() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 	}
 
 
@@ -490,6 +493,8 @@ abstract class Template extends \Controller
 	 */
 	public function flushAllData()
 	{
+		trigger_error('Using Template::flushAllData() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		if (function_exists('fastcgi_finish_request'))
 		{
 			fastcgi_finish_request();

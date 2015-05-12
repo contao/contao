@@ -55,6 +55,8 @@ class ModuleLoader
 	 */
 	public static function getActive()
 	{
+		trigger_error('Using ModuleLoader::getActive() has been deprecated and will no longer work in Contao 5.0. Use the container parameter "kernel.bundles" instead.', E_USER_DEPRECATED);
+
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
@@ -79,6 +81,8 @@ class ModuleLoader
 	 */
 	public static function getDisabled()
 	{
+		trigger_error('Using ModuleLoader::getDisabled() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		return array();
 	}
 }

@@ -712,10 +712,12 @@ class Database
 	 * @return \Database\Result|object The Database\Result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use \Database::execute() instead.
+	 *             Use Database::execute() instead.
 	 */
 	public function executeUncached($strQuery)
 	{
+		trigger_error('Using Database::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Database::execute() instead.', E_USER_DEPRECATED);
+
 		return $this->execute($strQuery);
 	}
 
@@ -728,10 +730,12 @@ class Database
 	 * @return \Database\Result|object The Database\Result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use \Database::execute() instead.
+	 *             Use Database::execute() instead.
 	 */
 	public function executeCached($strQuery)
 	{
+		trigger_error('Using Database::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Database::execute() instead.', E_USER_DEPRECATED);
+
 		return $this->execute($strQuery);
 	}
 }

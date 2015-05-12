@@ -845,6 +845,8 @@ class Input
 	 */
 	public static function getInstance()
 	{
+		trigger_error('Using Input::getInstance() has been deprecated and will no longer work in Contao 5.0. The Input class is now static.', E_USER_DEPRECATED);
+
 		if (static::$objInstance === null)
 		{
 			static::$objInstance = new static();

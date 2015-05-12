@@ -200,6 +200,8 @@ class Folder extends \System
 	 */
 	public function clear()
 	{
+		trigger_error('Using Folder->clear() has been deprecated and will no longer work in Contao 5.0. Use Folder->purge() instead.', E_USER_DEPRECATED);
+
 		$this->purge();
 	}
 

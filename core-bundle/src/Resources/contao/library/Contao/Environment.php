@@ -659,6 +659,8 @@ class Environment
 	 */
 	public static function getInstance()
 	{
+		trigger_error('Using Environment::getInstance() has been deprecated and will no longer work in Contao 5.0. The Environment class is now static.', E_USER_DEPRECATED);
+
 		if (static::$objInstance === null)
 		{
 			static::$objInstance = new static();

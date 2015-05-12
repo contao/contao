@@ -728,5 +728,7 @@ if (!USE_MBSTRING)
  */
 function nl2br_callback($matches)
 {
+	trigger_error('Using nl2br_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 	return str_replace("\n", '<br>', $matches[0]);
 }

@@ -322,10 +322,12 @@ class Config
 	 * @return array An array of active modules
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use ModuleLoader::getActive() instead.
+	 *             Use the container parameter "kernel.bundles" instead.
 	 */
 	public function getActiveModules()
 	{
+		trigger_error('Using Config::getActiveModules() has been deprecated and will no longer work in Contao 5.0. Use the container parameter "kernel.bundles" instead.', E_USER_DEPRECATED);
+
 		return \ModuleLoader::getActive();
 	}
 
