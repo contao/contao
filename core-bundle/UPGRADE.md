@@ -11,9 +11,6 @@ generate an inline form, add a text field and a submit button and assign the
 CSS class `inline-form` to the form element (requires the `form.css` style
 sheet to be enabled in the page layout).
 
-Note that you can no longer call `$this->addSubmit()` in your custom widget
-classes, either.
-
 
 ### Space before/after
 

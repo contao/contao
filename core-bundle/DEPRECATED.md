@@ -1,6 +1,12 @@
 Deprecated features
 ===================
 
+### Widget::addSubmit()
+
+The `Widget::addSubmit()` method has been deprecated in Contao 4.0 and will be
+removed in Contao 5.0. It already does not add a submit button anymore.
+
+
 ### Content elements
 
 For reasons of backwards compatibility, it is currently not required to set the
