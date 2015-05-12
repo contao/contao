@@ -29,9 +29,9 @@ class AttributeBagAdapter implements AttributeBagInterface, \ArrayAccess
     /**
      * Constructor.
      *
-     * @param AttributeBagInterface $targetBag The target bag
+     * @param AttributeBag $targetBag The target bag
      */
-    public function __construct(AttributeBagInterface $targetBag)
+    public function __construct(AttributeBag $targetBag)
     {
         $this->targetBag = $targetBag;
     }
@@ -93,7 +93,9 @@ class AttributeBagAdapter implements AttributeBagInterface, \ArrayAccess
     }
 
     /**
-     * {@inheritdoc}
+     * Sets the bag's name.
+     *
+     * @param string $name The name
      */
     public function setName($name)
     {

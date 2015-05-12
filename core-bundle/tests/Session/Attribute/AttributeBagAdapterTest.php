@@ -33,6 +33,51 @@ class AttributeBagAdapterTest extends TestCase
     }
 
     /**
+     * Tests the adapted methods.
+     */
+    public function testAdaptedMethods()
+    {
+        $attributeBag = new AttributeBag('foobar_storageKey');
+        $attributeBag->set('foo', 'bar');
+
+        $adapter = new AttributeBagAdapter($attributeBag);
+
+        $this->assertTrue($adapter->has('foo'));
+        $this->assertEquals('bar', $adapter->get('foo'));
+        $this->assertEquals('bar', $adapter->get('null', 'bar'));
+
+        $adapter->set('foo', 'foobar');
+
+        $this->assertEquals('foobar', $adapter->get('foo'));
+        $this->assertEquals(['foo' => 'foobar'], $adapter->all());
+
+        $adapter->replace(['foo' => 'bar', 'bar' => 'foo']);
+
+        $this->assertEquals(['foo' => 'bar', 'bar' => 'foo'], $adapter->all());
+
+        $adapter->remove('foo');
+
+        $this->assertEquals(['bar' => 'foo'], $adapter->all());
+
+        $adapter->clear();
+
+        $this->assertEquals([], $adapter->all());
+    }
+
+    /**
+     * Tests the alias methods.
+     */
+    public function testAliasMethods()
+    {
+        $attributeBag = new AttributeBag('foobar_storageKey');
+
+        $adapter = new AttributeBagAdapter($attributeBag);
+        $adapter->setData(['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $adapter->getData());
+    }
+
+    /**
      * Tests the offsetSet() method.
      */
     public function testOffsetSet()
