@@ -3,14 +3,14 @@
 <?php $this->block('content'); ?>
 
   <?php if ($this->useImage): ?>
-    <figure class="image_container">
+    <figure class="image_container" itemscope itemtype="http://schema.org/ImageObject">
 
       <?= $this->embed_pre ?>
-      <a href="<?= $this->href ?>" class="hyperlink_img" title="<?= $this->linkTitle ?>"<?= $this->attribute ?><?= $this->target ?>><?php $this->insert('picture_default', $this->picture); ?></a>
+      <a href="<?= $this->href ?>"<?php if ($this->linkTitle): ?> title="<?= $this->linkTitle ?>"<?php endif; ?> class="hyperlink_img"<?= $this->attribute ?><?= $this->target ?> itemprop="contentUrl"><?php $this->insert('picture_default', $this->picture); ?></a>
       <?= $this->embed_post ?>
 
       <?php if ($this->caption): ?>
-        <figcaption class="caption"><?= $this->caption ?></figcaption>
+        <figcaption class="caption" itemprop="caption"><?= $this->caption ?></figcaption>
       <?php endif; ?>
 
     </figure>
