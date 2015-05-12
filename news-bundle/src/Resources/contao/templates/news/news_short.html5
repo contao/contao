@@ -7,7 +7,7 @@
 
   <h2 itemprop="name"><?= $this->linkHeadline ?></h2>
 
-  <div class="teaser" itemprop="description">
+  <div class="ce_text block" itemprop="description">
     <?= $this->teaser ?>
   </div>
 

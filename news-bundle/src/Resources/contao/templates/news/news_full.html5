@@ -15,7 +15,17 @@
     <?= $this->text ?>
   <?php else: ?>
     <div class="ce_text block">
-      <?= $this->teaser ?>
+      <?php if (!$this->addBefore): ?>
+        <?= $this->teaser ?>
+      <?php endif; ?>
+
+      <?php  if ($this->addImage): ?>
+        <?php $this->insert('image', $this->arrData); ?>
+      <?php endif; ?>
+
+      <?php if ($this->addBefore): ?>
+        <?= $this->teaser ?>
+      <?php endif; ?>
     </div>
   <?php endif; ?>
 
