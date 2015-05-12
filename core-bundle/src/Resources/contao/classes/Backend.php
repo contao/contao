@@ -299,15 +299,6 @@ abstract class Backend extends \Controller
 			}
 		}
 
-		$arrInactiveModules = \ModuleLoader::getDisabled();
-
-		// Check whether the module is active
-		if (is_array($arrInactiveModules) && in_array($module, $arrInactiveModules))
-		{
-			$this->log('Attempt to access the inactive back end module "' . $module . '"', __METHOD__, TL_ACCESS);
-			$this->redirect('contao/main.php?act=error');
-		}
-
 		$this->import('BackendUser', 'User');
 
 		// Dynamically add the "personal data" module (see #4193)

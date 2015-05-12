@@ -472,9 +472,6 @@ class BackendUser extends \User
 			\Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', \Environment::get('request')));
 		}
 
-		$arrInactiveModules = \ModuleLoader::getDisabled();
-		$blnCheckInactiveModules = is_array($arrInactiveModules);
-
 		foreach ($GLOBALS['BE_MOD'] as $strGroupName=>$arrGroupModules)
 		{
 			if (!empty($arrGroupModules) && ($strGroupName == 'system' || $this->hasAccess(array_keys($arrGroupModules), 'modules')))
@@ -495,12 +492,6 @@ class BackendUser extends \User
 				{
 					foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
 					{
-						// Exclude inactive modules
-						if ($blnCheckInactiveModules && in_array($strModuleName, $arrInactiveModules))
-						{
-							continue;
-						}
-
 						// Check access
 						if ($strModuleName == 'undo' || $this->hasAccess($strModuleName, 'modules'))
 						{
