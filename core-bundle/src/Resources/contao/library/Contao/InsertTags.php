@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * A static class to replace insert tags
@@ -677,12 +679,17 @@ class InsertTags extends \Controller
 				case 'last_update':
 					$strQuery = "SELECT MAX(tstamp) AS tc";
 
-					if (in_array('news', \ModuleLoader::getActive()))
+					/** @var KernelInterface $kernel */
+					global $kernel;
+
+					$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+
+					if (isset($bundles['ContaoNewsBundle']))
 					{
 						$strQuery .= ", (SELECT MAX(tstamp) FROM tl_news) AS tn";
 					}
 
-					if (in_array('calendar', \ModuleLoader::getActive()))
+					if (isset($bundles['ContaoCalendarBundle']))
 					{
 						$strQuery .= ", (SELECT MAX(tstamp) FROM tl_calendar_events) AS te";
 					}

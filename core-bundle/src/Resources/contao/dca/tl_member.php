@@ -719,8 +719,13 @@ class tl_member extends Backend
 						   ->execute($intId);
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+
 		// HOOK: update newsletter subscriptions
-		if (in_array('newsletter', ModuleLoader::getActive()))
+		if (isset($bundles['ContaoNewsletterBundle']))
 		{
 			$objUser = $this->Database->prepare("SELECT email FROM tl_member WHERE id=?")
 									  ->limit(1)

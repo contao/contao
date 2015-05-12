@@ -580,7 +580,12 @@ class tl_layout extends Backend
 	 */
 	public function getNewsfeeds()
 	{
-		if (!in_array('news', ModuleLoader::getActive()))
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+
+		if (!isset($bundles['ContaoNewsBundle']))
 		{
 			return array();
 		}
@@ -610,7 +615,12 @@ class tl_layout extends Backend
 	 */
 	public function getCalendarfeeds()
 	{
-		if (!in_array('calendar', ModuleLoader::getActive()))
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+
+		if (!isset($bundles['ContaoCalendarBundle']))
 		{
 			return array();
 		}

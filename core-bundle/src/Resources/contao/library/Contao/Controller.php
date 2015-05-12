@@ -228,12 +228,6 @@ abstract class Controller extends \System
 				}
 			}
 
-			// HOOK: trigger the article_raster_designer extension
-			if (in_array('article_raster_designer', \ModuleLoader::getActive()))
-			{
-				return \RasterDesigner::load($objPage->id, $strColumn);
-			}
-
 			// Show all articles (no else block here, see #4740)
 			$objArticles = \ArticleModel::findPublishedByPidAndColumn($objPage->id, $strColumn);
 
