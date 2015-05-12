@@ -81,8 +81,6 @@ class PrettyErrorScreenListener
      * Map an exception to an error screen.
      *
      * @param GetResponseForExceptionEvent $event The event object
-     *
-     * @todo Log the exception?
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {

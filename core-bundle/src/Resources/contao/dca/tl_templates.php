@@ -235,7 +235,6 @@ class tl_templates extends Backend
 		foreach ($files as $file)
 		{
 			$strRelpath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $file->getPathname());
-			// FIXME: this will not work with resources in src/AppBundle
 			$strModule = preg_replace('@^(vendor|system/modules)/([^/]+(/.*-bundle)?)/.*$@', '$2', $strRelpath);
 			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
