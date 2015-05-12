@@ -10,7 +10,7 @@ The field "space before/after" has been removed. Use a CSS class instead and
 define the spacing in your style sheet.
 
 
-### CSS classes of incuded elements
+### CSS classes of included elements
 
 If an element is included in another element, the CSS classes are now merged
 instead of overwritten, e.g. if content element A has the CSS class `elemA` and
