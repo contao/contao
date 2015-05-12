@@ -4,6 +4,20 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Space before/after
+
+The field "space before/after" has been removed. Use a CSS class instead and
+define the spacing in your style sheet.
+
+
+### CSS classes of included elements
+
+If an element is included in another element, the CSS classes are now merged
+instead of overwritten, e.g. if content element A has the CSS class `elemA` and
+there is an alias content element with the CSS class `elemB` referring to
+element A, both CSS classes will be applied (`class="elemA elemB"`).
+
+
 ### Form option "tableless"
 
 The form option "tableless" has been removed, because all forms are now
@@ -278,7 +292,7 @@ argument, just like in `DC_Folder` and in any other callback.
 
  * The book navigation module now uses the CSS class `previous` instead of
    `prev` for the link to the previous page.
- 
+
  * The pagination menu now uses the CSS class `active` instead of `current` for
    the active menu item.
 

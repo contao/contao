@@ -457,12 +457,6 @@ abstract class Controller extends \System
 			return '';
 		}
 
-		// Remove the spacing in the back end preview
-		if (TL_MODE == 'BE')
-		{
-			$objRow->space = null;
-		}
-
 		$strClass = \ContentElement::findClass($objRow->type);
 
 		// Return if the class does not exist
