@@ -272,8 +272,13 @@ class tl_news_archive extends Backend
 	 */
 	public function checkPermission()
 	{
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+
 		// HOOK: comments extension required
-		if (!in_array('comments', ModuleLoader::getActive()))
+		if (!isset($bundles['ContaoCommentsBundle']))
 		{
 			unset($GLOBALS['TL_DCA']['tl_news_archive']['fields']['allowComments']);
 		}

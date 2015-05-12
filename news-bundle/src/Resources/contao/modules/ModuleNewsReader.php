@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -120,8 +121,13 @@ class ModuleNewsReader extends \ModuleNews
 			$objPage->description = $this->prepareMetaDescription($objArticle->teaser);
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+
 		// HOOK: comments extension required
-		if ($objArticle->noComments || !in_array('comments', \ModuleLoader::getActive()))
+		if ($objArticle->noComments || !isset($bundles['ContaoCommentsBundle']))
 		{
 			$this->Template->allowComments = false;
 
