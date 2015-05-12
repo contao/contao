@@ -19,7 +19,7 @@
         <?= $this->teaser ?>
       <?php endif; ?>
 
-      <?php  if ($this->addImage): ?>
+      <?php if ($this->addImage): ?>
         <?php $this->insert('image', $this->arrData); ?>
       <?php endif; ?>
 
