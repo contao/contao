@@ -17,8 +17,18 @@
     <p class="time"><?= $this->time . $this->span ?></p>
   <?php endif; ?>
 
-  <div class="teaser" itemprop="description">
-    <?= $this->teaser ?>
+  <div class="ce_text block" itemprop="description">
+    <?php if (!$this->addBefore): ?>
+      <?= $this->teaser ?>
+    <?php endif; ?>
+
+    <?php  if ($this->addImage): ?>
+      <?php $this->insert('image', $this->arrData); ?>
+    <?php endif; ?>
+
+    <?php if ($this->addBefore): ?>
+      <?= $this->teaser ?>
+    <?php endif; ?>
   </div>
 
   <?php if ($this->details): ?>
