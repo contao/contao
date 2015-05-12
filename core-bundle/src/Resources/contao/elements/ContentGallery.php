@@ -67,11 +67,6 @@ class ContentGallery extends \ContentElement
 
 		if ($this->objFiles === null)
 		{
-			if (!\Validator::isUuid($this->multiSRC[0]))
-			{
-				return '<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>';
-			}
-
 			return '';
 		}
 

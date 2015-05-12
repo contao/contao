@@ -40,17 +40,7 @@ class ContentImage extends \ContentElement
 
 		$objFile = \FilesModel::findByUuid($this->singleSRC);
 
-		if ($objFile === null)
-		{
-			if (!\Validator::isUuid($this->singleSRC))
-			{
-				return '<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>';
-			}
-
-			return '';
-		}
-
-		if (!is_file(TL_ROOT . '/' . $objFile->path))
+		if ($objFile === null || !is_file(TL_ROOT . '/' . $objFile->path))
 		{
 			return '';
 		}

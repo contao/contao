@@ -52,14 +52,7 @@ class ContentHyperlink extends \ContentElement
 		{
 			$objModel = \FilesModel::findByUuid($this->singleSRC);
 
-			if ($objModel === null)
-			{
-				if (!\Validator::isUuid($this->singleSRC))
-				{
-					$this->Template->text = '<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>';
-				}
-			}
-			elseif (is_file(TL_ROOT . '/' . $objModel->path))
+			if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
 			{
 				$this->singleSRC = $objModel->path;
 				$this->addImageToTemplate($this->Template, $this->arrData);

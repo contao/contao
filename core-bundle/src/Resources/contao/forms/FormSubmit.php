@@ -106,14 +106,7 @@ class FormSubmit extends \Widget
 		{
 			$objModel = \FilesModel::findByUuid($this->singleSRC);
 
-			if ($objModel === null)
-			{
-				if (!\Validator::isUuid($this->singleSRC))
-				{
-					return '<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>';
-				}
-			}
-			elseif (is_file(TL_ROOT . '/' . $objModel->path))
+			if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
 			{
 				$this->src = $objModel->path;
 			}

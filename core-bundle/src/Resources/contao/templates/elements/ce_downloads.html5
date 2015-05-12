@@ -2,8 +2,6 @@
 
 <?php $this->block('content'); ?>
 
-  <?= $this->v2warning ?>
-
   <ul>
     <?php foreach ($this->files as $file): ?>
       <li class="download-element ext-<?= $file['extension'] ?>">

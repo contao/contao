@@ -1558,17 +1558,6 @@ abstract class Controller extends \System
 
 		if ($objFiles === null)
 		{
-			if (!\Validator::isUuid($arrEnclosures[0]))
-			{
-				foreach (array('details', 'answer', 'text') as $key)
-				{
-					if (isset($objTemplate->$key))
-					{
-						$objTemplate->$key = '<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>';
-					}
-				}
-			}
-
 			return;
 		}
 
