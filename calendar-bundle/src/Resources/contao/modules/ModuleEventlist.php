@@ -299,14 +299,7 @@ class ModuleEventlist extends \Events
 			{
 				$objModel = \FilesModel::findByUuid($event['singleSRC']);
 
-				if ($objModel === null)
-				{
-					if (!\Validator::isUuid($event['singleSRC']))
-					{
-						$objTemplate->text = '<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>';
-					}
-				}
-				elseif (is_file(TL_ROOT . '/' . $objModel->path))
+				if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
 				{
 					if ($imgSize)
 					{

@@ -209,14 +209,7 @@ class ModuleEventReader extends \Events
 		{
 			$objModel = \FilesModel::findByUuid($objEvent->singleSRC);
 
-			if ($objModel === null)
-			{
-				if (!\Validator::isUuid($objEvent->singleSRC))
-				{
-					$objTemplate->text = '<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>';
-				}
-			}
-			elseif (is_file(TL_ROOT . '/' . $objModel->path))
+			if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
 			{
 				// Do not override the field now that we have a model registry (see #6303)
 				$arrEvent = $objEvent->row();
