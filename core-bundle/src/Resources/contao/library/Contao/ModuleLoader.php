@@ -26,7 +26,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0.
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use the container parameter "kernel.bundles" instead.
  */
 class ModuleLoader
 {

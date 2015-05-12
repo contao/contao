@@ -29,8 +29,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0. Use
- *             the Symfony Session via the container instead.
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use the Symfony session via the container instead.
  */
 class Session
 {

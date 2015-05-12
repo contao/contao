@@ -1709,7 +1709,8 @@ abstract class Controller extends \System
 	 *
 	 * @return string The name of the theme
 	 *
-	 * @deprecated Use Backend::getTheme() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Backend::getTheme() instead.
 	 */
 	public static function getTheme()
 	{
@@ -1722,7 +1723,8 @@ abstract class Controller extends \System
 	 *
 	 * @return array An array of available back end themes
 	 *
-	 * @deprecated Use Backend::getThemes() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Backend::getThemes() instead.
 	 */
 	public static function getBackendThemes()
 	{
@@ -1737,7 +1739,8 @@ abstract class Controller extends \System
 	 *
 	 * @return \PageModel The page model or null
 	 *
-	 * @deprecated Use PageModel::findWithDetails() or PageModel->loadDetails() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use PageModel::findWithDetails() or PageModel->loadDetails() instead.
 	 */
 	public static function getPageDetails($intId)
 	{
@@ -1803,7 +1806,8 @@ abstract class Controller extends \System
 	 *
 	 * @return array An array of old XML files
 	 *
-	 * @deprecated Use Automator::purgeXmlFiles() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Automator::purgeXmlFiles() instead.
 	 */
 	protected function removeOldFeeds($blnReturn=false)
 	{
@@ -1819,7 +1823,8 @@ abstract class Controller extends \System
 	 *
 	 * @return boolean True if the class exists
 	 *
-	 * @deprecated Use the PHP function class_exists() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the PHP function class_exists() instead.
 	 */
 	protected function classFileExists($strClass)
 	{
@@ -1834,7 +1839,8 @@ abstract class Controller extends \System
 	 *
 	 * @return string The string with the original entities
 	 *
-	 * @deprecated Use String::restoreBasicEntities() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use String::restoreBasicEntities() instead.
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
@@ -1852,7 +1858,8 @@ abstract class Controller extends \System
 	 *
 	 * @return boolean True if the image has been resized correctly
 	 *
-	 * @deprecated Use Image::resize() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Image::resize() instead.
 	 */
 	protected function resizeImage($image, $width, $height, $mode='')
 	{
@@ -1872,7 +1879,8 @@ abstract class Controller extends \System
 	 *
 	 * @return string|null The image path or null
 	 *
-	 * @deprecated Use Image::get() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Image::get() instead.
 	 */
 	protected function getImage($image, $width, $height, $mode='', $target=null, $force=false)
 	{
@@ -1889,7 +1897,8 @@ abstract class Controller extends \System
 	 *
 	 * @return string The image HTML tag
 	 *
-	 * @deprecated Use Image::getHtml() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Image::getHtml() instead.
 	 */
 	public static function generateImage($src, $alt='', $attributes='')
 	{
@@ -1902,7 +1911,8 @@ abstract class Controller extends \System
 	 *
 	 * @return boolean
 	 *
-	 * @deprecated Specify 'datepicker'=>true in your DCA file instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Specify 'datepicker'=>true in your DCA file instead.
 	 */
 	protected function getDatePickerString()
 	{
@@ -1915,7 +1925,8 @@ abstract class Controller extends \System
 	 *
 	 * @return array An array of available back end languages
 	 *
-	 * @deprecated Use System::getLanguages(true) instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use System::getLanguages(true) instead.
 	 */
 	protected function getBackendLanguages()
 	{
@@ -1931,7 +1942,8 @@ abstract class Controller extends \System
 	 *
 	 * @return string The text with the replaced tokens
 	 *
-	 * @deprecated Use String::parseSimpleTokens() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use String::parseSimpleTokens() instead.
 	 */
 	protected function parseSimpleTokens($strBuffer, $arrData)
 	{
@@ -1950,7 +1962,8 @@ abstract class Controller extends \System
 	 *
 	 * @return array An array that can be passed to a widget
 	 *
-	 * @deprecated Use Widget::getAttributesFromDca() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Widget::getAttributesFromDca() instead.
 	 */
 	protected function prepareForWidget($arrData, $strName, $varValue=null, $strField='', $strTable='')
 	{
@@ -1971,7 +1984,8 @@ abstract class Controller extends \System
 	 *
 	 * @return array An array of child record IDs
 	 *
-	 * @deprecated Use Database::getChildRecords() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Database::getChildRecords() instead.
 	 */
 	protected function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
 	{
@@ -1987,7 +2001,8 @@ abstract class Controller extends \System
 	 *
 	 * @return array An array of parent record IDs
 	 *
-	 * @deprecated Use Database::getParentRecords() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Database::getParentRecords() instead.
 	 */
 	protected function getParentRecords($intId, $strTable)
 	{
@@ -2000,7 +2015,8 @@ abstract class Controller extends \System
 	 *
 	 * @param \ModuleModel $objArticle An article object
 	 *
-	 * @deprecated Use ModuleArticle->generatePdf() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use ModuleArticle->generatePdf() instead.
 	 */
 	protected function printArticleAsPdf($objArticle)
 	{
@@ -2014,7 +2030,8 @@ abstract class Controller extends \System
 	 *
 	 * @return array An array of active page sections
 	 *
-	 * @deprecated See #4693
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             See https://github.com/contao/core/issues/4693.
 	 */
 	public static function getPageSections()
 	{
@@ -2030,7 +2047,8 @@ abstract class Controller extends \System
 	 *
 	 * @return string The attribute or an empty string
 	 *
-	 * @deprecated Use Widget::optionSelected() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Widget::optionSelected() instead.
 	 */
 	public static function optionSelected($strOption, $varValues)
 	{
@@ -2046,7 +2064,8 @@ abstract class Controller extends \System
 	 *
 	 * @return string The attribute or an empty string
 	 *
-	 * @deprecated Use Widget::optionChecked() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Widget::optionChecked() instead.
 	 */
 	public static function optionChecked($strOption, $varValues)
 	{
@@ -2061,7 +2080,8 @@ abstract class Controller extends \System
 	 *
 	 * @return string The class name
 	 *
-	 * @deprecated Use ContentElement::findClass() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use ContentElement::findClass() instead.
 	 */
 	public static function findContentElement($strName)
 	{
@@ -2076,7 +2096,8 @@ abstract class Controller extends \System
 	 *
 	 * @return string The class name
 	 *
-	 * @deprecated Use Module::findClass() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Module::findClass() instead.
 	 */
 	public static function findFrontendModule($strName)
 	{
@@ -2090,7 +2111,8 @@ abstract class Controller extends \System
 	 * @param string  $strTable The table name
 	 * @param integer $intId    The ID of the element to be versioned
 	 *
-	 * @deprecated Use Versions->initialize() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Versions->initialize() instead.
 	 */
 	protected function createInitialVersion($strTable, $intId)
 	{
@@ -2105,7 +2127,8 @@ abstract class Controller extends \System
 	 * @param string  $strTable The table name
 	 * @param integer $intId    The ID of the element to be versioned
 	 *
-	 * @deprecated Use Versions->create() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Versions->create() instead.
 	 */
 	protected function createNewVersion($strTable, $intId)
 	{

@@ -687,7 +687,8 @@ class String
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 *
-	 * @deprecated String is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The String class is now static.
 	 */
 	protected function __construct() {}
 
@@ -695,7 +696,8 @@ class String
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
-	 * @deprecated String is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The String class is now static.
 	 */
 	final public function __clone() {}
 
@@ -705,7 +707,8 @@ class String
 	 *
 	 * @return \String The object instance
 	 *
-	 * @deprecated String is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The String class is now static.
 	 */
 	public static function getInstance()
 	{

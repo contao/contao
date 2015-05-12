@@ -817,7 +817,8 @@ class Input
 	/**
 	 * Clean the keys of the request arrays
 	 *
-	 * @deprecated Input is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Input class is now static.
 	 */
 	protected function __construct()
 	{
@@ -828,7 +829,8 @@ class Input
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
-	 * @deprecated Input is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Input class is now static.
 	 */
 	final public function __clone() {}
 
@@ -838,7 +840,8 @@ class Input
 	 *
 	 * @return \Input The object instance
 	 *
-	 * @deprecated Input is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Input class is now static.
 	 */
 	public static function getInstance()
 	{

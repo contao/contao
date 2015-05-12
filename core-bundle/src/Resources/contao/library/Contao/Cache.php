@@ -99,7 +99,8 @@ class Cache
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 *
-	 * @deprecated Cache is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Cache class is now static.
 	 */
 	protected function __construct() {}
 
@@ -107,7 +108,8 @@ class Cache
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
-	 * @deprecated Cache is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Cache class is now static.
 	 */
 	final public function __clone() {}
 
@@ -119,7 +121,8 @@ class Cache
 	 *
 	 * @return boolean True if the key is set
 	 *
-	 * @deprecated Use Cache::has() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Cache::has() instead.
 	 */
 	public function __isset($strKey)
 	{
@@ -134,7 +137,8 @@ class Cache
 	 *
 	 * @return mixed|null The cached data
 	 *
-	 * @deprecated Use Cache::get() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Cache::get() instead.
 	 */
 	public function __get($strKey)
 	{
@@ -153,7 +157,8 @@ class Cache
 	 * @param string $strKey   The cache key
 	 * @param mixed  $varValue The data to be stored
 	 *
-	 * @deprecated Use Cache::set() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Cache::set() instead.
 	 */
 	public function __set($strKey, $varValue)
 	{
@@ -166,7 +171,8 @@ class Cache
 	 *
 	 * @param string $strKey The cache key
 	 *
-	 * @deprecated Use Cache::remove() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Cache::remove() instead.
 	 */
 	public function __unset($strKey)
 	{
@@ -179,7 +185,8 @@ class Cache
 	 *
 	 * @return \Cache The object instance
 	 *
-	 * @deprecated Cache is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Cache class is now static.
 	 */
 	public static function getInstance()
 	{

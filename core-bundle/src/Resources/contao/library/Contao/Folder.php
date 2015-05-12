@@ -195,7 +195,8 @@ class Folder extends \System
 	/**
 	 * Purge the folder
 	 *
-	 * @deprecated Use $this->purge() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use $this->purge() instead.
 	 */
 	public function clear()
 	{

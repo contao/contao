@@ -31,8 +31,8 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0. Use
- *             the Symfony CSRF service via the container instead.
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use the Symfony CSRF service via the container instead.
  */
 class RequestToken
 {

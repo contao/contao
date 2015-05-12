@@ -318,7 +318,8 @@ class FrontendTemplate extends \Template
 	/**
 	 * Add the template output to the search index
 	 *
-	 * @deprecated Now uses the kernel.terminate event
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the kernel.terminate event instead.
 	 */
 	protected function addToSearchIndex()
 	{
@@ -332,7 +333,8 @@ class FrontendTemplate extends \Template
 	 *
 	 * @return string The section markup
 	 *
-	 * @deprecated Use FrontendTemplate::section() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use FrontendTemplate::section() instead.
 	 */
 	public function getCustomSection($strKey)
 	{
@@ -347,7 +349,8 @@ class FrontendTemplate extends \Template
 	 *
 	 * @return string The section markup
 	 *
-	 * @deprecated Use FrontendTemplate::sections() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use FrontendTemplate::sections() instead.
 	 */
 	public function getCustomSections($strKey=null)
 	{

@@ -259,7 +259,8 @@ abstract class Template extends \Controller
 	/**
 	 * Parse the template file and print it to the screen
 	 *
-	 * @deprecated Throw a ResponseException with Template::getResponse() instead.
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Throw a ResponseException with Template::getResponse() instead.
 	 */
 	public function output()
 	{
@@ -335,7 +336,7 @@ abstract class Template extends \Controller
 	 *
 	 * @return string The debug bar markup
 	 *
-	 * @deprecated Deprecated since version 4.0, to be removed in version 5.0
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 */
 	protected function getDebugBar()
 	{
@@ -485,7 +486,7 @@ abstract class Template extends \Controller
 	/**
 	 * Flush the output buffers
 	 *
-	 * @deprecated Deprecated since version 4.0, to be removed in version 5.0
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 */
 	public function flushAllData()
 	{

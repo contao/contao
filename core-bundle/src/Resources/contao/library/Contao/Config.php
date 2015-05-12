@@ -321,7 +321,8 @@ class Config
 	 *
 	 * @return array An array of active modules
 	 *
-	 * @deprecated Use ModuleLoader::getActive() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use ModuleLoader::getActive() instead.
 	 */
 	public function getActiveModules()
 	{

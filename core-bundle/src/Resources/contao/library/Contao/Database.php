@@ -711,7 +711,8 @@ class Database
 	 *
 	 * @return \Database\Result|object The Database\Result object
 	 *
-	 * @deprecated Use \Database::execute() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use \Database::execute() instead.
 	 */
 	public function executeUncached($strQuery)
 	{
@@ -726,7 +727,8 @@ class Database
 	 *
 	 * @return \Database\Result|object The Database\Result object
 	 *
-	 * @deprecated Use \Database::execute() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use \Database::execute() instead.
 	 */
 	public function executeCached($strQuery)
 	{

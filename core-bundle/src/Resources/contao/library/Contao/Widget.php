@@ -1489,7 +1489,7 @@ abstract class Widget extends \Controller
 	 *
 	 * @return string The submit button markup
 	 *
-	 * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 */
 	protected function addSubmit()
 	{

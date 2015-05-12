@@ -369,7 +369,8 @@ class Statement
 	 *
 	 * @return \Database\Result The result object
 	 *
-	 * @deprecated Use Database\Statement::execute() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Database\Statement::execute() instead.
 	 */
 	public function executeUncached()
 	{
@@ -382,7 +383,8 @@ class Statement
 	 *
 	 * @return \Database\Result The result object
 	 *
-	 * @deprecated Use Database\Statement::execute() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Database\Statement::execute() instead.
 	 */
 	public function executeCached()
 	{

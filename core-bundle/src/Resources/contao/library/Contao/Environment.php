@@ -603,7 +603,8 @@ class Environment
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 *
-	 * @deprecated Environment is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Environment class is now static.
 	 */
 	protected function __construct() {}
 
@@ -611,7 +612,8 @@ class Environment
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
-	 * @deprecated Environment is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Environment class is now static.
 	 */
 	final public function __clone() {}
 
@@ -623,7 +625,8 @@ class Environment
 	 *
 	 * @return string The variable value
 	 *
-	 * @deprecated Use Environment::get() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Environment::get() instead.
 	 */
 	public function __get($strKey)
 	{
@@ -637,7 +640,8 @@ class Environment
 	 * @param string $strKey   The variable name
 	 * @param mixed  $varValue The variable value
 	 *
-	 * @deprecated Use Environment::set() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Environment::set() instead.
 	 */
 	public function __set($strKey, $varValue)
 	{
@@ -650,7 +654,8 @@ class Environment
 	 *
 	 * @return \Environment The object instance
 	 *
-	 * @deprecated Environment is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Environment class is now static.
 	 */
 	public static function getInstance()
 	{

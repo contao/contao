@@ -22,6 +22,6 @@ class UnusedArgumentsException extends Exception {}
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @deprecated Deprecated since version 4.0, to be removed in version 5.0
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
  */
 class UnresolvableDependenciesException extends Exception {}

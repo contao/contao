@@ -715,7 +715,8 @@ abstract class System
 	 *
 	 * @return string The PHP code without the PHP tags
 	 *
-	 * @deprecated Deprecated since version 4.0, to be removed in 5.0. Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.
 	 */
 	protected static function readPhpFileWithoutTags($strName)
 	{
@@ -740,7 +741,8 @@ abstract class System
 	 *
 	 * @return string The PHP code
 	 *
-	 * @deprecated Deprecated since version 4.0, to be removed in 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.
 	 */
 	public static function convertXlfToPhp($strName, $strLanguage, $blnLoad=false)
 	{
@@ -767,7 +769,8 @@ abstract class System
 	 *
 	 * @return string The textual representation of the date
 	 *
-	 * @deprecated Use Date::parse() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Date::parse() instead.
 	 */
 	public static function parseDate($strFormat, $intTstamp=null)
 	{
@@ -782,7 +785,8 @@ abstract class System
 	 *
 	 * @return string The new URL
 	 *
-	 * @deprecated Use Controller::addToUrl() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Controller::addToUrl() instead.
 	 */
 	public static function addToUrl($strRequest)
 	{
@@ -793,7 +797,8 @@ abstract class System
 	/**
 	 * Reload the current page
 	 *
-	 * @deprecated Use Controller::reload() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Controller::reload() instead.
 	 */
 	public static function reload()
 	{
@@ -807,7 +812,8 @@ abstract class System
 	 * @param string  $strLocation The target URL
 	 * @param integer $intStatus   The HTTP status code (defaults to 303)
 	 *
-	 * @deprecated Use Controller::redirect() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Controller::redirect() instead.
 	 */
 	public static function redirect($strLocation, $intStatus=303)
 	{
@@ -820,7 +826,8 @@ abstract class System
 	 *
 	 * @param string $strMessage The error message
 	 *
-	 * @deprecated Use Message::addError() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Message::addError() instead.
 	 */
 	protected function addErrorMessage($strMessage)
 	{
@@ -833,7 +840,8 @@ abstract class System
 	 *
 	 * @param string $strMessage The confirmation
 	 *
-	 * @deprecated Use Message::addConfirmation() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Message::addConfirmation() instead.
 	 */
 	protected function addConfirmationMessage($strMessage)
 	{
@@ -846,7 +854,8 @@ abstract class System
 	 *
 	 * @param string $strMessage The new message
 	 *
-	 * @deprecated Use Message::addNew() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Message::addNew() instead.
 	 */
 	protected function addNewMessage($strMessage)
 	{
@@ -859,7 +868,8 @@ abstract class System
 	 *
 	 * @param string $strMessage The info message
 	 *
-	 * @deprecated Use Message::addInfo() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Message::addInfo() instead.
 	 */
 	protected function addInfoMessage($strMessage)
 	{
@@ -872,7 +882,8 @@ abstract class System
 	 *
 	 * @param string $strMessage The unformatted message
 	 *
-	 * @deprecated Use Message::addRaw() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Message::addRaw() instead.
 	 */
 	protected function addRawMessage($strMessage)
 	{
@@ -886,7 +897,8 @@ abstract class System
 	 * @param string $strMessage The message
 	 * @param string $strType    The message type
 	 *
-	 * @deprecated Use Message::add() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Message::add() instead.
 	 */
 	protected function addMessage($strMessage, $strType)
 	{
@@ -901,7 +913,8 @@ abstract class System
 	 *
 	 * @return string The messages HTML markup
 	 *
-	 * @deprecated Use Message::generate() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Message::generate() instead.
 	 */
 	protected function getMessages($strScope=TL_MODE)
 	{
@@ -912,7 +925,8 @@ abstract class System
 	/**
 	 * Reset the message system
 	 *
-	 * @deprecated Use Message::reset() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Message::reset() instead.
 	 */
 	protected function resetMessages()
 	{
@@ -925,7 +939,8 @@ abstract class System
 	 *
 	 * @return array An array of message types
 	 *
-	 * @deprecated Use Message::getTypes() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Message::getTypes() instead.
 	 */
 	protected function getMessageTypes()
 	{
@@ -940,7 +955,8 @@ abstract class System
 	 *
 	 * @return string The encoded domain name
 	 *
-	 * @deprecated Use Idna::encode() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Idna::encode() instead.
 	 */
 	protected function idnaEncode($strDomain)
 	{
@@ -955,7 +971,8 @@ abstract class System
 	 *
 	 * @return string The decoded domain name
 	 *
-	 * @deprecated Use Idna::decode() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Idna::decode() instead.
 	 */
 	protected function idnaDecode($strDomain)
 	{
@@ -970,7 +987,8 @@ abstract class System
 	 *
 	 * @return string The encoded e-mail address
 	 *
-	 * @deprecated Use Idna::encodeEmail() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Idna::encodeEmail() instead.
 	 */
 	protected function idnaEncodeEmail($strEmail)
 	{
@@ -985,7 +1003,8 @@ abstract class System
 	 *
 	 * @return string The encoded URL
 	 *
-	 * @deprecated Use Idna::encodeUrl() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Idna::encodeUrl() instead.
 	 */
 	protected function idnaEncodeUrl($strUrl)
 	{
@@ -1000,7 +1019,8 @@ abstract class System
 	 *
 	 * @return boolean True if it is a valid e-mail address
 	 *
-	 * @deprecated Use Validator::isEmail() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Validator::isEmail() instead.
 	 */
 	protected function isValidEmailAddress($strEmail)
 	{
@@ -1015,7 +1035,8 @@ abstract class System
 	 *
 	 * @return array An array with name and e-mail address
 	 *
-	 * @deprecated Use String::splitFriendlyEmail() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use String::splitFriendlyEmail() instead.
 	 */
 	public static function splitFriendlyName($strEmail)
 	{
@@ -1030,7 +1051,8 @@ abstract class System
 	 *
 	 * @return string The request string
 	 *
-	 * @deprecated Use Environment::get('indexFreeRequest') instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Environment::get('indexFreeRequest') instead.
 	 */
 	public static function getIndexFreeRequest($blnAmpersand=true)
 	{
@@ -1045,7 +1067,8 @@ abstract class System
 	 *
 	 * @return string The model class name
 	 *
-	 * @deprecated Use Model::getClassFromTable() instead
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Model::getClassFromTable() instead.
 	 */
 	public static function getModelClassFromTable($strTable)
 	{
@@ -1060,7 +1083,8 @@ abstract class System
 	 *
 	 * @return boolean True if the module was enabled
 	 *
-	 * @deprecated Use Composer to add or remove modules
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Composer to add or remove modules.
 	 */
 	public static function enableModule($strName)
 	{
@@ -1074,7 +1098,8 @@ abstract class System
 	 *
 	 * @return boolean True if the module was disabled
 	 *
-	 * @deprecated Use Composer to add or remove modules
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Composer to add or remove modules.
 	 */
 	public static function disableModule($strName)
 	{

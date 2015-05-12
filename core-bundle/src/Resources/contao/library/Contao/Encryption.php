@@ -278,7 +278,8 @@ class Encryption
 	/**
 	 * Initialize the encryption module
 	 *
-	 * @deprecated Encryption is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Encryption class is now static.
 	 */
 	protected function __construct()
 	{
@@ -289,7 +290,8 @@ class Encryption
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
-	 * @deprecated Encryption is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Encryption class is now static.
 	 */
 	final public function __clone() {}
 
@@ -299,7 +301,8 @@ class Encryption
 	 *
 	 * @return \Encryption
 	 *
-	 * @deprecated Encryption is now a static class
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             The Encryption class is now static.
 	 */
 	public static function getInstance()
 	{

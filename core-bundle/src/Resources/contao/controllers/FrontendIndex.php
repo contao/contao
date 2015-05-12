@@ -292,7 +292,8 @@ class FrontendIndex extends \Frontend
 	/**
 	 * Try to load the page from the cache
 	 *
-	 * @deprecated Now uses the kernel.request event
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the kernel.request event instead.
 	 */
 	protected function outputFromCache()
 	{
