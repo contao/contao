@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -151,8 +152,13 @@ class ModuleFaqReader extends \Module
 
 		$this->Template->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], \Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+
 		// HOOK: comments extension required
-		if ($objFaq->noComments || !in_array('comments', \ModuleLoader::getActive()))
+		if ($objFaq->noComments || !isset($bundles['ContaoCommentsBundle']))
 		{
 			$this->Template->allowComments = false;
 

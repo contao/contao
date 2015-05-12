@@ -340,8 +340,13 @@ class tl_faq extends Backend
 	 */
 	public function checkPermission()
 	{
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+
 		// HOOK: comments extension required
-		if (!in_array('comments', ModuleLoader::getActive()))
+		if (!isset($bundles['ContaoCommentsBundle']))
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields']);
 			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key]);
