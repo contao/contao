@@ -59,7 +59,7 @@ class ContaoDataCollectorTest extends TestCase
                 'ContentText' => [
                     'alias'    => 'ContentText',
                     'original' => 'Contao\\ContentText',
-                ]
+                ],
             ],
             $collector->getClassesAliased()
         );
