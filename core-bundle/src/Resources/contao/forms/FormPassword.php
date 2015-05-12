@@ -171,7 +171,7 @@ class FormPassword extends \Widget
 						$this->strId,
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
 						$this->getAttributes(),
-						$this->strTagEnding) . $this->addSubmit();
+						$this->strTagEnding);
 	}
 
 

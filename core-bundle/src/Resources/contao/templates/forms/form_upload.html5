@@ -18,8 +18,4 @@
   <?php endif; ?>
 
   <input type="file" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="upload<?php if ($this->class) echo ' ' . $this->class; ?>"<?= $this->getAttributes() ?>>
-
-  <?php if ($this->addSubmit): ?>
-    <button type="submit" id="ctrl_<?= $this->id ?>_submit" class="submit"><?= $this->slabel ?></button>
-  <?php endif; ?>
 <?php $this->endblock(); ?>

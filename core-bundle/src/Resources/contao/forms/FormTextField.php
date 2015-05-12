@@ -211,6 +211,6 @@ class FormTextField extends \Widget
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
 						specialchars($this->value),
 						$this->getAttributes(),
-						$this->strTagEnding) . $this->addSubmit();
+						$this->strTagEnding);
 	}
 }

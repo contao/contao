@@ -15,8 +15,4 @@
 
   <input type="text" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="captcha mandatory<?php if ($this->class) echo ' ' . $this->class; ?>" value=""<?= $this->getAttributes() ?>>
   <span class="captcha_text<?php if ($this->class) echo ' ' . $this->class; ?>"><?= $this->getQuestion() ?></span>
-
-  <?php if ($this->addSubmit): ?>
-    <button type="submit" id="ctrl_<?= $this->id ?>_submit" class="submit"><?= $this->slabel ?></button>
-  <?php endif; ?>
 <?php $this->endblock(); ?>

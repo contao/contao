@@ -242,7 +242,7 @@ class FormCheckBox extends \Widget
 							$this->strError,
 							$this->strName,
 							$this->strTagEnding,
-							$strOptions) . $this->addSubmit();
+							$strOptions);
 		}
 		else
 		{
@@ -252,7 +252,7 @@ class FormCheckBox extends \Widget
 							$this->strError,
 							$this->strName,
 							$this->strTagEnding,
-							$strOptions) . $this->addSubmit();
+							$strOptions);
 		}
 	}
 }

@@ -308,12 +308,6 @@
       <trans-unit id="tl_form_field.customTpl.1">
         <source>Here you can overwrite the default form field template.</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.addSubmit.0">
-        <source>Add a submit button</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.addSubmit.1">
-        <source>Add a submit button next to the field to create a single line form.</source>
-      </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>
       </trans-unit>

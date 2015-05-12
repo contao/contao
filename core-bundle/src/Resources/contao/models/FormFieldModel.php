@@ -45,7 +45,6 @@ namespace Contao;
  * @property integer $tabindex
  * @property integer $fSize
  * @property string  $customTpl
- * @property boolean $addSubmit
  * @property string  $slabel
  * @property boolean $imageSubmit
  * @property string  $singleSRC

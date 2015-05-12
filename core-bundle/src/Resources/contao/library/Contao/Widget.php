@@ -67,7 +67,6 @@ namespace Contao;
  * @property boolean                 $mandatory         The field value must not be empty
  * @property boolean                 $nospace           Do not allow whitespace characters
  * @property boolean                 $allowHtml         Allow HTML tags in the field value
- * @property boolean                 $addSubmit         Add an inline submit button
  * @property boolean                 $storeFile         Store uploaded files in a given folder
  * @property boolean                 $useHomeDir        Store uploaded files in the user's home directory
  * @property boolean                 $trailingSlash     Add or remove a trailing slash
@@ -326,7 +325,6 @@ abstract class Widget extends \Controller
 			case 'mandatory':
 			case 'nospace':
 			case 'allowHtml':
-			case 'addSubmit':
 			case 'storeFile':
 			case 'useHomeDir':
 			case 'storeValues':
@@ -736,24 +734,6 @@ abstract class Widget extends \Controller
 		}
 
 		return '';
-	}
-
-
-	/**
-	 * Generate a submit button
-	 *
-	 * @return string The submit button markup
-	 */
-	protected function addSubmit()
-	{
-		if (!$this->addSubmit)
-		{
-			return '';
-		}
-
-		return sprintf(' <button type="submit" id="ctrl_%s_submit" class="submit">%s</button>',
-						$this->strId,
-						$this->slabel);
 	}
 
 

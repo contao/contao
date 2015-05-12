@@ -199,7 +199,7 @@ class FormRadioButton extends \Widget
 							$this->strError,
 							$this->strName,
 							$this->strTagEnding,
-							$strOptions) . $this->addSubmit();
+							$strOptions);
 		}
 		else
 		{
@@ -209,7 +209,7 @@ class FormRadioButton extends \Widget
 							$this->strError,
 							$this->strName,
 							$this->strTagEnding,
-							$strOptions) . $this->addSubmit();
+							$strOptions);
 		}
 	}
 }

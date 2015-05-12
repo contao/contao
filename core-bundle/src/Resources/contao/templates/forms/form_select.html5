@@ -32,8 +32,4 @@
       <?php endif; ?>
     <?php endforeach; ?>
   </select>
-
-  <?php if ($this->addSubmit): ?>
-    <button type="submit" id="ctrl_<?= $this->id ?>_submit" class="submit"><?= $this->slabel ?></button>
-  <?php endif; ?>
 <?php $this->endblock(); ?>

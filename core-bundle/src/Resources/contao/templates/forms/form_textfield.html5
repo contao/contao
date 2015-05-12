@@ -18,8 +18,4 @@
   <?php endif; ?>
 
   <input type="<?= $this->type ?>" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="text<?php if ($this->hideInput) echo ' password'; ?><?php if ($this->class) echo ' ' . $this->class; ?>" value="<?= specialchars($this->value) ?>"<?= $this->getAttributes() ?>>
-
-  <?php if ($this->addSubmit): ?>
-    <button type="submit" id="ctrl_<?= $this->id ?>_submit" class="submit"><?= $this->slabel ?></button>
-  <?php endif; ?>
 <?php $this->endblock(); ?>

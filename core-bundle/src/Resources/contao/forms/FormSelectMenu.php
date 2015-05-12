@@ -333,6 +333,6 @@ class FormSelectMenu extends \Widget
 						$this->strId,
 						$this->class,
 						$this->getAttributes(),
-						$strOptions) . $this->addSubmit();
+						$strOptions);
 	}
 }

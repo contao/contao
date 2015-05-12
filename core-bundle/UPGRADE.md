@@ -4,6 +4,14 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Add submit button
+
+The "add submit button" option in the form generator has been removed. To
+generate an inline form, add a text field and a submit button and assign the
+CSS class `inline-form` to the form element (requires the `form.css` style
+sheet to be enabled in the page layout).
+
+
 ### Space before/after
 
 The field "space before/after" has been removed. Use a CSS class instead and

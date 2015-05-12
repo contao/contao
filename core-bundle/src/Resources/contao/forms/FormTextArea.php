@@ -168,6 +168,6 @@ class FormTextArea extends \Widget
 						$this->intRows,
 						$this->intCols,
 						$this->getAttributes(),
-						$this->value) . $this->addSubmit();
+						$this->value);
 	}
 }
