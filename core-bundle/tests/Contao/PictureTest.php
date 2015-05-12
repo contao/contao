@@ -79,7 +79,7 @@ class PictureTest extends TestCase
      */
     public function testInstantiation()
     {
-        $fileMock = $this->getMockBuilder('File')
+        $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
