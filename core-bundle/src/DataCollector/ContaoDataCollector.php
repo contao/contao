@@ -23,8 +23,6 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  * Collects debug information for the web profiler.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
- *
- * @todo Add a unit test.
  */
 class ContaoDataCollector extends DataCollector
 {
@@ -36,24 +34,17 @@ class ContaoDataCollector extends DataCollector
     /**
      * @var array
      */
-    private $bundles;
-
-    /**
-     * @var array
-     */
     private $packages;
 
     /**
      * Constructor.
      *
      * @param ContainerInterface $container The container object
-     * @param array              $bundles   The installed bundles
      * @param array              $packages  The Composer packages
      */
-    public function __construct(ContainerInterface $container, array $bundles, array $packages)
+    public function __construct(ContainerInterface $container, array $packages)
     {
         $this->container = $container;
-        $this->bundles   = $bundles;
         $this->packages  = $packages;
     }
 
