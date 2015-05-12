@@ -13,13 +13,11 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\ClassLoader;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
-use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
@@ -386,13 +384,7 @@ class InitializeSystemListener extends AbstractScopeAwareListener
      */
     private function initializeLegacySessionAccess()
     {
-        /** @var AttributeBagInterface $feBag */
-        $feBag = $this->session->getBag('contao_frontend');
-
-        /** @var AttributeBagInterface $beBag */
-        $beBag = $this->session->getBag('contao_backend');
-
-        $_SESSION['FE_DATA'] = new AttributeBagAdapter($feBag);
-        $_SESSION['BE_DATA'] = new AttributeBagAdapter($beBag);
+        $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
+        $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
     }
 }

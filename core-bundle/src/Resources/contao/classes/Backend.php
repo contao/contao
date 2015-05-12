@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -721,7 +722,11 @@ abstract class Backend extends \Controller
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
-		$objSession = \Session::getInstance();
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagAdapter $objSession */
+		$objSession = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
 		if (isset($_GET['node']))
@@ -876,7 +881,11 @@ abstract class Backend extends \Controller
 	 */
 	public static function addFilesBreadcrumb($strKey='tl_files_node')
 	{
-		$objSession = \Session::getInstance();
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagAdapter $objSession */
+		$objSession = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
 		if (isset($_GET['node']))

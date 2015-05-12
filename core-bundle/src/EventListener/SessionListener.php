@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -40,12 +41,12 @@ class SessionListener
      */
     public function registerContaoAttributeBags()
     {
-        $beBag = new AttributeBag('_contao_be_attributes');
+        $beBag = new AttributeBagAdapter(new AttributeBag('_contao_be_attributes'));
         $beBag->setName('contao_backend');
 
         $this->session->registerBag($beBag);
 
-        $feBag = new AttributeBag('_contao_fe_attributes');
+        $feBag = new AttributeBagAdapter(new AttributeBag('_contao_fe_attributes'));
         $feBag->setName('contao_frontend');
 
         $this->session->registerBag($feBag);
