@@ -1,6 +1,12 @@
 Missing features
 ================
 
+### Events and hooks
+
+We are planning to replace the Contao hooks with the Symfony event dispatcher.
+You can track the changes here: https://github.com/contao/core-bundle/pull/204
+
+
 ### Twig
 
 It is possible to use Twig templates in Contao 4.0, however, the core still

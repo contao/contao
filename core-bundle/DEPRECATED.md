@@ -84,7 +84,7 @@ $refererId = $kernel->getContainer()->get('request_stack')->getCurrentRequest()-
 
 Contao 4 only uses a single PHP entry point, namely the `app.php` or
 `app_dev.php` file. The previous PHP entry points have been removed and a route
-has been set up for each one instead.
+has been set up for each one instead (see UPGRADE.md).
 
 Using the old paths is deprecated and will no longer work in Contao 5.0.
 
@@ -125,15 +125,15 @@ $GLOBALS['TL_DCA']['tl_example'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql' => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'name' => array
 		(
-			'sql'                     => "varchar(32) NULL"
+			'sql' => "varchar(32) NULL"
 		),
 		'value' => array
 		(
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql' => "varchar(32) NOT NULL default ''"
 		)
 	)
 );

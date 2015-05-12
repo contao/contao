@@ -5,6 +5,9 @@ Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
 ### Changed
+Removed the "space before/after" option (see #250).
+
+### Changed
 Consolidated the markup of all front end forms (see #249).
 
 ### Fixed
@@ -17,16 +20,16 @@ Consolidate the templates and module keys (see #247).
 Prevent recursion when creating symlinks (see #245).
 
 ### Fixed
-Always append the numeric ID to the `FORM_SUBMIT` variable (see #7286).
+Append the numeric ID to the `FORM_SUBMIT` variable (see contao/core#7286).
 
 ### Changed
-Do not render empty custom sections (see #7742).
+Do not render empty custom sections (see contao/core#7742).
 
 ### Fixed
-Convert dates to timestamps when storing front end form data (see #6827).
+Convert dates to timestamps in the form generator (see contao/core#6827).
 
 ### New
-Add schema.org tags where applicable (see #7780).
+Add schema.org tags where applicable (see contao/core#7780).
 
 ### Fixed
 Correctly store the referer URLs (see #143).

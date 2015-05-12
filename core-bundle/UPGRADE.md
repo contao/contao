@@ -17,6 +17,17 @@ instead of overwritten, e.g. if content element A has the CSS class `elemA` and
 there is an alias content element with the CSS class `elemB` referring to
 element A, both CSS classes will be applied (`class="elemA elemB"`).
 
+Here's how to select the elements separately:
+
+```css
+.elemA.elemB {
+    /* Alias elements only */
+}
+.elemA:not(.elemB) {
+    /* Original elements only */
+}
+```
+
 
 ### Form option "tableless"
 

@@ -31,4 +31,4 @@ Using semantic versioning also means that new major version might be released
 more often than in the past. 
 
 
-[1]: http://semver.org/
+[1]: http://semver.org
