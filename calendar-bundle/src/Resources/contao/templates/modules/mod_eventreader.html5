@@ -13,7 +13,7 @@
       <<?= $this->hlc ?>><?= $this->addComment ?></<?= $this->hlc ?>>
       <?= implode('', $this->comments) ?>
       <?= $this->pagination ?>
-      <?php include $this->getTemplate('mod_comment_form', 'html5'); ?>
+      <?php $this->insert('mod_comment_form', $this->arrData); ?>
     </div>
   <?php endif; ?>
 
