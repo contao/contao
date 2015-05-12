@@ -112,7 +112,6 @@ class ModulePassword extends \Module
 				continue;
 			}
 
-			$arrField['eval']['tableless'] = $this->tableless;
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'];
 
 			/** @var \Widget $objWidget */
@@ -168,7 +167,6 @@ class ModulePassword extends \Module
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['requestPassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
-		$this->Template->tableless = $this->tableless;
 	}
 
 
@@ -195,7 +193,6 @@ class ModulePassword extends \Module
 
 		// Define the form field
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
-		$arrField['eval']['tableless'] = $this->tableless;
 
 		/** @var \Widget $strClass */
 		$strClass = $GLOBALS['TL_FFL']['password'];
@@ -266,7 +263,6 @@ class ModulePassword extends \Module
 		$this->Template->fields = $objWidget->parse();
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['setNewPassword']);
-		$this->Template->tableless = $this->tableless;
 	}
 
 

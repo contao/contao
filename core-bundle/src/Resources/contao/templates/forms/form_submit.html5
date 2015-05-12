@@ -1,26 +1,9 @@
-<?php if ($this->tableless): ?>
+<?php $this->extend('form_row'); ?>
 
-  <div class="submit_container<?php if ($this->class) echo ' ' . $this->class; ?>">
-    <?php if ($this->src): ?>
-      <input type="image" src="<?= $this->src ?>" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>" title="<?= specialchars($this->slabel) ?>" alt="<?= specialchars($this->slabel) ?>"<?= $this->getAttributes() ?>>
-    <?php else: ?>
-      <button type="submit" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>"<?= $this->getAttributes() ?>><?= $this->slabel ?></button>
-    <?php endif; ?>
-  </div>
-
+<?php $this->block('field'); ?>
+<?php if ($this->src): ?>
+  <input type="image" src="<?= $this->src ?>" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>" title="<?= specialchars($this->slabel) ?>" alt="<?= specialchars($this->slabel) ?>"<?= $this->getattributes() ?>>
 <?php else: ?>
-
-  <tr class="<?= $this->rowClass ?>">
-    <td class="col_0 col_first">&nbsp;</td>
-    <td class="col_1 col_last">
-      <div class="submit_container">
-        <?php if ($this->src): ?>
-          <input type="image" src="<?= $this->src ?>" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>" title="<?= specialchars($this->slabel) ?>" alt="<?= specialchars($this->slabel) ?>"<?= $this->getAttributes() ?>>
-        <?php else: ?>
-          <button type="submit" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>"<?= $this->getAttributes() ?>><?= $this->slabel ?></button>
-        <?php endif; ?>
-      </div>
-    </td>
-  </tr>
-
+  <button type="submit" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class) echo ' ' . $this->class; ?>"<?= $this->getattributes() ?>><?= $this->slabel ?></button>
 <?php endif; ?>
+<?php $this->endblock(); ?>

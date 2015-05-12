@@ -57,6 +57,11 @@ class ModulePersonalData extends \Module
 			return '';
 		}
 
+		if ($this->memberTpl != '')
+		{
+			$this->strTemplate = $this->memberTpl;
+		}
+
 		return parent::generate();
 	}
 
@@ -93,18 +98,7 @@ class ModulePersonalData extends \Module
 			}
 		}
 
-		// Set the template
-		if ($this->memberTpl != '')
-		{
-			/** @var \FrontendTemplate|object $objTemplate */
-			$objTemplate = new \FrontendTemplate($this->memberTpl);
-
-			$this->Template = $objTemplate;
-			$this->Template->setData($this->arrData);
-		}
-
 		$this->Template->fields = '';
-		$this->Template->tableless = $this->tableless;
 
 		$arrFields = array();
 		$doNotSubmit = false;
@@ -156,7 +150,6 @@ class ModulePersonalData extends \Module
 			$strGroup = $arrData['eval']['feGroup'];
 
 			$arrData['eval']['required'] = false;
-			$arrData['eval']['tableless'] = $this->tableless;
 
 			// Use strlen() here (see #3277)
 			if ($arrData['eval']['mandatory'])

@@ -107,7 +107,7 @@ class ModuleRegistration extends \Module
 		}
 
 		$this->Template->fields = '';
-		$this->Template->tableless = $this->tableless;
+
 		$objCaptcha = null;
 		$doNotSubmit = false;
 		$strFormId = 'tl_registration_' . $this->id;
@@ -131,8 +131,7 @@ class ModuleRegistration extends \Module
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'type' => 'captcha',
 				'mandatory' => true,
-				'required' => true,
-				'tableless' => $this->tableless
+				'required' => true
 			);
 
 			/** @var \FormCaptcha $strClass */
@@ -182,7 +181,6 @@ class ModuleRegistration extends \Module
 				continue;
 			}
 
-			$arrData['eval']['tableless'] = $this->tableless;
 			$arrData['eval']['required'] = $arrData['eval']['mandatory'];
 
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'], '', '', $this));

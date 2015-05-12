@@ -18,7 +18,6 @@ namespace Contao;
  * @property string  $title
  * @property string  $formID
  * @property string  $method
- * @property boolean $tableless
  * @property boolean $allowTags
  * @property string  $attributes
  * @property boolean $novalidate
@@ -102,7 +101,6 @@ class Form extends \Hybrid
 		$this->Template->fields = '';
 		$this->Template->hidden = '';
 		$this->Template->formSubmit = $formId;
-		$this->Template->tableless = $this->tableless ? true : false;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 
 		$this->initializeSession($formId);
@@ -159,7 +157,6 @@ class Form extends \Hybrid
 				$arrData['decodeEntities'] = true;
 				$arrData['allowHtml'] = $this->allowTags;
 				$arrData['rowClass'] = 'row_'.$row . (($row == 0) ? ' row_first' : (($row == ($max_row - 1)) ? ' row_last' : '')) . ((($row % 2) == 0) ? ' even' : ' odd');
-				$arrData['tableless'] = $this->tableless;
 
 				// Increase the row count if its a password field
 				if ($objField->type == 'password')
@@ -596,7 +593,6 @@ class Form extends \Hybrid
 
 					$objTemplate->message = $message;
 					$objTemplate->class = strtolower($tl);
-					$objTemplate->tableless = $this->tableless ? true : false;
 
 					$this->Template->fields .= $objTemplate->parse() . "\n";
 				}

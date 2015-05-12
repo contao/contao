@@ -328,7 +328,6 @@ TemplateLoader::addFiles(array
 	'form_textarea'       => 'vendor/contao/core-bundle/src/Resources/contao/templates/forms',
 	'form_textfield'      => 'vendor/contao/core-bundle/src/Resources/contao/templates/forms',
 	'form_upload'         => 'vendor/contao/core-bundle/src/Resources/contao/templates/forms',
-	'form_widget'         => 'vendor/contao/core-bundle/src/Resources/contao/templates/forms',
 	'form_xml'            => 'vendor/contao/core-bundle/src/Resources/contao/templates/forms',
 	'fe_page'             => 'vendor/contao/core-bundle/src/Resources/contao/templates/frontend',
 	'gallery_default'     => 'vendor/contao/core-bundle/src/Resources/contao/templates/gallery',

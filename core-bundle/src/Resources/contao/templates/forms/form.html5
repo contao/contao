@@ -1,6 +1,6 @@
 
 <!-- indexer::stop -->
-<div class="<?= $this->class ?> <?= $this->tableless ? 'tableless' : 'tableform' ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
 
   <?php if ($this->headline): ?>
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
@@ -16,13 +16,7 @@
         <?php endif; ?>
       <?php endif; ?>
       <?= $this->hidden ?>
-      <?php if (!$this->tableless): ?>
-        <table>
-          <?= $this->fields ?>
-        </table>
-      <?php else: ?>
-        <?= $this->fields ?>
-      <?php endif; ?>
+      <?= $this->fields ?>
     </div>
   </form>
 

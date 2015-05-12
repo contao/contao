@@ -4,6 +4,19 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Form option "tableless"
+
+The form option "tableless" has been removed, because all forms are now
+tableless by default. Instead, the `form.css` style sheet of the layout builder
+has been enhanced to provide basic formattings for labels and input fields.
+
+By default, labels and input fields are listed underneath each other. However,
+if you add the CSS class `horizontal-form` to a form, they will be aligned in a
+horizontal layout, similar to the old table-based layout.
+
+If you add the CSS class `inline-form`, the widgets will be aligned vertically.
+
+
 ### Form field "headline"
 
 The form field "headline" has been removed in favor of the "explanation" field.
@@ -270,6 +283,9 @@ argument, just like in `DC_Folder` and in any other callback.
    the active menu item.
 
  * The classes `odd` and `even` are now correctly assigned to tables.
+
+ * The form submit widget now uses the CSS class `widget widget-submit` instead
+   of `submit_container`.
 
  * The content syndication links of the `mod_article.html5` template now have
    CSS classes and the class "pdf_link" has been replaced with "syndication":

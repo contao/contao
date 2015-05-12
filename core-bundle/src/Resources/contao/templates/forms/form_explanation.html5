@@ -1,14 +1,4 @@
 
-<?php if ($this->tableless): ?>
-
-  <div class="<?= $this->prefix ?> explanation<?php if ($this->class) echo ' ' . $this->class; ?>">
-    <?= $this->generate() ?>
-  </div>
-
-<?php else: ?>
-
-  <tr class="<?= $this->rowClass ?>">
-    <td colspan="2" class="colspan explanation<?php if ($this->class) echo ' ' . $this->class; ?>"><?= $this->generate() ?></td>
-  </tr>
-
-<?php endif; ?>
+<div class="<?= $this->prefix ?> explanation<?php if ($this->class) echo ' ' . $this->class; ?>">
+  <?= $this->generate() ?>
+</div>

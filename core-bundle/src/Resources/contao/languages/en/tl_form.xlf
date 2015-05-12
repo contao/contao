@@ -110,12 +110,6 @@
       <trans-unit id="tl_form.formID.1">
         <source>The form ID is required to trigger a Contao module.</source>
       </trans-unit>
-      <trans-unit id="tl_form.tableless.0">
-        <source>Tableless layout</source>
-      </trans-unit>
-      <trans-unit id="tl_form.tableless.1">
-        <source>Render the form without HTML tables.</source>
-      </trans-unit>
       <trans-unit id="tl_form.allowTags.0">
         <source>Allow HTML tags</source>
       </trans-unit>
