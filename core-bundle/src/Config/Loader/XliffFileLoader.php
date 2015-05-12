@@ -73,39 +73,21 @@ class XliffFileLoader extends Loader
      */
     private function convertXlfToPhp($name, $language)
     {
-        $xml = new \DOMDocument();
-
-        $xml->preserveWhiteSpace = false;
-
-        // Use loadXML() instead of load() (see contao/core#7192)
-        $xml->loadXML(file_get_contents($name));
+        $xml = $this->getDomDocumentFromFile($name);
 
         $return = "\n// " . str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $name) . "\n";
         $units  = $xml->getElementsByTagName('trans-unit');
 
-        // FIXME: refactor
         /** @var \DOMElement[] $units */
         foreach ($units as $unit) {
-            $node = ('en' === $language)
-                ? $unit->getElementsByTagName('source')
-                : $unit->getElementsByTagName('target')
-            ;
+            $node = $this->getNodeByLanguage($unit, $language);
 
             if ($node === null || $node->item(0) === null) {
                 continue;
             }
 
-            $value = $node->item(0)->nodeValue;
-
-            // Some closing </em> tags oddly have an extra space in
-            $value = str_replace('</ em>', '</em>', $value);
-
-            $chunks = explode('.', $unit->getAttribute('id'));
-
-            // Handle keys with dots
-            if (preg_match('/tl_layout\.[a-z]+\.css\./', $unit->getAttribute('id'))) {
-                $chunks = [$chunks[0], $chunks[1] . '.' . $chunks[2], $chunks[3]];
-            }
+            $chunks = $this->getChunksFromUnit($unit);
+            $value  = $this->fixClosingTags($node->item(0));
 
             $return .= $this->getStringRepresentation($chunks, $value);
 
@@ -113,6 +95,70 @@ class XliffFileLoader extends Loader
         }
 
         return $return;
+    }
+
+    /**
+     * Returns a DOM document object.
+     *
+     * @param string $name The file name
+     *
+     * @return \DOMDocument The DOM document object
+     */
+    private function getDomDocumentFromFile($name)
+    {
+        $xml = new \DOMDocument();
+
+        // Strip white space
+        $xml->preserveWhiteSpace = false;
+
+        // Use loadXML() instead of load() (see contao/core#7192)
+        $xml->loadXML(file_get_contents($name));
+
+        return $xml;
+    }
+
+    /**
+     * Returns a DOM node list depending on the language.
+     *
+     * @param \DOMElement $unit     The DOM element
+     * @param string      $language The language
+     *
+     * @return \DOMNodeList The DOM node list
+     */
+    private function getNodeByLanguage(\DOMElement $unit, $language)
+    {
+        return ('en' === $language) ? $unit->getElementsByTagName('source') : $unit->getElementsByTagName('target');
+    }
+
+    /**
+     * Removes extra spaces in closing tags.
+     *
+     * @param \DOMNode $node The DOM node
+     *
+     * @return string The fixed value
+     */
+    private function fixClosingTags(\DOMNode $node)
+    {
+        return str_replace('</ em>', '</em>', $node->nodeValue);
+    }
+
+    /**
+     * Splits the ID attribute and returns the chunks.
+     *
+     * @param \DOMElement $unit The DOM element
+     *
+     * @return array The chunks
+     */
+    private function getChunksFromUnit(\DOMElement $unit)
+    {
+        $chunks = explode('.', $unit->getAttribute('id'));
+
+        // Handle keys with dots
+        if (preg_match('/tl_layout\.[a-z]+\.css\./', $unit->getAttribute('id'))) {
+            $chunks = [$chunks[0], $chunks[1] . '.' . $chunks[2], $chunks[3]];
+        }
+
+        return $chunks;
     }
 
     /**
