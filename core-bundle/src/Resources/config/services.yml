@@ -51,3 +51,10 @@ services:
         class: Contao\CoreBundle\ContaoFramework
         arguments:
             - '@service_container'
+            - '@router'
+            - '@session'
+            - '@contao.adapter.config'
+            - '%kernel.root_dir%'
+            - '@security.csrf.token_manager'
+            - '%contao.csrf_token_name%'
+            - '%contao.error_level%'

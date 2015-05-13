@@ -91,16 +91,24 @@ class ContaoFramework
     /**
      * @inheritdoc
      */
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        RouterInterface $router,
+        SessionInterface $session,
+        ConfigAdapter $config,
+        $rootDir,
+        CsrfTokenManagerInterface $tokenManager,
+        $tokenName,
+        $errorLevel
+    ) {
         $this->container     = $container;
-        $this->router        = $this->container->get('router');
-        $this->session       = $this->container->get('session');
-        $this->rootDir       = dirname($this->container->getParameter('kernel.root_dir'));
-        $this->tokenManager  = $this->container->get('security.csrf.token_manager');
-        $this->csrfTokenName = $this->container->getParameter('contao.csrf_token_name');
-        $this->errorLevel    = $this->container->getParameter('contao.error_level');
-        $this->config        = $this->container->get('contao.adapter.config');
+        $this->router        = $router;
+        $this->session       = $session;
+        $this->rootDir       = dirname($rootDir);
+        $this->tokenManager  = $tokenManager;
+        $this->csrfTokenName = $tokenName;
+        $this->errorLevel    = $errorLevel;
+        $this->config        = $config;
     }
 
     /**
