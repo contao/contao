@@ -21,6 +21,7 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 

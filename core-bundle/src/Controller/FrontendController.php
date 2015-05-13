@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\FrontendCron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;

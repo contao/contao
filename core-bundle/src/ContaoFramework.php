@@ -183,6 +183,8 @@ class ContaoFramework
 
     /**
      * Defines Constants required for Contao-Framework
+     *
+     * @param Request $request
      */
     private function setConstants(Request $request = null)
     {
@@ -228,10 +230,10 @@ class ContaoFramework
      */
     private function includeHelpers()
     {
-        require __DIR__ . '/../Resources/contao/helper/functions.php';
-        require __DIR__ . '/../Resources/contao/config/constants.php';
-        require __DIR__ . '/../Resources/contao/helper/interface.php';
-        require __DIR__ . '/../Resources/contao/helper/exception.php';
+        require __DIR__ . '/Resources/contao/helper/functions.php';
+        require __DIR__ . '/Resources/contao/config/constants.php';
+        require __DIR__ . '/Resources/contao/helper/interface.php';
+        require __DIR__ . '/Resources/contao/helper/exception.php';
     }
 
     /**
@@ -254,7 +256,7 @@ class ContaoFramework
     {
         foreach ($this->basicClasses as $class) {
             if (!class_exists($class, false)) {
-                require_once __DIR__ . '/../../src/Resources/contao/library/Contao/' . $class . '.php';
+                require_once __DIR__ . '/Resources/contao/library/Contao/' . $class . '.php';
                 class_alias('Contao\\' . $class, $class);
             }
         }
