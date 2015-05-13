@@ -49,5 +49,5 @@ services:
 
     contao.framework_initializer:
         class: Contao\CoreBundle\Framework\FrameworkInitializer
-        calls:
-            - ['setContainer', ['@service_container']]
+        arguments:
+            - '@service_container'

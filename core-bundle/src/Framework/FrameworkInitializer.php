@@ -18,7 +18,6 @@ use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Contao\Input;
@@ -28,8 +27,9 @@ use Contao\System;
  * Service for Initialization-Process of Legacy-Framework
  *
  * @author Dominik Tomasi <https://github.com/dtomasi>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
-class FrameworkInitializer implements ContainerAwareInterface
+class FrameworkInitializer
 {
     /**
      * @var bool
@@ -44,7 +44,7 @@ class FrameworkInitializer implements ContainerAwareInterface
     /**
      * @inheritdoc
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -108,7 +108,7 @@ class FrameworkInitializer implements ContainerAwareInterface
      */
     private function setConstants()
     {
-        if (null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
+        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
             define('TL_MODE', 'BE');
         } else {
             define('TL_MODE', 'FE');
@@ -137,7 +137,7 @@ class FrameworkInitializer implements ContainerAwareInterface
 
         define('TL_SCRIPT', $route);
 
-        if (null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
+        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
             define('BE_USER_LOGGED_IN', false);
             define('FE_USER_LOGGED_IN', false);
         }
