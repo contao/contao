@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 
