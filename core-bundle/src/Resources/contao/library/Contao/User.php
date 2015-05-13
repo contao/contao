@@ -648,6 +648,7 @@ abstract class User extends \System
 		global $kernel;
 
 		$kernel->getContainer()->get('session')->invalidate();
+		$kernel->getContainer()->get('security.token_storage')->setToken(null);
 
 		// Add a log entry
 		if ($this->findBy('id', $intUserid) != false)
