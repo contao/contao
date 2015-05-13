@@ -183,6 +183,8 @@ class ContaoFramework
 
     /**
      * Defines Constants required for Contao-Framework
+     *
+     * @param Request $request
      */
     private function setConstants(Request $request = null)
     {
