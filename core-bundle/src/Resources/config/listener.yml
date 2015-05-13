@@ -117,8 +117,18 @@ services:
             - "@session"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 64 }
-            # FIXME: remove
+            # FIXME: remove once #234 has been merged
             - { name: kernel.event_listener, event: console.command, method: onKernelRequest, priority: 64 }
+
+    contao.listener.store_referer:
+        class: Contao\CoreBundle\EventListener\StoreRefererListener
+        arguments:
+            - '@session'
+            - '@security.token_storage'
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener

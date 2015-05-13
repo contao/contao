@@ -208,9 +208,9 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Tests that the session bag is never requested when there is no master request.
+     * Tests that the session bag is not requested upon a sub request.
      */
-    public function testListenerSkipIfNoMasterRequestOnKernelRequest()
+    public function testListenerSkipUponSubRequestOnKernelRequest()
     {
         $responseEvent = new GetResponseEvent(
             $this->mockKernel(),
@@ -232,7 +232,7 @@ class UserSessionListenerTest extends TestCase
     /**
      * Tests that neither the session bag nor doctrine is requested when there is no user.
      *
-     * @param AnonymousToken $noUserReturn
+     * @param AnonymousToken $noUserReturn The user token
      *
      * @dataProvider noUserProvider
      */
@@ -277,9 +277,9 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Tests that neither the session bag nor doctrine is requested when there is no master request.
+     * Tests that neither the session bag nor doctrine is requested upon a sub request.
      */
-    public function testListenerSkipIfNoMasterRequestOnKernelResponse()
+    public function testListenerSkipUponSubRequestOnKernelResponse()
     {
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
