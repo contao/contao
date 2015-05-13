@@ -45,17 +45,17 @@ services:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
         arguments:
-            - '@contao.framework'
-            - '@service_container'
+            - "@contao.framework"
+            - "@service_container"
 
     contao.framework:
         class: Contao\CoreBundle\ContaoFramework
         arguments:
-            - '@service_container'
-            - '@router'
-            - '@session'
-            - '%kernel.root_dir%'
-            - '@security.csrf.token_manager'
-            - '%contao.csrf_token_name%'
-            - '@contao.adapter.config'
-            - '%contao.error_level%'
+            - "@service_container"
+            - "@router"
+            - "@session"
+            - "%kernel.root_dir%"
+            - "@security.csrf.token_manager"
+            - "%contao.csrf_token_name%"
+            - "@contao.adapter.config"
+            - "%contao.error_level%"
