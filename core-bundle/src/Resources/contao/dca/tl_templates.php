@@ -152,7 +152,7 @@ class tl_templates extends Backend
 		global $kernel;
 
 		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session');
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
 		if (isset($_GET['node']))

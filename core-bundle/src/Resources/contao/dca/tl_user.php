@@ -667,7 +667,7 @@ class tl_user extends Backend
 					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
 					$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
-					$objSessionBag->replace(array());
+					$objSessionBag->clear();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['sessionPurged']);
 				}
 

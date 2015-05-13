@@ -662,7 +662,7 @@ class tl_style extends Backend
 		global $kernel;
 
 		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session');
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
 		$key = 'tl_style_' . CURRENT_ID;
 		$filter = $objSessionBag->get('filter');
