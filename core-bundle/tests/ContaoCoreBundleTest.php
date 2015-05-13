@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Bundle;
+namespace Contao\CoreBundle\Test;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Test\TestCase;
