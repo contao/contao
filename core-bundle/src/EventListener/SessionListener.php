@@ -38,7 +38,7 @@ class SessionListener
     /**
      * Registers the Contao front end and back end session bags.
      */
-    public function registerContaoAttributeBags()
+    public function onKernelRequest()
     {
         $beBag = new ArrayAttributeBag('_contao_be_attributes');
         $beBag->setName('contao_backend');

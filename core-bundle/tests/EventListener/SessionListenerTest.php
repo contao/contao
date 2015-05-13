@@ -41,7 +41,7 @@ class SessionListenerTest extends TestCase
         $session = $this->getSession();
 
         $listener = new SessionListener($session);
-        $listener->registerContaoAttributeBags();
+        $listener->onKernelRequest();
 
         $this->assertInstanceOf(
             'Contao\\CoreBundle\\Session\\Attribute\\ArrayAttributeBag',
