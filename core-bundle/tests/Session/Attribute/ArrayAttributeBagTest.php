@@ -81,20 +81,4 @@ class ArrayAttributeBagTest extends TestCase
 
         $this->assertFalse($bag->has('foo'));
     }
-
-    /**
-     * Tests the alias methods.
-     */
-    public function testLegacyMethods()
-    {
-        $errorReporting = error_reporting();
-        error_reporting(E_ALL & ~E_USER_DEPRECATED);
-
-        $bag = new ArrayAttributeBag('foobar_storageKey');
-        $bag->setData(['foo' => 'bar']);
-
-        $this->assertEquals(['foo' => 'bar'], $bag->getData());
-
-        error_reporting($errorReporting);
-    }
 }
