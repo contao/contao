@@ -47,12 +47,16 @@
             </select>
           <?php endif; ?>
           <span class="arrow">→</span>
-          <select name="to" id="ctrl_to" class="tl_select">
-            <?php foreach ($this->versions as $k=>$v): ?>
-              <option value="<?= $k ?>"<?php if ($v['version'] == $this->to): ?> selected="selected"<?php endif; ?>><?= $v['info'] ?></option>
-            <?php endforeach; ?>
-          </select>
-          <button type="submit" class="tl_submit"><?= $this->showLabel ?></button>
+          <?php if ($this->staticTo): ?>
+            <span class="static-version"><?= $this->staticTo ?></span>
+          <?php else: ?>
+            <select name="to" id="ctrl_to" class="tl_select">
+              <?php foreach ($this->versions as $k=>$v): ?>
+                <option value="<?= $k ?>"<?php if ($v['version'] == $this->to): ?> selected="selected"<?php endif; ?>><?= $v['info'] ?></option>
+              <?php endforeach; ?>
+            </select>
+          <?php endif; ?>
+          <input type="submit" class="tl_submit" value="<?= $this->showLabel ?>">
         </div>
       </form>
       <div id="diff">
