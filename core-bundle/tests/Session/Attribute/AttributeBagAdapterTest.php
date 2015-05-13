@@ -69,12 +69,17 @@ class AttributeBagAdapterTest extends TestCase
      */
     public function testLegacyMethods()
     {
+        $errorReporting = error_reporting();
+        error_reporting(E_ALL & ~E_USER_DEPRECATED);
+
         $attributeBag = new AttributeBag('foobar_storageKey');
 
         $adapter = new AttributeBagAdapter($attributeBag);
         $adapter->setData(['foo' => 'bar']);
 
         $this->assertEquals(['foo' => 'bar'], $adapter->getData());
+
+        error_reporting($errorReporting);
     }
 
     /**
