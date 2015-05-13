@@ -12,6 +12,7 @@
 namespace Contao\CoreBundle\Framework;
 
 use Contao\ClassLoader;
+use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
@@ -19,9 +20,12 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Contao\Input;
 use Contao\System;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Service for Initialization-Process of Legacy-Framework
@@ -32,21 +36,57 @@ use Contao\System;
 class FrameworkInitializer
 {
     /**
-     * @var bool
-     */
-    private $initialized = false;
-
-    /**
      * @var ContainerInterface
      */
     private $container;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var CsrfTokenManagerInterface
+     */
+    private $tokenManager;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
+     * @var ConfigAdapter
+     */
+    private $config;
+
+    /**
+     * @var string
+     */
+    private $csrfTokenName;
+
+    /**
+     * @var bool
+     */
+    private $initialized = false;
 
     /**
      * @inheritdoc
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
+        $this->container     = $container;
+        $this->router        = $this->container->get('router');
+        $this->session       = $this->container->get('session');
+        $this->rootDir       = dirname($this->container->getParameter('kernel.root_dir'));
+        $this->tokenManager  = $this->container->get('security.csrf.token_manager');
+        $this->csrfTokenName = $this->container->getParameter('contao.csrf_token_name');
+        $this->config        = $this->container->get('contao.adapter.config');
     }
 
     /**
@@ -88,8 +128,8 @@ class FrameworkInitializer
         }
 
         // Included initconfig.php
-        if (file_exists(dirname($this->container->getParameter('kernel.root_dir')) . '/system/config/initconfig.php')) {
-            include dirname($this->container->getParameter('kernel.root_dir')) . '/system/config/initconfig.php';
+        if (file_exists($this->rootDir . '/system/config/initconfig.php')) {
+            include $this->rootDir . '/system/config/initconfig.php';
         }
 
         $this->initializeConfig();
@@ -115,7 +155,7 @@ class FrameworkInitializer
         }
 
         define('TL_START', microtime(true));
-        define('TL_ROOT', dirname($this->container->getParameter('kernel.root_dir')));
+        define('TL_ROOT', $this->rootDir);
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
@@ -124,7 +164,7 @@ class FrameworkInitializer
         }
 
         if (null !== $request) {
-            $route = $this->container->get('router')->generate(
+            $route = $this->router->generate(
                 $request->attributes->get('_route'),
                 $request->attributes->get('_route_params')
             );
@@ -173,7 +213,7 @@ class FrameworkInitializer
     {
         // TODO: use Monolog to log errors
         if (function_exists('ini_set')) {
-            ini_set('error_log', dirname($this->container->getParameter('kernel.root_dir')) . '/system/logs/error.log');
+            ini_set('error_log', $this->rootDir . '/system/logs/error.log');
         }
     }
 
@@ -202,7 +242,7 @@ class FrameworkInitializer
      */
     private function preloadConfig()
     {
-        $this->container->get('contao.adapter.config')->preload();
+        $this->config->preload();
     }
 
     /**
@@ -218,10 +258,8 @@ class FrameworkInitializer
      */
     private function initializeLegacySessionAccess()
     {
-        $session = $this->container->get('session');
-
-        $_SESSION['BE_DATA'] = $session->getBag('contao_backend');
-        $_SESSION['FE_DATA'] = $session->getBag('contao_frontend');
+        $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
+        $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
     }
 
     /**
@@ -247,7 +285,7 @@ class FrameworkInitializer
      */
     private function initializeConfig()
     {
-        $this->container->get('contao.adapter.config')->initialize();
+        $this->config->initialize();
     }
 
     /**
@@ -262,7 +300,7 @@ class FrameworkInitializer
         }
 
         // Show the "incomplete installation" message
-        if (!$this->container->get('contao.adapter.config')->isComplete()) {
+        if (!$this->config->isComplete()) {
             throw new IncompleteInstallationException(
                 'The installation has not been completed. Open the Contao install tool to continue.'
             );
@@ -275,9 +313,9 @@ class FrameworkInitializer
     private function setTimezone()
     {
         if (function_exists('ini_set')) {
-            ini_set('date.timezone', $this->container->get('contao.adapter.config')->get('timeZone'));
+            ini_set('date.timezone', $this->config->get('timeZone'));
         }
-        date_default_timezone_set($this->container->get('contao.adapter.config')->get('timeZone'));
+        date_default_timezone_set($this->config->get('timeZone'));
     }
 
     /**
@@ -287,7 +325,7 @@ class FrameworkInitializer
     {
         // Set the mbstring encoding
         if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
-            mb_regex_encoding($this->container->get('contao.adapter.config')->get('characterSet'));
+            mb_regex_encoding($this->config->get('characterSet'));
         }
     }
 
@@ -297,26 +335,24 @@ class FrameworkInitializer
     private function handleRequestToken()
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
-        $tokenManager = $this->container->get('security.csrf.token_manager');
-        $tokenName = $this->container->getParameter('contao.csrf_token_name');
 
         // Backwards compatibility
         if (!defined('REQUEST_TOKEN')) {
-            define('REQUEST_TOKEN', $tokenManager->getToken($tokenName)->getValue());
+            define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
         }
 
         if (null === $request || 'POST' !== $request->getRealMethod()) {
             return;
         }
 
-        $token = new CsrfToken($tokenName, Input::post('REQUEST_TOKEN'));
+        $token = new CsrfToken($this->csrfTokenName, Input::post('REQUEST_TOKEN'));
 
-        if ($tokenManager->isTokenValid($token)) {
+        if ($this->tokenManager->isTokenValid($token)) {
             return;
         }
 
         if ($request->isXmlHttpRequest()) {
-            throw new AjaxRedirectResponseException($this->container->get('router')->generate('contao_backend'));
+            throw new AjaxRedirectResponseException($this->router->generate('contao_backend'));
         }
 
         // FIXME: This forces all routes handling POST data to pass a REQUEST_TOKEN
