@@ -191,8 +191,8 @@ class FrameworkInitializer implements ContainerAwareInterface
 
         foreach ($basicClasses as $class) {
             if (!class_exists($class, false)) {
-                require_once __DIR__ . "/../Resources/contao/library/Contao/{$class}.php";
-                class_alias("Contao\\$class", $class);
+                require_once __DIR__ . '/../../src/Resources/contao/library/Contao/' . $class . '.php';
+                class_alias('Contao\\' . $class, $class);
             }
         }
     }
@@ -218,14 +218,10 @@ class FrameworkInitializer implements ContainerAwareInterface
      */
     private function initializeLegacySessionAccess()
     {
-        /** @var AttributeBagInterface $feBag */
-        $feBag = $this->container->get('session')->getBag('contao_frontend');
+        $session = $this->container->get('session');
 
-        /** @var AttributeBagInterface $beBag */
-        $beBag = $this->container->get('session')->getBag('contao_backend');
-
-        $_SESSION['FE_DATA'] = new AttributeBagAdapter($feBag);
-        $_SESSION['BE_DATA'] = new AttributeBagAdapter($beBag);
+        $_SESSION['BE_DATA'] = $session->getBag('contao_backend');
+        $_SESSION['FE_DATA'] = $session->getBag('contao_frontend');
     }
 
     /**
@@ -234,22 +230,16 @@ class FrameworkInitializer implements ContainerAwareInterface
     private function setDefaultLanguage()
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
-        $session = $this->container->get('session');
 
-        if (!$session->has('TL_LANGUAGE')) {
-            $langs = $request ? $request->getLanguages() : [];
-            array_push($langs, 'en'); // see #6533
+        $language = 'en';
 
-            foreach ($langs as $lang) {
-                if (is_dir(__DIR__ . '/../../src/Resources/contao/languages/' . str_replace('-', '_', $lang))) {
-                    $session->set('TL_LANGUAGE', $lang);
-                    break;
-                }
-            }
+        if (null !== $request) {
+            $language = str_replace('_', '-', $request->getLocale());
         }
 
-        $GLOBALS['TL_LANGUAGE'] = $session->get('TL_LANGUAGE');
-        $_SESSION['TL_LANGUAGE'] = $session->get('TL_LANGUAGE'); // backwards compatibility
+        // Backwards compatibility
+        $GLOBALS['TL_LANGUAGE']  = $language;
+        $_SESSION['TL_LANGUAGE'] = $language;
     }
 
     /**
@@ -265,6 +255,12 @@ class FrameworkInitializer implements ContainerAwareInterface
      */
     private function validateInstallation()
     {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request || 'contao_backend_install' === $request->attributes->get('_route')) {
+            return;
+        }
+
         // Show the "incomplete installation" message
         if (!$this->container->get('contao.adapter.config')->isComplete()) {
             throw new IncompleteInstallationException(
@@ -309,7 +305,7 @@ class FrameworkInitializer implements ContainerAwareInterface
             define('REQUEST_TOKEN', $tokenManager->getToken($tokenName)->getValue());
         }
 
-        if (!$_POST || null === $request) {
+        if (null === $request || 'POST' !== $request->getRealMethod()) {
             return;
         }
 
