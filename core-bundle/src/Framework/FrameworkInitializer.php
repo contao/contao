@@ -70,6 +70,11 @@ class FrameworkInitializer
     private $csrfTokenName;
 
     /**
+     * @var int
+     */
+    private $errorLevel;
+
+    /**
      * @var bool
      */
     private $initialized = false;
@@ -95,6 +100,7 @@ class FrameworkInitializer
         $this->rootDir       = dirname($this->container->getParameter('kernel.root_dir'));
         $this->tokenManager  = $this->container->get('security.csrf.token_manager');
         $this->csrfTokenName = $this->container->getParameter('contao.csrf_token_name');
+        $this->errorLevel    = $this->container->getParameter('contao.error_level');
         $this->config        = $this->container->get('contao.adapter.config');
     }
 
@@ -124,7 +130,7 @@ class FrameworkInitializer
         $this->setConstants($request);
 
         // Set the error_reporting level
-        error_reporting($this->container->getParameter('contao.error_level'));
+        error_reporting($this->errorLevel);
 
         $this->includeHelpers();
 
