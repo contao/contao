@@ -120,10 +120,10 @@ class UserSessionListener extends AbstractScopeAwareListener
     {
         // Update the referer URL
         if ($this->canModifyBackendSession($request)) {
+            // FIXME: make a separate listener
             $key       = $request->query->has('popup') ? 'popupReferer' : 'referer';
             $refererId = $request->attributes->get('_contao_referer_id');
-            $bag       = $this->getSessionBag();
-            $referers  = $this->prepareBackendReferer($refererId, $bag->get($key));
+            $referers  = $this->prepareBackendReferer($refererId, $this->session->get($key));
             $ref       = $request->query->get('ref', '');
 
             // Move current to last if the referer is in both the URL and the session
@@ -134,7 +134,7 @@ class UserSessionListener extends AbstractScopeAwareListener
             // Set new current referer
             $referers[$refererId]['current'] = $this->getRelativeRequestUri($request);
 
-            $bag->set($key, $referers);
+            $this->session->set($key, $referers);
         }
 
         $this->storeSession();
