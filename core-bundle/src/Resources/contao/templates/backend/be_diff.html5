@@ -38,7 +38,7 @@
         <div class="formbody">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
           <?php if ($this->staticFrom): ?>
-            <span class="arrow"><?= $this->staticFrom ?></span>
+            <span class="static-version"><?= $this->staticFrom ?></span>
           <?php else: ?>
             <select name="from" id="ctrl_from" class="tl_select">
               <?php foreach ($this->versions as $k=>$v): ?>
