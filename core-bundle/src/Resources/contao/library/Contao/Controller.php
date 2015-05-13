@@ -1634,6 +1634,7 @@ abstract class Controller extends \System
 					'enclosure' => $objFiles->path,
 					'icon'      => TL_ASSETS_URL . 'assets/contao/images/' . $objFile->icon,
 					'mime'      => $objFile->mime,
+					'extension' => $objFile->extension,
 					'meta'      => $arrMeta
 				);
 			}

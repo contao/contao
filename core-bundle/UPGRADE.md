@@ -4,6 +4,13 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### Mime icons
+
+The mime icons have been removed from all front end templates. Instead, a new
+style sheet called `icons.css` has been added to the layout builder, which
+restores the mime icons for downloads and enclosures via CSS.
+
+
 ### article_raster_designer hook
 
 The "article_raster_designer" hook has been removed. Use the "getArticles" hook
