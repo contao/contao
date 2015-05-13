@@ -8,7 +8,6 @@
  * @license LGPL-3.0+
  */
 
-
 namespace Contao\CoreBundle;
 
 use Contao\ClassLoader;
@@ -26,7 +25,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
- * Service for Initialization-Process of Legacy-Framework
+ * Initializes the Contao framework.
  *
  * @author Dominik Tomasi <https://github.com/dtomasi>
  * @author Andreas Schempp <https://github.com/aschempp>
@@ -89,16 +88,25 @@ class ContaoFramework
     ];
 
     /**
-     * @inheritdoc
+     * Constructor.
+     *
+     * @param ContainerInterface        $container     The dependency injection container
+     * @param RouterInterface           $router        The router service
+     * @param SessionInterface          $session       The session service
+     * @param string                    $rootDir       The kernel root directory
+     * @param CsrfTokenManagerInterface $tokenManager  The token manager service
+     * @param string                    $csrfTokenName The name of the token
+     * @param ConfigAdapter             $config        The config adapter object
+     * @param int                       $errorLevel    The PHP error level
      */
     public function __construct(
         ContainerInterface $container,
         RouterInterface $router,
         SessionInterface $session,
-        ConfigAdapter $config,
         $rootDir,
         CsrfTokenManagerInterface $tokenManager,
-        $tokenName,
+        $csrfTokenName,
+        ConfigAdapter $config,
         $errorLevel
     ) {
         $this->container     = $container;
@@ -106,9 +114,9 @@ class ContaoFramework
         $this->session       = $session;
         $this->rootDir       = dirname($rootDir);
         $this->tokenManager  = $tokenManager;
-        $this->csrfTokenName = $tokenName;
-        $this->errorLevel    = $errorLevel;
+        $this->csrfTokenName = $csrfTokenName;
         $this->config        = $config;
+        $this->errorLevel    = $errorLevel;
     }
 
     /**
