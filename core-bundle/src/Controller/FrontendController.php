@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\Controller;
 use Contao\FrontendCron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,6 +34,8 @@ class FrontendController extends Controller
      */
     public function indexAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new FrontendIndex();
 
         return $controller->run();
@@ -49,6 +50,8 @@ class FrontendController extends Controller
      */
     public function cronAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new FrontendCron();
 
         return $controller->run();
@@ -63,6 +66,8 @@ class FrontendController extends Controller
      */
     public function shareAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new FrontendShare();
 
         return $controller->run();
