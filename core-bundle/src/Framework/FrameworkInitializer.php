@@ -17,12 +17,13 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
+use Contao\Input;
+use Contao\System;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Contao\Input;
-use Contao\System;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
@@ -74,6 +75,16 @@ class FrameworkInitializer
     private $initialized = false;
 
     /**
+     * @var array
+     */
+    private $basicClasses = [
+        'Config',
+        'ClassLoader',
+        'TemplateLoader',
+        'ModuleLoader',
+    ];
+
+    /**
      * @inheritdoc
      */
     public function __construct(ContainerInterface $container)
@@ -108,43 +119,51 @@ class FrameworkInitializer
 
         $this->initialized = true;
 
-        $this->setConstants();
-        $this->setErrorReporting();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        $this->setConstants($request);
+
+        // Set the error_reporting level
+        error_reporting($this->container->getParameter('contao.error_level'));
+
         $this->includeHelpers();
-        $this->setErrorLog();
+
+        // TODO: use Monolog to log errors
+        $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
+
         $this->includeBasicClasses();
-        $this->preloadConfig();
-        $this->scanAndRegisterClassLoader();
+
+        // Preload the configuration (see #5872)
+        $this->config->preload();
+
+        // Register the class loader
+        ClassLoader::scanAndRegister();
+
         $this->initializeLegacySessionAccess();
-        $this->setDefaultLanguage();
+        $this->setDefaultLanguage($request);
 
-        // Invoke Legacy-HOOKS
-        if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
-            foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
-                System::importStatic($callback[0])->$callback[1]();
-            }
-        }
+        // Fully load the configuration
+        $this->config->initialize();
 
-        // Included initconfig.php
-        if (file_exists($this->rootDir . '/system/config/initconfig.php')) {
-            include $this->rootDir . '/system/config/initconfig.php';
-        }
-
-        $this->initializeConfig();
-        $this->validateInstallation();
+        $this->validateInstallation($request);
 
         Input::initialize();
 
         $this->setTimezone();
-        $this->setMbStingEncoding();
-        $this->handleRequestToken();
 
+        // Set the mbstring encoding
+        if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
+            mb_regex_encoding($this->config->get('characterSet'));
+        }
+
+        $this->triggerInitializeSystemHook();
+        $this->handleRequestToken($request);
     }
 
     /**
      * Defines Constants required for Contao-Framework
      */
-    private function setConstants()
+    private function setConstants(Request $request = null)
     {
         if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
             define('TL_MODE', 'BE');
@@ -154,8 +173,6 @@ class FrameworkInitializer
 
         define('TL_START', microtime(true));
         define('TL_ROOT', $this->rootDir);
-
-        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if (null !== $request) {
             define('TL_REFERER_ID', $request->attributes->get('_contao_referer_id', ''));
@@ -186,14 +203,6 @@ class FrameworkInitializer
     }
 
     /**
-     * Sets error_reporting
-     */
-    private function setErrorReporting()
-    {
-        error_reporting($this->container->getParameter('contao.error_level'));
-    }
-
-    /**
      * Includes some helper files
      */
     private function includeHelpers()
@@ -205,29 +214,24 @@ class FrameworkInitializer
     }
 
     /**
-     * Sets error_log
+     * Tries to set a php.ini configuration option.
+     *
+     * @param string $key   The key
+     * @param mixed  $value The value
      */
-    private function setErrorLog()
+    private function iniSet($key, $value)
     {
-        // TODO: use Monolog to log errors
         if (function_exists('ini_set')) {
-            ini_set('error_log', $this->rootDir . '/system/logs/error.log');
+            ini_set($key, $value);
         }
     }
 
     /**
-     * Includes basic Classes for Contao-Framework
+     * Includes the basic classes required for further processing.
      */
     private function includeBasicClasses()
     {
-        $basicClasses = [
-            'Config',
-            'ClassLoader',
-            'TemplateLoader',
-            'ModuleLoader',
-        ];
-
-        foreach ($basicClasses as $class) {
+        foreach ($this->basicClasses as $class) {
             if (!class_exists($class, false)) {
                 require_once __DIR__ . '/../../src/Resources/contao/library/Contao/' . $class . '.php';
                 class_alias('Contao\\' . $class, $class);
@@ -236,37 +240,12 @@ class FrameworkInitializer
     }
 
     /**
-     * Preloads \Contao\Config via ConfigAdapter
+     * Sets the default language.
+     *
+     * @param Request|null $request
      */
-    private function preloadConfig()
+    private function setDefaultLanguage(Request $request = null)
     {
-        $this->config->preload();
-    }
-
-    /**
-     * Scan and Register Classes in Contao´s ClassLoader
-     */
-    private function scanAndRegisterClassLoader()
-    {
-        ClassLoader::scanAndRegister();
-    }
-
-    /**
-     * Initializes Session access for BC
-     */
-    private function initializeLegacySessionAccess()
-    {
-        $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
-        $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
-    }
-
-    /**
-     * Sets the Default Language
-     */
-    private function setDefaultLanguage()
-    {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-
         $language = 'en';
 
         if (null !== $request) {
@@ -279,20 +258,14 @@ class FrameworkInitializer
     }
 
     /**
-     * Initializes \Contao\Config via ConfigAdapter
+     * Validates the installation.
+     *
+     * @param Request|null $request The current request if available
+     *
+     * @throws IncompleteInstallationException If the installation has not been completed
      */
-    private function initializeConfig()
+    private function validateInstallation(Request $request = null)
     {
-        $this->config->initialize();
-    }
-
-    /**
-     * Validates the Installation is complete
-     */
-    private function validateInstallation()
-    {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-
         if (null === $request || 'contao_backend_install' === $request->attributes->get('_route')) {
             return;
         }
@@ -306,34 +279,39 @@ class FrameworkInitializer
     }
 
     /**
-     * Sets the Timezone
+     * Sets the time zone.
      */
     private function setTimezone()
     {
-        if (function_exists('ini_set')) {
-            ini_set('date.timezone', $this->config->get('timeZone'));
-        }
+        $this->iniSet('date.timezone', $this->config->get('timeZone'));
         date_default_timezone_set($this->config->get('timeZone'));
     }
 
     /**
-     * Sets MBString encoding
+     * Triggers the initializeSystem hook (see #5665).
      */
-    private function setMbStingEncoding()
+    private function triggerInitializeSystemHook()
     {
-        // Set the mbstring encoding
-        if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
-            mb_regex_encoding($this->config->get('characterSet'));
+        if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
+            foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
+                System::importStatic($callback[0])->$callback[1]();
+            }
+        }
+
+        if (file_exists($this->rootDir . '/system/config/initconfig.php')) {
+            include $this->rootDir . '/system/config/initconfig.php';
         }
     }
 
     /**
-     * Handles RequestToken
+     * Handles the request token.
+     *
+     * @param Request|null $request
+     *
+     * @throws AjaxRedirectResponseException|InvalidRequestTokenException If the token is invalid
      */
-    private function handleRequestToken()
+    private function handleRequestToken(Request $request = null)
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-
         // Backwards compatibility
         if (!defined('REQUEST_TOKEN')) {
             define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
@@ -355,5 +333,14 @@ class FrameworkInitializer
 
         // FIXME: This forces all routes handling POST data to pass a REQUEST_TOKEN
         throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
+    }
+
+    /**
+     * Initializes session access for $_SESSION['FE_DATA'] and $_SESSION['BE_DATA'].
+     */
+    private function initializeLegacySessionAccess()
+    {
+        $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
+        $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
     }
 }
