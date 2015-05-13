@@ -44,10 +44,11 @@ services:
     contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
-        calls:
-            - ['setContainer', ['@service_container']]
+        arguments:
+            - '@contao.framework'
+            - '@service_container'
 
-    contao.framework_initializer:
+    contao.framework:
         class: Contao\CoreBundle\ContaoFramework
         arguments:
             - '@service_container'

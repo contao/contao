@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\ContaoFramework;
 use Contao\Frontend;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -22,6 +23,21 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class OutputFromCacheListener extends AbstractScopeAwareListener
 {
     /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    /**
+     * Constructor.
+     *
+     * @param ContaoFramework $framework The Contao framework service
+     */
+    public function __construct(ContaoFramework $framework)
+    {
+        $this->framework = $framework;
+    }
+
+    /**
      * Forwards the request to the Frontend class and sets the response if any.
      *
      * @param GetResponseEvent $event The event object
@@ -31,6 +47,8 @@ class OutputFromCacheListener extends AbstractScopeAwareListener
         if (!$this->isFrontendMasterRequest($event)) {
             return;
         }
+
+        $this->framework->initialize();
 
         if (null !== ($response = Frontend::getResponseFromCache())) {
             $event->setResponse($response);

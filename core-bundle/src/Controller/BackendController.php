@@ -21,7 +21,6 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -44,6 +43,8 @@ class BackendController extends Controller
      */
     public function mainAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new BackendMain();
 
         return $controller->run();
@@ -58,6 +59,8 @@ class BackendController extends Controller
      */
     public function loginAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new BackendIndex();
 
         return $controller->run();
@@ -74,6 +77,8 @@ class BackendController extends Controller
      */
     public function installAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         ob_start();
 
         $controller = new BackendInstall();
@@ -91,6 +96,8 @@ class BackendController extends Controller
      */
     public function passwordAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new BackendPassword();
 
         return $controller->run();
@@ -105,6 +112,8 @@ class BackendController extends Controller
      */
     public function previewAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new BackendPreview();
 
         return $controller->run();
@@ -119,6 +128,8 @@ class BackendController extends Controller
      */
     public function confirmAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new BackendConfirm();
 
         return $controller->run();
@@ -133,6 +144,8 @@ class BackendController extends Controller
      */
     public function fileAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new BackendFile();
 
         return $controller->run();
@@ -147,6 +160,8 @@ class BackendController extends Controller
      */
     public function helpAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new BackendHelp();
 
         return $controller->run();
@@ -161,6 +176,8 @@ class BackendController extends Controller
      */
     public function pageAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new BackendPage();
 
         return $controller->run();
@@ -175,6 +192,8 @@ class BackendController extends Controller
      */
     public function popupAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new BackendPopup();
 
         return $controller->run();
@@ -189,6 +208,8 @@ class BackendController extends Controller
      */
     public function switchAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new BackendSwitch();
 
         return $controller->run();

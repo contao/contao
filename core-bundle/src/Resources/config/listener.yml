@@ -34,6 +34,8 @@
 services:
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
+        arguments:
+            - '@contao.framework'
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
@@ -49,16 +51,6 @@ services:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 96 }
-
-    contao.listener.initialize_system:
-        class: Contao\CoreBundle\EventListener\InitializeSystemListener
-        arguments:
-            - "@contao.framework_initializer"
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 10 }
-            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
@@ -78,6 +70,8 @@ services:
 
     contao.listener.output_from_cache:
         class: Contao\CoreBundle\EventListener\OutputFromCacheListener
+        arguments:
+            - '@contao.framework'
         calls:
             - [setContainer, ["@service_container"]]
         tags:
@@ -116,6 +110,8 @@ services:
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
+        arguments:
+            - '@contao.framework'
         calls:
             - [setContainer, ["@service_container"]]
         tags:
