@@ -287,7 +287,7 @@ class tl_comments extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$session = $this->Session->getData();
+				$session = $this->Session->all();
 
 				if (!is_array($session['CURRENT']['IDS']) || empty($session['CURRENT']['IDS']))
 				{
@@ -305,7 +305,7 @@ class tl_comments extends Backend
 				}
 
 				$session['CURRENT']['IDS'] = array_values($session['CURRENT']['IDS']);
-				$this->Session->setData($session);
+				$this->Session->replace($session);
 				break;
 
 			default:
