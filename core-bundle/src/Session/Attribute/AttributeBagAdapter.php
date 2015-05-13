@@ -166,7 +166,11 @@ class AttributeBagAdapter implements AttributeBagInterface, \ArrayAccess
      */
     public function getData()
     {
-        trigger_error('Using Session::getData() has been deprecated and will no longer work in Contao 5.0. Use the all() method instead.', E_USER_DEPRECATED);
+        trigger_error(
+            'Using Session::getData() has been deprecated and will no longer work in Contao 5.0. '
+                . 'Use the all() method instead.',
+            E_USER_DEPRECATED
+        );
 
         return $this->targetBag->all();
     }
@@ -181,7 +185,11 @@ class AttributeBagAdapter implements AttributeBagInterface, \ArrayAccess
      */
     public function setData(array $attributes)
     {
-        trigger_error('Using Session::setData() has been deprecated and will no longer work in Contao 5.0. Use the replace() method instead.', E_USER_DEPRECATED);
+        trigger_error(
+            'Using Session::setData() has been deprecated and will no longer work in Contao 5.0. '
+                . 'Use the replace() method instead.',
+            E_USER_DEPRECATED
+        );
 
         $this->targetBag->replace($attributes);
     }
