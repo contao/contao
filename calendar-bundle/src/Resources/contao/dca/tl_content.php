@@ -89,9 +89,9 @@ class tl_content_calendar extends Backend
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_calendar_events' AND pid=?")
 										 ->execute(CURRENT_ID);
 
-				$session = $this->Session->getData();
+				$session = $this->Session->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
-				$this->Session->setData($session);
+				$this->Session->replace($session);
 				break;
 
 			case 'cut':
