@@ -210,11 +210,14 @@ class BackendMain extends \Backend
 			$this->Template->title = $this->Template->headline;
 		}
 
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// File picker reference
-		if (\Input::get('popup') && \Input::get('act') != 'show' && (\Input::get('do') == 'page' || \Input::get('do') == 'files') && $this->Session->get('filePickerRef'))
+		if (\Input::get('popup') && \Input::get('act') != 'show' && (\Input::get('do') == 'page' || \Input::get('do') == 'files') && $objSession->get('filePickerRef'))
 		{
-			$this->Template->managerHref = $this->Session->get('filePickerRef');
-			$this->Template->manager = (strpos($this->Session->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
+			$this->Template->managerHref = $objSession->get('filePickerRef');
+			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
 		}
 
 		$this->Template->theme = \Backend::getTheme();

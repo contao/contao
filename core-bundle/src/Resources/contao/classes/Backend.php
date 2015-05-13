@@ -11,7 +11,9 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to manage back end controllers.
@@ -315,14 +317,20 @@ abstract class Backend extends \Controller
 			$this->redirect('contao/main.php?act=error');
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		$arrTables = (array) $arrModule['tables'];
 		$strTable = \Input::get('table') ?: $arrTables[0];
-		$id = (!\Input::get('act') && \Input::get('id')) ? \Input::get('id') : $this->Session->get('CURRENT_ID');
+		$id = (!\Input::get('act') && \Input::get('id')) ? \Input::get('id') : $objSession->get('CURRENT_ID');
 
 		// Store the current ID in the current session
-		if ($id != $this->Session->get('CURRENT_ID'))
+		if ($id != $objSession->get('CURRENT_ID'))
 		{
-			$this->Session->set('CURRENT_ID', $id);
+			$objSession->set('CURRENT_ID', $id);
 		}
 
 		define('CURRENT_ID', (\Input::get('table') ? $id : \Input::get('id')));

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -65,7 +66,13 @@ class RebuildIndex extends \Backend implements \executable
 			// Check the request token (see #4007)
 			if (!isset($_GET['rt']) || !\RequestToken::validate(\Input::get('rt')))
 			{
-				$this->Session->set('INVALID_TOKEN_URL', \Environment::get('request'));
+				/** @var KernelInterface $kernel */
+				global $kernel;
+
+				/** @var SessionInterface $objSession */
+				$objSession = $kernel->getContainer()->get('session');
+
+				$objSession->set('INVALID_TOKEN_URL', \Environment::get('request'));
 				$this->redirect('contao/confirm.php');
 			}
 

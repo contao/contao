@@ -12,9 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -46,7 +45,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * @property \Database\Updater                         $Updater     The database updater object
  * @property \Messages                                 $Messages    The messages object
  * @property \News                                     $News        The news object
- * @property AttributeBagInterface                     $Session     The session object
+ * @property \Session                                  $Session     The session object
  * @property \StyleSheets                              $StyleSheets The style sheets object
  * @property \BackendTemplate|\FrontendTemplate|object $Template    The template object
  * @property \BackendUser|\FrontendUser                $User        The user object
@@ -144,19 +143,7 @@ abstract class System
 
 		if ($blnForce || !isset($this->arrObjects[$strKey]))
 		{
-			if ($strKey == 'Session')
-			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
-
-				$strMode = $kernel->getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND) ? 'backend' : 'frontend';
-
-				$this->arrObjects[$strKey] = $kernel->getContainer()->get('session')->getBag('contao_' . $strMode);
-			}
-			else
-			{
-				$this->arrObjects[$strKey] = (in_array('getInstance', get_class_methods($strClass))) ? call_user_func(array($strClass, 'getInstance')) : new $strClass();
-			}
+			$this->arrObjects[$strKey] = (in_array('getInstance', get_class_methods($strClass))) ? call_user_func(array($strClass, 'getInstance')) : new $strClass();
 		}
 	}
 
@@ -231,10 +218,8 @@ abstract class System
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		$strMode = $kernel->getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND) ? 'backend' : 'frontend';
-
-		/** @var AttributeBagInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session')->getBag('contao_' . $strMode);
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
 
 		$ref = \Input::get('ref');
 		$key = \Input::get('popup') ? 'popupReferer' : 'referer';

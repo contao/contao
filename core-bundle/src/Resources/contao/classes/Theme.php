@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to handle themes.
@@ -40,6 +43,12 @@ class Theme extends \Backend
 
 		if (\Input::post('FORM_SUBMIT') == 'tl_theme_import')
 		{
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
+			/** @var SessionInterface $objSession */
+			$objSession = $kernel->getContainer()->get('session');
+
 			if (!\Input::post('confirm'))
 			{
 				$arrUploaded = $objUploader->uploadTo('system/tmp');
@@ -75,7 +84,7 @@ class Theme extends \Backend
 			}
 			else
 			{
-				$arrFiles = explode(',', $this->Session->get('uploaded_themes'));
+				$arrFiles = explode(',', $objSession->get('uploaded_themes'));
 			}
 
 			// Check whether there are any files
@@ -105,7 +114,7 @@ class Theme extends \Backend
 			}
 			else
 			{
-				$this->Session->set('uploaded_themes', implode(',', $arrFiles));
+				$objSession->set('uploaded_themes', implode(',', $arrFiles));
 
 				return $this->compareThemeFiles($arrFiles, $arrDbFields);
 			}
@@ -641,7 +650,14 @@ class Theme extends \Backend
 		}
 
 		\System::setCookie('BE_PAGE_OFFSET', 0, 0);
-		$this->Session->remove('uploaded_themes');
+
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$objSession->remove('uploaded_themes');
 
 		// Redirect
 		$this->redirect(str_replace('&key=importTheme', '', \Environment::get('request')));

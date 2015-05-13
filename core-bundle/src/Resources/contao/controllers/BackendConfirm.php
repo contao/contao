@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -49,10 +51,16 @@ class BackendConfirm extends \Backend
 	 */
 	public function run()
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Redirect to the back end home page
 		if (\Input::post('FORM_SUBMIT') == 'invalid_token_url')
 		{
-			list($strUrl) = explode('?', $this->Session->get('INVALID_TOKEN_URL'));
+			list($strUrl) = explode('?', $objSession->get('INVALID_TOKEN_URL'));
 			$this->redirect($strUrl);
 		}
 
@@ -60,7 +68,7 @@ class BackendConfirm extends \Backend
 		$objTemplate = new \BackendTemplate('be_confirm');
 
 		// Prepare the URL
-		$url = preg_replace('/(\?|&)rt=[^&]*/', '', $this->Session->get('INVALID_TOKEN_URL'));
+		$url = preg_replace('/(\?|&)rt=[^&]*/', '', $objSession->get('INVALID_TOKEN_URL'));
 		$objTemplate->href = ampersand($url . ((strpos($url, '?') !== false) ? '&rt=' : '?rt=') . REQUEST_TOKEN);
 
 		$vars = array();
