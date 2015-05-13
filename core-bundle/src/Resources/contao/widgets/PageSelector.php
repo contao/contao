@@ -297,7 +297,7 @@ class PageSelector extends \Widget
 	protected function renderPagetree($id, $intMargin, $protectedPage=false, $blnNoRecursion=false)
 	{
 		static $session;
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 
 		$flag = substr($this->strField, 0, 2);
 		$node = 'tree_' . $this->strTable . '_' . $this->strField;
@@ -307,7 +307,7 @@ class PageSelector extends \Widget
 		if (\Input::get($flag.'tg'))
 		{
 			$session[$node][\Input::get($flag.'tg')] = (isset($session[$node][\Input::get($flag.'tg')]) && $session[$node][\Input::get($flag.'tg')] == 1) ? 0 : 1;
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)'.$flag.'tg=[^& ]*/i', '', \Environment::get('request')));
 		}
 

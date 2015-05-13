@@ -153,9 +153,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$this->reload();
 			}
 
-			$session = $this->Session->getData();
+			$session = $this->Session->all();
 			$session['CURRENT']['IDS'] = $ids;
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 
 			if (isset($_POST['edit']))
 			{
@@ -393,9 +393,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		// Store the current IDs
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$session['CURRENT']['IDS'] = $this->current;
-		$this->Session->setData($session);
+		$this->Session->replace($session);
 
 		return $return;
 	}
@@ -1528,7 +1528,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$ids = $session['CURRENT']['IDS'];
 
 		if (is_array($ids) && strlen($ids[0]))
@@ -2158,7 +2158,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$this->import('BackendUser', 'User');
 
 		// Get current IDs from session
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$ids = $session['CURRENT']['IDS'];
 
 		if ($intId != '' && \Environment::get('isAjaxRequest'))
@@ -2170,7 +2170,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		if (\Input::post('FORM_SUBMIT') == $this->strTable.'_all' && \Input::get('fields'))
 		{
 			$session['CURRENT'][$this->strTable] = \Input::post('all_fields');
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 		}
 
 		// Add fields
@@ -2551,14 +2551,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$this->import('BackendUser', 'User');
 
 		// Get current IDs from session
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$ids = $session['CURRENT']['IDS'];
 
 		// Save field selection in session
 		if (\Input::post('FORM_SUBMIT') == $this->strTable.'_all' && \Input::get('fields'))
 		{
 			$session['CURRENT'][$this->strTable] = \Input::post('all_fields');
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 		}
 
 		// Add fields
@@ -3232,7 +3232,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->loadDataContainer($table);
 		}
 
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 
 		// Toggle the nodes
 		if (\Input::get('ptg') == 'all')
@@ -3257,7 +3257,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$session[$node] = array();
 			}
 
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', \Environment::get('request')));
 		}
 
@@ -3583,14 +3583,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	{
 		static $session;
 
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? $this->strTable.'_'.$table.'_tree' : $this->strTable.'_tree';
 
 		// Toggle nodes
 		if (\Input::get('ptg'))
 		{
 			$session[$node][\Input::get('ptg')] = (isset($session[$node][\Input::get('ptg')]) && $session[$node][\Input::get('ptg')] == 1) ? 0 : 1;
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', \Environment::get('request')));
 		}
@@ -3602,7 +3602,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Return if there is no result
 		if ($objRow->numRows < 1)
 		{
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 
 			return '';
 		}
@@ -3816,7 +3816,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		$this->Session->setData($session);
+		$this->Session->replace($session);
 
 		return $return;
 	}
@@ -4873,7 +4873,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	protected function searchMenu()
 	{
 		$searchFields = array();
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 
 		// Get search fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
@@ -4910,7 +4910,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				catch (\Exception $e) {}
 			}
 
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 		}
 
 		// Set the search value from the session
@@ -4994,7 +4994,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		$this->bid = 'tl_buttons_a';
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'];
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
 
@@ -5013,7 +5013,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			if (in_array($strSort, $sortingFields))
 			{
 				$session['sorting'][$this->strTable] = in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strSort]['flag'], array(2, 4, 6, 8, 10, 12)) ? "$strSort DESC" : $strSort;
-				$this->Session->setData($session);
+				$this->Session->replace($session);
 			}
 		}
 
@@ -5067,7 +5067,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function limitMenu($blnOptional=false)
 	{
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;
 		$fields = '';
 
@@ -5089,7 +5089,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_filters_limit')
 			{
@@ -5209,7 +5209,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$fields = '';
 		$this->bid = 'tl_buttons_a';
 		$sortingFields = array();
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;
 
 		// Get the sorting fields
@@ -5242,7 +5242,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 		}
 
 		// Set filter from table configuration
@@ -5608,7 +5608,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function paginationMenu()
 	{
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;
 
 		list($offset, $limit) = explode(',', $this->limit);
@@ -5621,7 +5621,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			if ($lp >= 0 && $lp < ceil($this->total / $limit))
 			{
 				$session['filter'][$filter]['limit'] = ($lp * $limit) . ',' . $limit;
-				$this->Session->setData($session);
+				$this->Session->replace($session);
 			}
 
 			$this->redirect(preg_replace('/&(amp;)?lp=[^&]+/i', '', \Environment::get('request')));

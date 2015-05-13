@@ -123,9 +123,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Decode the values (see #5764)
 			$ids = array_map('rawurldecode', $ids);
 
-			$session = $this->Session->getData();
+			$session = $this->Session->all();
 			$session['CURRENT']['IDS'] = $ids;
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 
 			if (isset($_POST['edit']))
 			{
@@ -269,7 +269,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Get the session data and toggle the nodes
 		if (\Input::get('tg') == 'all')
 		{
-			$session = $this->Session->getData();
+			$session = $this->Session->all();
 
 			// Expand tree
 			if (!is_array($session['filetree']) || empty($session['filetree']) || current($session['filetree']) != 1)
@@ -282,7 +282,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$session['filetree'] = array();
 			}
 
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', \Environment::get('request')));
 		}
 
@@ -830,7 +830,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$ids = $session['CURRENT']['IDS'];
 
 		if (is_array($ids) && strlen($ids[0]))
@@ -1355,14 +1355,14 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		// Get current IDs from session
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 		$ids = $session['CURRENT']['IDS'];
 
 		// Save field selection in session
 		if (\Input::post('FORM_SUBMIT') == $this->strTable.'_all' && \Input::get('fields'))
 		{
 			$session['CURRENT'][$this->strTable] = \Input::post('all_fields');
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 		}
 
 		$fields = $session['CURRENT'][$this->strTable];
@@ -1972,12 +1972,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Set the new value so the input field can show it
 			if (\Input::get('act') == 'editAll')
 			{
-				$session = $this->Session->getData();
+				$session = $this->Session->all();
 
 				if (($index = array_search($this->strPath.'/'.$this->varValue.$this->strExtension, $session['CURRENT']['IDS'])) !== false)
 				{
 					$session['CURRENT']['IDS'][$index] = $this->strPath.'/'.$varValue.$this->strExtension;
-					$this->Session->setData($session);
+					$this->Session->replace($session);
 				}
 			}
 
@@ -2257,13 +2257,13 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null)
 	{
 		static $session;
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 
 		// Get the session data and toggle the nodes
 		if (\Input::get('tg'))
 		{
 			$session['filetree'][\Input::get('tg')] = (isset($session['filetree'][\Input::get('tg')]) && $session['filetree'][\Input::get('tg')] == 1) ? 0 : 1;
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', \Environment::get('request')));
 		}
 

@@ -787,7 +787,7 @@ abstract class Frontend extends \Controller
 		$session = $kernel->getContainer()->get('session')->getBag('contao_frontend');
 
 		// Session required to determine the referer
-		$data = $session->getData();
+		$data = $session->all();
 
 		// Set the new referer
 		if (!isset($_GET['pdf']) && !isset($_GET['file']) && !isset($_GET['id']) && $data['referer']['current'] != \Environment::get('requestUri'))
@@ -797,7 +797,7 @@ abstract class Frontend extends \Controller
 		}
 
 		// Store the session data
-		$session->setData($data);
+		$session->replace($data);
 
 		// Load the default language file (see #2644)
 		\System::loadLanguageFile('default');

@@ -67,7 +67,7 @@ class AttributeBagAdapterTest extends TestCase
     /**
      * Tests the alias methods.
      */
-    public function testAliasMethods()
+    public function testLegacyMethods()
     {
         $attributeBag = new AttributeBag('foobar_storageKey');
 

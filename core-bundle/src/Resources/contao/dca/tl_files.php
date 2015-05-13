@@ -283,7 +283,7 @@ class tl_files extends Backend
 			$GLOBALS['TL_DCA']['tl_files']['config']['notDeletable'] = true;
 		}
 
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 
 		// Set allowed page IDs (edit multiple)
 		if (is_array($session['CURRENT']['IDS']))
@@ -333,7 +333,7 @@ class tl_files extends Backend
 		}
 
 		// Overwrite session
-		$this->Session->setData($session);
+		$this->Session->replace($session);
 
 		// Check current action
 		if (Input::get('act') && Input::get('act') != 'paste')

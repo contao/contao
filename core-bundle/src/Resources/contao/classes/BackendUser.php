@@ -462,13 +462,13 @@ class BackendUser extends \User
 	public function navigation($blnShowAll=false)
 	{
 		$arrModules = array();
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 
 		// Toggle nodes
 		if (\Input::get('mtg'))
 		{
 			$session['backend_modules'][\Input::get('mtg')] = (isset($session['backend_modules'][\Input::get('mtg')]) && $session['backend_modules'][\Input::get('mtg')] == 0) ? 1 : 0;
-			$this->Session->setData($session);
+			$this->Session->replace($session);
 			\Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', \Environment::get('request')));
 		}
 

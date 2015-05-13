@@ -661,7 +661,7 @@ class tl_page extends Backend
 			return;
 		}
 
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 
 		// Set the default page user and group
 		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = intval(Config::get('defaultUser') ?: $this->User->id);
@@ -730,7 +730,7 @@ class tl_page extends Backend
 		}
 
 		// Overwrite session
-		$this->Session->setData($session);
+		$this->Session->replace($session);
 
 		// Check permissions to save and create new
 		if (Input::get('act') == 'edit')
@@ -1537,7 +1537,7 @@ class tl_page extends Backend
 		// Generate the aliases
 		if (Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
 		{
-			$session = $this->Session->getData();
+			$session = $this->Session->all();
 			$ids = $session['CURRENT']['IDS'];
 
 			foreach ($ids as $id)

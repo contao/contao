@@ -536,9 +536,9 @@ class tl_form_field extends Backend
 					$this->redirect('contao/main.php?act=error');
 				}
 
-				$session = $this->Session->getData();
+				$session = $this->Session->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objForm->fetchEach('id'));
-				$this->Session->setData($session);
+				$this->Session->replace($session);
 				break;
 
 			default:

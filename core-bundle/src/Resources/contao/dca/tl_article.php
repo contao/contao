@@ -369,7 +369,7 @@ class tl_article extends Backend
 			return;
 		}
 
-		$session = $this->Session->getData();
+		$session = $this->Session->all();
 
 		// Set the default page user and group
 		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = intval(Config::get('defaultUser') ?: $this->User->id);
@@ -440,7 +440,7 @@ class tl_article extends Backend
 		$permission = 0;
 
 		// Overwrite the session
-		$this->Session->setData($session);
+		$this->Session->replace($session);
 
 		// Check current action
 		if (Input::get('act') && Input::get('act') != 'paste')
@@ -858,7 +858,7 @@ class tl_article extends Backend
 		// Generate the aliases
 		if (Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
 		{
-			$session = $this->Session->getData();
+			$session = $this->Session->all();
 			$ids = $session['CURRENT']['IDS'];
 
 			foreach ($ids as $id)

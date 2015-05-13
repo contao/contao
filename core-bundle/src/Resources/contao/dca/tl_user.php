@@ -500,10 +500,10 @@ class tl_user extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$session = $this->Session->getData();
+				$session = $this->Session->all();
 				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE admin=1");
 				$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objUser->fetchEach('id'));
-				$this->Session->setData($session);
+				$this->Session->replace($session);
 				break;
 		}
 	}
@@ -655,7 +655,7 @@ class tl_user extends Backend
 
 				if (in_array('purge_session', $arrPurge))
 				{
-					$this->Session->setData(array());
+					$this->Session->replace(array());
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['sessionPurged']);
 				}
 
