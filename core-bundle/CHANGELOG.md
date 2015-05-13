@@ -4,6 +4,9 @@ Contao change log
 Version 4.0.0-RC1 (2014-05-XX)
 ------------------------------
 
+### New
+Add the "getArticles" hook.
+
 ### Fixed
 Make `Validator::isValidUrl()` RFC 3986 compliant (see contao/core#7790).
 

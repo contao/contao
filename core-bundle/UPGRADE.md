@@ -4,6 +4,12 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### article_raster_designer hook
+
+The "article_raster_designer" hook has been removed. Use the "getArticles" hook
+instead and return a string to override the default articles content.
+
+
 ### Add submit button
 
 The "add submit button" option in the form generator has been removed. To
