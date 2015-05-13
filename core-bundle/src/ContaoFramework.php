@@ -352,7 +352,6 @@ class ContaoFramework
             throw new AjaxRedirectResponseException($this->router->generate('contao_backend'));
         }
 
-        // FIXME: This forces all routes handling POST data to pass a REQUEST_TOKEN
         throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
     }
 
