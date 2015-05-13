@@ -376,6 +376,9 @@ class UserSessionListenerTest extends TestCase
             $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
         }
 
-        return new UserSessionListener($session, $connection, $tokenStorage);
+        $listener = new UserSessionListener($session, $connection);
+        $listener->setTokenStorage($tokenStorage);
+
+        return $listener;
     }
 }

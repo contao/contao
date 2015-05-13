@@ -262,6 +262,9 @@ class StoreRefererListenerTest extends TestCase
             $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
         }
 
-        return new StoreRefererListener($session, $tokenStorage);
+        $listener = new StoreRefererListener($session);
+        $listener->setTokenStorage($tokenStorage);
+
+        return $listener;
     }
 }

@@ -17,15 +17,14 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Stores and restores the user session.
  *
  * @author Yanick Witschi <https://github.com/toflar>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
-class UserSessionListener extends AbstractScopeAwareListener
+class UserSessionListener extends AbstractUserAwareListener
 {
     /**
      * @var SessionInterface
@@ -38,22 +37,15 @@ class UserSessionListener extends AbstractScopeAwareListener
     private $connection;
 
     /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
      * Constructor.
      *
-     * @param SessionInterface      $session      The session object
-     * @param Connection            $connection   The database connection
-     * @param TokenStorageInterface $tokenStorage The token storage object
+     * @param SessionInterface $session    The session object
+     * @param Connection       $connection The database connection
      */
-    public function __construct(SessionInterface $session, Connection $connection, TokenStorageInterface $tokenStorage)
+    public function __construct(SessionInterface $session, Connection $connection)
     {
-        $this->session      = $session;
-        $this->connection   = $connection;
-        $this->tokenStorage = $tokenStorage;
+        $this->session    = $session;
+        $this->connection = $connection;
     }
 
     /**
@@ -91,22 +83,6 @@ class UserSessionListener extends AbstractScopeAwareListener
             ->prepare('UPDATE ' . $user->getTable() . ' SET session=? WHERE id=?')
             ->execute([serialize($this->getSessionBag()->all()), $user->id])
         ;
-    }
-
-    /**
-     * Checks if there is an authenticated user.
-     *
-     * @return bool True if there is an authenticated user
-     */
-    private function hasUser()
-    {
-        $user = $this->tokenStorage->getToken();
-
-        if (null === $user) {
-            return false;
-        }
-
-        return (!$user instanceof AnonymousToken);
     }
 
     /**

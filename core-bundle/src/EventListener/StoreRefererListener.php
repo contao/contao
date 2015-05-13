@@ -13,8 +13,6 @@ namespace Contao\CoreBundle\EventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Stores the referer in the session.
@@ -22,7 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class StoreRefererListener extends AbstractScopeAwareListener
+class StoreRefererListener extends AbstractUserAwareListener
 {
     /**
      * @var SessionInterface
@@ -30,20 +28,13 @@ class StoreRefererListener extends AbstractScopeAwareListener
     private $session;
 
     /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
      * Constructor.
      *
-     * @param SessionInterface      $session      The session object
-     * @param TokenStorageInterface $tokenStorage The token storage object
+     * @param SessionInterface $session The session object
      */
-    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage)
+    public function __construct(SessionInterface $session)
     {
-        $this->session      = $session;
-        $this->tokenStorage = $tokenStorage;
+        $this->session = $session;
     }
 
     /**
@@ -64,22 +55,6 @@ class StoreRefererListener extends AbstractScopeAwareListener
         } else {
             $this->storeFrontendReferer($request);
         }
-    }
-
-    /**
-     * Checks if there is an authenticated user.
-     *
-     * @return bool True if there is an authenticated user
-     */
-    private function hasUser()
-    {
-        $user = $this->tokenStorage->getToken();
-
-        if (null === $user) {
-            return false;
-        }
-
-        return (!$user instanceof AnonymousToken);
     }
 
     /**
