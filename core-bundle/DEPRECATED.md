@@ -1,6 +1,13 @@
 Deprecated features
 ===================
 
+### Session::setData() and Session::getData()
+
+The methods `Session::setData()` and `Session::getData()` have been deprecated
+in Contao 4.0 and will be removed in Contao 5.0. Use the methods `replace()`
+and `all()` instead.
+
+
 ### Widget::addSubmit()
 
 The `Widget::addSubmit()` method has been deprecated in Contao 4.0 and will be
