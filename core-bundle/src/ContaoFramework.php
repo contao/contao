@@ -9,11 +9,10 @@
  */
 
 
-namespace Contao\CoreBundle\Framework;
+namespace Contao\CoreBundle;
 
 use Contao\ClassLoader;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
@@ -32,7 +31,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  * @author Dominik Tomasi <https://github.com/dtomasi>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class FrameworkInitializer
+class ContaoFramework
 {
     /**
      * @var ContainerInterface

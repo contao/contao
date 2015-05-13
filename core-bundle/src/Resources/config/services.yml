@@ -48,6 +48,6 @@ services:
             - ['setContainer', ['@service_container']]
 
     contao.framework_initializer:
-        class: Contao\CoreBundle\Framework\FrameworkInitializer
+        class: Contao\CoreBundle\ContaoFramework
         arguments:
             - '@service_container'
