@@ -149,17 +149,17 @@ class PageSelector extends \Widget
 		}
 		else
 		{
-            /** @var AttributeBagInterface $objBag */
-			$objBag = $objSession->getBag('contao_backend');
+            /** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = $objSession->getBag('contao_backend');
 
-			$strNode = $objBag->get('tl_page_picker');
+			$strNode = $objSessionBag->get('tl_page_picker');
 
 			// Unset the node if it is not within the predefined node set (see #5899)
 			if ($strNode > 0 && is_array($this->rootNodes))
 			{
 				if (!in_array($strNode, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))
 				{
-					$objBag->remove('tl_page_picker');
+					$objSessionBag->remove('tl_page_picker');
 				}
 			}
 
@@ -317,10 +317,10 @@ class PageSelector extends \Widget
 		/** @var SessionInterface $objSession */
 		$objSession = $kernel->getContainer()->get('session');
 
-		/** @var AttributeBagInterface $objBag */
-		$objBag = $objSession->getBag('contao_backend');
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $objSession->getBag('contao_backend');
 
-		$session = $objBag->all();
+		$session = $objSessionBag->all();
 
 		$flag = substr($this->strField, 0, 2);
 		$node = 'tree_' . $this->strTable . '_' . $this->strField;
@@ -330,7 +330,7 @@ class PageSelector extends \Widget
 		if (\Input::get($flag.'tg'))
 		{
 			$session[$node][\Input::get($flag.'tg')] = (isset($session[$node][\Input::get($flag.'tg')]) && $session[$node][\Input::get($flag.'tg')] == 1) ? 0 : 1;
-			$objBag->replace($session);
+			$objSessionBag->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)'.$flag.'tg=[^& ]*/i', '', \Environment::get('request')));
 		}
 

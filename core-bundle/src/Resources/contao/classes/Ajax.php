@@ -78,23 +78,23 @@ class Ajax extends \Backend
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var AttributeBagInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
 		switch ($this->strAction)
 		{
 			// Toggle navigation menu
 			case 'toggleNavigation':
-				$bemod = $objSession->get('backend_modules');
+				$bemod = $objSessionBag->get('backend_modules');
 				$bemod[\Input::post('id')] = intval(\Input::post('state'));
-				$objSession->set('backend_modules', $bemod);
+				$objSessionBag->set('backend_modules', $bemod);
 				throw new NoContentResponseException();
 
 			// Load a navigation menu group
 			case 'loadNavigation':
-				$bemod = $objSession->get('backend_modules');
+				$bemod = $objSessionBag->get('backend_modules');
 				$bemod[\Input::post('id')] = intval(\Input::post('state'));
-				$objSession->set('backend_modules', $bemod);
+				$objSessionBag->set('backend_modules', $bemod);
 
 				$this->import('BackendUser', 'User');
 
@@ -118,9 +118,9 @@ class Ajax extends \Backend
 					$this->strAjaxName = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', \Input::post('name'));
 				}
 
-				$nodes = $objSession->get($this->strAjaxKey);
+				$nodes = $objSessionBag->get($this->strAjaxKey);
 				$nodes[$this->strAjaxId] = intval(\Input::post('state'));
-				$objSession->set($this->strAjaxKey, $nodes);
+				$objSessionBag->set($this->strAjaxKey, $nodes);
 				throw new NoContentResponseException();
 
 			// Load nodes of the file or page tree
@@ -137,16 +137,16 @@ class Ajax extends \Backend
 					$this->strAjaxName = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', \Input::post('name'));
 				}
 
-				$nodes = $objSession->get($this->strAjaxKey);
+				$nodes = $objSessionBag->get($this->strAjaxKey);
 				$nodes[$this->strAjaxId] = intval(\Input::post('state'));
-				$objSession->set($this->strAjaxKey, $nodes);
+				$objSessionBag->set($this->strAjaxKey, $nodes);
 				break;
 
 			// Toggle the visibility of a fieldset
 			case 'toggleFieldset':
-				$fs = $objSession->get('fieldset_states');
+				$fs = $objSessionBag->get('fieldset_states');
 				$fs[\Input::post('table')][\Input::post('id')] = intval(\Input::post('state'));
-				$objSession->set('fieldset_states', $fs);
+				$objSessionBag->set('fieldset_states', $fs);
 				throw new NoContentResponseException();
 
 			// Check whether the temporary directory is writeable
@@ -174,9 +174,9 @@ class Ajax extends \Backend
 
 			// Toggle checkbox groups
 			case 'toggleCheckboxGroup':
-				$state = $objSession->get('checkbox_groups');
+				$state = $objSessionBag->get('checkbox_groups');
 				$state[\Input::post('id')] = intval(\Input::post('state'));
-				$objSession->set('checkbox_groups', $state);
+				$objSessionBag->set('checkbox_groups', $state);
 				break;
 
 			// HOOK: pass unknown actions to callback functions

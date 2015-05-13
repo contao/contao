@@ -465,17 +465,17 @@ class BackendUser extends \User
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var AttributeBagInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
 		$arrModules = array();
-		$session = $objSession->all();
+		$session = $objSessionBag->all();
 
 		// Toggle nodes
 		if (\Input::get('mtg'))
 		{
 			$session['backend_modules'][\Input::get('mtg')] = (isset($session['backend_modules'][\Input::get('mtg')]) && $session['backend_modules'][\Input::get('mtg')] == 0) ? 1 : 0;
-			$objSession->replace($session);
+			$objSessionBag->replace($session);
 			\Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', \Environment::get('request')));
 		}
 
