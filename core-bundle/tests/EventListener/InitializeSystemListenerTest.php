@@ -460,6 +460,7 @@ class InitializeSystemListenerTest extends TestCase
 
         /** @var ContainerInterface $container */
         $container = $kernel->getContainer();
+        $container->enterScope('backend');
 
         $listener = new InitializeSystemListener(
             $this->mockRouter('/contao/install'),
@@ -472,24 +473,24 @@ class InitializeSystemListenerTest extends TestCase
 
         $listener->setContainer($container);
 
-        $container->enterScope('backend');
-
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
-        $keeper = error_reporting();
-        $kernel->getContainer()->setParameter('contao.error_level', E_ALL ^ (E_NOTICE | E_STRICT | E_DEPRECATED));
+        $errorReporting = error_reporting();
         error_reporting(E_ALL);
+
+        $kernel->getContainer()->setParameter('contao.error_level', E_ALL ^ (E_NOTICE | E_STRICT | E_DEPRECATED));
+
         $this->assertNotEquals(
             $kernel->getContainer()->getParameter('contao.error_level'),
             error_reporting(),
-            'Test is invalid, error level is not changed.'
+            'Test is invalid, error level has not changed.'
         );
 
         $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
+
         $this->assertEquals($kernel->getContainer()->getParameter('contao.error_level'), error_reporting());
 
-        // Restore error reporting.
-        error_reporting($keeper);
+        error_reporting($errorReporting);
     }
 }
