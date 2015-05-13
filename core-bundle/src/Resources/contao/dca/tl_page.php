@@ -661,7 +661,13 @@ class tl_page extends Backend
 			return;
 		}
 
-		$session = $this->Session->all();
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->all();
 
 		// Set the default page user and group
 		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = intval(Config::get('defaultUser') ?: $this->User->id);
@@ -730,7 +736,7 @@ class tl_page extends Backend
 		}
 
 		// Overwrite session
-		$this->Session->replace($session);
+		$objSession->replace($session);
 
 		// Check permissions to save and create new
 		if (Input::get('act') == 'edit')
@@ -1062,7 +1068,13 @@ class tl_page extends Backend
 			return;
 		}
 
-		$new_records = $this->Session->get('new_records');
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$new_records = $objSession->get('new_records');
 
 		// Not a new page
 		if (!$new_records || (is_array($new_records[$dc->table]) && !in_array($dc->id, $new_records[$dc->table])))
@@ -1537,7 +1549,13 @@ class tl_page extends Backend
 		// Generate the aliases
 		if (Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
 		{
-			$session = $this->Session->all();
+			/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+			global $kernel;
+
+			/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+			$objSession = $kernel->getContainer()->get('session');
+
+			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'];
 
 			foreach ($ids as $id)

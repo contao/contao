@@ -283,7 +283,13 @@ class tl_files extends Backend
 			$GLOBALS['TL_DCA']['tl_files']['config']['notDeletable'] = true;
 		}
 
-		$session = $this->Session->all();
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->all();
 
 		// Set allowed page IDs (edit multiple)
 		if (is_array($session['CURRENT']['IDS']))
@@ -333,7 +339,7 @@ class tl_files extends Backend
 		}
 
 		// Overwrite session
-		$this->Session->replace($session);
+		$objSession->replace($session);
 
 		// Check current action
 		if (Input::get('act') && Input::get('act') != 'paste')

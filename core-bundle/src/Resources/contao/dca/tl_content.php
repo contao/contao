@@ -839,15 +839,21 @@ class tl_content extends Backend
 	 */
 	public function checkPermission()
 	{
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Prevent deleting referenced elements (see #4898)
 		if (Input::get('act') == 'deleteAll')
 		{
 			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias'")
 									 ->execute();
 
-			$session = $this->Session->all();
+			$session = $objSession->all();
 			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
-			$this->Session->replace($session);
+			$objSession->replace($session);
 		}
 
 		if ($this->User->isAdmin)
@@ -897,9 +903,9 @@ class tl_content extends Backend
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND pid=?")
 										 ->execute(CURRENT_ID);
 
-				$session = $this->Session->all();
+				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
-				$this->Session->replace($session);
+				$objSession->replace($session);
 				break;
 
 			case 'cut':

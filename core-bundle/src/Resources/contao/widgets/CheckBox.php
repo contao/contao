@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to handle check boxes.
@@ -92,13 +95,19 @@ class CheckBox extends \Widget
 			$this->arrAttributes['required'] = 'required';
 		}
 
-		$state = $this->Session->get('checkbox_groups');
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+		$state = $objSessionBag->get('checkbox_groups');
 
 		// Toggle the checkbox group
 		if (\Input::get('cbc'))
 		{
 			$state[\Input::get('cbc')] = (isset($state[\Input::get('cbc')]) && $state[\Input::get('cbc')] == 1) ? 0 : 1;
-			$this->Session->set('checkbox_groups', $state);
+			$objSessionBag->set('checkbox_groups', $state);
 
 			$this->redirect(preg_replace('/(&(amp;)?|\?)cbc=[^& ]*/i', '', \Environment::get('request')));
 		}

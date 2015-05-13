@@ -299,6 +299,12 @@ class tl_form extends Backend
 			return;
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Set root IDs
 		if (!is_array($this->User->forms) || empty($this->User->forms))
 		{
@@ -329,7 +335,7 @@ class tl_form extends Backend
 				// Dynamically add the record to the user profile
 				if (!in_array(Input::get('id'), $root))
 				{
-					$arrNew = $this->Session->get('new_records');
+					$arrNew = $objSession->get('new_records');
 
 					if (is_array($arrNew['tl_form']) && in_array(Input::get('id'), $arrNew['tl_form']))
 					{
@@ -391,7 +397,7 @@ class tl_form extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$session = $this->Session->all();
+				$session = $objSession->all();
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'formp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -400,7 +406,7 @@ class tl_form extends Backend
 				{
 					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $root);
 				}
-				$this->Session->replace($session);
+				$objSession->replace($session);
 				break;
 
 			default:

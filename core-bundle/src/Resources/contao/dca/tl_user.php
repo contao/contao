@@ -500,10 +500,16 @@ class tl_user extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$session = $this->Session->all();
+				/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+				global $kernel;
+
+				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+				$objSession = $kernel->getContainer()->get('session');
+
+				$session = $objSession->all();
 				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE admin=1");
 				$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objUser->fetchEach('id'));
-				$this->Session->replace($session);
+				$objSession->replace($session);
 				break;
 		}
 	}
@@ -655,7 +661,13 @@ class tl_user extends Backend
 
 				if (in_array('purge_session', $arrPurge))
 				{
-					$this->Session->replace(array());
+					/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+					global $kernel;
+
+					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+					$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+					$objSessionBag->replace(array());
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['sessionPurged']);
 				}
 
