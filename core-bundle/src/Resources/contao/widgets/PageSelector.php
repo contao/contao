@@ -149,7 +149,7 @@ class PageSelector extends \Widget
 		}
 		else
 		{
-            /** @var AttributeBagInterface $objSessionBag */
+			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = $objSession->getBag('contao_backend');
 
 			$strNode = $objSessionBag->get('tl_page_picker');

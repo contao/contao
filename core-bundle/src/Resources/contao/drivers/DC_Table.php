@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -117,12 +119,18 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	{
 		parent::__construct();
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Check the request token (see #4007)
 		if (isset($_GET['act']))
 		{
 			if (!isset($_GET['rt']) || !\RequestToken::validate(\Input::get('rt')))
 			{
-				$this->Session->set('INVALID_TOKEN_URL', \Environment::get('request'));
+				$objSession->set('INVALID_TOKEN_URL', \Environment::get('request'));
 				$this->redirect('contao/confirm.php');
 			}
 		}
@@ -132,7 +140,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Clear the clipboard
 		if (isset($_GET['clipboard']))
 		{
-			$this->Session->set('CLIPBOARD', array());
+			$objSession->set('CLIPBOARD', array());
 			$this->redirect($this->getReferer());
 		}
 
@@ -153,9 +161,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$this->reload();
 			}
 
-			$session = $this->Session->all();
+			$session = $objSession->all();
 			$session['CURRENT']['IDS'] = $ids;
-			$this->Session->replace($session);
+			$objSession->replace($session);
 
 			if (isset($_POST['edit']))
 			{
@@ -171,7 +179,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 			elseif (isset($_POST['cut']) || isset($_POST['copy']))
 			{
-				$arrClipboard = $this->Session->get('CLIPBOARD');
+				$arrClipboard = $objSession->get('CLIPBOARD');
 
 				$arrClipboard[$strTable] = array
 				(
@@ -179,7 +187,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					'mode' => (isset($_POST['cut']) ? 'cutAll' : 'copyAll')
 				);
 
-				$this->Session->set('CLIPBOARD', $arrClipboard);
+				$objSession->set('CLIPBOARD', $arrClipboard);
 
 				// Support copyAll in the list view (see #7499)
 				if (isset($_POST['copy']) && $GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] < 4)
@@ -254,9 +262,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Store the current referer
 		if (!empty($this->ctable) && !\Input::get('act') && !\Input::get('key') && !\Input::get('token') && $route == 'contao_backend' && !\Environment::get('isAjaxRequest'))
 		{
-			$session = $this->Session->get('referer');
+			$session = $objSession->get('referer');
 			$session[TL_REFERER_ID][$this->strTable] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
-			$this->Session->set('referer', $session);
+			$objSession->set('referer', $session);
 		}
 	}
 
@@ -329,6 +337,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$this->limit = '';
 		$this->bid = 'tl_buttons';
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Clean up old tl_undo and tl_log entries
 		if ($this->strTable == 'tl_undo' && strlen(\Config::get('undoPeriod')))
 		{
@@ -346,7 +360,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Add to clipboard
 		if (\Input::get('act') == 'paste')
 		{
-			$arrClipboard = $this->Session->get('CLIPBOARD');
+			$arrClipboard = $objSession->get('CLIPBOARD');
 
 			$arrClipboard[$this->strTable] = array
 			(
@@ -355,7 +369,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				'mode' => \Input::get('mode')
 			);
 
-			$this->Session->set('CLIPBOARD', $arrClipboard);
+			$objSession->set('CLIPBOARD', $arrClipboard);
 		}
 
 		// Custom filter
@@ -393,9 +407,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		// Store the current IDs
-		$session = $this->Session->all();
+		$session = $objSession->all();
 		$session['CURRENT']['IDS'] = $this->current;
-		$this->Session->replace($session);
+		$objSession->replace($session);
 
 		return $return;
 	}
@@ -667,10 +681,16 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->set['ptable'] = $this->ptable;
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Empty the clipboard
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 		$arrClipboard[$this->strTable] = array();
-		$this->Session->set('CLIPBOARD', $arrClipboard);
+		$objSession->set('CLIPBOARD', $arrClipboard);
 
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'])
@@ -687,9 +707,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$insertID = $objInsertStmt->insertId;
 
 				// Save new record in the session
-				$new_records = $this->Session->get('new_records');
+				$new_records = $objSession->get('new_records');
 				$new_records[$this->strTable][] = $insertID;
-				$this->Session->set('new_records', $new_records);
+				$objSession->set('new_records', $new_records);
 
 				// Call the oncreate_callback
 				if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_callback']))
@@ -749,10 +769,16 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$cr[] = $this->intId;
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Empty clipboard
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 		$arrClipboard[$this->strTable] = array();
-		$this->Session->set('CLIPBOARD', $arrClipboard);
+		$objSession->set('CLIPBOARD', $arrClipboard);
 
 		// Update the record
 		if (in_array($this->set['pid'], $cr))
@@ -766,7 +792,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// HOOK: style sheet category
 		if ($this->strTable == 'tl_style')
 		{
-			$filter = $this->Session->get('filter');
+			/** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = $objSession->getBag('contao_backend');
+
+			$filter = $objSessionBag->get('filter');
 			$category = $filter['tl_style_' . CURRENT_ID]['category'];
 
 			if ($category != '')
@@ -820,7 +849,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && is_array($arrClipboard[$this->strTable]['id']))
 		{
@@ -900,7 +935,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// HOOK: style sheet category
 			if ($this->strTable == 'tl_style')
 			{
-				$filter = $this->Session->get('filter');
+				/** @var KernelInterface $kernel */
+				global $kernel;
+
+				/** @var AttributeBagInterface $objSessionBag */
+				$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+				$filter = $objSessionBag->get('filter');
 				$category = $filter['tl_style_' . CURRENT_ID]['category'];
 
 				if ($category != '')
@@ -919,10 +960,16 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->set['ptable'] = $this->ptable;
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Empty clipboard
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 		$arrClipboard[$this->strTable] = array();
-		$this->Session->set('CLIPBOARD', $arrClipboard);
+		$objSession->set('CLIPBOARD', $arrClipboard);
 
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'])
@@ -971,9 +1018,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				// Save the new record in the session
 				if (!$blnDoNotRedirect)
 				{
-					$new_records = $this->Session->get('new_records');
+					$new_records = $objSession->get('new_records');
 					$new_records[$this->strTable][] = $insertID;
-					$this->Session->set('new_records', $new_records);
+					$objSession->set('new_records', $new_records);
 				}
 
 				// Duplicate the records of the child table
@@ -1145,7 +1192,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && is_array($arrClipboard[$this->strTable]['id']))
 		{
@@ -1528,7 +1581,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		$session = $this->Session->all();
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'];
 
 		if (is_array($ids) && strlen($ids[0]))
@@ -1805,8 +1864,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
+			/** @var SessionInterface $objSessionBag */
+			$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
 			$class = 'tl_tbox';
-			$fs = $this->Session->get('fieldset_states');
+			$fs = $objSessionBag->get('fieldset_states');
 			$blnIsFirst = true;
 
 			// Render boxes
@@ -2157,8 +2222,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$return = '';
 		$this->import('BackendUser', 'User');
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Get current IDs from session
-		$session = $this->Session->all();
+		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'];
 
 		if ($intId != '' && \Environment::get('isAjaxRequest'))
@@ -2170,7 +2241,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		if (\Input::post('FORM_SUBMIT') == $this->strTable.'_all' && \Input::get('fields'))
 		{
 			$session['CURRENT'][$this->strTable] = \Input::post('all_fields');
-			$this->Session->replace($session);
+			$objSession->replace($session);
 		}
 
 		// Add fields
@@ -2550,15 +2621,21 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$return = '';
 		$this->import('BackendUser', 'User');
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Get current IDs from session
-		$session = $this->Session->all();
+		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'];
 
 		// Save field selection in session
 		if (\Input::post('FORM_SUBMIT') == $this->strTable.'_all' && \Input::get('fields'))
 		{
 			$session['CURRENT'][$this->strTable] = \Input::post('all_fields');
-			$this->Session->replace($session);
+			$objSession->replace($session);
 		}
 
 		// Add fields
@@ -3120,7 +3197,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'];
 		$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'];
 
-		$new_records = $this->Session->get('new_records');
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$new_records = $objSession->get('new_records');
 
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['reviseTable']) && is_array($GLOBALS['TL_HOOKS']['reviseTable']))
@@ -3232,7 +3315,16 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->loadDataContainer($table);
 		}
 
-		$session = $this->Session->all();
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $objSession->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
 
 		// Toggle the nodes
 		if (\Input::get('ptg') == 'all')
@@ -3257,7 +3349,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$session[$node] = array();
 			}
 
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', \Environment::get('request')));
 		}
 
@@ -3276,7 +3368,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		$blnClipboard = false;
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		// Check the clipboard
 		if (!empty($arrClipboard[$this->strTable]))
@@ -3545,8 +3637,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$arrIds[] = $objRows->id;
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		$blnClipboard = false;
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		// Check clipboard
 		if (!empty($arrClipboard[$this->strTable]))
@@ -3583,14 +3681,21 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	{
 		static $session;
 
-		$session = $this->Session->all();
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
+
 		$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? $this->strTable.'_'.$table.'_tree' : $this->strTable.'_tree';
 
 		// Toggle nodes
 		if (\Input::get('ptg'))
 		{
 			$session[$node][\Input::get('ptg')] = (isset($session[$node][\Input::get('ptg')]) && $session[$node][\Input::get('ptg')] == 1) ? 0 : 1;
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', \Environment::get('request')));
 		}
@@ -3602,7 +3707,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Return if there is no result
 		if ($objRow->numRows < 1)
 		{
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 
 			return '';
 		}
@@ -3816,7 +3921,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		$this->Session->replace($session);
+		$objSessionBag->replace($session);
 
 		return $return;
 	}
@@ -3829,8 +3934,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function parentView()
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		$blnClipboard = false;
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? $this->ptable : $this->strTable;
 		$blnHasSorting = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'][0] == 'sorting';
 		$blnMultiboard = false;
@@ -4873,7 +4984,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	protected function searchMenu()
 	{
 		$searchFields = array();
-		$session = $this->Session->all();
+
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
 
 		// Get search fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
@@ -4910,7 +5028,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				catch (\Exception $e) {}
 			}
 
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 		}
 
 		// Set the search value from the session
@@ -4993,8 +5111,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			return '';
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
 		$this->bid = 'tl_buttons_a';
-		$session = $this->Session->all();
+		$session = $objSessionBag->all();
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'];
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
 
@@ -5013,7 +5137,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			if (in_array($strSort, $sortingFields))
 			{
 				$session['sorting'][$this->strTable] = in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strSort]['flag'], array(2, 4, 6, 8, 10, 12)) ? "$strSort DESC" : $strSort;
-				$this->Session->replace($session);
+				$objSessionBag->replace($session);
 			}
 		}
 
@@ -5067,7 +5191,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function limitMenu($blnOptional=false)
 	{
-		$session = $this->Session->all();
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;
 		$fields = '';
 
@@ -5089,7 +5219,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 
 			if (\Input::post('FORM_SUBMIT') == 'tl_filters_limit')
 			{
@@ -5206,10 +5336,16 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function filterMenu($intFilterPanel)
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
 		$fields = '';
 		$this->bid = 'tl_buttons_a';
 		$sortingFields = array();
-		$session = $this->Session->all();
+		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;
 
 		// Get the sorting fields
@@ -5242,7 +5378,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 		}
 
 		// Set filter from table configuration
@@ -5608,7 +5744,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function paginationMenu()
 	{
-		$session = $this->Session->all();
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;
 
 		list($offset, $limit) = explode(',', $this->limit);
@@ -5621,7 +5763,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			if ($lp >= 0 && $lp < ceil($this->total / $limit))
 			{
 				$session['filter'][$filter]['limit'] = ($lp * $limit) . ',' . $limit;
-				$this->Session->replace($session);
+				$objSessionBag->replace($session);
 			}
 
 			$this->redirect(preg_replace('/&(amp;)?lp=[^&]+/i', '', \Environment::get('request')));
