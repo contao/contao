@@ -14,7 +14,6 @@ use Contao\BackendUser;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoFramework;
 use Contao\FrontendUser;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,7 +25,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoUserProvider extends ContainerAware implements UserProviderInterface
+class ContaoUserProvider implements UserProviderInterface
 {
     /**
      * @var ContaoFramework
