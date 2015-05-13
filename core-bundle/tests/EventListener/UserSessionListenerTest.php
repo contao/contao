@@ -185,7 +185,7 @@ class UserSessionListenerTest extends TestCase
         $responseEvent = new GetResponseEvent(
             $this->mockKernel(),
             new Request(),
-            HttpKernelInterface::SUB_REQUEST
+            HttpKernelInterface::MASTER_REQUEST
         );
 
         $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
@@ -241,7 +241,7 @@ class UserSessionListenerTest extends TestCase
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
             new Request(),
-            HttpKernelInterface::SUB_REQUEST,
+            HttpKernelInterface::MASTER_REQUEST,
             new Response()
         );
 
