@@ -11,8 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -783,7 +783,7 @@ abstract class Frontend extends \Controller
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var AttributeBagAdapter $session */
+		/** @var AttributeBagInterface $session */
 		$session = $kernel->getContainer()->get('session')->getBag('contao_frontend');
 
 		// Session required to determine the referer

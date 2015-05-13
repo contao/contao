@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -725,7 +725,7 @@ abstract class Backend extends \Controller
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var AttributeBagAdapter $objSession */
+		/** @var AttributeBagInterface $objSession */
 		$objSession = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
@@ -884,7 +884,7 @@ abstract class Backend extends \Controller
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var AttributeBagAdapter $objSession */
+		/** @var AttributeBagInterface $objSession */
 		$objSession = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node

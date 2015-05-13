@@ -44,11 +44,11 @@ class SessionListenerTest extends TestCase
         $listener->registerContaoAttributeBags();
 
         $this->assertInstanceOf(
-            'Contao\\CoreBundle\\Session\\Attribute\\AttributeBagAdapter',
+            'Contao\\CoreBundle\\Session\\Attribute\\ArrayAttributeBag',
             $session->getBag('contao_backend')
         );
         $this->assertInstanceOf(
-            'Contao\\CoreBundle\\Session\\Attribute\\AttributeBagAdapter',
+            'Contao\\CoreBundle\\Session\\Attribute\\ArrayAttributeBag',
             $session->getBag('contao_frontend')
         );
     }

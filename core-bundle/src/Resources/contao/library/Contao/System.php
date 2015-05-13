@@ -13,8 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Session\Attribute\AttributeBagAdapter;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -46,7 +46,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * @property \Database\Updater                         $Updater     The database updater object
  * @property \Messages                                 $Messages    The messages object
  * @property \News                                     $News        The news object
- * @property AttributeBagAdapter                       $Session     The session object
+ * @property AttributeBagInterface                     $Session     The session object
  * @property \StyleSheets                              $StyleSheets The style sheets object
  * @property \BackendTemplate|\FrontendTemplate|object $Template    The template object
  * @property \BackendUser|\FrontendUser                $User        The user object
@@ -233,7 +233,7 @@ abstract class System
 
 		$strMode = $kernel->getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND) ? 'backend' : 'frontend';
 
-		/** @var AttributeBagAdapter $objSession */
+		/** @var AttributeBagInterface $objSession */
 		$objSession = $kernel->getContainer()->get('session')->getBag('contao_' . $strMode);
 
 		$ref = \Input::get('ref');
