@@ -89,9 +89,9 @@ class tl_content_news extends Backend
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
 										 ->execute(CURRENT_ID);
 
-				$session = $this->Session->getData();
+				$session = $this->Session->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
-				$this->Session->setData($session);
+				$this->Session->replace($session);
 				break;
 
 			case 'cut':

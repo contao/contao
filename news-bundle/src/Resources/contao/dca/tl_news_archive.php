@@ -380,7 +380,7 @@ class tl_news_archive extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$session = $this->Session->getData();
+				$session = $this->Session->all();
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -389,7 +389,7 @@ class tl_news_archive extends Backend
 				{
 					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $root);
 				}
-				$this->Session->setData($session);
+				$this->Session->replace($session);
 				break;
 
 			default:

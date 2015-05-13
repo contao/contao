@@ -572,9 +572,9 @@ class tl_news extends Backend
 					$this->redirect('contao/main.php?act=error');
 				}
 
-				$session = $this->Session->getData();
+				$session = $this->Session->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
-				$this->Session->setData($session);
+				$this->Session->replace($session);
 				break;
 
 			default:
