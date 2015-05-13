@@ -117,6 +117,8 @@ services:
             - "@session"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 64 }
+            # FIXME: remove
+            - { name: kernel.event_listener, event: console.command, method: onKernelRequest, priority: 64 }
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
