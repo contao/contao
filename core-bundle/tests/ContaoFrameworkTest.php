@@ -27,6 +27,9 @@ use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
  * Test for Class Contao\CoreBundle\ContaoFramework
  *
  * @author Dominik Tomasi <https://github.com/dtomasi>
+ *
+ * @FIXME Write a test for initialize()
+ * @FIXME Write a test that determines that framework cannot be initialized twice
  */
 class ContaoFrameworkTest extends TestCase
 {
