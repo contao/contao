@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -93,11 +92,8 @@ class Newsletter extends \Backend
 			$html = $this->convertRelativeUrls($html);
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Send newsletter
 		if (!$blnAttachmentsFormatError && \Input::get('token') != '' && \Input::get('token') == $objSession->get('tl_newsletter_send'))
