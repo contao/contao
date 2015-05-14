@@ -89,7 +89,7 @@ class ContaoFrameworkTest extends TestCase
     private $tokenStorage;
 
     /**
-     * Setup each test
+     * {@inheritdoc}
      */
     public function setup()
     {
@@ -113,7 +113,6 @@ class ContaoFrameworkTest extends TestCase
         $this->errorLevel = error_reporting();
     }
 
-
     /**
      * Test instantiate ContaoFramework-Object
      */
@@ -125,7 +124,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testInitialize()
     {
-
     }
 
     /**
@@ -136,14 +134,13 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testSetConstants()
     {
-
         $refererId = uniqid();
         $this->requestStack->getCurrentRequest()->attributes->set('_contao_referer_id', $refererId);
 
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('setConstants');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(), array($this->requestStack->getCurrentRequest()));
+        $method->invokeArgs($this->getContaoFramework(), [$this->requestStack->getCurrentRequest()]);
 
         $this->assertDefined('TL_MODE');
         $this->assertEquals(TL_MODE, 'FE');
@@ -167,7 +164,6 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testSetConstantsWithBackendScope()
     {
-
         $refererId = uniqid();
         $this->requestStack->getCurrentRequest()->attributes->set('_contao_referer_id', $refererId);
         $this->requestStack->getCurrentRequest()->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
@@ -175,7 +171,7 @@ class ContaoFrameworkTest extends TestCase
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('setConstants');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(), array($this->requestStack->getCurrentRequest()));
+        $method->invokeArgs($this->getContaoFramework(), [$this->requestStack->getCurrentRequest()]);
 
         $this->assertDefined('TL_MODE');
         $this->assertEquals(TL_MODE, 'BE');
@@ -228,7 +224,7 @@ class ContaoFrameworkTest extends TestCase
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('validateInstallation');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(), array($request));
+        $method->invokeArgs($this->getContaoFramework(), [$request]);
 
         $this->assertTrue(true, 'No exception');
     }
@@ -241,7 +237,6 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testValidateInstallationThrowsIncompleteInstallationException()
     {
-
         $this->setExpectedException('\Contao\CoreBundle\Exception\IncompleteInstallationException');
 
         $request = Request::create('/foo', 'GET');
@@ -250,7 +245,7 @@ class ContaoFrameworkTest extends TestCase
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('validateInstallation');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(), array($request));
+        $method->invokeArgs($this->getContaoFramework(), [$request]);
     }
 
     /**
@@ -261,7 +256,7 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testTriggerInitializeSystemHook()
     {
-        $GLOBALS['TL_HOOKS']['initializeSystem'][] = array(__CLASS__, 'initializeSystemHook');
+        $GLOBALS['TL_HOOKS']['initializeSystem'][] = [__CLASS__, 'initializeSystemHook'];
 
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('triggerInitializeSystemHook');
@@ -293,7 +288,7 @@ class ContaoFrameworkTest extends TestCase
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('setDefaultLanguage');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(), array($request));
+        $method->invokeArgs($this->getContaoFramework(), [$request]);
 
         $this->assertArrayHasKey('TL_LANGUAGE', $GLOBALS);
         $this->assertArrayHasKey('TL_LANGUAGE', $_SESSION);
@@ -307,7 +302,6 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testInitializeLegacySessionAccess()
     {
-
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('initializeLegacySessionAccess');
         $method->setAccessible(true);
@@ -318,9 +312,7 @@ class ContaoFrameworkTest extends TestCase
 
         $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Session\SessionBagInterface', $_SESSION['FE_DATA']);
         $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Session\SessionBagInterface', $_SESSION['BE_DATA']);
-
     }
-
 
     /**
      * Test if handleRequestToken works properly
@@ -349,12 +341,12 @@ class ContaoFrameworkTest extends TestCase
         $_POST['REQUEST_TOKEN'] = $token->getValue();
         \Input::setPost('REQUEST_TOKEN', $token->getValue());
 
-        $request = Request::create('/index.html', 'POST', array('REQUEST_TOKEN' => $token->getValue()));
+        $request = Request::create('/index.html', 'POST', ['REQUEST_TOKEN' => $token->getValue()]);
 
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('handleRequestToken');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(), array($request));
+        $method->invokeArgs($this->getContaoFramework(), [$request]);
     }
 
     /**
@@ -386,12 +378,12 @@ class ContaoFrameworkTest extends TestCase
         $_POST['REQUEST_TOKEN'] = $token->getValue();
         \Input::setPost('REQUEST_TOKEN', $token->getValue());
 
-        $request = Request::create('/index.html', 'POST', array('REQUEST_TOKEN' => $token->getValue()));
+        $request = Request::create('/index.html', 'POST', ['REQUEST_TOKEN' => $token->getValue()]);
 
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('handleRequestToken');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(), array($request));
+        $method->invokeArgs($this->getContaoFramework(), [$request]);
     }
 
     /**
@@ -426,17 +418,17 @@ class ContaoFrameworkTest extends TestCase
         $request = Request::create(
             '/index.html',
             'POST',
-            array('REQUEST_TOKEN' => $token->getValue())
+            ['REQUEST_TOKEN' => $token->getValue()]
         );
 
-        $request->headers->add(array(
-            'X-Requested-With' => 'XMLHttpRequest'
-        ));
+        $request->headers->add([
+            'X-Requested-With' => 'XMLHttpRequest',
+        ]);
 
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('handleRequestToken');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(), array($request));
+        $method->invokeArgs($this->getContaoFramework(), [$request]);
     }
 
     /**

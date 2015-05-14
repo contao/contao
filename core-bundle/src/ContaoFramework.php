@@ -17,7 +17,6 @@ use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Input;
 use Contao\System;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -33,7 +32,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  */
 class ContaoFramework
 {
-
     /**
      * @var RequestStack
      */
@@ -212,7 +210,6 @@ class ContaoFramework
             );
 
             $route = substr($route, strlen($request->getBasePath()) + 1);
-
         } else {
             $route = 'console';
         }

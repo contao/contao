@@ -35,10 +35,10 @@ class ToggleViewListenerTest extends TestCase
     private $framework;
 
     /**
-     * Setup for each test
+     * {@inheritdoc}
      */
-    public function setup() {
-
+    public function setup()
+    {
         $this->framework = $this
             ->getMockBuilder('\Contao\CoreBundle\ContaoFramework')
             ->disableOriginalConstructor()
