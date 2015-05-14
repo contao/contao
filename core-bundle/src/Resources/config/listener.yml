@@ -35,7 +35,7 @@ services:
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
-            - '@contao.framework'
+            - "@contao.framework"
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
@@ -61,17 +61,17 @@ services:
         class: Contao\CoreBundle\EventListener\LocaleListener
         factory: [Contao\CoreBundle\EventListener\LocaleListener, createWithLocales]
         arguments:
-            - '%kernel.default_locale%'
-            - '%kernel.root_dir%'
+            - "%kernel.default_locale%"
+            - "%kernel.root_dir%"
         calls:
-            - ['setContainer', ["@service_container"]]
+            - ["setContainer", ["@service_container"]]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
 
     contao.listener.output_from_cache:
         class: Contao\CoreBundle\EventListener\OutputFromCacheListener
         arguments:
-            - '@contao.framework'
+            - "@contao.framework"
         calls:
             - [setContainer, ["@service_container"]]
         tags:
@@ -122,7 +122,7 @@ services:
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
         arguments:
-            - '@contao.framework'
+            - "@contao.framework"
         calls:
             - [setContainer, ["@service_container"]]
         tags:

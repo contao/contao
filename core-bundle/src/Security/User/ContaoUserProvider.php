@@ -14,7 +14,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoFramework;
 use Contao\FrontendUser;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -27,26 +27,21 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
  */
 class ContaoUserProvider implements UserProviderInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @var ContaoFramework
      */
     private $framework;
 
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
      * Constructor.
      *
-     * @param ContaoFramework    $framework The Contao framework service
-     * @param ContainerInterface $container The dependency injection container
+     * @param ContaoFramework $framework The Contao framework service
      */
-    public function __construct(ContaoFramework $framework, ContainerInterface $container)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
-        $this->container = $container;
     }
 
     /**

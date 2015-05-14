@@ -17,8 +17,9 @@ use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Input;
 use Contao\System;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -35,10 +36,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  */
 class ContaoFramework
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    use ContainerAwareTrait;
 
     /**
      * @var RouterInterface
@@ -98,7 +96,7 @@ class ContaoFramework
     /**
      * Constructor.
      *
-     * @param ContainerInterface        $container     The container object
+     * @param RequestStack              $requestStack  The request stack
      * @param RouterInterface           $router        The router service
      * @param SessionInterface          $session       The session service
      * @param string                    $rootDir       The kernel root directory
@@ -108,7 +106,7 @@ class ContaoFramework
      * @param int                       $errorLevel    The PHP error level
      */
     public function __construct(
-        ContainerInterface $container,
+        RequestStack $requestStack,
         RouterInterface $router,
         SessionInterface $session,
         $rootDir,
@@ -117,7 +115,6 @@ class ContaoFramework
         ConfigAdapter $config,
         $errorLevel
     ) {
-        $this->container     = $container;
         $this->router        = $router;
         $this->session       = $session;
         $this->rootDir       = dirname($rootDir);
@@ -125,7 +122,7 @@ class ContaoFramework
         $this->csrfTokenName = $csrfTokenName;
         $this->config        = $config;
         $this->errorLevel    = $errorLevel;
-        $this->request       = $container->get('request_stack')->getCurrentRequest();
+        $this->request       = $requestStack->getCurrentRequest();
     }
 
     /**
