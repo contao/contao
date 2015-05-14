@@ -231,9 +231,27 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
         $config = $this->getMock('Contao\\CoreBundle\\Adapter\\ConfigAdapter', ['isComplete']);
 
-        $config->expects($this->any())
+        $config
+            ->expects($this->any())
             ->method('isComplete')
             ->willReturn(true)
+        ;
+
+        $config
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnCallback(function ($key) {
+                switch ($key) {
+                    case 'characterSet':
+                        return 'UTF-8';
+
+                    case 'timeZone':
+                        return 'Europe/Berlin';
+
+                    default:
+                        return null;
+                }
+            });
         ;
 
         return $config;

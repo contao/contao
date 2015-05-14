@@ -8,6 +8,18 @@ services:
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
 
+    contao.framework:
+        class: Contao\CoreBundle\ContaoFramework
+        arguments:
+            - "@service_container"
+            - "@router"
+            - "@session"
+            - "%kernel.root_dir%"
+            - "@security.csrf.token_manager"
+            - "%contao.csrf_token_name%"
+            - "@contao.adapter.config"
+            - "%contao.error_level%"
+
     contao.referer_id.manager:
          class: "%security.csrf.token_manager.class%"
          public: false
@@ -44,6 +56,6 @@ services:
     contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
-        calls:
-            - ['setContainer', ['@service_container']]
-
+        arguments:
+            - "@contao.framework"
+            - "@service_container"

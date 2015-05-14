@@ -35,7 +35,17 @@ class BackendControllerTest extends TestCase
      */
     public function testActions()
     {
+        $framework = $this
+            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $container = $this->mockKernel()->getContainer();
+        $container->set('contao.framework', $framework);
+
         $controller = new BackendController();
+        $controller->setContainer($container);
 
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->mainAction());
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->loginAction());

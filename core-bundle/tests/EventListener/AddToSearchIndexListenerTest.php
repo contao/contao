@@ -11,11 +11,11 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
-use Contao\CoreBundle\EventListener\InitializeSystemListener;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Contao\CoreBundle\ContaoFramework;
 
 /**
  * Tests the AddToSearchIndexListener class.
@@ -25,11 +25,28 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 class AddToSearchIndexListenerTest extends TestCase
 {
     /**
+     * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $framework;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setup()
+    {
+        $this->framework = $this
+            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+    }
+
+    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $listener = new AddToSearchIndexListener();
+        $listener = new AddToSearchIndexListener($this->framework);
 
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\AddToSearchIndexListener', $listener);
     }
@@ -39,7 +56,13 @@ class AddToSearchIndexListenerTest extends TestCase
      */
     public function testWithoutContaoFramework()
     {
-        $listener = new AddToSearchIndexListener();
+        $this->framework
+            ->expects($this->any())
+            ->method('isInitialized')
+            ->willReturn(false)
+        ;
+
+        $listener = new AddToSearchIndexListener($this->framework);
         $event    = $this->mockPostResponseEvent();
 
         $event
@@ -58,20 +81,15 @@ class AddToSearchIndexListenerTest extends TestCase
      */
     public function testWithContaoFramework()
     {
-        $listener = new InitializeSystemListener(
-            $this->mockRouter('/index.html'),
-            $this->mockSession(),
-            $this->getRootDir() . '/app',
-            $this->mockTokenManager(),
-            'contao_csrf_token',
-            $this->mockConfig()
-        );
+        define('TL_ROOT', $this->getRootDir());
 
-        $listener->setContainer($this->mockKernel()->getContainer());
+        $this->framework
+            ->expects($this->any())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
 
-        $this->bootContaoFramework($listener);
-
-        $listener = new AddToSearchIndexListener();
+        $listener = new AddToSearchIndexListener($this->framework);
         $event    = $this->mockPostResponseEvent();
 
         $event

@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Contao\CoreBundle\ContaoFramework;
 
 /**
  * Tests the ToggleViewListener class.
@@ -29,11 +30,28 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class ToggleViewListenerTest extends TestCase
 {
     /**
+     * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $framework;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setup()
+    {
+        $this->framework = $this
+            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+    }
+
+    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $listener = new ToggleViewListener();
+        $listener = new ToggleViewListener($this->framework);
 
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\ToggleViewListener', $listener);
     }
@@ -47,7 +65,7 @@ class ToggleViewListenerTest extends TestCase
         $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
         $request  = new Request(['toggle_view' => 'desktop']);
         $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener();
+        $listener = new ToggleViewListener($this->framework);
 
         $request->attributes->set('_route', 'dummy');
 
@@ -66,7 +84,7 @@ class ToggleViewListenerTest extends TestCase
         $container = new Container();
         $request   = new Request(['toggle_view' => 'desktop']);
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new ToggleViewListener();
+        $listener  = new ToggleViewListener($this->framework);
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
@@ -89,7 +107,7 @@ class ToggleViewListenerTest extends TestCase
         $container = new Container();
         $request   = new Request();
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new ToggleViewListener();
+        $listener  = new ToggleViewListener($this->framework);
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
         $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
@@ -112,7 +130,7 @@ class ToggleViewListenerTest extends TestCase
         $container = new Container();
         $request   = new Request(['toggle_view' => 'desktop']);
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new ToggleViewListener();
+        $listener  = new ToggleViewListener($this->framework);
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
         $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
@@ -136,7 +154,7 @@ class ToggleViewListenerTest extends TestCase
         $container = new Container();
         $request   = new Request(['toggle_view' => 'mobile']);
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new ToggleViewListener();
+        $listener  = new ToggleViewListener($this->framework);
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
         $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
@@ -160,7 +178,7 @@ class ToggleViewListenerTest extends TestCase
         $container = new Container();
         $request   = new Request(['toggle_view' => 'foobar']);
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new ToggleViewListener();
+        $listener  = new ToggleViewListener($this->framework);
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
         $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
@@ -184,7 +202,7 @@ class ToggleViewListenerTest extends TestCase
         $container  = new Container();
         $request    = new Request(['toggle_view' => 'desktop']);
         $event      = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener   = new ToggleViewListener();
+        $listener   = new ToggleViewListener($this->framework);
         $reflection = new \ReflectionClass($request);
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));

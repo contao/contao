@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Contao\CoreBundle\ContaoFramework;
 
 /**
  * Tests the OutputFromCacheListener class.
@@ -27,11 +28,28 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class OutputFromCacheListenerTest extends TestCase
 {
     /**
+     * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $framework;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setup()
+    {
+        $this->framework = $this
+            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+    }
+
+    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $listener = new OutputFromCacheListener();
+        $listener = new OutputFromCacheListener($this->framework);
 
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\OutputFromCacheListener', $listener);
     }
@@ -46,7 +64,7 @@ class OutputFromCacheListenerTest extends TestCase
         $container = new Container();
         $request   = new Request();
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new OutputFromCacheListener();
+        $listener  = new OutputFromCacheListener($this->framework);
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
         $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
@@ -69,7 +87,7 @@ class OutputFromCacheListenerTest extends TestCase
         $container = new Container();
         $request   = new Request();
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new OutputFromCacheListener();
+        $listener  = new OutputFromCacheListener($this->framework);
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
@@ -91,7 +109,7 @@ class OutputFromCacheListenerTest extends TestCase
         $kernel    = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
         $request   = new Request();
         $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new OutputFromCacheListener();
+        $listener  = new OutputFromCacheListener($this->framework);
 
         $request->attributes->set('_route', 'dummy');
 
