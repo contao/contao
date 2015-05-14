@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -1032,10 +1031,7 @@ abstract class Controller extends \System
 	 */
 	protected static function replaceOldBePaths($strContext)
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$router = $kernel->getContainer()->get('router');
+		$router = \System::getContainer()->get('router');
 
 		$generate = function ($route) use ($router) {
 			return substr($router->generate($route), strlen(\Environment::get('path')) + 1);
@@ -1071,10 +1067,7 @@ abstract class Controller extends \System
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$objRouter = $kernel->getContainer()->get('router');
+		$objRouter = \System::getContainer()->get('router');
 		$arrParams = [];
 		$strRoute = 'contao_frontend';
 

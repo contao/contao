@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -281,10 +280,7 @@ class FrontendTemplate extends \Template
 			$strBuffer = $this->replaceInsertTags($this->strBuffer);
 			$strBuffer = $this->replaceDynamicScriptTags($strBuffer); // see #4203
 
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
-			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
+			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 			// Create the cache file
 			$strMd5CacheKey = md5($strCacheKey);

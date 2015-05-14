@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -250,12 +249,9 @@ abstract class Backend extends \Controller
 	{
 		$this->import('Files');
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		try
 		{
-			$files = $kernel->getContainer()->get('contao.resource_locator')->locate('config/runonce.php', null, false);
+			$files = \System::getContainer()->get('contao.resource_locator')->locate('config/runonce.php', null, false);
 		}
 		catch (\InvalidArgumentException $e)
 		{
@@ -317,11 +313,8 @@ abstract class Backend extends \Controller
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$arrTables = (array) $arrModule['tables'];
 		$strTable = \Input::get('table') ?: $arrTables[0];
@@ -730,11 +723,8 @@ abstract class Backend extends \Controller
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSession = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
 		if (isset($_GET['node']))
@@ -889,11 +879,8 @@ abstract class Backend extends \Controller
 	 */
 	public static function addFilesBreadcrumb($strKey='tl_files_node')
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSession = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
 		if (isset($_GET['node']))

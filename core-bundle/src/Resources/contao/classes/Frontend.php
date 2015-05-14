@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -334,12 +333,9 @@ abstract class Frontend extends \Controller
 			// Redirect to the language root (e.g. en/)
 			if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty') && \Environment::get('relativeRequest') == '')
 			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
-
 				$arrParams = array('_locale' => $objRootPage->language);
 
-				$strUrl = $kernel->getContainer()->get('router')->generate('contao_index', $arrParams);
+				$strUrl = \System::getContainer()->get('router')->generate('contao_index', $arrParams);
 				$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 				static::redirect($strUrl, 301);
@@ -421,14 +417,11 @@ abstract class Frontend extends \Controller
 			$pageId = static::getPageIdFromUrl();
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		$arrParams = array();
 		$arrParams['alias'] = $pageId . $strParams;
 		$arrParams['_locale'] = $objPage->rootLanguage;
 
-		$strUrl = $kernel->getContainer()->get('router')->generate('contao_frontend', $arrParams);
+		$strUrl = \System::getContainer()->get('router')->generate('contao_frontend', $arrParams);
 		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 		return $strUrl;
@@ -489,14 +482,11 @@ abstract class Frontend extends \Controller
 		// Validate the cookie hash
 		if (\Input::cookie($strCookie) == $hash)
 		{
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
 			// Try to find the session
 			$objSession = \SessionModel::findByHashAndName($hash, $strCookie);
 
 			// Validate the session ID and timeout
-			if ($objSession !== null && $objSession->sessionID == $kernel->getContainer()->get('session')->getId() && (\Config::get('disableIpCheck') || $objSession->ip == \Environment::get('ip')) && ($objSession->tstamp + \Config::get('sessionTimeout')) > time())
+			if ($objSession !== null && $objSession->sessionID == \System::getContainer()->get('session')->getId() && (\Config::get('disableIpCheck') || $objSession->ip == \Environment::get('ip')) && ($objSession->tstamp + \Config::get('sessionTimeout')) > time())
 			{
 				// Disable the cache if a back end user is logged in
 				if (TL_MODE == 'FE' && $strCookie == 'BE_USER_AUTH')
@@ -655,8 +645,7 @@ abstract class Frontend extends \Controller
 			return null;
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
+		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
 
 		// Try to map the empty request
 		if (\Environment::get('relativeRequest') == '')
@@ -669,7 +658,7 @@ abstract class Frontend extends \Controller
 
 			$strCacheKey = null;
 			$arrLanguage = \Environment::get('httpAcceptLanguage');
-			$strMappingFile = $kernel->getCacheDir() . '/contao/config/mapping.php';
+			$strMappingFile = $strCacheDir . '/contao/config/mapping.php';
 
 			// Try to get the cache key from the mapper array
 			if (file_exists($strMappingFile))
@@ -735,7 +724,7 @@ abstract class Frontend extends \Controller
 		if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
 		{
 			$strMd5CacheKey = md5($strCacheKey . '.mobile');
-			$strCacheFile = $kernel->getCacheDir() . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
+			$strCacheFile = $strCacheDir . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
 
 			if (file_exists($strCacheFile))
 			{
@@ -747,7 +736,7 @@ abstract class Frontend extends \Controller
 		if (!$blnFound)
 		{
 			$strMd5CacheKey = md5($strCacheKey);
-			$strCacheFile = $kernel->getCacheDir() . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
+			$strCacheFile = $strCacheDir . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
 
 			if (file_exists($strCacheFile))
 			{
@@ -780,11 +769,8 @@ abstract class Frontend extends \Controller
 		// Read the buffer
 		$strBuffer = ob_get_clean();
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $session */
-		$session = $kernel->getContainer()->get('session')->getBag('contao_frontend');
+		$session = \System::getContainer()->get('session')->getBag('contao_frontend');
 
 		// Session required to determine the referer
 		$data = $session->all();

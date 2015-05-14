@@ -65,10 +65,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
         Config::preload();
 
-        /** @var Kernel $kernel */
-        global $kernel;
-
-        $kernel = $this->mockKernel();
         $router = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');
 
         $router
@@ -121,6 +117,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         $container = $this->mockContainerWithContaoScopes();
         $container->setParameter('contao.error_level', error_reporting());
+        $container->setParameter('kernel.debug', false);
+        $container->setParameter('kernel.cache_dir', $this->getCacheDir());
 
         $container->set(
             'contao.resource_finder',

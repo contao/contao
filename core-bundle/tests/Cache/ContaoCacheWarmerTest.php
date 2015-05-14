@@ -69,11 +69,6 @@ class ContaoCacheWarmerTest extends TestCase
      */
     public function testWarmUp()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
-        $kernel = $this->mockKernel();
-
         $connection = $this->getMock('Doctrine\\DBAL\\Connection', ['prepare', 'execute', 'fetch'], [], '', false);
 
         $connection

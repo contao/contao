@@ -3,10 +3,12 @@
 namespace Contao\Fixtures;
 
 use Contao\CoreBundle\Test\LanguageHelper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class System
 {
     protected static $arrStaticObjects = [];
+    protected static $objContainer;
     protected $arrObjects = [];
 
     protected function __construct()
@@ -56,6 +58,16 @@ class System
         if ($blnForce || !isset($this->arrObjects[$strKey])) {
             $this->arrObjects[$strKey] = (in_array('getInstance', get_class_methods($strClass))) ? call_user_func([$strClass, 'getInstance']) : new $strClass();
         }
+    }
+
+    public static function getContainer()
+    {
+        return static::$objContainer;
+    }
+
+    public static function setContainer(ContainerInterface $container)
+    {
+        static::$objContainer = $container;
     }
 
     public static function loadLanguageFile($strName, $strLanguage = null, $blnNoCache = false)

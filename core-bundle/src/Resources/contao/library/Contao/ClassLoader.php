@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
 
 /**
  * Automatically loads class files based on a mapper array
@@ -203,17 +201,16 @@ class ClassLoader
 	 */
 	public static function scanAndRegister()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
+		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
 
 		// Try to load from cache
-		if (file_exists($kernel->getCacheDir() . '/contao/config/autoload.php'))
+		if (file_exists($strCacheDir . '/contao/config/autoload.php'))
 		{
-			include $kernel->getCacheDir() . '/contao/config/autoload.php';
+			include $strCacheDir . '/contao/config/autoload.php';
 		}
 		else
 		{
-			foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/autoload.php', null, false) as $file)
+			foreach (\System::getContainer()->get('contao.resource_locator')->locate('config/autoload.php', null, false) as $file)
 			{
 				include $file;
 			}

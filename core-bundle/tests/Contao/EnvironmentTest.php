@@ -139,11 +139,6 @@ class EnvironmentTest extends TestCase
      */
     protected function runTests()
     {
-        /** @var Kernel $kernel */
-        global $kernel;
-
-        $kernel = $this->mockKernel();
-
         $agent = Environment::get('agent');
 
         $this->assertEquals('mac', $agent->os);

@@ -12,7 +12,6 @@ namespace Contao;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -69,15 +68,12 @@ class Database
 	 */
 	protected function __construct(array $arrConfig)
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		// Custom configuration (backwards compatibiltiy)
 		if (!empty($arrConfig))
 		{
 			$arrParams = array
 			(
-				'driver'    => $kernel->getContainer()->getParameter('database_driver'),
+				'driver'    => \System::getContainer()->getParameter('database_driver'),
 				'host'      => $arrConfig['dbHost'],
 				'port'      => $arrConfig['dbPort'],
 				'user'      => $arrConfig['dbUser'],
@@ -89,7 +85,7 @@ class Database
 		}
 		else
 		{
-			$this->resConnection = $kernel->getContainer()->get('doctrine.dbal.default_connection');
+			$this->resConnection = \System::getContainer()->get('doctrine.dbal.default_connection');
 		}
 
 		if (!is_object($this->resConnection))

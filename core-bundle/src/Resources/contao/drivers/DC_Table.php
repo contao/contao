@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -119,11 +118,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	{
 		parent::__construct();
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Check the request token (see #4007)
 		if (isset($_GET['act']))
@@ -253,10 +249,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->root = array_unique($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']);
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$request = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
+		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
 		$route   = $request->attributes->get('_route');
 
 		// Store the current referer
@@ -337,11 +330,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$this->limit = '';
 		$this->bid = 'tl_buttons';
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Clean up old tl_undo and tl_log entries
 		if ($this->strTable == 'tl_undo' && strlen(\Config::get('undoPeriod')))
@@ -681,11 +671,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->set['ptable'] = $this->ptable;
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Empty the clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -769,11 +756,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$cr[] = $this->intId;
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -849,11 +833,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
@@ -935,11 +916,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// HOOK: style sheet category
 			if ($this->strTable == 'tl_style')
 			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
-
 				/** @var AttributeBagInterface $objSessionBag */
-				$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+				$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 				$filter = $objSessionBag->get('filter');
 				$category = $filter['tl_style_' . CURRENT_ID]['category'];
@@ -960,11 +938,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->set['ptable'] = $this->ptable;
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -1192,11 +1167,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
@@ -1581,11 +1553,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'];
@@ -1864,11 +1833,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
 			/** @var SessionInterface $objSessionBag */
-			$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+			$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 			$class = 'tl_tbox';
 			$fs = $objSessionBag->get('fieldset_states');
@@ -2222,11 +2188,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$return = '';
 		$this->import('BackendUser', 'User');
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Get current IDs from session
 		$session = $objSession->all();
@@ -2621,11 +2584,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$return = '';
 		$this->import('BackendUser', 'User');
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Get current IDs from session
 		$session = $objSession->all();
@@ -3197,11 +3157,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'];
 		$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'];
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$new_records = $objSession->get('new_records');
 
@@ -3315,11 +3272,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->loadDataContainer($table);
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = $objSession->getBag('contao_backend');
@@ -3637,11 +3591,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$arrIds[] = $objRows->id;
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -3681,11 +3632,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	{
 		static $session;
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 
@@ -3934,11 +3882,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function parentView()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -4985,11 +4930,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	{
 		$searchFields = array();
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 
@@ -5111,11 +5053,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			return '';
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$this->bid = 'tl_buttons_a';
 		$session = $objSessionBag->all();
@@ -5191,11 +5130,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function limitMenu($blnOptional=false)
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;
@@ -5336,11 +5272,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function filterMenu($intFilterPanel)
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$fields = '';
 		$this->bid = 'tl_buttons_a';
@@ -5744,11 +5677,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function paginationMenu()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;

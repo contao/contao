@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
 
 /**
  * A SwiftMailer adapter class
@@ -461,11 +459,8 @@ class Email
 		// Set the return path (see #5004)
 		$this->objMessage->setReturnPath($this->strSender);
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		// Send the e-mail
-		$intSent = $kernel->getContainer()->get('swiftmailer.mailer')->send($this->objMessage, $this->arrFailures);
+		$intSent = \System::getContainer()->get('swiftmailer.mailer')->send($this->objMessage, $this->arrFailures);
 
 		// Log failures
 		if (!empty($this->arrFailures))

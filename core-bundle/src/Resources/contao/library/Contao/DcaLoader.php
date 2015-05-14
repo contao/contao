@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
 
 /**
  * Loads a set of DCA files
@@ -71,19 +69,18 @@ class DcaLoader extends \Controller
 
 		$GLOBALS['loadDataContainer'][$this->strTable] = true; // see #6145
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
+		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
 
 		// Try to load from cache
-		if (file_exists($kernel->getCacheDir() . '/contao/dca/' . $this->strTable . '.php'))
+		if (file_exists($strCacheDir . '/contao/dca/' . $this->strTable . '.php'))
 		{
-			include $kernel->getCacheDir() . '/contao/dca/' . $this->strTable . '.php';
+			include $strCacheDir . '/contao/dca/' . $this->strTable . '.php';
 		}
 		else
 		{
 			try
 			{
-				foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false) as $file)
+				foreach (\System::getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false) as $file)
 				{
 					include $file;
 				}

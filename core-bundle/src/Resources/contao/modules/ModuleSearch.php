@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -137,10 +136,7 @@ class ModuleSearch extends \Module
 				return;
 			}
 
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
-			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
+			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 			$arrResult = null;
 			$strChecksum = md5($strKeywords . $strQueryType . $intRootId . $blnFuzzy);

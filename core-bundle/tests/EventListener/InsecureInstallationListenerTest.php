@@ -42,11 +42,8 @@ class InsecureInstallationListenerTest extends TestCase
      */
     public function testOnKernelRequest()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
-        $event  = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
+        $event = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
 
         $listener = new InsecureInstallationListener();
         $listener->onKernelRequest($event);
@@ -57,9 +54,6 @@ class InsecureInstallationListenerTest extends TestCase
      */
     public function testOnKernelRequestUponInstallation()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         $request = $this->getRequestObject();
@@ -76,9 +70,6 @@ class InsecureInstallationListenerTest extends TestCase
      */
     public function testOnKernelRequestOnLocalhost()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         $request = $this->getRequestObject();
@@ -95,9 +86,6 @@ class InsecureInstallationListenerTest extends TestCase
      */
     public function testOnKernelRequestWithSecureDocumentRoot()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         $request = $this->getRequestObject();

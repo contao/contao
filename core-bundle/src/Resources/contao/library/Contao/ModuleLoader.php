@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
 
 /**
  * Loads modules based on their autoload.ini configuration
@@ -57,10 +55,7 @@ class ModuleLoader
 	{
 		trigger_error('Using ModuleLoader::getActive() has been deprecated and will no longer work in Contao 5.0. Use the container parameter "kernel.bundles" instead.', E_USER_DEPRECATED);
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$bundles = array_keys($kernel->getContainer()->getParameter('kernel.bundles'));
+		$bundles = array_keys(\System::getContainer()->getParameter('kernel.bundles'));
 
 		foreach (static::$legacy as $bundleName => $module)
 		{

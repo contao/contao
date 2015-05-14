@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -66,11 +65,8 @@ class RebuildIndex extends \Backend implements \executable
 			// Check the request token (see #4007)
 			if (!isset($_GET['rt']) || !\RequestToken::validate(\Input::get('rt')))
 			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
-
 				/** @var SessionInterface $objSession */
-				$objSession = $kernel->getContainer()->get('session');
+				$objSession = \System::getContainer()->get('session');
 
 				$objSession->set('INVALID_TOKEN_URL', \Environment::get('request'));
 				$this->redirect('contao/confirm.php');
@@ -112,12 +108,9 @@ class RebuildIndex extends \Backend implements \executable
 			// Log in the front end user
 			if (is_numeric(\Input::get('user')) && \Input::get('user') > 0)
 			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
-
 				// Insert a new session
 				$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-							   ->execute(\Input::get('user'), $time, 'FE_USER_AUTH', $kernel->getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
+							   ->execute(\Input::get('user'), $time, 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
 
 				// Set the cookie
 				$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);

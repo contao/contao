@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -168,11 +167,7 @@ class BackendUser extends \User
 			return true;
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$container = $kernel->getContainer();
-		$route = $container->get('request_stack')->getCurrentRequest()->attributes->get('_route');
+		$route = \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_route');
 
 		if ($route == 'contao_backend_login')
 		{
@@ -187,7 +182,7 @@ class BackendUser extends \User
 			$parameters['referer'] = base64_encode(\Environment::get('request'));
 		}
 
-		throw new RedirectResponseException($container->get('router')->generate('contao_backend_login', $parameters, UrlGeneratorInterface::ABSOLUTE_URL));
+		throw new RedirectResponseException(\System::getContainer()->get('router')->generate('contao_backend_login', $parameters, UrlGeneratorInterface::ABSOLUTE_URL));
 	}
 
 
@@ -359,11 +354,8 @@ class BackendUser extends \User
 
 		$GLOBALS['TL_USERNAME'] = $this->username;
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$kernel->getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
-		$kernel->getContainer()->get('translator')->setLocale($this->language);
+		\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
+		\System::getContainer()->get('translator')->setLocale($this->language);
 
 		$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language); // backwards compatibility
 
@@ -462,11 +454,8 @@ class BackendUser extends \User
 	 */
 	public function navigation($blnShowAll=false)
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$arrModules = array();
 		$session = $objSessionBag->all();

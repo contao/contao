@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -49,9 +48,6 @@ class BackendPreview extends \Backend
 	 */
 	public function run()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var \BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_preview');
 
@@ -60,7 +56,7 @@ class BackendPreview extends \Backend
 		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->site = \Input::get('site', true);
-		$objTemplate->switchHref = $kernel->getContainer()->get('router')->generate('contao_backend_switch');
+		$objTemplate->switchHref = \System::getContainer()->get('router')->generate('contao_backend_switch');
 
 		if (\Input::get('url'))
 		{
@@ -72,7 +68,7 @@ class BackendPreview extends \Backend
 		}
 		else
 		{
-			$objTemplate->url = $kernel->getContainer()->get('router')->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL);
+			$objTemplate->url = \System::getContainer()->get('router')->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 
 		// Switch to a particular member (see #6546)
@@ -82,9 +78,6 @@ class BackendPreview extends \Backend
 
 			if ($objUser !== null)
 			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
-
 				$strHash = $this->getSessionHash('FE_USER_AUTH');
 
 				// Remove old sessions
@@ -93,7 +86,7 @@ class BackendPreview extends \Backend
 
 				// Insert the new session
 				$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-							   ->execute($objUser->id, time(), 'FE_USER_AUTH', $kernel->getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
+							   ->execute($objUser->id, time(), 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
 
 				// Set the cookie
 				$this->setCookie('FE_USER_AUTH', $strHash, (time() + \Config::get('sessionTimeout')), null, null, false, true);

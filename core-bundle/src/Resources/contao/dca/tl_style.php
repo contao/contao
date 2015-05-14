@@ -658,11 +658,8 @@ class tl_style extends Backend
 			return $varValue;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$key = 'tl_style_' . CURRENT_ID;
 		$filter = $objSessionBag->get('filter');
@@ -695,11 +692,8 @@ class tl_style extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->get('style_sheet_updater');
 
@@ -734,11 +728,8 @@ class tl_style extends Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('style_sheet_updater');

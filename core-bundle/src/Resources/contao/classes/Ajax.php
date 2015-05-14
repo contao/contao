@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -75,11 +74,8 @@ class Ajax extends \Backend
 	 */
 	public function executePreActions()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		switch ($this->strAction)
 		{

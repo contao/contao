@@ -49,34 +49,26 @@ have been deprecated and will be removed in Contao 5.0.
 Use the `kernel.root_dir` instead of `TL_ROOT`:
 
 ```php
-global $kernel;
-
-$rootDir = dirname($kernel->getContainer()->getParameter('kernel.root_dir'));
+$rootDir = dirname(System::getContainer()->getParameter('kernel.root_dir'));
 ```
 
 Check the container scope instead of using `TL_MODE`:
 
 ```php
-global $kernel;
-
-$isBackEnd  = $kernel->getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND);
-$isFrontEnd = $kernel->getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND);
+$isBackEnd  = System::getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND);
+$isFrontEnd = System::getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND);
 ```
 
 Use the kernel start time instead of `TL_START`:
 
 ```php
-global $kernel;
-
-$startTime = $kernel->getStartTime();
+$startTime = System::getContainer()->get('kernel')->getStartTime();
 ```
 
 Use the request stack to get the route instead of using `TL_SCRIPT`:
 
 ```php
-global $kernel;
-
-$route = $kernel->getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
+$route = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
 
 if ('contao_backend' === $route) {
     // Do something
@@ -86,10 +78,7 @@ if ('contao_backend' === $route) {
 Use the the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
 
 ```php
-global $kernel;
-
-$refererId = $kernel->getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
-
+$refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 ```
 
 
@@ -109,9 +98,7 @@ backwards compatibility. It is deprecated and will be removed in Contao 5.0.
 Use the container parameter `kernel.bundles` instead:
 
 ```php
-global $kernel;
-
-$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+$bundles = System::getContainer()->getParameter('kernel.bundles');
 ```
 
 

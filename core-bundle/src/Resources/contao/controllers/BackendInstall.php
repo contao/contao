@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -594,11 +593,8 @@ class BackendInstall extends \Backend
 	 */
 	protected function setAuthCookie()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $session */
-		$session = $kernel->getContainer()->get('session');
+		$session = \System::getContainer()->get('session');
 
 		$_SESSION['TL_INSTALL_EXPIRE'] = (time() + 300);
 		$_SESSION['TL_INSTALL_AUTH'] = md5(uniqid(mt_rand(), true) . (!\Config::get('disableIpCheck') ? \Environment::get('ip') : '') . $session->getId());

@@ -719,10 +719,7 @@ class tl_member extends Backend
 						   ->execute($intId);
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
-		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: update newsletter subscriptions
 		if (isset($bundles['ContaoNewsletterBundle']))

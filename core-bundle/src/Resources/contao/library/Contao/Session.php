@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -53,10 +52,7 @@ class Session
 	 */
 	protected function __construct()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$this->session = $kernel->getContainer()->get('session');
+		$this->session = \System::getContainer()->get('session');
 	}
 
 

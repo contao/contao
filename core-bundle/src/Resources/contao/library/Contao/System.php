@@ -12,9 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -54,6 +54,12 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 abstract class System
 {
+
+	/**
+	 * Container
+	 * @var ContainerInterface
+	 */
+	protected static $objContainer;
 
 	/**
 	 * Cache
@@ -171,6 +177,28 @@ abstract class System
 
 
 	/**
+	 * Return the container object
+	 *
+	 * @return ContainerInterface The container object
+	 */
+	public static function getContainer()
+	{
+		return static::$objContainer;
+	}
+
+
+	/**
+	 * Set the container object
+	 *
+	 * @param ContainerInterface $container The container object
+	 */
+	public static function setContainer(ContainerInterface $container)
+	{
+		static::$objContainer = $container;
+	}
+
+
+	/**
 	 * Add a log entry to the database
 	 *
 	 * @param string $strText     The log message
@@ -215,11 +243,8 @@ abstract class System
 	 */
 	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = static::getContainer()->get('session');
 
 		$ref = \Input::get('ref');
 		$key = \Input::get('popup') ? 'popupReferer' : 'referer';
@@ -273,9 +298,6 @@ abstract class System
 	 */
 	public static function loadLanguageFile($strName, $strLanguage=null, $blnNoCache=false)
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		if ($strLanguage === null)
 		{
 			$strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
@@ -320,22 +342,24 @@ abstract class System
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
 		// Prepare the XLIFF loader
-		$xlfLoader = new XliffFileLoader($kernel->getRootDir(), true);
+		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.root_dir'), true);
+
+		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
 
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
 			// Try to load from cache
-			if (file_exists($kernel->getCacheDir() . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php'))
+			if (file_exists($strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php'))
 			{
-				include $kernel->getCacheDir() . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php';
+				include $strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php';
 			}
 			else
 			{
 				try
 				{
 					/** @var SplFileInfo[] $files */
-					$files = $kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.php', null, false);
+					$files = static::getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.php', null, false);
 
 					foreach ($files as $file)
 					{
@@ -350,7 +374,7 @@ abstract class System
 				try
 				{
 					/** @var SplFileInfo[] $files */
-					$files = $kernel->getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.xlf', null, false);
+					$files = static::getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.xlf', null, false);
 
 					foreach ($files as $file)
 					{
@@ -398,21 +422,18 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
 			if (is_dir(TL_ROOT . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}
-			elseif (is_dir($kernel->getCacheDir() . '/contao/languages/' . $strLanguage))
+			elseif (is_dir(static::getContainer()->getParameter('kernel.cache_dir') . '/contao/languages/' . $strLanguage))
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}
 			else
 			{
 				/** @var SplFileInfo[] $files */
-				$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage);
+				$files = static::getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage);
 				static::$arrLanguages[$strLanguage] = count($files) > 0;
 			}
 		}
@@ -665,10 +686,7 @@ abstract class System
 	 */
 	public static function getSessionHash($strCookie)
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$strHash = $kernel->getContainer()->get('session')->getId();
+		$strHash = static::getContainer()->get('session')->getId();
 
 		if (!\Config::get('disableIpCheck'))
 		{
@@ -757,16 +775,13 @@ abstract class System
 	{
 		trigger_error('Using System::convertXlfToPhp() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.', E_USER_DEPRECATED);
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		// Convert to absolute path
 		if (strpos($strName, TL_ROOT . '/') === false)
 		{
 			$strName = TL_ROOT . '/' . $strName;
 		}
 
-		$loader = new XliffFileLoader($kernel->getRootDir(), $blnLoad);
+		$loader = new XliffFileLoader(static::getContainer()->getParameter('kernel.root_dir'), $blnLoad);
 
 		return $loader->load($strName, $strLanguage);
 	}

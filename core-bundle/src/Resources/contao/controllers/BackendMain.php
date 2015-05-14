@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -54,11 +53,8 @@ class BackendMain extends \Backend
 		// Password change required
 		if ($this->User->pwChange)
 		{
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
 			/** @var SessionInterface $session */
-			$session = $kernel->getContainer()->get('session');
+			$session = \System::getContainer()->get('session');
 
 			$objSession = $this->Database->prepare("SELECT su FROM tl_session WHERE sessionID=? AND pid=?")
 										 ->execute($session->getId(), $this->User->id);
@@ -195,9 +191,6 @@ class BackendMain extends \Backend
 	 */
 	protected function output()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		// Default headline
 		if ($this->Template->headline == '')
 		{
@@ -211,7 +204,7 @@ class BackendMain extends \Backend
 		}
 
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// File picker reference
 		if (\Input::get('popup') && \Input::get('act') != 'show' && (\Input::get('do') == 'page' || \Input::get('do') == 'files') && $objSession->get('filePickerRef'))
@@ -250,9 +243,9 @@ class BackendMain extends \Backend
 		$this->Template->maintenanceOff = specialchars($GLOBALS['TL_LANG']['MSC']['maintenanceOff']);
 		$this->Template->maintenanceHref = $this->addToUrl('mmo=1');
 		$this->Template->buildCacheLink = $GLOBALS['TL_LANG']['MSC']['buildCacheLink'];
-		$this->Template->buildCacheText = sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], $kernel->getEnvironment());
+		$this->Template->buildCacheText = sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], \System::getContainer()->getParameter('kernel.environment'));
 		$this->Template->buildCacheHref = $this->addToUrl('bic=1');
-		$this->Template->needsCacheBuild = !is_dir($kernel->getCacheDir() . '/contao/sql');
+		$this->Template->needsCacheBuild = !is_dir(\System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql');
 		$this->Template->isPopup = \Input::get('popup');
 
 		// Front end preview links

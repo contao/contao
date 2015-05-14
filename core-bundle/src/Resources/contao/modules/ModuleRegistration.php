@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
 
 /**
  * Front end module "registration".
@@ -358,10 +356,7 @@ class ModuleRegistration extends \Module
 			$arrTokenData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $arrData['activation'];
 			$arrTokenData['channels'] = '';
 
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
-			$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+			$bundles = \System::getContainer()->getParameter('kernel.bundles');
 
 			if (isset($bundles['ContaoNewsletterBundle']))
 			{

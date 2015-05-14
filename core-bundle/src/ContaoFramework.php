@@ -87,6 +87,7 @@ class ContaoFramework
      * @var array
      */
     private $basicClasses = [
+        'System',
         'Config',
         'ClassLoader',
         'TemplateLoader',
@@ -252,6 +253,9 @@ class ContaoFramework
         $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
 
         $this->includeBasicClasses();
+
+        // Set the container
+        System::setContainer($this->container);
 
         // Preload the configuration (see #5872)
         $this->config->preload();

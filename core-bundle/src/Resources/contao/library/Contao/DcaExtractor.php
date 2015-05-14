@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
 
 /**
  * Extracts DCA information and cache it
@@ -113,10 +111,7 @@ class DcaExtractor extends \Controller
 
 		$this->strTable = $strTable;
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$strFile = $kernel->getCacheDir() . '/contao/sql/' . $strTable . '.php';
+		$strFile = \System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql/' . $strTable . '.php';
 
 		// Try to load from cache
 		if (file_exists($strFile))

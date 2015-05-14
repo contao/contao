@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -65,12 +64,9 @@ class PageRegular extends \Frontend
 		$GLOBALS['TL_KEYWORDS'] = '';
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		$locale = str_replace('-', '_', $objPage->language);
-		$kernel->getContainer()->get('request_stack')->getCurrentRequest()->setLocale($locale);
-		$kernel->getContainer()->get('translator')->setLocale($locale);
+		\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($locale);
+		\System::getContainer()->get('translator')->setLocale($locale);
 
 		\System::loadLanguageFile('default');
 
@@ -390,10 +386,7 @@ class PageRegular extends \Frontend
 			$GLOBALS['TL_JAVASCRIPT'] = array();
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$arrPackages = $kernel->getContainer()->getParameter('kernel.packages');
+		$arrPackages = \System::getContainer()->getParameter('kernel.packages');
 
 		// jQuery scripts
 		if ($objLayout->addJQuery)
