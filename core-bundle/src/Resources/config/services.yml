@@ -11,6 +11,7 @@ services:
     contao.framework:
         class: Contao\CoreBundle\ContaoFramework
         arguments:
+            - "@request_stack"
             - "@router"
             - "@session"
             - "%kernel.root_dir%"
@@ -18,7 +19,6 @@ services:
             - "%contao.csrf_token_name%"
             - "@contao.adapter.config"
             - "%contao.error_level%"
-            - "@request_stack"
         calls:
             - ["setContainer", ["@service_container"]]
 
