@@ -10,15 +10,9 @@
 
 namespace Contao\CoreBundle\Test;
 
-use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\ContaoFramework;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Tests the ContaoFramework class.
@@ -34,7 +28,7 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testInstantiation()
     {
-        $framework = $this->getContaoFramework(
+        $framework = $this->mockContaoFramework(
             new RequestStack(),
             $this->mockRouter('/')
         );
@@ -57,7 +51,7 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
         $container->get('request_stack')->push($request);
 
-        $framework = $this->getContaoFramework($container->get('request_stack'), $this->mockRouter('/index.html'));
+        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/index.html'));
         $framework->setContainer($container);
         $framework->initialize();
 
@@ -96,7 +90,7 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $framework = $this->getContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
+        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
         $framework->setContainer($container);
         $framework->initialize();
 
@@ -128,7 +122,7 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->set('request_stack', new RequestStack());
 
-        $framework = $this->getContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
+        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
         $framework->setContainer($container);
         $framework->initialize();
 
@@ -162,7 +156,7 @@ class ContaoFrameworkTest extends TestCase
         $container = $this->mockContainerWithContaoScopes();
         $container->get('request_stack')->push($request);
 
-        $framework = $this->getContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
+        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
         $framework->setContainer($container);
         $framework->initialize();
 
@@ -197,34 +191,13 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
-            ->setConstructorArgs([
-                $container->get('request_stack'),
-                $this->mockRouter('/contao/install'),
-                $this->mockSession(),
-                $this->getRootDir() . '/app',
-                new CsrfTokenManager(
-                    $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenGenerator\\TokenGeneratorInterface'),
-                    $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
-                ),
-                'contao_csrf_token',
-                $this->mockConfig(),
-                error_reporting()
-            ])
-            ->setMethods(['isInitialized'])
-            ->getMock()
-        ;
-
-        $framework
-            ->expects($this->any())
-            ->method('isInitialized')
-            ->willReturnOnConsecutiveCalls(false, true)
-        ;
-
+        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
         $framework->setContainer($container);
         $framework->initialize();
+
+        // Calling initialize() on a different object should not trigger an error
+        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
+        $framework->setContainer($container);
         $framework->initialize();
     }
 
@@ -244,7 +217,7 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $framework = $this->getContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
+        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
         $framework->setContainer($container);
 
         $errorReporting = error_reporting();
@@ -306,7 +279,7 @@ class ContaoFrameworkTest extends TestCase
             ->willReturn('true')
         ;
 
-        $framework = $this->getContaoFramework(
+        $framework = $this->mockContaoFramework(
             $container->get('request_stack'),
             $this->mockRouter('/contao/install'),
             $tokenManager
@@ -347,7 +320,7 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $framework = $this->getContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
+        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
         $framework->setContainer($container);
         $framework->initialize();
    }
@@ -393,7 +366,7 @@ class ContaoFrameworkTest extends TestCase
             });
         ;
 
-        $framework = $this->getContaoFramework(
+        $framework = $this->mockContaoFramework(
             $container->get('request_stack'),
             $this->mockRouter('/contao/install'),
             null,
@@ -402,46 +375,5 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->setContainer($container);
         $framework->initialize();
-    }
-
-    /**
-     * Returns a ContaoFramework instance.
-     *
-     * @param RequestStack                   $requestStack  The request stack
-     * @param RouterInterface                $router        The router object
-     * @param CsrfTokenManagerInterface|null $tokenManager  An optional token manager
-     * @param ConfigAdapter|null             $configAdatper An optional config adapter
-     *
-     * @return ContaoFramework The object instance
-     */
-    public function getContaoFramework(
-        RequestStack $requestStack,
-        RouterInterface $router,
-        CsrfTokenManagerInterface $tokenManager = null,
-        ConfigAdapter $configAdatper = null
-    ) {
-        if (null === $tokenManager) {
-            $tokenManager = new CsrfTokenManager(
-                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenGenerator\\TokenGeneratorInterface'),
-                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
-            );
-        }
-
-        if (null === $configAdatper) {
-            $configAdatper = $this->mockConfig();
-        }
-
-        $framework = new ContaoFramework(
-            $requestStack,
-            $router,
-            $this->mockSession(),
-            $this->getRootDir() . '/app',
-            $tokenManager,
-            'contao_csrf_token',
-            $configAdatper,
-            error_reporting()
-        );
-
-        return $framework;
     }
 }

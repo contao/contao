@@ -81,7 +81,7 @@ class ContaoFramework
     /**
      * @var bool
      */
-    private $initialized = false;
+    private static $initialized = false;
 
     /**
      * @var array
@@ -133,7 +133,7 @@ class ContaoFramework
      */
     public function isInitialized()
     {
-        return $this->initialized;
+        return static::$initialized;
     }
 
     /**
@@ -146,7 +146,7 @@ class ContaoFramework
         }
 
         // Set before calling any methods to prevent recursion
-        $this->initialized = true;
+        static::$initialized = true;
 
         $this->setConstants();
         $this->initializeFramework();
@@ -313,6 +313,10 @@ class ContaoFramework
      */
     private function initializeLegacySessionAccess()
     {
+        if (!$this->session->isStarted()) {
+            return;
+        }
+
         $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
         $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
     }

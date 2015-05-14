@@ -10,11 +10,10 @@
 
 namespace Contao\CoreBundle\Test;
 
-use Contao\Config;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\EventListener\InitializeSystemListener;
+use Contao\CoreBundle\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
@@ -27,6 +26,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
@@ -54,26 +54,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function getCacheDir()
     {
         return __DIR__ . '/Fixtures/app/cache';
-    }
-
-    /**
-     * Initializes the Contao framework.
-     *
-     * @param InitializeSystemListener $listener The listener instance to be used
-     */
-    protected function bootContaoFramework(InitializeSystemListener $listener)
-    {
-        Config::preload();
-
-        $router = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');
-
-        $router
-            ->expects($this->any())
-            ->method('generate')
-            ->willReturn('/index.html')
-        ;
-
-        $listener->onConsoleCommand();
     }
 
     /**
@@ -182,6 +162,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function mockSession()
     {
         $session = new Session(new MockArraySessionStorage());
+        $session->start();
 
         $beBag = new ArrayAttributeBag('_contao_be_attributes');
         $beBag->setName('contao_backend');
@@ -269,5 +250,58 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         );
 
         return $container;
+    }
+
+    /**
+     * Returns a ContaoFramework instance.
+     *
+     * @param RequestStack                   $requestStack  The request stack
+     * @param RouterInterface                $router        The router object
+     * @param CsrfTokenManagerInterface|null $tokenManager  An optional token manager
+     * @param ConfigAdapter|null             $configAdatper An optional config adapter
+     *
+     * @return ContaoFramework The object instance
+     */
+    public function mockContaoFramework(
+        RequestStack $requestStack = null,
+        RouterInterface $router = null,
+        CsrfTokenManagerInterface $tokenManager = null,
+        ConfigAdapter $configAdatper = null
+    ) {
+        $container = $this->mockContainerWithContaoScopes();
+
+        if (null === $requestStack) {
+            $requestStack = $container->get('request_stack');
+        }
+
+        if (null === $router) {
+            $router = $this->mockRouter('/index.html');
+        }
+
+        if (null === $tokenManager) {
+            $tokenManager = new CsrfTokenManager(
+                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenGenerator\\TokenGeneratorInterface'),
+                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
+            );
+        }
+
+        if (null === $configAdatper) {
+            $configAdatper = $this->mockConfig();
+        }
+
+        $framework = new ContaoFramework(
+            $requestStack,
+            $router,
+            $this->mockSession(),
+            $this->getRootDir() . '/app',
+            $tokenManager,
+            'contao_csrf_token',
+            $configAdatper,
+            error_reporting()
+        );
+
+        $framework->setContainer($container);
+
+        return $framework;
     }
 }
