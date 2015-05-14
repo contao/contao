@@ -254,6 +254,12 @@ class tl_news_feed extends Backend
 			$GLOBALS['TL_DCA']['tl_news_feed']['config']['closed'] = true;
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Check current action
 		switch (Input::get('act'))
 		{
@@ -266,7 +272,7 @@ class tl_news_feed extends Backend
 				// Dynamically add the record to the user profile
 				if (!in_array(Input::get('id'), $root))
 				{
-					$arrNew = $this->Session->get('new_records');
+					$arrNew = $objSession->get('new_records');
 
 					if (is_array($arrNew['tl_news_feed']) && in_array(Input::get('id'), $arrNew['tl_news_feed']))
 					{
@@ -328,7 +334,7 @@ class tl_news_feed extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$session = $this->Session->all();
+				$session = $objSession->all();
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsfeedp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -337,7 +343,7 @@ class tl_news_feed extends Backend
 				{
 					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $root);
 				}
-				$this->Session->replace($session);
+				$objSession->replace($session);
 				break;
 
 			default:
@@ -356,7 +362,13 @@ class tl_news_feed extends Backend
 	 */
 	public function generateFeed()
 	{
-		$session = $this->Session->get('news_feed_updater');
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->get('news_feed_updater');
 
 		if (!is_array($session) || empty($session))
 		{
@@ -373,7 +385,7 @@ class tl_news_feed extends Backend
 		$this->import('Automator');
 		$this->Automator->generateSitemap();
 
-		$this->Session->set('news_feed_updater', null);
+		$objSession->set('news_feed_updater', null);
 	}
 
 
@@ -393,10 +405,16 @@ class tl_news_feed extends Backend
 			return;
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Store the ID in the session
-		$session = $this->Session->get('news_feed_updater');
+		$session = $objSession->get('news_feed_updater');
 		$session[] = $dc->id;
-		$this->Session->set('news_feed_updater', array_unique($session));
+		$objSession->set('news_feed_updater', array_unique($session));
 	}
 
 

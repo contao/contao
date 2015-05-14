@@ -89,9 +89,15 @@ class tl_content_news extends Backend
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
 										 ->execute(CURRENT_ID);
 
-				$session = $this->Session->all();
+				/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+				global $kernel;
+
+				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+				$objSession = $kernel->getContainer()->get('session');
+
+				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
-				$this->Session->replace($session);
+				$objSession->replace($session);
 				break;
 
 			case 'cut':
@@ -163,7 +169,13 @@ class tl_content_news extends Backend
 	 */
 	public function generateFeed()
 	{
-		$session = $this->Session->get('news_feed_updater');
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->get('news_feed_updater');
 
 		if (!is_array($session) || empty($session))
 		{
@@ -180,6 +192,6 @@ class tl_content_news extends Backend
 		$this->import('Automator');
 		$this->Automator->generateSitemap();
 
-		$this->Session->set('news_feed_updater', null);
+		$objSession->set('news_feed_updater', null);
 	}
 }

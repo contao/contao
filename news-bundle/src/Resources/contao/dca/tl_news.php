@@ -572,9 +572,15 @@ class tl_news extends Backend
 					$this->redirect('contao/main.php?act=error');
 				}
 
-				$session = $this->Session->all();
+				/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+				global $kernel;
+
+				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+				$objSession = $kernel->getContainer()->get('session');
+
+				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
-				$this->Session->replace($session);
+				$objSession->replace($session);
 				break;
 
 			default:
@@ -764,7 +770,13 @@ class tl_news extends Backend
 	 */
 	public function generateFeed()
 	{
-		$session = $this->Session->get('news_feed_updater');
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->get('news_feed_updater');
 
 		if (!is_array($session) || empty($session))
 		{
@@ -781,7 +793,7 @@ class tl_news extends Backend
 		$this->import('Automator');
 		$this->Automator->generateSitemap();
 
-		$this->Session->set('news_feed_updater', null);
+		$objSession->set('news_feed_updater', null);
 	}
 
 
@@ -803,10 +815,16 @@ class tl_news extends Backend
 			return;
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Store the ID in the session
-		$session = $this->Session->get('news_feed_updater');
+		$session = $objSession->get('news_feed_updater');
 		$session[] = $dc->activeRecord->pid;
-		$this->Session->set('news_feed_updater', array_unique($session));
+		$objSession->set('news_feed_updater', array_unique($session));
 	}
 
 
