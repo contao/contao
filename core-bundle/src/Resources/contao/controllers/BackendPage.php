@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -133,6 +134,9 @@ class BackendPage extends \Backend
 		/** @var \PageSelector $objPageTree */
 		$objPageTree = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$strTable]['fields'][$strField], $strField, $arrValues, $strField, $strTable, $objDca));
 
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $objSession->getBag('contao_backend');
+
 		$objTemplate->main = $objPageTree->generate();
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
@@ -142,7 +146,7 @@ class BackendPage extends \Backend
 		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
 		$objTemplate->action = ampersand(\Environment::get('request'));
-		$objTemplate->value = $objSession->get('page_selector_search');
+		$objTemplate->value = $objSessionBag->get('page_selector_search');
 		$objTemplate->manager = $GLOBALS['TL_LANG']['MSC']['pageManager'];
 		$objTemplate->managerHref = 'contao/main.php?do=page&amp;popup=1';
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'];
