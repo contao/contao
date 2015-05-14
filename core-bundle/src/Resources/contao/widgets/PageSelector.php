@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 
@@ -69,19 +68,19 @@ class PageSelector extends \Widget
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
 		// Store the keyword
 		if (\Input::post('FORM_SUBMIT') == 'item_selector')
 		{
-			$objSession->set('page_selector_search', \Input::post('keyword'));
+			$objSessionBag->set('page_selector_search', \Input::post('keyword'));
 			$this->reload();
 		}
 
 		$tree = '';
 		$this->getPathNodes();
-		$for = $objSession->get('page_selector_search');
+		$for = $objSessionBag->get('page_selector_search');
 		$arrIds = array();
 
 		// Search for a specific page
@@ -149,9 +148,6 @@ class PageSelector extends \Widget
 		}
 		else
 		{
-			/** @var AttributeBagInterface $objSessionBag */
-			$objSessionBag = $objSession->getBag('contao_backend');
-
 			$strNode = $objSessionBag->get('tl_page_picker');
 
 			// Unset the node if it is not within the predefined node set (see #5899)
@@ -314,11 +310,8 @@ class PageSelector extends \Widget
 		/** @var KernelInterface $kernel */
 		global $kernel;
 
-		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $objSession->getBag('contao_backend');
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 
@@ -404,7 +397,7 @@ class PageSelector extends \Widget
 		$return .= '</div><div style="clear:both"></div></li>';
 
 		// Begin a new submenu
-		if (!empty($childs) && ($blnIsOpen || $objSession->get('page_selector_search') != ''))
+		if (!empty($childs) && ($blnIsOpen || $objSessionBag->get('page_selector_search') != ''))
 		{
 			$return .= '<li class="parent" id="'.$node.'_'.$id.'"><ul class="level_'.$level.'">';
 
