@@ -22,6 +22,9 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
  */
 class AddToSearchIndexListener
 {
+    /**
+     * @var ContaoFramework
+     */
     private $framework;
 
     /**

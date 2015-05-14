@@ -14,11 +14,17 @@
     <testsuites>
         <testsuite name="latest">
             <directory>./tests</directory>
-            <exclude>./tests/Contao</exclude>
+            <exclude>./tests/Contao/EnvironmentTest.php</exclude>
+            <exclude>./tests/Contao/GdImageTest.php</exclude>
+            <exclude>./tests/Contao/ImageTest.php</exclude>
+            <exclude>./tests/Contao/PictureTest.php</exclude>
             <exclude>./tests/Fixtures</exclude>
         </testsuite>
         <testsuite name="legacy">
-            <directory>./tests/Contao</directory>
+            <file>./tests/Contao/EnvironmentTest.php</file>
+            <file>./tests/Contao/GdImageTest.php</file>
+            <file>./tests/Contao/ImageTest.php</file>
+            <file>./tests/Contao/PictureTest.php</file>
         </testsuite>
     </testsuites>
 
