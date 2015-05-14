@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
@@ -19,8 +19,10 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-abstract class AbstractScopeAwareListener extends ContainerAware
+trait ScopeAwareTrait
 {
+    use ContainerAwareTrait;
+
     /**
      * Checks whether the request is the master request in one of the Contao scopes.
      *

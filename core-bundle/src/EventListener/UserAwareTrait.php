@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class AbstractUserAwareListener extends AbstractScopeAwareListener
+trait UserAwareTrait
 {
     /**
      * @var TokenStorageInterface

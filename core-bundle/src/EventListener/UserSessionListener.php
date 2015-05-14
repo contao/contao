@@ -24,8 +24,11 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class UserSessionListener extends AbstractUserAwareListener
+class UserSessionListener
 {
+    use ScopeAwareTrait;
+    use UserAwareTrait;
+
     /**
      * @var SessionInterface
      */

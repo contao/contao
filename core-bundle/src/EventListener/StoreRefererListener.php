@@ -20,8 +20,11 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class StoreRefererListener extends AbstractUserAwareListener
+class StoreRefererListener
 {
+    use ScopeAwareTrait;
+    use UserAwareTrait;
+
     /**
      * @var SessionInterface
      */

@@ -19,8 +19,10 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class OutputFromCacheListener extends AbstractScopeAwareListener
+class OutputFromCacheListener
 {
+    use ScopeAwareTrait;
+
     /**
      * Forwards the request to the Frontend class and sets the response if any.
      *

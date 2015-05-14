@@ -21,8 +21,10 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ToggleViewListener extends AbstractScopeAwareListener
+class ToggleViewListener
 {
+    use ScopeAwareTrait;
+
     /**
      * Toggles the TL_VIEW cookie and redirects back to the referring page.
      *
