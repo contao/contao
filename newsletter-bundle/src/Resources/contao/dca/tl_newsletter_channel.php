@@ -248,6 +248,12 @@ class tl_newsletter_channel extends Backend
 			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['closed'] = true;
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Check current action
 		switch (Input::get('act'))
 		{
@@ -260,7 +266,7 @@ class tl_newsletter_channel extends Backend
 				// Dynamically add the record to the user profile
 				if (!in_array(Input::get('id'), $root))
 				{
-					$arrNew = $this->Session->get('new_records');
+					$arrNew = $objSession->get('new_records');
 
 					if (is_array($arrNew['tl_newsletter_channel']) && in_array(Input::get('id'), $arrNew['tl_newsletter_channel']))
 					{
@@ -322,7 +328,7 @@ class tl_newsletter_channel extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$session = $this->Session->all();
+				$session = $objSession->all();
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsletterp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -331,7 +337,7 @@ class tl_newsletter_channel extends Backend
 				{
 					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $root);
 				}
-				$this->Session->replace($session);
+				$objSession->replace($session);
 				break;
 
 			default:

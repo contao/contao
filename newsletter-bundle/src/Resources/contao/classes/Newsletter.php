@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to handle newsletters.
@@ -90,8 +93,14 @@ class Newsletter extends \Backend
 			$html = $this->convertRelativeUrls($html);
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Send newsletter
-		if (!$blnAttachmentsFormatError && \Input::get('token') != '' && \Input::get('token') == $this->Session->get('tl_newsletter_send'))
+		if (!$blnAttachmentsFormatError && \Input::get('token') != '' && \Input::get('token') == $objSession->get('tl_newsletter_send'))
 		{
 			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', \Environment::get('request'));
 
@@ -123,7 +132,7 @@ class Newsletter extends \Backend
 			// Return if there are no recipients
 			if ($objTotal->count < 1)
 			{
-				$this->Session->set('tl_newsletter_send', null);
+				$objSession->set('tl_newsletter_send', null);
 				\Message::addError($GLOBALS['TL_LANG']['tl_newsletter']['error']);
 				$this->redirect($referer);
 			}
@@ -168,7 +177,7 @@ class Newsletter extends \Backend
 			// Redirect back home
 			if ($objRecipients->numRows < 1 || ($intStart + $intPages) >= $intTotal)
 			{
-				$this->Session->set('tl_newsletter_send', null);
+				$objSession->set('tl_newsletter_send', null);
 
 				// Deactivate rejected addresses
 				if (!empty($_SESSION['REJECTED_RECIPIENTS']))
@@ -206,7 +215,7 @@ class Newsletter extends \Backend
 		}
 
 		$strToken = md5(uniqid(mt_rand(), true));
-		$this->Session->set('tl_newsletter_send', $strToken);
+		$objSession->set('tl_newsletter_send', $strToken);
 		$sprintf = ($objNewsletter->senderName != '') ? $objNewsletter->senderName . ' &lt;%s&gt;' : '%s';
 		$this->import('BackendUser', 'User');
 
