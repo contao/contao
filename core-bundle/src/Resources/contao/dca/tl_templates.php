@@ -148,6 +148,12 @@ class tl_templates extends Backend
 	 */
 	public function addBreadcrumb()
 	{
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
 		// Set a new node
 		if (isset($_GET['node']))
 		{
@@ -157,11 +163,11 @@ class tl_templates extends Backend
 				throw new RuntimeException('Insecure path ' . Input::get('node', true));
 			}
 
-			$this->Session->set('tl_templates_node', Input::get('node', true));
+			$objSessionBag->set('tl_templates_node', Input::get('node', true));
 			$this->redirect(preg_replace('/(&|\?)node=[^&]*/', '', Environment::get('request')));
 		}
 
-		$strNode = $this->Session->get('tl_templates_node');
+		$strNode = $objSessionBag->get('tl_templates_node');
 
 		if ($strNode == '')
 		{
@@ -177,7 +183,7 @@ class tl_templates extends Backend
 		// Currently selected folder does not exist
 		if (!is_dir(TL_ROOT . '/' . $strNode))
 		{
-			$this->Session->set('tl_templates_node', '');
+			$objSessionBag->set('tl_templates_node', '');
 
 			return;
 		}

@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to handle input field "file tree".
@@ -55,14 +58,20 @@ class FileSelector extends \Widget
 		$this->import('BackendUser', 'User');
 		$this->convertValuesToPaths();
 
-		$strNode = $this->Session->get('tl_files_picker');
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+		$strNode = $objSessionBag->get('tl_files_picker');
 
 		// Unset the node if it is not within the path (see #5899)
 		if ($strNode != '' && $this->path != '')
 		{
 			if (strncmp($strNode . '/', $this->path . '/', strlen($this->path) + 1) !== 0)
 			{
-				$this->Session->remove('tl_files_picker');
+				$objSessionBag->remove('tl_files_picker');
 			}
 		}
 
@@ -221,7 +230,14 @@ class FileSelector extends \Widget
 		}
 
 		static $session;
-		$session = $this->Session->all();
+
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
 
 		$flag = substr($this->strField, 0, 2);
 		$node = 'tree_' . $this->strTable . '_' . $this->strField;
@@ -231,7 +247,7 @@ class FileSelector extends \Widget
 		if (\Input::get($flag.'tg'))
 		{
 			$session[$node][\Input::get($flag.'tg')] = (isset($session[$node][\Input::get($flag.'tg')]) && $session[$node][\Input::get($flag.'tg')] == 1) ? 0 : 1;
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)'.$flag.'tg=[^& ]*/i', '', \Environment::get('request')));
 		}
 

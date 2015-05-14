@@ -658,8 +658,14 @@ class tl_style extends Backend
 			return $varValue;
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
 		$key = 'tl_style_' . CURRENT_ID;
-		$filter = $this->Session->get('filter');
+		$filter = $objSessionBag->get('filter');
 
 		// Return the current category
 		if (strlen($filter[$key]['category']))
@@ -689,7 +695,13 @@ class tl_style extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		$session = $this->Session->get('style_sheet_updater');
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->get('style_sheet_updater');
 
 		if (!is_array($session) || empty($session))
 		{
@@ -703,7 +715,7 @@ class tl_style extends Backend
 			$this->StyleSheets->updateStyleSheet($id);
 		}
 
-		$this->Session->set('style_sheet_updater', null);
+		$objSession->set('style_sheet_updater', null);
 	}
 
 
@@ -722,10 +734,16 @@ class tl_style extends Backend
 			return;
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Store the ID in the session
-		$session = $this->Session->get('style_sheet_updater');
+		$session = $objSession->get('style_sheet_updater');
 		$session[] = CURRENT_ID;
-		$this->Session->set('style_sheet_updater', array_unique($session));
+		$objSession->set('style_sheet_updater', array_unique($session));
 	}
 
 

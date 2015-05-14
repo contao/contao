@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to handle input field "page tree".
@@ -62,16 +65,22 @@ class PageSelector extends \Widget
 	{
 		$this->import('BackendUser', 'User');
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
 		// Store the keyword
 		if (\Input::post('FORM_SUBMIT') == 'item_selector')
 		{
-			$this->Session->set('page_selector_search', \Input::post('keyword'));
+			$objSessionBag->set('page_selector_search', \Input::post('keyword'));
 			$this->reload();
 		}
 
 		$tree = '';
 		$this->getPathNodes();
-		$for = $this->Session->get('page_selector_search');
+		$for = $objSessionBag->get('page_selector_search');
 		$arrIds = array();
 
 		// Search for a specific page
@@ -139,14 +148,14 @@ class PageSelector extends \Widget
 		}
 		else
 		{
-			$strNode = $this->Session->get('tl_page_picker');
+			$strNode = $objSessionBag->get('tl_page_picker');
 
 			// Unset the node if it is not within the predefined node set (see #5899)
 			if ($strNode > 0 && is_array($this->rootNodes))
 			{
 				if (!in_array($strNode, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))
 				{
-					$this->Session->remove('tl_page_picker');
+					$objSessionBag->remove('tl_page_picker');
 				}
 			}
 
@@ -297,7 +306,14 @@ class PageSelector extends \Widget
 	protected function renderPagetree($id, $intMargin, $protectedPage=false, $blnNoRecursion=false)
 	{
 		static $session;
-		$session = $this->Session->all();
+
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
 
 		$flag = substr($this->strField, 0, 2);
 		$node = 'tree_' . $this->strTable . '_' . $this->strField;
@@ -307,7 +323,7 @@ class PageSelector extends \Widget
 		if (\Input::get($flag.'tg'))
 		{
 			$session[$node][\Input::get($flag.'tg')] = (isset($session[$node][\Input::get($flag.'tg')]) && $session[$node][\Input::get($flag.'tg')] == 1) ? 0 : 1;
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)'.$flag.'tg=[^& ]*/i', '', \Environment::get('request')));
 		}
 
@@ -381,7 +397,7 @@ class PageSelector extends \Widget
 		$return .= '</div><div style="clear:both"></div></li>';
 
 		// Begin a new submenu
-		if (!empty($childs) && ($blnIsOpen || $this->Session->get('page_selector_search') != ''))
+		if (!empty($childs) && ($blnIsOpen || $objSessionBag->get('page_selector_search') != ''))
 		{
 			$return .= '<li class="parent" id="'.$node.'_'.$id.'"><ul class="level_'.$level.'">';
 

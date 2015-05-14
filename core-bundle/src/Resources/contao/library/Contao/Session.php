@@ -73,8 +73,6 @@ class Session
 	 */
 	public static function getInstance()
 	{
-		trigger_error('Using Session::getInstance() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
-
 		if (static::$objInstance === null)
 		{
 			static::$objInstance = new static();
@@ -93,6 +91,8 @@ class Session
 	 */
 	public function get($strKey)
 	{
+		trigger_error('Using Session::get() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());
 
@@ -108,6 +108,8 @@ class Session
 	 */
 	public function set($strKey, $varValue)
 	{
+		trigger_error('Using Session::set() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());
 
@@ -122,6 +124,8 @@ class Session
 	 */
 	public function remove($strKey)
 	{
+		trigger_error('Using Session::remove() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());
 
@@ -136,6 +140,8 @@ class Session
 	 */
 	public function getData()
 	{
+		trigger_error('Using Session::getData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());
 
@@ -152,6 +158,8 @@ class Session
 	 */
 	public function setData($arrData)
 	{
+		trigger_error('Using Session::setData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+
 		if (!is_array($arrData))
 		{
 			throw new \Exception('Array required to set session data');
@@ -173,6 +181,8 @@ class Session
 	 */
 	public function appendData($varData)
 	{
+		trigger_error('Using Session::appendData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+
 		if (is_object($varData))
 		{
 			$varData = get_object_vars($varData);

@@ -42,161 +42,13 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Tests that the session bag is not requested when there is no user.
-     *
-     * @param AnonymousToken $noUserReturn The user token
-     *
-     * @dataProvider noUserProvider
-     */
-    public function testListenerSkipIfNoUserOnKernelRequest(AnonymousToken $noUserReturn = null)
-    {
-        $request = new Request();
-
-        $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::SUB_REQUEST
-        );
-
-        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
-
-        $session
-            ->expects($this->never())
-            ->method('getBag')
-        ;
-
-        $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
-
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($noUserReturn)
-        ;
-
-        $listener = $this->getListener($session, null, $tokenStorage);
-        $listener->onKernelRequest($responseEvent);
-    }
-
-    /**
-     * Tests that the session bag is never requested when there is no master request.
-     */
-    public function testListenerSkipIfNoMasterRequestOnKernelRequest()
-    {
-        $request = new Request();
-
-        $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::SUB_REQUEST
-        );
-
-        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
-
-        $session
-            ->expects($this->never())
-            ->method('getBag')
-        ;
-
-        $listener = $this->getListener($session);
-        $listener->onKernelRequest($responseEvent);
-    }
-
-    /**
-     * Tests that neither the session bag nor doctrine is requested when there is no user.
-     *
-     * @param AnonymousToken $noUserReturn
-     *
-     * @dataProvider noUserProvider
-     */
-    public function testListenerSkipIfNoUserOnKernelResponse(AnonymousToken $noUserReturn = null)
-    {
-        $request  = new Request();
-        $response = new Response();
-
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::SUB_REQUEST,
-            $response
-        );
-
-        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
-
-        $session
-            ->expects($this->never())
-            ->method('getBag')
-        ;
-
-        $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
-
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($noUserReturn)
-        ;
-
-        $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
-
-        $connection
-            ->expects($this->never())
-            ->method('prepare')
-        ;
-
-        $connection
-            ->expects($this->never())
-            ->method('execute')
-        ;
-
-        $listener = $this->getListener($session, $connection, $tokenStorage);
-        $listener->onKernelResponse($responseEvent);
-    }
-
-    /**
-     * Tests that neither the session bag nor doctrine is requested when there is no master request.
-     */
-    public function testListenerSkipIfNoMasterRequestOnKernelResponse()
-    {
-        $request  = new Request();
-        $response = new Response();
-
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::SUB_REQUEST,
-            $response
-        );
-
-        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
-
-        $session
-            ->expects($this->never())
-            ->method('getBag')
-        ;
-
-        $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
-
-        $connection
-            ->expects($this->never())
-            ->method('prepare')
-        ;
-
-        $connection
-            ->expects($this->never())
-            ->method('execute')
-        ;
-
-        $listener = $this->getListener($session, $connection);
-        $listener->onKernelResponse($responseEvent);
-    }
-
-    /**
-     * Tests that session values are replaced upon kernel.request.
+     * Tests that the session is replaced upon kernel.request.
      *
      * @param string $scope          The container scope
      * @param string $userClass      The user class
      * @param string $sessionBagName The session bag
      *
-     * @dataProvider scopeProvider
+     * @dataProvider scopeBagProvider
      */
     public function testSessionReplacedOnKernelRequest($scope, $userClass, $sessionBagName)
     {
@@ -205,11 +57,9 @@ class UserSessionListenerTest extends TestCase
             'lonesome' => 'looser',
         ];
 
-        $request = new Request();
-
         $responseEvent = new GetResponseEvent(
             $this->mockKernel(),
-            $request,
+            new Request(),
             HttpKernelInterface::MASTER_REQUEST
         );
 
@@ -256,45 +106,33 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Tests that the session values are replaced upon kernel.request.
+     * Tests that the session is stored upon kernel.response.
      *
-     * @param string  $scope           The container scope
-     * @param string  $sessionBagName  The session bag name
-     * @param Request $request         The request object
-     * @param array   $currentReferer  The current referer
-     * @param array   $expectedReferer The expected referer
+     * @param string $scope     The container scope
+     * @param string $userClass The user class
+     * @param string $userTable The table name
      *
-     * @dataProvider sessionStoredOnKernelResponseProvider
+     * @dataProvider scopeTableProvider
      */
-    public function testSessionStoredOnKernelResponse(
-        $scope,
-        $sessionBagName,
-        $userClass,
-        $userTable,
-        Request $request,
-        $refererKey,
-        $currentReferer,
-        $expectedReferer
-    ) {
-        $response = new Response();
-
+    public function testSessionStoredOnKernelResponse($scope, $userClass, $userTable)
+    {
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
-            $request,
+            new Request(),
             HttpKernelInterface::MASTER_REQUEST,
-            $response
+            new Response()
         );
 
         $connection = $this->getMock('Doctrine\\DBAL\\Connection', ['prepare', 'execute'], [], '', false);
 
         $connection
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('prepare')
             ->willReturnSelf()
         ;
 
         $connection
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('execute')
         ;
 
@@ -330,125 +168,172 @@ class UserSessionListenerTest extends TestCase
 
         $session = $this->mockSession();
 
-        /* @var AttributeBagInterface $bag */
-        $bag = $session->getBag($sessionBagName);
-
-        // Set the current referer URLs
-        $bag->set($refererKey, $currentReferer);
-
         $listener = $this->getListener($session, $connection, $tokenStorage);
         $listener->setContainer($container);
         $listener->onKernelResponse($responseEvent);
-
-        $this->assertSame($expectedReferer, $bag->get($refererKey));
     }
 
     /**
-     * Provides the data for the kernel.response tests.
+     * Tests that the session bag is not requested when there is no user.
+     *
+     * @param AnonymousToken $noUserReturn The user token
+     *
+     * @dataProvider noUserProvider
+     */
+    public function testListenerSkipIfNoUserOnKernelRequest(AnonymousToken $noUserReturn = null)
+    {
+        $responseEvent = new GetResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST
+        );
+
+        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
+
+        $session
+            ->expects($this->never())
+            ->method('getBag')
+        ;
+
+        $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
+
+        $tokenStorage
+            ->expects($this->once())
+            ->method('getToken')
+            ->willReturn($noUserReturn)
+        ;
+
+        $listener = $this->getListener($session, null, $tokenStorage);
+        $listener->onKernelRequest($responseEvent);
+    }
+
+    /**
+     * Tests that the session bag is not requested upon a sub request.
+     */
+    public function testListenerSkipUponSubRequestOnKernelRequest()
+    {
+        $responseEvent = new GetResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::SUB_REQUEST
+        );
+
+        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
+
+        $session
+            ->expects($this->never())
+            ->method('getBag')
+        ;
+
+        $listener = $this->getListener($session);
+        $listener->onKernelRequest($responseEvent);
+    }
+
+    /**
+     * Tests that neither the session bag nor doctrine is requested when there is no user.
+     *
+     * @param AnonymousToken $noUserReturn The user token
+     *
+     * @dataProvider noUserProvider
+     */
+    public function testListenerSkipIfNoUserOnKernelResponse(AnonymousToken $noUserReturn = null)
+    {
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response()
+        );
+
+        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
+
+        $session
+            ->expects($this->never())
+            ->method('getBag')
+        ;
+
+        $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
+
+        $tokenStorage
+            ->expects($this->once())
+            ->method('getToken')
+            ->willReturn($noUserReturn)
+        ;
+
+        $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
+
+        $connection
+            ->expects($this->never())
+            ->method('prepare')
+        ;
+
+        $connection
+            ->expects($this->never())
+            ->method('execute')
+        ;
+
+        $listener = $this->getListener($session, $connection, $tokenStorage);
+        $listener->onKernelResponse($responseEvent);
+    }
+
+    /**
+     * Tests that neither the session bag nor doctrine is requested upon a sub request.
+     */
+    public function testListenerSkipUponSubRequestOnKernelResponse()
+    {
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::SUB_REQUEST,
+            new Response()
+        );
+
+        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
+
+        $session
+            ->expects($this->never())
+            ->method('getBag')
+        ;
+
+        $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
+
+        $connection
+            ->expects($this->never())
+            ->method('prepare')
+        ;
+
+        $connection
+            ->expects($this->never())
+            ->method('execute')
+        ;
+
+        $listener = $this->getListener($session, $connection);
+        $listener->onKernelResponse($responseEvent);
+    }
+
+    /**
+     * Provides the data for the testSessionReplacedOnKernelRequest() method.
      *
      * @return array The test data
      */
-    public function sessionStoredOnKernelResponseProvider()
+    public function scopeBagProvider()
     {
-        $request = new Request();
-        $request->attributes->set('_contao_referer_id', 'dummyTestRefererId');
-        $request->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
-
-        $requestWithRefInUrl = new Request();
-        $requestWithRefInUrl->attributes->set('_contao_referer_id', 'dummyTestRefererId');
-        $requestWithRefInUrl->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
-        $requestWithRefInUrl->query->set('ref', 'dummyTestRefererId');
-
         return [
-            'Test current referer null returns correct new referer for back end scope' => [
-                ContaoCoreBundle::SCOPE_BACKEND,
-                'contao_backend',
-                'Contao\\BackendUser',
-                'tl_user',
-                $request,
-                'referer',
-                null,
-                [
-                    'dummyTestRefererId' => [
-                        'last'    => '',
-                        'current' => 'path/of/contao?having&query&string=1',
-                    ],
-                ],
-            ],
-            'Test referer returns correct new referer for back end scope' => [
-                ContaoCoreBundle::SCOPE_BACKEND,
-                'contao_backend',
-                'Contao\\BackendUser',
-                'tl_user',
-                $requestWithRefInUrl,
-                'referer',
-                [
-                    'dummyTestRefererId' => [
-                        'last'    => '',
-                        'current' => 'hi/I/am/your_current_referer.html',
-                    ],
-                ],
-                [
-                    'dummyTestRefererId' => [
-                        'last'    => 'hi/I/am/your_current_referer.html',
-                        'current' => 'path/of/contao?having&query&string=1',
-                    ],
-                ],
-            ],
-            'Test current referer null returns null for front end scope' => [
-                ContaoCoreBundle::SCOPE_FRONTEND,
-                'contao_frontend',
-                'Contao\\FrontendUser',
-                'tl_member',
-                $request,
-                'referer',
-                null,
-                null,
-            ],
-            'Test referer returns correct new referer for front end scope' => [
-                ContaoCoreBundle::SCOPE_FRONTEND,
-                'contao_frontend',
-                'Contao\\FrontendUser',
-                'tl_member',
-                $requestWithRefInUrl,
-                'referer',
-                [
-                    'last'    => '',
-                    'current' => 'hi/I/am/your_current_referer.html',
-                ],
-                [
-                    'last'    => 'hi/I/am/your_current_referer.html',
-                    'current' => 'path/of/contao?having&query&string=1',
-                ],
-            ],
-            'Test referers are correctly added to the referers array (see #143)' => [
-                ContaoCoreBundle::SCOPE_BACKEND,
-                'contao_backend',
-                'Contao\\BackendUser',
-                'tl_url',
-                $requestWithRefInUrl,
-                'referer',
-                [
-                    'dummyTestRefererId' => [
-                        'last'    => '',
-                        'current' => 'hi/I/am/your_current_referer.html',
-                    ],
-                    'dummyTestRefererId1' => [
-                        'last'    => '',
-                        'current' => 'hi/I/am/your_current_referer.html',
-                    ],
-                ],
-                [
-                    'dummyTestRefererId' => [
-                        'last'    => 'hi/I/am/your_current_referer.html',
-                        'current' => 'path/of/contao?having&query&string=1',
-                    ],
-                    'dummyTestRefererId1' => [
-                        'last'    => '',
-                        'current' => 'hi/I/am/your_current_referer.html',
-                    ],
-                ],
-            ],
+            [ContaoCoreBundle::SCOPE_BACKEND, 'Contao\\BackendUser', 'contao_backend'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, 'Contao\\FrontendUser', 'contao_frontend'],
+        ];
+    }
+
+    /**
+     * Provides the data for the testSessionStoredOnKernelResponse() method.
+     *
+     * @return array The test data
+     */
+    public function scopeTableProvider()
+    {
+        return [
+            [ContaoCoreBundle::SCOPE_BACKEND, 'Contao\\BackendUser', 'tl_user'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, 'Contao\\FrontendUser', 'tl_member'],
         ];
     }
 
@@ -459,24 +344,9 @@ class UserSessionListenerTest extends TestCase
      */
     public function noUserProvider()
     {
-        $anonymousToken = new AnonymousToken('key', 'anon.');
-
         return [
             [null],
-            [$anonymousToken],
-        ];
-    }
-
-    /**
-     * Provides the data for the scope-based tests.
-     *
-     * @return array the test data
-     */
-    public function scopeProvider()
-    {
-        return [
-            [ContaoCoreBundle::SCOPE_BACKEND, 'Contao\\BackendUser', 'contao_backend'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, 'Contao\\FrontendUser', 'contao_frontend'],
+            [new AnonymousToken('key', 'anon.')],
         ];
     }
 
@@ -506,6 +376,9 @@ class UserSessionListenerTest extends TestCase
             $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
         }
 
-        return new UserSessionListener($session, $connection, $tokenStorage);
+        $listener = new UserSessionListener($session, $connection);
+        $listener->setTokenStorage($tokenStorage);
+
+        return $listener;
     }
 }

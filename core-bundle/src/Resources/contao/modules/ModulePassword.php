@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Front end module "lost password".
@@ -211,15 +214,21 @@ class ModulePassword extends \Module
 		$objWidget->rowClassConfirm = 'row_1 odd';
 		$this->Template->rowLast = 'row_2 row_last even';
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Validate the field
-		if (strlen(\Input::post('FORM_SUBMIT')) && \Input::post('FORM_SUBMIT') == $this->Session->get('setPasswordToken'))
+		if (strlen(\Input::post('FORM_SUBMIT')) && \Input::post('FORM_SUBMIT') == $objSession->get('setPasswordToken'))
 		{
 			$objWidget->validate();
 
 			// Set the new password and redirect
 			if (!$objWidget->hasErrors())
 			{
-				$this->Session->set('setPasswordToken', '');
+				$objSession->set('setPasswordToken', '');
 				array_pop($_SESSION['TL_CONFIRM']);
 
 				$objMember->activation = '';
@@ -257,7 +266,7 @@ class ModulePassword extends \Module
 		}
 
 		$strToken = md5(uniqid(mt_rand(), true));
-		$this->Session->set('setPasswordToken', $strToken);
+		$objSession->set('setPasswordToken', $strToken);
 
 		$this->Template->formId = $strToken;
 		$this->Template->fields = $objWidget->parse();

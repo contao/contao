@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -54,6 +56,12 @@ class BackendFile extends \Backend
 	 */
 	public function run()
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		/** @var \BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_picker');
 		$objTemplate->main = '';
@@ -69,7 +77,7 @@ class BackendFile extends \Backend
 		$strField = \Input::get('field');
 
 		// Define the current ID
-		define('CURRENT_ID', (\Input::get('table') ? $this->Session->get('CURRENT_ID') : \Input::get('id')));
+		define('CURRENT_ID', (\Input::get('table') ? $objSession->get('CURRENT_ID') : \Input::get('id')));
 
 		$this->loadDataContainer($strTable);
 		$strDriver = 'DC_' . $GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'];
@@ -99,7 +107,7 @@ class BackendFile extends \Backend
 			$this->objAjax->executePostActions($objDca);
 		}
 
-		$this->Session->set('filePickerRef', \Environment::get('request'));
+		$objSession->set('filePickerRef', \Environment::get('request'));
 		$arrValues = array_filter(explode(',', \Input::get('value')));
 
 		// Convert UUIDs to binary
@@ -144,7 +152,7 @@ class BackendFile extends \Backend
 		$objTemplate->addSearch = false;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
 		$objTemplate->action = ampersand(\Environment::get('request'));
-		$objTemplate->value = $this->Session->get('file_selector_search');
+		$objTemplate->value = $objSession->get('file_selector_search');
 		$objTemplate->manager = $GLOBALS['TL_LANG']['MSC']['fileManager'];
 		$objTemplate->managerHref = 'contao/main.php?do=files&amp;popup=1';
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'];

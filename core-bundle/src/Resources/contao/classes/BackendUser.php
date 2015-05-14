@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -461,14 +462,20 @@ class BackendUser extends \User
 	 */
 	public function navigation($blnShowAll=false)
 	{
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
 		$arrModules = array();
-		$session = $this->Session->all();
+		$session = $objSessionBag->all();
 
 		// Toggle nodes
 		if (\Input::get('mtg'))
 		{
 			$session['backend_modules'][\Input::get('mtg')] = (isset($session['backend_modules'][\Input::get('mtg')]) && $session['backend_modules'][\Input::get('mtg')] == 0) ? 1 : 0;
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 			\Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', \Environment::get('request')));
 		}
 

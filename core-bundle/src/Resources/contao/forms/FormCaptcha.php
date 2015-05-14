@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Class FormCaptcha
@@ -128,7 +131,13 @@ class FormCaptcha extends \Widget
 	 */
 	public function validate()
 	{
-		$arrCaptcha = $this->Session->get('captcha_' . $this->strId);
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$arrCaptcha = $objSession->get('captcha_' . $this->strId);
 
 		if (!is_array($arrCaptcha) || !strlen($arrCaptcha['key']) || !strlen($arrCaptcha['sum']) || \Input::post($arrCaptcha['key']) != $arrCaptcha['sum'] || $arrCaptcha['time'] > (time() - 3))
 		{
@@ -136,7 +145,7 @@ class FormCaptcha extends \Widget
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);
 		}
 
-		$this->Session->set('captcha_' . $this->strId, '');
+		$objSession->set('captcha_' . $this->strId, '');
 	}
 
 
@@ -153,7 +162,13 @@ class FormCaptcha extends \Widget
 		$question = $GLOBALS['TL_LANG']['SEC']['question' . rand(1, 3)];
 		$question = sprintf($question, $int1, $int2);
 
-		$this->Session->set('captcha_' . $this->strId, array
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$objSession->set('captcha_' . $this->strId, array
 		(
 			'sum' => $int1 + $int2,
 			'key' => $this->strCaptchaKey,

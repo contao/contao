@@ -297,13 +297,19 @@ class tl_theme extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		if ($this->Session->get('style_sheet_update_all'))
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		if ($objSession->get('style_sheet_update_all'))
 		{
 			$this->import('StyleSheets');
 			$this->StyleSheets->updateStyleSheets();
 		}
 
-		$this->Session->set('style_sheet_update_all', null);
+		$objSession->set('style_sheet_update_all', null);
 	}
 
 
@@ -315,7 +321,13 @@ class tl_theme extends Backend
 	 */
 	public function scheduleUpdate()
 	{
-		$this->Session->set('style_sheet_update_all', true);
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$objSession->set('style_sheet_update_all', true);
 	}
 
 

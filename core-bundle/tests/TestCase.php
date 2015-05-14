@@ -15,12 +15,12 @@ use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\InitializeSystemListener;
+use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -209,12 +209,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
         $session = new Session(new MockArraySessionStorage());
 
-        $beBag = new AttributeBag('_contao_be_attributes');
+        $beBag = new ArrayAttributeBag('_contao_be_attributes');
         $beBag->setName('contao_backend');
 
         $session->registerBag($beBag);
 
-        $feBag = new AttributeBag('_contao_fe_attributes');
+        $feBag = new ArrayAttributeBag('_contao_fe_attributes');
         $feBag->setName('contao_frontend');
 
         $session->registerBag($feBag);

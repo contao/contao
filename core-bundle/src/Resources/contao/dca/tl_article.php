@@ -369,7 +369,13 @@ class tl_article extends Backend
 			return;
 		}
 
-		$session = $this->Session->all();
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->all();
 
 		// Set the default page user and group
 		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = intval(Config::get('defaultUser') ?: $this->User->id);
@@ -440,7 +446,7 @@ class tl_article extends Backend
 		$permission = 0;
 
 		// Overwrite the session
-		$this->Session->replace($session);
+		$objSession->replace($session);
 
 		// Check current action
 		if (Input::get('act') && Input::get('act') != 'paste')
@@ -858,7 +864,13 @@ class tl_article extends Backend
 		// Generate the aliases
 		if (Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
 		{
-			$session = $this->Session->all();
+			/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+			global $kernel;
+
+			/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+			$objSession = $kernel->getContainer()->get('session');
+
+			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'];
 
 			foreach ($ids as $id)

@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to edit the local configuration file.
@@ -153,9 +156,15 @@ class DC_File extends \DataContainer implements \editable
 				}
 			}
 
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
+			/** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
 			// Render boxes
 			$class = 'tl_tbox';
-			$fs = $this->Session->get('fieldset_states');
+			$fs = $objSessionBag->get('fieldset_states');
 			$blnIsFirst = true;
 
 			foreach ($boxes as $k=>$v)

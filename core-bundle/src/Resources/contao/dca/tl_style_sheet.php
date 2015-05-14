@@ -255,7 +255,13 @@ class tl_style_sheet extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		$session = $this->Session->get('style_sheet_updater');
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->get('style_sheet_updater');
 
 		if (!is_array($session) || empty($session))
 		{
@@ -269,7 +275,7 @@ class tl_style_sheet extends Backend
 			$this->StyleSheets->updateStyleSheet($id);
 		}
 
-		$this->Session->set('style_sheet_updater', null);
+		$objSession->set('style_sheet_updater', null);
 	}
 
 
@@ -295,10 +301,16 @@ class tl_style_sheet extends Backend
 			return;
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Store the ID in the session
-		$session = $this->Session->get('style_sheet_updater');
+		$session = $objSession->get('style_sheet_updater');
 		$session[] = $id;
-		$this->Session->set('style_sheet_updater', array_unique($session));
+		$objSession->set('style_sheet_updater', array_unique($session));
 	}
 
 

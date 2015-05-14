@@ -10,6 +10,10 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Provide methods to modify the file system.
@@ -77,12 +81,18 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	{
 		parent::__construct();
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Check the request token (see #4007)
 		if (isset($_GET['act']))
 		{
 			if (!isset($_GET['rt']) || !\RequestToken::validate(\Input::get('rt')))
 			{
-				$this->Session->set('INVALID_TOKEN_URL', \Environment::get('request'));
+				$objSession->set('INVALID_TOKEN_URL', \Environment::get('request'));
 				$this->redirect('contao/confirm.php');
 			}
 		}
@@ -92,7 +102,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Clear the clipboard
 		if (isset($_GET['clipboard']))
 		{
-			$this->Session->set('CLIPBOARD', array());
+			$objSession->set('CLIPBOARD', array());
 			$this->redirect($this->getReferer());
 		}
 
@@ -123,9 +133,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Decode the values (see #5764)
 			$ids = array_map('rawurldecode', $ids);
 
-			$session = $this->Session->all();
+			$session = $objSession->all();
 			$session['CURRENT']['IDS'] = $ids;
-			$this->Session->replace($session);
+			$objSession->replace($session);
 
 			if (isset($_POST['edit']))
 			{
@@ -137,7 +147,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 			elseif (isset($_POST['cut']) || isset($_POST['copy']))
 			{
-				$arrClipboard = $this->Session->get('CLIPBOARD');
+				$arrClipboard = $objSession->get('CLIPBOARD');
 
 				$arrClipboard[$strTable] = array
 				(
@@ -145,7 +155,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					'mode' => (isset($_POST['cut']) ? 'cutAll' : 'copyAll')
 				);
 
-				$this->Session->set('CLIPBOARD', $arrClipboard);
+				$objSession->set('CLIPBOARD', $arrClipboard);
 				$this->redirect($this->getReferer());
 			}
 		}
@@ -246,6 +256,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	{
 		$return = '';
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Add to clipboard
 		if (\Input::get('act') == 'paste')
 		{
@@ -254,7 +270,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$this->isValid($this->intId);
 			}
 
-			$arrClipboard = $this->Session->get('CLIPBOARD');
+			$arrClipboard = $objSession->get('CLIPBOARD');
 
 			$arrClipboard[$this->strTable] = array
 			(
@@ -263,13 +279,16 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				'mode' => \Input::get('mode')
 			);
 
-			$this->Session->set('CLIPBOARD', $arrClipboard);
+			$objSession->set('CLIPBOARD', $arrClipboard);
 		}
 
 		// Get the session data and toggle the nodes
 		if (\Input::get('tg') == 'all')
 		{
-			$session = $this->Session->all();
+			/** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = $objSession->getBag('contao_backend');
+
+			$session = $objSessionBag->all();
 
 			// Expand tree
 			if (!is_array($session['filetree']) || empty($session['filetree']) || current($session['filetree']) != 1)
@@ -282,12 +301,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$session['filetree'] = array();
 			}
 
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', \Environment::get('request')));
 		}
 
 		$blnClipboard = false;
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		// Check clipboard
 		if (!empty($arrClipboard[$this->strTable]))
@@ -453,10 +472,16 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Empty clipboard
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 		$arrClipboard[$this->strTable] = array();
-		$this->Session->set('CLIPBOARD', $arrClipboard);
+		$objSession->set('CLIPBOARD', $arrClipboard);
 
 		$this->Files->mkdir($strFolder . '/__new__');
 		$this->redirect(html_entity_decode($this->switchToEdit($this->urlEncode($strFolder) . '/__new__')));
@@ -505,10 +530,16 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Empty clipboard
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 		$arrClipboard[$this->strTable] = array();
-		$this->Session->set('CLIPBOARD', $arrClipboard);
+		$objSession->set('CLIPBOARD', $arrClipboard);
 
 		$this->import('Files');
 
@@ -576,7 +607,13 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && is_array($arrClipboard[$this->strTable]['id']))
 		{
@@ -639,10 +676,16 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Empty clipboard
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 		$arrClipboard[$this->strTable] = array();
-		$this->Session->set('CLIPBOARD', $arrClipboard);
+		$objSession->set('CLIPBOARD', $arrClipboard);
 
 		$this->import('Files');
 
@@ -730,7 +773,13 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && is_array($arrClipboard[$this->strTable]['id']))
 		{
@@ -830,7 +879,13 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		$session = $this->Session->all();
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'];
 
 		if (is_array($ids) && strlen($ids[0]))
@@ -882,9 +937,15 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Empty clipboard
 		if (!$blnIsAjax)
 		{
-			$arrClipboard = $this->Session->get('CLIPBOARD');
+			/** @var KernelInterface $kernel */
+			global $kernel;
+
+			/** @var SessionInterface $objSession */
+			$objSession = $kernel->getContainer()->get('session');
+
+			$arrClipboard = $objSession->get('CLIPBOARD');
 			$arrClipboard[$this->strTable] = array();
-			$this->Session->set('CLIPBOARD', $arrClipboard);
+			$objSession->set('CLIPBOARD', $arrClipboard);
 		}
 
 		// Instantiate the uploader
@@ -1354,15 +1415,21 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Get current IDs from session
-		$session = $this->Session->all();
+		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'];
 
 		// Save field selection in session
 		if (\Input::post('FORM_SUBMIT') == $this->strTable.'_all' && \Input::get('fields'))
 		{
 			$session['CURRENT'][$this->strTable] = \Input::post('all_fields');
-			$this->Session->replace($session);
+			$objSession->replace($session);
 		}
 
 		$fields = $session['CURRENT'][$this->strTable];
@@ -1972,12 +2039,18 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Set the new value so the input field can show it
 			if (\Input::get('act') == 'editAll')
 			{
-				$session = $this->Session->all();
+				/** @var KernelInterface $kernel */
+				global $kernel;
+
+				/** @var SessionInterface $objSession */
+				$objSession = $kernel->getContainer()->get('session');
+
+				$session = $objSession->all();
 
 				if (($index = array_search($this->strPath.'/'.$this->varValue.$this->strExtension, $session['CURRENT']['IDS'])) !== false)
 				{
 					$session['CURRENT']['IDS'][$index] = $this->strPath.'/'.$varValue.$this->strExtension;
-					$this->Session->replace($session);
+					$objSession->replace($session);
 				}
 			}
 
@@ -2211,8 +2284,14 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			return '';
 		}
 
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		$blnClipboard = false;
-		$arrClipboard = $this->Session->get('CLIPBOARD');
+		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		// Check clipboard
 		if (!empty($arrClipboard[$this->strTable]))
@@ -2257,13 +2336,20 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null)
 	{
 		static $session;
-		$session = $this->Session->all();
+
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
 
 		// Get the session data and toggle the nodes
 		if (\Input::get('tg'))
 		{
 			$session['filetree'][\Input::get('tg')] = (isset($session['filetree'][\Input::get('tg')]) && $session['filetree'][\Input::get('tg')] == 1) ? 0 : 1;
-			$this->Session->replace($session);
+			$objSessionBag->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', \Environment::get('request')));
 		}
 
