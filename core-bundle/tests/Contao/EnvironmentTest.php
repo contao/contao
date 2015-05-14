@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Test\Contao;
 
 use Contao\CoreBundle\Test\TestCase;
 use Contao\Environment;
-use Symfony\Component\HttpKernel\Kernel;
+use Contao\System;
 
 /**
  * Tests the Environment class.
@@ -26,6 +26,7 @@ class EnvironmentTest extends TestCase
      */
     public static function setupBeforeClass()
     {
+        Environment::reset();
         Environment::set('path', '/core');
 
         require __DIR__ . '/../../src/Resources/contao/config/default.php';
@@ -139,6 +140,9 @@ class EnvironmentTest extends TestCase
      */
     protected function runTests()
     {
+        // Environment::get('ip') needs the request stack
+        System::setContainer($this->mockContainerWithContaoScopes());
+
         $agent = Environment::get('agent');
 
         $this->assertEquals('mac', $agent->os);

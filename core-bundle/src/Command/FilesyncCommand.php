@@ -21,6 +21,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class FilesyncCommand extends AbstractLockedCommand
 {
+    use FrameworkAwareTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -37,6 +39,8 @@ class FilesyncCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
+        $this->framework->initialize();
+
         $strLog = Dbafs::syncFiles();
         $output->writeln('Synchronization complete (see <info>' . $strLog . '</info>).');
 

@@ -41,6 +41,7 @@ class AutomatorCommandTest extends TestCase
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());
+        $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
 
@@ -75,6 +76,7 @@ class AutomatorCommandTest extends TestCase
 
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());
+        $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
 
@@ -97,6 +99,7 @@ class AutomatorCommandTest extends TestCase
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());
+        $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
 
@@ -115,6 +118,7 @@ class AutomatorCommandTest extends TestCase
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());
+        $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
 
@@ -135,6 +139,7 @@ class AutomatorCommandTest extends TestCase
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());
+        $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
 

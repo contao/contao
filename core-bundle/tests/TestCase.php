@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Test;
 
+use Contao\Config;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -220,12 +221,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function mockContainerWithContaoScopes()
     {
         $container = new Container();
-
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
-
-        $container->setParameter('contao.error_level', error_reporting());
-        $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.root_dir', $this->getRootDir());
         $container->setParameter('kernel.cache_dir', $this->getCacheDir());
 
@@ -267,6 +264,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         CsrfTokenManagerInterface $tokenManager = null,
         ConfigAdapter $configAdatper = null
     ) {
+        // Ensure to use the fixtures class
+        Config::preload();
+
         $container = $this->mockContainerWithContaoScopes();
 
         if (null === $requestStack) {

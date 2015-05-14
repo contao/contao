@@ -21,9 +21,13 @@ use Symfony\Component\Filesystem\Filesystem;
  * @author Yanick Witschi <https://github.com/Toflar>
  *
  * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class GdImageTest extends TestCase
 {
+    /**
+     * @var string
+     */
     private static $rootDir;
 
     /**

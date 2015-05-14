@@ -83,6 +83,7 @@ services:
             - "%contao.pretty_error_screens%"
             - "@templating"
             - "@contao.adapter.config"
+            - "@contao.framework"
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 32 }
 

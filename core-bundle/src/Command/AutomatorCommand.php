@@ -25,6 +25,8 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  */
 class AutomatorCommand extends AbstractLockedCommand
 {
+    use FrameworkAwareTrait;
+
     /**
      * @var array
      */
@@ -49,6 +51,8 @@ class AutomatorCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
+        $this->framework->initialize();
+
         try {
             $this->runAutomator($input, $output);
         } catch (\InvalidArgumentException $e) {

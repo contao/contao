@@ -44,8 +44,18 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public static function setUpBeforeClass()
     {
+        $GLOBALS['TL_LANG']['XPT'] = [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
         $engine = $this->getMock('Symfony\\Bundle\\TwigBundle\\TwigEngine', ['exists', 'renderResponse']);
 
         $engine->expects($this->any())

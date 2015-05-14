@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Test;
 
+use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoFramework;
 use Symfony\Component\HttpFoundation\Request;
@@ -192,6 +193,9 @@ class ContaoFrameworkTest extends TestCase
         $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
+
+        // Ensure to use the fixtures class
+        Config::preload();
 
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
