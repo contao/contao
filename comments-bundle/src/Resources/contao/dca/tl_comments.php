@@ -287,7 +287,13 @@ class tl_comments extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$session = $this->Session->all();
+				/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+				global $kernel;
+
+				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+				$objSession = $kernel->getContainer()->get('session');
+
+				$session = $objSession->all();
 
 				if (!is_array($session['CURRENT']['IDS']) || empty($session['CURRENT']['IDS']))
 				{
@@ -305,7 +311,7 @@ class tl_comments extends Backend
 				}
 
 				$session['CURRENT']['IDS'] = array_values($session['CURRENT']['IDS']);
-				$this->Session->replace($session);
+				$objSession->replace($session);
 				break;
 
 			default:
