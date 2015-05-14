@@ -65,8 +65,6 @@ class ContaoCacheWarmerTest extends TestCase
 
     /**
      * Tests the warmUp() method.
-     *
-     * @runInSeparateProcess
      */
     public function testWarmUp()
     {
