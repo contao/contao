@@ -137,10 +137,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 );
 
 
-/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-global $kernel;
-
-$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 // Add the comments template drop-down menu
 if (isset($bundles['ContaoCommentsBundle']))
