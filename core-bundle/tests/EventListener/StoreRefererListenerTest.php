@@ -139,7 +139,6 @@ class StoreRefererListenerTest extends TestCase
         $listener->onKernelResponse($responseEvent);
     }
 
-
     /**
      * Provides the data for the testRefererStoredOnKernelResponse() method.
      *
