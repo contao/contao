@@ -902,6 +902,8 @@ class tl_module extends Backend
 	/**
 	 * Return all module templates as array
 	 *
+	 * @param DataContainer $dc
+	 *
 	 * @return array
 	 */
 	public function getModuleTemplates(DataContainer $dc)

@@ -839,14 +839,14 @@ class tl_content extends Backend
 	 */
 	public function checkPermission()
 	{
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
+
 		// Prevent deleting referenced elements (see #4898)
 		if (Input::get('act') == 'deleteAll')
 		{
 			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias'")
 									 ->execute();
-
-			/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-			$objSession = System::getContainer()->get('session');
 
 			$session = $objSession->all();
 			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));

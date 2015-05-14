@@ -15,7 +15,6 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Tests the ContaoCacheWarmer class.

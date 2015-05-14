@@ -211,7 +211,7 @@ class ContaoFrameworkTest extends TestCase
                 ),
                 'contao_csrf_token',
                 $this->mockConfig(),
-                error_reporting()
+                error_reporting(),
             ])
             ->setMethods(['isInitialized'])
             ->getMock()
@@ -296,7 +296,7 @@ class ContaoFrameworkTest extends TestCase
             ['isTokenValid'],
             [
                 $tokenGenerator,
-                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
+                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface'),
             ]
         );
 
@@ -328,7 +328,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertEquals('', TL_REFERER_ID);
         $this->assertEquals('contao/install', TL_SCRIPT);
         $this->assertEquals('', TL_PATH);
-   }
+    }
 
     /**
      * Tests initializing the framework with an invalid request token.
@@ -350,7 +350,7 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
         $framework->setContainer($container);
         $framework->initialize();
-   }
+    }
 
     /**
      * Tests initializing the framework with an incomplete installation.
@@ -390,7 +390,7 @@ class ContaoFrameworkTest extends TestCase
                     default:
                         return null;
                 }
-            });
+            })
         ;
 
         $framework = $this->mockContaoFramework(

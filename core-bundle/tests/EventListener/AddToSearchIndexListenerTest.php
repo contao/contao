@@ -114,7 +114,7 @@ class AddToSearchIndexListenerTest extends TestCase
             [
                 $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]),
                 new Request(),
-                new Response()
+                new Response(),
             ]
         );
     }
