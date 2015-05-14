@@ -248,10 +248,7 @@ class tl_faq_category extends Backend
 	 */
 	public function checkPermission()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
-		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
@@ -282,11 +279,8 @@ class tl_faq_category extends Backend
 			$GLOBALS['TL_DCA']['tl_faq_category']['config']['closed'] = true;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		// Check current action
 		switch (Input::get('act'))
