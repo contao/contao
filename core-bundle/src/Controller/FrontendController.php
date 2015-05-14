@@ -35,6 +35,8 @@ class FrontendController extends Controller
      */
     public function indexAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new FrontendIndex();
 
         return $controller->run();
@@ -49,6 +51,8 @@ class FrontendController extends Controller
      */
     public function cronAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new FrontendCron();
 
         return $controller->run();
@@ -63,6 +67,8 @@ class FrontendController extends Controller
      */
     public function shareAction()
     {
+        $this->container->get('contao.framework')->initialize();
+
         $controller = new FrontendShare();
 
         return $controller->run();

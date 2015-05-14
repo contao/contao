@@ -44,6 +44,18 @@ services:
     contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
-        calls:
-            - ['setContainer', ['@service_container']]
+        arguments:
+            - "@contao.framework"
+            - "@service_container"
 
+    contao.framework:
+        class: Contao\CoreBundle\ContaoFramework
+        arguments:
+            - "@request_stack"
+            - "@router"
+            - "@session"
+            - "%kernel.root_dir%"
+            - "@security.csrf.token_manager"
+            - "%contao.csrf_token_name%"
+            - "@contao.adapter.config"
+            - "%contao.error_level%"

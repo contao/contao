@@ -46,7 +46,7 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function setUp()
     {
-        $engine = $this->getMock('Symfony\\Bundle\\TwigBundle\\TwigEngine', ['exists', 'renderResponse']);
+        $engine = $this->getMock('Symfony\\Bundle\\TwigBundle\\TwigEngine', ['exists', 'renderResponse'], [], '', false);
 
         $engine->expects($this->any())
             ->method('exists')
@@ -239,7 +239,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             new NotFoundHttpException('', new PageNotFoundException())
         );
 
-        $engine = $this->getMock('Symfony\\Bundle\\TwigBundle\\TwigEngine', ['exists', 'renderResponse']);
+        $engine = $this->getMock('Symfony\\Bundle\\TwigBundle\\TwigEngine', ['exists', 'renderResponse'], [], '', false);
 
         $engine->expects($this->any())
             ->method('exists')

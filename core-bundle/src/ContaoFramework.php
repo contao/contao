@@ -8,18 +8,19 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\EventListener;
+namespace Contao\CoreBundle;
 
 use Contao\ClassLoader;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
-use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
+use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Input;
 use Contao\System;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -27,13 +28,16 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 /**
  * Initializes the Contao framework.
  *
- * @author Christian Schiffler <https://github.com/discordier>
- * @author Yanick Witschi <https://github.com/toflar>
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Dominik Tomasi <https://github.com/dtomasi>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
-class InitializeSystemListener
+class ContaoFramework
 {
-    use ScopeAwareTrait;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * @var RouterInterface
@@ -66,9 +70,14 @@ class InitializeSystemListener
     private $csrfTokenName;
 
     /**
+     * @var int
+     */
+    private $errorLevel;
+
+    /**
      * @var bool
      */
-    private static $booted = false;
+    private $initialized = false;
 
     /**
      * @var array
@@ -83,118 +92,62 @@ class InitializeSystemListener
     /**
      * Constructor.
      *
+     * @param RequestStack              $requestStack  The RequestStack
      * @param RouterInterface           $router        The router service
      * @param SessionInterface          $session       The session service
      * @param string                    $rootDir       The kernel root directory
      * @param CsrfTokenManagerInterface $tokenManager  The token manager service
      * @param string                    $csrfTokenName The name of the token
      * @param ConfigAdapter             $config        The config adapter object
+     * @param int                       $errorLevel    The PHP error level
      */
     public function __construct(
+        RequestStack $requestStack,
         RouterInterface $router,
         SessionInterface $session,
         $rootDir,
         CsrfTokenManagerInterface $tokenManager,
         $csrfTokenName,
-        ConfigAdapter $config
+        ConfigAdapter $config,
+        $errorLevel
     ) {
+        $this->requestStack  = $requestStack;
         $this->router        = $router;
         $this->session       = $session;
         $this->rootDir       = dirname($rootDir);
         $this->tokenManager  = $tokenManager;
         $this->csrfTokenName = $csrfTokenName;
         $this->config        = $config;
+        $this->errorLevel    = $errorLevel;
     }
 
     /**
-     * Initializes the system upon kernel.request.
+     * Check Framework is initialized
      *
-     * @param GetResponseEvent $event The event object
+     * @return bool
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function isInitialized()
     {
-        if (true === self::$booted || (!$this->isFrontendScope() && !$this->isBackendScope())) {
+        return $this->initialized;
+    }
+
+    /**
+     * Start Initialization-Process
+     */
+    public function initialize()
+    {
+        if ($this->isInitialized()) {
             return;
         }
 
-        // Set before calling any methods to prevent recursive booting
-        self::$booted = true;
+        $this->initialized = true;
 
-        $request = $event->getRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
-        $route = $this->router->generate(
-            $request->attributes->get('_route'),
-            $request->attributes->get('_route_params')
-        );
+        $this->setConstants($request);
 
-        $basePath = $request->getBasePath();
-
-        $this->setConstants(
-            $this->getModeFromContainerScope(),
-            substr($route, strlen($basePath) + 1),
-            $basePath,
-            $request->attributes->get('_contao_referer_id')
-        );
-
-        $this->boot($request);
-    }
-
-    /**
-     * Initializes the system upon console.command.
-     */
-    public function onConsoleCommand()
-    {
-        if (true === self::$booted) {
-            return;
-        }
-
-        // Set before calling any methods to prevent recursive booting
-        self::$booted = true;
-
-        $this->setConstants('FE', 'console');
-        $this->boot();
-    }
-
-    /**
-     * Sets the Contao constants.
-     *
-     * @param string $mode      The mode (BE or FE)
-     * @param string $route     The route
-     * @param string $basePath  The base path
-     * @param string $refererId The referer ID
-     *
-     * @internal
-     */
-    protected function setConstants($mode, $route, $basePath = '', $refererId = '')
-    {
-        // The constants are deprecated and will be removed in version 5.0.
-        define('TL_MODE', $mode);
-        define('TL_START', microtime(true));
-        define('TL_ROOT', $this->rootDir);
-        define('TL_REFERER_ID', $refererId);
-        define('TL_SCRIPT', $route);
-
-        // Define the login status constants in the back end (see #4099, #5279)
-        if ('BE' === TL_MODE) {
-            define('BE_USER_LOGGED_IN', false);
-            define('FE_USER_LOGGED_IN', false);
-        }
-
-        // Define the relative path to the installation (see #5339)
-        define('TL_PATH', $basePath);
-    }
-
-    /**
-     * Boots the Contao framework.
-     *
-     * @param Request|null $request The request object
-     *
-     * @internal
-     */
-    protected function boot(Request $request = null)
-    {
         // Set the error_reporting level
-        error_reporting($this->container->getParameter('contao.error_level'));
+        error_reporting($this->errorLevel);
 
         $this->includeHelpers();
 
@@ -231,32 +184,60 @@ class InitializeSystemListener
     }
 
     /**
-     * Returns the TL_MODE value for the container scope.
+     * Defines Constants required for Contao-Framework
      *
-     * @return string|null The TL_MODE value
+     * @param Request $request
      */
-    private function getModeFromContainerScope()
+    private function setConstants(Request $request = null)
     {
-        if ($this->isBackendScope()) {
-            return 'BE';
+        $scope = $this->requestStack->getCurrentRequest()->attributes->get('_scope');
+
+        if ($scope === (ContaoCoreBundle::SCOPE_BACKEND)) {
+            define('TL_MODE', 'BE');
+        } else {
+            define('TL_MODE', 'FE');
         }
 
-        if ($this->isFrontendScope()) {
-            return 'FE';
+        define('TL_START', microtime(true));
+        define('TL_ROOT', $this->rootDir);
+
+        if (null !== $request) {
+            define('TL_REFERER_ID', $request->attributes->get('_contao_referer_id', ''));
         }
 
-        return null;
+        if (null !== $request) {
+            $route = $this->router->generate(
+                $request->attributes->get('_route'),
+                $request->attributes->get('_route_params')
+            );
+
+            $route = substr($route, strlen($request->getBasePath()) + 1);
+
+        } else {
+            $route = 'console';
+        }
+
+        define('TL_SCRIPT', $route);
+
+        if ($scope === ContaoCoreBundle::SCOPE_BACKEND) {
+            define('BE_USER_LOGGED_IN', false);
+            define('FE_USER_LOGGED_IN', false);
+        }
+
+        if (null !== $request) {
+            define('TL_PATH', $request->getBasePath());
+        }
     }
 
     /**
-     * Includes the helper files.
+     * Includes some helper files
      */
     private function includeHelpers()
     {
-        require __DIR__ . '/../../src/Resources/contao/helper/functions.php';
-        require __DIR__ . '/../../src/Resources/contao/config/constants.php';
-        require __DIR__ . '/../../src/Resources/contao/helper/interface.php';
-        require __DIR__ . '/../../src/Resources/contao/helper/exception.php';
+        require __DIR__ . '/Resources/contao/helper/functions.php';
+        require __DIR__ . '/Resources/contao/config/constants.php';
+        require __DIR__ . '/Resources/contao/helper/interface.php';
+        require __DIR__ . '/Resources/contao/helper/exception.php';
     }
 
     /**
@@ -279,7 +260,7 @@ class InitializeSystemListener
     {
         foreach ($this->basicClasses as $class) {
             if (!class_exists($class, false)) {
-                require_once __DIR__ . '/../../src/Resources/contao/library/Contao/' . $class . '.php';
+                require_once __DIR__ . '/Resources/contao/library/Contao/' . $class . '.php';
                 class_alias('Contao\\' . $class, $class);
             }
         }
