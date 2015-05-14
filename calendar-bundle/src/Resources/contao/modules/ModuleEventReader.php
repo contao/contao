@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -230,10 +229,7 @@ class ModuleEventReader extends \Events
 
 		$this->Template->event = $objTemplate->parse();
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+		$bundles = \System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if ($objEvent->noComments || !isset($bundles['ContaoCommentsBundle']))

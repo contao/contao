@@ -529,10 +529,7 @@ class tl_calendar_events extends Backend
 	 */
 	public function checkPermission()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
-		$bundles = $kernel->getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
@@ -624,11 +621,8 @@ class tl_calendar_events extends Backend
 					$this->redirect('contao/main.php?act=error');
 				}
 
-				/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-				global $kernel;
-
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = $kernel->getContainer()->get('session');
+				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCalendar->fetchEach('id'));
@@ -924,11 +918,8 @@ class tl_calendar_events extends Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->get('calendar_feed_updater');
 
@@ -969,11 +960,8 @@ class tl_calendar_events extends Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('calendar_feed_updater');

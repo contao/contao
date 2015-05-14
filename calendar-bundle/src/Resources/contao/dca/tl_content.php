@@ -89,11 +89,8 @@ class tl_content_calendar extends Backend
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_calendar_events' AND pid=?")
 										 ->execute(CURRENT_ID);
 
-				/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-				global $kernel;
-
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = $kernel->getContainer()->get('session');
+				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
@@ -169,11 +166,8 @@ class tl_content_calendar extends Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->get('calendar_feed_updater');
 

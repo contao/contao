@@ -254,11 +254,8 @@ class tl_calendar_feed extends Backend
 			$GLOBALS['TL_DCA']['tl_calendar_feed']['config']['closed'] = true;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		// Check current action
 		switch (Input::get('act'))
@@ -362,11 +359,8 @@ class tl_calendar_feed extends Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->get('calendar_feed_updater');
 
@@ -405,11 +399,8 @@ class tl_calendar_feed extends Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('calendar_feed_updater');
