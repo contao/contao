@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -58,11 +57,8 @@ class FileSelector extends \Widget
 		$this->import('BackendUser', 'User');
 		$this->convertValuesToPaths();
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$strNode = $objSessionBag->get('tl_files_picker');
 
@@ -231,11 +227,8 @@ class FileSelector extends \Widget
 
 		static $session;
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 

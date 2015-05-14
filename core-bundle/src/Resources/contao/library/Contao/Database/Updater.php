@@ -11,7 +11,6 @@
 namespace Contao\Database;
 
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -734,13 +733,10 @@ class Updater extends \Controller
 	 */
 	public function updateFileTreeFields()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		$processed = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
+		$files = \System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)
 		{

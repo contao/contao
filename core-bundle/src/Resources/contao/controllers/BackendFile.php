@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -56,11 +55,8 @@ class BackendFile extends \Backend
 	 */
 	public function run()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		/** @var \BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_picker');

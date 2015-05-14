@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -156,11 +155,8 @@ class DC_File extends \DataContainer implements \editable
 				}
 			}
 
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
 			/** @var AttributeBagInterface $objSessionBag */
-			$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+			$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 			// Render boxes
 			$class = 'tl_tbox';

@@ -90,16 +90,14 @@ class AddToSearchIndexListenerTest extends TestCase
      */
     private function mockPostResponseEvent()
     {
-        $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
-        $request  = new Request();
-        $response = new Response();
-
-        $event = $this->getMock(
+        return $this->getMock(
             'Symfony\\Component\\HttpKernel\\Event\\PostResponseEvent',
             ['getResponse'],
-            [$kernel, $request, $response]
+            [
+                $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]),
+                new Request(),
+                new Response()
+            ]
         );
-
-        return $event;
     }
 }

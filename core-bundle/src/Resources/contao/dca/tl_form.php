@@ -317,11 +317,8 @@ class tl_form extends Backend
 			$GLOBALS['TL_DCA']['tl_form']['config']['closed'] = true;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		// Check current action
 		switch (Input::get('act'))

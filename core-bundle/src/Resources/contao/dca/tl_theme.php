@@ -297,11 +297,8 @@ class tl_theme extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		if ($objSession->get('style_sheet_update_all'))
 		{
@@ -321,11 +318,8 @@ class tl_theme extends Backend
 	 */
 	public function scheduleUpdate()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		$objSession->set('style_sheet_update_all', true);
 	}

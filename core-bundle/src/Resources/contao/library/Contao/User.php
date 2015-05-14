@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
 
 /**
  * Authenticates and initializes user objects
@@ -284,11 +282,7 @@ abstract class User extends \System
 		}
 
 		$time = time();
-
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$session = $kernel->getContainer()->get('session');
+		$session = \System::getContainer()->get('session');
 
 		// Validate the session
 		if ($objSession->sessionID != $session->getId() || (!\Config::get('disableIpCheck') && $objSession->ip != $this->strIp) || $objSession->hash != $this->strHash || ($objSession->tstamp + \Config::get('sessionTimeout')) < $time)
@@ -586,9 +580,6 @@ abstract class User extends \System
 	 */
 	protected function generateSession()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		$time = time();
 
 		// Generate the cookie hash
@@ -600,7 +591,7 @@ abstract class User extends \System
 
 		// Save the session in the database
 		$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-					   ->execute($this->intId, $time, $this->strCookie, $kernel->getContainer()->get('session')->getId(), $this->strIp, $this->strHash);
+					   ->execute($this->intId, $time, $this->strCookie, \System::getContainer()->get('session')->getId(), $this->strIp, $this->strHash);
 
 		// Set the authentication cookie
 		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);
@@ -644,11 +635,8 @@ abstract class User extends \System
 		$this->setCookie($this->strCookie, $this->strHash, ($time - 86400), null, null, false, true);
 		$this->strHash = '';
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$kernel->getContainer()->get('session')->invalidate();
-		$kernel->getContainer()->get('security.token_storage')->setToken(null);
+		\System::getContainer()->get('session')->invalidate();
+		\System::getContainer()->get('security.token_storage')->setToken(null);
 
 		// Add a log entry
 		if ($this->findBy('id', $intUserid) != false)

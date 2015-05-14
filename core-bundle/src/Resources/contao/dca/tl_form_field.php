@@ -536,11 +536,8 @@ class tl_form_field extends Backend
 					$this->redirect('contao/main.php?act=error');
 				}
 
-				/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-				global $kernel;
-
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = $kernel->getContainer()->get('session');
+				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objForm->fetchEach('id'));

@@ -11,7 +11,6 @@
 namespace Contao\Database;
 
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -262,14 +261,11 @@ class Installer extends \Controller
 	 */
 	public function getFromDca()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		$return = array();
 		$processed = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
+		$files = \System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)
 		{
@@ -310,13 +306,10 @@ class Installer extends \Controller
 	 */
 	public function getFromFile()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		try
 		{
 			/** @var SplFileInfo[] $files */
-			$files = $kernel->getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
+			$files = \System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
 		}
 		catch (\InvalidArgumentException $e)
 		{

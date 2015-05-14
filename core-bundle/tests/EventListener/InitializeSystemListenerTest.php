@@ -60,9 +60,6 @@ class InitializeSystemListenerTest extends TestCase
     {
         Config::preload();
 
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         /** @var ContainerInterface $container */
@@ -103,9 +100,6 @@ class InitializeSystemListenerTest extends TestCase
     public function testBackendRequest()
     {
         Config::preload();
-
-        /** @var KernelInterface $kernel */
-        global $kernel;
 
         $kernel = $this->mockKernel();
 
@@ -149,9 +143,6 @@ class InitializeSystemListenerTest extends TestCase
     {
         Config::preload();
 
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         /** @var ContainerInterface $container */
@@ -194,9 +185,6 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testWithoutScope()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         /** @var ContainerInterface $container */
@@ -231,9 +219,6 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testWithoutContainer()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
@@ -263,9 +248,6 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testNotBootedTwiceUponKernelRequest()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         /** @var ContainerInterface $container */
@@ -313,9 +295,6 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testValidateInstallation()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
@@ -374,9 +353,6 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testConsoleCommand()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         $listener = new InitializeSystemListener(
@@ -406,9 +382,6 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testNotBootedTwiceUponConsoleCommand()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|InitializeSystemListener $listener */
@@ -453,9 +426,6 @@ class InitializeSystemListenerTest extends TestCase
      */
     public function testErrorLevelOverride()
     {
-        /** @var KernelInterface $kernel */
-        global $kernel;
-
         $kernel = $this->mockKernel();
 
         /** @var ContainerInterface $container */

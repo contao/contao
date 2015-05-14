@@ -148,11 +148,8 @@ class tl_templates extends Backend
 	 */
 	public function addBreadcrumb()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
 		if (isset($_GET['node']))
@@ -230,14 +227,11 @@ class tl_templates extends Backend
 	 */
 	public function addNewTemplate()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		$arrAllTemplates = array();
 		$arrAllowed = trimsplit(',', Config::get('templateFiles'));
 
 		/** @var SplFileInfo[] $files */
-		$files = $kernel->getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.(' . implode('|', $arrAllowed) . ')$/');
+		$files = System::getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.(' . implode('|', $arrAllowed) . ')$/');
 
 		foreach ($files as $file)
 		{

@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -81,11 +80,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	{
 		parent::__construct();
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Check the request token (see #4007)
 		if (isset($_GET['act']))
@@ -256,11 +252,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	{
 		$return = '';
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Add to clipboard
 		if (\Input::get('act') == 'paste')
@@ -472,11 +465,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -530,11 +520,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -607,11 +594,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
@@ -676,11 +660,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -773,11 +754,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
@@ -879,11 +857,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'];
@@ -937,11 +912,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Empty clipboard
 		if (!$blnIsAjax)
 		{
-			/** @var KernelInterface $kernel */
-			global $kernel;
-
 			/** @var SessionInterface $objSession */
-			$objSession = $kernel->getContainer()->get('session');
+			$objSession = \System::getContainer()->get('session');
 
 			$arrClipboard = $objSession->get('CLIPBOARD');
 			$arrClipboard[$this->strTable] = array();
@@ -1415,11 +1387,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Get current IDs from session
 		$session = $objSession->all();
@@ -2039,11 +2008,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Set the new value so the input field can show it
 			if (\Input::get('act') == 'editAll')
 			{
-				/** @var KernelInterface $kernel */
-				global $kernel;
-
 				/** @var SessionInterface $objSession */
-				$objSession = $kernel->getContainer()->get('session');
+				$objSession = \System::getContainer()->get('session');
 
 				$session = $objSession->all();
 
@@ -2284,11 +2250,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			return '';
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -2337,11 +2300,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	{
 		static $session;
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 

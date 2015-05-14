@@ -14,7 +14,6 @@ use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -75,10 +74,7 @@ class Automator extends \System
 		$objDatabase->execute("TRUNCATE TABLE tl_search");
 		$objDatabase->execute("TRUNCATE TABLE tl_search_index");
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
+		$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 		// Purge the cache folder
 		$objFolder = new \Folder($strCachePath . '/contao/search');
@@ -187,10 +183,7 @@ class Automator extends \System
 	 */
 	public function purgePageCache()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
+		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 		$objFolder = new \Folder($strCacheDir . '/contao/html');
 		$objFolder->purge();
@@ -205,10 +198,7 @@ class Automator extends \System
 	 */
 	public function purgeSearchCache()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $kernel->getCacheDir());
+		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 		$objFolder = new \Folder($strCacheDir . '/contao/search');
 		$objFolder->purge();
@@ -223,11 +213,8 @@ class Automator extends \System
 	 */
 	public function purgeInternalCache()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$command = new ContaoCacheClearer($kernel->getContainer()->get('filesystem'));
-		$command->clear($kernel->getCacheDir());
+		$command = new ContaoCacheClearer(\System::getContainer()->get('filesystem'));
+		$command->clear(\System::getContainer()->getParameter('kernel.cache_dir'));
 
 		// Add a log entry
 		$this->log('Purged the internal cache', __METHOD__, TL_CRON);
@@ -436,10 +423,7 @@ class Automator extends \System
 	 */
 	public function generateSymlinks()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$container = $kernel->getContainer();
+		$container = \System::getContainer();
 
 		$command = new SymlinksCommand();
 		$command->setContainer($container);
@@ -452,10 +436,7 @@ class Automator extends \System
 	 */
 	public function generateInternalCache()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$container = $kernel->getContainer();
+		$container = \System::getContainer();
 
 		$command = new ContaoCacheWarmer
 		(
@@ -466,7 +447,7 @@ class Automator extends \System
 			$container->get('doctrine.dbal.default_connection')
 		);
 
-		$command->warmUp($kernel->getCacheDir());
+		$command->warmUp(\System::getContainer()->getParameter('kernel.cache_dir'));
 
 		// Add a log entry
 		$this->log('Generated the internal cache', __METHOD__, TL_CRON);

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
 
@@ -53,12 +52,10 @@ class RequestToken
 	 */
 	public static function get()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
+		$container = \System::getContainer();
+		$name = $container->getParameter('contao.csrf_token_name');
 
-		$name = $kernel->getContainer()->getParameter('contao.csrf_token_name');
-
-		return $kernel->getContainer()->get('security.csrf.token_manager')->getToken($name)->getValue();
+		return $container->get('security.csrf.token_manager')->getToken($name)->getValue();
 	}
 
 
@@ -91,11 +88,9 @@ class RequestToken
 			}
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
+		$container = \System::getContainer();
+		$token = new CsrfToken($container->getParameter('contao.csrf_token_name'), $strToken);
 
-		$token = new CsrfToken($kernel->getContainer()->getParameter('contao.csrf_token_name'), $strToken);
-
-		return $kernel->getContainer()->get('security.csrf.token_manager')->isTokenValid($token);
+		return $container->get('security.csrf.token_manager')->isTokenValid($token);
 	}
 }

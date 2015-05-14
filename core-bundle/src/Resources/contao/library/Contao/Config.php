@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
 
 /**
  * Loads and writes the local configuration file
@@ -124,16 +122,15 @@ class Config
 			static::preload();
 		}
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
+		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
 
-		if (file_exists($kernel->getCacheDir() . '/contao/config/config.php'))
+		if (file_exists($strCacheDir . '/contao/config/config.php'))
 		{
-			include $kernel->getCacheDir() . '/contao/config/config.php';
+			include $strCacheDir . '/contao/config/config.php';
 		}
 		else
 		{
-			foreach ($kernel->getContainer()->get('contao.resource_locator')->locate('config/config.php', null, false) as $file)
+			foreach (\System::getContainer()->get('contao.resource_locator')->locate('config/config.php', null, false) as $file)
 			{
 				include $file;
 			}
@@ -476,10 +473,7 @@ class Config
 	 */
 	protected static function loadParameters()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$container = $kernel->getContainer();
+		$container = \System::getContainer();
 
 		if ($container === null)
 		{
@@ -512,7 +506,7 @@ class Config
 			}
 		}
 
-		$GLOBALS['TL_CONFIG']['debugMode'] = $kernel->isDebug();
+		$GLOBALS['TL_CONFIG']['debugMode'] = $container->getParameter('kernel.debug');
 	}
 
 

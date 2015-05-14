@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -110,12 +109,9 @@ class BackendSwitch extends \Backend
 
 					if ($objUser !== null)
 					{
-						/** @var KernelInterface $kernel */
-						global $kernel;
-
 						// Insert the new session
 						$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-									   ->execute($objUser->id, $time, 'FE_USER_AUTH', $kernel->getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
+									   ->execute($objUser->id, $time, 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
 
 						// Set the cookie
 						$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);
@@ -190,12 +186,11 @@ class BackendSwitch extends \Backend
 	 */
 	private function disableProfiler()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
+		$container = \System::getContainer();
 
-		if ($kernel->getContainer()->has('profiler'))
+		if ($container->has('profiler'))
 		{
-			$kernel->getContainer()->get('profiler')->disable();
+			$container->get('profiler')->disable();
 		}
 	}
 }

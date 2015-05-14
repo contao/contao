@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\KernelInterface;
+
 
 /**
  * Reads the environment variables
@@ -369,11 +369,8 @@ class Environment
 	 */
 	protected static function ip()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Request $request */
-		$request = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
+		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
 		{
@@ -410,10 +407,7 @@ class Environment
 	 */
 	protected static function path()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$request = $kernel->getContainer()->get('request_stack')->getCurrentRequest();
+		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
 		{

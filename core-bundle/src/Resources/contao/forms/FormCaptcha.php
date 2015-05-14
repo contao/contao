@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -131,11 +130,8 @@ class FormCaptcha extends \Widget
 	 */
 	public function validate()
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$arrCaptcha = $objSession->get('captcha_' . $this->strId);
 
@@ -162,11 +158,8 @@ class FormCaptcha extends \Widget
 		$question = $GLOBALS['TL_LANG']['SEC']['question' . rand(1, 3)];
 		$question = sprintf($question, $int1, $int2);
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		$objSession->set('captcha_' . $this->strId, array
 		(

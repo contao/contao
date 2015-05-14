@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -65,11 +64,8 @@ class PageSelector extends \Widget
 	{
 		$this->import('BackendUser', 'User');
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Store the keyword
 		if (\Input::post('FORM_SUBMIT') == 'item_selector')
@@ -307,11 +303,8 @@ class PageSelector extends \Widget
 	{
 		static $session;
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = $kernel->getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 

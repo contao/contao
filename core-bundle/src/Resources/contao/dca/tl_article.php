@@ -369,11 +369,8 @@ class tl_article extends Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->all();
 
@@ -864,11 +861,8 @@ class tl_article extends Backend
 		// Generate the aliases
 		if (Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
 		{
-			/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-			global $kernel;
-
 			/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-			$objSession = $kernel->getContainer()->get('session');
+			$objSession = System::getContainer()->get('session');
 
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'];

@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -214,11 +213,8 @@ class ModulePassword extends \Module
 		$objWidget->rowClassConfirm = 'row_1 odd';
 		$this->Template->rowLast = 'row_2 row_last even';
 
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
 		/** @var SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = \System::getContainer()->get('session');
 
 		// Validate the field
 		if (strlen(\Input::post('FORM_SUBMIT')) && \Input::post('FORM_SUBMIT') == $objSession->get('setPasswordToken'))

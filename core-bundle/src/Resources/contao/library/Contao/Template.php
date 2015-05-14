@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 
 /**
@@ -306,10 +305,7 @@ abstract class Template extends \Controller
 	 */
 	public function route($strName, $arrParams = array())
 	{
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		$strUrl = $kernel->getContainer()->get('router')->generate($strName, $arrParams);
+		$strUrl = \System::getContainer()->get('router')->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 		return ampersand($strUrl);

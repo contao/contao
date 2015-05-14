@@ -283,11 +283,8 @@ class tl_files extends Backend
 			$GLOBALS['TL_DCA']['tl_files']['config']['notDeletable'] = true;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->all();
 

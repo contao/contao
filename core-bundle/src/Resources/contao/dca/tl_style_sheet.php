@@ -255,11 +255,8 @@ class tl_style_sheet extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->get('style_sheet_updater');
 
@@ -301,11 +298,8 @@ class tl_style_sheet extends Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('style_sheet_updater');
