@@ -10,10 +10,10 @@
 
 namespace Contao\CoreBundle\Test;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoFramework;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -120,7 +120,8 @@ class ContaoFrameworkTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\ContaoFramework', $framework);
     }
 
-    public function testInitialize() {
+    public function testInitialize()
+    {
 
     }
 
@@ -166,7 +167,7 @@ class ContaoFrameworkTest extends TestCase
 
         $refererId = uniqid();
         $this->requestStack->getCurrentRequest()->attributes->set('_contao_referer_id', $refererId);
-        $this->requestStack->getCurrentRequest()->attributes->set('_scope',ContaoCoreBundle::SCOPE_BACKEND);
+        $this->requestStack->getCurrentRequest()->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('setConstants');
@@ -289,7 +290,7 @@ class ContaoFrameworkTest extends TestCase
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('setDefaultLanguage');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(),array($request));
+        $method->invokeArgs($this->getContaoFramework(), array($request));
 
         $this->assertArrayHasKey('TL_LANGUAGE', $GLOBALS);
         $this->assertArrayHasKey('TL_LANGUAGE', $_SESSION);
@@ -301,7 +302,8 @@ class ContaoFrameworkTest extends TestCase
      * @runInSeparateProcess
      * @backupGlobals disable
      */
-    public function testInitializeLegacySessionAccess() {
+    public function testInitializeLegacySessionAccess()
+    {
 
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('initializeLegacySessionAccess');
@@ -311,8 +313,8 @@ class ContaoFrameworkTest extends TestCase
         $this->assertArrayHasKey('FE_DATA', $_SESSION);
         $this->assertArrayHasKey('BE_DATA', $_SESSION);
 
-        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Session\SessionBagInterface',$_SESSION['FE_DATA']);
-        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Session\SessionBagInterface',$_SESSION['BE_DATA']);
+        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Session\SessionBagInterface', $_SESSION['FE_DATA']);
+        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Session\SessionBagInterface', $_SESSION['BE_DATA']);
 
     }
 
@@ -349,7 +351,7 @@ class ContaoFrameworkTest extends TestCase
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('handleRequestToken');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(),array($request));
+        $method->invokeArgs($this->getContaoFramework(), array($request));
     }
 
     /**
@@ -386,7 +388,7 @@ class ContaoFrameworkTest extends TestCase
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('handleRequestToken');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(),array($request));
+        $method->invokeArgs($this->getContaoFramework(), array($request));
     }
 
     /**
@@ -431,7 +433,7 @@ class ContaoFrameworkTest extends TestCase
         $ref = $this->getReflectionOfContaoFramework();
         $method = $ref->getMethod('handleRequestToken');
         $method->setAccessible(true);
-        $method->invokeArgs($this->getContaoFramework(),array($request));
+        $method->invokeArgs($this->getContaoFramework(), array($request));
     }
 
     /**
@@ -481,7 +483,6 @@ class ContaoFrameworkTest extends TestCase
             )->getMock();
     }
 
-
     /**
      * Shortcut for asserting that constant is defined
      *
@@ -491,5 +492,4 @@ class ContaoFrameworkTest extends TestCase
     {
         $this->assertTrue(defined($constant));
     }
-
 }
