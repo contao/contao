@@ -624,9 +624,15 @@ class tl_calendar_events extends Backend
 					$this->redirect('contao/main.php?act=error');
 				}
 
-				$session = $this->Session->all();
+				/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+				global $kernel;
+
+				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+				$objSession = $kernel->getContainer()->get('session');
+
+				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCalendar->fetchEach('id'));
-				$this->Session->replace($session);
+				$objSession->replace($session);
 				break;
 
 			default:
@@ -918,7 +924,13 @@ class tl_calendar_events extends Backend
 	 */
 	public function generateFeed()
 	{
-		$session = $this->Session->get('calendar_feed_updater');
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->get('calendar_feed_updater');
 
 		if (!is_array($session) || empty($session))
 		{
@@ -935,7 +947,7 @@ class tl_calendar_events extends Backend
 		$this->import('Automator');
 		$this->Automator->generateSitemap();
 
-		$this->Session->set('calendar_feed_updater', null);
+		$objSession->set('calendar_feed_updater', null);
 	}
 
 
@@ -957,10 +969,16 @@ class tl_calendar_events extends Backend
 			return;
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Store the ID in the session
-		$session = $this->Session->get('calendar_feed_updater');
+		$session = $objSession->get('calendar_feed_updater');
 		$session[] = $dc->activeRecord->pid;
-		$this->Session->set('calendar_feed_updater', array_unique($session));
+		$objSession->set('calendar_feed_updater', array_unique($session));
 	}
 
 

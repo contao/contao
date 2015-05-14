@@ -306,6 +306,9 @@ class tl_calendar extends Backend
 			$GLOBALS['TL_DCA']['tl_calendar']['config']['closed'] = true;
 		}
 
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Check current action
 		switch (Input::get('act'))
 		{
@@ -318,7 +321,7 @@ class tl_calendar extends Backend
 				// Dynamically add the record to the user profile
 				if (!in_array(Input::get('id'), $root))
 				{
-					$arrNew = $this->Session->get('new_records');
+					$arrNew = $objSession->get('new_records');
 
 					if (is_array($arrNew['tl_calendar']) && in_array(Input::get('id'), $arrNew['tl_calendar']))
 					{
@@ -380,7 +383,7 @@ class tl_calendar extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$session = $this->Session->all();
+				$session = $objSession->all();
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'calendarp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -389,7 +392,7 @@ class tl_calendar extends Backend
 				{
 					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $root);
 				}
-				$this->Session->replace($session);
+				$objSession->replace($session);
 				break;
 
 			default:
@@ -408,7 +411,13 @@ class tl_calendar extends Backend
 	 */
 	public function generateFeed()
 	{
-		$session = $this->Session->get('calendar_feed_updater');
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
+		$session = $objSession->get('calendar_feed_updater');
 
 		if (!is_array($session) || empty($session))
 		{
@@ -425,7 +434,7 @@ class tl_calendar extends Backend
 		$this->import('Automator');
 		$this->Automator->generateSitemap();
 
-		$this->Session->set('calendar_feed_updater', null);
+		$objSession->set('calendar_feed_updater', null);
 	}
 
 
@@ -445,10 +454,16 @@ class tl_calendar extends Backend
 			return;
 		}
 
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
+
 		// Store the ID in the session
-		$session = $this->Session->get('calendar_feed_updater');
+		$session = $objSession->get('calendar_feed_updater');
 		$session[] = $dc->id;
-		$this->Session->set('calendar_feed_updater', array_unique($session));
+		$objSession->set('calendar_feed_updater', array_unique($session));
 	}
 
 
