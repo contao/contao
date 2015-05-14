@@ -32,8 +32,10 @@ class AddToSearchIndexListenerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setup()
+    protected function setUp()
     {
+        parent::setUp();
+
         $this->framework = $this
             ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
             ->disableOriginalConstructor()
@@ -81,8 +83,6 @@ class AddToSearchIndexListenerTest extends TestCase
      */
     public function testWithContaoFramework()
     {
-        define('TL_ROOT', $this->getRootDir());
-
         $this->framework
             ->expects($this->any())
             ->method('isInitialized')

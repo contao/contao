@@ -11,8 +11,10 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\ContaoFramework;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 /**
  * Tests the ContaoFramework class.
@@ -191,13 +193,34 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
+        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
+        $framework = $this
+            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->setConstructorArgs([
+                $container->get('request_stack'),
+                $this->mockRouter('/contao/install'),
+                $this->mockSession(),
+                $this->getRootDir() . '/app',
+                new CsrfTokenManager(
+                    $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenGenerator\\TokenGeneratorInterface'),
+                    $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
+                ),
+                'contao_csrf_token',
+                $this->mockConfig(),
+                error_reporting()
+            ])
+            ->setMethods(['isInitialized'])
+            ->getMock()
+        ;
+
+        $framework
+            ->expects($this->any())
+            ->method('isInitialized')
+            ->willReturnOnConsecutiveCalls(false, true)
+        ;
+
         $framework->setContainer($container);
         $framework->initialize();
-
-        // Calling initialize() on a different object should not trigger an error
-        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
-        $framework->setContainer($container);
         $framework->initialize();
     }
 

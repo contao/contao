@@ -16,5 +16,6 @@ services:
             - "@contao.resource_locator"
             - "%kernel.root_dir%"
             - "@doctrine.dbal.default_connection"
+            - "@contao.framework"
         tags:
             - { name: kernel.cache_warmer }

@@ -41,7 +41,8 @@ class ContaoCacheWarmerTest extends TestCase
             new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
             new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
             $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-            $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false)
+            $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false),
+            $this->mockContaoFramework()
         );
     }
 
@@ -94,13 +95,9 @@ class ContaoCacheWarmerTest extends TestCase
             new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
             new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
             $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-            $connection
+            $connection,
+            $this->mockContaoFramework()
         );
-
-        // The test DCA file needs TL_ROOT to be defined
-        if (!defined('TL_ROOT')) {
-            define('TL_ROOT', '');
-        }
 
         $warmer->warmUp($this->getCacheDir());
 

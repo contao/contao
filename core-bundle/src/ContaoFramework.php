@@ -133,7 +133,7 @@ class ContaoFramework
      */
     public function isInitialized()
     {
-        return static::$initialized;
+        return self::$initialized;
     }
 
     /**
@@ -146,7 +146,7 @@ class ContaoFramework
         }
 
         // Set before calling any methods to prevent recursion
-        static::$initialized = true;
+        self::$initialized = true;
 
         $this->setConstants();
         $this->initializeFramework();

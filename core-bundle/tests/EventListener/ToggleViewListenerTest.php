@@ -37,8 +37,18 @@ class ToggleViewListenerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setup()
+    public static function setUpBeforeClass()
     {
+        $_SERVER['HTTP_HOST'] = 'localhost';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
         $this->framework = $this
             ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
             ->disableOriginalConstructor()

@@ -34,8 +34,10 @@ class ContaoUserProviderTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setup()
+    protected function setUp()
     {
+        parent::setUp();
+
         $this->framework = $this
             ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
             ->disableOriginalConstructor()

@@ -226,6 +226,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         $container->setParameter('contao.error_level', error_reporting());
         $container->setParameter('kernel.debug', false);
+        $container->setParameter('kernel.root_dir', $this->getRootDir());
         $container->setParameter('kernel.cache_dir', $this->getCacheDir());
 
         $container->set(
@@ -244,10 +245,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container->set(
-            'request_stack',
-            $requestStack
-        );
+        $container->set('request_stack', $requestStack);
+        $container->set('session', $this->mockSession());
 
         return $container;
     }

@@ -14,6 +14,7 @@ use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\ContaoFramework;
 use Contao\DcaExtractor;
 use Contao\PageModel;
 use Doctrine\DBAL\Driver\Connection;
@@ -57,26 +58,34 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private $connection;
 
     /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    /**
      * Constructor.
      *
-     * @param Filesystem     $filesystem The filesystem object
-     * @param ResourceFinder $finder     The resource finder object
-     * @param FileLocator    $locator    The file locator
-     * @param string         $rootDir    The root directory
-     * @param Connection     $connection The Doctrine connection
+     * @param Filesystem      $filesystem The filesystem object
+     * @param ResourceFinder  $finder     The resource finder object
+     * @param FileLocator     $locator    The file locator
+     * @param string          $rootDir    The root directory
+     * @param Connection      $connection The Doctrine connection
+     * @param ContaoFramework $framework  The Contao framework
      */
     public function __construct(
         Filesystem $filesystem,
         ResourceFinder $finder,
         FileLocator $locator,
         $rootDir,
-        Connection $connection
+        Connection $connection,
+        ContaoFramework $framework
     ) {
         $this->filesystem = $filesystem;
         $this->finder     = $finder;
         $this->locator    = $locator;
         $this->rootDir    = dirname($rootDir);
         $this->connection = $connection;
+        $this->framework  = $framework;
     }
 
     /**
@@ -84,6 +93,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     public function warmUp($cacheDir)
     {
+        $this->framework->initialize();
+
         $this->generateConfigCache($cacheDir);
         $this->generateCacheMapper($cacheDir);
         $this->generateDcaCache($cacheDir);
