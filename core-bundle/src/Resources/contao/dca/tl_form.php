@@ -299,12 +299,6 @@ class tl_form extends Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-		global $kernel;
-
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = $kernel->getContainer()->get('session');
-
 		// Set root IDs
 		if (!is_array($this->User->forms) || empty($this->User->forms))
 		{
@@ -322,6 +316,12 @@ class tl_form extends Backend
 		{
 			$GLOBALS['TL_DCA']['tl_form']['config']['closed'] = true;
 		}
+
+		/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
+		global $kernel;
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = $kernel->getContainer()->get('session');
 
 		// Check current action
 		switch (Input::get('act'))
