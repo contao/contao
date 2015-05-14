@@ -19,6 +19,7 @@ use Contao\Input;
 use Contao\System;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -32,10 +33,11 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  */
 class ContaoFramework
 {
+
     /**
-     * @var ContainerInterface
+     * @var RequestStack
      */
-    private $container;
+    private $requestStack;
 
     /**
      * @var RouterInterface
@@ -90,7 +92,7 @@ class ContaoFramework
     /**
      * Constructor.
      *
-     * @param ContainerInterface        $container     The dependency injection container
+     * @param RequestStack              $requestStack  The RequestStack
      * @param RouterInterface           $router        The router service
      * @param SessionInterface          $session       The session service
      * @param string                    $rootDir       The kernel root directory
@@ -100,7 +102,7 @@ class ContaoFramework
      * @param int                       $errorLevel    The PHP error level
      */
     public function __construct(
-        ContainerInterface $container,
+        RequestStack $requestStack,
         RouterInterface $router,
         SessionInterface $session,
         $rootDir,
@@ -109,7 +111,7 @@ class ContaoFramework
         ConfigAdapter $config,
         $errorLevel
     ) {
-        $this->container     = $container;
+        $this->requestStack  = $requestStack;
         $this->router        = $router;
         $this->session       = $session;
         $this->rootDir       = dirname($rootDir);
@@ -140,7 +142,7 @@ class ContaoFramework
 
         $this->initialized = true;
 
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         $this->setConstants($request);
 
@@ -188,7 +190,9 @@ class ContaoFramework
      */
     private function setConstants(Request $request = null)
     {
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
+        $scope = $this->requestStack->getCurrentRequest()->attributes->get('_scope');
+
+        if ($scope === (ContaoCoreBundle::SCOPE_BACKEND)) {
             define('TL_MODE', 'BE');
         } else {
             define('TL_MODE', 'FE');
@@ -215,7 +219,7 @@ class ContaoFramework
 
         define('TL_SCRIPT', $route);
 
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
+        if ($scope === ContaoCoreBundle::SCOPE_BACKEND) {
             define('BE_USER_LOGGED_IN', false);
             define('FE_USER_LOGGED_IN', false);
         }

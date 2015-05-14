@@ -51,7 +51,7 @@ services:
     contao.framework:
         class: Contao\CoreBundle\ContaoFramework
         arguments:
-            - "@service_container"
+            - "@request_stack"
             - "@router"
             - "@session"
             - "%kernel.root_dir%"
