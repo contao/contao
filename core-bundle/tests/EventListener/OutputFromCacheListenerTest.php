@@ -38,9 +38,10 @@ class OutputFromCacheListenerTest extends TestCase
     public function setup()
     {
         $this->framework = $this
-            ->getMockBuilder('\Contao\CoreBundle\ContaoFramework')
+            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
     }
 
     /**

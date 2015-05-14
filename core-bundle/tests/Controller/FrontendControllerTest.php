@@ -35,14 +35,16 @@ class FrontendControllerTest extends TestCase
      */
     public function testActions()
     {
-        $controller = new FrontendController();
+        $framework = $this
+            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
-        $kernel = $this->mockKernel();
-        $container = $kernel->getContainer();
-        $container->set(
-            'contao.framework',
-            $this->getMockBuilder('\Contao\CoreBundle\ContaoFramework')->disableOriginalConstructor()->getMock()
-        );
+        $container = $this->mockKernel()->getContainer();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController();
         $controller->setContainer($container);
 
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->indexAction());

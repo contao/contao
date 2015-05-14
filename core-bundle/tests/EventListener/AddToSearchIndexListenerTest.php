@@ -35,9 +35,10 @@ class AddToSearchIndexListenerTest extends TestCase
     public function setup()
     {
         $this->framework = $this
-            ->getMockBuilder('\Contao\CoreBundle\ContaoFramework')
+            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
     }
 
     /**
@@ -55,7 +56,11 @@ class AddToSearchIndexListenerTest extends TestCase
      */
     public function testWithoutContaoFramework()
     {
-        $this->framework->expects($this->any())->method('isInitialized')->willReturn(false);
+        $this->framework
+            ->expects($this->any())
+            ->method('isInitialized')
+            ->willReturn(false)
+        ;
 
         $listener = new AddToSearchIndexListener($this->framework);
         $event    = $this->mockPostResponseEvent();
@@ -78,7 +83,11 @@ class AddToSearchIndexListenerTest extends TestCase
     {
         define('TL_ROOT', $this->getRootDir());
 
-        $this->framework->expects($this->any())->method('isInitialized')->willReturn(true);
+        $this->framework
+            ->expects($this->any())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
 
         $listener = new AddToSearchIndexListener($this->framework);
         $event    = $this->mockPostResponseEvent();
