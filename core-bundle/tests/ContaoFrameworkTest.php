@@ -290,7 +290,6 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @expectedException \Contao\CoreBundle\Exception\InvalidRequestTokenException
      */
     public function testValidRequestToken()
     {
@@ -301,6 +300,7 @@ class ContaoFrameworkTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
         $request->setMethod('POST');
+        $request->request->set('REQUEST_TOKEN', 'foobar');
 
         $container = $kernel->getContainer();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
@@ -317,12 +317,20 @@ class ContaoFrameworkTest extends TestCase
             ->willReturn('foobar')
         ;
 
-        $tokenManager = new CsrfTokenManager(
-            $tokenGenerator,
-            $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
+        $tokenManager = $this->getMock(
+            'Symfony\\Component\\Security\\Csrf\\CsrfTokenManager',
+            ['isTokenValid'],
+            [
+                $tokenGenerator,
+                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
+            ]
         );
 
-        $tokenManager->refreshToken('contao_csrf_token');
+        $tokenManager
+            ->expects($this->any())
+            ->method('isTokenValid')
+            ->willReturn('true')
+        ;
 
         $framework = $this->getContaoFramework($container, $this->mockRouter('/contao/install'), $tokenManager);
         $framework->initialize();
@@ -337,7 +345,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(defined('TL_PATH'));
         $this->assertEquals('BE', TL_MODE);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
-        $this->assertEquals('foobar', TL_REFERER_ID);
+        $this->assertEquals('', TL_REFERER_ID);
         $this->assertEquals('contao/install', TL_SCRIPT);
         $this->assertEquals('', TL_PATH);
    }
