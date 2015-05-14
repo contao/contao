@@ -15,6 +15,7 @@ use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Contao\CoreBundle\ContaoFramework;
 
 /**
  * Tests the AddToSearchIndexListener class.
@@ -24,11 +25,27 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 class AddToSearchIndexListenerTest extends TestCase
 {
     /**
+     * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $framework;
+
+    /**
+     * Setup for each test
+     */
+    public function setup() {
+
+        $this->framework = $this
+            ->getMockBuilder('\Contao\CoreBundle\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $listener = new AddToSearchIndexListener();
+        $listener = new AddToSearchIndexListener($this->framework);
 
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\AddToSearchIndexListener', $listener);
     }
@@ -38,7 +55,9 @@ class AddToSearchIndexListenerTest extends TestCase
      */
     public function testWithoutContaoFramework()
     {
-        $listener = new AddToSearchIndexListener();
+        $this->framework->expects($this->any())->method('isInitialized')->willReturn(false);
+
+        $listener = new AddToSearchIndexListener($this->framework);
         $event    = $this->mockPostResponseEvent();
 
         $event
@@ -59,7 +78,9 @@ class AddToSearchIndexListenerTest extends TestCase
     {
         define('TL_ROOT', $this->getRootDir());
 
-        $listener = new AddToSearchIndexListener();
+        $this->framework->expects($this->any())->method('isInitialized')->willReturn(true);
+
+        $listener = new AddToSearchIndexListener($this->framework);
         $event    = $this->mockPostResponseEvent();
 
         $event
