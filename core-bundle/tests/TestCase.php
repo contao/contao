@@ -116,30 +116,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         );
 
         $container = $this->mockContainerWithContaoScopes();
-        $container->setParameter('contao.error_level', error_reporting());
-        $container->setParameter('kernel.debug', false);
-        $container->setParameter('kernel.cache_dir', $this->getCacheDir());
-
-        $container->set(
-            'contao.resource_finder',
-            new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
-        );
-
-        $container->set(
-            'contao.resource_locator',
-            new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
-        );
-
-        $request = new Request();
-        $request->server->set('REMOTE_ADDR', '123.456.789.0');
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $container->set(
-            'request_stack',
-            $requestStack
-        );
 
         $kernel
             ->expects($this->any())
@@ -263,8 +239,34 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function mockContainerWithContaoScopes()
     {
         $container = new Container();
+
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
+
+        $container->setParameter('contao.error_level', error_reporting());
+        $container->setParameter('kernel.debug', false);
+        $container->setParameter('kernel.cache_dir', $this->getCacheDir());
+
+        $container->set(
+            'contao.resource_finder',
+            new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
+        );
+
+        $container->set(
+            'contao.resource_locator',
+            new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
+        );
+
+        $request = new Request();
+        $request->server->set('REMOTE_ADDR', '123.456.789.0');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $container->set(
+            'request_stack',
+            $requestStack
+        );
 
         return $container;
     }

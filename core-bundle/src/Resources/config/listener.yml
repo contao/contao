@@ -106,8 +106,6 @@ services:
             - "@session"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 64 }
-            # FIXME: remove once #234 has been merged
-            - { name: kernel.event_listener, event: console.command, method: onKernelRequest, priority: 64 }
 
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener

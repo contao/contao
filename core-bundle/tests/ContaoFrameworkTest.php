@@ -34,10 +34,6 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testInstantiation()
     {
-        global $kernel;
-
-        $kernel = $this->mockKernel(); // FIXME: remove once #259 has been merged
-
         $framework = $this->getContaoFramework(
             new RequestStack(),
             $this->mockRouter('/')
@@ -54,14 +50,10 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testFrontendRequest()
     {
-        global $kernel;
-
-        $kernel = $this->mockKernel(); // FIXME: remove once #259 has been merged
-
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
-        $container = $kernel->getContainer();
+        $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
         $container->get('request_stack')->push($request);
 
@@ -95,16 +87,12 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testBackendRequest()
     {
-        global $kernel;
-
-        $kernel = $this->mockKernel(); // FIXME: remove once #259 has been merged
-
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_contao_referer_id', 'foobar');
         $request->setLocale('de');
 
-        $container = $kernel->getContainer();
+        $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
@@ -136,11 +124,7 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testWithoutRequest()
     {
-        global $kernel;
-
-        $kernel = $this->mockKernel(); // FIXME: remove once #259 has been merged
-
-        $container = $kernel->getContainer();
+        $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->set('request_stack', new RequestStack());
 
@@ -171,15 +155,11 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testWithoutScope()
     {
-        global $kernel;
-
-        $kernel = $this->mockKernel(); // FIXME: remove once #259 has been merged
-
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_contao_referer_id', 'foobar');
 
-        $container = $kernel->getContainer();
+        $container = $this->mockContainerWithContaoScopes();
         $container->get('request_stack')->push($request);
 
         $framework = $this->getContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
@@ -209,15 +189,11 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testNotInitializedTwice()
     {
-        global $kernel;
-
-        $kernel = $this->mockKernel(); // FIXME: remove once #259 has been merged
-
         $request = new Request();
         $request->attributes->set('_route', 'contao_backend_install');
         $request->attributes->set('_contao_referer_id', 'foobar');
 
-        $container = $kernel->getContainer();
+        $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
@@ -260,15 +236,11 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testErrorLevelOverride()
     {
-        global $kernel;
-
-        $kernel = $this->mockKernel(); // FIXME: remove once #259 has been merged
-
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_contao_referer_id', 'foobar');
 
-        $container = $kernel->getContainer();
+        $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
@@ -299,16 +271,12 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testValidRequestToken()
     {
-        global $kernel;
-
-        $kernel = $this->mockKernel(); // FIXME: remove once #259 has been merged
-
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
         $request->setMethod('POST');
         $request->request->set('REQUEST_TOKEN', 'foobar');
 
-        $container = $kernel->getContainer();
+        $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
@@ -371,15 +339,11 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testInvalidRequestToken()
     {
-        global $kernel;
-
-        $kernel = $this->mockKernel(); // FIXME: remove once #259 has been merged
-
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
         $request->setMethod('POST');
 
-        $container = $kernel->getContainer();
+        $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
@@ -397,14 +361,10 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testIncompleteInstallation()
     {
-        global $kernel;
-
-        $kernel = $this->mockKernel(); // FIXME: remove once #259 has been merged
-
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
-        $container = $kernel->getContainer();
+        $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
