@@ -287,11 +287,8 @@ class tl_comments extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				/** @var Symfony\Component\HttpKernel\KernelInterface $kernel */
-				global $kernel;
-
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = $kernel->getContainer()->get('session');
+				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
 
