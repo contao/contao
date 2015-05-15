@@ -470,8 +470,10 @@ abstract class DataContainer extends \Backend
 
 			/** @var \BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate("be_$file");
-			$objTemplate->language = \Backend::getTinyMceLanguage(); // backwards compatibility
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
+
+			// Deprecated since Contao 4.0, to be removed in Contao 5.0
+			$objTemplate->language = \Backend::getTinyMceLanguage();
 
 			$updateMode = $objTemplate->parse();
 

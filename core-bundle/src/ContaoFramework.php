@@ -154,10 +154,11 @@ class ContaoFramework
 
     /**
      * Sets the Contao constants.
+     *
+     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
      */
     private function setConstants()
     {
-        // The constants are deprecated and will be removed in Contao 5.0.
         define('TL_MODE', $this->getMode());
         define('TL_START', microtime(true));
         define('TL_ROOT', $this->rootDir);
@@ -332,7 +333,7 @@ class ContaoFramework
             $language = str_replace('_', '-', $this->request->getLocale());
         }
 
-        // Backwards compatibility
+        // Deprecated since Contao 4.0, to be removed in Contao 5.0
         $GLOBALS['TL_LANGUAGE']  = $language;
         $_SESSION['TL_LANGUAGE'] = $language;
     }
@@ -388,7 +389,7 @@ class ContaoFramework
      */
     private function handleRequestToken()
     {
-        // Backwards compatibility
+        // Deprecated since Contao 4.0, to be removed in Contao 5.0
         if (!defined('REQUEST_TOKEN')) {
             define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
         }

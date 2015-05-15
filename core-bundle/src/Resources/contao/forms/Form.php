@@ -510,6 +510,7 @@ class Form extends \Hybrid
 			}
 
 			// Do not use Models here (backwards compatibility)
+			// TODO: shall we keep it this way or force everyone to use models for their tables?
 			$this->Database->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
 		}
 
@@ -558,10 +559,15 @@ class Form extends \Hybrid
 	 * Get the maximum file size that is allowed for file uploads
 	 *
 	 * @return integer
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use $this->objModel->getMaxUploadFileSize() instead.
 	 */
 	protected function getMaxFileSize()
 	{
-		return $this->objModel->getMaxUploadFileSize(); // Backwards compatibility
+		trigger_error('Using Form::getMaxFileSize() has been deprecated and will no longer work in Contao 5.0. Use $this->objModel->getMaxUploadFileSize() instead.', E_USER_DEPRECATED);
+
+		return $this->objModel->getMaxUploadFileSize();
 	}
 
 

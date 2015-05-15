@@ -358,6 +358,7 @@ class ModulePersonalData extends \Module
 		// Add the groups
 		foreach ($arrFields as $k=>$v)
 		{
+			// TODO: why is this necessary?
 			$this->Template->$k = $v; // backwards compatibility
 
 			$key = $k . (($k == 'personal') ? 'Data' : 'Details');

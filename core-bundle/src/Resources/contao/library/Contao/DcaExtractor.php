@@ -421,9 +421,11 @@ class DcaExtractor extends \Controller
 		$sql = $GLOBALS['TL_DCA'][$this->strTable]['config']['sql'] ?: array();
 		$fields = $GLOBALS['TL_DCA'][$this->strTable]['fields'] ?: array();
 
-		// Get the SQL information from the database.sql files (backwards compatibility)
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($blnFromFile)
 		{
+			trigger_error('Using database.sql files has been deprecated and will no longer work in Contao 5.0. Use a DCA file instead.', E_USER_DEPRECATED);
+
 			if (!isset(static::$arrSql[$this->strTable]))
 			{
 				$objInstaller = new \Database\Installer();

@@ -270,12 +270,17 @@ abstract class Frontend extends \Controller
 
 
 	/**
-	 * Return the root page ID (backwards compatibility)
+	 * Return the root page ID
 	 *
 	 * @return integer
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Frontend::getRootPageFromUrl()->id instead.
 	 */
 	public static function getRootIdFromUrl()
 	{
+		trigger_error('Using Frontend::getRootIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use Frontend::getRootPageFromUrl()->id instead.', E_USER_DEPRECATED);
+
 		return static::getRootPageFromUrl()->id;
 	}
 

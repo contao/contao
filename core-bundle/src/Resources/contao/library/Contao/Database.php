@@ -68,9 +68,11 @@ class Database
 	 */
 	protected function __construct(array $arrConfig)
 	{
-		// Custom configuration (backwards compatibiltiy)
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if (!empty($arrConfig))
 		{
+			trigger_error('Passing a custom configuration to Database::__construct() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			$arrParams = array
 			(
 				'driver'    => \System::getContainer()->getParameter('database_driver'),

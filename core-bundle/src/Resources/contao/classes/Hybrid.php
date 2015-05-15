@@ -110,9 +110,12 @@ abstract class Hybrid extends \Frontend
 
 			$this->objModel = $objHybrid;
 		}
-		// Directly query the database (backwards compatibility)
+
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		else
 		{
+			trigger_error('Instantiating a Hybrid object with a table without model has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			$objHybrid = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
 										->limit(1)
 										->execute($objElement->{$this->strKey});
