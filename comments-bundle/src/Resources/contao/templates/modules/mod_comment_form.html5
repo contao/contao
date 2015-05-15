@@ -1,0 +1,47 @@
+
+<!-- indexer::stop -->
+<div class="form">
+  <?php if ($this->requireLogin): ?>
+    <p class="info"><?= $this->login ?></p>
+  <?php else: ?>
+    <?php if ($this->confirm): ?>
+      <p class="confirm"><?= $this->confirm ?></p>
+    <?php elseif ($this->allowComments): ?>
+      <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post">
+        <div class="formbody">
+          <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
+          <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+          <div class="widget widget-text mandatory">
+            <?= $this->fields['name']->generateLabel() ?>
+            <?= $this->fields['name']->generateWithError() ?>
+          </div>
+          <div class="widget widget-text mandatory">
+            <?= $this->fields['email']->generateLabel() ?>
+            <?= $this->fields['email']->generateWithError() ?>
+          </div>
+          <div class="widget widget-text">
+            <?= $this->fields['website']->generateLabel() ?>
+            <?= $this->fields['website']->generateWithError() ?>
+          </div>
+          <?php if (isset($this->fields['captcha'])): ?>
+            <div class="widget widget-captcha mandatory">
+              <label for="ctrl_captcha"><?= $this->fields['captcha']->generateQuestion() ?><span class="mandatory">*</span></label>
+              <?= $this->fields['captcha']->generateWithError() ?>
+            </div>
+          <?php endif; ?>
+          <div class="widget widget-textarea mandatory">
+            <?= $this->fields['comment']->generateLabel() ?>
+            <?= $this->fields['comment']->generateWithError() ?>
+          </div>
+          <div class="widget widget-checkbox">
+            <?= $this->fields['notify']->generateWithError() ?>
+          </div>
+          <div class="widget widget-submit">
+            <button type="submit" class="submit"><?= $this->submit ?></button>
+          </div>
+        </div>
+      </form>
+    <?php endif; ?>
+  <?php endif; ?>
+</div>
+<!-- indexer::continue -->

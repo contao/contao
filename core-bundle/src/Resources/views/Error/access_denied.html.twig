@@ -1,0 +1,10 @@
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ error.forbidden }}
+{% endblock %}
+{% block matter %}
+    <p>{{ error.notAuthenticated }}</p>
+{% endblock %}
+{% block howToFix %}
+    <p>{{ error.forbiddenFix|format(base, adminEmail)|raw }}</p>
+{% endblock %}

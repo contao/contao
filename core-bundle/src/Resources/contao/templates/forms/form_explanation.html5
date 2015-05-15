@@ -1,0 +1,4 @@
+
+<div class="<?= $this->prefix ?> explanation<?php if ($this->class) echo ' ' . $this->class; ?>">
+  <?= $this->generate() ?>
+</div>
