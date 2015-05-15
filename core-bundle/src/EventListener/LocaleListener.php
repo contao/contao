@@ -51,16 +51,35 @@ class LocaleListener
         }
 
         $request = $event->getRequest();
+        $locale  = $this->getLocale($request);
 
-        if ($request->attributes->has('_locale')) {
-            $locale = $this->formatLocaleId($request->attributes->get('_locale'));
-        } elseif (null !== ($session = $request->getSession()) && $session->has('_locale')) {
-            $locale = $session->get('_locale');
-        } else {
-            $locale = $request->getPreferredLanguage($this->availableLocales);
+        $request->attributes->set('_locale', $locale);
+
+        if ($request->hasSession()) {
+            $request->getSession()->set('_locale', $locale);
+        }
+    }
+
+    /**
+     * Returns the locale from the request, the session or the HTTP header.
+     *
+     * @param Request $request The request object
+     *
+     * @return string The locale
+     */
+    private function getLocale(Request $request)
+    {
+        $attributes = $request->attributes;
+
+        if ($attributes->has('_locale') && null !== $attributes->get('_locale')) {
+            return $this->formatLocaleId($attributes->get('_locale'));
         }
 
-        $this->saveLocale($request, $locale);
+        if (null !== ($session = $request->getSession()) && $session->has('_locale')) {
+            return $session->get('_locale');
+        }
+
+        return $request->getPreferredLanguage($this->availableLocales);
     }
 
     /**
@@ -86,21 +105,6 @@ class LocaleListener
         }
 
         return $locale;
-    }
-
-    /**
-     * Saves the locale in the request attributes and the session (if available).
-     *
-     * @param Request $request The request object
-     * @param string  $locale  The locale
-     */
-    private function saveLocale(Request $request, $locale)
-    {
-        $request->attributes->set('_locale', $locale);
-
-        if ($request->hasSession()) {
-            $request->getSession()->set('_locale', $locale);
-        }
     }
 
     /**
