@@ -51,7 +51,7 @@ class AutomatorCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->framework->initialize();
+        $this->getFramework()->initialize();
 
         try {
             $this->runAutomator($input, $output);

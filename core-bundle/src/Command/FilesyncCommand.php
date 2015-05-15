@@ -39,7 +39,7 @@ class FilesyncCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->framework->initialize();
+        $this->getFramework()->initialize();
 
         $strLog = Dbafs::syncFiles();
         $output->writeln('Synchronization complete (see <info>' . $strLog . '</info>).');

@@ -59,6 +59,5 @@ services:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
         arguments:
+            - "@service_container"
             - "@contao.framework"
-        calls:
-            - ["setContainer", ["@service_container"]]

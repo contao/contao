@@ -25,6 +25,22 @@ trait FrameworkAwareTrait
     private $framework;
 
     /**
+     * Returns the framework service.
+     *
+     * @return ContaoFramework The framework service
+     *
+     * @throws \LogicException If the framework service is not set
+     */
+    public function getFramework()
+    {
+        if (null === $this->framework) {
+            throw new \LogicException('The framework service has not been set.');
+        }
+
+        return $this->framework;
+    }
+
+    /**
      * Sets the framework service.
      *
      * @param ContaoFramework $framework The framework service

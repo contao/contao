@@ -138,6 +138,8 @@ class ContaoFramework
 
     /**
      * Initializes the framework.
+     *
+     * @throws \LogicException If the container is not set
      */
     public function initialize()
     {
@@ -147,6 +149,10 @@ class ContaoFramework
 
         // Set before calling any methods to prevent recursion
         self::$initialized = true;
+
+        if (null === $this->container) {
+            throw new \LogicException('The container needs to be set to initialize the Contao framework.');
+        }
 
         $this->setConstants();
         $this->initializeFramework();
