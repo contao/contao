@@ -1,6 +1,69 @@
 Deprecated features
 ===================
 
+### "channel" token
+
+Using the simple token "channel" in newsletter subscription mails has been
+deprecated in Contao 4.0 and will no longer work in Contao 5.0. Use the
+"channels" token instead.
+
+
+### $this->arrCache
+
+Using `$this->arrCache`, which is defined in the `System` class, has been
+deprecated in Contao 4.0 and will no longer work in Contao 5.0. If you are
+using it in your class, make sure to define it as property.
+
+
+### $this->items in pagination templates
+
+Using `$this->items` in pagination templates has been deprecated in Contao 4.0
+and will no longer work in Contao 5.0. Use `$this->pages` instead.
+
+
+### TL_SCRIPT_URL and TL_PLUGINS_URL
+
+The constants `TL_SCRIPT_URL` and `TL_PLUGINS_URL` have been deprecated in
+Contao 4.0 and will be removed in Contao 5.0. Use `TL_ASSETS_URL` instead.
+
+
+### UnresolvableDependenciesException
+
+The `UnresolvableDependenciesException` class has been deprecated in Contao 4.0
+and will be removed in Contao 5.0.
+
+
+### $this->language in TinyMCE config files
+
+Using `$this->language` in TinyMCE configuration files has been deprecated in
+Contao 4.0 and will no longer work in Contao 5.0. Use the static method
+`Backend::getTinyMceLanguage()` instead.
+
+
+### $GLOBALS['TL_LANGUAGE'] and $_SESSION['TL_LANGUAGE']
+
+Using the globals `$GLOBALS['TL_LANGUAGE']` and `$_SESSION['TL_LANGUAGE']` has
+been deprecated in Contao 4.0 and will no longer work in Contao 5.0. Use the
+locale from the request object instead:
+
+```php
+$locale = System::getContainer()->get('request')->getLocale();
+```
+
+
+### Request.Mixed
+
+Using the old Request.Mixed class instead of Request.Contao has been deprecated
+in Contao 4.0 and will no longer work in Contao 5.0.
+
+
+### "subpalette" event
+
+The "subpalette" event, which is currently fired when a subpalette is toggled
+via Ajax, has been deprecated in Contao 4.0 and will be removed in Contao 5.0.
+Subscribe to the "ajax_change" event instead.
+
+
 ### Session::setData() and Session::getData()
 
 The methods `Session::setData()` and `Session::getData()` have been deprecated
@@ -21,8 +84,8 @@ For reasons of backwards compatibility, it is currently not required to set the
 to `tl_article`.
 
 This behavior has been deprecated in Contao 4.0 and will no longer be supported
-in Contao 5. If you have developed an extension which creates content elements,
-make sure to always set the `ptable` column.
+in Contao 5.0. If you have developed an extension which creates content
+elements, make sure to always set the `ptable` column.
 
 
 ### Contao class loader
