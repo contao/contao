@@ -1,11 +1,3 @@
-# IDEs
-.buildpath
-.project
-.settings/
-.build/
-.idea/
-nbproject/
-
 # Components
 /components/
 
