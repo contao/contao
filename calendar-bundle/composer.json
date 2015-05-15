@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "symfony/framework-bundle": "~2.5",
+        "symfony/framework-bundle": "~2.6",
         "contao/core-bundle": "~4.0"
     },
     "conflict": {
