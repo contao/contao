@@ -444,7 +444,8 @@ class Automator extends \System
 			$container->get('contao.resource_finder'),
 			$container->get('contao.resource_locator'),
 			$container->getParameter('kernel.root_dir'),
-			$container->get('doctrine.dbal.default_connection')
+			$container->get('doctrine.dbal.default_connection'),
+			$container->get('contao.framework')
 		);
 
 		$command->warmUp(\System::getContainer()->getParameter('kernel.cache_dir'));

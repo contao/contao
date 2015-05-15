@@ -976,7 +976,24 @@ class InsertTags extends \Controller
 								$dimensions = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
 							}
 
-							$arrCache[$strTag] = '<img src="' . TL_FILES_URL . $src . '" ' . $dimensions . ' alt="' . $alt . '"' . (($class != '') ? ' class="' . $class . '"' : '') . '>';
+							// Generate the HTML markup
+							if ($rel != '')
+							{
+								if (strncmp($rel, 'lightbox', 8) !== 0)
+								{
+									$attribute = ' rel="' . $rel . '"';
+								}
+								else
+								{
+									$attribute = ' data-lightbox="' . substr($rel, 8) . '"';
+								}
+
+								$arrCache[$strTag] = '<a href="' . TL_FILES_URL . $strFile . '"' . (($alt != '') ? ' title="' . $alt . '"' : '') . $attribute . '><img src="' . TL_FILES_URL . $src . '" ' . $dimensions . ' alt="' . $alt . '"' . (($class != '') ? ' class="' . $class . '"' : '') . '></a>';
+							}
+							else
+							{
+								$arrCache[$strTag] = '<img src="' . TL_FILES_URL . $src . '" ' . $dimensions . ' alt="' . $alt . '"' . (($class != '') ? ' class="' . $class . '"' : '') . '>';
+							}
 						}
 
 						// Picture
@@ -988,25 +1005,6 @@ class InsertTags extends \Controller
 							$pictureTemplate = new \FrontendTemplate($strTemplate);
 							$pictureTemplate->setData($picture);
 							$arrCache[$strTag] = $pictureTemplate->parse();
-						}
-
-						// Generate the HTML markup
-						if ($rel != '')
-						{
-							if (strncmp($rel, 'lightbox', 8) !== 0)
-							{
-								$attribute = ' rel="' . $rel . '"';
-							}
-							else
-							{
-								$attribute = ' data-lightbox="' . substr($rel, 8) . '"';
-							}
-
-							$arrCache[$strTag] = '<a href="' . TL_FILES_URL . $strFile . '"' . (($alt != '') ? ' title="' . $alt . '"' : '') . $attribute . '><img src="' . TL_FILES_URL . $src . '" ' . $dimensions . ' alt="' . $alt . '"' . (($class != '') ? ' class="' . $class . '"' : '') . '></a>';
-						}
-						else
-						{
-							$arrCache[$strTag] = '<img src="' . TL_FILES_URL . $src . '" ' . $dimensions . ' alt="' . $alt . '"' . (($class != '') ? ' class="' . $class . '"' : '') . '>';
 						}
 					}
 					catch (\Exception $e)
