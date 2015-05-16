@@ -249,6 +249,7 @@ class LocaleListenerTest extends TestCase
     public function localeTestData()
     {
         return [
+            [null, 'en'], // see #264
             ['en', 'en'],
             ['de', 'de'],
             ['de-CH', 'de_CH'],
@@ -265,6 +266,7 @@ class LocaleListenerTest extends TestCase
     public function acceptLanguageTestData()
     {
         return [
+            [null, 'de', ['de', 'en']], // see #264
             ['de', 'de', ['de', 'en']],
             ['de, en', 'en', ['en']],
             ['de', 'en', ['en']],

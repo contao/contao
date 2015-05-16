@@ -69,10 +69,8 @@ class LocaleListener
      */
     private function getLocale(Request $request)
     {
-        $attributes = $request->attributes;
-
-        if ($attributes->has('_locale') && null !== $attributes->get('_locale')) {
-            return $this->formatLocaleId($attributes->get('_locale'));
+        if (null !== $request->attributes->get('_locale')) {
+            return $this->formatLocaleId($request->attributes->get('_locale'));
         }
 
         if (null !== ($session = $request->getSession()) && $session->has('_locale')) {
