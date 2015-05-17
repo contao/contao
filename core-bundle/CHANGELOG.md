@@ -1,14 +1,14 @@
 Contao change log
 =================
 
-Version 4.0.0 (2014-06-XX)
+Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
 Correctly switch between the page and file picker in the hyperlink element.
 
 
-Version 4.0.0-RC1 (2014-05-15)
+Version 4.0.0-RC1 (2015-05-15)
 ------------------------------
 
 ### New
@@ -76,7 +76,7 @@ It is now possible to check for an authenticated back end user in a front end
 template using `$this->hasAuthenticatedBackendUser()`.
 
 
-Version 4.0.0-beta1 (2014-04-14)
+Version 4.0.0-beta1 (2015-04-14)
 --------------------------------
 
 ### Removed
