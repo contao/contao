@@ -112,6 +112,8 @@ class AutomatorCommand extends AbstractLockedCommand
      */
     private function generateCommandMap()
     {
+        $this->getFramework()->initialize();
+
         $commands = [];
 
         // Find all public methods
