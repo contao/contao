@@ -259,11 +259,11 @@ abstract class Template extends \Controller
 	 * Parse the template file and print it to the screen
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Throw a ResponseException with Template::getResponse() instead.
+	 *             Use Template::getResponse() instead.
 	 */
 	public function output()
 	{
-		trigger_error('Using Template::output() has been deprecated and will no longer work in Contao 5.0. Throw a ResponseException with Template::getResponse() instead.', E_USER_DEPRECATED);
+		trigger_error('Using Template::output() has been deprecated and will no longer work in Contao 5.0. Use Template::getResponse() instead.', E_USER_DEPRECATED);
 
 		$this->compile();
 
