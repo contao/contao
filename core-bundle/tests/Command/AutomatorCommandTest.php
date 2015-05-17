@@ -62,6 +62,7 @@ class AutomatorCommandTest extends TestCase
     public function testToString()
     {
         $command = new AutomatorCommand('contao:automator');
+        $command->setFramework($this->mockContaoFramework());
 
         $this->assertContains('The name of the task:', $command->__toString());
     }
