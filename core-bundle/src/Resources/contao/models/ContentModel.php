@@ -375,7 +375,7 @@ class ContentModel extends \Model
 	{
 		$t = static::$strTable;
 
-		// Also handle empty ptable fields (backwards compatibility)
+		// Also handle empty ptable fields
 		if ($strParentTable == 'tl_article')
 		{
 			$arrColumns = array("$t.pid=? AND ($t.ptable=? OR $t.ptable='')");

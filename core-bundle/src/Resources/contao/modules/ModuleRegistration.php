@@ -312,7 +312,8 @@ class ModuleRegistration extends \Module
 		// Add the groups
 		foreach ($arrFields as $k=>$v)
 		{
-			$this->Template->$k = $v; // backwards compatibility
+			// Deprecated since Contao 4.0, to be removed in Contao 5.0
+			$this->Template->$k = $v;
 
 			$key = $k . (($k == 'personal') ? 'Data' : 'Details');
 			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key]] = $v;
@@ -322,7 +323,9 @@ class ModuleRegistration extends \Module
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['register']);
 		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->captcha = $arrFields['captcha']['captcha']; // backwards compatibility
+
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
+		$this->Template->captcha = $arrFields['captcha']['captcha'];
 	}
 
 
@@ -385,7 +388,7 @@ class ModuleRegistration extends \Module
 				}
 			}
 
-			// Backwards compatibility
+			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			$arrTokenData['channel'] = $arrTokenData['channels'];
 
 			$objEmail = new \Email();

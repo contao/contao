@@ -64,8 +64,9 @@ abstract class System
 	/**
 	 * Cache
 	 * @var array
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 */
-	protected $arrCache = array(); // Backwards compatibility
+	protected $arrCache = array();
 
 	/**
 	 * Default libraries

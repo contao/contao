@@ -196,9 +196,11 @@ class ModuleArticle extends \Module
 			$GLOBALS['TL_KEYWORDS'] .= (($GLOBALS['TL_KEYWORDS'] != '') ? ', ' : '') . $this->keywords;
 		}
 
-		// Backwards compatibility
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($this->printable == 1)
 		{
+			trigger_error('Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			$this->Template->printable = true;
 			$this->Template->pdfButton = true;
 		}

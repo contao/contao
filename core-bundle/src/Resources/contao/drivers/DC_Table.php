@@ -1077,7 +1077,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'])
 				{
 					$ptable = $GLOBALS['TL_DCA'][$v]['config']['ptable'];
-					$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?"; // backwards compatibility
+					$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
 					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND $cond" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting" : ""))
 												->execute($id, $ptable);
@@ -1599,7 +1599,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'])
 			{
 				$ptable = $GLOBALS['TL_DCA'][$v]['config']['ptable'];
-				$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?"; // backwards compatibility
+				$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
 				$objDelete = $this->Database->prepare("SELECT id FROM $v WHERE pid=? AND $cond")
 											->execute($id, $ptable);
@@ -3989,7 +3989,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
 					{
 						$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'];
-						$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?"; // backwards compatibility
+						$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
 						$objMaxTstamp = $this->Database->prepare("SELECT MAX(tstamp) AS tstamp FROM " . $this->strTable . " WHERE pid=? AND $cond")
 													   ->execute($objParent->id, $ptable);
@@ -4114,7 +4114,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$arrProcedure = $this->procedure;
 			$arrValues = $this->values;
 
-			// Support empty ptable fields (backwards compatibility)
+			// Support empty ptable fields
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
 			{
 				$arrProcedure[] = ($this->ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
@@ -4456,7 +4456,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 				$query .= " ORDER BY (SELECT " . $showFields[0] . " FROM " . $this->ptable . " WHERE " . $this->ptable . ".id=" . $this->strTable . ".pid), " . implode(', ', $orderBy);
 
-				// Set the foreignKey so that the label is translated (also for backwards compatibility)
+				// Set the foreignKey so that the label is translated
 				if ($GLOBALS['TL_DCA'][$table]['fields']['pid']['foreignKey'] == '')
 				{
 					$GLOBALS['TL_DCA'][$table]['fields']['pid']['foreignKey'] = $this->ptable . '.' . $showFields[0];
@@ -4711,7 +4711,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						$args = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']($row, $label, $this, $args);
 					}
 
-					// Handle strings and arrays (backwards compatibility)
+					// Handle strings and arrays
 					if (!$GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'])
 					{
 						$label = is_array($args) ? implode(' ', $args) : $args;
@@ -5177,7 +5177,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$arrProcedure[] = 'id IN(' . implode(',', $this->root) . ')';
 			}
 
-			// Support empty ptable fields (backwards compatibility)
+			// Support empty ptable fields
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
 			{
 				$arrProcedure[] = ($this->ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
@@ -5422,7 +5422,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
-			// Support empty ptable fields (backwards compatibility)
+			// Support empty ptable fields
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
 			{
 				$arrProcedure[] = ($this->ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";

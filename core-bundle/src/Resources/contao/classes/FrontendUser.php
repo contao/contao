@@ -276,7 +276,8 @@ class FrontendUser extends \User
 			\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
 			\System::getContainer()->get('translator')->setLocale($this->language);
 
-			$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language); // backwards compatibility
+			// Deprecated since Contao 4.0, to be removed in Contao 5.0
+			$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
 		}
 
 		$GLOBALS['TL_USERNAME'] = $this->username;

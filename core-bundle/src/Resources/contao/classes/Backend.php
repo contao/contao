@@ -1078,9 +1078,11 @@ abstract class Backend extends \Controller
 	 */
 	public function createFileList($strFilter='', $filemount=false)
 	{
-		// Backwards compatibility
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strFilter === true)
 		{
+			trigger_error('Passing "true" to Backend::createFileList() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			$strFilter = 'gif,jpg,jpeg,png';
 		}
 
@@ -1127,9 +1129,11 @@ abstract class Backend extends \Controller
 	 */
 	protected function doCreateFileList($strFolder=null, $level=-1, $strFilter='')
 	{
-		// Backwards compatibility
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strFilter === true)
 		{
+			trigger_error('Passing "true" to Backend::doCreateFileList() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			$strFilter = 'gif,jpg,jpeg,png';
 		}
 
