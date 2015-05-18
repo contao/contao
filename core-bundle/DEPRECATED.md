@@ -1,6 +1,21 @@
 Deprecated features
 ===================
 
+### member_grouped.html5
+
+Accessing the field groups via one of the following properties in the
+`member_grouped.html5` template has been deprecated in Contao 4.0 and will no
+longer work in Contao 5.0:
+
+ * `$this->personal`
+ * `$this->address`
+ * `$this->contact`
+ * `$this->login`
+ * `$this->captcha`
+
+Use `$this->categories` instead.
+
+
 ### "channel" token
 
 Using the simple token "channel" in newsletter subscription mails has been

@@ -510,7 +510,6 @@ class Form extends \Hybrid
 			}
 
 			// Do not use Models here (backwards compatibility)
-			// TODO: shall we keep it this way or force everyone to use models for their tables?
 			$this->Database->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
 		}
 

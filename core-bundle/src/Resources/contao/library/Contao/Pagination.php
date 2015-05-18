@@ -153,8 +153,6 @@ class Pagination
 
 		$this->strParameter = $strParameter;
 
-		// Backwards compatibility
-		// TODO: why is this necessary?
 		if ($objTemplate === null)
 		{
 			/** @var \FrontendTemplate|object $objTemplate */

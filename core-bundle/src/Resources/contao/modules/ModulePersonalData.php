@@ -358,8 +358,8 @@ class ModulePersonalData extends \Module
 		// Add the groups
 		foreach ($arrFields as $k=>$v)
 		{
-			// TODO: why is this necessary?
-			$this->Template->$k = $v; // backwards compatibility
+			// Deprecated since Contao 4.0, to be removed in Contao 5.0
+			$this->Template->$k = $v;
 
 			$key = $k . (($k == 'personal') ? 'Data' : 'Details');
 			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key]] = $v;
