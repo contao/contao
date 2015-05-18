@@ -47,17 +47,17 @@ been deprecated in Contao 4.0 and will no longer work in Contao 5.0. Use the
 locale from the request object instead:
 
 ```php
-$locale = System::getContainer()->get('request')->getLocale();
+$locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
 ```
 
 
-### Request.Mixed
+### Request.Mixed (JavaScript)
 
 Using the old Request.Mixed class instead of Request.Contao has been deprecated
 in Contao 4.0 and will no longer work in Contao 5.0.
 
 
-### "subpalette" event
+### "subpalette" event (JavaScript)
 
 The "subpalette" event, which is currently fired when a subpalette is toggled
 via Ajax, has been deprecated in Contao 4.0 and will be removed in Contao 5.0.
