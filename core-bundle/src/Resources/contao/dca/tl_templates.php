@@ -392,9 +392,9 @@ class tl_templates extends Backend
 		}
 
 		// User selected template to compare against
-		if (Input::post('to') && isset($arrTemplates[Input::post('to')]))
+		if (Input::post('from') && isset($arrTemplates[Input::post('from')]))
 		{
-			$strCompareName = Input::post('to');
+			$strCompareName = Input::post('from');
 			$strComparePath = $arrTemplates[$strCompareName] . '/' .$strCompareName . '.' . $strExtension;
 		}
 
