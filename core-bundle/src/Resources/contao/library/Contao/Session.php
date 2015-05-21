@@ -89,6 +89,8 @@ class Session
 	{
 		trigger_error('Using Session::get() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
+		// FIXME: https://github.com/contao/core-bundle/issues/281
+
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());
 
@@ -105,6 +107,8 @@ class Session
 	public function set($strKey, $varValue)
 	{
 		trigger_error('Using Session::set() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+
+		// FIXME: https://github.com/contao/core-bundle/issues/281
 
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());
@@ -138,6 +142,8 @@ class Session
 	{
 		trigger_error('Using Session::getData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
+		// FIXME: https://github.com/contao/core-bundle/issues/281
+
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());
 
@@ -160,6 +166,8 @@ class Session
 		{
 			throw new \Exception('Array required to set session data');
 		}
+
+		// FIXME: https://github.com/contao/core-bundle/issues/281
 
 		/** @var AttributeBagInterface $bag */
 		$bag = $this->session->getBag($this->getSessionBagKey());

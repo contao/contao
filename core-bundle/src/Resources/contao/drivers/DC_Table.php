@@ -3160,6 +3160,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		/** @var SessionInterface $objSession */
 		$objSession = \System::getContainer()->get('session');
 
+		// FIXME: this should be stored in the persistent bag!
 		$new_records = $objSession->get('new_records');
 
 		// HOOK: add custom logic
@@ -3244,6 +3245,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 		}
+
+		// FIXME: remove the revised entries from the session
 
 		// Reload the page
 		if ($reload)

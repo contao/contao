@@ -941,6 +941,7 @@ class BackendInstall extends \Backend
 	 */
 	protected function update40()
 	{
+		// FIXME: remove or disable until complete
 		if ($this->Database->tableExists('tl_layout') && !$this->Database->fieldExists('scripts', 'tl_layout'))
 		{
 			$this->enableMaintenanceMode();
