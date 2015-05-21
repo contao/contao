@@ -35,22 +35,22 @@ define the spacing in your style sheet.
 
 If an element is included in another element, the CSS classes are now merged
 instead of overwritten, e.g. if content element A has the CSS class `elemA` and
-there is an alias content element with the CSS class `elemB` referring to
-element A, both CSS classes will be applied (`class="elemA elemB"`).
+includes a front end module with the CSS class `elemB`, both CSS classes will
+be applied (`class="elemA elemB"`).
 
 Here's how to select the elements separately:
 
 ```css
 .elemA {
-    /* Include element only */
+    /* Content element only */
 }
 
 .elemB {
-    /* Include element and original element */
+    /* Content element and front end module */
 }
 
-.elemA:not(.elemB) {
-    /* Original element only */
+.elemB:not(.elemA) {
+    /* Front end module only */
 }
 ```
 
