@@ -41,11 +41,16 @@ element A, both CSS classes will be applied (`class="elemA elemB"`).
 Here's how to select the elements separately:
 
 ```css
-.elemA.elemB {
-    /* Alias elements only */
+.elemA {
+    /* Include element only */
 }
+
+.elemB {
+    /* Include element and original element */
+}
+
 .elemA:not(.elemB) {
-    /* Original elements only */
+    /* Original element only */
 }
 ```
 
