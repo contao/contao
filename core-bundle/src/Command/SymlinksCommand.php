@@ -77,7 +77,7 @@ class SymlinksCommand extends AbstractLockedCommand implements ContainerAwareInt
     /**
      * Generates the symlinks in the web/ directory.
      */
-    public function generateSymlinks()
+    private function generateSymlinks()
     {
         $fs         = new Filesystem();
         $uploadPath = $this->container->getParameter('contao.upload_path');

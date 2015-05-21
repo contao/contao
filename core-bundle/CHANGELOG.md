@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Correctly execute the symlinks command in the automator (see #265).
+
+### Fixed
 Correctly handle an empty `_locale` attribute (see #262).
 
 ### Fixed

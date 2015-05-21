@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Command\SymlinksCommand;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
 
 
@@ -427,7 +428,8 @@ class Automator extends \System
 
 		$command = new SymlinksCommand();
 		$command->setContainer($container);
-		$command->generateSymlinks(dirname($container->getParameter('kernel.root_dir')), new NullOutput());
+
+		$command->run(new ArgvInput(array()), new NullOutput());
 	}
 
 
