@@ -157,12 +157,7 @@ class InstallCommand extends AbstractLockedCommand
 
         $this->fs->dumpFile(
             $this->rootDir . '/system/initialize.php',
-            <<<EOF
-<?php
-
-// Deprecated since Contao 4.0, to be removed in Contao 5.0.
-
-EOF
+            "<?php\n\n// Deprecated since Contao 4.0, to be removed in Contao 5.0.\n"
         );
 
         $this->output->writeln('Added the <comment>' . $this->rootDir . '/system/initialize.php</comment> file.');
