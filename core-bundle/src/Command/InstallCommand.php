@@ -12,8 +12,6 @@ namespace Contao\CoreBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -21,13 +19,8 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InstallCommand extends AbstractLockedCommand implements ContainerAwareInterface
+class InstallCommand extends AbstractLockedCommand
 {
-    /**
-     * @var ContainerInterface|null
-     */
-    private $container;
-
     /**
      * @var array
      */
@@ -57,14 +50,6 @@ class InstallCommand extends AbstractLockedCommand implements ContainerAwareInte
     /**
      * {@inheritdoc}
      */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this
@@ -79,7 +64,7 @@ class InstallCommand extends AbstractLockedCommand implements ContainerAwareInte
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
         $fs      = new Filesystem();
-        $rootDir = dirname($this->container->getParameter('kernel.root_dir'));
+        $rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
 
         foreach ($this->emptyDirs as $path) {
             $this->addEmptyDir($rootDir . '/' . $path, $fs, $output);
