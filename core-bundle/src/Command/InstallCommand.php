@@ -22,6 +22,21 @@ use Symfony\Component\Filesystem\Filesystem;
 class InstallCommand extends AbstractLockedCommand
 {
     /**
+     * @var Filesystem
+     */
+    private $fs;
+
+    /**
+     * @var OutputInterface
+     */
+    private $output;
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
      * @var array
      */
     private $emptyDirs = [
@@ -63,58 +78,93 @@ class InstallCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $fs      = new Filesystem();
-        $rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
+        $this->fs      = new Filesystem();
+        $this->output  = $output;
+        $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
 
-        foreach ($this->emptyDirs as $path) {
-            $this->addEmptyDir($rootDir . '/' . $path, $fs, $output);
-        }
-
-        foreach ($this->ignoredDirs as $path) {
-            $this->addIgnoredDir($rootDir . '/' . $path, $fs, $output);
-        }
+        $this->addEmptyDirs();
+        $this->addIgnoredDirs();
+        $this->addInitializePhp();
 
         return 0;
     }
 
     /**
+     * Adds the empty directories.
+     */
+    private function addEmptyDirs()
+    {
+        foreach ($this->emptyDirs as $path) {
+            $this->addEmptyDir($this->rootDir . '/' . $path);
+        }
+    }
+
+    /**
      * Adds an empty directory.
      *
-     * @param string          $path   The path
-     * @param Filesystem      $fs     The file system object
-     * @param OutputInterface $output The output object
+     * @param string $path The path
      */
-    private function addEmptyDir($path, Filesystem $fs, OutputInterface $output)
+    private function addEmptyDir($path)
     {
-        if ($fs->exists($path)) {
+        if ($this->fs->exists($path)) {
             return;
         }
 
-        $fs->mkdir($path);
+        $this->fs->mkdir($path);
 
-        $output->writeln('Created the <comment>' . $path . '</comment> directory.');
+        $this->output->writeln('Created the <comment>' . $path . '</comment> directory.');
+    }
+
+    /**
+     * Adds the ignored directories.
+     */
+    private function addIgnoredDirs()
+    {
+        foreach ($this->ignoredDirs as $path) {
+            $this->addIgnoredDir($this->rootDir . '/' . $path);
+        }
     }
 
     /**
      * Adds a directory with a .gitignore file.
      *
-     * @param string          $path   The path
-     * @param Filesystem      $fs     The file system object
-     * @param OutputInterface $output The output object
+     * @param string $path The path
      */
-    private function addIgnoredDir($path, Filesystem $fs, OutputInterface $output)
+    private function addIgnoredDir($path)
     {
-        $this->addEmptyDir($path, $fs, $output);
+        $this->addEmptyDir($path);
 
-        if ($fs->exists($path . '/.gitignore')) {
+        if ($this->fs->exists($path . '/.gitignore')) {
             return;
         }
 
-        $fs->dumpFile(
+        $this->fs->dumpFile(
             $path . '/.gitignore',
             "# Create the folder and ignore its content\n*\n!.gitignore\n"
         );
 
-        $output->writeln('Added the <comment>' . $path . '/.gitignore</comment> file.');
+        $this->output->writeln('Added the <comment>' . $path . '/.gitignore</comment> file.');
+    }
+
+    /**
+     * Adds the initialize.php file.
+     */
+    private function addInitializePhp()
+    {
+        if ($this->fs->exists($this->rootDir . '/system/initialize.php')) {
+            return;
+        }
+
+        $this->fs->dumpFile(
+            $this->rootDir . '/system/initialize.php',
+            <<<EOF
+<?php
+
+// Deprecated since Contao 4.0, to be removed in Contao 5.0.
+
+EOF
+        );
+
+        $this->output->writeln('Added the <comment>' . $this->rootDir . '/system/initialize.php</comment> file.');
     }
 }
