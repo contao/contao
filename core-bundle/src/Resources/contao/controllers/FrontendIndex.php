@@ -41,7 +41,7 @@ class FrontendIndex extends \Frontend
 		if (!$_SESSION['DISABLE_CACHE'])
 		{
 			// Maintenance mode (see #4561 and #6353)
-			if (\Config::get('maintenanceMode'))
+			if (\Config::get('maintenanceMode') && !\System::getContainer()->get('kernel')->isDebug())
 			{
 				throw new ServiceUnavailableException('This site is currently down for maintenance. Please come back later.');
 			}
