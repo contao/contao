@@ -147,10 +147,12 @@ class StoreRefererListenerTest extends TestCase
     public function refererStoredOnKernelResponseProvider()
     {
         $request = new Request();
+        $request->attributes->set('_route', 'contao_backend');
         $request->attributes->set('_contao_referer_id', 'dummyTestRefererId');
         $request->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
 
         $requestWithRefInUrl = new Request();
+        $requestWithRefInUrl->attributes->set('_route', 'contao_backend');
         $requestWithRefInUrl->attributes->set('_contao_referer_id', 'dummyTestRefererId');
         $requestWithRefInUrl->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
         $requestWithRefInUrl->query->set('ref', 'dummyTestRefererId');

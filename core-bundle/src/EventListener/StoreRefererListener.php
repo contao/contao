@@ -101,6 +101,7 @@ class StoreRefererListener
             && !$request->query->has('token')
             && !$request->query->has('state')
             && 'feRedirect' !== $request->query->get('do')
+            && 'contao_backend' === $request->attributes->get('_route')
             && !$request->isXmlHttpRequest()
         ;
     }
