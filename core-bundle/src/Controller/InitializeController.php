@@ -36,7 +36,11 @@ class InitializeController extends Controller
 
         $masterRequest = $this->get('request_stack')->getMasterRequest();
         $realRequest   = Request::createFromGlobals();
-        $scope         = (defined('TL_MODE') && TL_MODE === 'BE') ? ContaoCoreBundle::SCOPE_BACKEND : ContaoCoreBundle::SCOPE_FRONTEND;
+        $scope         = ContaoCoreBundle::SCOPE_FRONTEND;
+
+        if (defined('TL_MODE') && TL_MODE === 'BE') {
+            $scope = ContaoCoreBundle::SCOPE_BACKEND;
+        }
 
         // Necessary to make the base path correct
         foreach (['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF'] as $name) {
