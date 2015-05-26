@@ -157,6 +157,11 @@ class FrontendTemplate extends \Template
 	 */
 	public function section($key, $template=null)
 	{
+		if (empty($this->sections[$key]))
+		{
+			return;
+		}
+
 		$this->id = $key;
 		$this->content = $this->sections[$key];
 
@@ -187,9 +192,6 @@ class FrontendTemplate extends \Template
 		{
 			return;
 		}
-
-		// Use the section tag in HTML5
-		$this->tag = ($key == 'main') ? 'section' : 'div';
 
 		if ($template === null)
 		{

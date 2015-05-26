@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Consolidate the custom sections markup (see #contao/core#7843).
+
+### Fixed
 Correctly execute the symlinks command in the automator (see #265).
 
 ### Fixed
