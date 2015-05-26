@@ -1,6 +1,6 @@
 {
     "name": "contao/comments-bundle",
-    "type": "library",
+    "type": "symfony-bundle",
     "description": "Contao 4 comments bundle",
     "license": "LGPL-3.0+",
     "authors": [
