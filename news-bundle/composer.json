@@ -1,6 +1,6 @@
 {
     "name": "contao/news-bundle",
-    "type": "library",
+    "type": "symfony-bundle",
     "description": "Contao 4 news bundle",
     "license": "LGPL-3.0+",
     "authors": [
