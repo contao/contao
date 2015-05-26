@@ -74,6 +74,11 @@ class ContaoFramework
     private $errorLevel;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var Request
      */
     private $request;
@@ -123,7 +128,7 @@ class ContaoFramework
         $this->csrfTokenName = $csrfTokenName;
         $this->config        = $config;
         $this->errorLevel    = $errorLevel;
-        $this->request       = $requestStack->getCurrentRequest();
+        $this->requestStack  = $requestStack;
     }
 
     /**
@@ -153,6 +158,9 @@ class ContaoFramework
         if (null === $this->container) {
             throw new \LogicException('The container needs to be set to initialize the Contao framework.');
         }
+
+        // Set the current request
+        $this->request = $this->requestStack->getCurrentRequest();
 
         $this->setConstants();
         $this->initializeFramework();
