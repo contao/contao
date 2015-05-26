@@ -1,6 +1,6 @@
 {
     "name": "contao/newsletter-bundle",
-    "type": "library",
+    "type": "symfony-bundle",
     "description": "Contao 4 newsletter bundle",
     "license": "LGPL-3.0+",
     "authors": [
