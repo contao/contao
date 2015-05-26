@@ -55,7 +55,7 @@ class ContaoAuthenticator extends ContainerAware implements SimplePreAuthenticat
      */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
-        if ($this->skipAuthentication($token)) {
+        if ($this->canSkipAuthentication($token)) {
             return $token;
         }
 
@@ -98,7 +98,7 @@ class ContaoAuthenticator extends ContainerAware implements SimplePreAuthenticat
      *
      * @throws \LogicException If the container object has not been set
      */
-    private function skipAuthentication(TokenInterface $token)
+    private function canSkipAuthentication(TokenInterface $token)
     {
         if ($token instanceof ContaoToken) {
             return true;
