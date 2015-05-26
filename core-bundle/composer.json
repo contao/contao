@@ -1,6 +1,6 @@
 {
     "name": "contao/core-bundle",
-    "type": "library",
+    "type": "symfony-bundle",
     "description": "Contao 4 core bundle",
     "license": "LGPL-3.0+",
     "authors": [
