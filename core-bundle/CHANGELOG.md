@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Correctly show the color picker images (see #268).
+
+### Fixed
 Consolidate the custom sections markup (see #contao/core#7843).
 
 ### Fixed

@@ -411,7 +411,7 @@ abstract class DataContainer extends \Backend
       new MooRainbow("moo_' . $this->strField . '", {
         id: "ctrl_' . $strKey . '",
         startColor: ((cl = $("ctrl_' . $strKey . '").value.hexToRgb(true)) ? cl : [255, 0, 0]),
-        imgPath: "assets/mootools/colorpicker/' . $GLOBALS['TL_ASSETS']['COLORPICKER'] . '/images/",
+        imgPath: "assets/colorpicker/images/",
         onComplete: function(color) {
           $("ctrl_' . $strKey . '").value = color.hex.replace("#", "");
         }
