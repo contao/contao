@@ -156,7 +156,7 @@ class ContaoFramework
         self::$initialized = true;
 
         if (null === $this->container) {
-            throw new \LogicException('The container needs to be set to initialize the Contao framework.');
+            throw new \LogicException('The service container has not been set.');
         }
 
         // Set the current request

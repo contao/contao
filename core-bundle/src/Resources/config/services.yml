@@ -54,6 +54,8 @@ services:
     contao.security.authenticator:
         class: Contao\CoreBundle\Security\ContaoAuthenticator
         public: false
+        calls:
+            - ["setContainer", ["@service_container"]]
 
     contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
