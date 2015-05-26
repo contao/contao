@@ -1,6 +1,6 @@
 {
     "name": "contao/listing-bundle",
-    "type": "library",
+    "type": "symfony-bundle",
     "description": "Contao 4 listing bundle",
     "license": "LGPL-3.0+",
     "authors": [
