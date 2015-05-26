@@ -1,6 +1,6 @@
 {
     "name": "contao/calendar-bundle",
-    "type": "library",
+    "type": "symfony-bundle",
     "description": "Contao 4 calendar bundle",
     "license": "LGPL-3.0+",
     "authors": [
