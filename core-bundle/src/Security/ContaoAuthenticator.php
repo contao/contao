@@ -108,8 +108,8 @@ class ContaoAuthenticator extends ContainerAware implements SimplePreAuthenticat
             throw new \LogicException('The service container has not been set.');
         }
 
-        return $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)
-            || $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)
+        return !$this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)
+            && !$this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)
         ;
     }
 }
