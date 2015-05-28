@@ -9,12 +9,14 @@ php:
 
 sudo: false
 
-before_script:
+before_install:
     - composer selfupdate
-    - composer install
+
+before_script:
+    - composer install --prefer-source
 
 script:
-    - ./vendor/bin/phpunit --testsuite latest --verbose --coverage-clover=coverage.clover
+    - ./vendor/bin/phpunit --testsuite latest --coverage-clover=coverage.clover
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
