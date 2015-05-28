@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Correctly reload the page in the install tool (see #267).
+
+### Fixed
 Correctly show the color picker images (see #268).
 
 ### Fixed

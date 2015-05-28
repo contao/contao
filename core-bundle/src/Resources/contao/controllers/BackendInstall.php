@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -131,6 +132,10 @@ class BackendInstall extends \Backend
 		try
 		{
 			$this->importExampleWebsite();
+		}
+		catch (ResponseException $e)
+		{
+			throw $e; // see #267
 		}
 		catch (\Exception $e)
 		{
@@ -559,6 +564,10 @@ class BackendInstall extends \Backend
 				$this->Template->adminEmail = \Input::post('email', true);
 				$this->Template->adminUser = \Input::post('username', true);
 			}
+		}
+		catch (ResponseException $e)
+		{
+			throw $e; // see #267
 		}
 		catch (\Exception $e)
 		{
