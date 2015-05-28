@@ -108,6 +108,7 @@ class InsecureInstallationListenerTest extends TestCase
 
         $request->server->set('REQUEST_URI', '/web/app_dev.php?do=test');
         $request->server->set('SCRIPT_FILENAME', $this->getRootDir() . '/web/app_dev.php');
+        $request->server->set('REMOTE_ADDR', '123.456.789.0');
 
         return $request;
     }
