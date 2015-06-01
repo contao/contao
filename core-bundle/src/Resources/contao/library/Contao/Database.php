@@ -87,7 +87,7 @@ class Database
 		}
 		else
 		{
-			$this->resConnection = \System::getContainer()->get('doctrine.dbal.default_connection');
+			$this->resConnection = \System::getContainer()->get('database_connection');
 		}
 
 		if (!is_object($this->resConnection))
