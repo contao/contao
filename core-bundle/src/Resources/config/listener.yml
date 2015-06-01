@@ -81,7 +81,7 @@ services:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
         arguments:
             - "%contao.pretty_error_screens%"
-            - "@templating"
+            - "@twig"
             - "@contao.adapter.config"
             - "@contao.framework"
         tags:

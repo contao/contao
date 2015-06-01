@@ -20,7 +20,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -56,19 +55,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         parent::setUp();
 
-        $engine = $this->getMock('Symfony\\Bundle\\TwigBundle\\TwigEngine', ['exists', 'renderResponse']);
-
-        $engine->expects($this->any())
-            ->method('exists')
-            ->willReturn(true)
-        ;
-
-        $engine->expects($this->any())
-            ->method('renderResponse')
-            ->willReturn(new Response())
-        ;
-
-        $this->listener = new PrettyErrorScreenListener(true, $engine, $this->mockConfig());
+        $this->listener = new PrettyErrorScreenListener(true, $this->getMock('Twig_Environment'), $this->mockConfig());
     }
 
     /**
@@ -249,19 +236,19 @@ class PrettyErrorScreenListenerTest extends TestCase
             new NotFoundHttpException('', new PageNotFoundException())
         );
 
-        $engine = $this->getMock('Symfony\\Bundle\\TwigBundle\\TwigEngine', ['exists', 'renderResponse']);
+        $count = 0;
+        $twig  = $this->getMock('Twig_Environment', ['render']);
 
-        $engine->expects($this->any())
-            ->method('exists')
-            ->willReturn(false)
+        $twig->expects($this->any())
+            ->method('render')
+            ->willReturnCallback(function () use (&$count) {
+                if (0 === $count++) {
+                    throw new \Twig_Error('foo');
+                }
+            })
         ;
 
-        $engine->expects($this->any())
-            ->method('renderResponse')
-            ->willReturn(new Response())
-        ;
-
-        $listener = new PrettyErrorScreenListener(true, $engine, new ConfigAdapter());
+        $listener = new PrettyErrorScreenListener(true, $twig, new ConfigAdapter());
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
