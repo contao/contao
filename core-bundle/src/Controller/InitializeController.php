@@ -50,6 +50,8 @@ class InitializeController extends Controller
             );
         }
 
+        $realRequest->attributes->replace($masterRequest->attributes->all());
+
         // Boot the framework with the real request
         $this->get('request_stack')->push($realRequest);
         $this->container->enterScope($scope);
