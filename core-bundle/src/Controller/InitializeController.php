@@ -61,6 +61,6 @@ class InitializeController extends Controller
         // it will pop the current request, resulting in the real request being active.
         $this->get('request_stack')->push($masterRequest);
 
-        return new Response();
+        return new Response('', 100);
     }
 }
