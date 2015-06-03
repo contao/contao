@@ -105,7 +105,7 @@ class PurgeData extends \Backend implements \executable
 			}
 		}
 
-		$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCachePath = str_replace(TL_ROOT . '/', '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 		// Folders
 		foreach ($GLOBALS['TL_PURGE']['folders'] as $key=>$config)

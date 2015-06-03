@@ -339,7 +339,7 @@ class Dbafs
 					$objNew->pid    = $objNewFile->uuid;
 					$objNew->tstamp = time();
 					$objNew->uuid   = $objDatabase->getUuid();
-					$objNew->path   = str_replace($strSource . DIRECTORY_SEPARATOR, $strDestination . DIRECTORY_SEPARATOR, $objFiles->path);
+					$objNew->path   = str_replace($strSource . '/', $strDestination . '/', $objFiles->path);
 					$objNew->save();
 				}
 			}

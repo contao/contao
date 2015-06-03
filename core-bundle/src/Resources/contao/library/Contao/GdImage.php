@@ -171,7 +171,7 @@ class GdImage
 		}
 
 		// Get the relative path
-		$folder = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $path);
+		$folder = str_replace(TL_ROOT . '/', '', $path);
 
 		// Create the parent folder
 		if (($dirname = dirname($folder)) != '.' && !is_dir(TL_ROOT . '/' . $dirname))
