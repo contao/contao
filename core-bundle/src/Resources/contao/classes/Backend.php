@@ -139,10 +139,11 @@ abstract class Backend extends \Controller
 			case 'java':
 			case 'json':
 			case 'less':
+			case 'mysql':
 			case 'php':
 			case 'scss':
-			case 'mysql':
 			case 'sql':
+			case 'twig':
 			case 'xml':
 			case 'yaml':
 				return $type;
