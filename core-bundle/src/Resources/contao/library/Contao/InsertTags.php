@@ -188,6 +188,21 @@ class InsertTags extends \Controller
 						case 'XPT':
 							$file = 'exception';
 							break;
+
+						case 'MSC':
+						case 'ERR':
+						case 'CTE':
+						case 'PTY':
+						case 'FOP':
+						case 'CHMOD':
+						case 'DAYS':
+						case 'MONTHS':
+						case 'UNITS':
+						case 'CONFIRM':
+						case 'DP':
+						case 'COLS':
+							$file = 'default';
+							break;
 					}
 
 					\System::loadLanguageFile($file);
@@ -224,6 +239,13 @@ class InsertTags extends \Controller
 						}
 
 						$value = deserialize($value);
+
+						// Decrypt the value
+						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'])
+						{
+							$value = \Encryption::decrypt($value);
+						}
+
 						$rgxp = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['rgxp'];
 						$opts = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['options'];
 						$rfrc = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['reference'];

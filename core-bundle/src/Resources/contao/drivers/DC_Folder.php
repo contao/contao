@@ -836,7 +836,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		// Add a log entry
-		$this->log('File or folder "' . str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $source) . '" has been deleted', __METHOD__, TL_FILES);
+		$this->log('File or folder "' . str_replace(TL_ROOT . '/', '', $source) . '" has been deleted', __METHOD__, TL_FILES);
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -1096,17 +1096,20 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		/** @var \FilesModel $objFile */
 		$objVersions = new \Versions($this->strTable, $objFile->id);
 
-		// Compare versions
-		if (\Input::get('versions'))
+		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'])
 		{
-			$objVersions->compare();
-		}
+			// Compare versions
+			if (\Input::get('versions'))
+			{
+				$objVersions->compare();
+			}
 
-		// Restore a version
-		if (\Input::post('FORM_SUBMIT') == 'tl_version' && \Input::post('version') != '')
-		{
-			$objVersions->restore(\Input::post('version'));
-			$this->reload();
+			// Restore a version
+			if (\Input::post('FORM_SUBMIT') == 'tl_version' && \Input::post('version') != '')
+			{
+				$objVersions->restore(\Input::post('version'));
+				$this->reload();
+			}
 		}
 
 		$objVersions->initialize();
@@ -1223,7 +1226,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		// Versions overview
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'])
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'])
 		{
 			$version = $objVersions->renderDropdown();
 		}
@@ -1739,25 +1742,28 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 			$objVersions = new \Versions($this->strTable, $objMeta->id);
 
-			// Compare versions
-			if (\Input::get('versions'))
+			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'])
 			{
-				$objVersions->compare();
-			}
-
-			// Restore a version
-			if (\Input::post('FORM_SUBMIT') == 'tl_version' && \Input::post('version') != '')
-			{
-				$objVersions->restore(\Input::post('version'));
-
-				// Purge the script cache (see #7005)
-				if ($objFile->extension == 'css' || $objFile->extension == 'scss' || $objFile->extension == 'less')
+				// Compare versions
+				if (\Input::get('versions'))
 				{
-					$this->import('Automator');
-					$this->Automator->purgeScriptCache();
+					$objVersions->compare();
 				}
 
-				$this->reload();
+				// Restore a version
+				if (\Input::post('FORM_SUBMIT') == 'tl_version' && \Input::post('version') != '')
+				{
+					$objVersions->restore(\Input::post('version'));
+
+					// Purge the script cache (see #7005)
+					if ($objFile->extension == 'css' || $objFile->extension == 'scss' || $objFile->extension == 'less')
+					{
+						$this->import('Automator');
+						$this->Automator->purgeScriptCache();
+					}
+
+					$this->reload();
+				}
 			}
 
 			$objVersions->initialize();
@@ -1829,7 +1835,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		// Versions overview
-		if ($this->blnIsDbAssisted && $GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'])
+		if ($this->blnIsDbAssisted && $GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'])
 		{
 			$version = $objVersions->renderDropdown();
 		}
@@ -1982,7 +1988,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			{
 				foreach (glob(TL_ROOT . '/assets/images/*/' . $this->varValue . '-*' . $this->strExtension) as $strThumbnail)
 				{
-					$this->Files->delete(str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $strThumbnail));
+					$this->Files->delete(str_replace(TL_ROOT . '/', '', $strThumbnail));
 				}
 			}
 
@@ -2343,7 +2349,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					if ($v == '__new__')
 					{
-						$this->Files->rmdir(str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $path) . '/' . $v);
+						$this->Files->rmdir(str_replace(TL_ROOT . '/', '', $path) . '/' . $v);
 					}
 					else
 					{
@@ -2364,7 +2370,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		{
 			$md5 = substr(md5($folders[$f]), 0, 8);
 			$content = scan($folders[$f]);
-			$currentFolder = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $folders[$f]);
+			$currentFolder = str_replace(TL_ROOT . '/', '', $folders[$f]);
 			$session['filetree'][$md5] = is_numeric($session['filetree'][$md5]) ? $session['filetree'][$md5] : 0;
 			$currentEncoded = $this->urlEncode($currentFolder);
 			$countFiles = count($content);
@@ -2445,7 +2451,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$thumbnail = '';
 			$popupWidth = 600;
 			$popupHeight = 161;
-			$currentFile = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $files[$h]);
+			$currentFile = str_replace(TL_ROOT . '/', '', $files[$h]);
 
 			$objFile = new \File($currentFile);
 

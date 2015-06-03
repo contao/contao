@@ -275,12 +275,21 @@ class ModulePersonalData extends \Module
 						$varValue = $objWidget->getEmptyValue();
 					}
 
-					// Set the new value
-					$this->User->$field = $varValue;
+					// Encrypt the value (see #7815)
+					if ($arrData['eval']['encrypt'])
+					{
+						$varValue = \Encryption::encrypt($varValue);
+					}
 
-					// Set the new field in the member model
-					$blnModified = true;
-					$objMember->$field = $varValue;
+					// Set the new value
+					if ($varValue !== $this->User->$field)
+					{
+						$this->User->$field = $varValue;
+
+						// Set the new field in the member model
+						$blnModified = true;
+						$objMember->$field = $varValue;
+					}
 				}
 			}
 
@@ -299,6 +308,7 @@ class ModulePersonalData extends \Module
 		// Save the model
 		if ($blnModified)
 		{
+			$objMember->tstamp = time();
 			$objMember->save();
 
 			// Create a new version

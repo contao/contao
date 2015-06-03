@@ -360,7 +360,7 @@ class BackendInstall extends \Backend
 		$arrOptions = array();
 
 		$objCollation = $this->Database->prepare("SHOW COLLATION LIKE ?")
-									   ->execute(\Config::get('dbCharset') .'%');
+									   ->execute(\Config::get('dbCharset') . '\_%');
 
 		while ($objCollation->next())
 		{
@@ -434,7 +434,7 @@ class BackendInstall extends \Backend
 		// Add the relative paths
 		foreach ($objFiles as $objFile)
 		{
-			$arrTemplates[] = str_replace(TL_ROOT . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR, '', $objFile->getPathname());
+			$arrTemplates[] = str_replace(TL_ROOT . '/templates/', '', $objFile->getPathname());
 		}
 
 		$strTemplates = '<option value="">-</option>';

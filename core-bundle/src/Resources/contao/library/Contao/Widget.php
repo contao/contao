@@ -344,7 +344,7 @@ abstract class Widget extends \Controller
 
 			case strncmp($strKey, 'ng-', 3) === 0:
 			case strncmp($strKey, 'data-', 5) === 0:
-				$this->arrAttributes[$strKey] = $strKey;
+				$this->arrAttributes[$strKey] = $varValue;
 				break;
 
 			default:
@@ -776,7 +776,7 @@ abstract class Widget extends \Controller
 		{
 			$varValue = \Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
-			foreach($arrParts as $part)
+			foreach ($arrParts as $part)
 			{
 				if (!is_array($varValue))
 				{
