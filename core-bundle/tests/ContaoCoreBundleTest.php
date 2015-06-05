@@ -79,7 +79,6 @@ class ContaoCoreBundleTest extends TestCase
             [
                 'Contao\\CoreBundle\\DependencyInjection\\Compiler\\AddPackagesPass',
                 'Contao\\CoreBundle\\DependencyInjection\\Compiler\\AddResourcesPathsPass',
-                'Contao\\CoreBundle\\DependencyInjection\\Compiler\\SetApplicationPass',
             ],
             $classes
         );
