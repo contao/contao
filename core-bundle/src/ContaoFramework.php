@@ -173,18 +173,16 @@ class ContaoFramework
      */
     private function setConstants()
     {
-        $constants = [
-            'TL_MODE'       => $this->getMode(),
-            'TL_START'      => microtime(true),
-            'TL_ROOT'       => $this->rootDir,
-            'TL_REFERER_ID' => $this->getRefererId(),
-            'TL_SCRIPT'     => $this->getRoute(),
-        ];
+        if (!defined('TL_MODE')) {
+            define('TL_MODE', $this->getMode());
+        }
 
-        foreach ($constants as $key => $value) {
-            if (!defined($key)) {
-                define($key, $value);
-            }
+        define('TL_START', microtime(true));
+        define('TL_ROOT', $this->rootDir);
+        define('TL_REFERER_ID', $this->getRefererId());
+
+        if (!defined('TL_SCRIPT')) {
+            define('TL_SCRIPT', $this->getRoute());
         }
 
         // Define the login status constants in the back end (see #4099, #5279)

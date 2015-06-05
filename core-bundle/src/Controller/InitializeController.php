@@ -24,9 +24,9 @@ use Symfony\Component\HttpFoundation\Response;
 class InitializeController extends Controller
 {
     /**
-     * Runs the initialize action for legacy entry point scripts.
+     * Runs the initialize action for legacy entry points.
      *
-     * @return Response
+     * @return Response The response object
      *
      * @Route("/_initialize", name="contao_initialize")
      */
@@ -38,11 +38,11 @@ class InitializeController extends Controller
         $realRequest   = Request::createFromGlobals();
         $scope         = ContaoCoreBundle::SCOPE_FRONTEND;
 
-        if (defined('TL_MODE') && TL_MODE === 'BE') {
+        if (defined('TL_MODE') && 'BE' === TL_MODE) {
             $scope = ContaoCoreBundle::SCOPE_BACKEND;
         }
 
-        // Necessary to make the base path correct
+        // Necessary to generate a correct base path
         foreach (['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF'] as $name) {
             $realRequest->server->set(
                 $name,
