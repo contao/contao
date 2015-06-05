@@ -738,6 +738,18 @@ abstract class Frontend extends \Controller
 			}
 		}
 
+		// Check for a desktop layout (see #7826)
+		else
+		{
+			$strMd5CacheKey = md5($strCacheKey . '.desktop');
+			$strCacheFile = $strCacheDir . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
+
+			if (file_exists($strCacheFile))
+			{
+				$blnFound = true;
+			}
+		}
+
 		// Check for a regular layout
 		if (!$blnFound)
 		{
