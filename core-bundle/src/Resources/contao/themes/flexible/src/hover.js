@@ -11,7 +11,7 @@ var Theme = {
 	/**
 	 * Check for WebKit
 	 * @member {boolean}
-	 */
+ 	 */
 	isWebkit: (Browser.chrome || Browser.safari || navigator.userAgent.match(/(?:webkit|khtml)/i)),
 
 	/**
