@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Map the referer in the old Session class (see #281).
+
+### Fixed
 Store new record IDs in the persistent session bag (see #281).
 
 ### Fixed
