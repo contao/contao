@@ -93,7 +93,22 @@ class FileSelector extends \Widget
 		// Show a custom path (see #4926)
 		elseif ($this->path != '')
 		{
-			$tree .= $this->renderFiletree(TL_ROOT . '/' . $this->path, 0);
+			$protected = true;
+			$path = $this->path;
+
+			// Check if the folder is protected (see #287)
+			do
+			{
+				if (file_exists(TL_ROOT . '/' . $path . '/.public'))
+				{
+					$protected = false;
+				}
+
+				$path = dirname($path);
+			}
+			while ($path != '.' && $protected !== false);
+
+			$tree .= $this->renderFiletree(TL_ROOT . '/' . $this->path, 0, false, $protected);
 		}
 
 		// Start from root

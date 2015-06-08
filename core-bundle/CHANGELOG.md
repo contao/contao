@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Check if a custom folder is protected in the file picker (see #287).
+
+### Fixed
 Do not make textareas required if they are replaced with an RTE (see #266).
 
 ### Fixed
