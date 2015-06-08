@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Handle bundle images in `Image::get()` (see #287).
+
+### Fixed
 Check if a custom folder is protected in the file picker (see #287).
 
 ### Fixed
