@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\InitializeControllerResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,9 @@ use Symfony\Component\HttpFoundation\Response;
  * Handles the Contao initialize.php route.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @internal
+ * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0.
  */
 class InitializeController extends Controller
 {
@@ -61,6 +65,6 @@ class InitializeController extends Controller
         // it will pop the current request, resulting in the real request being active.
         $this->get('request_stack')->push($masterRequest);
 
-        return new Response('', 100);
+        return new InitializeControllerResponse('', 204);
     }
 }
