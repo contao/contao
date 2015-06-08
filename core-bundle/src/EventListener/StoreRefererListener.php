@@ -169,6 +169,7 @@ class StoreRefererListener
             && !$request->query->has('id')
             && isset($referer['current'])
             && $referer['current'] !== $this->getRelativeRequestUri($request)
+            && !$request->isXmlHttpRequest()
         ;
     }
 
