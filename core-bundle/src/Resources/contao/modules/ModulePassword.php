@@ -225,7 +225,6 @@ class ModulePassword extends \Module
 			if (!$objWidget->hasErrors())
 			{
 				$objSession->set('setPasswordToken', '');
-				array_pop($_SESSION['TL_CONFIRM']);
 
 				$objMember->tstamp = time();
 				$objMember->activation = '';

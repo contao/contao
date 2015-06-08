@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Correctly show the error messages in the login module (see #269).
+
+### Fixed
 Map the referer in the old Session class (see #281).
 
 ### Fixed
