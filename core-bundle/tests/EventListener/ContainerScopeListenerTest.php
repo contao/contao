@@ -47,8 +47,8 @@ class ContainerScopeListenerTest extends TestCase
         $listener  = new ContainerScopeListener($container);
 
         /** @var HttpKernelInterface $kernel */
-        $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
-        $request  = new Request();
+        $kernel  = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $request = new Request();
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
@@ -91,8 +91,8 @@ class ContainerScopeListenerTest extends TestCase
         $listener  = new ContainerScopeListener($container);
 
         /** @var HttpKernelInterface $kernel */
-        $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
-        $request  = new Request();
+        $kernel  = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $request = new Request();
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
 
@@ -111,8 +111,8 @@ class ContainerScopeListenerTest extends TestCase
         $listener  = new ContainerScopeListener($container);
 
         /** @var HttpKernelInterface $kernel */
-        $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
-        $request  = new Request();
+        $kernel  = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $request = new Request();
 
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 

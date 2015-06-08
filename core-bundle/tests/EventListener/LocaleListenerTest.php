@@ -120,7 +120,7 @@ class LocaleListenerTest extends TestCase
         $kernel = $this->mockKernel();
         $kernel->getContainer()->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $session  = $this->mockSession();
+        $session = $this->mockSession();
 
         $request = Request::create('/');
         $request->setSession($session);

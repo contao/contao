@@ -108,10 +108,10 @@ class OutputFromCacheListenerTest extends TestCase
     public function testWithoutContainer()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel    = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
-        $request   = new Request();
-        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new OutputFromCacheListener($this->framework);
+        $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $request  = new Request();
+        $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener = new OutputFromCacheListener($this->framework);
 
         $request->attributes->set('_route', 'dummy');
 

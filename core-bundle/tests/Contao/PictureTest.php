@@ -65,9 +65,9 @@ class PictureTest extends TestCase
 
         copy(__DIR__ . '/../Fixtures/images/dummy.jpg', self::$rootDir . '/dummy.jpg');
 
-        $GLOBALS['TL_CONFIG']['debugMode'] = false;
-        $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
-        $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
+        $GLOBALS['TL_CONFIG']['debugMode']       = false;
+        $GLOBALS['TL_CONFIG']['gdMaxImgWidth']   = 3000;
+        $GLOBALS['TL_CONFIG']['gdMaxImgHeight']  = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
         define('TL_ERROR', 'ERROR');
