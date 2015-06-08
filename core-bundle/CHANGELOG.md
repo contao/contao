@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Fixed several directory separator issues.
+
+### Fixed
 Handle bundle images in `Image::get()` (see #287).
 
 ### Fixed

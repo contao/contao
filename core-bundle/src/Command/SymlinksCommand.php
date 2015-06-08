@@ -121,7 +121,7 @@ class SymlinksCommand extends AbstractLockedCommand
         foreach ($themes as $theme) {
             $path = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $theme->getPathname());
 
-            if (0 === strpos($path, 'system/modules/')) {
+            if (0 === strpos(strtr($path, '\\', '/'), 'system/modules/')) {
                 continue;
             }
 
@@ -265,7 +265,7 @@ class SymlinksCommand extends AbstractLockedCommand
 
             $dir     = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $file->getPath());
             $paths[] = $dir;
-            $chunks  = explode('/', $dir);
+            $chunks  = explode(DIRECTORY_SEPARATOR, $dir);
             $test    = $chunks[0];
 
             for ($i = 1, $c = count($chunks); $i < $c; $i++) {
