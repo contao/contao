@@ -173,11 +173,17 @@ class ContaoFramework
      */
     private function setConstants()
     {
-        define('TL_MODE', $this->getMode());
+        if (!defined('TL_MODE')) {
+            define('TL_MODE', $this->getMode());
+        }
+
         define('TL_START', microtime(true));
         define('TL_ROOT', $this->rootDir);
         define('TL_REFERER_ID', $this->getRefererId());
-        define('TL_SCRIPT', $this->getRoute());
+
+        if (!defined('TL_SCRIPT')) {
+            define('TL_SCRIPT', $this->getRoute());
+        }
 
         // Define the login status constants in the back end (see #4099, #5279)
         if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
