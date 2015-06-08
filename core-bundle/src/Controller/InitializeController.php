@@ -11,26 +11,25 @@
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\InitializeControllerResponse;
+use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Handles the Contao initialize.php route.
+ * Custom controller to support legacy entry point scripts.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  *
- * @internal
  * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0.
  */
 class InitializeController extends Controller
 {
     /**
-     * Runs the initialize action for legacy entry points.
+     * Initializes the Contao framework.
      *
-     * @return Response The response object
+     * @return InitializeControllerResponse The response object
      *
      * @Route("/_initialize", name="contao_initialize")
      */
@@ -46,7 +45,7 @@ class InitializeController extends Controller
             $scope = ContaoCoreBundle::SCOPE_BACKEND;
         }
 
-        // Necessary to generate a correct base path
+        // Necessary to generate the correct base path
         foreach (['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF'] as $name) {
             $realRequest->server->set(
                 $name,
@@ -56,7 +55,7 @@ class InitializeController extends Controller
 
         $realRequest->attributes->replace($masterRequest->attributes->all());
 
-        // Boot the framework with the real request
+        // Initialize the framework with the real request
         $this->get('request_stack')->push($realRequest);
         $this->container->enterScope($scope);
         $this->container->get('contao.framework')->initialize();
