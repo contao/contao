@@ -414,7 +414,7 @@ class Database
 
 		foreach ($this->listFields($strTable, $blnNoCache) as $arrField)
 		{
-			if ($arrField['name'] == $strField)
+			if ($arrField['name'] == $strField && $arrField['type'] != 'index')
 			{
 				return true;
 			}
@@ -467,7 +467,10 @@ class Database
 
 		foreach ($arrFields as $arrField)
 		{
-			$arrNames[] = $arrField['name'];
+			if ($arrField['type'] != 'index')
+			{
+				$arrNames[] = $arrField['name'];
+			}
 		}
 
 		return $arrNames;
