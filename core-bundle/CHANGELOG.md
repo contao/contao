@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Do not make textareas required if they are replaced with an RTE (see #266).
+
+### Fixed
 Correctly show the error messages in the login module (see #269).
 
 ### Fixed
