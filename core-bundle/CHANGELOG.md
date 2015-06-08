@@ -5,6 +5,9 @@ Version 4.0.0 (2015-06-XX)
 --------------------------
 
 ### Fixed
+Store new record IDs in the persistent session bag (see #281).
+
+### Fixed
 Correctly reload the page in the install tool (see #267).
 
 ### Fixed

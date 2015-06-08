@@ -704,10 +704,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$s2e = $GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ? '&s2e=1' : '';
 				$insertID = $objInsertStmt->insertId;
 
+				/** @var AttributeBagInterface $objSessionBag */
+				$objSessionBag = $objSession->getBag('contao_backend');
+
 				// Save new record in the session
-				$new_records = $objSession->get('new_records');
+				$new_records = $objSessionBag->get('new_records');
 				$new_records[$this->strTable][] = $insertID;
-				$objSession->set('new_records', $new_records);
+				$objSessionBag->set('new_records', $new_records);
 
 				// Call the oncreate_callback
 				if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_callback']))
@@ -884,6 +887,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
+		/** @var SessionInterface $objSession */
+		$objSession = \System::getContainer()->get('session');
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $objSession->getBag('contao_backend');
+
 		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
 								 ->limit(1)
 								 ->execute($this->intId);
@@ -927,9 +936,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// HOOK: style sheet category
 			if ($this->strTable == 'tl_style')
 			{
-				/** @var AttributeBagInterface $objSessionBag */
-				$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
-
 				$filter = $objSessionBag->get('filter');
 				$category = $filter['tl_style_' . CURRENT_ID]['category'];
 
@@ -948,9 +954,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			$this->set['ptable'] = $this->ptable;
 		}
-
-		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -1004,9 +1007,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				// Save the new record in the session
 				if (!$blnDoNotRedirect)
 				{
-					$new_records = $objSession->get('new_records');
+					$new_records = $objSessionBag->get('new_records');
 					$new_records[$this->strTable][] = $insertID;
-					$objSession->set('new_records', $new_records);
+					$objSessionBag->set('new_records', $new_records);
 				}
 
 				// Duplicate the records of the child table
@@ -3177,11 +3180,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'];
 		$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'];
 
-		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
-		// FIXME: this should be stored in the persistent bag!
-		$new_records = $objSession->get('new_records');
+		$new_records = $objSessionBag->get('new_records');
 
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['reviseTable']) && is_array($GLOBALS['TL_HOOKS']['reviseTable']))
@@ -3216,6 +3218,11 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			{
 				$reload = true;
 			}
+
+			// Remove the entries from the session
+			unset($new_records[$this->strTable]);
+
+			$objSessionBag->set('new_records', $new_records);
 		}
 
 		// Delete all records of the current table that are not related to the parent table
@@ -3265,8 +3272,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 		}
-
-		// FIXME: remove the revised entries from the session
 
 		// Reload the page
 		if ($reload)
