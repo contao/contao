@@ -36,7 +36,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  *
  * @internal
  */
-class ContaoFramework
+class ContaoFramework implements ContaoFrameworkInterface
 {
     use ContainerAwareTrait;
 

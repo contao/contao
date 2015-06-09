@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\ContaoFrameworkInterface;
 use Contao\FrontendUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -35,7 +35,7 @@ class ContaoUserProvider implements UserProviderInterface
     private $container;
 
     /**
-     * @var ContaoFramework
+     * @var ContaoFrameworkInterface
      */
     private $framework;
 
@@ -43,9 +43,9 @@ class ContaoUserProvider implements UserProviderInterface
      * Constructor.
      *
      * @param ContainerInterface $container The service container
-     * @param ContaoFramework    $framework The Contao framework service
+     * @param ContaoFrameworkInterface $framework The Contao framework service
      */
-    public function __construct(ContainerInterface $container, ContaoFramework $framework)
+    public function __construct(ContainerInterface $container, ContaoFrameworkInterface $framework)
     {
         $this->container = $container;
         $this->framework = $framework;

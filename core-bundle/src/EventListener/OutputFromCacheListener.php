@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\ContaoFrameworkInterface;
 use Contao\Frontend;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -27,16 +27,16 @@ class OutputFromCacheListener
     use ScopeAwareTrait;
 
     /**
-     * @var ContaoFramework
+     * @var ContaoFrameworkInterface
      */
     private $framework;
 
     /**
      * Constructor.
      *
-     * @param ContaoFramework $framework The Contao framework service
+     * @param ContaoFrameworkInterface $framework The Contao framework service
      */
-    public function __construct(ContaoFramework $framework)
+    public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
     }

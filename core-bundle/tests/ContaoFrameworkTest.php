@@ -36,7 +36,7 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/')
         );
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ContaoFramework', $framework);
+        $this->assertInstanceOf('Contao\\CoreBundle\\ContaoFrameworkInterface', $framework);
     }
 
     /**
