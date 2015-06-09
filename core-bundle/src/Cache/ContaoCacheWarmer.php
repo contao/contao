@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Cache;
 use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\ContaoFrameworkInterface;
 use Contao\DcaExtractor;
 use Contao\PageModel;
@@ -40,7 +40,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private $filesystem;
 
     /**
-     * @var ResourceFinder
+     * @var ResourceFinderInterface
      */
     private $finder;
 
@@ -68,7 +68,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      * Constructor.
      *
      * @param Filesystem               $filesystem The filesystem object
-     * @param ResourceFinder           $finder     The resource finder object
+     * @param ResourceFinderInterface  $finder     The resource finder object
      * @param FileLocator              $locator    The file locator
      * @param string                   $rootDir    The root directory
      * @param Connection               $connection The Doctrine connection
@@ -76,7 +76,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     public function __construct(
         Filesystem $filesystem,
-        ResourceFinder $finder,
+        ResourceFinderInterface $finder,
         FileLocator $locator,
         $rootDir,
         Connection $connection,

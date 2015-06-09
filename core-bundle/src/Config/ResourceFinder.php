@@ -17,7 +17,7 @@ use Symfony\Component\Finder\Finder;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ResourceFinder
+class ResourceFinder implements ResourceFinderInterface
 {
     /**
      * @var array
@@ -35,9 +35,7 @@ class ResourceFinder
     }
 
     /**
-     * Returns a Finder object with the resource paths set.
-     *
-     * @return Finder The Finder object
+     * {@inheritdoc}
      */
     public function find()
     {
@@ -45,11 +43,7 @@ class ResourceFinder
     }
 
     /**
-     * Appends the subpath to the resource paths and returns a Finder object.
-     *
-     * @param string $subpath The subpath
-     *
-     * @return Finder The Finder object
+     * {@inheritdoc}
      */
     public function findIn($subpath)
     {
