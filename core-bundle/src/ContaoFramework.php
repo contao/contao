@@ -36,7 +36,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  *
  * @internal
  */
-class ContaoFramework
+class ContaoFramework implements ContaoFrameworkInterface
 {
     use ContainerAwareTrait;
 
@@ -134,9 +134,7 @@ class ContaoFramework
     }
 
     /**
-     * Checks if the framework has been initialized.
-     *
-     * @return bool True if the framework has been initialized
+     * {@inheritdoc}
      */
     public function isInitialized()
     {
@@ -144,7 +142,7 @@ class ContaoFramework
     }
 
     /**
-     * Initializes the framework.
+     * {@inheritdoc}
      *
      * @throws \LogicException If the container is not set
      */
