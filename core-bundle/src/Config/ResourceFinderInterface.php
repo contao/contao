@@ -13,13 +13,12 @@ namespace Contao\CoreBundle\Config;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Defines the API to find resources in bundles.
+ * Interface for resource finders.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
 interface ResourceFinderInterface
 {
-
     /**
      * Returns a Finder object with the resource paths set.
      *

@@ -27,7 +27,7 @@ class ResourceFinderTest extends TestCase
     {
         $finder = new ResourceFinder();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Config\\ResourceFinderInterface', $finder);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Config\\ResourceFinder', $finder);
     }
 
     /**
