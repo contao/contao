@@ -17,7 +17,7 @@ use Symfony\Component\Finder\Finder;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ResourceFinder
+class ResourceFinder implements ResourceFinderInterface
 {
     /**
      * @var array
