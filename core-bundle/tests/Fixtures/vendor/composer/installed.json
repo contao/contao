@@ -1,0 +1,13 @@
+[
+    {
+        "name": "contao/test-bundle1",
+        "version": "1.0.0"
+    },
+    {
+        "name": "contao/test-bundle2",
+        "version": "dev-develop"
+    },
+    {
+        "name": "contao/test-bundle3"
+    }
+]
