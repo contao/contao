@@ -1,0 +1,14 @@
+
+<?php if ($this->title): ?>
+  <h1><?= $this->title ?></h1>
+<?php endif; ?>
+
+<?php if ($this->wildcard): ?>
+  <div class="tl_gray">
+    <?= $this->wildcard ?>
+    <?php if ($this->link): ?>
+      <br>
+      <?= $this->link ?> (<a href="<?= $this->href . '&amp;rt=' . REQUEST_TOKEN ?>" class="tl_gray">ID: <?= $this->id ?></a>)
+    <?php endif; ?>
+  </div>
+<?php endif; ?>

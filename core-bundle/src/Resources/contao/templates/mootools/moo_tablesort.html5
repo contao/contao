@@ -1,0 +1,17 @@
+<?php
+
+// Add the tablesorter style sheet
+$GLOBALS['TL_CSS'][] = 'assets/tablesort/css/tablesort.min.css|static';
+
+?>
+
+<script src="<?= TL_ASSETS_URL ?>assets/tablesort/js/tablesort.min.js"></script>
+<script>
+  (function() {
+    window.addEvent('domready', function() {
+      $$('.ce_table .sortable').each(function(table) {
+        new TableSort(table, '<?= $GLOBALS['TL_LANG']['MSC']['thousandsSeparator'] ?>', '<?= $GLOBALS['TL_LANG']['MSC']['decimalSeparator'] ?>');
+      });
+    });
+  })();
+</script>

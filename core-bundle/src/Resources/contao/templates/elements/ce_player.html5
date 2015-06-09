@@ -1,0 +1,21 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <!-- indexer::stop -->
+  <?php if ($this->isVideo): ?>
+    <video<?= $this->size ?><?php if ($this->poster): ?> poster="<?= $this->poster ?>" preload="none"<?php endif; ?><?php if ($this->autoplay): ?> autoplay<?php endif; ?> controls>
+      <?php foreach ($this->files as $file): ?>
+        <source type="<?= $file->mime ?>" src="<?= $file->path ?>" title="<?= $file->title ?>">
+      <?php endforeach; ?>
+    </video>
+  <?php else: ?>
+    <audio<?= $this->size ?> preload="none"<?php if ($this->autoplay): ?> autoplay<?php endif; ?> controls>
+      <?php foreach ($this->files as $file): ?>
+        <source type="<?= $file->mime ?>" src="<?= $file->path ?>" title="<?= $file->title ?>">
+      <?php endforeach; ?>
+    </audio>
+  <?php endif; ?>
+  <!-- indexer::continue -->
+
+<?php $this->endblock(); ?>
