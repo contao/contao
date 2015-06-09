@@ -143,6 +143,8 @@ class ContaoFramework implements ContaoFrameworkInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \LogicException If the container is not set
      */
     public function initialize()
     {
