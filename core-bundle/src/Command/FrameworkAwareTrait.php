@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\ContaoFrameworkInterface;
 
 /**
  * Provides methods to inject the framework service.
@@ -20,7 +20,7 @@ use Contao\CoreBundle\ContaoFramework;
 trait FrameworkAwareTrait
 {
     /**
-     * @var ContaoFramework
+     * @var ContaoFrameworkInterface
      */
     private $framework;
 
@@ -43,9 +43,9 @@ trait FrameworkAwareTrait
     /**
      * Sets the framework service.
      *
-     * @param ContaoFramework $framework The framework service
+     * @param ContaoFrameworkInterface $framework The framework service
      */
-    public function setFramework(ContaoFramework $framework)
+    public function setFramework(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
     }
