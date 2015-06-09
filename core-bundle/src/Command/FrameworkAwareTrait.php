@@ -27,7 +27,7 @@ trait FrameworkAwareTrait
     /**
      * Returns the framework service.
      *
-     * @return ContaoFramework The framework service
+     * @return ContaoFrameworkInterface The framework service
      *
      * @throws \LogicException If the framework service is not set
      */

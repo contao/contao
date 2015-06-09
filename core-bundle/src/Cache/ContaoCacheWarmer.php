@@ -67,12 +67,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Constructor.
      *
-     * @param Filesystem                $filesystem The filesystem object
-     * @param ResourceFinder            $finder     The resource finder object
-     * @param FileLocator               $locator    The file locator
-     * @param string                    $rootDir    The root directory
-     * @param Connection                $connection The Doctrine connection
-     * @param ContaoFrameworkInterface  $framework  The Contao framework
+     * @param Filesystem               $filesystem The filesystem object
+     * @param ResourceFinder           $finder     The resource finder object
+     * @param FileLocator              $locator    The file locator
+     * @param string                   $rootDir    The root directory
+     * @param Connection               $connection The Doctrine connection
+     * @param ContaoFrameworkInterface $framework  The framework service
      */
     public function __construct(
         Filesystem $filesystem,

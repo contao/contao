@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle;
 
 /**
- * Interface for the Contao Framework initializing service.
+ * Interface for the Contao framework initializer.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
@@ -26,6 +26,8 @@ interface ContaoFrameworkInterface
 
     /**
      * Initializes the framework.
+     *
+     * @throws \LogicException If the container is not set
      */
     public function initialize();
 }

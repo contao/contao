@@ -134,9 +134,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     }
 
     /**
-     * Checks if the framework has been initialized.
-     *
-     * @return bool True if the framework has been initialized
+     * {@inheritdoc}
      */
     public function isInitialized()
     {
@@ -144,9 +142,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     }
 
     /**
-     * Initializes the framework.
-     *
-     * @throws \LogicException If the container is not set
+     * {@inheritdoc}
      */
     public function initialize()
     {
