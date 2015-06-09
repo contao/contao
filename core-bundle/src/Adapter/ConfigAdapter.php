@@ -16,6 +16,8 @@ use Contao\Config;
  * Provides an adapter for the Contao Config class.
  *
  * @author Yanick Witschi <https://github.com/toflar>
+ *
+ * @internal
  */
 class ConfigAdapter
 {

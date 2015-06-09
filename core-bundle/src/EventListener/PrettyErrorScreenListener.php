@@ -28,6 +28,8 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @internal
  */
 class PrettyErrorScreenListener
 {

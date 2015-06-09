@@ -29,6 +29,8 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
  * Generates the Contao cache during cache warmup.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @internal
  */
 class ContaoCacheWarmer implements CacheWarmerInterface
 {

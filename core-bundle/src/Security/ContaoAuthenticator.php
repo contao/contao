@@ -26,6 +26,8 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  * Authenticates a Contao token.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @internal
  */
 class ContaoAuthenticator extends ContainerAware implements SimplePreAuthenticatorInterface
 {

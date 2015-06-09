@@ -21,6 +21,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @internal
  */
 class ToggleViewListener
 {

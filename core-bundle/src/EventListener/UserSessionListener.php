@@ -23,6 +23,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @internal
  */
 class UserSessionListener
 {

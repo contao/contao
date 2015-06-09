@@ -24,6 +24,8 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
  * Provides a Contao front end or back end user object.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @internal
  */
 class ContaoUserProvider implements UserProviderInterface
 {
