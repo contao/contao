@@ -429,7 +429,7 @@ class Form extends \Hybrid
 					// Add a link to the uploaded file
 					if ($file['uploaded'])
 					{
-						$uploaded .= "\n" . \Environment::get('base') . str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
+						$uploaded .= "\n" . \Environment::get('base') . str_replace(TL_ROOT . '/', '', dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
 						continue;
 					}
 
@@ -485,7 +485,7 @@ class Form extends \Hybrid
 				{
 					if ($v['uploaded'])
 					{
-						$arrSet[$k] = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $v['tmp_name']);
+						$arrSet[$k] = str_replace(TL_ROOT . '/', '', $v['tmp_name']);
 					}
 				}
 			}
@@ -558,10 +558,15 @@ class Form extends \Hybrid
 	 * Get the maximum file size that is allowed for file uploads
 	 *
 	 * @return integer
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use $this->objModel->getMaxUploadFileSize() instead.
 	 */
 	protected function getMaxFileSize()
 	{
-		return $this->objModel->getMaxUploadFileSize(); // Backwards compatibility
+		trigger_error('Using Form::getMaxFileSize() has been deprecated and will no longer work in Contao 5.0. Use $this->objModel->getMaxUploadFileSize() instead.', E_USER_DEPRECATED);
+
+		return $this->objModel->getMaxUploadFileSize();
 	}
 
 

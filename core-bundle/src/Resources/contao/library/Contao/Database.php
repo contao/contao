@@ -68,9 +68,11 @@ class Database
 	 */
 	protected function __construct(array $arrConfig)
 	{
-		// Custom configuration (backwards compatibiltiy)
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if (!empty($arrConfig))
 		{
+			trigger_error('Passing a custom configuration to Database::__construct() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			$arrParams = array
 			(
 				'driver'    => \System::getContainer()->getParameter('database_driver'),
@@ -85,7 +87,7 @@ class Database
 		}
 		else
 		{
-			$this->resConnection = \System::getContainer()->get('doctrine.dbal.default_connection');
+			$this->resConnection = \System::getContainer()->get('database_connection');
 		}
 
 		if (!is_object($this->resConnection))
@@ -412,7 +414,7 @@ class Database
 
 		foreach ($this->listFields($strTable, $blnNoCache) as $arrField)
 		{
-			if ($arrField['name'] == $strField)
+			if ($arrField['name'] == $strField && $arrField['type'] != 'index')
 			{
 				return true;
 			}
@@ -465,7 +467,10 @@ class Database
 
 		foreach ($arrFields as $arrField)
 		{
-			$arrNames[] = $arrField['name'];
+			if ($arrField['type'] != 'index')
+			{
+				$arrNames[] = $arrField['name'];
+			}
 		}
 
 		return $arrNames;

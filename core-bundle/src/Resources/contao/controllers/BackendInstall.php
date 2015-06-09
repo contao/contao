@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -131,6 +132,10 @@ class BackendInstall extends \Backend
 		try
 		{
 			$this->importExampleWebsite();
+		}
+		catch (ResponseException $e)
+		{
+			throw $e; // see #267
 		}
 		catch (\Exception $e)
 		{
@@ -355,7 +360,7 @@ class BackendInstall extends \Backend
 		$arrOptions = array();
 
 		$objCollation = $this->Database->prepare("SHOW COLLATION LIKE ?")
-									   ->execute(\Config::get('dbCharset') .'%');
+									   ->execute(\Config::get('dbCharset') . '\_%');
 
 		while ($objCollation->next())
 		{
@@ -429,7 +434,7 @@ class BackendInstall extends \Backend
 		// Add the relative paths
 		foreach ($objFiles as $objFile)
 		{
-			$arrTemplates[] = str_replace(TL_ROOT . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR, '', $objFile->getPathname());
+			$arrTemplates[] = str_replace(TL_ROOT . '/templates/', '', $objFile->getPathname());
 		}
 
 		$strTemplates = '<option value="">-</option>';
@@ -559,6 +564,10 @@ class BackendInstall extends \Backend
 				$this->Template->adminEmail = \Input::post('email', true);
 				$this->Template->adminUser = \Input::post('username', true);
 			}
+		}
+		catch (ResponseException $e)
+		{
+			throw $e; // see #267
 		}
 		catch (\Exception $e)
 		{
@@ -941,6 +950,7 @@ class BackendInstall extends \Backend
 	 */
 	protected function update40()
 	{
+		// FIXME: remove or disable until complete
 		if ($this->Database->tableExists('tl_layout') && !$this->Database->fieldExists('scripts', 'tl_layout'))
 		{
 			$this->enableMaintenanceMode();

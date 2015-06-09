@@ -262,7 +262,7 @@ abstract class Frontend extends \Controller
 				return false;
 			}
 
-			\Input::setGet($arrFragments[$i], (string) $arrFragments[$i+1], true);
+			\Input::setGet(urldecode($arrFragments[$i]), urldecode($arrFragments[$i+1]), true);
 		}
 
 		return $arrFragments[0] ?: null;
@@ -270,12 +270,17 @@ abstract class Frontend extends \Controller
 
 
 	/**
-	 * Return the root page ID (backwards compatibility)
+	 * Return the root page ID
 	 *
 	 * @return integer
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use Frontend::getRootPageFromUrl()->id instead.
 	 */
 	public static function getRootIdFromUrl()
 	{
+		trigger_error('Using Frontend::getRootIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use Frontend::getRootPageFromUrl()->id instead.', E_USER_DEPRECATED);
+
 		return static::getRootPageFromUrl()->id;
 	}
 
@@ -635,6 +640,7 @@ abstract class Frontend extends \Controller
 
 	/**
 	 * Check whether there is a cached version of the page and return a response object
+	 *
 	 * @return Response|null
 	 */
 	public static function getResponseFromCache()
@@ -732,6 +738,18 @@ abstract class Frontend extends \Controller
 			}
 		}
 
+		// Check for a desktop layout (see #7826)
+		else
+		{
+			$strMd5CacheKey = md5($strCacheKey . '.desktop');
+			$strCacheFile = $strCacheDir . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html';
+
+			if (file_exists($strCacheFile))
+			{
+				$blnFound = true;
+			}
+		}
+
 		// Check for a regular layout
 		if (!$blnFound)
 		{
@@ -788,10 +806,18 @@ abstract class Frontend extends \Controller
 		// Load the default language file (see #2644)
 		\System::loadLanguageFile('default');
 
-		// Replace the insert tags and then re-replace the request_token
-		// tag in case a form element has been loaded via insert tag
+		// Replace the insert tags and then re-replace the request_token tag in case a form element has been loaded via insert tag
 		$strBuffer = \Controller::replaceInsertTags($strBuffer, false);
 		$strBuffer = str_replace(array('{{request_token}}', '[{]', '[}]'), array(REQUEST_TOKEN, '{{', '}}'), $strBuffer);
+
+		// HOOK: allow to modify the compiled markup (see #4291 and #7457)
+		if (isset($GLOBALS['TL_HOOKS']['modifyFrontendPage']) && is_array($GLOBALS['TL_HOOKS']['modifyFrontendPage']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['modifyFrontendPage'] as $callback)
+			{
+				$strBuffer = \System::importStatic($callback[0])->$callback[1]($strBuffer, null);
+			}
+		}
 
 		// Content type
 		if (!$content)

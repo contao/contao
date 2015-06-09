@@ -12,7 +12,6 @@ namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\SetApplicationPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Symfony\Component\DependencyInjection\Scope;
@@ -58,6 +57,5 @@ class ContaoCoreBundle extends Bundle
         );
 
         $container->addCompilerPass(new AddResourcesPathsPass());
-        $container->addCompilerPass(new SetApplicationPass());
     }
 }

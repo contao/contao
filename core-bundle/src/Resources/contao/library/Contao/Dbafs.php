@@ -48,7 +48,7 @@ class Dbafs
 		}
 
 		// Normalize the path (see #6034)
-		$strResource = str_replace('//', '/', $strResource);
+		$strResource = str_replace(array('\\', '//'), '/', $strResource);
 
 		// The resource does not exist or lies outside the upload directory
 		if ($strResource == '' || strncmp($strResource,  $strUploadPath, strlen($strUploadPath)) !== 0 || !file_exists(TL_ROOT . '/' . $strResource))
@@ -118,7 +118,7 @@ class Dbafs
 			// Add the relative path
 			foreach ($objFiles as $objFile)
 			{
-				$strRelpath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $objFile->getPathname());
+				$strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
 
 				if ($objFile->isDir())
 				{
@@ -339,7 +339,7 @@ class Dbafs
 					$objNew->pid    = $objNewFile->uuid;
 					$objNew->tstamp = time();
 					$objNew->uuid   = $objDatabase->getUuid();
-					$objNew->path   = str_replace($strSource . DIRECTORY_SEPARATOR, $strDestination . DIRECTORY_SEPARATOR, $objFiles->path);
+					$objNew->path   = str_replace($strSource . '/', $strDestination . '/', $objFiles->path);
 					$objNew->save();
 				}
 			}
@@ -498,7 +498,7 @@ class Dbafs
 		// Create or update the database entries
 		foreach ($objFiles as $objFile)
 		{
-			$strRelpath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $objFile->getPathname());
+			$strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
 
 			// Get all subfiles in a single query
 			if ($objFile->isDir())

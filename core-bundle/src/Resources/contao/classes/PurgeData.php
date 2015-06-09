@@ -53,15 +53,7 @@ class PurgeData extends \Backend implements \executable
 		}
 
 		// Add potential error messages
-		if (!empty($_SESSION['TL_ERROR']) && is_array($_SESSION['TL_ERROR']))
-		{
-			foreach ($_SESSION['TL_ERROR'] as $message)
-			{
-				$objTemplate->message .= sprintf('<p class="tl_error">%s</p>' . "\n", $message);
-			}
-
-			$_SESSION['TL_ERROR'] = array();
-		}
+		$objTemplate->message .= \Message::generateUnwrapped();
 
 		// Run the jobs
 		if (\Input::post('FORM_SUBMIT') == 'tl_purge')
@@ -105,7 +97,7 @@ class PurgeData extends \Backend implements \executable
 			}
 		}
 
-		$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCachePath = str_replace(TL_ROOT . '/', '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 		// Folders
 		foreach ($GLOBALS['TL_PURGE']['folders'] as $key=>$config)

@@ -71,10 +71,10 @@ class PhpFileLoaderTest extends TestCase
             $this->loader->load($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/config.php')
         );
 
-        $content = <<<EOF
+        $content = <<<'EOF'
 
 
-\$GLOBALS['TL_DCA']['tl_test'] = [
+$GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
         'dataContainer' => 'DC_Table',
         'sql' => [

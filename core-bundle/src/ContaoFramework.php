@@ -33,8 +33,10 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Dominik Tomasi <https://github.com/dtomasi>
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @internal
  */
-class ContaoFramework
+class ContaoFramework implements ContaoFrameworkInterface
 {
     use ContainerAwareTrait;
 
@@ -72,6 +74,11 @@ class ContaoFramework
      * @var int
      */
     private $errorLevel;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * @var Request
@@ -123,13 +130,11 @@ class ContaoFramework
         $this->csrfTokenName = $csrfTokenName;
         $this->config        = $config;
         $this->errorLevel    = $errorLevel;
-        $this->request       = $requestStack->getCurrentRequest();
+        $this->requestStack  = $requestStack;
     }
 
     /**
-     * Checks if the framework has been initialized.
-     *
-     * @return bool True if the framework has been initialized
+     * {@inheritdoc}
      */
     public function isInitialized()
     {
@@ -137,7 +142,9 @@ class ContaoFramework
     }
 
     /**
-     * Initializes the framework.
+     * {@inheritdoc}
+     *
+     * @throws \LogicException If the container is not set
      */
     public function initialize()
     {
@@ -148,21 +155,35 @@ class ContaoFramework
         // Set before calling any methods to prevent recursion
         self::$initialized = true;
 
+        if (null === $this->container) {
+            throw new \LogicException('The service container has not been set.');
+        }
+
+        // Set the current request
+        $this->request = $this->requestStack->getCurrentRequest();
+
         $this->setConstants();
         $this->initializeFramework();
     }
 
     /**
      * Sets the Contao constants.
+     *
+     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
      */
     private function setConstants()
     {
-        // The constants are deprecated and will be removed in Contao 5.0.
-        define('TL_MODE', $this->getMode());
+        if (!defined('TL_MODE')) {
+            define('TL_MODE', $this->getMode());
+        }
+
         define('TL_START', microtime(true));
         define('TL_ROOT', $this->rootDir);
         define('TL_REFERER_ID', $this->getRefererId());
-        define('TL_SCRIPT', $this->getRoute());
+
+        if (!defined('TL_SCRIPT')) {
+            define('TL_SCRIPT', $this->getRoute());
+        }
 
         // Define the login status constants in the back end (see #4099, #5279)
         if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
@@ -332,7 +353,7 @@ class ContaoFramework
             $language = str_replace('_', '-', $this->request->getLocale());
         }
 
-        // Backwards compatibility
+        // Deprecated since Contao 4.0, to be removed in Contao 5.0
         $GLOBALS['TL_LANGUAGE']  = $language;
         $_SESSION['TL_LANGUAGE'] = $language;
     }
@@ -388,7 +409,7 @@ class ContaoFramework
      */
     private function handleRequestToken()
     {
-        // Backwards compatibility
+        // Deprecated since Contao 4.0, to be removed in Contao 5.0
         if (!defined('REQUEST_TOKEN')) {
             define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
         }

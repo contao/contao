@@ -124,6 +124,9 @@ class FrontendTemplate extends \Template
 		// Add the output to the cache
 		$this->addToCache();
 
+		// Unset only after the output has been cached (see #7824)
+		unset($_SESSION['LOGIN_ERROR']);
+
 		// Replace insert tags and then re-replace the request_token tag in case a form element has been loaded via insert tag
 		$this->strBuffer = $this->replaceInsertTags($this->strBuffer, false);
 		$this->strBuffer = str_replace(array('{{request_token}}', '[{]', '[}]'), array(REQUEST_TOKEN, '{{', '}}'), $this->strBuffer);
@@ -157,6 +160,11 @@ class FrontendTemplate extends \Template
 	 */
 	public function section($key, $template=null)
 	{
+		if (empty($this->sections[$key]))
+		{
+			return;
+		}
+
 		$this->id = $key;
 		$this->content = $this->sections[$key];
 
@@ -187,9 +195,6 @@ class FrontendTemplate extends \Template
 		{
 			return;
 		}
-
-		// Use the section tag in HTML5
-		$this->tag = ($key == 'main') ? 'section' : 'div';
 
 		if ($template === null)
 		{
@@ -270,17 +275,24 @@ class FrontendTemplate extends \Template
 				}
 			}
 
-			// Store mobile pages separately
-			if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
+			// Add a suffix if there is a mobile layout (see #7826)
+			if ($objPage->mobileLayout > 0)
 			{
-				$strCacheKey .= '.mobile';
+				if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
+				{
+					$strCacheKey .= '.mobile';
+				}
+				else
+				{
+					$strCacheKey .= '.desktop';
+				}
 			}
 
 			// Replace insert tags for caching
 			$strBuffer = $this->replaceInsertTags($this->strBuffer);
 			$strBuffer = $this->replaceDynamicScriptTags($strBuffer); // see #4203
 
-			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
+			$strCachePath = str_replace(TL_ROOT . '/', '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 			// Create the cache file
 			$strMd5CacheKey = md5($strCacheKey);

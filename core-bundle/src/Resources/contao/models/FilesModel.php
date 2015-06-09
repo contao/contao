@@ -97,7 +97,7 @@ class FilesModel extends \Model
 
 
 	/**
-	 * Find a file by its primary key (backwards compatibility)
+	 * Find a file by its primary key
 	 *
 	 * @param mixed $varValue   The value
 	 * @param array $arrOptions An optional options array
@@ -116,7 +116,7 @@ class FilesModel extends \Model
 
 
 	/**
-	 * Find a file by its ID or UUID (backwards compatibility)
+	 * Find a file by its ID or UUID
 	 *
 	 * @param mixed $intId      The ID or UUID
 	 * @param array $arrOptions An optional options array
@@ -135,7 +135,7 @@ class FilesModel extends \Model
 
 
 	/**
-	 * Find multiple files by their IDs or UUIDs (backwards compatibility)
+	 * Find multiple files by their IDs or UUIDs
 	 *
 	 * @param array $arrIds     An array of IDs or UUIDs
 	 * @param array $arrOptions An optional options array

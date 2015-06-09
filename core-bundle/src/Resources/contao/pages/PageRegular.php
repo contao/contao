@@ -443,12 +443,6 @@ class PageRegular extends \Frontend
 			}
 		}
 
-		// Load MooTools core for the debug bar (see #5195)
-		if (\Config::get('debugMode') && !$objLayout->addMooTools)
-		{
-			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools-core.min.js|static';
-		}
-
 		// Picturefill
 		if ($objLayout->picturefill)
 		{

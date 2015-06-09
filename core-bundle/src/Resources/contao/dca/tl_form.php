@@ -332,7 +332,10 @@ class tl_form extends Backend
 				// Dynamically add the record to the user profile
 				if (!in_array(Input::get('id'), $root))
 				{
-					$arrNew = $objSession->get('new_records');
+					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+					$objSessionBag = $objSession->getBag('contao_backend');
+
+					$arrNew = $objSessionBag->get('new_records');
 
 					if (is_array($arrNew['tl_form']) && in_array(Input::get('id'), $arrNew['tl_form']))
 					{

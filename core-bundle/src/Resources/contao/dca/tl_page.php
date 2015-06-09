@@ -1065,10 +1065,10 @@ class tl_page extends Backend
 			return;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
-		$new_records = $objSession->get('new_records');
+		$new_records = $objSessionBag->get('new_records');
 
 		// Not a new page
 		if (!$new_records || (is_array($new_records[$dc->table]) && !in_array($dc->id, $new_records[$dc->table])))

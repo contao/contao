@@ -937,6 +937,12 @@ class Image
 			return null;
 		}
 
+		// Handle public bundle resources
+		if (!file_exists(TL_ROOT . '/' . $image) && file_exists(TL_ROOT . '/web/' . $image))
+		{
+			$image = 'web/' . $image;
+		}
+
 		try
 		{
 			$imageObj = static::create($image, array($width, $height, $mode));

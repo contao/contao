@@ -386,9 +386,11 @@ abstract class Controller extends \System
 		// Print the article as PDF
 		if (isset($_GET['pdf']) && \Input::get('pdf') == $objRow->id)
 		{
-			// Backwards compatibility
+			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			if ($objRow->printable == 1)
 			{
+				trigger_error('Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 				$objArticle = new \ModuleArticle($objRow);
 				$objArticle->generatePdf();
 			}
@@ -1675,7 +1677,7 @@ abstract class Controller extends \System
 			}
 		}
 
-		// Backwards compatibility
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		define('TL_SCRIPT_URL', TL_ASSETS_URL);
 		define('TL_PLUGINS_URL', TL_ASSETS_URL);
 	}
@@ -1927,7 +1929,7 @@ abstract class Controller extends \System
 
 
 	/**
-	 * Return true for backwards compatibility (see #3218)
+	 * Return the date picker string (see #3218)
 	 *
 	 * @return boolean
 	 *

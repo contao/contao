@@ -13,8 +13,6 @@ namespace Contao\CoreBundle\Command;
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -25,13 +23,8 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class SymlinksCommand extends AbstractLockedCommand implements ContainerAwareInterface
+class SymlinksCommand extends AbstractLockedCommand
 {
-    /**
-     * @var ContainerInterface|null
-     */
-    private $container;
-
     /**
      * @var string
      */
@@ -41,14 +34,6 @@ class SymlinksCommand extends AbstractLockedCommand implements ContainerAwareInt
      * @var OutputInterface
      */
     private $output;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
 
     /**
      * {@inheritdoc}
@@ -67,7 +52,7 @@ class SymlinksCommand extends AbstractLockedCommand implements ContainerAwareInt
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
         $this->output  = $output;
-        $this->rootDir = dirname($this->container->getParameter('kernel.root_dir'));
+        $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
 
         $this->generateSymlinks();
 
@@ -77,10 +62,10 @@ class SymlinksCommand extends AbstractLockedCommand implements ContainerAwareInt
     /**
      * Generates the symlinks in the web/ directory.
      */
-    public function generateSymlinks()
+    private function generateSymlinks()
     {
         $fs         = new Filesystem();
-        $uploadPath = $this->container->getParameter('contao.upload_path');
+        $uploadPath = $this->getContainer()->getParameter('contao.upload_path');
 
         // Remove the base folders in the document root
         $fs->remove($this->rootDir . '/web/' . $uploadPath);
@@ -131,12 +116,12 @@ class SymlinksCommand extends AbstractLockedCommand implements ContainerAwareInt
     private function symlinkThemes()
     {
         /** @var SplFileInfo[] $themes */
-        $themes = $this->container->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
+        $themes = $this->getContainer()->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
             $path = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $theme->getPathname());
 
-            if (0 === strpos($path, 'system/modules/')) {
+            if (0 === strpos(strtr($path, '\\', '/'), 'system/modules/')) {
                 continue;
             }
 
@@ -280,7 +265,7 @@ class SymlinksCommand extends AbstractLockedCommand implements ContainerAwareInt
 
             $dir     = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $file->getPath());
             $paths[] = $dir;
-            $chunks  = explode('/', $dir);
+            $chunks  = explode(DIRECTORY_SEPARATOR, $dir);
             $test    = $chunks[0];
 
             for ($i = 1, $c = count($chunks); $i < $c; $i++) {

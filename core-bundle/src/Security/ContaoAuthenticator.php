@@ -10,8 +10,10 @@
 
 namespace Contao\CoreBundle\Security;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\User;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -24,8 +26,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  * Authenticates a Contao token.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @internal
  */
-class ContaoAuthenticator implements SimplePreAuthenticatorInterface
+class ContaoAuthenticator extends ContainerAware implements SimplePreAuthenticatorInterface
 {
     /**
      * Creates an authentication token.
@@ -53,7 +57,7 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
      */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
-        if ($token instanceof ContaoToken) {
+        if ($this->canSkipAuthentication($token)) {
             return $token;
         }
 
@@ -85,5 +89,29 @@ class ContaoAuthenticator implements SimplePreAuthenticatorInterface
     public function supportsToken(TokenInterface $token, $providerKey)
     {
         return $token instanceof ContaoToken || $token instanceof AnonymousToken;
+    }
+
+    /**
+     * Checks if the authentication can be skipped.
+     *
+     * @param TokenInterface $token The token object
+     *
+     * @return bool True if the authentication can be skipped
+     *
+     * @throws \LogicException If the container object has not been set
+     */
+    private function canSkipAuthentication(TokenInterface $token)
+    {
+        if ($token instanceof ContaoToken) {
+            return true;
+        }
+
+        if (null === $this->container) {
+            throw new \LogicException('The service container has not been set.');
+        }
+
+        return !$this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)
+            && !$this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)
+        ;
     }
 }

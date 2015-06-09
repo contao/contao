@@ -411,7 +411,7 @@ abstract class DataContainer extends \Backend
       new MooRainbow("moo_' . $this->strField . '", {
         id: "ctrl_' . $strKey . '",
         startColor: ((cl = $("ctrl_' . $strKey . '").value.hexToRgb(true)) ? cl : [255, 0, 0]),
-        imgPath: "assets/mootools/colorpicker/' . $GLOBALS['TL_ASSETS']['COLORPICKER'] . '/images/",
+        imgPath: "assets/colorpicker/images/",
         onComplete: function(color) {
           $("ctrl_' . $strKey . '").value = color.hex.replace("#", "");
         }
@@ -470,8 +470,10 @@ abstract class DataContainer extends \Backend
 
 			/** @var \BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate("be_$file");
-			$objTemplate->language = \Backend::getTinyMceLanguage(); // backwards compatibility
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
+
+			// Deprecated since Contao 4.0, to be removed in Contao 5.0
+			$objTemplate->language = \Backend::getTinyMceLanguage();
 
 			$updateMode = $objTemplate->parse();
 

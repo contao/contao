@@ -93,7 +93,22 @@ class FileSelector extends \Widget
 		// Show a custom path (see #4926)
 		elseif ($this->path != '')
 		{
-			$tree .= $this->renderFiletree(TL_ROOT . '/' . $this->path, 0);
+			$protected = true;
+			$path = $this->path;
+
+			// Check if the folder is protected (see #287)
+			do
+			{
+				if (file_exists(TL_ROOT . '/' . $path . '/.public'))
+				{
+					$protected = false;
+				}
+
+				$path = dirname($path);
+			}
+			while ($path != '.' && $protected !== false);
+
+			$tree .= $this->renderFiletree(TL_ROOT . '/' . $this->path, 0, false, $protected);
 		}
 
 		// Start from root
@@ -311,7 +326,7 @@ class FileSelector extends \Widget
 			$tid = md5($folders[$f]);
 			$folderAttribute = 'style="margin-left:20px"';
 			$session[$node][$tid] = is_numeric($session[$node][$tid]) ? $session[$node][$tid] : 0;
-			$currentFolder = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $folders[$f]);
+			$currentFolder = str_replace(TL_ROOT . '/', '', $folders[$f]);
 			$blnIsOpen = ($session[$node][$tid] == 1 || count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
 
 			// Add a toggle button if there are childs
@@ -376,7 +391,7 @@ class FileSelector extends \Widget
 			for ($h=0, $c=count($files); $h<$c; $h++)
 			{
 				$thumbnail = '';
-				$currentFile = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $files[$h]);
+				$currentFile = str_replace(TL_ROOT . '/', '', $files[$h]);
 				$currentEncoded = $this->urlEncode($currentFile);
 
 				$objFile = new \File($currentFile);

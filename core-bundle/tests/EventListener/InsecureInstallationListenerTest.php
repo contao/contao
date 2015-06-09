@@ -42,7 +42,7 @@ class InsecureInstallationListenerTest extends TestCase
     public function testOnKernelRequest()
     {
         $kernel = $this->mockKernel();
-        $event = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
+        $event  = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
 
         $listener = new InsecureInstallationListener();
         $listener->onKernelRequest($event);
@@ -106,8 +106,10 @@ class InsecureInstallationListenerTest extends TestCase
     {
         $request = new Request();
 
-        $request->server->set('REQUEST_URI', '/web/app_dev.php?do=test');
+        $request->server->set('SCRIPT_NAME', 'app_dev.php');
         $request->server->set('SCRIPT_FILENAME', $this->getRootDir() . '/web/app_dev.php');
+        $request->server->set('REMOTE_ADDR', '123.456.789.0');
+        $request->server->set('REQUEST_URI', '/web/app_dev.php?do=test');
 
         return $request;
     }

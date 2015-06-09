@@ -1,7 +1,50 @@
 Contao change log
 =================
 
-Version 4.0.0-RC1 (2014-05-15)
+Version 4.0.0 (2015-06-09)
+--------------------------
+
+### Fixed
+Fixed several directory separator issues.
+
+### Fixed
+Handle bundle images in `Image::get()` (see #287).
+
+### Fixed
+Check if a custom folder is protected in the file picker (see #287).
+
+### Fixed
+Do not make textareas required if they are replaced with an RTE (see #266).
+
+### Fixed
+Correctly show the error messages in the login module (see #269).
+
+### Fixed
+Map the referer in the old Session class (see #281).
+
+### Fixed
+Store new record IDs in the persistent session bag (see #281).
+
+### Fixed
+Correctly reload the page in the install tool (see #267).
+
+### Fixed
+Correctly show the color picker images (see #268).
+
+### Fixed
+Consolidate the custom sections markup (see #contao/core#7843).
+
+### Fixed
+Correctly execute the symlinks command in the automator (see #265).
+
+### Fixed
+Correctly handle an empty `_locale` attribute (see #262).
+
+### Fixed
+Correctly switch between the page and file picker in the hyperlink element.
+
+
+Version 4.0.0-RC1 (2015-05-15)
 ------------------------------
 
 ### New
@@ -69,7 +112,7 @@ It is now possible to check for an authenticated back end user in a front end
 template using `$this->hasAuthenticatedBackendUser()`.
 
 
-Version 4.0.0-beta1 (2014-04-14)
+Version 4.0.0-beta1 (2015-04-14)
 --------------------------------
 
 ### Removed

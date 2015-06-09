@@ -22,6 +22,8 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
+ *
+ * @internal
  */
 class AutomatorCommand extends AbstractLockedCommand
 {
@@ -51,7 +53,7 @@ class AutomatorCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->framework->initialize();
+        $this->getFramework()->initialize();
 
         try {
             $this->runAutomator($input, $output);
@@ -112,6 +114,8 @@ class AutomatorCommand extends AbstractLockedCommand
      */
     private function generateCommandMap()
     {
+        $this->getFramework()->initialize();
+
         $commands = [];
 
         // Find all public methods

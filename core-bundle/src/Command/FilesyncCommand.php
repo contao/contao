@@ -18,6 +18,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Synchronizes the file system with the database.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @internal
  */
 class FilesyncCommand extends AbstractLockedCommand
 {
@@ -39,7 +41,7 @@ class FilesyncCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->framework->initialize();
+        $this->getFramework()->initialize();
 
         $strLog = Dbafs::syncFiles();
         $output->writeln('Synchronization complete (see <info>' . $strLog . '</info>).');

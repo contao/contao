@@ -153,7 +153,6 @@ class Pagination
 
 		$this->strParameter = $strParameter;
 
-		// Backwards compatibility
 		if ($objTemplate === null)
 		{
 			/** @var \FrontendTemplate|object $objTemplate */
@@ -257,7 +256,7 @@ class Pagination
 		$objTemplate->hasNext = $this->hasNext();
 		$objTemplate->hasLast = $this->hasLast();
 
-		// Backwards compatibility
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$objTemplate->items = $this->getItemsAsString($strSeparator);
 
 		$objTemplate->pages = $this->getItemsAsArray();

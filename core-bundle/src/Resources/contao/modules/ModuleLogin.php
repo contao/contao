@@ -177,18 +177,17 @@ class ModuleLogin extends \Module
 
 		$blnHasError = false;
 
-		if (!empty($_SESSION['TL_ERROR']))
+		if (isset($_SESSION['MESSAGES'][TL_MODE]['TL_ERROR']))
 		{
 			$blnHasError = true;
-			$_SESSION['LOGIN_ERROR'] = $_SESSION['TL_ERROR'][0];
-			$_SESSION['TL_ERROR'] = array();
+			$_SESSION['LOGIN_ERROR'] = $_SESSION['MESSAGES'][TL_MODE]['TL_ERROR'][0];
+			unset($_SESSION['MESSAGES'][TL_MODE]['TL_ERROR']);
 		}
 
 		if (isset($_SESSION['LOGIN_ERROR']))
 		{
 			$blnHasError = true;
 			$this->Template->message = $_SESSION['LOGIN_ERROR'];
-			unset($_SESSION['LOGIN_ERROR']);
 		}
 
 		$this->Template->hasError = $blnHasError;

@@ -139,10 +139,11 @@ abstract class Backend extends \Controller
 			case 'java':
 			case 'json':
 			case 'less':
+			case 'mysql':
 			case 'php':
 			case 'scss':
-			case 'mysql':
 			case 'sql':
+			case 'twig':
 			case 'xml':
 			case 'yaml':
 				return $type;
@@ -597,26 +598,26 @@ abstract class Backend extends \Controller
 			{
 				$this->Template->headline .= ' » ' . $GLOBALS['TL_LANG']['MSC']['all_override'][0];
 			}
-			elseif (is_array($GLOBALS['TL_LANG'][$strTable][$act]))
+			else
 			{
 				if (\Input::get('id'))
 				{
-					if (\Input::get('do') == 'files')
+					if (\Input::get('do') == 'files' || \Input::get('do') == 'tpl_editor')
 					{
 						$this->Template->headline .= ' » ' . \Input::get('id');
 					}
-					else
+					elseif (is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
 						$this->Template->headline .= ' » ' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], \Input::get('id'));
 					}
 				}
 				elseif (\Input::get('pid'))
 				{
-					if (\Input::get('do') == 'files')
+					if (\Input::get('do') == 'files' || \Input::get('do') == 'tpl_editor')
 					{
 						$this->Template->headline .= ' » ' . \Input::get('pid');
 					}
-					else
+					elseif (is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
 						$this->Template->headline .= ' » ' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], \Input::get('pid'));
 					}
@@ -1078,9 +1079,11 @@ abstract class Backend extends \Controller
 	 */
 	public function createFileList($strFilter='', $filemount=false)
 	{
-		// Backwards compatibility
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strFilter === true)
 		{
+			trigger_error('Passing "true" to Backend::createFileList() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			$strFilter = 'gif,jpg,jpeg,png';
 		}
 
@@ -1127,9 +1130,11 @@ abstract class Backend extends \Controller
 	 */
 	protected function doCreateFileList($strFolder=null, $level=-1, $strFilter='')
 	{
-		// Backwards compatibility
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strFilter === true)
 		{
+			trigger_error('Passing "true" to Backend::doCreateFileList() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			$strFilter = 'gif,jpg,jpeg,png';
 		}
 

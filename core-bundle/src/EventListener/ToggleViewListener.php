@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\ContaoFrameworkInterface;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,22 +21,24 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @internal
  */
 class ToggleViewListener
 {
     use ScopeAwareTrait;
 
     /**
-     * @var ContaoFramework
+     * @var ContaoFrameworkInterface
      */
     private $framework;
 
     /**
      * Constructor.
      *
-     * @param ContaoFramework $framework The Contao framework service
+     * @param ContaoFrameworkInterface $framework The Contao framework service
      */
-    public function __construct(ContaoFramework $framework)
+    public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
     }

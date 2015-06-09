@@ -254,7 +254,7 @@ class BackendUser extends \User
 											->limit(1)
 											->execute($pid);
 
-			while (!$row['chmod'] && $pid > 0 && $objParentPage->numRows)
+			while ($row['chmod'] === false && $pid > 0 && $objParentPage->numRows)
 			{
 				$pid = $objParentPage->pid;
 
@@ -268,15 +268,15 @@ class BackendUser extends \User
 			}
 
 			// Set default values
-			if (!$row['chmod'])
+			if ($row['chmod'] === false)
 			{
 				$row['chmod'] = \Config::get('defaultChmod');
 			}
-			if (!$row['cuser'])
+			if ($row['cuser'] === false)
 			{
 				$row['cuser'] = intval(\Config::get('defaultUser'));
 			}
-			if (!$row['cgroup'])
+			if ($row['cgroup'] === false)
 			{
 				$row['cgroup'] = intval(\Config::get('defaultGroup'));
 			}
@@ -357,7 +357,8 @@ class BackendUser extends \User
 		\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
 		\System::getContainer()->get('translator')->setLocale($this->language);
 
-		$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language); // backwards compatibility
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
+		$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
 
 		\Config::set('showHelp', $this->showHelp);
 		\Config::set('useRTE', $this->useRTE);
@@ -432,7 +433,7 @@ class BackendUser extends \User
 		// Store the numeric file mounts
 		$this->arrFilemountIds = $this->filemounts;
 
-		// Convert the file mounts into paths (backwards compatibility)
+		// Convert the file mounts into paths
 		if (!$this->isAdmin && !empty($this->filemounts))
 		{
 			$objFiles = \FilesModel::findMultipleByUuids($this->filemounts);

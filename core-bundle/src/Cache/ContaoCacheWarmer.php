@@ -13,8 +13,8 @@ namespace Contao\CoreBundle\Cache;
 use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\Config\ResourceFinderInterface;
+use Contao\CoreBundle\ContaoFrameworkInterface;
 use Contao\DcaExtractor;
 use Contao\PageModel;
 use Doctrine\DBAL\Driver\Connection;
@@ -29,6 +29,8 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
  * Generates the Contao cache during cache warmup.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @internal
  */
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
@@ -38,7 +40,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private $filesystem;
 
     /**
-     * @var ResourceFinder
+     * @var ResourceFinderInterface
      */
     private $finder;
 
@@ -58,27 +60,27 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private $connection;
 
     /**
-     * @var ContaoFramework
+     * @var ContaoFrameworkInterface
      */
     private $framework;
 
     /**
      * Constructor.
      *
-     * @param Filesystem      $filesystem The filesystem object
-     * @param ResourceFinder  $finder     The resource finder object
-     * @param FileLocator     $locator    The file locator
-     * @param string          $rootDir    The root directory
-     * @param Connection      $connection The Doctrine connection
-     * @param ContaoFramework $framework  The Contao framework
+     * @param Filesystem               $filesystem The filesystem object
+     * @param ResourceFinderInterface  $finder     The resource finder object
+     * @param FileLocator              $locator    The file locator
+     * @param string                   $rootDir    The root directory
+     * @param Connection               $connection The Doctrine connection
+     * @param ContaoFrameworkInterface $framework  The framework service
      */
     public function __construct(
         Filesystem $filesystem,
-        ResourceFinder $finder,
+        ResourceFinderInterface $finder,
         FileLocator $locator,
         $rootDir,
         Connection $connection,
-        ContaoFramework $framework
+        ContaoFrameworkInterface $framework
     ) {
         $this->filesystem = $filesystem;
         $this->finder     = $finder;

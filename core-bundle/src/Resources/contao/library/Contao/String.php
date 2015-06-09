@@ -84,9 +84,11 @@ class String
 			break;
 		}
 
-		// Backwards compatibility
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strEllipsis === true)
 		{
+			trigger_error('Passing "true" as third argument to String::substr() has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.', E_USER_DEPRECATED);
+
 			$strEllipsis = ' …';
 		}
 
@@ -628,6 +630,30 @@ class String
 		}
 
 		return $return;
+	}
+
+
+	/**
+	 * Sanitize a file name
+	 *
+	 * @param string $strName The file name
+	 *
+	 * @return string The sanitized file name
+	 */
+	public static function sanitizeFileName($strName)
+	{
+		// Remove invisible control characters and unused code points
+		$strName = preg_replace('/[\pC]/u', '', $strName);
+
+		if ($strName === null)
+		{
+			throw new \InvalidArgumentException('The file name could not be sanitzied');
+		}
+
+		// Remove special characters not supported on e.g. Windows
+		$strName = str_replace(array('\\', '/', ':', '*', '?', '"', '<', '>', '|'), '-', $strName);
+
+		return $strName;
 	}
 
 

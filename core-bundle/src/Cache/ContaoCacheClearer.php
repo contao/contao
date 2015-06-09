@@ -17,6 +17,8 @@ use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
  * Removes the Contao cache directory during cache clear.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @internal
  */
 class ContaoCacheClearer implements CacheClearerInterface
 {

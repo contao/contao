@@ -136,7 +136,7 @@ class ModuleSearch extends \Module
 				return;
 			}
 
-			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
+			$strCachePath = str_replace(TL_ROOT . '/', '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 			$arrResult = null;
 			$strChecksum = md5($strKeywords . $strQueryType . $intRootId . $blnFuzzy);

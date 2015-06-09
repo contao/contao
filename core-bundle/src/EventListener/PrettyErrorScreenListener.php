@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\String;
 use Contao\System;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -29,6 +28,8 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @internal
  */
 class PrettyErrorScreenListener
 {
@@ -38,7 +39,7 @@ class PrettyErrorScreenListener
     private $prettyErrorScreens;
 
     /**
-     * @var TwigEngine
+     * @var \Twig_Environment
      */
     private $twig;
 
@@ -66,11 +67,11 @@ class PrettyErrorScreenListener
     /**
      * Constructor.
      *
-     * @param bool          $prettyErrorScreens True to render the error screens
-     * @param TwigEngine    $twig               The twig rendering engine
-     * @param ConfigAdapter $config             The config adapter
+     * @param bool              $prettyErrorScreens True to render the error screens
+     * @param \Twig_Environment $twig               The twig environment
+     * @param ConfigAdapter     $config             The config adapter
      */
-    public function __construct($prettyErrorScreens, TwigEngine $twig, ConfigAdapter $config)
+    public function __construct($prettyErrorScreens, \Twig_Environment $twig, ConfigAdapter $config)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig               = $twig;
@@ -230,23 +231,18 @@ class PrettyErrorScreenListener
             return;
         }
 
-        $view = '@ContaoCore/Error/' . $template . '.html.twig';
-
-        if (!$this->twig->exists($view)) {
-            $event->setResponse($this->getErrorTemplate());
-
-            return;
-        }
-
+        $view       = '@ContaoCore/Error/' . $template . '.html.twig';
         $parameters = $this->getTemplateParameters($view, $statusCode, $event->getRequest()->getBasePath());
 
         if (null === $parameters) {
             $event->setResponse($this->getErrorTemplate());
-
-            return;
+        } else {
+            try {
+                $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
+            } catch (\Twig_Error $e) {
+                $event->setResponse($this->getErrorTemplate());
+            }
         }
-
-        $event->setResponse($this->twig->renderResponse($view, $parameters)->setStatusCode($statusCode));
     }
 
     /**
@@ -279,7 +275,7 @@ class PrettyErrorScreenListener
             'adminEmail' => '',
         ];
 
-        return $this->twig->renderResponse('@ContaoCore/Error/error.html.twig', $parameters)->setStatusCode(500);
+        return new Response($this->twig->render('@ContaoCore/Error/error.html.twig', $parameters), 500);
     }
 
     /**

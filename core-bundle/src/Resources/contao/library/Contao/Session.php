@@ -46,6 +46,12 @@ class Session
 	 */
 	private $session;
 
+	/**
+	 * Symfony session bag
+	 * @var AttributeBagInterface
+	 */
+	private $sessionBag;
+
 
 	/**
 	 * Get the session data
@@ -53,6 +59,7 @@ class Session
 	protected function __construct()
 	{
 		$this->session = \System::getContainer()->get('session');
+		$this->sessionBag = $this->session->getBag($this->getSessionBagKey());
 	}
 
 
@@ -89,10 +96,13 @@ class Session
 	{
 		trigger_error('Using Session::get() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
-		/** @var AttributeBagInterface $bag */
-		$bag = $this->session->getBag($this->getSessionBagKey());
+		// Map the referer (see #281)
+		if ($strKey == 'referer')
+		{
+			return $this->session->get('referer');
+		}
 
-		return $bag->get($strKey);
+		return $this->sessionBag->get($strKey);
 	}
 
 
@@ -106,10 +116,15 @@ class Session
 	{
 		trigger_error('Using Session::set() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
-		/** @var AttributeBagInterface $bag */
-		$bag = $this->session->getBag($this->getSessionBagKey());
-
-		$bag->set($strKey, $varValue);
+		// Map the referer (see #281)
+		if ($strKey == 'referer')
+		{
+			$this->session->set('referer', $varValue);
+		}
+		else
+		{
+			$this->sessionBag->set($strKey, $varValue);
+		}
 	}
 
 
@@ -122,10 +137,15 @@ class Session
 	{
 		trigger_error('Using Session::remove() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
-		/** @var AttributeBagInterface $bag */
-		$bag = $this->session->getBag($this->getSessionBagKey());
-
-		$bag->remove($strKey);
+		// Map the referer (see #281)
+		if ($strKey == 'referer')
+		{
+			$this->session->remove('referer');
+		}
+		else
+		{
+			$this->sessionBag->remove($strKey);
+		}
 	}
 
 
@@ -138,10 +158,17 @@ class Session
 	{
 		trigger_error('Using Session::getData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
-		/** @var AttributeBagInterface $bag */
-		$bag = $this->session->getBag($this->getSessionBagKey());
+		$data = $this->sessionBag->all();
 
-		return $bag->all();
+		unset($data['referer']);
+
+		// Map the referer (see #281)
+		if ($this->session->has('referer'))
+		{
+			$data['referer'] = $this->session->get('referer');
+		}
+
+		return $data;
 	}
 
 
@@ -161,10 +188,14 @@ class Session
 			throw new \Exception('Array required to set session data');
 		}
 
-		/** @var AttributeBagInterface $bag */
-		$bag = $this->session->getBag($this->getSessionBagKey());
+		// Map the referer (see #281)
+		if (isset($data['referer']))
+		{
+			$this->session->set('referer', $data['referer']);
+			unset($data['referer']);
+		}
 
-		$bag->replace($arrData);
+		$this->sessionBag->replace($arrData);
 	}
 
 
@@ -189,12 +220,17 @@ class Session
 			throw new \Exception('Array or object required to append session data');
 		}
 
-		/** @var AttributeBagInterface $bag */
-		$bag = $this->session->getBag($this->getSessionBagKey());
-
 		foreach ($varData as $k=>$v)
 		{
-			$bag->set($k, $v);
+			// Map the referer (see #281)
+			if ($k == 'referer')
+			{
+				$this->session->set('referer', $v);
+			}
+			else
+			{
+				$this->sessionBag->set($k, $v);
+			}
 		}
 	}
 

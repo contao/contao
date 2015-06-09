@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Test\Security\Authentication;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Security\ContaoAuthenticator;
 use Contao\CoreBundle\Test\TestCase;
@@ -56,8 +57,13 @@ class ContaoAuthenticatorTest extends TestCase
      */
     public function testAuthenticateToken()
     {
+        $container = $this->mockContainerWithContaoScopes();
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
+
         $authenticator = new ContaoAuthenticator();
-        $provider      = $this->mockUserProvider();
+        $authenticator->setContainer($container);
+
+        $provider = $this->mockUserProvider();
 
         $this->assertInstanceOf(
             'Contao\\CoreBundle\\Security\\Authentication\\ContaoToken',
@@ -82,8 +88,23 @@ class ContaoAuthenticatorTest extends TestCase
      */
     public function testAuthenticateInvalidToken()
     {
+        $container = $this->mockContainerWithContaoScopes();
+        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
+
         $authenticator = new ContaoAuthenticator();
+        $authenticator->setContainer($container);
         $authenticator->authenticateToken(new PreAuthenticatedToken('foo', 'bar', 'console'), $this->mockUserProvider(), 'console');
+    }
+
+    /**
+     * Tests authenticating a token without the container being set.
+     *
+     * @expectedException \LogicException
+     */
+    public function testAuthenticateTokenWithoutContainer()
+    {
+        $authenticator = new ContaoAuthenticator();
+        $authenticator->authenticateToken(new AnonymousToken('frontend', 'anon.'), $this->mockUserProvider(), 'frontend');
     }
 
     /**
