@@ -182,8 +182,10 @@ class ImageTest extends TestCase
                     case 'path':
                         return 'dummy.jpg';
                     case 'width':
+                    case 'viewWidth':
                         return $arguments[2];
                     case 'height':
+                    case 'viewHeight':
                         return $arguments[3];
                     default:
                         return null;
@@ -628,8 +630,10 @@ class ImageTest extends TestCase
                     case 'path':
                         return 'dummy.jpg';
                     case 'width':
+                    case 'viewWidth':
                         return $arguments[2];
                     case 'height':
+                    case 'viewHeight':
                         return $arguments[3];
                     default:
                         return null;
@@ -814,8 +818,10 @@ class ImageTest extends TestCase
                     case 'path':
                         return 'dummy.jpg';
                     case 'width':
+                    case 'viewWidth':
                         return 100;
                     case 'height':
+                    case 'viewHeight':
                         return 100;
                     default:
                         return null;
@@ -944,8 +950,10 @@ class ImageTest extends TestCase
                     case 'mtime':
                         return $arguments[5];
                     case 'width':
+                    case 'viewWidth':
                         return 200;
                     case 'height':
+                    case 'viewHeight':
                         return 200;
                     default:
                         return null;
@@ -1257,6 +1265,146 @@ class ImageTest extends TestCase
     }
 
     /**
+     * Tests resizing an SVG image with percentage based dimensions.
+     */
+    public function testExecuteResizeSvgPercentageDimensions()
+    {
+        file_put_contents(
+            self::$rootDir . '/dummy.svg',
+            '<?xml version="1.0" encoding="utf-8"?>
+            <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+            <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                width="100%"
+                height="100%"
+                viewBox="100 100 400 200"
+            ></svg>'
+        );
+
+        $file = new \File('dummy.svg');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+        $imageObj->executeResize();
+
+        $resultFile = new \File($imageObj->getResizedPath());
+
+        $this->assertEquals(100, $resultFile->width);
+        $this->assertEquals(100, $resultFile->height);
+
+        $doc = new \DOMDocument();
+        $doc->loadXML($resultFile->getContent());
+
+        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+    }
+
+    /**
+     * Tests resizing an SVG image without dimensions.
+     */
+    public function testExecuteResizeSvgWithoutDimensions()
+    {
+        file_put_contents(
+            self::$rootDir . '/dummy.svg',
+            '<?xml version="1.0" encoding="utf-8"?>
+            <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+            <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="100 100 400 200"
+            ></svg>'
+        );
+
+        $file = new \File('dummy.svg');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+        $imageObj->executeResize();
+
+        $resultFile = new \File($imageObj->getResizedPath());
+
+        $this->assertEquals(100, $resultFile->width);
+        $this->assertEquals(100, $resultFile->height);
+
+        $doc = new \DOMDocument();
+        $doc->loadXML($resultFile->getContent());
+
+        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+    }
+
+    /**
+     * Tests resizing an SVG image without a view box.
+     */
+    public function testExecuteResizeSvgWithoutViewBox()
+    {
+        file_put_contents(
+            self::$rootDir . '/dummy.svg',
+            '<?xml version="1.0" encoding="utf-8"?>
+            <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+            <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                width="200px"
+                height="100px"
+            ></svg>'
+        );
+
+        $file = new \File('dummy.svg');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+        $imageObj->executeResize();
+
+        $resultFile = new \File($imageObj->getResizedPath());
+
+        $this->assertEquals(100, $resultFile->width);
+        $this->assertEquals(100, $resultFile->height);
+
+        $doc = new \DOMDocument();
+        $doc->loadXML($resultFile->getContent());
+
+        $this->assertEquals('0 0 200 100', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+    }
+
+    /**
+     * Tests resizing an SVG image without a view box and dimensions.
+     */
+    public function testExecuteResizeSvgWithoutViewBoxAndDimensions()
+    {
+        file_put_contents(
+            self::$rootDir . '/dummy.svg',
+            '<?xml version="1.0" encoding="utf-8"?>
+            <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+            <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+            ></svg>'
+        );
+
+        $file = new \File('dummy.svg');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+        $imageObj->executeResize();
+
+        $resultFile = new \File($imageObj->getResizedPath());
+
+        $this->assertEquals($file->path, $resultFile->path);
+    }
+
+    /**
      * Tests resizing an SVGZ image.
      */
     public function testExecuteResizeSvgz()
@@ -1356,9 +1504,25 @@ class ImageTest extends TestCase
             'No unit' => ['1234.5', 1235],
             'px'      => ['1234.5px', 1235],
             'em'      => ['1em', 16],
+            'ex'      => ['2ex', 16],
             'pt'      => ['12pt', 16],
-            'percent' => ['100%', 16],
+            'pc'      => ['1pc', 16],
+            'in'      => [(1 / 6) . 'in', 16],
+            'cm'      => [(2.54 / 6) . 'cm', 16],
+            'mm'      => [(25.4 / 6) . 'mm', 16],
             'invalid' => ['abc', 0],
         ];
+    }
+
+    /**
+     * Tests the getPixelValue() method deprecated percentage values.
+     */
+    public function testGetPixelValuePercentageDeprecated()
+    {
+        // Suppress deprecated error
+        $this->assertSame(16, @Image::getPixelValue('100%'));
+
+        $this->setExpectedException('PHPUnit_Framework_Error_Deprecated');
+        Image::getPixelValue('100%');
     }
 }
