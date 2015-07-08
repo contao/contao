@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="src/Resources/translations/messages.en.xlf">
+    <body>
+      <trans-unit id="1">
+        <source>install_tool</source>
+        <target>Contao install tool</target>
+      </trans-unit>
+      <trans-unit id="2">
+        <source>locked_headline</source>
+        <target>The install tool has been locked</target>
+      </trans-unit>
+      <trans-unit id="3">
+        <source>locked_explanation</source>
+        <target>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, open the local configuration file and set &lt;code&gt;installCount&lt;/code&gt; to &lt;code&gt;0&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="4">
+        <source>file_permissions_headline</source>
+        <target>File permission error</target>
+      </trans-unit>
+      <trans-unit id="5">
+        <source>php_not_allowed_to_write_files</source>
+        <target>PHP is not allowed to write files!</target>
+      </trans-unit>
+      <trans-unit id="6">
+        <source>file_permissions_explanation</source>
+        <target>Your server does not support file access via PHP; most likely PHP runs as Apache module under a different user. Please contact your server administrator and ask him to fix the problem. &lt;strong&gt;Do not attempt to fix this yourself&lt;/strong&gt; by making files and folders writable for everyone!</target>
+      </trans-unit>
+      <trans-unit id="7">
+        <source>accept_license</source>
+        <target>Accept license</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

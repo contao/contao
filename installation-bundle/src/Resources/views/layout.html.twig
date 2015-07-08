@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+
+  <meta charset="utf-8">
+  <title>Contao Open Source CMS</title>
+  <meta name="generator" content="Contao Open Source CMS">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+  <link rel="stylesheet" href="{{ asset('assets/stylect/css/stylect.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('system/themes/flexible/basic.css') }}">
+  <link rel="stylesheet" href="{{ asset('system/themes/flexible/install.css') }}">
+  <!--[if IE]><link rel="stylesheet" href="{{ asset('system/themes/flexible/iefixes.css') }}"><![endif]-->
+
+  <script src="{{ asset('assets/mootools/js/mootools.min.js') }}"></script>
+  <script src="{{ asset('assets/stylect/js/stylect.min.js') }}"></script>
+  <script src="{{ asset('assets/contao/js/mootao.min.js') }}"></script>
+  <script src="{{ asset('assets/contao/js/core.min.js') }}"></script>
+  <script src="{{ asset('system/themes/flexible/hover.js') }}"></script>
+  <!--[if lt IE 9]><script src="{{ asset('assets/html5shiv/js/html5shiv.min.js') }}"></script><![endif]-->
+
+</head>
+<body class="{{ ua }}">
+
+  <div id="header">
+    <h1>{{ 'install_tool'|trans }}</h1>
+  </div>
+
+  <div id="container">
+    <div id="main">
+      {% block main %}{% endblock %}
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+{% extends "layout.html.twig" %}
+
+{% block main %}
+  <fieldset class="tl_tbox nolegend">
+    <h3>{{ 'file_permissions_headline'|trans }}</h3>
+    <p class="tl_error">{{ 'php_not_allowed_to_write_files'|trans }}</p>
+    <p>{{ 'file_permissions_explanation'|trans|raw }}</p>
+  </fieldset>
+{% endblock %}
