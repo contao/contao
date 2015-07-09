@@ -16,6 +16,7 @@ use Contao\InstallationBundle\Translation\LanguageResolver;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator;
 
@@ -47,6 +48,11 @@ class ContainerFactory
         $requestStack = new RequestStack();
         $requestStack->push($request);
         $container->set('request_stack', $requestStack);
+
+        // Start the session
+        $session = new Session();
+        $session->start();
+        $container->set('session', $session);
 
         // Resolve the locale
         $translationsDir = __DIR__ . '/../Resources/translations';

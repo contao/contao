@@ -55,24 +55,10 @@ class InstallTool
     }
 
     /**
-     * Returns true if the license has not been accepted yet.
-     *
-     * @return bool True if the license has not been accepted yet
-     */
-    public function shouldAcceptLicense()
-    {
-        return !Config::get('licenseAccepted');
-    }
-
-    /**
      * Creates the local configuration files if they do not yet exist.
      */
     public function createLocalConfigurationFiles()
     {
-        if (Config::get('installPassword')) {
-            return;
-        }
-
         // The localconfig.php file is created by the Config class
         foreach (['dcaconfig', 'initconfig', 'langconfig'] as $file) {
             if (!file_exists($this->rootDir . '/../system/config/' . $file . '.php')) {
@@ -82,5 +68,15 @@ class InstallTool
                 );
             }
         }
+    }
+
+    /**
+     * Returns true if the license has not been accepted yet.
+     *
+     * @return bool True if the license has not been accepted yet
+     */
+    public function shouldAcceptLicense()
+    {
+        return !Config::get('licenseAccepted');
     }
 }

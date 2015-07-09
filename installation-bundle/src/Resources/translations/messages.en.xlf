@@ -7,28 +7,80 @@
         <target>Contao install tool</target>
       </trans-unit>
       <trans-unit id="2">
+        <source>an_error_occurred</source>
+        <target>An error occurred</target>
+      </trans-unit>
+      <trans-unit id="3">
         <source>locked_headline</source>
         <target>The install tool has been locked</target>
       </trans-unit>
-      <trans-unit id="3">
+      <trans-unit id="4">
         <source>locked_explanation</source>
         <target>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, open the local configuration file and set &lt;code&gt;installCount&lt;/code&gt; to &lt;code&gt;0&lt;/code&gt;.</target>
       </trans-unit>
-      <trans-unit id="4">
-        <source>file_permissions_headline</source>
-        <target>File permission error</target>
-      </trans-unit>
       <trans-unit id="5">
-        <source>php_not_allowed_to_write_files</source>
-        <target>PHP is not allowed to write files!</target>
+        <source>file_permissions_headline</source>
+        <target>PHP is not allowed to write files</target>
       </trans-unit>
       <trans-unit id="6">
         <source>file_permissions_explanation</source>
-        <target>Your server does not support file access via PHP; most likely PHP runs as Apache module under a different user. Please contact your server administrator and ask him to fix the problem. &lt;strong&gt;Do not attempt to fix this yourself&lt;/strong&gt; by making files and folders writable for everyone!</target>
+        <target>Your server does not support file access via PHP; most likely PHP runs as Apache module under a different user. Please contact your server administrator and ask him to fix the problem.</target>
       </trans-unit>
       <trans-unit id="7">
+        <source>file_permissions_warning</source>
+        <target>&lt;strong&gt;Do not attempt to fix this yourself by making files and folders writable for everyone!&lt;/strong&gt;</target>
+      </trans-unit>
+      <trans-unit id="8">
         <source>accept_license</source>
         <target>Accept license</target>
+      </trans-unit>
+      <trans-unit id="9">
+        <source>set_password</source>
+        <target>Install tool password</target>
+      </trans-unit>
+      <trans-unit id="10">
+        <source>set_password_hint</source>
+        <target>Please enter a password to prevent unauthorized access!</target>
+      </trans-unit>
+      <trans-unit id="11">
+        <source>password</source>
+        <target>Password</target>
+      </trans-unit>
+      <trans-unit id="12">
+        <source>confirmation</source>
+        <target>Confirmation</target>
+      </trans-unit>
+      <trans-unit id="13">
+        <source>save_password</source>
+        <target>Save password</target>
+      </trans-unit>
+      <trans-unit id="14">
+        <source>password_confirmation_mismatch</source>
+        <target>The password does not match the confirmation.</target>
+      </trans-unit>
+      <trans-unit id="15">
+        <source>password_too_short</source>
+        <target>The password should be at least %d characters long.</target>
+      </trans-unit>
+      <trans-unit id="16">
+        <source>login</source>
+        <target>Install tool login</target>
+      </trans-unit>
+      <trans-unit id="17">
+        <source>login_explanation</source>
+        <target>Please enter the install tool password. The install tool password is not the same as the Contao back end password.</target>
+      </trans-unit>
+      <trans-unit id="18">
+        <source>allow_cookies</source>
+        <target>You have to allow cookies to use Contao.</target>
+      </trans-unit>
+      <trans-unit id="19">
+        <source>login</source>
+        <target>Login</target>
+      </trans-unit>
+      <trans-unit id="20">
+        <source>invalid_password</source>
+        <target>Invalid password!</target>
       </trans-unit>
     </body>
   </file>

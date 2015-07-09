@@ -1,0 +1,25 @@
+{% extends "layout.html.twig" %}
+
+{% block main %}
+  <fieldset class="tl_tbox nolegend">
+    <h3>{{ 'login'|trans }}</h3>
+    <p class="tl_info" id="cookies">{{ 'allow_cookies'|trans }}</p>
+    <p>{{ 'login_explanation'|trans }}</p>
+    <form method="post">
+      <div class="tl_formbody">
+        <input type="hidden" name="FORM_SUBMIT" value="tl_login">
+        <h4><label for="password">{{ 'password'|trans }}</label></h4>
+        {% if error %}
+          <p class="tl_error">{{ error }}</p>
+        {% endif %}
+        <input type="password" name="password" id="password" autocomplete="off" class="tl_text" value="">
+      </div>
+      <div class="tl_formbody_submit">
+        <div class="tl_submit_container">
+          <button type="submit" class="tl_submit">{{ 'login'|trans }}</button>
+        </div>
+      </div>
+    </form>
+  </fieldset>
+  <script>navigator.cookieEnabled && $('cookies').destroy()</script>
+{% endblock %}

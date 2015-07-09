@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\InstallationBundle\ClassLoader;
+namespace Contao\InstallationBundle;
 
 /**
  * Autoloads the Contao library classes.
@@ -22,7 +22,7 @@ class LibraryLoader
      */
     public static function register()
     {
-        spl_autoload_register('Contao\\InstallationBundle\\ClassLoader\\LibraryLoader::load');
+        spl_autoload_register('Contao\\InstallationBundle\\LibraryLoader::load');
     }
 
     /**
