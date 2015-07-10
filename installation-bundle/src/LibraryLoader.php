@@ -18,11 +18,28 @@ namespace Contao\InstallationBundle;
 class LibraryLoader
 {
     /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
+     * Constructor.
+     *
+     * @param string $rootDir The root directory
+     */
+    public function __construct($rootDir)
+    {
+        $this->rootDir = $rootDir;
+
+        define('TL_ROOT', dirname($rootDir));
+    }
+
+    /**
      * Registers the autoloader.
      */
-    public static function register()
+    public function register()
     {
-        spl_autoload_register('Contao\\InstallationBundle\\LibraryLoader::load');
+        spl_autoload_register([$this, 'load']);
     }
 
     /**
@@ -30,20 +47,21 @@ class LibraryLoader
      *
      * @param string $class The class name
      */
-    public static function load($class)
+    public function load($class)
     {
         if (class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false)) {
             return;
         }
 
-        $class    = str_replace('Contao\\', '', $class);
-        $classDir = TL_ROOT . '/vendor/contao/core-bundle/src/Resources/contao/library/Contao';
+        $class = str_replace('Contao\\', '', $class);
+        $dir   = $this->rootDir . '/../vendor/contao/core-bundle/src/Resources/contao/library/Contao';
+        $file  = str_replace('\\', '/', $class) . '.php';
 
-        if (!file_exists($classDir . '/' . $class . '.php')) {
+        if (!file_exists($dir . '/' . $file)) {
             return;
         }
 
-        include $classDir . '/' . $class . '.php';
+        include $dir . '/' . $file;
         class_alias('Contao\\' . $class, $class);
     }
 }

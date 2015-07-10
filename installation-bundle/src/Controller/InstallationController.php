@@ -10,63 +10,46 @@
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\Config;
 use Contao\Encryption;
+use Contao\InstallationBundle\Config\ParameterDumper;
+use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\InstallTool;
 use Contao\InstallationBundle\InstallToolUser;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\Translator;
 
 /**
  * Handles the installation process.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InstallationController
+class InstallationController extends ContainerAware
 {
-    /**
-     * @var \Twig_Environment
-     */
-    private $twig;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
     /**
      * @var InstallToolUser
      */
     private $user;
 
     /**
-     * @var Translator
+     * @var InstallTool
      */
-    private $translator;
+    private $installTool;
 
     /**
-     * @var string
+     * @var array
      */
-    private $rootDir;
+    private $context = [];
 
     /**
      * Constructor.
      *
-     * @param \Twig_Environment $twig         The Twig environment
-     * @param RequestStack      $requestStack The request stack
-     * @param InstallToolUser   $user         The user object
-     * @param Translator        $translator   The translator
-     * @param string            $rootDir      The root directory
+     * @param InstallToolUser $user        The user object
+     * @param InstallTool     $installTool The install tool object
      */
-    public function __construct(\Twig_Environment $twig, RequestStack $requestStack, InstallToolUser $user, Translator $translator, $rootDir)
-    {
-        $this->twig         = $twig;
-        $this->requestStack = $requestStack;
-        $this->user         = $user;
-        $this->translator   = $translator;
-        $this->rootDir      = $rootDir;
+    public function __construct(InstallToolUser $user, InstallTool $installTool) {
+        $this->user        = $user;
+        $this->installTool = $installTool;
     }
 
     /**
@@ -76,23 +59,21 @@ class InstallationController
      */
     public function indexAction()
     {
-        $installTool = new InstallTool($this->rootDir);
-
-        if ($installTool->isLocked()) {
+        if ($this->installTool->isLocked()) {
             return $this->render('locked.html.twig');
         }
 
-        if (!$installTool->canWriteFiles()) {
+        if (!$this->installTool->canWriteFiles()) {
             return $this->render('not_writable.html.twig');
         }
 
-        if ($installTool->shouldAcceptLicense()) {
+        if ($this->installTool->shouldAcceptLicense()) {
             return $this->acceptLicense();
         }
 
-        $installTool->createLocalConfigurationFiles();
+        $this->installTool->createLocalConfigurationFiles();
 
-        if ('' === Config::get('installPassword')) {
+        if ('' === $this->installTool->getConfig('installPassword')) {
             return $this->setPassword();
         }
 
@@ -100,20 +81,19 @@ class InstallationController
             return $this->login();
         }
 
-        return $this->render('layout.html.twig');
-    }
+        if (!$this->installTool->canConnectToDatabase($this->container->getParameter('database_name'))) {
+            return $this->setUpDatabaseConnection();
+        }
 
-    /**
-     * Renders a template.
-     *
-     * @param string $name    The template name
-     * @param array  $context The context array
-     *
-     * @return Response The response object
-     */
-    private function render($name, $context = [])
-    {
-        return new Response($this->twig->render($name, $context));
+        if (null !== ($response = $this->runDatabaseUpdates())) {
+            return $response;
+        }
+
+        // adjustDatabaseTables()
+        // importExampleWebsite()
+        // createAdminUser()
+
+        return $this->render('main.html.twig', $this->context);
     }
 
     /**
@@ -123,13 +103,13 @@ class InstallationController
      */
     private function acceptLicense()
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if ('tl_license' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('license.html.twig');
         }
 
-        $this->persistContaoParameter('licenseAccepted', true);
+        $this->installTool->persistConfig('licenseAccepted', true);
 
         return $this->getRedirectResponse();
     }
@@ -141,7 +121,7 @@ class InstallationController
      */
     private function setPassword()
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if ('tl_password' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('password.html.twig');
@@ -153,18 +133,20 @@ class InstallationController
         // The passwords do not match
         if ($password !== $confirmation) {
             return $this->render('password.html.twig', [
-                'error' => $this->translator->trans('password_confirmation_mismatch'),
+                'error' => $this->trans('password_confirmation_mismatch'),
             ]);
         }
+
+        $minlength = $this->installTool->getConfig('minPasswordLength');
 
         // The passwords is too short
-        if (strlen(utf8_decode($password)) < Config::get('minPasswordLength')) {
+        if (strlen(utf8_decode($password)) < $minlength) {
             return $this->render('password.html.twig', [
-                'error' => sprintf($this->translator->trans('password_too_short'), Config::get('minPasswordLength')),
+                'error' => sprintf($this->trans('password_too_short'), $minlength),
             ]);
         }
 
-        $this->persistContaoParameter('installPassword', Encryption::hash($password));
+        $this->installTool->persistConfig('installPassword', Encryption::hash($password));
         $this->user->setAuthenticated(true);
 
         return $this->getRedirectResponse();
@@ -177,24 +159,115 @@ class InstallationController
      */
     private function login()
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if ('tl_login' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('login.html.twig');
         }
 
-        if (!Encryption::verify($request->request->get('password'), Config::get('installPassword'))) {
-            $this->persistContaoParameter('installCount', Config::get('installCount') + 1);
+        $verified = Encryption::verify(
+            $request->request->get('password'),
+            $this->installTool->getConfig('installPassword')
+        );
+
+        if (!$verified) {
+            $this->installTool->increaseLoginCount();
 
             return $this->render('login.html.twig', [
-                'error' => $this->translator->trans('invalid_password'),
+                'error' => $this->trans('invalid_password'),
             ]);
         }
 
-        $this->persistContaoParameter('installCount', 0);
+        $this->installTool->resetLoginCount();
         $this->user->setAuthenticated(true);
 
         return $this->getRedirectResponse();
+    }
+
+    /**
+     * Sets up the database connection.
+     *
+     * @return Response|null The response object
+     */
+    private function setUpDatabaseConnection()
+    {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        $parameters['parameters'] = [
+            'database_host'     => $this->container->getParameter('database_host'),
+            'database_port'     => $this->container->getParameter('database_port'),
+            'database_name'     => $this->container->getParameter('database_name'),
+            'database_user'     => $this->container->getParameter('database_user'),
+            'database_password' => $this->container->getParameter('database_password'),
+        ];
+
+        if ('tl_database_login' !== $request->request->get('FORM_SUBMIT')) {
+            return $this->render('database.html.twig', $parameters);
+        }
+
+        $parameters['parameters'] = [
+            'database_host'     => $request->request->get('dbHost'),
+            'database_port'     => $request->request->get('dbPort'),
+            'database_name'     => $request->request->get('dbName'),
+            'database_user'     => $request->request->get('dbUser'),
+            'database_password' => $this->container->getParameter('database_password'),
+        ];
+
+        if ('*****' !== $request->request->get('dbPassword')) {
+            $parameters['parameters']['database_password'] = $request->request->get('dbPassword');
+        }
+
+        $this->installTool->setConnection(ConnectionFactory::create($parameters));
+
+        if (!$this->installTool->canConnectToDatabase($parameters['parameters']['database_name'])) {
+            return $this->render('database.html.twig', array_merge(
+                $parameters,
+                ['database_error' => $this->trans('database_could_not_connect')]
+            ));
+        }
+
+        $dumper = new ParameterDumper($this->container->getParameter('kernel.root_dir'));
+        $dumper->setParameters($parameters);
+        $dumper->dump();
+
+        return $this->getRedirectResponse();
+    }
+
+    /**
+     * Runs the database updates.
+     *
+     * @return Response|null
+     */
+    private function runDatabaseUpdates()
+    {
+        if ($this->installTool->isFreshInstallation()) {
+            return null;
+        }
+    }
+
+    /**
+     * Renders a template.
+     *
+     * @param string $name    The template name
+     * @param array  $context The context array
+     *
+     * @return Response The response object
+     */
+    private function render($name, $context = [])
+    {
+        return new Response($this->container->get('twig')->render($name, $context));
+    }
+
+    /**
+     * Translate a key.
+     *
+     * @param string $key The translation key
+     *
+     * @return string The translated string
+     */
+    private function trans($key)
+    {
+        return $this->container->get('translator.default')->trans($key);
     }
 
     /**
@@ -204,19 +277,6 @@ class InstallationController
      */
     private function getRedirectResponse()
     {
-        return new RedirectResponse($this->requestStack->getCurrentRequest()->getRequestUri());
-    }
-
-    /**
-     * Persists a Contao configuration parameters.
-     *
-     * @param string $key   The key
-     * @param mixed  $value The value
-     */
-    private function persistContaoParameter($key, $value)
-    {
-        $config = Config::getInstance();
-        $config->persist($key, $value);
-        $config->save();
+        return new RedirectResponse($this->container->get('request_stack')->getCurrentRequest()->getRequestUri());
     }
 }

@@ -25,6 +25,11 @@ class InstallToolUser
     private $session;
 
     /**
+     * @var int
+     */
+    private $timeout = 300;
+
+    /**
      * Constructor.
      *
      * @param Session $session The session object
@@ -41,7 +46,14 @@ class InstallToolUser
      */
     public function isAuthenticated()
     {
-        return $this->session->has('_auth_until') && $this->session->get('_auth_until') >= time();
+        if (!$this->session->has('_auth_until') || $this->session->get('_auth_until') < time()) {
+            return false;
+        }
+
+        // Update the expiration date
+        $this->session->set('_auth_until', time() + $this->timeout);
+
+        return true;
     }
 
     /**
@@ -52,7 +64,7 @@ class InstallToolUser
     public function setAuthenticated($authenticated)
     {
         if (true === $authenticated) {
-            $this->session->set('_auth_until', time() + 300);
+            $this->session->set('_auth_until', time() + $this->timeout);
         } else {
             $this->session->remove('_auth_until');
         }

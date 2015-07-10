@@ -40,7 +40,7 @@
       </trans-unit>
       <trans-unit id="10">
         <source>set_password_hint</source>
-        <target>Please enter a password to prevent unauthorized access!</target>
+        <target>Please enter a password to prevent unauthorized access.</target>
       </trans-unit>
       <trans-unit id="11">
         <source>password</source>
@@ -81,6 +81,46 @@
       <trans-unit id="20">
         <source>invalid_password</source>
         <target>Invalid password!</target>
+      </trans-unit>
+      <trans-unit id="21">
+        <source>database_connection</source>
+        <target>Database connection</target>
+      </trans-unit>
+      <trans-unit id="22">
+        <source>database_connected</source>
+        <target>Database connection established.</target>
+      </trans-unit>
+      <trans-unit id="23">
+        <source>database_could_not_connect</source>
+        <target>Could not connect to the database!</target>
+      </trans-unit>
+      <trans-unit id="24">
+        <source>database_connection_explain</source>
+        <target>Please enter your database connection parameters.</target>
+      </trans-unit>
+      <trans-unit id="25">
+        <source>database_host</source>
+        <target>Host</target>
+      </trans-unit>
+      <trans-unit id="26">
+        <source>database_port</source>
+        <target>Port number</target>
+      </trans-unit>
+      <trans-unit id="27">
+        <source>database_user</source>
+        <target>Username</target>
+      </trans-unit>
+      <trans-unit id="28">
+        <source>database_password</source>
+        <target>Password</target>
+      </trans-unit>
+      <trans-unit id="29">
+        <source>database_name</source>
+        <target>Database name</target>
+      </trans-unit>
+      <trans-unit id="30">
+        <source>save_settings</source>
+        <target>Save settings</target>
       </trans-unit>
     </body>
   </file>
