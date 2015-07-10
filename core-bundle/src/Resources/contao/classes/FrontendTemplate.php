@@ -185,7 +185,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function sections($key=null, $template=null)
 	{
-		if (empty(array_filter($this->sections)))
+		if (!array_filter($this->sections))
 		{
 			return;
 		}
