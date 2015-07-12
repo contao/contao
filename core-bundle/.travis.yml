@@ -1,27 +1,34 @@
 language: php
 
 php:
-    - "5.4"
-    - "5.5"
-    - "5.6"
+  - "5.4"
+  - "5.5"
+  - "5.6"
 
-    # FIXME: Cannot use Contao\String as String because 'String' is a special class name
-    #- "nightly"
+  # FIXME: Cannot use Contao\String as String because 'String' is a special class name
+  #- "nightly"
 
-    # FIXME: Class Mock_Kernel_1fff02ed contains abstract method (registerBundles) and must therefore be declared
-    # abstract or implement the remaining methods
-    #- "hhvm"
+  # FIXME: Class Mock_Kernel_1fff02ed contains abstract method (registerBundles) and must therefore be declared
+  # abstract or implement the remaining methods
+  #- "hhvm"
 
 sudo: false
 
+matrix:
+  include:
+    - php: 5.4
+      env: dependencies=highest
+    - php: 5.6
+      env: dependencies=lowest
+
 before_install:
-    - composer selfupdate
+  - composer selfupdate
 
 before_script:
-    - composer install --prefer-source
+  - composer install --prefer-source
 
 script:
-    - ./vendor/bin/phpunit --testsuite latest --coverage-clover=coverage.clover
+  - ./vendor/bin/phpunit --testsuite latest --coverage-clover=coverage.clover
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
