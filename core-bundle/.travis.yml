@@ -27,9 +27,6 @@ before_install:
   - if [ "$dependencies" = "lowest" ]; then composer update --prefer-lowest -n; fi;
   - if [ "$dependencies" = "highest" ]; then composer update -n; fi;
 
-before_script:
-  - composer install --prefer-source
-
 script:
   - ./vendor/bin/phpunit --testsuite latest --coverage-clover=coverage.clover
 

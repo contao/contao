@@ -12,9 +12,11 @@
     "require": {
         "php": ">=5.4.0",
         "symfony/framework-bundle": "~2.7",
-        "symfony/swiftmailer-bundle": "~2.3",
         "symfony/console": "~2.7",
+        "symfony/filesystem": "~2.7",
         "symfony/finder": "~2.7",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/yaml": "~2.7",
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
         "twig/twig": "~1.18",
         "doctrine/doctrine-bundle": "~1.4",
