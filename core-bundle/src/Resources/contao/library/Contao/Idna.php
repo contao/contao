@@ -80,7 +80,7 @@ class Idna
 		}
 
 		$arrChunks = explode('@', $strEmail);
-		$strHost   = array_pop($arrChunks);
+		$strHost = array_pop($arrChunks);
 
 		return implode('@', $arrChunks) . '@' . static::encode($strHost);
 	}

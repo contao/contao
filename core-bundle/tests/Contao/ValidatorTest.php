@@ -20,15 +20,29 @@ use Contao\Validator;
  */
 class ValidatorTest extends TestCase
 {
+
     /**
-     * Data provider for Validator::isEmail().
+     * Test the isEmail() method.
      *
-     * @return array
+     * @param string $email    The email
+     * @param bool   $expected The expected result
+     *
+     * @dataProvider emailProvider
+     */
+    public function testEmail($email, $expected)
+    {
+        $this->assertEquals($expected, Validator::isEmail($email), 'Original: ' . $email . ' idna: ' . \Contao\Idna::encodeEmail($email));
+    }
+
+    /**
+     * Provides the data for the testEmail() method.
+     *
+     * @return array The data
      */
     public function emailProvider()
     {
         return [
-            // Valid ones in all ugly permutations but allowed accordingly to various RFCs.
+            // Valid ones in all ugly permutations but allowed accordingly to various RFCs
             ['niceandsimple@example.com', true],
             ['very.common@example.com', true],
             ['a.little.lengthy.but.fine@dept.example.com', true],
@@ -51,7 +65,7 @@ class ValidatorTest extends TestCase
             ['test@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', true],
             ['test+reference@example.com', true],
 
-            // Invalid ones in even more uglier permutations and all not allowed by RFCs.
+            // Invalid ones in even more uglier permutations and all not allowed by RFCs
             ['test..child@example.com', false],
             ['test@sub.-example.com', false],
             ['test@_smtp_.example.com', false],
@@ -79,19 +93,5 @@ class ValidatorTest extends TestCase
             ['@', false],
             ['test@', false],
         ];
-    }
-
-    /**
-     * Test Validator::isEmail().
-     *
-     * @param string $email    The email to test.
-     *
-     * @param bool   $expected The expected result.
-     *
-     * @dataProvider emailProvider
-     */
-    public function testEmail($email, $expected)
-    {
-        $this->assertEquals($expected, Validator::isEmail($email), 'Original: ' . $email . ' idna: ' . \Contao\Idna::encodeEmail($email));
     }
 }
