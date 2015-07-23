@@ -567,7 +567,7 @@ class PageRegular extends \Frontend
 
 							if ($objFile !== null)
 							{
-								$GLOBALS['TL_USER_CSS'][] = $objFile->path . '|' . $media . '|static|' . filemtime(TL_ROOT . '/' . $objFile->path);
+								$GLOBALS['TL_USER_CSS'][] = $objFile->path . '|' . $media . '|static|' . $objFile->tstamp;
 							}
 						}
 						else

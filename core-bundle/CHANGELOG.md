@@ -5,6 +5,9 @@ Version 4.0.1 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Correctly handle files in the `/web` directory in the Combiner (see #300). 
+
+### Fixed
 Fix the argument order of the `ondelete_callback` (see #301).
 
 ### Fixed

@@ -777,7 +777,7 @@ abstract class Controller extends \System
 
 				if ($options->static)
 				{
-					$objCombiner->add($stylesheet, filemtime(TL_ROOT . '/' . $stylesheet), $options->media);
+					$objCombiner->add($stylesheet, null, $options->media);
 				}
 				else
 				{
@@ -795,11 +795,6 @@ abstract class Controller extends \System
 
 				if ($options->static)
 				{
-					if ($options->mtime === null)
-					{
-						$options->mtime = filemtime(TL_ROOT . '/' . $stylesheet);
-					}
-
 					$objCombiner->add($stylesheet, $options->mtime, $options->media);
 				}
 				else
@@ -832,11 +827,11 @@ abstract class Controller extends \System
 				{
 					if ($options->async)
 					{
-						$objCombinerAsync->add($javascript, filemtime(TL_ROOT . '/' . $javascript));
+						$objCombinerAsync->add($javascript);
 					}
 					else
 					{
-						$objCombiner->add($javascript, filemtime(TL_ROOT . '/' . $javascript));
+						$objCombiner->add($javascript);
 					}
 				}
 				else
