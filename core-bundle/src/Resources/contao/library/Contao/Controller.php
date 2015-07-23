@@ -777,7 +777,7 @@ abstract class Controller extends \System
 
 				if ($options->static)
 				{
-					$objCombiner->add($stylesheet, null, $options->media);
+					$objCombiner->add($stylesheet, $options->mtime, $options->media);
 				}
 				else
 				{
@@ -827,11 +827,11 @@ abstract class Controller extends \System
 				{
 					if ($options->async)
 					{
-						$objCombinerAsync->add($javascript);
+						$objCombinerAsync->add($javascript, $options->mtime);
 					}
 					else
 					{
-						$objCombiner->add($javascript);
+						$objCombiner->add($javascript, $options->mtime);
 					}
 				}
 				else
