@@ -31,7 +31,7 @@ class ContentText extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$this->text = \String::toHtml5($this->text);
+		$this->text = \StringUtil::toHtml5($this->text);
 
 		// Add the static files URL to images
 		if (TL_FILES_URL != '')
@@ -40,7 +40,7 @@ class ContentText extends \ContentElement
 			$this->text = str_replace(' src="' . $path, ' src="' . TL_FILES_URL . $path, $this->text);
 		}
 
-		$this->Template->text = \String::encodeEmail($this->text);
+		$this->Template->text = \StringUtil::encodeEmail($this->text);
 		$this->Template->addImage = false;
 
 		// Add an image

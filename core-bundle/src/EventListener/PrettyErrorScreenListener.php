@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\String;
+use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -293,7 +293,7 @@ class PrettyErrorScreenListener
             return null;
         }
 
-        $encoded = String::encodeEmail($this->config->get('adminEmail'));
+        $encoded = StringUtil::encodeEmail($this->config->get('adminEmail'));
 
         return [
             'statusCode' => $statusCode,

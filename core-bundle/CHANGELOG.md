@@ -5,6 +5,9 @@ Version 4.0.1 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Add a `StringUtil` class to restore PHP 7 compatibility (see #309).
+
+### Fixed
 Correctly handle files in the `/web` directory in the Combiner (see #300). 
 
 ### Fixed

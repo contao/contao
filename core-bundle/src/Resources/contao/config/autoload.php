@@ -150,6 +150,7 @@ ClassLoader::addClasses(array
 	'Contao\Session'                   => 'vendor/contao/core-bundle/src/Resources/contao/library/Contao/Session.php',
 	'Contao\SortedIterator'            => 'vendor/contao/core-bundle/src/Resources/contao/library/Contao/SortedIterator.php',
 	'Contao\String'                    => 'vendor/contao/core-bundle/src/Resources/contao/library/Contao/String.php',
+	'Contao\StringUtil'                => 'vendor/contao/core-bundle/src/Resources/contao/library/Contao/StringUtil.php',
 	'Contao\System'                    => 'vendor/contao/core-bundle/src/Resources/contao/library/Contao/System.php',
 	'Contao\Template'                  => 'vendor/contao/core-bundle/src/Resources/contao/library/Contao/Template.php',
 	'Contao\TemplateInheritance'       => 'vendor/contao/core-bundle/src/Resources/contao/library/Contao/TemplateInheritance.php',
