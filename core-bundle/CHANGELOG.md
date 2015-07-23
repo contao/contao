@@ -5,6 +5,9 @@ Version 4.0.1 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Fix the argument order of the `ondelete_callback` (see #301).
+
+### Fixed
 Correctly apply the class `active` in the pagination template (see #315).
 
 ### Fixed
@@ -223,9 +226,6 @@ Support scopes in the `Message` class (see contao/core#6558).
 
 ### Changed
 Use `<fieldset>` and `<legend>` in the newsletter channel selection menu.
-
-### Changed
-Always pass the DC object as first argument in the ondelete_callback.
 
 ### Changed
 Do not auto-generate article IDs from their alias names (see contao/core#4837).

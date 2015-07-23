@@ -303,12 +303,6 @@ The "prepareFormData" hook now passes `$this` as last argument, just like in
 any other hook.
 
 
-### ondelete_callback
-
-The `ondelete_callback` of the `DC_Table` driver now passes `$this` as last
-argument, just like in `DC_Folder` and in any other callback.
-
-
 ### Markup changes
 
  * The navigation menus are now using `<strong>` instead of `<span>` to

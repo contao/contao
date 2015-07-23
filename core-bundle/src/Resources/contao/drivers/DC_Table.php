@@ -1512,7 +1512,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
 		{
-			$insertID = $objUndoStmt->insertId;
+			$undoId = $objUndoStmt->insertId;
 
 			// Call ondelete_callback
 			if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['ondelete_callback']))
@@ -1522,11 +1522,11 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($insertID, $this);
+						$this->$callback[0]->$callback[1]($this, $undoId);
 					}
 					elseif (is_callable($callback))
 					{
-						$callback($insertID, $this);
+						$callback($this, $undoId);
 					}
 				}
 			}
