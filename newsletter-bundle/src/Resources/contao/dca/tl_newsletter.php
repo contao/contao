@@ -474,7 +474,7 @@ class tl_newsletter extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$varValue = standardize(String::restoreBasicEntities($dc->activeRecord->subject));
+			$varValue = String::generateAlias($dc->activeRecord->subject);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=?")

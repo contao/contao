@@ -878,6 +878,8 @@ class Newsletter extends \Backend
 			}
 		}
 
+		natsort($arrNewsletters); // see #7864
+
 		return $arrNewsletters;
 	}
 
