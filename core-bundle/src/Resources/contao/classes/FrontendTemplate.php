@@ -292,12 +292,24 @@ class FrontendTemplate extends \Template
 			$strBuffer = $this->replaceInsertTags($this->strBuffer);
 			$strBuffer = $this->replaceDynamicScriptTags($strBuffer); // see #4203
 
+			// Add the cache file header
+			$strHeader = sprintf
+			(
+				"<?php /* %s */ \$expire = %d; \$content = %s; \$type = %s; \$files = %s; \$assets = %s; ?>\n",
+				$strCacheKey,
+				(int) $intCache,
+				var_export($this->strContentType, true),
+				var_export($objPage->type, true),
+				var_export(TL_FILES_URL, true),
+				var_export(TL_ASSETS_URL, true)
+			);
+
 			$strCachePath = str_replace(TL_ROOT . '/', '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 			// Create the cache file
 			$strMd5CacheKey = md5($strCacheKey);
 			$objFile = new \File($strCachePath . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html');
-			$objFile->write('<?php' . " /* $strCacheKey */ \$expire = $intCache; \$content = '{$this->strContentType}'; \$type = '{$objPage->type}'; ?>\n");
+			$objFile->write($strHeader);
 			$objFile->append($this->minifyHtml($strBuffer), '');
 			$objFile->close();
 		}
