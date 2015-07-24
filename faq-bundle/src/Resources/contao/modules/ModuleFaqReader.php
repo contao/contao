@@ -113,9 +113,9 @@ class ModuleFaqReader extends \Module
 		$this->Template->question = $objFaq->question;
 
 		// Clean the RTE output
-		$objFaq->answer = \String::toHtml5($objFaq->answer);
+		$objFaq->answer = \StringUtil::toHtml5($objFaq->answer);
 
-		$this->Template->answer = \String::encodeEmail($objFaq->answer);
+		$this->Template->answer = \StringUtil::encodeEmail($objFaq->answer);
 		$this->Template->addImage = false;
 
 		// Add image
