@@ -20,7 +20,6 @@ use Contao\Validator;
  */
 class ValidatorTest extends TestCase
 {
-
     /**
      * Test the isEmail() method.
      *

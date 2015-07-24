@@ -235,8 +235,8 @@ class GdImageTest extends TestCase
     {
         $image = imagecreatetruecolor(100, 100);
 
-        for ($x = 0; $x < 100; $x++) {
-            for ($y = 0; $y < 100; $y++) {
+        for ($x = 0; $x < 100; ++$x) {
+            for ($y = 0; $y < 100; ++$y) {
                 imagefilledrectangle($image, $x, $y, $x + 1, $y + 1, imagecolorallocatealpha($image, $x, $y, 0, 0));
             }
         }

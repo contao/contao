@@ -72,11 +72,11 @@ class WidgetTest extends TestCase
             [
                 'foo[k1][k2][k3]',
                 'foo',
-                ['k1'=>['k2'=>['k3'=>'bar']]],
-                'bar'
+                ['k1' => ['k2' => ['k3' => 'bar']]],
+                'bar',
             ],
-            ['foo[0]', 'foo', ['k1'=>'bar'], ''],
-            ['foo[k1][0]', 'foo', ['k1'=>'bar'], 'bar'],
+            ['foo[0]', 'foo', ['k1' => 'bar'], ''],
+            ['foo[k1][0]', 'foo', ['k1' => 'bar'], 'bar'],
             ['foo', 'nofoo', 'bar', ''],
             ['', 'foo', 'bar', ''],
             ['', '', 'bar', 'bar'],

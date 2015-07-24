@@ -268,7 +268,7 @@ class SymlinksCommand extends AbstractLockedCommand
             $chunks  = explode(DIRECTORY_SEPARATOR, $dir);
             $test    = $chunks[0];
 
-            for ($i = 1, $c = count($chunks); $i < $c; $i++) {
+            for ($i = 1, $c = count($chunks); $i < $c; ++$i) {
                 if (in_array($test, $paths)) {
                     $this->output->writeln(
                         sprintf(
