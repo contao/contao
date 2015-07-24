@@ -269,7 +269,7 @@ abstract class Events extends \Module
 		// Clean the RTE output
 		if ($arrEvent['teaser'] != '')
 		{
-			$arrEvent['teaser'] = \String::toHtml5($arrEvent['teaser']);
+			$arrEvent['teaser'] = \StringUtil::toHtml5($arrEvent['teaser']);
 		}
 
 		// Display the "read more" button for external/article links
@@ -359,7 +359,7 @@ abstract class Events extends \Module
 			case 'external':
 				if (substr($objEvent->url, 0, 7) == 'mailto:')
 				{
-					return \String::encodeEmail($objEvent->url);
+					return \StringUtil::encodeEmail($objEvent->url);
 				}
 				else
 				{

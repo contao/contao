@@ -449,7 +449,7 @@ class Calendar extends \Frontend
 		$arrEvent['title'] = $title;
 
 		// Clean the RTE output
-		$arrEvent['teaser'] = \String::toHtml5($objEvent->teaser);
+		$arrEvent['teaser'] = \StringUtil::toHtml5($objEvent->teaser);
 
 		// Reset the enclosures (see #5685)
 		$arrEvent['enclosure'] = array();
