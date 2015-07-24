@@ -4,6 +4,14 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### StringUtil class
+
+Since the `String` class is not compatible with PHP 7, we have renamed it to
+`StringUtil`. The `String` class remains available for reasons of backwards
+compatibility, however it has been deprecated and will be removed in a future
+version.
+
+
 ### Mime icons
 
 The mime icons have been removed from all front end templates. Instead, a new
