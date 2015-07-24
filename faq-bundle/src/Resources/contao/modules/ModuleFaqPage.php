@@ -85,9 +85,9 @@ class ModuleFaqPage extends \Module
 			$objTemp = (object) $objFaq->row();
 
 			// Clean the RTE output
-			$objTemp->answer = \String::toHtml5($objFaq->answer);
+			$objTemp->answer = \StringUtil::toHtml5($objFaq->answer);
 
-			$objTemp->answer = \String::encodeEmail($objTemp->answer);
+			$objTemp->answer = \StringUtil::encodeEmail($objTemp->answer);
 			$objTemp->addImage = false;
 
 			// Add an image
