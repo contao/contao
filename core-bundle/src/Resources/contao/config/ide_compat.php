@@ -116,6 +116,7 @@ namespace {
 	class Idna extends \Contao\Idna {}
 	class Image extends \Contao\Image {}
 	class Input extends \Contao\Input {}
+	class InsertTags extends \Contao\InsertTags {}
 	class Message extends \Contao\Message {}
 	abstract class Model extends \Contao\Model {}
 	class ModuleLoader extends \Contao\ModuleLoader {}
@@ -161,6 +162,7 @@ namespace {
 	class ModuleArticlenav extends \Contao\ModuleArticlenav {}
 	class ModuleBooknav extends \Contao\ModuleBooknav {}
 	class ModuleBreadcrumb extends \Contao\ModuleBreadcrumb {}
+	class ModuleChangePassword extends \Contao\ModuleChangePassword {}
 	class ModuleCloseAccount extends \Contao\ModuleCloseAccount {}
 	class ModuleCustomnav extends \Contao\ModuleCustomnav {}
 	class ModuleFlash extends \Contao\ModuleFlash {}
