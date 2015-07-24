@@ -79,7 +79,7 @@ class ModuleArticle extends \Module
 		$id = 'article-' . $this->id;
 
 		// Generate the CSS ID if it is not set
-		if ($this->cssID[0] == '')
+		if (empty($this->cssID[0]))
 		{
 			$this->cssID = array($id, $this->cssID[1]);
 		}

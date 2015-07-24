@@ -5,6 +5,9 @@ Version 4.0.1 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Support overwriting the CSS ID in an alias element (see #305).
+
+### Fixed
 Add a `StringUtil` class to restore PHP 7 compatibility (see #309).
 
 ### Fixed
