@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
+         backupGlobals="false"
+         colors="true"
+         processIsolation="false"
+         bootstrap="tests/bootstrap.php"
+>
+    <php>
+        <ini name="error_reporting" value="-1" />
+    </php>
+
+    <testsuites>
+        <testsuite name="latest">
+            <directory>./tests</directory>
+            <exclude>./tests/Contao/EnvironmentTest.php</exclude>
+            <exclude>./tests/Contao/GdImageTest.php</exclude>
+            <exclude>./tests/Contao/ImageTest.php</exclude>
+            <exclude>./tests/Contao/PictureTest.php</exclude>
+            <exclude>./tests/Contao/WidgetTest.php</exclude>
+            <exclude>./tests/Fixtures</exclude>
+        </testsuite>
+        <testsuite name="legacy">
+            <file>./tests/Contao/EnvironmentTest.php</file>
+            <file>./tests/Contao/GdImageTest.php</file>
+            <file>./tests/Contao/ImageTest.php</file>
+            <file>./tests/Contao/PictureTest.php</file>
+            <file>./tests/Contao/WidgetTest.php</file>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>./src</directory>
+            <exclude>
+                <directory>./src/Resources</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

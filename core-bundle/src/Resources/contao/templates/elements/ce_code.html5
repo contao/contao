@@ -1,0 +1,7 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <pre><code class="<?= $this->cssClass ?>"><?= $this->code ?></code></pre>
+
+<?php $this->endblock(); ?>
