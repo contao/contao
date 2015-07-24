@@ -1,6 +1,6 @@
 tools:
     external_code_coverage:
-        timeout: 900
+        timeout: 1800
     php_sim: true
     php_pdepend: true
     php_analyzer:
