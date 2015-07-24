@@ -47,7 +47,7 @@ class FrontendLoader extends Loader
 
         $defaults = [
             '_controller' => 'ContaoCoreBundle:Frontend:index',
-            '_scope'      => ContaoCoreBundle::SCOPE_FRONTEND,
+            '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
         ];
 
         $this->addFrontendRoute($routes, $defaults);

@@ -41,7 +41,7 @@ class FilesyncCommandTest extends TestCase
         $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
-        $code   = $tester->execute([]);
+        $code = $tester->execute([]);
 
         $this->assertEquals(0, $code);
         $this->assertContains('Synchronization complete (see sync.log).', $tester->getDisplay());
@@ -59,7 +59,7 @@ class FilesyncCommandTest extends TestCase
         $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
-        $code   = $tester->execute([]);
+        $code = $tester->execute([]);
 
         $this->assertEquals(1, $code);
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());

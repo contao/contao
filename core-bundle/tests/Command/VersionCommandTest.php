@@ -44,7 +44,7 @@ class VersionCommandTest extends TestCase
         $command->setContainer($container);
 
         $tester = new CommandTester($command);
-        $code   = $tester->execute([]);
+        $code = $tester->execute([]);
 
         $this->assertEquals(0, $code);
         $this->assertEquals("4.0.2\n", $tester->getDisplay());
@@ -62,7 +62,7 @@ class VersionCommandTest extends TestCase
         $command->setContainer($container);
 
         $tester = new CommandTester($command);
-        $code   = $tester->execute([]);
+        $code = $tester->execute([]);
 
         $this->assertEquals(1, $code);
         $this->assertEquals('', $tester->getDisplay());

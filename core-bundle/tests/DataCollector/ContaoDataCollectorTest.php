@@ -45,11 +45,11 @@ class ContaoDataCollectorTest extends TestCase
         $collector = new ContaoDataCollector($container, ['contao/core-bundle' => '4.0.0']);
 
         $GLOBALS['TL_DEBUG'] = [
-            'classes_aliased'          => ['ContentText <span>Contao\\ContentText</span>'],
-            'classes_set'              => ['Contao\\System'],
-            'unknown_insert_tags'      => ['foo'],
+            'classes_aliased' => ['ContentText <span>Contao\\ContentText</span>'],
+            'classes_set' => ['Contao\\System'],
+            'unknown_insert_tags' => ['foo'],
             'unknown_insert_tag_flags' => ['bar'],
-            'additional_data'          => 'data',
+            'additional_data' => 'data',
         ];
 
         $collector->collect(new Request(), new Response());
@@ -57,7 +57,7 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertEquals(
             [
                 'ContentText' => [
-                    'alias'    => 'ContentText',
+                    'alias' => 'ContentText',
                     'original' => 'Contao\\ContentText',
                 ],
             ],
@@ -66,11 +66,11 @@ class ContaoDataCollectorTest extends TestCase
 
         $this->assertEquals(
             [
-                'version'   => '4.0.0',
-                'scope'     => ContaoCoreBundle::SCOPE_BACKEND,
-                'layout'    => '',
+                'version' => '4.0.0',
+                'scope' => ContaoCoreBundle::SCOPE_BACKEND,
+                'layout' => '',
                 'framework' => true,
-                'models'    => 5,
+                'models' => 5,
             ],
             $collector->getSummary()
         );
@@ -95,9 +95,9 @@ class ContaoDataCollectorTest extends TestCase
 
         $collector = new ContaoDataCollector($container, []);
 
-        $layout       = new \stdClass();
+        $layout = new \stdClass();
         $layout->name = 'Default';
-        $layout->id   = 2;
+        $layout->id = 2;
 
         global $objPage;
 
@@ -118,11 +118,11 @@ class ContaoDataCollectorTest extends TestCase
 
         $this->assertEquals(
             [
-                'version'   => '',
-                'scope'     => ContaoCoreBundle::SCOPE_FRONTEND,
-                'layout'    => 'Default (ID 2)',
+                'version' => '',
+                'scope' => ContaoCoreBundle::SCOPE_FRONTEND,
+                'layout' => 'Default (ID 2)',
                 'framework' => false,
-                'models'    => 0,
+                'models' => 0,
             ],
             $collector->getSummary()
         );

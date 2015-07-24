@@ -314,7 +314,7 @@ class Pagination
 		{
 			if ($arrItem['href'] === null)
 			{
-				$arrLinks[] = sprintf('<li><span class="current">%s</span></li>', $arrItem['page']);
+				$arrLinks[] = sprintf('<li><span class="active">%s</span></li>', $arrItem['page']);
 			}
 			else
 			{

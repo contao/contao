@@ -62,11 +62,11 @@ class OutputFromCacheListenerTest extends TestCase
     public function testFrontendScope()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel    = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
         $container = new Container();
-        $request   = new Request();
-        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new OutputFromCacheListener($this->framework);
+        $request = new Request();
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener = new OutputFromCacheListener($this->framework);
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
         $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
@@ -85,11 +85,11 @@ class OutputFromCacheListenerTest extends TestCase
     public function testInvalidScope()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel    = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
         $container = new Container();
-        $request   = new Request();
-        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new OutputFromCacheListener($this->framework);
+        $request = new Request();
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener = new OutputFromCacheListener($this->framework);
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
@@ -108,9 +108,9 @@ class OutputFromCacheListenerTest extends TestCase
     public function testWithoutContainer()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel   = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
-        $request  = new Request();
-        $event    = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $request = new Request();
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener = new OutputFromCacheListener($this->framework);
 
         $request->attributes->set('_route', 'dummy');

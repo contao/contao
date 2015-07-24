@@ -84,7 +84,7 @@ class ContentTeaser extends \ContentElement
 		$this->Template->href = $this->generateFrontendUrl($this->objParent->row(), $link);
 
 		// Clean the RTE output
-		$this->Template->text = \String::toHtml5($objArticle->teaser);
+		$this->Template->text = \StringUtil::toHtml5($objArticle->teaser);
 
 		$this->Template->headline = $objArticle->title;
 		$this->Template->readMore = specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));

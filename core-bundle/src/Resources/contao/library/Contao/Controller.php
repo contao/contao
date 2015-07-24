@@ -773,11 +773,11 @@ abstract class Controller extends \System
 		{
 			foreach (array_unique($GLOBALS['TL_CSS']) as $stylesheet)
 			{
-				$options = \String::resolveFlaggedUrl($stylesheet);
+				$options = \StringUtil::resolveFlaggedUrl($stylesheet);
 
 				if ($options->static)
 				{
-					$objCombiner->add($stylesheet, filemtime(TL_ROOT . '/' . $stylesheet), $options->media);
+					$objCombiner->add($stylesheet, $options->mtime, $options->media);
 				}
 				else
 				{
@@ -791,15 +791,10 @@ abstract class Controller extends \System
 		{
 			foreach (array_unique($GLOBALS['TL_USER_CSS']) as $stylesheet)
 			{
-				$options = \String::resolveFlaggedUrl($stylesheet);
+				$options = \StringUtil::resolveFlaggedUrl($stylesheet);
 
 				if ($options->static)
 				{
-					if ($options->mtime === null)
-					{
-						$options->mtime = filemtime(TL_ROOT . '/' . $stylesheet);
-					}
-
 					$objCombiner->add($stylesheet, $options->mtime, $options->media);
 				}
 				else
@@ -826,17 +821,17 @@ abstract class Controller extends \System
 
 			foreach (array_unique($GLOBALS['TL_JAVASCRIPT']) as $javascript)
 			{
-				$options = \String::resolveFlaggedUrl($javascript);
+				$options = \StringUtil::resolveFlaggedUrl($javascript);
 
 				if ($options->static)
 				{
 					if ($options->async)
 					{
-						$objCombinerAsync->add($javascript, filemtime(TL_ROOT . '/' . $javascript));
+						$objCombinerAsync->add($javascript, $options->mtime);
 					}
 					else
 					{
-						$objCombiner->add($javascript, filemtime(TL_ROOT . '/' . $javascript));
+						$objCombiner->add($javascript, $options->mtime);
 					}
 				}
 				else
@@ -1449,6 +1444,12 @@ abstract class Controller extends \System
 			}
 		}
 
+		// Disable responsive images in the back end (see #7875)
+		if (TL_MODE == 'BE')
+		{
+			unset($size[2]);
+		}
+
 		try
 		{
 			$src = \Image::create($arrItem['singleSRC'], $size)->executeResize()->getResizedPath();
@@ -1854,13 +1855,13 @@ abstract class Controller extends \System
 	 * @return string The string with the original entities
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use String::restoreBasicEntities() instead.
+	 *             Use StringUtil::restoreBasicEntities() instead.
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
-		trigger_error('Using Controller::restoreBasicEntities() has been deprecated and will no longer work in Contao 5.0. Use String::restoreBasicEntities() instead.', E_USER_DEPRECATED);
+		trigger_error('Using Controller::restoreBasicEntities() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::restoreBasicEntities() instead.', E_USER_DEPRECATED);
 
-		return \String::restoreBasicEntities($strBuffer);
+		return \StringUtil::restoreBasicEntities($strBuffer);
 	}
 
 
@@ -1969,13 +1970,13 @@ abstract class Controller extends \System
 	 * @return string The text with the replaced tokens
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use String::parseSimpleTokens() instead.
+	 *             Use StringUtil::parseSimpleTokens() instead.
 	 */
 	protected function parseSimpleTokens($strBuffer, $arrData)
 	{
-		trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use String::parseSimpleTokens() instead.', E_USER_DEPRECATED);
+		trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::parseSimpleTokens() instead.', E_USER_DEPRECATED);
 
-		return \String::parseSimpleTokens($strBuffer, $arrData);
+		return \StringUtil::parseSimpleTokens($strBuffer, $arrData);
 	}
 
 

@@ -1099,13 +1099,13 @@ abstract class System
 	 * @return array An array with name and e-mail address
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use String::splitFriendlyEmail() instead.
+	 *             Use StringUtil::splitFriendlyEmail() instead.
 	 */
 	public static function splitFriendlyName($strEmail)
 	{
-		trigger_error('Using System::splitFriendlyName() has been deprecated and will no longer work in Contao 5.0. Use String::splitFriendlyEmail() instead.', E_USER_DEPRECATED);
+		trigger_error('Using System::splitFriendlyName() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::splitFriendlyEmail() instead.', E_USER_DEPRECATED);
 
-		return \String::splitFriendlyEmail($strEmail);
+		return \StringUtil::splitFriendlyEmail($strEmail);
 	}
 
 

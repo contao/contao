@@ -411,11 +411,11 @@ class DC_File extends \DataContainer implements \editable
 
 				if (!is_array($varValue))
 				{
-					$varValue = \String::binToUuid($varValue);
+					$varValue = \StringUtil::binToUuid($varValue);
 				}
 				else
 				{
-					$varValue = serialize(array_map('String::binToUuid', $varValue));
+					$varValue = serialize(array_map('StringUtil::binToUuid', $varValue));
 				}
 			}
 
@@ -433,11 +433,11 @@ class DC_File extends \DataContainer implements \editable
 
 				if (!is_array($varValue))
 				{
-					$varValue = \String::restoreBasicEntities($varValue);
+					$varValue = \StringUtil::restoreBasicEntities($varValue);
 				}
 				else
 				{
-					$varValue = serialize(array_map('String::restoreBasicEntities', $varValue));
+					$varValue = serialize(array_map('StringUtil::restoreBasicEntities', $varValue));
 				}
 			}
 		}

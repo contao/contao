@@ -123,28 +123,21 @@ class Combiner extends \System
 		// Check the source file
 		if (!file_exists(TL_ROOT . '/' . $strFile))
 		{
-			// Create the style sheets and retry
-			if ($strType == self::CSS)
+			// Handle public bundle resources
+			if (file_exists(TL_ROOT . '/web/' . $strFile))
 			{
-				$this->import('StyleSheets');
-				$this->StyleSheets->updateStyleSheets();
-
-				if (!file_exists(TL_ROOT . '/' . $strFile))
-				{
-					throw new \Exception("File $strFile does not exist");
-				}
+				$strFile = 'web/' . $strFile;
 			}
 			else
 			{
 				throw new \Exception("File $strFile does not exist");
 			}
-
 		}
 
 		// Default version
 		if ($strVersion === null)
 		{
-			$strVersion = VERSION .'.'. BUILD;
+			$strVersion = filemtime(TL_ROOT . '/' . $strFile);
 		}
 
 		// Store the file

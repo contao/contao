@@ -123,14 +123,14 @@ class ContaoFramework implements ContaoFrameworkInterface
         ConfigAdapter $config,
         $errorLevel
     ) {
-        $this->router        = $router;
-        $this->session       = $session;
-        $this->rootDir       = dirname($rootDir);
-        $this->tokenManager  = $tokenManager;
+        $this->router = $router;
+        $this->session = $session;
+        $this->rootDir = dirname($rootDir);
+        $this->tokenManager = $tokenManager;
         $this->csrfTokenName = $csrfTokenName;
-        $this->config        = $config;
-        $this->errorLevel    = $errorLevel;
-        $this->requestStack  = $requestStack;
+        $this->config = $config;
+        $this->errorLevel = $errorLevel;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -354,7 +354,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
-        $GLOBALS['TL_LANGUAGE']  = $language;
+        $GLOBALS['TL_LANGUAGE'] = $language;
         $_SESSION['TL_LANGUAGE'] = $language;
     }
 

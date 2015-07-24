@@ -15,7 +15,7 @@
 
     <?php foreach ($this->pages as $page): ?>
       <?php if ($page['href'] === null): ?>
-        <li><span class="current"><?= $page['page'] ?></span></li>
+        <li><span class="active"><?= $page['page'] ?></span></li>
       <?php else: ?>
         <li><a href="<?= $page['href'] ?>" class="link" title="<?= $page['title'] ?>"><?= $page['page'] ?></a></li>
       <?php endif; ?>

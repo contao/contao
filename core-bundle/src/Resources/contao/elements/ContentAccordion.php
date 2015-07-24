@@ -32,9 +32,9 @@ class ContentAccordion extends \ContentElement
 	protected function compile()
 	{
 		// Clean the RTE output
-		$this->text = \String::toHtml5($this->text);
+		$this->text = \StringUtil::toHtml5($this->text);
 
-		$this->Template->text = \String::encodeEmail($this->text);
+		$this->Template->text = \StringUtil::encodeEmail($this->text);
 		$this->Template->addImage = false;
 
 		// Add an image

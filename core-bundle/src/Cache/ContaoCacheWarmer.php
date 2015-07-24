@@ -83,11 +83,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         ContaoFrameworkInterface $framework
     ) {
         $this->filesystem = $filesystem;
-        $this->finder     = $finder;
-        $this->locator    = $locator;
-        $this->rootDir    = dirname($rootDir);
+        $this->finder = $finder;
+        $this->locator = $locator;
+        $this->rootDir = dirname($rootDir);
         $this->connection = $connection;
-        $this->framework  = $framework;
+        $this->framework = $framework;
     }
 
     /**
@@ -137,7 +137,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private function generateCacheMapper($cacheDir)
     {
         $mapper = [];
-        $pages  = PageModel::findPublishedRootPages();
+        $pages = PageModel::findPublishedRootPages();
 
         if (null === $pages) {
             return;
@@ -263,7 +263,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
             $processed[] = $file->getBasename();
 
-            $table   = $file->getBasename('.php');
+            $table = $file->getBasename('.php');
             $extract = DcaExtractor::getInstance($table);
 
             if (!$extract->isDbTable()) {

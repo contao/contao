@@ -40,7 +40,7 @@ class InsertTags extends \Controller
 		// Preserve insert tags
 		if (\Config::get('disableInsertTags'))
 		{
-			return \String::restoreBasicEntities($strBuffer);
+			return \StringUtil::restoreBasicEntities($strBuffer);
 		}
 
 		$tags = preg_split('/\{\{(([^\{\}]*|(?R))*)\}\}/', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -126,7 +126,7 @@ class InsertTags extends \Controller
 						break;
 					}
 
-					$strEmail = \String::encodeEmail($elements[1]);
+					$strEmail = \StringUtil::encodeEmail($elements[1]);
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
@@ -346,7 +346,7 @@ class InsertTags extends \Controller
 
 								if (strncasecmp($strUrl, 'mailto:', 7) === 0)
 								{
-									$strUrl = \String::encodeEmail($strUrl);
+									$strUrl = \StringUtil::encodeEmail($strUrl);
 								}
 								break;
 
@@ -651,7 +651,7 @@ class InsertTags extends \Controller
 
 					if ($objTeaser !== null)
 					{
-						$arrCache[$strTag] = \String::toHtml5($this->replaceInsertTags($objTeaser->teaser), $blnCache);
+						$arrCache[$strTag] = \StringUtil::toHtml5($this->replaceInsertTags($objTeaser->teaser), $blnCache);
 					}
 					break;
 
@@ -661,7 +661,7 @@ class InsertTags extends \Controller
 
 					if ($objTeaser !== null)
 					{
-						$arrCache[$strTag] = \String::toHtml5($objTeaser->teaser);
+						$arrCache[$strTag] = \StringUtil::toHtml5($objTeaser->teaser);
 					}
 					break;
 
@@ -671,7 +671,7 @@ class InsertTags extends \Controller
 
 					if ($objTeaser !== null)
 					{
-						$arrCache[$strTag] = \String::toHtml5($objTeaser->teaser);
+						$arrCache[$strTag] = \StringUtil::toHtml5($objTeaser->teaser);
 					}
 					break;
 
@@ -892,7 +892,7 @@ class InsertTags extends \Controller
 					if (strpos($elements[1], '?') !== false)
 					{
 						$arrChunks = explode('?', urldecode($elements[1]), 2);
-						$strSource = \String::decodeEntities($arrChunks[1]);
+						$strSource = \StringUtil::decodeEntities($arrChunks[1]);
 						$strSource = str_replace('[&]', '&', $strSource);
 						$arrParams = explode('&', $strSource);
 
@@ -1054,7 +1054,7 @@ class InsertTags extends \Controller
 					if (strpos($elements[1], '?') !== false)
 					{
 						$arrChunks = explode('?', urldecode($elements[1]));
-						$strSource = \String::decodeEntities($arrChunks[1]);
+						$strSource = \StringUtil::decodeEntities($arrChunks[1]);
 						$strSource = str_replace('[&]', '&', $strSource);
 						$arrParams = explode('&', $strSource);
 
@@ -1142,7 +1142,7 @@ class InsertTags extends \Controller
 
 						case 'encodeEmail':
 						case 'decodeEntities':
-							$arrCache[$strTag] = \String::$flag($arrCache[$strTag]);
+							$arrCache[$strTag] = \StringUtil::$flag($arrCache[$strTag]);
 							break;
 
 						case 'number_format':
@@ -1186,6 +1186,6 @@ class InsertTags extends \Controller
 			$strBuffer .= $arrCache[$strTag];
 		}
 
-		return \String::restoreBasicEntities($strBuffer);
+		return \StringUtil::restoreBasicEntities($strBuffer);
 	}
 }

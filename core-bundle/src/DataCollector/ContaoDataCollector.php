@@ -47,7 +47,7 @@ class ContaoDataCollector extends DataCollector
     public function __construct(ContainerInterface $container, array $packages)
     {
         $this->container = $container;
-        $this->packages  = $packages;
+        $this->packages = $packages;
     }
 
     /**
@@ -98,20 +98,20 @@ class ContaoDataCollector extends DataCollector
     public function getClassesAliased()
     {
         $aliases = [];
-        $data    = $this->getData('classes_aliased');
+        $data = $this->getData('classes_aliased');
 
         foreach ($data as $class) {
-            $alias    = $class;
+            $alias = $class;
             $original = '';
-            $pos      = strpos($class, '<span');
+            $pos = strpos($class, '<span');
 
             if (false !== $pos) {
-                $alias    = trim(substr($class, 0, $pos));
+                $alias = trim(substr($class, 0, $pos));
                 $original = trim(strip_tags(substr($class, $pos)), ' ()');
             }
 
             $aliases[$alias] = [
-                'alias'    => $alias,
+                'alias' => $alias,
                 'original' => $original,
             ];
         }
@@ -208,20 +208,20 @@ class ContaoDataCollector extends DataCollector
      */
     private function addSummaryData()
     {
-        $framework  = false;
+        $framework = false;
         $modelCount = '0';
 
         if (isset($GLOBALS['TL_DEBUG'])) {
-            $framework  = true;
+            $framework = true;
             $modelCount = Registry::getInstance()->count();
         }
 
         $this->data['summary'] = [
-            'version'   => $this->getContaoVersion(),
-            'scope'     => $this->getContainerScope(),
-            'layout'    => $this->getLayoutName(),
+            'version' => $this->getContaoVersion(),
+            'scope' => $this->getContainerScope(),
+            'layout' => $this->getLayoutName(),
             'framework' => $framework,
-            'models'    => $modelCount,
+            'models' => $modelCount,
         ];
     }
 

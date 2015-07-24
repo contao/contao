@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class ContaoCoreBundle extends Bundle
 {
-    const SCOPE_BACKEND  = 'backend';
+    const SCOPE_BACKEND = 'backend';
     const SCOPE_FRONTEND = 'frontend';
 
     /**
