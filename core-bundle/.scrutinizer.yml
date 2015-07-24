@@ -138,7 +138,7 @@ checks:
         avoid_aliased_php_functions: true
         assignment_of_null_return: true
         argument_type_checks: true
-        align_assignments: true
+        align_assignments: false
         avoid_todo_comments: true
         avoid_fixme_comments: true
 
