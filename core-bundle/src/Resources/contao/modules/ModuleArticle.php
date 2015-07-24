@@ -79,7 +79,7 @@ class ModuleArticle extends \Module
 		$id = 'article-' . $this->id;
 
 		// Generate the CSS ID if it is not set
-		if ($this->cssID[0] == '')
+		if (empty($this->cssID[0]))
 		{
 			$this->cssID = array($id, $this->cssID[1]);
 		}
@@ -92,7 +92,7 @@ class ModuleArticle extends \Module
 		$this->Template->date = \Date::parse($objPage->datimFormat, $this->tstamp);
 
 		// Clean the RTE output
-		$this->teaser = \String::toHtml5($this->teaser);
+		$this->teaser = \StringUtil::toHtml5($this->teaser);
 
 		// Show the teaser only
 		if ($this->multiMode && $this->showTeaser)

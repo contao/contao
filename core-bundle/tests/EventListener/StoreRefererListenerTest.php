@@ -57,7 +57,7 @@ class StoreRefererListenerTest extends TestCase
             new Response()
         );
 
-        $token        = $this->getMock('Contao\\CoreBundle\\Security\\Authentication\\ContaoToken', [], [], '', false);
+        $token = $this->getMock('Contao\\CoreBundle\\Security\\Authentication\\ContaoToken', [], [], '', false);
         $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
 
         $tokenStorage
@@ -164,7 +164,7 @@ class StoreRefererListenerTest extends TestCase
                 null,
                 [
                     'dummyTestRefererId' => [
-                        'last'    => '',
+                        'last' => '',
                         'current' => 'path/of/contao?having&query&string=1',
                     ],
                 ],
@@ -174,13 +174,13 @@ class StoreRefererListenerTest extends TestCase
                 $requestWithRefInUrl,
                 [
                     'dummyTestRefererId' => [
-                        'last'    => '',
+                        'last' => '',
                         'current' => 'hi/I/am/your_current_referer.html',
                     ],
                 ],
                 [
                     'dummyTestRefererId' => [
-                        'last'    => 'hi/I/am/your_current_referer.html',
+                        'last' => 'hi/I/am/your_current_referer.html',
                         'current' => 'path/of/contao?having&query&string=1',
                     ],
                 ],
@@ -195,11 +195,11 @@ class StoreRefererListenerTest extends TestCase
                 ContaoCoreBundle::SCOPE_FRONTEND,
                 $requestWithRefInUrl,
                 [
-                    'last'    => '',
+                    'last' => '',
                     'current' => 'hi/I/am/your_current_referer.html',
                 ],
                 [
-                    'last'    => 'hi/I/am/your_current_referer.html',
+                    'last' => 'hi/I/am/your_current_referer.html',
                     'current' => 'path/of/contao?having&query&string=1',
                 ],
             ],
@@ -208,21 +208,21 @@ class StoreRefererListenerTest extends TestCase
                 $requestWithRefInUrl,
                 [
                     'dummyTestRefererId' => [
-                        'last'    => '',
+                        'last' => '',
                         'current' => 'hi/I/am/your_current_referer.html',
                     ],
                     'dummyTestRefererId1' => [
-                        'last'    => '',
+                        'last' => '',
                         'current' => 'hi/I/am/your_current_referer.html',
                     ],
                 ],
                 [
                     'dummyTestRefererId' => [
-                        'last'    => 'hi/I/am/your_current_referer.html',
+                        'last' => 'hi/I/am/your_current_referer.html',
                         'current' => 'path/of/contao?having&query&string=1',
                     ],
                     'dummyTestRefererId1' => [
-                        'last'    => '',
+                        'last' => '',
                         'current' => 'hi/I/am/your_current_referer.html',
                     ],
                 ],

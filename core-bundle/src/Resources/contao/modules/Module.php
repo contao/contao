@@ -129,9 +129,6 @@ namespace Contao;
  * @property string  $nl_subscribe
  * @property string  $nl_unsubscribe
  * @property string  $nl_template
- * @property string  $origSpace
- * @property string  $origCssID
- *
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -272,7 +269,7 @@ abstract class Module extends \Frontend
 		// Do not change this order (see #6191)
 		$this->Template->style = !empty($this->arrStyle) ? implode(' ', $this->arrStyle) : '';
 		$this->Template->class = trim('mod_' . $this->type . ' ' . $this->cssID[1]);
-		$this->Template->cssID = ($this->cssID[0] != '') ? ' id="' . $this->cssID[0] . '"' : '';
+		$this->Template->cssID = !empty($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '';
 
 		$this->Template->inColumn = $this->strColumn;
 
@@ -385,7 +382,7 @@ abstract class Module extends \Frontend
 
 						if (strncasecmp($href, 'mailto:', 7) === 0)
 						{
-							$href = \String::encodeEmail($href);
+							$href = \StringUtil::encodeEmail($href);
 						}
 						break;
 

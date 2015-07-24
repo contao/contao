@@ -65,9 +65,9 @@ class PictureTest extends TestCase
 
         copy(__DIR__ . '/../Fixtures/images/dummy.jpg', self::$rootDir . '/dummy.jpg');
 
-        $GLOBALS['TL_CONFIG']['debugMode']       = false;
-        $GLOBALS['TL_CONFIG']['gdMaxImgWidth']   = 3000;
-        $GLOBALS['TL_CONFIG']['gdMaxImgHeight']  = 3000;
+        $GLOBALS['TL_CONFIG']['debugMode'] = false;
+        $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
+        $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
         define('TL_ERROR', 'ERROR');
@@ -111,10 +111,10 @@ class PictureTest extends TestCase
         $picture = new Picture(new \File('dummy.jpg'));
 
         $picture->setImageSize((object) [
-            'width'      => 0,
-            'height'     => 0,
+            'width' => 0,
+            'height' => 0,
             'resizeMode' => '',
-            'zoom'       => 0,
+            'zoom' => 0,
         ]);
 
         $pictureData = $picture->getTemplateData();
@@ -134,10 +134,10 @@ class PictureTest extends TestCase
         $picture = new Picture(new \File('dummy.jpg'));
 
         $picture->setImageSize((object) [
-            'width'      => 100,
-            'height'     => 100,
+            'width' => 100,
+            'height' => 100,
             'resizeMode' => 'crop',
-            'zoom'       => 0,
+            'zoom' => 0,
         ]);
 
         $pictureData = $picture->getTemplateData();
@@ -156,26 +156,26 @@ class PictureTest extends TestCase
         $picture = new Picture(new \File('dummy.jpg'));
 
         $picture->setImageSize((object) [
-            'width'      => 100,
-            'height'     => 100,
+            'width' => 100,
+            'height' => 100,
             'resizeMode' => 'crop',
-            'zoom'       => 0,
+            'zoom' => 0,
         ]);
 
         $picture->setImageSizeItems([
             (object) [
-                'width'      => 50,
-                'height'     => 50,
+                'width' => 50,
+                'height' => 50,
                 'resizeMode' => 'crop',
-                'zoom'       => 0,
-                'media'      => '(max-width: 900px)',
+                'zoom' => 0,
+                'media' => '(max-width: 900px)',
             ],
             (object) [
-                'width'      => 25,
-                'height'     => 25,
+                'width' => 25,
+                'height' => 25,
                 'resizeMode' => 'crop',
-                'zoom'       => 0,
-                'media'      => '(max-width: 600px)',
+                'zoom' => 0,
+                'media' => '(max-width: 600px)',
             ],
         ]);
 
@@ -202,11 +202,11 @@ class PictureTest extends TestCase
         $picture = new Picture(new \File('dummy.jpg'));
 
         $picture->setImageSize((object) [
-            'width'      => 100,
-            'height'     => 100,
+            'width' => 100,
+            'height' => 100,
             'resizeMode' => 'crop',
-            'zoom'       => 0,
-            'densities'  => '0.5x, 2x',
+            'zoom' => 0,
+            'densities' => '0.5x, 2x',
         ]);
 
         $pictureData = $picture->getTemplateData();
@@ -229,12 +229,12 @@ class PictureTest extends TestCase
         $picture = new Picture(new \File('dummy.jpg'));
 
         $picture->setImageSize((object) [
-            'width'      => 100,
-            'height'     => 100,
+            'width' => 100,
+            'height' => 100,
             'resizeMode' => 'crop',
-            'zoom'       => 0,
-            'densities'  => '0.5x, 2x',
-            'sizes'      => '100vw',
+            'zoom' => 0,
+            'densities' => '0.5x, 2x',
+            'sizes' => '100vw',
         ]);
 
         $pictureData = $picture->getTemplateData();
@@ -260,10 +260,10 @@ class PictureTest extends TestCase
         $picture = new Picture(new \File('dummy with spaces.jpg'));
 
         $picture->setImageSize((object) [
-            'width'      => 0,
-            'height'     => 0,
+            'width' => 0,
+            'height' => 0,
             'resizeMode' => '',
-            'zoom'       => 0,
+            'zoom' => 0,
         ]);
 
         $pictureData = $picture->getTemplateData();

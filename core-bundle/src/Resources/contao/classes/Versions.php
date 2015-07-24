@@ -258,9 +258,10 @@ class Versions extends \Controller
 				// Unset fields that do not exist (see #5219)
 				$data = array_intersect_key($data, $arrFields);
 
-				// Reset fields added after storing the version to their default value
 				$this->loadDataContainer($this->strTable);
-				foreach (array_diff_key($arrFields, $data) as $k => $v)
+
+				// Reset fields added after storing the version to their default value (see #7755)
+				foreach (array_diff_key($arrFields, $data) as $k=>$v)
 				{
 					$data[$k] = \Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
 				}
@@ -410,11 +411,11 @@ class Versions extends \Controller
 						// Convert binary UUIDs to their hex equivalents (see #6365)
 						if ($blnIsBinary && \Validator::isBinaryUuid($to[$k]))
 						{
-							$to[$k] = \String::binToUuid($to[$k]);
+							$to[$k] = \StringUtil::binToUuid($to[$k]);
 						}
 						if ($blnIsBinary && \Validator::isBinaryUuid($from[$k]))
 						{
-							$to[$k] = \String::binToUuid($from[$k]);
+							$to[$k] = \StringUtil::binToUuid($from[$k]);
 						}
 
 						// Convert date fields
@@ -562,8 +563,8 @@ class Versions extends \Controller
 			$arrRow['from'] = max(($objVersions->version - 1), 1); // see #4828
 			$arrRow['to'] = $objVersions->version;
 			$arrRow['date'] = date(\Config::get('datimFormat'), $objVersions->tstamp);
-			$arrRow['description'] = \String::substr($arrRow['description'], 32);
-			$arrRow['shortTable'] = \String::substr($arrRow['fromTable'], 18); // see #5769
+			$arrRow['description'] = \StringUtil::substr($arrRow['description'], 32);
+			$arrRow['shortTable'] = \StringUtil::substr($arrRow['fromTable'], 18); // see #5769
 
 			if ($arrRow['editUrl'] != '')
 			{
@@ -680,11 +681,11 @@ class Versions extends \Controller
 	{
 		if (!is_array($var))
 		{
-			return $binary ? \String::binToUuid($var) : $var;
+			return $binary ? \StringUtil::binToUuid($var) : $var;
 		}
 		elseif (!is_array(current($var)))
 		{
-			return implode(', ', ($binary ? array_map('String::binToUuid', $var) : $var));
+			return implode(', ', ($binary ? array_map('StringUtil::binToUuid', $var) : $var));
 		}
 		else
 		{

@@ -53,7 +53,7 @@ class UserSessionListenerTest extends TestCase
     public function testSessionReplacedOnKernelRequest($scope, $userClass, $sessionBagName)
     {
         $sessionValuesToBeSet = [
-            'foo'      => 'bar',
+            'foo' => 'bar',
             'lonesome' => 'looser',
         ];
 

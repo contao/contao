@@ -65,7 +65,7 @@ class SymlinksCommandTest extends TestCase
         $command->setContainer($container);
 
         $tester = new CommandTester($command);
-        $code   = $tester->execute([]);
+        $code = $tester->execute([]);
 
         $expected = <<<EOF
 Added web/system/modules/foobar/assets as symlink to system/modules/foobar/assets.
@@ -90,7 +90,7 @@ EOF;
         $lock->lock();
 
         $command = new SymlinksCommand('contao:symlinks');
-        $tester  = new CommandTester($command);
+        $tester = new CommandTester($command);
 
         $code = $tester->execute([]);
 
@@ -107,9 +107,9 @@ EOF;
      */
     public function testEmptySource()
     {
-        $command    = new SymlinksCommand('contao:symlinks');
+        $command = new SymlinksCommand('contao:symlinks');
         $reflection = new \ReflectionClass($command);
-        $method     = $reflection->getMethod('validateSymlink');
+        $method = $reflection->getMethod('validateSymlink');
 
         $method->setAccessible(true);
         $method->invokeArgs($command, ['', 'target']);
@@ -122,9 +122,9 @@ EOF;
      */
     public function testEmptyTarget()
     {
-        $command    = new SymlinksCommand('contao:symlinks');
+        $command = new SymlinksCommand('contao:symlinks');
         $reflection = new \ReflectionClass($command);
-        $method     = $reflection->getMethod('validateSymlink');
+        $method = $reflection->getMethod('validateSymlink');
 
         $method->setAccessible(true);
         $method->invokeArgs($command, ['source', '']);
@@ -137,9 +137,9 @@ EOF;
      */
     public function testInvalidTarget()
     {
-        $command    = new SymlinksCommand('contao:symlinks');
+        $command = new SymlinksCommand('contao:symlinks');
         $reflection = new \ReflectionClass($command);
-        $method     = $reflection->getMethod('validateSymlink');
+        $method = $reflection->getMethod('validateSymlink');
 
         $method->setAccessible(true);
         $method->invokeArgs($command, ['source', '../target']);
@@ -152,7 +152,7 @@ EOF;
      */
     public function testExistingTarget()
     {
-        $command    = new SymlinksCommand('contao:symlinks');
+        $command = new SymlinksCommand('contao:symlinks');
         $reflection = new \ReflectionClass($command);
 
         $property = $reflection->getProperty('rootDir');

@@ -119,7 +119,7 @@ class AutomatorCommand extends AbstractLockedCommand
         $commands = [];
 
         // Find all public methods
-        $class   = new \ReflectionClass('Contao\\Automator');
+        $class = new \ReflectionClass('Contao\\Automator');
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
@@ -142,7 +142,7 @@ class AutomatorCommand extends AbstractLockedCommand
     private function getTaskFromInput(InputInterface $input, OutputInterface $output)
     {
         $commands = $this->getCommands();
-        $task     = $input->getArgument('task');
+        $task = $input->getArgument('task');
 
         if (null !== $task) {
             if (!in_array($task, $commands)) {

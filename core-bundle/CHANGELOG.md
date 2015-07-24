@@ -1,6 +1,67 @@
 Contao change log
 =================
 
+Version 4.0.1 (2015-XX-XX)
+--------------------------
+
+### Fixed
+Support overwriting the CSS ID in an alias element (see #305).
+
+### Fixed
+Add a `StringUtil` class to restore PHP 7 compatibility (see #309).
+
+### Fixed
+Correctly handle files in the `/web` directory in the Combiner (see #300). 
+
+### Fixed
+Fix the argument order of the `ondelete_callback` (see #301).
+
+### Fixed
+Correctly apply the class `active` in the pagination template (see #315).
+
+### Fixed
+Fix the `Validator::isEmail()` method (see #313).
+
+### Fixed
+Strip tags before auto-generating aliases (see contao/core#7857). 
+
+### Fixed
+Correctly encode the URLs in the popup file manager (see contao/core#7929).
+
+### Fixed
+Check for the comments module when compiling the news meta fields (see contao/core#7901).
+
+### Fixed
+Also sort the newsletter channels alphabetically in the front end (see contao/core#7864).
+
+### Fixed
+Disable responsive images in the back end preview (see contao/core#7875).
+
+### Fixed
+Overwrite the request string when generating news/event feeds (see contao/core#7756).
+
+### Fixed
+Store the static URLs with the cached file (see contao/core#7914).
+
+### Fixed
+Correctly check the subfolders in the `hasAccess()` method (see contao/core#7920).
+
+### Fixed
+Updated the countries list (see contao/core#7918).
+
+### Fixed
+Respect the `notSortable` flag in the parent (see contao/core#7902).
+
+### Fixed
+Round the maximum upload size to an integer value (see contao/core#7880).
+
+### Fixed
+Make the markup minification less aggressive (see contao/core#7734).
+
+### Fixed
+Filter the indices in `Database::getFieldNames()` (see contao/core#7869).
+
+
 Version 4.0.0 (2015-06-09)
 --------------------------
 
@@ -32,7 +93,7 @@ Correctly reload the page in the install tool (see #267).
 Correctly show the color picker images (see #268).
 
 ### Fixed
-Consolidate the custom sections markup (see #contao/core#7843).
+Consolidate the custom sections markup (see contao/core#7843).
 
 ### Fixed
 Correctly execute the symlinks command in the automator (see #265).
@@ -174,9 +235,6 @@ Support scopes in the `Message` class (see contao/core#6558).
 
 ### Changed
 Use `<fieldset>` and `<legend>` in the newsletter channel selection menu.
-
-### Changed
-Always pass the DC object as first argument in the ondelete_callback.
 
 ### Changed
 Do not auto-generate article IDs from their alias names (see contao/core#4837).

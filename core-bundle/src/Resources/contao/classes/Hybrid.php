@@ -15,6 +15,7 @@ namespace Contao;
  * Parent class for objects that can be modules or content elements.
  *
  * @property string $hl
+ * @property string $cssID
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -127,17 +128,20 @@ abstract class Hybrid extends \Frontend
 		$this->arrData = $objHybrid->row();
 
 		// Get the CSS ID from the parent element (!)
-		$cssID = deserialize($objElement->cssID, true);
+		$this->cssID = deserialize($objElement->cssID, true);
+
+		$cssID = deserialize($objHybrid->attributes, true);
+
+		// Override the CSS ID (see #305)
+		if (!empty($this->cssID[0]))
+		{
+			$cssID[0] = $this->cssID[0];
+		}
 
 		// Merge the CSS classes (see #6011)
-		if (isset($objHybrid->attributes))
+		if (!empty($this->cssID[1]))
 		{
-			$arrAttributes = deserialize($objHybrid->attributes, true);
-
-			if (!empty($arrAttributes[1]))
-			{
-				$cssID[1] = trim($arrAttributes[1] . ' ' . $cssID[1]);
-			}
+			$cssID[1] = trim($cssID[1] . ' ' . $this->cssID[1]);
 		}
 
 		$this->cssID = $cssID;
@@ -234,7 +238,7 @@ abstract class Hybrid extends \Frontend
 		$this->compile();
 
 		$this->Template->style = !empty($this->arrStyle) ? implode(' ', $this->arrStyle) : '';
-		$this->Template->cssID = ($this->cssID[0] != '') ? ' id="' . $this->cssID[0] . '"' : '';
+		$this->Template->cssID = !empty($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '';
 		$this->Template->class = trim($this->typePrefix . $this->strKey . ' ' . $this->cssID[1]);
 
 		$this->Template->inColumn = $this->strColumn;

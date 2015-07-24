@@ -58,7 +58,7 @@ class InstallCommandTest extends TestCase
     public function testOutput()
     {
         $command = new InstallCommand('contao:install');
-        $tester  = new CommandTester($command);
+        $tester = new CommandTester($command);
 
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
@@ -88,7 +88,7 @@ class InstallCommandTest extends TestCase
         $lock->lock();
 
         $command = new InstallCommand('contao:install');
-        $tester  = new CommandTester($command);
+        $tester = new CommandTester($command);
 
         $code = $tester->execute([]);
 

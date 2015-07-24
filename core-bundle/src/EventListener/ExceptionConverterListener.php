@@ -29,16 +29,16 @@ class ExceptionConverterListener
      * @var array
      */
     private $mapper = [
-        'Contao\\CoreBundle\\Exception\\AccessDeniedException'           => 'AccessDeniedHttpException',
-        'Contao\\CoreBundle\\Exception\\ForwardPageNotFoundException'    => 'InternalServerErrorHttpException',
+        'Contao\\CoreBundle\\Exception\\AccessDeniedException' => 'AccessDeniedHttpException',
+        'Contao\\CoreBundle\\Exception\\ForwardPageNotFoundException' => 'InternalServerErrorHttpException',
         'Contao\\CoreBundle\\Exception\\IncompleteInstallationException' => 'InternalServerErrorHttpException',
-        'Contao\\CoreBundle\\Exception\\InsecureInstallationException'   => 'InternalServerErrorHttpException',
-        'Contao\\CoreBundle\\Exception\\InvalidRequestTokenException'    => 'BadRequestHttpException',
-        'Contao\\CoreBundle\\Exception\\NoActivePageFoundException'      => 'InternalServerErrorHttpException',
-        'Contao\\CoreBundle\\Exception\\NoLayoutSpecifiedException'      => 'InternalServerErrorHttpException',
-        'Contao\\CoreBundle\\Exception\\NoRootPageFoundException'        => 'InternalServerErrorHttpException',
-        'Contao\\CoreBundle\\Exception\\PageNotFoundException'           => 'NotFoundHttpException',
-        'Contao\\CoreBundle\\Exception\\ServiceUnavailableException'     => 'ServiceUnavailableHttpException',
+        'Contao\\CoreBundle\\Exception\\InsecureInstallationException' => 'InternalServerErrorHttpException',
+        'Contao\\CoreBundle\\Exception\\InvalidRequestTokenException' => 'BadRequestHttpException',
+        'Contao\\CoreBundle\\Exception\\NoActivePageFoundException' => 'InternalServerErrorHttpException',
+        'Contao\\CoreBundle\\Exception\\NoLayoutSpecifiedException' => 'InternalServerErrorHttpException',
+        'Contao\\CoreBundle\\Exception\\NoRootPageFoundException' => 'InternalServerErrorHttpException',
+        'Contao\\CoreBundle\\Exception\\PageNotFoundException' => 'NotFoundHttpException',
+        'Contao\\CoreBundle\\Exception\\ServiceUnavailableException' => 'ServiceUnavailableHttpException',
     ];
 
     /**
@@ -49,7 +49,7 @@ class ExceptionConverterListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
-        $class     = get_class($exception);
+        $class = get_class($exception);
 
         if (!isset($this->mapper[$class])) {
             return;

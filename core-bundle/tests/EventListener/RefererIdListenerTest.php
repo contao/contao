@@ -42,10 +42,10 @@ class RefererIdListenerTest extends TestCase
     public function testTokenAddedToRequest()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel    = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
-        $request   = new Request();
-        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new RefererIdListener($this->mockTokenManager());
+        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $request = new Request();
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener = new RefererIdListener($this->mockTokenManager());
         $container = new Container();
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
@@ -64,10 +64,10 @@ class RefererIdListenerTest extends TestCase
     public function testTokenNotAddedToFrontendRequest()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel    = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
-        $request   = new Request();
-        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener  = new RefererIdListener($this->mockTokenManager());
+        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $request = new Request();
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $listener = new RefererIdListener($this->mockTokenManager());
         $container = new Container();
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
@@ -85,10 +85,10 @@ class RefererIdListenerTest extends TestCase
     public function testTokenNotAddedToSubrequest()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel    = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
-        $request   = new Request();
-        $event     = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
-        $listener  = new RefererIdListener($this->mockTokenManager());
+        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $request = new Request();
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
+        $listener = new RefererIdListener($this->mockTokenManager());
         $container = new Container();
 
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));

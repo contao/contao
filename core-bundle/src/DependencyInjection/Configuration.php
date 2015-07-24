@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode    = $treeBuilder->root('contao');
+        $rootNode = $treeBuilder->root('contao');
 
         $rootNode
             ->children()
@@ -65,7 +65,7 @@ class Configuration implements ConfigurationInterface
                 ->integerNode('error_level')
                     ->min(-1)
                     ->max(32767)
-                    ->defaultValue(E_ALL & ~E_NOTICE & ~E_USER_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
+                    ->defaultValue(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
                 ->end()
             ->end()
         ;

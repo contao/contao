@@ -51,7 +51,7 @@ class LocaleListener
         }
 
         $request = $event->getRequest();
-        $locale  = $this->getLocale($request);
+        $locale = $this->getLocale($request);
 
         $request->attributes->set('_locale', $locale);
 

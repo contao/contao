@@ -72,7 +72,7 @@ class ContaoCoreBundleTest extends TestCase
 
         foreach ($container->getCompilerPassConfig()->getBeforeOptimizationPasses() as $pass) {
             $reflection = new \ReflectionClass($pass);
-            $classes[]  = $reflection->getName();
+            $classes[] = $reflection->getName();
         }
 
         $this->assertEquals(

@@ -51,8 +51,8 @@ class CombinedFileDumper implements DumperInterface
     public function __construct(Filesystem $filesystem, LoaderInterface $loader, $cacheDir)
     {
         $this->filesystem = $filesystem;
-        $this->loader     = $loader;
-        $this->cacheDir   = $cacheDir;
+        $this->loader = $loader;
+        $this->cacheDir = $cacheDir;
     }
 
     /**
@@ -76,7 +76,7 @@ class CombinedFileDumper implements DumperInterface
      */
     public function dump($files, $cacheFile, array $options = [])
     {
-        $type   = isset($options['type']) ? $options['type'] : null;
+        $type = isset($options['type']) ? $options['type'] : null;
         $buffer = $this->header;
 
         foreach ((array) $files as $file) {

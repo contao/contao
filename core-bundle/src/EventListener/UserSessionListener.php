@@ -49,7 +49,7 @@ class UserSessionListener
      */
     public function __construct(SessionInterface $session, Connection $connection)
     {
-        $this->session    = $session;
+        $this->session = $session;
         $this->connection = $connection;
     }
 

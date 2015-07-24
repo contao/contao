@@ -4,6 +4,14 @@ API changes
 Version 3.* to 4.0
 ------------------
 
+### StringUtil class
+
+Since the `String` class is not compatible with PHP 7, we have renamed it to
+`StringUtil`. The `String` class remains available for reasons of backwards
+compatibility, however it has been deprecated and will be removed in a future
+version.
+
+
 ### Mime icons
 
 The mime icons have been removed from all front end templates. Instead, a new
@@ -301,12 +309,6 @@ wrapping element, use `Message::generateUnwrapped()` instead.
 
 The "prepareFormData" hook now passes `$this` as last argument, just like in
 any other hook.
-
-
-### ondelete_callback
-
-The `ondelete_callback` of the `DC_Table` driver now passes `$this` as last
-argument, just like in `DC_Folder` and in any other callback.
 
 
 ### Markup changes

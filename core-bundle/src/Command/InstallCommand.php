@@ -78,8 +78,8 @@ class InstallCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->fs      = new Filesystem();
-        $this->output  = $output;
+        $this->fs = new Filesystem();
+        $this->output = $output;
         $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
 
         $this->addEmptyDirs();

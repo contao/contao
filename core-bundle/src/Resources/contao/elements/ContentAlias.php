@@ -49,6 +49,12 @@ class ContentAlias extends \ContentElement
 
 		$cssID = deserialize($objElement->cssID, true);
 
+		// Override the CSS ID (see #305)
+		if (!empty($this->cssID[0]))
+		{
+			$cssID[0] = $this->cssID[0];
+		}
+
 		// Merge the CSS classes (see #6011)
 		if (!empty($this->cssID[1]))
 		{

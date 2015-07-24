@@ -40,7 +40,7 @@ contao:
     upload_path:          files
     csrf_token_name:      contao_csrf_token
     pretty_error_screens: true
-    error_level:          7159 # E_ALL & ~E_NOTICE & ~E_USER_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
+    error_level:          8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
 ```
 
 Add the Contao routes to your `app/config/routing.yml` file:

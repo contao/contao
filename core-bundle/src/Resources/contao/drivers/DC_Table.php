@@ -496,14 +496,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				{
 					foreach ($value as $kk=>$vv)
 					{
-						$value[$kk] = $vv ? \String::binToUuid($vv) : '';
+						$value[$kk] = $vv ? \StringUtil::binToUuid($vv) : '';
 					}
 
 					$row[$i] = implode(', ', $value);
 				}
 				else
 				{
-					$row[$i] = $value ? \String::binToUuid($value) : '';
+					$row[$i] = $value ? \StringUtil::binToUuid($value) : '';
 				}
 			}
 			elseif (is_array($value))
@@ -1512,7 +1512,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
 		{
-			$insertID = $objUndoStmt->insertId;
+			$undoId = $objUndoStmt->insertId;
 
 			// Call ondelete_callback
 			if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['ondelete_callback']))
@@ -1522,11 +1522,11 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($insertID, $this);
+						$this->$callback[0]->$callback[1]($this, $undoId);
 					}
 					elseif (is_callable($callback))
 					{
-						$callback($insertID, $this);
+						$callback($this, $undoId);
 					}
 				}
 			}
@@ -3778,7 +3778,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Shorten the label if it is too long
 		if ($GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] > 0 && $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] < utf8_strlen(strip_tags($label)))
 		{
-			$label = trim(\String::substrHtml($label, $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'])) . ' …';
+			$label = trim(\StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'])) . ' …';
 		}
 
 		$label = preg_replace('/\(\) ?|\[\] ?|\{\} ?|<> ?/', '', $label);
@@ -4336,7 +4336,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		// Make items sortable
-		if ($blnHasSorting && \Input::get('act') != 'select')
+		if ($blnHasSorting && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] && \Input::get('act') != 'select')
 		{
 			$return .= '
 </ul>
@@ -4689,7 +4689,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'] > 0 && $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'] < strlen(strip_tags($label)))
 				{
-					$label = trim(\String::substrHtml($label, $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'])) . ' …';
+					$label = trim(\StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'])) . ' …';
 				}
 
 				// Remove empty brackets (), [], {}, <> and empty tags from the label

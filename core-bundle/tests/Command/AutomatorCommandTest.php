@@ -106,7 +106,7 @@ class AutomatorCommandTest extends TestCase
 
         $code = $tester->execute([
             'command' => $command->getName(),
-            'task'    => 'checkForUpdates',
+            'task' => 'checkForUpdates',
         ]);
 
         $this->assertEquals(0, $code);
@@ -146,7 +146,7 @@ class AutomatorCommandTest extends TestCase
 
         $code = $tester->execute([
             'command' => $command->getName(),
-            'task'    => 'fooBar',
+            'task' => 'fooBar',
         ]);
 
         $this->assertEquals(1, $code);
