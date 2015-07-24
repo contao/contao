@@ -45,7 +45,7 @@ class ContaoAuthenticatorTest extends TestCase
     public function testCreateToken()
     {
         $authenticator = new ContaoAuthenticator();
-        $token         = $authenticator->createToken(new Request(), 'frontend');
+        $token = $authenticator->createToken(new Request(), 'frontend');
 
         $this->assertInstanceOf('Symfony\\Component\\Security\\Core\\Authentication\\Token\\AnonymousToken', $token);
         $this->assertEquals('frontend', $token->getKey());

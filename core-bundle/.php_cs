@@ -24,8 +24,6 @@ return Symfony\CS\Config\Config::create()
         'header_comment',
         'concat_with_spaces',
         'short_array_syntax',
-        'align_double_arrow',
-        'align_equals',
         '-phpdoc_to_comment',
         '-empty_return',
         '-concat_without_spaces',

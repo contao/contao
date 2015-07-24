@@ -71,10 +71,10 @@ class StoreRefererListener
             return;
         }
 
-        $key       = $request->query->has('popup') ? 'popupReferer' : 'referer';
+        $key = $request->query->has('popup') ? 'popupReferer' : 'referer';
         $refererId = $request->attributes->get('_contao_referer_id');
-        $referers  = $this->prepareBackendReferer($refererId, $this->session->get($key));
-        $ref       = $request->query->get('ref', '');
+        $referers = $this->prepareBackendReferer($refererId, $this->session->get($key));
+        $ref = $request->query->get('ref', '');
 
         // Move current to last if the referer is in both the URL and the session
         if ('' !== $ref && isset($referers[$ref])) {
@@ -146,7 +146,7 @@ class StoreRefererListener
         }
 
         $refererNew = [
-            'last'    => (string) $refererOld['current'],
+            'last' => (string) $refererOld['current'],
             'current' => $this->getRelativeRequestUri($request),
         ];
 

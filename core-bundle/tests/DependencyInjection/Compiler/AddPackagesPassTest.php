@@ -36,7 +36,7 @@ class AddPackagesPassTest extends TestCase
      */
     public function testProcess()
     {
-        $pass      = new AddPackagesPass($this->getRootDir() . '/vendor/composer/installed.json');
+        $pass = new AddPackagesPass($this->getRootDir() . '/vendor/composer/installed.json');
         $container = new ContainerBuilder();
 
         $pass->process($container);
@@ -59,7 +59,7 @@ class AddPackagesPassTest extends TestCase
      */
     public function testFileNotFound()
     {
-        $pass      = new AddPackagesPass($this->getRootDir() . '/vendor/composer/invalid.json');
+        $pass = new AddPackagesPass($this->getRootDir() . '/vendor/composer/invalid.json');
         $container = new ContainerBuilder();
 
         $pass->process($container);

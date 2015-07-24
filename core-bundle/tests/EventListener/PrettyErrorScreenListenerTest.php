@@ -237,7 +237,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         );
 
         $count = 0;
-        $twig  = $this->getMock('Twig_Environment', ['render']);
+        $twig = $this->getMock('Twig_Environment', ['render']);
 
         $twig->expects($this->any())
             ->method('render')

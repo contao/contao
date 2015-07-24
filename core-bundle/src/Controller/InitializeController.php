@@ -37,8 +37,8 @@ class InitializeController extends Controller
         trigger_error('Custom entry points are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         $masterRequest = $this->get('request_stack')->getMasterRequest();
-        $realRequest   = Request::createFromGlobals();
-        $scope         = ContaoCoreBundle::SCOPE_FRONTEND;
+        $realRequest = Request::createFromGlobals();
+        $scope = ContaoCoreBundle::SCOPE_FRONTEND;
 
         if (defined('TL_MODE') && 'BE' === TL_MODE) {
             $scope = ContaoCoreBundle::SCOPE_BACKEND;

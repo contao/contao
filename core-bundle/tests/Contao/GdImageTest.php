@@ -66,7 +66,7 @@ class GdImageTest extends TestCase
     public function testInstantiation()
     {
         $resource = imagecreate(1, 1);
-        $image    = new GdImage($resource);
+        $image = new GdImage($resource);
 
         $this->assertInstanceOf('Contao\\GdImage', $image);
         $this->assertSame($resource, $image->getResource());
@@ -124,7 +124,7 @@ class GdImageTest extends TestCase
     public function testSaveToFile()
     {
         foreach (['gif', 'jpeg', 'png'] as $type) {
-            $file  = self::$rootDir . '/test.' . $type;
+            $file = self::$rootDir . '/test.' . $type;
             $image = GdImage::fromDimensions(100, 100);
 
             $image->saveToFile($file);
@@ -147,7 +147,7 @@ class GdImageTest extends TestCase
         // Whole image black
         imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
 
-        $image  = new GdImage($image);
+        $image = new GdImage($image);
         $target = GdImage::fromDimensions(100, 100);
 
         $image->copyTo($target, 10, 10, 80, 80);

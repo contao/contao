@@ -45,7 +45,7 @@ class ContaoCacheClearerTest extends TestCase
      */
     public function testClear()
     {
-        $fs       = new Filesystem();
+        $fs = new Filesystem();
         $cacheDir = $this->getCacheDir();
 
         $fs->mkdir("$cacheDir/contao/config");

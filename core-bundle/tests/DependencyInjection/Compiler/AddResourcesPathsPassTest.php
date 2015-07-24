@@ -42,9 +42,9 @@ class AddResourcesPathsPassTest extends TestCase
         $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
 
         $container->setParameter('kernel.bundles', [
-            'FrameworkBundle'  => 'Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle',
+            'FrameworkBundle' => 'Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle',
             'ContaoTestBundle' => 'Contao\\TestBundle\\ContaoTestBundle',
-            'foobar'           => 'Contao\\CoreBundle\\HttpKernel\\Bundle\\ContaoModuleBundle',
+            'foobar' => 'Contao\\CoreBundle\\HttpKernel\\Bundle\\ContaoModuleBundle',
         ]);
 
         $pass->process($container);

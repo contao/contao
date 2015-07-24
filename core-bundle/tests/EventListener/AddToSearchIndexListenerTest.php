@@ -65,7 +65,7 @@ class AddToSearchIndexListenerTest extends TestCase
         ;
 
         $listener = new AddToSearchIndexListener($this->framework);
-        $event    = $this->mockPostResponseEvent();
+        $event = $this->mockPostResponseEvent();
 
         $event
             ->expects($this->never())
@@ -90,7 +90,7 @@ class AddToSearchIndexListenerTest extends TestCase
         ;
 
         $listener = new AddToSearchIndexListener($this->framework);
-        $event    = $this->mockPostResponseEvent();
+        $event = $this->mockPostResponseEvent();
 
         $event
             ->expects($this->once())

@@ -38,7 +38,7 @@ class XliffFileLoader extends Loader
      */
     public function __construct($rootDir, $addToGlobals = false)
     {
-        $this->rootDir      = dirname($rootDir);
+        $this->rootDir = dirname($rootDir);
         $this->addToGlobals = $addToGlobals;
     }
 
@@ -76,7 +76,7 @@ class XliffFileLoader extends Loader
         $xml = $this->getDomDocumentFromFile($name);
 
         $return = "\n// " . str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $name) . "\n";
-        $units  = $xml->getElementsByTagName('trans-unit');
+        $units = $xml->getElementsByTagName('trans-unit');
 
         /** @var \DOMElement[] $units */
         foreach ($units as $unit) {
@@ -87,7 +87,7 @@ class XliffFileLoader extends Loader
             }
 
             $chunks = $this->getChunksFromUnit($unit);
-            $value  = $this->fixClosingTags($node->item(0));
+            $value = $this->fixClosingTags($node->item(0));
 
             $return .= $this->getStringRepresentation($chunks, $value);
 

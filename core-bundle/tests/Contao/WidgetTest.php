@@ -47,7 +47,7 @@ class WidgetTest extends TestCase
     public function testGetPost($key, $input, $value, $expected)
     {
         $widget = $this->getMock('Contao\\Widget');
-        $class  = new \ReflectionClass('Contao\\Widget');
+        $class = new \ReflectionClass('Contao\\Widget');
         $method = $class->getMethod('getPost');
 
         $method->setAccessible(true);

@@ -51,7 +51,7 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->output  = $output;
+        $this->output = $output;
         $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
 
         $this->generateSymlinks();
@@ -64,7 +64,7 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     private function generateSymlinks()
     {
-        $fs         = new Filesystem();
+        $fs = new Filesystem();
         $uploadPath = $this->getContainer()->getParameter('contao.upload_path');
 
         // Remove the base folders in the document root
@@ -263,10 +263,10 @@ class SymlinksCommand extends AbstractLockedCommand
         return function (SplFileInfo $file) {
             static $paths;
 
-            $dir     = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $file->getPath());
+            $dir = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $file->getPath());
             $paths[] = $dir;
-            $chunks  = explode(DIRECTORY_SEPARATOR, $dir);
-            $test    = $chunks[0];
+            $chunks = explode(DIRECTORY_SEPARATOR, $dir);
+            $test = $chunks[0];
 
             for ($i = 1, $c = count($chunks); $i < $c; ++$i) {
                 if (in_array($test, $paths)) {

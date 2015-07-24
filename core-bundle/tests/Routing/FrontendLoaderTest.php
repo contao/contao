@@ -49,7 +49,7 @@ class FrontendLoaderTest extends TestCase
      */
     public function testContainerScope()
     {
-        $loader     = new FrontendLoader(false);
+        $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
 
         $this->assertEquals(
@@ -68,7 +68,7 @@ class FrontendLoaderTest extends TestCase
      */
     public function testController()
     {
-        $loader     = new FrontendLoader(false);
+        $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
 
         $this->assertEquals(
@@ -87,9 +87,9 @@ class FrontendLoaderTest extends TestCase
      */
     public function testGenerateFrontendWithMissingAlias()
     {
-        $loader     = new FrontendLoader(false);
+        $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
-        $router     = $this->getRouter($collection);
+        $router = $this->getRouter($collection);
 
         $router->generate('contao_frontend');
     }
@@ -99,9 +99,9 @@ class FrontendLoaderTest extends TestCase
      */
     public function testGenerateFrontendWithoutLocale()
     {
-        $loader     = new FrontendLoader(false);
+        $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
-        $router     = $this->getRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->assertEquals(
             '/foobar.html',
@@ -119,9 +119,9 @@ class FrontendLoaderTest extends TestCase
      */
     public function testGenerateFrontendWithLocale()
     {
-        $loader     = new FrontendLoader(true);
+        $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
-        $router     = $this->getRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->assertEquals(
             '/en/foobar.html',
@@ -136,9 +136,9 @@ class FrontendLoaderTest extends TestCase
      */
     public function testGenerateFrontendWithMissingLocale()
     {
-        $loader     = new FrontendLoader(true);
+        $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
-        $router     = $this->getRouter($collection);
+        $router = $this->getRouter($collection);
 
         $router->generate('contao_frontend', ['alias' => 'foobar']);
     }
@@ -148,9 +148,9 @@ class FrontendLoaderTest extends TestCase
      */
     public function testGenerateIndexWithoutLocale()
     {
-        $loader     = new FrontendLoader(false);
+        $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
-        $router     = $this->getRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->assertEquals(
             '/',
@@ -168,9 +168,9 @@ class FrontendLoaderTest extends TestCase
      */
     public function testGenerateIndexWithLocale()
     {
-        $loader     = new FrontendLoader(true);
+        $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
-        $router     = $this->getRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->assertEquals(
             '/en/',
@@ -185,9 +185,9 @@ class FrontendLoaderTest extends TestCase
      */
     public function testGenerateIndexWithMissingLocale()
     {
-        $loader     = new FrontendLoader(true);
+        $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
-        $router     = $this->getRouter($collection);
+        $router = $this->getRouter($collection);
 
         $router->generate('contao_index');
     }
