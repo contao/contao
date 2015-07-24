@@ -30,22 +30,24 @@ class WidgetTest extends TestCase
     {
         define('TL_MODE', 'BE');
 
-        require __DIR__ . "/../../src/Resources/contao/library/Contao/Input.php";
+        require __DIR__ . '/../../src/Resources/contao/library/Contao/Input.php';
         class_alias('Contao\\Input', 'Input');
 
-        require __DIR__ . "/../../src/Resources/contao/helper/functions.php";
+        require __DIR__ . '/../../src/Resources/contao/helper/functions.php';
 
         // Needs to be disable to prevent "undefined index" errors
         error_reporting(E_ALL & ~E_NOTICE);
     }
 
     /**
+     * Tests the getPost() method.
+     *
      * @dataProvider postProvider
      */
     public function testGetPost($key, $input, $value, $expected)
     {
-        $widget = $this->getMock('\\Contao\\Widget');
-        $class  = new \ReflectionClass('\\Contao\\Widget');
+        $widget = $this->getMock('Contao\\Widget');
+        $class  = new \ReflectionClass('Contao\\Widget');
         $method = $class->getMethod('getPost');
 
         $method->setAccessible(true);
@@ -54,15 +56,13 @@ class WidgetTest extends TestCase
         Input::resetCache();
         Input::initialize();
 
-        $actual = $method->invoke($widget, $key);
-
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected, $method->invoke($widget, $key));
     }
 
     /**
-     * DataProvider for testGetPost method.
+     * Provides the data for the testGetPost() method.
      *
-     * @return array
+     * @return array The data
      */
     public function postProvider()
     {
