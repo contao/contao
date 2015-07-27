@@ -13,11 +13,11 @@ namespace Contao;
 
 if (version_compare(PHP_VERSION, '7.0', '>=')) {
 	throw new \RuntimeException(
-		'The String class cannot be used in PHP ' . PHP_VERSION . '. Use the StringUtils class instead.'
+		'The String class cannot be used in PHP ' . PHP_VERSION . '. Use the StringUtil class instead.'
 	);
 } else {
 	trigger_error(
-		'Using the String class has been deprecated and will no longer work in PHP 7. Use the StringUtils class instead.',
+		'Using the String class has been deprecated and will no longer work in PHP 7. Use the StringUtil class instead.',
 		E_USER_DEPRECATED
 	);
 }
@@ -29,7 +29,7 @@ if (version_compare(PHP_VERSION, '7.0', '>=')) {
  * @author Leo Feyer <https://github.com/leofeyer>
  *
  * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
- *             Use the StringUtils class instead.
+ *             Use the StringUtil class instead.
  */
 class String extends \StringUtil
 {
