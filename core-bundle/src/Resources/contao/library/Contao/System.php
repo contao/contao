@@ -562,11 +562,11 @@ abstract class System
 	/**
 	 * Return all image sizes as array
 	 *
-	 * @param bool $all Returns all sizes omitting the back end user permission check
+	 * @param bool $checkPermission If true filter image sizes by back end user permissions
 	 *
 	 * @return array The available image sizes
 	 */
-	public static function getImageSizes($all = false)
+	public static function getImageSizes($checkPermission = true)
 	{
 		if (empty(static::$arrImageSizes))
 		{
@@ -592,7 +592,7 @@ abstract class System
 		$imageSizes = static::$arrImageSizes;
 
 		// Permission check
-		if (TL_MODE == 'BE' && $all === false) 
+		if (TL_MODE == 'BE' && $checkPermission === true)
 		{
 			$user = \BackendUser::getInstance();
 
