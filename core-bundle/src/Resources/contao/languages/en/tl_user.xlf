@@ -134,6 +134,12 @@
       <trans-unit id="tl_user.filemounts.1">
         <source>Here you can grant access to one or more folders (subfolders will be included automatically).</source>
       </trans-unit>
+      <trans-unit id="tl_user.imageSizes.0">
+        <source>Image sizes</source>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.1">
+        <source>Here you can grant access to one or more image sizes (e.g. in content elements).</source>
+      </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
       </trans-unit>
@@ -196,6 +202,9 @@
       </trans-unit>
       <trans-unit id="tl_user.filemounts_legend">
         <source>Filemounts</source>
+      </trans-unit>
+      <trans-unit id="tl_user.imagesizes_legend">
+        <source>Image sizes</source>
       </trans-unit>
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>

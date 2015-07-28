@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{forms_legend},forms,formp;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
+		'default'                     => '{title_legend},name;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imagesizes_legend},imageSizes;{forms_legend},forms,formp;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
 	),
 
 	// Fields
@@ -182,6 +182,16 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL"
 		),
+        'imageSizes' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'options'                 => \System::getImageSizes(true),
+            'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+            'eval'                    => array('multiple'=>true),
+            'sql'                     => "blob NULL"
+        ),
 		'forms' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['forms'],
