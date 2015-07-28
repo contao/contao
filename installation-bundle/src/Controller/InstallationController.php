@@ -17,6 +17,7 @@ use Contao\InstallationBundle\Database\Installer;
 use Contao\InstallationBundle\Database\VersionUpdateInterface;
 use Contao\InstallationBundle\InstallTool;
 use Contao\InstallationBundle\InstallToolUser;
+use Doctrine\DBAL\DBALException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -103,7 +104,10 @@ class InstallationController extends ContainerAware
             return $response;
         }
 
-        // FIXME: importExampleWebsite()
+        if (null !== ($response = $this->importExampleWebsite())) {
+            return $response;
+        }
+
         // FIXME: createAdminUser()
 
         return $this->render('main.html.twig', $this->context);
@@ -281,6 +285,8 @@ class InstallationController extends ContainerAware
      */
     private function adjustDatabaseTables()
     {
+        $this->installTool->handleRunOnce();
+
         $this->context['sql_form'] = $this->installer->compileCommands();
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
@@ -296,6 +302,51 @@ class InstallationController extends ContainerAware
                 $this->installer->execCommand($hash);
             }
         }
+
+        return $this->getRedirectResponse();
+    }
+
+    /**
+     * Renders a form to import the example website.
+     *
+     * @return Response|RedirectResponse|null The response object
+     */
+    private function importExampleWebsite()
+    {
+        $templates = $this->installTool->getTemplates();
+
+        $this->context['templates'] = $templates;
+
+        if ($this->installTool->getConfig('exampleWebsite')) {
+            $this->context['import_date'] = date('Y-m-d H:i', $this->installTool->getConfig('exampleWebsite'));
+        }
+
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if ('tl_template_import' !== $request->request->get('FORM_SUBMIT')) {
+            return null;
+        }
+
+        $template = $request->request->get('template');
+
+        if ('' === $template || !in_array($template, $templates)) {
+            $this->context['import_error'] = $this->trans('import_empty_source');
+
+            return null;
+        }
+
+        try {
+            $this->installTool->importTemplate($template, ('1' === $request->request->get('preserve')));
+        } catch (DBALException $e) {
+            $this->installTool->persistConfig('exampleWebsite', null);
+            $this->installTool->logException($e);
+
+            $this->context['import_error'] = $this->trans('import_exception');
+
+            return null;
+        }
+
+        $this->installTool->persistConfig('exampleWebsite', time());
 
         return $this->getRedirectResponse();
     }

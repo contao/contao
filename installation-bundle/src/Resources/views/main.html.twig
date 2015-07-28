@@ -42,4 +42,38 @@
       {% endif %}
     </div>
   </fieldset>
+  <fieldset class="tl_box{% if import_date is not empty %} collapsed{% endif %}">
+    <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'template_import'|trans }}</legend>
+    <div>
+      <h3>{{ 'template_import'|trans }}</h3>
+      {% if import_error %}
+        <p class="tl_error">{{ import_error }}</p>
+      {% elseif import_date is not empty %}
+        <p class="tl_confirm">{{ 'imported_on'|trans|format(import_date) }}</p>
+      {% else %}
+        <p class="tl_info">{{ 'import_data_will_be_deleted'|trans }}</p>
+      {% endif %}
+      <p>{{ 'template_import_explain'|trans|raw }}</p>
+      <form method="post">
+        <div class="tl_formbody_submit">
+          <input type="hidden" name="FORM_SUBMIT" value="tl_template_import">
+          <h4>{{ 'templates'|trans }}</h4>
+          <select name="template" class="tl_select">
+            <option value="">-</option>
+            {% for template in templates %}
+              <option value="{{ template }}">{{ template }}</option>
+            {% endfor %}
+          </select>
+          <div class="tl_checkbox_container" style="margin-top:3px">
+            <input type="checkbox" name="preserve" id="ctrl_preserve" class="tl_checkbox" value="1"> <label for="ctrl_preserve">{{ 'do_not_truncate'|trans }}</label>
+          </div>
+        </div>
+        <div class="tl_formbody_submit">
+          <div class="tl_submit_container">
+            <button type="submit" class="tl_submit" onclick="if(!confirm('{{ 'import_confirm'|trans }}'))return false;Backend.getScrollOffset()">{{ 'template_save'|trans }}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </fieldset>
 {% endblock %}

@@ -162,6 +162,46 @@
         <source>select_all</source>
         <target>Select all</target>
       </trans-unit>
+      <trans-unit id="41">
+        <source>template_import</source>
+        <target>Import a template</target>
+      </trans-unit>
+      <trans-unit id="42">
+        <source>template_import_explain</source>
+        <target>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</target>
+      </trans-unit>
+      <trans-unit id="43">
+        <source>import_exception</source>
+        <target>The import failed! Is the database up to date and is the template file compatible with your Contao version?</target>
+      </trans-unit>
+      <trans-unit id="44">
+        <source>import_empty_source</source>
+        <target>Please choose a template file!</target>
+      </trans-unit>
+      <trans-unit id="45">
+        <source>import_data_will_be_deleted</source>
+        <target>Any existing data will be deleted!</target>
+      </trans-unit>
+      <trans-unit id="46">
+        <source>imported_on</source>
+        <target>Template imported on %s.</target>
+      </trans-unit>
+      <trans-unit id="47">
+        <source>templates</source>
+        <target>Templates</target>
+      </trans-unit>
+      <trans-unit id="48">
+        <source>do_not_truncate</source>
+        <target>Do not truncate the tables</target>
+      </trans-unit>
+      <trans-unit id="49">
+        <source>import_confirm</source>
+        <target>Any existing data will be deleted! Do you really want to continue?</target>
+      </trans-unit>
+      <trans-unit id="50">
+        <source>template_save</source>
+        <target>Import template</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

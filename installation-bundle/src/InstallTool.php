@@ -10,9 +10,13 @@
 
 namespace Contao\InstallationBundle;
 
+use Contao\Backend;
 use Contao\Config;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Exception\ConnectionException;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Provides installation related methods.
@@ -138,7 +142,7 @@ class InstallTool
 
         try {
             $this->connection->query('use ' . $quotedName);
-        } catch (\Exception $e) {
+        } catch (DBALException $e) {
             return false;
         }
 
@@ -163,6 +167,65 @@ class InstallTool
         }
 
         return false;
+    }
+
+    /**
+     * Handles executing the runonce files.
+     */
+    public function handleRunOnce()
+    {
+        // Wait for the tables to be created (see #5061)
+        if ($this->connection->getSchemaManager()->tablesExist('tl_log')) {
+            Backend::handleRunOnce();
+        }
+    }
+
+    /**
+     * Returns the available SQL templates.
+     *
+     * @return array The SQL templates
+     */
+    public function getTemplates()
+    {
+        $finder = Finder::create()
+            ->files()
+            ->name('*.sql')
+            ->in($this->rootDir . '/../templates')
+        ;
+
+        $templates = [];
+
+        /** @var SplFileInfo $file */
+        foreach ($finder as $file) {
+            $templates[] = $file->getRelativePathname();
+        }
+
+        return $templates;
+    }
+
+    /**
+     * Imports a template.
+     *
+     * @param string $template     The template path
+     * @param bool   $preserveData True to preserve the existing data
+     */
+    public function importTemplate($template, $preserveData = false)
+    {
+        if (!$preserveData) {
+            $tables = $this->connection->getSchemaManager()->listTableNames();
+
+            foreach ($tables as $table) {
+                if (0 === strncmp($table, 'tl_', 3)) {
+                    $this->connection->query('TRUNCATE TABLE ' . $this->connection->quoteIdentifier($table));
+                }
+            }
+        }
+
+        $data = file($this->rootDir . '/../templates/' . $template);
+
+        foreach (preg_grep('/^INSERT /', $data) as $query) {
+            $this->connection->query($query);
+        }
     }
 
     /**
@@ -199,5 +262,25 @@ class InstallTool
         $config = Config::getInstance();
         $config->persist($key, $value);
         $config->save();
+    }
+
+    /**
+     * Logs an exception in the error.log file.
+     *
+     * @param \Exception $e The exception
+     */
+    public function logException(\Exception $e)
+    {
+        error_log(
+            sprintf(
+                "PHP Fatal error: %s in %s on line %s\n%s\n",
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine(),
+                $e->getTraceAsString()
+            ),
+            3,
+            $this->rootDir . '/logs/error.log'
+        );
     }
 }
