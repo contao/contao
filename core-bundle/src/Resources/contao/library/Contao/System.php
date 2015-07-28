@@ -568,20 +568,23 @@ abstract class System
 	 */
 	public static function getImageSizes($all = false)
 	{
-		if (empty(static::$arrImageSizes)) {
-			try {
+		if (empty(static::$arrImageSizes))
+		{
+			try
+			{
 				$sizes = array();
-				$imageSize = \Database::getInstance()->query(
-					"SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name"
-				);
+				$imageSize = \Database::getInstance()->query("SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name");
 
-				while ($imageSize->next()) {
+				while ($imageSize->next())
+				{
 					$sizes[$imageSize->id] = $imageSize->name;
 					$sizes[$imageSize->id] .= ' (' . $imageSize->width . 'x' . $imageSize->height . ')';
 				}
 
 				static::$arrImageSizes = array_merge(array('image_sizes' => $sizes), $GLOBALS['TL_CROP']);
-			} catch (\Exception $e) {
+			}
+			catch (\Exception $e)
+			{
 				static::$arrImageSizes = $GLOBALS['TL_CROP'];
 			}
 		}
@@ -589,29 +592,36 @@ abstract class System
 		$imageSizes = static::$arrImageSizes;
 
 		// Permission check
-		if (TL_MODE == 'BE' && $all === false) {
+		if (TL_MODE == 'BE' && $all === false) 
+		{
 			$user = \BackendUser::getInstance();
 
 			// Limit only if the user is not an admin
-			if (!$user->isAdmin) {
+			if (!$user->isAdmin) 
+			{
 				$allowedSizes = deserialize($user->imageSizes, true);
 
-				if (!empty($allowedSizes)) {
+				if (!empty($allowedSizes)) 
+				{
 					$filteredSizes = [];
 
-					foreach ($imageSizes as $group => $sizes) {
-						foreach ($sizes as $id => $size) {
-
+					foreach ($imageSizes as $group => $sizes) 
+					{
+						foreach ($sizes as $id => $size) 
+						{
 							// Dynamic sizes
-							if ($group == 'image_sizes') {
-								if (in_array($id, $allowedSizes)) {
+							if ($group == 'image_sizes') 
+							{
+								if (in_array($id, $allowedSizes)) 
+								{
 									$filteredSizes[$group][$id] = $size;
 								}
 
 								continue;
 							}
 
-							if (in_array($size, $allowedSizes)) {
+							if (in_array($size, $allowedSizes)) 
+							{
 								$filteredSizes[$group][] = $size;
 							}
 						}
@@ -623,8 +633,10 @@ abstract class System
 		}
 
 		// HOOK: allow to add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getImageSizes']) && is_array($GLOBALS['TL_HOOKS']['getImageSizes'])) {
-			foreach ($GLOBALS['TL_HOOKS']['getImageSizes'] as $callback) {
+		if (isset($GLOBALS['TL_HOOKS']['getImageSizes']) && is_array($GLOBALS['TL_HOOKS']['getImageSizes'])) 
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getImageSizes'] as $callback) 
+			{
 				$imageSizes = static::importStatic($callback[0])->$callback[1]($imageSizes);
 			}
 		}
