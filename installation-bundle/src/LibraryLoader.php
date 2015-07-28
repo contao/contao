@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
@@ -31,6 +31,7 @@ class LibraryLoader
     {
         $this->rootDir = $rootDir;
 
+        define('TL_MODE', 'BE');
         define('TL_ROOT', dirname($rootDir));
     }
 
@@ -54,14 +55,16 @@ class LibraryLoader
         }
 
         $class = str_replace('Contao\\', '', $class);
-        $dir   = $this->rootDir . '/../vendor/contao/core-bundle/src/Resources/contao/library/Contao';
-        $file  = str_replace('\\', '/', $class) . '.php';
+        $dir = $this->rootDir . '/../vendor/contao/core-bundle/src/Resources/contao';
+        $file = str_replace('\\', '/', $class) . '.php';
 
-        if (!file_exists($dir . '/' . $file)) {
-            return;
+        foreach (['library/Contao', 'classes'] as $src) {
+            if (!file_exists($dir . '/' . $src . '/' . $file)) {
+                continue;
+            }
+
+            include $dir . '/' . $src . '/' . $file;
+            class_alias('Contao\\' . $class, $class);
         }
-
-        include $dir . '/' . $file;
-        class_alias('Contao\\' . $class, $class);
     }
 }

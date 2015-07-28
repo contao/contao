@@ -40,7 +40,7 @@ class InstallTool
     public function __construct(Connection $connection, $rootDir)
     {
         $this->connection = $connection;
-        $this->rootDir    = $rootDir;
+        $this->rootDir = $rootDir;
     }
 
     /**

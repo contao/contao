@@ -1,4 +1,45 @@
 {% extends "layout.html.twig" %}
 
 {% block main %}
+  <fieldset class="tl_tbox{% if sql_form is empty %} collapsed{% endif %}">
+    <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'update_tables'|trans }}</legend>
+    <div>
+      <h3>{{ 'update_tables'|trans }}</h3>
+      {% if sql_form is empty %}
+        <p class="tl_confirm">{{ 'update_tables_confirm'|trans }}</p>
+      {% endif %}
+      <p>{{ 'update_tables_explain'|trans|raw }}</p>
+      {% if sql_form is not empty %}
+        <form method="post">
+          <div class="tl_formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_database_update">
+            <div id="sql_wrapper">
+              <table id="sql_table">
+              {% for category, commands in sql_form %}
+                <tr>
+                  <td colspan="2" class="tl_col_0">{{ category|trans }}</td>
+                </tr>
+                <tr>
+                  <td class="tl_col_1"><input type="checkbox" id="check_all_{{ loop.index }}" class="tl_checkbox" onclick="Backend.toggleCheckboxElements(this, '{{ category }}')"></td>
+                  <td class="tl_col_2"><label for="check_all_{{ loop.index }}" style="color:#a6a6a6"><em>{{ 'select_all'|trans }}</em></label></td>
+                </tr>
+                {% for md5, command in commands %}
+                  <tr>
+                    <td class="tl_col_1"><input type="checkbox" name="sql[]" id="sql_{{ loop.parent.loop.index }}_{{ loop.index }}" class="tl_checkbox {{ category }}" value="{{ md5 }}"{% if 'DROP' not in command %} checked="checked"{% endif %}></td>
+                    <td class="tl_col_2"><pre><label for="sql_{{ loop.parent.loop.index }}_{{ loop.index }}">{{ command }}</label></pre></td>
+                  </tr>
+                {% endfor %}
+              {% endfor %}
+              </table>
+            </div>
+          </div>
+          <div class="tl_formbody_submit">
+            <div class="tl_submit_container">
+              <button type="submit" class="tl_submit">{{ 'update_save'|trans }}</button>
+            </div>
+          </div>
+        </form>
+      {% endif %}
+    </div>
+  </fieldset>
 {% endblock %}

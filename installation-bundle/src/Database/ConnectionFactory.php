@@ -30,12 +30,12 @@ class ConnectionFactory
      */
     public static function create(array $parameters)
     {
-        $params['driver']   = 'pdo_mysql';
-        $params['host']     = $parameters['parameters']['database_host'];
-        $params['port']     = $parameters['parameters']['database_port'];
-        $params['dbname']   = $parameters['parameters']['database_name'];
-        $params['user']     = $parameters['parameters']['database_user'];
+        $params['driver'] = 'pdo_mysql';
+        $params['host'] = $parameters['parameters']['database_host'];
+        $params['port'] = $parameters['parameters']['database_port'];
+        $params['user'] = $parameters['parameters']['database_user'];
         $params['password'] = $parameters['parameters']['database_password'];
+        $params['dbname'] = $parameters['parameters']['database_name'];
 
         try {
             return DriverManager::getConnection($params);

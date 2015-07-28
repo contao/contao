@@ -37,7 +37,7 @@ class LanguageResolver
      */
     public function __construct(RequestStack $requestStack, $translationsDir)
     {
-        $this->requestStack    = $requestStack;
+        $this->requestStack = $requestStack;
         $this->translationsDir = $translationsDir;
     }
 
@@ -65,7 +65,7 @@ class LanguageResolver
     private function getAcceptedLocales()
     {
         $accepted = [];
-        $locales  = [];
+        $locales = [];
 
         // The implementation differs from the original implementation and also works with .jp browsers
         preg_match_all(

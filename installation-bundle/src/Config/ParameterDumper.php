@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of Contao.
  *
  * Copyright (c) 2005-2015 Leo Feyer
@@ -36,7 +36,7 @@ class ParameterDumper
      */
     public function __construct($rootDir)
     {
-        $this->rootDir    = $rootDir;
+        $this->rootDir = $rootDir;
         $this->parameters = Yaml::parse(file_get_contents($rootDir . '/config/parameters.yml.dist'));
     }
 
@@ -68,11 +68,13 @@ class ParameterDumper
      */
     public function dump()
     {
-        if ('ThisTokenIsNotSoSecretChangeIt' == $this->parameters['parameters']['secret']) {
+        if ('ThisTokenIsNotSoSecretChangeIt' === $this->parameters['parameters']['secret']) {
             $this->parameters['parameters']['secret'] = md5(uniqid(mt_rand(), true));
         }
 
-        $this->parameters['parameters']['database_port'] = (int) $this->parameters['parameters']['database_port'];
+        if ($this->parameters['parameters']['database_port']) {
+            $this->parameters['parameters']['database_port'] = (int) $this->parameters['parameters']['database_port'];
+        }
 
         file_put_contents($this->rootDir . '/config/parameters.yml', Yaml::dump($this->parameters));
     }

@@ -122,6 +122,46 @@
         <source>save_settings</source>
         <target>Save settings</target>
       </trans-unit>
+      <trans-unit id="31">
+        <source>update_tables</source>
+        <target>Update the database tables</target>
+      </trans-unit>
+      <trans-unit id="32">
+        <source>update_tables_explain</source>
+        <target>Please note that the update assistant only handles tables starting with &lt;code&gt;tl_&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="33">
+        <source>update_tables_confirm</source>
+        <target>The database is up to date.</target>
+      </trans-unit>
+      <trans-unit id="34">
+        <source>update_save</source>
+        <target>Update database</target>
+      </trans-unit>
+      <trans-unit id="35">
+        <source>CREATE</source>
+        <target>Create tables</target>
+      </trans-unit>
+      <trans-unit id="36">
+        <source>ALTER_ADD</source>
+        <target>Add columns</target>
+      </trans-unit>
+      <trans-unit id="37">
+        <source>ALTER_CHANGE</source>
+        <target>Change columns</target>
+      </trans-unit>
+      <trans-unit id="38">
+        <source>ALTER_DROP</source>
+        <target>Drop columns</target>
+      </trans-unit>
+      <trans-unit id="39">
+        <source>DROP</source>
+        <target>Drop tables</target>
+      </trans-unit>
+      <trans-unit id="40">
+        <source>select_all</source>
+        <target>Select all</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

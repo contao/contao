@@ -14,6 +14,9 @@
         "symfony/framework-bundle": "~2.7",
         "contao/core-bundle": "~4.0"
     },
+    "require-dev": {
+        "fabpot/php-cs-fixer": "~1.8"
+    },
     "conflict": {
         "contao/core": "*"
     },

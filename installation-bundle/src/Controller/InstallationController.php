@@ -13,9 +13,13 @@ namespace Contao\InstallationBundle\Controller;
 use Contao\Encryption;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
+use Contao\InstallationBundle\Database\Installer;
+use Contao\InstallationBundle\Database\VersionUpdateInterface;
 use Contao\InstallationBundle\InstallTool;
 use Contao\InstallationBundle\InstallToolUser;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,14 +31,19 @@ use Symfony\Component\HttpFoundation\Response;
 class InstallationController extends ContainerAware
 {
     /**
-     * @var InstallToolUser
+     * @var Installer
      */
-    private $user;
+    private $installer;
 
     /**
      * @var InstallTool
      */
     private $installTool;
+
+    /**
+     * @var InstallToolUser
+     */
+    private $user;
 
     /**
      * @var array
@@ -44,12 +53,15 @@ class InstallationController extends ContainerAware
     /**
      * Constructor.
      *
-     * @param InstallToolUser $user        The user object
+     * @param Installer       $installer   The database installer
      * @param InstallTool     $installTool The install tool object
+     * @param InstallToolUser $user        The user object
      */
-    public function __construct(InstallToolUser $user, InstallTool $installTool) {
-        $this->user        = $user;
+    public function __construct(Installer $installer, InstallTool $installTool, InstallToolUser $user)
+    {
+        $this->installer = $installer;
         $this->installTool = $installTool;
+        $this->user = $user;
     }
 
     /**
@@ -85,13 +97,14 @@ class InstallationController extends ContainerAware
             return $this->setUpDatabaseConnection();
         }
 
-        if (null !== ($response = $this->runDatabaseUpdates())) {
+        $this->runDatabaseUpdates();
+
+        if (null !== ($response = $this->adjustDatabaseTables())) {
             return $response;
         }
 
-        // adjustDatabaseTables()
-        // importExampleWebsite()
-        // createAdminUser()
+        // FIXME: importExampleWebsite()
+        // FIXME: createAdminUser()
 
         return $this->render('main.html.twig', $this->context);
     }
@@ -115,9 +128,9 @@ class InstallationController extends ContainerAware
     }
 
     /**
-     * Sets the install tool password.
+     * Renders a form to set the install tool password.
      *
-     * @return Response The response object
+     * @return Response|RedirectResponse The response object
      */
     private function setPassword()
     {
@@ -127,7 +140,7 @@ class InstallationController extends ContainerAware
             return $this->render('password.html.twig');
         }
 
-        $password     = $request->request->get('password');
+        $password = $request->request->get('password');
         $confirmation = $request->request->get('confirmation');
 
         // The passwords do not match
@@ -153,9 +166,9 @@ class InstallationController extends ContainerAware
     }
 
     /**
-     * Logs in the install tool user.
+     * Renders a form to log in.
      *
-     * @return RedirectResponse|Response The response object
+     * @return Response|RedirectResponse The response object
      */
     private function login()
     {
@@ -185,20 +198,20 @@ class InstallationController extends ContainerAware
     }
 
     /**
-     * Sets up the database connection.
+     * Renders a form to set up the database connection.
      *
-     * @return Response|null The response object
+     * @return Response|RedirectResponse The response object
      */
     private function setUpDatabaseConnection()
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
         $parameters['parameters'] = [
-            'database_host'     => $this->container->getParameter('database_host'),
-            'database_port'     => $this->container->getParameter('database_port'),
-            'database_name'     => $this->container->getParameter('database_name'),
-            'database_user'     => $this->container->getParameter('database_user'),
+            'database_host' => $this->container->getParameter('database_host'),
+            'database_port' => $this->container->getParameter('database_port'),
+            'database_user' => $this->container->getParameter('database_user'),
             'database_password' => $this->container->getParameter('database_password'),
+            'database_name' => $this->container->getParameter('database_name'),
         ];
 
         if ('tl_database_login' !== $request->request->get('FORM_SUBMIT')) {
@@ -206,11 +219,11 @@ class InstallationController extends ContainerAware
         }
 
         $parameters['parameters'] = [
-            'database_host'     => $request->request->get('dbHost'),
-            'database_port'     => $request->request->get('dbPort'),
-            'database_name'     => $request->request->get('dbName'),
-            'database_user'     => $request->request->get('dbUser'),
+            'database_host' => $request->request->get('dbHost'),
+            'database_port' => $request->request->get('dbPort'),
+            'database_user' => $request->request->get('dbUser'),
             'database_password' => $this->container->getParameter('database_password'),
+            'database_name' => $request->request->get('dbName'),
         ];
 
         if ('*****' !== $request->request->get('dbPassword')) {
@@ -235,14 +248,56 @@ class InstallationController extends ContainerAware
 
     /**
      * Runs the database updates.
-     *
-     * @return Response|null
      */
     private function runDatabaseUpdates()
     {
         if ($this->installTool->isFreshInstallation()) {
+            return;
+        }
+
+        $finder = Finder::create()
+            ->files()
+            ->name('Version*Update.php')
+            ->in(__DIR__ . '/../Database')
+        ;
+
+        /** @var SplFileInfo $file */
+        foreach ($finder as $file) {
+            $class = 'Contao\\InstallationBundle\\Database\\' . $file->getBasename('.php');
+
+            /** @var VersionUpdateInterface $update */
+            $update = new $class($this->container->get('database_connection'));
+
+            if ($update->shouldBeRun()) {
+                $update->run();
+            }
+        }
+    }
+
+    /**
+     * Renders a form to adjust the database tables.
+     *
+     * @return Response|RedirectResponse|null The response object
+     */
+    private function adjustDatabaseTables()
+    {
+        $this->context['sql_form'] = $this->installer->compileCommands();
+
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if ('tl_database_update' !== $request->request->get('FORM_SUBMIT')) {
             return null;
         }
+
+        $sql = $request->request->get('sql');
+
+        if (!empty($sql) && is_array($sql)) {
+            foreach ($sql as $hash) {
+                $this->installer->execCommand($hash);
+            }
+        }
+
+        return $this->getRedirectResponse();
     }
 
     /**
