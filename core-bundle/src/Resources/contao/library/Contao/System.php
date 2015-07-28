@@ -637,7 +637,7 @@ abstract class System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getImageSizes'] as $callback) 
 			{
-				$imageSizes = static::importStatic($callback[0])->$callback[1]($imageSizes);
+				$imageSizes = static::importStatic($callback[0])->$callback[1]($imageSizes, $checkPermission);
 			}
 		}
 
