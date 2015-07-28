@@ -182,8 +182,8 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL"
 		),
-        'imageSizes' => array
-        (
+		'imageSizes' => array
+		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL"
-        ),
+		),
 		'forms' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['forms'],
