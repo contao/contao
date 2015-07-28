@@ -184,13 +184,13 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		),
         'imageSizes' => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'options'                 => \System::getImageSizes(true),
-            'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-            'eval'                    => array('multiple'=>true),
-            'sql'                     => "blob NULL"
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'options'                 => \System::getImageSizes(true),
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL"
         ),
 		'forms' => array
 		(
