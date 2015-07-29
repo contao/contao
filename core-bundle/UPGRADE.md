@@ -241,7 +241,6 @@ has been set up for each one instead.
  - `contao/file.php`     -> `contao_backend_file`
  - `contao/help.php`     -> `contao_backend_help`
  - `contao/index.php`    -> `contao_backend_login`
- - `contao/install.php`  -> `contao_backend_install`
  - `contao/main.php`     -> `contao_backend`
  - `contao/page.php`     -> `contao_backend_page`
  - `contao/password.php` -> `contao_backend_password`

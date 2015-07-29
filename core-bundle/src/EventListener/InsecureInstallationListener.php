@@ -37,11 +37,6 @@ class InsecureInstallationListener
     {
         $request = $event->getRequest();
 
-        // Skip the check in the install tool
-        if ('contao_backend_install' === $request->attributes->get('_route')) {
-            return;
-        }
-
         // Skip the check on localhost
         if (in_array($request->getClientIp(), $this->localIps)) {
             return;
