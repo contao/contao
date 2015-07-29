@@ -79,11 +79,14 @@ via Ajax, has been deprecated in Contao 4.0 and will be removed in Contao 5.0.
 Subscribe to the "ajax_change" event instead.
 
 
-### Session::setData() and Session::getData()
+### Session class
 
-The methods `Session::setData()` and `Session::getData()` have been deprecated
-in Contao 4.0 and will be removed in Contao 5.0. Use the methods `replace()`
-and `all()` instead.
+The `Session` class has been deprecated in Contao 4.0 and will be removed in
+Contao 5.0. Use the session service instead:
+
+```php
+$session = System::getContainer()->get('session');
+```
 
 
 ### Widget::addSubmit()
