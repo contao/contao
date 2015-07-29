@@ -42,7 +42,7 @@
       {% endif %}
     </div>
   </fieldset>
-  <fieldset class="tl_box">
+  <fieldset class="tl_box{% if has_admin %} collapsed{% endif %}">
     <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'template_import'|trans }}</legend>
     <div>
       <h3>{{ 'template_import'|trans }}</h3>
