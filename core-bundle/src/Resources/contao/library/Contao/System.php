@@ -601,7 +601,11 @@ abstract class System
 			{
 				$allowedSizes = deserialize($user->imageSizes, true);
 
-				if (!empty($allowedSizes)) 
+				if (empty($allowedSizes))
+				{
+					$imageSizes = [];
+				}
+				else
 				{
 					$filteredSizes = [];
 
