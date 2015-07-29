@@ -12,7 +12,7 @@
       </trans-unit>
       <trans-unit id="3">
         <source>locked_headline</source>
-        <target>The install tool has been locked</target>
+        <target>The install tool has been locked!</target>
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
@@ -20,7 +20,7 @@
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
-        <target>PHP is not allowed to write files</target>
+        <target>PHP is not allowed to write files!</target>
       </trans-unit>
       <trans-unit id="6">
         <source>file_permissions_explanation</source>
@@ -56,11 +56,11 @@
       </trans-unit>
       <trans-unit id="14">
         <source>password_confirmation_mismatch</source>
-        <target>The password does not match the confirmation.</target>
+        <target>The password does not match the confirmation!</target>
       </trans-unit>
       <trans-unit id="15">
         <source>password_too_short</source>
-        <target>The password should be at least %d characters long.</target>
+        <target>The password should be at least %d characters long!</target>
       </trans-unit>
       <trans-unit id="16">
         <source>login</source>
