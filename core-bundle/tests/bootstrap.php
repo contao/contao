@@ -37,13 +37,13 @@ spl_autoload_register(function ($class) {
 
     $file = str_replace('\\', '/', $class);
 
-    if (file_exists(__DIR__ . "/Fixtures/library/$file.php")) {
-        include_once __DIR__ . "/Fixtures/library/$file.php";
-        class_alias("Contao\\Fixtures\\$class", "Contao\\$class");
-        class_alias("Contao\\Fixtures\\$class", $class);
-    } elseif (file_exists(__DIR__ . "/../src/Resources/contao/library/Contao/$file.php")) {
-        include_once __DIR__ . "/../src/Resources/contao/library/Contao/$file.php";
-        class_alias("Contao\\$class", $class);
+    if (file_exists(__DIR__ . '/Fixtures/library/' . $file . '.php')) {
+        include_once __DIR__ . '/Fixtures/library/' . $file . '.php';
+        class_alias('Contao\\Fixtures\\' . $class, 'Contao\\' . $class);
+        class_alias('Contao\\Fixtures\\' . $class, $class);
+    } elseif (file_exists(__DIR__ . '/../src/Resources/contao/library/Contao/' . $file . '.php')) {
+        include_once __DIR__ . '/../src/Resources/contao/library/Contao/' . $file . '.php';
+        class_alias('Contao\\' . $class, $class);
     }
 });
 

@@ -17,6 +17,7 @@ use Contao\Input;
  * Tests the Widget class.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -24,19 +25,13 @@ use Contao\Input;
 class WidgetTest extends TestCase
 {
     /**
-     * {@inheritdoc}
+     * Includes the helper functions if they have not yet been included.
      */
-    public static function setupBeforeClass()
+    public static function setUpBeforeClass()
     {
-        define('TL_MODE', 'BE');
-
-        require __DIR__ . '/../../src/Resources/contao/library/Contao/Input.php';
-        class_alias('Contao\\Input', 'Input');
-
-        require __DIR__ . '/../../src/Resources/contao/helper/functions.php';
-
-        // Needs to be disable to prevent "undefined index" errors
-        error_reporting(E_ALL & ~E_NOTICE);
+        if (!function_exists('utf8_decode_entities')) {
+            include_once __DIR__ . '/../../src/Resources/contao/helper/functions.php';
+        }
     }
 
     /**
@@ -46,6 +41,10 @@ class WidgetTest extends TestCase
      */
     public function testGetPost($key, $input, $value, $expected)
     {
+        // Prevent "undefined index" errors
+        $errorReporting = error_reporting();
+        error_reporting($errorReporting & ~E_NOTICE);
+
         $widget = $this->getMock('Contao\\Widget');
         $class = new \ReflectionClass('Contao\\Widget');
         $method = $class->getMethod('getPost');
@@ -57,6 +56,9 @@ class WidgetTest extends TestCase
         Input::initialize();
 
         $this->assertEquals($expected, $method->invoke($widget, $key));
+
+        // Restore the error reporting level
+        error_reporting($errorReporting);
     }
 
     /**
