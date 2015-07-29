@@ -12,6 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\GetImageSizesEvent;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -635,6 +638,14 @@ abstract class System
 				}
 			}
 		}
+
+		/** @var KernelInterface $kernel */
+		global $kernel;
+
+		// Dispatch the contao.parse_widget event
+		$event = new GetImageSizesEvent($imageSizes, $checkPermission);
+		$kernel->getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::GET_IMAGE_SIZES, $event);
+		$imageSizes = $event->getImageSizes();
 
 		// HOOK: allow to add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['getImageSizes']) && is_array($GLOBALS['TL_HOOKS']['getImageSizes'])) 
