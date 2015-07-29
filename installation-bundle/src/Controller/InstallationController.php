@@ -37,38 +37,9 @@ use Symfony\Component\HttpFoundation\Response;
 class InstallationController extends ContainerAware
 {
     /**
-     * @var Installer
-     */
-    private $installer;
-
-    /**
-     * @var InstallTool
-     */
-    private $installTool;
-
-    /**
-     * @var InstallToolUser
-     */
-    private $user;
-
-    /**
      * @var array
      */
     private $context = [];
-
-    /**
-     * Constructor.
-     *
-     * @param Installer       $installer   The database installer
-     * @param InstallTool     $installTool The install tool object
-     * @param InstallToolUser $user        The user object
-     */
-    public function __construct(Installer $installer, InstallTool $installTool, InstallToolUser $user)
-    {
-        $this->installer = $installer;
-        $this->installTool = $installTool;
-        $this->user = $user;
-    }
 
     /**
      * Handles the installation process.
@@ -77,31 +48,33 @@ class InstallationController extends ContainerAware
      */
     public function indexAction()
     {
+        $installTool = $this->container->get('contao.install_tool');
+
         $this->runPostInstallCommands();
 
-        if ($this->installTool->isLocked()) {
+        if ($installTool->isLocked()) {
             return $this->render('locked.html.twig');
         }
 
-        if (!$this->installTool->canWriteFiles()) {
+        if (!$installTool->canWriteFiles()) {
             return $this->render('not_writable.html.twig');
         }
 
-        if ($this->installTool->shouldAcceptLicense()) {
+        if ($installTool->shouldAcceptLicense()) {
             return $this->acceptLicense();
         }
 
-        $this->installTool->createLocalConfigurationFiles();
+        $installTool->createLocalConfigurationFiles();
 
-        if ('' === $this->installTool->getConfig('installPassword')) {
+        if ('' === $installTool->getConfig('installPassword')) {
             return $this->setPassword();
         }
 
-        if (!$this->user->isAuthenticated()) {
+        if (!$this->container->get('contao.install_tool_user')->isAuthenticated()) {
             return $this->login();
         }
 
-        if (!$this->installTool->canConnectToDatabase($this->container->getParameter('database_name'))) {
+        if (!$installTool->canConnectToDatabase($this->container->getParameter('database_name'))) {
             return $this->setUpDatabaseConnection();
         }
 
@@ -129,7 +102,7 @@ class InstallationController extends ContainerAware
     {
         $rootDir = $this->container->getParameter('kernel.root_dir');
 
-        if (is_link($rootDir . '/../web/assets')) {
+        if (is_dir($rootDir . '/../files') && is_link($rootDir . '/../web/assets')) {
             return;
         }
 
@@ -162,7 +135,7 @@ class InstallationController extends ContainerAware
             return $this->render('license.html.twig');
         }
 
-        $this->installTool->persistConfig('licenseAccepted', true);
+        $this->container->get('contao.install_tool')->persistConfig('licenseAccepted', true);
 
         return $this->getRedirectResponse();
     }
@@ -190,7 +163,8 @@ class InstallationController extends ContainerAware
             ]);
         }
 
-        $minlength = $this->installTool->getConfig('minPasswordLength');
+        $installTool = $this->container->get('contao.install_tool');
+        $minlength = $installTool->getConfig('minPasswordLength');
 
         // The passwords is too short
         if (strlen(utf8_decode($password)) < $minlength) {
@@ -199,8 +173,8 @@ class InstallationController extends ContainerAware
             ]);
         }
 
-        $this->installTool->persistConfig('installPassword', Encryption::hash($password));
-        $this->user->setAuthenticated(true);
+        $installTool->persistConfig('installPassword', Encryption::hash($password));
+        $this->container->get('contao.install_tool_user')->setAuthenticated(true);
 
         return $this->getRedirectResponse();
     }
@@ -218,21 +192,23 @@ class InstallationController extends ContainerAware
             return $this->render('login.html.twig');
         }
 
+        $installTool = $this->container->get('contao.install_tool');
+
         $verified = Encryption::verify(
             $request->request->get('password'),
-            $this->installTool->getConfig('installPassword')
+            $installTool->getConfig('installPassword')
         );
 
         if (!$verified) {
-            $this->installTool->increaseLoginCount();
+            $installTool->increaseLoginCount();
 
             return $this->render('login.html.twig', [
                 'error' => $this->trans('invalid_password'),
             ]);
         }
 
-        $this->installTool->resetLoginCount();
-        $this->user->setAuthenticated(true);
+        $installTool->resetLoginCount();
+        $this->container->get('contao.install_tool_user')->setAuthenticated(true);
 
         return $this->getRedirectResponse();
     }
@@ -270,9 +246,10 @@ class InstallationController extends ContainerAware
             $parameters['parameters']['database_password'] = $request->request->get('dbPassword');
         }
 
-        $this->installTool->setConnection(ConnectionFactory::create($parameters));
+        $installTool = $this->container->get('contao.install_tool');
+        $installTool->setConnection(ConnectionFactory::create($parameters));
 
-        if (!$this->installTool->canConnectToDatabase($parameters['parameters']['database_name'])) {
+        if (!$installTool->canConnectToDatabase($parameters['parameters']['database_name'])) {
             return $this->render('database.html.twig', array_merge(
                 $parameters,
                 ['database_error' => $this->trans('database_could_not_connect')]
@@ -291,7 +268,7 @@ class InstallationController extends ContainerAware
      */
     private function runDatabaseUpdates()
     {
-        if ($this->installTool->isFreshInstallation()) {
+        if ($this->container->get('contao.install_tool')->isFreshInstallation()) {
             return;
         }
 
@@ -308,7 +285,7 @@ class InstallationController extends ContainerAware
             /** @var VersionUpdateInterface $update */
             $update = new $class($this->container->get('database_connection'));
 
-            if ($update->shouldBeRun()) {
+            if ($update instanceof VersionUpdateInterface && $update->shouldBeRun()) {
                 $update->run();
             }
         }
@@ -321,9 +298,11 @@ class InstallationController extends ContainerAware
      */
     private function adjustDatabaseTables()
     {
-        $this->installTool->handleRunOnce();
+        $this->container->get('contao.install_tool')->handleRunOnce();
 
-        $this->context['sql_form'] = $this->installer->compileCommands();
+        $installer = $this->container->get('contao.installer');
+
+        $this->context['sql_form'] = $installer->getCommands();
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
@@ -335,7 +314,7 @@ class InstallationController extends ContainerAware
 
         if (!empty($sql) && is_array($sql)) {
             foreach ($sql as $hash) {
-                $this->installer->execCommand($hash);
+                $installer->execCommand($hash);
             }
         }
 
@@ -349,12 +328,13 @@ class InstallationController extends ContainerAware
      */
     private function importExampleWebsite()
     {
-        $templates = $this->installTool->getTemplates();
+        $installTool = $this->container->get('contao.install_tool');
+        $templates = $installTool->getTemplates();
 
         $this->context['templates'] = $templates;
 
-        if ($this->installTool->getConfig('exampleWebsite')) {
-            $this->context['import_date'] = date('Y-m-d H:i', $this->installTool->getConfig('exampleWebsite'));
+        if ($installTool->getConfig('exampleWebsite')) {
+            $this->context['import_date'] = date('Y-m-d H:i', $installTool->getConfig('exampleWebsite'));
         }
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
@@ -372,17 +352,17 @@ class InstallationController extends ContainerAware
         }
 
         try {
-            $this->installTool->importTemplate($template, ('1' === $request->request->get('preserve')));
+            $installTool->importTemplate($template, ('1' === $request->request->get('preserve')));
         } catch (DBALException $e) {
-            $this->installTool->persistConfig('exampleWebsite', null);
-            $this->installTool->logException($e);
+            $installTool->persistConfig('exampleWebsite', null);
+            $installTool->logException($e);
 
             $this->context['import_error'] = $this->trans('import_exception');
 
             return null;
         }
 
-        $this->installTool->persistConfig('exampleWebsite', time());
+        $installTool->persistConfig('exampleWebsite', time());
 
         return $this->getRedirectResponse();
     }
@@ -394,7 +374,9 @@ class InstallationController extends ContainerAware
      */
     private function createAdminUser()
     {
-        if ($this->installTool->hasAdminUser()) {
+        $installTool = $this->container->get('contao.install_tool');
+
+        if ($installTool->hasAdminUser()) {
             $this->context['has_admin'] = true;
 
             return null;
@@ -451,7 +433,7 @@ class InstallationController extends ContainerAware
             return null;
         }
 
-        $minlength = $this->installTool->getConfig('minPasswordLength');
+        $minlength = $installTool->getConfig('minPasswordLength');
 
         // The password is too short
         if (strlen(utf8_decode($password)) < $minlength) {
@@ -467,9 +449,9 @@ class InstallationController extends ContainerAware
             return null;
         }
 
-        $this->installTool->persistConfig('adminEmail', $email);
+        $installTool->persistConfig('adminEmail', $email);
 
-        $this->installTool->persistAdminUser(
+        $installTool->persistAdminUser(
             $username,
             $name,
             $email,

@@ -270,7 +270,7 @@
         <source>installation_complete_explain</source>
         <target>Now please go to the Contao back end and check the system settings.</target>
       </trans-unit>
-      <trans-unit id="6X">
+      <trans-unit id="68">
         <source>back_end</source>
         <target>Contao back end</target>
       </trans-unit>

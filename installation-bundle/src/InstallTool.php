@@ -304,14 +304,14 @@ class InstallTool
             '=' => '&#61;',
         ];
 
-        $statement->bindParam(':time', time());
-        $statement->bindParam(':name', strtr($name, $replace));
-        $statement->bindParam(':email', $email);
-        $statement->bindParam(':username', strtr($username, $replace));
-        $statement->bindParam(':password', Encryption::hash($password));
-        $statement->bindParam(':language', $language);
-
-        $statement->execute();
+        $statement->execute([
+            ':time' => time(),
+            ':name' => strtr($name, $replace),
+            ':email' => $email,
+            ':username' => strtr($username, $replace),
+            ':password' => Encryption::hash($password),
+            ':language' => $language
+        ]);
     }
 
     /**

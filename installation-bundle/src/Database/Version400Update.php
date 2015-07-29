@@ -47,7 +47,7 @@ class Version400Update implements VersionUpdateInterface
 
         $columns = $schemaManager->listTableColumns('tl_layout');
 
-        if (isset($columns['script'])) {
+        if (isset($columns['scripts'])) {
             return false;
         }
 
@@ -59,51 +59,89 @@ class Version400Update implements VersionUpdateInterface
      */
     public function run()
     {
-        // FIXME: version 4.0.0 update
-        /*
+        $this->connection->query('ALTER TABLE `tl_layout` ADD `scripts` text NULL');
+
         // Adjust the framework agnostic scripts
-        $this->Database->query('ALTER TABLE `tl_layout` ADD `scripts` text NULL');
-        $objLayout = $this->Database->query("SELECT id, addJQuery, jquery, addMooTools, mootools FROM tl_layout WHERE framework!=''");
+        $statement = $this->connection->query(
+            "SELECT id, addJQuery, jquery, addMooTools, mootools FROM tl_layout WHERE framework!=''"
+        );
 
-        while ($objLayout->next()) {
-            $arrScripts = [];
+        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
+            $scripts = [];
 
-            // Check whether j_slider is enabled
-            if ($objLayout->addJQuery) {
-                $jquery = deserialize($objLayout->jquery);
+            // Check if j_slider is enabled
+            if ($layout->addJQuery) {
+                $jquery = deserialize($layout->jquery);
 
                 if (!empty($jquery) && is_array($jquery)) {
-                    if (($key = array_search('j_slider', $jquery)) !== false) {
-                        $arrScripts[] = 'js_slider';
+                    if (false !== ($key = array_search('j_slider', $jquery))) {
+                        $scripts[] = 'js_slider';
                         unset($jquery[$key]);
 
-                        $this->Database->prepare('UPDATE tl_layout SET jquery=? WHERE id=?')
-                                       ->execute(serialize(array_values($jquery)), $objLayout->id);
+                        $stmt = $this->connection->prepare('UPDATE tl_layout SET jquery=:jquery WHERE id=:id');
+                        $stmt->execute([':jquery' => serialize(array_values($jquery)), ':id' => $layout->id]);
                     }
                 }
+
             }
 
-            // Check whether moo_slider is enabled
-            if ($objLayout->addMooTools) {
-                $mootools = deserialize($objLayout->mootools);
+            // Check if moo_slider is enabled
+            if ($layout->addMooTools) {
+                $mootools = deserialize($layout->mootools);
 
                 if (!empty($mootools) && is_array($mootools)) {
-                    if (($key = array_search('moo_slider', $mootools)) !== false) {
-                        $arrScripts[] = 'js_slider';
+                    if (false !== ($key = array_search('moo_slider', $mootools))) {
+                        $scripts[] = 'js_slider';
                         unset($mootools[$key]);
 
-                        $this->Database->prepare('UPDATE tl_layout SET mootools=? WHERE id=?')
-                                       ->execute(serialize(array_values($mootools)), $objLayout->id);
+                        $stmt = $this->connection->prepare('UPDATE tl_layout SET mootools=:mootools WHERE id=:id');
+                        $stmt->execute([':mootools' => serialize(array_values($mootools)), ':id' => $layout->id]);
                     }
                 }
             }
 
             // Enable the js_slider template
-            if (!empty($arrScripts)) {
-                $this->Database->prepare('UPDATE tl_layout SET scripts=? WHERE id=?')
-                               ->execute(serialize(array_values(array_unique($arrScripts))), $objLayout->id);
+            if (!empty($scripts)) {
+                $stmt = $this->connection->prepare('UPDATE tl_layout SET scripts=:scripts WHERE id=:id');
+                $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $layout->id]);
             }
         }
-        */
+
+        // Replace moo_slimbox with moo_mediabox
+        $statement = $this->connection->query("SELECT id, mootools FROM tl_layout WHERE framework!=''");
+
+        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
+            $mootools = deserialize($layout->mootools);
+
+            if (!empty($mootools) && is_array($mootools)) {
+                if (false !== ($key = array_search('moo_slimbox', $mootools))) {
+                    $scripts[] = 'moo_mediabox';
+                    unset($mootools[$key]);
+
+                    $stmt = $this->connection->prepare('UPDATE tl_layout SET mootools=:mootools WHERE id=:id');
+                    $stmt->execute([':mootools' => serialize(array_values($mootools)), ':id' => $layout->id]);
+                }
+            }
+        }
+
+        // Adjust the list of framework style sheets
+        $statement = $this->connection->query("SELECT id, framework FROM tl_layout WHERE framework!=''");
+
+        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
+            $framework = deserialize($layout->framework);
+
+            if (!empty($framework) && is_array($framework)) {
+                if (false !== ($key = array_search('tinymce.css', $framework))) {
+                    unset($framework[$key]);
+
+                    $stmt = $this->connection->prepare('UPDATE tl_layout SET framework=:framework WHERE id=:id');
+                    $stmt->execute([':framework' => serialize(array_values($framework)), ':id' => $layout->id]);
+                }
+            }
+        }
+
+        // Adjust the module types
+        $this->connection->query("UPDATE tl_module SET type='articlelist' WHERE type='articleList'");
+        $this->connection->query("UPDATE tl_module SET type='rssReader' WHERE type='rss_reader'");
     }
 }
