@@ -10,6 +10,8 @@
 
 namespace Contao\InstallationBundle\Controller;
 
+use Contao\CoreBundle\Command\InstallCommand;
+use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\Encryption;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
@@ -18,6 +20,9 @@ use Contao\InstallationBundle\Database\VersionUpdateInterface;
 use Contao\InstallationBundle\InstallTool;
 use Contao\InstallationBundle\InstallToolUser;
 use Doctrine\DBAL\DBALException;
+use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -72,6 +77,8 @@ class InstallationController extends ContainerAware
      */
     public function indexAction()
     {
+        $this->runPostInstallCommands();
+
         if ($this->installTool->isLocked()) {
             return $this->render('locked.html.twig');
         }
@@ -113,6 +120,33 @@ class InstallationController extends ContainerAware
         }
 
         return $this->render('main.html.twig', $this->context);
+    }
+
+    /**
+     * Runs the post install commands.
+     */
+    private function runPostInstallCommands()
+    {
+        $rootDir = $this->container->getParameter('kernel.root_dir');
+
+        if (is_link($rootDir . '/../web/assets')) {
+            return;
+        }
+
+        // Install the bundle assets
+        $command = new AssetsInstallCommand();
+        $command->setContainer($this->container);
+        $command->run(new ArgvInput(['assets:install', '--relative', $rootDir . '/../web']), new NullOutput());
+
+        // Add the Contao directories
+        $command = new InstallCommand();
+        $command->setContainer($this->container);
+        $command->run(new ArgvInput([]), new NullOutput());
+
+        // Generate the symlinks
+        $command = new SymlinksCommand();
+        $command->setContainer($this->container);
+        $command->run(new ArgvInput([]), new NullOutput());
     }
 
     /**

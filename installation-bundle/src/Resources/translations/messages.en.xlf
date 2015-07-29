@@ -124,7 +124,7 @@
       </trans-unit>
       <trans-unit id="31">
         <source>update_tables</source>
-        <target>Update the database tables</target>
+        <target>Update the database</target>
       </trans-unit>
       <trans-unit id="32">
         <source>update_tables_explain</source>
@@ -255,6 +255,22 @@
         <target>Please fill in all fields to create an admin user!</target>
       </trans-unit>
       <trans-unit id="64">
+        <source>congratulations</source>
+        <target>Congratulations!</target>
+      </trans-unit>
+      <trans-unit id="65">
+        <source>congratulations_explain</source>
+        <target>You have successfully installed Contao.</target>
+      </trans-unit>
+      <trans-unit id="66">
+        <source>installation_complete</source>
+        <target>Installation complete</target>
+      </trans-unit>
+      <trans-unit id="67">
+        <source>installation_complete_explain</source>
+        <target>Now please go to the Contao back end and check the system settings.</target>
+      </trans-unit>
+      <trans-unit id="6X">
         <source>back_end</source>
         <target>Contao back end</target>
       </trans-unit>

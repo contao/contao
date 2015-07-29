@@ -16,12 +16,14 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\Environment;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Database\Installer;
+use Contao\InstallationBundle\HttpKernel\UnbootableKernel;
 use Contao\InstallationBundle\InstallTool;
 use Contao\InstallationBundle\InstallToolUser;
 use Contao\InstallationBundle\Translation\LanguageResolver;
 use Contao\System;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -63,6 +65,9 @@ class ContainerFactory
         foreach ($parameters['parameters'] as $name => $value) {
             $container->setParameter($name, $value);
         }
+
+        // Add the Contao upload path
+        $container->setParameter('contao.upload_path', 'files');
 
         // Set up the request stack
         $request = Request::createFromGlobals();
@@ -121,8 +126,14 @@ class ContainerFactory
         $container->set('twig', $twig);
 
         // Add the kernel bundles
-        $kernel = new \AppKernel('prod', false);
-        $container->setParameter('kernel.bundles', $kernel->registerBundles());
+        $kernel = new UnbootableKernel('prod', false);
+        $kernel->setBundles($kernel->registerBundles());
+
+        $container->set('kernel', $kernel);
+        $container->setParameter('kernel.bundles', $kernel->getBundles());
+
+        // Add the file system
+        $container->set('filesystem', new Filesystem());
 
         // Add the Contao resources paths
         $pass = new AddResourcesPathsPass();

@@ -42,7 +42,7 @@
       {% endif %}
     </div>
   </fieldset>
-  <fieldset class="tl_box{% if import_date is not empty %} collapsed{% endif %}">
+  <fieldset class="tl_box">
     <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'template_import'|trans }}</legend>
     <div>
       <h3>{{ 'template_import'|trans }}</h3>
@@ -119,5 +119,15 @@
       {% endif %}
     </div>
   </fieldset>
+  {% if has_admin %}
+    <fieldset class="tl_box last">
+      <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'installation_complete'|trans }}</legend>
+      <div>
+        <h3>{{ 'congratulations'|trans }}</h3>
+        <p class="tl_confirm">{{ 'congratulations_explain'|trans }}</p>
+        <p>{{ 'installation_complete_explain'|trans }}</p>
+      </div>
+    </fieldset>
+  {% endif %}
   <p id="back_end"><a href="{{ path }}/contao">{{ 'back_end'|trans }}</a></p>
 {% endblock %}
