@@ -127,6 +127,7 @@ namespace {
 	class Search extends \Contao\Search {}
 	class Session extends \Contao\Session {}
 	class SortedIterator extends \Contao\SortedIterator {}
+	class SqlFileParser extends \Contao\SqlFileParser {}
 	class String extends \Contao\String {}
 	class StringUtil extends \Contao\StringUtil {}
 	abstract class System extends \Contao\System {}
@@ -214,10 +215,8 @@ namespace {
 	class Upload extends \Contao\Upload {}
 }
 namespace Database {
-	class Installer extends \Contao\Database\Installer {}
 	class Result extends \Contao\Database\Result {}
 	class Statement extends \Contao\Database\Statement {}
-	class Updater extends \Contao\Database\Updater {}
 }
 namespace Filter {
 	class SqlFiles extends \Contao\Filter\SqlFiles {}

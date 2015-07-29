@@ -1,6 +1,13 @@
 Contao change log
 =================
 
+Version 4.0.2 (2015-XX-XX)
+--------------------------
+
+### Fixed
+Make the install tool stand-alone.
+
+
 Version 4.0.1 (2015-07-24)
 --------------------------
 

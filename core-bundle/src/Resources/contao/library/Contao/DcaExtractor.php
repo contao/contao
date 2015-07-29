@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Finder\SplFileInfo;
+
 
 /**
  * Extracts DCA information and cache it
@@ -428,8 +430,24 @@ class DcaExtractor extends \Controller
 
 			if (!isset(static::$arrSql[$this->strTable]))
 			{
-				$objInstaller = new \Database\Installer();
-				static::$arrSql = $objInstaller->getFromFile();
+				try
+				{
+					/** @var SplFileInfo[] $files */
+					$files = \System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
+				}
+				catch (\InvalidArgumentException $e)
+				{
+					return array();
+				}
+
+				$arrSql = array();
+
+				foreach ($files as $file)
+				{
+					$arrSql = array_merge_recursive($arrSql, \SqlFileParser::parse($file));
+				}
+
+				static::$arrSql = $arrSql;
 			}
 
 			$arrTable = static::$arrSql[$this->strTable];

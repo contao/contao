@@ -68,27 +68,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the install tool.
-     *
-     * @return Response
-     *
-     * @todo Make the install tool stand-alone
-     *
-     * @Route("/install", name="contao_backend_install")
-     */
-    public function installAction()
-    {
-        $this->container->get('contao.framework')->initialize();
-
-        ob_start();
-
-        $controller = new BackendInstall();
-        $controller->run();
-
-        return new Response(ob_get_clean());
-    }
-
-    /**
      * Renders the "set new password" form.
      *
      * @return Response
