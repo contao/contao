@@ -57,8 +57,8 @@
       <form method="post">
         <div class="tl_formbody_submit">
           <input type="hidden" name="FORM_SUBMIT" value="tl_template_import">
-          <h4>{{ 'templates'|trans }}</h4>
-          <select name="template" class="tl_select">
+          <h4><label for="template">{{ 'templates'|trans }}</label></h4>
+          <select name="template" id="template" class="tl_select">
             <option value="">-</option>
             {% for template in templates %}
               <option value="{{ template }}">{{ template }}</option>
@@ -76,4 +76,48 @@
       </form>
     </div>
   </fieldset>
+  <fieldset class="tl_box{% if has_admin %} collapsed{% endif %}">
+    <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'admin_create'|trans }}</legend>
+    <div>
+      <h3>{{ 'admin_create'|trans }}</h3>
+      {% if admin_error %}
+        <p class="tl_error">{{ admin_error }}</p>
+      {% elseif has_admin %}
+        <p class="tl_confirm">{{ 'admin_confirm'|trans }}</p>
+      {% endif %}
+      <p>{{ 'admin_create_explain'|trans }}</p>
+      {% if not has_admin %}
+        <form method="post">
+          <div class="tl_formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_admin">
+            <h4><label for="username">{{ 'admin_username'|trans }}</label></h4>
+            {% if admin_username_error %}
+              <p class="tl_error">{{ admin_username_error }}</p>
+            {% endif %}
+            <input type="text" name="username" id="username" class="tl_text" value="{{ admin_username_value }}">
+            <h4><label for="name">{{ 'admin_name'|trans }}</label></h4>
+            <input type="text" name="name" id="name" class="tl_text" value="{{ admin_name_value }}">
+            <h4><label for="email">{{ 'admin_email'|trans }}</label></h4>
+            {% if admin_email_error %}
+              <p class="tl_error">{{ admin_email_error }}</p>
+            {% endif %}
+            <input type="email" name="email" id="email" class="tl_text" value="{{ admin_email_value }}">
+            <h4><label for="password">{{ 'password'|trans }}</label></h4>
+            {% if admin_password_error %}
+              <p class="tl_error">{{ admin_password_error }}</p>
+            {% endif %}
+            <input type="password" name="password" id="password" class="tl_text" value="">
+            <h4><label for="confirmation">{{ 'confirmation'|trans }}</label></h4>
+            <input type="password" name="confirmation" id="confirmation" class="tl_text" value="">
+          </div>
+          <div class="tl_formbody_submit">
+            <div class="tl_submit_container">
+              <button type="submit" class="tl_submit">{{ 'admin_save'|trans }}</button>
+            </div>
+          </div>
+        </form>
+      {% endif %}
+    </div>
+  </fieldset>
+  <p id="back_end"><a href="{{ path }}/contao">{{ 'back_end'|trans }}</a></p>
 {% endblock %}

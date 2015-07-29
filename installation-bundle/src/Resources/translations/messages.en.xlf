@@ -202,6 +202,62 @@
         <source>template_save</source>
         <target>Import template</target>
       </trans-unit>
+      <trans-unit id="51">
+        <source>admin_create</source>
+        <target>Create an admin user</target>
+      </trans-unit>
+      <trans-unit id="52">
+        <source>admin_create_explain</source>
+        <target>Here you can create an admin user to log into the Contao back end.</target>
+      </trans-unit>
+      <trans-unit id="53">
+        <source>admin_confirm</source>
+        <target>An admin user has been created.</target>
+      </trans-unit>
+      <trans-unit id="54">
+        <source>admin_username</source>
+        <target>Username</target>
+      </trans-unit>
+      <trans-unit id="55">
+        <source>admin_name</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="56">
+        <source>admin_email</source>
+        <target>E-mail</target>
+      </trans-unit>
+      <trans-unit id="57">
+        <source>admin_save</source>
+        <target>Create admin user</target>
+      </trans-unit>
+      <trans-unit id="58">
+        <source>admin_error_extnd</source>
+        <target>For security reasons you can not use the following characters here: #()/&lt;=&gt;</target>
+      </trans-unit>
+      <trans-unit id="59">
+        <source>admin_error_no_space</source>
+        <target>The username must not contain any whitespace characters!</target>
+      </trans-unit>
+      <trans-unit id="60">
+        <source>admin_error_email</source>
+        <target>Please enter a valid e-mail address!</target>
+      </trans-unit>
+      <trans-unit id="61">
+        <source>admin_error_password_match</source>
+        <target>The passwords did not match!</target>
+      </trans-unit>
+      <trans-unit id="62">
+        <source>admin_error_password_user</source>
+        <target>Your username and password must not be the same!</target>
+      </trans-unit>
+      <trans-unit id="63">
+        <source>admin_error</source>
+        <target>Please fill in all fields to create an admin user!</target>
+      </trans-unit>
+      <trans-unit id="64">
+        <source>back_end</source>
+        <target>Contao back end</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

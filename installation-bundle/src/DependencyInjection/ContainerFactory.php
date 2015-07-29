@@ -98,6 +98,7 @@ class ContainerFactory
             $translator->addResource('xlf', $translationsDir . '/messages.' . $locale . '.xlf', 'en');
         }
 
+        $container->setParameter('locale', $locale);
         $container->set('translator.default', $translator);
 
         // Set up Twig

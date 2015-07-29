@@ -12,6 +12,7 @@ namespace Contao\InstallationBundle;
 
 use Contao\Backend;
 use Contao\Config;
+use Contao\Encryption;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Exception\ConnectionException;
@@ -152,7 +153,7 @@ class InstallTool
     /**
      * Checks if the installation is fresh.
      *
-     * @return bool True if the installation is fresh.
+     * @return bool True if the installation is fresh
      */
     public function isFreshInstallation()
     {
@@ -175,9 +176,11 @@ class InstallTool
     public function handleRunOnce()
     {
         // Wait for the tables to be created (see #5061)
-        if ($this->connection->getSchemaManager()->tablesExist('tl_log')) {
-            Backend::handleRunOnce();
+        if (!$this->connection->getSchemaManager()->tablesExist('tl_log')) {
+            return;
         }
+
+        Backend::handleRunOnce();
     }
 
     /**
@@ -226,6 +229,89 @@ class InstallTool
         foreach (preg_grep('/^INSERT /', $data) as $query) {
             $this->connection->query($query);
         }
+    }
+
+    /**
+     * Checks if there is an admin user.
+     *
+     * @return bool True if there is an admin user
+     */
+    public function hasAdminUser()
+    {
+        try {
+            $statement = $this->connection->query('SELECT COUNT(*) AS count FROM tl_user WHERE admin=1');
+
+            if ($statement->fetch(\PDO::FETCH_OBJ)->count > 0) {
+                return true;
+            }
+        } catch (DBALException $e) {
+            // ignore
+        }
+
+        return false;
+    }
+
+    /**
+     * Persists the admin user.
+     *
+     * @param string $username The username
+     * @param string $name     The name
+     * @param string $email    The e-mail address
+     * @param string $password The plain text password
+     * @param string $language The language
+     */
+    public function persistAdminUser($username, $name, $email, $password, $language)
+    {
+        $statement = $this->connection->prepare("
+            INSERT INTO tl_user(
+                tstamp,
+                name,
+                email,
+                username,
+                password,
+                language,
+                backendTheme,
+                admin,
+                showHelp,
+                useRTE,
+                useCE,
+                thumbnails,
+                dateAdded
+            ) VALUES (
+                :time,
+                :name,
+                :email,
+                :username,
+                :password,
+                :language,
+                'flexible',
+                1,
+                1,
+                1,
+                1,
+                1,
+                :time
+            )
+        ");
+
+        $replace = [
+            '#' => '&#35;',
+            '<' => '&#60;',
+            '>' => '&#62;',
+            '(' => '&#40;',
+            ')' => '&#41;',
+            '\\' => '&#92;',
+            '=' => '&#61;',
+        ];
+
+        $statement->bindParam(':time', time());
+        $statement->bindParam(':name', strtr($name, $replace));
+        $statement->bindParam(':email', $email);
+        $statement->bindParam(':username', strtr($username, $replace));
+        $statement->bindParam(':password', Encryption::hash($password));
+        $statement->bindParam(':language', $language);
+
+        $statement->execute();
     }
 
     /**

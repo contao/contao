@@ -108,7 +108,9 @@ class InstallationController extends ContainerAware
             return $response;
         }
 
-        // FIXME: createAdminUser()
+        if (null !== ($response = $this->createAdminUser())) {
+            return $response;
+        }
 
         return $this->render('main.html.twig', $this->context);
     }
@@ -347,6 +349,99 @@ class InstallationController extends ContainerAware
         }
 
         $this->installTool->persistConfig('exampleWebsite', time());
+
+        return $this->getRedirectResponse();
+    }
+
+    /**
+     * Creates an admin user.
+     *
+     * @return Response|RedirectResponse|null The response object
+     */
+    private function createAdminUser()
+    {
+        if ($this->installTool->hasAdminUser()) {
+            $this->context['has_admin'] = true;
+
+            return null;
+        }
+
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if ('tl_admin' !== $request->request->get('FORM_SUBMIT')) {
+            return null;
+        }
+
+        $username = $request->request->get('username');
+        $name = $request->request->get('name');
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+        $confirmation = $request->request->get('confirmation');
+
+        $this->context['admin_username_value'] = $username;
+        $this->context['admin_name_value'] = $name;
+        $this->context['admin_email_value'] = $email;
+
+        // All fields are mandatory
+        if ('' === $username || '' === $name || '' === $email || '' === $password) {
+            $this->context['admin_error'] = $this->trans('admin_error');
+
+            return null;
+        }
+
+        // Do not allow special characters in usernames
+        if (preg_match('/[#()\/<=>]/', $username)) {
+            $this->context['admin_username_error'] = $this->trans('admin_error_extnd');
+
+            return null;
+        }
+
+        // The username must not contain whitespace characters (see #4006)
+        if (false !== strpos($username, ' ')) {
+            $this->context['admin_username_error'] = $this->trans('admin_error_no_space');
+
+            return null;
+        }
+
+        // Validate the e-mail address (see #6003)
+        if ($email !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->context['admin_email_error'] = $this->trans('admin_error_email');
+
+            return null;
+        }
+
+        // The passwords do not match
+        if ($password !== $confirmation) {
+            $this->context['admin_password_error'] = $this->trans('admin_error_password_match');
+
+            return null;
+        }
+
+        $minlength = $this->installTool->getConfig('minPasswordLength');
+
+        // The password is too short
+        if (strlen(utf8_decode($password)) < $minlength) {
+            $this->context['admin_password_error'] = sprintf($this->trans('password_too_short'), $minlength);
+
+            return null;
+        }
+
+        // Password and username are the same
+        if ($password === $username) {
+            $this->context['admin_password_error'] = sprintf($this->trans('admin_error_password_user'), $minlength);
+
+            return null;
+        }
+
+        $this->installTool->persistConfig('adminEmail', $email);
+
+        $this->installTool->persistAdminUser(
+            $username,
+            $name,
+            $email,
+            $password,
+            $this->container->getParameter('locale')
+        );
 
         return $this->getRedirectResponse();
     }
