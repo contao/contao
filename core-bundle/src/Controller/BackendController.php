@@ -14,7 +14,6 @@ use Contao\BackendConfirm;
 use Contao\BackendFile;
 use Contao\BackendHelp;
 use Contao\BackendIndex;
-use Contao\BackendInstall;
 use Contao\BackendMain;
 use Contao\BackendPage;
 use Contao\BackendPassword;
