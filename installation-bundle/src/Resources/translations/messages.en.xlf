@@ -274,6 +274,14 @@
         <source>back_end</source>
         <target>Contao back end</target>
       </trans-unit>
+      <trans-unit id="69">
+        <source>old_database</source>
+        <target>The database is too old!</target>
+      </trans-unit>
+      <trans-unit id="70">
+        <source>old_database_explanation</source>
+        <target>You need at least Contao 3.2 to upgrade to Contao 4.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

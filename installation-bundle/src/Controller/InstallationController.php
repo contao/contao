@@ -17,8 +17,6 @@ use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Database\Installer;
 use Contao\InstallationBundle\Database\VersionUpdateInterface;
-use Contao\InstallationBundle\InstallTool;
-use Contao\InstallationBundle\InstallToolUser;
 use Doctrine\DBAL\DBALException;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -76,6 +74,10 @@ class InstallationController extends ContainerAware
 
         if (!$installTool->canConnectToDatabase($this->container->getParameter('database_name'))) {
             return $this->setUpDatabaseConnection();
+        }
+
+        if ($installTool->hasOldDatabase()) {
+            return $this->render('old_database.html.twig');
         }
 
         $this->runDatabaseUpdates();

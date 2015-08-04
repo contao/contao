@@ -171,6 +171,27 @@ class InstallTool
     }
 
     /**
+     * Checks if the database is older than version 3.2.
+     *
+     * @return bool True if the database is older than version 3.2
+     */
+    public function hasOldDatabase()
+    {
+        if (!$this->connection->getSchemaManager()->tablesExist('tl_layout')) {
+            return false;
+        }
+
+        $sql = $this->connection
+            ->getDatabasePlatform()
+            ->getListTableColumnsSQL('tl_layout', $this->connection->getDatabase())
+        ;
+
+        $column = $this->connection->fetchAssoc($sql . " AND COLUMN_NAME = 'sections'");
+
+        return 'varchar(1022)' !== $column['Type'];
+    }
+
+    /**
      * Handles executing the runonce files.
      */
     public function handleRunOnce()
@@ -310,7 +331,7 @@ class InstallTool
             ':email' => $email,
             ':username' => strtr($username, $replace),
             ':password' => Encryption::hash($password),
-            ':language' => $language
+            ':language' => $language,
         ]);
     }
 

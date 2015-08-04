@@ -35,7 +35,7 @@ class Version400Update implements VersionUpdateInterface
     }
 
     /**
-     * {@inheritdoca.
+     * {@inheritdoc}
      */
     public function shouldBeRun()
     {
@@ -47,11 +47,7 @@ class Version400Update implements VersionUpdateInterface
 
         $columns = $schemaManager->listTableColumns('tl_layout');
 
-        if (isset($columns['scripts'])) {
-            return false;
-        }
-
-        return true;
+        return !isset($columns['scripts']);
     }
 
     /**
@@ -82,7 +78,6 @@ class Version400Update implements VersionUpdateInterface
                         $stmt->execute([':jquery' => serialize(array_values($jquery)), ':id' => $layout->id]);
                     }
                 }
-
             }
 
             // Check if moo_slider is enabled
