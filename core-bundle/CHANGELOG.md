@@ -18,7 +18,7 @@ Support overwriting the CSS ID in an alias element (see #305).
 Add a `StringUtil` class to restore PHP 7 compatibility (see #309).
 
 ### Fixed
-Correctly handle files in the `/web` directory in the Combiner (see #300). 
+Correctly handle files in the `/web` directory in the Combiner (see #300).
 
 ### Fixed
 Fix the argument order of the `ondelete_callback` (see #301).
@@ -30,7 +30,7 @@ Correctly apply the class `active` in the pagination template (see #315).
 Fix the `Validator::isEmail()` method (see #313).
 
 ### Fixed
-Strip tags before auto-generating aliases (see contao/core#7857). 
+Strip tags before auto-generating aliases (see contao/core#7857).
 
 ### Fixed
 Correctly encode the URLs in the popup file manager (see contao/core#7929).
