@@ -116,7 +116,7 @@ class ContainerFactory
         $twig->addGlobal('ua', Environment::get('agent')->class);
 
         $twig->addFunction(new \Twig_SimpleFunction('asset', function ($path) use ($request) {
-            return ltrim($request->getBasePath() . '/' . $path, '/');
+            return '/' . ltrim($request->getBasePath() . '/' . $path, '/');
         }));
 
         $twig->addFilter(new \Twig_SimpleFilter('trans', function ($message, $params = []) use ($translator) {
