@@ -90,7 +90,8 @@ class Combiner extends \System
 	 * @param string $strVersion An optional version number
 	 * @param string $strMedia   The media type of the file (.css only)
 	 *
-	 * @throws \Exception If $strFile is invalid
+	 * @throws \InvalidArgumentException If $strFile is invalid
+	 * @throws \LogicException           If different file types are mixed
 	 */
 	public function add($strFile, $strVersion=null, $strMedia='all')
 	{
@@ -99,7 +100,7 @@ class Combiner extends \System
 		// Check the file type
 		if ($strType != self::CSS && $strType != self::JS && $strType != self::SCSS && $strType != self::LESS)
 		{
-			throw new \Exception("Invalid file $strFile");
+			throw new \InvalidArgumentException("Invalid file $strFile");
 		}
 
 		$strMode = ($strType == self::JS) ? self::JS : self::CSS;
@@ -111,7 +112,7 @@ class Combiner extends \System
 		}
 		elseif ($this->strMode != $strMode)
 		{
-			throw new \Exception('You cannot mix different file types. Create another Combiner object instead.');
+			throw new \LogicException('You cannot mix different file types. Create another Combiner object instead.');
 		}
 
 		// Prevent duplicates
@@ -130,7 +131,7 @@ class Combiner extends \System
 			}
 			else
 			{
-				throw new \Exception("File $strFile does not exist");
+				return;
 			}
 		}
 

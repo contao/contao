@@ -246,10 +246,8 @@ abstract class Backend extends \Controller
 	 *
 	 * @throws \Exception
 	 */
-	protected function handleRunOnce()
+	public static function handleRunOnce()
 	{
-		$this->import('Files');
-
 		try
 		{
 			$files = \System::getContainer()->get('contao.resource_locator')->locate('config/runonce.php', null, false);
@@ -269,12 +267,12 @@ abstract class Backend extends \Controller
 
 			$strRelpath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $file);
 
-			if (!$this->Files->delete($strRelpath))
+			if (!unlink($file))
 			{
 				throw new \Exception("The file $strRelpath cannot be deleted. Please remove the file manually and correct the file permission settings on your server.");
 			}
 
-			$this->log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
+			\System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
 		}
 	}
 

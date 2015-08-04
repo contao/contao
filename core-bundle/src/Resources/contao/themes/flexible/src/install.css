@@ -38,7 +38,7 @@ body {
 /* Main */
 #main {
 	width:756px;
-	padding:1px;
+	padding:1px 1px 3px;
 	background:#fff;
 	border:1px solid #bbb;
 	border-top:0;
@@ -66,7 +66,7 @@ body {
 }
 #container h3 {
 	margin:0;
-	padding:18px 0 3px;
+	padding:12px 0 3px;
 	font-size:12px;
 	font-size:.75rem;
 	font-weight:bold;
@@ -169,12 +169,12 @@ li {
 }
 
 /* Go to back end */
-#go_to_login {
-	margin:0 18px 14px 0;
+#back_end {
+	margin:-6px 18px 9px 0;
 	padding:0;
 	text-align:right;
 }
-#go_to_login a {
+#back_end a {
 	padding:2px 0 3px 20px;
 	background:url("images/login.gif") no-repeat left center;
 	color:#aaa;
@@ -182,7 +182,7 @@ li {
 
 /* License */
 #license pre {
-	height:400px;
+	height:calc(100vh - 205px);
 	overflow:auto;
 	margin:0;
 	background:#f9f9f9;
@@ -196,14 +196,12 @@ li {
 }
 .tl_submit_container {
 	margin-top:18px;
+	margin-bottom:12px;
 }
 
 /* Fieldsets */
 fieldset > div {
-	margin-bottom:24px;
-}
-fieldset.last > div {
-	margin-bottom:0;
+	margin-bottom:12px;
 }
 fieldset.tl_tbox {
 	margin-top:18px;
@@ -237,6 +235,9 @@ fieldset.collapsed div {
 }
 fieldset.collapsed > legend {
 	background:url("images/palCollapsed.gif") left center no-repeat;
+}
+fieldset:not(.collapsed) + fieldset {
+	margin-top:9px;
 }
 
 /* Form fields */
