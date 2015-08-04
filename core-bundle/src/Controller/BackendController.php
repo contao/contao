@@ -14,7 +14,6 @@ use Contao\BackendConfirm;
 use Contao\BackendFile;
 use Contao\BackendHelp;
 use Contao\BackendIndex;
-use Contao\BackendInstall;
 use Contao\BackendMain;
 use Contao\BackendPage;
 use Contao\BackendPassword;
@@ -65,27 +64,6 @@ class BackendController extends Controller
         $controller = new BackendIndex();
 
         return $controller->run();
-    }
-
-    /**
-     * Renders the install tool.
-     *
-     * @return Response
-     *
-     * @todo Make the install tool stand-alone
-     *
-     * @Route("/install", name="contao_backend_install")
-     */
-    public function installAction()
-    {
-        $this->container->get('contao.framework')->initialize();
-
-        ob_start();
-
-        $controller = new BackendInstall();
-        $controller->run();
-
-        return new Response(ob_get_clean());
     }
 
     /**

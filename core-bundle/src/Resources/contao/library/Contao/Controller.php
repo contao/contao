@@ -1040,7 +1040,6 @@ abstract class Controller extends \System
 			'contao/file.php'      => $generate('contao_backend_file'),
 			'contao/help.php'      => $generate('contao_backend_help'),
 			'contao/index.php'     => $generate('contao_backend_login'),
-			'contao/install.php'   => $generate('contao_backend_install'),
 			'contao/main.php'      => $generate('contao_backend'),
 			'contao/page.php'      => $generate('contao_backend_page'),
 			'contao/password.php'  => $generate('contao_backend_password'),

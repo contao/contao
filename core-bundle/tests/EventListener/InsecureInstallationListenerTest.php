@@ -49,22 +49,6 @@ class InsecureInstallationListenerTest extends TestCase
     }
 
     /**
-     * Tests the onKernelRequest() method in the install tool.
-     */
-    public function testOnKernelRequestUponInstallation()
-    {
-        $kernel = $this->mockKernel();
-
-        $request = $this->getRequestObject();
-        $request->attributes->set('_route', 'contao_backend_install');
-
-        $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
-
-        $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($event);
-    }
-
-    /**
      * Tests the onKernelRequest() method on localhost.
      */
     public function testOnKernelRequestOnLocalhost()

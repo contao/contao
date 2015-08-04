@@ -187,7 +187,6 @@ class ContaoFrameworkTest extends TestCase
     public function testNotInitializedTwice()
     {
         $request = new Request();
-        $request->attributes->set('_route', 'contao_backend_install');
         $request->attributes->set('_contao_referer_id', 'foobar');
 
         $container = $this->mockContainerWithContaoScopes();

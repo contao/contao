@@ -67,11 +67,6 @@ source_file = src/Resources/contao/languages/en/tl_image_size_item.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_image_size_item.xlf
 
-[contao-core-bundle.v4_0-tl_install]
-source_file = src/Resources/contao/languages/en/tl_install.xlf
-source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_install.xlf
-
 [contao-core-bundle.v4_0-tl_layout]
 source_file = src/Resources/contao/languages/en/tl_layout.xlf
 source_lang = en

@@ -365,7 +365,7 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function validateInstallation()
     {
-        if (null === $this->request || 'contao_backend_install' === $this->request->attributes->get('_route')) {
+        if (null === $this->request) {
             return;
         }
 

@@ -62,7 +62,7 @@ class Environment
 			return static::$arrCache[$strKey];
 		}
 
-		if (in_array($strKey, get_class_methods('Environment')))
+		if (in_array($strKey, get_class_methods(__CLASS__)))
 		{
 			static::$arrCache[$strKey] = static::$strKey();
 		}
