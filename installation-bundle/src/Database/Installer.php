@@ -207,6 +207,8 @@ class Installer
             }
         }
 
+        ksort($return);
+
         return $return;
     }
 
@@ -225,6 +227,8 @@ class Installer
         foreach ($files as $file) {
             $return = array_merge_recursive($return, SqlFileParser::parse($file));
         }
+
+        ksort($return);
 
         return $return;
     }
