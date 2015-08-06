@@ -56,7 +56,7 @@ class LibraryLoader
 
         $class = str_replace('Contao\\', '', $class);
         $dir = $this->rootDir . '/../vendor/contao/core-bundle/src/Resources/contao';
-        $file = str_replace('\\', '/', $class) . '.php';
+        $file = strtr($class, '\\', '/') . '.php';
 
         foreach (['library/Contao', 'classes'] as $src) {
             if (!file_exists($dir . '/' . $src . '/' . $file)) {
