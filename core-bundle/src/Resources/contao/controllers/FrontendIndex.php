@@ -262,11 +262,25 @@ class FrontendIndex extends \Frontend
 					break;
 
 				default:
-					/** @var \PageRegular $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
 
+					// Backwards Compatibility
+					if (!method_exists($objHandler, 'getResponse'))
+					{
+						$objResponse = new Response();
+
+						// Generate content
+						ob_start();
+						$objHandler->generate($objPage, true);
+						$strBuffer = ob_get_clean();
+
+						$objResponse->setContent($strBuffer);
+						$objResponse->setStatusCode(http_response_code());
+
+						return $objResponse;
+					}
+
 					return $objHandler->getResponse($objPage, true);
-					break;
 			}
 		}
 
