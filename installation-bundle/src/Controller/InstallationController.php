@@ -15,7 +15,6 @@ use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\Encryption;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
-use Contao\InstallationBundle\Database\Installer;
 use Contao\InstallationBundle\Database\VersionUpdateInterface;
 use Doctrine\DBAL\DBALException;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
