@@ -129,8 +129,14 @@ class ContainerFactory
         $kernel = new UnbootableKernel('prod', false);
         $kernel->setBundles($kernel->registerBundles());
 
+        $bundles = [];
+
+        foreach ($kernel->getBundles() as $bundle) {
+            $bundles[$bundle->getName()] = get_class($bundle);
+        }
+
         $container->set('kernel', $kernel);
-        $container->setParameter('kernel.bundles', $kernel->getBundles());
+        $container->setParameter('kernel.bundles', $bundles);
 
         // Add the file system
         $container->set('filesystem', new Filesystem());

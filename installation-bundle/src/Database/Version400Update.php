@@ -138,5 +138,6 @@ class Version400Update implements VersionUpdateInterface
         // Adjust the module types
         $this->connection->query("UPDATE tl_module SET type='articlelist' WHERE type='articleList'");
         $this->connection->query("UPDATE tl_module SET type='rssReader' WHERE type='rss_reader'");
+        $this->connection->query("UPDATE tl_form_field SET type='explanation' WHERE type='headline'");
     }
 }
