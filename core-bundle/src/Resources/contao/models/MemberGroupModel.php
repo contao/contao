@@ -91,14 +91,35 @@ class MemberGroupModel extends \Model
 
 
 	/**
+	 * Find all active groups
+	 *
+	 * @param array $arrOptions An optional options array
+	 *
+	 * @return \Model\Collection|\MemberGroupModel|null A collection of models or null if there are no member groups
+	 */
+	public static function findAllActive(array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$time = \Date::floorToMinute();
+
+		return static::findBy(array("$t.disable='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "')"), null, $arrOptions);
+	}
+
+
+	/**
 	 * Find the first active group with a published jumpTo page
 	 *
 	 * @param string $arrIds An array of member group IDs
 	 *
 	 * @return static The model or null if there is no matching member group
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use PageModel::findFirstActiveByMemberGroups() instead.
 	 */
 	public static function findFirstActiveWithJumpToByIds($arrIds)
 	{
+		trigger_error('Using MemberGroupModel::findFirstActiveWithJumpToByIds() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findFirstActiveByMemberGroups() instead.', E_USER_DEPRECATED);
+
 		if (!is_array($arrIds) || empty($arrIds))
 		{
 			return null;
@@ -118,21 +139,5 @@ class MemberGroupModel extends \Model
 		}
 
 		return new static($objResult);
-	}
-
-
-	/**
-	 * Find all active groups
-	 *
-	 * @param array $arrOptions An optional options array
-	 *
-	 * @return \Model\Collection|\MemberGroupModel|null A collection of models or null if there are no member groups
-	 */
-	public static function findAllActive(array $arrOptions=array())
-	{
-		$t = static::$strTable;
-		$time = \Date::floorToMinute();
-
-		return static::findBy(array("$t.disable='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "')"), null, $arrOptions);
 	}
 }
