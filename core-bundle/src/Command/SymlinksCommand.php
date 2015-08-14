@@ -168,8 +168,6 @@ class SymlinksCommand extends AbstractLockedCommand
             $fs->symlink($this->rootDir . '/' . $source, $this->rootDir . '/' . $target);
         }
 
-        $this->fixSymlinkPermissions($target);
-
         $this->output->writeln(
             sprintf('Added <comment>%s</comment> as symlink to <comment>%s</comment>.', $target, $source)
         );
@@ -203,42 +201,6 @@ class SymlinksCommand extends AbstractLockedCommand
         if ($fs->exists($this->rootDir . '/' . $target) && !is_link($this->rootDir . '/' . $target)) {
             throw new \LogicException('The symlink target "' . $target . '" exists and is not a symlink.');
         }
-    }
-
-    /**
-     * Fixes the symlink permissions.
-     *
-     * @param string $target The symlink target
-     */
-    private function fixSymlinkPermissions($target)
-    {
-        $stat = lstat($this->rootDir . '/' . $target);
-
-        // Try to fix the UID
-        if ($stat['uid'] !== getmyuid()) {
-            $this->changeOwnership($target, 'lchown', getmyuid());
-        }
-
-        // Try to fix the GID
-        if ($stat['gid'] !== getmygid()) {
-            $this->changeOwnership($target, 'lchgrp', getmygid());
-        }
-    }
-
-    /**
-     * Changes the ownership of a symlink.
-     *
-     * @param string $target   The symlink
-     * @param string $function The function name
-     * @param int    $id       The user or group ID
-     */
-    private function changeOwnership($target, $function, $id)
-    {
-        if (!function_exists($function)) {
-            return;
-        }
-
-        $function($this->rootDir . '/' . $target, $id);
     }
 
     /**
