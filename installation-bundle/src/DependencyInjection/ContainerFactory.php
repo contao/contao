@@ -127,6 +127,7 @@ class ContainerFactory
 
         // Add the kernel bundles
         $kernel = new UnbootableKernel('prod', false);
+        $kernel->setRootDir($rootDir);
         $kernel->setBundles($kernel->registerBundles());
 
         $bundles = [];

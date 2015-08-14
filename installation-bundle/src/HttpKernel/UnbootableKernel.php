@@ -18,6 +18,16 @@ namespace Contao\InstallationBundle\HttpKernel;
 class UnbootableKernel extends \AppKernel
 {
     /**
+     * Sets the root directory.
+     *
+     * @param string $rootDir The root directory
+     */
+    public function setRootDir($rootDir)
+    {
+        $this->rootDir = $rootDir;
+    }
+
+    /**
      * Sets the bundles array.
      *
      * @param array $bundles The bundles array
