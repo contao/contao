@@ -5,6 +5,9 @@ Version 4.0.3 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Throw an exception if a module folder does not exist (see #326).
+
+### Fixed
 Add the missing `getResponse()` method to the respective page types.
 
 ### Fixed

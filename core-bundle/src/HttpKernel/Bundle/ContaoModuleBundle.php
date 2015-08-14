@@ -24,10 +24,16 @@ final class ContaoModuleBundle extends Bundle
      *
      * @param string $name    The module name
      * @param string $rootDir The application root directory
+     *
+     * @throws \LogicException
      */
     public function __construct($name, $rootDir)
     {
         $this->name = $name;
         $this->path = dirname($rootDir) . '/system/modules/' . $this->name;
+
+        if (!is_dir($this->path)) {
+            throw new \LogicException('The module bundle folder "' . $this->name . '" does not exist.');
+        }
     }
 }
