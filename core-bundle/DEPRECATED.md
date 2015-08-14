@@ -1,6 +1,12 @@
 Deprecated features
 ===================
 
+### Page handler without getResponse()
+
+Using a custom page handler without a `getResponse()` method has been
+deprecated in Contao 4.0 and will no longer work in Contao 5.0.
+
+
 ### VERSION and BUILD
 
 The `VERSION` and `BUILD` constants have been deprecated in Contao 4.0 and will
