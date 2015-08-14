@@ -33,7 +33,7 @@ final class ContaoModuleBundle extends Bundle
         $this->path = dirname($rootDir) . '/system/modules/' . $this->name;
 
         if (!is_dir($this->path)) {
-            throw new \LogicException('The module bundle folder "' . $this->name . '" does not exist.');
+            throw new \LogicException('The module folder "system/modules/' . $this->name . '" does not exist.');
         }
     }
 }
