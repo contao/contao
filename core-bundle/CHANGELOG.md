@@ -5,6 +5,9 @@ Version 4.0.3 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Add the missing `getResponse()` method to the respective page types.
+
+### Fixed
 Correctly validate paths in the template editor (see #325).
 
 
