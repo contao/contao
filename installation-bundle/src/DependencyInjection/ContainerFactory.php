@@ -175,9 +175,6 @@ class ContainerFactory
 
         $container->set('contao.install_tool_user', new InstallToolUser($container->get('session')));
 
-        // Make the container available in the Contao framework
-        System::setContainer($container);
-
         return $container;
     }
 }

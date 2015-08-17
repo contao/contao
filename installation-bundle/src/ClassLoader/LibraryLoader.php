@@ -58,13 +58,11 @@ class LibraryLoader
         $dir = $this->rootDir . '/../vendor/contao/core-bundle/src/Resources/contao';
         $file = strtr($class, '\\', '/') . '.php';
 
-        foreach (['library/Contao', 'classes'] as $src) {
-            if (!file_exists($dir . '/' . $src . '/' . $file)) {
-                continue;
-            }
-
-            include $dir . '/' . $src . '/' . $file;
-            class_alias('Contao\\' . $class, $class);
+        if (!file_exists($dir . '/library/Contao/' . $file)) {
+            return;
         }
+
+        include $dir . '/library/Contao/' . $file;
+        class_alias('Contao\\' . $class, $class);
     }
 }
