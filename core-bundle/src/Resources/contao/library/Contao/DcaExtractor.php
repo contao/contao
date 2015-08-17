@@ -437,7 +437,7 @@ class DcaExtractor extends \Controller
 				}
 				catch (\InvalidArgumentException $e)
 				{
-					return array();
+					return;
 				}
 
 				$arrSql = array();
