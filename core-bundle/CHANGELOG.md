@@ -5,6 +5,9 @@ Version 4.0.3 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Make sure that `TABLE_OPTIONS` is not an array (see #324).
+
+### Fixed
 Throw an exception if a module folder does not exist (see #326).
 
 ### Fixed
