@@ -55,7 +55,14 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         parent::setUp();
 
-        $this->listener = new PrettyErrorScreenListener(true, $this->getMock('Twig_Environment'), $this->mockConfig());
+        /** @var \Twig_Environment $twig */
+        $twig = $this
+            ->getMockBuilder('Twig_Environment')
+            ->setConstructorArgs([$this->getMock('Twig_LoaderInterface')])
+            ->getMock()
+        ;
+
+        $this->listener = new PrettyErrorScreenListener(true, $twig, $this->mockConfig());
     }
 
     /**
@@ -237,7 +244,14 @@ class PrettyErrorScreenListenerTest extends TestCase
         );
 
         $count = 0;
-        $twig = $this->getMock('Twig_Environment', ['render']);
+
+        /** @var \Twig_Environment|\PHPUnit_Framework_MockObject_MockObject $twig */
+        $twig = $this
+            ->getMockBuilder('Twig_Environment')
+            ->setMethods(['render'])
+            ->setConstructorArgs([$this->getMock('Twig_LoaderInterface')])
+            ->getMock()
+        ;
 
         $twig->expects($this->any())
             ->method('render')
