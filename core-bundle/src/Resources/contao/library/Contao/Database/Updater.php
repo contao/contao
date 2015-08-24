@@ -17,6 +17,8 @@ use Symfony\Component\Finder\SplFileInfo;
  * Adjust the database if the system is updated.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
  */
 class Updater extends \Controller
 {
@@ -26,6 +28,8 @@ class Updater extends \Controller
 	 */
 	public function __construct()
 	{
+		trigger_error('Using the Contao\Database\Updater class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		parent::__construct();
 		$this->import('Database');
 	}

@@ -18,6 +18,9 @@ use Symfony\Component\Finder\SplFileInfo;
  * calculates the queries needed to update the database.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use the Installer class from the contao/installation-bundle instead.
  */
 class Installer extends \Controller
 {
@@ -27,6 +30,8 @@ class Installer extends \Controller
 	 */
 	public function __construct()
 	{
+		trigger_error('Using the Contao\Database\Installer class has been deprecated and will no longer work in Contao 5.0. Use the Installer class from the contao/installation-bundle instead.', E_USER_DEPRECATED);
+
 		parent::__construct();
 	}
 
