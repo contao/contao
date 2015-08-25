@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
-use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
@@ -21,7 +21,6 @@ use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -74,28 +73,6 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * Tests rendering an access denied HTTP exception.
-     */
-    public function testAccessDeniedHttpException()
-    {
-        $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new AccessDeniedHttpException('', new AccessDeniedException())
-        );
-
-        $this->listener->onKernelException($event);
-
-        $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
-        $this->assertEquals(403, $response->getStatusCode());
-    }
-
-    /**
      * Tests rendering a bad request HTTP exception.
      */
     public function testBadRequestHttpException()
@@ -137,28 +114,6 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
-    }
-
-    /**
-     * Tests rendering a not found HTTP exception.
-     */
-    public function testNotFoundHttpException()
-    {
-        $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new NotFoundHttpException('', new PageNotFoundException())
-        );
-
-        $this->listener->onKernelException($event);
-
-        $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
-        $this->assertEquals(404, $response->getStatusCode());
     }
 
     /**
@@ -240,7 +195,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             $this->mockKernel(),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
-            new NotFoundHttpException('', new PageNotFoundException())
+            new InternalServerErrorHttpException('', new ForwardPageNotFoundException())
         );
 
         $count = 0;
