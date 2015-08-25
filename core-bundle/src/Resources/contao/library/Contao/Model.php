@@ -851,14 +851,12 @@ abstract class Model
 		// Search for registered models
 		foreach ($arrIds as $intId)
 		{
-			$arrRegistered[$intId] = null;
-
 			if (empty($arrOptions))
 			{
 				$arrRegistered[$intId] = \Model\Registry::getInstance()->fetch(static::$strTable, $intId);
 			}
 
-			if ($arrRegistered[$intId] === null)
+			if (!isset($arrRegistered[$intId]))
 			{
 				$arrUnregistered[] = $intId;
 			}
