@@ -83,6 +83,10 @@ class PrettyErrorScreenListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
+        if (!$event->isMasterRequest() || 'html' !== $event->getRequest()->getRequestFormat()) {
+            return;
+        }
+
         $exception = $event->getException();
 
         switch (true) {
