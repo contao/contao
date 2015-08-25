@@ -52,7 +52,6 @@ class PrettyErrorScreenListener
      * @var array
      */
     private $mapper = [
-        'Contao\\CoreBundle\\Exception\\AccessDeniedException' => 'access_denied',
         'Contao\\CoreBundle\\Exception\\ForwardPageNotFoundException' => 'forward_page_not_found',
         'Contao\\CoreBundle\\Exception\\IncompleteInstallationException' => 'incomplete_installation',
         'Contao\\CoreBundle\\Exception\\InsecureInstallationException' => 'insecure_installation',
@@ -60,7 +59,6 @@ class PrettyErrorScreenListener
         'Contao\\CoreBundle\\Exception\\NoActivePageFoundException' => 'no_active_page_found',
         'Contao\\CoreBundle\\Exception\\NoLayoutSpecifiedException' => 'no_layout_specified',
         'Contao\\CoreBundle\\Exception\\NoRootPageFoundException' => 'no_root_page_found',
-        'Contao\\CoreBundle\\Exception\\PageNotFoundException' => 'page_not_found',
         'Contao\\CoreBundle\\Exception\\ServiceUnavailableException' => 'service_unavailable',
     ];
 
@@ -129,8 +127,6 @@ class PrettyErrorScreenListener
 
         if (null !== ($response = $this->getResponseFromPageHandler($type))) {
             $event->setResponse($response);
-        } else {
-            $this->renderErrorScreenByException($event);
         }
 
         $processing = false;

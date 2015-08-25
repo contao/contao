@@ -53,15 +53,6 @@
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href="https://contao.org/manual/installation.html" target="_blank"&gt;Contao manual&lt;/a&gt;.</source>
       </trans-unit>
-      <trans-unit id="XPT.notFound">
-        <source>Page not found</source>
-      </trans-unit>
-      <trans-unit id="XPT.pageNotFound">
-        <source>The page you have requested does not exist under this domain.</source>
-      </trans-unit>
-      <trans-unit id="XPT.notFoundFix">
-        <source>Try to &lt;a href="%s"&gt;go to the top level&lt;/a&gt; and use the search function (if any) to find the page you were looking for. You may also &lt;a href="%s"&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
-      </trans-unit>
       <trans-unit id="XPT.noForward">
         <source>Forward page not found</source>
       </trans-unit>
@@ -100,15 +91,6 @@
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
         <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href="%s"&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
-      </trans-unit>
-      <trans-unit id="XPT.forbidden">
-        <source>Forbidden</source>
-      </trans-unit>
-      <trans-unit id="XPT.notAuthenticated">
-        <source>You are either not authenticated or you are not allowed to access the requested page.</source>
-      </trans-unit>
-      <trans-unit id="XPT.forbiddenFix">
-        <source>If you are not logged in, try to &lt;a href="%s"&gt;go to the top level&lt;/a&gt; and look for a login form. If there is no login form or if you are logged in already, &lt;a href="%s"&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
