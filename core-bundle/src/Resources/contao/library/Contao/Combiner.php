@@ -223,6 +223,12 @@ class Combiner extends \System
 				{
 					$name = $arrFile['name'];
 
+					// Strip the web/ prefix (see #328)
+					if (strpos($name, 'web/') === 0)
+					{
+						$name = substr($name, 4);
+					}
+
 					// Add the media query (see #7070)
 					if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
 					{

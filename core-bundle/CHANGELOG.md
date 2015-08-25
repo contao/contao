@@ -5,6 +5,9 @@ Version 4.0.3 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Correctly add the bundle style sheets in debug mode (see #328).
+
+### Fixed
 Register the related models in the registry (see #333).
 
 ### Fixed
