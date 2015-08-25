@@ -14,7 +14,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
@@ -66,7 +66,7 @@ class ExceptionConverterListener
      * @param \Exception $exception The exception object
      * @param string     $target    The target exception
      *
-     * @return HttpExceptionInterface|null The HTTP exception or null
+     * @return HttpException|null The HTTP exception or null
      */
     private function convertToHttpException(\Exception $exception, $target)
     {
