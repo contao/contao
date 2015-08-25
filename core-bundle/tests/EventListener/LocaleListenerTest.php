@@ -229,7 +229,7 @@ class LocaleListenerTest extends TestCase
      */
     public function testCreateWithLocales()
     {
-        $listener = LocaleListener::createWithLocales('de', $this->getRootDir());
+        $listener = LocaleListener::createWithLocales('de', $this->getRootDir() . '/app');
 
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\LocaleListener', $listener);
 

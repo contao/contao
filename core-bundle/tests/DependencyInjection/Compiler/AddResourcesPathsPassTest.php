@@ -56,6 +56,7 @@ class AddResourcesPathsPassTest extends TestCase
             [
                 $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
                 $this->getRootDir() . '/system/modules/foobar',
+                $this->getRootDir() . '/app/Resources/contao',
             ]
         );
     }
