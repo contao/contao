@@ -151,11 +151,17 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_contao_referer_id', 'dummyTestRefererId');
         $request->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
 
+        $requestFrontend = clone $request;
+        $requestFrontend->attributes->set('_route', 'contao_frontend');
+
         $requestWithRefInUrl = new Request();
         $requestWithRefInUrl->attributes->set('_route', 'contao_backend');
         $requestWithRefInUrl->attributes->set('_contao_referer_id', 'dummyTestRefererId');
         $requestWithRefInUrl->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
         $requestWithRefInUrl->query->set('ref', 'dummyTestRefererId');
+
+        $requestWithRefInUrlFrontend = clone $requestWithRefInUrl;
+        $requestWithRefInUrlFrontend->attributes->set('_route', 'contao_frontend');
 
         return [
             'Test current referer null returns correct new referer for back end scope' => [
@@ -187,13 +193,13 @@ class StoreRefererListenerTest extends TestCase
             ],
             'Test current referer null returns null for front end scope' => [
                 ContaoCoreBundle::SCOPE_FRONTEND,
-                $request,
+                $requestFrontend,
                 null,
                 null,
             ],
             'Test referer returns correct new referer for front end scope' => [
                 ContaoCoreBundle::SCOPE_FRONTEND,
-                $requestWithRefInUrl,
+                $requestWithRefInUrlFrontend,
                 [
                     'last' => '',
                     'current' => 'hi/I/am/your_current_referer.html',
