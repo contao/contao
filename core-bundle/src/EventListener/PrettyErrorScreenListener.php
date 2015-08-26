@@ -49,11 +49,6 @@ class PrettyErrorScreenListener
     private $config;
 
     /**
-     * @var GetResponseForExceptionEvent
-     */
-    private $event;
-
-    /**
      * @var array
      */
     private $mapper = [
@@ -92,37 +87,38 @@ class PrettyErrorScreenListener
             return;
         }
 
-        $this->event = $event;
-        $this->handleException($event->getException());
+        $this->handleException($event);
     }
 
     /**
      * Handles the exception.
      *
-     * @param \Exception $exception The exception
+     * @param GetResponseForExceptionEvent $event The event object
      */
-    private function handleException(\Exception $exception)
+    private function handleException(GetResponseForExceptionEvent $event)
     {
+        $exception = $event->getException();
+
         switch (true) {
             case $exception instanceof AccessDeniedHttpException:
-                $this->renderErrorScreenByType(403);
+                $this->renderErrorScreenByType(403, $event);
                 break;
 
             case $exception instanceof BadRequestHttpException:
             case $exception instanceof InternalServerErrorHttpException:
-                $this->renderErrorScreenByException();
+                $this->renderErrorScreenByException($event);
                 break;
 
             case $exception instanceof NotFoundHttpException:
-                $this->renderErrorScreenByType(404);
+                $this->renderErrorScreenByType(404, $event);
                 break;
 
             case $exception instanceof ServiceUnavailableHttpException:
-                $this->renderTemplate('service_unavailable', 503);
+                $this->renderTemplate('service_unavailable', 503, $event);
                 break;
 
             default:
-                $this->renderTemplate('error', 500);
+                $this->renderTemplate('error', 500, $event);
                 break;
         }
     }
@@ -130,9 +126,10 @@ class PrettyErrorScreenListener
     /**
      * Renders the error screen.
      *
-     * @param int $type The error type
+     * @param int                          $type  The error type
+     * @param GetResponseForExceptionEvent $event The event object
      */
-    private function renderErrorScreenByType($type)
+    private function renderErrorScreenByType($type, GetResponseForExceptionEvent $event)
     {
         static $processing;
 
@@ -143,7 +140,7 @@ class PrettyErrorScreenListener
         $processing = true;
 
         if (null !== ($response = $this->getResponseFromPageHandler($type))) {
-            $this->event->setResponse($response);
+            $event->setResponse($response);
         }
 
         $processing = false;
@@ -178,11 +175,13 @@ class PrettyErrorScreenListener
 
     /**
      * Checks the exception chain for a known exception.
+     *
+     * @param GetResponseForExceptionEvent $event The event object
      */
-    private function renderErrorScreenByException()
+    private function renderErrorScreenByException(GetResponseForExceptionEvent $event)
     {
         $statusCode = 500;
-        $exception  = $this->event->getException();
+        $exception  = $event->getException();
 
         // Set the status code
         if ($exception instanceof HttpException) {
@@ -198,7 +197,7 @@ class PrettyErrorScreenListener
             return;
         }
 
-        $this->renderTemplate($template, $statusCode);
+        $this->renderTemplate($template, $statusCode, $event);
     }
 
     /**
@@ -222,25 +221,26 @@ class PrettyErrorScreenListener
     /**
      * Renders a template and returns the response object.
      *
-     * @param string $template   The template name
-     * @param int    $statusCode The status code
+     * @param string                       $template   The template name
+     * @param int                          $statusCode The status code
+     * @param GetResponseForExceptionEvent $event      The event object
      */
-    private function renderTemplate($template, $statusCode)
+    private function renderTemplate($template, $statusCode, GetResponseForExceptionEvent $event)
     {
         if (!$this->prettyErrorScreens) {
             return;
         }
 
         $view = '@ContaoCore/Error/' . $template . '.html.twig';
-        $parameters = $this->getTemplateParameters($view, $statusCode, $this->event->getRequest()->getBasePath());
+        $parameters = $this->getTemplateParameters($view, $statusCode, $event->getRequest()->getBasePath());
 
         if (null === $parameters) {
-            $this->event->setResponse($this->getErrorTemplate());
+            $event->setResponse($this->getErrorTemplate());
         } else {
             try {
-                $this->event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
+                $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
             } catch (\Twig_Error $e) {
-                $this->event->setResponse($this->getErrorTemplate());
+                $event->setResponse($this->getErrorTemplate());
             }
         }
     }
