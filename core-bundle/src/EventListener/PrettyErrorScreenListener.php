@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\StringUtil;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -49,6 +50,11 @@ class PrettyErrorScreenListener
     private $config;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var array
      */
     private $mapper = [
@@ -68,12 +74,18 @@ class PrettyErrorScreenListener
      * @param bool              $prettyErrorScreens True to render the error screens
      * @param \Twig_Environment $twig               The twig environment
      * @param ConfigAdapter     $config             The config adapter
+     * @param LoggerInterface   $logger             The logger service
      */
-    public function __construct($prettyErrorScreens, \Twig_Environment $twig, ConfigAdapter $config)
-    {
+    public function __construct(
+        $prettyErrorScreens,
+        \Twig_Environment $twig,
+        ConfigAdapter $config,
+        LoggerInterface $logger
+    ) {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->config = $config;
+        $this->logger = $logger;
     }
 
     /**
@@ -118,6 +130,7 @@ class PrettyErrorScreenListener
                 break;
 
             default:
+                $this->logException($exception);
                 $this->renderTemplate('error', 500, $event);
                 break;
         }
@@ -197,6 +210,7 @@ class PrettyErrorScreenListener
             return;
         }
 
+        $this->logException($exception);
         $this->renderTemplate($template, $statusCode, $event);
     }
 
@@ -260,12 +274,12 @@ class PrettyErrorScreenListener
                 'errorOccurred' => 'An error occurred while executing this script. Something does not work properly. '
                     . 'Additionally an error occurred while trying to display the error message.',
                 'howToFix' => 'How can I fix the issue?',
-                'errorFixOne' => 'Open the <code>app/logs/error.log</code> file and find the associated error '
+                'errorFixOne' => 'Open the <code>app/logs/prod.log</code> file and find the associated error '
                     . 'message (usually the last one).',
                 'more' => 'Tell me more, please',
                 'errorExplain' => 'The script execution stopped, because something does not work properly. The '
                     . 'actual error message is hidden by this notice for security reasons and can be '
-                    . 'found in the <code>app/logs/error.log</code> file (see above). If you do not '
+                    . 'found in the <code>app/logs/prod.log</code> file (see above). If you do not '
                     . 'understand the error message or do not know how to fix the problem, search the '
                     . '<a href="https://contao.org/faq.html">Contao FAQs</a> or visit the '
                     . '<a href="https://contao.org/support.html">Contao support page</a>.',
@@ -322,5 +336,15 @@ class PrettyErrorScreenListener
         }
 
         return $GLOBALS['TL_LANG']['XPT'];
+    }
+
+    /**
+     * Logs the exception.
+     *
+     * @param \Exception $exception The exception
+     */
+    private function logException(\Exception $exception)
+    {
+        $this->logger->critical('An exception occurred.', ['exception' => $exception]);
     }
 }

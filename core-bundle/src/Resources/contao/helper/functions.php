@@ -15,9 +15,9 @@
  * @param string $strMessage
  * @param string $strLog
  */
-function log_message($strMessage, $strLog='error.log')
+function log_message($strMessage, $strLog='prod.log')
 {
-	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, TL_ROOT . '/system/logs/' . $strLog);
+	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, TL_ROOT . '/app/logs/' . $strLog);
 }
 
 

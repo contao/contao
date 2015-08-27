@@ -462,11 +462,11 @@ class Automator extends \System
 	 */
 	public function rotateLogs()
 	{
-		$arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/system/logs'));
+		$arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/app/logs'));
 
 		foreach ($arrFiles as $strFile)
 		{
-			$objFile = new \File('system/logs/' . $strFile . '.9');
+			$objFile = new \File('app/logs/' . $strFile . '.9');
 
 			// Delete the oldest file
 			if ($objFile->exists())
@@ -477,18 +477,18 @@ class Automator extends \System
 			// Rotate the files (e.g. error.log.4 becomes error.log.5)
 			for ($i=8; $i>0; $i--)
 			{
-				$strGzName = 'system/logs/' . $strFile . '.' . $i;
+				$strGzName = 'app/logs/' . $strFile . '.' . $i;
 
 				if (file_exists(TL_ROOT . '/' . $strGzName))
 				{
 					$objFile = new \File($strGzName);
-					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));
+					$objFile->renameTo('app/logs/' . $strFile . '.' . ($i+1));
 				}
 			}
 
 			// Add .1 to the latest file
-			$objFile = new \File('system/logs/' . $strFile);
-			$objFile->renameTo('system/logs/' . $strFile . '.1');
+			$objFile = new \File('app/logs/' . $strFile);
+			$objFile->renameTo('app/logs/' . $strFile . '.1');
 		}
 	}
 }
