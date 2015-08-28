@@ -181,7 +181,7 @@ class PrettyErrorScreenListener
     private function renderErrorScreenByException(GetResponseForExceptionEvent $event)
     {
         $statusCode = 500;
-        $exception  = $event->getException();
+        $exception = $event->getException();
 
         // Set the status code
         if ($exception instanceof HttpException) {
