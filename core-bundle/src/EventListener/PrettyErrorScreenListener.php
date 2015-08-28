@@ -52,7 +52,6 @@ class PrettyErrorScreenListener
      * @var array
      */
     private $mapper = [
-        'Contao\\CoreBundle\\Exception\\AccessDeniedException' => 'access_denied',
         'Contao\\CoreBundle\\Exception\\ForwardPageNotFoundException' => 'forward_page_not_found',
         'Contao\\CoreBundle\\Exception\\IncompleteInstallationException' => 'incomplete_installation',
         'Contao\\CoreBundle\\Exception\\InsecureInstallationException' => 'insecure_installation',
@@ -60,7 +59,6 @@ class PrettyErrorScreenListener
         'Contao\\CoreBundle\\Exception\\NoActivePageFoundException' => 'no_active_page_found',
         'Contao\\CoreBundle\\Exception\\NoLayoutSpecifiedException' => 'no_layout_specified',
         'Contao\\CoreBundle\\Exception\\NoRootPageFoundException' => 'no_root_page_found',
-        'Contao\\CoreBundle\\Exception\\PageNotFoundException' => 'page_not_found',
         'Contao\\CoreBundle\\Exception\\ServiceUnavailableException' => 'service_unavailable',
     ];
 
@@ -85,6 +83,20 @@ class PrettyErrorScreenListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
+        if (!$event->isMasterRequest() || 'html' !== $event->getRequest()->getRequestFormat()) {
+            return;
+        }
+
+        $this->handleException($event);
+    }
+
+    /**
+     * Handles the exception.
+     *
+     * @param GetResponseForExceptionEvent $event The event object
+     */
+    private function handleException(GetResponseForExceptionEvent $event)
+    {
         $exception = $event->getException();
 
         switch (true) {
@@ -102,7 +114,7 @@ class PrettyErrorScreenListener
                 break;
 
             case $exception instanceof ServiceUnavailableHttpException:
-                $this->renderMaintenanceScreen($event);
+                $this->renderTemplate('service_unavailable', 503, $event);
                 break;
 
             default:
@@ -129,8 +141,6 @@ class PrettyErrorScreenListener
 
         if (null !== ($response = $this->getResponseFromPageHandler($type))) {
             $event->setResponse($response);
-        } else {
-            $this->renderErrorScreenByException($event);
         }
 
         $processing = false;
@@ -164,16 +174,6 @@ class PrettyErrorScreenListener
     }
 
     /**
-     * Renders the maintenance screen.
-     *
-     * @param GetResponseForExceptionEvent $event The event object
-     */
-    private function renderMaintenanceScreen(GetResponseForExceptionEvent $event)
-    {
-        $this->renderTemplate('service_unavailable', 503, $event);
-    }
-
-    /**
      * Checks the exception chain for a known exception.
      *
      * @param GetResponseForExceptionEvent $event The event object
@@ -181,7 +181,7 @@ class PrettyErrorScreenListener
     private function renderErrorScreenByException(GetResponseForExceptionEvent $event)
     {
         $statusCode = 500;
-        $exception = $event->getException();
+        $exception  = $event->getException();
 
         // Set the status code
         if ($exception instanceof HttpException) {
@@ -223,7 +223,7 @@ class PrettyErrorScreenListener
      *
      * @param string                       $template   The template name
      * @param int                          $statusCode The status code
-     * @param GetResponseForExceptionEvent $event      The event
+     * @param GetResponseForExceptionEvent $event      The event object
      */
     private function renderTemplate($template, $statusCode, GetResponseForExceptionEvent $event)
     {
