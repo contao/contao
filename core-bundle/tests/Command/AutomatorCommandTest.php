@@ -88,7 +88,7 @@ class AutomatorCommandTest extends TestCase
         $code = $tester->execute(['command' => $command->getName()]);
 
         $this->assertEquals(1, $code);
-        $this->assertEquals("The command is already running in another process.\n", $tester->getDisplay());
+        $this->assertContains('The command is already running in another process.', $tester->getDisplay());
 
         $lock->release();
     }

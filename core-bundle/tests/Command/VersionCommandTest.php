@@ -47,7 +47,7 @@ class VersionCommandTest extends TestCase
         $code = $tester->execute([]);
 
         $this->assertEquals(0, $code);
-        $this->assertEquals("4.0.2\n", $tester->getDisplay());
+        $this->assertContains('4.0.2', $tester->getDisplay());
     }
 
     /**

@@ -119,9 +119,9 @@ class SymlinksCommand extends AbstractLockedCommand
         $themes = $this->getContainer()->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
-            $path = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $theme->getPathname());
+            $path = str_replace(strtr($this->rootDir, '\\', '/') . '/', '', strtr($theme->getPathname(), '\\', '/'));
 
-            if (0 === strpos(strtr($path, '\\', '/'), 'system/modules/')) {
+            if (0 === strpos($path, 'system/modules/')) {
                 continue;
             }
 
@@ -159,17 +159,24 @@ class SymlinksCommand extends AbstractLockedCommand
 
         $fs = new Filesystem();
 
-        try {
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            $fs->symlink(
+                strtr($this->rootDir . '/' . $source, '\\', '/'),
+                strtr($this->rootDir . '/' . $target, '\\', '/')
+            );
+        } else {
             $fs->symlink(
                 rtrim($fs->makePathRelative($source, dirname($target)), '/'),
                 $this->rootDir . '/' . $target
             );
-        } catch (IOException $e) {
-            $fs->symlink($this->rootDir . '/' . $source, $this->rootDir . '/' . $target);
         }
 
         $this->output->writeln(
-            sprintf('Added <comment>%s</comment> as symlink to <comment>%s</comment>.', $target, $source)
+            sprintf(
+                'Added <comment>%s</comment> as symlink to <comment>%s</comment>.',
+                strtr($target, '\\', '/'),
+                strtr($source, '\\', '/')
+            )
         );
     }
 
@@ -225,9 +232,9 @@ class SymlinksCommand extends AbstractLockedCommand
         return function (SplFileInfo $file) {
             static $paths;
 
-            $dir = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $file->getPath());
+            $dir = str_replace(strtr($this->rootDir, '\\', '/') . '/', '', strtr($file->getPath(), '\\', '/'));
             $paths[] = $dir;
-            $chunks = explode(DIRECTORY_SEPARATOR, $dir);
+            $chunks = explode('/', $dir);
             $test = $chunks[0];
 
             for ($i = 1, $c = count($chunks); $i < $c; ++$i) {

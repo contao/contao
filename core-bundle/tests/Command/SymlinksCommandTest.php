@@ -33,7 +33,6 @@ class SymlinksCommandTest extends TestCase
         $fs = new Filesystem();
 
         $fs->remove($this->getRootDir() . '/system/logs');
-        $fs->remove($this->getRootDir() . '/system/themes');
         $fs->remove($this->getRootDir() . '/web');
     }
 
@@ -78,7 +77,7 @@ Added system/logs as symlink to app/logs.\n
 EOF;
 
         $this->assertEquals(0, $code);
-        $this->assertEquals($expected, $tester->getDisplay());
+        $this->assertEquals($expected, str_replace("\r", '', $tester->getDisplay()));
     }
 
     /**

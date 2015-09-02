@@ -75,7 +75,7 @@ class XliffFileLoader extends Loader
     {
         $xml = $this->getDomDocumentFromFile($name);
 
-        $return = "\n// " . str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $name) . "\n";
+        $return = "\n// " . str_replace(strtr($this->rootDir, '\\', '/') . '/', '', strtr($name, '\\', '/')) . "\n";
         $units = $xml->getElementsByTagName('trans-unit');
 
         /** @var \DOMElement[] $units */
