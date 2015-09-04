@@ -602,9 +602,13 @@ function utf8_convert_encoding($str, $to, $from=null)
  * @param string $str
  *
  * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
  */
 function utf8_decode_entities($str)
 {
+	trigger_error('Using utf8_decode_entities() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 	$str = preg_replace_callback('~&#x([0-9a-f]+);~i', function($matches) {
 		return \Patchwork\Utf8::chr(hexdec($matches[1]));
 	}, $str);

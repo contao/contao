@@ -594,7 +594,12 @@ class Input
 		$varValue = preg_replace('/\r+/', '', $varValue);
 
 		// Replace unicode entities
-		$varValue = utf8_decode_entities($varValue);
+		$varValue = preg_replace_callback('~&#x([0-9a-f]+);~i', function($matches) {
+			return \Patchwork\Utf8::chr(hexdec($matches[1]));
+		}, $varValue);
+		$varValue = preg_replace_callback('~&#([0-9]+);~', function($matches) {
+			return \Patchwork\Utf8::chr($matches[1]);
+		}, $varValue);
 
 		// Remove null bytes
 		$varValue = str_replace(chr(0), '', $varValue);
