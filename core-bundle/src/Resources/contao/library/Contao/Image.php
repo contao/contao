@@ -949,14 +949,23 @@ class Image
 			$imageObj->setTargetPath($target);
 			$imageObj->setForceOverride($force);
 
-			return $imageObj->executeResize()->getResizedPath() ?: null;
+			if ($path = $imageObj->executeResize()->getResizedPath())
+			{
+				// Strip the web/ prefix (see #337)
+				if (strncmp($path, 'web/', 4) === 0)
+				{
+					$path = substr($path, 4);
+				}
+
+				return $path;
+			}
 		}
 		catch (\Exception $e)
 		{
 			\System::log('Image "' . $image . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
-
-			return null;
 		}
+
+		return null;
 	}
 
 

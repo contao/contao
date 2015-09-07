@@ -5,6 +5,9 @@ Version 4.0.3 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Strip the `web/` prefix in the `Image::get()` method (see #337).
+
+### Fixed
 Update the symlinks after a file or folder has been renamed (see #332).
 
 ### Fixed
