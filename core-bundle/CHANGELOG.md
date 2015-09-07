@@ -5,6 +5,9 @@ Version 4.0.3 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Handle legacy page types not returning a response object (see #331).
+
+### Fixed
 Correctly add the bundle style sheets in debug mode (see #328).
 
 ### Fixed

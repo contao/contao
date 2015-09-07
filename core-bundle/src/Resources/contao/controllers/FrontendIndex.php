@@ -262,12 +262,12 @@ class FrontendIndex extends \Frontend
 					break;
 
 				default:
+					/** @var \PageRegular $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
 
-					// Backwards Compatibility
+					// Backwards compatibility
 					if (!method_exists($objHandler, 'getResponse'))
 					{
-						// Generate content
 						ob_start();
 						$objHandler->generate($objPage, true);
 
@@ -275,6 +275,7 @@ class FrontendIndex extends \Frontend
 					}
 
 					return $objHandler->getResponse($objPage, true);
+					break;
 			}
 		}
 
