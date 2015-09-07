@@ -83,7 +83,7 @@ services:
             - "%contao.pretty_error_screens%"
             - "@twig"
             - "@contao.adapter.config"
-            - "@monolog.logger"
+            - "@logger"
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 32 }
 
