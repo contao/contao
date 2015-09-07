@@ -71,10 +71,10 @@ class PrettyErrorScreenListener
     /**
      * Constructor.
      *
-     * @param bool              $prettyErrorScreens True to render the error screens
-     * @param \Twig_Environment $twig               The twig environment
-     * @param ConfigAdapter     $config             The config adapter
-     * @param LoggerInterface   $logger             An optional logger service
+     * @param bool                 $prettyErrorScreens True to render the error screens
+     * @param \Twig_Environment    $twig               The twig environment
+     * @param ConfigAdapter        $config             The config adapter
+     * @param LoggerInterface|null $logger             An optional logger service
      */
     public function __construct(
         $prettyErrorScreens,
