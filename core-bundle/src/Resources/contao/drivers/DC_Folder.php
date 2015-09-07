@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -2012,10 +2013,10 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			// Update the symlinks
-			if (file_exists(TL_ROOT . '/web/' . $this->strPath . '/' . $this->varValue . $this->strExtension))
+			if (is_link(TL_ROOT . '/web/' . $this->strPath . '/' . $this->varValue . $this->strExtension))
 			{
-				$this->import('Automator');
-				$this->Automator->generateSymlinks();
+				$this->Files->delete('web/' . $this->strPath . '/' . $this->varValue . $this->strExtension);
+				SymlinkUtil::symlink($this->strPath . '/' . $varValue . $this->strExtension, 'web/' . $this->strPath . '/' . $varValue . $this->strExtension);
 			}
 
 			// Set the new value so the input field can show it
