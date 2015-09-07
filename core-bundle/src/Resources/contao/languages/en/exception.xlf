@@ -21,7 +21,7 @@
         <source>An error occurred while executing this script. Something does not work properly.</source>
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
-        <source>Serach the &lt;code&gt;app/logs&lt;/code&gt; folder for the current log file and find the associated error message (usually the last one).</source>
+        <source>Search the &lt;code&gt;app/logs&lt;/code&gt; folder for the current log file and find the associated error message (usually the last one).</source>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href="https://contao.org/faq.html" target="_blank"&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href="https://contao.org/support.html" target="_blank"&gt;Contao support page&lt;/a&gt;.</source>
