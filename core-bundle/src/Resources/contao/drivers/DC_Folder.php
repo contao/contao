@@ -2011,6 +2011,13 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				}
 			}
 
+			// Update the symlinks
+			if (file_exists(TL_ROOT . '/web/' . $this->strPath . '/' . $this->varValue . $this->strExtension))
+			{
+				$this->import('Automator');
+				$this->Automator->generateSymlinks();
+			}
+
 			// Set the new value so the input field can show it
 			if (\Input::get('act') == 'editAll')
 			{

@@ -5,6 +5,9 @@ Version 4.0.3 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Update the symlinks after a file or folder has been renamed (see #332).
+
+### Fixed
 Correctly trigger the command scheduler in the front end (see #340).
 
 ### Fixed
