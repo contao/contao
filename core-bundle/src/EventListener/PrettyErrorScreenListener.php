@@ -274,13 +274,13 @@ class PrettyErrorScreenListener
                 'errorOccurred' => 'An error occurred while executing this script. Something does not work properly. '
                     . 'Additionally an error occurred while trying to display the error message.',
                 'howToFix' => 'How can I fix the issue?',
-                'errorFixOne' => 'Open the <code>app/logs/prod.log</code> file and find the associated error '
-                    . 'message (usually the last one).',
+                'errorFixOne' => 'Search the <code>app/logs</code> folder for the current log file and find the '
+                    . 'associated error message (usually the last one).',
                 'more' => 'Tell me more, please',
                 'errorExplain' => 'The script execution stopped, because something does not work properly. The '
                     . 'actual error message is hidden by this notice for security reasons and can be '
-                    . 'found in the <code>app/logs/prod.log</code> file (see above). If you do not '
-                    . 'understand the error message or do not know how to fix the problem, search the '
+                    . 'found in the current log file (see above). If you do not understand the error message or do '
+                    . 'not know how to fix the problem, search the '
                     . '<a href="https://contao.org/faq.html">Contao FAQs</a> or visit the '
                     . '<a href="https://contao.org/support.html">Contao support page</a>.',
             ],
