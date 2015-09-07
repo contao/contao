@@ -5,6 +5,9 @@ Version 4.0.3 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Correctly trigger the command scheduler in the front end (see #340).
+
+### Fixed
 Handle legacy page types not returning a response object (see #331).
 
 ### Fixed
