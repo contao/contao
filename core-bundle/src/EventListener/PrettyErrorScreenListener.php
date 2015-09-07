@@ -74,13 +74,13 @@ class PrettyErrorScreenListener
      * @param bool              $prettyErrorScreens True to render the error screens
      * @param \Twig_Environment $twig               The twig environment
      * @param ConfigAdapter     $config             The config adapter
-     * @param LoggerInterface   $logger             The logger service
+     * @param LoggerInterface   $logger             An optional logger service
      */
     public function __construct(
         $prettyErrorScreens,
         \Twig_Environment $twig,
         ConfigAdapter $config,
-        LoggerInterface $logger
+        LoggerInterface $logger = null
     ) {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
@@ -345,6 +345,10 @@ class PrettyErrorScreenListener
      */
     private function logException(\Exception $exception)
     {
+        if (null === $this->logger) {
+            return;
+        }
+
         $this->logger->critical('An exception occurred.', ['exception' => $exception]);
     }
 }
