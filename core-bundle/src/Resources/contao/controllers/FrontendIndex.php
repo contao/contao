@@ -265,6 +265,15 @@ class FrontendIndex extends \Frontend
 					/** @var \PageRegular $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
 
+					// Backwards compatibility
+					if (!method_exists($objHandler, 'getResponse'))
+					{
+						ob_start();
+						$objHandler->generate($objPage, true);
+
+						return new Response(ob_get_clean(), http_response_code());
+					}
+
 					return $objHandler->getResponse($objPage, true);
 					break;
 			}
