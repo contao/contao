@@ -459,14 +459,19 @@ class Automator extends \System
 
 	/**
 	 * Rotate the log files
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the logger service instead, which rotates its log files automatically.
 	 */
 	public function rotateLogs()
 	{
-		$arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/app/logs'));
+		trigger_error('Using Automator::rotateLogs() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.', E_USER_DEPRECATED);
+
+		$arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/system/logs'));
 
 		foreach ($arrFiles as $strFile)
 		{
-			$objFile = new \File('app/logs/' . $strFile . '.9');
+			$objFile = new \File('system/logs/' . $strFile . '.9');
 
 			// Delete the oldest file
 			if ($objFile->exists())
@@ -477,18 +482,18 @@ class Automator extends \System
 			// Rotate the files (e.g. error.log.4 becomes error.log.5)
 			for ($i=8; $i>0; $i--)
 			{
-				$strGzName = 'app/logs/' . $strFile . '.' . $i;
+				$strGzName = 'system/logs/' . $strFile . '.' . $i;
 
 				if (file_exists(TL_ROOT . '/' . $strGzName))
 				{
 					$objFile = new \File($strGzName);
-					$objFile->renameTo('app/logs/' . $strFile . '.' . ($i+1));
+					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));
 				}
 			}
 
 			// Add .1 to the latest file
-			$objFile = new \File('app/logs/' . $strFile);
-			$objFile->renameTo('app/logs/' . $strFile . '.1');
+			$objFile = new \File('system/logs/' . $strFile);
+			$objFile->renameTo('system/logs/' . $strFile . '.1');
 		}
 	}
 }
