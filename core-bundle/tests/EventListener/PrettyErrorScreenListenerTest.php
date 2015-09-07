@@ -221,8 +221,9 @@ class PrettyErrorScreenListenerTest extends TestCase
             })
         ;
 
-        /** @var LoggerInterface $logger */
+        /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
         $logger = $this->getMock('Psr\\Log\\LoggerInterface');
+        $logger->expects($this->once())->method('critical');
 
         $listener = new PrettyErrorScreenListener(true, $twig, new ConfigAdapter(), $logger);
         $listener->onKernelException($event);
