@@ -374,7 +374,7 @@ class InstallTool
     }
 
     /**
-     * Logs an exception in the prod.log file.
+     * Logs an exception in the current log file.
      *
      * @param \Exception $e The exception
      */
@@ -389,7 +389,7 @@ class InstallTool
                 $e->getTraceAsString()
             ),
             3,
-            $this->rootDir . '/logs/prod.log'
+            $this->rootDir . '/logs/prod-' . date('Y-m-d') . '.log'
         );
     }
 }
