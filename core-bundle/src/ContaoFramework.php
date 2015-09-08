@@ -269,10 +269,6 @@ class ContaoFramework implements ContaoFrameworkInterface
         error_reporting($this->errorLevel);
 
         $this->includeHelpers();
-
-        // TODO: use Monolog to log errors
-        $this->iniSet('error_log', $this->rootDir . '/system/logs/error.log');
-
         $this->includeBasicClasses();
 
         // Set the container

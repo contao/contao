@@ -459,9 +459,14 @@ class Automator extends \System
 
 	/**
 	 * Rotate the log files
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use the logger service instead, which rotates its log files automatically.
 	 */
 	public function rotateLogs()
 	{
+		trigger_error('Using Automator::rotateLogs() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.', E_USER_DEPRECATED);
+
 		$arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/system/logs'));
 
 		foreach ($arrFiles as $strFile)

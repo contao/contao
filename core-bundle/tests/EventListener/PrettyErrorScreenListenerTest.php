@@ -19,6 +19,7 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Test\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -61,7 +62,10 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->getMock()
         ;
 
-        $this->listener = new PrettyErrorScreenListener(true, $twig, $this->mockConfig());
+        /** @var LoggerInterface $logger */
+        $logger = $this->getMock('Psr\\Log\\LoggerInterface');
+
+        $this->listener = new PrettyErrorScreenListener(true, $twig, $this->mockConfig(), $logger);
     }
 
     /**
@@ -217,7 +221,11 @@ class PrettyErrorScreenListenerTest extends TestCase
             })
         ;
 
-        $listener = new PrettyErrorScreenListener(true, $twig, new ConfigAdapter());
+        /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
+        $logger = $this->getMock('Psr\\Log\\LoggerInterface');
+        $logger->expects($this->once())->method('critical');
+
+        $listener = new PrettyErrorScreenListener(true, $twig, new ConfigAdapter(), $logger);
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
