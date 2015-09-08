@@ -542,7 +542,10 @@ abstract class Backend extends \Controller
 					$this->Template->headline .= ' » ' . $objRow->name;
 				}
 
-				$this->Template->headline .= ' » ' . $GLOBALS['TL_LANG']['MOD'][$strSecond];
+				if (isset($GLOBALS['TL_LANG']['MOD'][$strSecond]))
+				{
+					$this->Template->headline .= ' » ' . $GLOBALS['TL_LANG']['MOD'][$strSecond];
+				}
 
 				// Add the second level name
 				$objRow = $this->Database->prepare("SELECT * FROM $strSecond WHERE id=?")
@@ -602,7 +605,15 @@ abstract class Backend extends \Controller
 				{
 					if (\Input::get('do') == 'files' || \Input::get('do') == 'tpl_editor')
 					{
-						$this->Template->headline .= ' » ' . \Input::get('id');
+						// Handle new folders (see #7980)
+						if (strpos(\Input::get('id'), '__new__') !== false)
+						{
+							$this->Template->headline .= ' » ' . dirname(\Input::get('id')) . ' » ' . $GLOBALS['TL_LANG'][$strTable]['new'][1];
+						}
+						else
+						{
+							$this->Template->headline .= ' » ' . \Input::get('id');
+						}
 					}
 					elseif (is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
@@ -936,7 +947,7 @@ abstract class Backend extends \Controller
 			}
 
 			// No link for the active folder
-			if ($strFolder == basename($strNode))
+			if ($strPath == $strNode)
 			{
 				$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/folderC.gif" width="18" height="18" alt=""> ' . $strFolder;
 			}

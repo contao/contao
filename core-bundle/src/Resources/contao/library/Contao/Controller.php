@@ -1465,12 +1465,6 @@ abstract class Controller extends \System
 			}
 		}
 
-		// Disable responsive images in the back end (see #7875)
-		if (TL_MODE == 'BE')
-		{
-			unset($size[2]);
-		}
-
 		try
 		{
 			$src = \Image::create($arrItem['singleSRC'], $size)->executeResize()->getResizedPath();
