@@ -7,7 +7,7 @@
 
 <div class="event layout_teaser<?= $this->classList ?>" itemscope itemtype="http://schema.org/Event">
 
-  <?php if ($this->details): ?>
+  <?php if ($this->hasDetails): ?>
     <h2 itemprop="name"><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day) echo $this->day . ', '; ?><?= $this->date ?><?php if ($this->time) echo ', ' . $this->time; ?>)"<?= $this->target ?> itemprop="url"><?= $this->link ?></a></h2>
   <?php else: ?>
     <h2><?= $this->title ?></h2>
@@ -31,7 +31,7 @@
     <?php endif; ?>
   </div>
 
-  <?php if ($this->details): ?>
+  <?php if ($this->hasDetails): ?>
     <p class="more"><a href="<?= $this->href ?>" title="<?= $this->readMore ?>"<?= $this->target ?> itemprop="url"><?= $this->more ?> <span class="invisible"><?= $this->link ?></span></a></p>
   <?php endif; ?>
 
