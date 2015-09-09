@@ -101,10 +101,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->scalarNode('imagine_class')
-                    ->cannotBeEmpty()
-                    ->defaultValue('Imagine\\Gd\\Imagine')
-                ->end()
             ->end()
         ;
 

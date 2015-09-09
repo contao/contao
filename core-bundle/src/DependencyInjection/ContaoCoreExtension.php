@@ -75,7 +75,6 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.error_level', $mergedConfig['error_level']);
         $container->setParameter('contao.image.bypass_cache', $mergedConfig['image']['bypass_cache']);
         $container->setParameter('contao.image.target_path', $mergedConfig['image']['target_path']);
-        $container->setParameter('contao.image.imagine.class', $mergedConfig['imagine_class']);
         $container->setParameter('contao.security.disable_ip_check', $mergedConfig['security']['disable_ip_check']);
     }
 }
