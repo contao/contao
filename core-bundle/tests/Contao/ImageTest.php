@@ -79,6 +79,7 @@ class ImageTest extends TestCase
      */
     public function testConstruct()
     {
+        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -109,6 +110,7 @@ class ImageTest extends TestCase
      */
     public function testConstructWithNonexistentFile()
     {
+        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -126,6 +128,7 @@ class ImageTest extends TestCase
      */
     public function testConstructWithInvalidExtension()
     {
+        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -167,6 +170,7 @@ class ImageTest extends TestCase
      */
     public function testComputeResizeWithoutImportantPart($arguments, $expectedResult)
     {
+        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -615,6 +619,7 @@ class ImageTest extends TestCase
      */
     public function testComputeResizeWithImportantPart($arguments, $expectedResult)
     {
+        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -803,6 +808,7 @@ class ImageTest extends TestCase
      */
     public function testSettersAndGetters()
     {
+        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -931,6 +937,7 @@ class ImageTest extends TestCase
      */
     public function testGetCacheName($arguments, $expectedCacheName)
     {
+        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -1003,6 +1010,7 @@ class ImageTest extends TestCase
      */
     public function testSetZoomOutOfBoundsNegative()
     {
+        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -1032,6 +1040,7 @@ class ImageTest extends TestCase
      */
     public function testSetZoomOutOfBoundsPositive()
     {
+        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -1094,15 +1103,6 @@ class ImageTest extends TestCase
                 ['foobar.jpg', 100, 100, 'crop', null, false],
                 null,
             ],
-            // Currently not testable (see contao/core-bundle#25)
-            //'No resize necessary returns same path' => [
-            //   ['dummy.jpg', 200, 200, 'crop', null, false],
-            //   'dummy.jpg'
-            //],
-            //'No resize necessary with target path' => [
-            //    ['dummy.jpg', 200, 200, 'crop', 'target/path/dummy.jpg', false],
-            //    'target/path/dummy.jpg'
-            //]
         ];
     }
 
@@ -1144,11 +1144,6 @@ class ImageTest extends TestCase
                 ['foobar.jpg', 100, 100, 'crop'],
                 false,
             ],
-            // Currently not testable (see contao/core-bundle#25)
-            //'No resize necessary returns true' => [
-            //    ['dummy.jpg', 200, 200, 'crop', null, false],
-            //    true
-            //]
         ];
     }
 
