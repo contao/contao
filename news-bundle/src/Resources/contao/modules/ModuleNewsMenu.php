@@ -28,6 +28,12 @@ class ModuleNewsMenu extends \ModuleNews
 	protected $Date;
 
 	/**
+	 * Current URL
+	 * @var string
+	 */
+	protected $strUrl;
+
+	/**
 	 * Template
 	 * @var string
 	 */
@@ -60,6 +66,13 @@ class ModuleNewsMenu extends \ModuleNews
 		if (!is_array($this->news_archives) || empty($this->news_archives))
 		{
 			return '';
+		}
+
+		$this->strUrl = preg_replace('/\?.*$/', '', \Environment::get('request'));
+
+		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
+		{
+			$this->strUrl = $this->generateFrontendUrl($objTarget->row());
 		}
 
 		return parent::generate();
@@ -113,13 +126,6 @@ class ModuleNewsMenu extends \ModuleNews
 		$arrItems = array();
 		$count = 0;
 		$limit = count($arrData);
-		$strUrl = \Environment::get('request');
-
-		// Get the current "jumpTo" page
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
-		{
-			$strUrl = $this->generateFrontendUrl($objTarget->row());
-		}
 
 		// Prepare the navigation
 		foreach ($arrData as $intYear=>$intCount)
@@ -129,7 +135,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 			$arrItems[$intYear]['date'] = $intDate;
 			$arrItems[$intYear]['link'] = $intYear;
-			$arrItems[$intYear]['href'] = $strUrl . '?year=' . $intDate;
+			$arrItems[$intYear]['href'] = $this->strUrl . '?year=' . $intDate;
 			$arrItems[$intYear]['title'] = specialchars($intYear . ' (' . $quantity . ')');
 			$arrItems[$intYear]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 			$arrItems[$intYear]['isActive'] = (\Input::get('year') == $intDate);
@@ -166,14 +172,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 		($this->news_order == 'ascending') ? ksort($arrData) : krsort($arrData);
 
-		$strUrl = '';
 		$arrItems = array();
-
-		// Get the current "jumpTo" page
-		if (($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
-		{
-			$strUrl = $this->generateFrontendUrl($objTarget->row());
-		}
 
 		// Prepare the navigation
 		foreach ($arrData as $intYear=>$arrMonth)
@@ -190,7 +189,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
-				$arrItems[$intYear][$intMonth]['href'] = $strUrl . '?month=' . $intDate;
+				$arrItems[$intYear][$intMonth]['href'] = $this->strUrl . '?month=' . $intDate;
 				$arrItems[$intYear][$intMonth]['title'] = specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.$intYear . ' (' . $quantity . ')');
 				$arrItems[$intYear][$intMonth]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 				$arrItems[$intYear][$intMonth]['isActive'] = (\Input::get('month') == $intDate);
@@ -200,7 +199,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 		$this->Template->items = $arrItems;
 		$this->Template->showQuantity = ($this->news_showQuantity != '') ? true : false;
-		$this->Template->url = $strUrl . '?';
+		$this->Template->url = $this->strUrl . '?';
 		$this->Template->activeYear = \Input::get('year');
 	}
 
@@ -223,13 +222,6 @@ class ModuleNewsMenu extends \ModuleNews
 
 		// Sort the data
 		krsort($arrData);
-		$strUrl = \Environment::get('request');
-
-		// Get the current "jumpTo" page
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
-		{
-			$strUrl = $this->generateFrontendUrl($objTarget->row());
-		}
 
 		// Create the date object
 		try
@@ -252,7 +244,7 @@ class ModuleNewsMenu extends \ModuleNews
 		$prevYear = ($intMonth == 1) ? ($intYear - 1) : $intYear;
 		$lblPrevious = $GLOBALS['TL_LANG']['MONTHS'][($prevMonth - 1)] . ' ' . $prevYear;
 
-		$this->Template->prevHref = $strUrl . '?day=' . $prevYear . ((strlen($prevMonth) < 2) ? '0' : '') . $prevMonth . '01';
+		$this->Template->prevHref = $this->strUrl . '?day=' . $prevYear . ((strlen($prevMonth) < 2) ? '0' : '') . $prevMonth . '01';
 		$this->Template->prevTitle = specialchars($lblPrevious);
 		$this->Template->prevLink = $GLOBALS['TL_LANG']['MSC']['news_previous'] . ' ' . $lblPrevious;
 		$this->Template->prevLabel = $GLOBALS['TL_LANG']['MSC']['news_previous'];
@@ -265,7 +257,7 @@ class ModuleNewsMenu extends \ModuleNews
 		$nextYear = ($intMonth == 12) ? ($intYear + 1) : $intYear;
 		$lblNext = $GLOBALS['TL_LANG']['MONTHS'][($nextMonth - 1)] . ' ' . $nextYear;
 
-		$this->Template->nextHref = $strUrl . '?day=' . $nextYear . ((strlen($nextMonth) < 2) ? '0' : '') . $nextMonth . '01';
+		$this->Template->nextHref = $this->strUrl . '?day=' . $nextYear . ((strlen($nextMonth) < 2) ? '0' : '') . $nextMonth . '01';
 		$this->Template->nextTitle = specialchars($lblNext);
 		$this->Template->nextLink = $lblNext . ' ' . $GLOBALS['TL_LANG']['MSC']['news_next'];
 		$this->Template->nextLabel = $GLOBALS['TL_LANG']['MSC']['news_next'];
@@ -278,7 +270,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 		$this->Template->daily = true;
 		$this->Template->days = $this->compileDays();
-		$this->Template->weeks = $this->compileWeeks($arrData, $strUrl);
+		$this->Template->weeks = $this->compileWeeks($arrData);
 		$this->Template->showQuantity = ($this->news_showQuantity != '') ? true : false;
 	}
 
@@ -306,11 +298,10 @@ class ModuleNewsMenu extends \ModuleNews
 	 * Return all weeks of the current month as array
 	 *
 	 * @param array  $arrData
-	 * @param string $strUrl
 	 *
 	 * @return array
 	 */
-	protected function compileWeeks($arrData, $strUrl)
+	protected function compileWeeks($arrData)
 	{
 		$intDaysInMonth = date('t', $this->Date->monthBegin);
 		$intFirstDayOffset = date('w', $this->Date->monthBegin) - $this->news_startDay;
@@ -364,7 +355,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 			$arrDays[$strWeekClass][$i]['label'] = $intDay;
 			$arrDays[$strWeekClass][$i]['class'] = 'days active' . $strClass;
-			$arrDays[$strWeekClass][$i]['href'] = $strUrl . '?day=' . $intKey;
+			$arrDays[$strWeekClass][$i]['href'] = $this->strUrl . '?day=' . $intKey;
 			$arrDays[$strWeekClass][$i]['title'] = sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['news_items']), $arrData[$intKey]);
 		}
 
