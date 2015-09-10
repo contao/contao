@@ -245,14 +245,14 @@ class tl_templates extends Backend
 		// Copy an existing template
 		if (Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
-			$strOriginal = Input::post('original');
+			$strOriginal = Input::post('original', true);
 
 			if (Validator::isInsecurePath($strOriginal))
 			{
 				throw new RuntimeException('Invalid path ' . $strOriginal);
 			}
 
-			$strTarget = Input::post('target');
+			$strTarget = Input::post('target', true);
 
 			if (Validator::isInsecurePath($strTarget))
 			{

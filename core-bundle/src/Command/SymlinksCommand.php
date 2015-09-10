@@ -11,9 +11,9 @@
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
+use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -119,9 +119,9 @@ class SymlinksCommand extends AbstractLockedCommand
         $themes = $this->getContainer()->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
-            $path = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $theme->getPathname());
+            $path = str_replace(strtr($this->rootDir, '\\', '/') . '/', '', strtr($theme->getPathname(), '\\', '/'));
 
-            if (0 === strpos(strtr($path, '\\', '/'), 'system/modules/')) {
+            if (0 === strpos($path, 'system/modules/')) {
                 continue;
             }
 
@@ -155,90 +155,15 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     private function symlink($source, $target)
     {
-        $this->validateSymlink($source, $target);
-
-        $fs = new Filesystem();
-
-        try {
-            $fs->symlink(
-                rtrim($fs->makePathRelative($source, dirname($target)), '/'),
-                $this->rootDir . '/' . $target
-            );
-        } catch (IOException $e) {
-            $fs->symlink($this->rootDir . '/' . $source, $this->rootDir . '/' . $target);
-        }
-
-        $this->fixSymlinkPermissions($target);
+        SymlinkUtil::symlink($source, $target, $this->rootDir);
 
         $this->output->writeln(
-            sprintf('Added <comment>%s</comment> as symlink to <comment>%s</comment>.', $target, $source)
+            sprintf(
+                'Added <comment>%s</comment> as symlink to <comment>%s</comment>.',
+                strtr($target, '\\', '/'),
+                strtr($source, '\\', '/')
+            )
         );
-    }
-
-    /**
-     * Validates a symlink.
-     *
-     * @param string $source The symlink name
-     * @param string $target The symlink target
-     *
-     * @throws \InvalidArgumentException If the source or target is invalid
-     * @throws \LogicException           If the symlink cannot be created
-     */
-    private function validateSymlink($source, $target)
-    {
-        if ('' === $source) {
-            throw new \InvalidArgumentException('The symlink source must not be empty.');
-        }
-
-        if ('' === $target) {
-            throw new \InvalidArgumentException('The symlink target must not be empty.');
-        }
-
-        if (false !== strpos($target, '../')) {
-            throw new \InvalidArgumentException('The symlink target must not be relative.');
-        }
-
-        $fs = new Filesystem();
-
-        if ($fs->exists($this->rootDir . '/' . $target) && !is_link($this->rootDir . '/' . $target)) {
-            throw new \LogicException('The symlink target "' . $target . '" exists and is not a symlink.');
-        }
-    }
-
-    /**
-     * Fixes the symlink permissions.
-     *
-     * @param string $target The symlink target
-     */
-    private function fixSymlinkPermissions($target)
-    {
-        $stat = lstat($this->rootDir . '/' . $target);
-
-        // Try to fix the UID
-        if ($stat['uid'] !== getmyuid()) {
-            $this->changeOwnership($target, 'lchown', getmyuid());
-        }
-
-        // Try to fix the GID
-        if ($stat['gid'] !== getmygid()) {
-            $this->changeOwnership($target, 'lchgrp', getmygid());
-        }
-    }
-
-    /**
-     * Changes the ownership of a symlink.
-     *
-     * @param string $target   The symlink
-     * @param string $function The function name
-     * @param int    $id       The user or group ID
-     */
-    private function changeOwnership($target, $function, $id)
-    {
-        if (!function_exists($function)) {
-            return;
-        }
-
-        $function($this->rootDir . '/' . $target, $id);
     }
 
     /**
@@ -263,9 +188,9 @@ class SymlinksCommand extends AbstractLockedCommand
         return function (SplFileInfo $file) {
             static $paths;
 
-            $dir = str_replace($this->rootDir . DIRECTORY_SEPARATOR, '', $file->getPath());
+            $dir = str_replace(strtr($this->rootDir, '\\', '/') . '/', '', strtr($file->getPath(), '\\', '/'));
             $paths[] = $dir;
-            $chunks = explode(DIRECTORY_SEPARATOR, $dir);
+            $chunks = explode('/', $dir);
             $test = $chunks[0];
 
             for ($i = 1, $c = count($chunks); $i < $c; ++$i) {

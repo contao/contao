@@ -349,7 +349,7 @@ class Validator
 	public static function isInsecurePath($strPath)
 	{
 		// Normalize backslashes
-		$strPath = str_replace('\\', '/', $strPath);
+		$strPath = strtr($strPath, '\\', '/');
 		$strPath = preg_replace('#//+#', '/', $strPath);
 
 		// Equals ..

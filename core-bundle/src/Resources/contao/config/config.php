@@ -386,7 +386,6 @@ $GLOBALS['TL_CRON'] = array
 	),
 	'daily' => array
 	(
-		array('Automator', 'rotateLogs'),
 		array('Automator', 'purgeTempFolder'),
 		array('Automator', 'checkForUpdates')
 	),

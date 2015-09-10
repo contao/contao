@@ -88,7 +88,7 @@ class ModuleLogin extends \Module
 
 					if (!empty($arrGroups) && is_array($arrGroups))
 					{
-						$objGroupPage = \MemberGroupModel::findFirstActiveWithJumpToByIds($arrGroups);
+						$objGroupPage = \PageModel::findFirstActiveByMemberGroups($arrGroups);
 
 						if ($objGroupPage !== null)
 						{

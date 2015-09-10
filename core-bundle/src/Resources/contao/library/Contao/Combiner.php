@@ -223,6 +223,12 @@ class Combiner extends \System
 				{
 					$name = $arrFile['name'];
 
+					// Strip the web/ prefix (see #328)
+					if (strpos($name, 'web/') === 0)
+					{
+						$name = substr($name, 4);
+					}
+
 					// Add the media query (see #7070)
 					if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
 					{
@@ -344,11 +350,13 @@ class Combiner extends \System
 
 			$arrOptions = array
 			(
+				'strictMath' => true,
 				'compress' => !\Config::get('debugMode'),
 				'import_dirs' => array(TL_ROOT . '/' . $strPath => $strPath)
 			);
 
-			$objParser = new \Less_Parser($arrOptions);
+			$objParser = new \Less_Parser();
+			$objParser->SetOptions($arrOptions);
 			$objParser->parse($content);
 
 			return $this->fixPaths($objParser->getCss(), $arrFile);

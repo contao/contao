@@ -35,7 +35,7 @@ spl_autoload_register(function ($class) {
         $class = substr($class, 7);
     }
 
-    $file = str_replace('\\', '/', $class);
+    $file = strtr($class, '\\', '/');
 
     if (file_exists(__DIR__ . '/Fixtures/library/' . $file . '.php')) {
         include_once __DIR__ . '/Fixtures/library/' . $file . '.php';
