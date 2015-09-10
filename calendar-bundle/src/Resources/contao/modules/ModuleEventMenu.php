@@ -53,6 +53,13 @@ class ModuleEventMenu extends \ModuleCalendar
 			$this->cal_ctemplate = 'cal_mini';
 		}
 
+		$this->strUrl = preg_replace('/\?.*$/', '', \Environment::get('request'));
+
+		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
+		{
+			$this->strUrl = $this->generateFrontendUrl($objTarget->row());
+		}
+
 		return parent::generate();
 	}
 
@@ -102,13 +109,6 @@ class ModuleEventMenu extends \ModuleCalendar
 		$arrItems = array();
 		$count = 0;
 		$limit = count($arrData);
-		$strUrl = \Environment::get('request');
-
-		// Get the current "jumpTo" page
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
-		{
-			$strUrl = $this->generateFrontendUrl($objTarget->row());
-		}
 
 		// Prepare navigation
 		foreach ($arrData as $intYear=>$intCount)
@@ -118,7 +118,7 @@ class ModuleEventMenu extends \ModuleCalendar
 
 			$arrItems[$intYear]['date'] = $intDate;
 			$arrItems[$intYear]['link'] = $intYear;
-			$arrItems[$intYear]['href'] = $strUrl . '?year=' . $intDate;
+			$arrItems[$intYear]['href'] = $this->strUrl . '?year=' . $intDate;
 			$arrItems[$intYear]['title'] = specialchars($intYear . ' (' . $quantity . ')');
 			$arrItems[$intYear]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 			$arrItems[$intYear]['isActive'] = (\Input::get('year') == $intDate);
@@ -156,13 +156,6 @@ class ModuleEventMenu extends \ModuleCalendar
 		($this->cal_order == 'ascending') ? ksort($arrData) : krsort($arrData);
 
 		$arrItems = array();
-		$strUrl = \Environment::get('request');
-
-		// Get the current "jumpTo" page
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
-		{
-			$strUrl = $this->generateFrontendUrl($objTarget->row());
-		}
 
 		// Prepare the navigation
 		foreach ($arrData as $intYear=>$arrMonth)
@@ -179,7 +172,7 @@ class ModuleEventMenu extends \ModuleCalendar
 
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
-				$arrItems[$intYear][$intMonth]['href'] = $strUrl . '?month=' . $intDate;
+				$arrItems[$intYear][$intMonth]['href'] = $this->strUrl . '?month=' . $intDate;
 				$arrItems[$intYear][$intMonth]['title'] = specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.$intYear . ' (' . $quantity . ')');
 				$arrItems[$intYear][$intMonth]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 				$arrItems[$intYear][$intMonth]['isActive'] = (\Input::get('month') == $intDate);
@@ -189,7 +182,7 @@ class ModuleEventMenu extends \ModuleCalendar
 
 		$this->Template->items = $arrItems;
 		$this->Template->showQuantity = ($this->cal_showQuantity != '') ? true : false;
-		$this->Template->url = $strUrl . '?';
+		$this->Template->url = $this->strUrl . '?';
 		$this->Template->activeYear = \Input::get('year');
 	}
 }
