@@ -34,6 +34,79 @@ Add the missing `getResponse()` method to the respective page types.
 ### Fixed
 Correctly validate paths in the template editor (see #325).
 
+### Fixed
+Correctly handle dimensionless SVG images (see #7882).
+
+### Fixed
+Enable the `strictMath` option of the LESS parser (see #7985).
+
+### Fixed
+Consider the pagination menu when inserting at the top (see #7895).
+
+### Fixed
+Store the correct edit URL in the back end personal data module (see #7987).
+
+### Fixed
+Adjust the breadcrumb trail when creating new folders (see #7980).
+
+### Fixed
+Convert the HTML content to XHTML when generating Atom feeds (see #7996).
+
+### Fixed
+Correctly link the items in the files breadcrumb menu (see #7965).
+
+### Fixed
+Handle explicit collations matching the default collation (see #7979).
+
+### Fixed
+Fix the duplicate content check in the front end controller (see #7661).
+
+### Fixed
+Correctly parse dates in MooTools (see #7983).
+
+### Fixed
+Correctly escape in the `findMultipleFilesByFolder()` method (see #7966).
+
+### Fixed
+Override the tabindex handling of the accordion to ensure that the togglers are
+always focusable via keyboard (see #7963).
+
+### Fixed
+Check the script when storing the front end referer (see #7908).
+
+### Fixed
+Fix the back end pagination menu (see #7956).
+
+### Fixed
+Handle option callbacks in the back end help (see #7951).
+
+### Fixed
+Fixed the external links in the text field help wizard (see #7954) and the
+keyboard shortcuts link on the back end start page (see #7935).
+
+### Fixed
+Fixed the CSS group field explanations (see #7949).
+
+### Fixed
+Use ./ instead of an empty href (see #7967).
+
+### Fixed
+Correctly detect Microsoft Edge (see #7970).
+
+### Fixed
+Respect the "order" parameter in the `findMultipleByIds()` method (see #7940).
+
+### Fixed
+Always trigger the "parseDate" hook (see #4260).
+
+### Fixed
+Allow to instantiate the `InsertTags` class (see #7946).
+
+### Fixed
+Do not parse the image `src` attribute to determine the state of an element,
+because the image path might have been replaced with a `data:` string (e.g. by
+the Apache module "mod_pagespeed").
+
 
 Version 4.0.2 (2015-08-04)
 --------------------------
