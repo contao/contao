@@ -12,16 +12,16 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
-use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Test\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -62,7 +62,10 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->getMock()
         ;
 
-        $this->listener = new PrettyErrorScreenListener(true, $twig, $this->mockConfig());
+        /** @var LoggerInterface $logger */
+        $logger = $this->getMock('Psr\\Log\\LoggerInterface');
+
+        $this->listener = new PrettyErrorScreenListener(true, $twig, $this->mockConfig(), $logger);
     }
 
     /**
@@ -71,28 +74,6 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testInstantiation()
     {
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\PrettyErrorScreenListener', $this->listener);
-    }
-
-    /**
-     * Tests rendering an access denied HTTP exception.
-     */
-    public function testAccessDeniedHttpException()
-    {
-        $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new AccessDeniedHttpException('', new AccessDeniedException())
-        );
-
-        $this->listener->onKernelException($event);
-
-        $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
-        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -137,28 +118,6 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
-    }
-
-    /**
-     * Tests rendering a not found HTTP exception.
-     */
-    public function testNotFoundHttpException()
-    {
-        $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new NotFoundHttpException('', new PageNotFoundException())
-        );
-
-        $this->listener->onKernelException($event);
-
-        $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
-        $this->assertEquals(404, $response->getStatusCode());
     }
 
     /**
@@ -240,7 +199,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             $this->mockKernel(),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
-            new NotFoundHttpException('', new PageNotFoundException())
+            new InternalServerErrorHttpException('', new ForwardPageNotFoundException())
         );
 
         $count = 0;
@@ -262,7 +221,11 @@ class PrettyErrorScreenListenerTest extends TestCase
             })
         ;
 
-        $listener = new PrettyErrorScreenListener(true, $twig, new ConfigAdapter());
+        /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
+        $logger = $this->getMock('Psr\\Log\\LoggerInterface');
+        $logger->expects($this->once())->method('critical');
+
+        $listener = new PrettyErrorScreenListener(true, $twig, new ConfigAdapter(), $logger);
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());

@@ -14,10 +14,20 @@
  *
  * @param string $strMessage
  * @param string $strLog
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use the logger service instead.
  */
-function log_message($strMessage, $strLog='error.log')
+function log_message($strMessage, $strLog=null)
 {
-	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, TL_ROOT . '/system/logs/' . $strLog);
+	trigger_error('Using log_message() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead.', E_USER_DEPRECATED);
+
+	if ($strLog === null)
+	{
+		$strLog = 'prod-' . date('Y-m-d') . '.log';
+	}
+
+	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, TL_ROOT . '/app/logs/' . $strLog);
 }
 
 

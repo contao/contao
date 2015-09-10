@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\StringUtil;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -49,10 +50,14 @@ class PrettyErrorScreenListener
     private $config;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var array
      */
     private $mapper = [
-        'Contao\\CoreBundle\\Exception\\AccessDeniedException' => 'access_denied',
         'Contao\\CoreBundle\\Exception\\ForwardPageNotFoundException' => 'forward_page_not_found',
         'Contao\\CoreBundle\\Exception\\IncompleteInstallationException' => 'incomplete_installation',
         'Contao\\CoreBundle\\Exception\\InsecureInstallationException' => 'insecure_installation',
@@ -60,22 +65,27 @@ class PrettyErrorScreenListener
         'Contao\\CoreBundle\\Exception\\NoActivePageFoundException' => 'no_active_page_found',
         'Contao\\CoreBundle\\Exception\\NoLayoutSpecifiedException' => 'no_layout_specified',
         'Contao\\CoreBundle\\Exception\\NoRootPageFoundException' => 'no_root_page_found',
-        'Contao\\CoreBundle\\Exception\\PageNotFoundException' => 'page_not_found',
         'Contao\\CoreBundle\\Exception\\ServiceUnavailableException' => 'service_unavailable',
     ];
 
     /**
      * Constructor.
      *
-     * @param bool              $prettyErrorScreens True to render the error screens
-     * @param \Twig_Environment $twig               The twig environment
-     * @param ConfigAdapter     $config             The config adapter
+     * @param bool                 $prettyErrorScreens True to render the error screens
+     * @param \Twig_Environment    $twig               The twig environment
+     * @param ConfigAdapter        $config             The config adapter
+     * @param LoggerInterface|null $logger             An optional logger service
      */
-    public function __construct($prettyErrorScreens, \Twig_Environment $twig, ConfigAdapter $config)
-    {
+    public function __construct(
+        $prettyErrorScreens,
+        \Twig_Environment $twig,
+        ConfigAdapter $config,
+        LoggerInterface $logger = null
+    ) {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->config = $config;
+        $this->logger = $logger;
     }
 
     /**
@@ -84,6 +94,20 @@ class PrettyErrorScreenListener
      * @param GetResponseForExceptionEvent $event The event object
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
+    {
+        if (!$event->isMasterRequest() || 'html' !== $event->getRequest()->getRequestFormat()) {
+            return;
+        }
+
+        $this->handleException($event);
+    }
+
+    /**
+     * Handles the exception.
+     *
+     * @param GetResponseForExceptionEvent $event The event object
+     */
+    private function handleException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
 
@@ -102,10 +126,11 @@ class PrettyErrorScreenListener
                 break;
 
             case $exception instanceof ServiceUnavailableHttpException:
-                $this->renderMaintenanceScreen($event);
+                $this->renderTemplate('service_unavailable', 503, $event);
                 break;
 
             default:
+                $this->logException($exception);
                 $this->renderTemplate('error', 500, $event);
                 break;
         }
@@ -129,8 +154,6 @@ class PrettyErrorScreenListener
 
         if (null !== ($response = $this->getResponseFromPageHandler($type))) {
             $event->setResponse($response);
-        } else {
-            $this->renderErrorScreenByException($event);
         }
 
         $processing = false;
@@ -164,16 +187,6 @@ class PrettyErrorScreenListener
     }
 
     /**
-     * Renders the maintenance screen.
-     *
-     * @param GetResponseForExceptionEvent $event The event object
-     */
-    private function renderMaintenanceScreen(GetResponseForExceptionEvent $event)
-    {
-        $this->renderTemplate('service_unavailable', 503, $event);
-    }
-
-    /**
      * Checks the exception chain for a known exception.
      *
      * @param GetResponseForExceptionEvent $event The event object
@@ -197,6 +210,7 @@ class PrettyErrorScreenListener
             return;
         }
 
+        $this->logException($exception);
         $this->renderTemplate($template, $statusCode, $event);
     }
 
@@ -223,7 +237,7 @@ class PrettyErrorScreenListener
      *
      * @param string                       $template   The template name
      * @param int                          $statusCode The status code
-     * @param GetResponseForExceptionEvent $event      The event
+     * @param GetResponseForExceptionEvent $event      The event object
      */
     private function renderTemplate($template, $statusCode, GetResponseForExceptionEvent $event)
     {
@@ -260,13 +274,13 @@ class PrettyErrorScreenListener
                 'errorOccurred' => 'An error occurred while executing this script. Something does not work properly. '
                     . 'Additionally an error occurred while trying to display the error message.',
                 'howToFix' => 'How can I fix the issue?',
-                'errorFixOne' => 'Open the <code>app/logs/error.log</code> file and find the associated error '
-                    . 'message (usually the last one).',
+                'errorFixOne' => 'Search the <code>app/logs</code> folder for the current log file and find the '
+                    . 'associated error message (usually the last one).',
                 'more' => 'Tell me more, please',
                 'errorExplain' => 'The script execution stopped, because something does not work properly. The '
                     . 'actual error message is hidden by this notice for security reasons and can be '
-                    . 'found in the <code>app/logs/error.log</code> file (see above). If you do not '
-                    . 'understand the error message or do not know how to fix the problem, search the '
+                    . 'found in the current log file (see above). If you do not understand the error message or do '
+                    . 'not know how to fix the problem, search the '
                     . '<a href="https://contao.org/faq.html">Contao FAQs</a> or visit the '
                     . '<a href="https://contao.org/support.html">Contao support page</a>.',
             ],
@@ -322,5 +336,19 @@ class PrettyErrorScreenListener
         }
 
         return $GLOBALS['TL_LANG']['XPT'];
+    }
+
+    /**
+     * Logs the exception.
+     *
+     * @param \Exception $exception The exception
+     */
+    private function logException(\Exception $exception)
+    {
+        if (null === $this->logger) {
+            return;
+        }
+
+        $this->logger->critical('An exception occurred.', ['exception' => $exception]);
     }
 }

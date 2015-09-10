@@ -215,8 +215,10 @@ namespace {
 	class Upload extends \Contao\Upload {}
 }
 namespace Database {
+	class Installer extends \Contao\Database\Installer {}
 	class Result extends \Contao\Database\Result {}
 	class Statement extends \Contao\Database\Statement {}
+	class Updater extends \Contao\Database\Updater {}
 }
 namespace Filter {
 	class SqlFiles extends \Contao\Filter\SqlFiles {}

@@ -31,12 +31,13 @@ class InstallCommandTest extends TestCase
     {
         $fs = new Filesystem();
 
-        $fs->remove($this->getRootDir() . '/assets');
+        $fs->remove($this->getRootDir() . '/assets/css');
+        $fs->remove($this->getRootDir() . '/assets/images');
+        $fs->remove($this->getRootDir() . '/assets/js');
         $fs->remove($this->getRootDir() . '/files');
         $fs->remove($this->getRootDir() . '/system/cache');
         $fs->remove($this->getRootDir() . '/system/config');
         $fs->remove($this->getRootDir() . '/system/initialize.php');
-        $fs->remove($this->getRootDir() . '/system/themes');
         $fs->remove($this->getRootDir() . '/system/tmp');
         $fs->remove($this->getRootDir() . '/templates');
         $fs->remove($this->getRootDir() . '/web');
@@ -75,7 +76,6 @@ class InstallCommandTest extends TestCase
         $this->assertContains('Added the ' . $this->getRootDir() . '/assets/js/.gitignore file.', $tester->getDisplay());
         $this->assertContains('Added the ' . $this->getRootDir() . '/system/cache/.gitignore file.', $tester->getDisplay());
         $this->assertContains('Added the ' . $this->getRootDir() . '/system/config/.gitignore file.', $tester->getDisplay());
-        $this->assertContains('Added the ' . $this->getRootDir() . '/system/themes/.gitignore file.', $tester->getDisplay());
         $this->assertContains('Added the ' . $this->getRootDir() . '/system/tmp/.gitignore file.', $tester->getDisplay());
     }
 

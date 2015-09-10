@@ -157,7 +157,7 @@ class ZipWriter
 	public function addString($strData, $strName, $intTime=0)
 	{
 		++$this->intCount;
-		$strName = str_replace('\\', '/', $strName);
+		$strName = strtr($strName, '\\', '/');
 
 		// Start file
 		$arrFile['file_signature']            = self::FILE_SIGNATURE;

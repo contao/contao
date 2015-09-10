@@ -1,5 +1,5 @@
-Contao change log
-=================
+Contao core bundle change log
+=============================
 
 Version 4.1.0-beta1 (2015-XX-XX)
 --------------------------------

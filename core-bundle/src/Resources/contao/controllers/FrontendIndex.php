@@ -158,7 +158,7 @@ class FrontendIndex extends \Frontend
 		}
 
 		// If the page has an alias, it can no longer be called via ID (see #7661)
-		if ($objPage->alias != '' && $pageId == $objPage->id)
+		if ($objPage->alias != '' && preg_match('#^' . $objPage->id . '[$/.]#', \Environment::get('relativeRequest')))
 		{
 			$this->User->authenticate();
 			throw new PageNotFoundException('Page not found');
@@ -264,6 +264,15 @@ class FrontendIndex extends \Frontend
 				default:
 					/** @var \PageRegular $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
+
+					// Backwards compatibility
+					if (!method_exists($objHandler, 'getResponse'))
+					{
+						ob_start();
+						$objHandler->generate($objPage, true);
+
+						return new Response(ob_get_clean(), http_response_code());
+					}
 
 					return $objHandler->getResponse($objPage, true);
 					break;

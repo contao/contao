@@ -33,7 +33,6 @@ class SymlinksCommandTest extends TestCase
         $fs = new Filesystem();
 
         $fs->remove($this->getRootDir() . '/system/logs');
-        $fs->remove($this->getRootDir() . '/system/themes');
         $fs->remove($this->getRootDir() . '/web');
     }
 
@@ -78,7 +77,7 @@ Added system/logs as symlink to app/logs.\n
 EOF;
 
         $this->assertEquals(0, $code);
-        $this->assertEquals($expected, $tester->getDisplay());
+        $this->assertEquals($expected, str_replace("\r", '', $tester->getDisplay()));
     }
 
     /**
@@ -98,69 +97,5 @@ EOF;
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
 
         $lock->release();
-    }
-
-    /**
-     * Tests an empty source file.
-     *
-     * @expectedException \InvalidArgumentException
-     */
-    public function testEmptySource()
-    {
-        $command = new SymlinksCommand('contao:symlinks');
-        $reflection = new \ReflectionClass($command);
-        $method = $reflection->getMethod('validateSymlink');
-
-        $method->setAccessible(true);
-        $method->invokeArgs($command, ['', 'target']);
-    }
-
-    /**
-     * Tests an empty target file.
-     *
-     * @expectedException \InvalidArgumentException
-     */
-    public function testEmptyTarget()
-    {
-        $command = new SymlinksCommand('contao:symlinks');
-        $reflection = new \ReflectionClass($command);
-        $method = $reflection->getMethod('validateSymlink');
-
-        $method->setAccessible(true);
-        $method->invokeArgs($command, ['source', '']);
-    }
-
-    /**
-     * Tests an invalid target file.
-     *
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidTarget()
-    {
-        $command = new SymlinksCommand('contao:symlinks');
-        $reflection = new \ReflectionClass($command);
-        $method = $reflection->getMethod('validateSymlink');
-
-        $method->setAccessible(true);
-        $method->invokeArgs($command, ['source', '../target']);
-    }
-
-    /**
-     * Tests an existing target file.
-     *
-     * @expectedException \LogicException
-     */
-    public function testExistingTarget()
-    {
-        $command = new SymlinksCommand('contao:symlinks');
-        $reflection = new \ReflectionClass($command);
-
-        $property = $reflection->getProperty('rootDir');
-        $property->setAccessible(true);
-        $property->setValue($command, $this->getRootDir());
-
-        $method = $reflection->getMethod('validateSymlink');
-        $method->setAccessible(true);
-        $method->invokeArgs($command, ['source', 'app']);
     }
 }

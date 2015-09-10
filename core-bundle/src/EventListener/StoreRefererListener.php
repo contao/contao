@@ -168,6 +168,7 @@ class StoreRefererListener
             && !$request->query->has('file')
             && !$request->query->has('id')
             && isset($referer['current'])
+            && 'contao_frontend' === $request->attributes->get('_route')
             && $referer['current'] !== $this->getRelativeRequestUri($request)
             && !$request->isXmlHttpRequest()
         ;

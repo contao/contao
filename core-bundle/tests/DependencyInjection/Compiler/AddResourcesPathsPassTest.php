@@ -51,13 +51,19 @@ class AddResourcesPathsPassTest extends TestCase
 
         $this->assertTrue($container->hasParameter('contao.resources_paths'));
 
+        $path = $this->getRootDir() . '/vendor/contao/test-bundle';
+
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            $path = strtr($path, '/', '\\');
+        }
+
         $this->assertEquals(
-            $container->getParameter('contao.resources_paths'),
             [
-                $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
+                $path . '/Resources/contao',
                 $this->getRootDir() . '/system/modules/foobar',
                 $this->getRootDir() . '/app/Resources/contao',
-            ]
+            ],
+            $container->getParameter('contao.resources_paths')
         );
     }
 }

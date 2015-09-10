@@ -83,7 +83,7 @@ services:
             - "%contao.pretty_error_screens%"
             - "@twig"
             - "@contao.adapter.config"
-            - "@contao.framework"
+            - "@logger"
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 32 }
 
@@ -131,7 +131,7 @@ services:
         class: Contao\CoreBundle\EventListener\UserSessionListener
         arguments:
             - "@session"
-            - "@doctrine.dbal.default_connection"
+            - "@database_connection"
         calls:
             - [setContainer, ["@service_container"]]
             - [setTokenStorage, ["@security.token_storage"]]
