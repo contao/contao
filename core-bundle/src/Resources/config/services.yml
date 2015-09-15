@@ -1,4 +1,7 @@
 services:
+    contao.adapter_factory
+        class: Contao\CoreBundle\Adapter\AdapterFactory
+        
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         public: false
