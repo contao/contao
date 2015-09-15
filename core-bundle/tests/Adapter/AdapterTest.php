@@ -26,8 +26,7 @@ class AdapterTest extends TestCase
      */
     public function testInstantiation()
     {
-        $factory = $this->getMock('Contao\\CoreBundle\\Adapter\\AdapterFactoryInterface');
-        $adapter = new Adapter('Dummy', [], $factory);
+        $adapter = new Adapter('Dummy');
 
         $this->assertInstanceOf('Contao\\CoreBundle\\Adapter\\Adapter', $adapter);
     }
