@@ -17,9 +17,8 @@ namespace Contao\CoreBundle\Adapter;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  *
- * @internal
  */
-class Adapter
+final class Adapter
 {
     /**
      * Class name.
