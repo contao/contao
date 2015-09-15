@@ -55,21 +55,18 @@ class AdapterFactory implements AdapterFactoryInterface
      * Returns an adapter class for a given class.
      *
      * @param string $class Fully qualified class name.
-     * @param array $args Constructor arguments.
      *
      * @return mixed
      */
-    public function getAdapter($class, $args = [])
+    public function getAdapter($class)
     {
-        $cacheKey = md5($class . ';' . json_encode($args));
+        if (isset($this->adapterCache[$class])) {
 
-        if (isset($this->adapterCache[$cacheKey])) {
-
-            return $this->adapterCache[$cacheKey];
+            return $this->adapterCache[$class];
         }
 
-        $this->adapterCache[$cacheKey] = new Adapter($class);
+        $this->adapterCache[$class] = new Adapter($class);
 
-        return $this->adapterCache[$cacheKey];
+        return $this->adapterCache[$class];
     }
 }

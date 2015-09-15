@@ -34,9 +34,8 @@ interface AdapterFactoryInterface
      * Returns an adapter class for a given class.
      *
      * @param string $class Fully qualified class name.
-     * @param array $args Constructor arguments.
      *
      * @return mixed
      */
-    public function getAdapter($class, $args = []);
+    public function getAdapter($class);
 }
