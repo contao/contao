@@ -18,6 +18,7 @@ use Contao\Config;
  * @author Yanick Witschi <https://github.com/toflar>
  *
  * @internal
+ * @deprecated Use the AdapterFactory instead.
  */
 class ConfigAdapter
 {
