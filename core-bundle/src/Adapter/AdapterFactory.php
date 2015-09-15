@@ -44,11 +44,11 @@ class AdapterFactory implements AdapterFactoryInterface
         $method = '__construct';
 
         if (in_array('getInstance', get_class_methods($class))) {
-
-            $method = 'getInstance';
+            return call_user_func_array([$class, 'getInstance'], $args);
         }
 
-        return call_user_func_array([$class, $method], $args);
+        $reflection = new \ReflectionClass($class);
+        return $reflection->newInstanceArgs($args);
     }
 
     /**
