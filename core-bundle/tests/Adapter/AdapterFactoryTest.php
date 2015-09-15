@@ -38,8 +38,10 @@ class AdapterFactoryTest extends TestCase
     {
         $factory = new AdapterFactory();
         $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass';
+        $instance = $factory->createInstance($class, [1, 2]);
 
-        $this->assertInstanceOf($class, $factory->createInstance($class));
+        $this->assertInstanceOf($class, $instance);
+        $this->assertEquals([1, 2], $instance->constructorArgs);
     }
 
     /**
@@ -49,8 +51,10 @@ class AdapterFactoryTest extends TestCase
     {
         $factory = new AdapterFactory();
         $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacySingletonClass';
+        $instance = $factory->createInstance($class, [1, 2]);
 
-        $this->assertInstanceOf($class, $factory->createInstance($class));
+        $this->assertInstanceOf($class, $instance);
+        $this->assertEquals([1, 2], $instance->constructorArgs);
     }
 
     /**
