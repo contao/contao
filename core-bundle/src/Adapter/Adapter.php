@@ -65,16 +65,6 @@ final class Adapter
      */
     public function __call($name, array $arguments = [])
     {
-        $method = new \ReflectionMethod($this->class, $name);
-        $method->setAccessible(true);
-
-        if ($method->isStatic()) {
-
-            return $method->invokeArgs(null, $arguments);
-        }
-
-        $instance = $this->factory->createInstance($this->class, $this->args);
-
-        return $method->invokeArgs($instance, $arguments);
+        return call_user_func_array($this->class . '::' . $name, $arguments);
     }
 }
