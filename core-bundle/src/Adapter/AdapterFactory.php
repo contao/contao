@@ -41,8 +41,6 @@ class AdapterFactory implements AdapterFactoryInterface
      */
     public function createInstance($class, $args = [])
     {
-        $method = '__construct';
-
         if (in_array('getInstance', get_class_methods($class))) {
             return call_user_func_array([$class, 'getInstance'], $args);
         }
