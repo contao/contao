@@ -26,6 +26,12 @@ namespace Contao\CoreBundle\Adapter;
 class AdapterFactory implements AdapterFactoryInterface
 {
     /**
+     * Adapter class cache
+     * @var array
+     */
+    private $adapterCache = [];
+
+    /**
      * Creates a new instance of a given class.
      *
      * @param string $class Fully qualified class name.
@@ -55,6 +61,15 @@ class AdapterFactory implements AdapterFactoryInterface
      */
     public function getAdapter($class, $args = [])
     {
-        return new Adapter($class, $args, $this);
+        $cacheKey = md5($class . ';' . json_encode($args));
+
+        if (isset($this->adapterCache[$cacheKey])) {
+
+            return $this->adapterCache[$cacheKey];
+        }
+
+        $this->adapterCache[$cacheKey] = new Adapter($class, $args, $this);
+
+        return $this->adapterCache[$cacheKey];
     }
 }
