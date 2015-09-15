@@ -1,5 +1,5 @@
 services:
-    contao.adapter_factory
+    contao.adapter_factory:
         class: Contao\CoreBundle\Adapter\AdapterFactory
         
     contao.data_collector:
