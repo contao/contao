@@ -30,4 +30,41 @@ class AdapterFactoryTest extends TestCase
 
         $this->assertInstanceOf('Contao\\CoreBundle\\Adapter\\AdapterFactory', $factory);
     }
+
+    /**
+     * Tests the createInstance method.
+     */
+    public function testCreateInstance()
+    {
+        $factory = new AdapterFactory();
+        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass';
+        $instance = $factory->createInstance($class, [1, 2]);
+
+        $this->assertInstanceOf($class, $instance);
+        $this->assertEquals([1, 2], $instance->constructorArgs);
+    }
+
+    /**
+     * Tests the createInstance method for a singleton class.
+     */
+    public function testCreateInstanceSingelton()
+    {
+        $factory = new AdapterFactory();
+        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacySingletonClass';
+        $instance = $factory->createInstance($class, [1, 2]);
+
+        $this->assertInstanceOf($class, $instance);
+        $this->assertEquals([1, 2], $instance->constructorArgs);
+    }
+
+    /**
+     * Tests the getAdapter method.
+     */
+    public function testGetAdapter()
+    {
+        $factory = new AdapterFactory();
+        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass';
+
+        $this->assertInstanceOf('Contao\\CoreBundle\\Adapter\\Adapter', $factory->getAdapter($class));
+    }
 }

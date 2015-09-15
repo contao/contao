@@ -30,4 +30,25 @@ class AdapterTest extends TestCase
 
         $this->assertInstanceOf('Contao\\CoreBundle\\Adapter\\Adapter', $adapter);
     }
+
+    /**
+     * Tests the __call method.
+     */
+    public function testMagicCall()
+    {
+        $adapter = new Adapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass');
+
+        $this->assertEquals(['staticMethod', 1, 2], $adapter->staticMethod(1, 2));
+    }
+
+    /**
+     * Tests the __call method of a non-existent function.
+     */
+    public function testMagicCallMissingMethod()
+    {
+        $adapter = new Adapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass');
+
+        $this->setExpectedException('PHPUnit_Framework_Error');
+        $adapter->missingMethod();
+    }
 }
