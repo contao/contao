@@ -28,31 +28,13 @@ final class Adapter
     private $class;
 
     /**
-     * Constructor arguments.
-     *
-     * @var array
-     */
-    private $args = [];
-
-    /**
-     * Adapter factory.
-     *
-     * @var AdapterFactoryInterface
-     */
-    private $factory;
-
-    /**
      * Adapter constructor.
      *
      * @param string                    $class
-     * @param array                     $args Constructor arguments.
-     * @param AdapterFactoryInterface   $factory
      */
-    public function __construct($class, $args = [], AdapterFactoryInterface $factory)
+    public function __construct($class)
     {
         $this->class    = $class;
-        $this->args     = $args;
-        $this->factory  = $factory;
     }
 
     /**

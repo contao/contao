@@ -68,7 +68,7 @@ class AdapterFactory implements AdapterFactoryInterface
             return $this->adapterCache[$cacheKey];
         }
 
-        $this->adapterCache[$cacheKey] = new Adapter($class, $args, $this);
+        $this->adapterCache[$cacheKey] = new Adapter($class);
 
         return $this->adapterCache[$cacheKey];
     }
