@@ -48,7 +48,7 @@ class AdapterFactory implements AdapterFactoryInterface
             $method = 'getInstance';
         }
 
-        return call_user_func_array(array($class, $method), $args);
+        return call_user_func_array([$class, $method], $args);
     }
 
     /**
