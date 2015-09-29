@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\Image;
 
-use Contao\CoreBundle\Adapter\ModelRepositoryAdapter;
+use Contao\CoreBundle\Adapter\AdapterFactoryInterface;
 
 /**
  * Creates Picture objects
@@ -25,22 +25,22 @@ class PictureFactory
     private $imageFactory;
 
     /**
-     * @var ModelRepositoryAdapter
+     * @var AdapterFactory
      */
-    private $repository;
+    private $adapterFactory;
 
     /**
      * Constructor.
      *
-     * @param ImageFactory           $imageFactory The image factory
-     * @param ModelRepositoryAdapter $repository   The model repository
+     * @param ImageFactory            $imageFactory   The image factory
+     * @param AdapterFactoryInterface $adapterFactory The adapter factory
      */
     public function __construct(
         ImageFactory $imageFactory,
-        ModelRepositoryAdapter $repository
+        AdapterFactoryInterface $adapterFactory
     ) {
         $this->imageFactory = $imageFactory;
-        $this->repository = $repository;
+        $this->adapterFactory = $adapterFactory;
     }
 
     /**

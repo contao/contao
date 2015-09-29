@@ -76,12 +76,11 @@ services:
         class: Contao\CoreBundle\Image\ImageFactory
         arguments:
             - "@contao.image.imagine"
-            - "@contao.adapter.config"
-            - "@contao.adapter.model_repository"
             - "@filesystem"
+            - "@contao.adapter_factory"
 
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
         arguments:
             - "@contao.image.factory"
-            - "@contao.adapter.model_repository"
+            - "@contao.adapter_factory"

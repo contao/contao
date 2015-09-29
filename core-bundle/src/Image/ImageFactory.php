@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Image;
 
 use Imagine\Image\ImagineInterface;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
-use Contao\CoreBundle\Adapter\ModelRepositoryAdapter;
+use Contao\CoreBundle\Adapter\AdapterFactoryInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -33,9 +33,9 @@ class ImageFactory
     private $config;
 
     /**
-     * @var ModelRepositoryAdapter
+     * @var AdapterFactoryInterface
      */
-    private $repository;
+    private $adapterFactory;
 
     /**
      * @var Filesystem
@@ -45,21 +45,18 @@ class ImageFactory
     /**
      * Constructor.
      *
-     * @param ImagineInterface       $imagine    The imagine object
-     * @param ConfigAdapter          $config     The Contao configuration
-     * @param ModelRepositoryAdapter $repository The model repository
-     * @param Filesystem             $filesystem The filesystem object
+     * @param ImagineInterface        $imagine        The imagine object
+     * @param Filesystem              $filesystem     The filesystem object
+     * @param AdapterFactoryInterface $adapterFactory The adapter factory
      */
     public function __construct(
         ImagineInterface $imagine,
-        ConfigAdapter $config,
-        ModelRepositoryAdapter $repository,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        AdapterFactoryInterface $adapterFactory
     ) {
         $this->imagine = $imagine;
-        $this->config = $config;
-        $this->repository = $repository;
         $this->filesystem = $filesystem;
+        $this->adapterFactory = $adapterFactory;
     }
 
     /**
