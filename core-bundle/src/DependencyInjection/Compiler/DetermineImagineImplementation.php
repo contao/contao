@@ -41,6 +41,7 @@ class DetermineImagineImplementation implements CompilerPassInterface
 
             $class = 'Imagine\\' . $name . '\\Imagine';
 
+            // Tests the Imagine class which throws an exception if the parent PHP implementation is not available.
             try {
                 new $class();
                 return $class;
