@@ -43,17 +43,11 @@ class DetermineImagineImplementation implements CompilerPassInterface
 
             try {
                 new $class();
-                break;
-            } catch (RuntimeException $exception) {
-                $class = null;
-            }
+                return $class;
+            } catch (RuntimeException $exception) {}
 
         }
 
-        if (null === $class) {
-            throw new \RuntimeException('No Imagine implementation is available (IMagick, GMagick or GD)');
-        }
-
-        return $class;
+        throw new \RuntimeException('No Imagine implementation is available (IMagick, GMagick or GD)');
     }
 }
