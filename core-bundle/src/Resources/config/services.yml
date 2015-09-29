@@ -72,15 +72,36 @@ services:
         class: "%contao.image.imagine.class%"
         public: false
 
-    contao.image.image_factory:
-        class: Contao\CoreBundle\Image\ImageFactory
+    contao.image.resize_calculator:
+        class: Contao\CoreBundle\Image\ResizeCalculator
+        public: false
+
+    contao.image.resizer:
+        class: Contao\CoreBundle\Image\Resizer
+        public: false
         arguments:
+            - "@contao.image.resize_calculator"
             - "@contao.image.imagine"
             - "@filesystem"
             - "@contao.adapter_factory"
 
+    contao.image.image_factory:
+        class: Contao\CoreBundle\Image\ImageFactory
+        arguments:
+            - "@contao.image.resizer"
+            - "@contao.image.imagine"
+            - "@filesystem"
+            - "@contao.adapter_factory"
+
+    contao.image.picture_generator:
+        class: Contao\CoreBundle\Image\PictureGenerator
+        public: false
+        arguments:
+            - "@contao.image.resizer"
+
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
         arguments:
+            - "@contao.image.picture_generator"
             - "@contao.image.factory"
             - "@contao.adapter_factory"

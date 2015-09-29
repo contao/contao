@@ -22,6 +22,11 @@ use Symfony\Component\Filesystem\Filesystem;
 class ImageFactory
 {
     /**
+     * @var Resizer
+     */
+    private $resizer;
+
+    /**
      * @var ImagineInterface
      */
     private $imagine;
@@ -44,15 +49,18 @@ class ImageFactory
     /**
      * Constructor.
      *
+     * @param Resizer                 $resizer        The resizer object
      * @param ImagineInterface        $imagine        The imagine object
      * @param Filesystem              $filesystem     The filesystem object
      * @param AdapterFactoryInterface $adapterFactory The adapter factory
      */
     public function __construct(
+        Resizer $resizer,
         ImagineInterface $imagine,
         Filesystem $filesystem,
         AdapterFactoryInterface $adapterFactory
     ) {
+        $this->resizer = $resizer;
         $this->imagine = $imagine;
         $this->filesystem = $filesystem;
         $this->adapterFactory = $adapterFactory;

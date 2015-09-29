@@ -20,6 +20,11 @@ use Contao\CoreBundle\Adapter\AdapterFactoryInterface;
 class PictureFactory
 {
     /**
+     * @var PictureGenerator
+     */
+    private $pictureGenerator;
+
+    /**
      * @var ImageFactory
      */
     private $imageFactory;
@@ -32,13 +37,16 @@ class PictureFactory
     /**
      * Constructor.
      *
-     * @param ImageFactory            $imageFactory   The image factory
-     * @param AdapterFactoryInterface $adapterFactory The adapter factory
+     * @param PictureGenerator        $pictureGenerator The picture generator
+     * @param ImageFactory            $imageFactory     The image factory
+     * @param AdapterFactoryInterface $adapterFactory   The adapter factory
      */
     public function __construct(
+        PictureGenerator $pictureGenerator,
         ImageFactory $imageFactory,
         AdapterFactoryInterface $adapterFactory
     ) {
+        $this->pictureGenerator = $pictureGenerator;
         $this->imageFactory = $imageFactory;
         $this->adapterFactory = $adapterFactory;
     }
