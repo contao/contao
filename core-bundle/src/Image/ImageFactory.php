@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Image;
 
 use Imagine\Image\ImagineInterface;
-use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Adapter\AdapterFactoryInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -68,7 +67,9 @@ class ImageFactory
      *
      * @return Image The created image object
      */
-    private function create($path, $size)
+    public function create($path, $size)
     {
+        // Create an `Image` and a `ResizeConfiguration`, pass it to `Resizer`
+        // and return the resulting `Image`.
     }
 }

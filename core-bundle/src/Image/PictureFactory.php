@@ -52,7 +52,9 @@ class PictureFactory
      *
      * @return Picture The created Picture object
      */
-    private function create($path, $size)
+    public function create($path, $size)
     {
+        // Create an `Image` and a `PictureConfiguration`, pass it to
+        // `PictureGenerator` and return the resulting `Picture`.
     }
 }
