@@ -103,6 +103,7 @@ class BackendMain extends \Backend
 	public function run()
 	{
 		$packages = System::getContainer()->getParameter('kernel.packages');
+
 		$this->Template = new \BackendTemplate('be_main');
 		$this->Template->version = $packages['contao/core-bundle'];
 		$this->Template->main = '';
