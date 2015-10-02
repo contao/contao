@@ -444,7 +444,7 @@ class DcaExtractor extends \Controller
 				}
 				catch (\InvalidArgumentException $e)
 				{
-					// Set static::$arrSql to an empty array if no database.sql files are found
+					// No database.sql files found (see #349)
 				}
 
 				static::$arrSql = $arrSql;

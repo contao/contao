@@ -5,6 +5,9 @@ Version 4.0.4 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Do not stop parsing DCA files if a `database.sql` file is missing (see #349).
+
+### Fixed
 Use the kernel.packages to determine the core version (see #351).
 
 ### Fixed
