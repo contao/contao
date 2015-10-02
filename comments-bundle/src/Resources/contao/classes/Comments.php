@@ -374,7 +374,7 @@ class Comments extends \Frontend
 									  $arrSet['name'] . ' (' . $arrSet['email'] . ')',
 									  $strComment,
 									  \Idna::decode(\Environment::get('base')) . \Environment::get('request'),
-									  \Idna::decode(\Environment::get('base')) . 'contao/main.php?do=comments&act=edit&id=' . $objComment->id);
+									  \Idna::decode(\Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id);
 
 			// Do not send notifications twice
 			if (is_array($varNotifies))
