@@ -1,6 +1,13 @@
 Contao installation bundle change log
 =====================================
 
+Version 0.9.9 (2015-XX-XX)
+--------------------------
+
+### Fixed
+Do not try to persist the admin e-mail twice (see contao/core-bundle#344).
+
+
 Version 0.9.5 (2015-08-14)
 --------------------------
 

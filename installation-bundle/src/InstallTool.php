@@ -333,8 +333,6 @@ class InstallTool
             ':password' => Encryption::hash($password),
             ':language' => $language,
         ]);
-
-        $this->persistConfig('adminEmail', $email);
     }
 
     /**
