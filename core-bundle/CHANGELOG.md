@@ -7,6 +7,9 @@ Version 4.0.4 (2015-XX-XX)
 ### Fixed
 Use the kernel.packages to determine the core version (see #351).
 
+### Fixed
+Follow symlinks when searching for installed files (see #348).
+
 
 Version 4.0.3 (2015-09-10)
 --------------------------
