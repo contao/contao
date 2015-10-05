@@ -159,6 +159,10 @@ class Config
 
 		$this->blnIsModified = true;
 
+		// Reset the top and bottom content (see #344)
+		$this->strTop = '';
+		$this->strBottom = '';
+
 		// Import the Files object (required in the destructor)
 		$this->Files = \Files::getInstance();
 
