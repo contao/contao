@@ -24,12 +24,12 @@
         "matthiasmullie/minify": "~1.3",
         "michelf/php-markdown": "~1.4",
         "oyejorge/less.php": "~1.7",
+        "patchwork/utf8": "~1.2",
         "phpspec/php-diff": "~1.0",
         "simplepie/simplepie": "~1.3",
         "tecnick.com/tcpdf": "~6.0",
         "true/punycode": "~1.0",
-        "contao-components/all": "~4.0",
-        "patchwork/utf8": "~1.2"
+        "contao-components/all": "~4.0"
     },
     "require-dev": {
         "composer/composer": "~1.0@dev",
