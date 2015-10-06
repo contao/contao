@@ -61,14 +61,7 @@ class Validator
 	 */
 	public static function isAlphabetic($varValue)
 	{
-		if (function_exists('mb_eregi'))
-		{
-			return mb_eregi('^[[:alpha:] \.-]+$', $varValue);
-		}
-		else
-		{
-			return preg_match('/^[\pL \.-]+$/u', $varValue);
-		}
+		return preg_match('/^[\pL \.-]+$/u', $varValue);
 	}
 
 
@@ -81,14 +74,7 @@ class Validator
 	 */
 	public static function isAlphanumeric($varValue)
 	{
-		if (function_exists('mb_eregi'))
-		{
-			return mb_eregi('^[[:alnum:] \._-]+$', $varValue);
-		}
-		else
-		{
-			return preg_match('/^[\pN\pL \._-]+$/u', $varValue);
-		}
+		return preg_match('/^[\pN\pL \._-]+$/u', $varValue);
 	}
 
 
@@ -168,14 +154,7 @@ class Validator
 	 */
 	public static function isUrl($varValue)
 	{
-		if (function_exists('mb_eregi'))
-		{
-			return mb_eregi('^[[:alnum:]\.\*\+\/\?\$#%:,;\{\}\(\)\[\]@&!=~_-]+$', \Idna::encodeUrl($varValue));
-		}
-		else
-		{
-			return preg_match('/^[\pN\pL\.\*\+\/\?\$#%:,;\{\}\(\)\[\]@&!=~_-]+$/u', \Idna::encodeUrl($varValue));
-		}
+		return preg_match('/^[\pN\pL\.\*\+\/\?\$#%:,;\{\}\(\)\[\]@&!=~_-]+$/u', \Idna::encodeUrl($varValue));
 	}
 
 
@@ -188,14 +167,7 @@ class Validator
 	 */
 	public static function isAlias($varValue)
 	{
-		if (function_exists('mb_eregi'))
-		{
-			return mb_eregi('^[[:alnum:]\._-]+$', $varValue);
-		}
-		else
-		{
-			return preg_match('/^[\pN\pL\._-]+$/u', $varValue);
-		}
+		return preg_match('/^[\pN\pL\._-]+$/u', $varValue);
 	}
 
 
@@ -208,14 +180,7 @@ class Validator
 	 */
 	public static function isFolderAlias($varValue)
 	{
-		if (function_exists('mb_eregi'))
-		{
-			return mb_eregi('^[[:alnum:]\/\._-]+$', $varValue);
-		}
-		else
-		{
-			return preg_match('/^[\pN\pL\/\._-]+$/u', $varValue);
-		}
+		return preg_match('/^[\pN\pL\/\._-]+$/u', $varValue);
 	}
 
 

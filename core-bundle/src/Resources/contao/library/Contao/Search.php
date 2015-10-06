@@ -234,14 +234,7 @@ class Search
 		unset($arrSet);
 
 		// Remove special characters
-		if (function_exists('mb_eregi_replace'))
-		{
-			$strText = mb_eregi_replace('[^[:alnum:]\'\.:,\+_-]|- | -|\' | \'|\. |\.$|: |:$|, |,$', ' ', $strText);
-		}
-		else
-		{
-			$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\pN\pL\'\.:,\+_-]/u'), ' ', $strText);
-		}
+		$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\pN\pL\'\.:,\+_-]/u'), ' ', $strText);
 
 		// Split words
 		$arrWords = preg_split('/ +/', utf8_strtolower($strText));
@@ -316,15 +309,7 @@ class Search
 		// Clean the keywords
 		$strKeywords = utf8_strtolower($strKeywords);
 		$strKeywords = \StringUtil::decodeEntities($strKeywords);
-
-		if (function_exists('mb_eregi_replace'))
-		{
-			$strKeywords = mb_eregi_replace('[^[:alnum:] \*\+\'"\.:,_-]|\. |\.$|: |:$|, |,$', ' ', $strKeywords);
-		}
-		else
-		{
-			$strKeywords = preg_replace(array('/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\pN\pL \*\+\'"\.:,_-]/u'), ' ', $strKeywords);
-		}
+		$strKeywords = preg_replace(array('/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\pN\pL \*\+\'"\.:,_-]/u'), ' ', $strKeywords);
 
 		// Check keyword string
 		if (!strlen($strKeywords))
