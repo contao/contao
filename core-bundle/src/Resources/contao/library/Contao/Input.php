@@ -27,6 +27,15 @@ namespace Contao;
  *     }
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ *
+ * Note that you should never trust any input even if filtered using the Input
+ * class. We recommend reading
+ * http://phpsecurity.readthedocs.org/en/latest/Input-Validation.html
+ * for further information.
+ * The Symfony request class provides enough methods to sanitize and/or filter
+ * user input. This is why we'll aim to get rid of the Input class. However, it
+ * is not deprecated yet.
  */
 class Input
 {
@@ -594,7 +603,12 @@ class Input
 		$varValue = preg_replace('/\r+/', '', $varValue);
 
 		// Replace unicode entities
-		$varValue = utf8_decode_entities($varValue);
+		$varValue = preg_replace_callback('~&#x([0-9a-f]+);~i', function($matches) {
+			return \Patchwork\Utf8::chr(hexdec($matches[1]));
+		}, $varValue);
+		$varValue = preg_replace_callback('~&#([0-9]+);~', function($matches) {
+			return \Patchwork\Utf8::chr($matches[1]);
+		}, $varValue);
 
 		// Remove null bytes
 		$varValue = str_replace(chr(0), '', $varValue);
