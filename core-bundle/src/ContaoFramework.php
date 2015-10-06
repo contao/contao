@@ -293,7 +293,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         $this->setTimezone();
 
         // Set the mbstring encoding
-        if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
+        if (function_exists('mb_regex_encoding')) {
             mb_regex_encoding($this->config->get('characterSet'));
         }
 
