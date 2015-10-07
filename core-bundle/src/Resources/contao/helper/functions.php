@@ -8,6 +8,8 @@
  * @license LGPL-3.0+
  */
 
+use Patchwork\Utf8;
+
 
 /**
  * Add a log entry
@@ -220,6 +222,7 @@ function deserialize($varValue, $blnForceArray=false)
 function trimsplit($strPattern, $strString)
 {
 	global $arrSplitCache;
+
 	$strKey = md5($strPattern.$strString);
 
 	// Load from cache
@@ -375,7 +378,7 @@ function natcaseksort($arrArray)
  */
 function length_sort_asc($a, $b)
 {
-   	return strlen($a) - strlen($b);
+	return strlen($a) - strlen($b);
 }
 
 
@@ -389,7 +392,7 @@ function length_sort_asc($a, $b)
  */
 function length_sort_desc($a, $b)
 {
-   	return strlen($b) - strlen($a);
+	return strlen($b) - strlen($a);
 }
 
 
@@ -530,200 +533,373 @@ function array_is_assoc($arrArray)
 
 
 /**
- * Load the mbstring library
+ * Return a specific character
+ *
+ * Unicode version of chr() that handles UTF-8 characters.
+ *
+ * @param integer $dec
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::chr() instead.
  */
-require __DIR__ . '/mbstring.php';
+function utf8_chr($dec)
+{
+	trigger_error('Using utf8_chr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::chr() instead.', E_USER_DEPRECATED);
+
+	return Utf8::chr($dec);
+}
 
 
 /**
- * Define some mbstring wrapper functions
+ * Return the ASCII value of a character
+ *
+ * Unicode version of ord() that handles UTF-8 characters.
+ *
+ * @param string $str
+ *
+ * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::ord() instead.
  */
-if (!USE_MBSTRING)
+function utf8_ord($str)
 {
-	/**
-	 * Convert character encoding
-	 *
-	 * @param string $str
-	 * @param string $to
-	 * @param string $from
-	 *
-	 * @return string
-	 */
-	function mb_convert_encoding($str, $to, $from=null)
-	{
-		if ($from === null)
-			return utf8_convert_encoding($str, $to);
+	trigger_error('Using utf8_ord() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::ord() instead.', E_USER_DEPRECATED);
 
-		return utf8_convert_encoding($str, $to, $from);
+	return Utf8::ord($str);
+}
+
+
+/**
+ * Convert character encoding
+ *
+ * @param string $str
+ * @param string $to
+ * @param string $from
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use mb_convert_encoding() instead.
+ */
+function utf8_convert_encoding($str, $to, $from=null)
+{
+	trigger_error('Using utf8_convert_encoding() has been deprecated and will no longer work in Contao 5.0. Use mb_convert_encoding() instead.', E_USER_DEPRECATED);
+
+	if ($str == '')
+	{
+		return '';
 	}
 
-	/**
-	 * Detect the encoding of a string
-	 *
-	 * @param string $str
-	 *
-	 * @return string
-	 */
-	function mb_detect_encoding($str)
+	if (!$from)
 	{
-		return utf8_detect_encoding($str);
+		$from = utf8_detect_encoding($str);
 	}
 
-	/**
-	 * Find the last occurrence of a character in a string (case-insensitive)
-	 *
-	 * @param string  $haystack
-	 * @param string  $needle
-	 * @param integer $offset
-	 *
-	 * @return integer
-	 */
-	function mb_stripos($haystack, $needle, $offset=null)
+	if ($from == $to)
 	{
-		if ($offset === null)
-			return stripos($haystack, $needle);
-
-		return stripos($haystack, $needle, $offset);
+		return $str;
 	}
 
-	/**
-	 * Find the first occurrence of a character in a string (case-insensitive)
-	 *
-	 * @param string $haystack
-	 * @param string $needle
-	 *
-	 * @return integer
-	 */
-	function mb_stristr($haystack, $needle)
+	if ($from == 'UTF-8' && $to == 'ISO-8859-1')
 	{
-		return stristr($haystack, $needle);
+		return utf8_decode($str);
 	}
 
-	/**
-	 * Determine the number of characters of a string
-	 *
-	 * @param string $str
-	 *
-	 * @return integer
-	 */
-	function mb_strlen($str)
+	if ($from == 'ISO-8859-1' && $to == 'UTF-8')
 	{
-		return utf8_strlen($str);
+		return utf8_encode($str);
 	}
 
-	/**
-	 * Find the first occurrence of a character in a string
-	 *
-	 * @param string  $haystack
-	 * @param string  $needle
-	 * @param integer $offset
-	 *
-	 * @return integer
-	 */
-	function mb_strpos($haystack, $needle, $offset=0)
-	{
-		if ($offset === 0)
-			return utf8_strpos($haystack, $needle);
+	return mb_convert_encoding($str, $to, $from);
+}
 
-		return utf8_strpos($haystack, $needle, $offset);
-	}
 
-	/**
-	 * Find the last occurrence of a character in a string
-	 *
-	 * @param string $haystack
-	 * @param string $needle
-	 *
-	 * @return string
-	 */
-	function mb_strrchr($haystack, $needle)
-	{
-		return utf8_strrchr($haystack, $needle);
-	}
+/**
+ * Convert all unicode entities to their applicable characters
+ *
+ * Calls utf8_chr() to convert unicode entities. HTML entities like '&nbsp;'
+ * or '&quot;' will not be decoded.
+ *
+ * @param string $str
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use html_entity_decode() instead.
+ */
+function utf8_decode_entities($str)
+{
+	trigger_error('Using utf8_decode_entities() has been deprecated and will no longer work in Contao 5.0. Use html_entity_decode() instead.', E_USER_DEPRECATED);
 
-	/**
-	 * Find the position of the last occurrence of a string in another string
-	 *
-	 * @param string $haystack
-	 * @param string $needle
-	 *
-	 * @return mixed
-	 */
-	function mb_strrpos($haystack, $needle)
-	{
-		return utf8_strrpos($haystack, $needle);
-	}
+	$str = preg_replace_callback('~&#x([0-9a-f]+);~i', function($matches) {
+		return Utf8::chr(hexdec($matches[1]));
+	}, $str);
 
-	/**
-	 * Find the first occurrence of a string in another string
-	 *
-	 * @param string $haystack
-	 * @param string $needle
-	 *
-	 * @return string
-	 */
-	function mb_strstr($haystack, $needle)
-	{
-		return utf8_strstr($haystack, $needle);
-	}
+	$str = preg_replace_callback('~&#([0-9]+);~', function($matches) {
+		return Utf8::chr($matches[1]);
+	}, $str);
 
-	/**
-	 * Make a string lowercase
-	 *
-	 * @param string $str
-	 *
-	 * @return string
-	 */
-	function mb_strtolower($str)
-	{
-		return utf8_strtolower($str);
-	}
+	return $str;
+}
 
-	/**
-	 * Make a string uppercase
-	 *
-	 * @param string $str
-	 *
-	 * @return string
-	 */
-	function mb_strtoupper($str)
-	{
-		return utf8_strtoupper($str);
-	}
 
-	/**
-	 * Return a substring of a string
-	 *
-	 * @param string  $str
-	 * @param integer $start
-	 * @param integer $length
-	 *
-	 * @return string
-	 */
-	function mb_substr($str, $start, $length=null)
-	{
-		if ($length === null)
-			return utf8_substr($str, $start);
+/**
+ * Callback function for utf8_decode_entities
+ *
+ * @param array $matches
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ */
+function utf8_chr_callback($matches)
+{
+	trigger_error('Using utf8_chr_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-		return utf8_substr($str, $start, $length);
-	}
+	return Utf8::chr($matches[1]);
+}
 
-	/**
-	 * Count the number of substring occurrences
-	 *
-	 * @param string  $haystack
-	 * @param string  $needle
-	 * @param integer $offset
-	 *
-	 * @return integer
-	 */
-	function mb_substr_count($haystack, $needle, $offset=null)
-	{
-		if ($offset === null)
-			return substr_count($haystack, $needle);
 
-		return substr_count($haystack, $needle, $offset);
-	}
+/**
+ * Callback function for utf8_decode_entities
+ *
+ * @param array $matches
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ */
+function utf8_hexchr_callback($matches)
+{
+	trigger_error('Using utf8_hexchr_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+	return Utf8::chr(hexdec($matches[1]));
+}
+
+
+/**
+ * Detect the encoding of a string
+ *
+ * @param string $str
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use mb_detect_encoding() instead.
+ */
+function utf8_detect_encoding($str)
+{
+	trigger_error('Using utf8_detect_encoding() has been deprecated and will no longer work in Contao 5.0. Use mb_detect_encoding() instead.', E_USER_DEPRECATED);
+
+	return mb_detect_encoding($str, array('ASCII', 'ISO-2022-JP', 'UTF-8', 'EUC-JP', 'ISO-8859-1'));
+}
+
+
+/**
+ * Romanize a string
+ *
+ * @param string $str
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::toAscii() instead.
+ */
+function utf8_romanize($str)
+{
+	trigger_error('Using utf8_romanize() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::toAscii() instead.', E_USER_DEPRECATED);
+
+	return Utf8::toAscii($str);
+}
+
+
+/**
+ * Determine the number of characters of a string
+ *
+ * @param string $str
+ *
+ * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::strlen() instead.
+ */
+function utf8_strlen($str)
+{
+	trigger_error('Using utf8_strlen() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strlen() instead.', E_USER_DEPRECATED);
+
+	return Utf8::strlen($str);
+}
+
+
+/**
+ * Find the position of the first occurence of a string in another string
+ *
+ * @param string  $haystack
+ * @param string  $needle
+ * @param integer $offset
+ *
+ * @return integer
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::strpos instead.
+ */
+function utf8_strpos($haystack, $needle, $offset=0)
+{
+	trigger_error('Using utf8_strpos() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strpos() instead.', E_USER_DEPRECATED);
+
+	return Utf8::strpos($haystack, $needle, $offset);
+}
+
+
+/**
+ * Find the last occurrence of a character in a string
+ *
+ * @param string $haystack
+ * @param string $needle
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::strrchr() instead.
+ */
+function utf8_strrchr($haystack, $needle)
+{
+	trigger_error('Using utf8_strrchr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strrchr() instead.', E_USER_DEPRECATED);
+
+	return Utf8::strrchr($haystack, $needle);
+}
+
+
+/**
+ * Find the position of the last occurrence of a string in another string
+ *
+ * @param string $haystack
+ * @param string $needle
+ *
+ * @return mixed
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::strrpos() instead.
+ */
+function utf8_strrpos($haystack, $needle)
+{
+	trigger_error('Using utf8_strrpos() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strrpos() instead.', E_USER_DEPRECATED);
+
+	return Utf8::strrpos($haystack, $needle);
+}
+
+
+/**
+ * Find the first occurrence of a string in another string
+ *
+ * @param string $haystack
+ * @param string $needle
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::strstr() instead.
+ */
+function utf8_strstr($haystack, $needle)
+{
+	trigger_error('Using utf8_strstr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strstr() instead.', E_USER_DEPRECATED);
+
+	return Utf8::strstr($haystack, $needle);
+}
+
+
+/**
+ * Make a string lowercase
+ *
+ * @param string $str
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::strtolower() instead.
+ */
+function utf8_strtolower($str)
+{
+	trigger_error('Using utf8_strtolower() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strtolower() instead.', E_USER_DEPRECATED);
+
+	return Utf8::strtolower($str);
+}
+
+
+/**
+ * Make a string uppercase
+ *
+ * @param string $str
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::strtoupper() instead.
+ */
+function utf8_strtoupper($str)
+{
+	trigger_error('Using utf8_strtoupper() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strtoupper() instead.', E_USER_DEPRECATED);
+
+	return Utf8::strtoupper($str);
+}
+
+
+/**
+ * Return substring of a string
+ *
+ * @param string  $str
+ * @param integer $start
+ * @param integer $length
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::substr() instead.
+ */
+function utf8_substr($str, $start, $length=null)
+{
+	trigger_error('Using utf8_substr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::substr() instead.', E_USER_DEPRECATED);
+
+	return Utf8::substr($str, $start, $length);
+}
+
+
+/**
+ * Make sure the first letter is uppercase
+ *
+ * @param string $str
+ *
+ * @return string
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::ucfirst() instead.
+ */
+function utf8_ucfirst($str)
+{
+	trigger_error('Using utf8_ucfirst() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::ucfirst() instead.', E_USER_DEPRECATED);
+
+	return Utf8::ucfirst($str);
+}
+
+
+/**
+ * Convert a string to an array
+ *
+ * @param string $str
+ *
+ * @return array
+ *
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ *             Use Patchwork\Utf8::str_split() instead.
+ */
+function utf8_str_split($str)
+{
+	trigger_error('Using utf8_str_split() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::str_split() instead.', E_USER_DEPRECATED);
+
+	return Utf8::str_split($str);
 }
 
 
