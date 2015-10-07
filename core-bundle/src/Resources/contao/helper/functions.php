@@ -582,11 +582,11 @@ function utf8_ord($str)
  * @return string
  *
  * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
- *             Use mb_convert_encoding() instead.
+ *             Use StringUtil::convertEncoding() instead.
  */
 function utf8_convert_encoding($str, $to, $from=null)
 {
-	trigger_error('Using utf8_convert_encoding() has been deprecated and will no longer work in Contao 5.0. Use mb_convert_encoding() instead.', E_USER_DEPRECATED);
+	trigger_error('Using utf8_convert_encoding() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::convertEncoding() instead.', E_USER_DEPRECATED);
 
 	if ($str == '')
 	{

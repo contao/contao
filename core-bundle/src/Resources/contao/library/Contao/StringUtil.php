@@ -720,4 +720,44 @@ class StringUtil
 
 		return $options;
 	}
+
+
+	/**
+	 * Convert the character encoding
+	 *
+	 * @param string $str  The input string
+	 * @param string $to   The target character set
+	 * @param string $from An optional source character set
+	 *
+	 * @return string The converted string
+	 */
+	public static function convertEncoding($str, $to, $from=null)
+	{
+		if ($str == '')
+		{
+			return '';
+		}
+
+		if (!$from)
+		{
+			$from = mb_detect_encoding($str, 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,ISO-8859-1');
+		}
+
+		if ($from == $to)
+		{
+			return $str;
+		}
+
+		if ($from == 'UTF-8' && $to == 'ISO-8859-1')
+		{
+			return utf8_decode($str);
+		}
+
+		if ($from == 'ISO-8859-1' && $to == 'UTF-8')
+		{
+			return utf8_encode($str);
+		}
+
+		return mb_convert_encoding($str, $to, $from);
+	}
 }

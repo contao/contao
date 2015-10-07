@@ -2418,7 +2418,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$folderImg = ($session['filetree'][$md5] == 1 && $countFiles > 0) ? ($protected ? 'folderOP.gif' : 'folderO.gif') : ($protected ? 'folderCP.gif' : 'folderC.gif');
 
 			// Add the current folder
-			$strFolderNameEncoded = mb_convert_encoding(specialchars(basename($currentFolder)), \Config::get('characterSet'), 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,ISO-8859-1');
+			$strFolderNameEncoded = \StringUtil::convertEncoding(specialchars(basename($currentFolder)), \Config::get('characterSet'));
 			$return .= \Image::getHtml($folderImg, '').' <a href="' . $this->addToUrl('node='.$currentEncoded) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'"><strong>'.$strFolderNameEncoded.'</strong></a></div> <div class="tl_right">';
 
 			// Paste buttons
@@ -2512,7 +2512,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$thumbnail .= ' <span class="tl_gray">('.$this->getReadableSize($objFile->filesize).')</span>';
 			}
 
-			$strFileNameEncoded = mb_convert_encoding(specialchars(basename($currentFile)), \Config::get('characterSet'), 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,ISO-8859-1');
+			$strFileNameEncoded = \StringUtil::convertEncoding(specialchars(basename($currentFile)), \Config::get('characterSet'));
 
 			// No popup links for templates and in the popup file manager
 			if ($this->strTable == 'tl_templates' || \Input::get('popup'))

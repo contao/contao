@@ -418,7 +418,7 @@ class FileSelector extends \Widget
 					}
 				}
 
-				$return .= \Image::getHtml($objFile->icon, $objFile->mime).' '.mb_convert_encoding(specialchars(basename($currentFile)), \Config::get('characterSet'), 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,ISO-8859-1').$thumbnail.'</div> <div class="tl_right">';
+				$return .= \Image::getHtml($objFile->icon, $objFile->mime).' '.\StringUtil::convertEncoding(specialchars(basename($currentFile)), \Config::get('characterSet')).$thumbnail.'</div> <div class="tl_right">';
 
 				// Add checkbox or radio button
 				switch ($this->fieldType)

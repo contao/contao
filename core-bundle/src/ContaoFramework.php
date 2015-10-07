@@ -291,12 +291,6 @@ class ContaoFramework implements ContaoFrameworkInterface
         Input::initialize();
 
         $this->setTimezone();
-
-        // Set the mbstring encoding
-        if (function_exists('mb_regex_encoding')) {
-            mb_regex_encoding($this->config->get('characterSet'));
-        }
-
         $this->triggerInitializeSystemHook();
         $this->handleRequestToken();
     }
