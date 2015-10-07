@@ -187,7 +187,9 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'options'                 => \System::getImageSizes(false),
+			'options_callback'        => function () {
+				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+			},
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL"

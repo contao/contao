@@ -13,7 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\GetImageSizesEvent;
+use Contao\CoreBundle\Event\ImageSizesEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\SplFileInfo;
@@ -565,98 +565,19 @@ abstract class System
 	/**
 	 * Return all image sizes as array
 	 *
-	 * @param bool $checkPermission If true filter image sizes by back end user permissions
-	 *
 	 * @return array The available image sizes
+	 *
+	 * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
+	 *             Use the contao.image.image_sizes service instead.
 	 */
-	public static function getImageSizes($checkPermission = true)
+	public static function getImageSizes()
 	{
-		if (empty(static::$arrImageSizes))
-		{
-			try
-			{
-				$sizes = array();
-				$imageSize = \Database::getInstance()->query("SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name");
+		trigger_error(
+			'System::getImageSizes() is deprecated, use the contao.image.image_sizes service instead',
+			E_USER_DEPRECATED
+		);
 
-				while ($imageSize->next())
-				{
-					$sizes[$imageSize->id] = $imageSize->name;
-					$sizes[$imageSize->id] .= ' (' . $imageSize->width . 'x' . $imageSize->height . ')';
-				}
-
-				static::$arrImageSizes = array_merge(array('image_sizes' => $sizes), $GLOBALS['TL_CROP']);
-			}
-			catch (\Exception $e)
-			{
-				static::$arrImageSizes = $GLOBALS['TL_CROP'];
-			}
-		}
-
-		$imageSizes = static::$arrImageSizes;
-
-		// Permission check
-		if (TL_MODE == 'BE' && $checkPermission === true)
-		{
-			$user = \BackendUser::getInstance();
-
-			// Limit only if the user is not an admin
-			if (!$user->isAdmin) 
-			{
-				$allowedSizes = deserialize($user->imageSizes, true);
-
-				if (empty($allowedSizes))
-				{
-					$imageSizes = [];
-				}
-				else
-				{
-					$filteredSizes = [];
-
-					foreach ($imageSizes as $group => $sizes) 
-					{
-						foreach ($sizes as $id => $size) 
-						{
-							// Dynamic sizes
-							if ($group == 'image_sizes') 
-							{
-								if (in_array($id, $allowedSizes)) 
-								{
-									$filteredSizes[$group][$id] = $size;
-								}
-
-								continue;
-							}
-
-							if (in_array($size, $allowedSizes)) 
-							{
-								$filteredSizes[$group][] = $size;
-							}
-						}
-					}
-
-					$imageSizes = $filteredSizes;
-				}
-			}
-		}
-
-		/** @var KernelInterface $kernel */
-		global $kernel;
-
-		// Dispatch the contao.parse_widget event
-		$event = new GetImageSizesEvent($imageSizes, $checkPermission);
-		$kernel->getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::GET_IMAGE_SIZES, $event);
-		$imageSizes = $event->getImageSizes();
-
-		// HOOK: allow to add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getImageSizes']) && is_array($GLOBALS['TL_HOOKS']['getImageSizes'])) 
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getImageSizes'] as $callback) 
-			{
-				$imageSizes = static::importStatic($callback[0])->$callback[1]($imageSizes, $checkPermission);
-			}
-		}
-
-		return $imageSizes;
+		return static::getContainer()->get('contao.image.image_sizes')->getAllOptions();
 	}
 
 

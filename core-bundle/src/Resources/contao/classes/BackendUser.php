@@ -25,6 +25,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property array   $filemountIds
  * @property string  $fop
  * @property string  $alexf
+ * @property array   $imageSizes
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

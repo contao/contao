@@ -63,3 +63,10 @@ services:
         arguments:
             - "@service_container"
             - "@contao.framework"
+
+    contao.image.image_sizes:
+        class: Contao\CoreBundle\Image\ImageSizes
+        public: true
+        arguments:
+            - "@database_connection"
+            - "@event_dispatcher"

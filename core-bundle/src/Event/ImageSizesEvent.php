@@ -10,14 +10,16 @@
 
 namespace Contao\CoreBundle\Event;
 
+use Contao\BackendUser;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Allows to execute logic when a widget is parsed.
+ * Allows to filter image sizes.
  *
  * @author Kamil Kuzminski <https://github.com/qzminski>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
-class GetImageSizesEvent extends Event
+class ImageSizesEvent extends Event
 {
     /**
      * @var array
@@ -25,20 +27,20 @@ class GetImageSizesEvent extends Event
     private $imageSizes;
 
     /**
-     * @var bool
+     * @var BackendUser
      */
-    private $checkPermission;
+    private $user;
 
     /**
      * Constructor.
      *
-     * @param array $imageSizes
-     * @param bool  $checkPermission
+     * @param array       $imageSizes
+     * @param BackendUser $user
      */
-    public function __construct(array $imageSizes, $checkPermission)
+    public function __construct(array $imageSizes, BackendUser $user = null)
     {
-        $this->imageSizes      = $imageSizes;
-        $this->checkPermission = $checkPermission;
+        $this->imageSizes = $imageSizes;
+        $this->user       = $user;
     }
 
     /**
@@ -62,22 +64,12 @@ class GetImageSizesEvent extends Event
     }
 
     /**
-     * Get the check permission flag
+     * Gets the backend user if available.
      *
-     * @return bool
+     * @return BackendUser|null
      */
-    public function isCheckPermission()
+    public function getUser()
     {
-        return $this->checkPermission;
-    }
-
-    /**
-     * Set the check permission flag
-     *
-     * @param bool $checkPermission
-     */
-    public function setCheckPermission($checkPermission)
-    {
-        $this->checkPermission = $checkPermission;
+        return $this->user;
     }
 }
