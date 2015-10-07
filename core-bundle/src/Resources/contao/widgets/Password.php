@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Provide methods to handle password fields.
@@ -111,7 +113,7 @@ class Password extends \Widget
 			return '*****';
 		}
 
-		if (utf8_strlen($varInput) < \Config::get('minPasswordLength'))
+		if (Utf8::strlen($varInput) < \Config::get('minPasswordLength'))
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], \Config::get('minPasswordLength')));
 		}

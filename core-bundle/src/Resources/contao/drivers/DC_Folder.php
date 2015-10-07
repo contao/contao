@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -1957,7 +1958,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			$this->import('Files');
-			$varValue = utf8_romanize($varValue);
+			$varValue = Utf8::toAscii($varValue);
 
 			// Trigger the save_callback
 			if (is_array($arrData['save_callback']))

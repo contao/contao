@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Creates and queries the search index
@@ -209,7 +211,7 @@ class Search
 			if ($objDuplicates->numRows)
 			{
 				// Update the URL if the new URL is shorter or the current URL is not canonical
-				if (substr_count($arrSet['url'], '/') < substr_count($objDuplicates->url, '/') || strncmp($arrSet['url'] . '?', $objDuplicates->url, utf8_strlen($arrSet['url']) + 1) === 0)
+				if (substr_count($arrSet['url'], '/') < substr_count($objDuplicates->url, '/') || strncmp($arrSet['url'] . '?', $objDuplicates->url, Utf8::strlen($arrSet['url']) + 1) === 0)
 				{
 					$objDatabase->prepare("UPDATE tl_search SET url=? WHERE id=?")
 								->execute($arrSet['url'], $objDuplicates->id);
@@ -237,7 +239,7 @@ class Search
 		$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\pN\pL\'\.:,\+_-]/u'), ' ', $strText);
 
 		// Split words
-		$arrWords = preg_split('/ +/', utf8_strtolower($strText));
+		$arrWords = preg_split('/ +/', Utf8::strtolower($strText));
 		$arrIndex = array();
 
 		// Index words
@@ -307,7 +309,7 @@ class Search
 	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false)
 	{
 		// Clean the keywords
-		$strKeywords = utf8_strtolower($strKeywords);
+		$strKeywords = Utf8::strtolower($strKeywords);
 		$strKeywords = \StringUtil::decodeEntities($strKeywords);
 		$strKeywords = preg_replace(array('/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\pN\pL \*\+\'"\.:,_-]/u'), ' ', $strKeywords);
 
@@ -439,7 +441,7 @@ class Search
 		{
 			foreach ($arrPhrases as $strPhrase)
 			{
-				$arrWords = explode('[^[:alnum:]]+', utf8_substr($strPhrase, 7, -7));
+				$arrWords = explode('[^[:alnum:]]+', Utf8::substr($strPhrase, 7, -7));
 				$arrAllKeywords[] = implode(' OR ', array_fill(0, count($arrWords), 'word=?'));
 				$arrValues = array_merge($arrValues, $arrWords);
 				$intKeywords += count($arrWords);

@@ -459,7 +459,7 @@ class tl_files extends Backend
 	 */
 	public function checkFilename($varValue)
 	{
-		$varValue = utf8_romanize($varValue);
+		$varValue = Patchwork\Utf8::toAscii($varValue);
 		$varValue = str_replace('"', '', $varValue);
 
 		if (strpos($varValue, '/') !== false || preg_match('/\.$/', $varValue))

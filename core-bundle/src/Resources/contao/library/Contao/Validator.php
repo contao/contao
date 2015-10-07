@@ -384,7 +384,7 @@ class Validator
 		}
 
 		// Must not be longer than 255 characters
-		if (utf8_strlen($strName) > 255)
+		if (mb_strlen($strName) > 255)
 		{
 			return false;
 		}

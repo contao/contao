@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -169,11 +170,11 @@ class FormCaptcha extends \Widget
 		));
 
 		$strEncoded = '';
-		$arrCharacters = utf8_str_split($question);
+		$arrCharacters = Utf8::str_split($question);
 
 		foreach ($arrCharacters as $strCharacter)
 		{
-			$strEncoded .= sprintf('&#%s;', utf8_ord($strCharacter));
+			$strEncoded .= sprintf('&#%s;', Utf8::ord($strCharacter));
 		}
 
 		return $strEncoded;

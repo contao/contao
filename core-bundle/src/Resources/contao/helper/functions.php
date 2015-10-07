@@ -116,7 +116,7 @@ function standardize($strString, $blnPreserveUppercase=false)
 
 	$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet']);
 	$strString = strip_insert_tags($strString);
-	$strString = utf8_romanize($strString);
+	$strString = Patchwork\Utf8::toAscii($strString);
 	$strString = preg_replace($arrSearch, $arrReplace, $strString);
 
 	if (is_numeric(substr($strString, 0, 1)))
@@ -620,7 +620,7 @@ function utf8_convert_encoding($str, $to, $from=null)
 /**
  * Convert all unicode entities to their applicable characters
  *
- * Calls utf8_chr() to convert unicode entities. HTML entities like '&nbsp;'
+ * Calls Utf8::chr() to convert unicode entities. HTML entities like '&nbsp;'
  * or '&quot;' will not be decoded.
  *
  * @param string $str

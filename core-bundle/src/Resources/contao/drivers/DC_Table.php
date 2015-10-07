@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -3797,7 +3798,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$label = vsprintf(((strlen($GLOBALS['TL_DCA'][$table]['list']['label']['format'])) ? $GLOBALS['TL_DCA'][$table]['list']['label']['format'] : '%s'), $args);
 
 		// Shorten the label if it is too long
-		if ($GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] > 0 && $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] < utf8_strlen(strip_tags($label)))
+		if ($GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] > 0 && $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] < Utf8::strlen(strip_tags($label)))
 		{
 			$label = trim(\StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'])) . ' …';
 		}
@@ -5055,7 +5056,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		foreach ($searchFields as $field)
 		{
 			$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: (is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field]);
-			$options_sorter[utf8_romanize($option_label).'_'.$field] = '  <option value="'.specialchars($field).'"'.(($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '').'>'.$option_label.'</option>';
+			$options_sorter[Utf8::toAscii($option_label).'_'.$field] = '  <option value="'.specialchars($field).'"'.(($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '').'>'.$option_label.'</option>';
 		}
 
 		// Sort by option values
@@ -5685,7 +5686,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						$option_label = $vv ?: '-';
 					}
 
-					$options_sorter['  <option value="' . specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '').'>'.$option_label.'</option>'] = utf8_romanize($option_label);
+					$options_sorter['  <option value="' . specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '').'>'.$option_label.'</option>'] = Utf8::toAscii($option_label);
 				}
 
 				// Sort by option values
@@ -5793,7 +5794,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 		elseif (in_array($mode, array(1, 2)))
 		{
-			$remoteNew = ($value != '') ? ucfirst(utf8_substr($value , 0, 1)) : '-';
+			$remoteNew = ($value != '') ? ucfirst(Utf8::substr($value , 0, 1)) : '-';
 		}
 		elseif (in_array($mode, array(3, 4)))
 		{
@@ -5802,7 +5803,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'] = 2;
 			}
 
-			$remoteNew = ($value != '') ? ucfirst(utf8_substr($value , 0, $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'])) : '-';
+			$remoteNew = ($value != '') ? ucfirst(Utf8::substr($value , 0, $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'])) : '-';
 		}
 		elseif (in_array($mode, array(5, 6)))
 		{

@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -459,7 +460,7 @@ abstract class System
 
 		foreach ($countries as $strKey=>$strName)
 		{
-			$arrAux[$strKey] = isset($GLOBALS['TL_LANG']['CNT'][$strKey]) ? utf8_romanize($GLOBALS['TL_LANG']['CNT'][$strKey]) : $strName;
+			$arrAux[$strKey] = isset($GLOBALS['TL_LANG']['CNT'][$strKey]) ? Utf8::toAscii($GLOBALS['TL_LANG']['CNT'][$strKey]) : $strName;
 		}
 
 		asort($arrAux);
@@ -501,7 +502,7 @@ abstract class System
 
 		foreach ($languages as $strKey=>$strName)
 		{
-			$arrAux[$strKey] = isset($GLOBALS['TL_LANG']['LNG'][$strKey]) ? utf8_romanize($GLOBALS['TL_LANG']['LNG'][$strKey]) : $strName;
+			$arrAux[$strKey] = isset($GLOBALS['TL_LANG']['LNG'][$strKey]) ? Utf8::toAscii($GLOBALS['TL_LANG']['LNG'][$strKey]) : $strName;
 		}
 
 		asort($arrAux);

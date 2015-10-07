@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Provides string manipulation methods
@@ -42,7 +44,7 @@ class StringUtil
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
 		$strString = strip_tags($strString);
 
-		if (utf8_strlen($strString) <= $intNumberOfChars)
+		if (Utf8::strlen($strString) <= $intNumberOfChars)
 		{
 			return $strString;
 		}
@@ -54,7 +56,7 @@ class StringUtil
 
 		foreach ($arrChunks as $strChunk)
 		{
-			$intCharCount += utf8_strlen(static::decodeEntities($strChunk));
+			$intCharCount += Utf8::strlen(static::decodeEntities($strChunk));
 
 			if ($intCharCount++ <= $intNumberOfChars)
 			{
@@ -63,10 +65,10 @@ class StringUtil
 			}
 
 			// If the first word is longer than $intNumberOfChars already, shorten it
-			// with utf8_substr() so the method does not return an empty string.
+			// with Utf8::substr() so the method does not return an empty string.
 			if (empty($arrWords))
 			{
-				$arrWords[] = utf8_substr($strChunk, 0, $intNumberOfChars);
+				$arrWords[] = Utf8::substr($strChunk, 0, $intNumberOfChars);
 			}
 
 			if ($strEllipsis !== false)
@@ -133,7 +135,7 @@ class StringUtil
 			}
 
 			$blnModified = ($buffer !== $arrChunks[$i]);
-			$intCharCount += utf8_strlen(static::decodeEntities($arrChunks[$i]));
+			$intCharCount += Utf8::strlen(static::decodeEntities($arrChunks[$i]));
 
 			if ($intCharCount <= $intNumberOfChars)
 			{

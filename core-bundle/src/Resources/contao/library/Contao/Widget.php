@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Generates and validates form fields
@@ -836,12 +838,12 @@ abstract class Widget extends \Controller
 			}
 		}
 
-		if ($this->minlength && $varInput != '' && utf8_strlen($varInput) < $this->minlength)
+		if ($this->minlength && $varInput != '' && Utf8::strlen($varInput) < $this->minlength)
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['minlength'], $this->strLabel, $this->minlength));
 		}
 
-		if ($this->maxlength && $varInput != '' && utf8_strlen($varInput) > $this->maxlength)
+		if ($this->maxlength && $varInput != '' && Utf8::strlen($varInput) > $this->maxlength)
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $this->strLabel, $this->maxlength));
 		}

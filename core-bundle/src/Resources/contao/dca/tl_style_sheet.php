@@ -349,7 +349,7 @@ class tl_style_sheet extends Backend
 	 */
 	public function romanizeName($varValue)
 	{
-		return utf8_romanize($varValue);
+		return Patchwork\Utf8::toAscii($varValue);
 	}
 
 

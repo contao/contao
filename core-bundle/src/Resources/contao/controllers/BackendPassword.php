@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -63,7 +64,7 @@ class BackendPassword extends \Backend
 				\Message::addError($GLOBALS['TL_LANG']['ERR']['passwordMatch']);
 			}
 			// Password too short
-			elseif (utf8_strlen($pw) < \Config::get('minPasswordLength'))
+			elseif (Utf8::strlen($pw) < \Config::get('minPasswordLength'))
 			{
 				\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], \Config::get('minPasswordLength')));
 			}
