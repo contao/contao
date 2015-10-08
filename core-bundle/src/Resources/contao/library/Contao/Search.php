@@ -236,7 +236,7 @@ class Search
 		unset($arrSet);
 
 		// Remove special characters
-		$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\pN\pL\'\.:,\+_-]/u'), ' ', $strText);
+		$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\'.:,+-]/u'), ' ', $strText);
 
 		// Split words
 		$arrWords = preg_split('/ +/', Utf8::strtolower($strText));
@@ -263,7 +263,7 @@ class Search
 				$strWord = substr($strWord, 1);
 			}
 
-			if (preg_match('/[\':,\.]$/', $strWord))
+			if (preg_match('/[\':,.]$/', $strWord))
 			{
 				$strWord = substr($strWord, 0, -1);
 			}
@@ -311,7 +311,7 @@ class Search
 		// Clean the keywords
 		$strKeywords = Utf8::strtolower($strKeywords);
 		$strKeywords = \StringUtil::decodeEntities($strKeywords);
-		$strKeywords = preg_replace(array('/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\pN\pL \*\+\'"\.:,_-]/u'), ' ', $strKeywords);
+		$strKeywords = preg_replace(array('/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\' *+".:,-]/u'), ' ', $strKeywords);
 
 		// Check keyword string
 		if (!strlen($strKeywords))
