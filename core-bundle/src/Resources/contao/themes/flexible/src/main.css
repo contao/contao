@@ -1189,12 +1189,32 @@ ul.sgallery li {
 }
 ul.sortable li {
 	cursor:move;
+	position:relative;
 }
 ul.sortable li .dirname {
 	display:none;
 }
 ul.sortable li:hover .dirname {
 	display:inline;
+}
+ul.sortable button {
+	position:absolute;
+	top:3px;
+	right:3px;
+	border:0;
+	background:rgba(255,255,255,.7);
+	margin:0;
+	padding:0 0 1px;
+	font-size:22px;
+	line-height:13px;
+	cursor:pointer;
+	-moz-transition:all .1s linear;
+	-webkit-transition:all .1s linear;
+	-o-transition:all .1s linear;
+	transition:all .1s linear;
+}
+ul.sortable button:hover {
+	background:rgba(255,255,255,.9);
 }
 #manager {
 	margin-top:9px;
