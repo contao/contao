@@ -1216,6 +1216,13 @@ ul.sortable button {
 ul.sortable button:hover {
 	background:rgba(255,255,255,.9);
 }
+ul.sortable button[disabled] {
+	color:#999;
+	cursor:not-allowed;
+}
+ul.sortable button[disabled]:hover {
+	background:rgba(255,255,255,.7);
+}
 #manager {
 	margin-top:9px;
 	background:#f3f3f3;
