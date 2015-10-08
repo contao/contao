@@ -138,7 +138,6 @@ class File extends \System
 
 		// Check whether we need to sync the database
 		$this->blnSyncDb = $objFolder->shouldBeSynchronized();
-		}
 	}
 
 
