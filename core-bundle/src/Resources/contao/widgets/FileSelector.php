@@ -414,7 +414,14 @@ class FileSelector extends \Widget
 
 					if (\Config::get('thumbnails') && ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')))
 					{
-						$thumbnail .= '<br><img src="' . TL_FILES_URL . \Image::get($currentEncoded, 400, (($objFile->height && $objFile->height < 50) ? $objFile->height : 50), 'box') . '" alt="" style="margin:0 0 2px -19px">';
+						$imageObj = \Image::create($currentEncoded, array(400, (($objFile->height && $objFile->height < 50) ? $objFile->height : 50), 'box'));
+						$importantPart = $imageObj->getImportantPart();
+						$thumbnail .= '<br><img src="' . TL_FILES_URL . $imageObj->executeResize()->getResizedPath() . '" alt="" style="margin:0 0 2px -19px">';
+
+						if ($importantPart['x'] > 0 || $importantPart['y'] > 0 || $importantPart['width'] < $objFile->width || $importantPart['height'] < $objFile->height)
+						{
+							$thumbnail .= ' <img src="' . TL_FILES_URL . $imageObj->setZoomLevel(100)->setTargetWidth(320)->setTargetHeight((($objFile->height && $objFile->height < 40) ? $objFile->height : 40))->executeResize()->getResizedPath() . '" alt="" style="margin:0 0 2px 0">';
+						}
 					}
 				}
 

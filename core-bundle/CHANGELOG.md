@@ -5,6 +5,9 @@ Version 4.1.0-beta1 (2015-XX-XX)
 --------------------------------
 
 ### Improved
+Show the important part in the file tree (see contao/core#7865).
+
+### Improved
 Also show the field names in "edit multiple" mode (see contao/core#7868).
 
 ### New
