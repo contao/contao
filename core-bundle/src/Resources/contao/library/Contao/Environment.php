@@ -240,7 +240,7 @@ class Environment
 			{
 				$locale = $chunks[0] . '-' . strtoupper($chunks[1]);
 
-				if (preg_match('/^[a-z]{2}(\-[A-Z]{2})?$/', $locale))
+				if (preg_match('/^[a-z]{2}(-[A-Z]{2})?$/', $locale))
 				{
 					$arrLanguages[] = $locale;
 				}
@@ -305,7 +305,7 @@ class Environment
 			}
 		}
 
-		return preg_replace('/[^A-Za-z0-9\[\]\.:-]/', '', $host);
+		return preg_replace('/[^A-Za-z0-9[\].:-]/', '', $host);
 	}
 
 
@@ -316,7 +316,7 @@ class Environment
 	 */
 	protected static function httpXForwardedHost()
 	{
-		return preg_replace('/[^A-Za-z0-9\[\]\.:-]/', '', @$_SERVER['HTTP_X_FORWARDED_HOST']);
+		return preg_replace('/[^A-Za-z0-9[\].:-]/', '', @$_SERVER['HTTP_X_FORWARDED_HOST']);
 	}
 
 

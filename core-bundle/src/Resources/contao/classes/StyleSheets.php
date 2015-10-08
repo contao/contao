@@ -913,7 +913,7 @@ class StyleSheets extends \Backend
 		}
 
 		// Optimize floating-point numbers (see #6634)
-		$return = preg_replace('/([^0-9\.\+\-])0\.([0-9]+)/', '$1.$2', $return);
+		$return = preg_replace('/([^0-9.+-])0\.([0-9]+)/', '$1.$2', $return);
 
 		// Custom code
 		if ($row['own'] != '')
@@ -1507,7 +1507,7 @@ class StyleSheets extends \Backend
 					else
 					{
 						$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrChunks[1]);
-						$varValue = preg_replace('/[^0-9\.-]+/', '', $arrChunks[1]);
+						$varValue = preg_replace('/[^0-9.-]+/', '', $arrChunks[1]);
 					}
 					$arrSet['size'] = 1;
 					$arrSet[$strKey]['value'] = $varValue;
@@ -1525,7 +1525,7 @@ class StyleSheets extends \Backend
 					else
 					{
 						$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrChunks[1]);
-						$varValue = preg_replace('/[^0-9\.-]+/', '', $arrChunks[1]);
+						$varValue = preg_replace('/[^0-9.-]+/', '', $arrChunks[1]);
 					}
 					$arrSet['size'] = 1;
 					$arrSet[$strName]['value'] = $varValue;
@@ -1543,7 +1543,7 @@ class StyleSheets extends \Backend
 					else
 					{
 						$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrChunks[1]);
-						$varValue = preg_replace('/[^0-9\.-]+/', '', $arrChunks[1]);
+						$varValue = preg_replace('/[^0-9.-]+/', '', $arrChunks[1]);
 					}
 					$arrSet['size'] = 1;
 					$arrSet[$strName]['value'] = $varValue;
@@ -1567,7 +1567,7 @@ class StyleSheets extends \Backend
 					else
 					{
 						$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrChunks[1]);
-						$varValue = preg_replace('/[^0-9\.-]+/', '', $arrChunks[1]);
+						$varValue = preg_replace('/[^0-9.-]+/', '', $arrChunks[1]);
 					}
 					$arrSet['positioning'] = 1;
 					$arrSet['trbl'][$strKey] = $varValue;
@@ -1606,7 +1606,7 @@ class StyleSheets extends \Backend
 							else
 							{
 								$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[0]);
-								$varValue = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[0]);
+								$varValue = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
 							}
 							$arrSet[$strKey] = array
 							(
@@ -1626,7 +1626,7 @@ class StyleSheets extends \Backend
 							else
 							{
 								$arrUnits[] = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[0]);
-								$varValue_1 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[0]);
+								$varValue_1 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
 							}
 							if ($arrTRBL[1] == 'auto')
 							{
@@ -1635,7 +1635,7 @@ class StyleSheets extends \Backend
 							else
 							{
 								$arrUnits[] = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[1]);
-								$varValue_2 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[1]);
+								$varValue_2 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[1]);
 							}
 							// Move to custom section if there are different units
 							if (count(array_filter(array_unique($arrUnits))) > 1)
@@ -1671,7 +1671,7 @@ class StyleSheets extends \Backend
 							else
 							{
 								$arrUnits[] = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[0]);
-								$varValue_1 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[0]);
+								$varValue_1 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
 							}
 							if ($arrTRBL[1] == 'auto')
 							{
@@ -1680,7 +1680,7 @@ class StyleSheets extends \Backend
 							else
 							{
 								$arrUnits[] = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[1]);
-								$varValue_2 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[1]);
+								$varValue_2 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[1]);
 							}
 							if ($arrTRBL[2] == 'auto')
 							{
@@ -1689,7 +1689,7 @@ class StyleSheets extends \Backend
 							else
 							{
 								$arrUnits[] = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[2]);
-								$varValue_3 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[2]);
+								$varValue_3 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[2]);
 							}
 							// Move to custom section if there are different units
 							if (count(array_filter(array_unique($arrUnits))) > 1)
@@ -1725,7 +1725,7 @@ class StyleSheets extends \Backend
 							else
 							{
 								$arrUnits[] = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[0]);
-								$varValue_1 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[0]);
+								$varValue_1 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
 							}
 							if ($arrTRBL[1] == 'auto')
 							{
@@ -1734,7 +1734,7 @@ class StyleSheets extends \Backend
 							else
 							{
 								$arrUnits[] = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[1]);
-								$varValue_2 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[1]);
+								$varValue_2 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[1]);
 							}
 							if ($arrTRBL[2] == 'auto')
 							{
@@ -1743,7 +1743,7 @@ class StyleSheets extends \Backend
 							else
 							{
 								$arrUnits[] = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[2]);
-								$varValue_3 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[2]);
+								$varValue_3 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[2]);
 							}
 							if ($arrTRBL[3] == 'auto')
 							{
@@ -1752,7 +1752,7 @@ class StyleSheets extends \Backend
 							else
 							{
 								$arrUnits[] = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[3]);
-								$varValue_4 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[3]);
+								$varValue_4 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[3]);
 							}
 							// Move to custom section if there are different units
 							if (count(array_filter(array_unique($arrUnits))) > 1)
@@ -1796,7 +1796,7 @@ class StyleSheets extends \Backend
 					else
 					{
 						$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrChunks[1]);
-						$varValue = preg_replace('/[^0-9\.-]+/', '', $arrChunks[1]);
+						$varValue = preg_replace('/[^0-9.-]+/', '', $arrChunks[1]);
 					}
 					$arrSet['margin'][$strName] = $varValue;
 					if (empty($arrSet['margin']['unit']))
@@ -1811,7 +1811,7 @@ class StyleSheets extends \Backend
 				case 'padding-left':
 					$arrSet['alignment'] = 1;
 					$strName = str_replace('padding-', '', $strKey);
-					$varValue = preg_replace('/[^0-9\.-]+/', '', $arrChunks[1]);
+					$varValue = preg_replace('/[^0-9.-]+/', '', $arrChunks[1]);
 					$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrChunks[1]);
 					$arrSet['padding'][$strName] = $varValue;
 					$arrSet['padding']['unit'] = $strUnit;
@@ -1838,7 +1838,7 @@ class StyleSheets extends \Backend
 					break;
 
 				case 'background-image':
-					$url = preg_replace('/url\(["\']?([^"\'\)]+)["\']?\)/i', '$1', $arrChunks[1]);
+					$url = preg_replace('/url\(["\']?([^"\')]+)["\']?\)/i', '$1', $arrChunks[1]);
 
 					if (strncmp($url, '-', 1) === 0)
 					{
@@ -1896,7 +1896,7 @@ class StyleSheets extends \Backend
 						break;
 					}
 					$arrSet['border'] = 1;
-					$varValue = preg_replace('/[^0-9\.-]+/', '', $arrWSC[0]);
+					$varValue = preg_replace('/[^0-9.-]+/', '', $arrWSC[0]);
 					$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrWSC[0]);
 					$arrSet['borderwidth'] = array
 					(
@@ -1933,14 +1933,14 @@ class StyleSheets extends \Backend
 					}
 					$arrSet['border'] = 1;
 					$strName = str_replace('border-', '', $strKey);
-					$varValue = preg_replace('/[^0-9\.-]+/', '', $arrWSC[0]);
+					$varValue = preg_replace('/[^0-9.-]+/', '', $arrWSC[0]);
 					$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrWSC[0]);
 					if ((isset($arrSet['borderwidth']['unit']) && $arrSet['borderwidth']['unit'] != $strUnit) || ($arrWSC[1] != '' && isset($arrSet['borderstyle']) && $arrSet['borderstyle'] != $arrWSC[1]) || ($arrWSC[2] != '' && isset($arrSet['bordercolor']) && $arrSet['bordercolor'] != $arrWSC[2]))
 					{
 						$arrSet['own'][] = $strDefinition;
 						break;
 					}
-					$arrSet['borderwidth'][$strName] = preg_replace('/[^0-9\.-]+/', '', $varValue);
+					$arrSet['borderwidth'][$strName] = preg_replace('/[^0-9.-]+/', '', $varValue);
 					$arrSet['borderwidth']['unit'] = $strUnit;
 					if ($arrWSC[1] != '')
 					{
@@ -1966,7 +1966,7 @@ class StyleSheets extends \Backend
 					switch (count($arrTRBL))
 					{
 						case 1:
-							$varValue = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[0]);
+							$varValue = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
 							$arrSet['borderwidth'] = array
 							(
 								'top' => $varValue,
@@ -1977,8 +1977,8 @@ class StyleSheets extends \Backend
 							);
 							break;
 						case 2:
-							$varValue_1 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[0]);
-							$varValue_2 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[1]);
+							$varValue_1 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
+							$varValue_2 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[1]);
 							$arrSet['borderwidth'] = array
 							(
 								'top' => $varValue_1,
@@ -1991,10 +1991,10 @@ class StyleSheets extends \Backend
 						case 4:
 							$arrSet['borderwidth'] = array
 							(
-								'top' => preg_replace('/[^0-9\.-]+/', '', $arrTRBL[0]),
-								'right' => preg_replace('/[^0-9\.-]+/', '', $arrTRBL[1]),
-								'bottom' => preg_replace('/[^0-9\.-]+/', '', $arrTRBL[2]),
-								'left' => preg_replace('/[^0-9\.-]+/', '', $arrTRBL[3]),
+								'top' => preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]),
+								'right' => preg_replace('/[^0-9.-]+/', '', $arrTRBL[1]),
+								'bottom' => preg_replace('/[^0-9.-]+/', '', $arrTRBL[2]),
+								'left' => preg_replace('/[^0-9.-]+/', '', $arrTRBL[3]),
 								'unit' => $strUnit
 							);
 							break;
@@ -2027,7 +2027,7 @@ class StyleSheets extends \Backend
 					switch (count($arrTRBL))
 					{
 						case 1:
-							$varValue = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[0]);
+							$varValue = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
 							$arrSet['borderradius'] = array
 							(
 								'top' => $varValue,
@@ -2038,8 +2038,8 @@ class StyleSheets extends \Backend
 							);
 							break;
 						case 2:
-							$varValue_1 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[0]);
-							$varValue_2 = preg_replace('/[^0-9\.-]+/', '', $arrTRBL[1]);
+							$varValue_1 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
+							$varValue_2 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[1]);
 							$arrSet['borderradius'] = array
 							(
 								'top' => $varValue_1,
@@ -2052,10 +2052,10 @@ class StyleSheets extends \Backend
 						case 4:
 							$arrSet['borderradius'] = array
 							(
-								'top' => preg_replace('/[^0-9\.-]+/', '', $arrTRBL[0]),
-								'right' => preg_replace('/[^0-9\.-]+/', '', $arrTRBL[1]),
-								'bottom' => preg_replace('/[^0-9\.-]+/', '', $arrTRBL[2]),
-								'left' => preg_replace('/[^0-9\.-]+/', '', $arrTRBL[3]),
+								'top' => preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]),
+								'right' => preg_replace('/[^0-9.-]+/', '', $arrTRBL[1]),
+								'bottom' => preg_replace('/[^0-9.-]+/', '', $arrTRBL[2]),
+								'left' => preg_replace('/[^0-9.-]+/', '', $arrTRBL[3]),
 								'unit' => $strUnit
 							);
 							break;
@@ -2077,7 +2077,7 @@ class StyleSheets extends \Backend
 					$arrSet['border'] = 1;
 					$arrSet['borderspacing'] = array
 					(
-						'value' => preg_replace('/[^0-9\.-]+/', '', $arrChunks[1]),
+						'value' => preg_replace('/[^0-9.-]+/', '', $arrChunks[1]),
 						'unit' => preg_replace('/[^acehimnprtvwx%]/', '', $arrChunks[1])
 					);
 					break;
@@ -2097,7 +2097,7 @@ class StyleSheets extends \Backend
 						$arrSet['font'] = 1;
 						$arrSet['fontsize'] = array
 						(
-							'value' => preg_replace('/[^0-9\.-]+/', '', $arrChunks[1]),
+							'value' => preg_replace('/[^0-9.-]+/', '', $arrChunks[1]),
 							'unit' => preg_replace('/[^acehimnprtvwx%]/', '', $arrChunks[1])
 						);
 					}
@@ -2174,7 +2174,7 @@ class StyleSheets extends \Backend
 					$arrSet['font'] = 1;
 					$arrSet['lineheight'] = array
 					(
-						'value' => preg_replace('/[^0-9\.-]+/', '', $arrChunks[1]),
+						'value' => preg_replace('/[^0-9.-]+/', '', $arrChunks[1]),
 						'unit' => preg_replace('/[^acehimnprtvwx%]/', '', $arrChunks[1])
 					);
 					break;
@@ -2191,7 +2191,7 @@ class StyleSheets extends \Backend
 					$arrSet['font'] = 1;
 					$arrSet[$strName] = array
 					(
-						'value' => preg_replace('/[^0-9\.-]+/', '', $arrChunks[1]),
+						'value' => preg_replace('/[^0-9.-]+/', '', $arrChunks[1]),
 						'unit' => preg_replace('/[^acehimnprtvwx%]/', '', $arrChunks[1])
 					);
 					break;
@@ -2203,7 +2203,7 @@ class StyleSheets extends \Backend
 
 				case 'list-style-image':
 					$arrSet['list'] = 1;
-					$arrSet['liststyleimage'] = preg_replace('/url\(["\']?([^"\'\)]+)["\']?\)/i', '$1', $arrChunks[1]);
+					$arrSet['liststyleimage'] = preg_replace('/url\(["\']?([^"\')]+)["\']?\)/i', '$1', $arrChunks[1]);
 					break;
 
 				case 'behavior':
