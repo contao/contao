@@ -336,7 +336,7 @@ class tl_user_group extends Backend
 				{
 					if ($vv['exclude'] || $vv['orig_exclude'])
 					{
-						$arrReturn[$k][specialchars($k.'::'.$kk)] = $vv['label'][0] ?: $kk;
+						$arrReturn[$k][specialchars($k.'::'.$kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#b3b3b3;padding-left:3px">[' . $kk . ']</span>' : $kk;
 					}
 				}
 			}
