@@ -17,6 +17,7 @@ use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Database\VersionUpdateInterface;
 use Doctrine\DBAL\DBALException;
+use Patchwork\Utf8;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -168,7 +169,7 @@ class InstallationController extends ContainerAware
         $minlength = $installTool->getConfig('minPasswordLength');
 
         // The passwords is too short
-        if (strlen(utf8_decode($password)) < $minlength) {
+        if (Utf8::strlen($password) < $minlength) {
             return $this->render('password.html.twig', [
                 'error' => sprintf($this->trans('password_too_short'), $minlength),
             ]);
@@ -437,7 +438,7 @@ class InstallationController extends ContainerAware
         $minlength = $installTool->getConfig('minPasswordLength');
 
         // The password is too short
-        if (strlen(utf8_decode($password)) < $minlength) {
+        if (Utf8::strlen($password) < $minlength) {
             $this->context['admin_password_error'] = sprintf($this->trans('password_too_short'), $minlength);
 
             return null;
