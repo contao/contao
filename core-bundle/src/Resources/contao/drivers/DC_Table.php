@@ -1225,8 +1225,11 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			{
 				$newPID = null;
 				$newSorting = null;
-				$session = $this->Session->getData();
 				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;
+
+				/** @var SessionInterface $objSession */
+				$objSession = \System::getContainer()->get('session');
+				$session = $objSession->all();
 
 				// Consider the pagination menu when inserting at the top (see #7895)
 				if ($insertInto && isset($session['filter'][$filter]['limit']))
