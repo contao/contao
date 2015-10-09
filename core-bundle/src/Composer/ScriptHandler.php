@@ -42,6 +42,28 @@ class ScriptHandler
     }
 
     /**
+     * Sets environment variable for random secret on installation.
+     *
+     * @param Event $event The event object
+     */
+    public static function generateRandomSecret(Event $event)
+    {
+        $extra = $event->getComposer()->getPackage()->getExtra();
+
+        if (!isset($extra['incenteev-parameters']) || !isset($extra['incenteev-parameters']['file'])) {
+            return;
+        }
+
+        $file = $extra['incenteev-parameters']['file'];
+
+        if (is_file($file)) {
+            return;
+        }
+
+        putenv('CONTAO_RANDOM_SECRET=' . md5(uniqid(mt_rand(), true)));
+    }
+
+    /**
      * Executes a command.
      *
      * @param string $cmd   The command
