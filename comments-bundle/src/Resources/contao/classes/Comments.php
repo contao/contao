@@ -376,6 +376,12 @@ class Comments extends \Frontend
 									  \Idna::decode(\Environment::get('base')) . \Environment::get('request'),
 									  \Idna::decode(\Environment::get('base')) . 'contao/main.php?do=comments&act=edit&id=' . $objComment->id);
 
+			// Add a moderation hint to the e-mail (see #7478)
+			if ($objConfig->moderate)
+			{
+				$objEmail->text .= "\n" . $GLOBALS['TL_LANG']['MSC']['com_moderated'] . "\n";
+			}
+
 			// Do not send notifications twice
 			if (is_array($varNotifies))
 			{
