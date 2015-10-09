@@ -4,6 +4,9 @@ Contao core bundle change log
 Version 4.1.0-beta1 (2015-XX-XX)
 --------------------------------
 
+### Changed
+Highlight the rows on hover via CSS (see contao/core#7837).
+
 ### Improved
 Show the important part in the file tree (see contao/core#7865).
 

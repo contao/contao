@@ -472,6 +472,11 @@ a.tl_submit,a.tl_submit:hover {
 	background-image:linear-gradient(to bottom, #909390, #b3b6b3);
 }
 
+/* Row highlighting */
+.hover-div:hover, .hover-row:hover td {
+	background:#ebfdd7 !important;
+}
+
 /* Wide screen */
 @media (min-width:1200px) {
 	.tl_text {

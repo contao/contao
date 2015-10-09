@@ -30,6 +30,9 @@ var Theme = {
 	 *
 	 * @param {object} el    The DOM element
 	 * @param {int}    state The current state
+	 *
+	 * @deprecated The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5.
+	 *             Assign the CSS class "hover-row" instead.
 	 */
 	hoverRow: function(el, state) {
 		var items = $(el).getChildren();
@@ -38,6 +41,7 @@ var Theme = {
 				items[i].setStyle('background-color', (state ? '#ebfdd7' : ''));
 			}
 		}
+		console.info('The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-row" instead.');
 	},
 
 	/**
@@ -45,12 +49,16 @@ var Theme = {
 	 *
 	 * @param {object} el    The DOM element
 	 * @param {int}    state The current state
+	 *
+	 * @deprecated The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5.
+	 *             Assign the CSS class "hover-div" instead.
 	 */
 	hoverDiv: function(el, state) {
 		if (!state) {
 			el.removeAttribute('data-visited');
 		}
 		$(el).setStyle('background-color', (state ? '#ebfdd7' : ''));
+		console.info('The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-div" instead.');
 	},
 
 	/**

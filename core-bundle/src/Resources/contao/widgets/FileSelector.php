@@ -312,7 +312,7 @@ class FileSelector extends \Widget
 		{
 			$countFiles = 0;
 			$content = scan($folders[$f]);
-			$return .= "\n    " . '<li class="'.$folderClass.' toggle_select" onmouseover="Theme.hoverDiv(this, 1)" onmouseout="Theme.hoverDiv(this, 0)"><div class="tl_left" style="padding-left:'.$intMargin.'px">';
+			$return .= "\n    " . '<li class="'.$folderClass.' toggle_select hover-div"><div class="tl_left" style="padding-left:'.$intMargin.'px">';
 
 			// Check whether there are subfolders or files
 			foreach ($content as $v)
@@ -402,7 +402,7 @@ class FileSelector extends \Widget
 					continue;
 				}
 
-				$return .= "\n    " . '<li class="tl_file toggle_select" onmouseover="Theme.hoverDiv(this, 1)" onmouseout="Theme.hoverDiv(this, 0)"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
+				$return .= "\n    " . '<li class="tl_file toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
 
 				// Generate thumbnail
 				if ($objFile->isImage && $objFile->viewHeight > 0)

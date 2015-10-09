@@ -3744,7 +3744,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		$session[$node][$id] = (is_int($session[$node][$id])) ? $session[$node][$id] : 0;
-		$mouseover = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 || $table == $this->strTable) ? ' toggle_select" onmouseover="Theme.hoverDiv(this,1)" onmouseout="Theme.hoverDiv(this,0)"' : '"';
+		$mouseover = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 || $table == $this->strTable) ? ' toggle_select hover-div"' : '"';
 
 		$return .= "\n  " . '<li class="'.((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file').' click2edit'.$mouseover.'><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
 
@@ -3990,7 +3990,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 <div class="tl_listing_container parent_view">
 
-<div class="tl_header click2edit toggle_select" onmouseover="Theme.hoverDiv(this,1)" onmouseout="Theme.hoverDiv(this,0)">';
+<div class="tl_header click2edit toggle_select hover-div">';
 
 		// List all records of the child table
 		if (!\Input::get('act') || \Input::get('act') == 'paste' || \Input::get('act') == 'select')
@@ -4302,7 +4302,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 					$return .= '
 
-<div class="tl_content'.($blnWrapperStart ? ' wrapper_start' : '').($blnWrapperSeparator ? ' wrapper_separator' : '').($blnWrapperStop ? ' wrapper_stop' : '').($blnIndent ? ' indent indent_'.$intWrapLevel : '').(($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] != '') ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '').(($i%2 == 0) ? ' even' : ' odd').' click2edit toggle_select" onmouseover="Theme.hoverDiv(this,1)" onmouseout="Theme.hoverDiv(this,0)">
+<div class="tl_content'.($blnWrapperStart ? ' wrapper_start' : '').($blnWrapperSeparator ? ' wrapper_separator' : '').($blnWrapperStop ? ' wrapper_stop' : '').($blnIndent ? ' indent indent_'.$intWrapLevel : '').(($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] != '') ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '').(($i%2 == 0) ? ' even' : ' odd').' click2edit toggle_select hover-div">
 <div class="tl_content_right">';
 
 					// Opening wrappers
@@ -4769,7 +4769,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 
 				$return .= '
-  <tr class="'.((++$eoCount % 2 == 0) ? 'even' : 'odd').' click2edit toggle_select" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+  <tr class="'.((++$eoCount % 2 == 0) ? 'even' : 'odd').' click2edit toggle_select hover-row">
     ';
 
 				$colspan = 1;
