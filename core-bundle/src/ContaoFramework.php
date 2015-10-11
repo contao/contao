@@ -205,6 +205,26 @@ class ContaoFramework implements ContaoFrameworkInterface
         return $this->adapterCache[$class];
     }
 
+    protected function configPreload()
+    {
+        $this->config->preload();
+    }
+
+    protected function configInitialize()
+    {
+        $this->config->initialize();
+    }
+
+    protected function configIsComplete()
+    {
+        return $this->config->isComplete();
+    }
+
+    protected function configGet($key)
+    {
+        return $this->config->get($key);
+    }
+
     /**
      * Sets the Contao constants.
      *
@@ -314,7 +334,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         System::setContainer($this->container);
 
         // Preload the configuration (see #5872)
-        $this->config->preload();
+        $this->configPreload();
 
         // Register the class loader
         ClassLoader::scanAndRegister();
@@ -323,7 +343,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         $this->setDefaultLanguage();
 
         // Fully load the configuration
-        $this->config->initialize();
+        $this->configInitialize();
 
         $this->validateInstallation();
 
@@ -333,7 +353,7 @@ class ContaoFramework implements ContaoFrameworkInterface
 
         // Set the mbstring encoding
         if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
-            mb_regex_encoding($this->config->get('characterSet'));
+            mb_regex_encoding($this->configGet('characterSet'));
         }
 
         $this->triggerInitializeSystemHook();
@@ -405,7 +425,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         // Show the "incomplete installation" message
-        if (!$this->config->isComplete()) {
+        if (!$this->configIsComplete()) {
             throw new IncompleteInstallationException(
                 'The installation has not been completed. Open the Contao install tool to continue.'
             );
@@ -417,8 +437,8 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function setTimezone()
     {
-        $this->iniSet('date.timezone', $this->config->get('timeZone'));
-        date_default_timezone_set($this->config->get('timeZone'));
+        $this->iniSet('date.timezone', $this->configGet('timeZone'));
+        date_default_timezone_set($this->configGet('timeZone'));
     }
 
     /**
