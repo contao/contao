@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Adapter;
+namespace Contao\CoreBundle\Framework;
 
 /**
  * A general Adapter class building a wrapper around any class that is not
@@ -28,17 +28,17 @@ final class Adapter
     private $class;
 
     /**
-     * Adapter constructor.
+     * Constructor.
      *
-     * @param string                    $class
+     * @param string $class
      */
     public function __construct($class)
     {
-        $this->class    = $class;
+        $this->class = $class;
     }
 
     /**
-     * Calls any method of the given class.
+     * Calls any static method of the given class.
      *
      * @param string $name
      * @param array  $arguments

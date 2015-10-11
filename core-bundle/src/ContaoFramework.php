@@ -12,6 +12,8 @@ namespace Contao\CoreBundle;
 
 use Contao\ClassLoader;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
@@ -34,7 +36,8 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  * @author Dominik Tomasi <https://github.com/dtomasi>
  * @author Andreas Schempp <https://github.com/aschempp>
  *
- * @internal
+ * @deprecated Deprecated since Contao 4.1, to be removed in 5.0
+ *             Use the ContaoFramework in the Framework namespace.
  */
 class ContaoFramework implements ContaoFrameworkInterface
 {
@@ -102,6 +105,12 @@ class ContaoFramework implements ContaoFrameworkInterface
     ];
 
     /**
+     * Adapter class cache
+     * @var array
+     */
+    private $adapterCache = [];
+
+    /**
      * Constructor.
      *
      * @param RequestStack              $requestStack  The request stack
@@ -164,6 +173,36 @@ class ContaoFramework implements ContaoFrameworkInterface
 
         $this->setConstants();
         $this->initializeFramework();
+    }
+
+    /**
+     * Creates a new instance of a given class.
+     *
+     * @param string $class Fully qualified class name.
+     * @param array $args Constructor arguments.
+     *
+     * @return mixed
+     */
+    public function createInstance($class, $args = [])
+    {
+        $reflection = new \ReflectionClass($class);
+        return $reflection->newInstanceArgs($args);
+    }
+
+    /**
+     * Returns an adapter class for a given class.
+     *
+     * @param string $class Fully qualified class name.
+     *
+     * @return Adapter
+     */
+    public function getAdapter($class)
+    {
+        if (!isset($this->adapterCache[$class])) {
+            $this->adapterCache[$class] = new Adapter($class);
+        }
+
+        return $this->adapterCache[$class];
     }
 
     /**
