@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\SplFileInfo;
@@ -268,11 +269,28 @@ abstract class System
 			$session['current'] = $session[$strTable];
 		}
 
-		// Determine current or last
-		$strUrl = ($session['current'] != \Environment::get('request')) ? $session['current'] : $session['last'];
+		// Remove parameters helper
+		$cleanUrl = function ($url, $params=array('rt', 'ref'))
+		{
+			if ($url == '' || strpos($url, '?') === false)
+			{
+				return $url;
+			}
 
-		// Remove "toggle" and "toggle all" parameters
-		$return = preg_replace('/(&(amp;)?|\?)p?tg=[^& ]*/i', '', $strUrl);
+			list($path, $query) = explode('?', $url, 2);
+
+			/** @var Query $queryObj */
+			$queryObj = new Query($query);
+			$queryObj = $queryObj->without($params);
+
+			return $path . $queryObj->getUriComponent();
+		};
+
+		// Determine current or last
+		$strUrl = ($cleanUrl($session['current']) != $cleanUrl(\Environment::get('request'))) ? $session['current'] : $session['last'];
+
+		// Remove the "toggle" and "toggle all" parameters
+		$return = $cleanUrl($strUrl, array('tg', 'ptg'));
 
 		// Fallback to the generic referer in the front end
 		if ($return == '' && TL_MODE == 'FE')

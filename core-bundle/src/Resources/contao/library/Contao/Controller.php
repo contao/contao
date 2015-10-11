@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use League\Uri\Components\Query;
 
 
 /**
@@ -938,34 +939,22 @@ abstract class Controller extends \System
 	 */
 	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
 	{
-		$strRequest = preg_replace('/^&(amp;)?/i', '', $strRequest);
+		/** @var Query $query */
+		$query = new Query(\Environment::get('queryString'));
 
-		if ($strRequest != '' && $blnAddRef)
+		// Remove the request token and referer ID
+		$query = $query->without(array_merge(array('rt', 'ref'), $arrUnset));
+
+		// Merge the request string to be added
+		$query = $query->merge(new Query(str_replace('&amp;', '&', $strRequest)));
+
+		// Add the referer ID
+		if (isset($_GET['ref']) || ($strRequest != '' && $blnAddRef))
 		{
-			$strRequest .= '&amp;ref=' . TL_REFERER_ID;
+			$query = $query->merge('ref=' . TL_REFERER_ID);
 		}
 
-		$queries = preg_split('/&(amp;)?/i', \Environment::get('queryString'));
-
-		// Overwrite existing parameters
-		foreach ($queries as $k=>$v)
-		{
-			list($key) = explode('=', $v);
-
-			if (in_array($key, $arrUnset) || preg_match('/(^|&(amp;)?)' . preg_quote($key, '/') . '=/i', $strRequest))
-			{
-				unset($queries[$k]);
-			}
-		}
-
-		$href = '?';
-
-		if (!empty($queries))
-		{
-			$href .= implode('&amp;', $queries) . '&amp;';
-		}
-
-		return TL_SCRIPT . $href . str_replace(' ', '%20', $strRequest);
+		return TL_SCRIPT . $query->getUriComponent();
 	}
 
 
