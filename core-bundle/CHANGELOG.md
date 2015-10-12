@@ -4,6 +4,9 @@ Contao core bundle change log
 Version 4.1.0-beta1 (2015-XX-XX)
 --------------------------------
 
+### New
+Show the website title in the back end (see contao/core#7840).
+
 ### Improved
 Re-send the activation mail upon a second registration attempt (see contao/core#7992).
 

@@ -48,7 +48,7 @@
 
   <?php if (!$this->isPopup): ?>
     <div id="header" class="collapsible">
-      <h1>Contao Open Source CMS <?= VERSION . '.' . BUILD ?></h1>
+      <h1><span class="title"><?= $this->websiteTitle ?></span>Contao Open Source CMS <?= VERSION . '.' . BUILD ?></h1>
       <div class="collapsible_area">
         <div id="tmenu">
           <span class="header_user_container"><a href="<?= $this->route('contao_backend', array('do'=>'login', 'ref'=>TL_REFERER_ID)) ?>" class="header_user" title="<?= $this->account ?>"><?= $this->username ?></a></span>

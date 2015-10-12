@@ -213,6 +213,12 @@ class BackendMain extends \Backend
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
 		}
 
+		// Website title
+		if (\Config::get('websiteTitle') != 'Contao Open Source CMS')
+		{
+			$this->Template->websiteTitle = \Config::get('websiteTitle');
+		}
+
 		$this->Template->theme = \Backend::getTheme();
 		$this->Template->base = \Environment::get('base');
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];

@@ -31,6 +31,12 @@ body.popup {
 	color:#fff;
 	border-radius:3px 3px 0 0;
 }
+#header .title:after {
+	content:" - ";
+}
+#header .title:empty {
+	display:none;
+}
 #tmenu {
 	margin:0;
 	padding:6px 11px 8px;
@@ -1787,6 +1793,9 @@ fieldset.collapsed > legend {
 	}
 	#footer {
 		padding-bottom:18px;
+	}
+	#header .title {
+		display:none;
 	}
 	#tmenu {
 		line-height:2;
