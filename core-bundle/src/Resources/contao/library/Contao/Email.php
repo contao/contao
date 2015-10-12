@@ -462,10 +462,12 @@ class Email
 		// Send the e-mail
 		$intSent = \System::getContainer()->get('swiftmailer.mailer')->send($this->objMessage, $this->arrFailures);
 
+		$objLogger = \System::getContainer()->get('logger');
+
 		// Log failures
 		if (!empty($this->arrFailures))
 		{
-			log_message('E-mail address rejected: ' . implode(', ', $this->arrFailures), $this->strLogFile);
+			$objLogger->warning('E-mail address rejected: ' . implode(', ', $this->arrFailures));
 		}
 
 		// Return if no e-mails have been sent
@@ -490,7 +492,7 @@ class Email
 			$strMessage .= ', BCC to ' . implode(', ', array_keys($arrBcc));
 		}
 
-		log_message($strMessage, $this->strLogFile);
+		$objLogger->info($strMessage);
 
 		return true;
 	}
