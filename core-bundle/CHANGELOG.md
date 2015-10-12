@@ -5,6 +5,9 @@ Version 4.1.0-beta1 (2015-XX-XX)
 --------------------------------
 
 ### Improved
+Re-send the activation mail upon a second registration attempt (see contao/core#7992).
+
+### Improved
 Always show the "save and edit" button (see contao/core#3567).
 
 ### Changed

@@ -182,7 +182,7 @@ class MemberModel extends \Model
 
 
 	/**
-	 * Find an active member by his/her e-mail-address and username
+	 * Find an active member by their e-mail-address and username
 	 *
 	 * @param string $strEmail    The e-mail address
 	 * @param string $strUsername The username
@@ -203,5 +203,21 @@ class MemberModel extends \Model
 		}
 
 		return static::findOneBy($arrColumns, array($strEmail, $strUsername), $arrOptions);
+	}
+
+
+	/**
+	 * Find an unactivated member by their e-mail-address
+	 *
+	 * @param string $strEmail   The e-mail address
+	 * @param array  $arrOptions An optional options array
+	 *
+	 * @return static The model or null if there is no member
+	 */
+	public static function findUnactivatedByEmail($strEmail, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+
+		return static::findOneBy(array("$t.email=? AND $t.activation!=''"), $strEmail, $arrOptions);
 	}
 }
