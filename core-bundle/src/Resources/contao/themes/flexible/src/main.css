@@ -176,6 +176,10 @@ h2.sub_headline_index {
 .tl_message {
 	margin:18px 18px 0;
 }
+.tl_message_picker {
+	margin-top:27px;
+	margin-bottom:-9px;
+}
 .tl_gerror {
 	margin:12px 6px 6px;
 	padding:2px 0 3px 20px;

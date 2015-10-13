@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -139,16 +140,20 @@ class BackendFile extends \Backend
 		/** @var \FileSelector $objFileTree */
 		$objFileTree = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$strTable]['fields'][$strField], $strField, $arrValues, $strField, $strTable, $objDca));
 
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $objSession->getBag('contao_backend');
+
 		$objTemplate->main = $objFileTree->generate();
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['filepicker']);
 		$objTemplate->charset = \Config::get('characterSet');
-		$objTemplate->addSearch = false;
+		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
+		$objTemplate->searchExclude = $GLOBALS['TL_LANG']['MSC']['searchExclude'];
 		$objTemplate->action = ampersand(\Environment::get('request'));
-		$objTemplate->value = $objSession->get('file_selector_search');
+		$objTemplate->value = $objSessionBag->get('file_selector_search');
 		$objTemplate->manager = $GLOBALS['TL_LANG']['MSC']['fileManager'];
 		$objTemplate->managerHref = 'contao/main.php?do=files&amp;popup=1';
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'];

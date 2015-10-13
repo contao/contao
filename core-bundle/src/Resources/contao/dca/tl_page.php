@@ -57,7 +57,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'mode'                    => 5,
 			'icon'                    => 'pagemounts.gif',
 			'paste_button_callback'   => array('tl_page', 'pastePage'),
-			'panelLayout'             => 'filter,search'
+			'panelLayout'             => 'search'
 		),
 		'label' => array
 		(

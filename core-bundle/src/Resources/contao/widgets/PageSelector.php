@@ -77,11 +77,12 @@ class PageSelector extends \Widget
 		$tree = '';
 		$this->getPathNodes();
 		$for = $objSessionBag->get('page_selector_search');
-		$arrIds = array();
 
 		// Search for a specific page
 		if ($for != '')
 		{
+			$arrIds = array();
+
 			// The keyword must not start with a wildcard (see #4910)
 			if (strncmp($for, '*', 1) === 0)
 			{
