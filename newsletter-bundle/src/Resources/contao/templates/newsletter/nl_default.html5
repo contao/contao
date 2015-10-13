@@ -17,9 +17,9 @@
         <?php endforeach; ?>
       <?php endif; ?>
 
-      <div class="widget widget-text">
+      <div class="widget widget-text mandatory">
         <label for="ctrl_email_<?= $this->id ?>" class="invisible"><?= $this->emailLabel ?></label>
-        <input type="text" name="email" id="ctrl_email_<?= $this->id ?>" class="text" value="<?= $this->email ?>" placeholder="<?= $this->emailLabel ?>">
+        <input type="text" name="email" id="ctrl_email_<?= $this->id ?>" class="text mandatory" value="<?= $this->email ?>" placeholder="<?= $this->emailLabel ?>" required>
       </div>
 
       <?php if ($this->showChannels): ?>
@@ -27,11 +27,13 @@
           <fieldset id="ctrl_channels_<?= $this->id ?>" class="checkbox_container">
             <legend class="invisible"><?= $this->channelsLabel ?></legend>
               <?php foreach ($this->channels as $id=>$title): ?>
-              <span><input type="checkbox" name="channels[]" id="opt_<?= $this->id ?>_<?= $id ?>" value="<?= $id ?>" class="checkbox"> <label for="opt_<?= $this->id ?>_<?= $id ?>"><?= $title ?></label></span>
+              <span><input type="checkbox" name="channels[]" id="opt_<?= $this->id ?>_<?= $id ?>" value="<?= $id ?>" class="checkbox"<?php if (is_array($this->selectedChannels) && in_array($id, $this->selectedChannels)) echo ' checked'; ?>> <label for="opt_<?= $this->id ?>_<?= $id ?>"><?= $title ?></label></span>
             <?php endforeach; ?>
             </fieldset>
         </div>
       <?php endif; ?>
+
+      <?= $this->captcha ?>
 
       <div class="widget widget-submit">
         <button type="submit" class="submit"><?= $this->submit ?></button>

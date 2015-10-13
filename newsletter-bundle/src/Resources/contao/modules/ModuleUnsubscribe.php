@@ -76,31 +76,54 @@ class ModuleUnsubscribe extends \Module
 			$this->Template->setData($this->arrData);
 		}
 
+		$this->Template->email = '';
+		$this->Template->captcha = '';
+
+		$objWidget = null;
+
+		// Set up the captcha widget
+		if (!$this->disableCaptcha)
+		{
+			$arrField = array
+			(
+				'name' => 'unsubscribe',
+				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
+				'inputType' => 'captcha',
+				'eval' => array('mandatory'=>true)
+			);
+
+			/** @var \Widget $objWidget */
+			$objWidget = new \FormCaptcha(\FormCaptcha::getAttributesFromDca($arrField, $arrField['name']));
+		}
+
 		$strFormId = 'tl_unsubscribe_' . $this->id;
 
 		// Unsubscribe
 		if (\Input::post('FORM_SUBMIT') == $strFormId)
 		{
-			$this->removeRecipient();
+			$varSubmitted = $this->validateForm($objWidget);
+
+			if ($varSubmitted !== false)
+			{
+				call_user_func_array(array($this, 'removeRecipient'), $varSubmitted);
+			}
 		}
 
-		$blnHasError = false;
-
-		// Error message
-		if (strlen($_SESSION['UNSUBSCRIBE_ERROR']))
+		// Add the captch widget to the template
+		if ($objWidget !== null)
 		{
-			$blnHasError = true;
-			$this->Template->mclass = 'error';
-			$this->Template->message = $_SESSION['UNSUBSCRIBE_ERROR'];
-			$_SESSION['UNSUBSCRIBE_ERROR'] = '';
+			$this->Template->captcha = $objWidget->parse();
 		}
+
+		$flashBag = \System::getContainer()->get('session')->getFlashBag();
 
 		// Confirmation message
-		if (strlen($_SESSION['UNSUBSCRIBE_CONFIRM']))
+		if ($flashBag->has('nl_removed'))
 		{
+			$arrMessages = $flashBag->get('nl_removed');
+
 			$this->Template->mclass = 'confirm';
-			$this->Template->message = $_SESSION['UNSUBSCRIBE_CONFIRM'];
-			$_SESSION['UNSUBSCRIBE_CONFIRM'] = '';
+			$this->Template->message = $arrMessages[0];
 		}
 
 		$arrChannels = array();
@@ -118,51 +141,63 @@ class ModuleUnsubscribe extends \Module
 		// Default template variables
 		$this->Template->channels = $arrChannels;
 		$this->Template->showChannels = !$this->nl_hideChannels;
-		$this->Template->email = urldecode(\Input::get('email'));
 		$this->Template->submit = specialchars($GLOBALS['TL_LANG']['MSC']['unsubscribe']);
 		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
-		$this->Template->hasError = $blnHasError;
 	}
 
 
 	/**
-	 * Remove the recipient
+	 * Validate the subscription form
+	 *
+	 * @param \Widget $objWidget
+	 *
+	 * @return array|bool
 	 */
-	protected function removeRecipient()
+	protected function validateForm(\Widget $objWidget=null)
 	{
+		// Validate the e-mail address
+		$varInput = \Idna::encodeEmail(\Input::post('email', true));
+
+		if (!\Validator::isEmail($varInput))
+		{
+			$this->Template->mclass = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['email'];
+
+			return false;
+		}
+
+		$this->Template->email = $varInput;
+
+		// Validate the channel selection
 		$arrChannels = \Input::post('channels');
 
 		if (!is_array($arrChannels))
 		{
-			$_SESSION['UNSUBSCRIBE_ERROR'] = $GLOBALS['TL_LANG']['ERR']['noChannels'];
-			$this->reload();
+			$this->Template->mclass = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['noChannels'];
+
+			return false;
 		}
 
 		$arrChannels = array_intersect($arrChannels, $this->nl_channels); // see #3240
 
-		// Check the selection
 		if (!is_array($arrChannels) || empty($arrChannels))
 		{
-			$_SESSION['UNSUBSCRIBE_ERROR'] = $GLOBALS['TL_LANG']['ERR']['noChannels'];
-			$this->reload();
+			$this->Template->mclass = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['noChannels'];
+
+			return false;
 		}
 
-		$varInput = \Idna::encodeEmail(\Input::post('email', true));
+		$this->Template->selectedChannels = $arrChannels;
 
-		// Validate e-mail address
-		if (!\Validator::isEmail($varInput))
-		{
-			$_SESSION['UNSUBSCRIBE_ERROR'] = $GLOBALS['TL_LANG']['ERR']['email'];
-			$this->reload();
-		}
-
+		// Check if there are any new subscriptions
 		$arrSubscriptions = array();
 
-		// Get the existing active subscriptions
 		if (($objSubscription = \NewsletterRecipientsModel::findBy(array("email=? AND active=1"), $varInput)) !== null)
 		{
 			$arrSubscriptions = $objSubscription->fetchEach('pid');
@@ -170,15 +205,39 @@ class ModuleUnsubscribe extends \Module
 
 		$arrRemove = array_intersect($arrChannels, $arrSubscriptions);
 
-		// Return if there are no subscriptions to remove
 		if (!is_array($arrRemove) || empty($arrRemove))
 		{
-			$_SESSION['UNSUBSCRIBE_ERROR'] = $GLOBALS['TL_LANG']['ERR']['unsubscribed'];
-			$this->reload();
+			$this->Template->mclass = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['unsubscribed'];
+
+			return false;
 		}
 
+		// Validate the captcha
+		if ($objWidget !== null)
+		{
+			$objWidget->validate();
+
+			if ($objWidget->hasErrors())
+			{
+				return false;
+			}
+		}
+
+		return array($varInput, $arrRemove);
+	}
+
+
+	/**
+	 * Remove the recipient
+	 *
+	 * @param string $strEmail
+	 * @param array  $arrRemove
+	 */
+	protected function removeRecipient($strEmail, $arrRemove)
+	{
 		// Remove the subscriptions
-		if (($objRemove = \NewsletterRecipientsModel::findByEmailAndPids($varInput, $arrRemove)) !== null)
+		if (($objRemove = \NewsletterRecipientsModel::findByEmailAndPids($strEmail, $arrRemove)) !== null)
 		{
 			while ($objRemove->next())
 			{
@@ -191,7 +250,7 @@ class ModuleUnsubscribe extends \Module
 		$arrChannels = $objChannels->fetchEach('title');
 
 		// Log activity
-		$this->log($varInput . ' unsubscribed from ' . implode(', ', $arrChannels), __METHOD__, TL_NEWSLETTER);
+		$this->log($strEmail . ' unsubscribed from ' . implode(', ', $arrChannels), __METHOD__, TL_NEWSLETTER);
 
 		// HOOK: post unsubscribe callback
 		if (isset($GLOBALS['TL_HOOKS']['removeRecipient']) && is_array($GLOBALS['TL_HOOKS']['removeRecipient']))
@@ -199,7 +258,7 @@ class ModuleUnsubscribe extends \Module
 			foreach ($GLOBALS['TL_HOOKS']['removeRecipient'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($varInput, $arrRemove);
+				$this->$callback[0]->$callback[1]($strEmail, $arrRemove);
 			}
 		}
 
@@ -214,7 +273,7 @@ class ModuleUnsubscribe extends \Module
 		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
 		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], \Idna::decode(\Environment::get('host')));
 		$objEmail->text = \StringUtil::parseSimpleTokens($this->nl_unsubscribe, $arrData);
-		$objEmail->sendTo($varInput);
+		$objEmail->sendTo($strEmail);
 
 		// Redirect to the jumpTo page
 		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
@@ -222,7 +281,8 @@ class ModuleUnsubscribe extends \Module
 			$this->redirect($this->generateFrontendUrl($objTarget->row()));
 		}
 
-		$_SESSION['UNSUBSCRIBE_CONFIRM'] = $GLOBALS['TL_LANG']['MSC']['nl_removed'];
+		\System::getContainer()->get('session')->getFlashBag()->set('nl_removed', $GLOBALS['TL_LANG']['MSC']['nl_removed']);
+
 		$this->reload();
 	}
 }
