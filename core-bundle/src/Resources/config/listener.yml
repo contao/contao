@@ -27,7 +27,7 @@
 #
 # - 96: ExceptionConverterListener
 # - 64: ResponseExceptionListener
-# - 32: PrettyErrorScreensListener
+# - 32: PrettyErrorScreenListener
 #
 # Do not change the priorities unless you know what you are doing!
 ##
