@@ -151,8 +151,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
     /**
      * Tests that if the response object already contains the header that shall
-     * be sent using header(), it is not overridden. The response object always
-     * has priority.
+     * be sent using header(), it is not overridden. It should get merged.
      */
     public function testHeadersAreNotOverridenIfAlreadyPresentInResponse()
     {
@@ -177,7 +176,12 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $listener->onKernelResponse($responseEvent);
         $response = $responseEvent->getResponse();
+
         $this->assertTrue($response->headers->has('FOOBAR'));
-        $this->assertSame('content', $response->headers->get('FOOBAR'));
+
+        $allHeaders = $response->headers->get('FOOBAR', null, false);
+
+        $this->assertSame('content', $allHeaders[0]);
+        $this->assertSame('new-content', $allHeaders[1]);
     }
 }

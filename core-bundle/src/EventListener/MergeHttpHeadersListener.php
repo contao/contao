@@ -153,11 +153,7 @@ class MergeHttpHeadersListener
 
             $content = trim($content);
 
-            if ($response->headers->has($name)) {
-                continue;
-            }
-
-            $response->headers->set($name, $content);
+            $response->headers->set($name, $content, false);
         }
 
         return $response;
