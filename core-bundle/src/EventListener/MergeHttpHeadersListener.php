@@ -40,6 +40,11 @@ class MergeHttpHeadersListener
     private $contaoFramework;
 
     /**
+     * Remove old headers or not
+     * @var boolean
+     */
+    private $removeOldHeaders = true;
+
     /**
      * Headers
      * @var array
@@ -81,6 +86,27 @@ class MergeHttpHeadersListener
     {
         $this->headers = $headers;
     }
+
+    /**
+     * Gets whether old headers should be removed using header_remove()
+     * or not.
+     *
+     * @return boolean
+     */
+    public function getRemoveOldHeaders()
+    {
+        return $this->removeOldHeaders;
+    }
+
+    /**
+     * Sets whether old headers should be removed using header_remove()
+     * or not.
+     *
+     * @param boolean $removeOldHeaders
+     */
+    public function setRemoveOldHeaders($removeOldHeaders)
+    {
+        $this->removeOldHeaders = (bool) $removeOldHeaders;
     }
 
     /**
@@ -120,6 +146,11 @@ class MergeHttpHeadersListener
     {
         foreach ($this->getHeaders() as $header) {
             list($name, $content) = explode(':', $header, 2);
+
+            if ($this->removeOldHeaders) {
+                header_remove($name);
+            }
+
             $content = trim($content);
 
             if ($response->headers->has($name)) {
