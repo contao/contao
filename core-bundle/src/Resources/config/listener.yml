@@ -68,6 +68,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
 
+    contao.listener.merge_http_headers:
+        class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
+        arguments:
+            - "%contao.merge_http_headers_routes%"
+            - "@contao.framework"
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 256 }
+
     contao.listener.output_from_cache:
         class: Contao\CoreBundle\EventListener\OutputFromCacheListener
         arguments:
