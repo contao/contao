@@ -33,21 +33,54 @@ class MergeHttpHeadersListener
      * @var array
      */
     private $routeNames;
+
     /**
      * @var ContaoFrameworkInterface
      */
     private $contaoFramework;
 
     /**
+    /**
+     * Headers
+     * @var array
+     */
+    private $headers = [];
+
+    /**
      * Constructor.
      *
-     * @param array $routeNames
+     * @param array                    $routeNames
      * @param ContaoFrameworkInterface $contaoFramework
      */
-    public function __construct(array $routeNames, ContaoFrameworkInterface $contaoFramework)
-    {
+    public function __construct(
+        array $routeNames,
+        ContaoFrameworkInterface $contaoFramework
+    ) {
         $this->routeNames = $routeNames;
         $this->contaoFramework = $contaoFramework;
+
+        $this->setHeaders(headers_list());
+    }
+
+    /**
+     * Gets the headers.
+     *
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Sets the headers.
+     *
+     * @param array $headers
+     */
+    public function setHeaders(array $headers)
+    {
+        $this->headers = $headers;
+    }
     }
 
     /**
@@ -85,13 +118,7 @@ class MergeHttpHeadersListener
      */
     private function mergeHttpHeaders(Response $response)
     {
-        if ('cli' === PHP_SAPI && function_exists('xdebug_get_headers')) {
-            $headers = xdebug_get_headers();
-        } else {
-            $headers = headers_list();
-        }
-
-        foreach ($headers as $header) {
+        foreach ($this->getHeaders() as $header) {
             list($name, $content) = explode(':', $header, 2);
             $content = trim($content);
 
