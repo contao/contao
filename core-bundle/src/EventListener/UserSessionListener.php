@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
 use Contao\FrontendUser;
+use Contao\User;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -60,7 +61,7 @@ class UserSessionListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$this->hasUser() || !$this->isContaoMasterRequest($event)) {
+        if (!$this->hasUser() || !$this->getUserObject() instanceof User || !$this->isContaoMasterRequest($event)) {
             return;
         }
 
@@ -78,7 +79,7 @@ class UserSessionListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->hasUser() || !$this->isContaoMasterRequest($event)) {
+        if (!$this->hasUser() || !$this->getUserObject() instanceof User || !$this->isContaoMasterRequest($event)) {
             return;
         }
 
