@@ -50,17 +50,11 @@ class ScriptHandler
     {
         $extra = $event->getComposer()->getPackage()->getExtra();
 
-        if (!isset($extra['incenteev-parameters']) || !isset($extra['incenteev-parameters']['file'])) {
+        if (!isset($extra['incenteev-parameters']) || !static::canGenerateSecret($extra['incenteev-parameters'])) {
             return;
         }
 
-        $file = $extra['incenteev-parameters']['file'];
-
-        if (is_file($file)) {
-            return;
-        }
-
-        putenv('CONTAO_RANDOM_SECRET=' . md5(uniqid(mt_rand(), true)));
+        putenv('CONTAO_RANDOM_SECRET=' . bin2hex(random_bytes(32)));
     }
 
     /**
@@ -90,5 +84,31 @@ class ScriptHandler
         if (!$process->isSuccessful()) {
             throw new \RuntimeException('An error occurred while executing the "' . $cmd . '" command.');
         }
+    }
+
+    /**
+     * Validates that we can generate a random secret.
+     * We need to make sure at least one file is defined in the config but none of the files exist.
+     *
+     * @param array $config
+     *
+     * @return bool
+     */
+    private static function canGenerateSecret(array $config)
+    {
+        // "incenteev-parameters" config can be an array of files.
+        if (!isset($config['file'])) {
+            $result = false;
+
+            foreach ($config as $v) {
+                if (is_array($v) && isset($v['file']) && !is_file($v['file'])) {
+                    $result = true;
+                }
+            }
+
+            return $result;
+        }
+
+        return !is_file($config['file']);
     }
 }
