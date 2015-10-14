@@ -8,17 +8,14 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Adapter;
-
+namespace Contao\CoreBundle\Framework;
 
 /**
- * Interface for Adapter factories.
+ * Interface for the Contao framework initializer.
  *
  * @author Yanick Witschi <https://github.com/toflar>
- *
- * @internal
  */
-interface AdapterFactoryInterface
+interface ContaoFrameworkInterface extends \Contao\CoreBundle\ContaoFrameworkInterface
 {
     /**
      * Creates a new instance of a given class.

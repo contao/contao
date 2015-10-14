@@ -12,6 +12,8 @@ namespace Contao\CoreBundle;
 
 use Contao\ClassLoader;
 use Contao\CoreBundle\Adapter\ConfigAdapter;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
@@ -34,7 +36,8 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  * @author Dominik Tomasi <https://github.com/dtomasi>
  * @author Andreas Schempp <https://github.com/aschempp>
  *
- * @internal
+ * @deprecated Deprecated since Contao 4.1, to be removed in 5.0
+ *             Use the ContaoFramework in the Framework namespace.
  */
 class ContaoFramework implements ContaoFrameworkInterface
 {
@@ -102,6 +105,12 @@ class ContaoFramework implements ContaoFrameworkInterface
     ];
 
     /**
+     * Adapter class cache
+     * @var array
+     */
+    private $adapterCache = [];
+
+    /**
      * Constructor.
      *
      * @param RequestStack              $requestStack  The request stack
@@ -164,6 +173,56 @@ class ContaoFramework implements ContaoFrameworkInterface
 
         $this->setConstants();
         $this->initializeFramework();
+    }
+
+    /**
+     * Creates a new instance of a given class.
+     *
+     * @param string $class Fully qualified class name.
+     * @param array $args Constructor arguments.
+     *
+     * @return mixed
+     */
+    public function createInstance($class, $args = [])
+    {
+        $reflection = new \ReflectionClass($class);
+        return $reflection->newInstanceArgs($args);
+    }
+
+    /**
+     * Returns an adapter class for a given class.
+     *
+     * @param string $class Fully qualified class name.
+     *
+     * @return Adapter
+     */
+    public function getAdapter($class)
+    {
+        if (!isset($this->adapterCache[$class])) {
+            $this->adapterCache[$class] = new Adapter($class);
+        }
+
+        return $this->adapterCache[$class];
+    }
+
+    protected function configPreload()
+    {
+        $this->config->preload();
+    }
+
+    protected function configInitialize()
+    {
+        $this->config->initialize();
+    }
+
+    protected function configIsComplete()
+    {
+        return $this->config->isComplete();
+    }
+
+    protected function configGet($key)
+    {
+        return $this->config->get($key);
     }
 
     /**
@@ -275,7 +334,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         System::setContainer($this->container);
 
         // Preload the configuration (see #5872)
-        $this->config->preload();
+        $this->configPreload();
 
         // Register the class loader
         ClassLoader::scanAndRegister();
@@ -284,7 +343,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         $this->setDefaultLanguage();
 
         // Fully load the configuration
-        $this->config->initialize();
+        $this->configInitialize();
 
         $this->validateInstallation();
 
@@ -294,7 +353,7 @@ class ContaoFramework implements ContaoFrameworkInterface
 
         // Set the mbstring encoding
         if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
-            mb_regex_encoding($this->config->get('characterSet'));
+            mb_regex_encoding($this->configGet('characterSet'));
         }
 
         $this->triggerInitializeSystemHook();
@@ -366,7 +425,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         // Show the "incomplete installation" message
-        if (!$this->config->isComplete()) {
+        if (!$this->configIsComplete()) {
             throw new IncompleteInstallationException(
                 'The installation has not been completed. Open the Contao install tool to continue.'
             );
@@ -378,8 +437,8 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function setTimezone()
     {
-        $this->iniSet('date.timezone', $this->config->get('timeZone'));
-        date_default_timezone_set($this->config->get('timeZone'));
+        $this->iniSet('date.timezone', $this->configGet('timeZone'));
+        date_default_timezone_set($this->configGet('timeZone'));
     }
 
     /**

@@ -18,7 +18,8 @@ use Contao\Config;
  * @author Yanick Witschi <https://github.com/toflar>
  *
  * @internal
- * @deprecated Use the AdapterFactory instead.
+ * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
+ *             Use the framework adapters instead.
  */
 class ConfigAdapter
 {
