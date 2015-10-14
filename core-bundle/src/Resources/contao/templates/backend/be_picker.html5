@@ -54,7 +54,7 @@
             <button type="submit" name="search" class="tl_submit"><?= $this->search ?></button>
           </div>
         </form>
-        <?php if ($this->value != ''): ?>
+        <?php if ($this->searchExclude && $this->value != ''): ?>
           <div class="tl_message tl_message_picker">
             <p class="tl_info"><?= $this->searchExclude ?></p>
           </div>
