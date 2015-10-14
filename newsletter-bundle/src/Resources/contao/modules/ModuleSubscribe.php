@@ -117,7 +117,7 @@ class ModuleSubscribe extends \Module
 			}
 		}
 
-		// Add the captch widget to the template
+		// Add the captcha widget to the template
 		if ($objWidget !== null)
 		{
 			$this->Template->captcha = $objWidget->parse();
