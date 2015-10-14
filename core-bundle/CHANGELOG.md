@@ -5,6 +5,9 @@ Version 4.1.0-beta1 (2015-XX-XX)
 --------------------------------
 
 ### New
+Add the "env::base_url" insert tag (see #322).
+
+### New
 Make the file manager and file picker searchable (see contao/core#7196).
 
 ### New

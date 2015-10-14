@@ -835,6 +835,12 @@ class InsertTags extends \Controller
 						case 'script_url':
 							$arrCache[$strTag] = TL_ASSETS_URL;
 							break;
+
+						case 'base_url':
+							$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+
+							$arrCache[$strTag] = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . '/';
+							break;
 					}
 					break;
 
