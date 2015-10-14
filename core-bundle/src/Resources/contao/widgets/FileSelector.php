@@ -75,7 +75,7 @@ class FileSelector extends \Widget
 		// Store the keyword
 		if (\Input::post('FORM_SUBMIT') == 'item_selector')
 		{
-			$objSessionBag->set('file_selector_search', \Input::post('keyword'));
+			$objSessionBag->set('file_selector_search', \Input::post('keyword', true));
 			$this->reload();
 		}
 
@@ -150,7 +150,7 @@ class FileSelector extends \Widget
 			catch (\Exception $e) {}
 
 			// Build the tree
-			foreach (array_unique($arrPaths) as $path)
+			foreach ($this->eliminateNestedPaths(array_unique($arrPaths)) as $path)
 			{
 				$tree .= $this->renderFiletree(TL_ROOT . '/' . $path, 0, true, $this->isProtectedPath($path), $for);
 			}
@@ -394,7 +394,6 @@ class FileSelector extends \Widget
 		{
 			$countFiles = 0;
 			$content = scan($folders[$f]);
-			$return .= "\n    " . '<li class="'.$folderClass.' toggle_select hover-div"><div class="tl_left" style="padding-left:'.$intMargin.'px">';
 
 			// Check whether there are subfolders or files
 			foreach ($content as $v)
@@ -403,6 +402,19 @@ class FileSelector extends \Widget
 				{
 					$countFiles++;
 				}
+
+				if ($for != '')
+				{
+					if (!preg_match('/' . str_replace('/', '\\/', $for) . '/', $folders[$f] . '/' . $v))
+					{
+						--$countFiles;
+					}
+				}
+			}
+
+			if ($for != '' && $countFiles < 1)
+			{
+				continue;
 			}
 
 			$tid = md5($folders[$f]);
@@ -410,6 +422,7 @@ class FileSelector extends \Widget
 			$session[$node][$tid] = is_numeric($session[$node][$tid]) ? $session[$node][$tid] : 0;
 			$currentFolder = str_replace(TL_ROOT . '/', '', $folders[$f]);
 			$blnIsOpen = ($for != '' || $session[$node][$tid] == 1 || count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
+			$return .= "\n    " . '<li class="'.$folderClass.' toggle_select hover-div"><div class="tl_left" style="padding-left:'.$intMargin.'px">';
 
 			// Add a toggle button if there are childs
 			if ($countFiles > 0)

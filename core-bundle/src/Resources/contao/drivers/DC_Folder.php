@@ -257,6 +257,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		/** @var SessionInterface $objSession */
 		$objSession = \System::getContainer()->get('session');
 
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $objSession->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
+
 		// Add to clipboard
 		if (\Input::get('act') == 'paste')
 		{
@@ -280,11 +285,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Get the session data and toggle the nodes
 		if (\Input::get('tg') == 'all')
 		{
-			/** @var AttributeBagInterface $objSessionBag */
-			$objSessionBag = $objSession->getBag('contao_backend');
-
-			$session = $objSessionBag->all();
-
 			// Expand tree
 			if (!is_array($session['filetree']) || empty($session['filetree']) || current($session['filetree']) != 1)
 			{
@@ -316,18 +316,80 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$this->import('Files');
 		$this->import('BackendUser', 'User');
 
-		// Call recursive function tree()
-		if (empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
+		// Limit the results by modifying $this->root
+		if ($session['search'][$this->strTable]['value'] != '')
 		{
-			$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false));
+			$fld = $session['search'][$this->strTable]['field'];
+			$for = $session['search'][$this->strTable]['value'];
+
+			$strPattern = "CAST(%s AS CHAR) REGEXP ?";
+
+			if (substr(\Config::get('dbCollation'), -3) == '_ci')
+			{
+				$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
+			}
+
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
+			{
+				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
+
+				$objRoot = $this->Database->prepare("SELECT path, type FROM {$this->strTable} WHERE (" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ") GROUP BY path")
+										  ->execute($for, $for);
+			}
+			else
+			{
+				$objRoot = $this->Database->prepare("SELECT path, type FROM {$this->strTable} WHERE " . sprintf($strPattern, $fld) . " GROUP BY path")
+										  ->execute($for);
+			}
+
+			if ($objRoot->numRows > 0)
+			{
+				$arrRoot = array();
+
+				// Respect existing limitations (root IDs)
+				if (is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'])) # FIXME
+				{
+					while ($objRoot->next())
+					{
+						foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] as $root)
+						{
+							if (strncmp($root . '/', $objRoot->path . '/', strlen($root) + 1) === 0)
+							{
+								$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
+								continue(2);
+							}
+						}
+					}
+				}
+				else
+				{
+					while ($objRoot->next())
+					{
+						$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
+					}
+				}
+
+				foreach ($this->eliminateNestedPaths(array_unique($arrRoot)) as $path)
+				{
+					$return .= $this->generateTree(TL_ROOT . '/' . $path, 0, true, $this->isProtectedPath($path), ($blnClipboard ? $arrClipboard : false), $fld, $for);
+				}
+			}
 		}
 		else
 		{
-			for ($i=0, $c=count($this->arrFilemounts); $i<$c; $i++)
+			// Call recursive function tree()
+			if (empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
 			{
-				if ($this->arrFilemounts[$i] != '' && is_dir(TL_ROOT . '/' . $this->arrFilemounts[$i]))
+				$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false));
+			}
+			else
+			{
+				for ($i=0, $c=count($this->arrFilemounts); $i<$c; $i++)
 				{
-					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false));
+					if ($this->arrFilemounts[$i] != '' && is_dir(TL_ROOT . '/' . $this->arrFilemounts[$i]))
+					{
+						$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false));
+					}
 				}
 			}
 		}
@@ -349,7 +411,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$imagePasteInto = \Image::getHtml('pasteinto.gif', $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][0]);
 
 		// Build the tree
-		$return = '
+		$return = $this->searchMenu() . '
 <div id="tl_buttons">'.((\Input::get('act') == 'select') ? '
 <a href="'.$this->getReferer(true).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : '') . ((\Input::get('act') != 'select' && !$blnClipboard) ? '
 <a href="'.$this->addToUrl($hrfNew).'" class="'.$clsNew.'" title="'.specialchars($ttlNew).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$lblNew.'</a> ' . ((!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '<a href="'.$this->addToUrl('&amp;act=paste&amp;mode=move').'" class="header_new" title="'.specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]).'" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['move'][0].'</a> ' : '') . $this->generateGlobalButtons() : '') . ($blnClipboard ? '<a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : '') . '
@@ -358,7 +420,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
 <div class="tl_formbody">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').($blnClipboard ? '
+<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').(($session['search'][$this->strTable]['value'] != '') ? '
+
+<div class="tl_message tl_message_picker">
+ <p class="tl_info">'.$GLOBALS['TL_LANG']['MSC']['searchExclude'].'</p>
+</div>' : '').($blnClipboard ? '
 
 <div id="paste_hint">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
@@ -2308,10 +2374,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * @param boolean $mount
 	 * @param boolean $blnProtected
 	 * @param array   $arrClipboard
+	 * @param string  $fld
+	 * @param string  $for
 	 *
 	 * @return string
 	 */
-	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null)
+	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null, $fld='', $for='')
 	{
 		static $session;
 
@@ -2395,6 +2463,18 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					--$countFiles;
 				}
+				elseif ($for != '')
+				{
+					if (($fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', $file)) || ($fld == 'path' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', $currentFolder . '/' . $file)) || ($fld == 'extension' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', pathinfo($currentFolder . '/' . $file, PATHINFO_EXTENSION))))
+					{
+						--$countFiles;
+					}
+				}
+			}
+
+			if ($for != '' && $countFiles < 1)
+			{
+				continue;
 			}
 
 			$return .= "\n  " . '<li class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + (($countFiles < 1) ? 20 : 0)).'px">';
@@ -2402,8 +2482,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Add a toggle button if there are childs
 			if ($countFiles > 0)
 			{
-				$img = ($session['filetree'][$md5] == 1) ? 'folMinus.gif' : 'folPlus.gif';
-				$alt = ($session['filetree'][$md5] == 1) ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
+				$img = ($for != '' || $session['filetree'][$md5] == 1) ? 'folMinus.gif' : 'folPlus.gif';
+				$alt = ($for != '' || $session['filetree'][$md5] == 1) ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
 				$return .= '<a href="'.$this->addToUrl('tg='.$md5).'" title="'.specialchars($alt).'" onclick="Backend.getScrollOffset(); return AjaxRequest.toggleFileManager(this, \'filetree_'.$md5.'\', \''.$currentFolder.'\', '.$level.')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
 			}
 
@@ -2446,10 +2526,10 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$return .= '</div><div style="clear:both"></div></li>';
 
 			// Call the next node
-			if (!empty($content) && $session['filetree'][$md5] == 1)
+			if ($for != '' || (!empty($content) && $session['filetree'][$md5] == 1))
 			{
 				$return .= '<li class="parent" id="filetree_'.$md5.'"><ul class="level_'.$level.'">';
-				$return .= $this->generateTree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrClipboard);
+				$return .= $this->generateTree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrClipboard, $fld, $for);
 				$return .= '</ul></li>';
 			}
 		}
@@ -2457,6 +2537,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Process files
 		for ($h=0, $c=count($files); $h<$c; $h++)
 		{
+			// Ignore files not matching the search criteria
+			if ($for != '' && (($fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', basename($files[$h]))) || ($fld == 'path' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', $files[$h])) || ($fld == 'extension' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', pathinfo($files[$h], PATHINFO_EXTENSION)))))
+			{
+				continue;
+			}
+
 			$thumbnail = '';
 			$popupWidth = 600;
 			$popupHeight = 161;
@@ -2545,6 +2631,107 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		return $return;
+	}
+
+
+	/**
+	 * Return a search form that allows to search results using regular expressions
+	 *
+	 * @return string
+	 */
+	protected function searchMenu()
+	{
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
+
+		// Store search value in the current session
+		if (\Input::post('FORM_SUBMIT') == 'tl_filters')
+		{
+			$session['search'][$this->strTable]['value'] = '';
+			$session['search'][$this->strTable]['field'] = \Input::post('tl_field', true);
+
+			// Make sure the regular expression is valid
+			if (\Input::postRaw('tl_value') != '')
+			{
+				try
+				{
+					$this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . \Input::post('tl_field', true) . " REGEXP ?")
+								   ->limit(1)
+								   ->execute(\Input::postRaw('tl_value'));
+
+					$session['search'][$this->strTable]['value'] = \Input::postRaw('tl_value');
+				}
+				catch (\Exception $e) {}
+			}
+
+			$objSessionBag->replace($session);
+			$this->reload();
+		}
+
+		// Set the search value from the session
+		elseif ($session['search'][$this->strTable]['value'] != '')
+		{
+			$strPattern = "CAST(%s AS CHAR) REGEXP ?";
+
+			if (substr(\Config::get('dbCollation'), -3) == '_ci')
+			{
+				$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
+			}
+
+			$fld = $session['search'][$this->strTable]['field'];
+
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
+			{
+				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
+				$this->procedure[] = "(" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ")";
+				$this->values[] = $session['search'][$this->strTable]['value'];
+			}
+			else
+			{
+				$this->procedure[] = sprintf($strPattern, $fld);
+			}
+
+			$this->values[] = $session['search'][$this->strTable]['value'];
+		}
+
+		$options_sorter = array();
+
+		// Currently only name, path and extension are supported
+		foreach (array('name', 'path', 'extension') as $field)
+		{
+			$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: (is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field]);
+			$options_sorter[Utf8::toAscii($option_label).'_'.$field] = '  <option value="'.specialchars($field).'"'.(($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '').'>'.$option_label.'</option>';
+		}
+
+		// Sort by option values
+		$options_sorter = natcaseksort($options_sorter);
+		$active = ($session['search'][$this->strTable]['value'] != '') ? true : false;
+
+		return '
+
+<form action="'.ampersand(\Environment::get('request'), true).'" class="tl_form" method="post">
+<div class="tl_formbody">
+<input type="hidden" name="FORM_SUBMIT" value="tl_filters">
+<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
+<div class="tl_panel">
+  <div class="tl_submit_panel tl_subpanel">
+    <input type="image" name="filter" id="filter" src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/reload.gif" class="tl_img_submit" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
+  </div>
+  <div class="tl_search tl_subpanel">
+    <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
+    <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
+      '.implode("\n", $options_sorter).'
+    </select>
+    <span> = </span>
+    <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="'.specialchars($session['search'][$this->strTable]['value']).'">
+  </div>
+  <div class="clear"></div>
+</div>
+</div>
+</form>
+';
 	}
 
 
@@ -2673,5 +2860,29 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		return $arrFiles;
+	}
+
+
+	/**
+	 * Check if a path is protected (see #287)
+	 *
+	 * @param string $path
+	 *
+	 * @return boolean
+	 */
+	protected function isProtectedPath($path)
+	{
+		do
+		{
+			if (file_exists(TL_ROOT . '/' . $path . '/.public'))
+			{
+				return false;
+			}
+
+			$path = dirname($path);
+		}
+		while ($path != '.');
+
+		return true;
 	}
 }

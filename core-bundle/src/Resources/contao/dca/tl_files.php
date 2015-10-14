@@ -147,11 +147,13 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'path' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['path'],
 			'eval'                    => array('unique'=>true),
 			'sql'                     => "varchar(1022) NOT NULL default ''",
 		),
 		'extension' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['extension'],
 			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
 		'hash' => array

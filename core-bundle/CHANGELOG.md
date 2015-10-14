@@ -5,7 +5,7 @@ Version 4.1.0-beta1 (2015-XX-XX)
 --------------------------------
 
 ### New
-Make the file picker searchable (see contao/core#7196).
+Make the file manager and file picker searchable (see contao/core#7196).
 
 ### New
 Show the website title in the back end (see contao/core#7840).

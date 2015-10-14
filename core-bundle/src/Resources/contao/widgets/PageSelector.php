@@ -70,7 +70,7 @@ class PageSelector extends \Widget
 		// Store the keyword
 		if (\Input::post('FORM_SUBMIT') == 'item_selector')
 		{
-			$objSessionBag->set('page_selector_search', \Input::post('keyword'));
+			$objSessionBag->set('page_selector_search', \Input::post('keyword', true));
 			$this->reload();
 		}
 

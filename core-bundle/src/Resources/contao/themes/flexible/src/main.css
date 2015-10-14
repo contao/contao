@@ -408,6 +408,8 @@ input[type=search]::-webkit-search-decoration {
 #search .tl_text {
 	width:160px;
 	padding:3px 2px;
+	-webkit-appearance:textfield;
+	box-sizing:content-box;
 }
 .mac #search .tl_text {
 	padding:4px 2px;
