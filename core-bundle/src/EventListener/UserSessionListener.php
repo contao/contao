@@ -79,11 +79,15 @@ class UserSessionListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->hasUser() || !$this->getUserObject() instanceof User || !$this->isContaoMasterRequest($event)) {
+        if (!$this->hasUser() || !$this->isContaoMasterRequest($event)) {
             return;
         }
 
         $user = $this->getUserObject();
+
+        if (!$this->getUserObject() instanceof User) {
+            return;
+        }
 
         $this->connection
             ->prepare('UPDATE ' . $user->getTable() . ' SET session=? WHERE id=?')
