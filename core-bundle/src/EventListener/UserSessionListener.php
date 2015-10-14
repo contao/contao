@@ -85,7 +85,7 @@ class UserSessionListener
 
         $user = $this->getUserObject();
 
-        if (!$this->getUserObject() instanceof User) {
+        if (!$user instanceof User) {
             return;
         }
 
