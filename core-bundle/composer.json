@@ -22,6 +22,7 @@
         "doctrine/doctrine-bundle": "~1.4",
         "leafo/scssphp": "~0.1",
         "league/uri": "~4.0",
+        "lexik/maintenance-bundle": "~2.0",
         "matthiasmullie/minify": "~1.3",
         "michelf/php-markdown": "~1.4",
         "oyejorge/less.php": "~1.7",
