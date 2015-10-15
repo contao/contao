@@ -15,6 +15,7 @@ use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\Framework\Adapter\AdapterInterface;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
@@ -179,41 +180,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Mocks a Config adapter.
-     *
-     * @return ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject The config adapter
-     */
-    protected function mockConfig()
-    {
-        $config = $this->getMock('Contao\\CoreBundle\\Adapter\\ConfigAdapter', ['isComplete']);
-
-        $config
-            ->expects($this->any())
-            ->method('isComplete')
-            ->willReturn(true)
-        ;
-
-        $config
-            ->expects($this->any())
-            ->method('get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'characterSet':
-                        return 'UTF-8';
-
-                    case 'timeZone':
-                        return 'Europe/Berlin';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        return $config;
-    }
-
-    /**
      * Mocks a container with scopes.
      *
      * @return Container|\PHPUnit_Framework_MockObject_MockObject The container object
@@ -225,6 +191,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
         $container->setParameter('kernel.root_dir', $this->getRootDir());
         $container->setParameter('kernel.cache_dir', $this->getCacheDir());
+        $container->setParameter('kernel.debug', false);
 
         $container->set(
             'contao.resource_finder',
@@ -254,7 +221,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      * @param RequestStack                   $requestStack  The request stack
      * @param RouterInterface                $router        The router object
      * @param CsrfTokenManagerInterface|null $tokenManager  An optional token manager
-     * @param ConfigAdapter|null             $configAdatper An optional config adapter
+     * @param AdapterInterface|null          $configAdapter An optional config adapter
      *
      * @return ContaoFramework The object instance
      */
@@ -262,11 +229,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         RequestStack $requestStack = null,
         RouterInterface $router = null,
         CsrfTokenManagerInterface $tokenManager = null,
-        ConfigAdapter $configAdatper = null
+        AdapterInterface $configAdapter = null
     ) {
-        // Ensure to use the fixtures class
-        Config::preload();
-
         $container = $this->mockContainerWithContaoScopes();
 
         if (null === $requestStack) {
@@ -284,18 +248,43 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             );
         }
 
-        if (null === $configAdatper) {
-            $configAdatper = $this->mockConfig();
+        if (null === $configAdapter) {
+            $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter\\GeneralAdapter')
+                ->disableOriginalConstructor()
+                ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
+                ->getMock();
+            $configAdapter
+                ->expects($this->any())
+                ->method('isComplete')
+                ->willReturn(true)
+            ;
+
+            $configAdapter
+                ->expects($this->any())
+                ->method('get')
+                ->willReturnCallback(function ($key) {
+                    switch ($key) {
+                        case 'characterSet':
+                            return 'UTF-8';
+
+                        case 'timeZone':
+                            return 'Europe/Berlin';
+
+                        default:
+                            return null;
+                    }
+                })
+            ;
         }
 
-        $framework = new ContaoFramework(
+        $framework = new \Contao\CoreBundle\Framework\ContaoFramework(
             $requestStack,
             $router,
             $this->mockSession(),
             $this->getRootDir() . '/app',
             $tokenManager,
             'contao_csrf_token',
-            $configAdatper,
+            $configAdapter,
             error_reporting()
         );
 
