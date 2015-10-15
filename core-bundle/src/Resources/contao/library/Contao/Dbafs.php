@@ -56,6 +56,24 @@ class Dbafs
 			throw new \InvalidArgumentException("Invalid resource $strResource");
 		}
 
+		$objModel = \FilesModel::findByPath($strResource);
+
+		// Return the model if it exists already
+		if ($objModel !== null)
+		{
+			$objFile = ($objModel->type == 'folder') ? new \Folder($objModel->path) : new \File($objModel->path);
+
+			// Update the timestamp and file hash (see #4818, #7828)
+			if ($objModel->hash != $objFile->hash)
+			{
+				$objModel->tstamp = time();
+				$objModel->hash   = $objFile->hash;
+				$objModel->save();
+			}
+
+			return $objModel;
+		}
+
 		$arrPaths    = array();
 		$arrChunks   = explode('/', $strResource);
 		$strPath     = array_shift($arrChunks);
@@ -72,7 +90,6 @@ class Dbafs
 
 		unset($arrChunks);
 
-		$objModel  = null;
 		$objModels = \FilesModel::findMultipleByPaths($arrPaths);
 
 		// Unset the entries in $arrPaths if the DB entry exists
@@ -85,19 +102,7 @@ class Dbafs
 					unset($arrPaths[$i]);
 					$arrPids[$objModels->path] = $objModels->uuid;
 				}
-
-				// Store the model if it exists
-				if ($objModels->path == $strResource)
-				{
-					$objModel = $objModels->current();
-				}
 			}
-		}
-
-		// Return the model if it exists already
-		if (empty($arrPaths))
-		{
-			return $objModel;
 		}
 
 		$arrPaths = array_values($arrPaths);

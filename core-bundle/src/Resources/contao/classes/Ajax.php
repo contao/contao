@@ -321,7 +321,14 @@ class Ajax extends \Backend
 					{
 						foreach ($varValue as $k=>$v)
 						{
-							$varValue[$k] = \Dbafs::addResource($v)->uuid;
+							$objFile = \FilesModel::findByPath($v);
+
+							if ($objFile === null)
+							{
+								$objFile = \Dbafs::addResource($v);
+							}
+
+							$varValue[$k] = $objFile->uuid;
 						}
 					}
 

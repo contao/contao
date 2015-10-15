@@ -4,6 +4,9 @@ Contao core bundle change log
 Version 4.1.0-beta1 (2015-XX-XX)
 --------------------------------
 
+### Changed
+Update the hash of an existing file in `Dbafs::addResource()` (see contao/core#7828).
+
 ### New
 Add the "env::base_url" insert tag (see #322).
 

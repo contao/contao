@@ -267,20 +267,7 @@ class FormFileUpload extends \Widget implements \uploadable
 
 					// Generate the DB entries
 					$strFile = $strUploadFolder . '/' . $file['name'];
-					$objFile = \FilesModel::findByPath($strFile);
-
-					// Existing file is being replaced (see #4818)
-					if ($objFile !== null)
-					{
-						$objFile->tstamp = time();
-						$objFile->path   = $strFile;
-						$objFile->hash   = md5_file(TL_ROOT . '/' . $strFile);
-						$objFile->save();
-					}
-					else
-					{
-						$objFile = \Dbafs::addResource($strFile);
-					}
+					$objFile = \Dbafs::addResource($strFile);
 
 					// Update the hash of the target folder
 					\Dbafs::updateFolderHashes($strUploadFolder);
