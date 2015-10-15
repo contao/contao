@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
 use Contao\FrontendUser;
+use Contao\User;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -64,7 +65,13 @@ class UserSessionListener
             return;
         }
 
-        $session = $this->getUserObject()->session;
+        $userObj = $this->getUserObject();
+
+        if (!$userObj instanceof User) {
+            return;
+        }
+
+        $session = $userObj->session;
 
         if (is_array($session)) {
             $this->getSessionBag()->replace($session);
@@ -83,6 +90,10 @@ class UserSessionListener
         }
 
         $user = $this->getUserObject();
+
+        if (!$user instanceof User) {
+            return;
+        }
 
         $this->connection
             ->prepare('UPDATE ' . $user->getTable() . ' SET session=? WHERE id=?')
