@@ -46,6 +46,7 @@ class ValidatorTest extends TestCase
             ['very.common@example.com', true],
             ['a.little.lengthy.but.fine@dept.example.com', true],
             ['disposable.style.email.with+symbol@example.com', true],
+            ['other.email-with-dash@example.com', true],
             ['user@[IPv6:2001:db8:1ff::a0b:dbd0]', true],
             ['"very.unusual.@.unusual.com"@example.com', true],
             ['"very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com', true],
@@ -63,6 +64,35 @@ class ValidatorTest extends TestCase
             ['test@[IPv6:2001::7344]', true],
             ['test@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', true],
             ['test+reference@example.com', true],
+
+            // New TLDs
+            ['test@example.photography', true],
+            ['test@sub-domain.example.photography', true],
+
+            // Valid ones with Unicode characters in the local part
+            ['niceändsimple@example.com', true],
+            ['véry.çommon@example.com', true],
+            ['a.lîttle.lengthy.but.fiñe@dept.example.com', true],
+            ['dîsposable.style.émail.with+symbol@example.com', true],
+            ['other.émail-with-dash@example.com', true],
+            ['üser@[IPv6:2001:db8:1ff::a0b:dbd0]', true],
+            ['"verî.uñusual.@.uñusual.com"@example.com', true],
+            ['"verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com', true],
+            ['tést@example.com', true],
+            ['tést.child@example.com', true],
+            ['tést@exämple.com', true],
+            ['tést@ä-.xe', true],
+            ['tést@subexample.wizard', true],
+            ['tést@wähwähwäh.ümläüts.de', true],
+            ['"tés@t"@wähwähwäh.ümläüts.de', true],
+            ['tést@[255.255.255.255]', true],
+            ['tést@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', true],
+            ['tést@[IPv6:2001::7344]', true],
+            ['tést@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', true],
+            ['tést+reference@example.com', true],
+            ['üñîçøðé@example.com', true],
+            ['"üñîçøðé"@example.com', true],
+            ['ǅǼ੧ఘⅧ⒇৪@example.com', true],
 
             // Invalid ones in even more uglier permutations and all not allowed by RFCs
             ['test..child@example.com', false],
