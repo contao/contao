@@ -5,6 +5,9 @@ Version 4.0.4 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Remove the SMTP settings from the back end editor (see #363).
+
+### Fixed
 Do not stop parsing DCA files if a `database.sql` file is missing (see #349).
 
 ### Fixed
