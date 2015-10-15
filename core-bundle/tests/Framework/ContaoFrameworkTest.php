@@ -8,11 +8,12 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test;
+namespace Contao\CoreBundle\Test\Framework;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -36,7 +37,8 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/')
         );
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ContaoFramework', $framework);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\ContaoFramework', $framework);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\ContaoFrameworkInterface', $framework);
     }
 
     /**
@@ -209,7 +211,7 @@ class ContaoFrameworkTest extends TestCase
                     $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
                 ),
                 'contao_csrf_token',
-                $this->mockConfig(),
+                null,
                 error_reporting(),
             ])
             ->setMethods(['isInitialized'])
@@ -367,7 +369,10 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $config = $this->getMock('Contao\\CoreBundle\\Adapter\\ConfigAdapter', ['isComplete']);
+        $config = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter\\GeneralAdapter')
+            ->disableOriginalConstructor()
+            ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
+            ->getMock();
 
         $config
             ->expects($this->any())
@@ -402,4 +407,5 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($container);
         $framework->initialize();
     }
+
 }

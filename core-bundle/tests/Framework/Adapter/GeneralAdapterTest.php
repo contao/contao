@@ -10,25 +10,26 @@
 
 namespace Contao\CoreBundle\Test\Adapter;
 
-use Contao\CoreBundle\Adapter\Adapter;
+use Contao\CoreBundle\Framework\Adapter\GeneralAdapter;
 use Contao\CoreBundle\Test\TestCase;
 
 
 /**
- * Tests the Adapter class.
+ * Tests the GeneralAdapter class.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class AdapterTest extends TestCase
+class GeneralAdapterTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $adapter = new Adapter('Dummy');
+        $adapter = new GeneralAdapter('Dummy');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Adapter\\Adapter', $adapter);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\Adapter\\GeneralAdapter', $adapter);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\Adapter\\AdapterInterface', $adapter);
     }
 
     /**
@@ -36,7 +37,7 @@ class AdapterTest extends TestCase
      */
     public function testMagicCall()
     {
-        $adapter = new Adapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass');
+        $adapter = new GeneralAdapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass');
 
         $this->assertEquals(['staticMethod', 1, 2], $adapter->staticMethod(1, 2));
     }
@@ -46,7 +47,7 @@ class AdapterTest extends TestCase
      */
     public function testMagicCallMissingMethod()
     {
-        $adapter = new Adapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass');
+        $adapter = new GeneralAdapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass');
 
         $this->setExpectedException('PHPUnit_Framework_Error');
         $adapter->missingMethod();

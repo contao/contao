@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Framework;
+namespace Contao\CoreBundle\Framework\Adapter;
 
 /**
  * A general Adapter class building a wrapper around any class that is not
@@ -18,7 +18,7 @@ namespace Contao\CoreBundle\Framework;
  * @author Yanick Witschi <https://github.com/toflar>
  *
  */
-final class Adapter
+class GeneralAdapter implements AdapterInterface
 {
     /**
      * Class name.
