@@ -176,6 +176,11 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     public function createInstance($class, $args = [])
     {
+        if (in_array('getInstance', get_class_methods($class))) {
+
+            return call_user_func_array([$class, 'getInstance'], $args);
+        }
+
         $reflection = new \ReflectionClass($class);
         return $reflection->newInstanceArgs($args);
     }

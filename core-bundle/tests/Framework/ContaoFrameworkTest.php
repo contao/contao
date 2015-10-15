@@ -415,4 +415,37 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
     }
 
+    /**
+     * Tests the createInstance method.
+     */
+    public function testCreateInstance()
+    {
+        $framework = $this->mockContaoFramework();
+        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass';
+        $instance = $framework->createInstance($class, [1, 2]);
+        $this->assertInstanceOf($class, $instance);
+        $this->assertEquals([1, 2], $instance->constructorArgs);
+    }
+
+    /**
+     * Tests the createInstance method for a singleton class.
+     */
+    public function testCreateInstanceSingelton()
+    {
+        $framework = $this->mockContaoFramework();
+        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacySingletonClass';
+        $instance = $framework->createInstance($class, [1, 2]);
+        $this->assertInstanceOf($class, $instance);
+        $this->assertEquals([1, 2], $instance->constructorArgs);
+    }
+
+    /**
+     * Tests the getAdapter method.
+     */
+    public function testGetAdapter()
+    {
+        $framework = $this->mockContaoFramework();
+        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass';
+        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\Adapter\\GeneralAdapter', $framework->getAdapter($class));
+    }
 }
