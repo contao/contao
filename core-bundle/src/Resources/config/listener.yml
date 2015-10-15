@@ -1,3 +1,12 @@
+parameters:
+    contao:
+        merge_http_headers_routes:
+            - contao_root
+            - contao_catch_all
+            - contao_frontend
+            - contao_frontend_cron
+            - contao_frontend_share
+
 ##
 # Listener priorities
 #
