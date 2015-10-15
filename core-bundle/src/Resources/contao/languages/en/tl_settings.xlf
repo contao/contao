@@ -218,12 +218,6 @@
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.0">
-        <source>Simultaneous file uploads</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.1">
-        <source>Here you can enter the maximum number of simultaneous file uploads.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
       </trans-unit>

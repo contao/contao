@@ -40,7 +40,7 @@ class DropZone extends \FileUpload
 		return '
   <input type="hidden" name="action" value="fileupload">
   <div class="fallback">
-    <input type="file" name="' . $this->strName . '[]" multiple>
+    <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" onfocus="Backend.getScrollOffset()" multiple>
   </div>
   <div class="dz-container">
     <div class="dz-default dz-message">
