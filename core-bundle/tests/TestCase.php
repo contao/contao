@@ -16,6 +16,7 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoFramework;
 use Contao\CoreBundle\Framework\Adapter\AdapterInterface;
+use Contao\CoreBundle\Framework\Adapter\GeneralAdapter;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
@@ -249,47 +250,77 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         }
 
         if (null === $configAdapter) {
-            $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter\\GeneralAdapter')
-                ->disableOriginalConstructor()
-                ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
-                ->getMock();
-            $configAdapter
-                ->expects($this->any())
-                ->method('isComplete')
-                ->willReturn(true)
-            ;
-
-            $configAdapter
-                ->expects($this->any())
-                ->method('get')
-                ->willReturnCallback(function ($key) {
-                    switch ($key) {
-                        case 'characterSet':
-                            return 'UTF-8';
-
-                        case 'timeZone':
-                            return 'Europe/Berlin';
-
-                        default:
-                            return null;
-                    }
-                })
-            ;
+            $configAdapter = $this->mockConfigAdapter();
         }
 
-        $framework = new \Contao\CoreBundle\Framework\ContaoFramework(
-            $requestStack,
-            $router,
-            $this->mockSession(),
-            $this->getRootDir() . '/app',
-            $tokenManager,
-            'contao_csrf_token',
-            $configAdapter,
-            error_reporting()
-        );
+        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
+        $framework = $this
+            ->getMockBuilder('Contao\\CoreBundle\\Framework\\ContaoFramework')
+            ->setConstructorArgs([
+                $requestStack,
+                $router,
+                $this->mockSession(),
+                $this->getRootDir() . '/app',
+                $tokenManager,
+                'contao_csrf_token',
+                null,
+                error_reporting(),
+            ])
+            ->setMethods(['getAdapter'])
+            ->getMock()
+        ;
+
+        $framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($configAdapter)
+        ;
 
         $framework->setContainer($container);
 
         return $framework;
+    }
+
+    protected function mockConfigAdapter()
+    {
+        $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter\\GeneralAdapter')
+            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $configAdapter
+            ->expects($this->any())
+            ->method('isComplete')
+            ->willReturn(true)
+        ;
+        $configAdapter
+            ->expects($this->any())
+            ->method('preload')
+            ->willReturn(null)
+        ;
+        $configAdapter
+            ->expects($this->any())
+            ->method('getInstance')
+            ->willReturn(null)
+        ;
+
+        $configAdapter
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnCallback(function ($key) {
+                switch ($key) {
+                    case 'characterSet':
+                        return 'UTF-8';
+
+                    case 'timeZone':
+                        return 'Europe/Berlin';
+
+                    default:
+                        return null;
+                }
+            })
+        ;
+
+
+        return $configAdapter;
     }
 }

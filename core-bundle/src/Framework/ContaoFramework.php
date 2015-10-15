@@ -61,11 +61,6 @@ class ContaoFramework implements ContaoFrameworkInterface
     private $rootDir;
 
     /**
-     * @var AdapterInterface
-     */
-    private $config;
-
-    /**
      * @var string
      */
     private $csrfTokenName;
@@ -126,7 +121,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         $rootDir,
         CsrfTokenManagerInterface $tokenManager,
         $csrfTokenName,
-        $config = null,
+        $config, // Here for BC only
         $errorLevel
     ) {
         $this->router = $router;
@@ -136,7 +131,6 @@ class ContaoFramework implements ContaoFrameworkInterface
         $this->csrfTokenName = $csrfTokenName;
         $this->errorLevel = $errorLevel;
         $this->requestStack = $requestStack;
-        $this->config = (null !== $config) ? $config : $this->getAdapter('Config');
     }
 
     /**
@@ -311,7 +305,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         System::setContainer($this->container);
 
         // Preload the configuration (see #5872)
-        $this->config->preload();
+        $this->getAdapter('Config')->preload();
 
         // Register the class loader
         ClassLoader::scanAndRegister();
@@ -320,7 +314,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         $this->setDefaultLanguage();
 
         // Fully load the configuration
-        $this->config->getInstance();
+        $this->getAdapter('Config')->getInstance();
 
         $this->validateInstallation();
 
@@ -330,7 +324,7 @@ class ContaoFramework implements ContaoFrameworkInterface
 
         // Set the mbstring encoding
         if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
-            mb_regex_encoding($this->config->get('characterSet'));
+            mb_regex_encoding($this->getAdapter('Config')->get('characterSet'));
         }
 
         $this->triggerInitializeSystemHook();
@@ -402,7 +396,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         // Show the "incomplete installation" message
-        if (!$this->config->isComplete()) {
+        if (!$this->getAdapter('Config')->isComplete()) {
             throw new IncompleteInstallationException(
                 'The installation has not been completed. Open the Contao install tool to continue.'
             );
@@ -414,8 +408,8 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function setTimezone()
     {
-        $this->iniSet('date.timezone', $this->config->get('timeZone'));
-        date_default_timezone_set($this->config->get('timeZone'));
+        $this->iniSet('date.timezone', $this->getAdapter('Config')->get('timeZone'));
+        date_default_timezone_set($this->getAdapter('Config')->get('timeZone'));
     }
 
     /**

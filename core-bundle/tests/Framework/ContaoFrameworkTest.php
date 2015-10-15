@@ -200,7 +200,7 @@ class ContaoFrameworkTest extends TestCase
 
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->getMockBuilder('Contao\\CoreBundle\\Framework\\ContaoFramework')
             ->setConstructorArgs([
                 $container->get('request_stack'),
                 $this->mockRouter('/contao/install'),
@@ -222,6 +222,13 @@ class ContaoFrameworkTest extends TestCase
             ->expects($this->any())
             ->method('isInitialized')
             ->willReturnOnConsecutiveCalls(false, true)
+        ;
+
+        $framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->with($this->equalTo('Config'))
+            ->willReturn($this->mockConfigAdapter())
         ;
 
         $framework->setContainer($container);
