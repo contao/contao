@@ -61,11 +61,17 @@ class UserSessionListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$this->hasUser() || !$this->getUserObject() instanceof User || !$this->isContaoMasterRequest($event)) {
+        if (!$this->hasUser() || !$this->isContaoMasterRequest($event)) {
             return;
         }
 
-        $session = $this->getUserObject()->session;
+        $userObj = $this->getUserObject();
+
+        if (!$userObj instanceof User) {
+            return;
+        }
+
+        $session = $userObj->session;
 
         if (is_array($session)) {
             $this->getSessionBag()->replace($session);
