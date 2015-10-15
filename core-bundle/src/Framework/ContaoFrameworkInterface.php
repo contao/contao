@@ -18,6 +18,18 @@ namespace Contao\CoreBundle\Framework;
 interface ContaoFrameworkInterface extends \Contao\CoreBundle\ContaoFrameworkInterface
 {
     /**
+     * Checks if the framework has been initialized.
+     *
+     * @return bool True if the framework has been initialized
+     */
+    public function isInitialized();
+
+    /**
+     * Initializes the framework.
+     */
+    public function initialize();
+    
+    /**
      * Creates a new instance of a given class.
      *
      * @param string $class Fully qualified class name.
