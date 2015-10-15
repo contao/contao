@@ -23,13 +23,11 @@
 # Exception listener
 #
 # The priority of the exception listeners must be higher than the one of the
-# Twig exception listener (defaults to -128).
+# Twig exception listener (defaults to -128). The pretty error screen listener should be
+# very late to not interfere with the exception bubbling.
 #
-# - 96: ExceptionConverterListener
-# - 64: ResponseExceptionListener
-#
-# The pretty error screen listener should be very late to not interfere
-# with exception bubbling (e.g. for security).
+# -  96: ExceptionConverterListener
+# -  64: ResponseExceptionListener
 # - -96: PrettyErrorScreensListener
 #
 # Do not change the priorities unless you know what you are doing!
