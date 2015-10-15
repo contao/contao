@@ -103,9 +103,15 @@ class MergeHttpHeadersListener
      * or not.
      *
      * @param boolean $removeOldHeaders
+     *
+     * @throws \InvalidArgumentException
      */
     public function setRemoveOldHeaders($removeOldHeaders)
     {
+        if (false === $removeOldHeaders && 'cli' !== PHP_SAPI) {
+            throw new \InvalidArgumentException('You cannot disable removing old
+            headers when not on CLI SAPI.');
+        }
         $this->removeOldHeaders = (bool) $removeOldHeaders;
     }
 
