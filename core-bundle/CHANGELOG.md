@@ -5,6 +5,9 @@ Version 4.1.0-beta1 (2015-XX-XX)
 --------------------------------
 
 ### New
+Added a more accurate e-mail validation with unicode support (see #367).
+
+### New
 Add the "env::base_url" insert tag (see #322).
 
 ### New
