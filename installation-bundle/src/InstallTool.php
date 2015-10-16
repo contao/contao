@@ -151,13 +151,25 @@ class InstallTool
     }
 
     /**
+     * Checks if a table exists.
+     *
+     * @param string $name The table name
+     *
+     * @return bool True if the table exists.
+     */
+    public function hasTable($name)
+    {
+        return $this->connection->getSchemaManager()->tablesExist($name);
+    }
+
+    /**
      * Checks if the installation is fresh.
      *
      * @return bool True if the installation is fresh
      */
     public function isFreshInstallation()
     {
-        if (!$this->connection->getSchemaManager()->tablesExist('tl_module')) {
+        if (!$this->hasTable('tl_module')) {
             return true;
         }
 
@@ -177,7 +189,7 @@ class InstallTool
      */
     public function hasOldDatabase()
     {
-        if (!$this->connection->getSchemaManager()->tablesExist('tl_layout')) {
+        if (!$this->hasTable('tl_layout')) {
             return false;
         }
 
@@ -197,7 +209,7 @@ class InstallTool
     public function handleRunOnce()
     {
         // Wait for the tables to be created (see #5061)
-        if (!$this->connection->getSchemaManager()->tablesExist('tl_log')) {
+        if (!$this->hasTable('tl_log')) {
             return;
         }
 
@@ -333,8 +345,6 @@ class InstallTool
             ':password' => Encryption::hash($password),
             ':language' => $language,
         ]);
-
-        $this->persistConfig('adminEmail', $email);
     }
 
     /**
