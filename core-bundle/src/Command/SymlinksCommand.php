@@ -175,7 +175,7 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     private function findIn($path)
     {
-        return Finder::create()->ignoreDotFiles(false)->filter($this->getFilterClosure())->in($path);
+        return Finder::create()->ignoreDotFiles(false)->filter($this->getFilterClosure())->followLinks()->in($path);
     }
 
     /**

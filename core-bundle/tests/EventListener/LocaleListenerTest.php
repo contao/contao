@@ -237,8 +237,11 @@ class LocaleListenerTest extends TestCase
 
         $property = $reflection->getProperty('availableLocales');
         $property->setAccessible(true);
+        $locales = $property->getValue($listener);
 
-        $this->assertEquals(['de', 'en', 'it'], $property->getValue($listener));
+        $this->assertContains('de', $locales);
+        $this->assertContains('en', $locales);
+        $this->assertContains('it', $locales);
     }
 
     /**

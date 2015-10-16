@@ -81,7 +81,7 @@ abstract class Frontend extends \Controller
 		}
 
 		// Remove the URL suffix if not just a language root (e.g. en/) is requested
-		if ($strRequest != '' && (!\Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(\-[A-Z]{2})?/$@', $strRequest)))
+		if ($strRequest != '' && (!\Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
 		{
 			$intSuffixLength = strlen(\Config::get('urlSuffix'));
 
@@ -103,7 +103,7 @@ abstract class Frontend extends \Controller
 			$arrMatches = array();
 
 			// Use the matches instead of substr() (thanks to Mario Müller)
-			if (preg_match('@^([a-z]{2}(\-[A-Z]{2})?)/(.*)$@', $strRequest, $arrMatches))
+			if (preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.*)$@', $strRequest, $arrMatches))
 			{
 				\Input::setGet('language', $arrMatches[1]);
 
