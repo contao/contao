@@ -65,13 +65,13 @@ class UserSessionListener
             return;
         }
 
-        $userObj = $this->getUserObject();
+        $user = $this->getUserObject();
 
-        if (!$userObj instanceof User) {
+        if (!$user instanceof User) {
             return;
         }
 
-        $session = $userObj->session;
+        $session = $user->session;
 
         if (is_array($session)) {
             $this->getSessionBag()->replace($session);
