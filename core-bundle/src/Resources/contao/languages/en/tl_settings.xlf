@@ -248,42 +248,6 @@
       <trans-unit id="tl_settings.indexProtected.1">
         <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
       </trans-unit>
-      <trans-unit id="tl_settings.useSMTP.0">
-        <source>Send e-mails via SMTP</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.useSMTP.1">
-        <source>Use an SMTP server instead of the PHP mail() function to send e-mails.</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtpHost.0">
-        <source>SMTP hostname</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtpHost.1">
-        <source>Please enter the host name of the SMTP server.</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtpUser.0">
-        <source>SMTP username</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtpUser.1">
-        <source>Here you can enter the SMTP username.</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtpPass.0">
-        <source>SMTP password</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtpPass.1">
-        <source>Here you can enter the SMTP password.</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtpEnc.0">
-        <source>SMTP encryption</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtpEnc.1">
-        <source>Here you can choose an encryption method (SSL or TLS).</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtpPort.0">
-        <source>SMTP port number</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtpPort.1">
-        <source>Please enter the port number of the SMTP server.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.undoPeriod.0">
         <source>Storage time for undo steps</source>
       </trans-unit>
@@ -370,9 +334,6 @@
       </trans-unit>
       <trans-unit id="tl_settings.search_legend">
         <source>Search engine settings</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.smtp_legend">
-        <source>SMTP configuration</source>
       </trans-unit>
       <trans-unit id="tl_settings.modules_legend">
         <source>Inactive extensions</source>

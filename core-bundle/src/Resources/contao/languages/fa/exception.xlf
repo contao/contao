@@ -1,0 +1,148 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/explain.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="XPT.error">
+        <source>An error occurred</source>
+        <target>خطایی رخ داد</target>
+      </trans-unit>
+      <trans-unit id="XPT.matter">
+        <source>What's the matter?</source>
+        <target>موضوع چیست؟</target>
+      </trans-unit>
+      <trans-unit id="XPT.howToFix">
+        <source>How can I fix the issue?</source>
+        <target>چگونه می‌توانم موضوع را حل کنم؟</target>
+      </trans-unit>
+      <trans-unit id="XPT.more">
+        <source>Tell me more, please</source>
+        <target>لطفا، به من بیشتر بگو</target>
+      </trans-unit>
+      <trans-unit id="XPT.hint">
+        <source>To customize this notice, create a custom Twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
+        <target>برای سفارشی کردن این یادداشت، یک قالب Twig که &lt;em&gt;%s&lt;/em&gt; بازنویسی می‌کند را ایجاد کنید.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorOccurred">
+        <source>An error occurred while executing this script. Something does not work properly.</source>
+        <target>خطائی در هنگام اجاری این اسکریپت رخ داد. بعضی چیزها به درستی کار نمی‌کنند.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorFixOne">
+        <source>Search the &lt;code&gt;app/logs&lt;/code&gt; folder for the current log file and find the associated error message (usually the last one).</source>
+      </trans-unit>
+      <trans-unit id="XPT.errorExplain">
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
+      </trans-unit>
+      <trans-unit id="XPT.requestToken">
+        <source>Invalid request token</source>
+        <target>توکن درخواست نامعتبر</target>
+      </trans-unit>
+      <trans-unit id="XPT.invalidToken">
+        <source>The request token could not be verified.</source>
+        <target>توکن درخواستی نمی‌تواند تایید شود.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenRetry">
+        <source>Please &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;click this link&lt;/a&gt; and try again. Do not use the back button of your browser.</source>
+        <target>لطفا &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;این پیوند&lt;/a&gt; را دوباره کلیک نمایید. از دکمه برگشت مرورگر استفاده نکنید.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainOne">
+        <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
+        <target>این خطا زمانی رخ می‌دهد که درخواست POSTی بدون توکن تصدیق شده معتبر وجود داشته باشد. در کانتائو 2.10، بررسی ارجاعی با سامانه توکن درخواستی جایگزین شده است. اگر این مشکل ادامه یابد، شما ممکن است از یک افزونه غیرسازگار استفاده می‌کنید یا نصب کانتائو را به درستی به‌روز نکرده‌اید.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainTwo">
+        <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>برای اطلاعات بیشتر، &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;پرسش و پاسخ کانتائو&lt;/a&gt; را جستجو نمایید و یا &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;پشتیبانی کانتائو&lt;/a&gt; را مشاهده کنید.</target>
+      </trans-unit>
+      <trans-unit id="XPT.incomplete">
+        <source>Incomplete installation</source>
+        <target>نصب ناقص</target>
+      </trans-unit>
+      <trans-unit id="XPT.incompleteInstallation">
+        <source>The installation has not been completed, therefore Contao cannot work properly.</source>
+        <target>نصب تکمیل نشده است، بنابراین کانتائو به درستی کار نخواهد کرد.</target>
+      </trans-unit>
+      <trans-unit id="XPT.incompleteFix">
+        <source>Please open the Contao install tool by pointing your browser to &lt;code&gt;/contao/install&lt;/code&gt;.</source>
+        <target>لطفا ابزار نصب کانتائو را با اشاره مرورگرتان به &lt;code&gt;/contao/install&lt;/code&gt; باز نمایید.</target>
+      </trans-unit>
+      <trans-unit id="XPT.incompleteExplain">
+        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>لطفا برای اطلاعات بیشتر به &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;راهنمای کانتائو&lt;/a&gt; مراجعه نمایید.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noForward">
+        <source>Forward page not found</source>
+        <target>برگه به پیش پیدا نشد</target>
+      </trans-unit>
+      <trans-unit id="XPT.noForwardPage">
+        <source>The application has been configured to forward the request to another page, however, the target page does not exist or has not been published.</source>
+        <target>برنامه تنظیم شده است تا درخواست را به برگه دیگری ارجاع دهد، با این حال، برگه مقصد وجود ندارد یا هنوز منتشر نشده است.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noForwardFix">
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
+        <target>این چیزی است که لازم است توسط مدیریت وب‌سایت درست شود. اگر شما یک بازدیدکننده هستید، کاری به جزء &lt;a href=&quot;%s&quot;&gt;تماس با مدیر وب&lt;/a&gt; و اجازه دادن به او تا بداند که چیز نادرستی اینجا وجود دارد، نمی‌توانید انجام دهید.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noRoot">
+        <source>No root page found</source>
+        <target>برگه‌ی ریشه پیدا نشد</target>
+      </trans-unit>
+      <trans-unit id="XPT.noRootPage">
+        <source>There is no website root page which matches the requested language and/or domain name.</source>
+        <target>اینجا برگه ریشه وب‌سایتی که با زبان و/یا نام دامنه درخواستی مطابقت داشته باشد وجود ندارد.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noRootFix">
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
+        <target>اگر شما به صراحت زبانی را نهاده‌اید، سعی کنید و ببینید که شما بازگردانی شده‌اید. در غیر این صورت &lt;a href=&quot;%s&quot;&gt;با مدیر وب تماس بگیرید&lt;/a&gt;  و اجازه دهید که او بداند که اینجا چیز نادرستی وجود دارد.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noLayout">
+        <source>No layout specified</source>
+        <target>هیچ چیدمانی مشخص نشده است</target>
+      </trans-unit>
+      <trans-unit id="XPT.noLayoutSpecified">
+        <source>The page you have requested has not yet been associated with a page layout.</source>
+        <target>برگه‌ای که شما درخواست کرده‌اید هنور چیدمانی به آن اختصاص داده نشده است.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noLayoutFix">
+        <source>Make sure that you have assigned a page layout to each website root page in the site structure.</source>
+        <target>مطمئن شوید که شما برای برگه ریشه وب‌سایت در ساختار وب‌سایت یک چیدمان اختصاص داده‌اید.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noLayoutExplain">
+        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>برای اطلاعات بیشتر لطفا به &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;راهنمای کانتائو&lt;/a&gt; مراجعه نمایید.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noActive">
+        <source>No active pages found</source>
+        <target>برگه‌ی فعالی پیدا نشد </target>
+      </trans-unit>
+      <trans-unit id="XPT.noActivePages">
+        <source>Your request has been mapped to a website which does not yet contain any published pages.</source>
+        <target>درخواست شما به تارنمایی نگاشته شده است که هنوز دارای هیچ برگه منتشر شده‌ای نیست.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noActiveFix">
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
+        <target>به احتمال زیاد، وب‌سایت همچنان در حال توسعه است و در چند روز آینده آنلاین خواهد بود. اگر هنوز شما فکر می‌کنید که چیز نادرسی وجود دارد، &lt;a href=&quot;%s&quot;&gt;با مدیر وب تماس بگیرید&lt;/a&gt; و به او اجازه دهید تا بداند.</target>
+      </trans-unit>
+      <trans-unit id="XPT.unavailable">
+        <source>Service unavailable</source>
+        <target>سرویس در دسترس نیست</target>
+      </trans-unit>
+      <trans-unit id="XPT.maintenance">
+        <source>The website is currently not available. Please come back later.</source>
+        <target>در حال حاضر وب‌سایت در دسترس نیست. لطفا بعدا مراجعه نمایید.</target>
+      </trans-unit>
+      <trans-unit id="XPT.insecure">
+        <source>Insecure document root</source>
+        <target>ریشه سند غیر امن</target>
+      </trans-unit>
+      <trans-unit id="XPT.insecureRoot">
+        <source>Your installation is not secure, because non-public resources are publicy available via HTTP.</source>
+        <target>نصب شما امن نیست، زیرا منابع غیر-عمومی از طریق HTTP در دسترس عموم هستند.</target>
+      </trans-unit>
+      <trans-unit id="XPT.insecureFix">
+        <source>Please set the document root to the &lt;code&gt;web/&lt;/code&gt; subfolder. This is usually done in the domain routing section of your server administration panel or in the vhosts file of your web server.</source>
+        <target>لطفا ریشه سند را به زیرشاخه &lt;code&gt;web/&lt;/code&gt; تنظیم کنید. معمولا این کار از طریق بخش مسیریابی در پنل مدیریت سرور شما و یا در پرونده هاست‌های مجازی سرور وب انجام می‌شود.</target>
+      </trans-unit>
+      <trans-unit id="XPT.insecureExplain">
+        <source>Contao 4 no longer relies on &lt;code&gt;.htaccess&lt;/code&gt; files to protect folders and instead uses a public subfolder as document root. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensitive data such as configuration files.</source>
+        <target>کانتائو ۴ دیگر بر اساس پرونده‌های &lt;code&gt;.htaccess&lt;/code&gt; برای حفاظت پوشه‌ها نمی‌باشد و در عوض از یک زیرپوشه عمومی به عنوان ریشه سند استفاده می‌کند. هر چیز فراتر از ریشه سند از طریق اچ‌تی‌تی‌پی در دسترس نیست، وگرنه هر کسی می‌توانست منابع غیرعمومی شامل اطلاعات حساس مانند پرونده‌های تنظیمات را بارگیری نماید.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

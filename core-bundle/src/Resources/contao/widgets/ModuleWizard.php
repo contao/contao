@@ -168,9 +168,6 @@ class ModuleWizard extends \Widget
   </thead>
   <tbody class="sortable" data-tabindex="'.$tabindex.'">';
 
-		// Load the tl_article language file
-		\System::loadLanguageFile('tl_article');
-
 		// Add the input fields
 		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
 		{
@@ -191,7 +188,7 @@ class ModuleWizard extends \Widget
 			// Add columns
 			foreach ($cols as $v)
 			{
-				$options .= '<option value="'.specialchars($v).'"'.static::optionSelected($v, $this->varValue[$i]['col']).'>'. ((isset($GLOBALS['TL_LANG']['tl_article'][$v]) && !is_array($GLOBALS['TL_LANG']['tl_article'][$v])) ? $GLOBALS['TL_LANG']['tl_article'][$v] : $v) .'</option>';
+				$options .= '<option value="'.specialchars($v).'"'.static::optionSelected($v, $this->varValue[$i]['col']).'>'. ((isset($GLOBALS['TL_LANG']['COLS'][$v]) && !is_array($GLOBALS['TL_LANG']['COLS'][$v])) ? $GLOBALS['TL_LANG']['COLS'][$v] : $v) .'</option>';
 			}
 
 			$return .= '

@@ -25,14 +25,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('useSMTP'),
-		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts,maintenanceMode;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},cacheMode,useAutoItem,folderUrl,doNotRedirectEmpty;{proxy_legend:hide},sslProxyDomain;{privacy_legend:hide},privacyAnonymizeIp,privacyAnonymizeGA;{security_legend},allowedTags,disableRefererCheck,disableIpCheck;{files_legend:hide},allowedDownload,validImageTypes,editableFiles,templateFiles,maxImageWidth,jpgQuality,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{smtp_legend:hide},useSMTP;{cron_legend:hide},disableCron;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout,autologin,lockPeriod;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod;{update_legend:hide},liveUpdateBase'
-	),
-
-	// Subpalettes
-	'subpalettes' => array
-	(
-		'useSMTP'                     => 'smtpHost,smtpUser,smtpPass,smtpEnc,smtpPort'
+		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts,maintenanceMode;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},cacheMode,useAutoItem,folderUrl,doNotRedirectEmpty;{proxy_legend:hide},sslProxyDomain;{privacy_legend:hide},privacyAnonymizeIp,privacyAnonymizeGA;{security_legend},allowedTags,disableRefererCheck,disableIpCheck;{files_legend:hide},allowedDownload,validImageTypes,editableFiles,templateFiles,maxImageWidth,jpgQuality,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{cron_legend:hide},disableCron;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout,autologin,lockPeriod;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod;{update_legend:hide},liveUpdateBase'
 	),
 
 	// Fields
@@ -304,47 +297,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 				array('tl_settings', 'clearSearchIndex')
 			)
 		),
-		'useSMTP' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['useSMTP'],
-			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true)
-		),
-		'smtpHost' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['smtpHost'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'nospace'=>true, 'tl_class'=>'long')
-		),
-		'smtpUser' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['smtpUser'],
-			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'tl_class'=>'w50')
-		),
-		'smtpPass' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['smtpPass'],
-			'inputType'               => 'textStore',
-			'eval'                    => array('decodeEntities'=>true, 'tl_class'=>'w50'),
-			'save_callback' => array
-			(
-				array('tl_settings', 'storeSmtpPass')
-			)
-		),
-		'smtpEnc' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['smtpEnc'],
-			'inputType'               => 'select',
-			'options'                 => array(''=>'-', 'ssl'=>'SSL', 'tls'=>'TLS'),
-			'eval'                    => array('tl_class'=>'w50')
-		),
-		'smtpPort' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['smtpPort'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
-		),
 		'undoPeriod' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['undoPeriod'],
@@ -428,25 +380,6 @@ class tl_settings extends Backend
 		if (!$varValue)
 		{
 			$this->Database->execute("DELETE FROM tl_search WHERE protected=1");
-		}
-
-		return $varValue;
-	}
-
-
-	/**
-	 * Store the unfiltered SMTP password
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 */
-	public function storeSmtpPass($varValue, DataContainer $dc)
-	{
-		if (isset($_POST[$dc->field]))
-		{
-			return Input::postUnsafeRaw($dc->field);
 		}
 
 		return $varValue;
