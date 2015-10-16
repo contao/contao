@@ -374,7 +374,7 @@ class Comments extends \Frontend
 									  $arrSet['name'] . ' (' . $arrSet['email'] . ')',
 									  $strComment,
 									  \Idna::decode(\Environment::get('base')) . \Environment::get('request'),
-									  \Idna::decode(\Environment::get('base')) . 'contao/main.php?do=comments&act=edit&id=' . $objComment->id);
+									  \Idna::decode(\Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id);
 
 			// Add a moderation hint to the e-mail (see #7478)
 			if ($objConfig->moderate)
