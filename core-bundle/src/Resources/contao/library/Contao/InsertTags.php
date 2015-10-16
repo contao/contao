@@ -837,9 +837,7 @@ class InsertTags extends \Controller
 							break;
 
 						case 'base_url':
-							$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
-
-							$arrCache[$strTag] = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . '/';
+							$arrCache[$strTag] = \System::getContainer()->get('request_stack')->getCurrentRequest()->getBaseUrl();
 							break;
 					}
 					break;
