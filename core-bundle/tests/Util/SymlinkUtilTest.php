@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\Util;
 
-use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Util\SymlinkUtil;
 
