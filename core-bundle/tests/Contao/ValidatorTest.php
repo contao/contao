@@ -121,6 +121,31 @@ class ValidatorTest extends TestCase
             ['test', false],
             ['@', false],
             ['test@', false],
+
+            // Invalid ones with Unicode characters in the local part
+            ['tést..child@example.com', false],
+            ['tést@sub.-example.com', false],
+            ['tést@_smtp_.example.com', false],
+            ['tést@sub..example.com', false],
+            ['tést@subexamplecom', false],
+            ['tés@t@wähwähwäh.ümläüts.de', false],
+            [' tést@wähwähwäh.ümläüts.de', false],
+            ['Abç.example.com', false],
+            ['Â@ఘ@ç@example.com', false],
+            ['â"ఘ(ç)d,e:f;gi[j\k]l@example.com', false],
+            ['jüst"not"rîght@example.com', false],
+            ['this îs"not\alløwed@example.com', false],
+            ['this\ stîll\"not\alløwed@example.com', false],
+            ['tést@a[255.255.255.255]', false],
+            ['tést@[255.255.255]', false],
+            ['tést@[255.255.255.255.255]', false],
+            ['tést@[255.255.255.256]', false],
+            ['tést@[2001::7344]', false],
+            ['tést@[IPv6:1111:2222:3333:4444:5555:6666:7777:255.255.255.255]', false],
+            ['(çommént)tést@iana.org', false],
+            ['tést@[1.2.3.4', false],
+            ['tést@iana.org-', false],
+            ['tést@', false],
         ];
     }
 }
