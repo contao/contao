@@ -1,0 +1,24 @@
+
+<section class="<?= $this->class ?> ce_accordion ce_text block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+
+  <div class="<?= $this->toggler ?>"<?php if ($this->headlineStyle): ?> style="<?= $this->headlineStyle ?>"<?php endif; ?>>
+    <?= $this->headline ?>
+  </div>
+
+  <div class="<?= $this->accordion ?>"><div>
+
+    <?php if (!$this->addBefore): ?>
+      <?= $this->text ?>
+    <?php endif; ?>
+
+    <?php if ($this->addImage): ?>
+      <?php $this->insert('image', $this->arrData); ?>
+    <?php endif; ?>
+
+    <?php if ($this->addBefore): ?>
+      <?= $this->text ?>
+    <?php endif; ?>
+
+  </div></div>
+
+</section>
