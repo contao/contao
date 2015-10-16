@@ -1,0 +1,265 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_newsletter.php" source-language="en" target-language="el">
+    <body>
+      <trans-unit id="tl_newsletter.subject.0">
+        <source>Subject</source>
+        <target>Θέμα</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.subject.1">
+        <source>Please enter the newsletter subject.</source>
+        <target>Συμπληρώστε το θέμα του δελτίου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.alias.0">
+        <source>Newsletter alias</source>
+        <target>Alias του δελτίου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.alias.1">
+        <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
+        <target>Το alias του ενημερωτικού δελτίου είναι μια μοναδική αναφορά στο δελτίο που μπορεί να χρησιμοποιηθεί αντί της αριθμητικής του αναφοράς με το ID.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.content.0">
+        <source>HTML content</source>
+        <target>Περιεχόμενα HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.content.1">
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <target>Εδώ μπορείτε να εισάγετε το HTML περιεχόμενα του δελτίου. Χρησιμοποιήστε τους χαρακτήρες μπαλαντερ &lt;em&gt;##email##&lt;/em&gt; για να εισάγετε τo email των παραληπτών.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.text.0">
+        <source>Text content</source>
+        <target>Περιεχόμενα κειμένου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.text.1">
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <target>Εδώ μπορείτε να εισάγετε το περιεχόμενα κειμένου του δελτίου. Χρησιμοποιήστε τους χαρακτήρες μπαλαντερ &lt;em&gt;##email##&lt;/em&gt; για να εισάγετε τo email των παραληπτών.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.addFile.0">
+        <source>Add attachments</source>
+        <target>Προσθήκη συνημμένων</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.addFile.1">
+        <source>Attach one or more files to the newsletter.</source>
+        <target>Προσθήκη ενός ή περισσότέρων αρχείων στο δελτίο.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.files.0">
+        <source>Attachments</source>
+        <target>Συννημένα</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.files.1">
+        <source>Please choose the files to be attached from the files directory.</source>
+        <target>Επιλέξτε τα αρχεία προς επισύναψη από τον κατάλογο αρχείων. </target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.template.0">
+        <source>E-mail template</source>
+        <target>Πρότυπο email</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.template.1">
+        <source>Here you can choose the e-mail template.</source>
+        <target>Επιλέξτε το πρότυπο email που θα χρησιμοποιηθεί.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sendText.0">
+        <source>Send as plain text</source>
+        <target>Αποστολή ως απλό κείμενο</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sendText.1">
+        <source>Send the newsletter as plain text e-mail without the HTML content.</source>
+        <target>Αποστολή του δελτίου ως απλό email κείμενου χωρίς τα περιεχόμενα HTML.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.externalImages.0">
+        <source>External images</source>
+        <target>Εξωτερικές εικόνες</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.externalImages.1">
+        <source>Do not embed images in HTML newsletters.</source>
+        <target>Χωρίς ενσωμάτωση των εικόνων στα HTML δελτία.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.0">
+        <source>Sender name</source>
+        <target>Όνομα αποστολέα</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.1">
+        <source>Here you can enter the sender's name.</source>
+        <target>Εισάγετε το όνομα του αποστολέα.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sender.0">
+        <source>Sender address</source>
+        <target>Διέυθυνση αποστολέα</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sender.1">
+        <source>Here you can enter a custom sender address.</source>
+        <target>Εδώ μπορείτε να συμπληρώσετε μια προσαρμοσμένη διεύθυνση αποστολέα.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailsPerCycle.0">
+        <source>Mails per cycle</source>
+        <target>Mails ανά κύκλο αποστολής</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailsPerCycle.1">
+        <source>The sending process is split into several cycles to prevent the script from timing out.</source>
+        <target>Η διαδικασία αποστολής χωρίζετε σε κύκλους αποστολής για να αποτρέψει τον κώδικα από  timing out.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.timeout.0">
+        <source>Timeout in seconds</source>
+        <target>Timeout σε δευτερόλεπτα</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.timeout.1">
+        <source>Here you can modify the waiting time between each cycle to control the number of e-mails per minute.</source>
+        <target>Εδώ μπορείτε να αλλάξετε τον χρόνο αναμονής μεταξύ των κύκλων για τον έλεγχο του αριθμού των email ανά δευτερόλεπτο.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.start.0">
+        <source>Offset</source>
+        <target>Aντιστάθμισμα</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.start.1">
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;app/logs/newsletter_*.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sendPreviewTo.0">
+        <source>Send preview to</source>
+        <target>Αποστολή προεπισκόπησης σε</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sendPreviewTo.1">
+        <source>Send the preview of the newsletter to this e-mail address.</source>
+        <target>Αποστολή επισκόπησης του ενημερωτικού δελτίου σε αυτό το email.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.title_legend">
+        <source>Title and subject</source>
+        <target>Τίτλος και θέμα</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.html_legend">
+        <source>HTML content</source>
+        <target>Περιεχόμενα HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.text_legend">
+        <source>Text content</source>
+        <target>Περιεχόμενα κειμένου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.attachment_legend">
+        <source>Attachments</source>
+        <target>Συννημένα</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.template_legend">
+        <source>Template settings</source>
+        <target>Ρυθμίσεις προτύπου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.expert_legend">
+        <source>Expert settings</source>
+        <target>Ρυθμίσεις για προχωρημένους</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sent">
+        <source>Sent</source>
+        <target>Αποστολή</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sentOn">
+        <source>Sent on %s</source>
+        <target>Απεστάλη την %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.notSent">
+        <source>Not sent yet</source>
+        <target>Δεν έχει σταλεί ακόμη</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailingDate">
+        <source>Mailing date</source>
+        <target>Ημερομηνία ταχυδρόμησης</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.confirm">
+        <source>The newsletter has been sent to %s recipients.</source>
+        <target>Το δελτίο έχει αποσταλεί σε %s παραλήπτες.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.rejected">
+        <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
+        <target>%s άκυρη(ες) διευθύνση(εις) email έχουν απενεργοποιηθεί (βλέπε system log).</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.error">
+        <source>There are no active subscribers to the channel.</source>
+        <target>Δεν υπάρχουν ενεργοί συνδρομητές στο κανάλι.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.from">
+        <source>From</source>
+        <target>Από</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.attachments">
+        <source>Attachments</source>
+        <target>Συννημένα</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preview">
+        <source>Send preview</source>
+        <target>Αποστολή προεπισκόπησης</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sendConfirm">
+        <source>Do you really want to send the newsletter?</source>
+        <target>Είστε σίγουροι οτι θέλετε να σταλεί το ενημερωτικό δελτίο;</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.new.0">
+        <source>New newsletter</source>
+        <target>Νέο ενημερωτικό δελτίο</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.new.1">
+        <source>Create a new newsletter</source>
+        <target>Δημιουργία νέου δελτίου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.show.0">
+        <source>Newsletter details</source>
+        <target>Λεπτομέρειες δελτίου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.show.1">
+        <source>Show the details of newsletter ID %s</source>
+        <target>Προβολή λεπτομερειών του δελτίου ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.edit.0">
+        <source>Edit newsletter</source>
+        <target>Επεξεργασία δελτίου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.edit.1">
+        <source>Edit newsletter ID %s</source>
+        <target>Επεξεργασία ενημερωτικού δελτίου ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.copy.0">
+        <source>Duplicate newsletter</source>
+        <target>Αντιγραφή δελτίου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.copy.1">
+        <source>Duplicate newsletter ID %s</source>
+        <target>Αντιγραφή ενημερωτικού δελτίου ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.cut.0">
+        <source>Move newsletter</source>
+        <target>Μετακίνηση δελτίου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.cut.1">
+        <source>Move newsletter ID %s</source>
+        <target>Μετακίνηση ενημερωτικού δελτίου ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.delete.0">
+        <source>Delete newsletter</source>
+        <target>Διαγραφή δελτίου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.delete.1">
+        <source>Delete newsletter ID %s</source>
+        <target>Διαγραφή ενημερωτικού δελτίου ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.editheader.0">
+        <source>Edit channel</source>
+        <target>Επεξεργασία καναλιού</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.editheader.1">
+        <source>Edit the channel settings</source>
+        <target>Επεξεργασία ρυθμίσεων καναλιού</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.pasteafter.0">
+        <source>Paste into this channel</source>
+        <target>Επικόλληση στο κανάλι</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.pasteafter.1">
+        <source>Paste after newsletter ID %s</source>
+        <target>Επικόλληση μετά το δελτίο ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.send.0">
+        <source>Send newsletter</source>
+        <target>Αποστολή ενημερωτικού δελτίου</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.send.1">
+        <source>Send newsletter ID %s</source>
+        <target>Αποστολή ενημερωτικού δελτίου ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
