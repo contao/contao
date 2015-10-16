@@ -32,7 +32,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     {
         /** @var ContaoFrameworkInterface $framework */
         $framework =  $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
-        $listener = new MergeHttpHeadersListener([], $framework);
+        $listener = new MergeHttpHeadersListener($framework);
 
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\MergeHttpHeadersListener', $listener);
     }
@@ -54,64 +54,8 @@ class MergeHttpHeadersListenerTest extends TestCase
         $framework->expects($this->once())->method('isInitialized')->willReturn(false);
 
         /** @var ContaoFrameworkInterface $framework */
-        $listener = new MergeHttpHeadersListener([], $framework);
+        $listener = new MergeHttpHeadersListener($framework);
         $listener->setHeaders(['FOOBAR: foobar']);
-        $listener->setRemoveOldHeaders(false);
-
-        $listener->onKernelResponse($responseEvent);
-        $response = $responseEvent->getResponse();
-        $this->assertFalse($response->headers->has('FOOBAR'));
-        $this->assertNull($response->headers->get('FOOBAR'));
-    }
-
-    /**
-     * Tests that the listener is skipped if the request has no route.
-     */
-    public function testListenerIsSkippedIfRequestHasNoRoute()
-    {
-        $request = new Request();
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
-        $framework =  $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
-        $framework->expects($this->once())->method('isInitialized')->willReturn(true);
-
-        /** @var ContaoFrameworkInterface $framework */
-        $listener = new MergeHttpHeadersListener([], $framework);
-        $listener->setHeaders(['FOOBAR: foobar']);
-        $listener->setRemoveOldHeaders(false);
-
-        $listener->onKernelResponse($responseEvent);
-        $response = $responseEvent->getResponse();
-        $this->assertFalse($response->headers->has('FOOBAR'));
-        $this->assertNull($response->headers->get('FOOBAR'));
-    }
-
-    /**
-     * Tests that the listener is skipped if the request has a route which is the
-     * listener shall not handle.
-     */
-    public function testListenerIsSkippedIfRequestHasRouteTheListenerShouldNotHandle()
-    {
-        $request = new Request();
-        $request->attributes->set('_route', 'foobar_route');
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
-        $framework =  $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
-        $framework->expects($this->once())->method('isInitialized')->willReturn(true);
-
-        /** @var ContaoFrameworkInterface $framework */
-        $listener = new MergeHttpHeadersListener(['other_route'], $framework);
-        $listener->setHeaders(['FOOBAR: content']);
         $listener->setRemoveOldHeaders(false);
 
         $listener->onKernelResponse($responseEvent);
@@ -127,7 +71,6 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testHeadersAreMerged()
     {
         $request = new Request();
-        $request->attributes->set('_route', 'foobar_route');
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
             $request,
@@ -139,7 +82,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $framework->expects($this->once())->method('isInitialized')->willReturn(true);
 
         /** @var ContaoFrameworkInterface $framework */
-        $listener = new MergeHttpHeadersListener(['foobar_route'], $framework);
+        $listener = new MergeHttpHeadersListener($framework);
         $listener->setHeaders(['FOOBAR: content']);
         $listener->setRemoveOldHeaders(false);
 
@@ -158,7 +101,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         $request = new Request();
         $response = new Response();
         $response->headers->set('FOOBAR', 'content');
-        $request->attributes->set('_route', 'foobar_route');
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
             $request,
@@ -170,7 +112,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $framework->expects($this->once())->method('isInitialized')->willReturn(true);
 
         /** @var ContaoFrameworkInterface $framework */
-        $listener = new MergeHttpHeadersListener(['foobar_route'], $framework);
+        $listener = new MergeHttpHeadersListener($framework);
         $listener->setHeaders(['FOOBAR: new-content']);
         $listener->setRemoveOldHeaders(false);
 

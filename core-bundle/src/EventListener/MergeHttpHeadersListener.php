@@ -30,11 +30,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class MergeHttpHeadersListener
 {
     /**
-     * @var array
-     */
-    private $routeNames;
-
-    /**
      * @var ContaoFrameworkInterface
      */
     private $contaoFramework;
@@ -54,16 +49,11 @@ class MergeHttpHeadersListener
     /**
      * Constructor.
      *
-     * @param array                    $routeNames
      * @param ContaoFrameworkInterface $contaoFramework
      */
-    public function __construct(
-        array $routeNames,
-        ContaoFrameworkInterface $contaoFramework
-    ) {
-        $this->routeNames = $routeNames;
+    public function __construct(ContaoFrameworkInterface $contaoFramework)
+    {
         $this->contaoFramework = $contaoFramework;
-
         $this->setHeaders(headers_list());
     }
 
@@ -123,15 +113,6 @@ class MergeHttpHeadersListener
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if (!$this->contaoFramework->isInitialized()) {
-
-            return;
-        }
-
-        $request = $event->getRequest();
-
-        if (!$request->attributes->has('_route')
-            || !in_array($request->attributes->get('_route'), $this->routeNames)
-        ) {
 
             return;
         }

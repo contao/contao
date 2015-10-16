@@ -1,12 +1,3 @@
-parameters:
-    contao:
-        merge_http_headers_routes:
-            - contao_root
-            - contao_catch_all
-            - contao_frontend
-            - contao_frontend_cron
-            - contao_frontend_share
-
 ##
 # Listener priorities
 #
@@ -80,7 +71,6 @@ services:
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
         arguments:
-            - "%contao.merge_http_headers_routes%"
             - "@contao.framework"
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 256 }
