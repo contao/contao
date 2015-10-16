@@ -1,0 +1,356 @@
+<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="1">
+        <source>install_tool</source>
+        <target>Contao Installationsverktyg</target>
+        
+      </trans-unit>
+      <trans-unit id="2">
+        <source>an_error_occurred</source>
+        <target>Ett fel uppstod</target>
+        
+      </trans-unit>
+      <trans-unit id="3">
+        <source>locked_headline</source>
+        <target>Installationsverktyget har låsts!</target>
+        
+      </trans-unit>
+      <trans-unit id="4">
+        <source>locked_explanation</source>
+        <target>Av säkerhetsskäl har installationsverktyget låsts efter att ett felaktigt lösenord angivits mer än tre gånger i rad. För att låsa upp det, öppna den lokala konfigurationsfilen och ändra &lt;code&gt;installCount&lt;/code&gt; till &lt;code&gt;0&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="5">
+        <source>file_permissions_headline</source>
+        <target>PHP tillåts inte att skriva filer!</target>
+        
+      </trans-unit>
+      <trans-unit id="6">
+        <source>file_permissions_explanation</source>
+        <target>Din server stödjer inte filåtkomst via PHP. Mest troligt för att PHP körs som en Apache-modul under en annan användare. Kontakta din serveradministratör och be om att åtgärda problemet.</target>
+        
+      </trans-unit>
+      <trans-unit id="7">
+        <source>file_permissions_warning</source>
+        <target>&lt;strong&gt;Försök inte åtgärda detta själv genom att göra filer och mappar skrivbara för samtliga användare!&lt;/strong&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="8">
+        <source>accept_license</source>
+        <target>Acceptera licens</target>
+        
+      </trans-unit>
+      <trans-unit id="9">
+        <source>set_password</source>
+        <target>Lösenord för installationsverktyget</target>
+        
+      </trans-unit>
+      <trans-unit id="10">
+        <source>set_password_hint</source>
+        <target>Ange ett lösenord för att förhindra obehörig åtkomst.</target>
+        
+      </trans-unit>
+      <trans-unit id="11">
+        <source>password</source>
+        <target>Lösenord</target>
+        
+      </trans-unit>
+      <trans-unit id="12">
+        <source>confirmation</source>
+        <target>Bekräfta lösenord</target>
+        
+      </trans-unit>
+      <trans-unit id="13">
+        <source>save_password</source>
+        <target>Spara lösenordet</target>
+        
+      </trans-unit>
+      <trans-unit id="14">
+        <source>password_confirmation_mismatch</source>
+        <target>Lösenordet överensstämmer ej med bekräftelsen!</target>
+        
+      </trans-unit>
+      <trans-unit id="15">
+        <source>password_too_short</source>
+        <target>Lösenordet måste vara minst %d tecken långt!</target>
+        
+      </trans-unit>
+      <trans-unit id="16">
+        <source>login</source>
+        <target>Logga in i installationsverktyget</target>
+        
+      </trans-unit>
+      <trans-unit id="17">
+        <source>login_explanation</source>
+        <target>Ange lösenordet för installationsverktyget. Lösenordet för installationsverktyget är inte detsamma som lösenordet för Contaos backend.</target>
+        
+      </trans-unit>
+      <trans-unit id="18">
+        <source>allow_cookies</source>
+        <target>Du måste tillåta cookies för att kunna använda Contao.</target>
+        
+      </trans-unit>
+      <trans-unit id="19">
+        <source>login</source>
+        <target>Logga in</target>
+        
+      </trans-unit>
+      <trans-unit id="20">
+        <source>invalid_password</source>
+        <target>Ogiltigt lösenord!</target>
+        
+      </trans-unit>
+      <trans-unit id="21">
+        <source>database_connection</source>
+        <target>Databasanslutning</target>
+        
+      </trans-unit>
+      <trans-unit id="22">
+        <source>database_connected</source>
+        <target>Databasanslutning upprättad.</target>
+        
+      </trans-unit>
+      <trans-unit id="23">
+        <source>database_could_not_connect</source>
+        <target>Kunde inte ansluta till databasen!</target>
+        
+      </trans-unit>
+      <trans-unit id="24">
+        <source>database_connection_explain</source>
+        <target>Ange dina databasparametrar för anslutningen.</target>
+        
+      </trans-unit>
+      <trans-unit id="25">
+        <source>database_host</source>
+        <target>Värd</target>
+        
+      </trans-unit>
+      <trans-unit id="26">
+        <source>database_port</source>
+        <target>Portnummer</target>
+        
+      </trans-unit>
+      <trans-unit id="27">
+        <source>database_user</source>
+        <target>Användarnamn</target>
+        
+      </trans-unit>
+      <trans-unit id="28">
+        <source>database_password</source>
+        <target>Lösenord</target>
+        
+      </trans-unit>
+      <trans-unit id="29">
+        <source>database_name</source>
+        <target>Databasnamn</target>
+        
+      </trans-unit>
+      <trans-unit id="30">
+        <source>save_settings</source>
+        <target>Spara inställningarna</target>
+        
+      </trans-unit>
+      <trans-unit id="31">
+        <source>update_tables</source>
+        <target>Uppdatera databasen</target>
+        
+      </trans-unit>
+      <trans-unit id="32">
+        <source>update_tables_explain</source>
+        <target>Notera att uppdateringsassistenten bara hanterar tabeller med namn som börjar med &lt;code&gt;tl_&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="33">
+        <source>update_tables_confirm</source>
+        <target>Databasen är uppdaterad.</target>
+        
+      </trans-unit>
+      <trans-unit id="34">
+        <source>update_save</source>
+        <target>Uppdatera databasen</target>
+        
+      </trans-unit>
+      <trans-unit id="35">
+        <source>CREATE</source>
+        <target>Skapa tabeller</target>
+        
+      </trans-unit>
+      <trans-unit id="36">
+        <source>ALTER_ADD</source>
+        <target>Lägg till kolumner</target>
+        
+      </trans-unit>
+      <trans-unit id="37">
+        <source>ALTER_CHANGE</source>
+        <target>Ändra kolumner</target>
+        
+      </trans-unit>
+      <trans-unit id="38">
+        <source>ALTER_DROP</source>
+        <target>Radera kolumner</target>
+        
+      </trans-unit>
+      <trans-unit id="39">
+        <source>DROP</source>
+        <target>Radera tabeller</target>
+        
+      </trans-unit>
+      <trans-unit id="40">
+        <source>select_all</source>
+        <target>Markera alla</target>
+        
+      </trans-unit>
+      <trans-unit id="41">
+        <source>template_import</source>
+        <target>Importera en mall</target>
+        
+      </trans-unit>
+      <trans-unit id="42">
+        <source>template_import_explain</source>
+        <target>Här kan du importera en &lt;code&gt;.sql&lt;/code&gt;-fil från &lt;code&gt;templates&lt;/code&gt;-mappen. Existerande data kommer att raderas! Om du bara vill importera ett tema så använder du tema-hanteraren i Contao istället.</target>
+        
+      </trans-unit>
+      <trans-unit id="43">
+        <source>import_exception</source>
+        <target>Importeringen misslyckades! Är databasen uppdaterad och är mallarna kompatibla med din Contao-version?</target>
+        
+      </trans-unit>
+      <trans-unit id="44">
+        <source>import_empty_source</source>
+        <target>Välj en mallfil!</target>
+        
+      </trans-unit>
+      <trans-unit id="45">
+        <source>import_data_will_be_deleted</source>
+        <target>Allt befintligt data kommer att raderas!</target>
+        
+      </trans-unit>
+      <trans-unit id="46">
+        <source>imported_on</source>
+        <target>Mall importeras %s</target>
+        
+      </trans-unit>
+      <trans-unit id="47">
+        <source>templates</source>
+        <target>Mallar</target>
+        
+      </trans-unit>
+      <trans-unit id="48">
+        <source>do_not_truncate</source>
+        <target>Trunkera inte tabeller</target>
+        
+      </trans-unit>
+      <trans-unit id="49">
+        <source>import_confirm</source>
+        <target>Befintliga data kommer att raderas! Vill du verkligen fortsätta?</target>
+        
+      </trans-unit>
+      <trans-unit id="50">
+        <source>template_save</source>
+        <target>Importera mall</target>
+        
+      </trans-unit>
+      <trans-unit id="51">
+        <source>admin_create</source>
+        <target>Skapa en administratör</target>
+        
+      </trans-unit>
+      <trans-unit id="52">
+        <source>admin_create_explain</source>
+        <target>Här kan du skapa en administratörsanvändare som kan logga in i Contaos backend.</target>
+        
+      </trans-unit>
+      <trans-unit id="53">
+        <source>admin_confirm</source>
+        <target>Administratörsanvändare har skapats.</target>
+        
+      </trans-unit>
+      <trans-unit id="54">
+        <source>admin_username</source>
+        <target>Användarnamn</target>
+        
+      </trans-unit>
+      <trans-unit id="55">
+        <source>admin_name</source>
+        <target>Namn och mediatyper</target>
+        
+      </trans-unit>
+      <trans-unit id="56">
+        <source>admin_email</source>
+        <target>E-postformat</target>
+        
+      </trans-unit>
+      <trans-unit id="57">
+        <source>admin_save</source>
+        <target>Skapa administratör</target>
+        
+      </trans-unit>
+      <trans-unit id="58">
+        <source>admin_error_extnd</source>
+        <target>Av säkerhetsskäl så kan du inte använda följande tecknen här: #()/&lt;=&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="59">
+        <source>admin_error_no_space</source>
+        <target>Användarnamnet får inte innehålla några mellanslag!</target>
+        
+      </trans-unit>
+      <trans-unit id="60">
+        <source>admin_error_email</source>
+        <target>Ange en giltig E-postadress!</target>
+        
+      </trans-unit>
+      <trans-unit id="61">
+        <source>admin_error_password_match</source>
+        <target>Lösenorden matchar inte varandra!</target>
+        
+      </trans-unit>
+      <trans-unit id="62">
+        <source>admin_error_password_user</source>
+        <target>Ditt användarnamn och lösenord får inte vara samma!</target>
+        
+      </trans-unit>
+      <trans-unit id="63">
+        <source>admin_error</source>
+        <target>Vänligen fyll i alla fält för att skapa en administratörsanvändare!</target>
+        
+      </trans-unit>
+      <trans-unit id="64">
+        <source>congratulations</source>
+        <target>Gratulerar!</target>
+        
+      </trans-unit>
+      <trans-unit id="65">
+        <source>congratulations_explain</source>
+        <target>Du har lyckats med installationen av Contao.</target>
+        
+      </trans-unit>
+      <trans-unit id="66">
+        <source>installation_complete</source>
+        <target>Installationen färdig</target>
+        
+      </trans-unit>
+      <trans-unit id="67">
+        <source>installation_complete_explain</source>
+        <target>Gå nu vidare till Contaos backend och kontrollera systeminställningarna.</target>
+        
+      </trans-unit>
+      <trans-unit id="68">
+        <source>back_end</source>
+        <target>Contao backend</target>
+        
+      </trans-unit>
+      <trans-unit id="69">
+        <source>old_database</source>
+        <target>Databasen är för gammal!</target>
+        
+      </trans-unit>
+      <trans-unit id="70">
+        <source>old_database_explanation</source>
+        <target>Du behöver minst Contao 3.2 för att kunna uppgradera till Contao 4.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

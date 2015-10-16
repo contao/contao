@@ -1,0 +1,356 @@
+<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="it">
+    <body>
+      <trans-unit id="1">
+        <source>install_tool</source>
+        <target>Strumento di installazione Contao</target>
+        
+      </trans-unit>
+      <trans-unit id="2">
+        <source>an_error_occurred</source>
+        <target>Si è verificato un errore</target>
+        
+      </trans-unit>
+      <trans-unit id="3">
+        <source>locked_headline</source>
+        <target>Lo strumento di installazione è stato bloccato</target>
+        
+      </trans-unit>
+      <trans-unit id="4">
+        <source>locked_explanation</source>
+        <target>Per ragioni di sicurezza lo strumento di installazione è stato bloccato. Questo succede se viene sbagliata più volte la password di installazione. Per sbloccare il sistema occorre aprire il file di configurazione e impostare la variabile &lt;em&gt;installCount&lt;/em&gt; a &lt;em&gt;0&lt;/em&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="5">
+        <source>file_permissions_headline</source>
+        <target>PHP non ha i permessi per la creazione di file.</target>
+        
+      </trans-unit>
+      <trans-unit id="6">
+        <source>file_permissions_explanation</source>
+        <target>Il server non supporta l'accesso ai file tramite PHP; molto probabilmente PHP viene eseguito come modulo Apache con un utente diverso. Si prega di contattare l'amministratore del server e chiedergli di risolvere il problema. </target>
+        
+      </trans-unit>
+      <trans-unit id="7">
+        <source>file_permissions_warning</source>
+        <target>&lt;strong&gt; Suggeriamo di non tentare in modo autonomo, dando i privilegi di lettura e scrittura a tutti!&lt;/ strong&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="8">
+        <source>accept_license</source>
+        <target>Accetta la licenza</target>
+        
+      </trans-unit>
+      <trans-unit id="9">
+        <source>set_password</source>
+        <target>Password strumento di installazione</target>
+        
+      </trans-unit>
+      <trans-unit id="10">
+        <source>set_password_hint</source>
+        <target>Inserire una password per evitare accessi non autorizzati!</target>
+        
+      </trans-unit>
+      <trans-unit id="11">
+        <source>password</source>
+        <target>Password</target>
+        
+      </trans-unit>
+      <trans-unit id="12">
+        <source>confirmation</source>
+        <target>Conferma la password</target>
+        
+      </trans-unit>
+      <trans-unit id="13">
+        <source>save_password</source>
+        <target>Salva la password</target>
+        
+      </trans-unit>
+      <trans-unit id="14">
+        <source>password_confirmation_mismatch</source>
+        <target>Le password non coincidono!</target>
+        
+      </trans-unit>
+      <trans-unit id="15">
+        <source>password_too_short</source>
+        <target>La password deve essere lunga almeno %d caratteri!</target>
+        
+      </trans-unit>
+      <trans-unit id="16">
+        <source>login</source>
+        <target>Login strumento di installazione</target>
+        
+      </trans-unit>
+      <trans-unit id="17">
+        <source>login_explanation</source>
+        <target>Inserire la password per lo strumento di installazione. Ricorda che la password non è la stessa del pannello di controllo di Contao.</target>
+        
+      </trans-unit>
+      <trans-unit id="18">
+        <source>allow_cookies</source>
+        <target>Occorre abilitare i cookie per poter utilizzare Contao.</target>
+        
+      </trans-unit>
+      <trans-unit id="19">
+        <source>login</source>
+        <target>Login</target>
+        
+      </trans-unit>
+      <trans-unit id="20">
+        <source>invalid_password</source>
+        <target>Password non valida!</target>
+        
+      </trans-unit>
+      <trans-unit id="21">
+        <source>database_connection</source>
+        <target>Connessione al database</target>
+        
+      </trans-unit>
+      <trans-unit id="22">
+        <source>database_connected</source>
+        <target>Connessione al database eseguita correttamente.</target>
+        
+      </trans-unit>
+      <trans-unit id="23">
+        <source>database_could_not_connect</source>
+        <target>Non è possibile effettuare la connessione al database!</target>
+        
+      </trans-unit>
+      <trans-unit id="24">
+        <source>database_connection_explain</source>
+        <target>Inserire i parametri per la connessione al database.</target>
+        
+      </trans-unit>
+      <trans-unit id="25">
+        <source>database_host</source>
+        <target>Host</target>
+        
+      </trans-unit>
+      <trans-unit id="26">
+        <source>database_port</source>
+        <target>Numero porta</target>
+        
+      </trans-unit>
+      <trans-unit id="27">
+        <source>database_user</source>
+        <target>Nome utente</target>
+        
+      </trans-unit>
+      <trans-unit id="28">
+        <source>database_password</source>
+        <target>Password</target>
+        
+      </trans-unit>
+      <trans-unit id="29">
+        <source>database_name</source>
+        <target>Nome Database</target>
+        
+      </trans-unit>
+      <trans-unit id="30">
+        <source>save_settings</source>
+        <target>Salva la configurazione</target>
+        
+      </trans-unit>
+      <trans-unit id="31">
+        <source>update_tables</source>
+        <target>Aggiorna il database</target>
+        
+      </trans-unit>
+      <trans-unit id="32">
+        <source>update_tables_explain</source>
+        <target>L'aggiornamento guidato aggiornerà solamente le tabelle con prefisso &lt;code&gt;tl_&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="33">
+        <source>update_tables_confirm</source>
+        <target>Il database è aggiornato.</target>
+        
+      </trans-unit>
+      <trans-unit id="34">
+        <source>update_save</source>
+        <target>Aggiorna il database</target>
+        
+      </trans-unit>
+      <trans-unit id="35">
+        <source>CREATE</source>
+        <target>Tabelle create</target>
+        
+      </trans-unit>
+      <trans-unit id="36">
+        <source>ALTER_ADD</source>
+        <target>Aggiungi colonne</target>
+        
+      </trans-unit>
+      <trans-unit id="37">
+        <source>ALTER_CHANGE</source>
+        <target>Modifica colonne </target>
+        
+      </trans-unit>
+      <trans-unit id="38">
+        <source>ALTER_DROP</source>
+        <target>Elimina colonne </target>
+        
+      </trans-unit>
+      <trans-unit id="39">
+        <source>DROP</source>
+        <target>Elimina tabelle</target>
+        
+      </trans-unit>
+      <trans-unit id="40">
+        <source>select_all</source>
+        <target>Seleziona tutto</target>
+        
+      </trans-unit>
+      <trans-unit id="41">
+        <source>template_import</source>
+        <target>Importa un template</target>
+        
+      </trans-unit>
+      <trans-unit id="42">
+        <source>template_import_explain</source>
+        <target>Selezionare un file &lt;em&gt;.sql&lt;/em&gt; dalla cartella &lt;em&gt;templates&lt;/em&gt; per l'importazione di un sito web di prova. Eventuali dati presenti saranno cancellati!!! Se invece si vuole importare un tema, utilizzare l'apposita funzione nel backend.</target>
+        
+      </trans-unit>
+      <trans-unit id="43">
+        <source>import_exception</source>
+        <target>L'importazione non è riuscita! E' la struttura della banca dati aggiornata ed è il file della template compatibile con la tua versione Contao?</target>
+        
+      </trans-unit>
+      <trans-unit id="44">
+        <source>import_empty_source</source>
+        <target>Selezionare un file template</target>
+        
+      </trans-unit>
+      <trans-unit id="45">
+        <source>import_data_will_be_deleted</source>
+        <target>ATTENZIONE, ogni informazione esistente sarà cancellata!</target>
+        
+      </trans-unit>
+      <trans-unit id="46">
+        <source>imported_on</source>
+        <target>Template importato il %s</target>
+        
+      </trans-unit>
+      <trans-unit id="47">
+        <source>templates</source>
+        <target>Templates</target>
+        
+      </trans-unit>
+      <trans-unit id="48">
+        <source>do_not_truncate</source>
+        <target>Non troncare le tabelle</target>
+        
+      </trans-unit>
+      <trans-unit id="49">
+        <source>import_confirm</source>
+        <target>Ogni informazione esistente sarà cancellata. Vuoi procedere?</target>
+        
+      </trans-unit>
+      <trans-unit id="50">
+        <source>template_save</source>
+        <target>Importa templates</target>
+        
+      </trans-unit>
+      <trans-unit id="51">
+        <source>admin_create</source>
+        <target>Crea un utente amministratore</target>
+        
+      </trans-unit>
+      <trans-unit id="52">
+        <source>admin_create_explain</source>
+        <target>Qui è possibile creare un utente amministratore per il back end di Contao</target>
+        
+      </trans-unit>
+      <trans-unit id="53">
+        <source>admin_confirm</source>
+        <target>L'utente amministratore è stato creato.</target>
+        
+      </trans-unit>
+      <trans-unit id="54">
+        <source>admin_username</source>
+        <target>Nome utente</target>
+        
+      </trans-unit>
+      <trans-unit id="55">
+        <source>admin_name</source>
+        <target>Nome e tipo di media</target>
+        
+      </trans-unit>
+      <trans-unit id="56">
+        <source>admin_email</source>
+        <target>Formato e-mail</target>
+        
+      </trans-unit>
+      <trans-unit id="57">
+        <source>admin_save</source>
+        <target>Crea un utente amministratore</target>
+        
+      </trans-unit>
+      <trans-unit id="58">
+        <source>admin_error_extnd</source>
+        <target>Per motivi di sicurezza non puoi utilizzare i seguenti caratteri: =&lt;&gt;&amp;/()#</target>
+        
+      </trans-unit>
+      <trans-unit id="59">
+        <source>admin_error_no_space</source>
+        <target>Il nome utente non può contenere degli spazi!</target>
+        
+      </trans-unit>
+      <trans-unit id="60">
+        <source>admin_error_email</source>
+        <target>Inserisci un indirizzo e-mail valido!</target>
+        
+      </trans-unit>
+      <trans-unit id="61">
+        <source>admin_error_password_match</source>
+        <target>Le password non coincidono!</target>
+        
+      </trans-unit>
+      <trans-unit id="62">
+        <source>admin_error_password_user</source>
+        <target>Username e password non possono essere uguali!</target>
+        
+      </trans-unit>
+      <trans-unit id="63">
+        <source>admin_error</source>
+        <target>Indicare tutte le informazioni per creare un utente amministratore</target>
+        
+      </trans-unit>
+      <trans-unit id="64">
+        <source>congratulations</source>
+        <target>Contao è stato configurato correttamente!</target>
+        
+      </trans-unit>
+      <trans-unit id="65">
+        <source>congratulations_explain</source>
+        <target>L'installazione di Contao è avvenuta con successo</target>
+        
+      </trans-unit>
+      <trans-unit id="66">
+        <source>installation_complete</source>
+        <target>Installazione completa</target>
+        
+      </trans-unit>
+      <trans-unit id="67">
+        <source>installation_complete_explain</source>
+        <target>Ora è possibile accedere al back end di Contao e verificare le impostazioni di sistema</target>
+        
+      </trans-unit>
+      <trans-unit id="68">
+        <source>back_end</source>
+        <target>Backend di Contao </target>
+        
+      </trans-unit>
+      <trans-unit id="69">
+        <source>old_database</source>
+        <target>Il database non è aggiornato!</target>
+        
+      </trans-unit>
+      <trans-unit id="70">
+        <source>old_database_explanation</source>
+        <target>E' necessario almeno Contao 3.2 per eseguire l'aggiornamento a Contao 4.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
