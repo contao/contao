@@ -21,6 +21,8 @@ use Symfony\Component\Process\Process;
  */
 class ScriptHandler
 {
+    const RANDOM_SECRET_NAME = 'CONTAO_RANDOM_SECRET';
+
     /**
      * Adds the Contao directories.
      *
@@ -54,7 +56,7 @@ class ScriptHandler
             return;
         }
 
-        putenv('CONTAO_RANDOM_SECRET=' . bin2hex(random_bytes(32)));
+        putenv(static::RANDOM_SECRET_NAME . '=' . bin2hex(random_bytes(32)));
     }
 
     /**
@@ -101,9 +103,11 @@ class ScriptHandler
             $result = false;
 
             foreach ($config as $v) {
-                if (is_array($v) && isset($v['file']) && !is_file($v['file'])) {
-                    $result = true;
+                if (is_array($v) && isset($v['file']) && is_file($v['file'])) {
+                    return false;
                 }
+
+                $result = true;
             }
 
             return $result;
