@@ -1,0 +1,26 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en" target-language="hr">
+    <body>
+      <trans-unit id="tl_user.faqs.0">
+        <source>Allowed FAQ categories</source>
+        <target>Dozvoljene kategorije učestalih pitanja</target>
+      </trans-unit>
+      <trans-unit id="tl_user.faqs.1">
+        <source>Here you can grant access to one or more FAQ categories.</source>
+        <target>Ovdje možete dati dozvole pristupa jednom ili više kategorija učestalih pitanja.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.faqp.0">
+        <source>FAQ category permissions</source>
+        <target>Dozvole kategorija učestalih pitanja</target>
+      </trans-unit>
+      <trans-unit id="tl_user.faqp.1">
+        <source>Here you can define the FAQ category permissions.</source>
+        <target>Definirajte dozvole kategorija učestalih pitanja</target>
+      </trans-unit>
+      <trans-unit id="tl_user.faq_legend">
+        <source>FAQ permissions</source>
+        <target>Dozvole učestalih pitanja</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
