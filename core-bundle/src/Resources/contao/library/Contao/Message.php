@@ -193,10 +193,7 @@ class Message
 	 */
 	public static function reset()
 	{
-		foreach (static::getTypes() as $strType)
-		{
-			$_SESSION[$strType] = array();
-		}
+		unset($_SESSION['MESSAGES']);
 	}
 
 

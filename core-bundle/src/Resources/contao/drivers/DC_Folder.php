@@ -1000,7 +1000,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			if (!$objUploader->hasError())
 			{
 				// Do not purge the html folder (see #2898)
-				if (\Input::post('uploadNback') && !$objUploader->hasResized())
+				if (isset($_POST['uploadNback']) && !$objUploader->hasResized())
 				{
 					\Message::reset();
 					$this->redirect($this->getReferer());

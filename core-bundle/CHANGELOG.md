@@ -5,6 +5,9 @@ Version 4.0.4 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Correctly upload and go back (see #345).
+
+### Fixed
 Remove the SMTP settings from the back end editor (see #363).
 
 ### Fixed
