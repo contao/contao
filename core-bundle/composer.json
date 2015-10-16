@@ -1,0 +1,56 @@
+{
+    "name": "contao/core-bundle",
+    "type": "symfony-bundle",
+    "description": "Contao 4 core bundle",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "symfony/framework-bundle": "~2.7",
+        "symfony/console": "^2.7.3",
+        "symfony/filesystem": "~2.7",
+        "symfony/finder": "~2.7",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/yaml": "~2.7",
+        "sensio/framework-extra-bundle": "^3.0.2",
+        "twig/twig": "~1.18",
+        "doctrine/doctrine-bundle": "~1.4",
+        "leafo/scssphp": "~0.1",
+        "matthiasmullie/minify": "~1.3",
+        "michelf/php-markdown": "~1.4",
+        "oyejorge/less.php": "~1.7",
+        "phpspec/php-diff": "~1.0",
+        "simplepie/simplepie": "~1.3",
+        "tecnick.com/tcpdf": "~6.0",
+        "true/punycode": "~1.0",
+        "contao-components/all": "~4.0"
+    },
+    "require-dev": {
+        "composer/composer": "~1.0@dev",
+        "fabpot/php-cs-fixer": "~1.8",
+        "phpunit/phpunit": "~4.5",
+        "symfony/phpunit-bridge": "~2.7"
+    },
+    "config": {
+        "component-dir": "vendor/contao-components"
+    },
+    "conflict": {
+        "contao/core": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\CoreBundle\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "4.1.x-dev",
+            "dev-hotfix/4.0.2": "4.0.x-dev"
+        }
+    }
+}
