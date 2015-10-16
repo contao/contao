@@ -304,24 +304,45 @@ class StringUtil
 	 */
 	public static function encodeEmail($strString)
 	{
-		$arrEmails = array();
-
-		preg_match_all('/\w([-.+!#$%&\'*\/=?^`{}|~\w]*\w)?@\w([-.\w]*\w)?\.\w{2,63}/u', $strString, $arrEmails);
-
-		foreach ((array) $arrEmails[0] as $strEmail)
+		foreach (static::extractEmail($strString) as $strEmail)
 		{
 			$strEncoded = '';
-			$arrCharacters = utf8_str_split($strEmail);
+			$arrCharacters = Utf8::str_split($strEmail);
 
 			foreach ($arrCharacters as $strCharacter)
 			{
-				$strEncoded .= sprintf((rand(0, 1) ? '&#x%X;' : '&#%s;'), utf8_ord($strCharacter));
+				$strEncoded .= sprintf((rand(0, 1) ? '&#x%X;' : '&#%s;'), Utf8::ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);
 		}
 
 		return str_replace('mailto:', '&#109;&#97;&#105;&#108;&#116;&#111;&#58;', $strString);
+	}
+
+
+	/**
+	 * Extract all e-mail addresses from a string
+	 *
+	 * @param string $strString The string
+	 *
+	 * @return array The e-mail addresses
+	 */
+	public static function extractEmail($strString)
+	{
+		$arrEmails = array();
+
+		preg_match_all('/(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', $strString, $arrEmails);
+
+		foreach ($arrEmails[0] as $strKey=>$strEmail)
+		{
+			if (!\Validator::isEmail($strEmail))
+			{
+				unset($arrEmails[0][$strKey]);
+			}
+		}
+
+		return array_values($arrEmails[0]);
 	}
 
 
