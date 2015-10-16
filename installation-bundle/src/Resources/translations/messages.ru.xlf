@@ -1,0 +1,356 @@
+<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="1">
+        <source>install_tool</source>
+        <target>Мастер установки Contao</target>
+        
+      </trans-unit>
+      <trans-unit id="2">
+        <source>an_error_occurred</source>
+        <target>Произошла ошибка</target>
+        
+      </trans-unit>
+      <trans-unit id="3">
+        <source>locked_headline</source>
+        <target>Мастер установки заблокирован!</target>
+        
+      </trans-unit>
+      <trans-unit id="4">
+        <source>locked_explanation</source>
+        <target>В целях безопасности, мастер установки Contao заблокирован после ввода, более чем трех раз подряд, неправильного пароля. Для разблокирования, откройте локальный файл конфигурации и установите в поле &lt;code&gt;installCount&lt;/code&gt; значение &lt;code&gt;0&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="5">
+        <source>file_permissions_headline</source>
+        <target>PHP процессу не разрешено записывать файлы.</target>
+        
+      </trans-unit>
+      <trans-unit id="6">
+        <source>file_permissions_explanation</source>
+        <target>Сервер не поддерживает доступ к файлам с через PHP; скорее всего, PHP работает как модуль Apache под другим пользователем. Обратитесь к администратору сервера и попросите его решить эту проблему</target>
+        
+      </trans-unit>
+      <trans-unit id="7">
+        <source>file_permissions_warning</source>
+        <target>&lt;strong&gt;Не пытайтесь исправить это самостоятельно предоставляя файлам и каталогам права доступа на запись 'для всех'!&lt;/strong&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="8">
+        <source>accept_license</source>
+        <target>Принять лицензию</target>
+        
+      </trans-unit>
+      <trans-unit id="9">
+        <source>set_password</source>
+        <target>Пароль для входа в мастер установки</target>
+        
+      </trans-unit>
+      <trans-unit id="10">
+        <source>set_password_hint</source>
+        <target>Введите пароль для предотвращения несанкционированного доступа.</target>
+        
+      </trans-unit>
+      <trans-unit id="11">
+        <source>password</source>
+        <target>Пароль</target>
+        
+      </trans-unit>
+      <trans-unit id="12">
+        <source>confirmation</source>
+        <target>Подтвердите пароль</target>
+        
+      </trans-unit>
+      <trans-unit id="13">
+        <source>save_password</source>
+        <target>Сохранить пароль</target>
+        
+      </trans-unit>
+      <trans-unit id="14">
+        <source>password_confirmation_mismatch</source>
+        <target>Пароль подтверждения не совпадает!</target>
+        
+      </trans-unit>
+      <trans-unit id="15">
+        <source>password_too_short</source>
+        <target>Пароль должен содержать минимум %d символов!</target>
+        
+      </trans-unit>
+      <trans-unit id="16">
+        <source>login</source>
+        <target>Вход в мастер установки</target>
+        
+      </trans-unit>
+      <trans-unit id="17">
+        <source>login_explanation</source>
+        <target>Введите пароль для входа в мастер установки. Пароль для входа в мастер установки не связан с паролем для входа в панель управления Contao.</target>
+        
+      </trans-unit>
+      <trans-unit id="18">
+        <source>allow_cookies</source>
+        <target>Разрешите cookies для использования Contao.</target>
+        
+      </trans-unit>
+      <trans-unit id="19">
+        <source>login</source>
+        <target>Вход</target>
+        
+      </trans-unit>
+      <trans-unit id="20">
+        <source>invalid_password</source>
+        <target>Неверный пароль!</target>
+        
+      </trans-unit>
+      <trans-unit id="21">
+        <source>database_connection</source>
+        <target>Соединение с базой данных</target>
+        
+      </trans-unit>
+      <trans-unit id="22">
+        <source>database_connected</source>
+        <target>Подключение к базе данных установлено.</target>
+        
+      </trans-unit>
+      <trans-unit id="23">
+        <source>database_could_not_connect</source>
+        <target>Не удалось подключиться к базе данных!</target>
+        
+      </trans-unit>
+      <trans-unit id="24">
+        <source>database_connection_explain</source>
+        <target>Введите настройки соединения с базой данных.</target>
+        
+      </trans-unit>
+      <trans-unit id="25">
+        <source>database_host</source>
+        <target>Хост</target>
+        
+      </trans-unit>
+      <trans-unit id="26">
+        <source>database_port</source>
+        <target>Порт</target>
+        
+      </trans-unit>
+      <trans-unit id="27">
+        <source>database_user</source>
+        <target>Имя пользователя</target>
+        
+      </trans-unit>
+      <trans-unit id="28">
+        <source>database_password</source>
+        <target>Пароль</target>
+        
+      </trans-unit>
+      <trans-unit id="29">
+        <source>database_name</source>
+        <target>Имя базы данных</target>
+        
+      </trans-unit>
+      <trans-unit id="30">
+        <source>save_settings</source>
+        <target>Сохранить настройки</target>
+        
+      </trans-unit>
+      <trans-unit id="31">
+        <source>update_tables</source>
+        <target>Обновить базу данных</target>
+        
+      </trans-unit>
+      <trans-unit id="32">
+        <source>update_tables_explain</source>
+        <target>Обратите внимание: помощник обновления базы данных обрабатывает только таблицы начинающиеся с префикса &lt;code&gt;tl_&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="33">
+        <source>update_tables_confirm</source>
+        <target>База данных обновлена.</target>
+        
+      </trans-unit>
+      <trans-unit id="34">
+        <source>update_save</source>
+        <target>Обновление базы данных</target>
+        
+      </trans-unit>
+      <trans-unit id="35">
+        <source>CREATE</source>
+        <target>Создание таблиц</target>
+        
+      </trans-unit>
+      <trans-unit id="36">
+        <source>ALTER_ADD</source>
+        <target>Добавление колонок</target>
+        
+      </trans-unit>
+      <trans-unit id="37">
+        <source>ALTER_CHANGE</source>
+        <target>Изменение колонок</target>
+        
+      </trans-unit>
+      <trans-unit id="38">
+        <source>ALTER_DROP</source>
+        <target>Удаление колонок</target>
+        
+      </trans-unit>
+      <trans-unit id="39">
+        <source>DROP</source>
+        <target>Удаление таблиц</target>
+        
+      </trans-unit>
+      <trans-unit id="40">
+        <source>select_all</source>
+        <target>Выбрать всё</target>
+        
+      </trans-unit>
+      <trans-unit id="41">
+        <source>template_import</source>
+        <target>Импорт шаблона</target>
+        
+      </trans-unit>
+      <trans-unit id="42">
+        <source>template_import_explain</source>
+        <target>Вы можете импортировать файл содержащий предварительно настроенный пример веб-сайта в формате &lt;code&gt;.sql&lt;/code&gt; из каталога &lt;code&gt;templates&lt;/code&gt;. Все существующие данные будут удалены! Если хотите импортировать тему веб-сайта, то используйте менеджер тем в панели управления Contao.</target>
+        
+      </trans-unit>
+      <trans-unit id="43">
+        <source>import_exception</source>
+        <target>Ошибка импорта! Убедитесь в совместимости базы данных и текущего шаблона с используемой версией Contao.</target>
+        
+      </trans-unit>
+      <trans-unit id="44">
+        <source>import_empty_source</source>
+        <target>Выберите файл шаблона веб-сайта!</target>
+        
+      </trans-unit>
+      <trans-unit id="45">
+        <source>import_data_will_be_deleted</source>
+        <target>Все существующие данные будут удалены!</target>
+        
+      </trans-unit>
+      <trans-unit id="46">
+        <source>imported_on</source>
+        <target>Шаблон веб-сайта импортирован %s</target>
+        
+      </trans-unit>
+      <trans-unit id="47">
+        <source>templates</source>
+        <target>Шаблоны</target>
+        
+      </trans-unit>
+      <trans-unit id="48">
+        <source>do_not_truncate</source>
+        <target>Не очищать таблицы в базе данных</target>
+        
+      </trans-unit>
+      <trans-unit id="49">
+        <source>import_confirm</source>
+        <target>Все существующие данные будут удалены! Вы хотите продолжить?</target>
+        
+      </trans-unit>
+      <trans-unit id="50">
+        <source>template_save</source>
+        <target>Импорт шаблона веб-сайта</target>
+        
+      </trans-unit>
+      <trans-unit id="51">
+        <source>admin_create</source>
+        <target>Создание учетной записи администратора</target>
+        
+      </trans-unit>
+      <trans-unit id="52">
+        <source>admin_create_explain</source>
+        <target>Вы можете создать пользователя с правами администратора для входа в панель управления Contao.</target>
+        
+      </trans-unit>
+      <trans-unit id="53">
+        <source>admin_confirm</source>
+        <target>Учетная запись администратора создана.</target>
+        
+      </trans-unit>
+      <trans-unit id="54">
+        <source>admin_username</source>
+        <target>Имя пользователя</target>
+        
+      </trans-unit>
+      <trans-unit id="55">
+        <source>admin_name</source>
+        <target>Имя</target>
+        
+      </trans-unit>
+      <trans-unit id="56">
+        <source>admin_email</source>
+        <target>E-mail</target>
+        
+      </trans-unit>
+      <trans-unit id="57">
+        <source>admin_save</source>
+        <target>Создать учетную запись администратора</target>
+        
+      </trans-unit>
+      <trans-unit id="58">
+        <source>admin_error_extnd</source>
+        <target>По соображениям безопасности, вы не должны использовать здесь следующие символы: #()/&lt;=&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="59">
+        <source>admin_error_no_space</source>
+        <target>Имя пользователя не должно содержать пробелов!</target>
+        
+      </trans-unit>
+      <trans-unit id="60">
+        <source>admin_error_email</source>
+        <target>Введите действующий e-mail адрес.</target>
+        
+      </trans-unit>
+      <trans-unit id="61">
+        <source>admin_error_password_match</source>
+        <target>Пароли не совпадают!</target>
+        
+      </trans-unit>
+      <trans-unit id="62">
+        <source>admin_error_password_user</source>
+        <target>Логин не должен совпадать с паролем!</target>
+        
+      </trans-unit>
+      <trans-unit id="63">
+        <source>admin_error</source>
+        <target>Заполните все поля для создания учетной записи администратора!</target>
+        
+      </trans-unit>
+      <trans-unit id="64">
+        <source>congratulations</source>
+        <target>Поздравляем!</target>
+        
+      </trans-unit>
+      <trans-unit id="65">
+        <source>congratulations_explain</source>
+        <target>Вы успешно установили Contao.</target>
+        
+      </trans-unit>
+      <trans-unit id="66">
+        <source>installation_complete</source>
+        <target>Установка завершена</target>
+        
+      </trans-unit>
+      <trans-unit id="67">
+        <source>installation_complete_explain</source>
+        <target>Теперь перейдите к панели управления Contao и проверьте настройки системы.</target>
+        
+      </trans-unit>
+      <trans-unit id="68">
+        <source>back_end</source>
+        <target>Панель управления Contao</target>
+        
+      </trans-unit>
+      <trans-unit id="69">
+        <source>old_database</source>
+        <target>База данных устарела!</target>
+        
+      </trans-unit>
+      <trans-unit id="70">
+        <source>old_database_explanation</source>
+        <target>Вам необходима как минимум Contao версии 3.2 для обновления до Contao 4.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

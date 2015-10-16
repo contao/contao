@@ -51,7 +51,7 @@ class ContainerFactory
 
         // Set up the kernel parameters
         $container->setParameter('kernel.root_dir', $rootDir);
-        $container->setParameter('kernel.cache_dir', $rootDir . '/cache/prod');
+        $container->setParameter('kernel.cache_dir', $rootDir . '/cache/install');
         $container->setParameter('kernel.debug', false);
 
         // Load the parameters.yml file

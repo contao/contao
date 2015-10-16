@@ -378,6 +378,12 @@ class InstallationController extends ContainerAware
     {
         $installTool = $this->container->get('contao.install_tool');
 
+        if (!$installTool->hasTable('tl_user')) {
+            $this->context['hide_admin'] = true;
+
+            return null;
+        }
+
         if ($installTool->hasAdminUser()) {
             $this->context['has_admin'] = true;
 

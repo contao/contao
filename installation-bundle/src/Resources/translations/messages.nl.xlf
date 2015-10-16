@@ -1,0 +1,356 @@
+<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="1">
+        <source>install_tool</source>
+        <target>Contao installatie programma</target>
+        
+      </trans-unit>
+      <trans-unit id="2">
+        <source>an_error_occurred</source>
+        <target>Er is een fout opgetreden</target>
+        
+      </trans-unit>
+      <trans-unit id="3">
+        <source>locked_headline</source>
+        <target>Het installatie programma is geblokkeerd</target>
+        
+      </trans-unit>
+      <trans-unit id="4">
+        <source>locked_explanation</source>
+        <target>Het installatie programma is om veiligheidsredenen geblokkeerd omdat een wachtwoord meer dan drie keer achter elkaar verkeerd is ingevoerd. Om te ontgrendelen, open localconfig en zet &lt;em&gt;installCount&lt;/em&gt; op&lt;em&gt;0&lt;/em&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="5">
+        <source>file_permissions_headline</source>
+        <target>Het is PHP niet toegestaan om bestanden te beschrijven!</target>
+        
+      </trans-unit>
+      <trans-unit id="6">
+        <source>file_permissions_explanation</source>
+        <target>Uw server ondersteunt geen toegang tot bestanden via PHP; hoogstwaarschijnlijk draait PHP als Apache module onder een andere gebruiker. Neem contact op met uw serverbeheerder en vraag hem om dit probleem op te lossen.</target>
+        
+      </trans-unit>
+      <trans-unit id="7">
+        <source>file_permissions_warning</source>
+        <target>&lt;strong&gt;Ga dit niet oplossen door bestanden en mappen beschrijfbaar te maken voor iedereen!&lt;/strong&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="8">
+        <source>accept_license</source>
+        <target>Accepteer licentie</target>
+        
+      </trans-unit>
+      <trans-unit id="9">
+        <source>set_password</source>
+        <target>Installatie programma wachtwoord</target>
+        
+      </trans-unit>
+      <trans-unit id="10">
+        <source>set_password_hint</source>
+        <target>Voer een wachtwoord in om onbevoegde toegang te voorkomen!</target>
+        
+      </trans-unit>
+      <trans-unit id="11">
+        <source>password</source>
+        <target>Wachtwoord</target>
+        
+      </trans-unit>
+      <trans-unit id="12">
+        <source>confirmation</source>
+        <target>Bevestiging</target>
+        
+      </trans-unit>
+      <trans-unit id="13">
+        <source>save_password</source>
+        <target>Wachtwoord opslaan</target>
+        
+      </trans-unit>
+      <trans-unit id="14">
+        <source>password_confirmation_mismatch</source>
+        <target>Het wachtwoord komt niet overeen met de bevestiging!</target>
+        
+      </trans-unit>
+      <trans-unit id="15">
+        <source>password_too_short</source>
+        <target>Het wachtwoord dient minstens %d karakters lang te zijn!</target>
+        
+      </trans-unit>
+      <trans-unit id="16">
+        <source>login</source>
+        <target>Installatie programma login</target>
+        
+      </trans-unit>
+      <trans-unit id="17">
+        <source>login_explanation</source>
+        <target>Geef het installatie programma wachtwoord op. Dit is niet hetzelfde als het Contao backend wachtwoord.</target>
+        
+      </trans-unit>
+      <trans-unit id="18">
+        <source>allow_cookies</source>
+        <target>U dient cookies toe te staan om Contao te kunnen gebruiken.</target>
+        
+      </trans-unit>
+      <trans-unit id="19">
+        <source>login</source>
+        <target>Aanmelden</target>
+        
+      </trans-unit>
+      <trans-unit id="20">
+        <source>invalid_password</source>
+        <target>Ongeldig wachtwoord!</target>
+        
+      </trans-unit>
+      <trans-unit id="21">
+        <source>database_connection</source>
+        <target>Database verbinding</target>
+        
+      </trans-unit>
+      <trans-unit id="22">
+        <source>database_connected</source>
+        <target>Database verbinding tot stand gebracht.</target>
+        
+      </trans-unit>
+      <trans-unit id="23">
+        <source>database_could_not_connect</source>
+        <target>Geen verbinding met een database!</target>
+        
+      </trans-unit>
+      <trans-unit id="24">
+        <source>database_connection_explain</source>
+        <target>Controleer uw gegevens om met de database te verbinden.</target>
+        
+      </trans-unit>
+      <trans-unit id="25">
+        <source>database_host</source>
+        <target>Host</target>
+        
+      </trans-unit>
+      <trans-unit id="26">
+        <source>database_port</source>
+        <target>Poortnummer</target>
+        
+      </trans-unit>
+      <trans-unit id="27">
+        <source>database_user</source>
+        <target>Gebruikersnaam</target>
+        
+      </trans-unit>
+      <trans-unit id="28">
+        <source>database_password</source>
+        <target>Wachtwoord</target>
+        
+      </trans-unit>
+      <trans-unit id="29">
+        <source>database_name</source>
+        <target>Naam database</target>
+        
+      </trans-unit>
+      <trans-unit id="30">
+        <source>save_settings</source>
+        <target>Bewaar instellingen</target>
+        
+      </trans-unit>
+      <trans-unit id="31">
+        <source>update_tables</source>
+        <target>Update de database</target>
+        
+      </trans-unit>
+      <trans-unit id="32">
+        <source>update_tables_explain</source>
+        <target>Houd er rekening mee dat de update-assistent alleen tabellen afhandelt welke met &lt;code&gt; tl _ &lt;/ code&gt; beginnen.</target>
+        
+      </trans-unit>
+      <trans-unit id="33">
+        <source>update_tables_confirm</source>
+        <target>De database is up-to-date!</target>
+        
+      </trans-unit>
+      <trans-unit id="34">
+        <source>update_save</source>
+        <target>Update database</target>
+        
+      </trans-unit>
+      <trans-unit id="35">
+        <source>CREATE</source>
+        <target>Maak tabellen</target>
+        
+      </trans-unit>
+      <trans-unit id="36">
+        <source>ALTER_ADD</source>
+        <target>Voeg kolommen toe</target>
+        
+      </trans-unit>
+      <trans-unit id="37">
+        <source>ALTER_CHANGE</source>
+        <target>Wijzig kolommen</target>
+        
+      </trans-unit>
+      <trans-unit id="38">
+        <source>ALTER_DROP</source>
+        <target>Dump kolommen</target>
+        
+      </trans-unit>
+      <trans-unit id="39">
+        <source>DROP</source>
+        <target>Dump tabellen</target>
+        
+      </trans-unit>
+      <trans-unit id="40">
+        <source>select_all</source>
+        <target>Selecteer alles</target>
+        
+      </trans-unit>
+      <trans-unit id="41">
+        <source>template_import</source>
+        <target>Importeer een template</target>
+        
+      </trans-unit>
+      <trans-unit id="42">
+        <source>template_import_explain</source>
+        <target>Hier kunt u een &lt;code&gt;.sql&lt;/code&gt; bestand importeren van de &lt;code&gt;templates&lt;/code&gt; directory. Bestaande gegevens worden verwijderd! Als u alleen een thema wilt importeren, gebruik dan de thema-manager in het Contao backend.</target>
+        
+      </trans-unit>
+      <trans-unit id="43">
+        <source>import_exception</source>
+        <target>Importeren is mislukt! Is de database up-to-date en is het template bestand compatibel met uw Contao versie?</target>
+        
+      </trans-unit>
+      <trans-unit id="44">
+        <source>import_empty_source</source>
+        <target>Kies een template bestand!</target>
+        
+      </trans-unit>
+      <trans-unit id="45">
+        <source>import_data_will_be_deleted</source>
+        <target>Alle bestaande gegevens worden verwijderd!</target>
+        
+      </trans-unit>
+      <trans-unit id="46">
+        <source>imported_on</source>
+        <target>Template geïmporteerd bij %s</target>
+        
+      </trans-unit>
+      <trans-unit id="47">
+        <source>templates</source>
+        <target>Templates</target>
+        
+      </trans-unit>
+      <trans-unit id="48">
+        <source>do_not_truncate</source>
+        <target>Maak tabellen niet leeg</target>
+        
+      </trans-unit>
+      <trans-unit id="49">
+        <source>import_confirm</source>
+        <target>Alle bestaande gegevens worden verwijderd! Wilt u werkelijk verder gaan?</target>
+        
+      </trans-unit>
+      <trans-unit id="50">
+        <source>template_save</source>
+        <target>Importeer template</target>
+        
+      </trans-unit>
+      <trans-unit id="51">
+        <source>admin_create</source>
+        <target>Maak een admin gebruiker aan</target>
+        
+      </trans-unit>
+      <trans-unit id="52">
+        <source>admin_create_explain</source>
+        <target>Maak hier een admin gebruiker aan welke kan inloggen in het Contao backend.</target>
+        
+      </trans-unit>
+      <trans-unit id="53">
+        <source>admin_confirm</source>
+        <target>Een admin gebruiker is aangemaakt.</target>
+        
+      </trans-unit>
+      <trans-unit id="54">
+        <source>admin_username</source>
+        <target>Gebruikersnaam</target>
+        
+      </trans-unit>
+      <trans-unit id="55">
+        <source>admin_name</source>
+        <target>Naam</target>
+        
+      </trans-unit>
+      <trans-unit id="56">
+        <source>admin_email</source>
+        <target>E-mail</target>
+        
+      </trans-unit>
+      <trans-unit id="57">
+        <source>admin_save</source>
+        <target>Maak een admin gebruiker aan</target>
+        
+      </trans-unit>
+      <trans-unit id="58">
+        <source>admin_error_extnd</source>
+        <target>Om veiligheidsredenen mag u de volgende karakters hier niet gebruiken: #()/&lt;=&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="59">
+        <source>admin_error_no_space</source>
+        <target>De gebruikersnaam mag geen spaties bevatten!</target>
+        
+      </trans-unit>
+      <trans-unit id="60">
+        <source>admin_error_email</source>
+        <target>Geef een geldig e-mail adres op!</target>
+        
+      </trans-unit>
+      <trans-unit id="61">
+        <source>admin_error_password_match</source>
+        <target>De opgegeven wachtwoorden zijn niet gelijk!</target>
+        
+      </trans-unit>
+      <trans-unit id="62">
+        <source>admin_error_password_user</source>
+        <target>Uw gebruikersnaam en wachtwoord mogen niet gelijk zijn!</target>
+        
+      </trans-unit>
+      <trans-unit id="63">
+        <source>admin_error</source>
+        <target>Vul alle velden in om een admin gebruiker aan te maken!</target>
+        
+      </trans-unit>
+      <trans-unit id="64">
+        <source>congratulations</source>
+        <target>Gefeliciteerd!</target>
+        
+      </trans-unit>
+      <trans-unit id="65">
+        <source>congratulations_explain</source>
+        <target>Contao is met succes geïnstalleerd.</target>
+        
+      </trans-unit>
+      <trans-unit id="66">
+        <source>installation_complete</source>
+        <target>Installatie compleet</target>
+        
+      </trans-unit>
+      <trans-unit id="67">
+        <source>installation_complete_explain</source>
+        <target>Ga naar het Contao backend om de systeem instellingen te controleren.</target>
+        
+      </trans-unit>
+      <trans-unit id="68">
+        <source>back_end</source>
+        <target>Contao backend</target>
+        
+      </trans-unit>
+      <trans-unit id="69">
+        <source>old_database</source>
+        <target>De database is te oud!</target>
+        
+      </trans-unit>
+      <trans-unit id="70">
+        <source>old_database_explanation</source>
+        <target>U dient op zijn minst over Contao 3.2 te beschikken om om te kunnen upgraden naar Contao 4.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

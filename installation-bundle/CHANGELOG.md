@@ -5,6 +5,12 @@ Version 0.9.9 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Hide the admin user form if the table does not yet exist (see contao/core-bundle#366).
+
+### Fixed
+Set the kernel.cache_dir to a non existing directory (see #3).
+
+### Fixed
 Do not try to persist the admin e-mail twice (see contao/core-bundle#344).
 
 
