@@ -1,0 +1,140 @@
+##
+# Listener priorities
+#
+# The priorities of the following listeners must be lower than the one of the
+# Symfony route listener (defaults to 32).
+#
+# - 30: ContainerScopeListener
+# - 20: RefererIdListener
+# - 20: LocaleListener
+#
+# The priorities of the following listeners must be lower than the one of the
+# Symfony locale listener (defaults to 16).
+#
+# - 10: InitializeSystemListener
+#
+# Session listener
+#
+# The priority of the session listener must be higher than the other listeners but
+# lower than the one of the Symfony session listener (defaults to 128).
+#
+# - 64: SessionListener
+#
+# Exception listener
+#
+# The priority of the exception listeners must be higher than the one of the
+# Twig exception listener (defaults to 0).
+#
+# - 96: ExceptionConverterListener
+# - 64: ResponseExceptionListener
+# - 32: PrettyErrorScreensListener
+#
+# Do not change the priorities unless you know what you are doing!
+##
+services:
+    contao.listener.add_to_search_index:
+        class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
+        arguments:
+            - "@contao.framework"
+        tags:
+            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+    contao.listener.container_scope:
+        class: Contao\CoreBundle\EventListener\ContainerScopeListener
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+            - { name: kernel.event_listener, event: kernel.finish_request, method: onKernelFinishRequest, priority: -254 }
+
+    contao.listener.exception_converter:
+        class: Contao\CoreBundle\EventListener\ExceptionConverterListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 96 }
+
+    contao.listener.insecure_installation:
+        class: Contao\CoreBundle\EventListener\InsecureInstallationListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    contao.listener.locale:
+        class: Contao\CoreBundle\EventListener\LocaleListener
+        factory: [Contao\CoreBundle\EventListener\LocaleListener, createWithLocales]
+        arguments:
+            - "%kernel.default_locale%"
+            - "%kernel.root_dir%"
+        calls:
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
+
+    contao.listener.output_from_cache:
+        class: Contao\CoreBundle\EventListener\OutputFromCacheListener
+        arguments:
+            - "@contao.framework"
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    contao.listener.pretty_error_screens:
+        class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
+        arguments:
+            - "%contao.pretty_error_screens%"
+            - "@twig"
+            - "@contao.adapter.config"
+            - "@logger"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 32 }
+
+    contao.listener.referer_id:
+        class: Contao\CoreBundle\EventListener\RefererIdListener
+        arguments:
+            - "@contao.referer_id.manager"
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
+
+    contao.listener.response_exception:
+        class: Contao\CoreBundle\EventListener\ResponseExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 64 }
+
+    contao.listener.session:
+        class: Contao\CoreBundle\EventListener\SessionListener
+        arguments:
+            - "@session"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 64 }
+
+    contao.listener.store_referer:
+        class: Contao\CoreBundle\EventListener\StoreRefererListener
+        arguments:
+            - "@session"
+        calls:
+            - [setContainer, ["@service_container"]]
+            - [setTokenStorage, ["@security.token_storage"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    contao.listener.toggle_view:
+        class: Contao\CoreBundle\EventListener\ToggleViewListener
+        arguments:
+            - "@contao.framework"
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    contao.listener.user_session:
+        class: Contao\CoreBundle\EventListener\UserSessionListener
+        arguments:
+            - "@session"
+            - "@database_connection"
+        calls:
+            - [setContainer, ["@service_container"]]
+            - [setTokenStorage, ["@security.token_storage"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

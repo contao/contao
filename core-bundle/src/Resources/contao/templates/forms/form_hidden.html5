@@ -1,0 +1,2 @@
+
+<input type="hidden" name="<?= $this->name ?>" value="<?= $this->value ?>">
