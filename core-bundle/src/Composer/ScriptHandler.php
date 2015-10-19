@@ -44,7 +44,7 @@ class ScriptHandler
     }
 
     /**
-     * Sets environment variable for random secret on installation.
+     * Sets the environment variable for the random secret.
      *
      * @param Event $event The event object
      */
@@ -89,30 +89,24 @@ class ScriptHandler
     }
 
     /**
-     * Validates that we can generate a random secret.
-     * We need to make sure at least one file is defined in the config but none of the files exist.
+     * Checks if there is at least one config file defined but none of the files exits.
      *
-     * @param array $config
+     * @param array $config The incenteev-parameters configuration
      *
-     * @return bool
+     * @return bool True if there is at least one config file defined but none of the files exits
      */
     private static function canGenerateSecret(array $config)
     {
-        // "incenteev-parameters" config can be an array of files.
-        if (!isset($config['file'])) {
-            $result = false;
-
-            foreach ($config as $v) {
-                if (is_array($v) && isset($v['file']) && is_file($v['file'])) {
-                    return false;
-                }
-
-                $result = true;
-            }
-
-            return $result;
+        if (isset($config['file'])) {
+            return !is_file($config['file']);
         }
 
-        return !is_file($config['file']);
+        foreach ($config as $v) {
+            if (is_array($v) && isset($v['file']) && is_file($v['file'])) {
+                return false;
+            }
+        }
+
+        return !empty($config);
     }
 }

@@ -29,6 +29,9 @@ class ScriptHandlerTest extends TestCase
      */
     private $handler;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         $this->handler = new ScriptHandler();
@@ -43,6 +46,8 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
+     * Tests generating a random secret.
+     *
      * @runInSeparateProcess
      */
     public function testGeneratesRandomSecret()
@@ -63,6 +68,8 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
+     * Tests generating a random secret with an array of configuration files.
+     *
      * @runInSeparateProcess
      */
     public function testGeneratesRandomSecretArray()
@@ -73,12 +80,8 @@ class ScriptHandlerTest extends TestCase
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        [
-                            'file' => __DIR__ . '/../Fixtures/app/config/parameters.yml'
-                        ],
-                        [
-                            'file' => __DIR__ . '/../Fixtures/app/config/test.yml'
-                        ]
+                        ['file' => __DIR__ . '/../Fixtures/app/config/parameters.yml'],
+                        ['file' => __DIR__ . '/../Fixtures/app/config/test.yml'],
                     ]
                 ]
             )
@@ -88,6 +91,8 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
+     * Tests that no secret is generated if there is no configuration file.
+     *
      * @runInSeparateProcess
      */
     public function testGeneratesNoRandomSecretWithoutFileConfig()
@@ -112,6 +117,8 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
+     * Tests that no secret is generated if the configuration file exists.
+     *
      * @runInSeparateProcess
      */
     public function testGeneratesNoRandomSecretIfFileExists()
@@ -136,6 +143,8 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
+     * Tests that no secret is generated if at least one of multiple configuration files exists.
+     *
      * @runInSeparateProcess
      */
     public function testGeneratesNoRandomSecretIfFileExistsArray()
@@ -148,12 +157,8 @@ class ScriptHandlerTest extends TestCase
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        [
-                            'file' => __DIR__ . '/../Fixtures/app/config/parameters.yml'
-                        ],
-                        [
-                            'file' => __DIR__ . '/../Fixtures/app/config/test.yml'
-                        ]
+                        ['file' => __DIR__ . '/../Fixtures/app/config/parameters.yml'],
+                        ['file' => __DIR__ . '/../Fixtures/app/config/test.yml'],
                     ]
                 ]
             )
@@ -182,9 +187,11 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @param array $extra
+     * Returns the composer event object.
      *
-     * @return Event
+     * @param array $extra The extra configuration
+     *
+     * @return Event The event object
      */
     private function getComposerEvent(array $extra = [])
     {
@@ -194,9 +201,11 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @param PackageInterface $package
+     * Mocks the Composer object.
      *
-     * @return Composer|\PHPUnit_Framework_MockObject_MockObject
+     * @param PackageInterface $package The package interface
+     *
+     * @return Composer|\PHPUnit_Framework_MockObject_MockObject The composer object
      */
     private function mockComposer(PackageInterface $package)
     {
@@ -226,7 +235,9 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return IOInterface|\PHPUnit_Framework_MockObject_MockObject
+     * Mocks the IO object.
+     *
+     * @return IOInterface|\PHPUnit_Framework_MockObject_MockObject The IO object
      */
     private function mockIO()
     {
@@ -248,9 +259,11 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @param array $extras
+     * Mocks the package object.
      *
-     * @return PackageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @param array $extras The extra configuration
+     *
+     * @return PackageInterface|\PHPUnit_Framework_MockObject_MockObject The package object
      */
     private function mockPackage(array $extras = [])
     {
