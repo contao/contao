@@ -343,7 +343,7 @@ class FrontendTemplate extends \Template
 	 */
 	protected function addToSearchIndex()
 	{
-		trigger_error('Using FrontendTemplate::addToSearchIndex() has been deprecated and will no longer work in Contao 5.0. Use the kernel.terminate event instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendTemplate::addToSearchIndex() has been deprecated and will no longer work in Contao 5.0. Use the kernel.terminate event instead.', E_USER_DEPRECATED);
 	}
 
 
@@ -359,7 +359,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function getCustomSection($strKey)
 	{
-		trigger_error('Using FrontendTemplate::getCustomSection() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::section() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendTemplate::getCustomSection() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::section() instead.', E_USER_DEPRECATED);
 
 		return '<div id="' . $strKey . '">' . $this->sections[$strKey] . '</div>' . "\n";
 	}
@@ -377,7 +377,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function getCustomSections($strKey=null)
 	{
-		trigger_error('Using FrontendTemplate::getCustomSections() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::sections() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendTemplate::getCustomSections() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::sections() instead.', E_USER_DEPRECATED);
 
 		if ($strKey != '' && $this->sPosition != $strKey)
 		{

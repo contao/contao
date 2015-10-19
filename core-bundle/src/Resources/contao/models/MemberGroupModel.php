@@ -118,7 +118,7 @@ class MemberGroupModel extends \Model
 	 */
 	public static function findFirstActiveWithJumpToByIds($arrIds)
 	{
-		trigger_error('Using MemberGroupModel::findFirstActiveWithJumpToByIds() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findFirstActiveByMemberGroups() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using MemberGroupModel::findFirstActiveWithJumpToByIds() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findFirstActiveByMemberGroups() instead.', E_USER_DEPRECATED);
 
 		if (!is_array($arrIds) || empty($arrIds))
 		{

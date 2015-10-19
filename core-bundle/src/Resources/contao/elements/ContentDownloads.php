@@ -272,7 +272,7 @@ class ContentDownloads extends \ContentElement
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			case 'meta':
-				trigger_error('The "meta" key in ContentDownloads::compile() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+				@trigger_error('The "meta" key in ContentDownloads::compile() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 				// no break;
 
 			case 'custom':

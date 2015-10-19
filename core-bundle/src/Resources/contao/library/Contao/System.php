@@ -765,7 +765,7 @@ abstract class System
 	 */
 	protected static function readPhpFileWithoutTags($strName)
 	{
-		trigger_error('Using System::readPhpFileWithoutTags() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::readPhpFileWithoutTags() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.', E_USER_DEPRECATED);
 
 		// Convert to absolute path
 		if (strpos($strName, TL_ROOT . '/') === false)
@@ -793,7 +793,7 @@ abstract class System
 	 */
 	public static function convertXlfToPhp($strName, $strLanguage, $blnLoad=false)
 	{
-		trigger_error('Using System::convertXlfToPhp() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::convertXlfToPhp() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.', E_USER_DEPRECATED);
 
 		// Convert to absolute path
 		if (strpos($strName, TL_ROOT . '/') === false)
@@ -820,7 +820,7 @@ abstract class System
 	 */
 	public static function parseDate($strFormat, $intTstamp=null)
 	{
-		trigger_error('Using System::parseDate() has been deprecated and will no longer work in Contao 5.0. Use Date::parse() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::parseDate() has been deprecated and will no longer work in Contao 5.0. Use Date::parse() instead.', E_USER_DEPRECATED);
 
 		return \Date::parse($strFormat, $intTstamp);
 	}
@@ -838,7 +838,7 @@ abstract class System
 	 */
 	public static function addToUrl($strRequest)
 	{
-		trigger_error('Using System::addToUrl() has been deprecated and will no longer work in Contao 5.0. Use Controller::addToUrl() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::addToUrl() has been deprecated and will no longer work in Contao 5.0. Use Controller::addToUrl() instead.', E_USER_DEPRECATED);
 
 		return \Controller::addToUrl($strRequest);
 	}
@@ -852,7 +852,7 @@ abstract class System
 	 */
 	public static function reload()
 	{
-		trigger_error('Using System::reload() has been deprecated and will no longer work in Contao 5.0. Use Controller::reload() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::reload() has been deprecated and will no longer work in Contao 5.0. Use Controller::reload() instead.', E_USER_DEPRECATED);
 
 		\Controller::reload();
 	}
@@ -869,7 +869,7 @@ abstract class System
 	 */
 	public static function redirect($strLocation, $intStatus=303)
 	{
-		trigger_error('Using System::redirect() has been deprecated and will no longer work in Contao 5.0. Use Controller::redirect() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::redirect() has been deprecated and will no longer work in Contao 5.0. Use Controller::redirect() instead.', E_USER_DEPRECATED);
 
 		\Controller::redirect($strLocation, $intStatus);
 	}
@@ -885,7 +885,7 @@ abstract class System
 	 */
 	protected function addErrorMessage($strMessage)
 	{
-		trigger_error('Using System::addErrorMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addError() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::addErrorMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addError() instead.', E_USER_DEPRECATED);
 
 		\Message::addError($strMessage);
 	}
@@ -901,7 +901,7 @@ abstract class System
 	 */
 	protected function addConfirmationMessage($strMessage)
 	{
-		trigger_error('Using System::addConfirmationMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addConfirmation() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::addConfirmationMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addConfirmation() instead.', E_USER_DEPRECATED);
 
 		\Message::addConfirmation($strMessage);
 	}
@@ -917,7 +917,7 @@ abstract class System
 	 */
 	protected function addNewMessage($strMessage)
 	{
-		trigger_error('Using System::addNewMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addNew() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::addNewMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addNew() instead.', E_USER_DEPRECATED);
 
 		\Message::addNew($strMessage);
 	}
@@ -933,7 +933,7 @@ abstract class System
 	 */
 	protected function addInfoMessage($strMessage)
 	{
-		trigger_error('Using System::addInfoMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addInfo() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::addInfoMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addInfo() instead.', E_USER_DEPRECATED);
 
 		\Message::addInfo($strMessage);
 	}
@@ -949,7 +949,7 @@ abstract class System
 	 */
 	protected function addRawMessage($strMessage)
 	{
-		trigger_error('Using System::addRawMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addRaw() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::addRawMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addRaw() instead.', E_USER_DEPRECATED);
 
 		\Message::addRaw($strMessage);
 	}
@@ -966,7 +966,7 @@ abstract class System
 	 */
 	protected function addMessage($strMessage, $strType)
 	{
-		trigger_error('Using System::addMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::add() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::addMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::add() instead.', E_USER_DEPRECATED);
 
 		\Message::add($strMessage, $strType);
 	}
@@ -984,7 +984,7 @@ abstract class System
 	 */
 	protected function getMessages($strScope=TL_MODE)
 	{
-		trigger_error('Using System::getMessages() has been deprecated and will no longer work in Contao 5.0. Use Message::generate() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::getMessages() has been deprecated and will no longer work in Contao 5.0. Use Message::generate() instead.', E_USER_DEPRECATED);
 
 		return \Message::generate($strScope);
 	}
@@ -998,7 +998,7 @@ abstract class System
 	 */
 	protected function resetMessages()
 	{
-		trigger_error('Using System::resetMessages() has been deprecated and will no longer work in Contao 5.0. Use Message::reset() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::resetMessages() has been deprecated and will no longer work in Contao 5.0. Use Message::reset() instead.', E_USER_DEPRECATED);
 
 		\Message::reset();
 	}
@@ -1014,7 +1014,7 @@ abstract class System
 	 */
 	protected function getMessageTypes()
 	{
-		trigger_error('Using System::getMessageTypes() has been deprecated and will no longer work in Contao 5.0. Use Message::getTypes() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::getMessageTypes() has been deprecated and will no longer work in Contao 5.0. Use Message::getTypes() instead.', E_USER_DEPRECATED);
 
 		return \Message::getTypes();
 	}
@@ -1032,7 +1032,7 @@ abstract class System
 	 */
 	protected function idnaEncode($strDomain)
 	{
-		trigger_error('Using System::idnaEncode() has been deprecated and will no longer work in Contao 5.0. Use Idna::encode() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::idnaEncode() has been deprecated and will no longer work in Contao 5.0. Use Idna::encode() instead.', E_USER_DEPRECATED);
 
 		return \Idna::encode($strDomain);
 	}
@@ -1050,7 +1050,7 @@ abstract class System
 	 */
 	protected function idnaDecode($strDomain)
 	{
-		trigger_error('Using System::idnaDecode() has been deprecated and will no longer work in Contao 5.0. Use Idna::decode() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::idnaDecode() has been deprecated and will no longer work in Contao 5.0. Use Idna::decode() instead.', E_USER_DEPRECATED);
 
 		return \Idna::decode($strDomain);
 	}
@@ -1068,7 +1068,7 @@ abstract class System
 	 */
 	protected function idnaEncodeEmail($strEmail)
 	{
-		trigger_error('Using System::idnaEncodeEmail() has been deprecated and will no longer work in Contao 5.0. Use Idna::encodeEmail() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::idnaEncodeEmail() has been deprecated and will no longer work in Contao 5.0. Use Idna::encodeEmail() instead.', E_USER_DEPRECATED);
 
 		return \Idna::encodeEmail($strEmail);
 	}
@@ -1086,7 +1086,7 @@ abstract class System
 	 */
 	protected function idnaEncodeUrl($strUrl)
 	{
-		trigger_error('Using System::idnaEncodeUrl() has been deprecated and will no longer work in Contao 5.0. Use Idna::encodeUrl() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::idnaEncodeUrl() has been deprecated and will no longer work in Contao 5.0. Use Idna::encodeUrl() instead.', E_USER_DEPRECATED);
 
 		return \Idna::encodeUrl($strUrl);
 	}
@@ -1104,7 +1104,7 @@ abstract class System
 	 */
 	protected function isValidEmailAddress($strEmail)
 	{
-		trigger_error('Using System::isValidEmailAddress() has been deprecated and will no longer work in Contao 5.0. Use Validator::isEmail() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::isValidEmailAddress() has been deprecated and will no longer work in Contao 5.0. Use Validator::isEmail() instead.', E_USER_DEPRECATED);
 
 		return \Validator::isEmail($strEmail);
 	}
@@ -1122,7 +1122,7 @@ abstract class System
 	 */
 	public static function splitFriendlyName($strEmail)
 	{
-		trigger_error('Using System::splitFriendlyName() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::splitFriendlyEmail() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::splitFriendlyName() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::splitFriendlyEmail() instead.', E_USER_DEPRECATED);
 
 		return \StringUtil::splitFriendlyEmail($strEmail);
 	}
@@ -1140,7 +1140,7 @@ abstract class System
 	 */
 	public static function getIndexFreeRequest($blnAmpersand=true)
 	{
-		trigger_error('Using System::getIndexFreeRequest() has been deprecated and will no longer work in Contao 5.0. Use Environment::get("indexFreeRequest") instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::getIndexFreeRequest() has been deprecated and will no longer work in Contao 5.0. Use Environment::get("indexFreeRequest") instead.', E_USER_DEPRECATED);
 
 		return ampersand(\Environment::get('indexFreeRequest'), $blnAmpersand);
 	}
@@ -1158,7 +1158,7 @@ abstract class System
 	 */
 	public static function getModelClassFromTable($strTable)
 	{
-		trigger_error('Using System::getModelClassFromTable() has been deprecated and will no longer work in Contao 5.0. Use Model::getClassFromTable() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::getModelClassFromTable() has been deprecated and will no longer work in Contao 5.0. Use Model::getClassFromTable() instead.', E_USER_DEPRECATED);
 
 		return \Model::getClassFromTable($strTable);
 	}
@@ -1176,7 +1176,7 @@ abstract class System
 	 */
 	public static function enableModule($strName)
 	{
-		trigger_error('Using System::enableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
+		@trigger_error('Using System::enableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
 	}
 
 
@@ -1192,6 +1192,6 @@ abstract class System
 	 */
 	public static function disableModule($strName)
 	{
-		trigger_error('Using System::disableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
+		@trigger_error('Using System::disableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
 	}
 }

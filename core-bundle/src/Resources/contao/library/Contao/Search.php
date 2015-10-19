@@ -556,7 +556,7 @@ class Search
 	 */
 	public static function getInstance()
 	{
-		trigger_error('Using Search::getInstance() has been deprecated and will no longer work in Contao 5.0. The Search class is now static.', E_USER_DEPRECATED);
+		@trigger_error('Using Search::getInstance() has been deprecated and will no longer work in Contao 5.0. The Search class is now static.', E_USER_DEPRECATED);
 
 		if (static::$objInstance === null)
 		{

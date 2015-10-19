@@ -298,7 +298,7 @@ class Encryption
 	 */
 	public static function getInstance()
 	{
-		trigger_error('Using Encryption::getInstance() has been deprecated and will no longer work in Contao 5.0. The Encryption class is now static.', E_USER_DEPRECATED);
+		@trigger_error('Using Encryption::getInstance() has been deprecated and will no longer work in Contao 5.0. The Encryption class is now static.', E_USER_DEPRECATED);
 
 		if (static::$objInstance === null)
 		{

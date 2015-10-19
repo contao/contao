@@ -296,6 +296,6 @@ class FrontendIndex extends \Frontend
 	 */
 	protected function outputFromCache()
 	{
-		trigger_error('Using FrontendIndex::outputFromCache() has been deprecated and will no longer work in Contao 5.0. Use the kernel.request event instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendIndex::outputFromCache() has been deprecated and will no longer work in Contao 5.0. Use the kernel.request event instead.', E_USER_DEPRECATED);
 	}
 }

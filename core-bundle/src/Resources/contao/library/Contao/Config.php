@@ -329,7 +329,7 @@ class Config
 	 */
 	public function getActiveModules()
 	{
-		trigger_error('Using Config::getActiveModules() has been deprecated and will no longer work in Contao 5.0. Use the container parameter "kernel.bundles" instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Config::getActiveModules() has been deprecated and will no longer work in Contao 5.0. Use the container parameter "kernel.bundles" instead.', E_USER_DEPRECATED);
 
 		return \ModuleLoader::getActive();
 	}

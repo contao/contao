@@ -30,7 +30,7 @@ class Installer extends \Controller
 	 */
 	public function __construct()
 	{
-		trigger_error('Using the Contao\Database\Installer class has been deprecated and will no longer work in Contao 5.0. Use the Installer class from the contao/installation-bundle instead.', E_USER_DEPRECATED);
+		@trigger_error('Using the Contao\Database\Installer class has been deprecated and will no longer work in Contao 5.0. Use the Installer class from the contao/installation-bundle instead.', E_USER_DEPRECATED);
 
 		parent::__construct();
 	}

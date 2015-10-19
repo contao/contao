@@ -22,7 +22,7 @@ use Patchwork\Utf8;
  */
 function log_message($strMessage, $strLog=null)
 {
-	trigger_error('Using log_message() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead.', E_USER_DEPRECATED);
+	@trigger_error('Using log_message() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead.', E_USER_DEPRECATED);
 
 	if ($strLog === null)
 	{
@@ -546,7 +546,7 @@ function array_is_assoc($arrArray)
  */
 function utf8_chr($dec)
 {
-	trigger_error('Using utf8_chr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::chr() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_chr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::chr() instead.', E_USER_DEPRECATED);
 
 	return Utf8::chr($dec);
 }
@@ -566,7 +566,7 @@ function utf8_chr($dec)
  */
 function utf8_ord($str)
 {
-	trigger_error('Using utf8_ord() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::ord() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_ord() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::ord() instead.', E_USER_DEPRECATED);
 
 	return Utf8::ord($str);
 }
@@ -586,7 +586,7 @@ function utf8_ord($str)
  */
 function utf8_convert_encoding($str, $to, $from=null)
 {
-	trigger_error('Using utf8_convert_encoding() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::convertEncoding() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_convert_encoding() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::convertEncoding() instead.', E_USER_DEPRECATED);
 
 	if ($str == '')
 	{
@@ -632,7 +632,7 @@ function utf8_convert_encoding($str, $to, $from=null)
  */
 function utf8_decode_entities($str)
 {
-	trigger_error('Using utf8_decode_entities() has been deprecated and will no longer work in Contao 5.0. Use html_entity_decode() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_decode_entities() has been deprecated and will no longer work in Contao 5.0. Use html_entity_decode() instead.', E_USER_DEPRECATED);
 
 	$str = preg_replace_callback('~&#x([0-9a-f]+);~i', function($matches) {
 		return Utf8::chr(hexdec($matches[1]));
@@ -657,7 +657,7 @@ function utf8_decode_entities($str)
  */
 function utf8_chr_callback($matches)
 {
-	trigger_error('Using utf8_chr_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_chr_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 	return Utf8::chr($matches[1]);
 }
@@ -674,7 +674,7 @@ function utf8_chr_callback($matches)
  */
 function utf8_hexchr_callback($matches)
 {
-	trigger_error('Using utf8_hexchr_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_hexchr_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 	return Utf8::chr(hexdec($matches[1]));
 }
@@ -692,7 +692,7 @@ function utf8_hexchr_callback($matches)
  */
 function utf8_detect_encoding($str)
 {
-	trigger_error('Using utf8_detect_encoding() has been deprecated and will no longer work in Contao 5.0. Use mb_detect_encoding() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_detect_encoding() has been deprecated and will no longer work in Contao 5.0. Use mb_detect_encoding() instead.', E_USER_DEPRECATED);
 
 	return mb_detect_encoding($str, array('ASCII', 'ISO-2022-JP', 'UTF-8', 'EUC-JP', 'ISO-8859-1'));
 }
@@ -710,7 +710,7 @@ function utf8_detect_encoding($str)
  */
 function utf8_romanize($str)
 {
-	trigger_error('Using utf8_romanize() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::toAscii() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_romanize() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::toAscii() instead.', E_USER_DEPRECATED);
 
 	return Utf8::toAscii($str);
 }
@@ -728,7 +728,7 @@ function utf8_romanize($str)
  */
 function utf8_strlen($str)
 {
-	trigger_error('Using utf8_strlen() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strlen() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_strlen() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strlen() instead.', E_USER_DEPRECATED);
 
 	return Utf8::strlen($str);
 }
@@ -748,7 +748,7 @@ function utf8_strlen($str)
  */
 function utf8_strpos($haystack, $needle, $offset=0)
 {
-	trigger_error('Using utf8_strpos() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strpos() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_strpos() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strpos() instead.', E_USER_DEPRECATED);
 
 	return Utf8::strpos($haystack, $needle, $offset);
 }
@@ -767,7 +767,7 @@ function utf8_strpos($haystack, $needle, $offset=0)
  */
 function utf8_strrchr($haystack, $needle)
 {
-	trigger_error('Using utf8_strrchr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strrchr() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_strrchr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strrchr() instead.', E_USER_DEPRECATED);
 
 	return Utf8::strrchr($haystack, $needle);
 }
@@ -786,7 +786,7 @@ function utf8_strrchr($haystack, $needle)
  */
 function utf8_strrpos($haystack, $needle)
 {
-	trigger_error('Using utf8_strrpos() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strrpos() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_strrpos() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strrpos() instead.', E_USER_DEPRECATED);
 
 	return Utf8::strrpos($haystack, $needle);
 }
@@ -805,7 +805,7 @@ function utf8_strrpos($haystack, $needle)
  */
 function utf8_strstr($haystack, $needle)
 {
-	trigger_error('Using utf8_strstr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strstr() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_strstr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strstr() instead.', E_USER_DEPRECATED);
 
 	return Utf8::strstr($haystack, $needle);
 }
@@ -823,7 +823,7 @@ function utf8_strstr($haystack, $needle)
  */
 function utf8_strtolower($str)
 {
-	trigger_error('Using utf8_strtolower() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strtolower() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_strtolower() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strtolower() instead.', E_USER_DEPRECATED);
 
 	return Utf8::strtolower($str);
 }
@@ -841,7 +841,7 @@ function utf8_strtolower($str)
  */
 function utf8_strtoupper($str)
 {
-	trigger_error('Using utf8_strtoupper() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strtoupper() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_strtoupper() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::strtoupper() instead.', E_USER_DEPRECATED);
 
 	return Utf8::strtoupper($str);
 }
@@ -861,7 +861,7 @@ function utf8_strtoupper($str)
  */
 function utf8_substr($str, $start, $length=null)
 {
-	trigger_error('Using utf8_substr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::substr() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_substr() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::substr() instead.', E_USER_DEPRECATED);
 
 	return Utf8::substr($str, $start, $length);
 }
@@ -879,7 +879,7 @@ function utf8_substr($str, $start, $length=null)
  */
 function utf8_ucfirst($str)
 {
-	trigger_error('Using utf8_ucfirst() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::ucfirst() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_ucfirst() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::ucfirst() instead.', E_USER_DEPRECATED);
 
 	return Utf8::ucfirst($str);
 }
@@ -897,7 +897,7 @@ function utf8_ucfirst($str)
  */
 function utf8_str_split($str)
 {
-	trigger_error('Using utf8_str_split() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::str_split() instead.', E_USER_DEPRECATED);
+	@trigger_error('Using utf8_str_split() has been deprecated and will no longer work in Contao 5.0. Use Patchwork\Utf8::str_split() instead.', E_USER_DEPRECATED);
 
 	return Utf8::str_split($str);
 }
@@ -914,7 +914,7 @@ function utf8_str_split($str)
  */
 function nl2br_callback($matches)
 {
-	trigger_error('Using nl2br_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+	@trigger_error('Using nl2br_callback() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 	return str_replace("\n", '<br>', $matches[0]);
 }

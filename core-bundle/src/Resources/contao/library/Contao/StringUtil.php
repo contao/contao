@@ -82,7 +82,7 @@ class StringUtil
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strEllipsis === true)
 		{
-			trigger_error('Passing "true" as third argument to StringUtil::substr() has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.', E_USER_DEPRECATED);
+			@trigger_error('Passing "true" as third argument to StringUtil::substr() has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.', E_USER_DEPRECATED);
 
 			$strEllipsis = ' …';
 		}

@@ -1495,7 +1495,7 @@ abstract class Widget extends \Controller
 	 */
 	protected function addSubmit()
 	{
-		trigger_error('Using Widget::addSubmit() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using Widget::addSubmit() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		return '';
 	}

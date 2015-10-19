@@ -34,7 +34,7 @@ class InitializeController extends Controller
      */
     public function indexAction()
     {
-        trigger_error('Custom entry points are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        @trigger_error('Custom entry points are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         $masterRequest = $this->get('request_stack')->getMasterRequest();
         $realRequest = Request::createFromGlobals();
