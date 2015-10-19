@@ -69,10 +69,10 @@ class ParameterDumper
     public function dump()
     {
         if ('ThisTokenIsNotSoSecretChangeIt' === $this->parameters['parameters']['secret']) {
-            $this->parameters['parameters']['secret'] = md5(uniqid(mt_rand(), true));
+            $this->parameters['parameters']['secret'] = bin2hex(random_bytes(32));
         }
 
-        if ($this->parameters['parameters']['database_port']) {
+        if (isset($this->parameters['parameters']['database_port'])) {
             $this->parameters['parameters']['database_port'] = (int) $this->parameters['parameters']['database_port'];
         }
 
