@@ -296,12 +296,6 @@
       <trans-unit id="tl_settings.defaultChmod.1">
         <source>Please assign the default access rights for pages and articles.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.0">
-        <source>Live Update URL</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.1">
-        <source>Here you can enter the Live Update URL.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.title_legend">
         <source>Website title</source>
       </trans-unit>
@@ -346,9 +340,6 @@
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.update_legend">
-        <source>Live Update</source>
       </trans-unit>
       <trans-unit id="tl_settings.static_legend">
         <source>Static resources</source>

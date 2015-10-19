@@ -129,7 +129,6 @@ $GLOBALS['TL_CONFIG']['repository_wsdl']      = 'https://contao.org/services/rep
 $GLOBALS['TL_CONFIG']['repository_languages'] = 'en,de';
 $GLOBALS['TL_CONFIG']['repository_listsize']  = 10;
 $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
-$GLOBALS['TL_CONFIG']['liveUpdateId']         = '';
 $GLOBALS['TL_CONFIG']['disableInsertTags']    = false;
 $GLOBALS['TL_CONFIG']['rootFiles']            = [];
 $GLOBALS['TL_CONFIG']['fileSyncExclude']      = '';

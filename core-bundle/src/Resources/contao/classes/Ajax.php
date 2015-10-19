@@ -145,29 +145,6 @@ class Ajax extends \Backend
 				$objSessionBag->set('fieldset_states', $fs);
 				throw new NoContentResponseException();
 
-			// Check whether the temporary directory is writeable
-			case 'liveUpdate':
-				\Config::set('liveUpdateId', \Input::post('id'));
-				\Config::persist('liveUpdateId', \Input::post('id'));
-
-				// Check whether the temp directory is writeable
-				try
-				{
-					$objFile = new \File('system/tmp/' . md5(uniqid(mt_rand(), true)));
-					$objFile->close();
-					$objFile->delete();
-				}
-				catch (\Exception $e)
-				{
-					if ($e->getCode() == 0)
-					{
-						\System::loadLanguageFile('tl_maintenance');
-						throw new ResponseException($this->convertToResponse('<p class="tl_error">' . $GLOBALS['TL_LANG']['tl_maintenance']['notWriteable'] . '</p>'));
-					}
-				}
-
-				throw new NoContentResponseException();
-
 			// Toggle checkbox groups
 			case 'toggleCheckboxGroup':
 				$state = $objSessionBag->get('checkbox_groups');

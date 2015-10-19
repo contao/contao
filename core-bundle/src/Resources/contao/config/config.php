@@ -269,7 +269,6 @@ $GLOBALS['TL_PTY'] = array
  */
 $GLOBALS['TL_MAINTENANCE'] = array
 (
-	'LiveUpdate',
 	'RebuildIndex',
 	'PurgeData'
 );
