@@ -52,7 +52,7 @@ class ScriptHandler
     {
         $extra = $event->getComposer()->getPackage()->getExtra();
 
-        if (!isset($extra['incenteev-parameters']) || !static::canGenerateSecret($extra['incenteev-parameters'])) {
+        if (!isset($extra['incenteev-parameters']) || !self::canGenerateSecret($extra['incenteev-parameters'])) {
             return;
         }
 
