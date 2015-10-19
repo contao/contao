@@ -56,9 +56,6 @@
           <span class="header_home_container"><a href="<?= $this->route('contao_backend') ?>" class="header_home" title="<?= $this->homeTitle ?>" accesskey="h"><?= $this->home ?></a></span>
           <span class="header_logout_container"><a href="<?= $this->route('contao_backend_login') ?>" class="header_logout" title="<?= $this->logoutTitle ?>" accesskey="q"><?= $this->logout ?></a></span>
         </div>
-        <?php if ($this->isMaintenanceMode): ?>
-          <p class="tl_error tl_permalert"><?php if ($this->isAdmin): ?><a href="<?= $this->maintenanceHref ?>" class="tl_submit"><?= $this->maintenanceOff ?></a><?php endif; ?><?= $this->maintenanceMode ?></p>
-        <?php endif; ?>
         <?php if ($this->needsCacheBuild): ?>
           <p class="tl_error tl_permalert"><?php if ($this->isAdmin): ?><a href="<?= $this->buildCacheHref ?>" class="tl_submit"><?= $this->buildCacheLink ?></a><?php endif; ?><?= $this->buildCacheText ?></p>
         <?php endif; ?>
