@@ -39,6 +39,7 @@ class ExceptionConverterListener
         'Contao\\CoreBundle\\Exception\\NoRootPageFoundException' => 'InternalServerErrorHttpException',
         'Contao\\CoreBundle\\Exception\\PageNotFoundException' => 'NotFoundHttpException',
         'Contao\\CoreBundle\\Exception\\ServiceUnavailableException' => 'ServiceUnavailableHttpException',
+        'Lexik\\Bundle\\MaintenanceBundle\\Exception\\ServiceUnavailableException' => 'ServiceUnavailableHttpException',
     ];
 
     /**
