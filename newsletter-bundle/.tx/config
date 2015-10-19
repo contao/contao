@@ -2,47 +2,47 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[contao-newsletter-bundle.v4_0-default]
+[contao-newsletter-bundle.v4_1-default]
 source_file = src/Resources/contao/languages/en/default.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/default.xlf
 
-[contao-newsletter-bundle.v4_0-modules]
+[contao-newsletter-bundle.v4_1-modules]
 source_file = src/Resources/contao/languages/en/modules.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/modules.xlf
 
-[contao-newsletter-bundle.v4_0-tl_member]
+[contao-newsletter-bundle.v4_1-tl_member]
 source_file = src/Resources/contao/languages/en/tl_member.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_member.xlf
 
-[contao-newsletter-bundle.v4_0-tl_module]
+[contao-newsletter-bundle.v4_1-tl_module]
 source_file = src/Resources/contao/languages/en/tl_module.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
 
-[contao-newsletter-bundle.v4_0-tl_newsletter]
+[contao-newsletter-bundle.v4_1-tl_newsletter]
 source_file = src/Resources/contao/languages/en/tl_newsletter.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_newsletter.xlf
 
-[contao-newsletter-bundle.v4_0-tl_newsletter_channel]
+[contao-newsletter-bundle.v4_1-tl_newsletter_channel]
 source_file = src/Resources/contao/languages/en/tl_newsletter_channel.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_newsletter_channel.xlf
 
-[contao-newsletter-bundle.v4_0-tl_newsletter_recipients]
+[contao-newsletter-bundle.v4_1-tl_newsletter_recipients]
 source_file = src/Resources/contao/languages/en/tl_newsletter_recipients.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_newsletter_recipients.xlf
 
-[contao-newsletter-bundle.v4_0-tl_user]
+[contao-newsletter-bundle.v4_1-tl_user]
 source_file = src/Resources/contao/languages/en/tl_user.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_user.xlf
 
-[contao-newsletter-bundle.v4_0-tl_user_group]
+[contao-newsletter-bundle.v4_1-tl_user_group]
 source_file = src/Resources/contao/languages/en/tl_user_group.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_user_group.xlf
