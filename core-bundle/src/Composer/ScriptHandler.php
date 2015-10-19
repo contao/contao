@@ -21,6 +21,8 @@ use Symfony\Component\Process\Process;
  */
 class ScriptHandler
 {
+    const RANDOM_SECRET_NAME = 'CONTAO_RANDOM_SECRET';
+
     /**
      * Adds the Contao directories.
      *
@@ -39,6 +41,22 @@ class ScriptHandler
     public static function generateSymlinks(Event $event)
     {
         self::executeCommand('contao:symlinks', $event);
+    }
+
+    /**
+     * Sets environment variable for random secret on installation.
+     *
+     * @param Event $event The event object
+     */
+    public static function generateRandomSecret(Event $event)
+    {
+        $extra = $event->getComposer()->getPackage()->getExtra();
+
+        if (!isset($extra['incenteev-parameters']) || !static::canGenerateSecret($extra['incenteev-parameters'])) {
+            return;
+        }
+
+        putenv(static::RANDOM_SECRET_NAME . '=' . bin2hex(random_bytes(32)));
     }
 
     /**
@@ -68,5 +86,33 @@ class ScriptHandler
         if (!$process->isSuccessful()) {
             throw new \RuntimeException('An error occurred while executing the "' . $cmd . '" command.');
         }
+    }
+
+    /**
+     * Validates that we can generate a random secret.
+     * We need to make sure at least one file is defined in the config but none of the files exist.
+     *
+     * @param array $config
+     *
+     * @return bool
+     */
+    private static function canGenerateSecret(array $config)
+    {
+        // "incenteev-parameters" config can be an array of files.
+        if (!isset($config['file'])) {
+            $result = false;
+
+            foreach ($config as $v) {
+                if (is_array($v) && isset($v['file']) && is_file($v['file'])) {
+                    return false;
+                }
+
+                $result = true;
+            }
+
+            return $result;
+        }
+
+        return !is_file($config['file']);
     }
 }
