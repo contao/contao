@@ -20,8 +20,8 @@ use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Test\TestCase;
+use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -250,7 +250,7 @@ class ExceptionConverterListenerTest extends TestCase
         $exception = $event->getException();
 
         $this->assertInstanceOf('Symfony\\Component\\HttpKernel\\Exception\\ServiceUnavailableHttpException', $exception);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\ServiceUnavailableException', $exception->getPrevious());
+        $this->assertInstanceOf('Lexik\\Bundle\\MaintenanceBundle\\Exception\\ServiceUnavailableException', $exception->getPrevious());
     }
 
     /**
