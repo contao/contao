@@ -1,7 +1,7 @@
 
 <div id="tl_maintenance_index" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
 
-  <h2 class="sub_headline_index"><?= $this->indexHeadline ?></h2>
+  <h2 class="sub_headline sub_headline_index"><?= $this->indexHeadline ?></h2>
 
   <?php if ($this->indexMessage): ?>
     <div class="tl_message">

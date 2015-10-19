@@ -25,7 +25,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts,maintenanceMode;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},cacheMode,doNotRedirectEmpty,useAutoItem,folderUrl;{proxy_legend:hide},sslProxyDomain;{privacy_legend:hide},privacyAnonymizeIp,privacyAnonymizeGA;{security_legend},allowedTags,disableRefererCheck,disableIpCheck;{files_legend:hide},allowedDownload,validImageTypes,editableFiles,templateFiles,maxImageWidth,jpgQuality,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{cron_legend:hide},disableCron;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout,autologin,lockPeriod;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},cacheMode,doNotRedirectEmpty,useAutoItem,folderUrl;{proxy_legend:hide},sslProxyDomain;{privacy_legend:hide},privacyAnonymizeIp,privacyAnonymizeGA;{security_legend},allowedTags,disableRefererCheck,disableIpCheck;{files_legend:hide},allowedDownload,validImageTypes,editableFiles,templateFiles,maxImageWidth,jpgQuality,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{cron_legend:hide},disableCron;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout,autologin,lockPeriod;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -192,12 +192,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['allowedTags'],
 			'inputType'               => 'text',
 			'eval'                    => array('preserveTags'=>true, 'tl_class'=>'long')
-		),
-		'maintenanceMode' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['maintenanceMode'],
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50')
 		),
 		'disableIpCheck' => array
 		(

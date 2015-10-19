@@ -1,7 +1,7 @@
 
 <div id="tl_maintenance_cache" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
 
-  <h2 class="sub_headline"><?= $this->headline ?></h2>
+  <h2 class="sub_headline sub_headline_purge"><?= $this->headline ?></h2>
 
   <?php if ($this->message): ?>
     <div class="tl_message">

@@ -20,6 +20,15 @@
       <trans-unit id="tl_maintenance.description">
         <source>Description</source>
       </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceMode">
+        <source>Maintenance mode</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceEnable">
+        <source>Enable</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceDisable">
+        <source>Disable</source>
+      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
       </trans-unit>

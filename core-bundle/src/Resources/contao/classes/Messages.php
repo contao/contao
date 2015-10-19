@@ -36,6 +36,22 @@ class Messages extends \Backend
 
 
 	/**
+	 * Check for maintenance mode
+	 *
+	 * @return string
+	 */
+	public function maintenanceCheck()
+	{
+		if (file_exists(\System::getContainer()->getParameter('kernel.root_dir') . '/cache/lock'))
+		{
+			return '<p class="tl_error"><a href="contao/main.php?do=maintenance">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</a></p>';
+		}
+
+		return '';
+	}
+
+
+	/**
 	 * Return the date of the last login
 	 *
 	 * @return string

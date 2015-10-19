@@ -36,16 +36,6 @@ class FrontendIndex extends \Frontend
 		// Check whether a user is logged in
 		define('BE_USER_LOGGED_IN', $this->getLoginStatus('BE_USER_AUTH'));
 		define('FE_USER_LOGGED_IN', $this->getLoginStatus('FE_USER_AUTH'));
-
-		// No back end user logged in
-		if (!$_SESSION['DISABLE_CACHE'])
-		{
-			// Maintenance mode (see #4561 and #6353)
-			if (\Config::get('maintenanceMode') && !\System::getContainer()->get('kernel')->isDebug())
-			{
-				throw new ServiceUnavailableException('This site is currently down for maintenance. Please come back later.');
-			}
-		}
 	}
 
 

@@ -74,13 +74,6 @@ class BackendMain extends \Backend
 		// Convenience functions
 		if ($this->User->isAdmin)
 		{
-			// Maintenance mode off
-			if (\Input::get('mmo'))
-			{
-				\Config::persist('maintenanceMode', false);
-				$this->redirect($this->getReferer());
-			}
-
 			// Build internal cache
 			if (\Input::get('bic'))
 			{
@@ -247,10 +240,6 @@ class BackendMain extends \Backend
 		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
 		$this->Template->loadFonts = \Config::get('loadGoogleFonts');
 		$this->Template->isAdmin = $this->User->isAdmin;
-		$this->Template->isMaintenanceMode = \Config::get('maintenanceMode');
-		$this->Template->maintenanceMode = $GLOBALS['TL_LANG']['MSC']['maintenanceMode'];
-		$this->Template->maintenanceOff = specialchars($GLOBALS['TL_LANG']['MSC']['maintenanceOff']);
-		$this->Template->maintenanceHref = $this->addToUrl('mmo=1');
 		$this->Template->buildCacheLink = $GLOBALS['TL_LANG']['MSC']['buildCacheLink'];
 		$this->Template->buildCacheText = sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], \System::getContainer()->getParameter('kernel.environment'));
 		$this->Template->buildCacheHref = $this->addToUrl('bic=1');

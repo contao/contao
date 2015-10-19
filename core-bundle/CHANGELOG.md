@@ -4,6 +4,10 @@ Contao core bundle change log
 Version 4.1.0-beta1 (2015-XX-XX)
 --------------------------------
 
+### New
+Use the Lexik maintenance bundle and either enable the maintenance mode on the command
+line or in the back end maintenance module (see #283).
+
 ### Changed
 Update the hash of an existing file in `Dbafs::addResource()` (see contao/core#7828).
 

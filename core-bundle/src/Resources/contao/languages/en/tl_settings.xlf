@@ -140,12 +140,6 @@
       <trans-unit id="tl_settings.allowedTags.1">
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.0">
-        <source>Maintenance mode</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.1">
-        <source>Send a 503 HTTP header and show a maintenance page in the front end.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
       </trans-unit>

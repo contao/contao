@@ -154,7 +154,7 @@ h1.main_headline {
 .popup h1.main_headline {
 	display:none;
 }
-h2.sub_headline,h2.sub_headline_all,h2.sub_headline_update,h2.sub_headline_index,h2.sub_headline_rss {
+h2.sub_headline {
 	margin:3px 18px 9px;
 	padding:6px 0 8px 36px;
 	color:#8ab858;
@@ -172,6 +172,9 @@ h2.sub_headline_update {
 }
 h2.sub_headline_index {
 	background:url("images/index.gif") no-repeat left center;
+}
+h2.sub_headline_purge {
+	background:url("images/purge.gif") no-repeat left center;
 }
 .tl_message {
 	margin:18px 18px 0;
