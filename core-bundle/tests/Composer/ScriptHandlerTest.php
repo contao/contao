@@ -21,6 +21,9 @@ use Contao\CoreBundle\Test\TestCase;
  * Tests the ScriptHandler class.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class ScriptHandlerTest extends TestCase
 {
@@ -47,8 +50,6 @@ class ScriptHandlerTest extends TestCase
 
     /**
      * Tests generating a random secret.
-     *
-     * @runInSeparateProcess
      */
     public function testGeneratesRandomSecret()
     {
@@ -69,8 +70,6 @@ class ScriptHandlerTest extends TestCase
 
     /**
      * Tests generating a random secret with an array of configuration files.
-     *
-     * @runInSeparateProcess
      */
     public function testGeneratesRandomSecretArray()
     {
@@ -92,8 +91,6 @@ class ScriptHandlerTest extends TestCase
 
     /**
      * Tests that no secret is generated if there is no configuration file.
-     *
-     * @runInSeparateProcess
      */
     public function testGeneratesNoRandomSecretWithoutFileConfig()
     {
@@ -118,8 +115,6 @@ class ScriptHandlerTest extends TestCase
 
     /**
      * Tests that no secret is generated if the configuration file exists.
-     *
-     * @runInSeparateProcess
      */
     public function testGeneratesNoRandomSecretIfFileExists()
     {
@@ -144,8 +139,6 @@ class ScriptHandlerTest extends TestCase
 
     /**
      * Tests that no secret is generated if at least one of multiple configuration files exists.
-     *
-     * @runInSeparateProcess
      */
     public function testGeneratesNoRandomSecretIfFileExistsArray()
     {
