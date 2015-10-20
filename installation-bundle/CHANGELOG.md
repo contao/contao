@@ -1,11 +1,15 @@
 Contao installation bundle change log
 =====================================
 
-Version 0.9.9 (2015-XX-XX)
---------------------------
+Version 1.0.0-beta1 (2015-XX-XX)
+--------------------------------
 
-### Fixed
+### Changed
 Boot the real system as soon as the `parameters.yml` file exists.
+
+
+Version 0.9.9 (2015-10-16)
+--------------------------
 
 ### Fixed
 Hide the admin user form if the table does not yet exist (see contao/core-bundle#366).
