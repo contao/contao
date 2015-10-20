@@ -30,7 +30,7 @@ class InitializeController extends Controller
      *
      * @return InitializeControllerResponse The response object
      *
-     * @Route("/_initialize", name="contao_initialize")
+     * @Route("/_contao/initialize", name="contao_initialize")
      */
     public function indexAction()
     {
