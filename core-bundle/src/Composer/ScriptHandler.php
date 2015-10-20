@@ -89,11 +89,11 @@ class ScriptHandler
     }
 
     /**
-     * Checks if there is at least one config file defined but none of the files exits.
+     * Checks if there is at least one config file defined but none of the files exists.
      *
      * @param array $config The incenteev-parameters configuration
      *
-     * @return bool True if there is at least one config file defined but none of the files exits
+     * @return bool True if there is at least one config file defined but none of the files exists
      */
     private static function canGenerateSecret(array $config)
     {

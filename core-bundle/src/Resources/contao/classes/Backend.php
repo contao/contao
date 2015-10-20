@@ -873,7 +873,7 @@ abstract class Backend extends \Controller
 
 				if ($objPage->numRows < 1)
 				{
-					// Currently selected page does not exits
+					// Currently selected page does not exist
 					if ($intId == $intNode)
 					{
 						$objSession->set($strKey, 0);
