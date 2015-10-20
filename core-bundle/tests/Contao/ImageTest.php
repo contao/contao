@@ -1508,16 +1508,4 @@ class ImageTest extends TestCase
             'invalid' => ['abc', 0],
         ];
     }
-
-    /**
-     * Tests the getPixelValue() method deprecated percentage values.
-     */
-    public function testGetPixelValuePercentageDeprecated()
-    {
-        // Suppress deprecated error
-        $this->assertSame(16, @Image::getPixelValue('100%'));
-
-        $this->setExpectedException('PHPUnit_Framework_Error_Deprecated');
-        Image::getPixelValue('100%');
-    }
 }
