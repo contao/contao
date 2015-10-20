@@ -203,7 +203,7 @@
       <trans-unit id="tl_user.filemounts_legend">
         <source>Filemounts</source>
       </trans-unit>
-      <trans-unit id="tl_user.imagesizes_legend">
+      <trans-unit id="tl_user.imageSizes_legend">
         <source>Image sizes</source>
       </trans-unit>
       <trans-unit id="tl_user.forms_legend">

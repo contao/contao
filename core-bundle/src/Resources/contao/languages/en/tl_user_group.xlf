@@ -44,7 +44,7 @@
       <trans-unit id="tl_user_group.filemounts_legend">
         <source>Filemounts</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.imagesizes_legend">
+      <trans-unit id="tl_user_group.imageSizes_legend">
         <source>Image sizes</source>
       </trans-unit>
       <trans-unit id="tl_user_group.forms_legend">
