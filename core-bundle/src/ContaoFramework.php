@@ -413,8 +413,6 @@ class ContaoFramework implements ContaoFrameworkInterface
 
     /**
      * Handles the request token.
-     *
-     * @throws AjaxRedirectResponseException|InvalidRequestTokenException If the token is invalid
      */
     private function handleRequestToken()
     {
@@ -427,6 +425,16 @@ class ContaoFramework implements ContaoFrameworkInterface
             return;
         }
 
+        $this->validateRequestToken();
+    }
+
+    /**
+     * Validates the request token.
+     *
+     * @throws AjaxRedirectResponseException|InvalidRequestTokenException If the token is invalid
+     */
+    private function validateRequestToken()
+    {
         $token = new CsrfToken($this->csrfTokenName, $this->request->request->get('REQUEST_TOKEN'));
 
         if ($this->tokenManager->isTokenValid($token)) {
