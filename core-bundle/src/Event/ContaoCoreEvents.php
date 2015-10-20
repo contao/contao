@@ -19,20 +19,20 @@ namespace Contao\CoreBundle\Event;
 final class ContaoCoreEvents
 {
     /**
-     * The contao.image_sizes.all event is triggered when all image sizes are generated.
+     * The contao.image_sizes_all event is triggered when all image sizes are generated.
      *
      * @var string
      *
      * @see Contao\CoreBundle\Event\GetImageSizesEvent
      */
-    const IMAGE_SIZES_ALL = 'contao.image_sizes.all';
+    const IMAGE_SIZES_ALL = 'contao.image_sizes_all';
 
     /**
-     * The contao.image_sizes.user event is triggered when image sizes are generated for a user.
+     * The contao.image_sizes_user event is triggered when image sizes are generated for a user.
      *
      * @var string
      *
      * @see Contao\CoreBundle\Event\GetImageSizesEvent
      */
-    const IMAGE_SIZES_USER = 'contao.image_sizes.user';
+    const IMAGE_SIZES_USER = 'contao.image_sizes_user';
 }
