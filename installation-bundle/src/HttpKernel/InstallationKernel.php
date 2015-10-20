@@ -60,7 +60,7 @@ class InstallationKernel extends \AppKernel
         $request = Request::createFromGlobals();
 
         $request->attributes->add([
-            '_route' => 'contao_installation',
+            '_route' => 'contao_install',
             '_route_params' => [
                 '_scope' => 'backend'
             ],

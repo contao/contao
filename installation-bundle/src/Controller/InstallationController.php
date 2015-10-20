@@ -47,7 +47,7 @@ class InstallationController extends ContainerAware
      *
      * @return Response The response object
      *
-     * @Route("/_installation", name="contao_installation")
+     * @Route("/_contao/install", name="contao_install")
      */
     public function indexAction()
     {
