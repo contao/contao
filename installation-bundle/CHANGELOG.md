@@ -5,6 +5,9 @@ Version 0.9.9 (2015-XX-XX)
 --------------------------
 
 ### Fixed
+Boot the real system as soon as the `parameters.yml` file exists.
+
+### Fixed
 Hide the admin user form if the table does not yet exist (see contao/core-bundle#366).
 
 ### Fixed

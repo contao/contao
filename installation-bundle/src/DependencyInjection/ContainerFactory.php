@@ -16,17 +16,16 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\Environment;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Database\Installer;
-use Contao\InstallationBundle\HttpKernel\UnbootableKernel;
 use Contao\InstallationBundle\InstallTool;
 use Contao\InstallationBundle\InstallToolUser;
 use Contao\InstallationBundle\Translation\LanguageResolver;
-use Contao\System;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Yaml\Yaml;
@@ -41,12 +40,13 @@ class ContainerFactory
     /**
      * Returns the container object.
      *
-     * @param string $rootDir The root directoy
+     * @param KernelInterface $kernel The kernel object
      *
      * @return ContainerBuilder The object instance
      */
-    public static function create($rootDir)
+    public static function create(KernelInterface $kernel)
     {
+        $rootDir = $kernel->getRootDir();
         $container = new ContainerBuilder();
 
         // Set up the kernel parameters
@@ -107,10 +107,10 @@ class ContainerFactory
         $container->set('translator.default', $translator);
 
         // Set up Twig
-        $twig = new \Twig_Environment(
-            new \Twig_Loader_Filesystem(__DIR__ . '/../Resources/views')
-        );
+        $twigLoader = new \Twig_Loader_Filesystem();
+        $twigLoader->addPath(__DIR__ . '/../Resources/views', 'ContaoInstallation');
 
+        $twig = new \Twig_Environment($twigLoader);
         $twig->addGlobal('path', $request->getBasePath());
         $twig->addGlobal('language', str_replace('_', '-', $locale));
         $twig->addGlobal('ua', Environment::get('agent')->class);
@@ -125,19 +125,14 @@ class ContainerFactory
 
         $container->set('twig', $twig);
 
-        // Add the kernel bundles
-        $kernel = new UnbootableKernel('prod', false);
-        $kernel->setRootDir($rootDir);
-        $kernel->setBundles($kernel->registerBundles());
-
-        $bundles = [];
+        $kernelBundles = [];
 
         foreach ($kernel->getBundles() as $bundle) {
-            $bundles[$bundle->getName()] = get_class($bundle);
+            $kernelBundles[$bundle->getName()] = get_class($bundle);
         }
 
         $container->set('kernel', $kernel);
-        $container->setParameter('kernel.bundles', $bundles);
+        $container->setParameter('kernel.bundles', $kernelBundles);
 
         // Add the file system
         $container->set('filesystem', new Filesystem());

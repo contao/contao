@@ -1,0 +1,3 @@
+contao_installation:
+    resource: "@ContaoInstallationBundle/Controller"
+    type: annotation

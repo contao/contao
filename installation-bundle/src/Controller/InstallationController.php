@@ -18,6 +18,7 @@ use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Database\VersionUpdateInterface;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -31,6 +32,8 @@ use Symfony\Component\HttpFoundation\Response;
  * Handles the installation process.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @Route(defaults={"_scope" = "backend"})
  */
 class InstallationController extends ContainerAware
 {
@@ -43,6 +46,8 @@ class InstallationController extends ContainerAware
      * Handles the installation process.
      *
      * @return Response The response object
+     *
+     * @Route("/_installation", name="contao_installation")
      */
     public function indexAction()
     {
@@ -480,7 +485,7 @@ class InstallationController extends ContainerAware
      */
     private function render($name, $context = [])
     {
-        return new Response($this->container->get('twig')->render($name, $context));
+        return new Response($this->container->get('twig')->render('@ContaoInstallation/' . $name, $context));
     }
 
     /**
