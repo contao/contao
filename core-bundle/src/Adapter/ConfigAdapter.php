@@ -18,6 +18,9 @@ use Contao\Config;
  * @author Yanick Witschi <https://github.com/toflar>
  *
  * @internal
+ *
+ * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
+ *             Use ContaoFrameworkInterface::getAdapter('Config').
  */
 class ConfigAdapter
 {
