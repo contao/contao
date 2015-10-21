@@ -30,6 +30,14 @@ class ConfigAdapter
     private $config;
 
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        @trigger_error('The ConfigAdapter has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+    }
+
+    /**
      * Initializes the Config class.
      */
     public function initialize()
