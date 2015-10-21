@@ -74,7 +74,7 @@ class InstallationKernel extends \AppKernel
         $resolver = new LanguageResolver($requestStack, __DIR__ . '/../Resources/translations');
 
         $container->get('translator')->setLocale($resolver->getLocale());
-        $container->get('contao.framework')->setSkipTokenCheck(true)->initialize();
+        $container->get('contao.framework')->initialize();
     }
 
     /**

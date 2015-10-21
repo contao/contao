@@ -13,6 +13,7 @@
         <form method="post">
           <div class="tl_formbody">
             <input type="hidden" name="FORM_SUBMIT" value="tl_database_update">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
             <div id="sql_wrapper">
               <table id="sql_table">
               {% for category, commands in sql_form %}
@@ -57,6 +58,7 @@
       <form method="post">
         <div class="tl_formbody_submit">
           <input type="hidden" name="FORM_SUBMIT" value="tl_template_import">
+          <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
           <h4><label for="template">{{ 'templates'|trans }}</label></h4>
           <select name="template" id="template" class="tl_select">
             <option value="">-</option>
@@ -91,6 +93,7 @@
           <form method="post">
             <div class="tl_formbody">
               <input type="hidden" name="FORM_SUBMIT" value="tl_admin">
+              <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
               <h4><label for="username">{{ 'admin_username'|trans }}</label></h4>
               {% if admin_username_error %}
                 <p class="tl_error">{{ admin_username_error }}</p>

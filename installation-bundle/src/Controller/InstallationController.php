@@ -485,7 +485,12 @@ class InstallationController extends ContainerAware
      */
     private function render($name, $context = [])
     {
-        return new Response($this->container->get('twig')->render('@ContaoInstallation/' . $name, $context));
+        return new Response(
+            $this->container->get('twig')->render(
+                '@ContaoInstallation/' . $name,
+                $this->addRequestTokenToContext($context)
+            )
+        );
     }
 
     /**
@@ -508,5 +513,25 @@ class InstallationController extends ContainerAware
     private function getRedirectResponse()
     {
         return new RedirectResponse($this->container->get('request_stack')->getCurrentRequest()->getRequestUri());
+    }
+
+    /**
+     * Adds the request token to the template context.
+     *
+     * @param array $context The context
+     *
+     * @return array The context with the request token
+     */
+    private function addRequestTokenToContext(array $context)
+    {
+        $context['request_token'] = '';
+
+        if (file_exists($this->container->getParameter('kernel.root_dir') . '/config/parameters.yml')) {
+            $tokenName = $this->container->getParameter('contao.csrf_token_name');
+            $token = $this->container->get('security.csrf.token_manager')->getToken($tokenName);
+            $context['request_token'] = $token->getValue();
+        }
+
+        return $context;
     }
 }

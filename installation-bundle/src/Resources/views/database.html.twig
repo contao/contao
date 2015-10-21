@@ -11,6 +11,7 @@
       <form method="post">
         <div class="tl_formbody">
           <input type="hidden" name="FORM_SUBMIT" value="tl_database_login">
+          <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
           <h4><label for="dbHost">{{ 'database_host'|trans }}</label></h4>
           <input type="text" name="dbHost" id="dbHost" class="tl_text" value="{{ parameters.database_host }}">
           <h4><label for="dbPort">{{ 'database_port'|trans }}</label></h4>

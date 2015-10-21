@@ -795,6 +795,7 @@ Library.</pre>
     <form class="tl_install_form" method="post">
       <div class="tl_formbody_submit">
         <input type="hidden" name="FORM_SUBMIT" value="tl_license">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
         <div class="tl_submit_container">
           <button type="submit" class="tl_submit">{{ 'accept_license'|trans }}</button>
         </div>
