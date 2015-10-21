@@ -299,14 +299,14 @@ class Config
 	 *
 	 * @return boolean True if the installation is complete
 	 */
-	public static function isComplete()
+	public function isComplete()
 	{
 		if (!static::$blnHasLcf)
 		{
 			return false;
 		}
 
-		if (!static::get('licenseAccepted'))
+		if (!$this->get('licenseAccepted'))
 		{
 			return false;
 		}
