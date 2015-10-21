@@ -12,8 +12,7 @@ namespace Contao\CoreBundle\Framework;
 
 use Contao\ClassLoader;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\Adapter\AdapterInterface;
+use Contao\CoreBundle\Framework\Adapter\Adapter;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
@@ -190,12 +189,12 @@ class ContaoFramework implements ContaoFrameworkInterface
      *
      * @param string $class Fully qualified class name.
      *
-     * @return AdapterInterface
+     * @return Adapter
      */
     public function getAdapter($class)
     {
         if (!isset($this->adapterCache[$class])) {
-            $this->adapterCache[$class] = new Adapter\GeneralAdapter($class);
+            $this->adapterCache[$class] = new Adapter($class);
         }
 
         return $this->adapterCache[$class];

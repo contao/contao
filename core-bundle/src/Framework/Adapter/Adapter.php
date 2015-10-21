@@ -17,8 +17,9 @@ namespace Contao\CoreBundle\Framework\Adapter;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  *
+ * @internal
  */
-class GeneralAdapter implements AdapterInterface
+class Adapter
 {
     /**
      * Class name.
