@@ -43,14 +43,19 @@ class Maintenance extends \Backend implements \executable
 		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['maintenanceMode'];
 		$objTemplate->isActive = $this->isActive();
 
-		$container = \System::getContainer();
-		$isLocked = file_exists($container->getParameter('kernel.root_dir') . '/cache/lock');
+		try
+		{
+			$driver   = \System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
+			$isLocked = $driver->isExists();
+		}
+		catch (\Exception $e)
+		{
+			return '';
+		}
 
 		// Toggle the maintenance mode
 		if (\Input::post('FORM_SUBMIT') == 'tl_maintenance_mode')
 		{
-			$driver = $this->getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
-
 			if ($isLocked)
 			{
 				$driver->unlock();
