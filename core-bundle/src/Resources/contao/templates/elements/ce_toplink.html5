@@ -1,0 +1,6 @@
+
+<!-- indexer::stop -->
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+  <a href="<?= $this->request ?>#top" title="<?= $this->title ?>"><?= $this->label ?></a>
+</div>
+<!-- indexer::continue -->

@@ -1,0 +1,151 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/explain.php" source-language="en" target-language="it">
+    <body>
+      <trans-unit id="XPT.error">
+        <source>An error occurred</source>
+        <target>Si è verificato un errore</target>
+      </trans-unit>
+      <trans-unit id="XPT.matter">
+        <source>What's the matter?</source>
+        <target>Qual'è il problema?</target>
+      </trans-unit>
+      <trans-unit id="XPT.howToFix">
+        <source>How can I fix the issue?</source>
+        <target>Come posso risolvere il problema?</target>
+      </trans-unit>
+      <trans-unit id="XPT.more">
+        <source>Tell me more, please</source>
+        <target>Fornisci maggiori informazioni</target>
+      </trans-unit>
+      <trans-unit id="XPT.hint">
+        <source>To customize this notice, create a custom Twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
+        <target>Per personalizzare questo avviso, occorre creare un file template personalizzato denominato &lt;em&gt;%s&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorOccurred">
+        <source>An error occurred while executing this script. Something does not work properly.</source>
+        <target>Si è verificato un errore durante l'esecuzione di questo script. Qualcosa non funziona correttamente.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorFixOne">
+        <source>Search the &lt;code&gt;app/logs&lt;/code&gt; folder for the current log file and find the associated error message (usually the last one).</source>
+        <target>Cerca la cartella &lt;code&gt;app/logs&lt;/code&gt; e apri il relativo file di log per verificare il messaggio di errore, solitamente in fondo al file.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorExplain">
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>L'esecuzione dello script si è fermato, perché qualcosa sembra non funzionare correttamente. Il messaggio di errore effettivo è nascosto dal presente avviso per motivi di sicurezza e può essere trovato nel file di log &lt;code&gt;system/logs/error.log&lt;/code&gt; (vedi sopra). Se il messaggio di errore non è comprensibile o non si sa come risolvere il problema, prova a cercare un aiuto tra le  &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt; FAQ di Contao&lt;/a&gt; o visita la &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt; pagina di supporto Contao&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.requestToken">
+        <source>Invalid request token</source>
+        <target>Token non valido</target>
+      </trans-unit>
+      <trans-unit id="XPT.invalidToken">
+        <source>The request token could not be verified.</source>
+        <target>Il token non poteva essere verificato.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenRetry">
+        <source>Please &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;click this link&lt;/a&gt; and try again. Do not use the back button of your browser.</source>
+        <target>Si prega di &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt; cliccare su questo link&lt;/a&gt; per riprovare. Non utilizzare il pulsante indietro del browser!!</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainOne">
+        <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
+        <target>Questo errore si verifica se c'è una richiesta POST senza un token di autenticazione valido. In Contao 2.10, il referer check è stato sostituito con un sistema di richiesta token. Se il problema persiste, è possibile che si stia utilizzando un'estensione di terzi non compatibile o non si abbia aggiornato correttamente l'installazione di Contao.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainTwo">
+        <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Per ulteriori informazioni, consultare le &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt; FAQ di Contao&lt;/a&gt; o visitare la &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt; pagina di supporto Contao&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.incomplete">
+        <source>Incomplete installation</source>
+        <target>Installazione incompleta</target>
+      </trans-unit>
+      <trans-unit id="XPT.incompleteInstallation">
+        <source>The installation has not been completed, therefore Contao cannot work properly.</source>
+        <target>Installazione non completata. Contao non è in grado di funzionare in modo corretto.</target>
+      </trans-unit>
+      <trans-unit id="XPT.incompleteFix">
+        <source>Please open the Contao install tool by pointing your browser to &lt;code&gt;/contao/install&lt;/code&gt;.</source>
+        <target>Esegui lo strumento di installazione di Contao collegandoti all'indirizzo &lt;code&gt;/contao/install&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.incompleteExplain">
+        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Per maggiori informazioni fare riferimento al &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;manuale di installazione Contao&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noForward">
+        <source>Forward page not found</source>
+        <target>pagina di destinazione non trovata</target>
+      </trans-unit>
+      <trans-unit id="XPT.noForwardPage">
+        <source>The application has been configured to forward the request to another page, however, the target page does not exist or has not been published.</source>
+        <target>L'applicazione è stata configurata per inoltrare la richiesta a un'altra pagina, ma la pagina di destinazione non esiste o non è stata pubblicata.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noForwardFix">
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
+        <target>Questo problema deve essere risolto da parte dell'amministratore del sito. Se sei un visitatore, segnala il problema al  &lt;a href=&quot;%s&quot;&gt;webmaster&lt;/a&gt; per comunicarli che vi è qualcosa che non funziona.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noRoot">
+        <source>No root page found</source>
+        <target>Non è stata trovata nessuna pagina root</target>
+      </trans-unit>
+      <trans-unit id="XPT.noRootPage">
+        <source>There is no website root page which matches the requested language and/or domain name.</source>
+        <target>Non esiste una pagina root del sito che corrisponda alla lingua richiesta e/o al nome del dominio.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noRootFix">
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
+        <target>Se è stata impostata in modo esplicito una lingua, provare a &lt;a href=&quot;%s&quot;&gt;passare al livello superiore&lt;/a&gt;. In caso contrario è possibile &lt;a href=&quot;%s&quot;&gt;contattare il webmaster&lt;/a&gt; e comunicargli il problema.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noLayout">
+        <source>No layout specified</source>
+        <target>Nessun layout specificato</target>
+      </trans-unit>
+      <trans-unit id="XPT.noLayoutSpecified">
+        <source>The page you have requested has not yet been associated with a page layout.</source>
+        <target>La pagina richiesta non è stata associata a nessun layout.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noLayoutFix">
+        <source>Make sure that you have assigned a page layout to each website root page in the site structure.</source>
+        <target>Assicurarsi di aver assegnato un layout di pagina di ogni pagina root nella struttura del sito.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noLayoutExplain">
+        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Per maggiori informazioni fare riferimento al &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;manuale di Contao&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noActive">
+        <source>No active pages found</source>
+        <target>Non sono state trovate pagine attive</target>
+      </trans-unit>
+      <trans-unit id="XPT.noActivePages">
+        <source>Your request has been mapped to a website which does not yet contain any published pages.</source>
+        <target>La richiesta è stata indirizzata ad un sito che non contiene ancora nessuna pagina pubblicata.</target>
+      </trans-unit>
+      <trans-unit id="XPT.noActiveFix">
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
+        <target>Molto probabilmente il sito è ancora in fase di sviluppo e sarà online tra pochi giorni. Se si vuole comunicare il problema, è possibile &lt;a href=&quot;%s&quot;&gt;contattare il webmaster&lt;/a&gt; e segnalare l'anomalia.</target>
+      </trans-unit>
+      <trans-unit id="XPT.unavailable">
+        <source>Service unavailable</source>
+        <target>Servizio non disponibile</target>
+      </trans-unit>
+      <trans-unit id="XPT.maintenance">
+        <source>The website is currently not available. Please come back later.</source>
+        <target>Il sito web non è al momento disponibile. </target>
+      </trans-unit>
+      <trans-unit id="XPT.insecure">
+        <source>Insecure document root</source>
+        <target>Document root non sicura</target>
+      </trans-unit>
+      <trans-unit id="XPT.insecureRoot">
+        <source>Your installation is not secure, because non-public resources are publicy available via HTTP.</source>
+        <target>Questa installazione non è sicura, perché le risorse che dovrebbero essere non pubbliche, sono in realtà accessibili via HTTP.</target>
+      </trans-unit>
+      <trans-unit id="XPT.insecureFix">
+        <source>Please set the document root to the &lt;code&gt;web/&lt;/code&gt; subfolder. This is usually done in the domain routing section of your server administration panel or in the vhosts file of your web server.</source>
+        <target>Si prega di impostare la document root a &lt;code&gt;web/&lt;/code&gt;.
+Questo è solitamente è posibile impostarlo dal pannello di controllo del web server o configurando opportunamente il file vhosts del server web.</target>
+      </trans-unit>
+      <trans-unit id="XPT.insecureExplain">
+        <source>Contao 4 no longer relies on &lt;code&gt;.htaccess&lt;/code&gt; files to protect folders and instead uses a public subfolder as document root. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensitive data such as configuration files.</source>
+        <target>Contao 4 non si basa più sul file &lt;code&gt; .htaccess &lt;/ code&gt; per proteggere le cartelle. Utilizza invece una sottocartella pubblica come document root. Tutto ciò al di sopra della document root non deve essere accessibile via HTTP, altrimenti chiunque potrebbe scaricare risorse non pubbliche, compresi dati sensibili, come i file di configurazione.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

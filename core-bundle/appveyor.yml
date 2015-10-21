@@ -1,0 +1,35 @@
+build: false
+shallow_clone: true
+platform: x86
+clone_folder: c:\projects\contao
+
+install:
+  - cinst -y OpenSSL.Light
+  - SET PATH=C:\Program Files\OpenSSL;%PATH%
+  - cinst -y php
+  - cd c:\tools\php
+  - copy php.ini-production php.ini
+  - echo date.timezone="UTC" >> php.ini
+  - echo extension_dir=ext >> php.ini
+  - echo extension=php_bz2.dll >> php.ini
+  - echo extension=php_curl.dll >> php.ini
+  - echo extension=php_fileinfo.dll >> php.ini
+  - echo extension=php_exif.dll >> php.ini
+  - echo extension=php_gd2.dll >> php.ini
+  - echo extension=php_intl.dll >> php.ini
+  - echo extension=php_mbstring.dll >> php.ini
+  - echo extension=php_mysqli.dll >> php.ini
+  - echo extension=php_openssl.dll >> php.ini
+  - echo extension=php_pdo_mysql.dll >> php.ini
+  - echo extension=php_soap.dll >> php.ini
+  - echo extension=php_sockets.dll >> php.ini
+  - echo extension=php_xmlrpc.dll >> php.ini
+  - echo extension=php_xsl.dll >> php.ini
+  - SET PATH=c:\tools\php;%PATH%
+  - cd c:\projects\contao
+  - php -r "readfile('http://getcomposer.org/installer');" | php
+  - php composer.phar install --prefer-source --no-interaction
+
+test_script:
+  - cd c:\projects\contao
+  - vendor\bin\phpunit.bat
