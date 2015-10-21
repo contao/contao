@@ -35,6 +35,8 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Dominik Tomasi <https://github.com/dtomasi>
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @internal
  */
 class ContaoFramework implements ContaoFrameworkInterface
 {
