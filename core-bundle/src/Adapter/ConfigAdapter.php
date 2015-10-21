@@ -20,7 +20,7 @@ use Contao\Config;
  * @internal
  *
  * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
- *             Use ContaoFrameworkInterface::getAdapter('Config').
+ *             Use Contao\CoreBundle\Framework\ContaoFrameworkInterface::getAdapter('Config').
  */
 class ConfigAdapter
 {

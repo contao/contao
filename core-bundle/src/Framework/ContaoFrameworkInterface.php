@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Framework;
 
 /**
- * Interface for the Contao framework initializer.
+ * Interface for the Contao framework.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
