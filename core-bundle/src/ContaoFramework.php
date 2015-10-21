@@ -88,11 +88,6 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * @var bool
      */
-    private $skipTokenCheck = false;
-
-    /**
-     * @var bool
-     */
     private static $initialized = false;
 
     /**
@@ -144,20 +139,6 @@ class ContaoFramework implements ContaoFrameworkInterface
     public function isInitialized()
     {
         return self::$initialized;
-    }
-
-    /**
-     * Enables or disables the request token check.
-     *
-     * @param bool $skipTokenCheck True to disable the request token check
-     *
-     * @return static The framework object
-     */
-    public function setSkipTokenCheck($skipTokenCheck)
-    {
-        $this->skipTokenCheck = (bool) $skipTokenCheck;
-
-        return $this;
     }
 
     /**
@@ -413,6 +394,8 @@ class ContaoFramework implements ContaoFrameworkInterface
 
     /**
      * Handles the request token.
+     *
+     * @throws AjaxRedirectResponseException|InvalidRequestTokenException If the token is invalid
      */
     private function handleRequestToken()
     {
@@ -421,20 +404,10 @@ class ContaoFramework implements ContaoFrameworkInterface
             define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
         }
 
-        if (true === $this->skipTokenCheck || null === $this->request || 'POST' !== $this->request->getRealMethod()) {
+        if (null === $this->request || 'POST' !== $this->request->getRealMethod()) {
             return;
         }
 
-        $this->validateRequestToken();
-    }
-
-    /**
-     * Validates the request token.
-     *
-     * @throws AjaxRedirectResponseException|InvalidRequestTokenException If the token is invalid
-     */
-    private function validateRequestToken()
-    {
         $token = new CsrfToken($this->csrfTokenName, $this->request->request->get('REQUEST_TOKEN'));
 
         if ($this->tokenManager->isTokenValid($token)) {
