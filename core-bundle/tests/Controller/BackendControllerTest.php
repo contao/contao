@@ -36,7 +36,7 @@ class BackendControllerTest extends TestCase
     public function testActions()
     {
         $framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->getMockBuilder('Contao\\CoreBundle\\Framework\\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
         ;

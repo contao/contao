@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Test\Framework;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -376,7 +376,7 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $config = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter\\GeneralAdapter')
+        $config = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter\\Adapter')
             ->disableOriginalConstructor()
             ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
             ->getMock();
@@ -446,6 +446,6 @@ class ContaoFrameworkTest extends TestCase
     {
         $framework = $this->mockContaoFramework();
         $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass';
-        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\Adapter\\GeneralAdapter', $framework->getAdapter($class));
+        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\Adapter\\Adapter', $framework->getAdapter($class));
     }
 }

@@ -10,13 +10,10 @@
 
 namespace Contao\CoreBundle\Test;
 
-use Contao\Config;
-use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\ContaoFramework;
-use Contao\CoreBundle\Framework\Adapter\AdapterInterface;
-use Contao\CoreBundle\Framework\Adapter\GeneralAdapter;
+use Contao\CoreBundle\Framework\Adapter\Adapter;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
@@ -222,7 +219,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      * @param RequestStack                   $requestStack  The request stack
      * @param RouterInterface                $router        The router object
      * @param CsrfTokenManagerInterface|null $tokenManager  An optional token manager
-     * @param AdapterInterface|null          $configAdapter An optional config adapter
+     * @param Adapter|null                   $configAdapter An optional config adapter
      *
      * @return ContaoFramework The object instance
      */
@@ -230,7 +227,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         RequestStack $requestStack = null,
         RouterInterface $router = null,
         CsrfTokenManagerInterface $tokenManager = null,
-        AdapterInterface $configAdapter = null
+        Adapter $configAdapter = null
     ) {
         $container = $this->mockContainerWithContaoScopes();
 
@@ -263,7 +260,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                 $this->getRootDir() . '/app',
                 $tokenManager,
                 'contao_csrf_token',
-                null,
                 error_reporting(),
             ])
             ->setMethods(['getAdapter'])
@@ -283,7 +279,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     protected function mockConfigAdapter()
     {
-        $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter\\GeneralAdapter')
+        $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter\\Adapter')
             ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
             ->disableOriginalConstructor()
             ->getMock();
