@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\EventListener;
 
-use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
@@ -65,7 +64,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         /** @var LoggerInterface $logger */
         $logger = $this->getMock('Psr\\Log\\LoggerInterface');
 
-        $this->listener = new PrettyErrorScreenListener(true, $twig, $this->mockConfig(), $logger);
+        $this->listener = new PrettyErrorScreenListener(true, $twig, $this->mockContaoFramework(), $logger);
     }
 
     /**
@@ -225,7 +224,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $logger = $this->getMock('Psr\\Log\\LoggerInterface');
         $logger->expects($this->once())->method('critical');
 
-        $listener = new PrettyErrorScreenListener(true, $twig, new ConfigAdapter(), $logger);
+        $listener = new PrettyErrorScreenListener(true, $twig, $this->mockContaoFramework(), $logger);
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());

@@ -50,7 +50,7 @@ class ToggleViewListenerTest extends TestCase
         parent::setUp();
 
         $this->framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->getMockBuilder('Contao\\CoreBundle\\Framework\\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
         ;

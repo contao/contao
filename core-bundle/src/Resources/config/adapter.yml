@@ -1,4 +1,7 @@
 services:
+    # Do not use this adapter anymore. Use the "contao.framework" service
+    # to get an adapter configuration. This service will be removed in
+    # Contao 5.
     contao.adapter.config:
         class: Contao\CoreBundle\Adapter\ConfigAdapter
         public: false

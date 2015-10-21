@@ -10,9 +10,9 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\StringUtil;
 use Contao\System;
 use Psr\Log\LoggerInterface;
@@ -45,9 +45,9 @@ class PrettyErrorScreenListener
     private $twig;
 
     /**
-     * @var ConfigAdapter
+     * @var ContaoFrameworkInterface
      */
-    private $config;
+    private $framework;
 
     /**
      * @var LoggerInterface
@@ -71,20 +71,20 @@ class PrettyErrorScreenListener
     /**
      * Constructor.
      *
-     * @param bool                 $prettyErrorScreens True to render the error screens
-     * @param \Twig_Environment    $twig               The twig environment
-     * @param ConfigAdapter        $config             The config adapter
-     * @param LoggerInterface|null $logger             An optional logger service
+     * @param bool                      $prettyErrorScreens True to render the error screens
+     * @param \Twig_Environment         $twig               The twig environment
+     * @param ContaoFrameworkInterface  $framework          The Contao framework
+     * @param LoggerInterface|null      $logger             An optional logger service
      */
     public function __construct(
         $prettyErrorScreens,
         \Twig_Environment $twig,
-        ConfigAdapter $config,
+        ContaoFrameworkInterface $framework,
         LoggerInterface $logger = null
     ) {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
-        $this->config = $config;
+        $this->framework = $framework;
         $this->logger = $logger;
     }
 
@@ -307,7 +307,7 @@ class PrettyErrorScreenListener
             return null;
         }
 
-        $encoded = StringUtil::encodeEmail($this->config->get('adminEmail'));
+        $encoded = StringUtil::encodeEmail($this->framework->getAdapter('Config')->get('adminEmail'));
 
         return [
             'statusCode' => $statusCode,

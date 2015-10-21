@@ -9,7 +9,7 @@ services:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
 
     contao.framework:
-        class: Contao\CoreBundle\ContaoFramework
+        class: Contao\CoreBundle\Framework\ContaoFramework
         arguments:
             - "@request_stack"
             - "@router"
@@ -17,7 +17,6 @@ services:
             - "%kernel.root_dir%"
             - "@security.csrf.token_manager"
             - "%contao.csrf_token_name%"
-            - "@contao.adapter.config"
             - "%contao.error_level%"
         calls:
             - ["setContainer", ["@service_container"]]
