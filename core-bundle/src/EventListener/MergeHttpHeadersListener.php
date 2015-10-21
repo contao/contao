@@ -35,12 +35,6 @@ class MergeHttpHeadersListener
     private $contaoFramework;
 
     /**
-     * Remove old headers or not
-     * @var boolean
-     */
-    private $removeOldHeaders = true;
-
-    /**
      * Headers
      * @var array
      */
@@ -78,34 +72,6 @@ class MergeHttpHeadersListener
     }
 
     /**
-     * Gets whether old headers should be removed using header_remove()
-     * or not.
-     *
-     * @return boolean
-     */
-    public function getRemoveOldHeaders()
-    {
-        return $this->removeOldHeaders;
-    }
-
-    /**
-     * Sets whether old headers should be removed using header_remove()
-     * or not.
-     *
-     * @param boolean $removeOldHeaders
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function setRemoveOldHeaders($removeOldHeaders)
-    {
-        if (false === $removeOldHeaders && 'cli' !== PHP_SAPI) {
-            throw new \InvalidArgumentException('You cannot disable removing old
-            headers when not on CLI SAPI.');
-        }
-        $this->removeOldHeaders = (bool) $removeOldHeaders;
-    }
-
-    /**
      * Sets the default locale based on the request or session.
      *
      * @param GetResponseEvent $event The event object
@@ -134,7 +100,7 @@ class MergeHttpHeadersListener
         foreach ($this->getHeaders() as $header) {
             list($name, $content) = explode(':', $header, 2);
 
-            if ($this->removeOldHeaders) {
+            if ('cli' !== PHP_SAPI) {
                 header_remove($name);
             }
 

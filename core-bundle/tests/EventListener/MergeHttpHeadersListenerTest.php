@@ -56,7 +56,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         /** @var ContaoFrameworkInterface $framework */
         $listener = new MergeHttpHeadersListener($framework);
         $listener->setHeaders(['FOOBAR: foobar']);
-        $listener->setRemoveOldHeaders(false);
 
         $listener->onKernelResponse($responseEvent);
         $response = $responseEvent->getResponse();
@@ -84,7 +83,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         /** @var ContaoFrameworkInterface $framework */
         $listener = new MergeHttpHeadersListener($framework);
         $listener->setHeaders(['FOOBAR: content']);
-        $listener->setRemoveOldHeaders(false);
 
         $listener->onKernelResponse($responseEvent);
         $response = $responseEvent->getResponse();
@@ -114,7 +112,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         /** @var ContaoFrameworkInterface $framework */
         $listener = new MergeHttpHeadersListener($framework);
         $listener->setHeaders(['FOOBAR: new-content']);
-        $listener->setRemoveOldHeaders(false);
 
         $listener->onKernelResponse($responseEvent);
         $response = $responseEvent->getResponse();
