@@ -17,7 +17,6 @@ services:
             - "%kernel.root_dir%"
             - "@security.csrf.token_manager"
             - "%contao.csrf_token_name%"
-            - ~
             - "%contao.error_level%"
         calls:
             - ["setContainer", ["@service_container"]]

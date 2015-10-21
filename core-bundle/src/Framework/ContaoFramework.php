@@ -113,7 +113,6 @@ class ContaoFramework implements ContaoFrameworkInterface
      * @param string                    $rootDir       The kernel root directory
      * @param CsrfTokenManagerInterface $tokenManager  The token manager service
      * @param string                    $csrfTokenName The name of the token
-     * @param AdapterInterface          $config        The config adapter object
      * @param int                       $errorLevel    The PHP error level
      */
     public function __construct(
@@ -123,7 +122,6 @@ class ContaoFramework implements ContaoFrameworkInterface
         $rootDir,
         CsrfTokenManagerInterface $tokenManager,
         $csrfTokenName,
-        $config, // Here for BC only
         $errorLevel
     ) {
         $this->router = $router;
