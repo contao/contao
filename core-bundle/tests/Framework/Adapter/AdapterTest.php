@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\Test\Adapter;
 
-use Contao\CoreBundle\Framework\Adapter\Adapter;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Test\TestCase;
 
 
@@ -28,7 +28,7 @@ class AdapterTest extends TestCase
     {
         $adapter = new Adapter('Dummy');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\Adapter\\Adapter', $adapter);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\Adapter', $adapter);
     }
 
     /**

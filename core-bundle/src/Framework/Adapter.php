@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Framework\Adapter;
+namespace Contao\CoreBundle\Framework;
 
 /**
  * A general Adapter class building a wrapper around any class that is not
