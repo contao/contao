@@ -14,6 +14,11 @@ $include = function ($file) {
     return file_exists($file) ? include $file : false;
 };
 
+// PhpStorm fix (see https://www.drupal.org/node/2597814)
+if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+    define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../vendor/autoload.php');
+}
+
 if (
     false === ($loader = $include(__DIR__ . '/../vendor/autoload.php'))
     && false === ($loader = $include(__DIR__ . '/../../../autoload.php'))
