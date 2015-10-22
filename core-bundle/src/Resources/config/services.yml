@@ -70,3 +70,4 @@ services:
         arguments:
             - "@database_connection"
             - "@event_dispatcher"
+            - "@contao.framework"

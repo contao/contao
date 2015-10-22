@@ -23,7 +23,7 @@ final class ContaoCoreEvents
      *
      * @var string
      *
-     * @see Contao\CoreBundle\Event\GetImageSizesEvent
+     * @see Contao\CoreBundle\Event\ImageSizesEvent
      */
     const IMAGE_SIZES_ALL = 'contao.image_sizes_all';
 
@@ -32,7 +32,7 @@ final class ContaoCoreEvents
      *
      * @var string
      *
-     * @see Contao\CoreBundle\Event\GetImageSizesEvent
+     * @see Contao\CoreBundle\Event\ImageSizesEvent
      */
     const IMAGE_SIZES_USER = 'contao.image_sizes_user';
 }
