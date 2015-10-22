@@ -59,8 +59,8 @@ class ScriptHandlerTest extends TestCase
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        'file' => __DIR__ . '/../Fixtures/app/config/parameters.yml'
-                    ]
+                        'file' => __DIR__ . '/../Fixtures/app/config/parameters.yml',
+                    ],
                 ]
             )
         );
@@ -81,7 +81,7 @@ class ScriptHandlerTest extends TestCase
                     'incenteev-parameters' => [
                         ['file' => __DIR__ . '/../Fixtures/app/config/parameters.yml'],
                         ['file' => __DIR__ . '/../Fixtures/app/config/test.yml'],
-                    ]
+                    ],
                 ]
             )
         );
@@ -105,7 +105,7 @@ class ScriptHandlerTest extends TestCase
         $this->handler->generateRandomSecret(
             $this->getComposerEvent(
                 [
-                    'incenteev-parameters' => []
+                    'incenteev-parameters' => [],
                 ]
             )
         );
@@ -126,8 +126,8 @@ class ScriptHandlerTest extends TestCase
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        'file' => __DIR__ . '/../Fixtures/app/config/parameters.yml'
-                    ]
+                        'file' => __DIR__ . '/../Fixtures/app/config/parameters.yml',
+                    ],
                 ]
             )
         );
@@ -152,7 +152,7 @@ class ScriptHandlerTest extends TestCase
                     'incenteev-parameters' => [
                         ['file' => __DIR__ . '/../Fixtures/app/config/parameters.yml'],
                         ['file' => __DIR__ . '/../Fixtures/app/config/test.yml'],
-                    ]
+                    ],
                 ]
             )
         );
@@ -202,9 +202,9 @@ class ScriptHandlerTest extends TestCase
      */
     private function mockComposer(PackageInterface $package)
     {
-        $config          = $this->getMock('Composer\\Config');
+        $config = $this->getMock('Composer\\Config');
         $downloadManager = $this->getMock('Composer\\Downloader\\DownloadManager', [], [], '', false);
-        $composer        = $this->getMock('Composer\\Composer', ['getConfig', 'getDownloadManager', 'getPackage']);
+        $composer = $this->getMock('Composer\\Composer', ['getConfig', 'getDownloadManager', 'getPackage']);
 
         $composer
             ->expects($this->any())
