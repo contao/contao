@@ -94,22 +94,20 @@ class ImageSizes
             return;
         }
 
-        try {
-            $sizes = array();
+        $this->options = $GLOBALS['TL_CROP'];
 
-            $rows = $this->db->fetchAll(
-                "SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name"
+
+        $rows = $this->db->fetchAll(
+            "SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name"
+        );
+
+        foreach ($rows as $imageSize) {
+            $this->options['image_sizes'][$imageSize['id']] = sprintf(
+                '%s (%sx%s)',
+                $imageSize['name'],
+                $imageSize['width'],
+                $imageSize['height']
             );
-
-            foreach ($rows as $imageSize) {
-                $sizes[$imageSize['id']] = $imageSize['name'];
-                $sizes[$imageSize['id']] .= ' (' . $imageSize['width'] . 'x' . $imageSize['height'] . ')';
-            }
-
-            $this->options = array_merge(array('image_sizes' => $sizes), $GLOBALS['TL_CROP']);
-
-        } catch (\Exception $e) {
-            $this->options = $GLOBALS['TL_CROP'];
         }
     }
 
