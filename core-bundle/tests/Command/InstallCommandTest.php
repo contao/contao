@@ -50,7 +50,7 @@ class InstallCommandTest extends TestCase
     {
         $command = new InstallCommand('contao:install');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Command\\InstallCommand', $command);
+        $this->assertInstanceOf('Contao\CoreBundle\Command\InstallCommand', $command);
     }
 
     /**

@@ -33,7 +33,7 @@ class RefererIdListenerTest extends TestCase
     {
         $listener = new RefererIdListener($this->mockTokenManager());
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\RefererIdListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\RefererIdListener', $listener);
     }
 
     /**
@@ -42,7 +42,7 @@ class RefererIdListenerTest extends TestCase
     public function testTokenAddedToRequest()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request = new Request();
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener = new RefererIdListener($this->mockTokenManager());
@@ -64,7 +64,7 @@ class RefererIdListenerTest extends TestCase
     public function testTokenNotAddedToFrontendRequest()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request = new Request();
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener = new RefererIdListener($this->mockTokenManager());
@@ -85,7 +85,7 @@ class RefererIdListenerTest extends TestCase
     public function testTokenNotAddedToSubrequest()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request = new Request();
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
         $listener = new RefererIdListener($this->mockTokenManager());

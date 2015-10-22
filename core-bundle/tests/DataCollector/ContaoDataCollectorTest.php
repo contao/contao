@@ -31,7 +31,7 @@ class ContaoDataCollectorTest extends TestCase
     {
         $collector = new ContaoDataCollector(new ContainerBuilder(), []);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\DataCollector\\ContaoDataCollector', $collector);
+        $this->assertInstanceOf('Contao\CoreBundle\DataCollector\ContaoDataCollector', $collector);
     }
 
     /**
@@ -45,8 +45,8 @@ class ContaoDataCollectorTest extends TestCase
         $collector = new ContaoDataCollector($container, ['contao/core-bundle' => '4.0.0']);
 
         $GLOBALS['TL_DEBUG'] = [
-            'classes_aliased' => ['ContentText <span>Contao\\ContentText</span>'],
-            'classes_set' => ['Contao\\System'],
+            'classes_aliased' => ['ContentText <span>Contao\ContentText</span>'],
+            'classes_set' => ['Contao\System'],
             'unknown_insert_tags' => ['foo'],
             'unknown_insert_tag_flags' => ['bar'],
             'additional_data' => 'data',
@@ -58,7 +58,7 @@ class ContaoDataCollectorTest extends TestCase
             [
                 'ContentText' => [
                     'alias' => 'ContentText',
-                    'original' => 'Contao\\ContentText',
+                    'original' => 'Contao\ContentText',
                 ],
             ],
             $collector->getClassesAliased()
@@ -76,7 +76,7 @@ class ContaoDataCollectorTest extends TestCase
         );
 
         $this->assertEquals('4.0.0', $collector->getContaoVersion());
-        $this->assertEquals(['Contao\\System'], $collector->getClassesSet());
+        $this->assertEquals(['Contao\System'], $collector->getClassesSet());
         $this->assertEquals(['foo'], $collector->getUnknownInsertTags());
         $this->assertEquals(['bar'], $collector->getUnknownInsertTagFlags());
         $this->assertEquals(['additional_data' => 'data'], $collector->getAdditionalData());
@@ -102,7 +102,7 @@ class ContaoDataCollectorTest extends TestCase
         global $objPage;
 
         $objPage = $this
-            ->getMockBuilder('Contao\\PageModel')
+            ->getMockBuilder('Contao\PageModel')
             ->setMethods(['getRelated'])
             ->disableOriginalConstructor()
             ->getMock()

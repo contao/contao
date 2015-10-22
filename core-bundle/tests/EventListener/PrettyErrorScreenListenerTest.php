@@ -62,7 +62,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         ;
 
         /** @var LoggerInterface $logger */
-        $logger = $this->getMock('Psr\\Log\\LoggerInterface');
+        $logger = $this->getMock('Psr\Log\LoggerInterface');
 
         $this->listener = new PrettyErrorScreenListener(true, $twig, $this->mockContaoFramework(), $logger);
     }
@@ -72,7 +72,7 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\PrettyErrorScreenListener', $this->listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\PrettyErrorScreenListener', $this->listener);
     }
 
     /**
@@ -93,7 +93,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $response = $event->getResponse();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(400, $response->getStatusCode());
     }
 
@@ -115,7 +115,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $response = $event->getResponse();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
     }
 
@@ -137,7 +137,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $response = $event->getResponse();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(503, $response->getStatusCode());
     }
 
@@ -159,7 +159,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $response = $event->getResponse();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
     }
 
@@ -168,7 +168,7 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testContaoPageHandler()
     {
-        $GLOBALS['TL_PTY']['error_404'] = 'Contao\\PageError404';
+        $GLOBALS['TL_PTY']['error_404'] = 'Contao\PageError404';
 
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -183,7 +183,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $response = $event->getResponse();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(404, $response->getStatusCode());
 
         unset($GLOBALS['TL_PTY']);
@@ -221,7 +221,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         ;
 
         /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
-        $logger = $this->getMock('Psr\\Log\\LoggerInterface');
+        $logger = $this->getMock('Psr\Log\LoggerInterface');
         $logger->expects($this->once())->method('critical');
 
         $listener = new PrettyErrorScreenListener(true, $twig, $this->mockContaoFramework(), $logger);
@@ -231,7 +231,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $response = $event->getResponse();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
     }
 }

@@ -40,7 +40,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $listener = new ExceptionConverterListener();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\ExceptionConverterListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ExceptionConverterListener', $listener);
     }
 
     /**
@@ -60,8 +60,8 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpKernel\\Exception\\AccessDeniedHttpException', $exception);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\AccessDeniedException', $exception->getPrevious());
+        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\AccessDeniedException', $exception->getPrevious());
     }
 
     /**
@@ -81,8 +81,8 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\InternalServerErrorHttpException', $exception);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\ForwardPageNotFoundException', $exception->getPrevious());
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\InternalServerErrorHttpException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\ForwardPageNotFoundException', $exception->getPrevious());
     }
 
     /**
@@ -102,8 +102,8 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\InternalServerErrorHttpException', $exception);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\IncompleteInstallationException', $exception->getPrevious());
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\InternalServerErrorHttpException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\IncompleteInstallationException', $exception->getPrevious());
     }
 
     /**
@@ -123,8 +123,8 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\InternalServerErrorHttpException', $exception);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\InsecureInstallationException', $exception->getPrevious());
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\InternalServerErrorHttpException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\InsecureInstallationException', $exception->getPrevious());
     }
 
     /**
@@ -144,8 +144,8 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpKernel\\Exception\\BadRequestHttpException', $exception);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\InvalidRequestTokenException', $exception->getPrevious());
+        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\BadRequestHttpException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\InvalidRequestTokenException', $exception->getPrevious());
     }
 
     /**
@@ -165,8 +165,8 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\InternalServerErrorHttpException', $exception);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\NoActivePageFoundException', $exception->getPrevious());
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\InternalServerErrorHttpException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\NoActivePageFoundException', $exception->getPrevious());
     }
 
     /**
@@ -186,8 +186,8 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\InternalServerErrorHttpException', $exception);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\NoLayoutSpecifiedException', $exception->getPrevious());
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\InternalServerErrorHttpException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\NoLayoutSpecifiedException', $exception->getPrevious());
     }
 
     /**
@@ -207,8 +207,8 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\InternalServerErrorHttpException', $exception);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\NoRootPageFoundException', $exception->getPrevious());
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\InternalServerErrorHttpException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\NoRootPageFoundException', $exception->getPrevious());
     }
 
     /**
@@ -228,8 +228,8 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException', $exception);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\PageNotFoundException', $exception->getPrevious());
+        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\PageNotFoundException', $exception->getPrevious());
     }
 
     /**
@@ -249,8 +249,8 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpKernel\\Exception\\ServiceUnavailableHttpException', $exception);
-        $this->assertInstanceOf('Lexik\\Bundle\\MaintenanceBundle\\Exception\\ServiceUnavailableException', $exception->getPrevious());
+        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException', $exception);
+        $this->assertInstanceOf('Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException', $exception->getPrevious());
     }
 
     /**

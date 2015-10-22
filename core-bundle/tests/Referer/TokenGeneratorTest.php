@@ -53,7 +53,7 @@ class TokenGeneratorTest extends TestCase
     {
         parent::setUp();
 
-        $this->random = $this->getMock('Symfony\\Component\\Security\\Core\\Util\\SecureRandomInterface');
+        $this->random = $this->getMock('Symfony\Component\Security\Core\Util\SecureRandomInterface');
         $this->generator = new TokenGenerator($this->random, self::ENTROPY);
     }
 

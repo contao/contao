@@ -59,14 +59,14 @@ class PrettyErrorScreenListener
      * @var array
      */
     private $mapper = [
-        'Contao\\CoreBundle\\Exception\\ForwardPageNotFoundException' => 'forward_page_not_found',
-        'Contao\\CoreBundle\\Exception\\IncompleteInstallationException' => 'incomplete_installation',
-        'Contao\\CoreBundle\\Exception\\InsecureInstallationException' => 'insecure_installation',
-        'Contao\\CoreBundle\\Exception\\InvalidRequestTokenException' => 'invalid_request_token',
-        'Contao\\CoreBundle\\Exception\\NoActivePageFoundException' => 'no_active_page_found',
-        'Contao\\CoreBundle\\Exception\\NoLayoutSpecifiedException' => 'no_layout_specified',
-        'Contao\\CoreBundle\\Exception\\NoRootPageFoundException' => 'no_root_page_found',
-        'Contao\\CoreBundle\\Exception\\ServiceUnavailableException' => 'service_unavailable',
+        'Contao\CoreBundle\Exception\ForwardPageNotFoundException' => 'forward_page_not_found',
+        'Contao\CoreBundle\Exception\IncompleteInstallationException' => 'incomplete_installation',
+        'Contao\CoreBundle\Exception\InsecureInstallationException' => 'insecure_installation',
+        'Contao\CoreBundle\Exception\InvalidRequestTokenException' => 'invalid_request_token',
+        'Contao\CoreBundle\Exception\NoActivePageFoundException' => 'no_active_page_found',
+        'Contao\CoreBundle\Exception\NoLayoutSpecifiedException' => 'no_layout_specified',
+        'Contao\CoreBundle\Exception\NoRootPageFoundException' => 'no_root_page_found',
+        'Contao\CoreBundle\Exception\ServiceUnavailableException' => 'service_unavailable',
     ];
 
     /**
@@ -329,7 +329,7 @@ class PrettyErrorScreenListener
      */
     private function loadLanguageStrings()
     {
-        if (!class_exists('Contao\\System')) {
+        if (!class_exists('Contao\System')) {
             return null;
         }
 

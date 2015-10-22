@@ -27,7 +27,7 @@ class BackendControllerTest extends TestCase
     {
         $controller = new BackendController();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Controller\\BackendController', $controller);
+        $this->assertInstanceOf('Contao\CoreBundle\Controller\BackendController', $controller);
     }
 
     /**
@@ -36,7 +36,7 @@ class BackendControllerTest extends TestCase
     public function testActions()
     {
         $framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\Framework\\ContaoFramework')
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -47,15 +47,15 @@ class BackendControllerTest extends TestCase
         $controller = new BackendController();
         $controller->setContainer($container);
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->mainAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->loginAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->passwordAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->previewAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->confirmAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->fileAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->helpAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->pageAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->popupAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->switchAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->mainAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->loginAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->passwordAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->previewAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->confirmAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->fileAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->helpAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->pageAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->popupAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->switchAction());
     }
 }

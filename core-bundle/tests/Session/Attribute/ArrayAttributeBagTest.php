@@ -29,7 +29,7 @@ class ArrayAttributeBagTest extends TestCase
     {
         $adapter = new ArrayAttributeBag(new AttributeBag('foobar_storageKey'));
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Session\\Attribute\\ArrayAttributeBag', $adapter);
+        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $adapter);
         $this->assertInstanceOf('ArrayAccess', $adapter);
     }
 

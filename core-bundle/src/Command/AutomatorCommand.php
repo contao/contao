@@ -119,7 +119,7 @@ class AutomatorCommand extends AbstractLockedCommand
         $commands = [];
 
         // Find all public methods
-        $class = new \ReflectionClass('Contao\\Automator');
+        $class = new \ReflectionClass('Contao\Automator');
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {

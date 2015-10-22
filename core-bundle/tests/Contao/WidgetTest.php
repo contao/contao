@@ -45,8 +45,8 @@ class WidgetTest extends TestCase
         $errorReporting = error_reporting();
         error_reporting($errorReporting & ~E_NOTICE);
 
-        $widget = $this->getMock('Contao\\Widget');
-        $class = new \ReflectionClass('Contao\\Widget');
+        $widget = $this->getMock('Contao\Widget');
+        $class = new \ReflectionClass('Contao\Widget');
         $method = $class->getMethod('getPost');
 
         $method->setAccessible(true);

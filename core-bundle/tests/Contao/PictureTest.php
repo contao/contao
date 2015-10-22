@@ -80,7 +80,7 @@ class PictureTest extends TestCase
      */
     public function testInstantiation()
     {
-        $fileMock = $this->getMockBuilder('Contao\\File')
+        $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
             ->getMock();
@@ -100,7 +100,7 @@ class PictureTest extends TestCase
             }
         ));
 
-        $this->assertInstanceOf('Contao\\Picture', new Picture($fileMock));
+        $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
     }
 
     /**
@@ -215,9 +215,9 @@ class PictureTest extends TestCase
         $this->assertEquals(100, $pictureData['img']['height']);
         $this->assertCount(1, explode(',', $pictureData['img']['src']));
         $this->assertCount(3, explode(',', $pictureData['img']['srcset']));
-        $this->assertRegExp('(\\.jpg\\s+1x(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\\.jpg\\s+0\\.5x(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\\.jpg\\s+2x(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+1x(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+0\.5x(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+2x(,|$))', $pictureData['img']['srcset']);
         $this->assertEquals([], $pictureData['sources']);
     }
 
@@ -244,9 +244,9 @@ class PictureTest extends TestCase
         $this->assertEquals('100vw', $pictureData['img']['sizes']);
         $this->assertCount(1, explode(',', $pictureData['img']['src']));
         $this->assertCount(3, explode(',', $pictureData['img']['srcset']));
-        $this->assertRegExp('(\\.jpg\\s+100w(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\\.jpg\\s+50w(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\\.jpg\\s+200w(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+100w(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+50w(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+200w(,|$))', $pictureData['img']['srcset']);
         $this->assertEquals([], $pictureData['sources']);
     }
 

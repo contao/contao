@@ -33,7 +33,7 @@ class ContaoTokenTest extends TestCase
     {
         $token = new ContaoToken(FrontendUser::getInstance());
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Security\\Authentication\\ContaoToken', $token);
+        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\ContaoToken', $token);
     }
 
     /**

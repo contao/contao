@@ -28,10 +28,10 @@ class CombinedFileDumperTest extends TestCase
     public function testInstantiation()
     {
         $this->assertInstanceOf(
-            'Contao\\CoreBundle\\Config\\Dumper\\CombinedFileDumper',
+            'Contao\CoreBundle\Config\Dumper\CombinedFileDumper',
             new CombinedFileDumper(
-                $this->getMock('Symfony\\Component\\Filesystem\\Filesystem'),
-                $this->getMock('Contao\\CoreBundle\\Config\\Loader\\PhpFileLoader'),
+                $this->getMock('Symfony\Component\Filesystem\Filesystem'),
+                $this->getMock('Contao\CoreBundle\Config\Loader\PhpFileLoader'),
                 $this->getCacheDir()
             )
         );
@@ -75,8 +75,8 @@ class CombinedFileDumperTest extends TestCase
     public function testInvalidHeader()
     {
         $dumper = new CombinedFileDumper(
-            $this->getMock('Symfony\\Component\\Filesystem\\Filesystem'),
-            $this->getMock('Contao\\CoreBundle\\Config\\Loader\\PhpFileLoader'),
+            $this->getMock('Symfony\Component\Filesystem\Filesystem'),
+            $this->getMock('Contao\CoreBundle\Config\Loader\PhpFileLoader'),
             $this->getCacheDir()
         );
 
@@ -93,7 +93,7 @@ class CombinedFileDumperTest extends TestCase
     private function mockFilesystem($expects)
     {
         $filesystem = $this->getMock(
-            'Symfony\\Component\\Filesystem\\Filesystem',
+            'Symfony\Component\Filesystem\Filesystem',
             ['dumpFile']
         );
 
@@ -114,7 +114,7 @@ class CombinedFileDumperTest extends TestCase
     private function mockLoader()
     {
         $loader = $this->getMock(
-            'Contao\\CoreBundle\\Config\\Loader\\PhpFileLoader',
+            'Contao\CoreBundle\Config\Loader\PhpFileLoader',
             ['load']
         );
 

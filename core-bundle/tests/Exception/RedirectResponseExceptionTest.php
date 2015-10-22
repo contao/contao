@@ -27,7 +27,7 @@ class RedirectResponseExceptionTest extends TestCase
     {
         $exception = new RedirectResponseException('http://example.org');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\RedirectResponseException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\RedirectResponseException', $exception);
     }
 
     /**
@@ -37,7 +37,7 @@ class RedirectResponseExceptionTest extends TestCase
     {
         $exception = new RedirectResponseException('http://example.org');
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $exception->getResponse());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
         $this->assertEquals(303, $exception->getResponse()->getStatusCode());
         $this->assertEquals('http://example.org', $exception->getResponse()->headers->get('Location'));
     }

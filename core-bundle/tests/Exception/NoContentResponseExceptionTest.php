@@ -27,7 +27,7 @@ class NoContentResponseExceptionTest extends TestCase
     {
         $exception = new NoContentResponseException();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\NoContentResponseException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\NoContentResponseException', $exception);
     }
 
     /**
@@ -37,7 +37,7 @@ class NoContentResponseExceptionTest extends TestCase
     {
         $exception = new NoContentResponseException();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $exception->getResponse());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
         $this->assertEquals(204, $exception->getResponse()->getStatusCode());
         $this->assertEquals('', $exception->getResponse()->getContent());
     }

@@ -68,7 +68,7 @@ class GdImageTest extends TestCase
         $resource = imagecreate(1, 1);
         $image = new GdImage($resource);
 
-        $this->assertInstanceOf('Contao\\GdImage', $image);
+        $this->assertInstanceOf('Contao\GdImage', $image);
         $this->assertSame($resource, $image->getResource());
     }
 

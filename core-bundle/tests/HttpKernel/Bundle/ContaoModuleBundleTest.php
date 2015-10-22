@@ -40,7 +40,7 @@ class ContaoModuleBundleTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\\CoreBundle\\HttpKernel\\Bundle\\ContaoModuleBundle', $this->bundle);
+        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle', $this->bundle);
     }
 
     /**

@@ -27,7 +27,7 @@ class AdapterTest extends TestCase
     {
         $adapter = new Adapter('Dummy');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\Adapter', $adapter);
+        $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $adapter);
     }
 
     /**
@@ -35,7 +35,7 @@ class AdapterTest extends TestCase
      */
     public function testMagicCall()
     {
-        $adapter = new Adapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass');
+        $adapter = new Adapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass');
 
         $this->assertEquals(['staticMethod', 1, 2], $adapter->staticMethod(1, 2));
     }
@@ -47,7 +47,7 @@ class AdapterTest extends TestCase
      */
     public function testMagicCallMissingMethod()
     {
-        $adapter = new Adapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass');
+        $adapter = new Adapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass');
 
         $adapter->missingMethod();
     }

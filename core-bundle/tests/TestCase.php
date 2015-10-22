@@ -64,7 +64,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function mockKernel()
     {
         $kernel = $this->getMock(
-            'Symfony\\Component\\HttpKernel\\Kernel',
+            'Symfony\Component\HttpKernel\Kernel',
             [
                 // KernelInterface
                 'registerBundles',
@@ -115,7 +115,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockRouter($url)
     {
-        $router = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');
+        $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
 
         $router
             ->expects($this->any())
@@ -134,7 +134,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function mockTokenManager()
     {
         $tokenManager = $this
-            ->getMockBuilder('Symfony\\Component\\Security\\Csrf\\CsrfTokenManagerInterface')
+            ->getMockBuilder('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface')
             ->setMethods(['getToken'])
             ->getMockForAbstractClass()
         ;
@@ -241,8 +241,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         if (null === $tokenManager) {
             $tokenManager = new CsrfTokenManager(
-                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenGenerator\\TokenGeneratorInterface'),
-                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
+                $this->getMock('Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface'),
+                $this->getMock('Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface')
             );
         }
 
@@ -252,7 +252,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\Framework\\ContaoFramework')
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->setConstructorArgs([
                 $requestStack,
                 $router,
@@ -284,7 +284,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockConfigAdapter()
     {
-        $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter')
+        $configAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
             ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
             ->disableOriginalConstructor()
             ->getMock()

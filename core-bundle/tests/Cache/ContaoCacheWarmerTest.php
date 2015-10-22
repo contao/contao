@@ -40,7 +40,7 @@ class ContaoCacheWarmerTest extends TestCase
             new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
             new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
             $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-            $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false),
+            $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
             $this->mockContaoFramework()
         );
     }
@@ -59,7 +59,7 @@ class ContaoCacheWarmerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\\CoreBundle\\Cache\\ContaoCacheWarmer', $this->warmer);
+        $this->assertInstanceOf('Contao\CoreBundle\Cache\ContaoCacheWarmer', $this->warmer);
     }
 
     /**
@@ -67,7 +67,7 @@ class ContaoCacheWarmerTest extends TestCase
      */
     public function testWarmUp()
     {
-        $connection = $this->getMock('Doctrine\\DBAL\\Connection', ['prepare', 'execute', 'fetch'], [], '', false);
+        $connection = $this->getMock('Doctrine\DBAL\Connection', ['prepare', 'execute', 'fetch'], [], '', false);
 
         $connection
             ->expects($this->any())

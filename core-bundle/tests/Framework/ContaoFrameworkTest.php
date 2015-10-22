@@ -37,8 +37,8 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/')
         );
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\ContaoFramework', $framework);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\ContaoFrameworkInterface', $framework);
+        $this->assertInstanceOf('Contao\CoreBundle\Framework\ContaoFramework', $framework);
+        $this->assertInstanceOf('Contao\CoreBundle\Framework\ContaoFrameworkInterface', $framework);
     }
 
     /**
@@ -74,8 +74,8 @@ class ContaoFrameworkTest extends TestCase
         $this->assertEquals('index.html', TL_SCRIPT);
         $this->assertEquals('', TL_PATH);
         $this->assertEquals('en', $GLOBALS['TL_LANGUAGE']);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Session\\Attribute\\ArrayAttributeBag', $_SESSION['BE_DATA']);
-        $this->assertInstanceOf('Contao\\CoreBundle\\Session\\Attribute\\ArrayAttributeBag', $_SESSION['FE_DATA']);
+        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $_SESSION['BE_DATA']);
+        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $_SESSION['FE_DATA']);
     }
 
     /**
@@ -200,15 +200,15 @@ class ContaoFrameworkTest extends TestCase
 
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\Framework\\ContaoFramework')
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->setConstructorArgs([
                 $container->get('request_stack'),
                 $this->mockRouter('/contao/install'),
                 $this->mockSession(),
                 $this->getRootDir() . '/app',
                 new CsrfTokenManager(
-                    $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenGenerator\\TokenGeneratorInterface'),
-                    $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
+                    $this->getMock('Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface'),
+                    $this->getMock('Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface')
                 ),
                 'contao_csrf_token',
                 null,
@@ -289,7 +289,7 @@ class ContaoFrameworkTest extends TestCase
         $container->get('request_stack')->push($request);
 
         $tokenGenerator = $this->getMock(
-            'Symfony\\Component\\Security\\Csrf\\TokenGenerator\\TokenGeneratorInterface',
+            'Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface',
             ['generateToken']
         );
 
@@ -300,11 +300,11 @@ class ContaoFrameworkTest extends TestCase
         ;
 
         $tokenManager = $this->getMock(
-            'Symfony\\Component\\Security\\Csrf\\CsrfTokenManager',
+            'Symfony\Component\Security\Csrf\CsrfTokenManager',
             ['isTokenValid'],
             [
                 $tokenGenerator,
-                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface'),
+                $this->getMock('Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface'),
             ]
         );
 
@@ -376,7 +376,7 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter')
+        $configAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
             ->disableOriginalConstructor()
             ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
             ->getMock();
@@ -420,7 +420,7 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testCreateInstance()
     {
-        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass';
+        $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass';
         $instance = $this->mockContaoFramework()->createInstance($class, [1, 2]);
 
         $this->assertInstanceOf($class, $instance);
@@ -432,7 +432,7 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testCreateInstanceSingelton()
     {
-        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacySingletonClass';
+        $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacySingletonClass';
         $instance = $this->mockContaoFramework()->createInstance($class, [1, 2]);
 
         $this->assertInstanceOf($class, $instance);
@@ -445,8 +445,8 @@ class ContaoFrameworkTest extends TestCase
     public function testGetAdapter()
     {
         $this->assertInstanceOf(
-            'Contao\\CoreBundle\\Framework\\Adapter',
-            $this->mockContaoFramework()->getAdapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass')
+            'Contao\CoreBundle\Framework\Adapter',
+            $this->mockContaoFramework()->getAdapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass')
         );
     }
 }

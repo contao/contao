@@ -30,7 +30,7 @@ class SessionListenerTest extends TestCase
     {
         $listener = new SessionListener($this->getSession());
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\SessionListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\SessionListener', $listener);
     }
 
     /**
@@ -44,11 +44,11 @@ class SessionListenerTest extends TestCase
         $listener->onKernelRequest();
 
         $this->assertInstanceOf(
-            'Contao\\CoreBundle\\Session\\Attribute\\ArrayAttributeBag',
+            'Contao\CoreBundle\Session\Attribute\ArrayAttributeBag',
             $session->getBag('contao_backend')
         );
         $this->assertInstanceOf(
-            'Contao\\CoreBundle\\Session\\Attribute\\ArrayAttributeBag',
+            'Contao\CoreBundle\Session\Attribute\ArrayAttributeBag',
             $session->getBag('contao_frontend')
         );
     }

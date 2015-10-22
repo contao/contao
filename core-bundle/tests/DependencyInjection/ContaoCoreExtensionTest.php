@@ -41,7 +41,7 @@ class ContaoCoreExtensionTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\\CoreBundle\\DependencyInjection\\ContaoCoreExtension', $this->extension);
+        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\ContaoCoreExtension', $this->extension);
     }
 
     /**

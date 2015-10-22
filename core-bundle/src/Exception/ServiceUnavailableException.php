@@ -31,7 +31,7 @@ class ServiceUnavailableException extends \RuntimeException
     {
         @trigger_error(
             'Using the ServiceUnavailableException has been deprecated and will no longer work in Contao 5.0. Use '
-            . 'the Lexik\\Bundle\\MaintenanceBundle\\Exception\\ServiceUnavailableException instead.',
+            . 'the Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException instead.',
             E_USER_DEPRECATED
         );
     }

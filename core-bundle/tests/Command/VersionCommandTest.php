@@ -29,7 +29,7 @@ class VersionCommandTest extends TestCase
     {
         $command = new VersionCommand('contao:version');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Command\\VersionCommand', $command);
+        $this->assertInstanceOf('Contao\CoreBundle\Command\VersionCommand', $command);
     }
 
     /**

@@ -28,7 +28,7 @@ class ResponseExceptionTest extends TestCase
     {
         $exception = new ResponseException(new Response('Hello world'));
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\ResponseException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\ResponseException', $exception);
     }
 
     /**
@@ -38,7 +38,7 @@ class ResponseExceptionTest extends TestCase
     {
         $exception = new ResponseException(new Response('Hello world'));
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $exception->getResponse());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
         $this->assertEquals(200, $exception->getResponse()->getStatusCode());
         $this->assertEquals('Hello world', $exception->getResponse()->getContent());
     }

@@ -44,7 +44,7 @@ class ScriptHandlerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\\CoreBundle\\Composer\\ScriptHandler', $this->handler);
+        $this->assertInstanceOf('Contao\CoreBundle\Composer\ScriptHandler', $this->handler);
     }
 
     /**
@@ -205,9 +205,9 @@ class ScriptHandlerTest extends TestCase
      */
     private function mockComposer(PackageInterface $package)
     {
-        $config = $this->getMock('Composer\\Config');
-        $downloadManager = $this->getMock('Composer\\Downloader\\DownloadManager', [], [], '', false);
-        $composer = $this->getMock('Composer\\Composer', ['getConfig', 'getDownloadManager', 'getPackage']);
+        $config = $this->getMock('Composer\Config');
+        $downloadManager = $this->getMock('Composer\Downloader\DownloadManager', [], [], '', false);
+        $composer = $this->getMock('Composer\Composer', ['getConfig', 'getDownloadManager', 'getPackage']);
 
         $composer
             ->expects($this->any())
@@ -237,7 +237,7 @@ class ScriptHandlerTest extends TestCase
      */
     private function mockIO()
     {
-        $io = $this->getMock('Composer\\IO\\IOInterface');
+        $io = $this->getMock('Composer\IO\IOInterface');
 
         $io
             ->expects($this->any())
@@ -263,7 +263,7 @@ class ScriptHandlerTest extends TestCase
      */
     private function mockPackage(array $extras = [])
     {
-        $package = $this->getMock('Composer\\Package\\PackageInterface');
+        $package = $this->getMock('Composer\Package\PackageInterface');
 
         $package
             ->expects($this->any())

@@ -37,7 +37,7 @@ class AddToSearchIndexListenerTest extends TestCase
         parent::setUp();
 
         $this->framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\Framework\\ContaoFramework')
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -50,7 +50,7 @@ class AddToSearchIndexListenerTest extends TestCase
     {
         $listener = new AddToSearchIndexListener($this->framework);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\AddToSearchIndexListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\AddToSearchIndexListener', $listener);
     }
 
     /**
@@ -109,10 +109,10 @@ class AddToSearchIndexListenerTest extends TestCase
     private function mockPostResponseEvent()
     {
         return $this->getMock(
-            'Symfony\\Component\\HttpKernel\\Event\\PostResponseEvent',
+            'Symfony\Component\HttpKernel\Event\PostResponseEvent',
             ['getResponse'],
             [
-                $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]),
+                $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]),
                 new Request(),
                 new Response(),
             ]

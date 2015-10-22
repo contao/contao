@@ -27,7 +27,7 @@ class AjaxRedirectResponseExceptionTest extends TestCase
     {
         $exception = new AjaxRedirectResponseException('http://example.org');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Exception\\AjaxRedirectResponseException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\AjaxRedirectResponseException', $exception);
     }
 
     /**
@@ -39,7 +39,7 @@ class AjaxRedirectResponseExceptionTest extends TestCase
 
         $response = $exception->getResponse();
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(204, $response->getStatusCode());
         $this->assertEquals('http://example.org', $response->headers->get('X-Ajax-Location'));
     }

@@ -57,7 +57,7 @@ EOF;
             '"very.unusual.@.unusual.com"@example.com',
             '"very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com',
             '!#$%&\'*+-/=?^_`{}|~@example.org',
-            '"()<>[]:,;@\\"!#$%&\'*+-/=?^_`{}|~.a"@example.org',
+            '"()<>[]:,;@\"!#$%&\'*+-/=?^_`{}|~.a"@example.org',
             'user@[255.255.255.255]',
             'user@[IPv6:2001:db8:1ff::a0b:dbd0]',
             'user@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]',
@@ -119,7 +119,7 @@ EOF;
             ['"very.unusual.@.unusual.com"@example.com', true],
             ['"very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com', true],
             ['!#$%&\'*+-/=?^_`{}|~@example.org', true],
-            ['"()<>[]:,;@\\"!#$%&\'*+-/=?^_`{}|~.a"@example.org', true],
+            ['"()<>[]:,;@\"!#$%&\'*+-/=?^_`{}|~.a"@example.org', true],
 
             // Valid with IP addresses
             ['user@[255.255.255.255]', true],

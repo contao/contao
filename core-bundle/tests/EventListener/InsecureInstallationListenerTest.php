@@ -31,7 +31,7 @@ class InsecureInstallationListenerTest extends TestCase
     {
         $listener = new InsecureInstallationListener();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\InsecureInstallationListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\InsecureInstallationListener', $listener);
     }
 
     /**
