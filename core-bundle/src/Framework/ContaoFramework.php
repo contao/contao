@@ -387,7 +387,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         /** @var Config $config */
-        $config = $this->createInstance('Contao\Config');
+        $config = $this->getAdapter('Contao\Config');
 
         // Show the "incomplete installation" message
         if (!$config->isComplete()) {
