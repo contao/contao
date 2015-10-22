@@ -31,89 +31,99 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testInstantiation()
     {
         /** @var ContaoFrameworkInterface $framework */
-        $framework =  $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
+        $framework = $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
         $listener = new MergeHttpHeadersListener($framework);
 
         $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\MergeHttpHeadersListener', $listener);
     }
 
     /**
-     * Tests that the listener is skipped if the framework was not initialized.
+     * Tests that the listener is skipped if the framework is not initialized.
      */
     public function testListenerIsSkippedIfFrameworkNotInitialized()
     {
-        $request = new Request();
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
-            $request,
+            new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
         );
 
-        $framework =  $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
-        $framework->expects($this->once())->method('isInitialized')->willReturn(false);
+        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
+        $framework = $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
 
-        /** @var ContaoFrameworkInterface $framework */
+        $framework
+            ->expects($this->once())
+            ->method('isInitialized')
+            ->willReturn(false)
+        ;
+
         $listener = new MergeHttpHeadersListener($framework);
         $listener->setHeaders(['FOOBAR: foobar']);
-
         $listener->onKernelResponse($responseEvent);
-        $response = $responseEvent->getResponse();
-        $this->assertFalse($response->headers->has('FOOBAR'));
-        $this->assertNull($response->headers->get('FOOBAR'));
+
+        $this->assertFalse($responseEvent->getResponse()->headers->has('FOOBAR'));
     }
 
     /**
-     * Tests that the headers sent using header() are actually merged into the
-     * response object.
+     * Tests that the headers sent using header() are merged into the response object.
      */
     public function testHeadersAreMerged()
     {
-        $request = new Request();
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
-            $request,
+            new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
         );
 
-        $framework =  $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
-        $framework->expects($this->once())->method('isInitialized')->willReturn(true);
+        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
+        $framework = $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
 
-        /** @var ContaoFrameworkInterface $framework */
+        $framework
+            ->expects($this->once())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
         $listener = new MergeHttpHeadersListener($framework);
         $listener->setHeaders(['FOOBAR: content']);
-
         $listener->onKernelResponse($responseEvent);
+
         $response = $responseEvent->getResponse();
+
         $this->assertTrue($response->headers->has('FOOBAR'));
         $this->assertSame('content', $response->headers->get('FOOBAR'));
     }
 
     /**
-     * Tests that if the response object already contains the header that shall
-     * be sent using header(), it is not overridden. It should get merged.
+     * Tests that existing headers are not overriden.
      */
     public function testHeadersAreNotOverridenIfAlreadyPresentInResponse()
     {
-        $request = new Request();
         $response = new Response();
         $response->headers->set('FOOBAR', 'content');
+
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
-            $request,
+            new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             $response
         );
 
-        $framework =  $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
-        $framework->expects($this->once())->method('isInitialized')->willReturn(true);
+        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
+        $framework = $this->getMock('Contao\\CoreBundle\\ContaoFrameworkInterface');
 
-        /** @var ContaoFrameworkInterface $framework */
+        $framework
+            ->expects($this->once())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
         $listener = new MergeHttpHeadersListener($framework);
         $listener->setHeaders(['FOOBAR: new-content']);
-
         $listener->onKernelResponse($responseEvent);
+
         $response = $responseEvent->getResponse();
 
         $this->assertTrue($response->headers->has('FOOBAR'));

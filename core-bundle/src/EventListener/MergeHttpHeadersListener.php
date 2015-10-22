@@ -13,17 +13,9 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\ContaoFrameworkInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Merges HTTP headers sent using PHP's header() method into the Symfony
- * Response so they are available for other listeners following later in the
- * application flow and relying on headers to be part of the response object.
- *
- * Although this could be useful in many applications we think that this should
- * not be supported in general and only serves as a layer to support legacy
- * code and therefore it's restricted to the Contao framework and part of the
- * Contao Core Bundle.
+ * Adds HTTP headers sent by Contao to the Symfony response.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
@@ -35,7 +27,6 @@ class MergeHttpHeadersListener
     private $contaoFramework;
 
     /**
-     * Headers
      * @var array
      */
     private $headers = [];
@@ -43,7 +34,7 @@ class MergeHttpHeadersListener
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $contaoFramework
+     * @param ContaoFrameworkInterface $contaoFramework The Contao framework
      */
     public function __construct(ContaoFrameworkInterface $contaoFramework)
     {
@@ -52,9 +43,9 @@ class MergeHttpHeadersListener
     }
 
     /**
-     * Gets the headers.
+     * Returns the headers.
      *
-     * @return array
+     * @return array The headers array
      */
     public function getHeaders()
     {
@@ -64,7 +55,7 @@ class MergeHttpHeadersListener
     /**
      * Sets the headers.
      *
-     * @param array $headers
+     * @param array $headers The headers array
      */
     public function setHeaders(array $headers)
     {
@@ -72,14 +63,13 @@ class MergeHttpHeadersListener
     }
 
     /**
-     * Sets the default locale based on the request or session.
+     * Adds the Contao headers to the Symfony response.
      *
-     * @param GetResponseEvent $event The event object
+     * @param FilterResponseEvent $event The event object
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if (!$this->contaoFramework->isInitialized()) {
-
             return;
         }
 
@@ -87,13 +77,11 @@ class MergeHttpHeadersListener
     }
 
     /**
-     * Merge the http headers. If one of the headers is already present in the
-     * response, it will not be merged as the response object has a higher
-     * priority.
+     * Merges the HTTP headers.
      *
-     * @param Response $response
+     * @param Response $response The response object
      *
-     * @return Response
+     * @return Response The response object
      */
     private function mergeHttpHeaders(Response $response)
     {
@@ -104,9 +92,8 @@ class MergeHttpHeadersListener
                 header_remove($name);
             }
 
-            $content = trim($content);
-
-            $response->headers->set($name, $content, false);
+            // Do not replace existing headers as the response object has a higher priority
+            $response->headers->set($name, trim($content), false);
         }
 
         return $response;
