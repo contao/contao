@@ -49,10 +49,12 @@ class Messages extends \Backend
 				return '<p class="tl_error"><a href="contao/main.php?do=maintenance">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</a></p>';
 			}
 		}
-		finally
+		catch (\Exception $e)
 		{
-			return '';
+			// ignore
 		}
+
+		return '';
 	}
 
 
