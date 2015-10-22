@@ -11,9 +11,7 @@
 namespace Contao\CoreBundle\Framework;
 
 /**
- * A general Adapter class building a wrapper around any class that is not
- * Unit testable/mockable. It only delegates method calls to the specified
- * class
+ * Wraps unmockable classes and delegates the method calls.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  *
@@ -22,8 +20,6 @@ namespace Contao\CoreBundle\Framework;
 class Adapter
 {
     /**
-     * Class name.
-     *
      * @var string
      */
     private $class;
@@ -31,7 +27,7 @@ class Adapter
     /**
      * Constructor.
      *
-     * @param string $class
+     * @param string $class The fully qualified class name
      */
     public function __construct($class)
     {
@@ -39,12 +35,12 @@ class Adapter
     }
 
     /**
-     * Calls any static method of the given class.
+     * Calls a method of the adapted class.
      *
-     * @param string $name
-     * @param array  $arguments
+     * @param string $name      The method name
+     * @param array  $arguments Optional arguments
      *
-     * @return mixed
+     * @return mixed The return value of the original method
      */
     public function __call($name, array $arguments = [])
     {

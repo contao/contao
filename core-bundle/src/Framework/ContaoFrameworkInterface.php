@@ -10,12 +10,14 @@
 
 namespace Contao\CoreBundle\Framework;
 
+use Contao\CoreBundle\ContaoFrameworkInterface as OldFrameworkInterface;
+
 /**
- * Interface for the Contao framework.
+ * Contao framework interface.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-interface ContaoFrameworkInterface extends \Contao\CoreBundle\ContaoFrameworkInterface
+interface ContaoFrameworkInterface extends OldFrameworkInterface
 {
     /**
      * Checks if the framework has been initialized.
@@ -28,23 +30,23 @@ interface ContaoFrameworkInterface extends \Contao\CoreBundle\ContaoFrameworkInt
      * Initializes the framework.
      */
     public function initialize();
-    
+
     /**
      * Creates a new instance of a given class.
      *
-     * @param string $class Fully qualified class name.
-     * @param array $args Constructor arguments.
+     * @param string $class The fully qualified class name
+     * @param array  $args  Optional constructor arguments
      *
-     * @return mixed
+     * @return object The instance
      */
     public function createInstance($class, $args = []);
 
     /**
      * Returns an adapter class for a given class.
      *
-     * @param string $class Fully qualified class name.
+     * @param string $class The fully qualified class name
      *
-     * @return mixed
+     * @return Adapter The adapter class
      */
     public function getAdapter($class);
 }

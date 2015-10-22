@@ -227,7 +227,7 @@ class ContaoFrameworkTest extends TestCase
         $framework
             ->expects($this->any())
             ->method('getAdapter')
-            ->with($this->equalTo('Config'))
+            ->with($this->equalTo('Contao\Config'))
             ->willReturn($this->mockConfigAdapter())
         ;
 
@@ -444,8 +444,9 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testGetAdapter()
     {
-        $framework = $this->mockContaoFramework();
-        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass';
-        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\Adapter', $framework->getAdapter($class));
+        $this->assertInstanceOf(
+            'Contao\\CoreBundle\\Framework\\Adapter',
+            $this->mockContaoFramework()->getAdapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass')
+        );
     }
 }

@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Test;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Framework\Adapter\Adapter;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\Config\FileLocator;
@@ -277,22 +277,31 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return $framework;
     }
 
+    /**
+     * Mocks a config adapter.
+     *
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject The config adapter
+     */
     protected function mockConfigAdapter()
     {
-        $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter\\Adapter')
+        $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter')
             ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
+
         $configAdapter
             ->expects($this->any())
             ->method('isComplete')
             ->willReturn(true)
         ;
+
         $configAdapter
             ->expects($this->any())
             ->method('preload')
             ->willReturn(null)
         ;
+
         $configAdapter
             ->expects($this->any())
             ->method('getInstance')
@@ -315,7 +324,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                 }
             })
         ;
-
 
         return $configAdapter;
     }

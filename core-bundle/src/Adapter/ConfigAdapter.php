@@ -20,7 +20,7 @@ use Contao\Config;
  * @internal
  *
  * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
- *             Use Contao\CoreBundle\Framework\ContaoFrameworkInterface::getAdapter('Config').
+ *             Use ContaoFramework::getAdapter('Contao\Config') instead.
  */
 class ConfigAdapter
 {
@@ -34,7 +34,11 @@ class ConfigAdapter
      */
     public function __construct()
     {
-        @trigger_error('The ConfigAdapter has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        @trigger_error(
+            'Using the ConfigAdapter class has been deprecated and will no longer work in Contao 5.0. '
+            . 'Use ContaoFramework::getAdapter(\'Contao\Config\') instead.',
+            E_USER_DEPRECATED
+        );
     }
 
     /**

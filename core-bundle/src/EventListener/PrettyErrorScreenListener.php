@@ -71,10 +71,10 @@ class PrettyErrorScreenListener
     /**
      * Constructor.
      *
-     * @param bool                      $prettyErrorScreens True to render the error screens
-     * @param \Twig_Environment         $twig               The twig environment
-     * @param ContaoFrameworkInterface  $framework          The Contao framework
-     * @param LoggerInterface|null      $logger             An optional logger service
+     * @param bool                     $prettyErrorScreens True to render the error screens
+     * @param \Twig_Environment        $twig               The twig environment
+     * @param ContaoFrameworkInterface $framework          The Contao framework
+     * @param LoggerInterface|null     $logger             An optional logger service
      */
     public function __construct(
         $prettyErrorScreens,
@@ -307,7 +307,7 @@ class PrettyErrorScreenListener
             return null;
         }
 
-        $encoded = StringUtil::encodeEmail($this->framework->getAdapter('Config')->get('adminEmail'));
+        $encoded = StringUtil::encodeEmail($this->framework->getAdapter('Contao\Config')->get('adminEmail'));
 
         return [
             'statusCode' => $statusCode,

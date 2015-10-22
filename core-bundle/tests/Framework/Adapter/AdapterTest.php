@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\Test\Adapter;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Test\TestCase;
 
-
 /**
  * Tests the Adapter class.
  *
@@ -43,12 +42,13 @@ class AdapterTest extends TestCase
 
     /**
      * Tests the __call method of a non-existent function.
+     *
+     * @expectedException \PHPUnit_Framework_Error
      */
     public function testMagicCallMissingMethod()
     {
         $adapter = new Adapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass');
 
-        $this->setExpectedException('PHPUnit_Framework_Error');
         $adapter->missingMethod();
     }
 }

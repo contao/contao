@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Framework;
 
 use Contao\ClassLoader;
+use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
@@ -88,6 +89,11 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * @var array
      */
+    private $adapterCache = [];
+
+    /**
+     * @var array
+     */
     private $basicClasses = [
         'System',
         'Config',
@@ -95,12 +101,6 @@ class ContaoFramework implements ContaoFrameworkInterface
         'TemplateLoader',
         'ModuleLoader',
     ];
-
-    /**
-     * Adapter class cache
-     * @var array
-     */
-    private $adapterCache = [];
 
     /**
      * Constructor.
@@ -165,30 +165,21 @@ class ContaoFramework implements ContaoFrameworkInterface
     }
 
     /**
-     * Creates a new instance of a given class.
-     *
-     * @param string $class Fully qualified class name.
-     * @param array $args Constructor arguments.
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function createInstance($class, $args = [])
     {
         if (in_array('getInstance', get_class_methods($class))) {
-
             return call_user_func_array([$class, 'getInstance'], $args);
         }
 
         $reflection = new \ReflectionClass($class);
+
         return $reflection->newInstanceArgs($args);
     }
 
     /**
-     * Returns an adapter class for a given class.
-     *
-     * @param string $class Fully qualified class name.
-     *
-     * @return Adapter
+     * {@inheritdoc}
      */
     public function getAdapter($class)
     {
@@ -307,8 +298,11 @@ class ContaoFramework implements ContaoFrameworkInterface
         // Set the container
         System::setContainer($this->container);
 
+        /** @var Config $config */
+        $config = $this->getAdapter('Contao\Config');
+
         // Preload the configuration (see #5872)
-        $this->getAdapter('Config')->preload();
+        $config->preload();
 
         // Register the class loader
         ClassLoader::scanAndRegister();
@@ -317,7 +311,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         $this->setDefaultLanguage();
 
         // Fully load the configuration
-        $this->getAdapter('Config')->getInstance();
+        $config->getInstance();
 
         $this->validateInstallation();
 
@@ -392,8 +386,11 @@ class ContaoFramework implements ContaoFrameworkInterface
             return;
         }
 
+        /** @var Config $config */
+        $config = $this->getAdapter('Contao\Config');
+
         // Show the "incomplete installation" message
-        if (!$this->getAdapter('Config')->isComplete()) {
+        if (!$config->isComplete()) {
             throw new IncompleteInstallationException(
                 'The installation has not been completed. Open the Contao install tool to continue.'
             );
@@ -405,8 +402,11 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function setTimezone()
     {
-        $this->iniSet('date.timezone', $this->getAdapter('Config')->get('timeZone'));
-        date_default_timezone_set($this->getAdapter('Config')->get('timeZone'));
+        /** @var Config $config */
+        $config = $this->getAdapter('Contao\Config');
+
+        $this->iniSet('date.timezone', $config->get('timeZone'));
+        date_default_timezone_set($config->get('timeZone'));
     }
 
     /**
