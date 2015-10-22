@@ -200,6 +200,6 @@ class ModuleChangePassword extends \Module
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
-		$this->Template->message = \Message::generate(false, true);
+		$this->Template->message = \Message::generateUnwrapped();
 	}
 }

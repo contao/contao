@@ -660,7 +660,7 @@ class InsertTags extends \Controller
 
 					if ($objTeaser !== null)
 					{
-						$arrCache[$strTag] = \StringUtil::toHtml5($this->replaceInsertTags($objTeaser->teaser), $blnCache);
+						$arrCache[$strTag] = \StringUtil::toHtml5($this->replaceInsertTags($objTeaser->teaser, $blnCache));
 					}
 					break;
 
