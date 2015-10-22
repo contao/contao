@@ -287,7 +287,7 @@ class InstallationController extends ContainerAware
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $class = 'Contao\\InstallationBundle\\Database\\' . $file->getBasename('.php');
+            $class = 'Contao\InstallationBundle\Database\\' . $file->getBasename('.php');
 
             /** @var VersionUpdateInterface $update */
             $update = new $class($this->container->get('database_connection'));
