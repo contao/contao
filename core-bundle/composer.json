@@ -55,5 +55,7 @@
         "branch-alias": {
             "dev-develop": "4.1.x-dev"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
