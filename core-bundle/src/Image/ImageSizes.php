@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Image;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\ContaoFrameworkInterface;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Doctrine\DBAL\Connection;
@@ -35,6 +36,11 @@ class ImageSizes
     private $eventDispatcher;
 
     /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
+
+    /**
      * @var array
      */
     private $options;
@@ -44,11 +50,16 @@ class ImageSizes
      *
      * @param Connection               $db
      * @param EventDispatcherInterface $eventDispatcher
+     * @param ContaoFrameworkInterface $framework
      */
-    public function __construct(Connection $db, EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        Connection $db,
+        EventDispatcherInterface $eventDispatcher,
+        ContaoFrameworkInterface $framework
+    ) {
         $this->db              = $db;
         $this->eventDispatcher = $eventDispatcher;
+        $this->framework       = $framework;
     }
 
     /**
@@ -96,6 +107,8 @@ class ImageSizes
 
         $this->options = $GLOBALS['TL_CROP'];
 
+        // The framework is necessary to have TL_CROP options available
+        $this->framework->initialize();
 
         $rows = $this->db->fetchAll(
             "SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name"
