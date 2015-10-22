@@ -319,15 +319,13 @@ class FrontendTemplate extends \Template
 		{
 			if ($intCache > 0 && (\Config::get('cacheMode') == 'both' || \Config::get('cacheMode') == 'browser'))
 			{
-				header('Cache-Control: public, max-age=' . ($intCache - time()));
-				header('Pragma: public');
+				header('Cache-Control: private, max-age=' . ($intCache - time()));
 				header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
 				header('Expires: ' . gmdate('D, d M Y H:i:s', $intCache) . ' GMT');
 			}
 			else
 			{
 				header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-				header('Pragma: no-cache');
 				header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 				header('Expires: Fri, 06 Jun 1975 15:10:00 GMT');
 			}
