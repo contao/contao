@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "symfony/framework-bundle": "~2.7",
         "symfony/console": "^2.7.3",
         "symfony/filesystem": "~2.7",
