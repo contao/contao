@@ -376,18 +376,18 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $config = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter')
+        $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter')
             ->disableOriginalConstructor()
             ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
             ->getMock();
 
-        $config
+        $configAdapter
             ->expects($this->any())
             ->method('isComplete')
             ->willReturn(false)
         ;
 
-        $config
+        $configAdapter
             ->expects($this->any())
             ->method('get')
             ->willReturnCallback(function ($key) {
@@ -408,7 +408,7 @@ class ContaoFrameworkTest extends TestCase
             $container->get('request_stack'),
             $this->mockRouter('/contao/install'),
             null,
-            $config
+            $configAdapter
         );
 
         $framework->setContainer($container);
