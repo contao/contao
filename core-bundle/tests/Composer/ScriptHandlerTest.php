@@ -22,7 +22,6 @@ use Contao\CoreBundle\Test\TestCase;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  *
- * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
 class ScriptHandlerTest extends TestCase
@@ -50,6 +49,8 @@ class ScriptHandlerTest extends TestCase
 
     /**
      * Tests generating a random secret.
+     *
+     * @runInSeparateProcess
      */
     public function testGeneratesRandomSecret()
     {
@@ -70,6 +71,8 @@ class ScriptHandlerTest extends TestCase
 
     /**
      * Tests generating a random secret with an array of configuration files.
+     *
+     * @runInSeparateProcess
      */
     public function testGeneratesRandomSecretArray()
     {
