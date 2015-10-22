@@ -51,6 +51,11 @@ class ImageSizes
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * Gets image sizes as options suitable for widgets.
+     *
+     * @return array
+     */
     public function getAllOptions()
     {
         $this->loadOptions();
@@ -61,6 +66,13 @@ class ImageSizes
         return $event->getImageSizes();
     }
 
+    /**
+     * Gets image sizes for the given user suitable for widgets.
+     *
+     * @param BackendUser $user The backend user instance.
+     *
+     * @return array
+     */
     public function getOptionsForUser(BackendUser $user)
     {
         $this->loadOptions();
@@ -73,6 +85,9 @@ class ImageSizes
         return $event->getImageSizes();
     }
 
+    /**
+     * Loads options array from database.
+     */
     private function loadOptions()
     {
         if (null !== $this->options) {
@@ -98,6 +113,13 @@ class ImageSizes
         }
     }
 
+    /**
+     * Filters options by the given allowed sizes and returns the result.
+     *
+     * @param array $allowedSizes An array of allowed options
+     *
+     * @return array
+     */
     private function filterOptions(array $allowedSizes)
     {
         if (empty($allowedSizes)) {
