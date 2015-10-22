@@ -45,7 +45,7 @@ class Maintenance extends \Backend implements \executable
 
 		try
 		{
-			$driver   = \System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
+			$driver = \System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
 			$isLocked = $driver->isExists();
 		}
 		catch (\Exception $e)

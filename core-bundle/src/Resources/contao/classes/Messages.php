@@ -49,12 +49,10 @@ class Messages extends \Backend
 				return '<p class="tl_error"><a href="contao/main.php?do=maintenance">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</a></p>';
 			}
 		}
-		catch (\Exception $e)
+		finally
 		{
-			// If the driver does not exist, we simply don't show a message
+			return '';
 		}
-
-		return '';
 	}
 
 
