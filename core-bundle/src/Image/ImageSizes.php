@@ -67,7 +67,7 @@ class ImageSizes
 
         $options = $user->isAdmin ? $this->options : $this->filterOptions(deserialize($user->imageSizes, true));
 
-        $event = new ImageSizesEvent($options);
+        $event = new ImageSizesEvent($options, $user);
         $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_USER, $event);
 
         return $event->getImageSizes();
