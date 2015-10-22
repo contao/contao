@@ -42,12 +42,17 @@ class Messages extends \Backend
 	 */
 	public function maintenanceCheck()
 	{
-		if (file_exists(\System::getContainer()->getParameter('kernel.root_dir') . '/cache/lock'))
+		try
 		{
-			return '<p class="tl_error"><a href="contao/main.php?do=maintenance">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</a></p>';
+			if (\System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver()->isExists())
+			{
+				return '<p class="tl_error"><a href="contao/main.php?do=maintenance">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</a></p>';
+			}
 		}
-
-		return '';
+		finally
+		{
+			return '';
+		}
 	}
 
 
