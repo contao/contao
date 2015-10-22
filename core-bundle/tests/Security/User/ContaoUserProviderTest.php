@@ -11,12 +11,12 @@
 namespace Contao\CoreBundle\Test\Security\Authentication;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\Security\Core\User\User;
-use Contao\CoreBundle\ContaoFramework;
 
 /**
  * Tests the ContaoUserProvider class.
@@ -39,7 +39,7 @@ class ContaoUserProviderTest extends TestCase
         parent::setUp();
 
         $this->framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->getMockBuilder('Contao\\CoreBundle\\Framework\\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
         ;

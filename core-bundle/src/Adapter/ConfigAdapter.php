@@ -18,6 +18,9 @@ use Contao\Config;
  * @author Yanick Witschi <https://github.com/toflar>
  *
  * @internal
+ *
+ * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
+ *             Use ContaoFramework::getAdapter('Contao\Config') instead.
  */
 class ConfigAdapter
 {
@@ -25,6 +28,18 @@ class ConfigAdapter
      * @var Config
      */
     private $config;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        @trigger_error(
+            'Using the ConfigAdapter class has been deprecated and will no longer work in Contao 5.0. '
+            . 'Use ContaoFramework::getAdapter(\'Contao\Config\') instead.',
+            E_USER_DEPRECATED
+        );
+    }
 
     /**
      * Initializes the Config class.

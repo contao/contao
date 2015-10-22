@@ -8,11 +8,12 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test;
+namespace Contao\CoreBundle\Test\Framework;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -36,7 +37,8 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/')
         );
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ContaoFramework', $framework);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\ContaoFramework', $framework);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Framework\\ContaoFrameworkInterface', $framework);
     }
 
     /**
@@ -198,7 +200,7 @@ class ContaoFrameworkTest extends TestCase
 
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->getMockBuilder('Contao\\CoreBundle\\Framework\\ContaoFramework')
             ->setConstructorArgs([
                 $container->get('request_stack'),
                 $this->mockRouter('/contao/install'),
@@ -209,7 +211,7 @@ class ContaoFrameworkTest extends TestCase
                     $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
                 ),
                 'contao_csrf_token',
-                $this->mockConfig(),
+                null,
                 error_reporting(),
             ])
             ->setMethods(['isInitialized'])
@@ -220,6 +222,13 @@ class ContaoFrameworkTest extends TestCase
             ->expects($this->any())
             ->method('isInitialized')
             ->willReturnOnConsecutiveCalls(false, true)
+        ;
+
+        $framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->with($this->equalTo('Contao\Config'))
+            ->willReturn($this->mockConfigAdapter())
         ;
 
         $framework->setContainer($container);
@@ -367,15 +376,18 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $config = $this->getMock('Contao\\CoreBundle\\Adapter\\ConfigAdapter', ['isComplete']);
+        $configAdapter = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter')
+            ->disableOriginalConstructor()
+            ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
+            ->getMock();
 
-        $config
+        $configAdapter
             ->expects($this->any())
             ->method('isComplete')
             ->willReturn(false)
         ;
 
-        $config
+        $configAdapter
             ->expects($this->any())
             ->method('get')
             ->willReturnCallback(function ($key) {
@@ -396,10 +408,45 @@ class ContaoFrameworkTest extends TestCase
             $container->get('request_stack'),
             $this->mockRouter('/contao/install'),
             null,
-            $config
+            $configAdapter
         );
 
         $framework->setContainer($container);
         $framework->initialize();
+    }
+
+    /**
+     * Tests the createInstance method.
+     */
+    public function testCreateInstance()
+    {
+        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass';
+        $instance = $this->mockContaoFramework()->createInstance($class, [1, 2]);
+
+        $this->assertInstanceOf($class, $instance);
+        $this->assertEquals([1, 2], $instance->constructorArgs);
+    }
+
+    /**
+     * Tests the createInstance method for a singleton class.
+     */
+    public function testCreateInstanceSingelton()
+    {
+        $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacySingletonClass';
+        $instance = $this->mockContaoFramework()->createInstance($class, [1, 2]);
+
+        $this->assertInstanceOf($class, $instance);
+        $this->assertEquals([1, 2], $instance->constructorArgs);
+    }
+
+    /**
+     * Tests the getAdapter method.
+     */
+    public function testGetAdapter()
+    {
+        $this->assertInstanceOf(
+            'Contao\\CoreBundle\\Framework\\Adapter',
+            $this->mockContaoFramework()->getAdapter('Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass')
+        );
     }
 }
