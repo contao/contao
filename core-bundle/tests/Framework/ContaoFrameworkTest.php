@@ -376,7 +376,7 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $config = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter\\Adapter')
+        $config = $this->getMockBuilder('Contao\\CoreBundle\\Framework\\Adapter')
             ->disableOriginalConstructor()
             ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
             ->getMock();
@@ -420,9 +420,9 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testCreateInstance()
     {
-        $framework = $this->mockContaoFramework();
         $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacyClass';
-        $instance = $framework->createInstance($class, [1, 2]);
+        $instance = $this->mockContaoFramework()->createInstance($class, [1, 2]);
+
         $this->assertInstanceOf($class, $instance);
         $this->assertEquals([1, 2], $instance->constructorArgs);
     }
@@ -432,9 +432,9 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testCreateInstanceSingelton()
     {
-        $framework = $this->mockContaoFramework();
         $class = 'Contao\\CoreBundle\\Test\\Fixtures\\Adapter\\LegacySingletonClass';
-        $instance = $framework->createInstance($class, [1, 2]);
+        $instance = $this->mockContaoFramework()->createInstance($class, [1, 2]);
+
         $this->assertInstanceOf($class, $instance);
         $this->assertEquals([1, 2], $instance->constructorArgs);
     }
