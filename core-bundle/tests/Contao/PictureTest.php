@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\Contao;
 
 use Contao\CoreBundle\Test\TestCase;
+use Contao\File;
 use Contao\Picture;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
@@ -83,6 +84,7 @@ class PictureTest extends TestCase
      */
     public function testInstantiation()
     {
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])

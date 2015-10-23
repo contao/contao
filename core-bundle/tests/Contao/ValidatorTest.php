@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\Contao;
 
 use Contao\CoreBundle\Test\TestCase;
+use Contao\Idna;
 use Contao\StringUtil;
 use Contao\Validator;
 
@@ -31,7 +32,7 @@ class ValidatorTest extends TestCase
      */
     public function testEmail($email, $expected)
     {
-        $this->assertEquals($expected, Validator::isEmail($email), 'Original: ' . $email . ' idna: ' . \Contao\Idna::encodeEmail($email));
+        $this->assertEquals($expected, Validator::isEmail($email), 'Original: ' . $email . ' idna: ' . Idna::encodeEmail($email));
     }
 
     /**

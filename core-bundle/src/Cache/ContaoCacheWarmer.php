@@ -14,7 +14,7 @@ use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
-use Contao\CoreBundle\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DcaExtractor;
 use Contao\PageModel;
 use Doctrine\DBAL\Driver\Connection;

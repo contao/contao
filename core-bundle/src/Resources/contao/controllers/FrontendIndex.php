@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Symfony\Component\HttpFoundation\Response;
 
 

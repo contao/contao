@@ -27,13 +27,15 @@ class CombinedFileDumperTest extends TestCase
      */
     public function testInstantiation()
     {
+        /** @var Filesystem|\PHPUnit_Framework_MockObject_MockObject $filesystem */
+        $filesystem = $this->getMock('Symfony\Component\Filesystem\Filesystem');
+
+        /** @var PhpFileLoader|\PHPUnit_Framework_MockObject_MockObject $fileLoader */
+        $fileLoader = $this->getMock('Contao\CoreBundle\Config\Loader\PhpFileLoader');
+
         $this->assertInstanceOf(
             'Contao\CoreBundle\Config\Dumper\CombinedFileDumper',
-            new CombinedFileDumper(
-                $this->getMock('Symfony\Component\Filesystem\Filesystem'),
-                $this->getMock('Contao\CoreBundle\Config\Loader\PhpFileLoader'),
-                $this->getCacheDir()
-            )
+            new CombinedFileDumper($filesystem, $fileLoader, $this->getCacheDir())
         );
     }
 
@@ -63,7 +65,6 @@ class CombinedFileDumperTest extends TestCase
         );
 
         $dumper->setHeader("<?php \necho 'foo';");
-
         $dumper->dump(['test.php'], 'test.php');
     }
 
@@ -74,12 +75,13 @@ class CombinedFileDumperTest extends TestCase
      */
     public function testInvalidHeader()
     {
-        $dumper = new CombinedFileDumper(
-            $this->getMock('Symfony\Component\Filesystem\Filesystem'),
-            $this->getMock('Contao\CoreBundle\Config\Loader\PhpFileLoader'),
-            $this->getCacheDir()
-        );
+        /** @var Filesystem|\PHPUnit_Framework_MockObject_MockObject $filesystem */
+        $filesystem = $this->getMock('Symfony\Component\Filesystem\Filesystem');
 
+        /** @var PhpFileLoader|\PHPUnit_Framework_MockObject_MockObject $fileLoader */
+        $fileLoader = $this->getMock('Contao\CoreBundle\Config\Loader\PhpFileLoader');
+
+        $dumper = new CombinedFileDumper($filesystem, $fileLoader, $this->getCacheDir());
         $dumper->setHeader('No opening PHP tag');
     }
 

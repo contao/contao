@@ -97,6 +97,7 @@ namespace Contao;
  * @property string  $com_template
  * @property string  $classes
  * @property string  $typePrefix
+ * @property integer $origId
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

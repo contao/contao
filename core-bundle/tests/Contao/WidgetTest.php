@@ -37,6 +37,11 @@ class WidgetTest extends TestCase
     /**
      * Tests the getPost() method.
      *
+     * @param string $key      The key
+     * @param string $input    The input
+     * @param mixed  $value    The value
+     * @param string $expected The expected value
+     *
      * @dataProvider postProvider
      */
     public function testGetPost($key, $input, $value, $expected)

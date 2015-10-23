@@ -595,7 +595,7 @@ function utf8_convert_encoding($str, $to, $from=null)
 
 	if (!$from)
 	{
-		$from = utf8_detect_encoding($str);
+		$from = mb_detect_encoding($str);
 	}
 
 	if ($from == $to)

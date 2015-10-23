@@ -1167,14 +1167,12 @@ abstract class System
 	/**
 	 * Enable a back end module
 	 *
-	 * @param string $strName The module name
-	 *
 	 * @return boolean True if the module was enabled
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Composer to add or remove modules.
 	 */
-	public static function enableModule($strName)
+	public static function enableModule()
 	{
 		@trigger_error('Using System::enableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
 	}
@@ -1183,14 +1181,12 @@ abstract class System
 	/**
 	 * Disable a back end module
 	 *
-	 * @param string $strName The module name
-	 *
 	 * @return boolean True if the module was disabled
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Composer to add or remove modules.
 	 */
-	public static function disableModule($strName)
+	public static function disableModule()
 	{
 		@trigger_error('Using System::disableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
 	}

@@ -2104,7 +2104,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			if (is_link(TL_ROOT . '/web/' . $this->strPath . '/' . $this->varValue . $this->strExtension))
 			{
 				$this->Files->delete('web/' . $this->strPath . '/' . $this->varValue . $this->strExtension);
-				SymlinkUtil::symlink($this->strPath . '/' . $varValue . $this->strExtension, 'web/' . $this->strPath . '/' . $varValue . $this->strExtension);
+				SymlinkUtil::symlink($this->strPath . '/' . $varValue . $this->strExtension, 'web/' . $this->strPath . '/' . $varValue . $this->strExtension, TL_ROOT);
 			}
 
 			// Set the new value so the input field can show it

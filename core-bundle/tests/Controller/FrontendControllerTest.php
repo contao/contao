@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Test\Controller;
 
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the FrontendController class.
@@ -41,6 +42,7 @@ class FrontendControllerTest extends TestCase
             ->getMock()
         ;
 
+        /** @var ContainerBuilder $container */
         $container = $this->mockKernel()->getContainer();
         $container->set('contao.framework', $framework);
 

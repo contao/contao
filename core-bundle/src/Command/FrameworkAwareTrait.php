@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 
 /**
  * Provides methods to inject the framework service.

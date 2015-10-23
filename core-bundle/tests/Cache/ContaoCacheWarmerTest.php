@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Test\Command;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Test\TestCase;
+use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -35,12 +36,15 @@ class ContaoCacheWarmerTest extends TestCase
     {
         parent::setUp();
 
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->getMock('Doctrine\DBAL\Connection', [], [], '', false);
+
         $this->warmer = new ContaoCacheWarmer(
             new Filesystem(),
             new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
             new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao'),
             $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-            $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
+            $connection,
             $this->mockContaoFramework()
         );
     }
@@ -67,6 +71,7 @@ class ContaoCacheWarmerTest extends TestCase
      */
     public function testWarmUp()
     {
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
         $connection = $this->getMock('Doctrine\DBAL\Connection', ['prepare', 'execute', 'fetch'], [], '', false);
 
         $connection

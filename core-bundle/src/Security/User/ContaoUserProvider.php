@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FrontendUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;

@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\Finder\SplFileInfo;
-
 
 /**
  * Parses a database.sql file.
