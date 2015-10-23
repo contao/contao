@@ -138,7 +138,7 @@ class News extends \Frontend
 
 			while ($objArticle->next())
 			{
-				/** @var \PageModel $objPage */
+				/** @var PageModel $objPage */
 				$objPage = $objArticle->getRelated('pid');
 				$jumpTo = $objPage->jumpTo;
 
@@ -338,9 +338,9 @@ class News extends \Frontend
 	/**
 	 * Return the link of a news article
 	 *
-	 * @param \NewsModel $objItem
-	 * @param string     $strUrl
-	 * @param string     $strBase
+	 * @param NewsModel $objItem
+	 * @param string    $strUrl
+	 * @param string    $strBase
 	 *
 	 * @return string
 	 */

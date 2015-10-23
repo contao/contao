@@ -74,16 +74,16 @@ abstract class ModuleNews extends \Module
 	/**
 	 * Parse an item and return it as string
 	 *
-	 * @param \NewsModel $objArticle
-	 * @param boolean    $blnAddArchive
-	 * @param string     $strClass
-	 * @param integer    $intCount
+	 * @param NewsModel $objArticle
+	 * @param boolean   $blnAddArchive
+	 * @param string    $strClass
+	 * @param integer   $intCount
 	 *
 	 * @return string
 	 */
 	protected function parseArticle($objArticle, $blnAddArchive=false, $strClass='', $intCount=0)
 	{
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->news_template);
 		$objTemplate->setData($objArticle->row());
 
@@ -203,8 +203,8 @@ abstract class ModuleNews extends \Module
 	/**
 	 * Parse one or more items and return them as array
 	 *
-	 * @param \Model\Collection $objArticles
-	 * @param boolean           $blnAddArchive
+	 * @param Model\Collection $objArticles
+	 * @param boolean          $blnAddArchive
 	 *
 	 * @return array
 	 */
@@ -222,7 +222,7 @@ abstract class ModuleNews extends \Module
 
 		while ($objArticles->next())
 		{
-			/** @var \NewsModel $objArticle */
+			/** @var NewsModel $objArticle */
 			$objArticle = $objArticles->current();
 
 			$arrArticles[] = $this->parseArticle($objArticle, $blnAddArchive, ((++$count == 1) ? ' first' : '') . (($count == $limit) ? ' last' : '') . ((($count % 2) == 0) ? ' odd' : ' even'), $count);
@@ -235,7 +235,7 @@ abstract class ModuleNews extends \Module
 	/**
 	 * Return the meta fields of a news article as array
 	 *
-	 * @param \NewsModel $objArticle
+	 * @param NewsModel $objArticle
 	 *
 	 * @return array
 	 */
@@ -248,7 +248,7 @@ abstract class ModuleNews extends \Module
 			return array();
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$return = array();
@@ -262,7 +262,7 @@ abstract class ModuleNews extends \Module
 					break;
 
 				case 'author':
-					/** @var \UserModel $objAuthor */
+					/** @var UserModel $objAuthor */
 					if (($objAuthor = $objArticle->getRelated('author')) !== null)
 					{
 						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
@@ -288,8 +288,8 @@ abstract class ModuleNews extends \Module
 	/**
 	 * Generate a URL and return it as string
 	 *
-	 * @param \NewsModel $objItem
-	 * @param boolean    $blnAddArchive
+	 * @param NewsModel $objItem
+	 * @param boolean   $blnAddArchive
 	 *
 	 * @return string
 	 */
@@ -365,10 +365,10 @@ abstract class ModuleNews extends \Module
 	/**
 	 * Generate a link and return it as string
 	 *
-	 * @param string     $strLink
-	 * @param \NewsModel $objArticle
-	 * @param boolean    $blnAddArchive
-	 * @param boolean    $blnIsReadMore
+	 * @param string    $strLink
+	 * @param NewsModel $objArticle
+	 * @param boolean   $blnAddArchive
+	 * @param boolean   $blnIsReadMore
 	 *
 	 * @return string
 	 */

@@ -38,7 +38,7 @@ class ModuleNewsArchive extends \ModuleNews
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsarchive'][0]) . ' ###';
@@ -79,7 +79,7 @@ class ModuleNewsArchive extends \ModuleNews
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$limit = null;

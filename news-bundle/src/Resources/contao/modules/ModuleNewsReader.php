@@ -38,7 +38,7 @@ class ModuleNewsReader extends \ModuleNews
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsreader'][0]) . ' ###';
@@ -59,7 +59,7 @@ class ModuleNewsReader extends \ModuleNews
 		// Do not index or cache the page if no news item has been specified
 		if (!\Input::get('items'))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -73,7 +73,7 @@ class ModuleNewsReader extends \ModuleNews
 		// Do not index or cache the page if there are no archives
 		if (!is_array($this->news_archives) || empty($this->news_archives))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -91,7 +91,7 @@ class ModuleNewsReader extends \ModuleNews
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->articles = '';
@@ -131,7 +131,7 @@ class ModuleNewsReader extends \ModuleNews
 			return;
 		}
 
-		/** @var \NewsArchiveModel $objArchive */
+		/** @var NewsArchiveModel $objArchive */
 		$objArchive = $objArticle->getRelated('pid');
 		$this->Template->allowComments = $objArchive->allowComments;
 
@@ -157,7 +157,7 @@ class ModuleNewsReader extends \ModuleNews
 		// Notify the author
 		if ($objArchive->notify != 'notify_admin')
 		{
-			/** @var \UserModel $objAuthor */
+			/** @var UserModel $objAuthor */
 			if (($objAuthor = $objArticle->getRelated('author')) !== null && $objAuthor->email != '')
 			{
 				$arrNotifies[] = $objAuthor->email;

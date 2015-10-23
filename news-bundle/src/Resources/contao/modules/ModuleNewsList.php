@@ -38,7 +38,7 @@ class ModuleNewsList extends \ModuleNews
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newslist'][0]) . ' ###';
@@ -189,7 +189,7 @@ class ModuleNewsList extends \ModuleNews
 	 * @param  integer $limit
 	 * @param  integer $offset
 	 *
-	 * @return \Model\Collection|\NewsModel|null
+	 * @return Model\Collection|NewsModel|null
 	 */
 	protected function fetchItems($newsArchives, $blnFeatured, $limit, $offset)
 	{
@@ -203,7 +203,7 @@ class ModuleNewsList extends \ModuleNews
 					continue;
 				}
 
-				if ($objCollection === null || $objCollection instanceof \Model\Collection)
+				if ($objCollection === null || $objCollection instanceof Model\Collection)
 				{
 					return $objCollection;
 				}
