@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\Contao;
 
 use Contao\CoreBundle\Test\TestCase;
+use Contao\File;
 use Contao\Image;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
@@ -82,7 +83,7 @@ class ImageTest extends TestCase
      */
     public function testConstruct()
     {
-        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -113,7 +114,7 @@ class ImageTest extends TestCase
      */
     public function testConstructWithNonexistentFile()
     {
-        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -131,7 +132,7 @@ class ImageTest extends TestCase
      */
     public function testConstructWithInvalidExtension()
     {
-        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -173,7 +174,7 @@ class ImageTest extends TestCase
      */
     public function testComputeResizeWithoutImportantPart($arguments, $expectedResult)
     {
-        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -622,7 +623,7 @@ class ImageTest extends TestCase
      */
     public function testComputeResizeWithImportantPart($arguments, $expectedResult)
     {
-        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -811,7 +812,7 @@ class ImageTest extends TestCase
      */
     public function testSettersAndGetters()
     {
-        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -940,7 +941,7 @@ class ImageTest extends TestCase
      */
     public function testGetCacheName($arguments, $expectedCacheName)
     {
-        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -1013,7 +1014,7 @@ class ImageTest extends TestCase
      */
     public function testSetZoomOutOfBoundsNegative()
     {
-        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
@@ -1043,7 +1044,7 @@ class ImageTest extends TestCase
      */
     public function testSetZoomOutOfBoundsPositive()
     {
-        /** @var \File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])

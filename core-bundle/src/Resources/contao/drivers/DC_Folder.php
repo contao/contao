@@ -1009,7 +1009,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$class = 'FileUpload';
 		}
 
-		/** @var \FileUpload $objUploader */
+		/** @var FileUpload $objUploader */
 		$objUploader = new $class();
 
 		// Process the uploaded files
@@ -1164,7 +1164,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 			$this->blnCreateNewVersion = false;
 
-			/** @var \FilesModel $objFile */
+			/** @var FilesModel $objFile */
 			$objVersions = new \Versions($this->strTable, $objFile->id);
 
 			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'])
@@ -1512,7 +1512,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					$this->objActiveRecord = $objFile;
 					$this->blnCreateNewVersion = false;
 
-					/** @var \FilesModel $objFile */
+					/** @var FilesModel $objFile */
 					$objVersions = new \Versions($this->strTable, $objFile->id);
 					$objVersions->initialize();
 				}
@@ -1886,7 +1886,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				// Update the database
 				if ($this->blnIsDbAssisted)
 				{
-					/** @var \FilesModel $objMeta */
+					/** @var FilesModel $objMeta */
 					$objMeta->hash = $objFile->hash;
 					$objMeta->save();
 
@@ -1915,7 +1915,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Prepare the code editor
 		if (\Config::get('useCE'))
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_ace');
 			$objTemplate->selector = 'ctrl_source';
 			$objTemplate->type = $objFile->extension;

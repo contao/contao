@@ -29,7 +29,7 @@ class Encryption
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Encryption
+	 * @var Encryption
 	 */
 	protected static $objInstance;
 
@@ -291,7 +291,7 @@ class Encryption
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return \Encryption
+	 * @return Encryption
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Encryption class is now static.

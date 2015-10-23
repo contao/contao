@@ -37,7 +37,7 @@ class ModuleChangePassword extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['changePassword'][0]) . ' ###';
@@ -64,7 +64,7 @@ class ModuleChangePassword extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->import('FrontendUser', 'User');
@@ -94,16 +94,16 @@ class ModuleChangePassword extends \Module
 		$objMember = \MemberModel::findByPk($this->User->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 
-		/** @var \FormTextField $objOldPassword */
+		/** @var FormTextField $objOldPassword */
 		$objOldPassword = null;
 
-		/** @var \FormPassword $objNewPassword */
+		/** @var FormPassword $objNewPassword */
 		$objNewPassword = null;
 
 		// Initialize the widgets
 		foreach ($arrFields as $strKey=>$arrField)
 		{
-			/** @var \Widget $strClass */
+			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
 
 			// Continue if the class is not defined
@@ -114,14 +114,14 @@ class ModuleChangePassword extends \Module
 
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'];
 
-			/** @var \Widget $objWidget */
+			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
 
 			// Increase the row count if it is a password field
-			if ($objWidget instanceof \FormPassword)
+			if ($objWidget instanceof FormPassword)
 			{
 				$objWidget->rowClassConfirm = 'row_' . ++$row . ((($row % 2) == 0) ? ' even' : ' odd');
 			}

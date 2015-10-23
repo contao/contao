@@ -26,7 +26,7 @@ class PageForward extends \Frontend
 	/**
 	 * Redirect to an internal page
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 */
 	public function generate($objPage)
 	{
@@ -36,7 +36,7 @@ class PageForward extends \Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
 	 * @return RedirectResponse
 	 */
@@ -48,7 +48,7 @@ class PageForward extends \Frontend
 	/**
 	 * Return the URL to the jumpTo or first published page
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
 	 * @return string
 	 *
@@ -58,7 +58,7 @@ class PageForward extends \Frontend
 	{
 		if ($objPage->jumpTo)
 		{
-			/** @var \PageModel $objNextPage */
+			/** @var PageModel $objNextPage */
 			$objNextPage = $objPage->getRelated('jumpTo');
 		}
 		else
@@ -138,7 +138,7 @@ class PageForward extends \Frontend
 	/**
 	 * Return the redirect status code
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
 	 * @return integer
 	 */

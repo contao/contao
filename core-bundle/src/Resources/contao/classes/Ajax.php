@@ -94,7 +94,7 @@ class Ajax extends \Backend
 
 				$this->import('BackendUser', 'User');
 
-				/** @var \BackendTemplate|object $objTemplate */
+				/** @var BackendTemplate|object $objTemplate */
 				$objTemplate = new \BackendTemplate('be_navigation');
 				$navigation = $this->User->navigation();
 				$objTemplate->modules = $navigation[\Input::post('id')]['modules'];
@@ -170,14 +170,14 @@ class Ajax extends \Backend
 	/**
 	 * Ajax actions that do require a data container object
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function executePostActions(\DataContainer $dc)
+	public function executePostActions(DataContainer $dc)
 	{
 		header('Content-Type: text/html; charset=' . \Config::get('characterSet'));
 
 		// Bypass any core logic for non-core drivers (see #5957)
-		if (!$dc instanceof \DC_File && !$dc instanceof \DC_Folder && !$dc instanceof \DC_Table)
+		if (!$dc instanceof DC_File && !$dc instanceof DC_Folder && !$dc instanceof DC_Table)
 		{
 			$this->executePostActionsHook($dc);
 			throw new NoContentResponseException();
@@ -197,10 +197,10 @@ class Ajax extends \Backend
 			case 'loadPagetree':
 				$strField = $dc->field = \Input::post('name');
 
-				/** @var \PageSelector $strClass */
+				/** @var PageSelector $strClass */
 				$strClass = $GLOBALS['BE_FFL']['pageSelector'];
 
-				/** @var \PageSelector $objWidget */
+				/** @var PageSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, null, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), intval(\Input::post('level')))));
@@ -209,10 +209,10 @@ class Ajax extends \Backend
 			case 'loadFiletree':
 				$strField = $dc->field = \Input::post('name');
 
-				/** @var \FileSelector $strClass */
+				/** @var FileSelector $strClass */
 				$strClass = $GLOBALS['BE_FFL']['fileSelector'];
 
-				/** @var \FileSelector $objWidget */
+				/** @var FileSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, null, $strField, $dc->table, $dc));
 
 				// Load a particular node
@@ -312,10 +312,10 @@ class Ajax extends \Backend
 					$varValue = serialize($varValue);
 				}
 
-				/** @var \FileTree|\PageTree $strClass */
+				/** @var FileTree|PageTree $strClass */
 				$strClass = $GLOBALS['BE_FFL'][$strKey];
 
-				/** @var \FileTree|\PageTree $objWidget */
+				/** @var FileTree|PageTree $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
@@ -367,7 +367,7 @@ class Ajax extends \Backend
 						}
 					}
 				}
-				elseif ($dc instanceof \DC_File)
+				elseif ($dc instanceof DC_File)
 				{
 					$val = (intval(\Input::post('state') == 1) ? true : false);
 					\Config::persist(\Input::post('field'), $val);
@@ -398,9 +398,9 @@ class Ajax extends \Backend
 	/**
 	 * Execute the post actions hook
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	protected function executePostActionsHook(\DataContainer $dc)
+	protected function executePostActionsHook(DataContainer $dc)
 	{
 		if (isset($GLOBALS['TL_HOOKS']['executePostActions']) && is_array($GLOBALS['TL_HOOKS']['executePostActions']))
 		{

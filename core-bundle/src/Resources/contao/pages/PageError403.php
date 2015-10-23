@@ -26,17 +26,17 @@ class PageError403 extends \Frontend
 	/**
 	 * Generate an error 403 page
 	 *
-	 * @param \PageModel|integer $objRootPage
+	 * @param PageModel|integer $objRootPage
 	 */
 	public function generate($objRootPage=null)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj403 = $this->prepare($objRootPage);
 		$objPage = $obj403->loadDetails();
 
-		/** @var \PageRegular $objHandler */
+		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
 		header('HTTP/1.1 403 Forbidden');
@@ -47,19 +47,19 @@ class PageError403 extends \Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param \PageModel|integer $objRootPage
+	 * @param PageModel|integer $objRootPage
 	 *
 	 * @return Response
 	 */
 	public function getResponse($objRootPage=null)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj403 = $this->prepare($objRootPage);
 		$objPage = $obj403->loadDetails();
 
-		/** @var \PageRegular $objHandler */
+		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
 		return $objHandler->getResponse($objPage)->setStatusCode(403);
@@ -69,9 +69,9 @@ class PageError403 extends \Frontend
 	/**
 	 * Prepare the output
 	 *
-	 * @param \PageModel|integer $objRootPage
+	 * @param PageModel|integer $objRootPage
 	 *
-	 * @return \PageModel
+	 * @return PageModel
 	 *
 	 * @internal
 	 */

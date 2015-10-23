@@ -43,7 +43,7 @@ class Folder extends \System
 
 	/**
 	 * Files model
-	 * @var \FilesModel
+	 * @var FilesModel
 	 */
 	protected $objModel;
 
@@ -311,7 +311,7 @@ class Folder extends \System
 	/**
 	 * Return the files model
 	 *
-	 * @return \FilesModel The files model
+	 * @return FilesModel The files model
 	 */
 	public function getModel()
 	{

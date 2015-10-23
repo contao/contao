@@ -24,12 +24,12 @@ class BackendMain extends \Backend
 
 	/**
 	 * Current Ajax object
-	 * @var \Ajax
+	 * @var Ajax
 	 */
 	protected $objAjax;
 
 	/**
-	 * @var \BackendTemplate|object
+	 * @var BackendTemplate|object
 	 */
 	protected $Template;
 
@@ -140,7 +140,7 @@ class BackendMain extends \Backend
 	{
 		\System::loadLanguageFile('explain');
 
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_welcome');
 		$objTemplate->messages = \Message::generateUnwrapped();
 

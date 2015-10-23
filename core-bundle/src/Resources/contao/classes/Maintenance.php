@@ -37,7 +37,7 @@ class Maintenance extends \Backend implements \executable
 	 */
 	public function run()
 	{
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_maintenance_mode');
 		$objTemplate->action = ampersand(\Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['maintenanceMode'];

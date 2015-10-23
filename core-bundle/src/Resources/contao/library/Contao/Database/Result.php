@@ -286,7 +286,7 @@ class Result
 	/**
 	 * Go to the first row of the current result
 	 *
-	 * @return \Database\Result|boolean The result object or false if there is no first row
+	 * @return Result|boolean The result object or false if there is no first row
 	 */
 	public function first()
 	{
@@ -302,7 +302,7 @@ class Result
 	/**
 	 * Go to the previous row of the current result
 	 *
-	 * @return \Database\Result|boolean The result object or false if there is no previous row
+	 * @return Result|boolean The result object or false if there is no previous row
 	 */
 	public function prev()
 	{
@@ -321,7 +321,7 @@ class Result
 	/**
 	 * Go to the next row of the current result
 	 *
-	 * @return \Database\Result|boolean The result object or false if there is no next row
+	 * @return Result|boolean The result object or false if there is no next row
 	 */
 	public function next()
 	{
@@ -344,7 +344,7 @@ class Result
 	/**
 	 * Go to the last row of the current result
 	 *
-	 * @return \Database\Result|boolean The result object or false if there is no last row
+	 * @return Result|boolean The result object or false if there is no last row
 	 */
 	public function last()
 	{
@@ -389,7 +389,7 @@ class Result
 	/**
 	 * Reset the current result
 	 *
-	 * @return \Database\Result The result object
+	 * @return Result The result object
 	 */
 	public function reset()
 	{

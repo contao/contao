@@ -35,7 +35,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function parse()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Adjust the output format
@@ -241,7 +241,7 @@ class FrontendTemplate extends \Template
 	 */
 	protected function addToCache()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$intCache = 0;
@@ -386,7 +386,7 @@ class FrontendTemplate extends \Template
 
 		if ($strKey == 'main')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			// Use the section tag in HTML5

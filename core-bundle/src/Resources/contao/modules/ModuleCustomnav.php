@@ -37,7 +37,7 @@ class ModuleCustomnav extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['customnav'][0]) . ' ###';
@@ -68,7 +68,7 @@ class ModuleCustomnav extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$items = array();
@@ -106,7 +106,7 @@ class ModuleCustomnav extends \Module
 		// Add the items to the pre-sorted array
 		while ($objPages->next())
 		{
-			/** @var \PageModel $objPages */
+			/** @var PageModel $objPages */
 			$objModel = $objPages->current();
 
 			$arrPages[$objPages->id] = $objModel->loadDetails()->row(); // see #3765
@@ -118,7 +118,7 @@ class ModuleCustomnav extends \Module
 			$this->navigationTpl = 'nav_default';
 		}
 
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->navigationTpl);
 
 		$objTemplate->type = get_class($this);

@@ -56,7 +56,7 @@ class FrontendIndex extends \Frontend
 		{
 			$objRootPage = $this->getRootPageFromUrl();
 
-			/** @var \PageRoot $objHandler */
+			/** @var PageRoot $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['root']();
 			$pageId = $objHandler->generate($objRootPage->id, true, true);
 		}
@@ -80,7 +80,7 @@ class FrontendIndex extends \Frontend
 			// Order by domain and language
 			while ($objPage->next())
 			{
-				/** @var \PageModel $objModel */
+				/** @var PageModel $objModel */
 				$objModel = $objPage->current();
 				$objCurrentPage = $objModel->loadDetails();
 
@@ -135,14 +135,14 @@ class FrontendIndex extends \Frontend
 		}
 
 		// Throw a 500 error if the result is still ambiguous
-		if ($objPage instanceof \Model\Collection && $objPage->count() != 1)
+		if ($objPage instanceof Model\Collection && $objPage->count() != 1)
 		{
 			$this->log('More than one page matches page ID "' . $pageId . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
 			throw new \LogicException('More than one page found');
 		}
 
 		// Make sure $objPage is a Model
-		if ($objPage instanceof \Model\Collection)
+		if ($objPage instanceof Model\Collection)
 		{
 			$objPage = $objPage->current();
 		}
@@ -157,7 +157,7 @@ class FrontendIndex extends \Frontend
 		// Load a website root page object (will redirect to the first active regular page)
 		if ($objPage->type == 'root')
 		{
-			/** @var \PageRoot $objHandler */
+			/** @var PageRoot $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['root']();
 			$objHandler->generate($objPage->id);
 		}
@@ -238,21 +238,21 @@ class FrontendIndex extends \Frontend
 			switch ($objPage->type)
 			{
 				case 'error_404':
-					/** @var \PageError404 $objHandler */
+					/** @var PageError404 $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 
 					return $objHandler->getResponse();
 					break;
 
 				case 'error_403':
-					/** @var \PageError403 $objHandler */
+					/** @var PageError403 $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY']['error_403']();
 
 					return $objHandler->getResponse($objRootPage);
 					break;
 
 				default:
-					/** @var \PageRegular $objHandler */
+					/** @var PageRegular $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
 
 					// Backwards compatibility
@@ -278,7 +278,7 @@ class FrontendIndex extends \Frontend
 			$GLOBALS['TL_MOOTOOLS'] = $arrMootools;
 			$GLOBALS['TL_JQUERY'] = $arrJquery;
 
-			/** @var \PageError404 $objHandler */
+			/** @var PageError404 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 
 			$this->log('The request for page ID "' . $pageId . '" contained unused GET parameters: "' . implode('", "', \Input::getUnusedGet()) . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);

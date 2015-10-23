@@ -38,7 +38,7 @@ class Theme extends \Backend
 			$class = 'FileUpload';
 		}
 
-		/** @var \FileUpload $objUploader */
+		/** @var FileUpload $objUploader */
 		$objUploader = new $class();
 
 		if (\Input::post('FORM_SUBMIT') == 'tl_theme_import')
@@ -673,9 +673,9 @@ class Theme extends \Backend
 	/**
 	 * Export a theme
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	public function exportTheme($dc)
+	public function exportTheme(DataContainer $dc)
 	{
 		// Get the theme meta data
 		$objTheme = $this->Database->prepare("SELECT * FROM tl_theme WHERE id=?")
@@ -742,11 +742,11 @@ class Theme extends \Backend
 	/**
 	 * Add the table tl_theme
 	 *
-	 * @param \DOMDocument            $xml
-	 * @param \DOMNode|\DOMElement    $tables
-	 * @param \Database\Result|object $objTheme
+	 * @param \DOMDocument           $xml
+	 * @param \DOMNode|\DOMElement   $tables
+	 * @param Database\Result|object $objTheme
 	 */
-	protected function addTableTlTheme(\DOMDocument $xml, \DOMNode $tables, \Database\Result $objTheme)
+	protected function addTableTlTheme(\DOMDocument $xml, \DOMNode $tables, Database\Result $objTheme)
 	{
 		// Add the table
 		$table = $xml->createElement('table');
@@ -768,11 +768,11 @@ class Theme extends \Backend
 	/**
 	 * Add the table tl_style_sheet
 	 *
-	 * @param \DOMDocument            $xml
-	 * @param \DOMNode|\DOMElement    $tables
-	 * @param \Database\Result|object $objTheme
+	 * @param \DOMDocument           $xml
+	 * @param \DOMNode|\DOMElement   $tables
+	 * @param Database\Result|object $objTheme
 	 */
-	protected function addTableTlStyleSheet(\DOMDocument $xml, \DOMNode $tables, \Database\Result $objTheme)
+	protected function addTableTlStyleSheet(\DOMDocument $xml, \DOMNode $tables, Database\Result $objTheme)
 	{
 		// Add the table
 		$table = $xml->createElement('table');
@@ -829,11 +829,11 @@ class Theme extends \Backend
 	/**
 	 * Add the table tl_module
 	 *
-	 * @param \DOMDocument            $xml
-	 * @param \DOMNode|\DOMElement    $tables
-	 * @param \Database\Result|object $objTheme
+	 * @param \DOMDocument           $xml
+	 * @param \DOMNode|\DOMElement   $tables
+	 * @param Database\Result|object $objTheme
 	 */
-	protected function addTableTlModule(\DOMDocument $xml, \DOMNode $tables, \Database\Result $objTheme)
+	protected function addTableTlModule(\DOMDocument $xml, \DOMNode $tables, Database\Result $objTheme)
 	{
 		// Add the table
 		$table = $xml->createElement('table');
@@ -862,11 +862,11 @@ class Theme extends \Backend
 	/**
 	 * Add the table tl_layout
 	 *
-	 * @param \DOMDocument            $xml
-	 * @param \DOMNode|\DOMElement    $tables
-	 * @param \Database\Result|object $objTheme
+	 * @param \DOMDocument           $xml
+	 * @param \DOMNode|\DOMElement   $tables
+	 * @param Database\Result|object $objTheme
 	 */
-	protected function addTableTlLayout(\DOMDocument $xml, \DOMNode $tables, \Database\Result $objTheme)
+	protected function addTableTlLayout(\DOMDocument $xml, \DOMNode $tables, Database\Result $objTheme)
 	{
 		// Add the table
 		$table = $xml->createElement('table');
@@ -895,11 +895,11 @@ class Theme extends \Backend
 	/**
 	 * Add the table tl_image_size
 	 *
-	 * @param \DOMDocument            $xml
-	 * @param \DOMNode|\DOMElement    $tables
-	 * @param \Database\Result|object $objTheme
+	 * @param \DOMDocument           $xml
+	 * @param \DOMNode|\DOMElement   $tables
+	 * @param Database\Result|object $objTheme
 	 */
-	protected function addTableTlImageSize(\DOMDocument $xml, \DOMNode $tables, \Database\Result $objTheme)
+	protected function addTableTlImageSize(\DOMDocument $xml, \DOMNode $tables, Database\Result $objTheme)
 	{
 		// Add the tables
 		$imageSizeTable = $xml->createElement('table');
@@ -934,12 +934,12 @@ class Theme extends \Backend
 
 	/**
 	 * Add the table tl_files to the XML and the files to the archive
-	 * @param \DOMDocument            $xml
-	 * @param \DOMNode|\DOMElement    $tables
-	 * @param \Database\Result|object $objTheme
-	 * @param \ZipWriter              $objArchive
+	 * @param \DOMDocument           $xml
+	 * @param \DOMNode|\DOMElement   $tables
+	 * @param Database\Result|object $objTheme
+	 * @param ZipWriter              $objArchive
 	 */
-	protected function addTableTlFiles(\DOMDocument $xml, \DOMElement $tables, \Database\Result $objTheme, \ZipWriter $objArchive)
+	protected function addTableTlFiles(\DOMDocument $xml, \DOMElement $tables, Database\Result $objTheme, ZipWriter $objArchive)
 	{
 		// Add the table
 		$table = $xml->createElement('table');
@@ -1051,7 +1051,7 @@ class Theme extends \Backend
 	/**
 	 * Recursively add a folder to the archive
 	 *
-	 * @param \ZipWriter           $objArchive
+	 * @param ZipWriter            $objArchive
 	 * @param string               $strFolder
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $table
@@ -1059,7 +1059,7 @@ class Theme extends \Backend
 	 *
 	 * @throws \Exception If the folder path is insecure
 	 */
-	protected function addFolderToArchive(\ZipWriter $objArchive, $strFolder, \DOMDocument $xml, \DOMElement $table, array $arrOrder=array())
+	protected function addFolderToArchive(ZipWriter $objArchive, $strFolder, \DOMDocument $xml, \DOMElement $table, array $arrOrder=array())
 	{
 		// Strip the custom upload folder name
 		$strFolder = preg_replace('@^'.preg_quote(\Config::get('uploadPath'), '@').'/@', '', $strFolder);
@@ -1133,10 +1133,10 @@ class Theme extends \Backend
 	/**
 	 * Add templates to the archive
 	 *
-	 * @param \ZipWriter $objArchive
-	 * @param string     $strFolder
+	 * @param ZipWriter $objArchive
+	 * @param string    $strFolder
 	 */
-	protected function addTemplatesToArchive(\ZipWriter $objArchive, $strFolder)
+	protected function addTemplatesToArchive(ZipWriter $objArchive, $strFolder)
 	{
 		// Strip the templates folder name
 		$strFolder = preg_replace('@^templates/@', '', $strFolder);

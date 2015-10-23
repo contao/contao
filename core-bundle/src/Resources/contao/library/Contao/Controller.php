@@ -65,7 +65,7 @@ abstract class Controller extends \System
 		// Check for a theme folder
 		if (TL_MODE == 'FE')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			if ($objPage->templateGroup != '')
@@ -194,7 +194,7 @@ abstract class Controller extends \System
 			return '';
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Articles
@@ -257,7 +257,7 @@ abstract class Controller extends \System
 
 			while ($objArticles->next())
 			{
-				/** @var \ArticleModel $objRow */
+				/** @var ArticleModel $objRow */
 				$objRow = $objArticles->current();
 
 				// Add the "first" and "last" classes (see #2583)
@@ -320,7 +320,7 @@ abstract class Controller extends \System
 
 			$objRow->typePrefix = 'mod_';
 
-			/** @var \Module $objModule */
+			/** @var Module $objModule */
 			$objModule = new $strClass($objRow, $strColumn);
 			$strBuffer = $objModule->generate();
 
@@ -356,7 +356,7 @@ abstract class Controller extends \System
 	 */
 	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (is_object($varId))
@@ -479,7 +479,7 @@ abstract class Controller extends \System
 
 		$objRow->typePrefix = 'ce_';
 
-		/** @var \ContentElement $objElement */
+		/** @var ContentElement $objElement */
 		$objElement = new $strClass($objRow, $strColumn);
 		$strBuffer = $objElement->generate();
 
@@ -579,7 +579,7 @@ abstract class Controller extends \System
 	/**
 	 * Calculate the page status icon name based on the page parameters
 	 *
-	 * @param \PageModel $objPage The page object
+	 * @param PageModel|Database\Result|object $objPage The page object
 	 *
 	 * @return string The status icon name
 	 */
@@ -628,11 +628,11 @@ abstract class Controller extends \System
 	/**
 	 * Check whether an element is visible in the front end
 	 *
-	 * @param \Model|\ContentModel|\ModuleModel $objElement The element model
+	 * @param Model|ContentModel|ModuleModel $objElement The element model
 	 *
 	 * @return boolean True if the element is visible
 	 */
-	public static function isVisibleElement(\Model $objElement)
+	public static function isVisibleElement(Model $objElement)
 	{
 		// Only apply the restrictions in the front end
 		if (TL_MODE != 'FE' || BE_USER_LOGGED_IN)
@@ -1080,7 +1080,7 @@ abstract class Controller extends \System
 		}
 		elseif (TL_MODE == 'FE')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$arrParams['_locale'] = $objPage->rootLanguage;
@@ -1578,7 +1578,7 @@ abstract class Controller extends \System
 			$objFiles->reset();
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrEnclosures = array();
@@ -1640,7 +1640,7 @@ abstract class Controller extends \System
 	/**
 	 * Set the static URL constants
 	 *
-	 * @param \PageModel $objPage An optional page object
+	 * @param PageModel $objPage An optional page object
 	 */
 	public static function setStaticUrls($objPage=null)
 	{
@@ -1743,7 +1743,7 @@ abstract class Controller extends \System
 	 *
 	 * @param mixed $intId A page ID or a Model object
 	 *
-	 * @return \PageModel The page model or null
+	 * @return PageModel The page model or null
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use PageModel::findWithDetails() or PageModel->loadDetails() instead.
@@ -1752,13 +1752,13 @@ abstract class Controller extends \System
 	{
 		@trigger_error('Using Controller::getPageDetails() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findWithDetails() or PageModel->loadDetails() instead.', E_USER_DEPRECATED);
 
-		if ($intId instanceof \PageModel)
+		if ($intId instanceof PageModel)
 		{
 			return $intId->loadDetails();
 		}
-		elseif ($intId instanceof \Model\Collection)
+		elseif ($intId instanceof Model\Collection)
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			$objPage = $intId->current();
 
 			return $objPage->loadDetails();
@@ -2045,7 +2045,7 @@ abstract class Controller extends \System
 	/**
 	 * Print an article as PDF and stream it to the browser
 	 *
-	 * @param \ModuleModel $objArticle An article object
+	 * @param ModuleModel $objArticle An article object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use ModuleArticle->generatePdf() instead.

@@ -39,7 +39,7 @@ class ModulePersonalData extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['personalData'][0]) . ' ###';
@@ -73,7 +73,7 @@ class ModulePersonalData extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->import('FrontendUser', 'User');
@@ -140,7 +140,7 @@ class ModulePersonalData extends \Module
 				$arrData['inputType'] = 'checkbox';
 			}
 
-			/** @var \Widget $strClass */
+			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
 
 			// Continue if the class does not exist
@@ -191,14 +191,14 @@ class ModulePersonalData extends \Module
 				}
 			}
 
-			/** @var \Widget $objWidget */
+			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $varValue, '', '', $this));
 
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
 
 			// Increase the row count if it is a password field
-			if ($objWidget instanceof \FormPassword)
+			if ($objWidget instanceof FormPassword)
 			{
 				if ($objMember->password != '')
 				{

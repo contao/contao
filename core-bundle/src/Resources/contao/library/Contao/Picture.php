@@ -37,21 +37,21 @@ class Picture
 	/**
 	 * The Image instance of the source image
 	 *
-	 * @var \Image
+	 * @var Image
 	 */
 	protected $image = null;
 
 	/**
 	 * The image size
 	 *
-	 * @var object|\ImageSizeModel
+	 * @var ImageSizeModel|object
 	 */
 	protected $imageSize = null;
 
 	/**
 	 * The image size items collection
 	 *
-	 * @var array|\Model\Collection|\ImageSizeItemModel
+	 * @var ImageSizeItemModel[]|Model\Collection
 	 */
 	protected $imageSizeItems = array();
 
@@ -59,9 +59,9 @@ class Picture
 	/**
 	 * Create a new object to handle a picture element
 	 *
-	 * @param \File $file A file instance of the source image
+	 * @param File $file A file instance of the source image
 	 */
-	public function __construct(\File $file)
+	public function __construct(File $file)
 	{
 		$this->image = new \Image($file);
 	}
@@ -156,7 +156,7 @@ class Picture
 	/**
 	 * Set the image size
 	 *
-	 * @param object|\ImageSizeModel $imageSize The image size
+	 * @param ImageSizeModel|object $imageSize The image size
 	 *
 	 * @return $this The picture object
 	 */
@@ -171,7 +171,7 @@ class Picture
 	/**
 	 * Set the image size items collection
 	 *
-	 * @param array|\ImageSizeItemModel|\Model\Collection $imageSizeItems The image size items collection
+	 * @param ImageSizeItemModel[]|Model\Collection $imageSizeItems The image size items collection
 	 *
 	 * @return $this The picture object
 	 */
@@ -214,7 +214,7 @@ class Picture
 	/**
 	 * Get the attributes for one picture source element
 	 *
-	 * @param object|\Model $imageSize The image size or image size item model
+	 * @param Model|object $imageSize The image size or image size item model
 	 *
 	 * @return array The source element attributes
 	 */

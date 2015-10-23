@@ -390,7 +390,7 @@ abstract class Backend extends \Controller
 
 			$dataContainer = 'DC_' . $GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'];
 
-			/** @var \DataContainer $dc */
+			/** @var DataContainer $dc */
 			$dc = new $dataContainer($strTable, $arrModule);
 		}
 
@@ -403,7 +403,7 @@ abstract class Backend extends \Controller
 		// Trigger the module callback
 		elseif (class_exists($arrModule['callback']))
 		{
-			/** @var \Module $objCallback */
+			/** @var Module $objCallback */
 			$objCallback = new $arrModule['callback']($dc);
 
 			$this->Template->main .= $objCallback->generate();
@@ -935,16 +935,16 @@ abstract class Backend extends \Controller
 	/**
 	 * Add an image to each page in the tree
 	 *
-	 * @param array          $row
-	 * @param string         $label
-	 * @param \DataContainer $dc
-	 * @param string         $imageAttribute
-	 * @param boolean        $blnReturnImage
-	 * @param boolean        $blnProtected
+	 * @param array         $row
+	 * @param string        $label
+	 * @param DataContainer $dc
+	 * @param string        $imageAttribute
+	 * @param boolean       $blnReturnImage
+	 * @param boolean       $blnProtected
 	 *
 	 * @return string
 	 */
-	public static function addPageIcon($row, $label, \DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
 	{
 		if ($blnProtected)
 		{

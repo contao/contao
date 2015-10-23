@@ -37,7 +37,7 @@ class ModuleRegistration extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['registration'][0]) . ' ###';
@@ -66,7 +66,7 @@ class ModuleRegistration extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
@@ -101,7 +101,7 @@ class ModuleRegistration extends \Module
 
 		if ($this->memberTpl != '')
 		{
-			/** @var \FrontendTemplate|object $objTemplate */
+			/** @var FrontendTemplate|object $objTemplate */
 			$objTemplate = new \FrontendTemplate($this->memberTpl);
 
 			$this->Template = $objTemplate;
@@ -136,7 +136,7 @@ class ModuleRegistration extends \Module
 				'required' => true
 			);
 
-			/** @var \FormCaptcha $strClass */
+			/** @var FormCaptcha $strClass */
 			$strClass = $GLOBALS['TL_FFL']['captcha'];
 
 			// Fallback to default if the class is not defined
@@ -145,7 +145,7 @@ class ModuleRegistration extends \Module
 				$strClass = 'FormCaptcha';
 			}
 
-			/** @var \FormCaptcha $objCaptcha */
+			/** @var FormCaptcha $objCaptcha */
 			$objCaptcha = new $strClass($arrCaptcha);
 
 			if (\Input::post('FORM_SUBMIT') == $strFormId)
@@ -207,7 +207,7 @@ class ModuleRegistration extends \Module
 			$objWidget->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 
 			// Increase the row count if its a password field
-			if ($objWidget instanceof \FormPassword)
+			if ($objWidget instanceof FormPassword)
 			{
 				$objWidget->rowClassConfirm = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
 			}
@@ -219,7 +219,7 @@ class ModuleRegistration extends \Module
 				$varValue = $objWidget->value;
 
 				// Check whether the password matches the username
-				if ($objWidget instanceof \FormPassword && $varValue == \Input::post('username'))
+				if ($objWidget instanceof FormPassword && $varValue == \Input::post('username'))
 				{
 					$objWidget->addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 				}
@@ -508,7 +508,7 @@ class ModuleRegistration extends \Module
 	{
 		$this->strTemplate = 'mod_message';
 
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->strTemplate);
 
 		$this->Template = $objTemplate;
@@ -556,9 +556,9 @@ class ModuleRegistration extends \Module
 	/**
 	 * Re-send the activation mail
 	 *
-	 * @param \MemberModel $objMember
+	 * @param MemberModel $objMember
 	 */
-	protected function resendActivationMail(\MemberModel $objMember)
+	protected function resendActivationMail(MemberModel $objMember)
 	{
 		if ($objMember->activation == '')
 		{
@@ -567,7 +567,7 @@ class ModuleRegistration extends \Module
 
 		$this->strTemplate = 'mod_message';
 
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->strTemplate);
 
 		$this->Template = $objTemplate;

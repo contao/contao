@@ -105,9 +105,9 @@ abstract class Model
 	/**
 	 * Load the relations and optionally process a result set
 	 *
-	 * @param \Database\Result $objResult An optional database result
+	 * @param Database\Result $objResult An optional database result
 	 */
-	public function __construct(\Database\Result $objResult=null)
+	public function __construct(Database\Result $objResult=null)
 	{
 		$this->arrModified = array();
 
@@ -586,7 +586,7 @@ abstract class Model
 	 * @param string $strKey     The property name
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return static|\Model\Collection|null The model or a model collection if there are multiple rows
+	 * @return static|Model\Collection|null The model or a model collection if there are multiple rows
 	 *
 	 * @throws \Exception If $strKey is not a related field
 	 */
@@ -629,7 +629,7 @@ abstract class Model
 			// Handle UUIDs (see #6525)
 			if ($strField == 'tl_files.uuid')
 			{
-				/** @var \FilesModel $strClass */
+				/** @var FilesModel $strClass */
 				$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
 			}
 			else
@@ -703,9 +703,9 @@ abstract class Model
 	/**
 	 * Called when the model is attached to the model registry
 	 *
-	 * @param \Model\Registry|\Contao\Model\Registry $registry The model registry
+	 * @param Model\Registry $registry The model registry
 	 */
-	public function onRegister(\Model\Registry $registry)
+	public function onRegister(Model\Registry $registry)
 	{
 		// Register aliases to unique fields
 		foreach (static::getUniqueFields() as $strColumn)
@@ -723,9 +723,9 @@ abstract class Model
 	/**
 	 * Called when the model is detached from the model registry
 	 *
-	 * @param \Model\Registry|\Contao\Model\Registry $registry The model registry
+	 * @param Model\Registry $registry The model registry
 	 */
-	public function onUnregister(\Model\Registry $registry)
+	public function onUnregister(Model\Registry $registry)
 	{
 		// Unregister aliases to unique fields
 		foreach (static::getUniqueFields() as $strColumn)
@@ -836,7 +836,7 @@ abstract class Model
 	 * @param array $arrIds     An array of IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return \Model\Collection|null The model collection or null if there are no records
+	 * @return Model\Collection|null The model collection or null if there are no records
 	 */
 	public static function findMultipleByIds($arrIds, array $arrOptions=array())
 	{
@@ -931,7 +931,7 @@ abstract class Model
 	 * @param mixed $varValue   The property value
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return static|\Model\Collection|null A model, model collection or null if the result is empty
+	 * @return static|Model\Collection|null A model, model collection or null if the result is empty
 	 */
 	public static function findBy($strColumn, $varValue, array $arrOptions=array())
 	{
@@ -964,7 +964,7 @@ abstract class Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return \Model\Collection|null The model collection or null if the result is empty
+	 * @return Model\Collection|null The model collection or null if the result is empty
 	 */
 	public static function findAll(array $arrOptions=array())
 	{
@@ -988,7 +988,7 @@ abstract class Model
 	 * @param string $name The method name
 	 * @param array  $args The passed arguments
 	 *
-	 * @return static|\Model\Collection|null A model or model collection
+	 * @return static|Model\Collection|null A model or model collection
 	 *
 	 * @throws \Exception If the method name is invalid
 	 */
@@ -1031,7 +1031,7 @@ abstract class Model
 	 *
 	 * @param array $arrOptions The options array
 	 *
-	 * @return static|\Model\Collection|null A model, model collection or null if the result is empty
+	 * @return static|Model\Collection|null A model, model collection or null if the result is empty
 	 */
 	protected static function find(array $arrOptions)
 	{
@@ -1110,11 +1110,11 @@ abstract class Model
 	/**
 	 * Modify the database statement before it is executed
 	 *
-	 * @param \Database\Statement $objStatement The database statement object
+	 * @param Database\Statement $objStatement The database statement object
 	 *
-	 * @return \Database\Statement The database statement object
+	 * @return Database\Statement The database statement object
 	 */
-	protected static function preFind(\Database\Statement $objStatement)
+	protected static function preFind(Database\Statement $objStatement)
 	{
 		return $objStatement;
 	}
@@ -1123,11 +1123,11 @@ abstract class Model
 	/**
 	 * Modify the database result before the model is created
 	 *
-	 * @param \Database\Result $objResult The database result object
+	 * @param Database\Result $objResult The database result object
 	 *
-	 * @return \Database\Result The database result object
+	 * @return Database\Result The database result object
 	 */
-	protected static function postFind(\Database\Result $objResult)
+	protected static function postFind(Database\Result $objResult)
 	{
 		return $objResult;
 	}
@@ -1243,11 +1243,11 @@ abstract class Model
 	/**
 	 * Create a model from a database result
 	 *
-	 * @param \Database\Result $objResult The database result object
+	 * @param Database\Result $objResult The database result object
 	 *
 	 * @return static The model
 	 */
-	protected static function createModelFromDbResult(\Database\Result $objResult)
+	protected static function createModelFromDbResult(Database\Result $objResult)
 	{
 		return new static($objResult);
 	}
@@ -1259,7 +1259,7 @@ abstract class Model
 	 * @param array  $arrModels An array of models
 	 * @param string $strTable  The table name
 	 *
-	 * @return \Model\Collection The Model\Collection object
+	 * @return Model\Collection The Model\Collection object
 	 */
 	protected static function createCollection(array $arrModels, $strTable)
 	{
@@ -1270,12 +1270,12 @@ abstract class Model
 	/**
 	 * Create a new collection from a database result
 	 *
-	 * @param \Database\Result $objResult The database result object
-	 * @param string           $strTable  The table name
+	 * @param Database\Result $objResult The database result object
+	 * @param string          $strTable  The table name
 	 *
-	 * @return \Model\Collection The model collection
+	 * @return Model\Collection The model collection
 	 */
-	protected static function createCollectionFromDbResult(\Database\Result $objResult, $strTable)
+	protected static function createCollectionFromDbResult(Database\Result $objResult, $strTable)
 	{
 		return \Model\Collection::createFromDbResult($objResult, $strTable);
 	}

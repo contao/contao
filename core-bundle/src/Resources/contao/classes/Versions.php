@@ -458,7 +458,7 @@ class Versions extends \Controller
 			$strBuffer = '<p>'.$GLOBALS['TL_LANG']['MSC']['identicalVersions'].'</p>';
 		}
 
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_diff');
 
 		// Template variables
@@ -523,9 +523,9 @@ class Versions extends \Controller
 	/**
 	 * Add a list of versions to a template
 	 *
-	 * @param \BackendTemplate|object $objTemplate
+	 * @param BackendTemplate|object $objTemplate
 	 */
-	public static function addToTemplate(\BackendTemplate $objTemplate)
+	public static function addToTemplate(BackendTemplate $objTemplate)
 	{
 		$arrVersions = array();
 

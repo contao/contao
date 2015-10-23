@@ -25,8 +25,8 @@ class PageRegular extends \Frontend
 	/**
 	 * Generate a regular page
 	 *
-	 * @param \PageModel $objPage
-	 * @param boolean    $blnCheckRequest
+	 * @param PageModel $objPage
+	 * @param boolean   $blnCheckRequest
 	 */
 	public function generate($objPage, $blnCheckRequest=false)
 	{
@@ -39,8 +39,8 @@ class PageRegular extends \Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param \PageModel $objPage
-	 * @param boolean    $blnCheckRequest
+	 * @param PageModel $objPage
+	 * @param boolean   $blnCheckRequest
 	 *
 	 * @return Response
 	 */
@@ -55,7 +55,7 @@ class PageRegular extends \Frontend
 	/**
 	 * Generate a regular page
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
 	 * @internal
 	 */
@@ -86,7 +86,7 @@ class PageRegular extends \Frontend
 			}
 		}
 
-		/** @var \ThemeModel $objTheme */
+		/** @var ThemeModel $objTheme */
 		$objTheme = $objLayout->getRelated('pid');
 
 		// Set the layout template and template group
@@ -229,9 +229,9 @@ class PageRegular extends \Frontend
 	/**
 	 * Get a page layout and return it as database result object
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
-	 * @return \LayoutModel
+	 * @return LayoutModel
 	 */
 	protected function getPageLayout($objPage)
 	{
@@ -268,12 +268,12 @@ class PageRegular extends \Frontend
 	/**
 	 * Create a new template
 	 *
-	 * @param \PageModel   $objPage
-	 * @param \LayoutModel $objLayout
+	 * @param PageModel   $objPage
+	 * @param LayoutModel $objLayout
 	 */
 	protected function createTemplate($objPage, $objLayout)
 	{
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($objPage->template);
 
 		$this->Template = $objTemplate;
@@ -480,8 +480,8 @@ class PageRegular extends \Frontend
 	/**
 	 * Create all header scripts
 	 *
-	 * @param \PageModel   $objPage
-	 * @param \LayoutModel $objLayout
+	 * @param PageModel   $objPage
+	 * @param LayoutModel $objLayout
 	 */
 	protected function createHeaderScripts($objPage, $objLayout)
 	{
@@ -697,7 +697,7 @@ class PageRegular extends \Frontend
 	/**
 	 * Create all footer scripts
 	 *
-	 * @param \LayoutModel $objLayout
+	 * @param LayoutModel $objLayout
 	 */
 	protected function createFooterScripts($objLayout)
 	{

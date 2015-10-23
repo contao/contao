@@ -38,7 +38,7 @@ class ModuleSearch extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['search'][0]) . ' ###';
@@ -112,7 +112,7 @@ class ModuleSearch extends \Module
 			// Website root
 			else
 			{
-				/** @var \PageModel $objPage */
+				/** @var PageModel $objPage */
 				global $objPage;
 
 				$intRootId = $objPage->rootId;
@@ -253,7 +253,7 @@ class ModuleSearch extends \Module
 			// Get the results
 			for ($i=($from-1); $i<$to && $i<$count; $i++)
 			{
-				/** @var \FrontendTemplate|object $objTemplate */
+				/** @var FrontendTemplate|object $objTemplate */
 				$objTemplate = new \FrontendTemplate($this->searchTpl);
 
 				$objTemplate->url = $arrResult[$i]['url'];

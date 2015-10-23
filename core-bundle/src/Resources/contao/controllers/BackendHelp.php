@@ -55,7 +55,7 @@ class BackendHelp extends \Backend
 		\System::loadLanguageFile($table);
 		$this->loadDataContainer($table);
 
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_help');
 		$objTemplate->rows = array();
 		$objTemplate->explanation = '';

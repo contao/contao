@@ -27,7 +27,7 @@ class ContentMedia extends \ContentElement
 
 	/**
 	 * Files object
-	 * @var \Model\Collection|\FilesModel
+	 * @var Model\Collection|FilesModel
 	 */
 	protected $objFiles;
 
@@ -83,7 +83,7 @@ class ContentMedia extends \ContentElement
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->size = '';
@@ -112,7 +112,7 @@ class ContentMedia extends \ContentElement
 
 		$objFiles = $this->objFiles;
 
-		/** @var \FilesModel $objFirst */
+		/** @var FilesModel $objFirst */
 		$objFirst = $objFiles->current();
 
 		// Pre-sort the array by preference

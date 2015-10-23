@@ -61,7 +61,7 @@ class PageRoot extends \Frontend
 	 *
 	 * @param integer $rootPageId
 	 *
-	 * @return \PageModel
+	 * @return PageModel
 	 *
 	 * @throws NoActivePageFoundException
 	 */
@@ -88,7 +88,7 @@ class PageRoot extends \Frontend
 	 */
 	protected function getRedirectUrl($rootPageId)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		return $this->generateFrontendUrl($this->getNextPage($rootPageId)->row(), null, $objPage->language);

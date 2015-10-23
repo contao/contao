@@ -44,7 +44,7 @@ class ModuleRssReader extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['rssReader'][0]) . ' ###';
@@ -96,14 +96,14 @@ class ModuleRssReader extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		if ($this->rss_template != 'rss_default')
 		{
 			$this->strTemplate = $this->rss_template;
 
-			/** @var \FrontendTemplate|object $objTemplate */
+			/** @var FrontendTemplate|object $objTemplate */
 			$objTemplate = new \FrontendTemplate($this->strTemplate);
 
 			$this->Template = $objTemplate;

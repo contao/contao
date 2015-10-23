@@ -35,7 +35,7 @@ class Files
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Files
+	 * @var Files
 	 */
 	protected static $objInstance;
 
@@ -55,7 +55,7 @@ class Files
 	/**
 	 * Instantiate the object (Factory)
 	 *
-	 * @return \Files The files object
+	 * @return Files The files object
 	 */
 	public static function getInstance()
 	{

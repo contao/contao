@@ -92,7 +92,7 @@ abstract class DataContainer extends \Backend
 
 	/**
 	 * Active record
-	 * @var \Model|\FilesModel
+	 * @var Model|FilesModel
 	 */
 	protected $objActiveRecord;
 
@@ -225,7 +225,7 @@ abstract class DataContainer extends \Backend
 			return $arrData['input_field_callback']($this, $xlabel);
 		}
 
-		/** @var \Widget $strClass */
+		/** @var Widget $strClass */
 		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType']];
 
 		// Return if the widget class does not exists
@@ -261,7 +261,7 @@ abstract class DataContainer extends \Backend
 			$this->varValue = \StringUtil::insertTagToSrc($this->varValue);
 		}
 
-		/** @var \Widget $objWidget */
+		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this));
 
 		$objWidget->xlabel = $xlabel;
@@ -468,7 +468,7 @@ abstract class DataContainer extends \Backend
 		{
 			list ($file, $type) = explode('|', $arrData['eval']['rte'], 2);
 
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate("be_$file");
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
 

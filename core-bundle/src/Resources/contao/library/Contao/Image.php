@@ -36,7 +36,7 @@ class Image
 	/**
 	 * The File instance of the original image
 	 *
-	 * @var \File
+	 * @var File
 	 */
 	protected $fileObj = null;
 
@@ -100,11 +100,11 @@ class Image
 	/**
 	 * Create a new object to handle an image
 	 *
-	 * @param \File $file A file instance of the original image
+	 * @param File $file A file instance of the original image
 	 *
 	 * @throws \InvalidArgumentException If the file does not exists or cannot be processed
 	 */
-	public function __construct(\File $file)
+	public function __construct(File $file)
 	{
 		// Check whether the file exists
 		if (!$file->exists())
@@ -876,7 +876,7 @@ class Image
 			$image = new \File(rawurldecode($image));
 		}
 
-		/** @var \Image $imageObj */
+		/** @var Image $imageObj */
 		$imageObj = new static($image);
 
 		// tl_image_size ID as resize mode

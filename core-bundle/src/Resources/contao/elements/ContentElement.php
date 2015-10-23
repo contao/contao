@@ -117,7 +117,7 @@ abstract class ContentElement extends \Frontend
 
 	/**
 	 * Model
-	 * @var \ContentElement
+	 * @var ContentElement
 	 */
 	protected $objModel;
 
@@ -143,16 +143,16 @@ abstract class ContentElement extends \Frontend
 	/**
 	 * Initialize the object
 	 *
-	 * @param \ContentModel $objElement
-	 * @param string        $strColumn
+	 * @param ContentModel $objElement
+	 * @param string       $strColumn
 	 */
 	public function __construct($objElement, $strColumn='main')
 	{
-		if ($objElement instanceof \Model)
+		if ($objElement instanceof Model)
 		{
 			$this->objModel = $objElement;
 		}
-		elseif ($objElement instanceof \Model\Collection)
+		elseif ($objElement instanceof Model\Collection)
 		{
 			$this->objModel = $objElement->current();
 		}
@@ -220,7 +220,7 @@ abstract class ContentElement extends \Frontend
 	/**
 	 * Return the model
 	 *
-	 * @return \Model
+	 * @return Model
 	 */
 	public function getModel()
 	{

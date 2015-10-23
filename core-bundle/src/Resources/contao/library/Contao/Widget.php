@@ -200,7 +200,7 @@ abstract class Widget extends \Controller
 		// Override the output format in the front end
 		if (TL_MODE == 'FE')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			if ($objPage->outputFormat != '')
@@ -1255,12 +1255,12 @@ abstract class Widget extends \Controller
 	/**
 	 * Extract the Widget attributes from a Data Container array
 	 *
-	 * @param array  $arrData  The field configuration array
-	 * @param string $strName  The field name in the form
-	 * @param mixed  $varValue The field value
-	 * @param string $strField The field name in the database
-	 * @param string $strTable The table name in the database
-	 * @param object $objDca   An optional DataContainer object
+	 * @param array              $arrData  The field configuration array
+	 * @param string             $strName  The field name in the form
+	 * @param mixed              $varValue The field value
+	 * @param string             $strField The field name in the database
+	 * @param string             $strTable The table name in the database
+     * @param DataContainer|null $objDca   An optional DataContainer object
 	 *
 	 * @return array An attributes array that can be passed to a widget
 	 */

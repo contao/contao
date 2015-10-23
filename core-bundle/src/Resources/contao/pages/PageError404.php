@@ -28,13 +28,13 @@ class PageError404 extends \Frontend
 	 */
 	public function generate()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj404 = $this->prepare();
 		$objPage = $obj404->loadDetails();
 
-		/** @var \PageRegular $objHandler */
+		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
 		header('HTTP/1.1 404 Not Found');
@@ -49,13 +49,13 @@ class PageError404 extends \Frontend
 	 */
 	public function getResponse()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj404 = $this->prepare();
 		$objPage = $obj404->loadDetails();
 
-		/** @var \PageRegular $objHandler */
+		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
 		return $objHandler->getResponse($objPage)->setStatusCode(404);
@@ -65,7 +65,7 @@ class PageError404 extends \Frontend
 	/**
 	 * Prepare the output
 	 *
-	 * @return \PageModel
+	 * @return PageModel
 	 *
 	 * @internal
 	 */

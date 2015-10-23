@@ -137,7 +137,7 @@ class Database
 	 *
 	 * @param array $arrCustomConfig A configuration array
 	 *
-	 * @return \Database The Database object
+	 * @return Database The Database object
 	 */
 	public static function getInstance(array $arrCustomConfig=null)
 	{
@@ -175,7 +175,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Statement The Database\Statement object
+	 * @return Database\Statement The Database\Statement object
 	 */
 	public function prepare($strQuery)
 	{
@@ -190,7 +190,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Result|object The Database\Result object
+	 * @return Database\Result|object The Database\Result object
 	 */
 	public function execute($strQuery)
 	{
@@ -203,7 +203,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Result|object The Database\Result object
+	 * @return Database\Result|object The Database\Result object
 	 */
 	public function query($strQuery)
 	{
@@ -710,7 +710,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Result|object The Database\Result object
+	 * @return Database\Result|object The Database\Result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Database::execute() instead.
@@ -728,7 +728,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Result|object The Database\Result object
+	 * @return Database\Result|object The Database\Result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Database::execute() instead.

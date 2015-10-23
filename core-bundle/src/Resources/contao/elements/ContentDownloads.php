@@ -21,7 +21,7 @@ class ContentDownloads extends \ContentElement
 
 	/**
 	 * Files object
-	 * @var \Model\Collection|FilesModel
+	 * @var Model\Collection|FilesModel
 	 */
 	protected $objFiles;
 
@@ -93,7 +93,7 @@ class ContentDownloads extends \ContentElement
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$files = array();

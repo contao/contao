@@ -43,7 +43,7 @@ class ModuleBooknav extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['booknav'][0]) . ' ###';
@@ -55,7 +55,7 @@ class ModuleBooknav extends \Module
 			return $objTemplate->parse();
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (!$this->rootPage || !in_array($this->rootPage, $objPage->trail))
@@ -91,7 +91,7 @@ class ModuleBooknav extends \Module
 		$this->arrPages[$objTarget->id] = $objTarget->row();
 		$this->getBookPages($objTarget->id, $groups, time());
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Upper page

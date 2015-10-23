@@ -73,7 +73,7 @@ class ModuleArticle extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$id = 'article-' . $this->id;
@@ -165,7 +165,7 @@ class ModuleArticle extends \Module
 			{
 				$arrCss = array();
 
-				/** @var \ContentModel $objRow */
+				/** @var ContentModel $objRow */
 				$objRow = $objCte->current();
 
 				// Add the "first" and "last" classes (see #2583)

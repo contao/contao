@@ -39,7 +39,7 @@ class Form extends \Hybrid
 
 	/**
 	 * Model
-	 * @var \FormModel
+	 * @var FormModel
 	 */
 	protected $objModel;
 
@@ -71,7 +71,7 @@ class Form extends \Hybrid
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['form'][0]) . ' ###';
@@ -145,7 +145,7 @@ class Form extends \Hybrid
 
 			foreach ($arrFields as $objField)
 			{
-				/** @var \FormFieldModel $objField */
+				/** @var FormFieldModel $objField */
 				$strClass = $GLOBALS['TL_FFL'][$objField->type];
 
 				// Continue if the class is not defined
@@ -184,7 +184,7 @@ class Form extends \Hybrid
 					}
 				}
 
-				/** @var \Widget $objWidget */
+				/** @var Widget $objWidget */
 				$objWidget = new $strClass($arrData);
 				$objWidget->required = $objField->mandatory ? true : false;
 
@@ -232,7 +232,7 @@ class Form extends \Hybrid
 					$hasUpload = true;
 				}
 
-				if ($objWidget instanceof \FormHidden)
+				if ($objWidget instanceof FormHidden)
 				{
 					$this->Template->hidden .= $objWidget->parse();
 					--$max_row;
@@ -258,7 +258,7 @@ class Form extends \Hybrid
 		// Add a warning to the page title
 		if ($doNotSubmit && !\Environment::get('isAjaxRequest'))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$title = $objPage->pageTitle ?: $objPage->title;
@@ -406,7 +406,7 @@ class Form extends \Hybrid
 			// Attach XML file
 			if ($this->format == 'xml')
 			{
-				/** @var \FrontendTemplate|object $objTemplate */
+				/** @var FrontendTemplate|object $objTemplate */
 				$objTemplate = new \FrontendTemplate('form_xml');
 
 				$objTemplate->fields = $fields;
@@ -595,7 +595,7 @@ class Form extends \Hybrid
 
 				foreach ($_SESSION[$formId][$tl] as $message)
 				{
-					/** @var \FrontendTemplate|object $objTemplate */
+					/** @var FrontendTemplate|object $objTemplate */
 					$objTemplate = new \FrontendTemplate('form_message');
 
 					$objTemplate->message = $message;

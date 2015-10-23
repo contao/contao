@@ -35,7 +35,7 @@ class ContentAccordionStart extends \ContentElement
 		{
 			$this->strTemplate = 'be_wildcard';
 
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate($this->strTemplate);
 
 			$this->Template = $objTemplate;

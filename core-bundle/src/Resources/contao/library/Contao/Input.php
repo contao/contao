@@ -35,7 +35,7 @@ class Input
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Input
+	 * @var Input
 	 */
 	protected static $objInstance;
 
@@ -848,7 +848,7 @@ class Input
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return \Input The object instance
+	 * @return Input The object instance
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Input class is now static.

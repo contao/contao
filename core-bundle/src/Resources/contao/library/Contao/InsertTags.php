@@ -43,7 +43,7 @@ class InsertTags extends \Controller
 	 */
 	public function replace($strBuffer, $blnCache=true)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Preserve insert tags
@@ -362,7 +362,7 @@ class InsertTags extends \Controller
 							case 'forward':
 								if ($objNextPage->jumpTo)
 								{
-									/** @var \PageModel $objNext */
+									/** @var PageModel $objNext */
 									$objNext = $objNextPage->getRelated('jumpTo');
 								}
 								else

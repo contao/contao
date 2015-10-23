@@ -23,7 +23,7 @@ class ContentGallery extends \ContentElement
 
 	/**
 	 * Files object
-	 * @var \Model\Collection|\FilesModel
+	 * @var Model\Collection|FilesModel
 	 */
 	protected $objFiles;
 
@@ -79,7 +79,7 @@ class ContentGallery extends \ContentElement
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$images = array();
@@ -373,7 +373,7 @@ class ContentGallery extends \ContentElement
 			$strTemplate = $this->galleryTpl;
 		}
 
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($strTemplate);
 		$objTemplate->setData($this->arrData);
 

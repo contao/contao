@@ -31,7 +31,7 @@ class Environment
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Environment
+	 * @var Environment
 	 */
 	protected static $objInstance;
 
@@ -646,7 +646,7 @@ class Environment
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return \Environment The object instance
+	 * @return Environment The object instance
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Environment class is now static.

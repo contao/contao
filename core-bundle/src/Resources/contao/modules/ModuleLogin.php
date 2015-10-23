@@ -37,7 +37,7 @@ class ModuleLogin extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['login'][0]) . ' ###';
@@ -119,7 +119,7 @@ class ModuleLogin extends \Module
 		// Logout and redirect to the website root if the current page is protected
 		if (\Input::post('FORM_SUBMIT') == 'tl_logout_' . $this->id)
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$this->import('FrontendUser', 'User');
@@ -168,7 +168,7 @@ class ModuleLogin extends \Module
 
 			if ($this->User->lastLogin > 0)
 			{
-				/** @var \PageModel $objPage */
+				/** @var PageModel $objPage */
 				global $objPage;
 
 				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], \Date::parse($objPage->datimFormat, $this->User->lastLogin));

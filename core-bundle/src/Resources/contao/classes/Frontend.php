@@ -146,7 +146,7 @@ abstract class Frontend extends \Controller
 				// Order by domain and language
 				while ($objPages->next())
 				{
-					/** @var \PageModel $objModel */
+					/** @var PageModel $objModel */
 					$objModel = $objPages->current();
 					$objPage  = $objModel->loadDetails();
 
@@ -288,7 +288,7 @@ abstract class Frontend extends \Controller
 	/**
 	 * Try to find a root page based on language and URL
 	 *
-	 * @return \PageModel
+	 * @return PageModel
 	 */
 	public static function getRootPageFromUrl()
 	{
@@ -297,7 +297,7 @@ abstract class Frontend extends \Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback)
 			{
-				/** @var \PageModel $objRootPage */
+				/** @var PageModel $objRootPage */
 				if (is_object(($objRootPage = static::importStatic($callback[0])->$callback[1]())))
 				{
 					return $objRootPage;
@@ -411,7 +411,7 @@ abstract class Frontend extends \Controller
 			}
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$pageId = $objPage->alias ?: $objPage->id;
@@ -442,7 +442,7 @@ abstract class Frontend extends \Controller
 	 */
 	protected function jumpToOrReload($intId, $strParams=null, $strForceLang=null)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Always redirect if there are additional arguments (see #5734)

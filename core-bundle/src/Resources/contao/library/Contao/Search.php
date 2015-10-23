@@ -37,7 +37,7 @@ class Search
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Search
+	 * @var Search
 	 */
 	protected static $objInstance;
 
@@ -302,7 +302,7 @@ class Search
 	 * @param integer $intOffset   An optional result offset
 	 * @param boolean $blnFuzzy    If true, the search will be fuzzy
 	 *
-	 * @return \Database\Result The database result object
+	 * @return Database\Result The database result object
 	 *
 	 * @throws \Exception If the cleaned keyword string is empty
 	 */
@@ -549,7 +549,7 @@ class Search
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return \Search The object instance
+	 * @return Search The object instance
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Search class is now static.

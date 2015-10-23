@@ -120,7 +120,7 @@ class Statement
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Statement The statement object
+	 * @return Statement The statement object
 	 *
 	 * @throws \Exception If $strQuery is empty
 	 */
@@ -171,7 +171,7 @@ class Statement
 	 *
 	 * @param array $arrParams The associative array
 	 *
-	 * @return \Database\Statement The statement object
+	 * @return Statement The statement object
 	 */
 	public function set($arrParams)
 	{
@@ -211,7 +211,7 @@ class Statement
 	 * @param integer $intRows   The maximum number of rows
 	 * @param integer $intOffset The number of rows to skip
 	 *
-	 * @return \Database\Statement The statement object
+	 * @return Statement The statement object
 	 */
 	public function limit($intRows, $intOffset=0)
 	{
@@ -241,7 +241,7 @@ class Statement
 	/**
 	 * Execute the query and return the result object
 	 *
-	 * @return \Database\Result|object The result object
+	 * @return Result|object The result object
 	 */
 	public function execute()
 	{
@@ -263,7 +263,7 @@ class Statement
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Result|\Database\Statement The result object or the statement object if there is no result set
+	 * @return Result|Statement The result object or the statement object if there is no result set
      *
      * @throws \Exception If the query string is empty
 	 */
@@ -367,7 +367,7 @@ class Statement
 	/**
 	 * Bypass the cache and always execute the query
 	 *
-	 * @return \Database\Result The result object
+	 * @return Result The result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Database\Statement::execute() instead.
@@ -383,7 +383,7 @@ class Statement
 	/**
 	 * Always execute the query and add or replace an existing cache entry
 	 *
-	 * @return \Database\Result The result object
+	 * @return Result The result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Database\Statement::execute() instead.

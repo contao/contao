@@ -24,13 +24,13 @@ class Config
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Config
+	 * @var Config
 	 */
 	protected static $objInstance;
 
 	/**
 	 * Files object
-	 * @var \Files
+	 * @var Files
 	 */
 	protected $Files;
 

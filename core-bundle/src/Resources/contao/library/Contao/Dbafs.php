@@ -32,7 +32,7 @@ class Dbafs
 	 * @param string  $strResource      The path to the file or folder
 	 * @param boolean $blnUpdateFolders If true, the parent folders will be updated
 	 *
-	 * @return \FilesModel The files model
+	 * @return FilesModel The files model
 	 *
 	 * @throws \Exception                If a parent ID entry is missing
 	 * @throws \InvalidArgumentException If the resource is outside the upload folder
@@ -216,7 +216,7 @@ class Dbafs
 	 * @param string $strSource      The source path
 	 * @param string $strDestination The target path
 	 *
-	 * @return \FilesModel The files model
+	 * @return FilesModel The files model
 	 */
 	public static function moveResource($strSource, $strDestination)
 	{
@@ -287,7 +287,7 @@ class Dbafs
 	 * @param string $strSource      The source path
 	 * @param string $strDestination The target path
 	 *
-	 * @return \FilesModel The files model
+	 * @return FilesModel The files model
 	 */
 	public static function copyResource($strSource, $strDestination)
 	{
@@ -302,7 +302,7 @@ class Dbafs
 
 		$strFolder = dirname($strDestination);
 
-		/** @var \FilesModel $objNewFile */
+		/** @var FilesModel $objNewFile */
 		$objNewFile = clone $objFile->current();
 
 		// Set the new parent ID
@@ -338,7 +338,7 @@ class Dbafs
 			{
 				while ($objFiles->next())
 				{
-					/**@var \FilesModel $objNew */
+					/**@var FilesModel $objNew */
 					$objNew = clone $objFiles->current();
 
 					$objNew->pid    = $objNewFile->uuid;
@@ -612,7 +612,7 @@ class Dbafs
 			$arrMapped = array();
 			$arrPidUpdate = array();
 
-			/** @var \Model\Collection|\FilesModel $objFiles */
+			/** @var Model\Collection|FilesModel $objFiles */
 			while ($objFiles->next())
 			{
 				$objFound = \FilesModel::findBy(array('hash=?', 'found=2'), $objFiles->hash);

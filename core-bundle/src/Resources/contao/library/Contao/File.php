@@ -85,7 +85,7 @@ class File extends \System
 
 	/**
 	 * Files model
-	 * @var \FilesModel
+	 * @var FilesModel
 	 */
 	protected $objModel;
 
@@ -563,7 +563,7 @@ class File extends \System
 	/**
 	 * Return the files model
 	 *
-	 * @return \FilesModel The files model
+	 * @return FilesModel The files model
 	 */
 	public function getModel()
 	{
