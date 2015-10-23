@@ -371,11 +371,11 @@ class Calendar extends \Frontend
 	/**
 	 * Add an event to the array of active events
 	 *
-	 * @param \CalendarEventsModel $objEvent
-	 * @param integer              $intStart
-	 * @param integer              $intEnd
-	 * @param string               $strUrl
-	 * @param string               $strBase
+	 * @param CalendarEventsModel $objEvent
+	 * @param integer             $intStart
+	 * @param integer             $intEnd
+	 * @param string              $strUrl
+	 * @param string              $strBase
 	 */
 	protected function addEvent($objEvent, $intStart, $intEnd, $strUrl, $strBase)
 	{
@@ -384,7 +384,7 @@ class Calendar extends \Frontend
 			return;
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Called in the back end (see #4026)

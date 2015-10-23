@@ -38,7 +38,7 @@ class ModuleEventReader extends \Events
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventreader'][0]) . ' ###';
@@ -59,7 +59,7 @@ class ModuleEventReader extends \Events
 		// Do not index or cache the page if no event has been specified
 		if (!\Input::get('events'))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -73,7 +73,7 @@ class ModuleEventReader extends \Events
 		// Do not index or cache the page if there are no calendars
 		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -91,7 +91,7 @@ class ModuleEventReader extends \Events
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->event = '';
@@ -169,7 +169,7 @@ class ModuleEventReader extends \Events
 			}
 		}
 
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->cal_template);
 		$objTemplate->setData($objEvent->row());
 
@@ -271,7 +271,7 @@ class ModuleEventReader extends \Events
 			return;
 		}
 
-		/** @var \CalendarModel $objCalendar */
+		/** @var CalendarModel $objCalendar */
 		$objCalendar = $objEvent->getRelated('pid');
 		$this->Template->allowComments = $objCalendar->allowComments;
 
@@ -297,7 +297,7 @@ class ModuleEventReader extends \Events
 		// Notify the author
 		if ($objCalendar->notify != 'notify_admin')
 		{
-			/** @var \UserModel $objAuthor */
+			/** @var UserModel $objAuthor */
 			if (($objAuthor = $objEvent->getRelated('author')) !== null && $objAuthor->email != '')
 			{
 				$arrNotifies[] = $objAuthor->email;

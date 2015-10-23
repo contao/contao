@@ -190,17 +190,17 @@ abstract class Events extends \Module
 	/**
 	 * Add an event to the array of active events
 	 *
-	 * @param \CalendarEventsModel $objEvents
-	 * @param integer              $intStart
-	 * @param integer              $intEnd
-	 * @param string               $strUrl
-	 * @param integer              $intBegin
-	 * @param integer              $intLimit
-	 * @param integer              $intCalendar
+	 * @param CalendarEventsModel $objEvents
+	 * @param integer             $intStart
+	 * @param integer             $intEnd
+	 * @param string              $strUrl
+	 * @param integer             $intBegin
+	 * @param integer             $intLimit
+	 * @param integer             $intCalendar
 	 */
 	protected function addEvent($objEvents, $intStart, $intEnd, $strUrl, $intBegin, $intLimit, $intCalendar)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$span = \Calendar::calculateSpan($intStart, $intEnd);
@@ -353,8 +353,8 @@ abstract class Events extends \Module
 	/**
 	 * Generate a URL and return it as string
 	 *
-	 * @param \CalendarEventsModel $objEvent
-	 * @param string               $strUrl
+	 * @param CalendarEventsModel $objEvent
+	 * @param string              $strUrl
 	 *
 	 * @return string
 	 */
@@ -399,12 +399,12 @@ abstract class Events extends \Module
 	/**
 	 * Return the begin and end timestamp and an error message as array
 	 *
-	 * @param \Date  $objDate
+	 * @param Date   $objDate
 	 * @param string $strFormat
 	 *
 	 * @return array
 	 */
-	protected function getDatesFromFormat(\Date $objDate, $strFormat)
+	protected function getDatesFromFormat(Date $objDate, $strFormat)
 	{
 		switch ($strFormat)
 		{

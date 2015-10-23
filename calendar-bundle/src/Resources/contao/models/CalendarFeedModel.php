@@ -27,34 +27,34 @@ namespace Contao;
  * @property string  $description
  * @property string  $feedName
  *
- * @method static \CalendarFeedModel|null findById($id, $opt=array())
- * @method static \CalendarFeedModel|null findByPk($id, $opt=array())
- * @method static \CalendarFeedModel|null findByIdOrAlias($val, $opt=array())
- * @method static \CalendarFeedModel|null findOneBy($col, $val, $opt=array())
- * @method static \CalendarFeedModel|null findOneByTstamp($val, $opt=array())
- * @method static \CalendarFeedModel|null findOneByTitle($val, $opt=array())
- * @method static \CalendarFeedModel|null findOneByAlias($val, $opt=array())
- * @method static \CalendarFeedModel|null findOneByLanguage($val, $opt=array())
- * @method static \CalendarFeedModel|null findOneByCalendars($val, $opt=array())
- * @method static \CalendarFeedModel|null findOneByFormat($val, $opt=array())
- * @method static \CalendarFeedModel|null findOneBySource($val, $opt=array())
- * @method static \CalendarFeedModel|null findOneByMaxItems($val, $opt=array())
- * @method static \CalendarFeedModel|null findOneByFeedBase($val, $opt=array())
- * @method static \CalendarFeedModel|null findOneByDescription($val, $opt=array())
+ * @method static CalendarFeedModel|null findById($id, $opt=array())
+ * @method static CalendarFeedModel|null findByPk($id, $opt=array())
+ * @method static CalendarFeedModel|null findByIdOrAlias($val, $opt=array())
+ * @method static CalendarFeedModel|null findOneBy($col, $val, $opt=array())
+ * @method static CalendarFeedModel|null findOneByTstamp($val, $opt=array())
+ * @method static CalendarFeedModel|null findOneByTitle($val, $opt=array())
+ * @method static CalendarFeedModel|null findOneByAlias($val, $opt=array())
+ * @method static CalendarFeedModel|null findOneByLanguage($val, $opt=array())
+ * @method static CalendarFeedModel|null findOneByCalendars($val, $opt=array())
+ * @method static CalendarFeedModel|null findOneByFormat($val, $opt=array())
+ * @method static CalendarFeedModel|null findOneBySource($val, $opt=array())
+ * @method static CalendarFeedModel|null findOneByMaxItems($val, $opt=array())
+ * @method static CalendarFeedModel|null findOneByFeedBase($val, $opt=array())
+ * @method static CalendarFeedModel|null findOneByDescription($val, $opt=array())
  *
- * @method static \Model\Collection|\CalendarFeedModel|null findByTstamp($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findByTitle($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findByAlias($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findByLanguage($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findByCalendars($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findByFormat($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findBySource($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findByMaxItems($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findByFeedBase($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findByDescription($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findMultipleByIds($val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findBy($col, $val, $opt=array())
- * @method static \Model\Collection|\CalendarFeedModel|null findAll($opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findByTstamp($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findByTitle($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findByAlias($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findByLanguage($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findByCalendars($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findByFormat($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findBySource($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findByMaxItems($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findByFeedBase($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findByDescription($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findMultipleByIds($val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findBy($col, $val, $opt=array())
+ * @method static Model\Collection|CalendarFeedModel|null findAll($opt=array())
  *
  * @method static integer countById($id, $opt=array())
  * @method static integer countByTstamp($val, $opt=array())
@@ -86,7 +86,7 @@ class CalendarFeedModel extends \Model
 	 * @param integer $intId      The calendar ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return \Model\Collection|\CalendarFeedModel|null A collection of models or null if the calendar is not part of a feed
+	 * @return Model\Collection|CalendarFeedModel|null A collection of models or null if the calendar is not part of a feed
 	 */
 	public static function findByCalendar($intId, array $arrOptions=array())
 	{
@@ -102,7 +102,7 @@ class CalendarFeedModel extends \Model
 	 * @param array $arrIds     An array of calendar feed IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return \Model\Collection|\CalendarFeedModel|null A collection of models or null if there are no feeds
+	 * @return Model\Collection|CalendarFeedModel|null A collection of models or null if there are no feeds
 	 */
 	public static function findByIds($arrIds, array $arrOptions=array())
 	{

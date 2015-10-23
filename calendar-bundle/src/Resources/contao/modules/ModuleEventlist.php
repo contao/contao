@@ -24,7 +24,7 @@ class ModuleEventlist extends \Events
 
 	/**
 	 * Current date object
-	 * @var \Date
+	 * @var Date
 	 */
 	protected $Date;
 
@@ -44,7 +44,7 @@ class ModuleEventlist extends \Events
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventlist'][0]) . ' ###';
@@ -79,7 +79,7 @@ class ModuleEventlist extends \Events
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$blnClearInput = false;
@@ -244,7 +244,7 @@ class ModuleEventlist extends \Events
 				$blnIsLastEvent = true;
 			}
 
-			/** @var \FrontendTemplate|object $objTemplate */
+			/** @var FrontendTemplate|object $objTemplate */
 			$objTemplate = new \FrontendTemplate($this->cal_template);
 			$objTemplate->setData($event);
 
