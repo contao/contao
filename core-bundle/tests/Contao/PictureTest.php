@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Test\Contao;
 
 use Contao\CoreBundle\Test\TestCase;
 use Contao\Picture;
+use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -73,6 +74,8 @@ class PictureTest extends TestCase
         define('TL_ERROR', 'ERROR');
         define('TL_FILES_URL', '');
         define('TL_ROOT', self::$rootDir);
+
+        System::setContainer($this->mockContainerWithContaoScopes());
     }
 
     /**

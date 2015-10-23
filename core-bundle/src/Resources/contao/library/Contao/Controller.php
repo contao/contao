@@ -579,7 +579,7 @@ abstract class Controller extends \System
 	/**
 	 * Calculate the page status icon name based on the page parameters
 	 *
-	 * @param object $objPage The page object
+	 * @param \PageModel $objPage The page object
 	 *
 	 * @return string The status icon name
 	 */
@@ -1058,7 +1058,6 @@ abstract class Controller extends \System
 		$objRouter = \System::getContainer()->get('router');
 		$arrParams = [];
 		$strRoute = 'contao_frontend';
-		$strUrl = '';
 
 		// Correctly handle the "index" alias (see #3961)
 		if ($arrRow['alias'] == 'index' && $strParams == '')

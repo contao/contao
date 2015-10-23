@@ -2,9 +2,7 @@
 
 namespace Contao\Fixtures;
 
-use Contao\User;
-
-class BackendUser extends User
+class BackendUser extends \Contao\User
 {
     public $isAdmin = true;
 
