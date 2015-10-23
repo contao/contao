@@ -24,15 +24,15 @@ class Comments extends \Frontend
 	/**
 	 * Add comments to a template
 	 *
-	 * @param \FrontendTemplate|object $objTemplate
-	 * @param \stdClass                $objConfig
-	 * @param string                   $strSource
-	 * @param integer                  $intParent
-	 * @param mixed                    $varNotifies
+	 * @param FrontendTemplate|object $objTemplate
+	 * @param \stdClass               $objConfig
+	 * @param string                  $strSource
+	 * @param integer                 $intParent
+	 * @param mixed                   $varNotifies
 	 */
-	public function addCommentsToTemplate(\FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
+	public function addCommentsToTemplate(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$limit = 0;
@@ -100,7 +100,7 @@ class Comments extends \Frontend
 				$objConfig->template = 'com_default';
 			}
 
-			/** @var \FrontendTemplate|object $objPartial */
+			/** @var FrontendTemplate|object $objPartial */
 			$objPartial = new \FrontendTemplate($objConfig->template);
 
 			while ($objComments->next())
@@ -155,13 +155,13 @@ class Comments extends \Frontend
 	/**
 	 * Add a form to create new comments
 	 *
-	 * @param \FrontendTemplate|object $objTemplate
-	 * @param \stdClass                $objConfig
-	 * @param string                   $strSource
-	 * @param integer                  $intParent
-	 * @param mixed                    $varNotifies
+	 * @param FrontendTemplate|object $objTemplate
+	 * @param \stdClass               $objConfig
+	 * @param string                  $strSource
+	 * @param integer                 $intParent
+	 * @param mixed                   $varNotifies
 	 */
-	protected function renderCommentForm(\FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
+	protected function renderCommentForm(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
 		$this->import('FrontendUser', 'User');
 
@@ -246,7 +246,7 @@ class Comments extends \Frontend
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
 		{
-			/** @var \Widget $strClass */
+			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
 
 			// Continue if the class is not defined
@@ -257,7 +257,7 @@ class Comments extends \Frontend
 
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'];
 
-			/** @var \Widget $objWidget */
+			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name'], $arrField['value']));
 
 			// Validate the widget
@@ -284,7 +284,7 @@ class Comments extends \Frontend
 		// Do not index or cache the page with the confirmation message
 		if ($_SESSION['TL_COMMENT_ADDED'])
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -509,9 +509,9 @@ class Comments extends \Frontend
 	/**
 	 * Add the subscription and send the activation mail (double opt-in)
 	 *
-	 * @param \CommentsModel $objComment
+	 * @param CommentsModel $objComment
 	 */
-	public static function addCommentsSubscription(\CommentsModel $objComment)
+	public static function addCommentsSubscription(CommentsModel $objComment)
 	{
 		$objNotify = \CommentsNotifyModel::findBySourceParentAndEmail($objComment->source, $objComment->parent, $objComment->email);
 
@@ -558,9 +558,9 @@ class Comments extends \Frontend
 	/**
 	 * Change the subscription status
 	 *
-	 * @param \FrontendTemplate|object $objTemplate
+	 * @param FrontendTemplate|object $objTemplate
 	 */
-	public static function changeSubscriptionStatus(\FrontendTemplate $objTemplate)
+	public static function changeSubscriptionStatus(FrontendTemplate $objTemplate)
 	{
 		$objNotify = \CommentsNotifyModel::findByTokens(\Input::get('token'));
 
@@ -588,9 +588,9 @@ class Comments extends \Frontend
 	/**
 	 * Notify the subscribers of new comments
 	 *
-	 * @param \CommentsModel $objComment
+	 * @param CommentsModel $objComment
 	 */
-	public static function notifyCommentsSubscribers(\CommentsModel $objComment)
+	public static function notifyCommentsSubscribers(CommentsModel $objComment)
 	{
 		// Notified already
 		if ($objComment->notified)
