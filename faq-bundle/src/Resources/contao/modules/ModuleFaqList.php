@@ -43,7 +43,7 @@ class ModuleFaqList extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqlist'][0]) . ' ###';
@@ -96,7 +96,7 @@ class ModuleFaqList extends \Module
 			$arrTemp['title'] = specialchars($objFaq->question, true);
 			$arrTemp['href'] = $this->generateFaqLink($objFaq);
 
-			/** @var \FaqCategoryModel $objPid */
+			/** @var FaqCategoryModel $objPid */
 			$objPid = $objFaq->getRelated('pid');
 
 			$arrFaq[$objFaq->pid]['items'][] = $arrTemp;
@@ -130,7 +130,7 @@ class ModuleFaqList extends \Module
 	/**
 	 * Create links and remember pages that have been processed
 	 *
-	 * @param \FaqModel $objFaq
+	 * @param FaqModel $objFaq
 	 *
 	 * @return string
 	 *
@@ -138,7 +138,7 @@ class ModuleFaqList extends \Module
 	 */
 	protected function generateFaqLink($objFaq)
 	{
-		/** @var \FaqCategoryModel $objCategory */
+		/** @var FaqCategoryModel $objCategory */
 		$objCategory = $objFaq->getRelated('pid');
 		$jumpTo = intval($objCategory->jumpTo);
 

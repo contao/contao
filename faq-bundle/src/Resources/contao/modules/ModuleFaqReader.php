@@ -38,7 +38,7 @@ class ModuleFaqReader extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqreader'][0]) . ' ###';
@@ -59,7 +59,7 @@ class ModuleFaqReader extends \Module
 		// Do not index or cache the page if no FAQ has been specified
 		if (!\Input::get('items'))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -73,7 +73,7 @@ class ModuleFaqReader extends \Module
 		// Do not index or cache the page if there are no categories
 		if (!is_array($this->faq_categories) || empty($this->faq_categories))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -91,7 +91,7 @@ class ModuleFaqReader extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
@@ -162,7 +162,7 @@ class ModuleFaqReader extends \Module
 			return;
 		}
 
-		/** @var \FaqCategoryModel $objCategory */
+		/** @var FaqCategoryModel $objCategory */
 		$objCategory = $objFaq->getRelated('pid');
 		$this->Template->allowComments = $objCategory->allowComments;
 
@@ -188,7 +188,7 @@ class ModuleFaqReader extends \Module
 		// Notify the author
 		if ($objCategory->notify != 'notify_admin')
 		{
-			/** @var \UserModel $objAuthor */
+			/** @var UserModel $objAuthor */
 			if (($objAuthor = $objFaq->getRelated('author')) !== null && $objAuthor->email != '')
 			{
 				$arrNotifies[] = $objAuthor->email;
