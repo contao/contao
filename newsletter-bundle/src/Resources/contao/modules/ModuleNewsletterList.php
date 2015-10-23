@@ -37,7 +37,7 @@ class ModuleNewsletterList extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsletterlist'][0]) . ' ###';
@@ -66,7 +66,7 @@ class ModuleNewsletterList extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrJumpTo = array();
@@ -79,7 +79,7 @@ class ModuleNewsletterList extends \Module
 		{
 			while ($objNewsletter->next())
 			{
-				/** @var \NewsletterModel $objNewsletter */
+				/** @var NewsletterModel $objNewsletter */
 				if (($objTarget = $objNewsletter->getRelated('pid')) === null)
 				{
 					continue;
@@ -97,7 +97,7 @@ class ModuleNewsletterList extends \Module
 
 				if (!isset($arrJumpTo[$objTarget->jumpTo]))
 				{
-					/** @var \PageModel $objModel */
+					/** @var PageModel $objModel */
 					$objModel = $objTarget->getRelated('jumpTo');
 					$objJumpTo = $objModel->loadDetails();
 

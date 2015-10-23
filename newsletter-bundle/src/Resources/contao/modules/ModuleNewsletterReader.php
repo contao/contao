@@ -38,7 +38,7 @@ class ModuleNewsletterReader extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsletterreader'][0]) . ' ###';
@@ -59,7 +59,7 @@ class ModuleNewsletterReader extends \Module
 		// Do not index or cache the page if no news item has been specified
 		if (!\Input::get('items'))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -73,7 +73,7 @@ class ModuleNewsletterReader extends \Module
 		// Do not index or cache the page if there are no channels
 		if (!is_array($this->nl_channels) || empty($this->nl_channels))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -91,7 +91,7 @@ class ModuleNewsletterReader extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->content = '';

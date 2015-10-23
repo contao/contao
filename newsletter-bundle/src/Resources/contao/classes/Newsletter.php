@@ -24,11 +24,11 @@ class Newsletter extends \Backend
 	/**
 	 * Renturn a form to choose an existing style sheet and import it
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return string
 	 */
-	public function send(\DataContainer $dc)
+	public function send(DataContainer $dc)
 	{
 		$objNewsletter = $this->Database->prepare("SELECT n.*, c.useSMTP, c.smtpHost, c.smtpPort, c.smtpUser, c.smtpPass FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
 										->limit(1)
@@ -305,12 +305,12 @@ class Newsletter extends \Backend
 	/**
 	 * Generate the e-mail object and return it
 	 *
-	 * @param \Database\Result|object $objNewsletter
-	 * @param array                   $arrAttachments
+	 * @param Database\Result|object $objNewsletter
+	 * @param array                  $arrAttachments
 	 *
-	 * @return \Email
+	 * @return Email
 	 */
-	protected function generateEmailObject(\Database\Result $objNewsletter, $arrAttachments)
+	protected function generateEmailObject(Database\Result $objNewsletter, $arrAttachments)
 	{
 		$objEmail = new \Email();
 
@@ -342,16 +342,16 @@ class Newsletter extends \Backend
 	/**
 	 * Compile the newsletter and send it
 	 *
-	 * @param \Email                  $objEmail
-	 * @param \Database\Result|object $objNewsletter
-	 * @param array                   $arrRecipient
-	 * @param string                  $text
-	 * @param string                  $html
-	 * @param string                  $css
+	 * @param Email                  $objEmail
+	 * @param Database\Result|object $objNewsletter
+	 * @param array                  $arrRecipient
+	 * @param string                 $text
+	 * @param string                 $html
+	 * @param string                 $css
 	 *
 	 * @return string
 	 */
-	protected function sendNewsletter(\Email $objEmail, \Database\Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
+	protected function sendNewsletter(Email $objEmail, Database\Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
 		// Prepare the text content
 		$objEmail->text = \StringUtil::parseSimpleTokens($text, $arrRecipient);
@@ -364,7 +364,7 @@ class Newsletter extends \Backend
 				$objNewsletter->template = 'mail_default';
 			}
 
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate($objNewsletter->template);
 			$objTemplate->setData($objNewsletter->row());
 
@@ -430,7 +430,7 @@ class Newsletter extends \Backend
 			$class = 'FileUpload';
 		}
 
-		/** @var \FileUpload $objUploader */
+		/** @var FileUpload $objUploader */
 		$objUploader = new $class();
 
 		// Import CSS
@@ -592,8 +592,8 @@ class Newsletter extends \Backend
 	/**
 	 * Synchronize newsletter subscription of new users
 	 *
-	 * @param \MemberModel $intUser
-	 * @param array        $arrData
+	 * @param MemberModel $intUser
+	 * @param array       $arrData
 	 */
 	public function createNewUser($intUser, $arrData)
 	{
@@ -632,7 +632,7 @@ class Newsletter extends \Backend
 	/**
 	 * Activate newsletter subscription of new users
 	 *
-	 * @param \MemberModel $objUser
+	 * @param MemberModel $objUser
 	 */
 	public function activateAccount($objUser)
 	{
@@ -663,9 +663,9 @@ class Newsletter extends \Backend
 	/**
 	 * Synchronize newsletter subscription of existing users
 	 *
-	 * @param mixed        $varValue
-	 * @param \MemberModel $objUser
-	 * @param \ModuleModel $objModule
+	 * @param mixed       $varValue
+	 * @param MemberModel $objUser
+	 * @param ModuleModel $objModule
 	 *
 	 * @return mixed
 	 */
@@ -680,7 +680,7 @@ class Newsletter extends \Backend
 		$blnIsFrontend = true;
 
 		// If called from the back end, the second argument is a DataContainer object
-		if ($objUser instanceof \DataContainer)
+		if ($objUser instanceof DataContainer)
 		{
 			$objUser = $this->Database->prepare("SELECT * FROM tl_member WHERE id=?")
 									  ->limit(1)
@@ -704,7 +704,7 @@ class Newsletter extends \Backend
 		$varValue = deserialize($varValue, true);
 
 		// Get all channel IDs (thanks to Andreas Schempp)
-		if ($blnIsFrontend && $objModule instanceof \Module)
+		if ($blnIsFrontend && $objModule instanceof Module)
 		{
 			$arrChannel = deserialize($objModule->newsletters, true);
 		}
@@ -837,7 +837,7 @@ class Newsletter extends \Backend
 	/**
 	 * Get all editable newsletters and return them as array
 	 *
-	 * @param \ModuleModel $objModule
+	 * @param ModuleModel $objModule
 	 *
 	 * @return array
 	 */

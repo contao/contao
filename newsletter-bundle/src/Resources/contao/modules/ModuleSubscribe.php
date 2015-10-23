@@ -37,7 +37,7 @@ class ModuleSubscribe extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['subscribe'][0]) . ' ###';
@@ -69,7 +69,7 @@ class ModuleSubscribe extends \Module
 		// Overwrite default template
 		if ($this->nl_template)
 		{
-			/** @var \FrontendTemplate|object $objTemplate */
+			/** @var FrontendTemplate|object $objTemplate */
 			$objTemplate = new \FrontendTemplate($this->nl_template);
 
 			$this->Template = $objTemplate;
@@ -100,7 +100,7 @@ class ModuleSubscribe extends \Module
 				'eval' => array('mandatory'=>true)
 			);
 
-			/** @var \Widget $objWidget */
+			/** @var Widget $objWidget */
 			$objWidget = new \FormCaptcha(\FormCaptcha::getAttributesFromDca($arrField, $arrField['name']));
 		}
 
@@ -163,7 +163,7 @@ class ModuleSubscribe extends \Module
 	 */
 	protected function activateRecipient()
 	{
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate('mod_newsletter');
 
 		$this->Template = $objTemplate;
@@ -187,7 +187,7 @@ class ModuleSubscribe extends \Module
 		// Update the subscriptions
 		while ($objRecipient->next())
 		{
-			/** @var \NewsletterChannelModel $objChannel */
+			/** @var NewsletterChannelModel $objChannel */
 			$objChannel = $objRecipient->getRelated('pid');
 
 			$arrAdd[] = $objRecipient->id;
@@ -223,11 +223,11 @@ class ModuleSubscribe extends \Module
 	/**
 	 * Validate the subscription form
 	 *
-	 * @param \Widget $objWidget
+	 * @param Widget $objWidget
 	 *
 	 * @return array|bool
 	 */
-	protected function validateForm(\Widget $objWidget=null)
+	protected function validateForm(Widget $objWidget=null)
 	{
 		// Validate the e-mail address
 		$varInput = \Idna::encodeEmail(\Input::post('email', true));
