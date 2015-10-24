@@ -26,8 +26,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Abstract TestCase class.
@@ -216,17 +214,15 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Returns a ContaoFramework instance.
      *
-     * @param RequestStack                   $requestStack  The request stack
-     * @param RouterInterface                $router        The router object
-     * @param CsrfTokenManagerInterface|null $tokenManager  An optional token manager
-     * @param Adapter|null                   $configAdapter An optional config adapter
+     * @param RequestStack    $requestStack  The request stack
+     * @param RouterInterface $router        The router object
+     * @param Adapter|null    $configAdapter An optional config adapter
      *
      * @return ContaoFramework The object instance
      */
     public function mockContaoFramework(
         RequestStack $requestStack = null,
         RouterInterface $router = null,
-        CsrfTokenManagerInterface $tokenManager = null,
         Adapter $configAdapter = null
     ) {
         $container = $this->mockContainerWithContaoScopes();
@@ -237,13 +233,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         if (null === $router) {
             $router = $this->mockRouter('/index.html');
-        }
-
-        if (null === $tokenManager) {
-            $tokenManager = new CsrfTokenManager(
-                $this->getMock('Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface'),
-                $this->getMock('Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface')
-            );
         }
 
         if (null === $configAdapter) {
@@ -258,8 +247,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                 $router,
                 $this->mockSession(),
                 $this->getRootDir() . '/app',
-                $tokenManager,
-                'contao_csrf_token',
                 error_reporting(),
             ])
             ->setMethods(['getAdapter'])

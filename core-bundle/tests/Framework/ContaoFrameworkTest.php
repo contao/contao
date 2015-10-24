@@ -206,12 +206,6 @@ class ContaoFrameworkTest extends TestCase
                 $this->mockRouter('/contao/install'),
                 $this->mockSession(),
                 $this->getRootDir() . '/app',
-                new CsrfTokenManager(
-                    $this->getMock('Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface'),
-                    $this->getMock('Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface')
-                ),
-                'contao_csrf_token',
-                null,
                 error_reporting(),
             ])
             ->setMethods(['isInitialized'])
@@ -316,8 +310,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = $this->mockContaoFramework(
             $container->get('request_stack'),
-            $this->mockRouter('/contao/install'),
-            $tokenManager
+            $this->mockRouter('/contao/install')
         );
 
         $framework->setContainer($container);
@@ -336,28 +329,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertEquals('', TL_REFERER_ID);
         $this->assertEquals('contao/install', TL_SCRIPT);
         $this->assertEquals('', TL_PATH);
-    }
-
-    /**
-     * Tests initializing the framework with an invalid request token.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @expectedException \Contao\CoreBundle\Exception\InvalidRequestTokenException
-     */
-    public function testInvalidRequestToken()
-    {
-        $request = new Request();
-        $request->attributes->set('_route', 'dummy');
-        $request->setMethod('POST');
-
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
-        $container->get('request_stack')->push($request);
-
-        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
-        $framework->setContainer($container);
-        $framework->initialize();
     }
 
     /**
@@ -407,7 +378,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockContaoFramework(
             $container->get('request_stack'),
             $this->mockRouter('/contao/install'),
-            null,
             $configAdapter
         );
 
