@@ -977,7 +977,7 @@ abstract class Widget extends \Controller
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['email'], $this->strLabel));
 					}
-					if ($this->rgxp == 'friendly' && $strName != '')
+					if ($this->rgxp == 'friendly' && !empty($strName))
 					{
 						$varInput = $strName . ' [' . $varInput . ']';
 					}
