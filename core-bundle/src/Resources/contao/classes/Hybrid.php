@@ -16,6 +16,7 @@ namespace Contao;
  *
  * @property string $hl
  * @property string $cssID
+ * @property string $attributes
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -125,12 +126,16 @@ abstract class Hybrid extends \Frontend
 			}
 		}
 
+		$cssID = array();
 		$this->arrData = $objHybrid->row();
 
 		// Get the CSS ID from the parent element (!)
 		$this->cssID = deserialize($objElement->cssID, true);
 
-		$cssID = deserialize($objHybrid->attributes, true);
+		if (isset($objHybrid->attributes))
+		{
+			$cssID = deserialize($objHybrid->attributes, true);
+		}
 
 		// Override the CSS ID (see #305)
 		if (!empty($this->cssID[0]))
