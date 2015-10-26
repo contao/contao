@@ -1,5 +1,5 @@
-Contao news bundle change log
-=============================
+# Contao FAQ bundle change log
 
-Version 4.1.0-beta1 (2015-10-21)
---------------------------------
+### 4.1.0-beta1 (2015-10-21)
+
+ * Add all translations which are at least 95% complete.
