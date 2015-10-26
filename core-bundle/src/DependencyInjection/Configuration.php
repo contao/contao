@@ -21,6 +21,21 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
+     * @var bool
+     */
+    private $debug;
+
+    /**
+     * Constructor.
+     *
+     * @param bool $debug If kernel debug mode is enabled
+     */
+    public function __construct($debug)
+    {
+        $this->debug = (bool) $debug;
+    }
+
+    /**
      * Generates the configuration tree builder.
      *
      * @return TreeBuilder The tree builder
@@ -54,6 +69,12 @@ class Configuration implements ConfigurationInterface
                         })
                         ->thenInvalid('%s')
                     ->end()
+                ->end()
+                ->booleanNode('image_cache')
+                    ->defaultValue(!$this->debug)
+                ->end()
+                ->scalarNode('image_dir')
+                    ->defaultValue('assets/images')
                 ->end()
                 ->scalarNode('csrf_token_name')
                     ->cannotBeEmpty()

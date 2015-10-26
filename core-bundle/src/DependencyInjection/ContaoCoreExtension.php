@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
@@ -45,6 +46,17 @@ class ContaoCoreExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        // Will add the resource to the container
+        parent::getConfiguration($config, $container);
+
+        return new Configuration($container->getParameter('kernel.debug'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader(
@@ -54,12 +66,15 @@ class ContaoCoreExtension extends ConfigurableExtension
 
         foreach ($this->files as $file) {
             $loader->load($file);
+            $container->addResource(new FileResource(__DIR__ . '/../Resources/config/' . $file));
         }
 
         $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
         $container->setParameter('contao.encryption_key', $mergedConfig['encryption_key']);
         $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
         $container->setParameter('contao.upload_path', $mergedConfig['upload_path']);
+        $container->setParameter('contao.image_cache', $mergedConfig['image_cache']);
+        $container->setParameter('contao.image_dir', $mergedConfig['image_dir']);
         $container->setParameter('contao.csrf_token_name', $mergedConfig['csrf_token_name']);
         $container->setParameter('contao.pretty_error_screens', $mergedConfig['pretty_error_screens']);
         $container->setParameter('contao.error_level', $mergedConfig['error_level']);

@@ -14,7 +14,7 @@ namespace Contao;
 /**
  * Resizes images
  *
- * The class resizes images and stores them in the assets/images folder.
+ * The class resizes images and stores them in the image cache folder.
  *
  * Usage:
  *
@@ -386,7 +386,7 @@ class Image
 			. '-t' . $this->fileObj->mtime
 		), 0, 8);
 
-		return 'assets/images/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
+		return System::getContainer()->getParameter('contao.image_dir') . '/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
 	}
 
 
@@ -442,7 +442,7 @@ class Image
 		}
 
 		// Check whether the image exists already
-		if (!\Config::get('debugMode'))
+		if (System::getContainer()->getParameter('contao.image_cache'))
 		{
 			// Custom target (thanks to Tristan Lins) (see #4166)
 			if ($this->getTargetPath() && !$this->getForceOverride())
@@ -922,7 +922,7 @@ class Image
 
 
 	/**
-	 * Resize an image and store the resized version in the assets/images folder
+	 * Resize an image and store the resized version in the image cache folder
 	 *
 	 * @param string  $image        The image path
 	 * @param integer $width        The target width
