@@ -29,8 +29,15 @@ class FrontendCron extends \Frontend
 		parent::__construct();
 
 		// See #4099
-		define('BE_USER_LOGGED_IN', false);
-		define('FE_USER_LOGGED_IN', false);
+		if (!defined('BE_USER_LOGGED_IN'))
+		{
+			define('BE_USER_LOGGED_IN', false);
+		}
+
+		if (!defined('FE_USER_LOGGED_IN'))
+		{
+			define('FE_USER_LOGGED_IN', false);
+		}
 	}
 
 
