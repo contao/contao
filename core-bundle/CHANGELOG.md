@@ -2,6 +2,7 @@
 
 ### 4.1.0-RC1 (2015-XX-XX)
 
+ * Use the `kernel.terminate` event for the command scheduler (see #244).
  * Support news and event links in the front end preview (see contao/core#7504).
 
 ### 4.1.0-beta1 (2015-10-21)

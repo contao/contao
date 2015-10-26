@@ -102,7 +102,6 @@ class BackendIndex extends \Backend
 		$objTemplate->username = $GLOBALS['TL_LANG']['tl_user']['username'][0];
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
-		$objTemplate->disableCron = \Config::get('disableCron');
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 
 		return $objTemplate->getResponse();

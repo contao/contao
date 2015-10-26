@@ -40,6 +40,15 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
+    contao.listener.command_scheduler:
+        class: Contao\CoreBundle\EventListener\CommandSchedulerListener
+        arguments:
+            - "@contao.framework"
+        calls:
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
     contao.listener.container_scope:
         class: Contao\CoreBundle\EventListener\ContainerScopeListener
         arguments:
