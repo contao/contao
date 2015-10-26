@@ -16,6 +16,7 @@ use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -43,6 +44,20 @@ class OutputFromCacheListenerTest extends TestCase
             ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
+        ;
+
+        $frontend = $this->getMock('Contao\Frontend', ['getResponseFromCache']);
+
+        $frontend
+            ->expects($this->any())
+            ->method('getResponseFromCache')
+            ->willReturn(new Response())
+        ;
+
+        $this->framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($frontend)
         ;
     }
 

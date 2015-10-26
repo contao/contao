@@ -41,6 +41,19 @@ class AddToSearchIndexListenerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock()
         ;
+
+        $frontend = $this->getMock('Contao\Frontend', ['indexPageIfApplicable']);
+
+        $frontend
+            ->expects($this->any())
+            ->method('indexPageIfApplicable')
+        ;
+
+        $this->framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($frontend)
+        ;
     }
 
     /**

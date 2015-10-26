@@ -54,7 +54,10 @@ class OutputFromCacheListener
 
         $this->framework->initialize();
 
-        if (null !== ($response = Frontend::getResponseFromCache())) {
+        /** @var Frontend $frontend */
+        $frontend = $this->framework->getAdapter('Contao\Frontend');
+
+        if (null !== ($response = $frontend->getResponseFromCache())) {
             $event->setResponse($response);
         }
     }

@@ -50,6 +50,8 @@ class AddToSearchIndexListener
             return;
         }
 
-        Frontend::indexPageIfApplicable($event->getResponse());
+        /** @var Frontend $frontend */
+        $frontend = $this->framework->getAdapter('Contao\Frontend');
+        $frontend->indexPageIfApplicable($event->getResponse());
     }
 }
