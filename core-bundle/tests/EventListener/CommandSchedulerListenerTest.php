@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\Test\EventListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the CommandSchedulerListener class.
@@ -85,18 +84,15 @@ class CommandSchedulerListenerTest extends TestCase
      */
     public function testWithContaoFramework()
     {
-        /** @var ContainerInterface|\PHPUnit_Framework_MockObject_MockObject $container */
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
-
-        $container
-            ->expects($this->any())
-            ->method('get')
-            ->willReturn($this->mockContaoFramework())
-        ;
-
         $this->framework
             ->expects($this->once())
             ->method('getAdapter')
+        ;
+
+        $this->framework
+            ->expects($this->any())
+            ->method('createInstance')
+            ->willReturn($this->getMock('Contao\FrontendCron', ['run']))
         ;
 
         $this->framework
@@ -106,7 +102,6 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($this->framework);
-        $listener->setContainer($container);
         $listener->onKernelTerminate();
     }
 }

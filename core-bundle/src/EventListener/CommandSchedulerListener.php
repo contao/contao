@@ -11,9 +11,8 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\Config;
-use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Contao\FrontendCron;
 
 /**
  * Triggers the Contao command scheduler after the response has been sent.
@@ -22,8 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  */
 class CommandSchedulerListener
 {
-    use ContainerAwareTrait;
-
     /**
      * @var ContaoFrameworkInterface
      */
@@ -55,8 +52,8 @@ class CommandSchedulerListener
             return;
         }
 
-        $controller = new FrontendController();
-        $controller->setContainer($this->container);
-        $controller->cronAction();
+        /** @var FrontendCron $controller */
+        $controller = $this->framework->createInstance('Contao\FrontendCron');
+        $controller->run();
     }
 }
