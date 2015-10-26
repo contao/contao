@@ -16,7 +16,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
- * Registers the Contao front end and back end session bags.
+ * Triggers the Contao command scheduler after the response has been sent.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
