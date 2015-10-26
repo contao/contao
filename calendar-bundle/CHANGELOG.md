@@ -1,8 +1,9 @@
-Contao news bundle change log
-=============================
+# Contao calendar bundle change log
 
-Version 4.1.0-beta1 (2015-10-21)
---------------------------------
+### 4.1.0-RC1 (2015-XX-XX)
 
-### Changed
-Make the `Events::generateEventUrl()` method public static (see contao/core#7504).
+ * Make the `Events::generateEventUrl()` method public static (see contao/core#7504).
+
+### 4.1.0-beta1 (2015-10-21)
+
+ * Add all translations which are at least 95% complete.
