@@ -66,6 +66,14 @@ class BackendPreview extends \Backend
 		{
 			$objTemplate->url = $this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'), true);
 		}
+		elseif (\Input::get('news') && ($objNews = \NewsModel::findByPk(\Input::get('news'))) !== null)
+		{
+			$objTemplate->url = \Environment::get('base') . \News::generateNewsUrl($objNews);
+		}
+		elseif (\Input::get('event') && ($objEvent = \CalendarEventsModel::findByPk(\Input::get('event'))) !== null)
+		{
+			$objTemplate->url = \Environment::get('base') . \Events::generateEventUrl($objEvent);
+		}
 		else
 		{
 			$objTemplate->url = \System::getContainer()->get('router')->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL);

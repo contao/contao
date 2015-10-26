@@ -1,6 +1,13 @@
 Contao core bundle change log
 =============================
 
+Version 4.1.0-RC1 (2015-XX-XX)
+------------------------------
+
+### New
+Support news and event links in the front end preview (see #7504).
+
+
 Version 4.1.0-beta1 (2015-10-21)
 --------------------------------
 
