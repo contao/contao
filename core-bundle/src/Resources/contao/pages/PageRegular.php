@@ -471,8 +471,6 @@ class PageRegular extends \Frontend
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
 		$this->Template->charset = \Config::get('characterSet');
 		$this->Template->base = \Environment::get('base');
-		$this->Template->disableCron = \Config::get('disableCron');
-		$this->Template->cronTimeout = $this->getCronTimeout();
 		$this->Template->isRTL = false;
 	}
 

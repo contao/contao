@@ -749,12 +749,6 @@ abstract class Controller extends \System
 			}
 		}
 
-		// Command scheduler
-		if (!\Config::get('disableCron'))
-		{
-			$strScripts .= "\n" . \Template::generateInlineScript('setTimeout(function(){var e=function(e,t){try{var n=new XMLHttpRequest}catch(r){return}n.open("GET",e,!0),n.onreadystatechange=function(){this.readyState==4&&this.status==200&&typeof t=="function"&&t(this.responseText)},n.send()};e("system/cron/cron.txt",function(n){parseInt(n||0)<Math.round(+(new Date)/1e3)-' . \Frontend::getCronTimeout() . '&&e("_contao/cron")})},5e3);') . "\n";
-		}
-
 		$arrReplace['[[TL_BODY]]'] = $strScripts;
 		$strScripts = '';
 
