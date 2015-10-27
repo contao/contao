@@ -96,7 +96,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     public function warmUp($cacheDir)
     {
-        if (!$this->isInstalled()) {
+        if (!$this->isCompleteInstallation()) {
             return;
         }
 
@@ -325,11 +325,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * Checks if Contao is installed (tl_page table exists).
+     * Checks if the installation is complete.
      *
-     * @return bool
+     * @return bool True if the installation is complete
      */
-    private function isInstalled()
+    private function isCompleteInstallation()
     {
         try {
             $this->connection->exec("SELECT COUNT(*) FROM tl_page");
