@@ -72,7 +72,13 @@ class ContaoCacheWarmerTest extends TestCase
     public function testWarmUp()
     {
         /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this->getMock('Doctrine\DBAL\Connection', ['prepare', 'execute', 'fetch'], [], '', false);
+        $connection = $this->getMock(
+            'Doctrine\DBAL\Connection',
+            ['prepare', 'execute', 'fetch', 'exec'],
+            [],
+            '',
+            false
+        );
 
         $connection
             ->expects($this->any())
