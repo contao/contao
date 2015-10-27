@@ -43,6 +43,11 @@ class MetaWizard extends \Widget
 	 */
 	public function validator($varInput)
 	{
+		if (!is_array($varInput))
+		{
+			return null; // see #382
+		}
+
 		foreach ($varInput as $k=>$v)
 		{
 			if ($k != 'language')
