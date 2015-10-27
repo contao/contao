@@ -2,6 +2,7 @@
 
 ### 4.1.0-RC1 (2015-XX-XX)
 
+ * Support retrieving services in `System::import()` and `System::importStatic()` (see #376).
  * Handle an empty input in the meta wizard (see #382).
  * Use the `kernel.terminate` event for the command scheduler (see #244).
  * Support news and event links in the front end preview (see contao/core#7504).

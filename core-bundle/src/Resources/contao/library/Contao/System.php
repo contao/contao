@@ -152,7 +152,20 @@ abstract class System
 
 		if ($blnForce || !isset($this->arrObjects[$strKey]))
 		{
-			$this->arrObjects[$strKey] = (in_array('getInstance', get_class_methods($strClass))) ? call_user_func(array($strClass, 'getInstance')) : new $strClass();
+			$container = static::getContainer();
+
+			if ($container->has($strClass))
+			{
+				$this->arrObjects[$strKey] = $container->get($strClass);
+			}
+			elseif (in_array('getInstance', get_class_methods($strClass)))
+			{
+				$this->arrObjects[$strKey] = call_user_func(array($strClass, 'getInstance'));
+			}
+			else
+			{
+				$this->arrObjects[$strKey] = new $strClass();
+			}
 		}
 	}
 
@@ -172,7 +185,20 @@ abstract class System
 
 		if ($blnForce || !isset(static::$arrStaticObjects[$strKey]))
 		{
-			static::$arrStaticObjects[$strKey] = (in_array('getInstance', get_class_methods($strClass))) ? call_user_func(array($strClass, 'getInstance')) : new $strClass();
+			$container = static::getContainer();
+
+			if ($container->has($strClass))
+			{
+				static::$arrStaticObjects[$strKey] = $container->get($strClass);
+			}
+			elseif (in_array('getInstance', get_class_methods($strClass)))
+			{
+				static::$arrStaticObjects[$strKey] = call_user_func(array($strClass, 'getInstance'));
+			}
+			else
+			{
+				static::$arrStaticObjects[$strKey] = new $strClass();
+			}
 		}
 
 		return static::$arrStaticObjects[$strKey];
