@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DcaExtractor;
 use Contao\PageModel;
 use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
@@ -95,6 +96,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     public function warmUp($cacheDir)
     {
+        if (!$this->isInstalled()) {
+            return;
+        }
+
         $this->framework->initialize();
 
         $this->generateConfigCache($cacheDir);
@@ -317,5 +322,21 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
 
         return array_unique($languages);
+    }
+
+    /**
+     * Checks if Contao is installed (tl_page table exists).
+     *
+     * @return bool
+     */
+    private function isInstalled()
+    {
+        try {
+            $this->connection->exec("SELECT COUNT(*) FROM tl_page");
+        } catch (TableNotFoundException $e) {
+            return false;
+        }
+
+        return true;
     }
 }
