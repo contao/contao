@@ -152,9 +152,11 @@ abstract class System
 
 		if ($blnForce || !isset($this->arrObjects[$strKey]))
 		{
-			if (static::getContainer()->has($strClass))
+			$container = static::getContainer();
+
+			if ($container->has($strClass))
 			{
-				$this->arrObjects[$strKey] = self::getContainer()->get($strClass);
+				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
 			elseif (in_array('getInstance', get_class_methods($strClass)))
 			{
@@ -183,9 +185,11 @@ abstract class System
 
 		if ($blnForce || !isset(static::$arrStaticObjects[$strKey]))
 		{
-			if (static::getContainer()->has($strClass))
+			$container = static::getContainer();
+
+			if ($container->has($strClass))
 			{
-				static::$arrStaticObjects[$strKey] = self::getContainer()->get($strClass);
+				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
 			elseif (in_array('getInstance', get_class_methods($strClass)))
 			{
