@@ -94,11 +94,11 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Constructor.
      *
-     * @param RequestStack     $requestStack  The request stack
-     * @param RouterInterface  $router        The router service
-     * @param SessionInterface $session       The session service
-     * @param string           $rootDir       The kernel root directory
-     * @param int              $errorLevel    The PHP error level
+     * @param RequestStack     $requestStack The request stack
+     * @param RouterInterface  $router       The router service
+     * @param SessionInterface $session      The session service
+     * @param string           $rootDir      The kernel root directory
+     * @param int              $errorLevel   The PHP error level
      */
     public function __construct(
         RequestStack $requestStack,
