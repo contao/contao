@@ -223,7 +223,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function mockContaoFramework(
         RequestStack $requestStack = null,
         RouterInterface $router = null,
-        Adapter $configAdapter = null
+        array $adapters = []
     ) {
         $container = $this->mockContainerWithContaoScopes();
 
@@ -235,8 +235,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $router = $this->mockRouter('/index.html');
         }
 
-        if (null === $configAdapter) {
-            $configAdapter = $this->mockConfigAdapter();
+        if (!isset($adapters['Contao\Config'])) {
+            $adapters['Contao\Config'] = $this->mockConfigAdapter();
+        }
+
+        if (!isset($adapters['Contao\RequestToken'])) {
+            $adapters['Contao\RequestToken'] = $this->mockRequestTokenAdapter();
         }
 
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
@@ -253,10 +257,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ->getMock()
         ;
 
+
+
         $framework
             ->expects($this->any())
             ->method('getAdapter')
-            ->willReturn($configAdapter)
+            ->willReturnCallback(function ($key) use ($adapters) {
+                return $adapters[$key];
+            })
         ;
 
         $framework->setContainer($container);
@@ -313,5 +321,33 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         ;
 
         return $configAdapter;
+    }
+
+    /**
+     * Mocks a request token adapter.
+     *
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject The request token adapter
+     */
+    protected function mockRequestTokenAdapter()
+    {
+        $rtAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['get', 'validate'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $rtAdapter
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn('foobar')
+        ;
+
+        $rtAdapter
+            ->expects($this->any())
+            ->method('validate')
+            ->willReturn(true)
+        ;
+
+        return $rtAdapter;
     }
 }

@@ -17,7 +17,6 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Input;
-use Contao\RequestToken;
 use Contao\System;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -417,14 +416,14 @@ class ContaoFramework implements ContaoFrameworkInterface
     {
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         if (!defined('REQUEST_TOKEN')) {
-            define('REQUEST_TOKEN', RequestToken::get());
+            define('REQUEST_TOKEN', $this->getAdapter('Contao\RequestToken')->get());
         }
 
         if (null === $this->request || 'POST' !== $this->request->getRealMethod()) {
             return;
         }
 
-        if (RequestToken::validate($this->request->request->get('REQUEST_TOKEN'))) {
+        if ($this->getAdapter('Contao\RequestToken')->validate($this->request->request->get('REQUEST_TOKEN'))) {
             return;
         }
 
