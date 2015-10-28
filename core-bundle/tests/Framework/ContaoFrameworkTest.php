@@ -343,6 +343,51 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
+     * Tests if request token test is skipped on request attribute.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRequestTokenCheckSkippedIfAttributeSet()
+    {
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_enable_request_token', false);
+        $request->setMethod('POST');
+        $request->request->set('REQUEST_TOKEN', 'foobar');
+
+        $container = $this->mockContainerWithContaoScopes();
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $container->get('request_stack')->push($request);
+
+        $rtAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['get', 'validate'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $rtAdapter
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn('foobar')
+        ;
+
+        $rtAdapter
+            ->expects($this->never())
+            ->method('validate')
+        ;
+
+        $framework = $this->mockContaoFramework(
+            $container->get('request_stack'),
+            null,
+            ['Contao\RequestToken' => $rtAdapter]
+        );
+
+        $framework->setContainer($container);
+        $framework->initialize();
+    }
+
+    /**
      * Tests initializing the framework with an incomplete installation.
      * @expectedException \Contao\CoreBundle\Exception\IncompleteInstallationException
      * @runInSeparateProcess
