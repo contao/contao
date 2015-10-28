@@ -17,14 +17,13 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Input;
+use Contao\RequestToken;
 use Contao\System;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Initializes the Contao framework.
@@ -47,11 +46,6 @@ class ContaoFramework implements ContaoFrameworkInterface
     private $router;
 
     /**
-     * @var CsrfTokenManagerInterface
-     */
-    private $tokenManager;
-
-    /**
      * @var SessionInterface
      */
     private $session;
@@ -60,11 +54,6 @@ class ContaoFramework implements ContaoFrameworkInterface
      * @var string
      */
     private $rootDir;
-
-    /**
-     * @var string
-     */
-    private $csrfTokenName;
 
     /**
      * @var int
@@ -105,28 +94,22 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Constructor.
      *
-     * @param RequestStack              $requestStack  The request stack
-     * @param RouterInterface           $router        The router service
-     * @param SessionInterface          $session       The session service
-     * @param string                    $rootDir       The kernel root directory
-     * @param CsrfTokenManagerInterface $tokenManager  The token manager service
-     * @param string                    $csrfTokenName The name of the token
-     * @param int                       $errorLevel    The PHP error level
+     * @param RequestStack     $requestStack The request stack
+     * @param RouterInterface  $router       The router service
+     * @param SessionInterface $session      The session service
+     * @param string           $rootDir      The kernel root directory
+     * @param int              $errorLevel   The PHP error level
      */
     public function __construct(
         RequestStack $requestStack,
         RouterInterface $router,
         SessionInterface $session,
         $rootDir,
-        CsrfTokenManagerInterface $tokenManager,
-        $csrfTokenName,
         $errorLevel
     ) {
         $this->router = $router;
         $this->session = $session;
         $this->rootDir = dirname($rootDir);
-        $this->tokenManager = $tokenManager;
-        $this->csrfTokenName = $csrfTokenName;
         $this->errorLevel = $errorLevel;
         $this->requestStack = $requestStack;
     }
@@ -434,16 +417,14 @@ class ContaoFramework implements ContaoFrameworkInterface
     {
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         if (!defined('REQUEST_TOKEN')) {
-            define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
+            define('REQUEST_TOKEN', RequestToken::get());
         }
 
         if (null === $this->request || 'POST' !== $this->request->getRealMethod()) {
             return;
         }
 
-        $token = new CsrfToken($this->csrfTokenName, $this->request->request->get('REQUEST_TOKEN'));
-
-        if ($this->tokenManager->isTokenValid($token)) {
+        if (RequestToken::validate($this->request->request->get('REQUEST_TOKEN'))) {
             return;
         }
 
