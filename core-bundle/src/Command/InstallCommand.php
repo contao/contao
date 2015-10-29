@@ -40,7 +40,6 @@ class InstallCommand extends AbstractLockedCommand
      * @var array
      */
     private $emptyDirs = [
-        'files',
         'system',
         'templates',
         'web/system',
@@ -93,6 +92,8 @@ class InstallCommand extends AbstractLockedCommand
      */
     private function addEmptyDirs()
     {
+        $this->emptyDirs[] = $this->getContainer()->getParameter('contao.upload_path');
+
         foreach ($this->emptyDirs as $path) {
             $this->addEmptyDir($this->rootDir . '/' . $path);
         }
