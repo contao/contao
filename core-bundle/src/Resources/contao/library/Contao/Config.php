@@ -513,6 +513,7 @@ class Config
 		}
 
 		$GLOBALS['TL_CONFIG']['debugMode'] = $container->getParameter('kernel.debug');
+		$GLOBALS['TL_CONFIG']['disableIpCheck'] = !$container->getParameter('contao.user_token_bind_to_ip');
 	}
 
 
