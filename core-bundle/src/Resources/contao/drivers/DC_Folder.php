@@ -327,74 +327,75 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$this->import('Files');
 		$this->import('BackendUser', 'User');
 
-		$fld = '';
-		$for = '';
+		$for = ltrim($session['search'][$this->strTable]['value'], '*');
 
 		// Limit the results by modifying $this->arrFilemounts
-		if ($session['search'][$this->strTable]['value'] != '')
+		if ($for != '')
 		{
-			$fld = $session['search'][$this->strTable]['field'];
-			$for = $session['search'][$this->strTable]['value'];
-
-			$strPattern = "CAST(%s AS CHAR) REGEXP ?";
-
-			if (substr(\Config::get('dbCollation'), -3) == '_ci')
+			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
+			try
 			{
-				$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
-			}
+				$strPattern = "CAST(name AS CHAR) REGEXP ?";
 
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
-			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
-
-				$objRoot = $this->Database->prepare("SELECT path, type FROM {$this->strTable} WHERE (" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ") GROUP BY path")
-										  ->execute($for, $for);
-			}
-			else
-			{
-				$objRoot = $this->Database->prepare("SELECT path, type FROM {$this->strTable} WHERE " . sprintf($strPattern, $fld) . " GROUP BY path")
-										  ->execute($for);
-			}
-
-			if ($objRoot->numRows < 1)
-			{
-				$this->arrFilemounts = array();
-			}
-			else
-			{
-				$arrRoot = array();
-
-				// Respect existing limitations (root IDs)
-				if (is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']))
+				if (substr(\Config::get('dbCollation'), -3) == '_ci')
 				{
-					while ($objRoot->next())
-					{
-						foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] as $root)
-						{
-							if (strncmp($root . '/', $objRoot->path . '/', strlen($root) + 1) === 0)
-							{
-								$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
-								continue(2);
-							}
-						}
-					}
+					$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
+				}
+
+				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
+				{
+					list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
+
+					$objRoot = $this->Database->prepare("SELECT path, type FROM {$this->strTable} WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.name)") . ") GROUP BY path")
+											  ->execute($for, $for);
 				}
 				else
 				{
-					while ($objRoot->next())
-					{
-						$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
-					}
+					$objRoot = $this->Database->prepare("SELECT path, type FROM {$this->strTable} WHERE " . $strPattern . " GROUP BY path")
+											  ->execute($for);
 				}
 
-				$this->arrFilemounts = $this->eliminateNestedPaths(array_unique($arrRoot));
+				if ($objRoot->numRows < 1)
+				{
+					$this->arrFilemounts = array();
+				}
+				else
+				{
+					$arrRoot = array();
+
+					// Respect existing limitations (root IDs)
+					if (is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']))
+					{
+						while ($objRoot->next())
+						{
+							foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] as $root)
+							{
+								if (strncmp($root . '/', $objRoot->path . '/', strlen($root) + 1) === 0)
+								{
+									$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
+									continue(2);
+								}
+							}
+						}
+					}
+					else
+					{
+						while ($objRoot->next())
+						{
+							$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
+						}
+					}
+
+					$this->arrFilemounts = $this->eliminateNestedPaths(array_unique($arrRoot));
+				}
 			}
+			catch (\Exception $e) {}
 		}
 
 		// Call recursive function tree()
 		if (empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
 		{
-			$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false), $fld, $for);
+			$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false), $for);
 		}
 		else
 		{
@@ -402,7 +403,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			{
 				if ($this->arrFilemounts[$i] != '' && is_dir(TL_ROOT . '/' . $this->arrFilemounts[$i]))
 				{
-					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false), $fld, $for);
+					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false), $for);
 				}
 			}
 		}
@@ -2397,12 +2398,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * @param boolean $mount
 	 * @param boolean $blnProtected
 	 * @param array   $arrClipboard
-	 * @param string  $fld
 	 * @param string  $for
 	 *
 	 * @return string
 	 */
-	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null, $fld='', $for='')
+	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null, $for='')
 	{
 		static $session;
 
@@ -2488,14 +2488,14 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				}
 				elseif ($for != '' && is_file($folders[$f] . '/' . $file))
 				{
-					if ($fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', $file))
+					if (!preg_match('/' . str_replace('/', '\\/', $for) . '/i', $file))
 					{
 						--$countFiles;
 					}
 				}
 			}
 
-			if ($for != '' && $countFiles < 1 && $fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($currentFolder)))
+			if ($for != '' && $countFiles < 1 && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($currentFolder)))
 			{
 				continue;
 			}
@@ -2552,7 +2552,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			if ($for != '' || (!empty($content) && $session['filetree'][$md5] == 1))
 			{
 				$return .= '<li class="parent" id="filetree_'.$md5.'"><ul class="level_'.$level.'">';
-				$return .= $this->generateTree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrClipboard, $fld, $for);
+				$return .= $this->generateTree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrClipboard, $for);
 				$return .= '</ul></li>';
 			}
 		}
@@ -2573,7 +2573,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			// Ignore files not matching the search criteria
-			if ($for != '' && $fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($currentFile)))
+			if ($for != '' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($currentFile)))
 			{
 				continue;
 			}
@@ -2696,24 +2696,22 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Set the search value from the session
 		elseif ($session['search'][$this->strTable]['value'] != '')
 		{
-			$strPattern = "CAST(%s AS CHAR) REGEXP ?";
+			$strPattern = "CAST(name AS CHAR) REGEXP ?";
 
 			if (substr(\Config::get('dbCollation'), -3) == '_ci')
 			{
-				$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
+				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 			}
 
-			$fld = $session['search'][$this->strTable]['field'];
-
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
-				$this->procedure[] = "(" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ")";
+				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
+				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.name)") . ")";
 				$this->values[] = $session['search'][$this->strTable]['value'];
 			}
 			else
 			{
-				$this->procedure[] = sprintf($strPattern, $fld);
+				$this->procedure[] = $strPattern;
 			}
 
 			$this->values[] = $session['search'][$this->strTable]['value'];

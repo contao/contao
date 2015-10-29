@@ -3404,65 +3404,70 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Limit the results by modifying $this->root
 		if ($session['search'][$this->strTable]['value'] != '')
 		{
-			$for = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? 'pid' : 'id';
-
-			if ($session['search'][$this->strTable]['field'] == 'id')
+			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
+			try
 			{
-				$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE id=?")
-										  ->execute($session['search'][$this->strTable]['value']);
-			}
-			else
-			{
-				$strPattern = "CAST(%s AS CHAR) REGEXP ?";
+				$for = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? 'pid' : 'id';
 
-				if (substr(\Config::get('dbCollation'), -3) == '_ci')
+				if ($session['search'][$this->strTable]['field'] == 'id')
 				{
-					$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
-				}
-
-				$fld = $session['search'][$this->strTable]['field'];
-
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
-				{
-					list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
-
-					$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE (" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ") GROUP BY $for")
-											  ->execute($session['search'][$this->strTable]['value'], $session['search'][$this->strTable]['value']);
-				}
-				else
-				{
-					$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE " . sprintf($strPattern, $fld) . " GROUP BY $for")
+					$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE id=?")
 											  ->execute($session['search'][$this->strTable]['value']);
 				}
-			}
-
-			if ($objRoot->numRows < 1)
-			{
-				$this->root = array();
-			}
-			else
-			{
-				// Respect existing limitations (root IDs)
-				if (is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']))
+				else
 				{
-					$arrRoot = array();
+					$strPattern = "CAST(%s AS CHAR) REGEXP ?";
 
-					while ($objRoot->next())
+					if (substr(\Config::get('dbCollation'), -3) == '_ci')
 					{
-						if (count(array_intersect($this->root, $this->Database->getParentRecords($objRoot->$for, $table))) > 0)
-						{
-							$arrRoot[] = $objRoot->$for;
-						}
+						$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
 					}
 
-					$this->root = $arrRoot;
+					$fld = $session['search'][$this->strTable]['field'];
+
+					if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
+					{
+						list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
+
+						$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE (" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ") GROUP BY $for")
+												  ->execute($session['search'][$this->strTable]['value'], $session['search'][$this->strTable]['value']);
+					}
+					else
+					{
+						$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE " . sprintf($strPattern, $fld) . " GROUP BY $for")
+												  ->execute($session['search'][$this->strTable]['value']);
+					}
+				}
+
+				if ($objRoot->numRows < 1)
+				{
+					$this->root = array();
 				}
 				else
 				{
-					$blnNoRecursion = true;
-					$this->root = $objRoot->fetchEach($for);
+					// Respect existing limitations (root IDs)
+					if (is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']))
+					{
+						$arrRoot = array();
+
+						while ($objRoot->next())
+						{
+							if (count(array_intersect($this->root, $this->Database->getParentRecords($objRoot->$for, $table))) > 0)
+							{
+								$arrRoot[] = $objRoot->$for;
+							}
+						}
+
+						$this->root = $arrRoot;
+					}
+					else
+					{
+						$blnNoRecursion = true;
+						$this->root = $objRoot->fetchEach($for);
+					}
 				}
 			}
+			catch (\Exception $e) {}
 		}
 
 		// Call a recursive function that builds the tree

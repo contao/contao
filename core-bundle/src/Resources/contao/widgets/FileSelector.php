@@ -75,24 +75,32 @@ class FileSelector extends \Widget
 		// Store the keyword
 		if (\Input::post('FORM_SUBMIT') == 'item_selector')
 		{
-			$objSessionBag->set('file_selector_search', \Input::post('keyword', true));
+			$strKeyword = '';
+
+			// Make sure the regular expression is valid
+			if (\Input::postRaw('keyword') != '')
+			{
+				try
+				{
+					$this->Database->prepare("SELECT * FROM tl_files WHERE name REGEXP ?")
+								   ->limit(1)
+								   ->execute(\Input::postRaw('keyword'));
+
+					$strKeyword = \Input::postRaw('keyword');
+				}
+				catch (\Exception $e) {}
+			}
+
+			$objSessionBag->set('file_selector_search', $strKeyword);
 			$this->reload();
 		}
 
 		$tree = '';
-		$for = $objSessionBag->get('file_selector_search');
+		$for = ltrim($objSessionBag->get('file_selector_search'), '*');
 
 		// Search for a specific file
 		if ($for != '')
 		{
-			$arrPaths = array();
-
-			// The keyword must not start with a wildcard (see #4910)
-			if (strncmp($for, '*', 1) === 0)
-			{
-				$for = substr($for, 1);
-			}
-
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
 			{
@@ -112,6 +120,8 @@ class FileSelector extends \Widget
 				}
 				else
 				{
+					$arrPaths = array();
+
 					// Respect existing limitations
 					if ($this->path != '')
 					{
