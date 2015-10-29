@@ -76,19 +76,12 @@ class PageSelector extends \Widget
 
 		$tree = '';
 		$this->getPathNodes();
-		$for = $objSessionBag->get('page_selector_search');
+		$for = ltrim($objSessionBag->get('page_selector_search'), '*');
+		$arrFound = array();
 
 		// Search for a specific page
 		if ($for != '')
 		{
-			$arrIds = array();
-
-			// The keyword must not start with a wildcard (see #4910)
-			if (strncmp($for, '*', 1) === 0)
-			{
-				$for = substr($for, 1);
-			}
-
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
 			{
@@ -102,116 +95,114 @@ class PageSelector extends \Widget
 				$objRoot = $this->Database->prepare("SELECT id FROM tl_page WHERE $strPattern GROUP BY id")
 										  ->execute($for);
 
-				if ($objRoot->numRows > 0)
+				if ($objRoot->numRows < 1)
 				{
+					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array();
+				}
+				else
+				{
+					$arrIds = array();
+
 					// Respect existing limitations
 					if (is_array($this->rootNodes))
 					{
-						$arrRoot = array();
-
 						while ($objRoot->next())
 						{
 							// Predefined node set (see #3563)
 							if (count(array_intersect($this->rootNodes, $this->Database->getParentRecords($objRoot->id, 'tl_page'))) > 0)
 							{
-								$arrRoot[] = $objRoot->id;
+								$arrFound[] = $objRoot->id;
+								$arrIds[] = $objRoot->id;
 							}
 						}
-
-						$arrIds = $arrRoot;
 					}
 					elseif ($this->User->isAdmin)
 					{
 						// Show all pages to admins
-						$arrIds = $objRoot->fetchEach('id');
+						while ($objRoot->next())
+						{
+							$arrFound[] = $objRoot->id;
+							$arrIds[] = $objRoot->id;
+						}
 					}
 					else
 					{
-						$arrRoot = array();
-
 						while ($objRoot->next())
 						{
 							// Show only mounted pages to regular users
 							if (count(array_intersect($this->User->pagemounts, $this->Database->getParentRecords($objRoot->id, 'tl_page'))) > 0)
 							{
-								$arrRoot[] = $objRoot->id;
+								$arrFound[] = $objRoot->id;
+								$arrIds[] = $objRoot->id;
 							}
 						}
-
-						$arrIds = $arrRoot;
 					}
+
+					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array_unique($arrIds);
 				}
 			}
 			catch (\Exception $e) {}
+		}
 
-			// Build the tree
-			foreach ($arrIds as $id)
+		$strNode = $objSessionBag->get('tl_page_picker');
+
+		// Unset the node if it is not within the predefined node set (see #5899)
+		if ($strNode > 0 && is_array($this->rootNodes))
+		{
+			if (!in_array($strNode, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))
 			{
-				$tree .= $this->renderPagetree($id, -20, false, true);
+				$objSessionBag->remove('tl_page_picker');
 			}
 		}
+
+		// Add the breadcrumb menu
+		if (\Input::get('do') != 'page')
+		{
+			\Backend::addPagesBreadcrumb('tl_page_picker');
+		}
+
+		// Root nodes (breadcrumb menu)
+		if (!empty($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root']))
+		{
+			$nodes = $this->eliminateNestedPages($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root']);
+
+			foreach ($nodes as $node)
+			{
+				$tree .= $this->renderPagetree($node, -20, false, false, $arrFound);
+			}
+		}
+
+		// Predefined node set (see #3563)
+		elseif (is_array($this->rootNodes))
+		{
+			$nodes = $this->eliminateNestedPages($this->rootNodes);
+
+			foreach ($nodes as $node)
+			{
+				$tree .= $this->renderPagetree($node, -20, false, false, $arrFound);
+			}
+		}
+
+		// Show all pages to admins
+		elseif ($this->User->isAdmin)
+		{
+			$objPage = $this->Database->prepare("SELECT id FROM tl_page WHERE pid=? ORDER BY sorting")
+									  ->execute(0);
+
+			while ($objPage->next())
+			{
+				$tree .= $this->renderPagetree($objPage->id, -20, false, false, $arrFound);
+			}
+		}
+
+		// Show only mounted pages to regular users
 		else
 		{
-			$strNode = $objSessionBag->get('tl_page_picker');
+			$nodes = $this->eliminateNestedPages($this->User->pagemounts);
 
-			// Unset the node if it is not within the predefined node set (see #5899)
-			if ($strNode > 0 && is_array($this->rootNodes))
+			foreach ($nodes as $node)
 			{
-				if (!in_array($strNode, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))
-				{
-					$objSessionBag->remove('tl_page_picker');
-				}
-			}
-
-			// Add the breadcrumb menu
-			if (\Input::get('do') != 'page')
-			{
-				\Backend::addPagesBreadcrumb('tl_page_picker');
-			}
-
-			// Root nodes (breadcrumb menu)
-			if (!empty($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root']))
-			{
-				$nodes = $this->eliminateNestedPages($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root']);
-
-				foreach ($nodes as $node)
-				{
-					$tree .= $this->renderPagetree($node, -20);
-				}
-			}
-
-			// Predefined node set (see #3563)
-			elseif (is_array($this->rootNodes))
-			{
-				$nodes = $this->eliminateNestedPages($this->rootNodes);
-
-				foreach ($nodes as $node)
-				{
-					$tree .= $this->renderPagetree($node, -20);
-				}
-			}
-
-			// Show all pages to admins
-			elseif ($this->User->isAdmin)
-			{
-				$objPage = $this->Database->prepare("SELECT id FROM tl_page WHERE pid=? ORDER BY sorting")
-										  ->execute(0);
-
-				while ($objPage->next())
-				{
-					$tree .= $this->renderPagetree($objPage->id, -20);
-				}
-			}
-
-			// Show only mounted pages to regular users
-			else
-			{
-				$nodes = $this->eliminateNestedPages($this->User->pagemounts);
-
-				foreach ($nodes as $node)
-				{
-					$tree .= $this->renderPagetree($node, -20);
-				}
+				$tree .= $this->renderPagetree($node, -20, false, false, $arrFound);
 			}
 		}
 
@@ -304,10 +295,11 @@ class PageSelector extends \Widget
 	 * @param integer $intMargin
 	 * @param boolean $protectedPage
 	 * @param boolean $blnNoRecursion
+	 * @param array   $arrFound
 	 *
 	 * @return string
 	 */
-	protected function renderPagetree($id, $intMargin, $protectedPage=false, $blnNoRecursion=false)
+	protected function renderPagetree($id, $intMargin, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
 		static $session;
 
@@ -345,7 +337,7 @@ class PageSelector extends \Widget
 		// Check whether there are child records
 		if (!$blnNoRecursion)
 		{
-			$objNodes = $this->Database->prepare("SELECT id FROM tl_page WHERE pid=? ORDER BY sorting")
+			$objNodes = $this->Database->prepare("SELECT id FROM tl_page WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('intval', $arrFound)) . ")" : '') . " ORDER BY sorting")
 									   ->execute($id);
 
 			if ($objNodes->numRows)
@@ -398,13 +390,13 @@ class PageSelector extends \Widget
 		$return .= '</div><div style="clear:both"></div></li>';
 
 		// Begin a new submenu
-		if (!empty($childs) && ($blnIsOpen || $objSessionBag->get('page_selector_search') != ''))
+		if ($blnIsOpen || !empty($childs) && $objSessionBag->get('page_selector_search') != '')
 		{
 			$return .= '<li class="parent" id="'.$node.'_'.$id.'"><ul class="level_'.$level.'">';
 
 			for ($k=0, $c=count($childs); $k<$c; $k++)
 			{
-				$return .= $this->renderPagetree($childs[$k], ($intMargin + $intSpacing), $objPage->protected);
+				$return .= $this->renderPagetree($childs[$k], ($intMargin + $intSpacing), $objPage->protected, $blnNoRecursion, $arrFound);
 			}
 
 			$return .= '</ul></li>';
