@@ -327,7 +327,10 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$this->import('Files');
 		$this->import('BackendUser', 'User');
 
-		// Limit the results by modifying $this->root
+		$fld = '';
+		$for = '';
+
+		// Limit the results by modifying $this->arrFilemounts
 		if ($session['search'][$this->strTable]['value'] != '')
 		{
 			$fld = $session['search'][$this->strTable]['field'];
@@ -353,12 +356,16 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 										  ->execute($for);
 			}
 
-			if ($objRoot->numRows > 0)
+			if ($objRoot->numRows < 1)
+			{
+				$this->arrFilemounts = array();
+			}
+			else
 			{
 				$arrRoot = array();
 
 				// Respect existing limitations (root IDs)
-				if (is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'])) # FIXME
+				if (is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']))
 				{
 					while ($objRoot->next())
 					{
@@ -380,27 +387,22 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					}
 				}
 
-				foreach ($this->eliminateNestedPaths(array_unique($arrRoot)) as $path)
-				{
-					$return .= $this->generateTree(TL_ROOT . '/' . $path, 0, true, $this->isProtectedPath($path), ($blnClipboard ? $arrClipboard : false), $fld, $for);
-				}
+				$this->arrFilemounts = $this->eliminateNestedPaths(array_unique($arrRoot));
 			}
+		}
+
+		// Call recursive function tree()
+		if (empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
+		{
+			$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false), $fld, $for);
 		}
 		else
 		{
-			// Call recursive function tree()
-			if (empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
+			for ($i=0, $c=count($this->arrFilemounts); $i<$c; $i++)
 			{
-				$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false));
-			}
-			else
-			{
-				for ($i=0, $c=count($this->arrFilemounts); $i<$c; $i++)
+				if ($this->arrFilemounts[$i] != '' && is_dir(TL_ROOT . '/' . $this->arrFilemounts[$i]))
 				{
-					if ($this->arrFilemounts[$i] != '' && is_dir(TL_ROOT . '/' . $this->arrFilemounts[$i]))
-					{
-						$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false));
-					}
+					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false), $fld, $for);
 				}
 			}
 		}
@@ -2484,16 +2486,16 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					--$countFiles;
 				}
-				elseif ($for != '')
+				elseif ($for != '' && is_file($folders[$f] . '/' . $file))
 				{
-					if (($fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', $file)) || ($fld == 'path' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', $currentFolder . '/' . $file)) || ($fld == 'extension' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', pathinfo($currentFolder . '/' . $file, PATHINFO_EXTENSION))))
+					if ($fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', $file))
 					{
 						--$countFiles;
 					}
 				}
 			}
 
-			if ($for != '' && $countFiles < 1)
+			if ($for != '' && $countFiles < 1 && $fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($currentFolder)))
 			{
 				continue;
 			}
@@ -2558,12 +2560,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Process files
 		for ($h=0, $c=count($files); $h<$c; $h++)
 		{
-			// Ignore files not matching the search criteria
-			if ($for != '' && (($fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($files[$h]))) || ($fld == 'path' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', $files[$h])) || ($fld == 'extension' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', pathinfo($files[$h], PATHINFO_EXTENSION)))))
-			{
-				continue;
-			}
-
 			$thumbnail = '';
 			$popupWidth = 600;
 			$popupHeight = 161;
@@ -2572,6 +2568,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$objFile = new \File($currentFile);
 
 			if (!empty($this->arrValidFileTypes) && !in_array($objFile->extension, $this->arrValidFileTypes))
+			{
+				continue;
+			}
+
+			// Ignore files not matching the search criteria
+			if ($for != '' && $fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($currentFile)))
 			{
 				continue;
 			}
@@ -2717,17 +2719,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->values[] = $session['search'][$this->strTable]['value'];
 		}
 
-		$options_sorter = array();
-
-		// Currently only name, path and extension are supported
-		foreach (array('name', 'path', 'extension') as $field)
-		{
-			$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: (is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field]);
-			$options_sorter[Utf8::toAscii($option_label).'_'.$field] = '  <option value="'.specialchars($field).'"'.(($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '').'>'.$option_label.'</option>';
-		}
-
-		// Sort by option values
-		$options_sorter = natcaseksort($options_sorter);
 		$active = ($session['search'][$this->strTable]['value'] != '') ? true : false;
 
 		return '
@@ -2743,7 +2734,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
   <div class="tl_search tl_subpanel">
     <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
     <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
-      '.implode("\n", $options_sorter).'
+      <option value="name">'.($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (is_array($GLOBALS['TL_LANG']['MSC']['name']) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : $GLOBALS['TL_LANG']['MSC']['name'])).'</option>
     </select>
     <span> = </span>
     <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="'.specialchars($session['search'][$this->strTable]['value']).'">
