@@ -367,7 +367,7 @@ class PageSelector extends \Widget
 		$folderAttribute = 'style="margin-left:20px"';
 		$session[$node][$id] = is_numeric($session[$node][$id]) ? $session[$node][$id] : 0;
 		$level = ($intMargin / $intSpacing + 1);
-		$blnIsOpen = ($session[$node][$id] == 1 || in_array($id, $this->arrNodes));
+		$blnIsOpen = (!empty($arrFound) || $session[$node][$id] == 1 || in_array($id, $this->arrNodes));
 
 		if (!empty($childs))
 		{
