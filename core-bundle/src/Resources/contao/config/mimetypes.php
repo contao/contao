@@ -132,3 +132,12 @@ $GLOBALS['TL_MIME'] =
 	'ogv'   => ['video/ogg', 'iconVIDEO.gif'],
 	'movie' => ['video/x-sgi-movie', 'iconVIDEO.gif']
 ];
+
+$GLOBALS['TL_MIME_COMMON'] =
+[
+	'text'        => ['js', 'css', 'scss', 'less', 'html', 'md', 'txt', 'xhtml', 'xml'],
+	'image'       => ['jpg', 'jpeg', 'png', 'gif', 'svg', 'svgz', 'tiff', 'tif', 'bmp'],
+	'video'       => ['mp4', 'm4v', 'mov', 'wmv', 'webm', 'ogv'],
+	'audio'       => ['m4a', 'mp3', 'wma', 'mpeg', 'ogg'],
+	'application' => ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'pps', 'ppt', 'odc', 'odf', 'odg', 'odi', 'odp', 'ods', 'odt', 'cto', 'swf', 'eps', 'zip'],
+];

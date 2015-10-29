@@ -321,6 +321,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
 
+		// Apply the extension filter
+		if (isset($session['filter'][$this->strTable]['extension']))
+		{
+			$this->arrValidFileTypes = array($session['filter'][$this->strTable]['extension']);
+		}
+
 		// Load the fonts to display the paste hint
 		\Config::set('loadGoogleFonts', $blnClipboard);
 
@@ -428,7 +434,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$imagePasteInto = \Image::getHtml('pasteinto.gif', $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][0]);
 
 		// Build the tree
-		$return = $this->searchMenu() . '
+		$return = $this->panel() . '
 <div id="tl_buttons">'.((\Input::get('act') == 'select') ? '
 <a href="'.$this->getReferer(true).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : '') . ((\Input::get('act') != 'select' && !$blnClipboard) ? '
 <a href="'.$this->addToUrl($hrfNew).'" class="'.$clsNew.'" title="'.specialchars($ttlNew).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$lblNew.'</a> ' . ((!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '<a href="'.$this->addToUrl('&amp;act=paste&amp;mode=move').'" class="header_new" title="'.specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]).'" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['move'][0].'</a> ' : '') . $this->generateGlobalButtons() : '') . ($blnClipboard ? '<a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : '') . '
@@ -2658,6 +2664,39 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 
 	/**
+	 * Build the sort panel and return it as string
+	 *
+	 * @return string
+	 */
+	protected function panel()
+	{
+		$search = $this->searchMenu();
+		$filter = $this->filterMenu();
+
+		if (\Input::post('FORM_SUBMIT') == 'tl_filters')
+		{
+			$this->reload();
+		}
+
+		return '
+
+<form action="'.ampersand(\Environment::get('request'), true).'" class="tl_form" method="post">
+<div class="tl_formbody">
+<input type="hidden" name="FORM_SUBMIT" value="tl_filters">
+<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
+<div class="tl_panel">
+  <div class="tl_submit_panel tl_subpanel">
+    <input type="image" name="filter" id="filter" src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/reload.gif" class="tl_img_submit" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
+  </div>'.$search.$filter.'
+  <div class="clear"></div>
+</div>
+</div>
+</form>
+';
+	}
+
+
+	/**
 	 * Return a search form that allows to search results using regular expressions
 	 *
 	 * @return string
@@ -2690,7 +2729,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			$objSessionBag->replace($session);
-			$this->reload();
 		}
 
 		// Set the search value from the session
@@ -2720,15 +2758,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$active = ($session['search'][$this->strTable]['value'] != '') ? true : false;
 
 		return '
-
-<form action="'.ampersand(\Environment::get('request'), true).'" class="tl_form" method="post">
-<div class="tl_formbody">
-<input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-<div class="tl_panel">
-  <div class="tl_submit_panel tl_subpanel">
-    <input type="image" name="filter" id="filter" src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/reload.gif" class="tl_img_submit" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
-  </div>
   <div class="tl_search tl_subpanel">
     <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
     <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
@@ -2736,14 +2765,65 @@ class DC_Folder extends \DataContainer implements \listable, \editable
     </select>
     <span> = </span>
     <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="'.specialchars($session['search'][$this->strTable]['value']).'">
-  </div>
-  <div class="clear"></div>
-</div>
-</div>
-</form>
-';
+  </div>';
 	}
 
+
+	/**
+	 * Generate the filter panel and return it as HTML string
+	 *
+	 * @return string
+	 */
+	protected function filterMenu()
+	{
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+
+		$session = $objSessionBag->all();
+
+		// Store search value in the current session
+		if (\Input::post('FORM_SUBMIT') == 'tl_filters')
+		{
+			if (\Input::post('extension', true) != 'tl_extension')
+			{
+				$session['filter'][$this->strTable]['extension'] = \Input::post('extension', true);
+			}
+			else
+			{
+				unset($session['filter'][$this->strTable]['extension']);
+			}
+
+			$objSessionBag->replace($session);
+		}
+
+		$options = '';
+
+		foreach ($GLOBALS['TL_MIME_COMMON'] as $group=>$types)
+		{
+			$options .= '
+      <optgroup label="'.$group.'">';
+
+			foreach ($types as $type)
+			{
+				$options .= '
+      <option value="'.$type.'"'.(($session['filter'][$this->strTable]['extension'] == $type) ? ' selected="selected"' : '').'>.'.$type.'</option>';
+			}
+
+			$options .= '
+      </optgroup>';
+		}
+
+		$active = isset($session['filter'][$this->strTable]['extension']);
+
+		return '
+  <div class="tl_filter tl_subpanel">
+    <strong>' . $GLOBALS['TL_LANG']['MSC']['filter'] . ':</strong>
+    <select name="extension" class="tl_select' . ($active ? ' active' : '') . '">
+      <option value="tl_extension">'.($GLOBALS['TL_DCA'][$this->strTable]['fields']['extension']['label'][0] ?: (is_array($GLOBALS['TL_LANG']['MSC']['extension']) ? $GLOBALS['TL_LANG']['MSC']['extension'][0] : $GLOBALS['TL_LANG']['MSC']['extension'])).'</option>
+      <option value="tl_extension">---</option>'.$options.'
+    </select>
+  </div>';
+	}
 
 	/**
 	 * Return true if the current folder is mounted
