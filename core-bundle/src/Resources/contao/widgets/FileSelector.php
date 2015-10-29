@@ -112,7 +112,21 @@ class FileSelector extends \Widget
 					$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 				}
 
-				$objRoot = $this->Database->prepare("SELECT path, type FROM tl_files WHERE $strPattern GROUP BY path")
+				$strType = '';
+
+				if (strpos($for, 'type:file') !== false)
+				{
+					$strType = " AND type='file'";
+					$for = trim(str_replace('type:file', '', $for));
+				}
+
+				if (strpos($for, 'type:folder') !== false)
+				{
+					$strType = " AND type='folder'";
+					$for = trim(str_replace('type:folder', '', $for));
+				}
+
+				$objRoot = $this->Database->prepare("SELECT path, type FROM tl_files WHERE $strPattern $strType GROUP BY path")
 										  ->execute($for);
 
 				if ($objRoot->numRows < 1)
