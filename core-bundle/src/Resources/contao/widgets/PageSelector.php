@@ -70,7 +70,23 @@ class PageSelector extends \Widget
 		// Store the keyword
 		if (\Input::post('FORM_SUBMIT') == 'item_selector')
 		{
-			$objSessionBag->set('page_selector_search', \Input::post('keyword', true));
+			$strKeyword = '';
+
+			// Make sure the regular expression is valid
+			if (\Input::postRaw('keyword') != '')
+			{
+				try
+				{
+					$this->Database->prepare("SELECT * FROM tl_files WHERE name REGEXP ?")
+								   ->limit(1)
+								   ->execute(\Input::postRaw('keyword'));
+
+					$strKeyword = \Input::postRaw('keyword');
+				}
+				catch (\Exception $e) {}
+			}
+
+			$objSessionBag->set('page_selector_search', $strKeyword);
 			$this->reload();
 		}
 
