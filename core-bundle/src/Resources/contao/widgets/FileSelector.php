@@ -131,7 +131,7 @@ class FileSelector extends \Widget
 
 				if ($objRoot->numRows < 1)
 				{
-					$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array();
+					$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array('');
 				}
 				else
 				{

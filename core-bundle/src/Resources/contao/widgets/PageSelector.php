@@ -113,7 +113,7 @@ class PageSelector extends \Widget
 
 				if ($objRoot->numRows < 1)
 				{
-					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array();
+					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array(0);
 				}
 				else
 				{
