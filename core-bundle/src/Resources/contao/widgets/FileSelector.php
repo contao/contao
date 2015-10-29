@@ -106,7 +106,11 @@ class FileSelector extends \Widget
 				$objRoot = $this->Database->prepare("SELECT path, type FROM tl_files WHERE $strPattern GROUP BY path")
 										  ->execute($for);
 
-				if ($objRoot->numRows > 0)
+				if ($objRoot->numRows < 1)
+				{
+					$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array();
+				}
+				else
 				{
 					// Respect existing limitations
 					if ($this->path != '')
@@ -152,67 +156,61 @@ class FileSelector extends \Widget
 
 						$arrPaths = $arrRoot;
 					}
+
+					$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array_unique($arrPaths);
 				}
 			}
 			catch (\Exception $e) {}
+		}
 
-			// Build the tree
-			foreach ($this->eliminateNestedPaths(array_unique($arrPaths)) as $path)
+		$strNode = $objSessionBag->get('tl_files_picker');
+
+		// Unset the node if it is not within the path (see #5899)
+		if ($strNode != '' && $this->path != '')
+		{
+			if (strncmp($strNode . '/', $this->path . '/', strlen($this->path) + 1) !== 0)
 			{
-				$tree .= $this->renderFiletree(TL_ROOT . '/' . $path, 0, true, $this->isProtectedPath($path), $for);
+				$objSessionBag->remove('tl_files_picker');
 			}
 		}
+
+		// Add the breadcrumb menu
+		if (\Input::get('do') != 'files')
+		{
+			\Backend::addFilesBreadcrumb('tl_files_picker');
+		}
+
+		// Root nodes (breadcrumb menu)
+		if (!empty($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root']))
+		{
+			$nodes = $this->eliminateNestedPaths($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root']);
+
+			foreach ($nodes as $node)
+			{
+				$tree .= $this->renderFiletree(TL_ROOT . '/' . $node, 0, true, true, $for);
+			}
+		}
+
+		// Show a custom path (see #4926)
+		elseif ($this->path != '')
+		{
+			$tree .= $this->renderFiletree(TL_ROOT . '/' . $this->path, 0, false, $this->isProtectedPath($this->path), $for);
+		}
+
+		// Start from root
+		elseif ($this->User->isAdmin)
+		{
+			$tree .= $this->renderFiletree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, $for);
+		}
+
+		// Show mounted files to regular users
 		else
 		{
-			$strNode = $objSessionBag->get('tl_files_picker');
+			$nodes = $this->eliminateNestedPaths($this->User->filemounts);
 
-			// Unset the node if it is not within the path (see #5899)
-			if ($strNode != '' && $this->path != '')
+			foreach ($nodes as $node)
 			{
-				if (strncmp($strNode . '/', $this->path . '/', strlen($this->path) + 1) !== 0)
-				{
-					$objSessionBag->remove('tl_files_picker');
-				}
-			}
-
-			// Add the breadcrumb menu
-			if (\Input::get('do') != 'files')
-			{
-				\Backend::addFilesBreadcrumb('tl_files_picker');
-			}
-
-			// Root nodes (breadcrumb menu)
-			if (!empty($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root']))
-			{
-				$nodes = $this->eliminateNestedPaths($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root']);
-
-				foreach ($nodes as $node)
-				{
-					$tree .= $this->renderFiletree(TL_ROOT . '/' . $node, 0, true);
-				}
-			}
-
-			// Show a custom path (see #4926)
-			elseif ($this->path != '')
-			{
-				$tree .= $this->renderFiletree(TL_ROOT . '/' . $this->path, 0, false, $this->isProtectedPath($this->path));
-			}
-
-			// Start from root
-			elseif ($this->User->isAdmin)
-			{
-				$tree .= $this->renderFiletree(TL_ROOT . '/' . \Config::get('uploadPath'), 0);
-			}
-
-			// Show mounted files to regular users
-			else
-			{
-				$nodes = $this->eliminateNestedPaths($this->User->filemounts);
-
-				foreach ($nodes as $node)
-				{
-					$tree .= $this->renderFiletree(TL_ROOT . '/' . $node, 0, true);
-				}
+				$tree .= $this->renderFiletree(TL_ROOT . '/' . $node, 0, true, true, $for);
 			}
 		}
 
@@ -410,7 +408,7 @@ class FileSelector extends \Widget
 					$countFiles++;
 				}
 
-				if ($for != '')
+				if ($for != '' && is_file($folders[$f] . '/' . $v))
 				{
 					if (!preg_match('/' . str_replace('/', '\\/', $for) . '/i', $v))
 					{
@@ -419,7 +417,7 @@ class FileSelector extends \Widget
 				}
 			}
 
-			if ($for != '' && $countFiles < 1)
+			if ($for != '' && $countFiles < 1 && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($folders[$f])))
 			{
 				continue;
 			}
@@ -492,12 +490,6 @@ class FileSelector extends \Widget
 
 			for ($h=0, $c=count($files); $h<$c; $h++)
 			{
-				// Ignore files not matching the search criteria
-				if ($for != '' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($files[$h])))
-				{
-					continue;
-				}
-
 				$thumbnail = '';
 				$currentFile = str_replace(TL_ROOT . '/', '', $files[$h]);
 				$currentEncoded = $this->urlEncode($currentFile);
@@ -506,6 +498,12 @@ class FileSelector extends \Widget
 
 				// Check file extension
 				if (is_array($allowedExtensions) && !in_array($objFile->extension, $allowedExtensions))
+				{
+					continue;
+				}
+
+				// Ignore files not matching the search criteria
+				if ($for != '' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($currentFile)))
 				{
 					continue;
 				}
