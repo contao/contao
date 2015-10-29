@@ -2,6 +2,7 @@
 
 ### 4.1.0-RC1 (2015-XX-XX)
 
+ * Fix several issues with the new file search and add the `type:file` and `type:folder` flags (see #392).
  * Only warm the Contao cache if the installation has been completed (see #383).
  * Support retrieving services in `System::import()` and `System::importStatic()` (see #376).
  * Handle an empty input in the meta wizard (see #382).
