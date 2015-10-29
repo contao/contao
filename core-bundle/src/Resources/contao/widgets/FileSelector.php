@@ -434,7 +434,7 @@ class FileSelector extends \Widget
 				{
 					--$countFiles;
 				}
-				elseif ($this->files === false && is_file($folders[$f] . '/' . $file))
+				elseif (!$this->files && !$this->filesOnly && is_file($folders[$f] . '/' . $file))
 				{
 					--$countFiles;
 				}
