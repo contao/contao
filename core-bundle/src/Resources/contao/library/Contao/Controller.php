@@ -1320,6 +1320,8 @@ abstract class Controller extends \System
 	 */
 	protected function eliminateNestedPaths($arrPaths)
 	{
+		$arrPaths = array_filter($arrPaths);
+
 		if (!is_array($arrPaths) || empty($arrPaths))
 		{
 			return array();

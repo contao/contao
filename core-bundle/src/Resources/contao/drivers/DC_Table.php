@@ -3399,76 +3399,82 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		$tree = '';
 		$blnHasSorting = $this->Database->fieldExists('sorting', $table);
-		$blnNoRecursion = false;
+		$arrFound = array();
 
 		// Limit the results by modifying $this->root
 		if ($session['search'][$this->strTable]['value'] != '')
 		{
-			$for = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? 'pid' : 'id';
-
-			if ($session['search'][$this->strTable]['field'] == 'id')
+			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
+			try
 			{
-				$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE id=?")
-										  ->execute($session['search'][$this->strTable]['value']);
-			}
-			else
-			{
-				$strPattern = "CAST(%s AS CHAR) REGEXP ?";
+				$for = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? 'pid' : 'id';
 
-				if (substr(\Config::get('dbCollation'), -3) == '_ci')
+				if ($session['search'][$this->strTable]['field'] == 'id')
 				{
-					$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
-				}
-
-				$fld = $session['search'][$this->strTable]['field'];
-
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
-				{
-					list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
-
-					$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE (" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ") GROUP BY $for")
-											  ->execute($session['search'][$this->strTable]['value'], $session['search'][$this->strTable]['value']);
-				}
-				else
-				{
-					$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE " . sprintf($strPattern, $fld) . " GROUP BY $for")
+					$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE id=?")
 											  ->execute($session['search'][$this->strTable]['value']);
 				}
-			}
-
-			if ($objRoot->numRows < 1)
-			{
-				$this->root = array();
-			}
-			else
-			{
-				// Respect existing limitations (root IDs)
-				if (is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']))
+				else
 				{
-					$arrRoot = array();
+					$strPattern = "CAST(%s AS CHAR) REGEXP ?";
 
-					while ($objRoot->next())
+					if (substr(\Config::get('dbCollation'), -3) == '_ci')
 					{
-						if (count(array_intersect($this->root, $this->Database->getParentRecords($objRoot->$for, $table))) > 0)
-						{
-							$arrRoot[] = $objRoot->$for;
-						}
+						$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
 					}
 
-					$this->root = $arrRoot;
+					$fld = $session['search'][$this->strTable]['field'];
+
+					if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
+					{
+						list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
+
+						$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE (" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ") GROUP BY $for")
+												  ->execute($session['search'][$this->strTable]['value'], $session['search'][$this->strTable]['value']);
+					}
+					else
+					{
+						$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE " . sprintf($strPattern, $fld) . " GROUP BY $for")
+												  ->execute($session['search'][$this->strTable]['value']);
+					}
+				}
+
+				if ($objRoot->numRows < 1)
+				{
+					$this->root = array();
 				}
 				else
 				{
-					$blnNoRecursion = true;
-					$this->root = $objRoot->fetchEach($for);
+					// Respect existing limitations (root IDs)
+					if (is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']))
+					{
+						$arrRoot = array();
+
+						while ($objRoot->next())
+						{
+							if (count(array_intersect($this->root, $this->Database->getParentRecords($objRoot->$for, $table))) > 0)
+							{
+								$arrRoot[] = $objRoot->$for;
+							}
+						}
+
+						$arrFound = $arrRoot;
+						$this->root = $this->eliminateNestedPages($arrFound);
+					}
+					else
+					{
+						$arrFound = $objRoot->fetchEach($for);
+						$this->root = $this->eliminateNestedPages($arrFound);
+					}
 				}
 			}
+			catch (\Exception $e) {}
 		}
 
 		// Call a recursive function that builds the tree
 		for ($i=0, $c=count($this->root); $i<$c; $i++)
 		{
-			$tree .= $this->generateTree($table, $this->root[$i], array('p'=>$this->root[($i-1)], 'n'=>$this->root[($i+1)]), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $blnClipboard && $this->root[$i] == $arrClipboard['id']), false, $blnNoRecursion);
+			$tree .= $this->generateTree($table, $this->root[$i], array('p'=>$this->root[($i-1)], 'n'=>$this->root[($i+1)]), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $blnClipboard && $this->root[$i] == $arrClipboard['id']), false, false, $arrFound);
 		}
 
 		// Return if there are no records
@@ -3676,10 +3682,11 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * @param boolean $blnCircularReference
 	 * @param boolean $protectedPage
 	 * @param boolean $blnNoRecursion
+	 * @param array   $arrFound
 	 *
 	 * @return string
 	 */
-	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false)
+	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
 		static $session;
 
@@ -3726,7 +3733,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 || $this->strTable != $table)
 			{
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting" : ''))
+				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('intval', $arrFound)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting" : ''))
 											->execute($id);
 
 				if ($objChilds->numRows)
@@ -3758,8 +3765,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		if (!empty($childs))
 		{
 			$folderAttribute = '';
-			$img = ($session[$node][$id] == 1) ? 'folMinus.gif' : 'folPlus.gif';
-			$alt = ($session[$node][$id] == 1) ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
+			$img = (!empty($arrFound) || $session[$node][$id] == 1) ? 'folMinus.gif' : 'folPlus.gif';
+			$alt = (!empty($arrFound) || $session[$node][$id] == 1) ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
 			$return .= '<a href="'.$this->addToUrl('ptg='.$id).'" title="'.specialchars($alt).'" onclick="Backend.getScrollOffset();return AjaxRequest.toggleStructure(this,\''.$node.'_'.$id.'\','.$level.','.$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'].')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
 		}
 
@@ -3888,7 +3895,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 				for ($j=0, $c=count($ids); $j<$c; $j++)
 				{
-					$return .= $this->generateTree($this->strTable, $ids[$j], array('pp'=>$ids[($j-1)], 'nn'=>$ids[($j+1)]), $blnHasSorting, ($intMargin + $intSpacing + 20), $arrClipboard, false, ($j<(count($ids)-1) || !empty($childs)));
+					$return .= $this->generateTree($this->strTable, $ids[$j], array('pp'=>$ids[($j-1)], 'nn'=>$ids[($j+1)]), $blnHasSorting, ($intMargin + $intSpacing + 20), $arrClipboard, false, ($j<(count($ids)-1) || !empty($childs)), $blnNoRecursion, $arrFound);
 				}
 			}
 		}
@@ -3896,25 +3903,25 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Begin a new submenu
 		if (!$blnNoRecursion)
 		{
-			if (!empty($childs) && $session[$node][$id] == 1)
+			if (!empty($arrFound) || !empty($childs) && $session[$node][$id] == 1)
 			{
 				$return .= '<li class="parent" id="'.$node.'_'.$id.'"><ul class="level_'.$level.'">';
 			}
 
 			// Add the records of the parent table
-			if ($session[$node][$id] == 1)
+			if (!empty($arrFound) || $session[$node][$id] == 1)
 			{
 				if (is_array($childs))
 				{
 					for ($k=0, $c=count($childs); $k<$c; $k++)
 					{
-						$return .= $this->generateTree($table, $childs[$k], array('p'=>$childs[($k-1)], 'n'=>$childs[($k+1)]), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $childs[$k] == $arrClipboard['id']) || $blnCircularReference) ? true : false), ($blnProtected || $protectedPage));
+						$return .= $this->generateTree($table, $childs[$k], array('p'=>$childs[($k-1)], 'n'=>$childs[($k+1)]), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $childs[$k] == $arrClipboard['id']) || $blnCircularReference) ? true : false), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
 					}
 				}
 			}
 
 			// Close the submenu
-			if (!empty($childs) && $session[$node][$id] == 1)
+			if (!empty($arrFound) || !empty($childs) && $session[$node][$id] == 1)
 			{
 				$return .= '</ul></li>';
 			}
