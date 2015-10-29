@@ -66,7 +66,6 @@ class ContaoCoreExtension extends ConfigurableExtension
 
         foreach ($this->files as $file) {
             $loader->load($file);
-            $container->addResource(new FileResource(__DIR__ . '/../Resources/config/' . $file));
         }
 
         $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
