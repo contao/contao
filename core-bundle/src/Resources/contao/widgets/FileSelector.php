@@ -96,7 +96,14 @@ class FileSelector extends \Widget
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
 			{
-				$objRoot = $this->Database->prepare("SELECT path, type FROM tl_files WHERE CAST(path AS CHAR) REGEXP ?")
+				$strPattern = "CAST(name AS CHAR) REGEXP ?";
+
+				if (substr(\Config::get('dbCollation'), -3) == '_ci')
+				{
+					$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
+				}
+
+				$objRoot = $this->Database->prepare("SELECT path, type FROM tl_files WHERE $strPattern GROUP BY path")
 										  ->execute($for);
 
 				if ($objRoot->numRows > 0)
@@ -405,7 +412,7 @@ class FileSelector extends \Widget
 
 				if ($for != '')
 				{
-					if (!preg_match('/' . str_replace('/', '\\/', $for) . '/', $folders[$f] . '/' . $v))
+					if (!preg_match('/' . str_replace('/', '\\/', $for) . '/i', $v))
 					{
 						--$countFiles;
 					}
@@ -486,7 +493,7 @@ class FileSelector extends \Widget
 			for ($h=0, $c=count($files); $h<$c; $h++)
 			{
 				// Ignore files not matching the search criteria
-				if ($for != '' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', $files[$h]))
+				if ($for != '' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($files[$h])))
 				{
 					continue;
 				}

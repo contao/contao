@@ -2486,7 +2486,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				}
 				elseif ($for != '')
 				{
-					if (($fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', $file)) || ($fld == 'path' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', $currentFolder . '/' . $file)) || ($fld == 'extension' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', pathinfo($currentFolder . '/' . $file, PATHINFO_EXTENSION))))
+					if (($fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', $file)) || ($fld == 'path' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', $currentFolder . '/' . $file)) || ($fld == 'extension' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', pathinfo($currentFolder . '/' . $file, PATHINFO_EXTENSION))))
 					{
 						--$countFiles;
 					}
@@ -2559,7 +2559,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		for ($h=0, $c=count($files); $h<$c; $h++)
 		{
 			// Ignore files not matching the search criteria
-			if ($for != '' && (($fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', basename($files[$h]))) || ($fld == 'path' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', $files[$h])) || ($fld == 'extension' && !preg_match('/' . str_replace('/', '\\/', $for) . '/', pathinfo($files[$h], PATHINFO_EXTENSION)))))
+			if ($for != '' && (($fld == 'name' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($files[$h]))) || ($fld == 'path' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', $files[$h])) || ($fld == 'extension' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', pathinfo($files[$h], PATHINFO_EXTENSION)))))
 			{
 				continue;
 			}

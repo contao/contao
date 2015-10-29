@@ -92,7 +92,14 @@ class PageSelector extends \Widget
 			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
 			{
-				$objRoot = $this->Database->prepare("SELECT id FROM tl_page WHERE CAST(title AS CHAR) REGEXP ?")
+				$strPattern = "CAST(title AS CHAR) REGEXP ?";
+
+				if (substr(\Config::get('dbCollation'), -3) == '_ci')
+				{
+					$strPattern = "LOWER(CAST(title AS CHAR)) REGEXP LOWER(?)";
+				}
+
+				$objRoot = $this->Database->prepare("SELECT id FROM tl_page WHERE $strPattern GROUP BY id")
 										  ->execute($for);
 
 				if ($objRoot->numRows > 0)
