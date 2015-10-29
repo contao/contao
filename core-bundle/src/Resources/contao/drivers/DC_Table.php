@@ -3399,7 +3399,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		$tree = '';
 		$blnHasSorting = $this->Database->fieldExists('sorting', $table);
-		$blnNoRecursion = false;
+		$arrFound = array();
 
 		// Limit the results by modifying $this->root
 		if ($session['search'][$this->strTable]['value'] != '')
@@ -3458,12 +3458,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 							}
 						}
 
-						$this->root = $arrRoot;
+						$arrFound = $arrRoot;
+						$this->root = $this->eliminateNestedPages($arrFound);
 					}
 					else
 					{
-						$blnNoRecursion = true;
-						$this->root = $objRoot->fetchEach($for);
+						$arrFound = $objRoot->fetchEach($for);
+						$this->root = $this->eliminateNestedPages($arrFound);
 					}
 				}
 			}
@@ -3473,7 +3474,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Call a recursive function that builds the tree
 		for ($i=0, $c=count($this->root); $i<$c; $i++)
 		{
-			$tree .= $this->generateTree($table, $this->root[$i], array('p'=>$this->root[($i-1)], 'n'=>$this->root[($i+1)]), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $blnClipboard && $this->root[$i] == $arrClipboard['id']), false, $blnNoRecursion);
+			$tree .= $this->generateTree($table, $this->root[$i], array('p'=>$this->root[($i-1)], 'n'=>$this->root[($i+1)]), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $blnClipboard && $this->root[$i] == $arrClipboard['id']), false, false, $arrFound);
 		}
 
 		// Return if there are no records
@@ -3681,10 +3682,11 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * @param boolean $blnCircularReference
 	 * @param boolean $protectedPage
 	 * @param boolean $blnNoRecursion
+	 * @param array   $arrFound
 	 *
 	 * @return string
 	 */
-	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false)
+	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
 		static $session;
 
@@ -3731,7 +3733,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 || $this->strTable != $table)
 			{
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting" : ''))
+				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('intval', $arrFound)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting" : ''))
 											->execute($id);
 
 				if ($objChilds->numRows)
@@ -3763,8 +3765,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		if (!empty($childs))
 		{
 			$folderAttribute = '';
-			$img = ($session[$node][$id] == 1) ? 'folMinus.gif' : 'folPlus.gif';
-			$alt = ($session[$node][$id] == 1) ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
+			$img = (!empty($arrFound) || $session[$node][$id] == 1) ? 'folMinus.gif' : 'folPlus.gif';
+			$alt = (!empty($arrFound) || $session[$node][$id] == 1) ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
 			$return .= '<a href="'.$this->addToUrl('ptg='.$id).'" title="'.specialchars($alt).'" onclick="Backend.getScrollOffset();return AjaxRequest.toggleStructure(this,\''.$node.'_'.$id.'\','.$level.','.$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'].')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
 		}
 
@@ -3893,7 +3895,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 				for ($j=0, $c=count($ids); $j<$c; $j++)
 				{
-					$return .= $this->generateTree($this->strTable, $ids[$j], array('pp'=>$ids[($j-1)], 'nn'=>$ids[($j+1)]), $blnHasSorting, ($intMargin + $intSpacing + 20), $arrClipboard, false, ($j<(count($ids)-1) || !empty($childs)));
+					$return .= $this->generateTree($this->strTable, $ids[$j], array('pp'=>$ids[($j-1)], 'nn'=>$ids[($j+1)]), $blnHasSorting, ($intMargin + $intSpacing + 20), $arrClipboard, false, ($j<(count($ids)-1) || !empty($childs)), $blnNoRecursion, $arrFound);
 				}
 			}
 		}
@@ -3901,25 +3903,25 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Begin a new submenu
 		if (!$blnNoRecursion)
 		{
-			if (!empty($childs) && $session[$node][$id] == 1)
+			if (!empty($arrFound) || !empty($childs) && $session[$node][$id] == 1)
 			{
 				$return .= '<li class="parent" id="'.$node.'_'.$id.'"><ul class="level_'.$level.'">';
 			}
 
 			// Add the records of the parent table
-			if ($session[$node][$id] == 1)
+			if (!empty($arrFound) || $session[$node][$id] == 1)
 			{
 				if (is_array($childs))
 				{
 					for ($k=0, $c=count($childs); $k<$c; $k++)
 					{
-						$return .= $this->generateTree($table, $childs[$k], array('p'=>$childs[($k-1)], 'n'=>$childs[($k+1)]), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $childs[$k] == $arrClipboard['id']) || $blnCircularReference) ? true : false), ($blnProtected || $protectedPage));
+						$return .= $this->generateTree($table, $childs[$k], array('p'=>$childs[($k-1)], 'n'=>$childs[($k+1)]), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $childs[$k] == $arrClipboard['id']) || $blnCircularReference) ? true : false), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
 					}
 				}
 			}
 
 			// Close the submenu
-			if (!empty($childs) && $session[$node][$id] == 1)
+			if (!empty($arrFound) || !empty($childs) && $session[$node][$id] == 1)
 			{
 				$return .= '</ul></li>';
 			}
