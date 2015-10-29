@@ -327,6 +327,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$this->import('Files');
 		$this->import('BackendUser', 'User');
 
+		$arrFound = array();
 		$for = ltrim($session['search'][$this->strTable]['value'], '*');
 
 		// Limit the results by modifying $this->arrFilemounts
@@ -372,6 +373,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 							{
 								if (strncmp($root . '/', $objRoot->path . '/', strlen($root) + 1) === 0)
 								{
+									$arrFound[] = $objRoot->path;
 									$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
 									continue(2);
 								}
@@ -382,6 +384,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					{
 						while ($objRoot->next())
 						{
+							$arrFound[] = $objRoot->path;
 							$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
 						}
 					}
@@ -395,7 +398,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Call recursive function tree()
 		if (empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
 		{
-			$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false), $for);
+			$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
 		}
 		else
 		{
@@ -403,7 +406,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			{
 				if ($this->arrFilemounts[$i] != '' && is_dir(TL_ROOT . '/' . $this->arrFilemounts[$i]))
 				{
-					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false), $for);
+					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
 				}
 			}
 		}
@@ -2398,11 +2401,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * @param boolean $mount
 	 * @param boolean $blnProtected
 	 * @param array   $arrClipboard
-	 * @param string  $for
+	 * @param array   $arrFound
 	 *
 	 * @return string
 	 */
-	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null, $for='')
+	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null, $arrFound=array())
 	{
 		static $session;
 
@@ -2486,16 +2489,13 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					--$countFiles;
 				}
-				elseif ($for != '' && is_file($folders[$f] . '/' . $file))
+				elseif (!empty($arrFound) && !in_array($currentFolder . '/' . $file, $arrFound))
 				{
-					if (!preg_match('/' . str_replace('/', '\\/', $for) . '/i', $file))
-					{
-						--$countFiles;
-					}
+					--$countFiles;
 				}
 			}
 
-			if ($for != '' && $countFiles < 1 && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($currentFolder)))
+			if (!empty($arrFound) && $countFiles < 1 && !in_array($currentFolder, $arrFound))
 			{
 				continue;
 			}
@@ -2505,8 +2505,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Add a toggle button if there are childs
 			if ($countFiles > 0)
 			{
-				$img = ($for != '' || $session['filetree'][$md5] == 1) ? 'folMinus.gif' : 'folPlus.gif';
-				$alt = ($for != '' || $session['filetree'][$md5] == 1) ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
+				$img = (!empty($arrFound) || $session['filetree'][$md5] == 1) ? 'folMinus.gif' : 'folPlus.gif';
+				$alt = (!empty($arrFound) || $session['filetree'][$md5] == 1) ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
 				$return .= '<a href="'.$this->addToUrl('tg='.$md5).'" title="'.specialchars($alt).'" onclick="Backend.getScrollOffset(); return AjaxRequest.toggleFileManager(this, \'filetree_'.$md5.'\', \''.$currentFolder.'\', '.$level.')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
 			}
 
@@ -2549,10 +2549,10 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$return .= '</div><div style="clear:both"></div></li>';
 
 			// Call the next node
-			if ($for != '' || (!empty($content) && $session['filetree'][$md5] == 1))
+			if (!empty($content) && (!empty($arrFound) || $session['filetree'][$md5] == 1))
 			{
 				$return .= '<li class="parent" id="filetree_'.$md5.'"><ul class="level_'.$level.'">';
-				$return .= $this->generateTree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrClipboard, $for);
+				$return .= $this->generateTree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrClipboard, $arrFound);
 				$return .= '</ul></li>';
 			}
 		}
@@ -2573,7 +2573,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			// Ignore files not matching the search criteria
-			if ($for != '' && !preg_match('/' . str_replace('/', '\\/', $for) . '/i', basename($currentFile)))
+			if (!in_array($currentFile, $arrFound))
 			{
 				continue;
 			}
