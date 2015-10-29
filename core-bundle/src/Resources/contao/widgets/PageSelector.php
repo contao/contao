@@ -77,7 +77,7 @@ class PageSelector extends \Widget
 			{
 				try
 				{
-					$this->Database->prepare("SELECT * FROM tl_files WHERE name REGEXP ?")
+					$this->Database->prepare("SELECT * FROM tl_page WHERE title REGEXP ?")
 								   ->limit(1)
 								   ->execute(\Input::postRaw('keyword'));
 
