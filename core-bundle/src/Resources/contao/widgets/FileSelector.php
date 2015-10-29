@@ -512,7 +512,7 @@ class FileSelector extends \Widget
 				}
 
 				// Ignore files not matching the search criteria
-				if (!in_array($currentFile, $arrFound))
+				if (!empty($arrFound) && !in_array($currentFile, $arrFound))
 				{
 					continue;
 				}

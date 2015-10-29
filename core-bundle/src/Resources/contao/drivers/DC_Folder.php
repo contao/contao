@@ -2573,7 +2573,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			// Ignore files not matching the search criteria
-			if (!in_array($currentFile, $arrFound))
+			if (!empty($arrFound) && !in_array($currentFile, $arrFound))
 			{
 				continue;
 			}
