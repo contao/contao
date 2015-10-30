@@ -16,6 +16,8 @@ use Contao\InstallationBundle\ClassLoader\LibraryLoader;
 use Contao\InstallationBundle\DependencyInjection\ContainerFactory;
 use Contao\InstallationBundle\Translation\LanguageResolver;
 use Contao\System;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -30,6 +32,8 @@ class InstallationKernel extends \AppKernel
      */
     public function boot()
     {
+        $this->purgeSymfonyCache();
+
         if (file_exists($this->getRootDir() . '/config/parameters.yml')) {
             parent::boot();
             $this->bootRealSystem();
@@ -98,5 +102,23 @@ class InstallationKernel extends \AppKernel
         System::setContainer($this->container);
 
         ClassLoader::scanAndRegister();
+    }
+
+    /**
+     * Purges the Symfony cache.
+     */
+    private function purgeSymfonyCache()
+    {
+        $fs = new Filesystem();
+
+        $finder = Finder::create()
+            ->directories()
+            ->depth('==0')
+            ->in($this->getRootDir() . '/cache')
+        ;
+
+        foreach ($finder as $dir) {
+            $fs->remove($dir);
+        }
     }
 }

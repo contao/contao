@@ -38,6 +38,13 @@ class ParameterDumper
     {
         $this->rootDir = $rootDir;
         $this->parameters = Yaml::parse(file_get_contents($rootDir . '/config/parameters.yml.dist'));
+
+        if (file_exists($rootDir . '/config/parameters.yml')) {
+            $this->parameters = array_merge(
+                $this->parameters,
+                Yaml::parse(file_get_contents($rootDir . '/config/parameters.yml'))
+            );
+        }
     }
 
     /**
