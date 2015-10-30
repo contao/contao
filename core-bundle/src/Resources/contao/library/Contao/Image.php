@@ -386,7 +386,7 @@ class Image
 			. '-t' . $this->fileObj->mtime
 		), 0, 8);
 
-		return System::getContainer()->getParameter('contao.image_dir') . '/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
+		return System::getContainer()->getParameter('contao.image.target_dir') . '/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
 	}
 
 
@@ -442,7 +442,7 @@ class Image
 		}
 
 		// Check whether the image exists already
-		if (System::getContainer()->getParameter('contao.image_cache'))
+		if (!System::getContainer()->getParameter('contao.image.bypass_cache'))
 		{
 			// Custom target (thanks to Tristan Lins) (see #4166)
 			if ($this->getTargetPath() && !$this->getForceOverride())

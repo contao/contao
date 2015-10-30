@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -70,12 +71,6 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('%s')
                     ->end()
                 ->end()
-                ->booleanNode('image_cache')
-                    ->defaultValue(!$this->debug)
-                ->end()
-                ->scalarNode('image_dir')
-                    ->defaultValue('assets/images')
-                ->end()
                 ->scalarNode('csrf_token_name')
                     ->cannotBeEmpty()
                     ->defaultValue('contao_csrf_token')
@@ -91,6 +86,31 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
 
+        $this->addImageSection($rootNode);
+
         return $treeBuilder;
+    }
+
+    /**
+     * Configures the `contao.image` section.
+     *
+     * @param ArrayNodeDefinition $rootNode
+     */
+    private function addImageSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('image')
+                    ->children()
+                        ->booleanNode('bypass_cache')
+                            ->defaultValue($this->debug)
+                        ->end()
+                        ->scalarNode('target_dir')
+                            ->defaultValue('assets/images')
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+        ;
     }
 }
