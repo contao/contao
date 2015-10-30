@@ -903,7 +903,7 @@ class tl_news extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -1009,7 +1009,7 @@ class tl_news extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{

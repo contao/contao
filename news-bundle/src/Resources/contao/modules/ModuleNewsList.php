@@ -165,7 +165,7 @@ class ModuleNewsList extends \ModuleNews
 		{
 			foreach ($GLOBALS['TL_HOOKS']['newsListCountItems'] as $callback)
 			{
-				if (($intResult = \System::importStatic($callback[0])->$callback[1]($newsArchives, $blnFeatured, $this)) === false)
+				if (($intResult = \System::importStatic($callback[0])->{$callback[1]}($newsArchives, $blnFeatured, $this)) === false)
 				{
 					continue;
 				}
@@ -198,7 +198,7 @@ class ModuleNewsList extends \ModuleNews
 		{
 			foreach ($GLOBALS['TL_HOOKS']['newsListFetchItems'] as $callback)
 			{
-				if (($objCollection = \System::importStatic($callback[0])->$callback[1]($newsArchives, $blnFeatured, $limit, $offset, $this)) === false)
+				if (($objCollection = \System::importStatic($callback[0])->{$callback[1]}($newsArchives, $blnFeatured, $limit, $offset, $this)) === false)
 				{
 					continue;
 				}
