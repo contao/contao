@@ -70,20 +70,21 @@ class PageSelector extends \Widget
 		// Store the keyword
 		if (\Input::post('FORM_SUBMIT') == 'item_selector')
 		{
-			$strKeyword = '';
+			$strKeyword = ltrim(\Input::postRaw('keyword'), '*');
 
 			// Make sure the regular expression is valid
-			if (\Input::postRaw('keyword') != '')
+			if ($strKeyword != '')
 			{
 				try
 				{
 					$this->Database->prepare("SELECT * FROM tl_page WHERE title REGEXP ?")
 								   ->limit(1)
-								   ->execute(\Input::postRaw('keyword'));
-
-					$strKeyword = \Input::postRaw('keyword');
+								   ->execute($strKeyword);
 				}
-				catch (\Exception $e) {}
+				catch (\Exception $e)
+				{
+					$strKeyword = '';
+				}
 			}
 
 			$objSessionBag->set('page_selector_search', $strKeyword);
@@ -92,7 +93,7 @@ class PageSelector extends \Widget
 
 		$tree = '';
 		$this->getPathNodes();
-		$for = ltrim($objSessionBag->get('page_selector_search'), '*');
+		$for = $objSessionBag->get('page_selector_search');
 		$arrFound = array();
 
 		// Search for a specific page

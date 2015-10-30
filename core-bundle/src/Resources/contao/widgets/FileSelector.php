@@ -46,6 +46,12 @@ class FileSelector extends \Widget
 	 */
 	protected $strTemplate = 'be_widget';
 
+	/**
+	 * Valid file types
+	 * @var array
+	 */
+	protected $arrValidFileTypes = array();
+
 
 	/**
 	 * Load the database object
@@ -69,26 +75,32 @@ class FileSelector extends \Widget
 		$this->import('BackendUser', 'User');
 		$this->convertValuesToPaths();
 
+		if ($this->extensions != '')
+		{
+			$this->arrValidFileTypes = trimsplit(',', $this->extensions);
+		}
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Store the keyword
 		if (\Input::post('FORM_SUBMIT') == 'item_selector')
 		{
-			$strKeyword = '';
+			$strKeyword = ltrim(\Input::postRaw('keyword'), '*');
 
 			// Make sure the regular expression is valid
-			if (\Input::postRaw('keyword') != '')
+			if ($strKeyword != '')
 			{
 				try
 				{
 					$this->Database->prepare("SELECT * FROM tl_files WHERE name REGEXP ?")
 								   ->limit(1)
-								   ->execute(\Input::postRaw('keyword'));
-
-					$strKeyword = \Input::postRaw('keyword');
+								   ->execute($strKeyword);
 				}
-				catch (\Exception $e) {}
+				catch (\Exception $e)
+				{
+					$strKeyword = '';
+				}
 			}
 
 			$objSessionBag->set('file_selector_search', $strKeyword);
@@ -96,7 +108,7 @@ class FileSelector extends \Widget
 		}
 
 		$tree = '';
-		$for = ltrim($objSessionBag->get('file_selector_search'), '*');
+		$for = $objSessionBag->get('file_selector_search');
 		$arrFound = array();
 
 		// Search for a specific file
@@ -126,7 +138,7 @@ class FileSelector extends \Widget
 					$for = trim(str_replace('type:folder', '', $for));
 				}
 
-				$objRoot = $this->Database->prepare("SELECT path, type FROM tl_files WHERE $strPattern $strType GROUP BY path")
+				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM tl_files WHERE $strPattern $strType GROUP BY path")
 										  ->execute($for);
 
 				if ($objRoot->numRows < 1)
@@ -144,7 +156,11 @@ class FileSelector extends \Widget
 						{
 							if (strncmp($this->path . '/', $objRoot->path . '/', strlen($this->path) + 1) === 0)
 							{
-								$arrFound[] = $objRoot->path;
+								if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || in_array($objRoot->extension, $this->arrValidFileTypes))
+								{
+									$arrFound[] = $objRoot->path;
+								}
+
 								$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
 							}
 						}
@@ -154,7 +170,11 @@ class FileSelector extends \Widget
 						// Show all files to admins
 						while ($objRoot->next())
 						{
-							$arrFound[] = $objRoot->path;
+							if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || in_array($objRoot->extension, $this->arrValidFileTypes))
+							{
+								$arrFound[] = $objRoot->path;
+							}
+
 							$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
 						}
 					}
@@ -169,7 +189,11 @@ class FileSelector extends \Widget
 								{
 									if (strncmp($path . '/', $objRoot->path . '/', strlen($path) + 1) === 0)
 									{
-										$arrFound[] = $objRoot->path;
+										if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || in_array($objRoot->extension, $this->arrValidFileTypes))
+										{
+											$arrFound[] = $objRoot->path;
+										}
+
 										$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
 									}
 								}
@@ -413,12 +437,6 @@ class FileSelector extends \Widget
 		}
 
 		$folderClass = ($this->files || $this->filesOnly) ? 'tl_folder' : 'tl_file';
-		$allowedExtensions = null;
-
-		if ($this->extensions != '')
-		{
-			$allowedExtensions = trimsplit(',', $this->extensions);
-		}
 
 		// Process folders
 		for ($f=0, $c=count($folders); $f<$c; $f++)
@@ -438,11 +456,7 @@ class FileSelector extends \Widget
 				{
 					--$countFiles;
 				}
-				elseif (!empty($allowedExtensions) && is_file($folders[$f] . '/' . $file) && !in_array(strtolower(substr($file, (strrpos($file, '.') + 1))), $allowedExtensions))
-				{
-					--$countFiles;
-				}
-				elseif (!empty($arrFound) && !in_array($currentFolder . '/' . $file, $arrFound))
+				elseif (!empty($arrFound) && !in_array($currentFolder . '/' . $file, $arrFound) && !preg_grep('/^' . preg_quote($currentFolder . '/' . $file, '/') . '\//', $arrFound))
 				{
 					--$countFiles;
 				}
@@ -520,7 +534,7 @@ class FileSelector extends \Widget
 
 				$objFile = new \File($currentFile);
 
-				if (is_array($allowedExtensions) && !in_array($objFile->extension, $allowedExtensions))
+				if (!empty($this->arrValidFileTypes) && !in_array($objFile->extension, $this->arrValidFileTypes))
 				{
 					continue;
 				}
