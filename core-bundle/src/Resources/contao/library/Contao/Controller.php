@@ -233,7 +233,7 @@ abstract class Controller extends \System
 			{
 				foreach ($GLOBALS['TL_HOOKS']['getArticles'] as $callback)
 				{
-					$return = static::importStatic($callback[0])->$callback[1]($objPage->id, $strColumn);
+					$return = static::importStatic($callback[0])->{$callback[1]}($objPage->id, $strColumn);
 
 					if (is_string($return))
 					{

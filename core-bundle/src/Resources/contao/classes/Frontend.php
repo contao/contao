@@ -719,7 +719,7 @@ abstract class Frontend extends \Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getCacheKey'] as $callback)
 			{
-				$strCacheKey = \System::importStatic($callback[0])->$callback[1]($strCacheKey);
+				$strCacheKey = \System::importStatic($callback[0])->{$callback[1]}($strCacheKey);
 			}
 		}
 
@@ -821,7 +821,7 @@ abstract class Frontend extends \Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['modifyFrontendPage'] as $callback)
 			{
-				$strBuffer = \System::importStatic($callback[0])->$callback[1]($strBuffer, null);
+				$strBuffer = \System::importStatic($callback[0])->{$callback[1]}($strBuffer, null);
 			}
 		}
 

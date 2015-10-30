@@ -407,7 +407,7 @@ class Automator extends \System
 			foreach ($GLOBALS['TL_HOOKS']['generateXmlFiles'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]();
+				$this->{$callback[0]}->{$callback[1]}();
 			}
 		}
 
