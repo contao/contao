@@ -101,6 +101,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('image')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode('bypass_cache')
                             ->defaultValue($this->debug)
