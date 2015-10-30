@@ -273,7 +273,7 @@ abstract class Template extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['parseTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($this);
+				$this->{$callback[0]}->{$callback[1]}($this);
 			}
 		}
 

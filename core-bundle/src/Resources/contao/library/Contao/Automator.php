@@ -262,7 +262,7 @@ class Automator extends \System
 			foreach ($GLOBALS['TL_HOOKS']['removeOldFeeds'] as $callback)
 			{
 				$this->import($callback[0]);
-				$arrFeeds = array_merge($arrFeeds, $this->$callback[0]->$callback[1]());
+				$arrFeeds = array_merge($arrFeeds, $this->{$callback[0]}->{$callback[1]}());
 			}
 		}
 
@@ -370,7 +370,7 @@ class Automator extends \System
 				foreach ($GLOBALS['TL_HOOKS']['getSearchablePages'] as $callback)
 				{
 					$this->import($callback[0]);
-					$arrPages = $this->$callback[0]->$callback[1]($arrPages, $objRoot->id, true, $objRoot->language);
+					$arrPages = $this->{$callback[0]}->{$callback[1]}($arrPages, $objRoot->id, true, $objRoot->language);
 				}
 			}
 

@@ -262,15 +262,28 @@ class FormFileUpload extends \Widget implements \uploadable
 						$file['name'] = str_replace($name, $name . '__' . ++$offset, $file['name']);
 					}
 
+					// Move the file to its destination
 					$this->Files->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
 					$this->Files->chmod($strUploadFolder . '/' . $file['name'], \Config::get('defaultFileChmod'));
 
-					// Generate the DB entries
+					$strUuid = null;
 					$strFile = $strUploadFolder . '/' . $file['name'];
-					$objFile = \Dbafs::addResource($strFile);
 
-					// Update the hash of the target folder
-					\Dbafs::updateFolderHashes($strUploadFolder);
+					// Generate the DB entries
+					if (\Dbafs::shouldBeSynchronized($strFile))
+					{
+						$objFile = \FilesModel::findByPath($strFile);
+
+						if ($objFile === null)
+						{
+							$objFile = \Dbafs::addResource($strFile);
+						}
+
+						$strUuid = \StringUtil::binToUuid(\Dbafs::addResource($strFile)->uuid);
+
+						// Update the hash of the target folder
+						\Dbafs::updateFolderHashes($strUploadFolder);
+					}
 
 					// Add the session entry (see #6986)
 					$_SESSION['FILES'][$this->strName] = array
@@ -281,7 +294,7 @@ class FormFileUpload extends \Widget implements \uploadable
 						'error'    => $file['error'],
 						'size'     => $file['size'],
 						'uploaded' => true,
-						'uuid'     => \StringUtil::binToUuid($objFile->uuid)
+						'uuid'     => $strUuid
 					);
 
 					// Add a log entry

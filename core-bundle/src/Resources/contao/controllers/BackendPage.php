@@ -115,7 +115,7 @@ class BackendPage extends \Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$arrValues = $this->$callback[0]->$callback[1]($arrValues, $objDca);
+					$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $objDca);
 				}
 				elseif (is_callable($callback))
 				{

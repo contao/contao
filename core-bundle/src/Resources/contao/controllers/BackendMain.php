@@ -152,7 +152,7 @@ class BackendMain extends \Backend
 			foreach ($GLOBALS['TL_HOOKS']['getSystemMessages'] as $callback)
 			{
 				$this->import($callback[0]);
-				$strBuffer = $this->$callback[0]->$callback[1]();
+				$strBuffer = $this->{$callback[0]}->{$callback[1]}();
 
 				if ($strBuffer != '')
 				{

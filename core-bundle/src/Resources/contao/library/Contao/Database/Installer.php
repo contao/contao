@@ -251,7 +251,7 @@ class Installer extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback)
 			{
 				$this->import($callback[0]);
-				$return = $this->$callback[0]->$callback[1]($return);
+				$return = $this->{$callback[0]}->{$callback[1]}($return);
 			}
 		}
 
@@ -296,7 +296,7 @@ class Installer extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback)
 			{
 				$this->import($callback[0]);
-				$return = $this->$callback[0]->$callback[1]($return);
+				$return = $this->{$callback[0]}->{$callback[1]}($return);
 			}
 		}
 
@@ -382,7 +382,7 @@ class Installer extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromFile'] as $callback)
 			{
 				$this->import($callback[0]);
-				$return = $this->$callback[0]->$callback[1]($return);
+				$return = $this->{$callback[0]}->{$callback[1]}($return);
 			}
 		}
 
@@ -512,7 +512,7 @@ class Installer extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDB'] as $callback)
 			{
 				$this->import($callback[0]);
-				$return = $this->$callback[0]->$callback[1]($return);
+				$return = $this->{$callback[0]}->{$callback[1]}($return);
 			}
 		}
 

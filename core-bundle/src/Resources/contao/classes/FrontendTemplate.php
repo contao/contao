@@ -52,7 +52,7 @@ class FrontendTemplate extends \Template
 			foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
-				$strBuffer = $this->$callback[0]->$callback[1]($strBuffer, $this->strTemplate);
+				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -120,7 +120,7 @@ class FrontendTemplate extends \Template
 			foreach ($GLOBALS['TL_HOOKS']['outputFrontendTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->strBuffer = $this->$callback[0]->$callback[1]($this->strBuffer, $this->strTemplate);
+				$this->strBuffer = $this->{$callback[0]}->{$callback[1]}($this->strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -141,7 +141,7 @@ class FrontendTemplate extends \Template
 			foreach ($GLOBALS['TL_HOOKS']['modifyFrontendPage'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->strBuffer = $this->$callback[0]->$callback[1]($this->strBuffer, $this->strTemplate);
+				$this->strBuffer = $this->{$callback[0]}->{$callback[1]}($this->strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -274,7 +274,7 @@ class FrontendTemplate extends \Template
 				foreach ($GLOBALS['TL_HOOKS']['getCacheKey'] as $callback)
 				{
 					$this->import($callback[0]);
-					$strCacheKey = $this->$callback[0]->$callback[1]($strCacheKey);
+					$strCacheKey = $this->{$callback[0]}->{$callback[1]}($strCacheKey);
 				}
 			}
 

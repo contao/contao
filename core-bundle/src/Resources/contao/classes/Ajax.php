@@ -159,7 +159,7 @@ class Ajax extends \Backend
 					foreach ($GLOBALS['TL_HOOKS']['executePreActions'] as $callback)
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($this->strAction);
+						$this->{$callback[0]}->{$callback[1]}($this->strAction);
 					}
 				}
 				break;
@@ -275,7 +275,7 @@ class Ajax extends \Backend
 						if (is_array($callback))
 						{
 							$this->import($callback[0]);
-							$varValue = $this->$callback[0]->$callback[1]($varValue, $dc);
+							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
 						}
 						elseif (is_callable($callback))
 						{
@@ -298,14 +298,17 @@ class Ajax extends \Backend
 					{
 						foreach ($varValue as $k=>$v)
 						{
-							$objFile = \FilesModel::findByPath($v);
-
-							if ($objFile === null)
+							if (\Dbafs::shouldBeSynchronized($v))
 							{
-								$objFile = \Dbafs::addResource($v);
-							}
+								$objFile = \FilesModel::findByPath($v);
 
-							$varValue[$k] = $objFile->uuid;
+								if ($objFile === null)
+								{
+									$objFile = \Dbafs::addResource($v);
+								}
+
+								$varValue[$k] = $objFile->uuid;
+							}
 						}
 					}
 
@@ -407,7 +410,7 @@ class Ajax extends \Backend
 			foreach ($GLOBALS['TL_HOOKS']['executePostActions'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($this->strAction, $dc);
+				$this->{$callback[0]}->{$callback[1]}($this->strAction, $dc);
 			}
 		}
 	}

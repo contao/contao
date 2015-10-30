@@ -161,17 +161,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$this->strTable = $strTable;
 		$this->blnIsDbAssisted = $GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'];
 
-		// Check if the folder is excluded
-		if ($this->blnIsDbAssisted && $this->intId)
-		{
-			$objFolder = new \Folder(is_dir(TL_ROOT . '/' . $this->intId) ? $this->intId : dirname($this->intId));
-
-			if (!$objFolder->shouldBeSynchronized())
-			{
-				$this->blnIsDbAssisted = false;
-			}
-		}
-
 		// Check for valid file types
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['validFileTypes'])
 		{
@@ -186,7 +175,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1]($this);
+					$this->{$callback[0]}->{$callback[1]}($this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -501,7 +490,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -638,7 +627,21 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Update the database AFTER the file has been moved
 			if ($this->blnIsDbAssisted)
 			{
-				\Dbafs::moveResource($source, $destination);
+				$syncSource = \Dbafs::shouldBeSynchronized($source);
+				$syncTarget = \Dbafs::shouldBeSynchronized($destination);
+
+				if ($syncSource && $syncTarget)
+				{
+					\Dbafs::moveResource($source, $destination);
+				}
+				elseif ($syncSource)
+				{
+					\Dbafs::deleteResource($source);
+				}
+				elseif ($syncTarget)
+				{
+					\Dbafs::addResource($destination);
+				}
 			}
 
 			// Call the oncut_callback
@@ -649,7 +652,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($source, $destination, $this);
+						$this->{$callback[0]}->{$callback[1]}($source, $destination, $this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -799,7 +802,17 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Update the database AFTER the file has been copied
 		if ($this->blnIsDbAssisted)
 		{
-			\Dbafs::copyResource($source, $destination);
+			$syncSource = \Dbafs::shouldBeSynchronized($source);
+			$syncTarget = \Dbafs::shouldBeSynchronized($destination);
+
+			if ($syncSource && $syncTarget)
+			{
+				\Dbafs::copyResource($source, $destination);
+			}
+			elseif ($syncTarget)
+			{
+				\Dbafs::addResource($destination);
+			}
 		}
 
 		// Call the oncopy_callback
@@ -810,7 +823,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1]($source, $destination, $this);
+					$this->{$callback[0]}->{$callback[1]}($source, $destination, $this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -901,7 +914,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1]($source, $this);
+					$this->{$callback[0]}->{$callback[1]}($source, $this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -923,7 +936,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		// Update the database AFTER the resource has been deleted
-		if ($this->blnIsDbAssisted)
+		if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($source))
 		{
 			\Dbafs::deleteResource($source);
 		}
@@ -1030,7 +1043,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		if (\Input::post('FORM_SUBMIT') == 'tl_upload')
 		{
 			// Generate the DB entries
-			if ($this->blnIsDbAssisted)
+			if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($strFolder))
 			{
 				// Upload the files
 				$arrUploaded = $objUploader->uploadTo($strFolder);
@@ -1060,7 +1073,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($arrUploaded);
+						$this->{$callback[0]}->{$callback[1]}($arrUploaded);
 					}
 					elseif (is_callable($callback))
 					{
@@ -1070,7 +1083,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			// Update the hash of the target folder
-			if ($this->blnIsDbAssisted && $strFolder != \Config::get('uploadPath'))
+			if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($strFolder))
 			{
 				\Dbafs::updateFolderHashes($strFolder);
 			}
@@ -1102,7 +1115,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -1162,7 +1175,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$objVersions = null;
 
 		// Add the versioning routines
-		if ($this->blnIsDbAssisted)
+		if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($this->intId))
 		{
 			if (stristr($this->intId, '__new__') === false)
 			{
@@ -1295,7 +1308,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 							if (is_array($callback))
 							{
 								$this->import($callback[0]);
-								$this->varValue = $this->$callback[0]->$callback[1]($this->varValue, $this);
+								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
 							}
 							elseif (is_callable($callback))
 							{
@@ -1317,7 +1330,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		// Versions overview
-		if ($this->blnIsDbAssisted && $GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'])
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'] && $this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($this->intId))
 		{
 			$version = $objVersions->renderDropdown();
 		}
@@ -1339,7 +1352,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -1390,7 +1403,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($this);
+						$this->{$callback[0]}->{$callback[1]}($this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -1400,7 +1413,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			// Save the current version
-			if ($this->blnCreateNewVersion)
+			if ($this->blnCreateNewVersion && $objFile !== null)
 			{
 				$objVersions->create();
 
@@ -1412,7 +1425,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 						if (is_array($callback))
 						{
 							$this->import($callback[0]);
-							$this->$callback[0]->$callback[1]($this->strTable, $objFile->id, $this);
+							$this->{$callback[0]}->{$callback[1]}($this->strTable, $objFile->id, $this);
 						}
 						elseif (is_callable($callback))
 						{
@@ -1425,7 +1438,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			// Set the current timestamp (-> DO NOT CHANGE THE ORDER version - timestamp)
-			if ($this->blnIsDbAssisted)
+			if ($this->blnIsDbAssisted && $objFile !== null)
 			{
 				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
 							   ->execute(time(), $objFile->id);
@@ -1440,7 +1453,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			// Reload
-			if ($this->blnIsDbAssisted)
+			if ($this->blnIsDbAssisted && $this->objActiveRecord !== null)
 			{
 				$this->redirect($this->addToUrl('id='.$this->urlEncode($this->objActiveRecord->path)));
 			}
@@ -1510,11 +1523,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				$objFile = null;
 				$objVersions = null;
-				$objFolder = new \Folder(is_dir(TL_ROOT . '/' . $id) ? $id : dirname($id));
-				$this->blnIsDbAssisted = $objFolder->shouldBeSynchronized();
 
 				// Get the DB entry
-				if ($this->blnIsDbAssisted)
+				if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($id))
 				{
 					$objFile = \FilesModel::findByPath($id);
 
@@ -1587,7 +1598,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 							if (is_array($callback))
 							{
 								$this->import($callback[0]);
-								$this->varValue = $this->$callback[0]->$callback[1]($this->varValue, $this);
+								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
 							}
 							elseif (is_callable($callback))
 							{
@@ -1616,7 +1627,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 							if (is_array($callback))
 							{
 								$this->import($callback[0]);
-								$this->$callback[0]->$callback[1]($this);
+								$this->{$callback[0]}->{$callback[1]}($this);
 							}
 							elseif (is_callable($callback))
 							{
@@ -1626,7 +1637,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					}
 
 					// Create a new version
-					if ($this->blnCreateNewVersion)
+					if ($this->blnCreateNewVersion && $objFile !== null)
 					{
 						$objVersions->create();
 
@@ -1638,7 +1649,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 								if (is_array($callback))
 								{
 									$this->import($callback[0]);
-									$this->$callback[0]->$callback[1]($this->strTable, $objFile->id, $this);
+									$this->{$callback[0]}->{$callback[1]}($this->strTable, $objFile->id, $this);
 								}
 								elseif (is_callable($callback))
 								{
@@ -1651,7 +1662,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					}
 
 					// Set the current timestamp (-> DO NOT CHANGE ORDER version - timestamp)
-					if ($this->blnIsDbAssisted)
+					if ($this->blnIsDbAssisted && $objFile !== null)
 					{
 						$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
 									   ->execute(time(), $objFile->id);
@@ -1672,7 +1683,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -1831,10 +1842,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->redirect('contao/main.php?act=error');
 		}
 
+		$objMeta = null;
 		$objVersions = null;
 
 		// Add the versioning routines
-		if ($this->blnIsDbAssisted)
+		if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($this->intId))
 		{
 			$objMeta = \FilesModel::findByPath($objFile->value);
 
@@ -1898,7 +1910,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$objFile->close();
 
 				// Update the database
-				if ($this->blnIsDbAssisted)
+				if ($this->blnIsDbAssisted && $objMeta !== null)
 				{
 					/** @var FilesModel $objMeta */
 					$objMeta->hash = $objFile->hash;
@@ -1938,7 +1950,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		// Versions overview
-		if ($this->blnIsDbAssisted && $GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'])
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'] && $this->blnIsDbAssisted && $objVersions !== null)
 		{
 			$version = $objVersions->renderDropdown();
 		}
@@ -1960,7 +1972,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -2069,7 +2081,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$varValue = $this->$callback[0]->$callback[1]($varValue, $this);
+						$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -2098,20 +2110,40 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Rename the file
 			$this->Files->rename($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
 
-			// Update the database
-			if ($this->blnIsDbAssisted)
+			// New folders
+			if (stristr($this->intId, '__new__') !== false)
 			{
-				// New folders
-				if (stristr($this->intId, '__new__') !== false)
+				// Update the database
+				if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension))
 				{
 					$this->objActiveRecord = \Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
-					$this->log('Folder "'.$this->strPath.'/'.$varValue.$this->strExtension.'" has been created', __METHOD__, TL_FILES);
 				}
-				else
+
+				$this->log('Folder "'.$this->strPath.'/'.$varValue.$this->strExtension.'" has been created', __METHOD__, TL_FILES);
+			}
+			else
+			{
+				// Update the database
+				if ($this->blnIsDbAssisted)
 				{
-					$this->objActiveRecord = \Dbafs::moveResource($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
-					$this->log('File or folder "'.$this->strPath.'/'.$this->varValue.$this->strExtension.'" has been renamed to "'.$this->strPath.'/'.$varValue.$this->strExtension.'"', __METHOD__, TL_FILES);
+					$syncSource = \Dbafs::shouldBeSynchronized($this->strPath . '/' . $this->varValue . $this->strExtension);
+					$syncTarget = \Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension);
+
+					if ($syncSource && $syncTarget)
+					{
+						\Dbafs::moveResource($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
+					}
+					elseif ($syncSource)
+					{
+						\Dbafs::deleteResource($this->strPath . '/' . $this->varValue . $this->strExtension);
+					}
+					elseif ($syncTarget)
+					{
+						\Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
+					}
 				}
+
+				$this->log('File or folder "'.$this->strPath.'/'.$this->varValue.$this->strExtension.'" has been renamed to "'.$this->strPath.'/'.$varValue.$this->strExtension.'"', __METHOD__, TL_FILES);
 			}
 
 			// Update the symlinks
@@ -2205,7 +2237,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$varValue = $this->$callback[0]->$callback[1]($varValue, $this);
+						$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this);
 					}
 					elseif (is_callable($callback))
 					{

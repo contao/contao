@@ -211,7 +211,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1]($this);
+					$this->{$callback[0]}->{$callback[1]}($this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -721,7 +721,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						if (is_array($callback))
 						{
 							$this->import($callback[0]);
-							$this->$callback[0]->$callback[1]($this->strTable, $insertID, $this->set, $this);
+							$this->{$callback[0]}->{$callback[1]}($this->strTable, $insertID, $this->set, $this);
 						}
 						elseif (is_callable($callback))
 						{
@@ -821,7 +821,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1]($this);
+					$this->{$callback[0]}->{$callback[1]}($this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -1024,7 +1024,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						if (is_array($callback))
 						{
 							$this->import($callback[0]);
-							$this->$callback[0]->$callback[1]($insertID, $this);
+							$this->{$callback[0]}->{$callback[1]}($insertID, $this);
 						}
 						elseif (is_callable($callback))
 						{
@@ -1547,7 +1547,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($this, $undoId);
+						$this->{$callback[0]}->{$callback[1]}($this, $undoId);
 					}
 					elseif (is_callable($callback))
 					{
@@ -1724,7 +1724,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						if (is_array($callback))
 						{
 							$this->import($callback[0]);
-							$this->$callback[0]->$callback[1]($table, $row, $this);
+							$this->{$callback[0]}->{$callback[1]}($table, $row, $this);
 						}
 						elseif (is_callable($callback))
 						{
@@ -1958,7 +1958,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 							if (is_array($callback))
 							{
 								$this->import($callback[0]);
-								$this->varValue = $this->$callback[0]->$callback[1]($this->varValue, $this);
+								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
 							}
 							elseif (is_callable($callback))
 							{
@@ -2021,7 +2021,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -2077,7 +2077,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($this);
+						$this->{$callback[0]}->{$callback[1]}($this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -2099,7 +2099,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						if (is_array($callback))
 						{
 							$this->import($callback[0]);
-							$this->$callback[0]->$callback[1]($this->strTable, $this->intId, $this);
+							$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
 						}
 						elseif (is_callable($callback))
 						{
@@ -2386,7 +2386,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 							if (is_array($callback))
 							{
 								$this->import($callback[0]);
-								$this->varValue = $this->$callback[0]->$callback[1]($this->varValue, $this);
+								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
 							}
 							elseif (is_callable($callback))
 							{
@@ -2418,7 +2418,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 							if (is_array($callback))
 							{
 								$this->import($callback[0]);
-								$this->$callback[0]->$callback[1]($this);
+								$this->{$callback[0]}->{$callback[1]}($this);
 							}
 							elseif (is_callable($callback))
 							{
@@ -2440,7 +2440,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 								if (is_array($callback))
 								{
 									$this->import($callback[0]);
-									$this->$callback[0]->$callback[1]($this->strTable, $this->intId, $this);
+									$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
 								}
 								elseif (is_callable($callback))
 								{
@@ -2479,7 +2479,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -2704,7 +2704,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 								if (is_array($callback))
 								{
 									$this->import($callback[0]);
-									$this->$callback[0]->$callback[1]($this);
+									$this->{$callback[0]}->{$callback[1]}($this);
 								}
 								elseif (is_callable($callback))
 								{
@@ -2726,7 +2726,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 									if (is_array($callback))
 									{
 										$this->import($callback[0]);
-										$this->$callback[0]->$callback[1]($this->strTable, $this->intId, $this);
+										$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
 									}
 									elseif (is_callable($callback))
 									{
@@ -2806,7 +2806,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -2980,7 +2980,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						if (is_array($callback))
 						{
 							$this->import($callback[0]);
-							$old = $this->$callback[0]->$callback[1]($old, $this);
+							$old = $this->{$callback[0]}->{$callback[1]}($old, $this);
 						}
 						elseif (is_callable($callback))
 						{
@@ -3033,7 +3033,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$varValue = $this->$callback[0]->$callback[1]($varValue, $this);
+					$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this);
 				}
 				elseif (is_callable($callback))
 				{
@@ -3218,7 +3218,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$status = $this->$callback[0]->$callback[1]($this->strTable, $new_records[$this->strTable], $ptable, $ctable);
+					$status = $this->{$callback[0]}->{$callback[1]}($this->strTable, $new_records[$this->strTable], $ptable, $ctable);
 				}
 				elseif (is_callable($callback))
 				{
@@ -3570,7 +3570,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -4442,7 +4442,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -4623,7 +4623,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				{
 					if (strpos($f, ':') !== false)
 					{
-						list($f,) = explode(':', $f, 2);
+						list($f) = explode(':', $f, 2);
 					}
 
 					if ($firstOrderBy == $f)
@@ -4649,7 +4649,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				{
 					if (strpos($f, ':') !== false)
 					{
-						list($f,) = explode(':', $f, 2);
+						list($f) = explode(':', $f, 2);
 					}
 
 					$return .= '
@@ -4866,7 +4866,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						if (is_array($callback))
 						{
 							$this->import($callback[0]);
-							$arrButtons = $this->$callback[0]->$callback[1]($arrButtons, $this);
+							$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 						}
 						elseif (is_callable($callback))
 						{
@@ -4937,7 +4937,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (is_array($arrCallback))
 					{
 						$this->import($arrCallback[0]);
-						$panel = $this->$arrCallback[0]->$arrCallback[1]($this);
+						$panel = $this->{$arrCallback[0]}->{$arrCallback[1]}($this);
 					}
 					elseif (is_callable($arrCallback))
 					{
@@ -5701,7 +5701,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 						if ($objShowFields->numRows)
 						{
-							$vv = $objShowFields->$showFields[0];
+							$vv = $objShowFields->{$showFields[0]};
 						}
 					}
 
