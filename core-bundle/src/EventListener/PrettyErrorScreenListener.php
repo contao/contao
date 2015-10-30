@@ -59,6 +59,7 @@ class PrettyErrorScreenListener
      * @var array
      */
     private $mapper = [
+        'Contao\CoreBundle\Exception\BackendException' => 'backend',
         'Contao\CoreBundle\Exception\ForwardPageNotFoundException' => 'forward_page_not_found',
         'Contao\CoreBundle\Exception\IncompleteInstallationException' => 'incomplete_installation',
         'Contao\CoreBundle\Exception\InsecureInstallationException' => 'insecure_installation',
@@ -246,7 +247,7 @@ class PrettyErrorScreenListener
         }
 
         $view = '@ContaoCore/Error/' . $template . '.html.twig';
-        $parameters = $this->getTemplateParameters($view, $statusCode, $event->getRequest()->getBasePath());
+        $parameters = $this->getTemplateParameters($view, $statusCode, $event);
 
         if (null === $parameters) {
             $event->setResponse($this->getErrorTemplate());
@@ -287,6 +288,7 @@ class PrettyErrorScreenListener
             'template' => '@ContaoCore/Error/error.html.twig',
             'base' => '',
             'adminEmail' => '',
+            'exception' => '',
         ];
 
         return new Response($this->twig->render('@ContaoCore/Error/error.html.twig', $parameters), 500);
@@ -295,13 +297,13 @@ class PrettyErrorScreenListener
     /**
      * Returns the template parameters.
      *
-     * @param string $view       The name of the view
-     * @param int    $statusCode The HTTP status code
-     * @param string $basePath   The base path
+     * @param string                       $view       The name of the view
+     * @param int                          $statusCode The HTTP status code
+     * @param GetResponseForExceptionEvent $event      The event object
      *
      * @return array|null The template parameters or null
      */
-    private function getTemplateParameters($view, $statusCode, $basePath)
+    private function getTemplateParameters($view, $statusCode, GetResponseForExceptionEvent $event)
     {
         if (null === ($labels = $this->loadLanguageStrings())) {
             return null;
@@ -316,8 +318,9 @@ class PrettyErrorScreenListener
             'statusCode' => $statusCode,
             'error' => $labels,
             'template' => $view,
-            'base' => $basePath,
+            'base' => $event->getRequest()->getBasePath(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;' . $encoded,
+            'exception' => $event->getException()->getMessage(),
         ];
     }
 

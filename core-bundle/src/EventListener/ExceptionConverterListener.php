@@ -29,6 +29,7 @@ class ExceptionConverterListener
      */
     private $mapper = [
         'Contao\CoreBundle\Exception\AccessDeniedException' => 'AccessDeniedHttpException',
+        'Contao\CoreBundle\Exception\BackendException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\ForwardPageNotFoundException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\IncompleteInstallationException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\InsecureInstallationException' => 'InternalServerErrorHttpException',
