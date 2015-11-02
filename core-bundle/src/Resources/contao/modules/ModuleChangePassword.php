@@ -93,6 +93,7 @@ class ModuleChangePassword extends \Module
 		$doNotSubmit = false;
 		$objMember = \MemberModel::findByPk($this->User->id);
 		$strFormId = 'tl_change_password_' . $this->id;
+		$flashBag = \System::getContainer()->get('session')->getFlashBag();
 
 		/** @var FormTextField $objOldPassword */
 		$objOldPassword = null;
@@ -193,13 +194,20 @@ class ModuleChangePassword extends \Module
 				$this->jumpToOrReload($objJumpTo->row());
 			}
 
+			$flashBag->set('mod_change_password_confirm', $GLOBALS['TL_LANG']['MSC']['newPasswordSet']);
 			$this->reload();
+		}
+
+		// Confirmation message
+		if ($flashBag->has('mod_change_password_confirm'))
+		{
+			$arrMessages = $flashBag->get('mod_change_password_confirm');
+			$this->Template->message = $arrMessages[0];
 		}
 
 		$this->Template->formId = $strFormId;
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
-		$this->Template->message = \Message::generateUnwrapped();
 	}
 }
