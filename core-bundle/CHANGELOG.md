@@ -2,6 +2,7 @@
 
 ### 4.1.0-RC1 (2015-XX-XX)
 
+ * Never cache a page if there are messages (see #343).
  * Adjust the code to be compatible with PHP7 (see contao/core#8018).
  * Fix several issues with the new file search and add the `type:file` and `type:folder` flags (see #392).
  * Only warm the Contao cache if the installation has been completed (see #383).

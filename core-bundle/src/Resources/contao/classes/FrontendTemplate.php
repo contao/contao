@@ -250,7 +250,7 @@ class FrontendTemplate extends \Template
 		$intCache = 0;
 
 		// Decide whether the page shall be cached
-		if (!isset($_GET['file']) && !isset($_GET['token']) && empty($_POST) && !BE_USER_LOGGED_IN && !FE_USER_LOGGED_IN && !$_SESSION['DISABLE_CACHE'] && !isset($_SESSION['LOGIN_ERROR']) && intval($objPage->cache) > 0 && !$objPage->protected)
+		if (!isset($_GET['file']) && !isset($_GET['token']) && empty($_POST) && !BE_USER_LOGGED_IN && !FE_USER_LOGGED_IN && !$_SESSION['DISABLE_CACHE'] && !isset($_SESSION['LOGIN_ERROR']) && !\Message::hasMessages() && intval($objPage->cache) > 0 && !$objPage->protected)
 		{
 			$intCache = time() + intval($objPage->cache);
 		}
