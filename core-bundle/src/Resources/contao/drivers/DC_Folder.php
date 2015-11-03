@@ -2554,7 +2554,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$protected = false;
 			}
 
-			$folderImg = ($session['filetree'][$md5] == 1 && $countFiles > 0) ? ($protected ? 'folderOP.gif' : 'folderO.gif') : ($protected ? 'folderCP.gif' : 'folderC.gif');
+			$folderImg = $protected ? 'folderCP.gif' : 'folderC.gif';
 
 			// Add the current folder
 			$strFolderNameEncoded = \StringUtil::convertEncoding(specialchars(basename($currentFolder)), \Config::get('characterSet'));

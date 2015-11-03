@@ -491,7 +491,7 @@ class FileSelector extends \Widget
 				$protected = false;
 			}
 
-			$folderImg = ($blnIsOpen && $countFiles > 0) ? ($protected ? 'folderOP.gif' : 'folderO.gif') : ($protected ? 'folderCP.gif' : 'folderC.gif');
+			$folderImg = $protected ? 'folderCP.gif' : 'folderC.gif';
 			$folderLabel = ($this->files || $this->filesOnly) ? '<strong>'.specialchars(basename($currentFolder)).'</strong>' : specialchars(basename($currentFolder));
 
 			// Add the current folder
