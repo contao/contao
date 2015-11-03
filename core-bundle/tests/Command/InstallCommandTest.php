@@ -16,6 +16,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\LockHandler;
+use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 
 /**
  * Tests the InstallCommand class.
@@ -35,6 +36,7 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getRootDir() . '/assets/images');
         $fs->remove($this->getRootDir() . '/assets/js');
         $fs->remove($this->getRootDir() . '/files');
+        $fs->remove($this->getRootDir() . '/files_uploadtest');
         $fs->remove($this->getRootDir() . '/system/cache');
         $fs->remove($this->getRootDir() . '/system/config');
         $fs->remove($this->getRootDir() . '/system/initialize.php');
@@ -62,6 +64,16 @@ class InstallCommandTest extends TestCase
         $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
         $container->setParameter('contao.image.target_path', 'assets/images');
 
+        // Load config so we've have access to the upload_path setting
+        // On first run we fall back to the default setting for upload_path
+        $params = [
+            'contao' => [
+                'encryption_key' => 'foobar',
+            ],
+        ];
+        $extension = new ContaoCoreExtension();
+        $extension->load($params, $container);
+
         $command = new InstallCommand('contao:install');
         $command->setContainer($container);
 
@@ -78,6 +90,12 @@ class InstallCommandTest extends TestCase
         $this->assertContains('Added the ' . $this->getRootDir() . '/system/cache/.gitignore file.', $tester->getDisplay());
         $this->assertContains('Added the ' . $this->getRootDir() . '/system/config/.gitignore file.', $tester->getDisplay());
         $this->assertContains('Added the ' . $this->getRootDir() . '/system/tmp/.gitignore file.', $tester->getDisplay());
+
+        // Test for different upload_path
+        $params['contao']['upload_path'] = 'files_uploadtest';
+        $extension->load($params, $container);
+        $tester->execute([]);
+        $this->assertContains('Created the ' . $this->getRootDir() . '/files_uploadtest directory.', $tester->getDisplay());
     }
 
     /**
