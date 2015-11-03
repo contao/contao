@@ -83,7 +83,7 @@ services:
             - "@contao.image.resize_calculator"
             - "@contao.image.imagine"
             - "@filesystem"
-            - "@contao.adapter_factory"
+            - "@contao.framework"
 
     contao.image.image_factory:
         class: Contao\CoreBundle\Image\ImageFactory
@@ -91,7 +91,7 @@ services:
             - "@contao.image.resizer"
             - "@contao.image.imagine"
             - "@filesystem"
-            - "@contao.adapter_factory"
+            - "@contao.framework"
 
     contao.image.picture_generator:
         class: Contao\CoreBundle\Image\PictureGenerator
@@ -104,4 +104,4 @@ services:
         arguments:
             - "@contao.image.picture_generator"
             - "@contao.image.factory"
-            - "@contao.adapter_factory"
+            - "@contao.framework"

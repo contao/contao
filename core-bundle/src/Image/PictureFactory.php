@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\Image;
 
-use Contao\CoreBundle\Adapter\AdapterFactoryInterface;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 
 /**
  * Creates Picture objects
@@ -30,25 +30,25 @@ class PictureFactory
     private $imageFactory;
 
     /**
-     * @var AdapterFactory
+     * @var ContaoFrameworkInterface
      */
-    private $adapterFactory;
+    private $framework;
 
     /**
      * Constructor.
      *
-     * @param PictureGenerator        $pictureGenerator The picture generator
-     * @param ImageFactory            $imageFactory     The image factory
-     * @param AdapterFactoryInterface $adapterFactory   The adapter factory
+     * @param PictureGenerator         $pictureGenerator The picture generator
+     * @param ImageFactory             $imageFactory     The image factory
+     * @param ContaoFrameworkInterface $framework        The Contao framework
      */
     public function __construct(
         PictureGenerator $pictureGenerator,
         ImageFactory $imageFactory,
-        AdapterFactoryInterface $adapterFactory
+        ContaoFrameworkInterface $framework
     ) {
         $this->pictureGenerator = $pictureGenerator;
         $this->imageFactory = $imageFactory;
-        $this->adapterFactory = $adapterFactory;
+        $this->framework = $framework;
     }
 
     /**
