@@ -59,7 +59,6 @@ class PrettyErrorScreenListener
      * @var array
      */
     private $mapper = [
-        'Contao\CoreBundle\Exception\BackendException' => 'backend',
         'Contao\CoreBundle\Exception\ForwardPageNotFoundException' => 'forward_page_not_found',
         'Contao\CoreBundle\Exception\IncompleteInstallationException' => 'incomplete_installation',
         'Contao\CoreBundle\Exception\InsecureInstallationException' => 'insecure_installation',
@@ -207,8 +206,9 @@ class PrettyErrorScreenListener
             $template = $this->getTemplateForException($exception);
         } while (null === $template && null !== ($exception = $exception->getPrevious()));
 
+        // Fall back to the default template
         if (null === $template) {
-            return;
+            $template = 'error';
         }
 
         $this->logException($exception);

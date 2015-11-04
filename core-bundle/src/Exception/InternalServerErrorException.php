@@ -11,10 +11,10 @@
 namespace Contao\CoreBundle\Exception;
 
 /**
- * Back end exception.
+ * Internal server error exception.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendException extends \RuntimeException
+class InternalServerErrorException extends \RuntimeException
 {
 }

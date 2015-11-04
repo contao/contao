@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\BackendException;
+use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -1807,7 +1807,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Redirect if there is no record with the given ID
 		if ($objRow->numRows < 1)
 		{
-			throw new BackendException('Could not load record "'.$this->strTable.'.id='.$this->intId.'".');
+			throw new InternalServerErrorException('Could not load record "'.$this->strTable.'.id='.$this->intId.'".');
 		}
 
 		$this->objActiveRecord = $objRow;
