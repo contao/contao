@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
@@ -33,7 +32,7 @@ class ExceptionConverterListener
         'Contao\CoreBundle\Exception\ForwardPageNotFoundException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\IncompleteInstallationException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\InsecureInstallationException' => 'InternalServerErrorHttpException',
-        'Contao\CoreBundle\Exception\InvalidRequestTokenException' => 'BadRequestHttpException',
+        'Contao\CoreBundle\Exception\InvalidRequestTokenException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\NoActivePageFoundException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\NoLayoutSpecifiedException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\NoRootPageFoundException' => 'InternalServerErrorHttpException',
@@ -74,9 +73,6 @@ class ExceptionConverterListener
         switch ($target) {
             case 'AccessDeniedHttpException':
                 return new AccessDeniedHttpException($exception->getMessage(), $exception);
-
-            case 'BadRequestHttpException':
-                return new BadRequestHttpException($exception->getMessage(), $exception);
 
             case 'InternalServerErrorHttpException':
                 return new InternalServerErrorHttpException($exception->getMessage(), $exception);

@@ -21,7 +21,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
@@ -118,7 +117,6 @@ class PrettyErrorScreenListener
                 $this->renderErrorScreenByType(403, $event);
                 break;
 
-            case $exception instanceof BadRequestHttpException:
             case $exception instanceof InternalServerErrorHttpException:
                 $this->renderErrorScreenByException($event);
                 break;
