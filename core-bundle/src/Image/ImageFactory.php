@@ -64,15 +64,70 @@ class ImageFactory
     /**
      * Creates an Image object
      *
-     * @param string    $path The path to the source image
-     * @param int|array $size The ID of an image size or an array with width
-     *                        height and resize mode
+     * @param string    $path       The path to the source image
+     * @param int|array $size       The ID of an image size or an array with
+     *                              width height and resize mode
+     * @param string    $targetPath The absolute target path
      *
      * @return Image The created image object
      */
-    public function create($path, $size)
+    public function create($path, $size = null, $targetPath = null)
     {
-        // Create an `Image` and a `ResizeConfiguration`, pass it to `Resizer`
-        // and return the resulting `Image`.
+        $image = new Image($this->imagine, $this->filesystem, (string) $path);
+
+        if (null === $size) {
+            return $image;
+        }
+
+        $resizeConfig = $this->createResizeConfig($size);
+
+        return $this->resizer->resize($image, $resizeConfig, $targetPath);
+    }
+
+    /**
+     * Create a ResizeConfiguration object
+     *
+     * @param int|array $size The ID of an image size or an array with width
+     *                        height and resize mode
+     *
+     * @return ResizeConfiguration The resize configuration
+     */
+    private function createResizeConfig($size)
+    {
+        if (!is_array($size)) {
+            $size = [0, 0, $size];
+        }
+
+        $config = new ResizeConfiguration;
+
+        if (isset($size[2]) && is_numeric($size[2])) {
+
+            $imageSize = $this->framework
+                ->getAdapter('Contao\\ImageSizeModel')
+                ->findByPk($size[2]);
+
+            if (null !== $imageSize) {
+                $config
+                    ->setWidth($imageSize->width)
+                    ->setHeight($imageSize->height)
+                    ->setMode($imageSize->resizeMode)
+                    ->setZoomLevel($imageSize->zoom);
+
+                return $config;
+            }
+
+        }
+
+        if (isset($size[0]) && $size[0]) {
+            $config->setWidth($size[0]);
+        }
+        if (isset($size[1]) && $size[1]) {
+            $config->setHeight($size[1]);
+        }
+        if (isset($size[2]) && $size[2]) {
+            $config->setMode($size[2]);
+        }
+
+        return $config;
     }
 }

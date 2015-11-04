@@ -49,6 +49,9 @@ spl_autoload_register(function ($class) {
     } elseif (file_exists(__DIR__ . '/../src/Resources/contao/library/Contao/' . $file . '.php')) {
         include_once __DIR__ . '/../src/Resources/contao/library/Contao/' . $file . '.php';
         class_alias('Contao\\' . $class, $class);
+    } elseif (file_exists(__DIR__ . '/../src/Resources/contao/models/' . $file . '.php')) {
+        include_once __DIR__ . '/../src/Resources/contao/models/' . $file . '.php';
+        class_alias('Contao\\' . $class, $class);
     }
 });
 
