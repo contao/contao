@@ -76,28 +76,6 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * Tests rendering a bad request HTTP exception.
-     */
-    public function testBadRequestHttpException()
-    {
-        $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new BadRequestHttpException('', new InvalidRequestTokenException())
-        );
-
-        $this->listener->onKernelException($event);
-
-        $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
      * Tests rendering an internal server error HTTP exception.
      */
     public function testInternalServerErrorHttpException()
