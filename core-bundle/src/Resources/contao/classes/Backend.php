@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -308,8 +309,7 @@ abstract class Backend extends \Controller
 		// Check whether the current user has access to the current module
 		elseif ($module != 'undo' && !$this->User->hasAccess($module, 'modules'))
 		{
-			$this->log('Back end module "' . $module . '" was not allowed for user "' . $this->User->username . '"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new AccessDeniedException('Back end module "' . $module . '" was not allowed for user "' . $this->User->username . '".');
 		}
 
 		/** @var SessionInterface $objSession */

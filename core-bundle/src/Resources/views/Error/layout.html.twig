@@ -136,17 +136,17 @@
                         <div class="text-error">
                             {% block main %}
                                 {% set _block = block('matter') %}
-                                {% if _block is not empty %}
+                                {% if _block|trim is not empty %}
                                     <h2>{{ error.matter }}</h2>
                                     {{ _block|raw }}
                                 {% endif %}
                                 {% set _block = block('howToFix') %}
-                                {% if _block is not empty %}
+                                {% if _block|trim is not empty %}
                                     <h2>{{ error.howToFix }}</h2>
                                     {{ _block|raw }}
                                 {% endif %}
                                 {% set _block = block('explain') %}
-                                {% if _block is not empty %}
+                                {% if _block|trim is not empty %}
                                     <h3>{{ error.more }}</h3>
                                     {{ _block|raw }}
                                 {% endif %}

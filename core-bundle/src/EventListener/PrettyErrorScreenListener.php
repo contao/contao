@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Renders pretty error screens for exceptions.
@@ -51,6 +53,11 @@ class PrettyErrorScreenListener
     private $framework;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -75,17 +82,20 @@ class PrettyErrorScreenListener
      * @param bool                     $prettyErrorScreens True to render the error screens
      * @param \Twig_Environment        $twig               The twig environment
      * @param ContaoFrameworkInterface $framework          The Contao framework
+     * @param TokenStorageInterface    $tokenStorage       The token storage object
      * @param LoggerInterface|null     $logger             An optional logger service
      */
     public function __construct(
         $prettyErrorScreens,
         \Twig_Environment $twig,
         ContaoFrameworkInterface $framework,
+        TokenStorageInterface $tokenStorage,
         LoggerInterface $logger = null
     ) {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
+        $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
     }
 
@@ -113,12 +123,12 @@ class PrettyErrorScreenListener
         $exception = $event->getException();
 
         switch (true) {
-            case $exception instanceof AccessDeniedHttpException:
-                $this->renderErrorScreenByType(403, $event);
+            case $this->isBackendUser():
+                $this->renderErrorScreenByException($event);
                 break;
 
-            case $exception instanceof InternalServerErrorHttpException:
-                $this->renderErrorScreenByException($event);
+            case $exception instanceof AccessDeniedHttpException:
+                $this->renderErrorScreenByType(403, $event);
                 break;
 
             case $exception instanceof NotFoundHttpException:
@@ -130,9 +140,7 @@ class PrettyErrorScreenListener
                 break;
 
             default:
-                $this->logException($exception);
-                $this->renderTemplate('error', 500, $event);
-                break;
+                $this->renderErrorScreenByException($event);
         }
     }
 
@@ -201,18 +209,14 @@ class PrettyErrorScreenListener
             $statusCode = $exception->getStatusCode();
         }
 
+        $this->logException($exception);
+
         // Look for a template
         do {
             $template = $this->getTemplateForException($exception);
         } while (null === $template && null !== ($exception = $exception->getPrevious()));
 
-        // Fall back to the default template
-        if (null === $template) {
-            $template = 'error';
-        }
-
-        $this->logException($exception);
-        $this->renderTemplate($template, $statusCode, $event);
+        $this->renderTemplate($template ?: 'internal_server_error', $statusCode, $event);
     }
 
     /**
@@ -320,7 +324,7 @@ class PrettyErrorScreenListener
             'template' => $view,
             'base' => $event->getRequest()->getBasePath(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;' . $encoded,
-            'exception' => $event->getException()->getMessage(),
+            'exception' => ($this->isBackendUser() ? $event->getException()->getMessage() : ''),
         ];
     }
 
@@ -356,5 +360,15 @@ class PrettyErrorScreenListener
         }
 
         $this->logger->critical('An exception occurred.', ['exception' => $exception]);
+    }
+
+    /**
+     * Checks if the user is a back end user.
+     *
+     * @return bool True if the user is a back end user.
+     */
+    private function isBackendUser()
+    {
+        return $this->tokenStorage->getToken()->getUser() instanceof BackendUser;
     }
 }

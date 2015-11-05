@@ -1,0 +1,21 @@
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ error.error }}
+{% endblock %}
+{% block matter %}
+    {% if exception is not empty %}
+        <p>{{ exception }}</p>
+    {% else %}
+        <p>{{ error.errorOccurred }}</p>
+    {% endif %}
+{% endblock %}
+{% block howToFix %}
+    {% if exception is empty %}
+        <p>{{ error.errorFixOne|raw }}</p>
+    {% endif %}
+{% endblock %}
+{% block explain %}
+    {% if exception is empty %}
+        <p>{{ error.errorExplain|raw }}</p>
+    {% endif %}
+{% endblock %}

@@ -98,6 +98,7 @@ services:
             - "%contao.pretty_error_screens%"
             - "@twig"
             - "@contao.framework"
+            - "@security.token_storage"
             - "@logger"
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: -96 }
