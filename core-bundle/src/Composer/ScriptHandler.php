@@ -57,7 +57,7 @@ class ScriptHandler
         }
 
         if (!function_exists('random_bytes')) {
-            static::loadRandomCompat($event);
+            self::loadRandomCompat($event);
         }
 
         putenv(static::RANDOM_SECRET_NAME . '=' . bin2hex(random_bytes(32)));
