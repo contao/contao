@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageError404;
