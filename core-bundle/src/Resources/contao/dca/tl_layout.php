@@ -532,8 +532,7 @@ class tl_layout extends Backend
 
 		if (!$this->User->hasAccess('layout', 'themes'))
 		{
-			$this->log('Not enough permissions to access the page layout module', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the page layout module.');
 		}
 	}
 

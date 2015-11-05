@@ -259,8 +259,7 @@ class tl_member_group extends Backend
 		// Check permissions
 		if (!$this->User->hasAccess('tl_member_group::disable', 'alexf'))
 		{
-			$this->log('Not enough permissions to activate/deactivate member group ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate member group ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_member_group', $intId);

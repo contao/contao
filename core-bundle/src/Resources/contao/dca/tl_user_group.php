@@ -397,8 +397,7 @@ class tl_user_group extends Backend
 		// Check permissions
 		if (!$this->User->hasAccess('tl_user_group::disable', 'alexf'))
 		{
-			$this->log('Not enough permissions to activate/deactivate user group ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate user group ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_user_group', $intId);

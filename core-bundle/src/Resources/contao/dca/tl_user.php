@@ -477,8 +477,7 @@ class tl_user extends Backend
 			case 'delete':
 				if (Input::get('id') == $this->User->id)
 				{
-					$this->log('Attempt to delete own account ID "'.Input::get('id').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Attempt to delete own account ID ' . Input::get('id') . '.');
 				}
 				// no break;
 
@@ -492,8 +491,7 @@ class tl_user extends Backend
 
 				if ($objUser->admin && Input::get('act') != '')
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' administrator account ID "'.Input::get('id').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' administrator account ID ' . Input::get('id') . '.');
 				}
 				break;
 
@@ -882,8 +880,7 @@ class tl_user extends Backend
 		// Check permissions
 		if (!$this->User->hasAccess('tl_user::disable', 'alexf'))
 		{
-			$this->log('Not enough permissions to activate/deactivate user ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate user ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_user', $intId);

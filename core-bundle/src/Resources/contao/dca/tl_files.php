@@ -348,8 +348,7 @@ class tl_files extends Backend
 				case 'move':
 					if (!$canUpload)
 					{
-						$this->log('No permission to upload files', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to upload files.');
 					}
 					break;
 
@@ -361,8 +360,7 @@ class tl_files extends Backend
 				case 'cutAll':
 					if (!$canEdit)
 					{
-						$this->log('No permission to create, edit, copy or move files', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to create, edit, copy or move files.');
 					}
 					break;
 
@@ -373,27 +371,23 @@ class tl_files extends Backend
 						$files = scan(TL_ROOT . '/' . $strFile);
 						if (!empty($files) && !$canDeleteRecursive)
 						{
-							$this->log('No permission to delete folder "'.$strFile.'" recursively', __METHOD__, TL_ERROR);
-							$this->redirect('contao/main.php?act=error');
+							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '" recursively.');
 						}
 						elseif (!$canDeleteOne)
 						{
-							$this->log('No permission to delete folder "'.$strFile.'"', __METHOD__, TL_ERROR);
-							$this->redirect('contao/main.php?act=error');
+							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '".');
 						}
 					}
 					elseif (!$canDeleteOne)
 					{
-						$this->log('No permission to delete file "'.$strFile.'"', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete file "' . $strFile . '".');
 					}
 					break;
 
 				default:
 					if (empty($this->User->fop))
 					{
-						$this->log('No permission to manipulate files', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to manipulate files.');
 					}
 					break;
 			}

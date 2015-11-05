@@ -252,16 +252,14 @@ class tl_theme extends Backend
 			case 'importTheme':
 				if (!$this->User->hasAccess('theme_import', 'themes'))
 				{
-					$this->log('Not enough permissions to import themes', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to import themes.');
 				}
 				break;
 
 			case 'exportTheme':
 				if (!$this->User->hasAccess('theme_import', 'themes'))
 				{
-					$this->log('Not enough permissions to export themes', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to export themes.');
 				}
 				break;
 		}
