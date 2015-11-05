@@ -51,7 +51,6 @@ class InstallCommand extends AbstractLockedCommand
      */
     private $ignoredDirs = [
         'assets/css',
-        'assets/images',
         'assets/js',
         'system/cache',
         'system/config',
@@ -123,6 +122,8 @@ class InstallCommand extends AbstractLockedCommand
         foreach ($this->ignoredDirs as $path) {
             $this->addIgnoredDir($this->rootDir . '/' . $path);
         }
+
+        $this->addIgnoredDir($this->rootDir . '/' . $this->getContainer()->getParameter('contao.image.target_path'));
     }
 
     /**
