@@ -273,6 +273,7 @@ class PrettyErrorScreenListener
     {
         $parameters = [
             'statusCode' => 500,
+            'statusName' => 'Internal Server Error',
             'error' => [
                 'error' => 'An error occurred',
                 'matter' => 'What\'s the matter?',
@@ -320,6 +321,7 @@ class PrettyErrorScreenListener
 
         return [
             'statusCode' => $statusCode,
+            'statusName' => Response::$statusTexts[$statusCode],
             'error' => $labels,
             'template' => $view,
             'base' => $event->getRequest()->getBasePath(),

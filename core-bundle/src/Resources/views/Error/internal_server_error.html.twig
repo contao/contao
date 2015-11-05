@@ -1,6 +1,10 @@
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ error.error }}
+    {% if statusName is not empty %}
+        {{ statusName }}
+    {% else %}
+        {{ error.error }}
+    {% endif %}
 {% endblock %}
 {% block matter %}
     {% if exception is not empty %}
