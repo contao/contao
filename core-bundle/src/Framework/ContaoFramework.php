@@ -423,8 +423,8 @@ class ContaoFramework implements ContaoFrameworkInterface
             return;
         }
 
-        if (!$this->request->attributes->has('_enable_request_token')
-            || false === $this->request->attributes->get('_enable_request_token')
+        if (!$this->request->attributes->has('_token_check')
+            || false === $this->request->attributes->get('_token_check')
         ) {
             return;
         }

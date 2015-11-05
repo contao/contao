@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @Route("/contao", defaults={"_scope" = "backend", "_enable_request_token" = true})
+ * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
  */
 class BackendController extends Controller
 {

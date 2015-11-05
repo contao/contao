@@ -278,7 +278,7 @@ class ContaoFrameworkTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_enable_request_token', true);
+        $request->attributes->set('_token_check', true);
         $request->setMethod('POST');
         $request->request->set('REQUEST_TOKEN', 'foobar');
 
@@ -306,7 +306,7 @@ class ContaoFrameworkTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_enable_request_token', true);
+        $request->attributes->set('_token_check', true);
         $request->setMethod('POST');
         $request->request->set('REQUEST_TOKEN', 'invalid');
 
@@ -352,7 +352,7 @@ class ContaoFrameworkTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_enable_request_token', false);
+        $request->attributes->set('_token_check', false);
         $request->setMethod('POST');
         $request->request->set('REQUEST_TOKEN', 'foobar');
 
