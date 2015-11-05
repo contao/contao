@@ -2,6 +2,7 @@
 
 ### 4.1.0-RC1 (2015-XX-XX)
 
+ * Call the load_callback when loading the page/file tree via ajax (see #398).
  * Load the random_compat library in the Composer script handler (see #397).
  * Never cache a page if there are messages (see #343).
  * Adjust the code to be compatible with PHP7 (see contao/core#8018).

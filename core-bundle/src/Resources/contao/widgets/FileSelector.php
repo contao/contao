@@ -327,6 +327,11 @@ class FileSelector extends \Widget
 
 		$this->convertValuesToPaths();
 
+		if ($this->extensions != '')
+		{
+			$this->arrValidFileTypes = trimsplit(',', $this->extensions);
+		}
+
 		$blnProtected = true;
 		$strPath = $strFolder;
 
