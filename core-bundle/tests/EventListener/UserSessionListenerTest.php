@@ -73,7 +73,8 @@ class UserSessionListenerTest extends TestCase
             ->getMock()
         ;
 
-        $user->expects($this->any())
+        $user
+            ->expects($this->any())
             ->method('__get')
             ->with($this->equalTo('session'))
             ->willReturn($sessionValuesToBeSet)

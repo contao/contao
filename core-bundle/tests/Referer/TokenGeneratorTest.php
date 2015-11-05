@@ -71,7 +71,8 @@ class TokenGeneratorTest extends TestCase
      */
     public function testGeneratedTokenHasLengthOfEight()
     {
-        $this->random->expects($this->once())
+        $this->random
+            ->expects($this->once())
             ->method('nextBytes')
             ->with(self::ENTROPY / 8)
             ->will($this->returnValue(self::$bytes))

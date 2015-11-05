@@ -189,7 +189,8 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->getMock()
         ;
 
-        $twig->expects($this->any())
+        $twig
+            ->expects($this->any())
             ->method('render')
             ->willReturnCallback(function () use (&$count) {
                 if (0 === $count++) {
