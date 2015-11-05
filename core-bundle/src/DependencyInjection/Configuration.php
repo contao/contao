@@ -106,7 +106,7 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('bypass_cache')
                             ->defaultValue($this->debug)
                         ->end()
-                        ->scalarNode('target_dir')
+                        ->scalarNode('target_path')
                             ->defaultValue('assets/images')
                         ->end()
                     ->end()
