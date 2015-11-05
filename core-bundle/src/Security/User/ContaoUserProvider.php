@@ -58,13 +58,15 @@ class ContaoUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $this->framework->initialize();
-
         if ($this->isBackendUsername($username)) {
+            $this->framework->initialize();
+
             return BackendUser::getInstance();
         }
 
         if ($this->isFrontendUsername($username)) {
+            $this->framework->initialize();
+
             return FrontendUser::getInstance();
         }
 
