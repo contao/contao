@@ -15,9 +15,10 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Sets route parameter to bypass maintenance mode if a backend user is logged in.
+ * Adds the maintenance attribute to the request.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BypassMaintenanceListener
 {
@@ -29,7 +30,7 @@ class BypassMaintenanceListener
     /**
      * @var bool
      */
-    private $checkIp;
+    private $bindSessionToIp;
 
     /**
      * @var string
@@ -39,19 +40,19 @@ class BypassMaintenanceListener
     /**
      * Constructor.
      *
-     * @param SessionInterface $session
-     * @param bool             $checkIp
-     * @param string           $requestAttribute
+     * @param SessionInterface $session          The session object
+     * @param bool             $bindSessionToIp  Whether to bind the session to the IP address
+     * @param string           $requestAttribute The request attribute name
      */
-    public function __construct(SessionInterface $session, $checkIp, $requestAttribute = '_bypass_maintenance')
+    public function __construct(SessionInterface $session, $bindSessionToIp, $requestAttribute = '_bypass_maintenance')
     {
-        $this->session          = $session;
-        $this->checkIp          = $checkIp;
+        $this->session = $session;
+        $this->bindSessionToIp = $bindSessionToIp;
         $this->requestAttribute = $requestAttribute;
     }
 
     /**
-     * Sets request attribute to disable maintenance mode if backend user is logged in.
+     * Adds the request attribute to the request.
      *
      * @param GetResponseEvent $event The event object
      */
@@ -59,19 +60,23 @@ class BypassMaintenanceListener
     {
         $request = $event->getRequest();
 
-        $request->attributes->set($this->requestAttribute, $this->hasValidSessionCookie($request));
+        if (!$this->hasAuthenticatedBackendUser($request)) {
+            return;
+        }
+
+        $request->attributes->set($this->requestAttribute, true);
     }
 
     /**
-     * Validates session cookie in the given request.
+     * Checks if there is an authenticated back end user.
      *
-     * @param Request $request
+     * @param Request $request The request object
      *
-     * @return bool
+     * @return bool True if there is an authenticated back end user
      */
-    private function hasValidSessionCookie(Request $request)
+    private function hasAuthenticatedBackendUser(Request $request)
     {
-        if ($request->cookies->has('BE_USER_AUTH')) {
+        if (!$request->cookies->has('BE_USER_AUTH')) {
             return false;
         }
 
@@ -79,7 +84,7 @@ class BypassMaintenanceListener
             sprintf(
                 '%s%sBE_USER_AUTH',
                 $this->session->getId(),
-                ($this->checkIp ? $request->getClientIp() : '')
+                $this->bindSessionToIp ? $request->getClientIp() : ''
             )
         );
 
