@@ -378,7 +378,19 @@ class PrettyErrorScreenListener
      */
     private function isBackendUser()
     {
-        return $this->tokenStorage->getToken()->getUser() instanceof BackendUser;
+        $token = $this->tokenStorage->getToken();
+
+        if (null === $token) {
+            return false;
+        }
+
+        $user = $token->getUser();
+
+        if (null === $user) {
+            return false;
+        }
+
+        return $user instanceof BackendUser;
     }
 
     /**
