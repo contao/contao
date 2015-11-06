@@ -254,6 +254,8 @@ class tl_comments extends Backend
 
 	/**
 	 * Check permissions to edit table tl_comments
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -273,14 +275,12 @@ class tl_comments extends Backend
 
 				if ($objComment->numRows < 1)
 				{
-					$this->log('Comment ID ' . Input::get('id') . ' does not exist', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Comment ID ' . Input::get('id') . ' does not exist.');
 				}
 
 				if (!$this->isAllowedToEditComment($objComment->parent, $objComment->source))
 				{
-					$this->log('Not enough permissions to ' . Input::get('act') . ' comment ID ' . Input::get('id') . ' (parent element: ' . $objComment->source . ' ID ' . $objComment->parent . ')', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' comment ID ' . Input::get('id') . ' (parent element: ' . $objComment->source . ' ID ' . $objComment->parent . ').');
 				}
 				break;
 
@@ -314,8 +314,7 @@ class tl_comments extends Backend
 			default:
 				if (strlen(Input::get('act')))
 				{
-					$this->log('Invalid command "'.Input::get('act').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '.');
 				}
 				break;
 		}
@@ -620,6 +619,8 @@ class tl_comments extends Backend
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
@@ -631,8 +632,7 @@ class tl_comments extends Backend
 		// Check permissions to publish
 		if (!$this->User->hasAccess('tl_comments::published', 'alexf'))
 		{
-			$this->log('Not enough permissions to publish/unpublish comment ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish comment ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_comments', $intId);
