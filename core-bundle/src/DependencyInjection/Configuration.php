@@ -21,6 +21,21 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
+     * @var bool
+     */
+    private $debug;
+
+    /**
+     * Constructor.
+     *
+     * @param bool $debug If kernel debug mode is enabled
+     */
+    public function __construct($debug)
+    {
+        $this->debug = (bool) $debug;
+    }
+
+    /**
      * Generates the configuration tree builder.
      *
      * @return TreeBuilder The tree builder
@@ -66,6 +81,17 @@ class Configuration implements ConfigurationInterface
                     ->min(-1)
                     ->max(32767)
                     ->defaultValue(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
+                ->end()
+                ->arrayNode('image')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('bypass_cache')
+                            ->defaultValue($this->debug)
+                        ->end()
+                        ->scalarNode('target_path')
+                            ->defaultValue('assets/images')
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
         ;

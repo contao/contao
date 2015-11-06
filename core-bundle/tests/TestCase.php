@@ -189,6 +189,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->setParameter('kernel.root_dir', $this->getRootDir());
         $container->setParameter('kernel.cache_dir', $this->getCacheDir());
         $container->setParameter('kernel.debug', false);
+        $container->setParameter('contao.image.bypass_cache', false);
+        $container->setParameter('contao.image.target_path', 'assets/images');
 
         $container->set(
             'contao.resource_finder',
