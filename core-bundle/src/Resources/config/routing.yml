@@ -19,6 +19,7 @@ contao_root:
     path: /
     defaults:
         _scope: frontend
+        _token_check: true
         _controller: ContaoCoreBundle:Frontend:index
 
 # The catch all route must be the last one!
@@ -26,6 +27,7 @@ contao_catch_all:
     path: /{_url_fragment}
     defaults:
         _scope: frontend
+        _token_check: true
         _controller: ContaoCoreBundle:Frontend:index
     requirements:
         _url_fragment: .*

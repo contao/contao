@@ -12,10 +12,12 @@ namespace Contao\CoreBundle\Test\Framework;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 /**
  * Tests the ContaoFramework class.
@@ -193,6 +195,8 @@ class ContaoFrameworkTest extends TestCase
         $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
+        $container->setParameter('contao.csrf_token_name', 'dummy_token');
+        $container->set('security.csrf.token_manager', new CsrfTokenManager());
 
         // Ensure to use the fixtures class
         Config::preload();
@@ -274,38 +278,13 @@ class ContaoFrameworkTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_token_check', true);
         $request->setMethod('POST');
         $request->request->set('REQUEST_TOKEN', 'foobar');
 
         $container = $this->mockContainerWithContaoScopes();
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
-
-        $tokenGenerator = $this->getMock(
-            'Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface',
-            ['generateToken']
-        );
-
-        $tokenGenerator
-            ->expects($this->any())
-            ->method('generateToken')
-            ->willReturn('foobar')
-        ;
-
-        $tokenManager = $this->getMock(
-            'Symfony\Component\Security\Csrf\CsrfTokenManager',
-            ['isTokenValid'],
-            [
-                $tokenGenerator,
-                $this->getMock('Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface'),
-            ]
-        );
-
-        $tokenManager
-            ->expects($this->any())
-            ->method('isTokenValid')
-            ->willReturn('true')
-        ;
 
         $framework = $this->mockContaoFramework(
             $container->get('request_stack'),
@@ -314,20 +293,100 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->setContainer($container);
         $framework->initialize();
+    }
 
-        $this->assertTrue(defined('TL_MODE'));
-        $this->assertTrue(defined('TL_START'));
-        $this->assertTrue(defined('TL_ROOT'));
-        $this->assertTrue(defined('TL_REFERER_ID'));
-        $this->assertTrue(defined('TL_SCRIPT'));
-        $this->assertTrue(defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('TL_PATH'));
-        $this->assertEquals('BE', TL_MODE);
-        $this->assertEquals($this->getRootDir(), TL_ROOT);
-        $this->assertEquals('', TL_REFERER_ID);
-        $this->assertEquals('contao/install', TL_SCRIPT);
-        $this->assertEquals('', TL_PATH);
+    /**
+     * Tests initializing the framework with an invalid request token.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     * @expectedException \Contao\CoreBundle\Exception\InvalidRequestTokenException
+     */
+    public function testInvalidRequestToken()
+    {
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_token_check', true);
+        $request->setMethod('POST');
+        $request->request->set('REQUEST_TOKEN', 'invalid');
+
+        $container = $this->mockContainerWithContaoScopes();
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $container->get('request_stack')->push($request);
+
+        $rtAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['get', 'validate'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $rtAdapter
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn('nonsense')
+        ;
+
+        $rtAdapter
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn(false)
+        ;
+
+        $framework = $this->mockContaoFramework(
+            $container->get('request_stack'),
+            null,
+            ['Contao\RequestToken' => $rtAdapter]
+        );
+
+        $framework->setContainer($container);
+        $framework->initialize();
+    }
+
+    /**
+     * Tests if the request token check is skipped if the attribute is false.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRequestTokenCheckSkippedIfAttributeFalse()
+    {
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_token_check', false);
+        $request->setMethod('POST');
+        $request->request->set('REQUEST_TOKEN', 'foobar');
+
+        $container = $this->mockContainerWithContaoScopes();
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $container->get('request_stack')->push($request);
+
+        $rtAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['get', 'validate'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $rtAdapter
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn('foobar')
+        ;
+
+        $rtAdapter
+            ->expects($this->never())
+            ->method('validate')
+        ;
+
+        $framework = $this->mockContaoFramework(
+            $container->get('request_stack'),
+            null,
+            ['Contao\RequestToken' => $rtAdapter]
+        );
+
+        $framework->setContainer($container);
+        $framework->initialize();
     }
 
     /**
@@ -346,10 +405,12 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $configAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+        $configAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
             ->disableOriginalConstructor()
             ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
-            ->getMock();
+            ->getMock()
+        ;
 
         $configAdapter
             ->expects($this->any())
@@ -377,7 +438,7 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockContaoFramework(
             $container->get('request_stack'),
             $this->mockRouter('/contao/install'),
-            $configAdapter
+            ['Contao\Config' => $configAdapter]
         );
 
         $framework->setContainer($container);
@@ -413,9 +474,12 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testGetAdapter()
     {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Framework\Adapter',
-            $this->mockContaoFramework()->getAdapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass')
+        $framework = $this->mockContaoFramework(
+            null,
+            null,
+            ['LegacyClass' => new Adapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass')]
         );
+
+        $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $framework->getAdapter('LegacyClass'));
     }
 }

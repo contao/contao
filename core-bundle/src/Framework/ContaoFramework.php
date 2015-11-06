@@ -415,16 +415,20 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function handleRequestToken()
     {
+        /** @var RequestToken $requestToken */
+        $requestToken = $this->getAdapter('Contao\RequestToken');
+
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         if (!defined('REQUEST_TOKEN')) {
-            define('REQUEST_TOKEN', RequestToken::get());
+            define('REQUEST_TOKEN', $requestToken->get());
         }
 
-        if (null === $this->request || 'POST' !== $this->request->getRealMethod()) {
-            return;
-        }
-
-        if (RequestToken::validate($this->request->request->get('REQUEST_TOKEN'))) {
+        if (null === $this->request
+            || 'POST' !== $this->request->getRealMethod()
+            || !$this->request->attributes->has('_token_check')
+            || false === $this->request->attributes->get('_token_check')
+            || $requestToken->validate($this->request->request->get('REQUEST_TOKEN'))
+        ) {
             return;
         }
 
