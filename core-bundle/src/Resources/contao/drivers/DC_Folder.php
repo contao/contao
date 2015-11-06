@@ -79,6 +79,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * Initialize the object
 	 *
 	 * @param string $strTable
+	 *
+	 * @throws AccessDeniedException
 	 */
 	public function __construct($strTable)
 	{
@@ -530,6 +532,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Create a new folder
+	 *
+	 * @throws AccessDeniedException
+	 * @throws InternalServerErrorException
 	 */
 	public function create()
 	{
@@ -563,6 +568,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * Move an existing file or folder
 	 *
 	 * @param string $source
+	 *
+	 * @throws AccessDeniedException
+	 * @throws InternalServerErrorException
 	 */
 	public function cut($source=null)
 	{
@@ -670,6 +678,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Move all selected files and folders
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function cutAll()
 	{
@@ -706,6 +716,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 *
 	 * @param string $source
 	 * @param string $destination
+	 *
+	 * @throws AccessDeniedException
+	 * @throws InternalServerErrorException
 	 */
 	public function copy($source=null, $destination=null)
 	{
@@ -835,6 +848,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Move all selected files and folders
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function copyAll()
 	{
@@ -870,6 +885,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * Recursively delete files and folders
 	 *
 	 * @param string $source
+	 *
+	 * @throws AccessDeniedException
+	 * @throws InternalServerErrorException
 	 */
 	public function delete($source=null)
 	{
@@ -941,6 +959,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Delete all files and folders that are currently shown
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function deleteAll()
 	{
@@ -984,6 +1004,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * @param boolean $blnIsAjax
 	 *
 	 * @return string
+	 *
+	 * @throws AccessDeniedException
 	 */
 	public function move($blnIsAjax=false)
 	{
@@ -1142,6 +1164,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * Auto-generate a form to rename a file or folder
 	 *
 	 * @return string
+	 *
+	 * @throws AccessDeniedException
 	 */
 	public function edit()
 	{
@@ -1466,6 +1490,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * Auto-generate a form to edit all records that are currently shown
 	 *
 	 * @return string
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function editAll()
 	{
@@ -1790,6 +1816,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * Load the source editor
 	 *
 	 * @return string
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function source()
 	{
@@ -1989,6 +2017,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Protect a folder
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function protect()
 	{
@@ -2252,6 +2282,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * Synchronize the file system with the database
 	 *
 	 * @return string
+	 *
+	 * @throws AccessDeniedException
 	 */
 	public function sync()
 	{
@@ -2818,6 +2850,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * @param string $strFile
 	 *
 	 * @return boolean
+	 *
+	 * @throws AccessDeniedException
 	 */
 	protected function isValid($strFile)
 	{

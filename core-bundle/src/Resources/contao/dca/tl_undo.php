@@ -133,6 +133,8 @@ class tl_undo extends Backend
 
 	/**
 	 * Check permissions to use table tl_undo
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{

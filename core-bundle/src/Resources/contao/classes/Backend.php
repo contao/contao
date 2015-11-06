@@ -284,6 +284,8 @@ abstract class Backend extends \Controller
 	 * @param string $module
 	 *
 	 * @return string
+	 *
+	 * @throws AccessDeniedException
 	 */
 	protected function getBackendModule($module)
 	{
@@ -821,6 +823,7 @@ abstract class Backend extends \Controller
 	 *
 	 * @param string $strKey
 	 *
+	 * @throws AccessDeniedException
 	 * @throws \RuntimeException
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
@@ -976,6 +979,7 @@ abstract class Backend extends \Controller
 	 *
 	 * @param string $strKey
 	 *
+	 * @throws AccessDeniedException
 	 * @throws \RuntimeException
 	 */
 	public static function addFilesBreadcrumb($strKey='tl_files_node')

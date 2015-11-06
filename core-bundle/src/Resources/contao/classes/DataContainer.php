@@ -171,6 +171,7 @@ abstract class DataContainer extends \Backend
 	 *
 	 * @return string
 	 *
+	 * @throws AccessDeniedException
 	 * @throws \Exception
 	 */
 	protected function row($strPalette=null)

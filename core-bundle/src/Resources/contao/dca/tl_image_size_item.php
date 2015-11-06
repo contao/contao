@@ -228,6 +228,8 @@ class tl_image_size_item extends Backend
 
 	/**
 	 * Check permissions to edit the table
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{

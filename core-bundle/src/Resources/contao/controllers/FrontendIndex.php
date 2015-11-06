@@ -42,6 +42,8 @@ class FrontendIndex extends \Frontend
 	 * Run the controller
 	 *
 	 * @return Response
+	 *
+	 * @throws AccessDeniedException
 	 */
 	public function run()
 	{

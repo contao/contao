@@ -245,6 +245,8 @@ class tl_files extends Backend
 
 	/**
 	 * Check permissions to edit the file system
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{

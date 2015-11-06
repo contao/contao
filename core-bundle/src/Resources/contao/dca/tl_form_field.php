@@ -432,6 +432,9 @@ class tl_form_field extends Backend
 
 	/**
 	 * Check permissions to edit table tl_form_field
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws Contao\CoreBundle\Exception\InternalServerErrorException
 	 */
 	public function checkPermission()
 	{

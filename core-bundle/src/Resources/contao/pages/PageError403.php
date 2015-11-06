@@ -73,6 +73,8 @@ class PageError403 extends \Frontend
 	 *
 	 * @return PageModel
 	 *
+	 * @throws AccessDeniedException
+	 *
 	 * @internal
 	 */
 	protected function prepare($objRootPage=null)

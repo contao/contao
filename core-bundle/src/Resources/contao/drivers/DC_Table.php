@@ -645,6 +645,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * Insert a new row into a database table
 	 *
 	 * @param array $set
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function create($set=array())
 	{
@@ -745,6 +747,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * Assign a new position to an existing record
 	 *
 	 * @param boolean $blnDoNotRedirect
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function cut($blnDoNotRedirect=false)
 	{
@@ -838,6 +842,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Move all selected records
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function cutAll()
 	{
@@ -872,6 +878,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * @param boolean $blnDoNotRedirect
 	 *
 	 * @return integer|boolean
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function copy($blnDoNotRedirect=false)
 	{
@@ -1170,6 +1178,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Move all selected records
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function copyAll()
 	{
@@ -1452,6 +1462,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * Delete a record of the current table table and save it to tl_undo
 	 *
 	 * @param boolean $blnDoNotRedirect
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function delete($blnDoNotRedirect=false)
 	{
@@ -1578,6 +1590,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Delete all selected records
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function deleteAll()
 	{
@@ -1778,6 +1792,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * @param integer $ajaxId
 	 *
 	 * @return string
+	 *
+	 * @throws AccessDeniedException
+	 * @throws InternalServerErrorException
 	 */
 	public function edit($intId=null, $ajaxId=null)
 	{
@@ -2208,6 +2225,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * @param integer $ajaxId
 	 *
 	 * @return string
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function editAll($intId=null, $ajaxId=null)
 	{
@@ -2609,6 +2628,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * Auto-generate a form to override all records that are currently shown
 	 *
 	 * @return string
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function overrideAll()
 	{

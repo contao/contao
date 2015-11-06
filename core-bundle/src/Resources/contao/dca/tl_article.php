@@ -361,6 +361,8 @@ class tl_article extends Backend
 
 	/**
 	 * Check permissions to edit table tl_page
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -439,7 +441,6 @@ class tl_article extends Backend
 			$session['CLIPBOARD']['tl_article']['id'] = $clipboard;
 		}
 
-		$error = false;
 		$permission = 0;
 
 		// Overwrite the session
@@ -947,6 +948,8 @@ class tl_article extends Backend
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
