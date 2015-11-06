@@ -398,7 +398,7 @@ class PrettyErrorScreenListener
      *
      * @param \Exception $exception The exception
      *
-     * @return int The statux code
+     * @return int The status code
      */
     private function getStatusCodeForException(\Exception $exception)
     {
