@@ -123,7 +123,7 @@ class PrettyErrorScreenListener
 
         switch (true) {
             case $this->isBackendUser():
-                $this->renderErrorScreenByException($event);
+                $this->renderBackendException($event);
                 break;
 
             case $exception instanceof AccessDeniedHttpException:
@@ -141,6 +141,19 @@ class PrettyErrorScreenListener
             default:
                 $this->renderErrorScreenByException($event);
         }
+    }
+
+    /**
+     * Renders a back end exception.
+     *
+     * @param GetResponseForExceptionEvent $event The event object
+     */
+    private function renderBackendException(GetResponseForExceptionEvent $event)
+    {
+        $exception = $event->getException();
+
+        $this->logException($exception);
+        $this->renderTemplate('backend', $this->getStatusCodeForException($exception), $event);
     }
 
     /**
@@ -200,13 +213,8 @@ class PrettyErrorScreenListener
      */
     private function renderErrorScreenByException(GetResponseForExceptionEvent $event)
     {
-        $statusCode = 500;
         $exception = $event->getException();
-
-        // Set the status code
-        if ($exception instanceof HttpException) {
-            $statusCode = $exception->getStatusCode();
-        }
+        $statusCode = $this->getStatusCodeForException($exception);
 
         $this->logException($exception);
 
@@ -215,7 +223,7 @@ class PrettyErrorScreenListener
             $template = $this->getTemplateForException($exception);
         } while (null === $template && null !== ($exception = $exception->getPrevious()));
 
-        $this->renderTemplate($template ?: 'internal_server_error', $statusCode, $event);
+        $this->renderTemplate($template ?: 'error', $statusCode, $event);
     }
 
     /**
@@ -325,7 +333,7 @@ class PrettyErrorScreenListener
             'template' => $view,
             'base' => $event->getRequest()->getBasePath(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;' . $encoded,
-            'exception' => ($this->isBackendUser() ? $event->getException()->getMessage() : ''),
+            'exception' => $event->getException()->getMessage(),
         ];
     }
 
@@ -371,5 +379,17 @@ class PrettyErrorScreenListener
     private function isBackendUser()
     {
         return $this->tokenStorage->getToken()->getUser() instanceof BackendUser;
+    }
+
+    /**
+     * Returns the status code for an exception.
+     *
+     * @param \Exception $exception The exception
+     *
+     * @return int The statux code
+     */
+    private function getStatusCodeForException(\Exception $exception)
+    {
+        return $exception instanceof HttpException ? $exception->getStatusCode() : 500;
     }
 }
