@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Test\DependencyInjection;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 /**
  * Tests the ContaoCoreExtension class.
@@ -49,7 +50,7 @@ class ContaoCoreExtensionTest extends TestCase
      */
     public function testLoad()
     {
-        $container = new ContainerBuilder();
+        $container = new ContainerBuilder(new ParameterBag(['kernel.debug' => false]));
 
         $params = [
             'contao' => [

@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -20,6 +21,21 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
+    /**
+     * @var bool
+     */
+    private $debug;
+
+    /**
+     * Constructor.
+     *
+     * @param bool $debug If kernel debug mode is enabled
+     */
+    public function __construct($debug)
+    {
+        $this->debug = (bool) $debug;
+    }
+
     /**
      * Generates the configuration tree builder.
      *
@@ -70,6 +86,32 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
 
+        $this->addImageSection($rootNode);
+
         return $treeBuilder;
+    }
+
+    /**
+     * Configures the `contao.image` section.
+     *
+     * @param ArrayNodeDefinition $rootNode
+     */
+    private function addImageSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('image')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('bypass_cache')
+                            ->defaultValue($this->debug)
+                        ->end()
+                        ->scalarNode('target_path')
+                            ->defaultValue('assets/images')
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+        ;
     }
 }

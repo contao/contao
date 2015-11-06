@@ -308,7 +308,7 @@ $GLOBALS['TL_PURGE'] = array
 		'images' => array
 		(
 			'callback' => array('Automator', 'purgeImageCache'),
-			'affected' => array('assets/images')
+			'affected' => array(System::getContainer()->getParameter('contao.image.target_path'))
 		),
 		'scripts' => array
 		(

@@ -44,6 +44,17 @@ class ContaoCoreExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        // Will add the resource to the container
+        parent::getConfiguration($config, $container);
+
+        return new Configuration($container->getParameter('kernel.debug'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader(
@@ -59,6 +70,8 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.encryption_key', $mergedConfig['encryption_key']);
         $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
         $container->setParameter('contao.upload_path', $mergedConfig['upload_path']);
+        $container->setParameter('contao.image.bypass_cache', $mergedConfig['image']['bypass_cache']);
+        $container->setParameter('contao.image.target_dir', $mergedConfig['image']['target_dir']);
         $container->setParameter('contao.csrf_token_name', $mergedConfig['csrf_token_name']);
         $container->setParameter('contao.pretty_error_screens', $mergedConfig['pretty_error_screens']);
         $container->setParameter('contao.error_level', $mergedConfig['error_level']);
