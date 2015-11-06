@@ -924,7 +924,6 @@ class tl_content extends Backend
 	 * @param boolean $blnIsPid
 	 *
 	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
-	 * @throws Contao\CoreBundle\Exception\InternalServerErrorException
 	 */
 	protected function checkAccessToElement($id, $pagemounts, $blnIsPid=false)
 	{
@@ -944,7 +943,7 @@ class tl_content extends Backend
 		// Invalid ID
 		if ($objPage->numRows < 1)
 		{
-			throw new Contao\CoreBundle\Exception\InternalServerErrorException('Invalid content element ID ' . $id . '.');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid content element ID ' . $id . '.');
 		}
 
 		// The page is not mounted

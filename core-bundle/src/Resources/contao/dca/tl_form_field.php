@@ -434,7 +434,6 @@ class tl_form_field extends Backend
 	 * Check permissions to edit table tl_form_field
 	 *
 	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
-	 * @throws Contao\CoreBundle\Exception\InternalServerErrorException
 	 */
 	public function checkPermission()
 	{
@@ -543,7 +542,7 @@ class tl_form_field extends Backend
 			default:
 				if (strlen(Input::get('act')))
 				{
-					throw new Contao\CoreBundle\Exception\InternalServerErrorException('Invalid command "' . Input::get('act') . '".');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
 				elseif (!in_array($id, $root))
 				{
