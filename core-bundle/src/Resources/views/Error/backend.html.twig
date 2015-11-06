@@ -2,8 +2,7 @@
 {% block title %}
     {{ statusName }}
 {% endblock %}
-{% block matter %}
+{% block main %}
+    <h2>{{ error.matter }}</h2>
     <p>{{ exception }}</p>
 {% endblock %}
-{% block howToFix %}{% endblock %}
-{% block explain %}{% endblock %}
