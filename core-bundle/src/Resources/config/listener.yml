@@ -30,6 +30,13 @@
 # -  64: ResponseExceptionListener
 # - -96: PrettyErrorScreensListener
 #
+# Maintenance listener
+#
+# The priority of the maintenance listener must be higher than the one of the
+# Lexik maintenance bundle (defaults to 0).
+#
+# - 10: BypassMaintenanceListener
+#
 # Do not change the priorities unless you know what you are doing!
 ##
 services:
