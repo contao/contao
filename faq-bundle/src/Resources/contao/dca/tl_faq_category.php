@@ -245,6 +245,8 @@ class tl_faq_category extends Backend
 
 	/**
 	 * Check permissions to edit table tl_news_archive
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -351,8 +353,7 @@ class tl_faq_category extends Backend
 			case 'show':
 				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'faqp')))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' FAQ category ID "'.Input::get('id').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ category ID ' . Input::get('id') . '.');
 				}
 				break;
 
@@ -374,8 +375,7 @@ class tl_faq_category extends Backend
 			default:
 				if (strlen(Input::get('act')))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' FAQ categories', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ categories.');
 				}
 				break;
 		}

@@ -490,14 +490,15 @@ class tl_faq extends Backend
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
 		// Check permissions to publish
 		if (!$this->User->hasAccess('tl_faq::published', 'alexf'))
 		{
-			$this->log('Not enough permissions to publish/unpublish FAQ ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish FAQ ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_faq', $intId);
