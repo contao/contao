@@ -501,7 +501,9 @@ class Config
 			'addLanguageToUrl' => 'contao.prepend_locale',
 			'encryptionKey'    => 'contao.encryption_key',
 			'urlSuffix'        => 'contao.url_suffix',
-			'uploadPath'       => 'contao.upload_path'
+			'uploadPath'       => 'contao.upload_path',
+			'debugMode'        => 'kernel.debug',
+			'disableIpCheck'   => 'contao.security.disable_ip_check',
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)
@@ -511,9 +513,6 @@ class Config
 				$GLOBALS['TL_CONFIG'][$strKey] = $container->getParameter($strParam);
 			}
 		}
-
-		$GLOBALS['TL_CONFIG']['debugMode'] = $container->getParameter('kernel.debug');
-		$GLOBALS['TL_CONFIG']['disableIpCheck'] = $container->getParameter('contao.security.disable_ip_check');
 	}
 
 
