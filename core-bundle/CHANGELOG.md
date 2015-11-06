@@ -2,6 +2,7 @@
 
 ### 4.1.0-RC1 (2015-XX-XX)
 
+ * Support the Lexik maintenance bundle if it is installed (see #283).
  * Throw an exception instead of redirecting to `/contao?act=error` (see #395).
  * Make the image caching and target path configurable (see #381).
  * Call the load_callback when loading the page/file tree via ajax (see #398).
@@ -18,7 +19,6 @@
 ### 4.1.0-beta1 (2015-10-21)
 
  * Add all translations which are at least 95% complete.
- * Use the Lexik maintenance bundle to put the app into maintenance mode (see #283).
  * Update the hash of an existing file in `Dbafs::addResource()` (see contao/core#7828).
  * Add a more accurate e-mail validation with unicode support (see #367).
  * Add the "env::base_url" insert tag (see #322).
