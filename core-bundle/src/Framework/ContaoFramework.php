@@ -34,7 +34,7 @@ use Symfony\Component\Routing\RouterInterface;
  * @author Dominik Tomasi <https://github.com/dtomasi>
  * @author Andreas Schempp <https://github.com/aschempp>
  *
- * @internal
+ * @internal Do not instantiate this class in your code. Use the "contao.framework" service instead.
  */
 class ContaoFramework implements ContaoFrameworkInterface
 {

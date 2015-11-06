@@ -98,7 +98,7 @@ class FrontendTemplate extends \Template
 	 *
 	 * @throws \UnusedArgumentsException If there are unused $_GET parameters
 	 *
-	 * @internal
+	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
 	protected function compile($blnCheckRequest=false)
 	{

@@ -18,8 +18,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Synchronizes the file system with the database.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @internal
  */
 class FilesyncCommand extends AbstractLockedCommand
 {
