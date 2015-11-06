@@ -279,7 +279,7 @@ class FormFileUpload extends \Widget implements \uploadable
 							$objFile = \Dbafs::addResource($strFile);
 						}
 
-						$strUuid = \StringUtil::binToUuid(\Dbafs::addResource($strFile)->uuid);
+						$strUuid = \StringUtil::binToUuid($objFile->uuid);
 
 						// Update the hash of the target folder
 						\Dbafs::updateFolderHashes($strUploadFolder);
