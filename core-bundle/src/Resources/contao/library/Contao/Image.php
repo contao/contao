@@ -14,7 +14,7 @@ namespace Contao;
 /**
  * Resizes images
  *
- * The class resizes images and stores them in the image cache folder.
+ * The class resizes images and stores them in the image target folder.
  *
  * Usage:
  *
@@ -922,7 +922,7 @@ class Image
 
 
 	/**
-	 * Resize an image and store the resized version in the image cache folder
+	 * Resize an image and store the resized version in the image target folder
 	 *
 	 * @param string  $image        The image path
 	 * @param integer $width        The target width

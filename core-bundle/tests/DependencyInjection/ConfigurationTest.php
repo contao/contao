@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\DependencyInjection;
 
-
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 
@@ -22,7 +21,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     private $configuration;
 
     /**
-     * Creates the core extension object.
+     * {@inheritdoc}
      */
     protected function setUp()
     {
@@ -41,20 +40,30 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests an invalid upload path.
+     *
+     * @param string $uploadPath The upload path
+     *
      * @dataProvider invalidUploadPathProvider
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
     public function testInvalidUploadPath($uploadPath)
     {
         $processor = new Processor();
+
         $processor->processConfiguration($this->configuration, [
             'contao' => [
                 'encryption_key' => 's3cr3t',
                 'upload_path' => $uploadPath,
-            ]
+            ],
         ]);
     }
 
+    /**
+     * Provides the data for the testInvalidUploadPath() method.
+     *
+     * @return array The test data
+     */
     public function invalidUploadPathProvider()
     {
         return [

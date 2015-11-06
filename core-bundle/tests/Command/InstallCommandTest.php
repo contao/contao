@@ -58,14 +58,14 @@ class InstallCommandTest extends TestCase
      */
     public function testOutput()
     {
-        $command = new InstallCommand('contao:install');
-        $tester = new CommandTester($command);
-
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
         $container->setParameter('contao.image.target_path', 'assets/images');
+
+        $command = new InstallCommand('contao:install');
         $command->setContainer($container);
 
+        $tester = new CommandTester($command);
         $code = $tester->execute([]);
 
         $this->assertEquals(0, $code);
