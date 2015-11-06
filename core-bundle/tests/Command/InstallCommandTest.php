@@ -56,7 +56,7 @@ class InstallCommandTest extends TestCase
     }
 
     /**
-     * Tests the installer output.
+     * Tests the installation.
      */
     public function testInstallation()
     {
@@ -84,9 +84,9 @@ class InstallCommandTest extends TestCase
     }
 
     /**
-     * Tests directories from container parameters.
+     * Tests the installation with a custom files and images directory.
      */
-    public function testInstallationWithContainerParameters()
+    public function testInstallationWithCustomPaths()
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
