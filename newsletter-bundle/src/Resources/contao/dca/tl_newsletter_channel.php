@@ -222,6 +222,8 @@ class tl_newsletter_channel extends Backend
 
 	/**
 	 * Check permissions to edit table tl_newsletter_channel
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -320,8 +322,7 @@ class tl_newsletter_channel extends Backend
 			case 'show':
 				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsletterp')))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' newsletter channel ID "'.Input::get('id').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter channel ID ' . Input::get('id') . '.');
 				}
 				break;
 
@@ -343,8 +344,7 @@ class tl_newsletter_channel extends Backend
 			default:
 				if (strlen(Input::get('act')))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' newsletter channels', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter channels.');
 				}
 				break;
 		}
