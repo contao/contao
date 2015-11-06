@@ -31,8 +31,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *
  * @author Christian Schiffler <https://github.com/discordier>
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @internal
  */
 class PrettyErrorScreenListener
 {

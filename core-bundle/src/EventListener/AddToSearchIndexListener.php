@@ -19,8 +19,6 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
- *
- * @internal
  */
 class AddToSearchIndexListener
 {

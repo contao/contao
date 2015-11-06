@@ -57,7 +57,7 @@ class PageRegular extends \Frontend
 	 *
 	 * @param PageModel $objPage
 	 *
-	 * @internal
+	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
 	protected function prepare($objPage)
 	{

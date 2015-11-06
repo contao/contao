@@ -23,8 +23,6 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  * Collects debug information for the web profiler.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
- *
- * @internal
  */
 class ContaoDataCollector extends DataCollector
 {
