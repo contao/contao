@@ -40,6 +40,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
+    contao.listener.bypass_maintenance:
+        class: Contao\CoreBundle\EventListener\BypassMaintenanceListener
+        arguments:
+            - "@session"
+            - "%contao.security.disable_ip_check%"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 10 }
+
     contao.listener.command_scheduler:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:

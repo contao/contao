@@ -93,6 +93,14 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('security')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('disable_ip_check')
+                            ->defaultFalse()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 
