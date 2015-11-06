@@ -36,11 +36,12 @@
     "require-dev": {
         "composer/composer": "~1.0@dev",
         "fabpot/php-cs-fixer": "~1.8",
+        "lexik/maintenance-bundle": "~2.0",
         "phpunit/phpunit": "~4.5",
         "symfony/phpunit-bridge": "~2.7"
     },
     "suggest": {
-        "lexik/maintenance-bundle": "to toggle the maintenance mode in the Contao back end"
+        "lexik/maintenance-bundle": "to put the application into maintenance mode"
     },
     "config": {
         "component-dir": "vendor/contao-components"

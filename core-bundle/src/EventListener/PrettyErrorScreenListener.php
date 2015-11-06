@@ -70,7 +70,6 @@ class PrettyErrorScreenListener
         'Contao\CoreBundle\Exception\NoActivePageFoundException' => 'no_active_page_found',
         'Contao\CoreBundle\Exception\NoLayoutSpecifiedException' => 'no_layout_specified',
         'Contao\CoreBundle\Exception\NoRootPageFoundException' => 'no_root_page_found',
-        'Contao\CoreBundle\Exception\ServiceUnavailableException' => 'service_unavailable',
     ];
 
     /**

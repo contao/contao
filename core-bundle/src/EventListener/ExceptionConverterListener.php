@@ -38,7 +38,7 @@ class ExceptionConverterListener
         'Contao\CoreBundle\Exception\NoLayoutSpecifiedException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\NoRootPageFoundException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\PageNotFoundException' => 'NotFoundHttpException',
-        'Contao\CoreBundle\Exception\ServiceUnavailableException' => 'ServiceUnavailableHttpException',
+        'Contao\CoreBundle\Exception\ServiceUnavailableException' => 'ServiceUnavailableHttpException', // to be removed in Contao 5.0
         'Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException' => 'ServiceUnavailableHttpException',
     ];
 
