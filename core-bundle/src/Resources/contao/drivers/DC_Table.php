@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -643,13 +645,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * Insert a new row into a database table
 	 *
 	 * @param array $set
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function create($set=array())
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'])
 		{
-			$this->log('Table "'.$this->strTable.'" is not creatable', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
 		// Get all default values for the new entry
@@ -744,13 +747,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * Assign a new position to an existing record
 	 *
 	 * @param boolean $blnDoNotRedirect
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function cut($blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
 		{
-			$this->log('Table "'.$this->strTable.'" is not sortable', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
 		$cr = array();
@@ -779,11 +783,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$arrClipboard[$this->strTable] = array();
 		$objSession->set('CLIPBOARD', $arrClipboard);
 
-		// Update the record
+		// Check for circular references
 		if (in_array($this->set['pid'], $cr))
 		{
-			$this->log('Attempt to relate record '.$this->intId.' of table "'.$this->strTable.'" to its child record '.\Input::get('pid').' (circular reference)', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Attempt to relate record ' . $this->intId . ' of table "' . $this->strTable . '" to its child record ' . \Input::get('pid') . ' (circular reference).');
 		}
 
 		$this->set['tstamp'] = time();
@@ -839,13 +842,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Move all selected records
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function cutAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
 		{
-			$this->log('Table "'.$this->strTable.'" is not sortable', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
 		/** @var SessionInterface $objSession */
@@ -874,13 +878,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * @param boolean $blnDoNotRedirect
 	 *
 	 * @return integer|boolean
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function copy($blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'])
 		{
-			$this->log('Table "'.$this->strTable.'" is not copyable', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
 		if (!$this->intId)
@@ -1173,13 +1178,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Move all selected records
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function copyAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'])
 		{
-			$this->log('Table "'.$this->strTable.'" is not copyable', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
 		/** @var SessionInterface $objSession */
@@ -1456,13 +1462,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * Delete a record of the current table table and save it to tl_undo
 	 *
 	 * @param boolean $blnDoNotRedirect
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function delete($blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
 		{
-			$this->log('Table "'.$this->strTable.'" is not deletable', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
 		if (!$this->intId)
@@ -1583,13 +1590,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 	/**
 	 * Delete all selected records
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function deleteAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
 		{
-			$this->log('Table "'.$this->strTable.'" is not deletable', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
 		/** @var SessionInterface $objSession */
@@ -1784,13 +1792,15 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * @param integer $ajaxId
 	 *
 	 * @return string
+	 *
+	 * @throws AccessDeniedException
+	 * @throws InternalServerErrorException
 	 */
 	public function edit($intId=null, $ajaxId=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
 		{
-			$this->log('Table "'.$this->strTable.'" is not editable', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		if ($intId != '')
@@ -1806,8 +1816,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Redirect if there is no record with the given ID
 		if ($objRow->numRows < 1)
 		{
-			$this->log('Could not load record "'.$this->strTable.'.id='.$this->intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		$this->objActiveRecord = $objRow;
@@ -2216,13 +2225,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * @param integer $ajaxId
 	 *
 	 * @return string
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function editAll($intId=null, $ajaxId=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
 		{
-			$this->log('Table "'.$this->strTable.'" is not editable', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		$return = '';
@@ -2618,13 +2628,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * Auto-generate a form to override all records that are currently shown
 	 *
 	 * @return string
+	 *
+	 * @throws InternalServerErrorException
 	 */
 	public function overrideAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
 		{
-			$this->log('Table "'.$this->strTable.'" is not editable', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		$return = '';

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -283,6 +284,8 @@ abstract class Backend extends \Controller
 	 * @param string $module
 	 *
 	 * @return string
+	 *
+	 * @throws AccessDeniedException
 	 */
 	protected function getBackendModule($module)
 	{
@@ -308,8 +311,7 @@ abstract class Backend extends \Controller
 		// Check whether the current user has access to the current module
 		elseif ($module != 'undo' && !$this->User->hasAccess($module, 'modules'))
 		{
-			$this->log('Back end module "' . $module . '" was not allowed for user "' . $this->User->username . '"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . $this->User->username . '".');
 		}
 
 		/** @var SessionInterface $objSession */
@@ -348,13 +350,12 @@ abstract class Backend extends \Controller
 
 		$dc = null;
 
-		// Redirect if the current table does not belong to the current module
+		// Create the data container object
 		if ($strTable != '')
 		{
 			if (!in_array($strTable, $arrTables))
 			{
-				$this->log('Table "' . $strTable . '" is not allowed in module "' . $module . '"', __METHOD__, TL_ERROR);
-				$this->redirect('contao/main.php?act=error');
+				throw new AccessDeniedException('Table "' . $strTable . '" is not allowed in module "' . $module . '".');
 			}
 
 			// Load the language and DCA file
@@ -822,6 +823,7 @@ abstract class Backend extends \Controller
 	 *
 	 * @param string $strKey
 	 *
+	 * @throws AccessDeniedException
 	 * @throws \RuntimeException
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
@@ -911,9 +913,7 @@ abstract class Backend extends \Controller
 		if (!$objUser->hasAccess($arrIds, 'pagemounts'))
 		{
 			$objSession->set($strKey, 0);
-
-			\System::log('Page ID '.$intNode.' was not mounted', __METHOD__, TL_ERROR);
-			\Controller::redirect('contao/main.php?act=error');
+			throw new AccessDeniedException('Page ID ' . $intNode . ' is not mounted.');
 		}
 
 		// Limit tree
@@ -979,6 +979,7 @@ abstract class Backend extends \Controller
 	 *
 	 * @param string $strKey
 	 *
+	 * @throws AccessDeniedException
 	 * @throws \RuntimeException
 	 */
 	public static function addFilesBreadcrumb($strKey='tl_files_node')
@@ -1054,9 +1055,7 @@ abstract class Backend extends \Controller
 		if (!$objUser->hasAccess($strNode, 'filemounts'))
 		{
 			$objSession->set($strKey, '');
-
-			\System::log('Folder ID '.$strNode.' was not mounted', __METHOD__, TL_ERROR);
-			\Controller::redirect('contao/main.php?act=error');
+			throw new AccessDeniedException('Folder ID "' . $strNode . '" is not mounted');
 		}
 
 		// Limit tree

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
+
 
 /**
  * Provide methods to handle data container arrays.
@@ -169,17 +171,17 @@ abstract class DataContainer extends \Backend
 	 *
 	 * @return string
 	 *
+	 * @throws AccessDeniedException
 	 * @throws \Exception
 	 */
 	protected function row($strPalette=null)
 	{
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField];
 
-		// Redirect if the field is excluded
+		// Check if the field is excluded
 		if ($arrData['exclude'])
 		{
-			$this->log('Field "'.$this->strField.'" of table "'.$this->strTable.'" was excluded from being edited', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new AccessDeniedException('Field "' . $this->strTable . '.' . $this->strField . '" is excluded from being edited.');
 		}
 
 		$xlabel = '';

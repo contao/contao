@@ -359,6 +359,8 @@ class tl_templates extends Backend
 	 * @param DataContainer $dc
 	 *
 	 * @return string
+	 *
+	 * @throws Contao\CoreBundle\Exception\InternalServerErrorException
 	 */
 	public function compareTemplate(DataContainer $dc)
 	{
@@ -406,7 +408,7 @@ class tl_templates extends Backend
 			// Abort if one file is missing
 			if (!$objCurrentFile->exists() || !$objCompareFile->exists())
 			{
-				$this->redirect('contao/main.php?act=error');
+				throw new Contao\CoreBundle\Exception\InternalServerErrorException('The source or target file does not exist.');
 			}
 
 			$objDiff = new Diff($objCompareFile->getContentAsArray(), $objCurrentFile->getContentAsArray());

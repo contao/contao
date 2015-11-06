@@ -627,6 +627,8 @@ class tl_style extends Backend
 
 	/**
 	 * Check permissions to edit the table
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -637,8 +639,7 @@ class tl_style extends Backend
 
 		if (!$this->User->hasAccess('css', 'themes'))
 		{
-			$this->log('Not enough permissions to access the style sheets module', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the style sheets module.');
 		}
 	}
 

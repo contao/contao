@@ -10,8 +10,8 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageError404;
@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Renders pretty error screens for exceptions.
@@ -51,6 +52,11 @@ class PrettyErrorScreenListener
     private $framework;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -75,17 +81,20 @@ class PrettyErrorScreenListener
      * @param bool                     $prettyErrorScreens True to render the error screens
      * @param \Twig_Environment        $twig               The twig environment
      * @param ContaoFrameworkInterface $framework          The Contao framework
+     * @param TokenStorageInterface    $tokenStorage       The token storage object
      * @param LoggerInterface|null     $logger             An optional logger service
      */
     public function __construct(
         $prettyErrorScreens,
         \Twig_Environment $twig,
         ContaoFrameworkInterface $framework,
+        TokenStorageInterface $tokenStorage,
         LoggerInterface $logger = null
     ) {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
+        $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
     }
 
@@ -113,12 +122,12 @@ class PrettyErrorScreenListener
         $exception = $event->getException();
 
         switch (true) {
-            case $exception instanceof AccessDeniedHttpException:
-                $this->renderErrorScreenByType(403, $event);
+            case $this->isBackendUser():
+                $this->renderBackendException($event);
                 break;
 
-            case $exception instanceof InternalServerErrorHttpException:
-                $this->renderErrorScreenByException($event);
+            case $exception instanceof AccessDeniedHttpException:
+                $this->renderErrorScreenByType(403, $event);
                 break;
 
             case $exception instanceof NotFoundHttpException:
@@ -130,10 +139,21 @@ class PrettyErrorScreenListener
                 break;
 
             default:
-                $this->logException($exception);
-                $this->renderTemplate('error', 500, $event);
-                break;
+                $this->renderErrorScreenByException($event);
         }
+    }
+
+    /**
+     * Renders a back end exception.
+     *
+     * @param GetResponseForExceptionEvent $event The event object
+     */
+    private function renderBackendException(GetResponseForExceptionEvent $event)
+    {
+        $exception = $event->getException();
+
+        $this->logException($exception);
+        $this->renderTemplate('backend', $this->getStatusCodeForException($exception), $event);
     }
 
     /**
@@ -193,25 +213,17 @@ class PrettyErrorScreenListener
      */
     private function renderErrorScreenByException(GetResponseForExceptionEvent $event)
     {
-        $statusCode = 500;
         $exception = $event->getException();
+        $statusCode = $this->getStatusCodeForException($exception);
 
-        // Set the status code
-        if ($exception instanceof HttpException) {
-            $statusCode = $exception->getStatusCode();
-        }
+        $this->logException($exception);
 
         // Look for a template
         do {
             $template = $this->getTemplateForException($exception);
         } while (null === $template && null !== ($exception = $exception->getPrevious()));
 
-        if (null === $template) {
-            return;
-        }
-
-        $this->logException($exception);
-        $this->renderTemplate($template, $statusCode, $event);
+        $this->renderTemplate($template ?: 'error', $statusCode, $event);
     }
 
     /**
@@ -246,7 +258,7 @@ class PrettyErrorScreenListener
         }
 
         $view = '@ContaoCore/Error/' . $template . '.html.twig';
-        $parameters = $this->getTemplateParameters($view, $statusCode, $event->getRequest()->getBasePath());
+        $parameters = $this->getTemplateParameters($view, $statusCode, $event);
 
         if (null === $parameters) {
             $event->setResponse($this->getErrorTemplate());
@@ -268,6 +280,7 @@ class PrettyErrorScreenListener
     {
         $parameters = [
             'statusCode' => 500,
+            'statusName' => 'Internal Server Error',
             'error' => [
                 'error' => 'An error occurred',
                 'matter' => 'What\'s the matter?',
@@ -287,6 +300,7 @@ class PrettyErrorScreenListener
             'template' => '@ContaoCore/Error/error.html.twig',
             'base' => '',
             'adminEmail' => '',
+            'exception' => '',
         ];
 
         return new Response($this->twig->render('@ContaoCore/Error/error.html.twig', $parameters), 500);
@@ -295,13 +309,13 @@ class PrettyErrorScreenListener
     /**
      * Returns the template parameters.
      *
-     * @param string $view       The name of the view
-     * @param int    $statusCode The HTTP status code
-     * @param string $basePath   The base path
+     * @param string                       $view       The name of the view
+     * @param int                          $statusCode The HTTP status code
+     * @param GetResponseForExceptionEvent $event      The event object
      *
      * @return array|null The template parameters or null
      */
-    private function getTemplateParameters($view, $statusCode, $basePath)
+    private function getTemplateParameters($view, $statusCode, GetResponseForExceptionEvent $event)
     {
         if (null === ($labels = $this->loadLanguageStrings())) {
             return null;
@@ -314,10 +328,12 @@ class PrettyErrorScreenListener
 
         return [
             'statusCode' => $statusCode,
+            'statusName' => Response::$statusTexts[$statusCode],
             'error' => $labels,
             'template' => $view,
-            'base' => $basePath,
+            'base' => $event->getRequest()->getBasePath(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;' . $encoded,
+            'exception' => $event->getException()->getMessage(),
         ];
     }
 
@@ -353,5 +369,27 @@ class PrettyErrorScreenListener
         }
 
         $this->logger->critical('An exception occurred.', ['exception' => $exception]);
+    }
+
+    /**
+     * Checks if the user is a back end user.
+     *
+     * @return bool True if the user is a back end user.
+     */
+    private function isBackendUser()
+    {
+        return $this->tokenStorage->getToken()->getUser() instanceof BackendUser;
+    }
+
+    /**
+     * Returns the status code for an exception.
+     *
+     * @param \Exception $exception The exception
+     *
+     * @return int The statux code
+     */
+    private function getStatusCodeForException(\Exception $exception)
+    {
+        return $exception instanceof HttpException ? $exception->getStatusCode() : 500;
     }
 }

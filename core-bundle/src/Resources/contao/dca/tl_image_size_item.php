@@ -228,6 +228,8 @@ class tl_image_size_item extends Backend
 
 	/**
 	 * Check permissions to edit the table
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -238,8 +240,7 @@ class tl_image_size_item extends Backend
 
 		if (!$this->User->hasAccess('image_sizes', 'themes'))
 		{
-			$this->log('Not enough permissions to access the image sizes module', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the image sizes module.');
 		}
 	}
 

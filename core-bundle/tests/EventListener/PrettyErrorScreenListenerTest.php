@@ -24,6 +24,8 @@ use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
  * Tests the PrettyErrorScreenListener class.
@@ -62,7 +64,13 @@ class PrettyErrorScreenListenerTest extends TestCase
         /** @var LoggerInterface $logger */
         $logger = $this->getMock('Psr\Log\LoggerInterface');
 
-        $this->listener = new PrettyErrorScreenListener(true, $twig, $this->mockContaoFramework(), $logger);
+        $this->listener = new PrettyErrorScreenListener(
+            true,
+            $twig,
+            $this->mockContaoFramework(),
+            $this->mockTokenStorage(),
+            $logger
+        );
     }
 
     /**
@@ -136,7 +144,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $response = $event->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals(409, $response->getStatusCode());
     }
 
     /**
@@ -201,7 +209,14 @@ class PrettyErrorScreenListenerTest extends TestCase
         $logger = $this->getMock('Psr\Log\LoggerInterface');
         $logger->expects($this->once())->method('critical');
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $this->mockContaoFramework(), $logger);
+        $listener = new PrettyErrorScreenListener(
+            true,
+            $twig,
+            $this->mockContaoFramework(),
+            $this->mockTokenStorage(),
+            $logger
+        );
+
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
@@ -210,5 +225,33 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
+    }
+
+    /**
+     * Mocks a token storage object.
+     *
+     * @return TokenStorage|\PHPUnit_Framework_MockObject_MockObject The token storage object
+     */
+    private function mockTokenStorage()
+    {
+        /** @var AbstractToken|\PHPUnit_Framework_MockObject_MockObject $token */
+        $token = $this->getMockForAbstractClass('Symfony\Component\Security\Core\Authentication\Token\AbstractToken');
+
+        $token
+            ->expects($this->any())
+            ->method('getUser')
+            ->willReturn($this->getMock('Contao\BackendUser'))
+        ;
+
+        /** @var TokenStorage|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage');
+
+        $tokenStorage
+            ->expects($this->any())
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        return $tokenStorage;
     }
 }

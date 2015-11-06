@@ -32,6 +32,7 @@ class ExceptionConverterListener
         'Contao\CoreBundle\Exception\ForwardPageNotFoundException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\IncompleteInstallationException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\InsecureInstallationException' => 'InternalServerErrorHttpException',
+        'Contao\CoreBundle\Exception\InternalServerErrorException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\InvalidRequestTokenException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\NoActivePageFoundException' => 'InternalServerErrorHttpException',
         'Contao\CoreBundle\Exception\NoLayoutSpecifiedException' => 'InternalServerErrorHttpException',
