@@ -18,7 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DcaExtractor;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
@@ -331,7 +330,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         try {
             $this->connection->query('SELECT COUNT(*) FROM tl_page');
-        } catch (TableNotFoundException $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
