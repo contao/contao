@@ -298,9 +298,9 @@ class ContaoFrameworkTest extends TestCase
     /**
      * Tests initializing the framework with an invalid request token.
      *
-     * @expectedException \Contao\CoreBundle\Exception\InvalidRequestTokenException
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     * @expectedException \Contao\CoreBundle\Exception\InvalidRequestTokenException
      */
     public function testInvalidRequestToken()
     {
@@ -314,7 +314,8 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $rtAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+        $rtAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
             ->setMethods(['get', 'validate'])
             ->disableOriginalConstructor()
             ->getMock()
@@ -343,12 +344,12 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests if request token test is skipped on request attribute.
+     * Tests if the request token check is skipped if the attribute is false.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testRequestTokenCheckSkippedIfAttributeSet()
+    public function testRequestTokenCheckSkippedIfAttributeFalse()
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -360,7 +361,8 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $rtAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+        $rtAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
             ->setMethods(['get', 'validate'])
             ->disableOriginalConstructor()
             ->getMock()
@@ -389,9 +391,10 @@ class ContaoFrameworkTest extends TestCase
 
     /**
      * Tests initializing the framework with an incomplete installation.
-     * @expectedException \Contao\CoreBundle\Exception\IncompleteInstallationException
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     * @expectedException \Contao\CoreBundle\Exception\IncompleteInstallationException
      */
     public function testIncompleteInstallation()
     {
@@ -402,10 +405,12 @@ class ContaoFrameworkTest extends TestCase
         $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
-        $configAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+        $configAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
             ->disableOriginalConstructor()
             ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
-            ->getMock();
+            ->getMock()
+        ;
 
         $configAdapter
             ->expects($this->any())
@@ -469,15 +474,12 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testGetAdapter()
     {
-        $legacyAdapter = new Adapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass');
-
-        $adapters = [
-            'Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass' => $legacyAdapter
-        ];
-
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Framework\Adapter',
-            $this->mockContaoFramework(null, null, $adapters)->getAdapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass')
+        $framework = $this->mockContaoFramework(
+            null,
+            null,
+            ['LegacyClass' => new Adapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass')]
         );
+
+        $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $framework->getAdapter('LegacyClass'));
     }
 }

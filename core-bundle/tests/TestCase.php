@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Abstract TestCase class.
@@ -214,9 +215,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Returns a ContaoFramework instance.
      *
-     * @param RequestStack    $requestStack  The request stack
-     * @param RouterInterface $router        The router object
-     * @param Adapter|null    $configAdapter An optional config adapter
+     * @param RequestStack    $requestStack The request stack
+     * @param RouterInterface $router       The router object
+     * @param array           $adapters     An optional array of adapters
      *
      * @return ContaoFramework The object instance
      */
@@ -256,8 +257,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ->setMethods(['getAdapter'])
             ->getMock()
         ;
-
-
 
         $framework
             ->expects($this->any())
@@ -330,7 +329,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockRequestTokenAdapter()
     {
-        $rtAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+        $rtAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
             ->setMethods(['get', 'validate'])
             ->disableOriginalConstructor()
             ->getMock()

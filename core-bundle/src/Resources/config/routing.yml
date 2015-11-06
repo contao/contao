@@ -7,7 +7,6 @@ contao_backend_redirect:
     path: /contao/
     defaults:
         _scope: backend
-        _token_check: true
         _controller: FrameworkBundle:Redirect:redirect
         route: contao_backend
         permanent: true
