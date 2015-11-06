@@ -2,6 +2,7 @@
 
 ### 4.1.0-RC1 (2015-XX-XX)
 
+ * Throw an exception instead of redirecting to `/contao?act=error` (see #395).
  * Make the image caching and target path configurable (see #381).
  * Call the load_callback when loading the page/file tree via ajax (see #398).
  * Load the random_compat library in the Composer script handler (see #397).
