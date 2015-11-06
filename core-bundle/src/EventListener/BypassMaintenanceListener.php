@@ -30,7 +30,7 @@ class BypassMaintenanceListener
     /**
      * @var bool
      */
-    private $bindSessionToIp;
+    private $disableIpCheck;
 
     /**
      * @var string
@@ -41,13 +41,13 @@ class BypassMaintenanceListener
      * Constructor.
      *
      * @param SessionInterface $session          The session object
-     * @param bool             $bindSessionToIp  Whether to bind the session to the IP address
+     * @param bool             $disableIpCheck   Whether to disable the IP check
      * @param string           $requestAttribute The request attribute name
      */
-    public function __construct(SessionInterface $session, $bindSessionToIp, $requestAttribute = '_bypass_maintenance')
+    public function __construct(SessionInterface $session, $disableIpCheck, $requestAttribute = '_bypass_maintenance')
     {
         $this->session = $session;
-        $this->bindSessionToIp = $bindSessionToIp;
+        $this->disableIpCheck = $disableIpCheck;
         $this->requestAttribute = $requestAttribute;
     }
 
@@ -84,7 +84,7 @@ class BypassMaintenanceListener
             sprintf(
                 '%s%sBE_USER_AUTH',
                 $this->session->getId(),
-                $this->bindSessionToIp ? $request->getClientIp() : ''
+                $this->disableIpCheck ? '' : $request->getClientIp()
             )
         );
 
