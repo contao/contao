@@ -477,6 +477,8 @@ class tl_news extends Backend
 
 	/**
 	 * Check permissions to edit table tl_news
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -516,8 +518,7 @@ class tl_news extends Backend
 			case 'create':
 				if (!strlen(Input::get('pid')) || !in_array(Input::get('pid'), $root))
 				{
-					$this->log('Not enough permissions to create news items in news archive ID "'.Input::get('pid').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create news items in news archive ID ' . Input::get('pid') . '.');
 				}
 				break;
 
@@ -525,8 +526,7 @@ class tl_news extends Backend
 			case 'copy':
 				if (!in_array(Input::get('pid'), $root))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' news item ID "'.$id.'" to news archive ID "'.Input::get('pid').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news item ID ' . $id . ' to news archive ID ' . Input::get('pid') . '.');
 				}
 				// NO BREAK STATEMENT HERE
 
@@ -541,14 +541,12 @@ class tl_news extends Backend
 
 				if ($objArchive->numRows < 1)
 				{
-					$this->log('Invalid news item ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid news item ID ' . $id . '.');
 				}
 
 				if (!in_array($objArchive->pid, $root))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' news item ID "'.$id.'" of news archive ID "'.$objArchive->pid.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news item ID ' . $id . ' of news archive ID ' . $objArchive->pid . '.');
 				}
 				break;
 
@@ -560,8 +558,7 @@ class tl_news extends Backend
 			case 'copyAll':
 				if (!in_array($id, $root))
 				{
-					$this->log('Not enough permissions to access news archive ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}
 
 				$objArchive = $this->Database->prepare("SELECT id FROM tl_news WHERE pid=?")
@@ -569,8 +566,7 @@ class tl_news extends Backend
 
 				if ($objArchive->numRows < 1)
 				{
-					$this->log('Invalid news archive ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid news archive ID ' . $id . '.');
 				}
 
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
@@ -584,13 +580,11 @@ class tl_news extends Backend
 			default:
 				if (strlen(Input::get('act')))
 				{
-					$this->log('Invalid command "'.Input::get('act').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
 				elseif (!in_array($id, $root))
 				{
-					$this->log('Not enough permissions to access news archive ID ' . $id, __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}
 				break;
 		}
@@ -877,6 +871,8 @@ class tl_news extends Backend
 	 * @param boolean $blnVisible
 	 *
 	 * @return string
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleFeatured($intId, $blnVisible)
 	{
@@ -888,8 +884,7 @@ class tl_news extends Backend
 		// Check permissions to feature
 		if (!$this->User->hasAccess('tl_news::featured', 'alexf'))
 		{
-			$this->log('Not enough permissions to feature/unfeature news item ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to feature/unfeature news item ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_news', $intId);
@@ -994,8 +989,7 @@ class tl_news extends Backend
 		// Check permissions to publish
 		if (!$this->User->hasAccess('tl_news::published', 'alexf'))
 		{
-			$this->log('Not enough permissions to publish/unpublish news item ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish news item ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_news', $intId);

@@ -69,10 +69,7 @@ class tl_content_news extends Backend
 			case 'create':
 			case 'select':
 				// Check access to the news item
-				if (!$this->checkAccessToElement(CURRENT_ID, $root, true))
-				{
-					$this->redirect('contao/main.php?act=error');
-				}
+				$this->checkAccessToElement(CURRENT_ID, $root, true);
 				break;
 
 			case 'editAll':
@@ -81,9 +78,9 @@ class tl_content_news extends Backend
 			case 'cutAll':
 			case 'copyAll':
 				// Check access to the parent element if a content element is moved
-				if ((Input::get('act') == 'cutAll' || Input::get('act') == 'copyAll') && !$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2)))
+				if (Input::get('act') == 'cutAll' || Input::get('act') == 'copyAll')
 				{
-					$this->redirect('contao/main.php?act=error');
+					$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
@@ -100,18 +97,12 @@ class tl_content_news extends Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				if (!$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2)))
-				{
-					$this->redirect('contao/main.php?act=error');
-				}
+				$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
 				// NO BREAK STATEMENT HERE
 
 			default:
 				// Check access to the content element
-				if (!$this->checkAccessToElement(Input::get('id'), $root))
-				{
-					$this->redirect('contao/main.php?act=error');
-				}
+				$this->checkAccessToElement(Input::get('id'), $root);
 				break;
 		}
 	}
@@ -124,7 +115,7 @@ class tl_content_news extends Backend
 	 * @param array   $root
 	 * @param boolean $blnIsPid
 	 *
-	 * @return boolean
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	protected function checkAccessToElement($id, $root, $blnIsPid=false)
 	{
@@ -144,20 +135,14 @@ class tl_content_news extends Backend
 		// Invalid ID
 		if ($objArchive->numRows < 1)
 		{
-			$this->log('Invalid news content element ID ' . $id, __METHOD__, TL_ERROR);
-
-			return false;
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid news content element ID ' . $id . '.');
 		}
 
 		// The news archive is not mounted
 		if (!in_array($objArchive->id, $root))
 		{
-			$this->log('Not enough permissions to modify article ID ' . $objArchive->nid . ' in news archive ID ' . $objArchive->id, __METHOD__, TL_ERROR);
-
-			return false;
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify article ID ' . $objArchive->nid . ' in news archive ID ' . $objArchive->id . '.');
 		}
-
-		return true;
 	}
 
 
