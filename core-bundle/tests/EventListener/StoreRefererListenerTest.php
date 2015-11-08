@@ -140,6 +140,42 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
+     * Tests that the session is not written if the back end session cannot be modified.
+     */
+    public function testListenerSkipIfBackendSessionNotModifiable()
+    {
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response()
+        );
+
+        $container = $this->mockContainerWithContaoScopes();
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+
+        $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
+
+        $session
+            ->expects($this->never())
+            ->method('set')
+        ;
+
+        $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+
+        $tokenStorage
+            ->expects($this->any())
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        $listener = $this->getListener($session, $tokenStorage);
+        $listener->setContainer($container);
+        $listener->onKernelResponse($responseEvent);
+    }
+
+    /**
      * Provides the data for the testRefererStoredOnKernelResponse() method.
      *
      * @return array The test data

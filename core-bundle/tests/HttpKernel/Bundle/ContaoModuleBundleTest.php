@@ -53,4 +53,14 @@ class ContaoModuleBundleTest extends TestCase
             $this->bundle->getPath()
         );
     }
+
+    /**
+     * Tests that an exception is thrown if the module folder does not exist.
+     *
+     * @expectedException \LogicException
+     */
+    public function testModuleFolderExists()
+    {
+        $this->bundle = new ContaoModuleBundle('invalid', $this->getRootDir() . '/app');
+    }
 }

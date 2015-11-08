@@ -91,8 +91,51 @@ class CommandSchedulerListenerTest extends TestCase
 
         $this->framework
             ->expects($this->any())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $this->framework
+            ->expects($this->any())
             ->method('createInstance')
             ->willReturn($this->getMock('Contao\FrontendCron', ['run']))
+        ;
+
+        $listener = new CommandSchedulerListener($this->framework);
+        $listener->onKernelTerminate();
+    }
+
+    /**
+     * Tests that the listener does nothing if the command scheduler has been disabled.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testDisableCron()
+    {
+        $adapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['get'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $adapter
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn(true)
+        ;
+
+        $this->framework = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $this->framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($adapter)
         ;
 
         $this->framework

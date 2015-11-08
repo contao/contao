@@ -41,6 +41,11 @@ class ContaoFramework implements ContaoFrameworkInterface
     use ContainerAwareTrait;
 
     /**
+     * @var bool
+     */
+    private static $initialized = false;
+
+    /**
      * @var RouterInterface
      */
     private $router;
@@ -69,11 +74,6 @@ class ContaoFramework implements ContaoFrameworkInterface
      * @var Request
      */
     private $request;
-
-    /**
-     * @var bool
-     */
-    private static $initialized = false;
 
     /**
      * @var array

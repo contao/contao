@@ -280,7 +280,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockConfigAdapter()
     {
-        $configAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+        $configAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
             ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
             ->disableOriginalConstructor()
             ->getMock()

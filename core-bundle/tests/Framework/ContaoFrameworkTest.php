@@ -25,6 +25,8 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
  * @author Christian Schiffler <https://github.com/discordier>
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Dominik Tomasi <https://github.com/dtomasi>
+ *
+ * @preserveGlobalState disabled
  */
 class ContaoFrameworkTest extends TestCase
 {
@@ -46,7 +48,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with a front end request.
      *
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testFrontendRequest()
     {
@@ -83,7 +84,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with a back end request.
      *
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testBackendRequest()
     {
@@ -120,7 +120,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework without a request.
      *
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testWithoutRequest()
     {
@@ -151,7 +150,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework without a scope.
      *
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testWithoutScope()
     {
@@ -185,7 +183,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests that the framework is not initialized twice.
      *
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testNotInitializedTwice()
     {
@@ -237,7 +234,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests that the error level will get updated when configured.
      *
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testErrorLevelOverride()
     {
@@ -272,7 +268,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with a valid request token.
      *
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testValidRequestToken()
     {
@@ -299,7 +294,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with an invalid request token.
      *
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      * @expectedException \Contao\CoreBundle\Exception\InvalidRequestTokenException
      */
     public function testInvalidRequestToken()
@@ -347,7 +341,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests if the request token check is skipped if the attribute is false.
      *
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testRequestTokenCheckSkippedIfAttributeFalse()
     {
@@ -393,7 +386,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with an incomplete installation.
      *
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      * @expectedException \Contao\CoreBundle\Exception\IncompleteInstallationException
      */
     public function testIncompleteInstallation()
@@ -442,6 +434,23 @@ class ContaoFrameworkTest extends TestCase
         );
 
         $framework->setContainer($container);
+        $framework->initialize();
+    }
+
+    /**
+     * Tests initializing the framework with a valid request token.
+     *
+     * @runInSeparateProcess
+     * @expectedException \LogicException
+     */
+    public function testContainerNotSet()
+    {
+        $framework = $this->mockContaoFramework(
+            new RequestStack(),
+            $this->mockRouter('/contao/install')
+        );
+
+        $framework->setContainer();
         $framework->initialize();
     }
 
