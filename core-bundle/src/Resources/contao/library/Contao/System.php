@@ -154,7 +154,7 @@ abstract class System
 		{
 			$container = static::getContainer();
 
-			if ($container->has($strClass))
+			if (!class_exists($strClass) && $container->has($strClass))
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
@@ -187,7 +187,7 @@ abstract class System
 		{
 			$container = static::getContainer();
 
-			if ($container->has($strClass))
+			if (!class_exists($strClass) && $container->has($strClass))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
