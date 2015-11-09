@@ -108,10 +108,10 @@ class ImageSizes
             return;
         }
 
-        $this->options = $GLOBALS['TL_CROP'];
-
         // The framework is required to have the TL_CROP options available
         $this->framework->initialize();
+
+        $this->options = $GLOBALS['TL_CROP'];
 
         $rows = $this->connection->fetchAll(
             'SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name'
