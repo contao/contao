@@ -423,12 +423,7 @@ class ContaoFramework implements ContaoFrameworkInterface
             define('REQUEST_TOKEN', $requestToken->get());
         }
 
-        if (null === $this->request
-            || 'POST' !== $this->request->getRealMethod()
-            || !$this->request->attributes->has('_token_check')
-            || false === $this->request->attributes->get('_token_check')
-            || $requestToken->validate($this->request->request->get('REQUEST_TOKEN'))
-        ) {
+        if ($this->canSkipTokenCheck() || $requestToken->validate($this->request->request->get('REQUEST_TOKEN'))) {
             return;
         }
 
@@ -450,5 +445,19 @@ class ContaoFramework implements ContaoFrameworkInterface
         if (function_exists('ini_set')) {
             ini_set($key, $value);
         }
+    }
+
+    /**
+     * Checks if the token check can be skipped.
+     *
+     * @return bool True if the token check can be skipped
+     */
+    private function canSkipTokenCheck()
+    {
+        return null === $this->request
+            || 'POST' !== $this->request->getRealMethod()
+            || !$this->request->attributes->has('_token_check')
+            || false === $this->request->attributes->get('_token_check')
+        ;
     }
 }

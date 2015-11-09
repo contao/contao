@@ -143,17 +143,47 @@ class ImageSizes
         $filteredSizes = [];
 
         foreach ($this->options as $group => $sizes) {
-            foreach ($sizes as $k => $v) {
-                if ($group == 'image_sizes') {
-                    if (in_array($k, $allowedSizes)) {
-                        $filteredSizes[$group][$k] = $v;
-                    }
-                } elseif (in_array($v, $allowedSizes)) {
-                    $filteredSizes[$group][] = $v;
-                }
+            if ('image_sizes' === $group) {
+                $this->filterImageSizes($sizes, $allowedSizes, $filteredSizes, $group);
+            } else {
+                $this->filterResizeModes($sizes, $allowedSizes, $filteredSizes, $group);
             }
         }
 
         return $filteredSizes;
+    }
+
+    /**
+     * Filters image sizes.
+     *
+     * @param array  $sizes         The available sizes
+     * @param array  $allowedSizes  The allowed sizes
+     * @param array  $filteredSizes The filtered sizes
+     * @param string $group         The group name
+     */
+    private function filterImageSizes(array $sizes, array $allowedSizes, array &$filteredSizes, $group)
+    {
+        foreach ($sizes as $key => $size) {
+            if (in_array($key, $allowedSizes)) {
+                $filteredSizes[$group][$key] = $size;
+            }
+        }
+    }
+
+    /**
+     * Filters resize modes.
+     *
+     * @param array  $sizes         The available sizes
+     * @param array  $allowedSizes  The allowed sizes
+     * @param array  $filteredSizes The filtered sizes
+     * @param string $group         The group name
+     */
+    private function filterResizeModes(array $sizes, array $allowedSizes, array &$filteredSizes, $group)
+    {
+        foreach ($sizes as $size) {
+            if (in_array($size, $allowedSizes)) {
+                $filteredSizes[$group][] = $size;
+            }
+        }
     }
 }
