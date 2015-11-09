@@ -475,7 +475,7 @@ class Dbafs
 		// Consider the suhosin.memory_limit (see #7035)
 		if (extension_loaded('suhosin'))
 		{
-			if ($limit = ini_get('suhosin.memory_limit'))
+			if (($limit = ini_get('suhosin.memory_limit')) !== '')
 			{
 				@ini_set('memory_limit', $limit);
 			}

@@ -952,7 +952,7 @@ class Image
 			$imageObj->setTargetPath($target);
 			$imageObj->setForceOverride($force);
 
-			if ($path = $imageObj->executeResize()->getResizedPath())
+			if (($path = $imageObj->executeResize()->getResizedPath()) != '')
 			{
 				// Strip the web/ prefix (see #337)
 				if (strncmp($path, 'web/', 4) === 0)

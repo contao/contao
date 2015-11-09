@@ -253,7 +253,7 @@ class Versions extends \Controller
 				}
 
 				// Get the currently available fields
-				$arrFields = array_flip($this->Database->getFieldnames($this->strTable));
+				$arrFields = array_flip($this->Database->getFieldNames($this->strTable));
 
 				// Unset fields that do not exist (see #5219)
 				$data = array_intersect_key($data, $arrFields);
