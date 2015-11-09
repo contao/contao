@@ -178,8 +178,11 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options'                 => System::getLanguages(true),
 			'eval'                    => array('rgxp'=>'locale', 'tl_class'=>'w50'),
+			'options_callback' => function ()
+			{
+				return System::getLanguages(true);
+			},
 			'sql'                     => "varchar(5) NOT NULL default ''"
 		),
 		'backendTheme' => array
@@ -187,7 +190,10 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['backendTheme'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options'                 => Backend::getThemes(),
+			'options_callback' => function ()
+			{
+				return Backend::getThemes();
+			},
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'uploader' => array
@@ -351,12 +357,12 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'options_callback'        => function ()
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array('multiple'=>true),
+			'options_callback' => function ()
 			{
 				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
 			},
-			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'forms' => array

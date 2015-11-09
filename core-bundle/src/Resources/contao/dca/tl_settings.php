@@ -60,7 +60,10 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['timeZone'],
 			'inputType'               => 'select',
-			'options'                 => System::getTimeZones(),
+			'options_callback' => function ()
+			{
+				return System::getTimeZones();
+			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50')
 		),
 		'adminEmail' => array

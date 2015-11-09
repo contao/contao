@@ -234,8 +234,11 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'filter'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'select',
-			'options'                 => System::getCountries(),
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
+			'options_callback' => function ()
+			{
+				return System::getCountries();
+			},
 			'sql'                     => "varchar(2) NOT NULL default ''"
 		),
 		'phone' => array
@@ -289,8 +292,11 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options'                 => System::getLanguages(),
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'rgxp'=>'locale', 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
+			'options_callback' => function ()
+			{
+				return System::getLanguages();
+			},
 			'sql'                     => "varchar(5) NOT NULL default ''"
 		),
 		'groups' => array
