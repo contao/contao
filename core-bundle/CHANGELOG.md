@@ -2,6 +2,7 @@
 
 ### 4.1.0-RC1 (2015-XX-XX)
 
+ * Limit access to the image sizes per user or user group (see #319).
  * Support the Lexik maintenance bundle if it is installed (see #283).
  * Throw an exception instead of redirecting to `/contao?act=error` (see #395).
  * Make the image caching and target path configurable (see #381).
