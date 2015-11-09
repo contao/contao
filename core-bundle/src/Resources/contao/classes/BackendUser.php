@@ -25,6 +25,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property array   $filemountIds
  * @property string  $fop
  * @property string  $alexf
+ * @property array   $imageSizes
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -368,7 +369,7 @@ class BackendUser extends \User
 
 		// Inherit permissions
 		$always = array('alexf');
-		$depends = array('modules', 'themes', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp');
+		$depends = array('modules', 'themes', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes');
 
 		// HOOK: Take custom permissions
 		if (!empty($GLOBALS['TL_PERMISSIONS']) && is_array($GLOBALS['TL_PERMISSIONS']))

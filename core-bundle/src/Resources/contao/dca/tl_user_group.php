@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{forms_legend},forms,formp;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
+		'default'                     => '{title_legend},name;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
 	),
 
 	// Fields
@@ -179,6 +179,19 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'options'                 => array('f1', 'f2', 'f3', 'f4', 'f5', 'f6'),
 			'reference'               => &$GLOBALS['TL_LANG']['FOP'],
+			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL"
+		),
+		'imageSizes' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'options_callback'        => function ()
+			{
+				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+			},
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL"
 		),
