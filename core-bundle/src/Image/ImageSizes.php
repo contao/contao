@@ -1,0 +1,161 @@
+<?php
+
+/*
+ * This file is part of Contao.
+ *
+ * Copyright (c) 2005-2015 Leo Feyer
+ *
+ * @license LGPL-3.0+
+ */
+
+namespace Contao\CoreBundle\Image;
+
+use Contao\BackendUser;
+use Contao\CoreBundle\ContaoFrameworkInterface;
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\ImageSizesEvent;
+use Doctrine\DBAL\Connection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
+/**
+ * Class ImageSizes
+ *
+ * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Kamil Kuzminski <https://github.com/qzminski>
+ */
+class ImageSizes
+{
+    /**
+     * @var Connection
+     */
+    private $db;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
+
+    /**
+     * @var array
+     */
+    private $options;
+
+    /**
+     * Constructor.
+     *
+     * @param Connection               $db
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(
+        Connection $db,
+        EventDispatcherInterface $eventDispatcher,
+        ContaoFrameworkInterface $framework
+    ) {
+        $this->db              = $db;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->framework       = $framework;
+    }
+
+    /**
+     * Gets image sizes as options suitable for widgets.
+     *
+     * @return array
+     */
+    public function getAllOptions()
+    {
+        $this->loadOptions();
+
+        $event = new ImageSizesEvent($this->options);
+        $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_ALL, $event);
+
+        return $event->getImageSizes();
+    }
+
+    /**
+     * Gets image sizes for the given user suitable for widgets.
+     *
+     * @param BackendUser $user The backend user instance.
+     *
+     * @return array
+     */
+    public function getOptionsForUser(BackendUser $user)
+    {
+        $this->loadOptions();
+
+        $options = $user->isAdmin ? $this->options : $this->filterOptions(deserialize($user->imageSizes, true));
+
+        $event = new ImageSizesEvent($options, $user);
+        $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_USER, $event);
+
+        return $event->getImageSizes();
+    }
+
+    /**
+     * Loads options array from database.
+     */
+    private function loadOptions()
+    {
+        if (null !== $this->options) {
+            return;
+        }
+
+        $this->options = $GLOBALS['TL_CROP'];
+
+        // The framework is necessary to have TL_CROP options available
+        $this->framework->initialize();
+
+        $rows = $this->db->fetchAll(
+            "SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name"
+        );
+
+        foreach ($rows as $imageSize) {
+            $this->options['image_sizes'][$imageSize['id']] = sprintf(
+                '%s (%sx%s)',
+                $imageSize['name'],
+                $imageSize['width'],
+                $imageSize['height']
+            );
+        }
+    }
+
+    /**
+     * Filters options by the given allowed sizes and returns the result.
+     *
+     * @param array $allowedSizes An array of allowed options
+     *
+     * @return array
+     */
+    private function filterOptions(array $allowedSizes)
+    {
+        if (empty($allowedSizes)) {
+            return [];
+        }
+
+        $filteredSizes = [];
+
+        foreach ($this->options as $group => $sizes) {
+            foreach ($sizes as $k => $v) {
+                // Dynamic sizes
+                if ($group == 'image_sizes') {
+                    if (in_array($k, $allowedSizes)) {
+                        $filteredSizes[$group][$k] = $v;
+                    }
+
+                    continue;
+                }
+
+                if (in_array($v, $allowedSizes)) {
+                    $filteredSizes[$group][] = $v;
+                }
+            }
+        }
+
+        return $filteredSizes;
+    }
+}

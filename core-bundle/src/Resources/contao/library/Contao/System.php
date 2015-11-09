@@ -12,6 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\ImageSizesEvent;
+use Symfony\Component\HttpKernel\KernelInterface;
 use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -608,31 +611,18 @@ abstract class System
 	 * Return all image sizes as array
 	 *
 	 * @return array The available image sizes
+	 *
+	 * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
+	 *             Use the contao.image.image_sizes service instead.
 	 */
 	public static function getImageSizes()
 	{
-		if (empty(static::$arrImageSizes))
-		{
-			try
-			{
-				$sizes = array();
-				$imageSize = \Database::getInstance()->query("SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name");
+		trigger_error(
+			'System::getImageSizes() is deprecated, use the contao.image.image_sizes service instead',
+			E_USER_DEPRECATED
+		);
 
-				while ($imageSize->next())
-				{
-					$sizes[$imageSize->id] = $imageSize->name;
-					$sizes[$imageSize->id] .= ' (' . $imageSize->width . 'x' . $imageSize->height . ')';
-				}
-
-				static::$arrImageSizes = array_merge(array('image_sizes' => $sizes), $GLOBALS['TL_CROP']);
-			}
-			catch (\Exception $e)
-			{
-				static::$arrImageSizes = $GLOBALS['TL_CROP'];
-			}
-		}
-
-		return static::$arrImageSizes;
+		return static::getContainer()->get('contao.image.image_sizes')->getAllOptions();
 	}
 
 
