@@ -161,6 +161,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function mockSession()
     {
         $session = new Session(new MockArraySessionStorage());
+        $session->setId('session_test');
         $session->start();
 
         $beBag = new ArrayAttributeBag('_contao_be_attributes');
