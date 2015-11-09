@@ -138,7 +138,7 @@
         <source>Image sizes</source>
       </trans-unit>
       <trans-unit id="tl_user.imageSizes.1">
-        <source>Here you can grant access to one or more image sizes (e.g. in content elements).</source>
+        <source>Here you can grant access to one or more image sizes.</source>
       </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>

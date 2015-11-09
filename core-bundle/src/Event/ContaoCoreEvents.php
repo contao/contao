@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Event;
 
 /**
- * Defines Constants for all Contao events.
+ * Defines constants for the Contao events.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
@@ -19,7 +19,7 @@ namespace Contao\CoreBundle\Event;
 final class ContaoCoreEvents
 {
     /**
-     * The contao.image_sizes_all event is triggered when all image sizes are generated.
+     * The contao.image_sizes_all event is triggered when the image sizes are generated.
      *
      * @var string
      *
@@ -28,7 +28,7 @@ final class ContaoCoreEvents
     const IMAGE_SIZES_ALL = 'contao.image_sizes_all';
 
     /**
-     * The contao.image_sizes_user event is triggered when image sizes are generated for a user.
+     * The contao.image_sizes_user event is triggered when the image sizes are generated for a user.
      *
      * @var string
      *

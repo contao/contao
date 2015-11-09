@@ -531,7 +531,8 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['imgSize'],
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
-			'options_callback'        => function () {
+			'options_callback'        => function ()
+			{
 				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],

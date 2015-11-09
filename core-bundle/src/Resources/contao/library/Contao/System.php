@@ -12,9 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\ImageSizesEvent;
-use Symfony\Component\HttpKernel\KernelInterface;
 use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -617,10 +614,7 @@ abstract class System
 	 */
 	public static function getImageSizes()
 	{
-		trigger_error(
-			'System::getImageSizes() is deprecated, use the contao.image.image_sizes service instead',
-			E_USER_DEPRECATED
-		);
+		@trigger_error('Using System::getImageSizes() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_sizes service instead.', E_USER_DEPRECATED);
 
 		return static::getContainer()->get('contao.image.image_sizes')->getAllOptions();
 	}

@@ -18,7 +18,7 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class ImageSizes
+ * Defines the image sizes service.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Kamil Kuzminski <https://github.com/qzminski>
@@ -28,7 +28,7 @@ class ImageSizes
     /**
      * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
      * @var EventDispatcherInterface
@@ -48,56 +48,59 @@ class ImageSizes
     /**
      * Constructor.
      *
-     * @param Connection               $db
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param ContaoFrameworkInterface $framework
+     * @param Connection               $connection      The connection
+     * @param EventDispatcherInterface $eventDispatcher The event dispatcher
+     * @param ContaoFrameworkInterface $framework       The Contao framework
      */
     public function __construct(
-        Connection $db,
+        Connection $connection,
         EventDispatcherInterface $eventDispatcher,
         ContaoFrameworkInterface $framework
     ) {
-        $this->db              = $db;
+        $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
-        $this->framework       = $framework;
+        $this->framework = $framework;
     }
 
     /**
-     * Gets image sizes as options suitable for widgets.
+     * Returns the image sizes as options suitable for widgets.
      *
-     * @return array
+     * @return array The image sizes
      */
     public function getAllOptions()
     {
         $this->loadOptions();
 
         $event = new ImageSizesEvent($this->options);
+
         $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_ALL, $event);
 
         return $event->getImageSizes();
     }
 
     /**
-     * Gets image sizes for the given user suitable for widgets.
+     * Returns the image sizes for the given user suitable for widgets.
      *
-     * @param BackendUser $user The backend user instance.
+     * @param BackendUser $user The back end user
      *
-     * @return array
+     * @return array The image sizes
      */
     public function getOptionsForUser(BackendUser $user)
     {
         $this->loadOptions();
 
-        $options = $user->isAdmin ? $this->options : $this->filterOptions(deserialize($user->imageSizes, true));
+        $event = new ImageSizesEvent(
+            $user->isAdmin ? $this->options : $this->filterOptions(deserialize($user->imageSizes, true)),
+            $user
+        );
 
-        $event = new ImageSizesEvent($options, $user);
         $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_USER, $event);
 
         return $event->getImageSizes();
     }
 
     /**
-     * Loads options array from database.
+     * Loads the options from the database.
      */
     private function loadOptions()
     {
@@ -107,11 +110,11 @@ class ImageSizes
 
         $this->options = $GLOBALS['TL_CROP'];
 
-        // The framework is necessary to have TL_CROP options available
+        // The framework is required to have the TL_CROP options available
         $this->framework->initialize();
 
-        $rows = $this->db->fetchAll(
-            "SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name"
+        $rows = $this->connection->fetchAll(
+            'SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name'
         );
 
         foreach ($rows as $imageSize) {
@@ -125,11 +128,11 @@ class ImageSizes
     }
 
     /**
-     * Filters options by the given allowed sizes and returns the result.
+     * Filters the options by the given allowed sizes and returns the result.
      *
-     * @param array $allowedSizes An array of allowed options
+     * @param array $allowedSizes The allowed options
      *
-     * @return array
+     * @return array The filtered options
      */
     private function filterOptions(array $allowedSizes)
     {
@@ -141,16 +144,11 @@ class ImageSizes
 
         foreach ($this->options as $group => $sizes) {
             foreach ($sizes as $k => $v) {
-                // Dynamic sizes
                 if ($group == 'image_sizes') {
                     if (in_array($k, $allowedSizes)) {
                         $filteredSizes[$group][$k] = $v;
                     }
-
-                    continue;
-                }
-
-                if (in_array($v, $allowedSizes)) {
+                } elseif (in_array($v, $allowedSizes)) {
                     $filteredSizes[$group][] = $v;
                 }
             }
