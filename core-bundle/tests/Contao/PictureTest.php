@@ -85,25 +85,37 @@ class PictureTest extends TestCase
     public function testInstantiation()
     {
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this->getMockBuilder('Contao\File')
+        $fileMock = $this
+            ->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
-            ->getMock();
+            ->getMock()
+        ;
 
-        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+        $fileMock
+            ->expects($this->any())
+            ->method('exists')
+            ->will($this->returnValue(true))
+        ;
 
-        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function ($key) {
-                switch ($key) {
-                    case 'extension':
-                        return 'jpg';
-                    case 'path':
-                        return 'dummy.jpg';
-                    default:
-                        return null;
+        $fileMock
+            ->expects($this->any())
+            ->method('__get')
+            ->will($this->returnCallback(
+                function ($key) {
+                    switch ($key) {
+                        case 'extension':
+                            return 'jpg';
+
+                        case 'path':
+                            return 'dummy.jpg';
+
+                        default:
+                            return null;
+                    }
                 }
-            }
-        ));
+            ))
+        ;
 
         $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
     }

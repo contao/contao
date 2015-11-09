@@ -70,7 +70,7 @@ class System
         static::$objContainer = $container;
     }
 
-    public static function loadLanguageFile($strName, $strLanguage = null, $blnNoCache = false)
+    public static function loadLanguageFile()
     {
         $GLOBALS['TL_LANG'] = new LanguageHelper();
     }

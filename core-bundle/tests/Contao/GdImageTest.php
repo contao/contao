@@ -89,23 +89,25 @@ class GdImageTest extends TestCase
 
     /**
      * Tests the fromFile() method.
+     *
+     * @param string $type The image type
+     *
+     * @dataProvider getImageTypes
      */
-    public function testFromFile()
+    public function testFromFile($type)
     {
-        foreach (['gif', 'jpeg', 'png'] as $type) {
-            $image = imagecreatetruecolor(100, 100);
-            imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
+        $image = imagecreatetruecolor(100, 100);
+        imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
 
-            $method = 'image' . $type;
-            $method($image, self::$rootDir . '/test.' . $type);
-            imagedestroy($image);
+        $method = 'image' . $type;
+        $method($image, self::$rootDir . '/test.' . $type);
+        imagedestroy($image);
 
-            $image = GdImage::fromFile(new \File('test.' . $type));
+        $image = GdImage::fromFile(new \File('test.' . $type));
 
-            $this->assertInternalType('resource', $image->getResource());
-            $this->assertEquals(100, imagesx($image->getResource()));
-            $this->assertEquals(100, imagesy($image->getResource()));
-        }
+        $this->assertInternalType('resource', $image->getResource());
+        $this->assertEquals(100, imagesx($image->getResource()));
+        $this->assertEquals(100, imagesy($image->getResource()));
     }
 
     /**
@@ -120,21 +122,23 @@ class GdImageTest extends TestCase
 
     /**
      * Tests the saveToFile() method.
+     *
+     * @param string $type The image type
+     *
+     * @dataProvider getImageTypes
      */
-    public function testSaveToFile()
+    public function testSaveToFile($type)
     {
-        foreach (['gif', 'jpeg', 'png'] as $type) {
-            $file = self::$rootDir . '/test.' . $type;
-            $image = GdImage::fromDimensions(100, 100);
+        $file = self::$rootDir . '/test.' . $type;
+        $image = GdImage::fromDimensions(100, 100);
 
-            $image->saveToFile($file);
+        $image->saveToFile($file);
 
-            $this->assertFileExists($file);
+        $this->assertFileExists($file);
 
-            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
 
-            $this->assertEquals('image/' . $type, $finfo->file($file));
-        }
+        $this->assertEquals('image/' . $type, $finfo->file($file));
     }
 
     /**
@@ -303,5 +307,19 @@ class GdImageTest extends TestCase
 
         imagefill($image->getResource(), 0, 0, imagecolorallocatealpha($image->getResource(), 0, 0, 0, 0));
         $this->assertFalse($image->isSemitransparent());
+    }
+
+    /**
+     * Provides the image types for the tests.
+     *
+     * @return array The image types
+     */
+    public function getImageTypes()
+    {
+        return [
+            ['gif'],
+            ['jpeg'],
+            ['png'],
+        ];
     }
 }
