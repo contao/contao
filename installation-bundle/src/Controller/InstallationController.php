@@ -14,8 +14,8 @@ use Contao\CoreBundle\Command\InstallCommand;
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\Encryption;
 use Contao\InstallationBundle\Config\ParameterDumper;
+use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
-use Contao\InstallationBundle\Database\VersionUpdateInterface;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -289,10 +289,11 @@ class InstallationController extends ContainerAware
         foreach ($finder as $file) {
             $class = 'Contao\InstallationBundle\Database\\' . $file->getBasename('.php');
 
-            /** @var VersionUpdateInterface $update */
+            /** @var AbstractVersionUpdate $update */
             $update = new $class($this->container->get('database_connection'));
 
-            if ($update instanceof VersionUpdateInterface && $update->shouldBeRun()) {
+            if ($update instanceof AbstractVersionUpdate && $update->shouldBeRun()) {
+                $update->setContainer($this->container);
                 $update->run();
             }
         }

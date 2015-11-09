@@ -10,30 +10,13 @@
 
 namespace Contao\InstallationBundle\Database;
 
-use Doctrine\DBAL\Connection;
-
 /**
  * Runs the version 3.3.0 update.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Version330Update implements VersionUpdateInterface
+class Version330Update extends AbstractVersionUpdate
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * Constructor.
-     *
-     * @param Connection $connection The database connection
-     */
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -51,7 +34,7 @@ class Version330Update implements VersionUpdateInterface
     }
 
     /**
-     * Runs the update.
+     * {@inheritdoc}
      */
     public function run()
     {

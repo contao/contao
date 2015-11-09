@@ -2,6 +2,7 @@
 
 ### 1.0.0-RC1 (2015-XX-XX)
 
+ * Add the version 4.1 update routines.
  * Purge the Symfony cache upon each request (see contao/core-bundle#347).
 
 ### 1.0.0-beta1 (2015-10-21)
