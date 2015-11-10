@@ -25,6 +25,17 @@
         <source>Description</source>
         <target>Kuvaus</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceMode">
+        <source>Maintenance mode</source>
+        <target>Huoltotila</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceEnable">
+        <source>Enable</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceDisable">
+        <source>Disable</source>
+        <target>Poista käytöstä</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Puhdista tiedot</target>
@@ -32,46 +43,6 @@
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
         <target>Tiedot on puhdistettu</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.liveUpdate">
-        <source>Live Update</source>
-        <target>Live Päivitys</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.liveUpdateId">
-        <source>Live Update ID</source>
-        <target>Live-päivitystunniste</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.toLiveUpdate">
-        <source>Go to the Live Update</source>
-        <target>Mene Live-päivitykseen</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.upToDate">
-        <source>Your Contao version %s is up to date</source>
-        <target>Contao-versiosi %s on ajan tasalla.</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.newVersion">
-        <source>A newer Contao version %s is available</source>
-        <target>Contaosta on saatavilla uudempi %s-versio.</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.notWriteable">
-        <source>The temporary folder (system/tmp) is not writeable</source>
-        <target>Väliaikaisten tiedostojen hakemistoon (system/tmp) ei voi kirjoittaa</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.runLiveUpdate">
-        <source>Run the update</source>
-        <target>Aja päivitys</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.toc">
-        <source>Content of the update archive</source>
-        <target>Päivitysarkiston sisältö</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.backup">
-        <source>Backuped files</source>
-        <target>Varmuuskopioidut tiedostot</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.update">
-        <source>Updated files</source>
-        <target>Päivitetyt tiedostot</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.searchIndex">
         <source>Rebuild the search index</source>

@@ -244,8 +244,7 @@
         <target>FIşierul &quot;%s&quot; nu este disponibil pentru download!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid input: %s</source>
-        <target>Intrare invalidă: %s</target>
+        <source>Invalid option: %s</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -1414,6 +1413,9 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
         <source>No records found.</source>
         <target>Nu s-au găsit înregistrări.</target>
       </trans-unit>
+      <trans-unit id="MSC.searchExclude">
+        <source>Unsynchronized directories are not included in the search results.</source>
+      </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
         <target>Salvează</target>
@@ -1619,8 +1621,13 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
         <target>%s back-end</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
-        <source>Contao version %s available</source>
-        <target>Contao versiunea %s este disponibilă</target>
+        <source>Contao version %s is available.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceEnabled">
+        <source>The maintenance mode is currently enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceDisabled">
+        <source>The maintenance mode is currently disabled.</source>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1798,14 +1805,6 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
         <source>%s (copy)</source>
         <target>%s (copie)</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceMode">
-        <source>Contao is currently running in &lt;strong&gt;maintenance mode&lt;/strong&gt;, in which the website (front end) is not available. Do not disable it if you are currently installing or upgrading third-party extensions! The website might not function properly.</source>
-        <target>Contao funcţionează acum în &lt;strong&gt;modul de mentenanţă&lt;/strong&gt;, în care websiteul (front-end) nu e disponibil. Nu schimbaţi acest mod în timpul instalării sau actualizării extensiilor din terţe surse! Acestea pot funcţiona necorespunzător.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceOff">
-        <source>Disable</source>
-        <target>Dezactivare</target>
-      </trans-unit>
       <trans-unit id="MSC.buildCacheText">
         <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
       </trans-unit>
@@ -1824,6 +1823,9 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
       <trans-unit id="MSC.register">
         <source>Register</source>
         <target>Înregistrare</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendActivation">
+        <source>The activation mail has been re-sent to your e-mail address.</source>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>

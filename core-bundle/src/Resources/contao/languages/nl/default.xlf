@@ -211,23 +211,23 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Geen van de actieve website root pagina's zonder een expliciete DNS-instelling hebben de taal reserveoptie ingesteld, dit betekent dat deze websites enkel beschikbaar zijn in een taal die u heeft gedefinieerd in de pagina-instellingen! Bezoekers en zoekmachines die deze taal niet hebben ingesteld, kunnen uw website niet gebruiken.</target>
+        <target>Geen van de actieve website startpagina's zonder een expliciete DNS-instelling hebben de taal reserveoptie ingesteld, dit betekent dat deze websites enkel beschikbaar zijn in een taal die u heeft gedefinieerd in de pagina-instellingen! Bezoekers en zoekmachines die deze taal niet hebben ingesteld, kunnen uw website niet gebruiken.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Geen van de actieve website root pagina's voor &lt;strong&gt;%s&lt;/strong&gt; heeft de taal reserveoptie ingesteld, dit betekent dat deze websites enkel beschikbaar zijn in de taal welke u heeft gedefinieerd in de pagina instellingen! Bezoekers en zoekmachines die deze taal niet hebben ingesteld, kunnen uw website niet gebruiken.</target>
+        <target>Geen van de actieve website startpagina's voor &lt;strong&gt;%s&lt;/strong&gt; heeft de taal reserveoptie ingesteld, dit betekent dat deze websites enkel beschikbaar zijn in de taal welke u heeft gedefinieerd in de pagina instellingen! Bezoekers en zoekmachines die deze taal niet hebben ingesteld, kunnen uw website niet gebruiken.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
-        <target>U kunt slechts één website root pagina per domein definiëren als taal fallback.</target>
+        <target>U kunt slechts één website startpagina per domein definiëren als taal fallback.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
-        <target>Top-level pagina's moeten website root pagina's zijn!</target>
+        <target>Top-level pagina's moeten website startpagina's zijn!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are pages on the top-level which are not website root pages. Creating websites without a website root page is no longer supported, so please ensure that all pages are grouped under a website root page.</source>
-        <target>Er bevinden zich pagina's in het top-level welke geen website root pagina's zijn. Aanmaken van websites zonder een website root pagina wordt niet langer ondersteund, zorg ervoor dat alle pagina's zijn gegroepeerd onder een website root pagina.</target>
+        <target>Er bevinden zich pagina's in het top-level welke geen website startpagina's zijn. Aanmaken van websites zonder een website startpagina wordt niet langer ondersteund, zorg ervoor dat alle pagina's zijn gegroepeerd onder een website startpagina.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -246,8 +246,8 @@
         <target>Bestand &quot;%s&quot; is niet beschikbaar als download!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid input: %s</source>
-        <target>Foutieve invoer %s</target>
+        <source>Invalid option: %s</source>
+        <target>Ongeldige optie: %s</target>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -979,7 +979,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>
-        <target>Groepsnaam</target>
+        <target>Titel</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -1419,9 +1419,13 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <source>No records found.</source>
         <target>Geen records gevonden.</target>
       </trans-unit>
+      <trans-unit id="MSC.searchExclude">
+        <source>Unsynchronized directories are not included in the search results.</source>
+        <target>Ongesynchroniseerde mappen zijn niet opgenomen in de zoekresultaten.</target>
+      </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
-        <target>Bewaar</target>
+        <target>Opslaan</target>
       </trans-unit>
       <trans-unit id="MSC.saveNclose">
         <source>Save and close</source>
@@ -1624,8 +1628,16 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <target>%s back-end</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
-        <source>Contao version %s available</source>
-        <target>Contao versie %s beschikbaar</target>
+        <source>Contao version %s is available.</source>
+        <target>Contao versie %s beschikbaar.</target>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceEnabled">
+        <source>The maintenance mode is currently enabled.</source>
+        <target>Onderhoudsmodus is momenteel ingeschakeld.</target>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceDisabled">
+        <source>The maintenance mode is currently disabled.</source>
+        <target>Onderhoudsmodus is momenteel uitgeschakeld.</target>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1677,7 +1689,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.changeSelected">
         <source>Change selection</source>
-        <target>Verander selectie</target>
+        <target>Wijzig selectie</target>
       </trans-unit>
       <trans-unit id="MSC.resetSelected">
         <source>Reset selection</source>
@@ -1803,14 +1815,6 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <source>%s (copy)</source>
         <target>%s (kopie)</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceMode">
-        <source>Contao is currently running in &lt;strong&gt;maintenance mode&lt;/strong&gt;, in which the website (front end) is not available. Do not disable it if you are currently installing or upgrading third-party extensions! The website might not function properly.</source>
-        <target>Contao draait momenteel in &lt;strong&gt;onderhoudsmodus&lt;/strong&gt;, waarin de website (front-end) niet beschikbaar is. Schakel dit niet uit indien u momenteel extensies van derden aan het installeren of upgraden bent! De website zal mogelijk niet goed functioneren.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceOff">
-        <source>Disable</source>
-        <target>Uitschakelen</target>
-      </trans-unit>
       <trans-unit id="MSC.buildCacheText">
         <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
         <target>De &lt;strong&gt;interne cache&lt;/strong&gt; moet nog worden opgebouwd. Opbouwen van de interne cache zorgt ervoor dat de prestatie van de applicatie verbetert en wordt dan ook aanbevolen. De interne cache zal automatisch worden opgebouwd telkens als u &lt;code&gt; app/console cache:warmup -e %s &lt;/code&gt; op de opdrachtregel start.</target>
@@ -1830,6 +1834,10 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       <trans-unit id="MSC.register">
         <source>Register</source>
         <target>Registreer</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendActivation">
+        <source>The activation mail has been re-sent to your e-mail address.</source>
+        <target>De activatie mail is opnieuw verzonden naar uw e-mail adres.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
@@ -1897,7 +1905,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.changeSelection">
         <source>Change selection</source>
-        <target>Verander selectie</target>
+        <target>Wijzig selectie</target>
       </trans-unit>
       <trans-unit id="MSC.currentlySelected">
         <source>Selected</source>
@@ -2041,7 +2049,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.fileExceeds">
         <source>Image %s uploaded successfully, however it is too big to be resized automatically.</source>
-        <target>Afbeelding %s is succesvol geüpload, maar te groot om automatisch te schalen.</target>
+        <target>Afbeelding %s is succesvol geüpload, maar is te groot om automatisch geschaald te kunnen worden.</target>
       </trans-unit>
       <trans-unit id="MSC.fileResized">
         <source>Image %s uploaded successfully and was scaled down to the maximum dimensions.</source>

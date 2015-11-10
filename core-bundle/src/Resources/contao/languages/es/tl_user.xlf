@@ -177,6 +177,13 @@
         <source>Here you can grant access to one or more folders (subfolders will be included automatically).</source>
         <target>Por favor selecciona las carpetas que quieres habilitar para el usuario actual. Las subcarpetas serán incluidas automáticamente.</target>
       </trans-unit>
+      <trans-unit id="tl_user.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Tamaños de imágen</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.1">
+        <source>Here you can grant access to one or more image sizes.</source>
+      </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
         <target>Formularios</target>
@@ -260,6 +267,10 @@
       <trans-unit id="tl_user.filemounts_legend">
         <source>Filemounts</source>
         <target>Soportes de archivos</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Tamaños de imágen</target>
       </trans-unit>
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>

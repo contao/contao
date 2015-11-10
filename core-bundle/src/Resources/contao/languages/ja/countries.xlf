@@ -283,7 +283,7 @@
       </trans-unit>
       <trans-unit id="CNT.fj">
         <source>Fiji</source>
-        <target>フィジー</target>
+        <target>フィジー語</target>
       </trans-unit>
       <trans-unit id="CNT.fk">
         <source>Falkland Islands (the) [Malvinas]</source>
@@ -675,7 +675,7 @@
       </trans-unit>
       <trans-unit id="CNT.nr">
         <source>Nauru</source>
-        <target>ナウル</target>
+        <target>ナウル語</target>
       </trans-unit>
       <trans-unit id="CNT.nu">
         <source>Niue</source>
@@ -895,7 +895,7 @@
       </trans-unit>
       <trans-unit id="CNT.to">
         <source>Tonga</source>
-        <target>トンガ</target>
+        <target>トンガ語</target>
       </trans-unit>
       <trans-unit id="CNT.tr">
         <source>Turkey</source>

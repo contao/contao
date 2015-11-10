@@ -687,7 +687,7 @@
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
-        <target>Ein neues Element erstellen</target>
+        <target>Ein neues Inhaltselement erstellen</target>
       </trans-unit>
       <trans-unit id="tl_content.show.0">
         <source>Element details</source>
@@ -747,11 +747,11 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Add new at the top</source>
-        <target>Neue Formatdefinition oben erstellen</target>
+        <target>Neues Inhaltselement oben erstellen</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Add new after content element ID %s</source>
-        <target>Neues Element nach dem Inhaltselement ID %s erstellen</target>
+        <target>Neues Inhaltselement nach ID %s erstellen</target>
       </trans-unit>
       <trans-unit id="tl_content.toggle.0">
         <source>Toggle visibility</source>

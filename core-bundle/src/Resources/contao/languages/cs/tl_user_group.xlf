@@ -57,6 +57,10 @@
         <source>Filemounts</source>
         <target>Přístup k souborů</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Obrázkové rozměry</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.forms_legend">
         <source>Form permissions</source>
         <target>Přístup k formulářům</target>

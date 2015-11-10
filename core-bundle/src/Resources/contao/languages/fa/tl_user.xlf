@@ -155,7 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
-        <target>برگه‌ها مونت شده</target>
+        <target>برگه‌های مونت شده</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts.1">
         <source>Here you can grant access to one or more pages (subpages are included automatically).</source>
@@ -176,6 +176,13 @@
       <trans-unit id="tl_user.filemounts.1">
         <source>Here you can grant access to one or more folders (subfolders will be included automatically).</source>
         <target>اینجا می‌توانید دسترسی به یک یا چند پوشه را واگذار نمایید (زیرپوشه‌ها به صورت خودکار گنجانده خواهند شد).</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.0">
+        <source>Image sizes</source>
+        <target>اندازه‌های تصویر</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.1">
+        <source>Here you can grant access to one or more image sizes.</source>
       </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
@@ -255,11 +262,15 @@
       </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>
-        <target>برگه‌ها مونت شده</target>
+        <target>برگه‌های مونت شده</target>
       </trans-unit>
       <trans-unit id="tl_user.filemounts_legend">
         <source>Filemounts</source>
         <target>پرونده‌های مونت شده</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>اندازه‌های تصویر</target>
       </trans-unit>
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>

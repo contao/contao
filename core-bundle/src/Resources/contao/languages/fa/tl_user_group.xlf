@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
         <source>Automatically activate the group on this day.</source>
-        <target>فعال کردت اتوماتیک گروه در این روز.</target>
+        <target>فعال کردن خودکار گروه در این روز.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
@@ -56,6 +56,10 @@
       <trans-unit id="tl_user_group.filemounts_legend">
         <source>Filemounts</source>
         <target>پرونده‌های مونت شده</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>اندازه‌های تصویر</target>
       </trans-unit>
       <trans-unit id="tl_user_group.forms_legend">
         <source>Form permissions</source>

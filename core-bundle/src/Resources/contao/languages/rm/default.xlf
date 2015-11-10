@@ -111,6 +111,7 @@
       </trans-unit>
       <trans-unit id="ERR.filename">
         <source>The name of at least one uploaded file contains invalid characters or exceeds the maximum length of 255 characters!</source>
+        <target>Il num dad almain ina datoteca transferida cuntegna caracters nunvalids u surpassa la lunghezza maximala da 255 caracters!</target>
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
@@ -245,8 +246,7 @@
         <target>La datoteca &quot;%s&quot; na stat betg a disposiziun per telechargiar.</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid input: %s</source>
-        <target>Endataziun nunvalida: %s</target>
+        <source>Invalid option: %s</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -1418,6 +1418,9 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
         <source>No records found.</source>
         <target>Chattà nagins elements.</target>
       </trans-unit>
+      <trans-unit id="MSC.searchExclude">
+        <source>Unsynchronized directories are not included in the search results.</source>
+      </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
         <target>Memorisar</target>
@@ -1623,8 +1626,13 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
         <target>Back-end da %s</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
-        <source>Contao version %s available</source>
-        <target>La versiun %s da Contao è disponibla</target>
+        <source>Contao version %s is available.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceEnabled">
+        <source>The maintenance mode is currently enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceDisabled">
+        <source>The maintenance mode is currently disabled.</source>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1802,14 +1810,6 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
         <source>%s (copy)</source>
         <target>%s (copia)</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceMode">
-        <source>Contao is currently running in &lt;strong&gt;maintenance mode&lt;/strong&gt;, in which the website (front end) is not available. Do not disable it if you are currently installing or upgrading third-party extensions! The website might not function properly.</source>
-        <target>Contao è actualmain en il &lt;strong&gt;modus da mantegniment&lt;/strong&gt;, en il qual la pagina d'internet (front-end) n'è betg disponibla. Na betg deactivar sche ti installeschas u actualiseschas gest extensiuns da terz! La pagina d'internet na funcziunescha forsa betg correctamain.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceOff">
-        <source>Disable</source>
-        <target>Deactivar</target>
-      </trans-unit>
       <trans-unit id="MSC.buildCacheText">
         <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
         <target>Il &lt;strong&gt;cache intern&lt;/strong&gt; n'è anc betg vegnì creà. Crear il cache intern vegn ad augmentar la prestaziun da l'applicaziun ed è fitg recummandà. Il cache intern vegn creà automaticamain mintga giada che ti exequeschas &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; sin la lingia da cummonds. </target>
@@ -1829,6 +1829,9 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
       <trans-unit id="MSC.register">
         <source>Register</source>
         <target>Registrar</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendActivation">
+        <source>The activation mail has been re-sent to your e-mail address.</source>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>

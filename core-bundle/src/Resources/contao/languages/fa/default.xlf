@@ -139,7 +139,7 @@
       </trans-unit>
       <trans-unit id="ERR.filetarget">
         <source>Cannot move %s to %s because the target exists!</source>
-        <target>نمی‌توان %s را به %s منتقل کرد زیرا مقصد موجود است!</target>
+        <target>نمی‌توان %s را به %s جابجا کرد زیرا مقصد موجود است!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
@@ -243,11 +243,10 @@
       </trans-unit>
       <trans-unit id="ERR.download">
         <source>File &quot;%s&quot; is not available for download!</source>
-        <target>پرونده «%s» برای دانلود در دسترس نیست!</target>
+        <target>پرونده «%s» برای بارگیری در دسترس نیست!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid input: %s</source>
-        <target>ورودی نامعتبر: %s</target>
+        <source>Invalid option: %s</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -275,7 +274,7 @@
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
-        <target>عنوان</target>
+        <target>سربرگ</target>
       </trans-unit>
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
@@ -347,7 +346,7 @@
       </trans-unit>
       <trans-unit id="CTE.code.1">
         <source>Highlights code snippets and prints them to the screen.</source>
-        <target>این عنصر برای درج کدهای برنامه نویسی و رنگ بندی آنها کاربر دارد . توجه داشته باشید که کدها در سایت نمایش داده می شوند و قابل اجرا شدن نمی باشند .</target>
+        <target>قطعه‌های کد را برجسته می‌کند و آنها را روی برگه نمایش چاپ می‌کند.</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.0">
         <source>Markdown</source>
@@ -355,11 +354,11 @@
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a markdown text.</source>
-        <target>کد اچ‌تی‌ام‌ال از یک متن نشانه‌دار تولید می‌نماید.</target>
+        <target>کد اچ‌تی‌ام‌ال از یک متن نشانه‌دار تولید می‌کند.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
-        <target>اسلایدر محتوایی</target>
+        <target>اسلایدر محتوا</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
         <source>Wrapper start</source>
@@ -387,7 +386,7 @@
       </trans-unit>
       <trans-unit id="CTE.hyperlink.1">
         <source>Generates a link to another website.</source>
-        <target>یک پیوند به تارنمای دیگر تولید می‌نماید.</target>
+        <target>یک پیوند به وب‌سایت دیگر ایجاد می‌کند.</target>
       </trans-unit>
       <trans-unit id="CTE.toplink.0">
         <source>Top link</source>
@@ -407,11 +406,11 @@
       </trans-unit>
       <trans-unit id="CTE.image.1">
         <source>Generates a stand-alone image.</source>
-        <target>یک تصویر درجا تولید می‌نماید.</target>
+        <target>یک تصویر درجا تولید می‌کند.</target>
       </trans-unit>
       <trans-unit id="CTE.gallery.0">
         <source>Gallery</source>
-        <target>گالری تصاویر</target>
+        <target>گالری</target>
       </trans-unit>
       <trans-unit id="CTE.gallery.1">
         <source>Generates a lightbox image gallery.</source>
@@ -419,11 +418,11 @@
       </trans-unit>
       <trans-unit id="CTE.player.0">
         <source>Video/audio</source>
-        <target>تصویری/صوتی</target>
+        <target>صوتی/تصویری</target>
       </trans-unit>
       <trans-unit id="CTE.player.1">
         <source>Generates a video or audio player.</source>
-        <target>یک پخش‌کننده تصویری یا صوتی تولید می‌نماید.</target>
+        <target>یک پلیر تصویری یا صوتی تولید می‌کند.</target>
       </trans-unit>
       <trans-unit id="CTE.youtube.0">
         <source>YouTube</source>
@@ -819,7 +818,7 @@
       </trans-unit>
       <trans-unit id="MSC.source.0">
         <source>Source files</source>
-        <target>منبع پرونده‌ها</target>
+        <target>پرونده‌های منبع</target>
       </trans-unit>
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
@@ -1011,7 +1010,7 @@
       </trans-unit>
       <trans-unit id="MSC.proportional.1">
         <source>The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>ضلع بزرگ‌تر تصویر به اندازه داده شده تنظیم شده و تصویر به صورت متناسب تغییر خواهد کرد</target>
+        <target>ضلع بزرگ‌تر تصویر به اندازه داده شده تنظیم شده و تصویر به صورت متناسب تغییر خواهد کرد.</target>
       </trans-unit>
       <trans-unit id="MSC.box.0">
         <source>Fit the box</source>
@@ -1019,7 +1018,7 @@
       </trans-unit>
       <trans-unit id="MSC.box.1">
         <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>ضلع کوچک‌تر تصویر به اندازه داده شده تنظیم شده و تصویر به صورت متناسب تغییر خواهد کرد</target>
+        <target>ضلع کوچک‌تر تصویر به اندازه داده شده تنظیم شده و تصویر به صورت متناسب تغییر خواهد کرد.</target>
       </trans-unit>
       <trans-unit id="MSC.exact.0">
         <source>Exact dimensions</source>
@@ -1215,7 +1214,7 @@
       </trans-unit>
       <trans-unit id="MSC.move_up.1">
         <source>Move the item one position up</source>
-        <target>جابجایی مورد یک جایگاه به بالا</target>
+        <target>جابجایی به جایگاه بالا</target>
       </trans-unit>
       <trans-unit id="MSC.move_down.0">
         <source>Move down</source>
@@ -1223,7 +1222,7 @@
       </trans-unit>
       <trans-unit id="MSC.move_down.1">
         <source>Move the item one position down</source>
-        <target>جابجایی مورد یک جایگاه به پایین</target>
+        <target>جابجایی مورد به جایگاه پایین</target>
       </trans-unit>
       <trans-unit id="MSC.staticFiles.0">
         <source>Files URL</source>
@@ -1231,7 +1230,7 @@
       </trans-unit>
       <trans-unit id="MSC.staticFiles.1">
         <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>نشانی وب پرونده‌ها به شاخه &lt;em&gt;files&lt;/em&gt; اعمال خواهد شد (بهینه‌سازی سرعت برگه).</target>
+        <target>نشانی وب پرونده‌ها به شاخه &lt;em&gt;tl_files&lt;/em&gt; خواهد شد (بهینه‌سازی سرعت برگه).</target>
       </trans-unit>
       <trans-unit id="MSC.staticPlugins.0">
         <source>Assets URL</source>
@@ -1239,7 +1238,7 @@
       </trans-unit>
       <trans-unit id="MSC.staticPlugins.1">
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>نشانی وب دارای‌ها به شاخه &lt;em&gt;assets&lt;/em&gt; اعمال خواهد شد (بهینه‌سازی سرعت برگه).</target>
+        <target>نشانی وب دارایی‌ها به شاخه &lt;em&gt;assets&lt;/em&gt; اعمال خواهد شد (بهینه‌سازی سرعت برگه).</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
@@ -1251,11 +1250,11 @@
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
-        <target>بستن همه</target>
+        <target>باز یا بستن همه</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.1">
         <source>Expand or collapse all nodes</source>
-        <target>گسترش یا باز کردن همه گره‌ها</target>
+        <target>بستن یا باز کردن همه گره‌ها</target>
       </trans-unit>
       <trans-unit id="MSC.lockedAccount.0">
         <source>A Contao account has been locked</source>
@@ -1278,9 +1277,9 @@ This e-mail has been generated by Contao. You can not reply to it directly.
 نام واقعی: %s
 وب‌سایت: %s
 
-حساب کاربری به مدت %d دقیقه قفل شده است، زیرا کاربر سه بار پشت سر هم  گذرواژه را اشتباه وارد کرده است. بعد از این دوره زمانی، حساب کاربری به صورت خودکار باز خواهد شد.
+حساب کاربری به مدت %d دقیقه قفل شده است، زیرا کاربر سه بار پشت سر هم  گذرواژه را نامعتبر وارد کرده است. بعد از این دوره زمانی، حساب کاربری به صورت خودکار باز خواهد شد.
 
-این ایمیل توسط کانتائو تولید شده است. شما مستقیما نمی‌تواند به آن پاسخ دهید.
+این ایمیل توسط کانتائو ایجاد شده است. شما مستقیما نمی‌تواند به آن پاسخ دهید.
 </target>
       </trans-unit>
       <trans-unit id="MSC.toggleMobile.0">
@@ -1419,6 +1418,9 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <source>No records found.</source>
         <target>رکوردی پیدا نشد.</target>
       </trans-unit>
+      <trans-unit id="MSC.searchExclude">
+        <source>Unsynchronized directories are not included in the search results.</source>
+      </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
         <target>ذخیره</target>
@@ -1449,7 +1451,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.skipNavigation">
         <source>Skip navigation</source>
-        <target>پریدن از ناوربری</target>
+        <target>پریدن از ناوبری</target>
       </trans-unit>
       <trans-unit id="MSC.selectAll">
         <source>Select all</source>
@@ -1461,7 +1463,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.pw_change">
         <source>Please enter a new password</source>
-        <target>لطفا گذرواژه جدیدی وارد نمایید</target>
+        <target>لطفا گذرواژه‌ی جدیدی وارد نمایید</target>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1473,11 +1475,11 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.view">
         <source>View in a new window</source>
-        <target>مشاهده در یک پنجره جدید</target>
+        <target>مشاهده در یک برگه جدید</target>
       </trans-unit>
       <trans-unit id="MSC.fullsize">
         <source>Open full size image in a new window</source>
-        <target>باز کردن تصویر با اندازه واقعی در یک پنجره جدید</target>
+        <target>باز کردن تصویر با اندازه واقعی در یک برگه جدید</target>
       </trans-unit>
       <trans-unit id="MSC.datepicker">
         <source>Date picker</source>
@@ -1565,7 +1567,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.filetree">
         <source>File system</source>
-        <target>سامانه‌ی پرونده</target>
+        <target>سامانه پرونده</target>
       </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
@@ -1624,8 +1626,13 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>بخش مدیریت %s</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
-        <source>Contao version %s available</source>
-        <target>کانتائو نسخه %s موجود است</target>
+        <source>Contao version %s is available.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceEnabled">
+        <source>The maintenance mode is currently enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceDisabled">
+        <source>The maintenance mode is currently disabled.</source>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1633,7 +1640,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.saveAlert">
         <source>ATTENTION! You will lose any unsaved changes. Continue?</source>
-        <target>توجه! شما همه تغییرات ذخیره نشده را از دست خواهید داد. از ادامه اطمينان داريد؟</target>
+        <target>توجه! شما همه تغییرات ذخیره نشده را از دست خواهید داد.، از ادامه كار اطمينان داريد؟</target>
       </trans-unit>
       <trans-unit id="MSC.toggleNodes">
         <source>Toggle all nodes</source>
@@ -1721,7 +1728,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
         <source>Unpublished elements</source>
-        <target>عناصر منتشر نشده</target>
+        <target>عنصرهای منتشر نشده</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>
@@ -1803,14 +1810,6 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <source>%s (copy)</source>
         <target>%s (رونوشت)</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceMode">
-        <source>Contao is currently running in &lt;strong&gt;maintenance mode&lt;/strong&gt;, in which the website (front end) is not available. Do not disable it if you are currently installing or upgrading third-party extensions! The website might not function properly.</source>
-        <target>کانتائو در &lt;strong&gt;وضعیت نگهداشت&lt;/strong&gt; کار می‌کند، که وب‌سایت (بخش کاربری) در دسترس نیست. اگر در حال نصب یا ارتقاء افزونه‌ها هستید این حالت را غیرفعال نکنید! وب‌سایت ممکن است به درستی کار نکند.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceOff">
-        <source>Disable</source>
-        <target>غیرفعال</target>
-      </trans-unit>
       <trans-unit id="MSC.buildCacheText">
         <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
         <target>&lt;strong&gt;نهان‌گاه داخلی&lt;/strong&gt; هنوز ساخته نشده است. ساختن نهان‌گاه داخلی عملکرد برنامه را بهبود خواهد بخشید و به شدت توصیه می‌شود. نهان‌گاه داخلی به صورت خورکار هر زمان که شما &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; در خط فرمان اجرا نمایید ساخته خواهد شد.</target>
@@ -1831,6 +1830,9 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <source>Register</source>
         <target>ثبت‌نام</target>
       </trans-unit>
+      <trans-unit id="MSC.resendActivation">
+        <source>The activation mail has been re-sent to your e-mail address.</source>
+      </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
         <target>حساب کاربری شما فعال گردید.</target>
@@ -1841,15 +1843,15 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.emailSubject">
         <source>Your registration on %s</source>
-        <target>نام‌نویسی شما در %s</target>
+        <target>ثبت‌نام شما در %s</target>
       </trans-unit>
       <trans-unit id="MSC.adminSubject">
         <source>New registration on %s</source>
-        <target>نام‌نویسی جدید در %s</target>
+        <target>ثبت‌نام جدید در %s</target>
       </trans-unit>
       <trans-unit id="MSC.adminText">
         <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
-        <target>یک کاربر جدید (با شناسه‌ی %s) در وب‌سایت شما عضو گردید. %s در صورتی که شما اجازه فعال شده ثبت‌نام را توسط ایمیل تصدیق نداده‌اید، لطفا به بخش مدیریت رفته و به صورت معمولی کاربر را فعال نمایید.</target>
+        <target>یک کاربر جدید (شناسه‌ی %s) در وب‌سایت شما عضو گردید. %s در صورتی که شما اجازه فعال شده نام‌نویسی را توسط ایمیل تصدیق نداده‌اید، لطفا به بخش مدیریت وب‌سایت رفته و به صورت معمولی کاربر را فعال نمایید.</target>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
         <source>Request password</source>
@@ -2236,7 +2238,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="DP.time_confirm_button">
         <source>OK</source>
-        <target>تایید</target>
+        <target>بسیار خوب</target>
       </trans-unit>
       <trans-unit id="DP.apply_range">
         <source>Apply</source>
@@ -2252,7 +2254,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="COLS.header">
         <source>Header</source>
-        <target>سربرگ</target>
+        <target>سربرگ سایت</target>
       </trans-unit>
       <trans-unit id="COLS.left">
         <source>Left column</source>

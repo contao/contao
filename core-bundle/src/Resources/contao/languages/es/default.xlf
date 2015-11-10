@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="ERR.mandatory">
         <source>Field &quot;%s&quot; must not be empty!</source>
-        <target>¡El campo &quot;%s no debe estar vacío!</target>
+        <target>¡El campo &quot;%s&quot; no debe estar vacío!</target>
       </trans-unit>
       <trans-unit id="ERR.mdtryNoLabel">
         <source>This field must not be empty!</source>
@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="ERR.extnd">
         <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>¡Por motivos de seguridad, no puedes emplear aquí los siguientes caracteres: (=&lt;&gt;&amp;/()#)!</target>
+        <target>Por motivos de seguridad, no puedes emplear aquí los siguientes caracteres: =&lt;&gt;&amp;/()#</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="ERR.locale">
         <source>Please enter a valid locale such as &quot;en&quot; or &quot;en_US&quot;!</source>
-        <target>¡Por favor, introduzca una localización válida, como &quot;en&quot; o &quot;es_ES&quot;!</target>
+        <target>¡Por favor, introduzca una localización válida, como &quot;en&quot; o &quot;en_US&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.language">
         <source>Please enter a valid language code such as &quot;en&quot; or &quot;en-US&quot;!</source>
@@ -246,8 +246,7 @@
         <target>El archivo &quot;%s&quot; no esta disponible para descarga</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid input: %s</source>
-        <target>Entrada no valida: %s</target>
+        <source>Invalid option: %s</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -1419,6 +1418,9 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <source>No records found.</source>
         <target>No se encontraron registros.</target>
       </trans-unit>
+      <trans-unit id="MSC.searchExclude">
+        <source>Unsynchronized directories are not included in the search results.</source>
+      </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
         <target>Guardar</target>
@@ -1624,8 +1626,13 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <target>%s back end</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
-        <source>Contao version %s available</source>
-        <target>Versión %s de Contao ya disponible</target>
+        <source>Contao version %s is available.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceEnabled">
+        <source>The maintenance mode is currently enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceDisabled">
+        <source>The maintenance mode is currently disabled.</source>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1803,14 +1810,6 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <source>%s (copy)</source>
         <target>%s (copia)</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceMode">
-        <source>Contao is currently running in &lt;strong&gt;maintenance mode&lt;/strong&gt;, in which the website (front end) is not available. Do not disable it if you are currently installing or upgrading third-party extensions! The website might not function properly.</source>
-        <target>Contao está en &lt;strong&gt;modo mantenimiento&lt;/strong&gt;, en el que el sitio web no se encuentra disponible. No desactive si está instalando o actualizando extensiones de terceros. El sitio web puede no funcionar correctamente.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceOff">
-        <source>Disable</source>
-        <target>Desactivado</target>
-      </trans-unit>
       <trans-unit id="MSC.buildCacheText">
         <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
         <target>El &lt;strong&gt;caché interno&lt;/strong&gt; no se ha construido todavía. La construcción de la caché interna mejorará el rendimiento de la aplicación y es recomendado. La caché interna se construirá de forma automática cada vez que se ejecuta &lt;code&gt;app/console cache:warmup -e %s&lt;/ code&gt; en la línea de comandos.</target>
@@ -1830,6 +1829,9 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       <trans-unit id="MSC.register">
         <source>Register</source>
         <target>Darse de alta</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendActivation">
+        <source>The activation mail has been re-sent to your e-mail address.</source>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
@@ -1997,7 +1999,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.sNoResult">
         <source>Your search for &lt;strong&gt;%s&lt;/strong&gt; returned no results.</source>
-        <target>Su búsqueda &lt;strong&gt;%s&lt;/strong&gt; no ha producido resultados.</target>
+        <target>Su búsqueda &lt;strong&gt;%s&lt;/strong&gt; no ha dado resultados.</target>
       </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
@@ -2009,7 +2011,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.first">
         <source>&amp;#171; First</source>
-        <target>« Primero</target>
+        <target>&amp;#171; Primero</target>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2021,7 +2023,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.last">
         <source>Last &amp;#187;</source>
-        <target>Último »</target>
+        <target>Último &amp;#187;</target>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2189,7 +2191,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="UNITS.3">
         <source>GiB</source>
-        <target>Ir</target>
+        <target>GiB</target>
       </trans-unit>
       <trans-unit id="UNITS.4">
         <source>TiB</source>

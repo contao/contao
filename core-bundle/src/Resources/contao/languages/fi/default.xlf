@@ -244,8 +244,7 @@
         <target>Tiedostoa &quot;%s&quot; ei voi ladata!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid input: %s</source>
-        <target>Virheellinen syöte: %s</target>
+        <source>Invalid option: %s</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -1414,6 +1413,9 @@ Tämä viesti on Contaon generoima, eikä siihen voi vastata.
         <source>No records found.</source>
         <target>Ei kohteita.</target>
       </trans-unit>
+      <trans-unit id="MSC.searchExclude">
+        <source>Unsynchronized directories are not included in the search results.</source>
+      </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
         <target>Tallenna</target>
@@ -1619,8 +1621,13 @@ Tämä viesti on Contaon generoima, eikä siihen voi vastata.
         <target>%s hallinta</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
-        <source>Contao version %s available</source>
-        <target>Contao versio %s saatavilla</target>
+        <source>Contao version %s is available.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceEnabled">
+        <source>The maintenance mode is currently enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceDisabled">
+        <source>The maintenance mode is currently disabled.</source>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1798,14 +1805,6 @@ Tämä viesti on Contaon generoima, eikä siihen voi vastata.
         <source>%s (copy)</source>
         <target>%s (kopioitu)</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceMode">
-        <source>Contao is currently running in &lt;strong&gt;maintenance mode&lt;/strong&gt;, in which the website (front end) is not available. Do not disable it if you are currently installing or upgrading third-party extensions! The website might not function properly.</source>
-        <target>Contao on tällä hetkellä &lt;strong&gt;huoltotilassa&lt;/strong&gt;, jolloin sivusto (julkinen puoli) ei ole käytettävissä. Älä ota sivustoa pois huoltotilasta jos asennat tai päivität kolmannen osapuolen lisäosia! Sivusto ei välttämättä toimi oikein.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceOff">
-        <source>Disable</source>
-        <target>Poista käytöstä</target>
-      </trans-unit>
       <trans-unit id="MSC.buildCacheText">
         <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
       </trans-unit>
@@ -1824,6 +1823,9 @@ Tämä viesti on Contaon generoima, eikä siihen voi vastata.
       <trans-unit id="MSC.register">
         <source>Register</source>
         <target>Rekisteröi</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendActivation">
+        <source>The activation mail has been re-sent to your e-mail address.</source>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
@@ -2203,7 +2205,7 @@ Tämä viesti on Contaon generoima, eikä siihen voi vastata.
       </trans-unit>
       <trans-unit id="CONFIRM.do">
         <source>Module</source>
-        <target>Moduli</target>
+        <target>Moduuli</target>
       </trans-unit>
       <trans-unit id="CONFIRM.table">
         <source>Affected table</source>

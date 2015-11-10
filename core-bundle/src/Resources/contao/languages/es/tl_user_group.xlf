@@ -57,6 +57,10 @@
         <source>Filemounts</source>
         <target>Soportes de archivos</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Tamaños de imágen</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.forms_legend">
         <source>Form permissions</source>
         <target>Permisos de formulario</target>

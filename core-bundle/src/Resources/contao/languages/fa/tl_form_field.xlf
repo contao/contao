@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="FFL.explanation.1">
         <source>A custom field to insert an explanation text.</source>
-        <target>فیلد سفارشی برای درج یک متن توضیحی.</target>
+        <target>فیلد سفارشی برای پرج یک متن توضیحی.</target>
       </trans-unit>
       <trans-unit id="FFL.html.0">
         <source>HTML code</source>
@@ -91,7 +91,7 @@
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
-        <target>سوال امنیتی</target>
+        <target>پرسش امنیتی</target>
       </trans-unit>
       <trans-unit id="FFL.captcha.1">
         <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>

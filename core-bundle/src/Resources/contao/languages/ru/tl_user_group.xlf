@@ -57,6 +57,10 @@
         <source>Filemounts</source>
         <target>Доступные каталоги</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Размеры изображения</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.forms_legend">
         <source>Form permissions</source>
         <target>Разрешения форм</target>

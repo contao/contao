@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
-        <target>منبع پرونده‌ها</target>
+        <target>پرونده‌های منبع</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
         <source>Here you can upload one or more .cto files to be imported.</source>

@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_style.size.1">
         <source>Width, height, min-width, min-height, max-width and max-height.</source>
-        <target>width, height, min-width, min-height, max-width, max-height</target>
+        <target>width, height, min-width, min-height, max-width, max-heightを入力できます。</target>
       </trans-unit>
       <trans-unit id="tl_style.width.0">
         <source>Width</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_style.positioning.1">
         <source>Position, float, clear, overflow and display.</source>
-        <target>position, float, clear, overflow, display</target>
+        <target>position、float、clear、overflow、displayを入力できます。</target>
       </trans-unit>
       <trans-unit id="tl_style.trbl.0">
         <source>Position</source>
@@ -279,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_style.border.1">
         <source>Border-width, border-style, border-color, border-radius, border-collapse and border-spacing.</source>
-        <target>border-width, border-style, border-color, border-radius, border-collapse, border-spacing</target>
+        <target>border-width, border-style, border-color, border-radius, border-collapse, border-spacingを入力できます。</target>
       </trans-unit>
       <trans-unit id="tl_style.borderwidth.0">
         <source>Border width</source>

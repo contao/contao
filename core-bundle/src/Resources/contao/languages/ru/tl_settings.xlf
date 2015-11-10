@@ -185,14 +185,6 @@
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>Вы можете ввести список допустимых HTML-тегов, которые не будут удалены.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.0">
-        <source>Maintenance mode</source>
-        <target>Режим обслуживания</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.1">
-        <source>Send a 503 HTTP header and show a maintenance page in the front end.</source>
-        <target>Отправить 503 HTTP-заголовок (сервис недоступен) и показать страницу режима обслуживания во внешнем интерфейсе.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
         <target>Отключить запрос токенов</target>
@@ -288,14 +280,6 @@
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
         <target>Вы можете ввести разделенный запятыми список расширений файлов разрешенных к загрузке на сервер.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.0">
-        <source>Simultaneous file uploads</source>
-        <target>Одновременных загрузок файлов на сервер</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.1">
-        <source>Here you can enter the maximum number of simultaneous file uploads.</source>
-        <target>Введите количество одновременных загрузок файлов на сервер.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
@@ -401,14 +385,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>Назначьте права доступа по умолчанию для страниц и статей.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.0">
-        <source>Live Update URL</source>
-        <target>URL онлайн обновления</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.1">
-        <source>Here you can enter the Live Update URL.</source>
-        <target>Вы можете указать URL онлайн обновления Contao</target>
-      </trans-unit>
       <trans-unit id="tl_settings.title_legend">
         <source>Website title</source>
         <target>Название веб-сайта</target>
@@ -468,10 +444,6 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Права доступа по умолчанию</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.update_legend">
-        <source>Live Update</source>
-        <target>Онлайн обновление</target>
       </trans-unit>
       <trans-unit id="tl_settings.static_legend">
         <source>Static resources</source>

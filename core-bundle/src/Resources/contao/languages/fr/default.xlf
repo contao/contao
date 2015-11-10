@@ -246,8 +246,7 @@
         <target>Le fichier &quot;%s&quot; n'est pas disponible en téléchargement.</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid input: %s</source>
-        <target>Entrée non valide : %s</target>
+        <source>Invalid option: %s</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -979,7 +978,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>
-        <target>Nom du groupe</target>
+        <target>Titre</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -1419,6 +1418,10 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
         <source>No records found.</source>
         <target>Aucun enregistrement trouvé.</target>
       </trans-unit>
+      <trans-unit id="MSC.searchExclude">
+        <source>Unsynchronized directories are not included in the search results.</source>
+        <target>Les répertoires non synchronisés ne sont pas inclus dans les résultats de recherche.</target>
+      </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
         <target>Sauvegarder</target>
@@ -1624,8 +1627,13 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
         <target>%s en coulisses</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
-        <source>Contao version %s available</source>
-        <target>La version %s de Contao est disponible</target>
+        <source>Contao version %s is available.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceEnabled">
+        <source>The maintenance mode is currently enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceDisabled">
+        <source>The maintenance mode is currently disabled.</source>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1803,14 +1811,6 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
         <source>%s (copy)</source>
         <target>%s (copie)</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceMode">
-        <source>Contao is currently running in &lt;strong&gt;maintenance mode&lt;/strong&gt;, in which the website (front end) is not available. Do not disable it if you are currently installing or upgrading third-party extensions! The website might not function properly.</source>
-        <target>Contao est actuellement en &lt;strong&gt;mode maintenance&lt;/strong&gt;, ce qui signifie que le site internet (guichet) n'est pas disponible. Ne le désactiver pas si vous êtes en train d'installer ou mettre à niveau des extensions tierces ! Le site internet pourrait ne pas fonctionner correctement.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceOff">
-        <source>Disable</source>
-        <target>Désactiver</target>
-      </trans-unit>
       <trans-unit id="MSC.buildCacheText">
         <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
         <target>Le &lt;strong&gt;cache interne&lt;/strong&gt; n'a pas encore été construit. Construire le cache interne permettra d'améliorer les performances de l'application et est fortement recommandé. Le cache interne sera construit automatiquement à chaque fois que vous exécuterez &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; en ligne de commande.</target>
@@ -1830,6 +1830,10 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       <trans-unit id="MSC.register">
         <source>Register</source>
         <target>S'enregistrer</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendActivation">
+        <source>The activation mail has been re-sent to your e-mail address.</source>
+        <target>L'e-mail d'activation a été renvoyé à votre adresse e-mail.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
@@ -2173,6 +2177,7 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to store file meta information.</source>
+        <target>Il vous faut ajouter une page racine dans la structure du site afin de stocker les méta-informations.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

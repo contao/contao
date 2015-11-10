@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_module.name.0">
         <source>Title</source>
-        <target>Groepsnaam</target>
+        <target>Titel</target>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
@@ -59,19 +59,19 @@
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
-        <target>Definieer de startpagina</target>
+        <target>Stel referentiepagina in</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.1">
         <source>Define a custom source or target page for the module.</source>
-        <target>Gebruik een zelfgemaakte startpagina in plaats van de website root pagina.</target>
+        <target>De module een individuele bron- of doelpagina toewijzen.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPage.0">
         <source>Reference page</source>
-        <target>Startpagina</target>
+        <target>Referentiepagina</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPage.1">
         <source>Please choose the reference page from the site structure.</source>
-        <target>U kunt hier een startpunt van een website opgeven die gebruikt wordt als bron of doelpagina.</target>
+        <target>Kies een referentie pagina uit van de site-structuur.</target>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
@@ -595,7 +595,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reference_legend">
         <source>Reference page</source>
-        <target>Startpagina</target>
+        <target>Referentiepagina</target>
       </trans-unit>
       <trans-unit id="tl_module.redirect_legend">
         <source>Redirect settings</source>

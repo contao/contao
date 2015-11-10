@@ -187,11 +187,11 @@
       </trans-unit>
       <trans-unit id="tl_article.facebook">
         <source>Share on Facebook</source>
-        <target>اشتراک گذاری در فیسبوک</target>
+        <target>اشتراک‌گذاری در فیسبوک</target>
       </trans-unit>
       <trans-unit id="tl_article.twitter">
         <source>Share on Twitter</source>
-        <target>اشتراک گذاری در تویتر</target>
+        <target>اشتراک‌گذاری در تویتر</target>
       </trans-unit>
       <trans-unit id="tl_article.gplus">
         <source>Share on Google+</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_article.toggle.0">
         <source>Publish/unpublish article</source>
-        <target>انتشار/لغو انتشار مقاله</target>
+        <target>انتشار/عدم انتشار مقاله</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle.1">
         <source>Publish/unpublish article ID %s</source>

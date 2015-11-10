@@ -185,14 +185,6 @@
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>不被阻断的HTML标签列表</target>
       </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.0">
-        <source>Maintenance mode</source>
-        <target>维护模式</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.1">
-        <source>Send a 503 HTTP header and show a maintenance page in the front end.</source>
-        <target>发送503代码，并在前端显示一个维护页面。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
         <target>禁用来路检测</target>
@@ -288,14 +280,6 @@
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
         <target>用英文逗号隔开</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.0">
-        <source>Simultaneous file uploads</source>
-        <target>同时上传文件数量</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.1">
-        <source>Here you can enter the maximum number of simultaneous file uploads.</source>
-        <target>同时上传文件数量最大值</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
@@ -401,14 +385,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>设置页面默认权限</target>
       </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.0">
-        <source>Live Update URL</source>
-        <target>Live Update URL</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.1">
-        <source>Here you can enter the Live Update URL.</source>
-        <target>你可以在这里输入在线升级的URL。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.title_legend">
         <source>Website title</source>
         <target>网站名称</target>
@@ -468,10 +444,6 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>默认访问权限</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.update_legend">
-        <source>Live Update</source>
-        <target>在线更新</target>
       </trans-unit>
       <trans-unit id="tl_settings.static_legend">
         <source>Static resources</source>

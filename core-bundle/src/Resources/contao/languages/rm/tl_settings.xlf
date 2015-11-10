@@ -185,14 +185,6 @@
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>Qua pos ti endatar ina glista dals tags da HTML che na duain betg vegnir eliminads.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.0">
-        <source>Maintenance mode</source>
-        <target>Modus da mantegniment</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.1">
-        <source>Send a 503 HTTP header and show a maintenance page in the front end.</source>
-        <target>Trametter in chau da HTTP 503 e mussar ina pagina da mantegniment en il front-end.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
         <target>Deactivar tokens da dumondas</target>
@@ -288,14 +280,6 @@
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
         <target>Qua pos ti endatar ina glista separada entras commas da tips da datotecas che pon vegnir transferids sin il server.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.0">
-        <source>Simultaneous file uploads</source>
-        <target>Transfers simultans</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.1">
-        <source>Here you can enter the maximum number of simultaneous file uploads.</source>
-        <target>Qua pos ti endatar il dumber maximal da transfers da datotecas che pon capitar simultan.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
@@ -401,14 +385,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>Definescha ils dretgs d'access da standard per paginas ed artitgels.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.0">
-        <source>Live Update URL</source>
-        <target>URL per l'actualisaziun directa</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.1">
-        <source>Here you can enter the Live Update URL.</source>
-        <target>Qua pos ti endatar l'URL per l'actualisaziun directa.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.title_legend">
         <source>Website title</source>
         <target>Titel da la pagina d'internet</target>
@@ -468,10 +444,6 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Dretgs d'access da standard</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.update_legend">
-        <source>Live Update</source>
-        <target>Actualisaziun directa (Live Update)</target>
       </trans-unit>
       <trans-unit id="tl_settings.static_legend">
         <source>Static resources</source>

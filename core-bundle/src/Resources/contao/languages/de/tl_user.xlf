@@ -177,6 +177,14 @@
         <source>Here you can grant access to one or more folders (subfolders will be included automatically).</source>
         <target>Hier können Sie den Zugriff auf ein oder mehrere Verzeichnisse erlauben (Unterverzeichnisse werden automatisch hinzugefügt).</target>
       </trans-unit>
+      <trans-unit id="tl_user.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Bildgrößen</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.1">
+        <source>Here you can grant access to one or more image sizes.</source>
+        <target>Hier können Sie den Zugriff auf eine oder mehrere Bildgrößen erlauben.</target>
+      </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
         <target>Erlaubte Formulare</target>
@@ -260,6 +268,10 @@
       <trans-unit id="tl_user.filemounts_legend">
         <source>Filemounts</source>
         <target>Filemounts</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Bildgrößen</target>
       </trans-unit>
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>

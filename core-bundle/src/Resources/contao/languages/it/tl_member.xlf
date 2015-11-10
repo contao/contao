@@ -131,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_member.groups.0">
         <source>Member groups</source>
-        <target>Membri del gruppo</target>
+        <target>Gruppi membri</target>
       </trans-unit>
       <trans-unit id="tl_member.groups.1">
         <source>Here you can assign the member to one or more groups.</source>
@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_member.groups_legend">
         <source>Member groups</source>
-        <target>Membri del gruppo</target>
+        <target>Gruppi membri</target>
       </trans-unit>
       <trans-unit id="tl_member.login_legend">
         <source>Login details</source>

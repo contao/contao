@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_content.title.0">
         <source>Title</source>
-        <target>Nom du groupe</target>
+        <target>Titre</target>
       </trans-unit>
       <trans-unit id="tl_content.title.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>

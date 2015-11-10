@@ -185,14 +185,6 @@
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>اینجا می‌توانید فهرستی از برچسب‌های اچ‌تی‌ام‌ال مجاز که نباید حذف شوند را وارد نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.0">
-        <source>Maintenance mode</source>
-        <target>وضعیت نگهداشت</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.1">
-        <source>Send a 503 HTTP header and show a maintenance page in the front end.</source>
-        <target>سربرگ اچ‌تی‌پی 503 را ارسال می‌کند و یک برگه نگهداشت را در بخش کاربری نمایش می‌دهد.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
         <target>غیرفعال کردن تکون‌های درخواست</target>
@@ -251,7 +243,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.maxImageWidth.0">
         <source>Maximum front end width</source>
-        <target>عرض بیشینه‌ی بخش کاربری</target>
+        <target>عرض بیشینه در بخش کاربری</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
@@ -288,14 +280,6 @@
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
         <target>اینجا می‌توانید فهرست جداشده با کاما از گونه‌های پرونده قابل بارگزاری را وارد نمایید.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.0">
-        <source>Simultaneous file uploads</source>
-        <target>بازگذاری‌های همزمان پرونده</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.1">
-        <source>Here you can enter the maximum number of simultaneous file uploads.</source>
-        <target>اینجا می‌توانید بیشترین تعداد بارگزاری پرونده همزمان را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
@@ -401,14 +385,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>لطفا  قوانین دسترسی پیش‌فرض به برگه‌ها و مقاله‌ها را اختصاص دهید.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.0">
-        <source>Live Update URL</source>
-        <target>نشانی وب به‌روزرسانی لایو</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.1">
-        <source>Here you can enter the Live Update URL.</source>
-        <target>اینجا می‌توانید نشانی وب به‌روزرسانی لایو را وارد نمایید.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.title_legend">
         <source>Website title</source>
         <target>عنوان وب‌سایت</target>
@@ -468,10 +444,6 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>سطوح دسترسی پیش‌فرض</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.update_legend">
-        <source>Live Update</source>
-        <target>به‌روزرسانی لایو</target>
       </trans-unit>
       <trans-unit id="tl_settings.static_legend">
         <source>Static resources</source>

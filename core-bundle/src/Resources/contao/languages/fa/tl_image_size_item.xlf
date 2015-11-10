@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.show.1">
         <source>Show the details of image size media query ID %s</source>
-        <target>مشاهده جزئیات پرسش رسانه اندازه تصویر شناسه‌ی %s</target>
+        <target>نمایش جزئیات پرسش رسانه اندازه تصویر شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.edit.0">
         <source>Edit image size media query</source>
