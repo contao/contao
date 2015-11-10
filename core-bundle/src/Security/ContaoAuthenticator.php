@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Security;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\User;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
@@ -27,7 +28,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoAuthenticator implements SimplePreAuthenticatorInterface
+class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthenticatorInterface
 {
     use ContainerAwareTrait;
 
