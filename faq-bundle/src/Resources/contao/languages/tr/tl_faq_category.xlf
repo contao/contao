@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.notify.0">
         <source>Notify</source>
-        <target>Bildir</target>
+        <target>Bildirim</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.notify.1">
         <source>Please choose who to notify when comments are added.</source>
-        <target>Lütfen yorum eklendiğinde bildirilecek kişiyi seçin.</target>
+        <target>Yorum yapıldığında bildirilecek kişiyi seçin.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.sortOrder.0">
         <source>Sort order</source>
@@ -47,15 +47,15 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>Varsayılan olarak yorumlar, en eskiden başlayarak, artan şekilde sıralandı.</target>
+        <target>Yorumlar, varsayılan olarak eskiden yeniye doğru sıralanır.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.perPage.0">
         <source>Comments per page</source>
-        <target>Sayfa başına yorum</target>
+        <target>Sayfadaki yorum sayısı</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Sayfa başına yorum sayısı. Etkisizleştirmek için 0 yapın.</target>
+        <target>Bir sayfada görüntülenecek yorum sayısını yazın. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.moderate.0">
         <source>Moderate comments</source>
@@ -63,27 +63,27 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Websitesinde yayınlanmadan önce yorumları onaylayın.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yorumlar web sitesinde yayınlanmadan önce onaylanmasu gerekir.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.bbcode.0">
         <source>Allow BBCode</source>
-        <target>BBCode'a izin ver</target>
+        <target>BBCode kullanılabilsin</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Ziyaretçilerin yorumlarını BBCode ile düzenlemelerine izin ver.</target>
+        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler yorumlarında BBCode kullanabilir.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.0">
         <source>Require login to comment</source>
-        <target>Yorum yapmak için giriş yapılmalı</target>
+        <target>Yorum yapmak için oturum açılmalı</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>Sadece yetkili kullanıcıların yorum yapmasına izin ver.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yalnız oturum açmış kullanıcılar yorum yapabilir.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
         <source>Disable the security question</source>
-        <target>Güvenlik sorusunu etkisizleştir</target>
+        <target>Güvenlik sorusu kullanılmasın</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -91,7 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.tstamp.0">
         <source>Revision date</source>
-        <target>Revizyon tarihi</target>
+        <target>Düzenleme tarihi</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.tstamp.1">
         <source>Date and time of the latest revision</source>

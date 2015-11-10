@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.1">
         <source>Please choose the files you want to attach.</source>
-        <target>لطفاً پرونده‌هایی که می‌خواهید پیوست شوند را انتخاب نمایید.</target>
+        <target>لطفا پرونده‌هایی که می‌خواهید پیوست شوند را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_faq.noComments.0">
         <source>Disable comments</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.published.1">
         <source>Make the FAQ publicly visible on the website.</source>
-        <target>برای نمایش پرسش و پاسخ در تارنما این گزینه را فعال نمایید.</target>
+        <target>برای نمایش پرسش و پاسخ در وب‌سایت این گزینه را فعال نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_faq.title_legend">
         <source>Title and author</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.show.1">
         <source>Show the details of question ID %s</source>
-        <target>نمایش اطلاعات پرسش شناسه‌ی %s</target>
+        <target>نمایش جزئیات پرسش شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.edit.0">
         <source>Edit question</source>
@@ -147,11 +147,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.toggle.0">
         <source>Publish/unpublish question</source>
-        <target>انتشار/عدم انتشار پرسش</target>
+        <target>انتشار/لغو انتشار پرسش</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.1">
         <source>Publish/unpublish question ID %s</source>
-        <target>انتشار/عدم انتشار پرسش شناسه‌ی %s</target>
+        <target>انتشار/لغو انتشار پرسش شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.editheader.0">
         <source>Edit category</source>
@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Add new at the top</source>
-        <target>اضافه کردن در بالا</target>
+        <target>افزودن در بالا</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Add new after question ID %s</source>
