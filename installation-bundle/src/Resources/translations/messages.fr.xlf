@@ -183,10 +183,12 @@
       </trans-unit>
       <trans-unit id="37">
         <source>ALTER_CHANGE</source>
+        <target>Changer les colonnes</target>
         
       </trans-unit>
       <trans-unit id="38">
         <source>ALTER_DROP</source>
+        <target>Supprimer les colonnes</target>
         
       </trans-unit>
       <trans-unit id="39">
@@ -226,6 +228,7 @@
       </trans-unit>
       <trans-unit id="46">
         <source>imported_on</source>
+        <target>Modèle importé le %s.</target>
         
       </trans-unit>
       <trans-unit id="47">
