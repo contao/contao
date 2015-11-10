@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.1.0-RC1 (2015-XX-XX)
+### 4.1.0-RC1 (2015-11-10)
 
  * Limit access to the image sizes per user or user group (see #319).
  * Support the Lexik maintenance bundle if it is installed (see #283).
