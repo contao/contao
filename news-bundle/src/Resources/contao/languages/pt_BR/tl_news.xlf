@@ -303,7 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
         <source>Edit archive settings</source>
-        <target>Editar configurações de arquivamento</target>
+        <target>Editar configurações de arquivo</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
         <source>Edit the archive settings</source>

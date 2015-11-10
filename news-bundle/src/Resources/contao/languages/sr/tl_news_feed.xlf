@@ -7,23 +7,23 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.title.1">
         <source>Please enter a feed title.</source>
-        <target>Унесите наслов читача.</target>
+        <target>Унесите наслов Feed-a.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.alias.0">
         <source>Feed alias</source>
-        <target>Алиас приказивача</target>
+        <target>Алиас Feed-a</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.alias.1">
         <source>Here you can enter a unique filename (without extension). The XML feed file will be auto-generated in the &lt;em&gt;share&lt;/em&gt; directory of your Contao installation, e.g. as &lt;em&gt;share/name.xml&lt;/em&gt;.</source>
-        <target>Овде можете унести јединствено име фајла (без екстензије). XML читач ће бити аутоматски креиран у &lt;em&gt;share&lt;/em&gt; фолдеру Ваше Contao инсталације, нпр., као &lt;em&gt;share/name.xml&lt;/em&gt;.</target>
+        <target>Овде можете унести јединствено име фајла (без екстензије). XML Feed ће бити аутоматски креиран у &lt;em&gt;share&lt;/em&gt; фолдеру Ваше Contao инсталације, нпр., као &lt;em&gt;share/name.xml&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.language.0">
         <source>Feed language</source>
-        <target>Језик читача</target>
+        <target>Језик Feed-a</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.language.1">
         <source>Please enter the feed language according to the ISO-639 standard (e.g. &lt;em&gt;en&lt;/em&gt; or &lt;em&gt;en-us&lt;/em&gt;).</source>
-        <target>Унесите језик читача у складу са стандардом ISO-639  (нпр. &lt;em&gt;en&lt;/em&gt; или &lt;em&gt;en-us&lt;/em&gt;).</target>
+        <target>Унесите језик Feed-a у складу са стандардом ISO-639  (нпр. &lt;em&gt;en&lt;/em&gt; или &lt;em&gt;en-us&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.archives.0">
         <source>News archives</source>
@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.format.0">
         <source>Feed format</source>
-        <target>Формат читача</target>
+        <target>Формат Feed-a</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.format.1">
         <source>Please choose a feed format.</source>
-        <target>Изаберите формат читача.</target>
+        <target>Изаберите формат Feed-a.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source.0">
         <source>Export settings</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.maxItems.1">
         <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
-        <target>Овде можете ограничити број ставки читача. Поставите 0 за извоз свих ставки.</target>
+        <target>Овде можете ограничити број ставки Feed-a. Поставите 0 за извоз свих ставки.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.feedBase.0">
         <source>Base URL</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.description.0">
         <source>Feed description</source>
-        <target>Опис читача</target>
+        <target>Опис Feed-a</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.description.1">
         <source>Here you can enter a short description of the news feed.</source>
@@ -83,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.config_legend">
         <source>Feed settings</source>
-        <target>Подешавања читача</target>
+        <target>Подешавања Feed-a</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source_teaser">
         <source>News teasers</source>
@@ -91,47 +91,47 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.source_text">
         <source>Full articles</source>
-        <target>Пуни чланак</target>
+        <target>Комплетан чланак</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
         <source>New feed</source>
-        <target>Нови читач</target>
+        <target>Нови Feed</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.1">
         <source>Create a new feed</source>
-        <target>Креирај нови читач</target>
+        <target>Креирај нови Feed</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.show.0">
         <source>Feed details</source>
-        <target>Детаљи читача</target>
+        <target>Детаљи Feed-a</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.show.1">
         <source>Show the details of feed ID %s</source>
-        <target>Прикажи детаље читача ID %s</target>
+        <target>Прикажи детаље Feed-a ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.edit.0">
         <source>Edit feed</source>
-        <target>Уреди читач</target>
+        <target>Уреди Feed</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.edit.1">
         <source>Edit feed ID %s</source>
-        <target>Уреди читач ID %s</target>
+        <target>Уреди Feed ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.copy.0">
         <source>Duplicate feed</source>
-        <target>Копирај читач</target>
+        <target>Копирај Feed</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.copy.1">
         <source>Duplicate feed ID %s</source>
-        <target>Копирај читач ID %s</target>
+        <target>Копирај Feed ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.delete.0">
         <source>Delete feed</source>
-        <target>Обриши читач</target>
+        <target>Обриши Feed</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.delete.1">
         <source>Delete feed ID %s</source>
-        <target>Обриши читач ID %s</target>
+        <target>Обриши Feed ID %s</target>
       </trans-unit>
     </body>
   </file>

@@ -203,7 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_news.title_legend">
         <source>Title and author</source>
-        <target>Наслов и аутор</target>
+        <target>Назив и аутор</target>
       </trans-unit>
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>

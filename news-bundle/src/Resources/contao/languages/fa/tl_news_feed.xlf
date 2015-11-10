@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.title.1">
         <source>Please enter a feed title.</source>
-        <target>لطفا عنوان خوراک را وارد نمایید</target>
+        <target>لطفا عنوان خوراک را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.alias.0">
         <source>Feed alias</source>
@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.alias.1">
         <source>Here you can enter a unique filename (without extension). The XML feed file will be auto-generated in the &lt;em&gt;share&lt;/em&gt; directory of your Contao installation, e.g. as &lt;em&gt;share/name.xml&lt;/em&gt;.</source>
-        <target>اینجا می‌توانید نام پرونده یکتا (با پسوند) را وارد نمایید. پرونده خوراک XML به صورت خودکار در فهرست &lt;em&gt;share&lt;/em&gt; محل نصب کانتائو شما ایجاد خواهد شد، به عنوان مثال &lt;em&gt;share/name.xml&lt;/em&gt;.</target>
+        <target>اینجا می‌توانید نام پرونده یکتا (با پسوند) را وارد نمایید. پرونده خوراک XML به صورت خودکار در فهرست &lt;em&gt;share&lt;/em&gt; محل نصب کانتائو شما ایجاد خواهد شد، برای نمونه به صورت &lt;em&gt;share/name.xml&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.language.0">
         <source>Feed language</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.language.1">
         <source>Please enter the feed language according to the ISO-639 standard (e.g. &lt;em&gt;en&lt;/em&gt; or &lt;em&gt;en-us&lt;/em&gt;).</source>
-        <target>لطفا زبان خوراک را بر اساس استاندارد ISO-639 وارد نمایید (مثلا &lt;em&gt;en&lt;/em&gt; یا &lt;em&gt;en-us&lt;/em&gt;).</target>
+        <target>لطفا زبان خوراک را بر اساس استاندارد ISO-639 وارد نمایید (برای نمونه &lt;em&gt;en&lt;/em&gt; یا &lt;em&gt;en-us&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.archives.0">
         <source>News archives</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.archives.1">
         <source>Here you can choose the news archives to be included in the feed.</source>
-        <target>اینجا می‌توانید بایگانی‌های اخباری را که می‌خواهید به خوراک اضافه کنید را انتخاب کنید.</target>
+        <target>اینجا می‌توانید بایگانی‌های اخباری را که باید در خوراک گنجانده شوند را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.format.0">
         <source>Feed format</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.format.1">
         <source>Please choose a feed format.</source>
-        <target>یک قالب خوراک را انتخاب نمایید</target>
+        <target>لطفا یک قالب خوراک را انتخاب نمایید</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source.0">
         <source>Export settings</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.feedBase.1">
         <source>Please enter the base URL with protocol (e.g. &lt;em&gt;http://&lt;/em&gt;).</source>
-        <target>نشانی وب ریشه را با پروتکل (به عنوان مثال &lt;em&gt;http://&lt;/em&gt;) وارد نمایید.</target>
+        <target>لطفا نشانی وب ریشه را با پروتکل (برای نمونه &lt;em&gt;http://&lt;/em&gt;) وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.description.0">
         <source>Feed description</source>

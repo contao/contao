@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
-        <target>Системски администратор</target>
+        <target>Администратор система</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_author">
         <source>Author of the news item</source>
@@ -131,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_both">
         <source>Author and system administrator</source>
-        <target>Аутор и системски администратор</target>
+        <target>Аутор и администратор система</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.source_teaser">
         <source>News teasers</source>
@@ -139,7 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.source_text">
         <source>Full articles</source>
-        <target>Пуни чланак</target>
+        <target>Комплетан чланак</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>
@@ -203,7 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage RSS feeds</source>
-        <target>Управљај RSS извором</target>
+        <target>Управљање RSS извором</target>
       </trans-unit>
     </body>
   </file>

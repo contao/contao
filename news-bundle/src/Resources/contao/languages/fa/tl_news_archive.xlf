@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.title.1">
         <source>Please enter a news archive title.</source>
-        <target>لطفا عنوان بایگانی خبر را وارد نمایید .</target>
+        <target>لطفا عنوان بایگانی خبر را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.0">
         <source>Redirect page</source>
@@ -31,11 +31,11 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.notify.1">
         <source>Please choose who to notify when comments are added.</source>
-        <target>لطفا کسی که باید وقتی دیدگاه‌ها اضافه شد اعلام کند را انتخاب نمایید.</target>
+        <target>لطفا کسی را که وقتی دیدگاه‌ها اضافه شد آگاه شود را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.sortOrder.0">
         <source>Sort order</source>
-        <target>نحوه مرتب‌سازی</target>
+        <target>ترتیب مرتب‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.perPage.0">
         <source>Comments per page</source>
-        <target>دیدگاه در هر برگه</target>
+        <target>دیدگاه‌ها در هر برگه</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>تایید دیدگاه‌ها قبل از انتشار در تارنما.</target>
+        <target>تایید دیدگاه‌ها قبل از انتشار در وب‌سایت.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.bbcode.0">
         <source>Allow BBCode</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>اجازه دادن به کاربران تایید شده برای ایجاد دیدگاه‌ها</target>
+        <target>اجازه دادن به کاربران تایید شده برای ایجاد دیدگاه‌ها.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable the security question</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
-        <target>حفاظت از دسترسی</target>
+        <target>حفاظت دسترسی</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feed_legend">
         <source>RSS/Atom feed</source>
@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
-        <target>مدیر سیستم</target>
+        <target>مدیر سامانه</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_author">
         <source>Author of the news item</source>
@@ -131,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_both">
         <source>Author and system administrator</source>
-        <target>نویسنده و مدیر سیستم</target>
+        <target>نویسنده و مدیر سامانه</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.source_teaser">
         <source>News teasers</source>

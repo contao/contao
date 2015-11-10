@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_news.headline.0">
         <source>Title</source>
-        <target>Nom du groupe</target>
+        <target>Titre</target>
       </trans-unit>
       <trans-unit id="tl_news.headline.1">
         <source>Please enter the news title.</source>

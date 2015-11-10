@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_news_archive.title.0">
         <source>Title</source>
-        <target>Groepsnaam</target>
+        <target>Titel</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.title.1">
         <source>Please enter a news archive title.</source>

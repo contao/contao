@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_news.headline.0">
         <source>Title</source>
-        <target>Nome gruppo</target>
+        <target>Nome del modulo</target>
       </trans-unit>
       <trans-unit id="tl_news.headline.1">
         <source>Please enter the news title.</source>
@@ -231,7 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
-        <target>Exporta impostazioni</target>
+        <target>Impostazioni avanzate</target>
       </trans-unit>
       <trans-unit id="tl_news.publish_legend">
         <source>Publish settings</source>
