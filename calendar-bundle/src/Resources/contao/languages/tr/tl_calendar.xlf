@@ -55,27 +55,27 @@
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Websitesinde yayınlanmadan önce yorumları onaylayın.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yorumlar web sitesinde yayınlanmadan önce onaylanmasu gerekir.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.0">
         <source>Allow BBCode</source>
-        <target>BBCode'a izin ver</target>
+        <target>BBCode kullanılabilsin</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Ziyaretçilerin yorumlarını BBCode ile düzenlemelerine izin ver.</target>
+        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler yorumlarında BBCode kullanabilir.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.0">
         <source>Require login to comment</source>
-        <target>Yorum yapmak için giriş yapılmalı</target>
+        <target>Yorum yapmak için oturum açılmalı</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>Sadece yetkili kullanıcıların yorum yapmasına izin ver.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yalnız oturum açmış kullanıcılar yorum yapabilir.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
         <source>Disable the security question</source>
-        <target>Güvenlik sorusunu etkisizleştir</target>
+        <target>Güvenlik sorusu kullanılmasın</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.0">
         <source>Revision date</source>
-        <target>Revizyon tarihi</target>
+        <target>Düzenleme tarihi</target>
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.1">
         <source>Date and time of the latest revision</source>

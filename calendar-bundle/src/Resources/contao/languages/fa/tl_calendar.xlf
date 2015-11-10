@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.1">
         <source>Allow visitors to comment events.</source>
-        <target>به بازدیدکنندگان اجازه دیدگاه به رویدادها می دهد.</target>
+        <target>به کاربران اجازه دیدگاه دادن به رویدادها می‌دهد.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify.0">
         <source>Notify</source>
@@ -31,11 +31,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.notify.1">
         <source>Please choose who to notify when comments are added.</source>
-        <target>لطفا کسی که باید وقتی دیدگاه‌ها اضافه شد اعلام کند را انتخاب نمایید.</target>
+        <target>لطفا کسی را که وقتی دیدگاه‌ها اضافه شد آگاه شود را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.sortOrder.0">
         <source>Sort order</source>
-        <target>نحوه مرتب‌سازی</target>
+        <target>ترتیب مرتب‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_calendar.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.0">
         <source>Comments per page</source>
-        <target>دیدگاه در هر برگه</target>
+        <target>دیدگاه‌ها در هر برگه</target>
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>تایید دیدگاه‌ها قبل از انتشار در تارنما.</target>
+        <target>تایید دیدگاه‌ها قبل از انتشار در وب‌سایت.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.0">
         <source>Allow BBCode</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>اجازه دادن به کاربران تایید شده برای ایجاد دیدگاه‌ها</target>
+        <target>اجازه دادن به کاربران تایید شده برای ایجاد دیدگاه‌ها.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
         <source>Disable the security question</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.protected_legend">
         <source>Access protection</source>
-        <target>حفاظت از دسترسی</target>
+        <target>حفاظت دسترسی</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feed_legend">
         <source>RSS/Atom feed</source>
@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.notify_admin">
         <source>System administrator</source>
-        <target>مدیر سیستم</target>
+        <target>مدیر سامانه</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_author">
         <source>Author of the event</source>
@@ -131,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.notify_both">
         <source>Author and system administrator</source>
-        <target>نویسنده و مدیر سیستم</target>
+        <target>نویسنده و مدیر سامانه</target>
       </trans-unit>
       <trans-unit id="tl_calendar.source_teaser">
         <source>Event teasers</source>
@@ -155,7 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.show.1">
         <source>Show the details of calendar ID %s</source>
-        <target>نمایش جزئیات سالنما شناسه‌ی %s</target>
+        <target>نمایش جزئیات سالنمای شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.edit.0">
         <source>Edit calendar</source>
@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.edit.1">
         <source>Edit calendar ID %s</source>
-        <target>ویرایش سالنما شناسه‌ی %s</target>
+        <target>ویرایش سالنمای شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.0">
         <source>Edit calendar settings</source>
@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.1">
         <source>Edit the settings of calendar ID %s</source>
-        <target>ویرایش تنظیمات سالنما شناسه‌ی %s</target>
+        <target>ویرایش تنظیمات سالنمای شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.0">
         <source>Duplicate calendar</source>
@@ -179,7 +179,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.copy.1">
         <source>Duplicate calendar ID %s</source>
-        <target>تکثیر سالنما شناسه‌ی %s</target>
+        <target>تکثیر سالنمای شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.delete.0">
         <source>Delete calendar</source>
@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.delete.1">
         <source>Delete calendar ID %s</source>
-        <target>حذف سالنما شناسه‌ی %s</target>
+        <target>حذف سالنمای شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>

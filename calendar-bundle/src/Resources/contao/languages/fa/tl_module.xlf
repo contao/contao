@@ -43,11 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_order.0">
         <source>Sort order</source>
-        <target>نحوه مرتب‌سازی</target>
+        <target>ترتیب مرتب‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_order.1">
         <source>Here you can choose the sort order.</source>
-        <target>اینجا می‌توانید نحوه مرتب‌سازی را انتخاب نمایید.</target>
+        <target>اینجا می‌توانید ترتیب مرتب‌سازی را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.0">
         <source>Event reader module</source>
