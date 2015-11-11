@@ -14,6 +14,24 @@
       <trans-unit id="tl_newsletter_channel.jumpTo.1">
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
       </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template.0">
+        <source>E-mail template</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template.1">
+        <source>Here you can choose the e-mail template.</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender.0">
+        <source>Sender e-mail address</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender.1">
+        <source>Please enter the e-mail address of the sender.</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.senderName.0">
+        <source>Sender name</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.senderName.1">
+        <source>Here you can enter an optional sender name.</source>
+      </trans-unit>
       <trans-unit id="tl_newsletter_channel.useSMTP.0">
         <source>Custom SMTP server</source>
       </trans-unit>
@@ -58,6 +76,12 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.title_legend">
         <source>Title and redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template_legend">
+        <source>Template settings</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender_legend">
+        <source>Sender settings</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.smtp_legend">
         <source>SMTP configuration</source>

@@ -102,7 +102,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addFile'),
-		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{expert_legend:hide},sendText,externalImages,senderName,sender'
+		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName;{expert_legend:hide},sendText,externalImages'
 	),
 
 	// Subpalettes
@@ -199,10 +199,13 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'template' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['template'],
-			'default'                 => 'mail_default',
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_newsletter', 'getMailTemplates'),
+			'eval'                    => array('includeBlankOption'=>true),
+			'options_callback'        => function ()
+			{
+				return Controller::getTemplateGroup('mail_');
+			},
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'sendText' => array
@@ -486,16 +489,5 @@ class tl_newsletter extends Backend
 		}
 
 		return $varValue;
-	}
-
-
-	/**
-	 * Return all mail templates as array
-	 *
-	 * @return array
-	 */
-	public function getMailTemplates()
-	{
-		return $this->getTemplateGroup('mail_');
 	}
 }

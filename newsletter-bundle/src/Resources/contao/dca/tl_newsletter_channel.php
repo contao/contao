@@ -109,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('useSMTP'),
-		'default'                     => '{title_legend},title,jumpTo;{smtp_legend:hide},useSMTP'
+		'default'                     => '{title_legend},title,jumpTo;{template_legend},template;{sender_legend},sender,senderName;{smtp_legend:hide},useSMTP'
 	),
 
 	// Subpalettes
@@ -147,6 +147,39 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'eval'                    => array('fieldType'=>'radio'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
+		'template' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['template'],
+			'default'                 => 'mail_default',
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'options_callback'        => function ()
+			{
+				return Controller::getTemplateGroup('mail_');
+			},
+			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
+		'sender' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['sender'],
+			'exclude'                 => true,
+			'search'                  => true,
+			'filter'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>128, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(128) NOT NULL default ''"
+		),
+		'senderName' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['senderName'],
+			'exclude'                 => true,
+			'search'                  => true,
+			'sorting'                 => true,
+			'flag'                    => 11,
+			'inputType'               => 'text',
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
 		'useSMTP' => array
 		(

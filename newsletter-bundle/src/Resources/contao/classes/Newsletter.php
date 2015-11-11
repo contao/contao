@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -30,7 +31,7 @@ class Newsletter extends \Backend
 	 */
 	public function send(DataContainer $dc)
 	{
-		$objNewsletter = $this->Database->prepare("SELECT n.*, c.useSMTP, c.smtpHost, c.smtpPort, c.smtpUser, c.smtpPass FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
+		$objNewsletter = $this->Database->prepare("SELECT n.*, c.template AS channelTemplate, c.sender AS channelSender, c.senderName as channelSenderName, c.useSMTP, c.smtpHost, c.smtpPort, c.smtpUser, c.smtpPass FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
 										->limit(1)
 										->execute($dc->id);
 
@@ -38,6 +39,24 @@ class Newsletter extends \Backend
 		if ($objNewsletter->numRows < 1)
 		{
 			return '';
+		}
+
+		// Set the template
+		if ($objNewsletter->template == '')
+		{
+			$objNewsletter->template = $objNewsletter->channelTemplate;
+		}
+
+		// Set the sender address
+		if ($objNewsletter->sender == '')
+		{
+			$objNewsletter->sender = $objNewsletter->channelSender;
+		}
+
+		// Set the sender name
+		if ($objNewsletter->senderName == '')
+		{
+			$objNewsletter->senderName = $objNewsletter->channelSenderName;
 		}
 
 		// Overwrite the SMTP configuration
@@ -51,10 +70,10 @@ class Newsletter extends \Backend
 			\Config::set('smtpPort', $objNewsletter->smtpPort);
 		}
 
-		// Add default sender address
+		// No sender address given
 		if ($objNewsletter->sender == '')
 		{
-			list($objNewsletter->senderName, $objNewsletter->sender) = \StringUtil::splitFriendlyEmail(\Config::get('adminEmail'));
+			throw new InternalServerErrorException('No sender address given. Please check the newsletter channel settings.');
 		}
 
 		$arrAttachments = array();
