@@ -527,7 +527,7 @@ class InstallationController extends ContainerAware
     {
         $context['request_token'] = '';
 
-        if (file_exists($this->container->getParameter('kernel.root_dir') . '/config/parameters.yml')) {
+        if ($this->container->hasParameter('contao.csrf_token_name')) {
             $tokenName = $this->container->getParameter('contao.csrf_token_name');
             $token = $this->container->get('security.csrf.token_manager')->getToken($tokenName);
             $context['request_token'] = $token->getValue();

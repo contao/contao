@@ -34,7 +34,7 @@ class InstallationKernel extends \AppKernel
     {
         $this->purgeSymfonyCache();
 
-        if (file_exists($this->getRootDir() . '/config/parameters.yml')) {
+        if ($this->canBootRealSystem()) {
             parent::boot();
             $this->bootRealSystem();
         } else {
@@ -54,6 +54,18 @@ class InstallationKernel extends \AppKernel
         }
 
         return $this->rootDir;
+    }
+
+    /**
+     * Checks if the real system can be booted.
+     *
+     * @return bool True if the real system can be booted
+     */
+    private function canBootRealSystem()
+    {
+        return file_exists($this->getRootDir() . '/config/parameters.yml')
+            && file_exists($this->getRootDir() . '/../system/config/localconfig.php')
+        ;
     }
 
     /**

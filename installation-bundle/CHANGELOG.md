@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.0.0 (2015-XX-XX)
+
+ * Also check for the `localconfig.php` file during boot (see contao/core-bundle#406).
+
 ### 1.0.0-RC1 (2015-10-11)
 
  * Add the version 4.1 update routines.
