@@ -27,7 +27,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-develop": "1.0.x-dev"
+            "dev-develop": "1.1.x-dev"
         }
     }
 }
