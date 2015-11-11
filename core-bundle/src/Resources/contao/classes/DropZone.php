@@ -37,7 +37,7 @@ class DropZone extends \FileUpload
 		$GLOBALS['TL_JAVASCRIPT'][] = 'assets/dropzone/js/dropzone.min.js';
 
 		// Generate the markup
-		return '
+		$return = '
   <input type="hidden" name="action" value="fileupload">
   <div class="fallback">
     <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" onfocus="Backend.getScrollOffset()" multiple>
@@ -61,7 +61,14 @@ class DropZone extends \FileUpload
       });
       $$("div.tl_formbody_submit").setStyle("display", "none");
     });
-  </script>
+  </script>';
+
+		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
+		{
+			$return .= '
   <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], \System::getReadableSize($this->getMaximumUploadSize()), \Config::get('gdMaxImgWidth') . 'x' . \Config::get('gdMaxImgHeight')) . '</p>';
+		}
+
+		return $return;
 	}
 }
