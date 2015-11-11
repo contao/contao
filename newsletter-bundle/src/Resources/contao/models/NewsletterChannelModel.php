@@ -18,12 +18,9 @@ namespace Contao;
  * @property integer $tstamp
  * @property string  $title
  * @property integer $jumpTo
- * @property boolean $useSMTP
- * @property string  $smtpHost
- * @property string  $smtpUser
- * @property string  $smtpPass
- * @property string  $smtpEnc
- * @property integer $smtpPort
+ * @property string  $template
+ * @property string  $sender
+ * @property string  $senderName
  *
  * @method static NewsletterChannelModel|null findById($id, $opt=array())
  * @method static NewsletterChannelModel|null findByPk($id, $opt=array())
@@ -32,22 +29,16 @@ namespace Contao;
  * @method static NewsletterChannelModel|null findOneByTstamp($val, $opt=array())
  * @method static NewsletterChannelModel|null findOneByTitle($val, $opt=array())
  * @method static NewsletterChannelModel|null findOneByJumpTo($val, $opt=array())
- * @method static NewsletterChannelModel|null findOneByUseSMTP($val, $opt=array())
- * @method static NewsletterChannelModel|null findOneBySmtpHost($val, $opt=array())
- * @method static NewsletterChannelModel|null findOneBySmtpUser($val, $opt=array())
- * @method static NewsletterChannelModel|null findOneBySmtpPass($val, $opt=array())
- * @method static NewsletterChannelModel|null findOneBySmtpEnc($val, $opt=array())
- * @method static NewsletterChannelModel|null findOneBySmtpPort($val, $opt=array())
+ * @method static NewsletterChannelModel|null findOneByTemplate($val, $opt=array())
+ * @method static NewsletterChannelModel|null findOneBySender($val, $opt=array())
+ * @method static NewsletterChannelModel|null findOneBySenderName($val, $opt=array())
  *
  * @method static Model\Collection|NewsletterChannelModel|null findByTstamp($val, $opt=array())
  * @method static Model\Collection|NewsletterChannelModel|null findByTitle($val, $opt=array())
  * @method static Model\Collection|NewsletterChannelModel|null findByJumpTo($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findByUseSMTP($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findBySmtpHost($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findBySmtpUser($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findBySmtpPass($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findBySmtpEnc($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findBySmtpPort($val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel|null findByTemplate($val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel|null findBySender($val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel|null findBySenderName($val, $opt=array())
  * @method static Model\Collection|NewsletterChannelModel|null findMultipleByIds($val, $opt=array())
  * @method static Model\Collection|NewsletterChannelModel|null findBy($col, $val, $opt=array())
  * @method static Model\Collection|NewsletterChannelModel|null findAll($opt=array())
@@ -56,12 +47,9 @@ namespace Contao;
  * @method static integer countByTstamp($val, $opt=array())
  * @method static integer countByTitle($val, $opt=array())
  * @method static integer countByJumpTo($val, $opt=array())
- * @method static integer countByUseSMTP($val, $opt=array())
- * @method static integer countBySmtpHost($val, $opt=array())
- * @method static integer countBySmtpUser($val, $opt=array())
- * @method static integer countBySmtpPass($val, $opt=array())
- * @method static integer countBySmtpEnc($val, $opt=array())
- * @method static integer countBySmtpPort($val, $opt=array())
+ * @method static integer countByTemplate($val, $opt=array())
+ * @method static integer countBySender($val, $opt=array())
+ * @method static integer countBySenderName($val, $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

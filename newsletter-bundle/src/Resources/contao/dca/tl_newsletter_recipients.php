@@ -48,7 +48,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'mode'                    => 4,
 			'fields'                  => array('email'),
 			'panelLayout'             => 'filter;sort,search,limit',
-			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'useSMTP'),
+			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 			'child_record_callback'   => array('tl_newsletter_recipients', 'listRecipient'),
 			'child_record_class'      => 'no_padding'
 		),

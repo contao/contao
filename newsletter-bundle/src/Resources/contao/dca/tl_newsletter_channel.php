@@ -108,14 +108,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('useSMTP'),
-		'default'                     => '{title_legend},title,jumpTo;{template_legend},template;{sender_legend},sender,senderName;{smtp_legend:hide},useSMTP'
-	),
-
-	// Subpalettes
-	'subpalettes' => array
-	(
-		'useSMTP'                     => 'smtpHost,smtpUser,smtpPass,smtpEnc,smtpPort'
+		'default'                     => '{title_legend},title,jumpTo;{template_legend},template;{sender_legend},sender,senderName'
 	),
 
 	// Fields
@@ -180,56 +173,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
-		),
-		'useSMTP' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['useSMTP'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'smtpHost' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['smtpHost'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'doNotShow'=>true, 'tl_class'=>'long'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'smtpUser' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['smtpUser'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'doNotShow'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
-		),
-		'smtpPass' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['smtpPass'],
-			'exclude'                 => true,
-			'inputType'               => 'textStore',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>32, 'doNotShow'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
-		),
-		'smtpEnc' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['smtpEnc'],
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options'                 => array(''=>'-', 'ssl'=>'SSL', 'tls'=>'TLS'),
-			'eval'                    => array('doNotShow'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(3) NOT NULL default ''"
-		),
-		'smtpPort' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['smtpPort'],
-			'default'                 => 25,
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'doNotShow'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
 		)
 	)
 );
