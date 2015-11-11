@@ -13,6 +13,7 @@
 // class aliasing we are using is a bit too complex for them to understand.
 namespace  {
 	class Newsletter extends \Contao\Newsletter {}
+	class NewsletterBlacklistModel extends \Contao\NewsletterBlacklistModel {}
 	class NewsletterChannelModel extends \Contao\NewsletterChannelModel {}
 	class NewsletterModel extends \Contao\NewsletterModel {}
 	class NewsletterRecipientsModel extends \Contao\NewsletterRecipientsModel {}

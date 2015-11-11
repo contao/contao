@@ -15,6 +15,7 @@ ClassLoader::addClasses(array
 	'Contao\Newsletter'                => 'vendor/contao/newsletter-bundle/src/Resources/contao/classes/Newsletter.php',
 
 	// Models
+	'Contao\NewsletterBlacklistModel'  => 'vendor/contao/newsletter-bundle/src/Resources/contao/models/NewsletterBlacklistModel.php',
 	'Contao\NewsletterChannelModel'    => 'vendor/contao/newsletter-bundle/src/Resources/contao/models/NewsletterChannelModel.php',
 	'Contao\NewsletterModel'           => 'vendor/contao/newsletter-bundle/src/Resources/contao/models/NewsletterModel.php',
 	'Contao\NewsletterRecipientsModel' => 'vendor/contao/newsletter-bundle/src/Resources/contao/models/NewsletterRecipientsModel.php',

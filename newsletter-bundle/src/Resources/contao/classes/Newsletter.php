@@ -434,7 +434,7 @@ class Newsletter extends \Backend
 		/** @var FileUpload $objUploader */
 		$objUploader = new $class();
 
-		// Import CSS
+		// Import recipients
 		if (\Input::post('FORM_SUBMIT') == 'tl_recipients_import')
 		{
 			$arrUploaded = $objUploader->uploadTo('system/tmp');
@@ -494,8 +494,7 @@ class Newsletter extends \Backend
 					// Skip invalid entries
 					if (!\Validator::isEmail($strRecipient))
 					{
-						$this->log('Recipient address "' . $strRecipient . '" seems to be invalid and has been skipped', __METHOD__, TL_ERROR);
-
+						$this->log('Recipient address "' . $strRecipient . '" seems to be invalid and was not imported', __METHOD__, TL_ERROR);
 						++$intInvalid;
 						continue;
 					}
@@ -504,13 +503,25 @@ class Newsletter extends \Backend
 					$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE pid=? AND email=?")
 												   ->execute(\Input::get('id'), $strRecipient);
 
-					if ($objRecipient->count < 1)
+					if ($objRecipient->count > 0)
 					{
-						$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=1")
-									   ->execute(\Input::get('id'), $strRecipient);
-
-						++$intTotal;
+						continue;
 					}
+
+					// Check whether the e-mail address has been blacklisted
+					$objBlacklist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_blacklist WHERE pid=? AND hash=?")
+												   ->execute(\Input::get('id'), md5($strRecipient));
+
+					if ($objBlacklist->count > 0)
+					{
+						$this->log('Recipient address "' . $strRecipient . '" has been unsubscribed and was not imported', __METHOD__, TL_ERROR);
+						continue;
+					}
+
+					$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=1")
+								   ->execute(\Input::get('id'), $strRecipient);
+
+					++$intTotal;
 				}
 			}
 
@@ -523,6 +534,12 @@ class Newsletter extends \Backend
 
 			\System::setCookie('BE_PAGE_OFFSET', 0, 0);
 			$this->reload();
+		}
+
+		// Overwrite the help text of the upload widget
+		if (isset($GLOBALS['TL_LANG']['MSC']['source'][1]))
+		{
+			$GLOBALS['TL_LANG']['tl_files']['fileupload'][1] = $GLOBALS['TL_LANG']['MSC']['source'][1];
 		}
 
 		// Return form
@@ -546,8 +563,7 @@ class Newsletter extends \Backend
     <option value="linebreak">'.$GLOBALS['TL_LANG']['MSC']['linebreak'].'</option>
   </select>'.(($GLOBALS['TL_LANG']['MSC']['separator'][1] != '') ? '
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['separator'][1].'</p>' : '').'
-  <h3>'.$GLOBALS['TL_LANG']['MSC']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['MSC']['source'][1]) ? '
-  <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['source'][1].'</p>' : '').'
+  <h3>'.$GLOBALS['TL_LANG']['MSC']['source'][0].'</h3>'.$objUploader->generateMarkup().'
 </div>
 
 </div>

@@ -146,7 +146,8 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>128, 'decodeEntities'=>true),
 			'save_callback' => array
 			(
-				array('tl_newsletter_recipients', 'checkUniqueRecipient')
+				array('tl_newsletter_recipients', 'checkUniqueRecipient'),
+				array('tl_newsletter_recipients', 'checkBlacklistedRecipient')
 			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -353,6 +354,30 @@ class tl_newsletter_recipients extends Backend
 		if ($objRecipient->count > 0)
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $GLOBALS['TL_LANG'][$dc->table][$dc->field][0]));
+		}
+
+		return $varValue;
+	}
+
+
+	/**
+	 * Check if a recipient is blacklisted for a channel
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 *
+	 * @throws Exception
+	 */
+	public function checkBlacklistedRecipient($varValue, DataContainer $dc)
+	{
+		$objBlacklist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_blacklist WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
+									   ->execute(md5($varValue), $dc->id, $dc->id);
+
+		if ($objBlacklist->count > 0)
+		{
+			throw new Exception($GLOBALS['TL_LANG']['ERR']['blacklisted']);
 		}
 
 		return $varValue;

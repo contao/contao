@@ -322,7 +322,6 @@ class ModuleSubscribe extends \Module
 		foreach ($arrNew as $id)
 		{
 			$objRecipient = new \NewsletterRecipientsModel();
-
 			$objRecipient->pid = $id;
 			$objRecipient->tstamp = $time;
 			$objRecipient->email = $strEmail;
@@ -331,8 +330,13 @@ class ModuleSubscribe extends \Module
 			$objRecipient->ip = $this->anonymizeIp(\Environment::get('ip'));
 			$objRecipient->token = $strToken;
 			$objRecipient->confirmed = '';
-
 			$objRecipient->save();
+
+			// Remove the blacklist entry (see #4999)
+			if (($objBlacklist = \NewsletterBlacklistModel::findByHashAndPid(md5($strEmail), $id)) !== null)
+			{
+				$objBlacklist->delete();
+			}
 		}
 
 		// Get the channels
