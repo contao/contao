@@ -536,12 +536,6 @@ class Newsletter extends \Backend
 			$this->reload();
 		}
 
-		// Overwrite the help text of the upload widget
-		if (isset($GLOBALS['TL_LANG']['MSC']['source'][1]))
-		{
-			$GLOBALS['TL_LANG']['tl_files']['fileupload'][1] = $GLOBALS['TL_LANG']['MSC']['source'][1];
-		}
-
 		// Return form
 		return '
 <div id="tl_buttons">
@@ -563,7 +557,8 @@ class Newsletter extends \Backend
     <option value="linebreak">'.$GLOBALS['TL_LANG']['MSC']['linebreak'].'</option>
   </select>'.(($GLOBALS['TL_LANG']['MSC']['separator'][1] != '') ? '
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['separator'][1].'</p>' : '').'
-  <h3>'.$GLOBALS['TL_LANG']['MSC']['source'][0].'</h3>'.$objUploader->generateMarkup().'
+  <h3>'.$GLOBALS['TL_LANG']['MSC']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['MSC']['source'][1]) ? '
+  <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['source'][1].'</p>' : '').'
 </div>
 
 </div>
