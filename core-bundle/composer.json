@@ -44,9 +44,6 @@
     "suggest": {
         "lexik/maintenance-bundle": "to put the application into maintenance mode"
     },
-    "config": {
-        "component-dir": "vendor/contao-components"
-    },
     "conflict": {
         "contao/core": "*"
     },
