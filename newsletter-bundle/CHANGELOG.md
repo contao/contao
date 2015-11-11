@@ -1,6 +1,6 @@
 # Contao newsletter bundle change log
 
-### 4.1.0-RC1 (2015-XX-XX)
+### 4.1.0-RC1 (2015-11-11)
 
  * Prevent adding or importing unsubscribed e-mail addresses (see contao/core#4999).
  * Require to add a sender address in the channel settings (see contao/core#2896).

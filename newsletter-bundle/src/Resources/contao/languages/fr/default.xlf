@@ -17,6 +17,9 @@
         <source>Please select at least one channel.</source>
         <target>Veuillez sélectionner au moins une liste de diffusion.</target>
       </trans-unit>
+      <trans-unit id="ERR.blacklisted">
+        <source>The e-mail address has been unsubscribed from the channel.</source>
+      </trans-unit>
       <trans-unit id="MSC.subscribe">
         <source>Subscribe</source>
         <target>S'abonner</target>

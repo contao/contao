@@ -50,12 +50,10 @@
         <target>Por favor seleccione los archivos que quiere adjuntar al boletín.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>E-mail template</source>
-        <target>Plantilla e-mail</target>
+        <source>Custom e-mail template</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can choose the e-mail template.</source>
-        <target>Por favor seleccione una plantilla e-mail (grupo plantilla &lt;em&gt;mail_&lt;/em&gt;).</target>
+        <source>Here you can override the default e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -73,21 +71,17 @@
         <source>Do not embed images in HTML newsletters.</source>
         <target>Si selecciona esta opción, no se incrustarán las imágenes en los boletines HTML.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.senderName.0">
-        <source>Sender name</source>
-        <target>Nombre del remitente</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.senderName.1">
-        <source>Here you can enter the sender's name.</source>
-        <target>Aqui puede introducir el nombre del remitente</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
-        <source>Sender address</source>
-        <target>Dirección remitente</target>
+        <source>Custom sender e-mail address</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
-        <source>Here you can enter a custom sender address.</source>
-        <target>Si no introduce una dirección e-mail de remitente, se utilizará el e-mail del administrador.</target>
+        <source>Here you can override the default sender e-mail address of the channel.</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.0">
+        <source>Custom sender name</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.1">
+        <source>Here you can override the default sender name of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
@@ -139,6 +133,9 @@
       <trans-unit id="tl_newsletter.template_legend">
         <source>Template settings</source>
         <target>Ajustes de plantilla</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sender_legend">
+        <source>Sender settings</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>

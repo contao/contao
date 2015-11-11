@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
-        <target>منو کانال‌ها را مخفی کن</target>
+        <target>پنهان کردن منو کانال‌ها</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.1">
         <source>Do not show the channel selection menu.</source>
@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
+        <target>Please enter the text of the unsubscription confirmation e-mail. You can use the wildcards &lt;em&gt;##channel##&lt;/em&gt; (channel name) and &lt;em&gt;##domain##&lt;/em&gt; (current domain name).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
@@ -70,6 +71,7 @@ Please click ##link## to activate your subscription. If you did not subscribe yo
 
 ##channels##
 </source>
+        <target>اشتراک شما در ##channel## به طور کامل قطع شد .</target>
       </trans-unit>
     </body>
   </file>
