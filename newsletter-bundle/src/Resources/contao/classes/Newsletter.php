@@ -77,7 +77,6 @@ class Newsletter extends \Backend
 		}
 
 		$arrAttachments = array();
-		$blnAttachmentsFormatError = false;
 
 		// Add attachments
 		if ($objNewsletter->addFile)
@@ -115,7 +114,7 @@ class Newsletter extends \Backend
 		$objSession = \System::getContainer()->get('session');
 
 		// Send newsletter
-		if (!$blnAttachmentsFormatError && \Input::get('token') != '' && \Input::get('token') == $objSession->get('tl_newsletter_send'))
+		if (\Input::get('token') != '' && \Input::get('token') == $objSession->get('tl_newsletter_send'))
 		{
 			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', \Environment::get('request'));
 
@@ -298,20 +297,14 @@ class Newsletter extends \Backend
 </div>
 </div>';
 
-		// Do not send the newsletter if there is an attachment format error
-		if (!$blnAttachmentsFormatError)
-		{
-			$return .= '
+		$return .= '
 
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
 <button type="submit" name="preview" class="tl_submit" accesskey="p">'.$GLOBALS['TL_LANG']['tl_newsletter']['preview'].'</button>
 <button type="submit" id="send" class="tl_submit" accesskey="s" onclick="return confirm(\''. str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_newsletter']['sendConfirm']) .'\')">'.$GLOBALS['TL_LANG']['tl_newsletter']['send'][0].'</button>
 </div>
-</div>';
-		}
-
-		$return .= '
+</div>
 
 </form>';
 
