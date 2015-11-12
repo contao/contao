@@ -42,7 +42,7 @@
         "symfony/phpunit-bridge": "~2.7"
     },
     "suggest": {
-        "lexik/maintenance-bundle": "to put the application into maintenance mode"
+        "lexik/maintenance-bundle": "To put the application into maintenance mode"
     },
     "conflict": {
         "contao/core": "*"
