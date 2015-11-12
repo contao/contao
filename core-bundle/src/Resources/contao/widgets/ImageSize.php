@@ -105,6 +105,11 @@ class ImageSize extends \Widget
 	 */
 	protected function isValidOption($varInput)
 	{
+		if ($varInput == '')
+		{
+			return true;
+		}
+
 		foreach ($this->arrAvailableOptions as $strGroup=>$arrValues)
 		{
 			if ($strGroup == 'image_sizes')

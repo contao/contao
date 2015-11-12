@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.1.0 (2015-XX-XX)
+
+ * Fix saving the image size widget if no option is selected (see #411).
+
 ### 4.1.0-RC1 (2015-11-10)
 
  * Limit access to the image sizes per user or user group (see #319).
