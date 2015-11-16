@@ -130,6 +130,10 @@ class BackendHelp extends \Backend
 				$this->import($arrData['options_callback'][0]);
 				$options = $this->{$arrData['options_callback'][0]}->{$arrData['options_callback'][1]}();
 			}
+			elseif (is_callable($arrData['options_callback']))
+			{
+				$options = $arrData['options_callback']();
+			}
 			else
 			{
 				$options = array_keys($arrData['reference']);
@@ -158,13 +162,13 @@ class BackendHelp extends \Backend
 				}
 				else
 				{
-					if (!is_array($arrData['reference'][$option]))
+					if (is_array($arrData['reference'][$option]))
 					{
-						$rows[] = array('headspan', $arrData['reference'][$option]);
+						$rows[] = $arrData['reference'][$option];
 					}
 					else
 					{
-						$rows[] = $arrData['reference'][$option];
+						$rows[] = array('headspan', $arrData['reference'][$option]);
 					}
 				}
 			}

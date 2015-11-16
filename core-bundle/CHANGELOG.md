@@ -2,6 +2,7 @@
 
 ### 4.1.0 (2015-XX-XX)
 
+ * Handle closures in the back end help controller (see #408).
  * Fix saving the image size widget if no option is selected (see #411).
 
 ### 4.1.0-RC1 (2015-11-10)
