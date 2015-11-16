@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -58,26 +60,29 @@ class BackendPreview extends \Backend
 		$objTemplate->site = \Input::get('site', true);
 		$objTemplate->switchHref = \System::getContainer()->get('router')->generate('contao_backend_switch');
 
+		$strUrl = null;
+
 		if (\Input::get('url'))
 		{
-			$objTemplate->url = \Environment::get('base') . \Input::get('url');
+			$strUrl = \Environment::get('base') . \Input::get('url');
 		}
 		elseif (\Input::get('page'))
 		{
-			$objTemplate->url = $this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'), true);
-		}
-		elseif (\Input::get('news') && ($objNews = \NewsModel::findByPk(\Input::get('news'))) !== null)
-		{
-			$objTemplate->url = \Environment::get('base') . \News::generateNewsUrl($objNews);
-		}
-		elseif (\Input::get('event') && ($objEvent = \CalendarEventsModel::findByPk(\Input::get('event'))) !== null)
-		{
-			$objTemplate->url = \Environment::get('base') . \Events::generateEventUrl($objEvent);
+			$strUrl = $this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'), true);
 		}
 		else
 		{
-			$objTemplate->url = \System::getContainer()->get('router')->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL);
+			$event = new PreviewUrlConvertEvent();
+			\System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CONVERT, $event);
+			$strUrl = $event->getUrl();
 		}
+
+		if ($strUrl === null)
+		{
+			$strUrl = \System::getContainer()->get('router')->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+
+		$objTemplate->url = $strUrl;
 
 		// Switch to a particular member (see #6546)
 		if (\Input::get('user') && $this->User->isAdmin)
