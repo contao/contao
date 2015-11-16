@@ -127,6 +127,10 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['name'],
 			'inputType'               => 'text',
+			'wizard' => array
+			(
+				array('tl_templates', 'addFileLocation')
+			),
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>32, 'spaceToUnderscore'=>true)
 		)
 	)
@@ -528,5 +532,21 @@ class tl_templates extends Backend
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
 		return is_file(TL_ROOT . '/' . $row['id']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+	}
+
+
+	/**
+	 * Add the file location instead of the help text (see #6503)
+	 *
+	 * @param DataContainer $dc
+	 *
+	 * @return string
+	 */
+	public function addFileLocation(DataContainer $dc)
+	{
+		// Unset the default help text
+		unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1]);
+
+		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id) . '</p>';
 	}
 }

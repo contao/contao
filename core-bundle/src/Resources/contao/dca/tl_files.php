@@ -434,15 +434,10 @@ class tl_files extends Backend
 	 */
 	public function addFileLocation(DataContainer $dc)
 	{
-		if ($dc->activeRecord === null)
-		{
-			return '';
-		}
-
 		// Unset the default help text
 		unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1]);
 
-		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->activeRecord->path) . '</p>';
+		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id) . '</p>';
 	}
 
 
