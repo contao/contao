@@ -11,14 +11,13 @@
 namespace Contao\CoreBundle\Test\Adapter;
 
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the Adapter class.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class AdapterTest extends TestCase
+class AdapterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.

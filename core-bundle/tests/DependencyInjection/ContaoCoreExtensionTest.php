@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
@@ -20,29 +19,16 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoCoreExtensionTest extends TestCase
+class ContaoCoreExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var ContaoCoreExtension
-     */
-    protected $extension;
-
-    /**
-     * Creates the core extension object.
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->extension = new ContaoCoreExtension();
-    }
-
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\ContaoCoreExtension', $this->extension);
+        $extension = new ContaoCoreExtension();
+
+        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\ContaoCoreExtension', $extension);
     }
 
     /**
@@ -58,7 +44,8 @@ class ContaoCoreExtensionTest extends TestCase
             ],
         ];
 
-        $this->extension->load($params, $container);
+        $extension = new ContaoCoreExtension();
+        $extension->load($params, $container);
 
         $this->assertTrue($container->has('contao.listener.output_from_cache'));
         $this->assertTrue($container->has('contao.listener.add_to_search_index'));
@@ -69,6 +56,8 @@ class ContaoCoreExtensionTest extends TestCase
      */
     public function testGetAlias()
     {
-        $this->assertEquals('contao', $this->extension->getAlias());
+        $extension = new ContaoCoreExtension();
+
+        $this->assertEquals('contao', $extension->getAlias());
     }
 }

@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
@@ -22,7 +21,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class AddToSearchIndexListenerTest extends TestCase
+class AddToSearchIndexListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject

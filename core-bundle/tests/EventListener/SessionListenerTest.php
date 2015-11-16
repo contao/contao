@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\SessionListener;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -21,7 +20,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  *
  * @author Yanick Witschi <https:/github.com/toflar>
  */
-class SessionListenerTest extends TestCase
+class SessionListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.

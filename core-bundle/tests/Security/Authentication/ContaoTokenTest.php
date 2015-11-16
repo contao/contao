@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\Test\Security\Authentication;
 use Contao\BackendUser;
 use Contao\FrontendUser;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
@@ -21,7 +20,7 @@ use Symfony\Component\Security\Core\Role\Role;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoTokenTest extends TestCase
+class ContaoTokenTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.

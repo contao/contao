@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\ContainerScopeListener;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +25,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContainerScopeListenerTest extends TestCase
+class ContainerScopeListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.

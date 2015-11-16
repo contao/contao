@@ -11,14 +11,13 @@
 namespace Contao\CoreBundle\Test\Exception;
 
 use Contao\CoreBundle\Exception\NoContentResponseException;
-use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the NoContentResponseException class.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class NoContentResponseExceptionTest extends TestCase
+class NoContentResponseExceptionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.

@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\Contao;
 
-use Contao\CoreBundle\Test\TestCase;
 use Contao\GdImage;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -23,7 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class GdImageTest extends TestCase
+class GdImageTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string

@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\ToggleViewListener;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -27,7 +26,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
  *
  * @author Andreas Schempp <https:/github.com/aschempp>
  */
-class ToggleViewListenerTest extends TestCase
+class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
