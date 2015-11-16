@@ -14,6 +14,7 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
@@ -222,7 +223,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      * @param RouterInterface $router       The router object
      * @param array           $adapters     An optional array of adapters
      *
-     * @return ContaoFramework The object instance
+     * @return ContaoFrameworkInterface The object instance
      */
     public function mockContaoFramework(
         RequestStack $requestStack = null,
