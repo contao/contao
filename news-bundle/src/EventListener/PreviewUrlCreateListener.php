@@ -13,6 +13,7 @@ namespace Contao\NewsBundle\EventListener;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\NewsModel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -62,20 +63,43 @@ class PreviewUrlCreateListener
             return;
         }
 
-        $id = $event->getId();
-
-        // Overwrite the ID if the news settings are edited
-        if ('tl_news' === $request->query->get('table') && 'edit' === $request->query->get('act')) {
-            $id = $request->query->get('id');
-        }
-
-        /** @var NewsModel $newsModel */
-        $newsModel = $this->framework->getAdapter('Contao\NewsModel');
-
-        if (null === ($news = $newsModel->findByPk($id))) {
+        if (null === ($news = $this->getNewsModel($this->getId($event, $request)))) {
             return;
         }
 
         $event->setQuery('news=' . $news->id);
+    }
+
+    /**
+     * Returns the ID.
+     *
+     * @param PreviewUrlCreateEvent $event   The event object
+     * @param Request               $request The request object
+     *
+     * @return int The ID
+     */
+    private function getId(PreviewUrlCreateEvent $event, Request $request)
+    {
+        // Overwrite the ID if the news settings are edited
+        if ('tl_news' === $request->query->get('table') && 'edit' === $request->query->get('act')) {
+            return $request->query->get('id');
+        }
+
+        return $event->getId();
+    }
+
+    /**
+     * Returns the news model.
+     *
+     * @param int $id The ID
+     *
+     * @return NewsModel|null The news model or null
+     */
+    private function getNewsModel($id)
+    {
+        /** @var NewsModel $adapter */
+        $adapter = $this->framework->getAdapter('Contao\NewsModel');
+
+        return $adapter->findByPk($id);
     }
 }

@@ -14,6 +14,7 @@ use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\News;
 use Contao\NewsModel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -58,14 +59,7 @@ class PreviewUrlConvertListener
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request->query->has('news')) {
-            return;
-        }
-
-        /** @var NewsModel $newsModel */
-        $newsModel = $this->framework->getAdapter('Contao\NewsModel');
-
-        if (null === ($news = $newsModel->findByPk($request->query->get('news')))) {
+        if (null === ($news = $this->getNewsModel($request))) {
             return;
         }
 
@@ -73,5 +67,24 @@ class PreviewUrlConvertListener
         $newsAdapter = $this->framework->getAdapter('Contao\News');
 
         $event->setUrl($request->getSchemeAndHttpHost() . '/' . $newsAdapter->generateNewsUrl($news));
+    }
+
+    /**
+     * Returns the news model.
+     *
+     * @param Request $request The request object
+     *
+     * @return NewsModel|null The news model or null
+     */
+    private function getNewsModel(Request $request)
+    {
+        if (!$request->query->has('news')) {
+            return null;
+        }
+
+        /** @var NewsModel $adapter */
+        $adapter = $this->framework->getAdapter('Contao\NewsModel');
+
+        return $adapter->findByPk($request->query->get('news'));
     }
 }
