@@ -76,7 +76,7 @@ class PreviewUrlCreateListener
      * @param PreviewUrlCreateEvent $event   The event object
      * @param Request               $request The request object
      *
-     * @return int The ID
+     * @return int|string The ID
      */
     private function getId(PreviewUrlCreateEvent $event, Request $request)
     {

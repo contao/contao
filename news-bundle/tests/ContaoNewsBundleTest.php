@@ -13,7 +13,7 @@ namespace Contao\NewsBundle\Test;
 use Contao\NewsBundle\ContaoNewsBundle;
 
 /**
- * Tests the ContaoCoreBundle class.
+ * Tests the ContaoNewsBundle class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
