@@ -63,11 +63,11 @@ class PreviewUrlCreateListener
             return;
         }
 
-        if (null === ($news = $this->getNewsModel($this->getId($event, $request)))) {
+        if (null === ($newsModel = $this->getNewsModel($this->getId($event, $request)))) {
             return;
         }
 
-        $event->setQuery('news=' . $news->id);
+        $event->setQuery('news=' . $newsModel->id);
     }
 
     /**
