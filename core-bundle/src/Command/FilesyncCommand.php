@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\Dbafs;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,7 +21,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class FilesyncCommand extends AbstractLockedCommand
 {
-    use FrameworkAwareTrait;
+    // TODO: Remove the FQN once the deprecated trait has been removed
+    use \Contao\CoreBundle\Framework\FrameworkAwareTrait;
 
     /**
      * {@inheritdoc}
