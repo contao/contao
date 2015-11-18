@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
+use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

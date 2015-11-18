@@ -8,17 +8,12 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Command;
-
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+namespace Contao\CoreBundle\Framework;
 
 /**
  * Provides methods to inject the framework service.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
- *             Use Contao\CoreBundle\Framework\FrameworkAwareTrait instead.
  */
 trait FrameworkAwareTrait
 {
@@ -36,8 +31,6 @@ trait FrameworkAwareTrait
      */
     public function getFramework()
     {
-        @trigger_error('Using Contao\CoreBundle\Command\FrameworkAwareTrait has been deprecated and will no longer work in Contao 5.0. Use Contao\CoreBundle\Framework\FrameworkAwareTrait instead.', E_USER_DEPRECATED);
-
         if (null === $this->framework) {
             throw new \LogicException('The framework service has not been set.');
         }
@@ -52,8 +45,6 @@ trait FrameworkAwareTrait
      */
     public function setFramework(ContaoFrameworkInterface $framework)
     {
-        @trigger_error('Using Contao\CoreBundle\Command\FrameworkAwareTrait has been deprecated and will no longer work in Contao 5.0. Use Contao\CoreBundle\Framework\FrameworkAwareTrait instead.', E_USER_DEPRECATED);
-
         $this->framework = $framework;
     }
 }
