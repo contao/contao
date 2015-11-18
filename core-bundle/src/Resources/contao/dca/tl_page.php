@@ -71,7 +71,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
 				'href'                => 'ptg=all',
-				'class'               => 'header_toggle'
+				'class'               => 'header_toggle',
+				'showOnSelect'        => true
 			),
 			'all' => array
 			(
@@ -1654,7 +1655,7 @@ class tl_page extends Backend
 								  ->limit(1)
 								  ->execute($row['id']);
 
-		if (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
+		if (!$this->User->hasAccess($row['type'], 'alpty') || !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
 		{
 			return Image::getHtml($icon) . ' ';
 		}
@@ -1674,12 +1675,18 @@ class tl_page extends Backend
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
-		// Check permissions to edit
+		// Set the ID and action
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
 		$this->checkPermission();
 
-		// Check permissions to publish
+		// Check the field access
 		if (!$this->User->hasAccess('tl_page::published', 'alexf'))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish page ID ' . $intId . '.');

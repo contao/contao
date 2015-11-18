@@ -889,9 +889,15 @@ class tl_user extends Backend
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
-		// Check admin accounts
+		// Set the ID and action
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
 		$this->checkPermission();
 
 		// Protect own account
@@ -900,7 +906,7 @@ class tl_user extends Backend
 			return;
 		}
 
-		// Check permissions
+		// Check the field access
 		if (!$this->User->hasAccess('tl_user::disable', 'alexf'))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate user ID ' . $intId . '.');
