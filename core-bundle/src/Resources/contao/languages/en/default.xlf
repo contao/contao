@@ -735,7 +735,7 @@
         <source>Enable/disable the module</source>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
-        <source>Title</source>
+        <source>Alternate text</source>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
