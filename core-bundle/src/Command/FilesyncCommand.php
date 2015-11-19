@@ -21,7 +21,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class FilesyncCommand extends AbstractLockedCommand
 {
-    // TODO: Remove the FQN once the deprecated trait has been removed
     use \Contao\CoreBundle\Framework\FrameworkAwareTrait;
 
     /**

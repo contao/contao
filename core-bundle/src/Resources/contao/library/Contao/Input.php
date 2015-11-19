@@ -91,7 +91,6 @@ class Input
 		{
 			$varValue = $_GET[$strKey];
 
-			$varValue = static::stripSlashes($varValue);
 			$varValue = static::decodeEntities($varValue);
 			$varValue = static::xssClean($varValue, true);
 			$varValue = static::stripTags($varValue);
@@ -137,7 +136,6 @@ class Input
 				return $varValue;
 			}
 
-			$varValue = static::stripSlashes($varValue);
 			$varValue = static::decodeEntities($varValue);
 			$varValue = static::xssClean($varValue, true);
 			$varValue = static::stripTags($varValue);
@@ -180,7 +178,6 @@ class Input
 				return $varValue;
 			}
 
-			$varValue = static::stripSlashes($varValue);
 			$varValue = static::decodeEntities($varValue);
 			$varValue = static::xssClean($varValue);
 			$varValue = static::stripTags($varValue, \Config::get('allowedTags'));
@@ -222,7 +219,6 @@ class Input
 				return $varValue;
 			}
 
-			$varValue = static::stripSlashes($varValue);
 			$varValue = static::preserveBasicEntities($varValue);
 			$varValue = static::xssClean($varValue);
 
@@ -286,7 +282,6 @@ class Input
 		{
 			$varValue = $_COOKIE[$strKey];
 
-			$varValue = static::stripSlashes($varValue);
 			$varValue = static::decodeEntities($varValue);
 			$varValue = static::xssClean($varValue, true);
 			$varValue = static::stripTags($varValue);
@@ -462,7 +457,6 @@ class Input
 			return $return;
 		}
 
-		$varValue = static::stripSlashes($varValue);
 		$varValue = static::decodeEntities($varValue);
 		$varValue = static::xssClean($varValue, true);
 		$varValue = static::stripTags($varValue);

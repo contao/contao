@@ -25,7 +25,6 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  */
 class AutomatorCommand extends AbstractLockedCommand
 {
-    // TODO: Remove the FQN once the deprecated trait has been removed
     use \Contao\CoreBundle\Framework\FrameworkAwareTrait;
 
     /**
