@@ -97,9 +97,9 @@ class Session
 		@trigger_error('Using Session::get() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		// Map the referer (see #281)
-		if ($strKey == 'referer')
+		if ($strKey == 'referer' || $strKey == 'popupReferer')
 		{
-			return $this->session->get('referer');
+			return $this->session->get($strKey);
 		}
 
 		return $this->sessionBag->get($strKey);
@@ -117,9 +117,9 @@ class Session
 		@trigger_error('Using Session::set() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		// Map the referer (see #281)
-		if ($strKey == 'referer')
+		if ($strKey == 'referer' || $strKey == 'popupReferer')
 		{
-			$this->session->set('referer', $varValue);
+			$this->session->set($strKey, $varValue);
 		}
 		else
 		{
