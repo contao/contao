@@ -100,16 +100,16 @@
         },
         {
             "name": "contao-components/chosen",
-            "version": "1.0.2.1",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/chosen.git",
-                "reference": "ba8ad0401610f2e0e787dbad0118809bff13fc33"
+                "reference": "2aa49a2f358c5e13b06cb52fc460aa51f6b16555"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/chosen/zipball/ba8ad0401610f2e0e787dbad0118809bff13fc33",
-                "reference": "ba8ad0401610f2e0e787dbad0118809bff13fc33",
+                "url": "https://api.github.com/repos/contao-components/chosen/zipball/2aa49a2f358c5e13b06cb52fc460aa51f6b16555",
+                "reference": "2aa49a2f358c5e13b06cb52fc460aa51f6b16555",
                 "shasum": ""
             },
             "require": {
@@ -127,7 +127,7 @@
                 }
             ],
             "description": "Chosen integration for Contao Open Source CMS",
-            "time": "2014-11-06 08:48:59"
+            "time": "2015-11-17 15:40:09"
         },
         {
             "name": "contao-components/colorbox",
@@ -643,16 +643,16 @@
         },
         {
             "name": "contao-components/stylect",
-            "version": "3.4.2.1",
+            "version": "3.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/stylect.git",
-                "reference": "bdbbb39c5a4abd0b5ba1fef901e08ef37eb30a12"
+                "reference": "34db8cd1618e4299f20b73baf0074b4fc7bc497c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/stylect/zipball/bdbbb39c5a4abd0b5ba1fef901e08ef37eb30a12",
-                "reference": "bdbbb39c5a4abd0b5ba1fef901e08ef37eb30a12",
+                "url": "https://api.github.com/repos/contao-components/stylect/zipball/34db8cd1618e4299f20b73baf0074b4fc7bc497c",
+                "reference": "34db8cd1618e4299f20b73baf0074b4fc7bc497c",
                 "shasum": ""
             },
             "require": {
@@ -670,7 +670,7 @@
                 }
             ],
             "description": "Contao Open Source CMS stylect",
-            "time": "2015-04-29 10:42:09"
+            "time": "2015-11-17 15:40:41"
         },
         {
             "name": "contao-components/swipe",
@@ -802,12 +802,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/core-bundle.git",
-                "reference": "0a06bb22bfee7b76cbf7d1cd39094c46440f3913"
+                "reference": "42a6b6c14949faab0e1279fd466545770c9dcb8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/core-bundle/zipball/0a06bb22bfee7b76cbf7d1cd39094c46440f3913",
-                "reference": "0a06bb22bfee7b76cbf7d1cd39094c46440f3913",
+                "url": "https://api.github.com/repos/contao/core-bundle/zipball/42a6b6c14949faab0e1279fd466545770c9dcb8c",
+                "reference": "42a6b6c14949faab0e1279fd466545770c9dcb8c",
                 "shasum": ""
             },
             "require": {
@@ -870,7 +870,7 @@
                 }
             ],
             "description": "Contao 4 core bundle",
-            "time": "2015-11-16 20:44:50"
+            "time": "2015-11-18 14:48:45"
         },
         {
             "name": "doctrine/annotations",
