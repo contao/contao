@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5e179e2ecda37c71819dd6df510c5ee5",
-    "content-hash": "1deb3920d8736ebdf435aaf3402a910e",
+    "hash": "e7bc5985591647b5fad42e54758d3efc",
+    "content-hash": "06424b964e06a1e37f2f00dceba732c5",
     "packages": [
         {
             "name": "contao-components/ace",
-            "version": "1.1.9",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/ace.git",
-                "reference": "2e36eb42024e846edec329a0b7c8e101655cbd3f"
+                "reference": "b634366f2152455461b005d4b6fed7e606ab2143"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/ace/zipball/2e36eb42024e846edec329a0b7c8e101655cbd3f",
-                "reference": "2e36eb42024e846edec329a0b7c8e101655cbd3f",
+                "url": "https://api.github.com/repos/contao-components/ace/zipball/b634366f2152455461b005d4b6fed7e606ab2143",
+                "reference": "b634366f2152455461b005d4b6fed7e606ab2143",
                 "shasum": ""
             },
             "require": {
@@ -36,7 +36,7 @@
                 }
             ],
             "description": "ACE code editor integration for Contao Open Source CMS",
-            "time": "2015-06-03 12:08:03"
+            "time": "2015-11-10 10:26:10"
         },
         {
             "name": "contao-components/all",
@@ -100,16 +100,16 @@
         },
         {
             "name": "contao-components/chosen",
-            "version": "1.0.2.1",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/chosen.git",
-                "reference": "ba8ad0401610f2e0e787dbad0118809bff13fc33"
+                "reference": "2aa49a2f358c5e13b06cb52fc460aa51f6b16555"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/chosen/zipball/ba8ad0401610f2e0e787dbad0118809bff13fc33",
-                "reference": "ba8ad0401610f2e0e787dbad0118809bff13fc33",
+                "url": "https://api.github.com/repos/contao-components/chosen/zipball/2aa49a2f358c5e13b06cb52fc460aa51f6b16555",
+                "reference": "2aa49a2f358c5e13b06cb52fc460aa51f6b16555",
                 "shasum": ""
             },
             "require": {
@@ -127,20 +127,20 @@
                 }
             ],
             "description": "Chosen integration for Contao Open Source CMS",
-            "time": "2014-11-06 08:48:59"
+            "time": "2015-11-17 15:40:09"
         },
         {
             "name": "contao-components/colorbox",
-            "version": "1.6.1",
+            "version": "1.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/colorbox.git",
-                "reference": "6e54cd3388f69de6d6e29853f566d962756f8408"
+                "reference": "89eabd678bbada0a4e1b1e9e73cc26e536634610"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/colorbox/zipball/6e54cd3388f69de6d6e29853f566d962756f8408",
-                "reference": "6e54cd3388f69de6d6e29853f566d962756f8408",
+                "url": "https://api.github.com/repos/contao-components/colorbox/zipball/89eabd678bbada0a4e1b1e9e73cc26e536634610",
+                "reference": "89eabd678bbada0a4e1b1e9e73cc26e536634610",
                 "shasum": ""
             },
             "require": {
@@ -158,7 +158,7 @@
                 }
             ],
             "description": "Colorbox integration for Contao Open Source CMS",
-            "time": "2015-06-05 06:51:05"
+            "time": "2015-11-10 11:43:28"
         },
         {
             "name": "contao-components/colorpicker",
@@ -225,12 +225,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/contao.git",
-                "reference": "3beaf628fae4c648a4db1f990a42abe41878b1f6"
+                "reference": "372f2e6075adca644b181f935b52ab34a90242a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/contao/zipball/3beaf628fae4c648a4db1f990a42abe41878b1f6",
-                "reference": "3beaf628fae4c648a4db1f990a42abe41878b1f6",
+                "url": "https://api.github.com/repos/contao-components/contao/zipball/372f2e6075adca644b181f935b52ab34a90242a8",
+                "reference": "372f2e6075adca644b181f935b52ab34a90242a8",
                 "shasum": ""
             },
             "require": {
@@ -253,7 +253,7 @@
                 }
             ],
             "description": "Contao Open Source CMS components",
-            "time": "2015-11-03 13:17:06"
+            "time": "2015-11-10 10:06:31"
         },
         {
             "name": "contao-components/datepicker",
@@ -319,16 +319,16 @@
         },
         {
             "name": "contao-components/highlight",
-            "version": "8.6.0",
+            "version": "8.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/highlight.git",
-                "reference": "0e3f8daf4030cda1697b5ac2d8c6ff2a6fea516b"
+                "reference": "92851aa223c597bfa15ebb170877af92d7243293"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/highlight/zipball/0e3f8daf4030cda1697b5ac2d8c6ff2a6fea516b",
-                "reference": "0e3f8daf4030cda1697b5ac2d8c6ff2a6fea516b",
+                "url": "https://api.github.com/repos/contao-components/highlight/zipball/92851aa223c597bfa15ebb170877af92d7243293",
+                "reference": "92851aa223c597bfa15ebb170877af92d7243293",
                 "shasum": ""
             },
             "require": {
@@ -346,20 +346,20 @@
                 }
             ],
             "description": "Highlight.js integration for Contao Open Source CMS",
-            "time": "2015-06-05 07:52:25"
+            "time": "2015-11-10 13:11:20"
         },
         {
             "name": "contao-components/html5shiv",
-            "version": "3.7.2.1",
+            "version": "3.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/html5shiv.git",
-                "reference": "cef093b9447f0de4272019eff4b0748d1881476f"
+                "reference": "15fa06ddc9bc47a09f0c31bb93e26b789c3b43ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/html5shiv/zipball/cef093b9447f0de4272019eff4b0748d1881476f",
-                "reference": "cef093b9447f0de4272019eff4b0748d1881476f",
+                "url": "https://api.github.com/repos/contao-components/html5shiv/zipball/15fa06ddc9bc47a09f0c31bb93e26b789c3b43ea",
+                "reference": "15fa06ddc9bc47a09f0c31bb93e26b789c3b43ea",
                 "shasum": ""
             },
             "require": {
@@ -377,20 +377,20 @@
                 }
             ],
             "description": "HTML5 Shiv integration for Contao Open Source CMS",
-            "time": "2014-11-06 08:59:02"
+            "time": "2015-11-10 10:48:13"
         },
         {
             "name": "contao-components/installer",
-            "version": "1.0.9",
+            "version": "1.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/installer.git",
-                "reference": "7e29462dc91f2ab1a39179393abb55bcb6e799da"
+                "reference": "b8a654cb195b8f7db38a501e6d7178d2b0b070da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/installer/zipball/7e29462dc91f2ab1a39179393abb55bcb6e799da",
-                "reference": "7e29462dc91f2ab1a39179393abb55bcb6e799da",
+                "url": "https://api.github.com/repos/contao-components/installer/zipball/b8a654cb195b8f7db38a501e6d7178d2b0b070da",
+                "reference": "b8a654cb195b8f7db38a501e6d7178d2b0b070da",
                 "shasum": ""
             },
             "require": {
@@ -422,7 +422,7 @@
                 }
             ],
             "description": "Contao components installer",
-            "time": "2015-10-21 18:33:55"
+            "time": "2015-11-10 09:42:55"
         },
         {
             "name": "contao-components/jquery",
@@ -519,16 +519,16 @@
         },
         {
             "name": "contao-components/mediaelement",
-            "version": "2.17.0",
+            "version": "2.18.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/mediaelement.git",
-                "reference": "0433008026d2974e98231ac48c2cb8c4cf3bf6d4"
+                "reference": "67f52aee7de5ace0739f8992c3579aca9951e1f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/mediaelement/zipball/0433008026d2974e98231ac48c2cb8c4cf3bf6d4",
-                "reference": "0433008026d2974e98231ac48c2cb8c4cf3bf6d4",
+                "url": "https://api.github.com/repos/contao-components/mediaelement/zipball/67f52aee7de5ace0739f8992c3579aca9951e1f6",
+                "reference": "67f52aee7de5ace0739f8992c3579aca9951e1f6",
                 "shasum": ""
             },
             "require": {
@@ -546,7 +546,7 @@
                 }
             ],
             "description": "MediaElement.js integration for Contao Open Source CMS",
-            "time": "2015-06-05 08:14:53"
+            "time": "2015-11-10 11:38:47"
         },
         {
             "name": "contao-components/mootools",
@@ -581,16 +581,16 @@
         },
         {
             "name": "contao-components/respimage",
-            "version": "1.4.0",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/respimage.git",
-                "reference": "c08c0773a126d3fa862838681807a841435020c3"
+                "reference": "c8e20216d7e958447b17429d631341dfdd0ebed9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/respimage/zipball/c08c0773a126d3fa862838681807a841435020c3",
-                "reference": "c08c0773a126d3fa862838681807a841435020c3",
+                "url": "https://api.github.com/repos/contao-components/respimage/zipball/c8e20216d7e958447b17429d631341dfdd0ebed9",
+                "reference": "c8e20216d7e958447b17429d631341dfdd0ebed9",
                 "shasum": ""
             },
             "require": {
@@ -608,7 +608,7 @@
                 }
             ],
             "description": "Respimage.js integration for Contao Open Source CMS",
-            "time": "2015-06-05 08:18:50"
+            "time": "2015-11-10 10:49:03"
         },
         {
             "name": "contao-components/simplemodal",
@@ -643,16 +643,16 @@
         },
         {
             "name": "contao-components/stylect",
-            "version": "3.4.2.1",
+            "version": "3.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/stylect.git",
-                "reference": "bdbbb39c5a4abd0b5ba1fef901e08ef37eb30a12"
+                "reference": "34db8cd1618e4299f20b73baf0074b4fc7bc497c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/stylect/zipball/bdbbb39c5a4abd0b5ba1fef901e08ef37eb30a12",
-                "reference": "bdbbb39c5a4abd0b5ba1fef901e08ef37eb30a12",
+                "url": "https://api.github.com/repos/contao-components/stylect/zipball/34db8cd1618e4299f20b73baf0074b4fc7bc497c",
+                "reference": "34db8cd1618e4299f20b73baf0074b4fc7bc497c",
                 "shasum": ""
             },
             "require": {
@@ -670,20 +670,20 @@
                 }
             ],
             "description": "Contao Open Source CMS stylect",
-            "time": "2015-04-29 10:42:09"
+            "time": "2015-11-17 15:40:41"
         },
         {
             "name": "contao-components/swipe",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/swipe.git",
-                "reference": "ee646b4e3b0c089e30ceef100e8d68f2a56f71fc"
+                "reference": "419f0a39131406aa7df9894be6e958f014c23cbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/swipe/zipball/ee646b4e3b0c089e30ceef100e8d68f2a56f71fc",
-                "reference": "ee646b4e3b0c089e30ceef100e8d68f2a56f71fc",
+                "url": "https://api.github.com/repos/contao-components/swipe/zipball/419f0a39131406aa7df9894be6e958f014c23cbc",
+                "reference": "419f0a39131406aa7df9894be6e958f014c23cbc",
                 "shasum": ""
             },
             "require": {
@@ -701,7 +701,7 @@
                 }
             ],
             "description": "A JavaScript touch slider with dot menu",
-            "time": "2015-05-15 07:55:16"
+            "time": "2015-11-10 10:09:08"
         },
         {
             "name": "contao-components/tablesort",
@@ -767,16 +767,16 @@
         },
         {
             "name": "contao-components/tinymce4",
-            "version": "4.1.10",
+            "version": "4.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/tinymce4.git",
-                "reference": "a66edb3aecf65b136dd1d817b8c503c9f9329705"
+                "reference": "dca944e015337f3d627070af3e920785a59191ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/tinymce4/zipball/a66edb3aecf65b136dd1d817b8c503c9f9329705",
-                "reference": "a66edb3aecf65b136dd1d817b8c503c9f9329705",
+                "url": "https://api.github.com/repos/contao-components/tinymce4/zipball/dca944e015337f3d627070af3e920785a59191ef",
+                "reference": "dca944e015337f3d627070af3e920785a59191ef",
                 "shasum": ""
             },
             "require": {
@@ -794,7 +794,7 @@
                 }
             ],
             "description": "TinyMCE 4 integration for Contao Open Source CMS",
-            "time": "2015-06-05 08:34:00"
+            "time": "2015-11-10 12:22:28"
         },
         {
             "name": "doctrine/annotations",
@@ -1541,20 +1541,20 @@
         },
         {
             "name": "leafo/scssphp",
-            "version": "v0.4.0",
+            "version": "v0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leafo/scssphp.git",
-                "reference": "78a6f27aa4eaf70bb3ff4d13b639bab71fdaf47a"
+                "reference": "251cd10c1c86d9df20d54d3856ba30acdbdaab5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leafo/scssphp/zipball/78a6f27aa4eaf70bb3ff4d13b639bab71fdaf47a",
-                "reference": "78a6f27aa4eaf70bb3ff4d13b639bab71fdaf47a",
+                "url": "https://api.github.com/repos/leafo/scssphp/zipball/251cd10c1c86d9df20d54d3856ba30acdbdaab5b",
+                "reference": "251cd10c1c86d9df20d54d3856ba30acdbdaab5b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=5.4.0"
             },
             "require-dev": {
                 "kherge/box": "~2.5",
@@ -1566,9 +1566,6 @@
             ],
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "classmap.php"
-                ],
                 "psr-4": {
                     "Leafo\\ScssPhp\\": "src/"
                 }
@@ -1593,7 +1590,7 @@
                 "scss",
                 "stylesheet"
             ],
-            "time": "2015-11-09 14:44:09"
+            "time": "2015-11-11 22:15:07"
         },
         {
             "name": "league/uri",
@@ -3695,28 +3692,34 @@
     "packages-dev": [
         {
             "name": "composer/composer",
-            "version": "1.0.0-alpha10",
+            "version": "1.0.0-alpha11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "775f6cd5c633facf2e7b99611fdcaa900b58ddb7"
+                "reference": "cd9054ce2abd1d06ed0eb1244eba1b2c2af633b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/775f6cd5c633facf2e7b99611fdcaa900b58ddb7",
-                "reference": "775f6cd5c633facf2e7b99611fdcaa900b58ddb7",
+                "url": "https://api.github.com/repos/composer/composer/zipball/cd9054ce2abd1d06ed0eb1244eba1b2c2af633b6",
+                "reference": "cd9054ce2abd1d06ed0eb1244eba1b2c2af633b6",
                 "shasum": ""
             },
             "require": {
-                "justinrainbow/json-schema": "~1.4",
-                "php": ">=5.3.2",
-                "seld/jsonlint": "~1.0",
-                "symfony/console": "~2.5",
-                "symfony/finder": "~2.2",
-                "symfony/process": "~2.1"
+                "composer/semver": "^1.0",
+                "composer/spdx-licenses": "^1.0",
+                "justinrainbow/json-schema": "^1.4.4",
+                "php": "^5.3.2 || ^7.0",
+                "seld/cli-prompt": "^1.0",
+                "seld/jsonlint": "^1.0",
+                "seld/phar-utils": "^1.0",
+                "symfony/console": "^2.5 || ^3.0",
+                "symfony/filesystem": "^2.5 || ^3.0",
+                "symfony/finder": "^2.2 || ^3.0",
+                "symfony/process": "^2.1 || ^3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.5"
+                "phpunit/phpunit": "^4.5 || ^5.0.5",
+                "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
             },
             "suggest": {
                 "ext-openssl": "Enabling the openssl extension allows you to access https URLs for repositories and packages",
@@ -3732,8 +3735,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Composer": "src/"
+                "psr-4": {
+                    "Composer\\": "src/Composer"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3753,13 +3756,136 @@
                 }
             ],
             "description": "Composer helps you declare, manage and install dependencies of PHP projects, ensuring you have the right stack everywhere.",
-            "homepage": "http://getcomposer.org/",
+            "homepage": "https://getcomposer.org/",
             "keywords": [
                 "autoload",
                 "dependency",
                 "package"
             ],
-            "time": "2015-04-14 21:18:51"
+            "time": "2015-11-14 16:21:07"
+        },
+        {
+            "name": "composer/semver",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/semver.git",
+                "reference": "0faeb6e433f6b352f0dc55ec1faf5c6b605a35d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/semver/zipball/0faeb6e433f6b352f0dc55ec1faf5c6b605a35d3",
+                "reference": "0faeb6e433f6b352f0dc55ec1faf5c6b605a35d3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.2 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5 || ^5.0.5",
+                "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Semver\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nils Adermann",
+                    "email": "naderman@naderman.de",
+                    "homepage": "http://www.naderman.de"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                },
+                {
+                    "name": "Rob Bast",
+                    "email": "rob.bast@gmail.com",
+                    "homepage": "http://robbast.nl"
+                }
+            ],
+            "description": "Semver library that offers utilities, version constraint parsing and validation.",
+            "keywords": [
+                "semantic",
+                "semver",
+                "validation",
+                "versioning"
+            ],
+            "time": "2015-11-10 11:17:42"
+        },
+        {
+            "name": "composer/spdx-licenses",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/spdx-licenses.git",
+                "reference": "9e1c3926bb0842812967213d7c92827bc5883671"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/9e1c3926bb0842812967213d7c92827bc5883671",
+                "reference": "9e1c3926bb0842812967213d7c92827bc5883671",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5",
+                "phpunit/phpunit-mock-objects": "~2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Spdx\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nils Adermann",
+                    "email": "naderman@naderman.de",
+                    "homepage": "http://www.naderman.de"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                },
+                {
+                    "name": "Rob Bast",
+                    "email": "rob.bast@gmail.com",
+                    "homepage": "http://robbast.nl"
+                }
+            ],
+            "description": "SPDX licenses list and validation library.",
+            "keywords": [
+                "license",
+                "spdx",
+                "validator"
+            ],
+            "time": "2015-10-05 11:27:42"
         },
         {
             "name": "doctrine/instantiator",
@@ -4438,16 +4564,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.16",
+            "version": "4.8.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "625f8c345606ed0f3a141dfb88f4116f0e22978e"
+                "reference": "fa33d4ad96481b91df343d83e8c8aabed6b1dfd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/625f8c345606ed0f3a141dfb88f4116f0e22978e",
-                "reference": "625f8c345606ed0f3a141dfb88f4116f0e22978e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fa33d4ad96481b91df343d83e8c8aabed6b1dfd3",
+                "reference": "fa33d4ad96481b91df343d83e8c8aabed6b1dfd3",
                 "shasum": ""
             },
             "require": {
@@ -4506,7 +4632,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-23 06:48:33"
+            "time": "2015-11-11 11:32:49"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -5004,6 +5130,54 @@
             "time": "2015-06-21 13:59:46"
         },
         {
+            "name": "seld/cli-prompt",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/cli-prompt.git",
+                "reference": "fe114c7a6ac5cb0ce76932ae4017024d9842a49c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/cli-prompt/zipball/fe114c7a6ac5cb0ce76932ae4017024d9842a49c",
+                "reference": "fe114c7a6ac5cb0ce76932ae4017024d9842a49c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Seld\\CliPrompt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be"
+                }
+            ],
+            "description": "Allows you to prompt for user input on the command line, and optionally hide the characters they type",
+            "keywords": [
+                "cli",
+                "console",
+                "hidden",
+                "input",
+                "prompt"
+            ],
+            "time": "2015-04-30 20:24:49"
+        },
+        {
             "name": "seld/jsonlint",
             "version": "1.3.1",
             "source": {
@@ -5048,6 +5222,50 @@
                 "validator"
             ],
             "time": "2015-01-04 21:18:15"
+        },
+        {
+            "name": "seld/phar-utils",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/phar-utils.git",
+                "reference": "7009b5139491975ef6486545a39f3e6dad5ac30a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/phar-utils/zipball/7009b5139491975ef6486545a39f3e6dad5ac30a",
+                "reference": "7009b5139491975ef6486545a39f3e6dad5ac30a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Seld\\PharUtils\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be"
+                }
+            ],
+            "description": "PHAR file format utilities, for when PHP phars you up",
+            "keywords": [
+                "phra"
+            ],
+            "time": "2015-10-13 18:44:15"
         },
         {
             "name": "symfony/phpunit-bridge",
