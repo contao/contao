@@ -11,7 +11,9 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 
 /**
@@ -58,7 +60,15 @@ class Session
 	 */
 	protected function __construct()
 	{
-		$this->session = \System::getContainer()->get('session');
+		if (PHP_SAPI == 'cli')
+		{
+			$this->session = new SymfonySession(new MockArraySessionStorage());
+		}
+		else
+		{
+			$this->session = \System::getContainer()->get('session');
+		}
+
 		$this->sessionBag = $this->session->getBag($this->getSessionBagKey());
 	}
 
