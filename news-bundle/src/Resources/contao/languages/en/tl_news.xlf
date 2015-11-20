@@ -12,7 +12,7 @@
         <source>News alias</source>
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
-        <source>The news alias is a unique reference to the article which can be called instead of its numeric ID.</source>
+        <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
@@ -42,7 +42,7 @@
         <source>News teaser</source>
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
-        <source>The news teaser can be shown in a news list instead of the full article. A "read more …" link will be added automatically.</source>
+        <source>The news teaser can be shown in a news list instead of the full story. A "read more …" link will be added automatically.</source>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
@@ -180,70 +180,70 @@
         <source>Publish settings</source>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New article</source>
+        <source>New item</source>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
-        <source>Create a new news article</source>
+        <source>Create a new news item</source>
       </trans-unit>
       <trans-unit id="tl_news.show.0">
-        <source>Article details</source>
+        <source>Item details</source>
       </trans-unit>
       <trans-unit id="tl_news.show.1">
-        <source>Show the details of news article ID %s</source>
+        <source>Show the details of news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.0">
-        <source>Edit article</source>
+        <source>Edit item</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.1">
-        <source>Edit news article ID %s</source>
+        <source>Edit news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.copy.0">
-        <source>Duplicate article</source>
+        <source>Duplicate item</source>
       </trans-unit>
       <trans-unit id="tl_news.copy.1">
-        <source>Duplicate news article ID %s</source>
+        <source>Duplicate news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.cut.0">
-        <source>Move article</source>
+        <source>Move item</source>
       </trans-unit>
       <trans-unit id="tl_news.cut.1">
-        <source>Move news article ID %s</source>
+        <source>Move news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.delete.0">
-        <source>Delete article</source>
+        <source>Delete item</source>
       </trans-unit>
       <trans-unit id="tl_news.delete.1">
-        <source>Delete news article ID %s</source>
+        <source>Delete news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish article</source>
+        <source>Publish/unpublish item</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
-        <source>Publish/unpublish news article ID %s</source>
+        <source>Publish/unpublish news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature article</source>
+        <source>Feature/unfeature item</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
-        <source>Feature/unfeature news article ID %s</source>
+        <source>Feature/unfeature news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
         <source>Edit archive settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
-        <source>Edit the archive settings</source>
+        <source>Edit the news archive settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.0">
-        <source>Edit article settings</source>
+        <source>Edit item settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the article settings</source>
+        <source>Edit the news item settings</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
-        <source>Paste into this archive</source>
+        <source>Paste into this news archive</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news article ID %s</source>
+        <source>Paste after news item ID %s</source>
       </trans-unit>
     </body>
   </file>
