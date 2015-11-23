@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Test\TestCase;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -44,6 +45,8 @@ class ImageSizesTest extends TestCase
      */
     public function setUp()
     {
+        System::setContainer($this->mockContainerWithContaoScopes());
+
         require_once __DIR__ . '/../../src/Resources/contao/config/config.php';
 
         $this->connection = $this->getMock('Doctrine\DBAL\Connection', ['fetchAll'], [], '', false);
