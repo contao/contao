@@ -2,6 +2,7 @@
 
 ### 4.1.0 (2015-XX-XX)
 
+ * Log e-mails in the database instead of a log file (see #413).
  * Use events to modify the front end preview URL.
  * Handle closures in the back end help controller (see #408).
  * Fix saving the image size widget if no option is selected (see #411).
