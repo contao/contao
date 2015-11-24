@@ -29,6 +29,8 @@ class ContaoToken extends AbstractToken
      * Constructor.
      *
      * @param User $user The user object
+     *
+     * @throws UsernameNotFoundException If the user is invalid
      */
     public function __construct(User $user)
     {
