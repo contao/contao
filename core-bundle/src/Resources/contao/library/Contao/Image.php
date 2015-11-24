@@ -808,6 +808,11 @@ class Image
 	 */
 	public static function getHtml($src, $alt='', $attributes='')
 	{
+		if ($src == '')
+		{
+			return '';
+		}
+
 		$static = TL_FILES_URL;
 		$src = rawurldecode($src);
 
@@ -826,7 +831,7 @@ class Image
 
 		$path = $src;
 
-		if (!file_exists(TL_ROOT . '/' . $src))
+		if (!is_file(TL_ROOT .'/'. $src))
 		{
 			// Handle public bundle resources
 			if (file_exists(TL_ROOT . '/web/' . $src))
