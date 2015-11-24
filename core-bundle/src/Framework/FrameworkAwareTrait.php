@@ -41,9 +41,9 @@ trait FrameworkAwareTrait
     /**
      * Sets the framework service.
      *
-     * @param ContaoFrameworkInterface $framework The framework service
+     * @param ContaoFrameworkInterface|null $framework The framework service
      */
-    public function setFramework(ContaoFrameworkInterface $framework)
+    public function setFramework(ContaoFrameworkInterface $framework = null)
     {
         $this->framework = $framework;
     }
