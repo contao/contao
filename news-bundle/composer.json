@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "symfony/framework-bundle": "~2.7",
+        "symfony/framework-bundle": "^2.7.7",
         "contao/core-bundle": "dev-release/4.1.0 as 4.1.0"
     },
     "require-dev": {
