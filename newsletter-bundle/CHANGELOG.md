@@ -1,5 +1,9 @@
 # Contao newsletter bundle change log
 
+### 4.1.0 (2015-11-26)
+
+ * Correctly set the ID when toggling fields via Ajax (see contao/core#8043).
+
 ### 4.1.0-RC1 (2015-11-11)
 
  * Prevent adding or importing unsubscribed e-mail addresses (see contao/core#4999).

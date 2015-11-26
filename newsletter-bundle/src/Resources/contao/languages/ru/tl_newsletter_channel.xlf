@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>
+        <target>E-mail адрес отправителя</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.1">
         <source>Please enter the e-mail address of the sender.</source>
+        <target>Введите e-mail адрес отправителя.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.senderName.0">
         <source>Sender name</source>
@@ -37,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.senderName.1">
         <source>Here you can enter an optional sender name.</source>
+        <target>Вы можете ввести дополнительное имя отправителя.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
@@ -56,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender_legend">
         <source>Sender settings</source>
+        <target>Настройки отправителя</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New channel</source>
