@@ -50,12 +50,10 @@
         <target>Alegeţi fişierele care doriţi să fie ataşate la newsletter.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>E-mail template</source>
-        <target>Şablon de email</target>
+        <source>Custom e-mail template</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can choose the e-mail template.</source>
-        <target>Alegeţi un şablon de email (grup &lt;em&gt;mail_&lt;/em&gt;).</target>
+        <source>Here you can override the default e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -73,21 +71,17 @@
         <source>Do not embed images in HTML newsletters.</source>
         <target>Nu include imaginile în newslettere HTML</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.senderName.0">
-        <source>Sender name</source>
-        <target>Nume expeditor</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.senderName.1">
-        <source>Here you can enter the sender's name.</source>
-        <target>Aici puteţi introduce numele expeditorului.</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
-        <source>Sender address</source>
-        <target>Adresă expeditor</target>
+        <source>Custom sender e-mail address</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
-        <source>Here you can enter a custom sender address.</source>
-        <target>Dacă nu introduceţi o adresă de expeditor va fi folosită cea a administratorului.</target>
+        <source>Here you can override the default sender e-mail address of the channel.</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.0">
+        <source>Custom sender name</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.1">
+        <source>Here you can override the default sender name of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
@@ -139,6 +133,9 @@
       <trans-unit id="tl_newsletter.template_legend">
         <source>Template settings</source>
         <target>Şablon comentariu</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sender_legend">
+        <source>Sender settings</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>

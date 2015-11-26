@@ -108,14 +108,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('useSMTP'),
-		'default'                     => '{title_legend},title,jumpTo;{smtp_legend:hide},useSMTP'
-	),
-
-	// Subpalettes
-	'subpalettes' => array
-	(
-		'useSMTP'                     => 'smtpHost,smtpUser,smtpPass,smtpEnc,smtpPort'
+		'default'                     => '{title_legend},title,jumpTo;{template_legend},template;{sender_legend},sender,senderName'
 	),
 
 	// Fields
@@ -148,55 +141,38 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
-		'useSMTP' => array
+		'template' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['useSMTP'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'smtpHost' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['smtpHost'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'doNotShow'=>true, 'tl_class'=>'long'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'smtpUser' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['smtpUser'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'doNotShow'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
-		),
-		'smtpPass' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['smtpPass'],
-			'exclude'                 => true,
-			'inputType'               => 'textStore',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>32, 'doNotShow'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
-		),
-		'smtpEnc' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['smtpEnc'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['template'],
+			'default'                 => 'mail_default',
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options'                 => array(''=>'-', 'ssl'=>'SSL', 'tls'=>'TLS'),
-			'eval'                    => array('doNotShow'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(3) NOT NULL default ''"
+			'options_callback'        => function ()
+			{
+				return Controller::getTemplateGroup('mail_');
+			},
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
-		'smtpPort' => array
+		'sender' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['smtpPort'],
-			'default'                 => 25,
+			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['sender'],
 			'exclude'                 => true,
+			'search'                  => true,
+			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'doNotShow'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>128, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(128) NOT NULL default ''"
+		),
+		'senderName' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['senderName'],
+			'exclude'                 => true,
+			'search'                  => true,
+			'sorting'                 => true,
+			'flag'                    => 11,
+			'inputType'               => 'text',
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(128) NOT NULL default ''"
 		)
 	)
 );
@@ -222,6 +198,8 @@ class tl_newsletter_channel extends Backend
 
 	/**
 	 * Check permissions to edit table tl_newsletter_channel
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -320,8 +298,7 @@ class tl_newsletter_channel extends Backend
 			case 'show':
 				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsletterp')))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' newsletter channel ID "'.Input::get('id').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter channel ID ' . Input::get('id') . '.');
 				}
 				break;
 
@@ -343,8 +320,7 @@ class tl_newsletter_channel extends Backend
 			default:
 				if (strlen(Input::get('act')))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' newsletter channels', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter channels.');
 				}
 				break;
 		}

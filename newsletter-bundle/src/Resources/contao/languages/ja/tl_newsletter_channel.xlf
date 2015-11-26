@@ -17,53 +17,26 @@
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
         <target>ニュースレターをクリックしたときに移動する、ニュースレターリーダーのページを選択してください。</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.useSMTP.0">
-        <source>Custom SMTP server</source>
-        <target>専用のSMTPサーバー</target>
+      <trans-unit id="tl_newsletter_channel.template.0">
+        <source>E-mail template</source>
+        <target>電子メールのテンプレート</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.useSMTP.1">
-        <source>Use a custom SMTP server for sending newsletters.</source>
-        <target>ニュースレターの送信に専用のSMTPサーバーを使用します。</target>
+      <trans-unit id="tl_newsletter_channel.template.1">
+        <source>Here you can choose the e-mail template.</source>
+        <target>電子メールのテンプレートを選択します。</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpHost.0">
-        <source>SMTP hostname</source>
-        <target>SMTPのホスト名</target>
+      <trans-unit id="tl_newsletter_channel.sender.0">
+        <source>Sender e-mail address</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpHost.1">
-        <source>Please enter the host name of the SMTP server.</source>
-        <target>SMTPサーバーのホスト名を入力してください。</target>
+      <trans-unit id="tl_newsletter_channel.sender.1">
+        <source>Please enter the e-mail address of the sender.</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpUser.0">
-        <source>SMTP username</source>
-        <target>SMTPのユーザー名</target>
+      <trans-unit id="tl_newsletter_channel.senderName.0">
+        <source>Sender name</source>
+        <target>送信者の名前</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpUser.1">
-        <source>Here you can enter the SMTP username.</source>
-        <target>SMTPのユーザー名を入力できます。</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPass.0">
-        <source>SMTP password</source>
-        <target>SMTPのパスワード</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPass.1">
-        <source>Here you can enter the SMTP password.</source>
-        <target>SMTPのパスワードを入力できます。</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpEnc.0">
-        <source>SMTP encryption</source>
-        <target>SMTPの暗号化</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpEnc.1">
-        <source>Here you can choose an encryption method (SSL or TLS).</source>
-        <target>SMTPの暗号化の方法(SSLまたはTLS)を選択します。</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPort.0">
-        <source>SMTP port number</source>
-        <target>SMTPのポート番号</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPort.1">
-        <source>Please enter the port number of the SMTP server.</source>
-        <target>SMTPサーバーのポート番号を入力します。</target>
+      <trans-unit id="tl_newsletter_channel.senderName.1">
+        <source>Here you can enter an optional sender name.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
@@ -77,9 +50,12 @@
         <source>Title and redirect</source>
         <target>題名とリダイレクト</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtp_legend">
-        <source>SMTP configuration</source>
-        <target>SMTPの構成</target>
+      <trans-unit id="tl_newsletter_channel.template_legend">
+        <source>Template settings</source>
+        <target>テンプレートの設定</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender_legend">
+        <source>Sender settings</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New channel</source>

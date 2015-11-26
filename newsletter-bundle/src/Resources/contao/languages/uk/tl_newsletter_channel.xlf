@@ -17,53 +17,26 @@
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
         <target>Будь ласка, виберіть сторінку, до якої відвідувачі будуть перенаправлені при натисканні на розсилку.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.useSMTP.0">
-        <source>Custom SMTP server</source>
-        <target>Власний SMTP сервер</target>
+      <trans-unit id="tl_newsletter_channel.template.0">
+        <source>E-mail template</source>
+        <target>Шаблон листа</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.useSMTP.1">
-        <source>Use a custom SMTP server for sending newsletters.</source>
-        <target>Використовувати власний сервер SMTP для відправлення розсилок.</target>
+      <trans-unit id="tl_newsletter_channel.template.1">
+        <source>Here you can choose the e-mail template.</source>
+        <target>Будь ласка, виберіть шаблон листа (група шаблонів &lt;em&gt;mail_&lt;/em&gt;)</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpHost.0">
-        <source>SMTP hostname</source>
-        <target>SMTP ім'я хоста</target>
+      <trans-unit id="tl_newsletter_channel.sender.0">
+        <source>Sender e-mail address</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpHost.1">
-        <source>Please enter the host name of the SMTP server.</source>
-        <target>Введіть, будь ласка, ім'я хоста вашого SMTP сервера (за замовчуванням - localhost).</target>
+      <trans-unit id="tl_newsletter_channel.sender.1">
+        <source>Please enter the e-mail address of the sender.</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpUser.0">
-        <source>SMTP username</source>
-        <target>SMTP ім'я користувача</target>
+      <trans-unit id="tl_newsletter_channel.senderName.0">
+        <source>Sender name</source>
+        <target>Ім'я відправника</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpUser.1">
-        <source>Here you can enter the SMTP username.</source>
-        <target>Якщо ваш SMTP сервер вимагає авторизацію, введіть будь-ласка тут ім'я користувача.</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPass.0">
-        <source>SMTP password</source>
-        <target>SMTP пароль</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPass.1">
-        <source>Here you can enter the SMTP password.</source>
-        <target>Якщо ваш SMTP сервер вимагає авторизацію, Введіть будь-ласка пароль тут.</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpEnc.0">
-        <source>SMTP encryption</source>
-        <target>SMTP шифрування</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpEnc.1">
-        <source>Here you can choose an encryption method (SSL or TLS).</source>
-        <target>Тут Ви можете вказати метод шифрування даних (SSL or TLS)</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPort.0">
-        <source>SMTP port number</source>
-        <target>SMTP порт</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPort.1">
-        <source>Please enter the port number of the SMTP server.</source>
-        <target>Будь ласка, введіть порт вашого SMTP сервера (за замовчуванням 25 або 465 для SSL).</target>
+      <trans-unit id="tl_newsletter_channel.senderName.1">
+        <source>Here you can enter an optional sender name.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
@@ -77,9 +50,12 @@
         <source>Title and redirect</source>
         <target>Заголовок та перенаправлення</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtp_legend">
-        <source>SMTP configuration</source>
-        <target>SMTP конфігурація</target>
+      <trans-unit id="tl_newsletter_channel.template_legend">
+        <source>Template settings</source>
+        <target>Налаштування макету</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender_legend">
+        <source>Sender settings</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New channel</source>

@@ -14,41 +14,23 @@
       <trans-unit id="tl_newsletter_channel.jumpTo.1">
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.useSMTP.0">
-        <source>Custom SMTP server</source>
+      <trans-unit id="tl_newsletter_channel.template.0">
+        <source>E-mail template</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.useSMTP.1">
-        <source>Use a custom SMTP server for sending newsletters.</source>
+      <trans-unit id="tl_newsletter_channel.template.1">
+        <source>Here you can choose the e-mail template.</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpHost.0">
-        <source>SMTP hostname</source>
+      <trans-unit id="tl_newsletter_channel.sender.0">
+        <source>Sender e-mail address</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpHost.1">
-        <source>Please enter the host name of the SMTP server.</source>
+      <trans-unit id="tl_newsletter_channel.sender.1">
+        <source>Please enter the e-mail address of the sender.</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpUser.0">
-        <source>SMTP username</source>
+      <trans-unit id="tl_newsletter_channel.senderName.0">
+        <source>Sender name</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpUser.1">
-        <source>Here you can enter the SMTP username.</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPass.0">
-        <source>SMTP password</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPass.1">
-        <source>Here you can enter the SMTP password.</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpEnc.0">
-        <source>SMTP encryption</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpEnc.1">
-        <source>Here you can choose an encryption method (SSL or TLS).</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPort.0">
-        <source>SMTP port number</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPort.1">
-        <source>Please enter the port number of the SMTP server.</source>
+      <trans-unit id="tl_newsletter_channel.senderName.1">
+        <source>Here you can enter an optional sender name.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
@@ -59,8 +41,11 @@
       <trans-unit id="tl_newsletter_channel.title_legend">
         <source>Title and redirect</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtp_legend">
-        <source>SMTP configuration</source>
+      <trans-unit id="tl_newsletter_channel.template_legend">
+        <source>Template settings</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender_legend">
+        <source>Sender settings</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New channel</source>

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -24,13 +25,13 @@ class Newsletter extends \Backend
 	/**
 	 * Renturn a form to choose an existing style sheet and import it
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return string
 	 */
-	public function send(\DataContainer $dc)
+	public function send(DataContainer $dc)
 	{
-		$objNewsletter = $this->Database->prepare("SELECT n.*, c.useSMTP, c.smtpHost, c.smtpPort, c.smtpUser, c.smtpPass FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
+		$objNewsletter = $this->Database->prepare("SELECT n.*, c.template AS channelTemplate, c.sender AS channelSender, c.senderName as channelSenderName FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
 										->limit(1)
 										->execute($dc->id);
 
@@ -40,25 +41,31 @@ class Newsletter extends \Backend
 			return '';
 		}
 
-		// Overwrite the SMTP configuration
-		if ($objNewsletter->useSMTP)
+		// Set the template
+		if ($objNewsletter->template == '')
 		{
-			\Config::set('useSMTP', true);
-			\Config::set('smtpHost', $objNewsletter->smtpHost);
-			\Config::set('smtpUser', $objNewsletter->smtpUser);
-			\Config::set('smtpPass', $objNewsletter->smtpPass);
-			\Config::set('smtpEnc', $objNewsletter->smtpEnc);
-			\Config::set('smtpPort', $objNewsletter->smtpPort);
+			$objNewsletter->template = $objNewsletter->channelTemplate;
 		}
 
-		// Add default sender address
+		// Set the sender address
 		if ($objNewsletter->sender == '')
 		{
-			list($objNewsletter->senderName, $objNewsletter->sender) = \StringUtil::splitFriendlyEmail(\Config::get('adminEmail'));
+			$objNewsletter->sender = $objNewsletter->channelSender;
+		}
+
+		// Set the sender name
+		if ($objNewsletter->senderName == '')
+		{
+			$objNewsletter->senderName = $objNewsletter->channelSenderName;
+		}
+
+		// No sender address given
+		if ($objNewsletter->sender == '')
+		{
+			throw new InternalServerErrorException('No sender address given. Please check the newsletter channel settings.');
 		}
 
 		$arrAttachments = array();
-		$blnAttachmentsFormatError = false;
 
 		// Add attachments
 		if ($objNewsletter->addFile)
@@ -96,7 +103,7 @@ class Newsletter extends \Backend
 		$objSession = \System::getContainer()->get('session');
 
 		// Send newsletter
-		if (!$blnAttachmentsFormatError && \Input::get('token') != '' && \Input::get('token') == $objSession->get('tl_newsletter_send'))
+		if (\Input::get('token') != '' && \Input::get('token') == $objSession->get('tl_newsletter_send'))
 		{
 			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', \Environment::get('request'));
 
@@ -279,20 +286,14 @@ class Newsletter extends \Backend
 </div>
 </div>';
 
-		// Do not send the newsletter if there is an attachment format error
-		if (!$blnAttachmentsFormatError)
-		{
-			$return .= '
+		$return .= '
 
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
 <button type="submit" name="preview" class="tl_submit" accesskey="p">'.$GLOBALS['TL_LANG']['tl_newsletter']['preview'].'</button>
 <button type="submit" id="send" class="tl_submit" accesskey="s" onclick="return confirm(\''. str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_newsletter']['sendConfirm']) .'\')">'.$GLOBALS['TL_LANG']['tl_newsletter']['send'][0].'</button>
 </div>
-</div>';
-		}
-
-		$return .= '
+</div>
 
 </form>';
 
@@ -305,12 +306,12 @@ class Newsletter extends \Backend
 	/**
 	 * Generate the e-mail object and return it
 	 *
-	 * @param \Database\Result|object $objNewsletter
-	 * @param array                   $arrAttachments
+	 * @param Database\Result|object $objNewsletter
+	 * @param array                  $arrAttachments
 	 *
-	 * @return \Email
+	 * @return Email
 	 */
-	protected function generateEmailObject(\Database\Result $objNewsletter, $arrAttachments)
+	protected function generateEmailObject(Database\Result $objNewsletter, $arrAttachments)
 	{
 		$objEmail = new \Email();
 
@@ -324,7 +325,7 @@ class Newsletter extends \Backend
 		}
 
 		$objEmail->embedImages = !$objNewsletter->externalImages;
-		$objEmail->logFile = 'newsletter_' . $objNewsletter->id . '.log';
+		$objEmail->logFile = TL_NEWSLETTER . '_' . $objNewsletter->id;
 
 		// Attachments
 		if (!empty($arrAttachments) && is_array($arrAttachments))
@@ -342,16 +343,16 @@ class Newsletter extends \Backend
 	/**
 	 * Compile the newsletter and send it
 	 *
-	 * @param \Email                  $objEmail
-	 * @param \Database\Result|object $objNewsletter
-	 * @param array                   $arrRecipient
-	 * @param string                  $text
-	 * @param string                  $html
-	 * @param string                  $css
+	 * @param Email                  $objEmail
+	 * @param Database\Result|object $objNewsletter
+	 * @param array                  $arrRecipient
+	 * @param string                 $text
+	 * @param string                 $html
+	 * @param string                 $css
 	 *
 	 * @return string
 	 */
-	protected function sendNewsletter(\Email $objEmail, \Database\Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
+	protected function sendNewsletter(Email $objEmail, Database\Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
 		// Prepare the text content
 		$objEmail->text = \StringUtil::parseSimpleTokens($text, $arrRecipient);
@@ -364,7 +365,7 @@ class Newsletter extends \Backend
 				$objNewsletter->template = 'mail_default';
 			}
 
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate($objNewsletter->template);
 			$objTemplate->setData($objNewsletter->row());
 
@@ -403,7 +404,7 @@ class Newsletter extends \Backend
 			foreach ($GLOBALS['TL_HOOKS']['sendNewsletter'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($objEmail, $objNewsletter, $arrRecipient, $text, $html);
+				$this->{$callback[0]}->{$callback[1]}($objEmail, $objNewsletter, $arrRecipient, $text, $html);
 			}
 		}
 	}
@@ -430,10 +431,10 @@ class Newsletter extends \Backend
 			$class = 'FileUpload';
 		}
 
-		/** @var \FileUpload $objUploader */
+		/** @var FileUpload $objUploader */
 		$objUploader = new $class();
 
-		// Import CSS
+		// Import recipients
 		if (\Input::post('FORM_SUBMIT') == 'tl_recipients_import')
 		{
 			$arrUploaded = $objUploader->uploadTo('system/tmp');
@@ -493,8 +494,7 @@ class Newsletter extends \Backend
 					// Skip invalid entries
 					if (!\Validator::isEmail($strRecipient))
 					{
-						$this->log('Recipient address "' . $strRecipient . '" seems to be invalid and has been skipped', __METHOD__, TL_ERROR);
-
+						$this->log('Recipient address "' . $strRecipient . '" seems to be invalid and was not imported', __METHOD__, TL_ERROR);
 						++$intInvalid;
 						continue;
 					}
@@ -503,13 +503,25 @@ class Newsletter extends \Backend
 					$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE pid=? AND email=?")
 												   ->execute(\Input::get('id'), $strRecipient);
 
-					if ($objRecipient->count < 1)
+					if ($objRecipient->count > 0)
 					{
-						$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=1")
-									   ->execute(\Input::get('id'), $strRecipient);
-
-						++$intTotal;
+						continue;
 					}
+
+					// Check whether the e-mail address has been blacklisted
+					$objBlacklist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_blacklist WHERE pid=? AND hash=?")
+												   ->execute(\Input::get('id'), md5($strRecipient));
+
+					if ($objBlacklist->count > 0)
+					{
+						$this->log('Recipient address "' . $strRecipient . '" has been unsubscribed and was not imported', __METHOD__, TL_ERROR);
+						continue;
+					}
+
+					$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=1")
+								   ->execute(\Input::get('id'), $strRecipient);
+
+					++$intTotal;
 				}
 			}
 
@@ -592,8 +604,8 @@ class Newsletter extends \Backend
 	/**
 	 * Synchronize newsletter subscription of new users
 	 *
-	 * @param \MemberModel $intUser
-	 * @param array        $arrData
+	 * @param MemberModel $intUser
+	 * @param array       $arrData
 	 */
 	public function createNewUser($intUser, $arrData)
 	{
@@ -632,7 +644,7 @@ class Newsletter extends \Backend
 	/**
 	 * Activate newsletter subscription of new users
 	 *
-	 * @param \MemberModel $objUser
+	 * @param MemberModel $objUser
 	 */
 	public function activateAccount($objUser)
 	{
@@ -663,9 +675,9 @@ class Newsletter extends \Backend
 	/**
 	 * Synchronize newsletter subscription of existing users
 	 *
-	 * @param mixed        $varValue
-	 * @param \MemberModel $objUser
-	 * @param \ModuleModel $objModule
+	 * @param mixed       $varValue
+	 * @param MemberModel $objUser
+	 * @param ModuleModel $objModule
 	 *
 	 * @return mixed
 	 */
@@ -680,7 +692,7 @@ class Newsletter extends \Backend
 		$blnIsFrontend = true;
 
 		// If called from the back end, the second argument is a DataContainer object
-		if ($objUser instanceof \DataContainer)
+		if ($objUser instanceof DataContainer)
 		{
 			$objUser = $this->Database->prepare("SELECT * FROM tl_member WHERE id=?")
 									  ->limit(1)
@@ -704,7 +716,7 @@ class Newsletter extends \Backend
 		$varValue = deserialize($varValue, true);
 
 		// Get all channel IDs (thanks to Andreas Schempp)
-		if ($blnIsFrontend && $objModule instanceof \Module)
+		if ($blnIsFrontend && $objModule instanceof Module)
 		{
 			$arrChannel = deserialize($objModule->newsletters, true);
 		}
@@ -837,7 +849,7 @@ class Newsletter extends \Backend
 	/**
 	 * Get all editable newsletters and return them as array
 	 *
-	 * @param \ModuleModel $objModule
+	 * @param ModuleModel $objModule
 	 *
 	 * @return array
 	 */

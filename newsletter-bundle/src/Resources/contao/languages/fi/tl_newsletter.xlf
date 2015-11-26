@@ -50,12 +50,10 @@
         <target>Ole hyvä ja valitse liitettävät tiedostot.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>E-mail template</source>
-        <target>Viestin mallipohja</target>
+        <source>Custom e-mail template</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can choose the e-mail template.</source>
-        <target>Täällä voit valita viestin mallipohjan.</target>
+        <source>Here you can override the default e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -73,21 +71,17 @@
         <source>Do not embed images in HTML newsletters.</source>
         <target>Älä yhdistä kuvia HTML-uutiskirjeissä.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.senderName.0">
-        <source>Sender name</source>
-        <target>Lähettäjän nimi</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.senderName.1">
-        <source>Here you can enter the sender's name.</source>
-        <target>Tähän voit antaa lähettäjän nimen.</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
-        <source>Sender address</source>
-        <target>Lähettäjän osoite</target>
+        <source>Custom sender e-mail address</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
-        <source>Here you can enter a custom sender address.</source>
-        <target>Tähän voit antaa lähettäjän osoitteen.</target>
+        <source>Here you can override the default sender e-mail address of the channel.</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.0">
+        <source>Custom sender name</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.1">
+        <source>Here you can override the default sender name of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
@@ -139,6 +133,9 @@
       <trans-unit id="tl_newsletter.template_legend">
         <source>Template settings</source>
         <target>Mallin asetukset</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sender_legend">
+        <source>Sender settings</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>

@@ -50,12 +50,12 @@
         <target>Choisir les fichiers à attacher au bulletin d'information.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>E-mail template</source>
-        <target>Modèle d'e-mail</target>
+        <source>Custom e-mail template</source>
+        <target>Modèle d'e-mail personnalisé</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can choose the e-mail template.</source>
-        <target>Choisir un modèle d'e-mail.</target>
+        <source>Here you can override the default e-mail template of the channel.</source>
+        <target>Ici, vous pouvez remplacer le modèle d'e-mail par défaut de la liste de diffusion.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -73,21 +73,21 @@
         <source>Do not embed images in HTML newsletters.</source>
         <target>Ne pas inclure des images dans les bulletins d'information HTML.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.senderName.0">
-        <source>Sender name</source>
-        <target>Nom de l'expéditeur</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.senderName.1">
-        <source>Here you can enter the sender's name.</source>
-        <target>Saisir le nom de l'expéditeur.</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
-        <source>Sender address</source>
-        <target>Adresse e-mail de l'expéditeur</target>
+        <source>Custom sender e-mail address</source>
+        <target>Adresse e-mail personnalisée de l'expéditeur</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
-        <source>Here you can enter a custom sender address.</source>
-        <target>Saisir l'adresse e-mail personnalisée de l'expéditeur.</target>
+        <source>Here you can override the default sender e-mail address of the channel.</source>
+        <target>Ici, vous pouvez remplacer l'adresse e-mail par défaut de l'expéditeur de la liste de diffusion.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.0">
+        <source>Custom sender name</source>
+        <target>Nom de l'expéditeur personnalisé</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.1">
+        <source>Here you can override the default sender name of the channel.</source>
+        <target>Ici, vous pouvez remplacer le nom par défaut de l'expéditeur de la liste de diffusion.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
@@ -140,6 +140,10 @@
       <trans-unit id="tl_newsletter.template_legend">
         <source>Template settings</source>
         <target>Paramètres des modèles</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sender_legend">
+        <source>Sender settings</source>
+        <target>Paramètres de l'expéditeur</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>

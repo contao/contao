@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MOD.newsletter.1">
         <source>Manage subscriptions and send newsletters</source>
-        <target>این بخش به شما امکان مدیریت خبرنامه‌های سایت را می دهد.</target>
+        <target>مدیریت اشتراک‌ها و ارسال خبرنامه‌ها</target>
       </trans-unit>
       <trans-unit id="MOD.tl_newsletter_recipients">
         <source>Recipients</source>

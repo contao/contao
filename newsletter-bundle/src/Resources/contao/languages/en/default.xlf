@@ -14,6 +14,9 @@
       <trans-unit id="ERR.noChannels">
         <source>Please select at least one channel.</source>
       </trans-unit>
+      <trans-unit id="ERR.blacklisted">
+        <source>The e-mail address has been unsubscribed from the channel.</source>
+      </trans-unit>
       <trans-unit id="MSC.subscribe">
         <source>Subscribe</source>
       </trans-unit>

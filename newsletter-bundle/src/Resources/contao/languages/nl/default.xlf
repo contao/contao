@@ -17,6 +17,10 @@
         <source>Please select at least one channel.</source>
         <target>Selecteer minstens 1 nieuwsbrief.</target>
       </trans-unit>
+      <trans-unit id="ERR.blacklisted">
+        <source>The e-mail address has been unsubscribed from the channel.</source>
+        <target>Het e-mail adres is afgemeld van het kanaal.</target>
+      </trans-unit>
       <trans-unit id="MSC.subscribe">
         <source>Subscribe</source>
         <target>Inschrijven</target>

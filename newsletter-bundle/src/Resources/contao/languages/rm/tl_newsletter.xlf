@@ -50,12 +50,10 @@
         <target>Tscherner las datotecas che duain vegnir agiuntadas.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
-        <source>E-mail template</source>
-        <target>Template dad e-mail</target>
+        <source>Custom e-mail template</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
-        <source>Here you can choose the e-mail template.</source>
-        <target>Qua pudais vus tscherner il template per l'e-mail.</target>
+        <source>Here you can override the default e-mail template of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -73,21 +71,17 @@
         <source>Do not embed images in HTML newsletters.</source>
         <target>Betg integrar maletgs externs en newsletters da HTML.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.senderName.0">
-        <source>Sender name</source>
-        <target>Num dal speditur</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.senderName.1">
-        <source>Here you can enter the sender's name.</source>
-        <target>Qua pudais vus endatar il num dal speditur.</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
-        <source>Sender address</source>
-        <target>Adressa dal speditur</target>
+        <source>Custom sender e-mail address</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
-        <source>Here you can enter a custom sender address.</source>
-        <target>Qua pudais vus inditgar l'adressa dad e-mail dal speditur.</target>
+        <source>Here you can override the default sender e-mail address of the channel.</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.0">
+        <source>Custom sender name</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.1">
+        <source>Here you can override the default sender name of the channel.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
@@ -140,6 +134,9 @@
       <trans-unit id="tl_newsletter.template_legend">
         <source>Template settings</source>
         <target>Configuraziun da templates</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sender_legend">
+        <source>Sender settings</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>

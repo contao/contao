@@ -17,53 +17,29 @@
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
         <target>Bitte wählen Sie die Newsletterleser-Seite aus, zu der Besucher weitergeleitet werden, wenn Sie einen Newsletter anklicken.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.useSMTP.0">
-        <source>Custom SMTP server</source>
-        <target>Eigener SMTP-Server</target>
+      <trans-unit id="tl_newsletter_channel.template.0">
+        <source>E-mail template</source>
+        <target>E-Mail-Template</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.useSMTP.1">
-        <source>Use a custom SMTP server for sending newsletters.</source>
-        <target>Einen eigenen SMTP-Server für den Newsletter-Versand verwenden.</target>
+      <trans-unit id="tl_newsletter_channel.template.1">
+        <source>Here you can choose the e-mail template.</source>
+        <target>Hier können Sie das E-Mail-Template auswählen.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpHost.0">
-        <source>SMTP hostname</source>
-        <target>SMTP-Hostname</target>
+      <trans-unit id="tl_newsletter_channel.sender.0">
+        <source>Sender e-mail address</source>
+        <target>Absender-E-Mail-Adresse</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpHost.1">
-        <source>Please enter the host name of the SMTP server.</source>
-        <target>Bitte geben Sie den Hostnamen des SMTP-Servers ein.</target>
+      <trans-unit id="tl_newsletter_channel.sender.1">
+        <source>Please enter the e-mail address of the sender.</source>
+        <target>Bitte geben Sie die E-Mail-Adresse des Absenders ein.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpUser.0">
-        <source>SMTP username</source>
-        <target>SMTP-Benutzername</target>
+      <trans-unit id="tl_newsletter_channel.senderName.0">
+        <source>Sender name</source>
+        <target>Absendername</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpUser.1">
-        <source>Here you can enter the SMTP username.</source>
-        <target>Hier können Sie den SMTP-Benutzernamen eingeben.</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPass.0">
-        <source>SMTP password</source>
-        <target>SMTP-Passwort</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPass.1">
-        <source>Here you can enter the SMTP password.</source>
-        <target>Hier können Sie das SMTP-Passwort eingeben.</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpEnc.0">
-        <source>SMTP encryption</source>
-        <target>SMTP-Verschlüsselung</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpEnc.1">
-        <source>Here you can choose an encryption method (SSL or TLS).</source>
-        <target>Hier können Sie eine Verschlüsselungsmethode auswählen (SSL oder TLS).</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPort.0">
-        <source>SMTP port number</source>
-        <target>SMTP-Portnummer</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPort.1">
-        <source>Please enter the port number of the SMTP server.</source>
-        <target>Bitte geben Sie die Portnummer des SMTP-Servers ein.</target>
+      <trans-unit id="tl_newsletter_channel.senderName.1">
+        <source>Here you can enter an optional sender name.</source>
+        <target>Hier können Sie den Namen des Absenders eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
@@ -77,9 +53,13 @@
         <source>Title and redirect</source>
         <target>Titel und Weiterleitung</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtp_legend">
-        <source>SMTP configuration</source>
-        <target>SMTP-Einstellungen</target>
+      <trans-unit id="tl_newsletter_channel.template_legend">
+        <source>Template settings</source>
+        <target>Template-Einstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender_legend">
+        <source>Sender settings</source>
+        <target>Absendereinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New channel</source>

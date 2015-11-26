@@ -11,11 +11,14 @@
       </trans-unit>
       <trans-unit id="ERR.invalidToken">
         <source>The activation link is invalid or outdated.</source>
-        <target>این پیوند فعال سازی اشتباه یا تاریخ گذشته می باشد.</target>
+        <target>پیوند فعال‌سازی نامعتبر یا تاریخ گذشته می‌باشد.</target>
       </trans-unit>
       <trans-unit id="ERR.noChannels">
         <source>Please select at least one channel.</source>
         <target>لطفا دست‌کم یک کانال را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.blacklisted">
+        <source>The e-mail address has been unsubscribed from the channel.</source>
       </trans-unit>
       <trans-unit id="MSC.subscribe">
         <source>Subscribe</source>

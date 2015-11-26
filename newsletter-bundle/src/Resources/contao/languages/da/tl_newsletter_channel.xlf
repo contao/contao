@@ -17,53 +17,26 @@
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
         <target>Vælg venligst siden som brugere bliver videresendt til når der klikkes på et nyhedsbrev.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.useSMTP.0">
-        <source>Custom SMTP server</source>
-        <target>Brugervalgt SMTP server</target>
+      <trans-unit id="tl_newsletter_channel.template.0">
+        <source>E-mail template</source>
+        <target>E-mail skabelon</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.useSMTP.1">
-        <source>Use a custom SMTP server for sending newsletters.</source>
-        <target>Benyt en brugervalgt SMTP server til at sende nyhedsbreve.</target>
+      <trans-unit id="tl_newsletter_channel.template.1">
+        <source>Here you can choose the e-mail template.</source>
+        <target>Vælg venligst en e-mail skabelon (skabelon gruppe &lt;em&gt;mail_&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpHost.0">
-        <source>SMTP hostname</source>
-        <target>SMTP-værtsnavn</target>
+      <trans-unit id="tl_newsletter_channel.sender.0">
+        <source>Sender e-mail address</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpHost.1">
-        <source>Please enter the host name of the SMTP server.</source>
-        <target>Angiv værtsnavnet på din SMTP-server (standardværdi er localhost).</target>
+      <trans-unit id="tl_newsletter_channel.sender.1">
+        <source>Please enter the e-mail address of the sender.</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpUser.0">
-        <source>SMTP username</source>
-        <target>SMTP-brugernavn</target>
+      <trans-unit id="tl_newsletter_channel.senderName.0">
+        <source>Sender name</source>
+        <target>Afsendernavn</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpUser.1">
-        <source>Here you can enter the SMTP username.</source>
-        <target>Angiv brugernavn, hvis din SMTP-server kræver godkendelse.</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPass.0">
-        <source>SMTP password</source>
-        <target>SMTP-adgangskode</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPass.1">
-        <source>Here you can enter the SMTP password.</source>
-        <target>Angiv adgangskode hvis din SMTP-server kræver godkendelse.</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpEnc.0">
-        <source>SMTP encryption</source>
-        <target>SMTP kryptering</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpEnc.1">
-        <source>Here you can choose an encryption method (SSL or TLS).</source>
-        <target>Her kan du vælge krypterings protokol (SSL og TLS).</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPort.0">
-        <source>SMTP port number</source>
-        <target>SMTP-portnummer</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtpPort.1">
-        <source>Please enter the port number of the SMTP server.</source>
-        <target>Angiv det portnummer, din SMTP-server lytter på (standardværdi er 25 eller 465 for SSL-tilslutning).</target>
+      <trans-unit id="tl_newsletter_channel.senderName.1">
+        <source>Here you can enter an optional sender name.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
@@ -77,9 +50,12 @@
         <source>Title and redirect</source>
         <target>Titel og videresend</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.smtp_legend">
-        <source>SMTP configuration</source>
-        <target>Indstillinger for SMTP</target>
+      <trans-unit id="tl_newsletter_channel.template_legend">
+        <source>Template settings</source>
+        <target>Skabelon indstillinger</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender_legend">
+        <source>Sender settings</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New channel</source>

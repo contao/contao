@@ -17,6 +17,10 @@
         <source>Please select at least one channel.</source>
         <target>Bitte wählen Sie mindestens einen Verteiler aus.</target>
       </trans-unit>
+      <trans-unit id="ERR.blacklisted">
+        <source>The e-mail address has been unsubscribed from the channel.</source>
+        <target>Die E-Mail-Adresse wurde aus dem Kanal ausgetragen.</target>
+      </trans-unit>
       <trans-unit id="MSC.subscribe">
         <source>Subscribe</source>
         <target>Abonnieren</target>

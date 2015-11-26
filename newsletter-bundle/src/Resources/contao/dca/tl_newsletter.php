@@ -42,7 +42,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'mode'                    => 4,
 			'fields'                  => array('sent', 'date DESC', 'tstamp DESC'),
-			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'useSMTP'),
+			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'child_record_callback'   => array('tl_newsletter', 'listNewsletters')
 		),
@@ -102,7 +102,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addFile'),
-		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{expert_legend:hide},sendText,externalImages,senderName,sender'
+		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName;{expert_legend:hide},sendText,externalImages'
 	),
 
 	// Subpalettes
@@ -199,10 +199,13 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'template' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['template'],
-			'default'                 => 'mail_default',
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_newsletter', 'getMailTemplates'),
+			'eval'                    => array('includeBlankOption'=>true),
+			'options_callback'        => function ()
+			{
+				return Controller::getTemplateGroup('mail_');
+			},
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'sendText' => array
@@ -285,6 +288,8 @@ class tl_newsletter extends Backend
 
 	/**
 	 * Check permissions to edit table tl_newsletter
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -316,8 +321,7 @@ class tl_newsletter extends Backend
 			case 'create':
 				if (!strlen(Input::get('pid')) || !in_array(Input::get('pid'), $root))
 				{
-					$this->log('Not enough permissions to create newsletters in channel ID "'.Input::get('pid').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletters in channel ID ' . Input::get('pid') . '.');
 				}
 				break;
 
@@ -325,8 +329,7 @@ class tl_newsletter extends Backend
 			case 'copy':
 				if (!in_array(Input::get('pid'), $root))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' newsletter ID "'.$id.'" to channel ID "'.Input::get('pid').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' to channel ID ' . Input::get('pid') . '.');
 				}
 				// NO BREAK STATEMENT HERE
 
@@ -339,14 +342,12 @@ class tl_newsletter extends Backend
 
 				if ($objChannel->numRows < 1)
 				{
-					$this->log('Invalid newsletter ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid newsletter ID ' . $id . '.');
 				}
 
 				if (!in_array($objChannel->pid, $root))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' newsletter ID "'.$id.'" of newsletter channel ID "'.$objChannel->pid.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' of newsletter channel ID ' . $objChannel->pid . '.');
 				}
 				break;
 
@@ -357,8 +358,7 @@ class tl_newsletter extends Backend
 			case 'copyAll':
 				if (!in_array($id, $root))
 				{
-					$this->log('Not enough permissions to access newsletter channel ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
 
 				$objChannel = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE pid=?")
@@ -366,8 +366,7 @@ class tl_newsletter extends Backend
 
 				if ($objChannel->numRows < 1)
 				{
-					$this->log('Invalid newsletter channel ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid newsletter channel ID  ' . $id . '.');
 				}
 
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
@@ -381,9 +380,9 @@ class tl_newsletter extends Backend
 			default:
 				if (strlen(Input::get('act')))
 				{
-					$this->log('Invalid command "'.Input::get('act').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
+
 				if (Input::get('key') == 'send')
 				{
 					$objChannel = $this->Database->prepare("SELECT pid FROM tl_newsletter WHERE id=?")
@@ -392,20 +391,17 @@ class tl_newsletter extends Backend
 
 					if ($objChannel->numRows < 1)
 					{
-						$this->log('Invalid newsletter ID "'.$id.'"', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid newsletter ID ' . $id . '.');
 					}
 
 					if (!in_array($objChannel->pid, $root))
 					{
-						$this->log('Not enough permissions to send newsletter ID "'.$id.'" of newsletter channel ID "'.$objChannel->pid.'"', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to send newsletter ID ' . $id . ' of newsletter channel ID ' . $objChannel->pid . '.');
 					}
 				}
 				elseif (!in_array($id, $root))
 				{
-					$this->log('Not enough permissions to access newsletter channel ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
 				break;
 		}
@@ -493,16 +489,5 @@ class tl_newsletter extends Backend
 		}
 
 		return $varValue;
-	}
-
-
-	/**
-	 * Return all mail templates as array
-	 *
-	 * @return array
-	 */
-	public function getMailTemplates()
-	{
-		return $this->getTemplateGroup('mail_');
 	}
 }
