@@ -11,8 +11,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "symfony/framework-bundle": "~2.7",
-        "contao/core-bundle": "^4.0.3"
+        "symfony/framework-bundle": "^2.7.7",
+        "contao/core-bundle": "~4.1"
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "~1.8"
@@ -27,7 +27,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-develop": "1.0.x-dev"
+            "dev-develop": "1.1.x-dev"
         }
     }
 }

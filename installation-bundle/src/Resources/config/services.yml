@@ -1,21 +1,18 @@
 services:
     contao.install_tool:
         class: Contao\InstallationBundle\InstallTool
-        public: false
         arguments:
-            - "%doctrine.default_connection%"
+            - "@database_connection"
             - "%kernel.root_dir%"
 
     contao.install_tool_user:
         class: Contao\InstallationBundle\InstallToolUser
-        public: false
         arguments:
-            - "%kernel.root_dir%"
+            - "@session"
 
     contao.installer:
         class: Contao\InstallationBundle\Database\Installer
-        public: false
         arguments:
-            - "%doctrine.default_connection%"
+            - "@database_connection"
             - "@contao.resource_finder"
-            - "%translator.class%"
+            - "@translator.default"

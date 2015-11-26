@@ -14,9 +14,11 @@ use Contao\CoreBundle\Command\InstallCommand;
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\Encryption;
 use Contao\InstallationBundle\Config\ParameterDumper;
+use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
-use Contao\InstallationBundle\Database\VersionUpdateInterface;
 use Doctrine\DBAL\DBALException;
+use Patchwork\Utf8;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -30,6 +32,8 @@ use Symfony\Component\HttpFoundation\Response;
  * Handles the installation process.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @Route(defaults={"_scope" = "backend"})
  */
 class InstallationController extends ContainerAware
 {
@@ -42,6 +46,8 @@ class InstallationController extends ContainerAware
      * Handles the installation process.
      *
      * @return Response The response object
+     *
+     * @Route("/_contao/install", name="contao_install")
      */
     public function indexAction()
     {
@@ -168,7 +174,7 @@ class InstallationController extends ContainerAware
         $minlength = $installTool->getConfig('minPasswordLength');
 
         // The passwords is too short
-        if (strlen(utf8_decode($password)) < $minlength) {
+        if (Utf8::strlen($password) < $minlength) {
             return $this->render('password.html.twig', [
                 'error' => sprintf($this->trans('password_too_short'), $minlength),
             ]);
@@ -281,12 +287,13 @@ class InstallationController extends ContainerAware
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $class = 'Contao\\InstallationBundle\\Database\\' . $file->getBasename('.php');
+            $class = 'Contao\InstallationBundle\Database\\' . $file->getBasename('.php');
 
-            /** @var VersionUpdateInterface $update */
+            /** @var AbstractVersionUpdate $update */
             $update = new $class($this->container->get('database_connection'));
 
-            if ($update instanceof VersionUpdateInterface && $update->shouldBeRun()) {
+            if ($update instanceof AbstractVersionUpdate && $update->shouldBeRun()) {
+                $update->setContainer($this->container);
                 $update->run();
             }
         }
@@ -443,7 +450,7 @@ class InstallationController extends ContainerAware
         $minlength = $installTool->getConfig('minPasswordLength');
 
         // The password is too short
-        if (strlen(utf8_decode($password)) < $minlength) {
+        if (Utf8::strlen($password) < $minlength) {
             $this->context['admin_password_error'] = sprintf($this->trans('password_too_short'), $minlength);
 
             return null;
@@ -479,7 +486,12 @@ class InstallationController extends ContainerAware
      */
     private function render($name, $context = [])
     {
-        return new Response($this->container->get('twig')->render($name, $context));
+        return new Response(
+            $this->container->get('twig')->render(
+                '@ContaoInstallation/' . $name,
+                $this->addRequestTokenToContext($context)
+            )
+        );
     }
 
     /**
@@ -502,5 +514,25 @@ class InstallationController extends ContainerAware
     private function getRedirectResponse()
     {
         return new RedirectResponse($this->container->get('request_stack')->getCurrentRequest()->getRequestUri());
+    }
+
+    /**
+     * Adds the request token to the template context.
+     *
+     * @param array $context The context
+     *
+     * @return array The context with the request token
+     */
+    private function addRequestTokenToContext(array $context)
+    {
+        $context['request_token'] = '';
+
+        if ($this->container->hasParameter('contao.csrf_token_name')) {
+            $tokenName = $this->container->getParameter('contao.csrf_token_name');
+            $token = $this->container->get('security.csrf.token_manager')->getToken($tokenName);
+            $context['request_token'] = $token->getValue();
+        }
+
+        return $context;
     }
 }
