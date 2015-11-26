@@ -234,7 +234,7 @@ class Database
 			$varSet = $this->resConnection->quote($varSet);
 		}
 
-		return "FIND_IN_SET(" . $this->resConnection->quoteIdentifier($strKey) . ", " . $varSet . ")";
+		return "FIND_IN_SET(" . $strKey . ", " . $varSet . ")";
 	}
 
 
