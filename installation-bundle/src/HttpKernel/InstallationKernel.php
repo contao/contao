@@ -78,7 +78,7 @@ class InstallationKernel extends \AppKernel
         $request->attributes->add([
             '_route' => 'contao_install',
             '_route_params' => [
-                '_scope' => 'backend'
+                '_scope' => 'backend',
             ],
         ]);
 
