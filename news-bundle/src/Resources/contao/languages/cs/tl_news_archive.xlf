@@ -133,14 +133,6 @@
         <source>Author and system administrator</source>
         <target>Autor a administrátor systému</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.source_teaser">
-        <source>News teasers</source>
-        <target>Ukázka novinky</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_text">
-        <source>Full articles</source>
-        <target>Plné znění</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>
         <target>Nový archiv</target>

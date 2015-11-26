@@ -133,14 +133,6 @@
         <source>Author and system administrator</source>
         <target>作者和系统管理员</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.source_teaser">
-        <source>News teasers</source>
-        <target>新闻广告</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_text">
-        <source>Full articles</source>
-        <target>全部文章</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>
         <target>新闻档案</target>

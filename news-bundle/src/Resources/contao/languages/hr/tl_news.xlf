@@ -14,8 +14,7 @@
         <target>Alias novosti</target>
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
-        <source>The news alias is a unique reference to the article which can be called instead of its numeric ID.</source>
-        <target>Alias novosti je jedinstvena referenca članka novosti koja se može pozivati umjesto njenog numeričkog ID-a.</target>
+        <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
@@ -54,8 +53,7 @@
         <target>Najava novosti</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
-        <source>The news teaser can be shown in a news list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Najava novosti može biti prikazana u popisu novosti umjesto cijelog članka. Automatski će se dodati link &quot;Opširnije ...&quot;.</target>
+        <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
@@ -238,92 +236,71 @@
         <target>Postavke objavljivanje</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New article</source>
-        <target>Novi članak</target>
+        <source>New item</source>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
-        <source>Create a new news article</source>
-        <target>Kreirajte novi članak.</target>
+        <source>Create a new news item</source>
       </trans-unit>
       <trans-unit id="tl_news.show.0">
-        <source>Article details</source>
-        <target>Detalji članka</target>
+        <source>Item details</source>
       </trans-unit>
       <trans-unit id="tl_news.show.1">
-        <source>Show the details of news article ID %s</source>
-        <target>Prikazati detalje članka s ID %s</target>
+        <source>Show the details of news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.0">
-        <source>Edit article</source>
-        <target>Uredi članak</target>
+        <source>Edit item</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.1">
-        <source>Edit news article ID %s</source>
-        <target>Uredite članak s ID %s</target>
+        <source>Edit news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.copy.0">
-        <source>Duplicate article</source>
-        <target>Kopiraj članak</target>
+        <source>Duplicate item</source>
       </trans-unit>
       <trans-unit id="tl_news.copy.1">
-        <source>Duplicate news article ID %s</source>
-        <target>Kopirajte članak s ID %s</target>
+        <source>Duplicate news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.cut.0">
-        <source>Move article</source>
-        <target>Premjesti članak</target>
+        <source>Move item</source>
       </trans-unit>
       <trans-unit id="tl_news.cut.1">
-        <source>Move news article ID %s</source>
-        <target>Premjestite članak s ID %s</target>
+        <source>Move news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.delete.0">
-        <source>Delete article</source>
-        <target>Izbriši članak</target>
+        <source>Delete item</source>
       </trans-unit>
       <trans-unit id="tl_news.delete.1">
-        <source>Delete news article ID %s</source>
-        <target>Izbrišite članak s ID %s</target>
+        <source>Delete news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish article</source>
-        <target>Objavi/ne objavi članak</target>
+        <source>Publish/unpublish item</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
-        <source>Publish/unpublish news article ID %s</source>
-        <target>Objavite/ne objavite novost s ID %s</target>
+        <source>Publish/unpublish news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature article</source>
-        <target>Istaknuti/neistaknuti članak</target>
+        <source>Feature/unfeature item</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
-        <source>Feature/unfeature news article ID %s</source>
-        <target>Istaknite ili ne istaknite članke novosti s ID %s.</target>
+        <source>Feature/unfeature news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
         <source>Edit archive settings</source>
         <target>Uredi postavke arhive</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
-        <source>Edit the archive settings</source>
-        <target>Uredite naziv arhive novosti.</target>
+        <source>Edit the news archive settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.0">
-        <source>Edit article settings</source>
-        <target>Uredi postavke članka</target>
+        <source>Edit item settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the article settings</source>
-        <target>Uredi postavke članka.</target>
+        <source>Edit the news item settings</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
-        <source>Paste into this archive</source>
-        <target>Zalijepi u ovu arhivu</target>
+        <source>Paste into this news archive</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news article ID %s</source>
-        <target>Zalijepiti nakon vijesti s ID %s</target>
+        <source>Paste after news item ID %s</source>
       </trans-unit>
     </body>
   </file>

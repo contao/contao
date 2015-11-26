@@ -133,14 +133,6 @@
         <source>Author and system administrator</source>
         <target>Auteur en systeembeheerder</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.source_teaser">
-        <source>News teasers</source>
-        <target>Teasers van nieuwsberichten</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_text">
-        <source>Full articles</source>
-        <target>Volledige nieuwsberichten</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>
         <target>Nieuw archief</target>

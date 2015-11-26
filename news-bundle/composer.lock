@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6d800d64b9c60b9394ace65f0bf9a258",
-    "content-hash": "512c6cefdb04a5fadbe6e5bbc301502e",
+    "hash": "74c211eb13abf2d65721ae146ceac053",
+    "content-hash": "e696fcf2afa75d01138f65993cc1c109",
     "packages": [
         {
             "name": "contao-components/ace",
@@ -40,41 +40,41 @@
         },
         {
             "name": "contao-components/all",
-            "version": "dev-develop",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/all.git",
-                "reference": "79cb9f8e7744966d6e9f7a60b33f62f6e46cee66"
+                "reference": "4759628176ee338f1b5c04911fe89b6de3bdfdb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/all/zipball/79cb9f8e7744966d6e9f7a60b33f62f6e46cee66",
-                "reference": "79cb9f8e7744966d6e9f7a60b33f62f6e46cee66",
+                "url": "https://api.github.com/repos/contao-components/all/zipball/4759628176ee338f1b5c04911fe89b6de3bdfdb3",
+                "reference": "4759628176ee338f1b5c04911fe89b6de3bdfdb3",
                 "shasum": ""
             },
             "require": {
-                "contao-components/ace": "^1.1.9",
-                "contao-components/chosen": "^1.0.2.1",
-                "contao-components/colorbox": "^1.5.13.1",
+                "contao-components/ace": "~1.2",
+                "contao-components/chosen": "^1.0.5",
+                "contao-components/colorbox": "~1.6",
                 "contao-components/colorpicker": "^1.4.0.1",
                 "contao-components/compass": "~0.12",
                 "contao-components/contao": "~4.2",
                 "contao-components/datepicker": "^2.2.0.1",
-                "contao-components/dropzone": "^3.10.2.1",
-                "contao-components/highlight": "^8.2.2",
-                "contao-components/html5shiv": "^3.7.2.1",
-                "contao-components/jquery": "^1.11.1.1",
-                "contao-components/jquery-ui": "^1.11.1.1",
-                "contao-components/mediabox": "^1.4.6.1",
-                "contao-components/mediaelement": "^2.15.1.1",
-                "contao-components/mootools": "^1.5.1.1",
-                "contao-components/respimage": "~1.1",
+                "contao-components/dropzone": "~3.12",
+                "contao-components/highlight": "~8.9",
+                "contao-components/html5shiv": "~3.7.3",
+                "contao-components/jquery": "^1.11.3",
+                "contao-components/jquery-ui": "^1.11.4",
+                "contao-components/mediabox": "~1.5",
+                "contao-components/mediaelement": "~2.18",
+                "contao-components/mootools": "^1.5.2",
+                "contao-components/respimage": "~1.4",
                 "contao-components/simplemodal": "^1.2.0.1",
-                "contao-components/stylect": "^3.4.0.1",
+                "contao-components/stylect": "^3.4.4",
                 "contao-components/swipe": "^2.0.3",
-                "contao-components/tablesort": "^3.4.0.1",
+                "contao-components/tablesort": "^3.4.3",
                 "contao-components/tablesorter": "^2.0.5.1",
-                "contao-components/tinymce4": "^4.1.6.1"
+                "contao-components/tinymce4": "~4.2"
             },
             "conflict": {
                 "contao/core": "*"
@@ -82,7 +82,7 @@
             "type": "metapackage",
             "extra": {
                 "branch-alias": {
-                    "dev-develop": "4.1.x-dev"
+                    "dev-develop": "4.2.x-dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -96,20 +96,20 @@
                 }
             ],
             "description": "Contao Open Source CMS",
-            "time": "2015-10-21 10:05:06"
+            "time": "2015-11-26 10:47:08"
         },
         {
             "name": "contao-components/chosen",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/chosen.git",
-                "reference": "2aa49a2f358c5e13b06cb52fc460aa51f6b16555"
+                "reference": "b54cd06a6ea8bf9b8d36be72472f0f4d378de246"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/chosen/zipball/2aa49a2f358c5e13b06cb52fc460aa51f6b16555",
-                "reference": "2aa49a2f358c5e13b06cb52fc460aa51f6b16555",
+                "url": "https://api.github.com/repos/contao-components/chosen/zipball/b54cd06a6ea8bf9b8d36be72472f0f4d378de246",
+                "reference": "b54cd06a6ea8bf9b8d36be72472f0f4d378de246",
                 "shasum": ""
             },
             "require": {
@@ -127,7 +127,7 @@
                 }
             ],
             "description": "Chosen integration for Contao Open Source CMS",
-            "time": "2015-11-17 15:40:09"
+            "time": "2015-11-25 10:39:20"
         },
         {
             "name": "contao-components/colorbox",
@@ -221,25 +221,25 @@
         },
         {
             "name": "contao-components/contao",
-            "version": "dev-develop",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao-components/contao.git",
-                "reference": "2b75d239c79aca2d641e92ac448054b1526480c1"
+                "reference": "b0d33fbb1db9eff251c8ff9eb114c70c57ff4cdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao-components/contao/zipball/2b75d239c79aca2d641e92ac448054b1526480c1",
-                "reference": "2b75d239c79aca2d641e92ac448054b1526480c1",
+                "url": "https://api.github.com/repos/contao-components/contao/zipball/b0d33fbb1db9eff251c8ff9eb114c70c57ff4cdb",
+                "reference": "b0d33fbb1db9eff251c8ff9eb114c70c57ff4cdb",
                 "shasum": ""
             },
             "require": {
-                "contao-components/installer": "~1.0"
+                "contao-components/installer": "^1.0.9"
             },
             "type": "contao-component",
             "extra": {
                 "branch-alias": {
-                    "dev-develop": "4.2.x-dev"
+                    "dev-develop": "4.3.x-dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -253,7 +253,7 @@
                 }
             ],
             "description": "Contao Open Source CMS components",
-            "time": "2015-11-24 19:27:26"
+            "time": "2015-11-26 10:38:21"
         },
         {
             "name": "contao-components/datepicker",
@@ -798,16 +798,16 @@
         },
         {
             "name": "contao/core-bundle",
-            "version": "dev-release/4.1.0",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/core-bundle.git",
-                "reference": "43297294b5f252b8258b0b616b1dc6943fdc9f48"
+                "reference": "b59a083a05b01ff95b7246ce6a734bf62a67919e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/core-bundle/zipball/43297294b5f252b8258b0b616b1dc6943fdc9f48",
-                "reference": "43297294b5f252b8258b0b616b1dc6943fdc9f48",
+                "url": "https://api.github.com/repos/contao/core-bundle/zipball/b59a083a05b01ff95b7246ce6a734bf62a67919e",
+                "reference": "b59a083a05b01ff95b7246ce6a734bf62a67919e",
                 "shasum": ""
             },
             "require": {
@@ -876,7 +876,7 @@
                 }
             ],
             "description": "Contao 4 core bundle",
-            "time": "2015-11-25 09:43:26"
+            "time": "2015-11-26 10:58:38"
         },
         {
             "name": "doctrine/annotations",
@@ -4958,19 +4958,10 @@
             "time": "2015-11-19 16:11:24"
         }
     ],
-    "aliases": [
-        {
-            "alias": "4.1.0",
-            "alias_normalized": "4.1.0.0",
-            "version": "dev-release/4.1.0",
-            "package": "contao/core-bundle"
-        }
-    ],
-    "minimum-stability": "dev",
-    "stability-flags": {
-        "contao/core-bundle": 20
-    },
-    "prefer-stable": true,
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.4.0"
