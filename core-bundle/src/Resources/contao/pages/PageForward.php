@@ -73,14 +73,10 @@ class PageForward extends \Frontend
 			throw new ForwardPageNotFoundException('Forward page not found');
 		}
 
-		$strForceLang = null;
+		$objNextPage->loadDetails();
 
 		// Check the target page language (see #4706)
-		if (\Config::get('addLanguageToUrl'))
-		{
-			$objNextPage->loadDetails(); // see #3983
-			$strForceLang = $objNextPage->language;
-		}
+		$strForceLang = \Config::get('addLanguageToUrl') ? $objNextPage->language : null;
 
 		$strGet = '';
 		$strQuery = \Environment::get('queryString');
@@ -132,7 +128,7 @@ class PageForward extends \Frontend
 			$strQuery = '?' . $strQuery;
 		}
 
-		return $this->generateFrontendUrl($objNextPage->row(), $strGet, $strForceLang) . $strQuery;
+		return $this->generateFrontendUrl($objNextPage->row(), $strGet, $strForceLang, true) . $strQuery;
 	}
 
 	/**
