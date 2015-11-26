@@ -51,9 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
         <source>Custom e-mail template</source>
+        <target>Пользовательский шаблон e-mail</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the default e-mail template of the channel.</source>
+        <target>Вы можете переопределить e-mail шаблон по умолчанию для канала.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -73,15 +75,19 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>
+        <target>Пользовательский e-mail адрес отправителя</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
         <source>Here you can override the default sender e-mail address of the channel.</source>
+        <target>Вы можете переопределить e-mail адрес отправителя по умолчанию для канала.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.0">
         <source>Custom sender name</source>
+        <target>Пользовательское имя отправителя</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.1">
         <source>Here you can override the default sender name of the channel.</source>
+        <target>Вы можете изменить имя отправителя по умолчанию для канала.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
@@ -137,6 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sender_legend">
         <source>Sender settings</source>
+        <target>Настройки отправителя</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>

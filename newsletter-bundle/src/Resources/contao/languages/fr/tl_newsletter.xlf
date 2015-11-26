@@ -51,9 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
         <source>Custom e-mail template</source>
+        <target>Modèle d'e-mail personnalisé</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the default e-mail template of the channel.</source>
+        <target>Ici, vous pouvez remplacer le modèle d'e-mail par défaut de la liste de diffusion.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -73,15 +75,19 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>
+        <target>Adresse e-mail personnalisée de l'expéditeur</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
         <source>Here you can override the default sender e-mail address of the channel.</source>
+        <target>Ici, vous pouvez remplacer l'adresse e-mail par défaut de l'expéditeur de la liste de diffusion.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.0">
         <source>Custom sender name</source>
+        <target>Nom de l'expéditeur personnalisé</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.1">
         <source>Here you can override the default sender name of the channel.</source>
+        <target>Ici, vous pouvez remplacer le nom par défaut de l'expéditeur de la liste de diffusion.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
@@ -137,6 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sender_legend">
         <source>Sender settings</source>
+        <target>Paramètres de l'expéditeur</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>

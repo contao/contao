@@ -19,6 +19,7 @@
       </trans-unit>
       <trans-unit id="ERR.blacklisted">
         <source>The e-mail address has been unsubscribed from the channel.</source>
+        <target>E-mail адрес был отписан от канала.</target>
       </trans-unit>
       <trans-unit id="MSC.subscribe">
         <source>Subscribe</source>

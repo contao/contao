@@ -95,9 +95,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.cut.0">
         <source>Move recipient</source>
+        <target>Premakni prejemnika</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.cut.1">
         <source>Move recipient ID %s</source>
+        <target>Premakni prejemnika ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.copy.0">
         <source>Duplicate recipient</source>

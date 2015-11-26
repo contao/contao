@@ -325,7 +325,7 @@ class Newsletter extends \Backend
 		}
 
 		$objEmail->embedImages = !$objNewsletter->externalImages;
-		$objEmail->logFile = 'newsletter_' . $objNewsletter->id . '.log';
+		$objEmail->logFile = TL_NEWSLETTER . '_' . $objNewsletter->id;
 
 		// Attachments
 		if (!empty($arrAttachments) && is_array($arrAttachments))

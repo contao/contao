@@ -51,9 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
         <source>Custom e-mail template</source>
+        <target>Individuele e-mail template</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the default e-mail template of the channel.</source>
+        <target>De standaard e-mail template van het kanaal kunt u hier overschrijven.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -73,15 +75,19 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>
+        <target>Individuele afzender e-mail adres</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
         <source>Here you can override the default sender e-mail address of the channel.</source>
+        <target>De standaard afzender e-mail adres van het kanaal kunt u hier overschrijven.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.0">
         <source>Custom sender name</source>
+        <target>Individuele naam afzender</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.1">
         <source>Here you can override the default sender name of the channel.</source>
+        <target>De standaard naam van de afzender van het kanaal kunt u hier overschrijven.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
@@ -137,6 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sender_legend">
         <source>Sender settings</source>
+        <target>Instellingen afzender</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>
