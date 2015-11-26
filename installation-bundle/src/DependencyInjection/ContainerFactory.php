@@ -66,8 +66,9 @@ class ContainerFactory
             $container->setParameter($name, $value);
         }
 
-        // Add the Contao upload path
+        // Add the Contao parameters
         $container->setParameter('contao.upload_path', 'files');
+        $container->setParameter('contao.image.target_path', 'assets/images');
 
         // Set up the request stack
         $request = Request::createFromGlobals();

@@ -225,7 +225,7 @@ class Installer
         $files = $this->finder->findIn('config')->depth(0)->files()->name('database.sql');
 
         foreach ($files as $file) {
-            $return = array_merge_recursive($return, SqlFileParser::parse($file));
+            $return = array_replace_recursive($return, SqlFileParser::parse($file));
         }
 
         ksort($return);
