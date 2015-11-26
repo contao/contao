@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_admin">
         <source>System administrator</source>
-        <target>Системски администратор</target>
+        <target>Администратор система</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_author">
         <source>Author of the FAQ</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_both">
         <source>Author and system administrator</source>
-        <target>Аутор и системски администратор</target>
+        <target>Аутор и администратор система</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.deleteConfirm">
         <source>Deleting category ID %s will also delete all its FAQs! Continue?</source>

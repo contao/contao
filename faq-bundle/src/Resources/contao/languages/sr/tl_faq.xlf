@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.title_legend">
         <source>Title and author</source>
-        <target>Наслов и аутор</target>
+        <target>Назив и аутор</target>
       </trans-unit>
       <trans-unit id="tl_faq.answer_legend">
         <source>Answer</source>

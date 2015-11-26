@@ -11,11 +11,11 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.headline.0">
         <source>Headline</source>
-        <target>عنوان</target>
+        <target>سربرگ</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.headline.1">
         <source>Please enter the category headline.</source>
-        <target>لطفا سرصفحه دسته‌بندی را وارد نمایید.</target>
+        <target>لطفا سربرگ دسته‌بندی را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.jumpTo.0">
         <source>Redirect page</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.allowComments.1">
         <source>Allow visitors to comment FAQs.</source>
-        <target>اجازه دادن به بازدیدکنندگان برای دیدگاه دادن در مورد پرسش و پاسخ ها.</target>
+        <target>به بازدیدکنندگان برای دیدگاه دادن در پرسش و پاسخ‌ها را می‌دهد.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.notify.0">
         <source>Notify</source>
@@ -39,11 +39,11 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.notify.1">
         <source>Please choose who to notify when comments are added.</source>
-        <target>لطفا کسی که باید وقتی دیدگاه‌ها اضافه شد اعلام کند را انتخاب نمایید.</target>
+        <target>لطفا کسی را که وقتی دیدگاه‌ها اضافه شد آگاه شود را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.sortOrder.0">
         <source>Sort order</source>
-        <target>نحوه مرتب‌سازی</target>
+        <target>ترتیب مرتب‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.perPage.0">
         <source>Comments per page</source>
-        <target>دیدگاه در هر برگه</target>
+        <target>دیدگاه‌ها در هر برگه</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>تایید دیدگاه‌ها قبل از انتشار در تارنما.</target>
+        <target>تایید دیدگاه‌ها قبل از انتشار در وب‌سایت.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.bbcode.0">
         <source>Allow BBCode</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>اجازه دادن به کاربران تایید شده برای ایجاد دیدگاه‌ها</target>
+        <target>اجازه دادن به کاربران تایید شده برای ایجاد دیدگاه‌ها.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
         <source>Disable the security question</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_admin">
         <source>System administrator</source>
-        <target>مدیر سیستم</target>
+        <target>مدیر سامانه</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_author">
         <source>Author of the FAQ</source>
@@ -115,11 +115,11 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_both">
         <source>Author and system administrator</source>
-        <target>نویسنده و مدیر سیستم</target>
+        <target>نویسنده و مدیر سامانه</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.deleteConfirm">
         <source>Deleting category ID %s will also delete all its FAQs! Continue?</source>
-        <target>با حذف دسته‌بندی شناسه‌ی %s تمامی پرسش و پاسخ‌های آن نیز حذف خواهد شد! ادامه می‌دهید؟</target>
+        <target>حذف دسته‌بندی شناسه‌ی %s تمامی FAQهای آن نیز حذف خواهد شد! ادامه می‌دهید؟</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
         <source>New category</source>

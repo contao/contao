@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.addImage.0">
         <source>Add an image</source>
-        <target>Görsel ekle</target>
+        <target>Resim ekleyin</target>
       </trans-unit>
       <trans-unit id="tl_faq.addImage.1">
         <source>Add an image to the FAQ.</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Bölüm ekle</target>
+        <target>Dosya ekle</target>
       </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.1">
         <source>Add one or more downloadable files to the FAQ.</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.0">
         <source>Enclosures</source>
-        <target>Bölümler</target>
+        <target>Dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
-        <target>Bölümler</target>
+        <target>Dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_faq.expert_legend">
         <source>Expert settings</source>
