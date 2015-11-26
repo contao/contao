@@ -731,10 +731,10 @@
       </trans-unit>
       <trans-unit id="tl_content.editheader.0">
         <source>Edit article settings</source>
-        <target>Artikel bearbeiten</target>
+        <target>Artikeleinstellungen bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
+        <source>Edit the article settings</source>
         <target>Die Artikeleinstellungen bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">

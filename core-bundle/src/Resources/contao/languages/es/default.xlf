@@ -247,6 +247,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalid">
         <source>Invalid option: %s</source>
+        <target>Opción no valida: %s</target>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -977,8 +978,8 @@
         <target>Habilitar/deshabilitar el módulo</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
-        <source>Title</source>
-        <target>Título</target>
+        <source>Alternate text</source>
+        <target>Texto alternativo</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -1420,6 +1421,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
+        <target>Directorios no sincronizados no estan incluidos en los resultados de búsqueda.</target>
       </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
@@ -1627,12 +1629,15 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
+        <target>Está disponible la versión %s de Contao.</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
+        <target>Actualmente está habilitado el modo de mantenimiento.</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceDisabled">
         <source>The maintenance mode is currently disabled.</source>
+        <target>Actualmente está deshabilitado el modo de mantenimiento.</target>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1832,6 +1837,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.resendActivation">
         <source>The activation mail has been re-sent to your e-mail address.</source>
+        <target>El E-mail de activación ha sido reenviado a su dirección de corréo electrónico.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
@@ -2072,6 +2078,10 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
         <target>Guardar datos</target>
+      </trans-unit>
+      <trans-unit id="MSC.savedData">
+        <source>Your data has been saved.</source>
+        <target>Sus datos se han guardado.</target>
       </trans-unit>
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>

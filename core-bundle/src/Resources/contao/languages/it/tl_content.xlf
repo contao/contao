@@ -734,8 +734,8 @@
         <target>Modifica intestazione articolo</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
-        <target>Modifica l'intestazione di questo articolo</target>
+        <source>Edit the article settings</source>
+        <target>Modifica le impostazioni dell'articolo</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

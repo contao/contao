@@ -6,14 +6,16 @@
         <target>Nom</target>
       </trans-unit>
       <trans-unit id="tl_files.name.1">
-        <source>Contao automatically adds the file extension.</source>
-        <target>Contao ajoute automatiquement l'extension de fichier.</target>
+        <source>The file or folder name (without extension).</source>
+        <target>Le nom du fichier ou du dossier (sans extension).</target>
       </trans-unit>
       <trans-unit id="tl_files.path.0">
         <source>Path</source>
+        <target>Chemin d’accès</target>
       </trans-unit>
       <trans-unit id="tl_files.path.1">
         <source>The relative path to the file or folder.</source>
+        <target>Le chemin d’accès relatif au fichier ou dossier.</target>
       </trans-unit>
       <trans-unit id="tl_files.extension.0">
         <source>Extension</source>
@@ -21,6 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_files.extension.1">
         <source>The file extension</source>
+        <target>L'extension du fichier</target>
       </trans-unit>
       <trans-unit id="tl_files.protected.0">
         <source>Public</source>

@@ -734,8 +734,8 @@
         <target>Upravit nastavení článku</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
-        <target>Upravit nastavení tohoto článku</target>
+        <source>Edit the article settings</source>
+        <target>Upravit nastavení článku</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

@@ -247,6 +247,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalid">
         <source>Invalid option: %s</source>
+        <target>Option non valide : %s</target>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -977,8 +978,8 @@
         <target>Activer/désactiver le module</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
-        <source>Title</source>
-        <target>Titre</target>
+        <source>Alternate text</source>
+        <target>Texte alternatif</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -1628,12 +1629,15 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
+        <target>La version %s de Contao est disponible.</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
+        <target>Le mode de maintenance est actuellement activé.</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceDisabled">
         <source>The maintenance mode is currently disabled.</source>
+        <target>Le mode de maintenance est actuellement désactivé.</target>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -2074,6 +2078,10 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
         <target>Sauvegarder les données</target>
+      </trans-unit>
+      <trans-unit id="MSC.savedData">
+        <source>Your data has been saved.</source>
+        <target>Vos données ont été sauvegardées.</target>
       </trans-unit>
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>

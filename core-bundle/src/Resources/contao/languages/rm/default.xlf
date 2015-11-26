@@ -977,8 +977,8 @@
         <target>Activar/deactivar il module</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
-        <source>Title</source>
-        <target>Titel</target>
+        <source>Alternate text</source>
+        <target>Text alternativ</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -2072,6 +2072,9 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
         <target>Memorisar las datas</target>
+      </trans-unit>
+      <trans-unit id="MSC.savedData">
+        <source>Your data has been saved.</source>
       </trans-unit>
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>

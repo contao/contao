@@ -734,8 +734,8 @@
         <target>Redigera artikelninställningar</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
-        <target>Redigera artikelns inställningar.</target>
+        <source>Edit the article settings</source>
+        <target>Redigera inställningar för artikeln.</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

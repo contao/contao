@@ -734,8 +734,8 @@
         <target>Bewerk artikel instellingen</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
-        <target>Bewerk de instellingen van het artikel</target>
+        <source>Edit the article settings</source>
+        <target>Bewerk de artikel instellingen</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

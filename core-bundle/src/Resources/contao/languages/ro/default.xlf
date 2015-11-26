@@ -975,8 +975,8 @@
         <target>Activează/dezactivează modulul</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
-        <source>Title</source>
-        <target>Nume grup</target>
+        <source>Alternate text</source>
+        <target>Text alternativ</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -2063,6 +2063,9 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
         <target>Salvează</target>
+      </trans-unit>
+      <trans-unit id="MSC.savedData">
+        <source>Your data has been saved.</source>
       </trans-unit>
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>

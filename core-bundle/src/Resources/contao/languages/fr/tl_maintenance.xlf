@@ -27,10 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceMode">
         <source>Maintenance mode</source>
-        <target>Mode maintenance</target>
+        <target>Mode de maintenance</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceEnable">
         <source>Enable</source>
+        <target>Activer</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceDisable">
         <source>Disable</source>

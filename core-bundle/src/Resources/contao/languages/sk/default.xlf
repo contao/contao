@@ -975,8 +975,8 @@
         <target>Aktivovať/deaktivovať modul</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
-        <source>Title</source>
-        <target>Nadpis</target>
+        <source>Alternate text</source>
+        <target>Alternatívny text</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -2061,6 +2061,9 @@ Tento e-mail bol automatický vygenerovaný systémom Contao. Neodpovedajte naň
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
         <target>Uložiť údaje</target>
+      </trans-unit>
+      <trans-unit id="MSC.savedData">
+        <source>Your data has been saved.</source>
       </trans-unit>
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>
