@@ -254,6 +254,8 @@ class tl_comments extends Backend
 
 	/**
 	 * Check permissions to edit table tl_comments
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -273,14 +275,12 @@ class tl_comments extends Backend
 
 				if ($objComment->numRows < 1)
 				{
-					$this->log('Comment ID ' . Input::get('id') . ' does not exist', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Comment ID ' . Input::get('id') . ' does not exist.');
 				}
 
 				if (!$this->isAllowedToEditComment($objComment->parent, $objComment->source))
 				{
-					$this->log('Not enough permissions to ' . Input::get('act') . ' comment ID ' . Input::get('id') . ' (parent element: ' . $objComment->source . ' ID ' . $objComment->parent . ')', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' comment ID ' . Input::get('id') . ' (parent element: ' . $objComment->source . ' ID ' . $objComment->parent . ').');
 				}
 				break;
 
@@ -314,8 +314,7 @@ class tl_comments extends Backend
 			default:
 				if (strlen(Input::get('act')))
 				{
-					$this->log('Invalid command "'.Input::get('act').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '.');
 				}
 				break;
 		}
@@ -411,7 +410,7 @@ class tl_comments extends Backend
 					{
 						$this->import($callback[0]);
 
-						if ($this->$callback[0]->$callback[1]($intParent, $strSource) === true)
+						if ($this->{$callback[0]}->{$callback[1]}($intParent, $strSource) === true)
 						{
 							Cache::set($strKey, true);
 							break;
@@ -514,7 +513,7 @@ class tl_comments extends Backend
 					{
 						$this->import($callback[0]);
 
-						if (($tmp = $this->$callback[0]->$callback[1]($arrRow)) != '')
+						if (($tmp = $this->{$callback[0]}->{$callback[1]}($arrRow)) != '')
 						{
 							$title .= $tmp;
 							break;
@@ -620,19 +619,26 @@ class tl_comments extends Backend
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
-		// Check permissions to edit
+		// Set the ID and action
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
 		$this->checkPermission();
 
-		// Check permissions to publish
+		// Check the field access
 		if (!$this->User->hasAccess('tl_comments::published', 'alexf'))
 		{
-			$this->log('Not enough permissions to publish/unpublish comment ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish comment ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_comments', $intId);
@@ -646,7 +652,7 @@ class tl_comments extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{

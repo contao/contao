@@ -60,20 +60,10 @@
 
 View: %s
 Edit: %s
-
-If you are moderating comments, you have to log in to the back end to publish it.</source>
-        <target>%s 已在您的网站创建一个新的评论.
-
----
-
-%s
-
----
-
-查看: %s
-编辑: %s
-
-如果您正在审核评论，您需要登录到后台将其发布。</target>
+</source>
+      </trans-unit>
+      <trans-unit id="MSC.com_moderated">
+        <source>This comment has to be published in the back end before it will appear on the website!</source>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>

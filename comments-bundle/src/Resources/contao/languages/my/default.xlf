@@ -60,9 +60,10 @@
 
 View: %s
 Edit: %s
-
-If you are moderating comments, you have to log in to the back end to publish it.</source>
-        <target>%s မှဝဘ်ဆိုက်တွင်မှတ်ချက်အသစ်ရေးသွား။ ⏎ ⏎ ---⏎ ⏎ %s⏎ ⏎ ---⏎ ⏎ ကြည့်ရှု: %s⏎ တည်းဖြတ်: %s⏎ ⏎ မှတ်ချက်များကိုစိစစ်နေပါက၊ ထုတ်ဝေရန်အနောက်သို့ဖွင့်ဝင်ရန်လို။</target>
+</source>
+      </trans-unit>
+      <trans-unit id="MSC.com_moderated">
+        <source>This comment has to be published in the back end before it will appear on the website!</source>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>

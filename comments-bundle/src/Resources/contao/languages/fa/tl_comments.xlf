@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>
-        <target>تنها دیدگاه‌ها منتشر شده در تارنما نمایش داده خواهند شد.</target>
+        <target>تنها دیدگاه‌ها منتشر شده در وب‌سایت نمایش داده خواهند شد.</target>
       </trans-unit>
       <trans-unit id="tl_comments.ip.0">
         <source>IP address</source>
@@ -131,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.tl_content">
         <source>Article</source>
-        <target>نوشته</target>
+        <target>مقاله</target>
       </trans-unit>
       <trans-unit id="tl_comments.tl_page">
         <source>Page</source>
@@ -175,11 +175,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.toggle.0">
         <source>Publish/unpublish comment</source>
-        <target>انتشار/عدم انتشار دیدگاه</target>
+        <target>انتشار/لغو انتشار دیدگاه</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle.1">
         <source>Publish/unpublish comment ID %s</source>
-        <target>انتشار/عدم انتشار دیدگاه شناسه‌ی %s</target>
+        <target>انتشار/لغو انتشار دیدگاه شناسه‌ی %s</target>
       </trans-unit>
     </body>
   </file>

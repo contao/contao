@@ -1,15 +1,15 @@
-Contao news bundle change log
-=============================
+# Contao comments bundle change log
 
-Version 4.0.3 (2015-10-16)
---------------------------
+### 4.1.0 (2015-11-26)
 
-### Fixed
-Fix the comment edit link that is sent via e-mail (see #2).
+ * Correctly set the ID when toggling fields via Ajax (see contao/core#8043).
 
+### 4.1.0-RC1 (2015-11-10)
 
-Version 4.0.2 (2015-09-10)
---------------------------
+ * Throw an exception instead of redirecting to `/contao?act=error` (see contao/core-bundle#395).
+ * Adjust the code to be compatible with PHP7 (see contao/core#8018).
 
-### Fixed
-Add a `data-icon` attribute to the recipient icons.
+### 4.1.0-beta1 (2015-10-21)
+
+ * Add all translations which are at least 95% complete.
+ * Check the moderation status when sending new comment mails (see contao/core#7478).

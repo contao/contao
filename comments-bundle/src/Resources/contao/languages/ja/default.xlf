@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="MSC.com_name">
         <source>Name</source>
-        <target>氏名</target>
+        <target>名前</target>
       </trans-unit>
       <trans-unit id="MSC.com_email">
         <source>E-mail (not published)</source>
@@ -60,8 +60,7 @@
 
 View: %s
 Edit: %s
-
-If you are moderating comments, you have to log in to the back end to publish it.</source>
+</source>
         <target>%sさんがウェブサイトで新しいコメントを作成しました。
 
 ---
@@ -72,9 +71,11 @@ If you are moderating comments, you have to log in to the back end to publish it
 
 表示: %s
 編集: %s
-
-コメントを審査している場合は、コメントを公開するにはバックエンドにログインしなければなりません。
 </target>
+      </trans-unit>
+      <trans-unit id="MSC.com_moderated">
+        <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <target>このコメントはウェブサイトで表示する前にバックエンドで公開しなければなりません。</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>

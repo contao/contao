@@ -2,27 +2,27 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[contao-comments-bundle.v4_0-default]
+[contao-comments-bundle.v4_1-default]
 source_file = src/Resources/contao/languages/en/default.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/default.xlf
 
-[contao-comments-bundle.v4_0-modules]
+[contao-comments-bundle.v4_1-modules]
 source_file = src/Resources/contao/languages/en/modules.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/modules.xlf
 
-[contao-comments-bundle.v4_0-tl_comments]
+[contao-comments-bundle.v4_1-tl_comments]
 source_file = src/Resources/contao/languages/en/tl_comments.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_comments.xlf
 
-[contao-comments-bundle.v4_0-tl_content]
+[contao-comments-bundle.v4_1-tl_content]
 source_file = src/Resources/contao/languages/en/tl_content.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_content.xlf
 
-[contao-comments-bundle.v4_0-tl_module]
+[contao-comments-bundle.v4_1-tl_module]
 source_file = src/Resources/contao/languages/en/tl_module.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
