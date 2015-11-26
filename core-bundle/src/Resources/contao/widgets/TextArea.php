@@ -110,7 +110,6 @@ class TextArea extends \Widget
 		if ($this->rte)
 		{
 			$this->strClass = trim($this->strClass . ' noresize');
-			unset($this->arrAttributes['required']); // see #266
 		}
 
 		return sprintf('<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s onfocus="Backend.getScrollOffset()">%s</textarea>%s',
