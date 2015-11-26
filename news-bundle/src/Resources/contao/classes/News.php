@@ -220,7 +220,7 @@ class News extends \Frontend
 
 					if ($objFile !== null)
 					{
-						$objItem->addEnclosure($objFile->path);
+						$objItem->addEnclosure($objFile->path, $strLink);
 					}
 				}
 
@@ -237,7 +237,7 @@ class News extends \Frontend
 						{
 							while ($objFile->next())
 							{
-								$objItem->addEnclosure($objFile->path);
+								$objItem->addEnclosure($objFile->path, $strLink);
 							}
 						}
 					}
