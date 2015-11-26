@@ -202,11 +202,18 @@ class FileUpload extends \Backend
 	 */
 	public function generateMarkup()
 	{
-		return '
+		$return = '
   <div>
     <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" onfocus="Backend.getScrollOffset()" multiple>
-  </div>
+  </div>';
+
+		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
+		{
+			$return .= '
   <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], \System::getReadableSize($this->getMaximumUploadSize()), \Config::get('gdMaxImgWidth') . 'x' . \Config::get('gdMaxImgHeight')) . '</p>';
+		}
+
+		return $return;
 	}
 
 

@@ -1,5 +1,13 @@
 # Contao core bundle change log
 
+### 4.1.0 (2015-11-26)
+
+ * Log e-mails in the database instead of a log file (see #413).
+ * Use events to modify the front end preview URL.
+ * Handle closures in the back end help controller (see #408).
+ * Fix saving the image size widget if no option is selected (see #411).
+ * Correctly set the ID when toggling fields via Ajax (see contao/core#8043).
+
 ### 4.1.0-RC1 (2015-11-10)
 
  * Limit access to the image sizes per user or user group (see #319).

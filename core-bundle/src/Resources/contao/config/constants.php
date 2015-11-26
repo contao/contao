@@ -10,7 +10,7 @@
 
 // Core version
 define('VERSION', '4.1');
-define('BUILD', '0-RC1');
+define('BUILD', '0');
 define('LONG_TERM_SUPPORT', false);
 
 // Link constants
@@ -25,6 +25,7 @@ define('TL_GENERAL', 'GENERAL');
 define('TL_FILES', 'FILES');
 define('TL_CRON', 'CRON');
 define('TL_FORMS', 'FORMS');
+define('TL_EMAIL', 'EMAIL');
 define('TL_CONFIGURATION', 'CONFIGURATION');
 define('TL_NEWSLETTER', 'NEWSLETTER');
 define('TL_REPOSITORY', 'REPOSITORY');

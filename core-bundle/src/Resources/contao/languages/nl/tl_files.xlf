@@ -6,14 +6,16 @@
         <target>Naam</target>
       </trans-unit>
       <trans-unit id="tl_files.name.1">
-        <source>Contao automatically adds the file extension.</source>
-        <target>Contao voegt automatisch de bestand extensie toe.</target>
+        <source>The file or folder name (without extension).</source>
+        <target>De bestand of map naam (zonder extensie).</target>
       </trans-unit>
       <trans-unit id="tl_files.path.0">
         <source>Path</source>
+        <target>Pad</target>
       </trans-unit>
       <trans-unit id="tl_files.path.1">
         <source>The relative path to the file or folder.</source>
+        <target>Relatief pad naar bestand of map.</target>
       </trans-unit>
       <trans-unit id="tl_files.extension.0">
         <source>Extension</source>
@@ -21,6 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_files.extension.1">
         <source>The file extension</source>
+        <target>Bestands-extensie</target>
       </trans-unit>
       <trans-unit id="tl_files.protected.0">
         <source>Public</source>

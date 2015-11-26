@@ -11,14 +11,13 @@
 namespace Contao\CoreBundle\Test\Exception;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the RedirectResponseException class.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class RedirectResponseExceptionTest extends TestCase
+class RedirectResponseExceptionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.

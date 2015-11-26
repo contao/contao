@@ -10,14 +10,12 @@
 
 namespace Contao\CoreBundle\Framework;
 
-use Contao\CoreBundle\ContaoFrameworkInterface as OldFrameworkInterface;
-
 /**
  * Contao framework interface.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-interface ContaoFrameworkInterface extends OldFrameworkInterface
+interface ContaoFrameworkInterface extends \Contao\CoreBundle\ContaoFrameworkInterface
 {
     /**
      * Checks if the framework has been initialized.

@@ -128,7 +128,11 @@ class BackendHelp extends \Backend
 			elseif (is_array($arrData['options_callback']))
 			{
 				$this->import($arrData['options_callback'][0]);
-				$options = $this->{$arrData['options_callback'][0]}->{$arrData['options_callback'][1]}();
+				$options = $this->{$arrData['options_callback'][0]}->{$arrData['options_callback'][1]}(new \DC_Table($table));
+			}
+			elseif (is_callable($arrData['options_callback']))
+			{
+				$options = $arrData['options_callback']();
 			}
 			else
 			{
@@ -158,13 +162,13 @@ class BackendHelp extends \Backend
 				}
 				else
 				{
-					if (!is_array($arrData['reference'][$option]))
+					if (is_array($arrData['reference'][$option]))
 					{
-						$rows[] = array('headspan', $arrData['reference'][$option]);
+						$rows[] = $arrData['reference'][$option];
 					}
 					else
 					{
-						$rows[] = $arrData['reference'][$option];
+						$rows[] = array('headspan', $arrData['reference'][$option]);
 					}
 				}
 			}

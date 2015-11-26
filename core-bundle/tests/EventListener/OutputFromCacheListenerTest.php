@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\OutputFromCacheListener;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +25,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class OutputFromCacheListenerTest extends TestCase
+class OutputFromCacheListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject

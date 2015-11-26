@@ -733,8 +733,8 @@
         <target>Upraviť nastavenia článku</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
-        <target>Upraviť nastavenia tohto článku</target>
+        <source>Edit the article settings</source>
+        <target>Upraviť nastavenie článku</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

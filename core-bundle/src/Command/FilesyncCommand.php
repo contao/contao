@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class FilesyncCommand extends AbstractLockedCommand
 {
-    use FrameworkAwareTrait;
+    use \Contao\CoreBundle\Framework\FrameworkAwareTrait;
 
     /**
      * {@inheritdoc}

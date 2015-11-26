@@ -56,7 +56,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
 				'href'                => 'tg=all',
-				'class'               => 'header_toggle'
+				'class'               => 'header_toggle',
+				'showOnSelect'        => true
 			),
 			'all' => array
 			(
@@ -434,15 +435,10 @@ class tl_files extends Backend
 	 */
 	public function addFileLocation(DataContainer $dc)
 	{
-		if ($dc->activeRecord === null)
-		{
-			return '';
-		}
-
 		// Unset the default help text
 		unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1]);
 
-		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->activeRecord->path) . '</p>';
+		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id) . '</p>';
 	}
 
 

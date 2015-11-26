@@ -111,7 +111,7 @@ class Email
 	 * Log file name
 	 * @var string
 	 */
-	protected $strLogFile = 'email.log';
+	protected $strLogFile = TL_EMAIL;
 
 
 	/**
@@ -462,12 +462,10 @@ class Email
 		// Send the e-mail
 		$intSent = \System::getContainer()->get('swiftmailer.mailer')->send($this->objMessage, $this->arrFailures);
 
-		$objLogger = \System::getContainer()->get('logger');
-
 		// Log failures
 		if (!empty($this->arrFailures))
 		{
-			$objLogger->warning('E-mail address rejected: ' . implode(', ', $this->arrFailures));
+			\System::log('E-mail address rejected: ' . implode(', ', $this->arrFailures), __METHOD__, $this->strLogFile);
 		}
 
 		// Return if no e-mails have been sent
@@ -492,7 +490,7 @@ class Email
 			$strMessage .= ', BCC to ' . implode(', ', array_keys($arrBcc));
 		}
 
-		$objLogger->info($strMessage);
+		\System::log($strMessage, __METHOD__, $this->strLogFile);
 
 		return true;
 	}

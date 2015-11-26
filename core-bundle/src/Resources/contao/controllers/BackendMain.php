@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -251,36 +253,22 @@ class BackendMain extends \Backend
 		// Front end preview links
 		if (defined('CURRENT_ID') && CURRENT_ID != '')
 		{
-			// Pages
 			if (\Input::get('do') == 'page')
 			{
 				$this->Template->frontendFile = '?page=' . CURRENT_ID;
 			}
-
-			// Articles
-			elseif (\Input::get('do') == 'article')
+			elseif (\Input::get('do') == 'article' && ($objArticle = \ArticleModel::findByPk(CURRENT_ID)) !== null)
 			{
-				if (($objArticle = \ArticleModel::findByPk(CURRENT_ID)) !== null)
-				{
-					$this->Template->frontendFile = '?page=' . $objArticle->pid;
-				}
+				$this->Template->frontendFile = '?page=' . $objArticle->pid;
 			}
-
-			// News
-			elseif (\Input::get('do') == 'news')
+			elseif (\Input::get('do') != '')
 			{
-				if (($objNews = \NewsModel::findByPk(CURRENT_ID)) !== null)
-				{
-					$this->Template->frontendFile = '?news=' . $objNews->id;
-				}
-			}
+				$event = new PreviewUrlCreateEvent(\Input::get('do'), CURRENT_ID);
+				\System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CREATE, $event);
 
-			// Events
-			elseif (\Input::get('do') == 'calendar')
-			{
-				if (($objEvent = \CalendarEventsModel::findByPk(CURRENT_ID)) !== null)
+				if (($strQuery = $event->getQuery()) !== null)
 				{
-					$this->Template->frontendFile = '?event=' . $objEvent->id;
+					$this->Template->frontendFile = '?' . $strQuery;
 				}
 			}
 		}

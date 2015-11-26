@@ -734,7 +734,7 @@
         <target>Редактировать настройки статьи</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
+        <source>Edit the article settings</source>
         <target>Редактировать настройки статьи</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">

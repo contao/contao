@@ -975,8 +975,8 @@
         <target>Julkaise/piilota moduuli</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
-        <source>Title</source>
-        <target>Otsikko</target>
+        <source>Alternate text</source>
+        <target>Vaihtoehtoinen teksti</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -2063,6 +2063,9 @@ Tämä viesti on Contaon generoima, eikä siihen voi vastata.
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
         <target>Tallena tiedot</target>
+      </trans-unit>
+      <trans-unit id="MSC.savedData">
+        <source>Your data has been saved.</source>
       </trans-unit>
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>

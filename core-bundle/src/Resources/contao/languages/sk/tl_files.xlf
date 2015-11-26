@@ -6,8 +6,7 @@
         <target>Názov</target>
       </trans-unit>
       <trans-unit id="tl_files.name.1">
-        <source>Contao automatically adds the file extension.</source>
-        <target>Vložte, prosím, názov súboru, alebo priečinku (bez prípony)</target>
+        <source>The file or folder name (without extension).</source>
       </trans-unit>
       <trans-unit id="tl_files.path.0">
         <source>Path</source>

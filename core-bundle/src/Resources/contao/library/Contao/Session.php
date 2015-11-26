@@ -11,7 +11,9 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 
 /**
@@ -58,7 +60,15 @@ class Session
 	 */
 	protected function __construct()
 	{
-		$this->session = \System::getContainer()->get('session');
+		if (PHP_SAPI == 'cli')
+		{
+			$this->session = new SymfonySession(new MockArraySessionStorage());
+		}
+		else
+		{
+			$this->session = \System::getContainer()->get('session');
+		}
+
 		$this->sessionBag = $this->session->getBag($this->getSessionBagKey());
 	}
 
@@ -97,9 +107,9 @@ class Session
 		@trigger_error('Using Session::get() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		// Map the referer (see #281)
-		if ($strKey == 'referer')
+		if ($strKey == 'referer' || $strKey == 'popupReferer')
 		{
-			return $this->session->get('referer');
+			return $this->session->get($strKey);
 		}
 
 		return $this->sessionBag->get($strKey);
@@ -117,9 +127,9 @@ class Session
 		@trigger_error('Using Session::set() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		// Map the referer (see #281)
-		if ($strKey == 'referer')
+		if ($strKey == 'referer' || $strKey == 'popupReferer')
 		{
-			$this->session->set('referer', $varValue);
+			$this->session->set($strKey, $varValue);
 		}
 		else
 		{

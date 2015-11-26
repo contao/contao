@@ -108,6 +108,7 @@ class ModuleBooknav extends \Module
 			// Hide the link if the reference page is a forward page (see #5374)
 			if (isset($this->arrPages[$intKey]))
 			{
+				$this->Template->hasUp = true;
 				$this->Template->upHref = $this->generateFrontendUrl($this->arrPages[$intKey]);
 				$this->Template->upTitle = specialchars($this->arrPages[$intKey]['title'], true);
 				$this->Template->upPageTitle = specialchars($this->arrPages[$intKey]['pageTitle'], true);
@@ -127,6 +128,7 @@ class ModuleBooknav extends \Module
 		{
 			$intKey = $arrLookup[($intCurrent - 1)];
 
+			$this->Template->hasPrev = true;
 			$this->Template->prevHref = $this->generateFrontendUrl($this->arrPages[$intKey]);
 			$this->Template->prevTitle = specialchars($this->arrPages[$intKey]['title'], true);
 			$this->Template->prevPageTitle = specialchars($this->arrPages[$intKey]['pageTitle'], true);
@@ -138,6 +140,7 @@ class ModuleBooknav extends \Module
 		{
 			$intKey = $arrLookup[($intCurrent + 1)];
 
+			$this->Template->hasNext = true;
 			$this->Template->nextHref = $this->generateFrontendUrl($this->arrPages[$intKey]);
 			$this->Template->nextTitle = specialchars($this->arrPages[$intKey]['title'], true);
 			$this->Template->nextPageTitle = specialchars($this->arrPages[$intKey]['pageTitle'], true);

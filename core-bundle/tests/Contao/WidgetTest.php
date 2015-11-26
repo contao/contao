@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\Contao;
 
-use Contao\CoreBundle\Test\TestCase;
 use Contao\Input;
 
 /**
@@ -22,7 +21,7 @@ use Contao\Input;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class WidgetTest extends TestCase
+class WidgetTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Includes the helper functions if they have not yet been included.

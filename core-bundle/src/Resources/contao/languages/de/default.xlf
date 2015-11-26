@@ -978,8 +978,8 @@
         <target>Das Modul aktivieren/deaktivieren</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
-        <source>Title</source>
-        <target>Titel</target>
+        <source>Alternate text</source>
+        <target>Alternativer Text</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -2078,6 +2078,10 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
         <target>Daten speichern</target>
+      </trans-unit>
+      <trans-unit id="MSC.savedData">
+        <source>Your data has been saved.</source>
+        <target>Ihre Daten wurden gespeichert.</target>
       </trans-unit>
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>

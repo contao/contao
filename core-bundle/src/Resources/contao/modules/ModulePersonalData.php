@@ -121,6 +121,7 @@ class ModulePersonalData extends \Module
 		$objMember = \MemberModel::findByPk($this->User->id);
 		$strTable = $objMember->getTable();
 		$strFormId = 'tl_member_' . $this->id;
+		$flashBag = \System::getContainer()->get('session')->getFlashBag();
 
 		// Initialize the versioning (see #7415)
 		$objVersions = new \Versions($strTable, $objMember->id);
@@ -138,6 +139,12 @@ class ModulePersonalData extends \Module
 			if ($arrData['inputType'] == 'checkboxWizard')
 			{
 				$arrData['inputType'] = 'checkbox';
+			}
+
+			// Map fileTrees to upload widgets (see #8091)
+			if ($arrData['inputType'] == 'fileTree')
+			{
+				$arrData['inputType'] = 'upload';
 			}
 
 			/** @var Widget $strClass */
@@ -359,6 +366,7 @@ class ModulePersonalData extends \Module
 				$this->jumpToOrReload($objJumpTo->row());
 			}
 
+			$flashBag->set('mod_personal_data_confirm', $GLOBALS['TL_LANG']['MSC']['savedData']);
 			$this->reload();
 		}
 
@@ -375,6 +383,13 @@ class ModulePersonalData extends \Module
 
 			$key = $k . (($k == 'personal') ? 'Data' : 'Details');
 			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key]] = $v;
+		}
+
+		// Confirmation message
+		if ($flashBag->has('mod_personal_data_confirm'))
+		{
+			$arrMessages = $flashBag->get('mod_personal_data_confirm');
+			$this->Template->message = $arrMessages[0];
 		}
 
 		$this->Template->categories = $arrGroups;

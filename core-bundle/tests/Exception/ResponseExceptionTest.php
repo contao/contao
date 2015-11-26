@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test\Exception;
 
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -19,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class ResponseExceptionTest extends TestCase
+class ResponseExceptionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.

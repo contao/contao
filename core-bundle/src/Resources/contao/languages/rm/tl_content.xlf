@@ -734,8 +734,8 @@
         <target>Modifitgar las opziuns da l'artitgel</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
-        <target>Modifitgar las opziuns da l'artitgel</target>
+        <source>Edit the article settings</source>
+        <target>Midar las preferenzas da l'artitgel</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

@@ -25,7 +25,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  */
 class AutomatorCommand extends AbstractLockedCommand
 {
-    use FrameworkAwareTrait;
+    use \Contao\CoreBundle\Framework\FrameworkAwareTrait;
 
     /**
      * @var array

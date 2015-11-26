@@ -11,14 +11,13 @@
 namespace Contao\CoreBundle\Test\Exception;
 
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
-use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the AjaxRedirectResponseException class.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class AjaxRedirectResponseExceptionTest extends TestCase
+class AjaxRedirectResponseExceptionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.

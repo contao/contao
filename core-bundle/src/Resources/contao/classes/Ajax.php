@@ -171,6 +171,10 @@ class Ajax extends \Backend
 	 * Ajax actions that do require a data container object
 	 *
 	 * @param DataContainer $dc
+	 *
+	 * @throws NoContentResponseException
+	 * @throws ResponseException
+	 * @throws BadRequestHttpException
 	 */
 	public function executePostActions(DataContainer $dc)
 	{

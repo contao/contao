@@ -15,7 +15,6 @@ use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Script\Event;
 use Contao\CoreBundle\Composer\ScriptHandler;
-use Contao\CoreBundle\Test\TestCase;
 
 /**
  * Tests the ScriptHandler class.
@@ -24,7 +23,7 @@ use Contao\CoreBundle\Test\TestCase;
  *
  * @preserveGlobalState disabled
  */
-class ScriptHandlerTest extends TestCase
+class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ScriptHandler

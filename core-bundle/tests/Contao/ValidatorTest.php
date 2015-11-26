@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\Contao;
 
-use Contao\CoreBundle\Test\TestCase;
 use Contao\Idna;
 use Contao\StringUtil;
 use Contao\Validator;
@@ -20,7 +19,7 @@ use Contao\Validator;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class ValidatorTest extends TestCase
+class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the isEmail() method.

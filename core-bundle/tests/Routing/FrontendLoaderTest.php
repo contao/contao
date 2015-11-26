@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Test\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\FrontendLoader;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -22,7 +21,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendLoaderTest extends TestCase
+class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.

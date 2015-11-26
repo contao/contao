@@ -35,4 +35,22 @@ final class ContaoCoreEvents
      * @see Contao\CoreBundle\Event\ImageSizesEvent
      */
     const IMAGE_SIZES_USER = 'contao.image_sizes_user';
+
+    /**
+     * The contao.preview_url_create event is triggered when the front end preview URL is generated.
+     *
+     * @var string
+     *
+     * @see Contao\CoreBundle\Event\PreviewUrlCreateEvent
+     */
+    const PREVIEW_URL_CREATE = 'contao.preview_url_create';
+
+    /**
+     * The contao.preview_url_convert event is triggered when the front end preview URL is converted.
+     *
+     * @var string
+     *
+     * @see Contao\CoreBundle\Event\PreviewUrlConvertEvent
+     */
+    const PREVIEW_URL_CONVERT = 'contao.preview_url_convert';
 }
