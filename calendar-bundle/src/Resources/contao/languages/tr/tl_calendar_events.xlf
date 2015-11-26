@@ -143,11 +143,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.source.0">
         <source>Redirect target</source>
-        <target>Hedef yönlendirme</target>
+        <target>Yönlendirme hedefi</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.source.1">
         <source>Here you can override the default redirect target.</source>
-        <target>Varsayılan hedef yönlendirmeni buradan geçersiz kılabilirsiniz</target>
+        <target>Varsayılan yönlendirme hedefini buradan geçersiz kılabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.default.0">
         <source>Use default</source>
@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.noComments.0">
         <source>Disable comments</source>
-        <target>Yorumları kaldır</target>
+        <target>Yorum yapılamasın</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.noComments.1">
         <source>Do not allow comments for this particular event.</source>
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.image_legend">
         <source>Image settings</source>
-        <target>Resim ayarları</target>
+        <target>Görsel ayarları</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring_legend">
         <source>Recurrence settings</source>
@@ -275,7 +275,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
-        <target>Hedef yönlendirme</target>
+        <target>Yönlendirme hedefi</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
@@ -283,7 +283,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.publish_legend">
         <source>Publish settings</source>
-        <target>Yayım ayarları</target>
+        <target>Yayınlama ayarları</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.days">
         <source>day(s)</source>

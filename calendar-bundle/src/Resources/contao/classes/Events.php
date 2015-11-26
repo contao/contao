@@ -43,6 +43,12 @@ abstract class Events extends \Module
 	 */
 	protected $arrEvents = array();
 
+	/**
+	 * URL cache array
+	 * @var array
+	 */
+	private static $arrUrlCache = array();
+
 
 	/**
 	 * Sort out protected archives
@@ -109,15 +115,6 @@ abstract class Events extends \Module
 
 		foreach ($arrCalendars as $id)
 		{
-			$strUrl = $this->strUrl;
-			$objCalendar = \CalendarModel::findByPk($id);
-
-			// Get the current "jumpTo" page
-			if ($objCalendar !== null && $objCalendar->jumpTo && ($objTarget = $objCalendar->getRelated('jumpTo')) !== null)
-			{
-				$strUrl = $this->generateFrontendUrl($objTarget->row(), (\Config::get('useAutoItem') ? '/%s' : '/events/%s'));
-			}
-
 			// Get the events of the current period
 			$objEvents = \CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd);
 
@@ -128,7 +125,7 @@ abstract class Events extends \Module
 
 			while ($objEvents->next())
 			{
-				$this->addEvent($objEvents, $objEvents->startTime, $objEvents->endTime, $strUrl, $intStart, $intEnd, $id);
+				$this->addEvent($objEvents, $objEvents->startTime, $objEvents->endTime, $intStart, $intEnd, $id);
 
 				// Recurring events
 				if ($objEvents->recurring)
@@ -161,7 +158,7 @@ abstract class Events extends \Module
 							continue;
 						}
 
-						$this->addEvent($objEvents, $intStartTime, $intEndTime, $strUrl, $intStart, $intEnd, $id);
+						$this->addEvent($objEvents, $intStartTime, $intEndTime, $intStart, $intEnd, $id);
 					}
 				}
 			}
@@ -179,7 +176,7 @@ abstract class Events extends \Module
 			foreach ($GLOBALS['TL_HOOKS']['getAllEvents'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->arrEvents = $this->$callback[0]->$callback[1]($this->arrEvents, $arrCalendars, $intStart, $intEnd, $this);
+				$this->arrEvents = $this->{$callback[0]}->{$callback[1]}($this->arrEvents, $arrCalendars, $intStart, $intEnd, $this);
 			}
 		}
 
@@ -190,18 +187,27 @@ abstract class Events extends \Module
 	/**
 	 * Add an event to the array of active events
 	 *
-	 * @param \CalendarEventsModel $objEvents
-	 * @param integer              $intStart
-	 * @param integer              $intEnd
-	 * @param string               $strUrl
-	 * @param integer              $intBegin
-	 * @param integer              $intLimit
-	 * @param integer              $intCalendar
+	 * @param CalendarEventsModel $objEvents
+	 * @param integer             $intStart
+	 * @param integer             $intEnd
+	 * @param integer             $intBegin
+	 * @param integer             $intLimit
+	 * @param integer             $intCalendar
 	 */
-	protected function addEvent($objEvents, $intStart, $intEnd, $strUrl, $intBegin, $intLimit, $intCalendar)
+	protected function addEvent($objEvents, $intStart, $intEnd, $intBegin, $intLimit, $intCalendar)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
+
+		// Backwards compatibility (4th argument was $strUrl)
+		if (func_num_args() > 6)
+		{
+			@trigger_error('Calling Events::addEvent() with 7 arguments has been deprecated and will no longer work in Contao 5.0. Do not pass $strUrl as 4th argument anymore.', E_USER_DEPRECATED);
+
+			$intBegin = func_get_arg(4);
+			$intLimit = func_get_arg(5);
+			$intCalendar = func_get_arg(6);
+		}
 
 		$span = \Calendar::calculateSpan($intStart, $intEnd);
 
@@ -241,12 +247,29 @@ abstract class Events extends \Module
 			}
 		}
 
+		$until = '';
+		$recurring = '';
+
+		// Recurring event
+		if ($objEvents->recurring)
+		{
+			$arrRange = deserialize($objEvents->repeatEach);
+			$strKey = 'cal_' . $arrRange['unit'];
+			$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
+
+			if ($objEvents->recurrences > 0)
+			{
+				$until = sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvents->repeatEnd));
+			}
+		}
+
 		// Store raw data
 		$arrEvent = $objEvents->row();
 
 		// Overwrite some settings
-		$arrEvent['time'] = $strTime;
 		$arrEvent['date'] = $strDate;
+		$arrEvent['time'] = $strTime;
+		$arrEvent['datetime'] = $objEvents->addTime ? date('Y-m-d\TH:i:sP', $intStart) : date('Y-m-d', $intStart);
 		$arrEvent['day'] = $strDay;
 		$arrEvent['month'] = $strMonth;
 		$arrEvent['parent'] = $intCalendar;
@@ -254,8 +277,10 @@ abstract class Events extends \Module
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
 		$arrEvent['title'] = specialchars($objEvents->title, true);
-		$arrEvent['href'] = $this->generateEventUrl($objEvents, $strUrl);
+		$arrEvent['href'] = $this->generateEventUrl($objEvents);
 		$arrEvent['class'] = ($objEvents->cssClass != '') ? ' ' . $objEvents->cssClass : '';
+		$arrEvent['recurring'] = $recurring;
+		$arrEvent['until'] = $until;
 		$arrEvent['begin'] = $intStart;
 		$arrEvent['end'] = $intEnd;
 		$arrEvent['details'] = '';
@@ -353,24 +378,34 @@ abstract class Events extends \Module
 	/**
 	 * Generate a URL and return it as string
 	 *
-	 * @param \CalendarEventsModel $objEvent
-	 * @param string               $strUrl
+	 * @param CalendarEventsModel $objEvent
 	 *
 	 * @return string
 	 */
-	protected function generateEventUrl($objEvent, $strUrl)
+	public static function generateEventUrl($objEvent)
 	{
+		$strCacheKey = 'id_' . $objEvent->id;
+
+		// Load the URL from cache
+		if (isset(self::$arrUrlCache[$strCacheKey]))
+		{
+			return self::$arrUrlCache[$strCacheKey];
+		}
+
+		// Initialize the cache
+		self::$arrUrlCache[$strCacheKey] = null;
+
 		switch ($objEvent->source)
 		{
 			// Link to an external page
 			case 'external':
 				if (substr($objEvent->url, 0, 7) == 'mailto:')
 				{
-					return \StringUtil::encodeEmail($objEvent->url);
+					self::$arrUrlCache[$strCacheKey] = \StringUtil::encodeEmail($objEvent->url);
 				}
 				else
 				{
-					return ampersand($objEvent->url);
+					self::$arrUrlCache[$strCacheKey] = ampersand($objEvent->url);
 				}
 				break;
 
@@ -378,7 +413,7 @@ abstract class Events extends \Module
 			case 'internal':
 				if (($objTarget = $objEvent->getRelated('jumpTo')) !== null)
 				{
-					return ampersand($this->generateFrontendUrl($objTarget->row()));
+					self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objTarget->row()));
 				}
 				break;
 
@@ -386,25 +421,39 @@ abstract class Events extends \Module
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 				{
-					return ampersand($this->generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
 		}
 
 		// Link to the default page
-		return ampersand(sprintf($strUrl, ($objEvent->alias ?: $objEvent->id)));
+		if (self::$arrUrlCache[$strCacheKey] === null)
+		{
+			$objPage = \PageModel::findByPk($objEvent->getRelated('pid')->jumpTo);
+
+			if ($objPage === null)
+			{
+				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'), true);
+			}
+			else
+			{
+				self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objPage->row(), (\Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id)));
+			}
+		}
+
+		return self::$arrUrlCache[$strCacheKey];
 	}
 
 
 	/**
 	 * Return the begin and end timestamp and an error message as array
 	 *
-	 * @param \Date  $objDate
+	 * @param Date   $objDate
 	 * @param string $strFormat
 	 *
 	 * @return array
 	 */
-	protected function getDatesFromFormat(\Date $objDate, $strFormat)
+	protected function getDatesFromFormat(Date $objDate, $strFormat)
 	{
 		switch ($strFormat)
 		{

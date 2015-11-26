@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Patchwork\Utf8;
 
 
 /**
@@ -37,10 +38,10 @@ class ModuleEventReader extends \Events
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['eventreader'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventreader'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -58,7 +59,7 @@ class ModuleEventReader extends \Events
 		// Do not index or cache the page if no event has been specified
 		if (!\Input::get('events'))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -72,7 +73,7 @@ class ModuleEventReader extends \Events
 		// Do not index or cache the page if there are no calendars
 		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$objPage->noSearch = 1;
@@ -90,7 +91,7 @@ class ModuleEventReader extends \Events
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->event = '';
@@ -133,23 +134,29 @@ class ModuleEventReader extends \Events
 			}
 		}
 
-		// Generate the <time> tags
-		$strTimeStart = '<time datetime="' . date('Y-m-d\TH:i:sP', $intStartTime) . '" itemprop="startDate">';
-		$strTimeEnd = '<time datetime="' . date('Y-m-d\TH:i:sP', $intEndTime) . '" itemprop="endDate">';
-		$strTimeClose = '</time>';
+		$strDate = \Date::parse($objPage->dateFormat, $intStartTime);
 
-		// Get date
 		if ($span > 0)
 		{
-			$date = $strTimeStart . \Date::parse(($objEvent->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intStartTime) . $strTimeClose . ' – ' . $strTimeEnd . \Date::parse(($objEvent->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intEndTime) . $strTimeClose;
+			$strDate = \Date::parse($objPage->dateFormat, $intStartTime) . ' – ' . \Date::parse($objPage->dateFormat, $intEndTime);
 		}
-		elseif ($intStartTime == $intEndTime)
+
+		$strTime = '';
+
+		if ($objEvent->addTime)
 		{
-			$date = $strTimeStart . \Date::parse($objPage->dateFormat, $intStartTime) . ($objEvent->addTime ? ' (' . \Date::parse($objPage->timeFormat, $intStartTime) . ')' : '') . $strTimeClose;
-		}
-		else
-		{
-			$date = $strTimeStart . \Date::parse($objPage->dateFormat, $intStartTime) . ($objEvent->addTime ? ' (' . \Date::parse($objPage->timeFormat, $intStartTime) . $strTimeClose . ' – ' . $strTimeEnd . \Date::parse($objPage->timeFormat, $intEndTime) . ')' : '') . $strTimeClose;
+			if ($span > 0)
+			{
+				$strDate = \Date::parse($objPage->datimFormat, $intStartTime) . ' – ' . \Date::parse($objPage->datimFormat, $intEndTime);
+			}
+			elseif ($intStartTime == $intEndTime)
+			{
+				$strTime = \Date::parse($objPage->timeFormat, $intStartTime);
+			}
+			else
+			{
+				$strTime = \Date::parse($objPage->timeFormat, $intStartTime) . ' – ' . \Date::parse($objPage->timeFormat, $intEndTime);
+			}
 		}
 
 		$until = '';
@@ -168,11 +175,13 @@ class ModuleEventReader extends \Events
 			}
 		}
 
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->cal_template);
 		$objTemplate->setData($objEvent->row());
 
-		$objTemplate->date = $date;
+		$objTemplate->date = $strDate;
+		$objTemplate->time = $strTime;
+		$objTemplate->datetime = $objEvent->addTime ? date('Y-m-d\TH:i:sP', $intStartTime) : date('Y-m-d', $intStartTime);
 		$objTemplate->begin = $intStartTime;
 		$objTemplate->end = $intEndTime;
 		$objTemplate->class = ($objEvent->cssClass != '') ? ' ' . $objEvent->cssClass : '';
@@ -270,7 +279,7 @@ class ModuleEventReader extends \Events
 			return;
 		}
 
-		/** @var \CalendarModel $objCalendar */
+		/** @var CalendarModel $objCalendar */
 		$objCalendar = $objEvent->getRelated('pid');
 		$this->Template->allowComments = $objCalendar->allowComments;
 
@@ -296,7 +305,7 @@ class ModuleEventReader extends \Events
 		// Notify the author
 		if ($objCalendar->notify != 'notify_admin')
 		{
-			/** @var \UserModel $objAuthor */
+			/** @var UserModel $objAuthor */
 			if (($objAuthor = $objEvent->getRelated('author')) !== null && $objAuthor->email != '')
 			{
 				$arrNotifies[] = $objAuthor->email;

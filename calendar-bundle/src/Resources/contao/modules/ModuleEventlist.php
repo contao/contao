@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Patchwork\Utf8;
 
 
 /**
@@ -23,7 +24,7 @@ class ModuleEventlist extends \Events
 
 	/**
 	 * Current date object
-	 * @var \Date
+	 * @var Date
 	 */
 	protected $Date;
 
@@ -43,10 +44,10 @@ class ModuleEventlist extends \Events
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['eventlist'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventlist'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -78,7 +79,7 @@ class ModuleEventlist extends \Events
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$blnClearInput = false;
@@ -174,7 +175,6 @@ class ModuleEventlist extends \Events
 				{
 					$event['firstDay'] = $GLOBALS['TL_LANG']['DAYS'][date('w', $day)];
 					$event['firstDate'] = \Date::parse($objPage->dateFormat, $day);
-					$event['datetime'] = date('Y-m-d', $day);
 
 					$arrEvents[] = $event;
 				}
@@ -243,7 +243,7 @@ class ModuleEventlist extends \Events
 				$blnIsLastEvent = true;
 			}
 
-			/** @var \FrontendTemplate|object $objTemplate */
+			/** @var FrontendTemplate|object $objTemplate */
 			$objTemplate = new \FrontendTemplate($this->cal_template);
 			$objTemplate->setData($event);
 
@@ -283,13 +283,11 @@ class ModuleEventlist extends \Events
 			{
 				$objTemplate->day = $event['day'];
 				$objTemplate->date = $event['date'];
-				$objTemplate->span = ($event['time'] == '' && $event['day'] == '') ? $event['date'] : '';
 			}
 			else
 			{
 				$objTemplate->day = $event['firstDay'];
 				$objTemplate->date = $event['firstDate'];
-				$objTemplate->span = '';
 			}
 
 			$objTemplate->addImage = false;
