@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_news_archive.title.0">
         <source>Title</source>
-        <target>Nom du groupe</target>
+        <target>Titre</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.title.1">
         <source>Please enter a news archive title.</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.groups.1">
         <source>These groups will be able to see the news items in this archive.</source>
-        <target>Choisir quels groupes seront autorisés à voir les actualités.</target>
+        <target>Ces groupes seront en mesure de voir les actualités dans cette archive.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.0">
         <source>Revision date</source>
@@ -132,14 +132,6 @@
       <trans-unit id="tl_news_archive.notify_both">
         <source>Author and system administrator</source>
         <target>Auteur et administrateur système</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_teaser">
-        <source>News teasers</source>
-        <target>Accroches d'actualités</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_text">
-        <source>Full articles</source>
-        <target>Articles complets</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>

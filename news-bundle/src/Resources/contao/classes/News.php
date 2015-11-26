@@ -20,6 +20,13 @@ class News extends \Frontend
 {
 
 	/**
+	 * URL cache array
+	 * @var array
+	 */
+	private static $arrUrlCache = array();
+
+
+	/**
 	 * Update a particular RSS feed
 	 *
 	 * @param integer $intId
@@ -138,7 +145,7 @@ class News extends \Frontend
 
 			while ($objArticle->next())
 			{
-				/** @var \PageModel $objPage */
+				/** @var PageModel $objPage */
 				$objPage = $objArticle->getRelated('pid');
 				$jumpTo = $objPage->jumpTo;
 
@@ -213,7 +220,7 @@ class News extends \Frontend
 
 					if ($objFile !== null)
 					{
-						$objItem->addEnclosure($objFile->path);
+						$objItem->addEnclosure($objFile->path, $strLink);
 					}
 				}
 
@@ -230,7 +237,7 @@ class News extends \Frontend
 						{
 							while ($objFile->next())
 							{
-								$objItem->addEnclosure($objFile->path);
+								$objItem->addEnclosure($objFile->path, $strLink);
 							}
 						}
 					}
@@ -336,11 +343,88 @@ class News extends \Frontend
 
 
 	/**
+	 * Generate a URL and return it as string
+	 *
+	 * @param NewsModel $objItem
+	 * @param boolean   $blnAddArchive
+	 *
+	 * @return string
+	 */
+	public static function generateNewsUrl($objItem, $blnAddArchive=false)
+	{
+		$strCacheKey = 'id_' . $objItem->id;
+
+		// Load the URL from cache
+		if (isset(self::$arrUrlCache[$strCacheKey]))
+		{
+			return self::$arrUrlCache[$strCacheKey];
+		}
+
+		// Initialize the cache
+		self::$arrUrlCache[$strCacheKey] = null;
+
+		switch ($objItem->source)
+		{
+			// Link to an external page
+			case 'external':
+				if (substr($objItem->url, 0, 7) == 'mailto:')
+				{
+					self::$arrUrlCache[$strCacheKey] = \StringUtil::encodeEmail($objItem->url);
+				}
+				else
+				{
+					self::$arrUrlCache[$strCacheKey] = ampersand($objItem->url);
+				}
+				break;
+
+			// Link to an internal page
+			case 'internal':
+				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
+				{
+					self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objTarget->row()));
+				}
+				break;
+
+			// Link to an article
+			case 'article':
+				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+				{
+					self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id)));
+				}
+				break;
+		}
+
+		// Link to the default page
+		if (self::$arrUrlCache[$strCacheKey] === null)
+		{
+			$objPage = \PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
+
+			if ($objPage === null)
+			{
+				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'), true);
+			}
+			else
+			{
+				self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objPage->row(), (\Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id)));
+			}
+
+			// Add the current archive parameter (news archive)
+			if ($blnAddArchive && \Input::get('month') != '')
+			{
+				self::$arrUrlCache[$strCacheKey] .= '?month=' . \Input::get('month');
+			}
+		}
+
+		return self::$arrUrlCache[$strCacheKey];
+	}
+
+
+	/**
 	 * Return the link of a news article
 	 *
-	 * @param \NewsModel $objItem
-	 * @param string     $strUrl
-	 * @param string     $strBase
+	 * @param NewsModel $objItem
+	 * @param string    $strUrl
+	 * @param string    $strBase
 	 *
 	 * @return string
 	 */

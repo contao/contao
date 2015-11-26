@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="MSC.news_previous">
         <source>&amp;lt;</source>
-        <target>&lt;</target>
+        <target>&amp;lt;</target>
       </trans-unit>
       <trans-unit id="MSC.news_next">
         <source>&amp;gt;</source>
-        <target>&gt;</target>
+        <target>&amp;gt;</target>
       </trans-unit>
     </body>
   </file>

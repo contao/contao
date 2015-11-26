@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_news_archive.title.0">
         <source>Title</source>
-        <target>Nome gruppo</target>
+        <target>Nome del modulo</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.title.1">
         <source>Please enter a news archive title.</source>
@@ -132,14 +132,6 @@
       <trans-unit id="tl_news_archive.notify_both">
         <source>Author and system administrator</source>
         <target>Autore e amministratore di sistema</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_teaser">
-        <source>News teasers</source>
-        <target>Teaser di news</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_text">
-        <source>Full articles</source>
-        <target>Articoli completi</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>

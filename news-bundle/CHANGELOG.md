@@ -1,17 +1,16 @@
-Contao news bundle change log
-=============================
+# Contao news bundle change log
 
-Version 4.0.2 (2015-09-10)
---------------------------
+### 4.1.0 (2015-11-26)
 
-### Fixed
-Correctly fill in the image meta data (see contao/core#7907).
+ * Subscribe to the events to modify the front end preview URL.
+ * Correctly set the ID when toggling fields via Ajax (see contao/core#8043).
 
-### Fixed
-Use `$this->hasText` in the templates (see contao/core#7993).
+### 4.1.0-RC1 (2015-10-11)
 
-### Fixed
-Correctly generate the news URLs (see contao/core#7953).
+ * Throw an exception instead of redirecting to `/contao?act=error` (see contao/core-bundle#395).
+ * Adjust the code to be compatible with PHP7 (see contao/core#8018).
+ * Add the `News::generateNewsUrl()` method (see contao/core#7504).
 
-### Fixed
-Add a `data-icon` attribute to the recipient icons.
+### 4.1.0-beta1 (2015-10-21)
+
+ * Add all translations which are at least 95% complete.

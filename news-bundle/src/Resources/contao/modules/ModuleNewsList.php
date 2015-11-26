@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Patchwork\Utf8;
 
 
 /**
@@ -37,10 +38,10 @@ class ModuleNewsList extends \ModuleNews
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['newslist'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newslist'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -164,7 +165,7 @@ class ModuleNewsList extends \ModuleNews
 		{
 			foreach ($GLOBALS['TL_HOOKS']['newsListCountItems'] as $callback)
 			{
-				if (($intResult = \System::importStatic($callback[0])->$callback[1]($newsArchives, $blnFeatured, $this)) === false)
+				if (($intResult = \System::importStatic($callback[0])->{$callback[1]}($newsArchives, $blnFeatured, $this)) === false)
 				{
 					continue;
 				}
@@ -188,7 +189,7 @@ class ModuleNewsList extends \ModuleNews
 	 * @param  integer $limit
 	 * @param  integer $offset
 	 *
-	 * @return \Model\Collection|\NewsModel|null
+	 * @return Model\Collection|NewsModel|null
 	 */
 	protected function fetchItems($newsArchives, $blnFeatured, $limit, $offset)
 	{
@@ -197,12 +198,12 @@ class ModuleNewsList extends \ModuleNews
 		{
 			foreach ($GLOBALS['TL_HOOKS']['newsListFetchItems'] as $callback)
 			{
-				if (($objCollection = \System::importStatic($callback[0])->$callback[1]($newsArchives, $blnFeatured, $limit, $offset, $this)) === false)
+				if (($objCollection = \System::importStatic($callback[0])->{$callback[1]}($newsArchives, $blnFeatured, $limit, $offset, $this)) === false)
 				{
 					continue;
 				}
 
-				if ($objCollection === null || $objCollection instanceof \Model\Collection)
+				if ($objCollection === null || $objCollection instanceof Model\Collection)
 				{
 					return $objCollection;
 				}

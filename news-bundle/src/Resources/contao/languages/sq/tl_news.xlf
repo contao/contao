@@ -14,8 +14,7 @@
         <target>Pseudonimi lajmit</target>
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
-        <source>The news alias is a unique reference to the article which can be called instead of its numeric ID.</source>
-        <target>Pseudonimi lajmit është një referencë unike e një lajmi, që mund të thirret në vend të ID-së së lajmit.</target>
+        <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
@@ -54,8 +53,7 @@
         <target>Teksti tërheqës/ngacmues</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
-        <source>The news teaser can be shown in a news list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Teksti tërheqës/ngacmues paraqitet në vend të lajmit të plotë me një lidhje shtesë &quot;Lexo më shumë...&quot;.</target>
+        <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
@@ -238,92 +236,71 @@
         <target>Publiko cilësit</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New article</source>
-        <target>Artikull i ri</target>
+        <source>New item</source>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
-        <source>Create a new news article</source>
-        <target>Krijo lajm të ri</target>
+        <source>Create a new news item</source>
       </trans-unit>
       <trans-unit id="tl_news.show.0">
-        <source>Article details</source>
-        <target>Detajet e artikullit</target>
+        <source>Item details</source>
       </trans-unit>
       <trans-unit id="tl_news.show.1">
-        <source>Show the details of news article ID %s</source>
-        <target>Trego detajet e lajmit</target>
+        <source>Show the details of news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.0">
-        <source>Edit article</source>
-        <target>Përpuno artikullin</target>
+        <source>Edit item</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.1">
-        <source>Edit news article ID %s</source>
-        <target>Përpuno lajmin ID %s</target>
+        <source>Edit news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.copy.0">
-        <source>Duplicate article</source>
-        <target>Dupliko artikullin</target>
+        <source>Duplicate item</source>
       </trans-unit>
       <trans-unit id="tl_news.copy.1">
-        <source>Duplicate news article ID %s</source>
-        <target>Kopjo lajmin ID %s</target>
+        <source>Duplicate news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.cut.0">
-        <source>Move article</source>
-        <target>Zhvendos artikullin</target>
+        <source>Move item</source>
       </trans-unit>
       <trans-unit id="tl_news.cut.1">
-        <source>Move news article ID %s</source>
-        <target>Lëviz artikullin ID %s</target>
+        <source>Move news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.delete.0">
-        <source>Delete article</source>
-        <target>Fshij artikullin</target>
+        <source>Delete item</source>
       </trans-unit>
       <trans-unit id="tl_news.delete.1">
-        <source>Delete news article ID %s</source>
-        <target>Shlyej lajmin ID %s</target>
+        <source>Delete news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish article</source>
-        <target>Publiko/ç'publiko artikuj</target>
+        <source>Publish/unpublish item</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
-        <source>Publish/unpublish news article ID %s</source>
-        <target>Publiko/ç'publiko artikullin ID %s</target>
+        <source>Publish/unpublish news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature article</source>
-        <target>Rekomando/ç'rekomando artikull</target>
+        <source>Feature/unfeature item</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
-        <source>Feature/unfeature news article ID %s</source>
-        <target>Rekomando/ç'rekomando artikullin ID %s</target>
+        <source>Feature/unfeature news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
         <source>Edit archive settings</source>
         <target>Përpuno kryen e arkivit</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
-        <source>Edit the archive settings</source>
-        <target>Përpuno kryen e këtij arkivi</target>
+        <source>Edit the news archive settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.0">
-        <source>Edit article settings</source>
-        <target>Përpuno titullin e artikullit</target>
+        <source>Edit item settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the article settings</source>
-        <target>Përpuno konfigurimin e artikullit</target>
+        <source>Edit the news item settings</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
-        <source>Paste into this archive</source>
-        <target>Fute në këtë arkiv</target>
+        <source>Paste into this news archive</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news article ID %s</source>
-        <target>Fute pas artikullit ID %s</target>
+        <source>Paste after news item ID %s</source>
       </trans-unit>
     </body>
   </file>

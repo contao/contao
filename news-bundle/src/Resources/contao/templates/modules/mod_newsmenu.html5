@@ -25,7 +25,7 @@
         </tr>
         <tr>
           <?php foreach ($this->days as $day): ?>
-            <th class="label"><?= utf8_substr($day, 0, 2) ?></th>
+            <th class="label"><?= Patchwork\Utf8::substr($day, 0, 2) ?></th>
           <?php endforeach; ?>
         </tr>
       </thead>

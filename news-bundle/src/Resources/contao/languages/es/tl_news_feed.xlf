@@ -90,8 +90,8 @@
         <target>Sumarios de noticia</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source_text">
-        <source>Full articles</source>
-        <target>Noticias completas</target>
+        <source>Full stories</source>
+        <target>Historias completas</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
         <source>New feed</source>

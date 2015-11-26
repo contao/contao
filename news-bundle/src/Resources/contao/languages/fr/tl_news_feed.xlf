@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_news_feed.title.0">
         <source>Title</source>
-        <target>Nom du groupe</target>
+        <target>Titre</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.title.1">
         <source>Please enter a feed title.</source>
@@ -90,7 +90,7 @@
         <target>Accroches d'actualités</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source_text">
-        <source>Full articles</source>
+        <source>Full stories</source>
         <target>Articles complets</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">

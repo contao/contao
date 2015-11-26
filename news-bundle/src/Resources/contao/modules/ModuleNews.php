@@ -20,13 +20,6 @@ abstract class ModuleNews extends \Module
 {
 
 	/**
-	 * URL cache array
-	 * @var array
-	 */
-	private static $arrUrlCache = array();
-
-
-	/**
 	 * Sort out protected archives
 	 *
 	 * @param array $arrArchives
@@ -74,16 +67,16 @@ abstract class ModuleNews extends \Module
 	/**
 	 * Parse an item and return it as string
 	 *
-	 * @param \NewsModel $objArticle
-	 * @param boolean    $blnAddArchive
-	 * @param string     $strClass
-	 * @param integer    $intCount
+	 * @param NewsModel $objArticle
+	 * @param boolean   $blnAddArchive
+	 * @param string    $strClass
+	 * @param integer   $intCount
 	 *
 	 * @return string
 	 */
 	protected function parseArticle($objArticle, $blnAddArchive=false, $strClass='', $intCount=0)
 	{
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->news_template);
 		$objTemplate->setData($objArticle->row());
 
@@ -93,7 +86,7 @@ abstract class ModuleNews extends \Module
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
 		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
 		$objTemplate->more = $this->generateLink($GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
-		$objTemplate->link = $this->generateNewsUrl($objArticle, $blnAddArchive);
+		$objTemplate->link = \News::generateNewsUrl($objArticle, $blnAddArchive);
 		$objTemplate->archive = $objArticle->getRelated('pid');
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
@@ -192,7 +185,7 @@ abstract class ModuleNews extends \Module
 			foreach ($GLOBALS['TL_HOOKS']['parseArticles'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($objTemplate, $objArticle->row(), $this);
+				$this->{$callback[0]}->{$callback[1]}($objTemplate, $objArticle->row(), $this);
 			}
 		}
 
@@ -203,8 +196,8 @@ abstract class ModuleNews extends \Module
 	/**
 	 * Parse one or more items and return them as array
 	 *
-	 * @param \Model\Collection $objArticles
-	 * @param boolean           $blnAddArchive
+	 * @param Model\Collection $objArticles
+	 * @param boolean          $blnAddArchive
 	 *
 	 * @return array
 	 */
@@ -222,7 +215,7 @@ abstract class ModuleNews extends \Module
 
 		while ($objArticles->next())
 		{
-			/** @var \NewsModel $objArticle */
+			/** @var NewsModel $objArticle */
 			$objArticle = $objArticles->current();
 
 			$arrArticles[] = $this->parseArticle($objArticle, $blnAddArchive, ((++$count == 1) ? ' first' : '') . (($count == $limit) ? ' last' : '') . ((($count % 2) == 0) ? ' odd' : ' even'), $count);
@@ -235,7 +228,7 @@ abstract class ModuleNews extends \Module
 	/**
 	 * Return the meta fields of a news article as array
 	 *
-	 * @param \NewsModel $objArticle
+	 * @param NewsModel $objArticle
 	 *
 	 * @return array
 	 */
@@ -248,7 +241,7 @@ abstract class ModuleNews extends \Module
 			return array();
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$return = array();
@@ -262,7 +255,7 @@ abstract class ModuleNews extends \Module
 					break;
 
 				case 'author':
-					/** @var \UserModel $objAuthor */
+					/** @var UserModel $objAuthor */
 					if (($objAuthor = $objArticle->getRelated('author')) !== null)
 					{
 						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
@@ -288,87 +281,29 @@ abstract class ModuleNews extends \Module
 	/**
 	 * Generate a URL and return it as string
 	 *
-	 * @param \NewsModel $objItem
-	 * @param boolean    $blnAddArchive
+	 * @param NewsModel $objItem
+	 * @param boolean   $blnAddArchive
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
+	 *             Use News::generateNewsUrl() instead.
 	 */
 	protected function generateNewsUrl($objItem, $blnAddArchive=false)
 	{
-		$strCacheKey = 'id_' . $objItem->id;
+		@trigger_error('Using ModuleNews::generateNewsUrl() has been deprecated and will no longer work in Contao 5.0. Use News::generateNewsUrl() instead.', E_USER_DEPRECATED);
 
-		// Load the URL from cache
-		if (isset(self::$arrUrlCache[$strCacheKey]))
-		{
-			return self::$arrUrlCache[$strCacheKey];
-		}
-
-		// Initialize the cache
-		self::$arrUrlCache[$strCacheKey] = null;
-
-		switch ($objItem->source)
-		{
-			// Link to an external page
-			case 'external':
-				if (substr($objItem->url, 0, 7) == 'mailto:')
-				{
-					self::$arrUrlCache[$strCacheKey] = \StringUtil::encodeEmail($objItem->url);
-				}
-				else
-				{
-					self::$arrUrlCache[$strCacheKey] = ampersand($objItem->url);
-				}
-				break;
-
-			// Link to an internal page
-			case 'internal':
-				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
-				{
-					self::$arrUrlCache[$strCacheKey] = ampersand($this->generateFrontendUrl($objTarget->row()));
-				}
-				break;
-
-			// Link to an article
-			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
-				{
-					self::$arrUrlCache[$strCacheKey] = ampersand($this->generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id)));
-				}
-				break;
-		}
-
-		// Link to the default page
-		if (self::$arrUrlCache[$strCacheKey] === null)
-		{
-			$objPage = \PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
-
-			if ($objPage === null)
-			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'), true);
-			}
-			else
-			{
-				self::$arrUrlCache[$strCacheKey] = ampersand($this->generateFrontendUrl($objPage->row(), (\Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id)));
-			}
-
-			// Add the current archive parameter (news archive)
-			if ($blnAddArchive && \Input::get('month') != '')
-			{
-				self::$arrUrlCache[$strCacheKey] .= '?month=' . \Input::get('month');
-			}
-		}
-
-		return self::$arrUrlCache[$strCacheKey];
+		return \News::generateNewsUrl($objItem, $blnAddArchive);
 	}
 
 
 	/**
 	 * Generate a link and return it as string
 	 *
-	 * @param string     $strLink
-	 * @param \NewsModel $objArticle
-	 * @param boolean    $blnAddArchive
-	 * @param boolean    $blnIsReadMore
+	 * @param string    $strLink
+	 * @param NewsModel $objArticle
+	 * @param boolean   $blnAddArchive
+	 * @param boolean   $blnIsReadMore
 	 *
 	 * @return string
 	 */
@@ -378,10 +313,10 @@ abstract class ModuleNews extends \Module
 		if ($objArticle->source != 'external')
 		{
 			return sprintf('<a href="%s" title="%s" itemprop="url">%s%s</a>',
-							$this->generateNewsUrl($objArticle, $blnAddArchive),
+							\News::generateNewsUrl($objArticle, $blnAddArchive),
 							specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
 							$strLink,
-							($blnIsReadMore ? ' <span class="invisible">'.$objArticle->headline.'</span>' : ''));
+							($blnIsReadMore ? '<span class="invisible"> '.$objArticle->headline.'</span>' : ''));
 		}
 
 		// Encode e-mail addresses

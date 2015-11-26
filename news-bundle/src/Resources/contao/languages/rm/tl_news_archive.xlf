@@ -133,14 +133,6 @@
         <source>Author and system administrator</source>
         <target>Autur ed administratur dal sistem</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.source_teaser">
-        <source>News teasers</source>
-        <target>Teasers da novitads</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_text">
-        <source>Full articles</source>
-        <target>Artitgels cumplains</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>
         <target>Nov archiv</target>

@@ -133,14 +133,6 @@
         <source>Author and system administrator</source>
         <target>ရေးသားသူနှင့်စက်စနစ်စီမံခန့်ခွဲသူ</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.source_teaser">
-        <source>News teasers</source>
-        <target>သတင်းပဟေဠိများ</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_text">
-        <source>Full articles</source>
-        <target>ဆောင်းပါးများအပြည့်</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>
         <target>ဖိုင်ထုပ်အသစ်</target>

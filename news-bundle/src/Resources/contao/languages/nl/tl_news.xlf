@@ -3,19 +3,19 @@
     <body>
       <trans-unit id="tl_news.headline.0">
         <source>Title</source>
-        <target>Groepsnaam</target>
+        <target>Titel</target>
       </trans-unit>
       <trans-unit id="tl_news.headline.1">
         <source>Please enter the news title.</source>
-        <target>Geef de titel van het nieuwsbericht.</target>
+        <target>Geef een titel op voor het nieuwsbericht.</target>
       </trans-unit>
       <trans-unit id="tl_news.alias.0">
         <source>News alias</source>
         <target>Nieuws alias</target>
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
-        <source>The news alias is a unique reference to the article which can be called instead of its numeric ID.</source>
-        <target>Een nieuws alias is een unieke referentie naar een nieuwsbericht dat kan gebruikt worden i.p.v. het ID.</target>
+        <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
+        <target>De nieuws-alias is een unieke referentie naar een nieuwsbericht dat gebruikt kan worden i.p.v. zijn numerieke ID.</target>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
@@ -54,8 +54,8 @@
         <target>Teaser tekst nieuws</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
-        <source>The news teaser can be shown in a news list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>De teaser wordt gewoonlijk getoond in een nieuwslijst i.p.v. het volledige nieuwsbericht gevolgd door een &quot;lees meer...&quot; link.</target>
+        <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
+        <target>De nieuws teasertekst kan getoond worden in een nieuwslijst i.p.v. het gehele artikel. Een &quot;lees meer...&quot; link wordt automatisch toegevoegd.</target>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
@@ -238,91 +238,91 @@
         <target>Publicatie-instellingen</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New article</source>
-        <target>Nieuw artikel</target>
+        <source>New item</source>
+        <target>Nieuw item</target>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
-        <source>Create a new news article</source>
-        <target>Maak een nieuw nieuwsbericht</target>
+        <source>Create a new news item</source>
+        <target>Maak een nieuw nieuwsitem</target>
       </trans-unit>
       <trans-unit id="tl_news.show.0">
-        <source>Article details</source>
-        <target>Artikel details</target>
+        <source>Item details</source>
+        <target>Details nieuwsitem</target>
       </trans-unit>
       <trans-unit id="tl_news.show.1">
-        <source>Show the details of news article ID %s</source>
-        <target>Toon de details van nieuwsbericht ID %s</target>
+        <source>Show the details of news item ID %s</source>
+        <target>Toon de details van nieuwsitem ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.edit.0">
-        <source>Edit article</source>
-        <target>Bewerk artikel</target>
+        <source>Edit item</source>
+        <target>Bewerk item</target>
       </trans-unit>
       <trans-unit id="tl_news.edit.1">
-        <source>Edit news article ID %s</source>
-        <target>Bewerk nieuwsbericht ID %s</target>
+        <source>Edit news item ID %s</source>
+        <target>Bewerk nieuwsitem ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.copy.0">
-        <source>Duplicate article</source>
-        <target>Dupliceer artikel</target>
+        <source>Duplicate item</source>
+        <target>Dupliceer item</target>
       </trans-unit>
       <trans-unit id="tl_news.copy.1">
-        <source>Duplicate news article ID %s</source>
-        <target>Kopieer nieuwsbericht ID %s</target>
+        <source>Duplicate news item ID %s</source>
+        <target>Dupliceer nieuwsitem ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.cut.0">
-        <source>Move article</source>
-        <target>Verplaats artikel</target>
+        <source>Move item</source>
+        <target>Verplaats item</target>
       </trans-unit>
       <trans-unit id="tl_news.cut.1">
-        <source>Move news article ID %s</source>
-        <target>Verplaats nieuwsbericht ID %s</target>
+        <source>Move news item ID %s</source>
+        <target>Verplaats nieuwsitem ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.delete.0">
-        <source>Delete article</source>
-        <target>Verwijder artikel</target>
+        <source>Delete item</source>
+        <target>Verwijder item</target>
       </trans-unit>
       <trans-unit id="tl_news.delete.1">
-        <source>Delete news article ID %s</source>
-        <target>Verwijder nieuwsbericht ID %s</target>
+        <source>Delete news item ID %s</source>
+        <target>Verwijder nieuwsitem ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish article</source>
-        <target>Publiceer/depubliceer artikel</target>
+        <source>Publish/unpublish item</source>
+        <target>Publiceer/depubliceer item</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
-        <source>Publish/unpublish news article ID %s</source>
-        <target>Publiceer/verberg nieuwsbericht ID %s</target>
+        <source>Publish/unpublish news item ID %s</source>
+        <target>Publiceer/depubliceer item ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature article</source>
-        <target>Geef/verwijder kenmerk bericht</target>
+        <source>Feature/unfeature item</source>
+        <target>Invoegen/verwijder kenmerk item</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
-        <source>Feature/unfeature news article ID %s</source>
-        <target>Geef/verwijder kenmerk nieuwsbericht ID %s</target>
+        <source>Feature/unfeature news item ID %s</source>
+        <target>Invoegen/verwijder kenmerk nieuwsitem ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
         <source>Edit archive settings</source>
         <target>Bewerk archiefinstellingen</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
-        <source>Edit the archive settings</source>
-        <target>Bewerkt de archiefinstellingen</target>
+        <source>Edit the news archive settings</source>
+        <target>Nieuws-archiefinstellingen bewerken</target>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.0">
-        <source>Edit article settings</source>
-        <target>Bewerk artikel instellingen</target>
+        <source>Edit item settings</source>
+        <target>Item instellingen bewerken</target>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the article settings</source>
-        <target>Bewerk de artikel instellingen</target>
+        <source>Edit the news item settings</source>
+        <target>Nieuws item instellingen bewerken</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
-        <source>Paste into this archive</source>
-        <target>Plak in dit archief</target>
+        <source>Paste into this news archive</source>
+        <target>Plak in dit nieuwsarchief</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news article ID %s</source>
+        <source>Paste after news item ID %s</source>
         <target>Plak achter nieuwsbericht ID %s</target>
       </trans-unit>
     </body>
