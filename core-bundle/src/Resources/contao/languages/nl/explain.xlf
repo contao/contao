@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.1.1">
         <source>YYYY-MM-DD, international ISO-8601, e.g. 2005-01-28</source>
-        <target>YYYY-MM-DD, international ISO 8601 bv. 2012-01-28</target>
+        <target>YYYY-MM-DD, international ISO-8601 bv. 2005-01-28</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.2.0">
         <source>m/d/Y</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.4.1">
         <source>YY-M-D, without leading zeros, e.g. 05-1-28</source>
-        <target>YY-M-D, zonder voorloopnullen bv. 12-1-28</target>
+        <target>YY-M-D, zonder voorloopnullen bv. 05-1-28</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.5.0">
         <source>Ymd</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.5.1">
         <source>YYYYMMDD, timestamp, e.g. 20050128</source>
-        <target>YYYYMMDD, timestamp bv. 20120128</target>
+        <target>YYYYMMDD, timestamp, bv. 20050128</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.6.0">
         <source>H:i:s</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="XPL.imageSizeDensities.1.1">
         <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code:&lt;br&gt;&lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes get generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code:&lt;br&gt;&lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href=&quot;http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-srcset&quot; target=&quot;_blank&quot;&gt;w3.org&lt;/a&gt;.</source>
-        <target>Als sizes-attribute niet is gedefinieerd, legt deze instelling de pixel-dichtheid vast die ondersteund wordt. De afmetingen van foto's worden automatisch aangepast. B.v. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creëert de volgende HTML-code:&lt;br&gt;&lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c. jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Als sizes-atribute is gedefinieerd, worden gelijke beeldformaten gegenereerd, er worden voor het srcset-attribute breedte omschrijvingen gebruikt. B.v. een beeld van 200 pixel breed met een pixel-dichtheid &lt;code&gt; 1x, 1.5x, 2x &lt;/ code&gt; creëert de volgende HTML-code: &lt;br&gt; &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Voor meer informatie over het attribute srcset kunt u terecht op &lt;a href =&quot;a href=&quot;http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-srcset &quot;target =&quot; _blank &quot;&gt; w3.org &lt;/a&gt;.</target>
+        <target>Als sizes-attribute niet is gedefinieerd, simpel gezegd legt deze instelling de pixel-dichtheid vast die ondersteund wordt. De afmetingen van foto's worden automatisch aangepast. B.v. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creëert de volgende HTML-code:&lt;br&gt;&lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c. jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Als sizes-atribute is gedefinieerd, worden gelijke beeldformaten gegenereerd, er worden voor het srcset-attribute breedte omschrijvingen gebruikt. B.v. een beeld van 200 pixel breed met een pixel-dichtheid &lt;code&gt; 1x, 1.5x, 2x &lt;/ code&gt; creëert de volgende HTML-code: &lt;br&gt; &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Voor meer informatie over het attribute srcset kunt u terecht op &lt;a href =&quot;a href=&quot;http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-srcset &quot;target =&quot; _blank &quot;&gt; w3.org &lt;/a&gt;.</target>
       </trans-unit>
     </body>
   </file>

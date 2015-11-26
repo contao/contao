@@ -44,7 +44,7 @@ class ContentAlias extends \ContentElement
 		$objElement->id = $this->id;
 		$objElement->typePrefix = 'ce_';
 
-		/** @var \ContentElement $objElement */
+		/** @var ContentElement $objElement */
 		$objElement = new $strClass($objElement);
 
 		$cssID = deserialize($objElement->cssID, true);

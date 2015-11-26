@@ -202,29 +202,18 @@ class FileUpload extends \Backend
 	 */
 	public function generateMarkup()
 	{
-		$fields = '';
+		$return = '
+  <div>
+    <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" onfocus="Backend.getScrollOffset()" multiple>
+  </div>';
 
-		for ($i=0; $i<\Config::get('uploadFields'); $i++)
+		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
 		{
-			$fields .= '
-  <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" onfocus="Backend.getScrollOffset()"><br>';
+			$return .= '
+  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], \System::getReadableSize($this->getMaximumUploadSize()), \Config::get('gdMaxImgWidth') . 'x' . \Config::get('gdMaxImgHeight')) . '</p>';
 		}
 
-		return '
-  <div id="upload-fields">'.$fields.'
-  </div>
-  <script>
-    window.addEvent("domready", function() {
-      if ("multiple" in document.createElement("input")) {
-        var div = $("upload-fields");
-        var input = div.getElement("input");
-        div.empty();
-        input.set("multiple", true);
-        input.inject(div);
-      }
-    });
-  </script>
-  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], \System::getReadableSize($this->getMaximumUploadSize()), \Config::get('gdMaxImgWidth') . 'x' . \Config::get('gdMaxImgHeight')) . '</p>';
+		return $return;
 	}
 
 

@@ -36,7 +36,7 @@ class ContaoAuthenticatorTest extends TestCase
     {
         $authenticator = new ContaoAuthenticator();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Security\\ContaoAuthenticator', $authenticator);
+        $this->assertInstanceOf('Contao\CoreBundle\Security\ContaoAuthenticator', $authenticator);
     }
 
     /**
@@ -47,7 +47,7 @@ class ContaoAuthenticatorTest extends TestCase
         $authenticator = new ContaoAuthenticator();
         $token = $authenticator->createToken(new Request(), 'frontend');
 
-        $this->assertInstanceOf('Symfony\\Component\\Security\\Core\\Authentication\\Token\\AnonymousToken', $token);
+        $this->assertInstanceOf('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken', $token);
         $this->assertEquals('frontend', $token->getKey());
         $this->assertEquals('anon.', $token->getUsername());
     }
@@ -66,12 +66,12 @@ class ContaoAuthenticatorTest extends TestCase
         $provider = $this->mockUserProvider();
 
         $this->assertInstanceOf(
-            'Contao\\CoreBundle\\Security\\Authentication\\ContaoToken',
+            'Contao\CoreBundle\Security\Authentication\ContaoToken',
             $authenticator->authenticateToken(new ContaoToken($this->mockUser()), $provider, 'frontend')
         );
 
         $this->assertInstanceOf(
-            'Contao\\CoreBundle\\Security\\Authentication\\ContaoToken',
+            'Contao\CoreBundle\Security\Authentication\ContaoToken',
             $authenticator->authenticateToken(new AnonymousToken('frontend', 'anon.'), $provider, 'frontend')
         );
 
@@ -129,7 +129,7 @@ class ContaoAuthenticatorTest extends TestCase
         $user = $this->mockUser();
 
         $provider = $this->getMock(
-            'Symfony\\Component\\Security\\Core\\User\\UserProviderInterface',
+            'Symfony\Component\Security\Core\User\UserProviderInterface',
             ['loadUserByUsername', 'refreshUser', 'supportsClass']
         );
 
@@ -156,7 +156,7 @@ class ContaoAuthenticatorTest extends TestCase
     private function mockUser()
     {
         $user = $this->getMock(
-            'Contao\\User',
+            'Contao\User',
             ['authenticate']
         );
 

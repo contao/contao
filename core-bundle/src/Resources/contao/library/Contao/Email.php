@@ -111,7 +111,7 @@ class Email
 	 * Log file name
 	 * @var string
 	 */
-	protected $strLogFile = 'email.log';
+	protected $strLogFile = TL_EMAIL;
 
 
 	/**
@@ -465,7 +465,7 @@ class Email
 		// Log failures
 		if (!empty($this->arrFailures))
 		{
-			log_message('E-mail address rejected: ' . implode(', ', $this->arrFailures), $this->strLogFile);
+			\System::log('E-mail address rejected: ' . implode(', ', $this->arrFailures), __METHOD__, $this->strLogFile);
 		}
 
 		// Return if no e-mails have been sent
@@ -490,7 +490,7 @@ class Email
 			$strMessage .= ', BCC to ' . implode(', ', array_keys($arrBcc));
 		}
 
-		log_message($strMessage, $this->strLogFile);
+		\System::log($strMessage, __METHOD__, $this->strLogFile);
 
 		return true;
 	}

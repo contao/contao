@@ -29,7 +29,7 @@ class Encryption
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Encryption
+	 * @var Encryption
 	 */
 	protected static $objInstance;
 
@@ -291,14 +291,14 @@ class Encryption
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return \Encryption
+	 * @return Encryption
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Encryption class is now static.
 	 */
 	public static function getInstance()
 	{
-		trigger_error('Using Encryption::getInstance() has been deprecated and will no longer work in Contao 5.0. The Encryption class is now static.', E_USER_DEPRECATED);
+		@trigger_error('Using Encryption::getInstance() has been deprecated and will no longer work in Contao 5.0. The Encryption class is now static.', E_USER_DEPRECATED);
 
 		if (static::$objInstance === null)
 		{

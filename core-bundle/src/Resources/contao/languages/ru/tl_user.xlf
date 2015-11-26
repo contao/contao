@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_user.email.1">
         <source>Please enter a valid e-mail address.</source>
-        <target>Введите существующий e-mail адрес.</target>
+        <target>Введите действующий e-mail адрес.</target>
       </trans-unit>
       <trans-unit id="tl_user.language.0">
         <source>Back end language</source>
@@ -177,6 +177,14 @@
         <source>Here you can grant access to one or more folders (subfolders will be included automatically).</source>
         <target>Вы можете предоставить доступ к одному или нескольким каталогам (Подкаталоги будут включены автоматически).</target>
       </trans-unit>
+      <trans-unit id="tl_user.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Размеры изображения</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.1">
+        <source>Here you can grant access to one or more image sizes.</source>
+        <target>Вы можете предоставить доступ к одному или нескольким размерам изображения.</target>
+      </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
         <target>Разрешенные формы</target>
@@ -260,6 +268,10 @@
       <trans-unit id="tl_user.filemounts_legend">
         <source>Filemounts</source>
         <target>Доступные каталоги</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Размеры изображения</target>
       </trans-unit>
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>

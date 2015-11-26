@@ -627,7 +627,7 @@
       </trans-unit>
       <trans-unit id="tl_style.pastenew.1">
         <source>Add new after format definition ID %s</source>
-        <target>Neues Element nach der Formatdefinition ID %s erstellen</target>
+        <target>Neues Formatdefinition nach ID %s erstellen</target>
       </trans-unit>
       <trans-unit id="tl_style.toggle.0">
         <source>Toggle visibility</source>

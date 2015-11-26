@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -24,12 +26,12 @@ class BackendMain extends \Backend
 
 	/**
 	 * Current Ajax object
-	 * @var \Ajax
+	 * @var Ajax
 	 */
 	protected $objAjax;
 
 	/**
-	 * @var \BackendTemplate|object
+	 * @var BackendTemplate|object
 	 */
 	protected $Template;
 
@@ -74,13 +76,6 @@ class BackendMain extends \Backend
 		// Convenience functions
 		if ($this->User->isAdmin)
 		{
-			// Maintenance mode off
-			if (\Input::get('mmo'))
-			{
-				\Config::persist('maintenanceMode', false);
-				$this->redirect($this->getReferer());
-			}
-
 			// Build internal cache
 			if (\Input::get('bic'))
 			{
@@ -120,6 +115,8 @@ class BackendMain extends \Backend
 		{
 			$this->Template->error = $GLOBALS['TL_LANG']['ERR']['general'];
 			$this->Template->title = $GLOBALS['TL_LANG']['ERR']['general'];
+
+			@trigger_error('Using act=error has been deprecated and will no longer work in Contao 5.0. Throw an exception instead.', E_USER_DEPRECATED);
 		}
 		// Welcome screen
 		elseif (!\Input::get('do') && !\Input::get('act'))
@@ -147,7 +144,7 @@ class BackendMain extends \Backend
 	{
 		\System::loadLanguageFile('explain');
 
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_welcome');
 		$objTemplate->messages = \Message::generateUnwrapped();
 
@@ -159,7 +156,7 @@ class BackendMain extends \Backend
 			foreach ($GLOBALS['TL_HOOKS']['getSystemMessages'] as $callback)
 			{
 				$this->import($callback[0]);
-				$strBuffer = $this->$callback[0]->$callback[1]();
+				$strBuffer = $this->{$callback[0]}->{$callback[1]}();
 
 				if ($strBuffer != '')
 				{
@@ -212,8 +209,14 @@ class BackendMain extends \Backend
 		// File picker reference
 		if (\Input::get('popup') && \Input::get('act') != 'show' && (\Input::get('do') == 'page' || \Input::get('do') == 'files') && $objSession->get('filePickerRef'))
 		{
-			$this->Template->managerHref = ampersand($this->Session->get('filePickerRef'));
+			$this->Template->managerHref = ampersand($objSession->get('filePickerRef'));
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
+		}
+
+		// Website title
+		if (\Config::get('websiteTitle') != 'Contao Open Source CMS')
+		{
+			$this->Template->websiteTitle = \Config::get('websiteTitle');
 		}
 
 		$this->Template->theme = \Backend::getTheme();
@@ -241,10 +244,6 @@ class BackendMain extends \Backend
 		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
 		$this->Template->loadFonts = \Config::get('loadGoogleFonts');
 		$this->Template->isAdmin = $this->User->isAdmin;
-		$this->Template->isMaintenanceMode = \Config::get('maintenanceMode');
-		$this->Template->maintenanceMode = $GLOBALS['TL_LANG']['MSC']['maintenanceMode'];
-		$this->Template->maintenanceOff = specialchars($GLOBALS['TL_LANG']['MSC']['maintenanceOff']);
-		$this->Template->maintenanceHref = $this->addToUrl('mmo=1');
 		$this->Template->buildCacheLink = $GLOBALS['TL_LANG']['MSC']['buildCacheLink'];
 		$this->Template->buildCacheText = sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], \System::getContainer()->getParameter('kernel.environment'));
 		$this->Template->buildCacheHref = $this->addToUrl('bic=1');
@@ -254,18 +253,22 @@ class BackendMain extends \Backend
 		// Front end preview links
 		if (defined('CURRENT_ID') && CURRENT_ID != '')
 		{
-			// Pages
 			if (\Input::get('do') == 'page')
 			{
 				$this->Template->frontendFile = '?page=' . CURRENT_ID;
 			}
-
-			// Articles
-			elseif (\Input::get('do') == 'article')
+			elseif (\Input::get('do') == 'article' && ($objArticle = \ArticleModel::findByPk(CURRENT_ID)) !== null)
 			{
-				if (($objArticle = \ArticleModel::findByPk(CURRENT_ID)) !== null)
+				$this->Template->frontendFile = '?page=' . $objArticle->pid;
+			}
+			elseif (\Input::get('do') != '')
+			{
+				$event = new PreviewUrlCreateEvent(\Input::get('do'), CURRENT_ID);
+				\System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CREATE, $event);
+
+				if (($strQuery = $event->getQuery()) !== null)
 				{
-					$this->Template->frontendFile = '?page=' . $objArticle->pid;
+					$this->Template->frontendFile = '?' . $strQuery;
 				}
 			}
 		}

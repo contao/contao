@@ -12,8 +12,9 @@ namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Patchwork\Utf8\Bootup;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -41,6 +42,8 @@ class ContaoCoreBundle extends Bundle
      */
     public function boot()
     {
+        Bootup::initAll();
+
         $this->container->addScope(new Scope(self::SCOPE_BACKEND, 'request'));
         $this->container->addScope(new Scope(self::SCOPE_FRONTEND, 'request'));
     }

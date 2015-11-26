@@ -57,6 +57,10 @@
         <source>Filemounts</source>
         <target>文件加载点</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>图片尺寸</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.forms_legend">
         <source>Form permissions</source>
         <target>表单许可</target>

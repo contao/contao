@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_page.language.1">
         <source>Please enter the page language according to the ISO-639-1 standard (e.g. &quot;en&quot; for English or &quot;en-US&quot; for American English).</source>
-        <target>Por favor introduzca el idioma de la página acorde al estándar ISO-639-1(por ejemplo &quot;en&quot; para inglés o &quot;en-US&quot; para el inglés americano).</target>
+        <target>Por favor introduzca el idioma de la página acorde al estándar ISO-639-1 (por ejemplo &quot;en&quot; para inglés o &quot;en-US&quot; para el inglés americano).</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_page.redirect.1">
         <source>Please choose the redirect type.</source>
-        <target>Las redirecciones temporales enviaran una cabecera HTTP 302, y las permanentes una cabecera HTTP 301.</target>
+        <target>Por favor eliga un tipo de redirección.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
         <source>Show this page if there is none that matches the visitor's language.</source>
-        <target>TYPOlight automáticamente redirecciona un visitante a la página raiz de una web en su idioma o a la página de fallo de idioma. Si no existe una página de fallo de idioma, se mostrará el mensaje de error &lt;em&gt;No pages found&lt;/em&gt;.</target>
+        <target>Muestra esta página si no hay ninguno que coincida con el idioma del visitante.</target>
       </trans-unit>
       <trans-unit id="tl_page.dns.0">
         <source>Domain name</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_page.dns.1">
         <source>Here you can restrict the access to the website to a certain domain name.</source>
-        <target>Si asignas un nombre de dominio a la página raiz de la web, tus visitas serán redirigidas a esta web cuando introduzcan el dominio correspondiente (por ejemplo &lt;em&gt;midominio.com&lt;/em&gt; o &lt;em&gt;subdominio.midominio.com&lt;/em&gt;).</target>
+        <target>Aquí puede restringir el acceso a la página web a ciertos nombres de dominio.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_page.groups.1">
         <source>These groups will be able to access the page.</source>
-        <target>Aquí puede dar acceso a uno o más grupos de usuarios. Si no selecciona un grupo, cualquier usuario registrado tendrá acceso a la página.</target>
+        <target>Estos grupos serán capaces de acceder a la página.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeLayout.0">
         <source>Assign a layout</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_page.includeLayout.1">
         <source>Assign a page layout to the page and its subpages.</source>
-        <target>Por defecto una página utiliza el mismo diseño que su página padre. Si seleccionas esta opción, puedes asignar un diseño nuevo a la página actual y sus subpáginas.</target>
+        <target>Asignar un diseño de página a la página y sus subpáginas.</target>
       </trans-unit>
       <trans-unit id="tl_page.layout.0">
         <source>Page layout</source>
@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
-        <target>Por favor selecciona un diseño de página. Puede editar o crear diseños utilizando el módulo &lt;em&gt;page layout&lt;/em&gt;.</target>
+        <target>Puede manejar diseños de página con el módulo de &quot;temas&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_page.mobileLayout.0">
         <source>Mobile page layout</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
         <source>Set a cache timeout value for the page and its subpages.</source>
-        <target>Por defecto una página utiliza el mismo timeout cache que su página padre. Si seleccionas esta opción, puedes asignar un valor nuevo de timeout cache a la página actual y sus subpáginas.</target>
+        <target>Establezca un valor de tiempo de espera de caché de la página y sus subpáginas.</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
         <source>Cache timeout</source>
@@ -215,7 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.1">
         <source>Access rights determine what back end users can do with the page.</source>
-        <target>Los permisos te permiten definir hasta qué punto un usuario del back end puede modificar una página y sus artículos. Si no seleccionas esta opción, la página utiliza los mismos permisos que su página padre.</target>
+        <target>Los derechos de acceso determinan lo que pueden hacer los usuarios del backend.</target>
       </trans-unit>
       <trans-unit id="tl_page.cuser.0">
         <source>Owner</source>
@@ -239,7 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_page.chmod.1">
         <source>Please assign the access rights for the page and its subpages.</source>
-        <target>Cada página tiene tres niveles de acceso: uno para el usuario, uno para el grupo y otro para todos los demás. Puedes asignar diferentes permisos para cada nivel.</target>
+        <target>Por favor, asigne los derechos de acceso a la página y sus subpáginas.</target>
       </trans-unit>
       <trans-unit id="tl_page.noSearch.0">
         <source>Do not search</source>
@@ -295,7 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_page.accesskey.1">
         <source>A navigation item can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
-        <target>Una tecla de acceso es un único carácter que se puede ser asignado a un elemento de la navegación. Si un visitante pulsa simultáneamente la tecla [ALT] y la tecla de acceso, el elemento de la navegación estará preparado para recibir una acción (focus).</target>
+        <target>Un elemento de navegación se puede enfocar pulsando la tecla de acceso simultáneamente la tecla [CTRL] ó [ALT] .</target>
       </trans-unit>
       <trans-unit id="tl_page.published.0">
         <source>Publish page</source>
@@ -391,11 +391,11 @@
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
-        <target>permanente</target>
+        <target>Redirección 301 permanente</target>
       </trans-unit>
       <trans-unit id="tl_page.temporary">
         <source>302 Temporary redirect</source>
-        <target>temporal</target>
+        <target>Redirección 302 temporal</target>
       </trans-unit>
       <trans-unit id="tl_page.map_default">
         <source>Default</source>

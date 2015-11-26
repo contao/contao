@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Safely read the user input
@@ -33,7 +35,7 @@ class Input
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Input
+	 * @var Input
 	 */
 	protected static $objInstance;
 
@@ -53,7 +55,7 @@ class Input
 	 * Magic quotes setting
 	 * @var boolean
 	 */
-	protected static $blnMagicQuotes;
+	protected static $blnMagicQuotes = false;
 
 
 	/**
@@ -64,9 +66,6 @@ class Input
 		$_GET    = static::cleanKey($_GET);
 		$_POST   = static::cleanKey($_POST);
 		$_COOKIE = static::cleanKey($_COOKIE);
-
-		// Only check magic quotes once (see #3438)
-		static::$blnMagicQuotes = function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc();
 	}
 
 
@@ -92,7 +91,6 @@ class Input
 		{
 			$varValue = $_GET[$strKey];
 
-			$varValue = static::stripSlashes($varValue);
 			$varValue = static::decodeEntities($varValue);
 			$varValue = static::xssClean($varValue, true);
 			$varValue = static::stripTags($varValue);
@@ -138,7 +136,6 @@ class Input
 				return $varValue;
 			}
 
-			$varValue = static::stripSlashes($varValue);
 			$varValue = static::decodeEntities($varValue);
 			$varValue = static::xssClean($varValue, true);
 			$varValue = static::stripTags($varValue);
@@ -181,7 +178,6 @@ class Input
 				return $varValue;
 			}
 
-			$varValue = static::stripSlashes($varValue);
 			$varValue = static::decodeEntities($varValue);
 			$varValue = static::xssClean($varValue);
 			$varValue = static::stripTags($varValue, \Config::get('allowedTags'));
@@ -223,7 +219,6 @@ class Input
 				return $varValue;
 			}
 
-			$varValue = static::stripSlashes($varValue);
 			$varValue = static::preserveBasicEntities($varValue);
 			$varValue = static::xssClean($varValue);
 
@@ -245,8 +240,6 @@ class Input
 	 * @param string $strKey The variable name
 	 *
 	 * @return mixed The raw variable value
-	 *
-	 * @internal
 	 */
 	public static function postUnsafeRaw($strKey)
 	{
@@ -289,7 +282,6 @@ class Input
 		{
 			$varValue = $_COOKIE[$strKey];
 
-			$varValue = static::stripSlashes($varValue);
 			$varValue = static::decodeEntities($varValue);
 			$varValue = static::xssClean($varValue, true);
 			$varValue = static::stripTags($varValue);
@@ -465,7 +457,6 @@ class Input
 			return $return;
 		}
 
-		$varValue = static::stripSlashes($varValue);
 		$varValue = static::decodeEntities($varValue);
 		$varValue = static::xssClean($varValue, true);
 		$varValue = static::stripTags($varValue);
@@ -480,26 +471,13 @@ class Input
 	 * @param mixed $varValue A string or array
 	 *
 	 * @return mixed The string or array without slashes
+	 *
+	 * @deprecated Deprecated since Contao 3.5, to be removed in Contao 5.
+	 *             Since get_magic_quotes_gpc() always returns false in PHP 5.4+, the method was never actually executed.
 	 */
 	public static function stripSlashes($varValue)
 	{
-		if ($varValue == '' || !static::$blnMagicQuotes)
-		{
-			return $varValue;
-		}
-
-		// Recursively clean arrays
-		if (is_array($varValue))
-		{
-			foreach ($varValue as $k=>$v)
-			{
-				$varValue[$k] = static::stripSlashes($v);
-			}
-
-			return $varValue;
-		}
-
-		return stripslashes($varValue);
+		return $varValue;
 	}
 
 
@@ -593,7 +571,13 @@ class Input
 		$varValue = preg_replace('/\r+/', '', $varValue);
 
 		// Replace unicode entities
-		$varValue = utf8_decode_entities($varValue);
+		$varValue = preg_replace_callback('~&#x([0-9a-f]+);~i', function($matches) {
+			return Utf8::chr(hexdec($matches[1]));
+		}, $varValue);
+
+		$varValue = preg_replace_callback('~&#([0-9]+);~', function($matches) {
+			return Utf8::chr($matches[1]);
+		}, $varValue);
 
 		// Remove null bytes
 		$varValue = str_replace(chr(0), '', $varValue);
@@ -840,14 +824,14 @@ class Input
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return \Input The object instance
+	 * @return Input The object instance
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Input class is now static.
 	 */
 	public static function getInstance()
 	{
-		trigger_error('Using Input::getInstance() has been deprecated and will no longer work in Contao 5.0. The Input class is now static.', E_USER_DEPRECATED);
+		@trigger_error('Using Input::getInstance() has been deprecated and will no longer work in Contao 5.0. The Input class is now static.', E_USER_DEPRECATED);
 
 		if (static::$objInstance === null)
 		{

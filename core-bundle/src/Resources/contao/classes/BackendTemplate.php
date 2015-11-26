@@ -39,7 +39,7 @@ class BackendTemplate extends \Template
 			foreach ($GLOBALS['TL_HOOKS']['parseBackendTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
-				$strBuffer = $this->$callback[0]->$callback[1]($strBuffer, $this->strTemplate);
+				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -50,7 +50,7 @@ class BackendTemplate extends \Template
 	/**
 	 * Compile the template
 	 *
-	 * @internal
+	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
 	protected function compile()
 	{
@@ -107,7 +107,7 @@ class BackendTemplate extends \Template
 			foreach ($GLOBALS['TL_HOOKS']['outputBackendTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
-				$strBuffer = $this->$callback[0]->$callback[1]($strBuffer, $this->strTemplate);
+				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
 			}
 		}
 

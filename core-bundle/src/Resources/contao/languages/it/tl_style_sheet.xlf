@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_style_sheet.name.0">
         <source>Name</source>
-        <target>Nome e tipo di media</target>
+        <target>Nome</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.name.1">
         <source>Please enter the style sheet name.</source>
@@ -67,11 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.title_legend">
         <source>Name</source>
-        <target>Nome e tipo di media</target>
+        <target>Nome</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.expert_legend">
         <source>Expert settings</source>
-        <target>Exporta impostazioni</target>
+        <target>Impostazioni avanzate</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.media_legend">
         <source>Media settings</source>

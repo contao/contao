@@ -23,7 +23,7 @@ class ContentGallery extends \ContentElement
 
 	/**
 	 * Files object
-	 * @var \Model\Collection|\FilesModel
+	 * @var Model\Collection|FilesModel
 	 */
 	protected $objFiles;
 
@@ -79,7 +79,7 @@ class ContentGallery extends \ContentElement
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$images = array();
@@ -224,7 +224,7 @@ class ContentGallery extends \ContentElement
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			case 'meta':
-				trigger_error('The "meta" key in ContentGallery::compile() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+				@trigger_error('The "meta" key in ContentGallery::compile() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 				// no break;
 
 			case 'custom':
@@ -277,8 +277,8 @@ class ContentGallery extends \ContentElement
 		$total = count($images);
 		$limit = $total;
 
-		// Pagination
-		if ($this->perPage > 0)
+		// Paginate the result of not randomly sorted (see #8033)
+		if ($this->perPage > 0 && $this->sortBy != 'random')
 		{
 			// Get the current page
 			$id = 'page_g' . $this->id;
@@ -373,7 +373,7 @@ class ContentGallery extends \ContentElement
 			$strTemplate = $this->galleryTpl;
 		}
 
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($strTemplate);
 		$objTemplate->setData($this->arrData);
 

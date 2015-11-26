@@ -11,11 +11,11 @@
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
-        <target>عنوان</target>
+        <target>سربرگ</target>
       </trans-unit>
       <trans-unit id="tl_content.headline.1">
         <source>Here you can add a headline to the content element.</source>
-        <target>اینجا می‌توانید عنوانی به عنصر محتوا اضافه کنید.</target>
+        <target>اینجا می‌توانید عنوان اصلی را به عنصر محتوا اضافه کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_content.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
-        <target>می‌توانید فهرست تگ‌های اچ‌تی‌ام‌ال مجاز را در تنظیمات بخش مدیریت تغییر دهید.</target>
+        <target>می‌توانید فهرست برچسب‌های اچ‌تی‌ام‌ال مجاز را در تنظیمات بخش مدیریت تغییر دهید.</target>
       </trans-unit>
       <trans-unit id="tl_content.listtype.0">
         <source>List type</source>
@@ -155,11 +155,11 @@
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
-        <target>افزودن پارورقی جدول</target>
+        <target>افزودن پاورقی جدول</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
         <source>Make the last row of the table the table footer.</source>
-        <target>در صورتی که این گزینه را فعال سازید، ردیف آخر جدول به عنوان پاورقی جدول محسوب خواهد شد.</target>
+        <target>ردیف آخر جدول به عنوان زیرنویس جدول خواهد کرد.</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -187,11 +187,11 @@
       </trans-unit>
       <trans-unit id="tl_content.sortOrder.0">
         <source>Sort order</source>
-        <target>ترتیب چیدن</target>
+        <target>ترتیب مرتب‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_content.sortOrder.1">
         <source>Please choose the sort order.</source>
-        <target>لطفا ترتیب چیدن را انتخاب نمایید.</target>
+        <target>لطفا ترتیب مرتب‌سازی را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooType.0">
         <source>Operation mode</source>
@@ -227,7 +227,7 @@
       </trans-unit>
       <trans-unit id="tl_content.mooHeadline.0">
         <source>Section headline</source>
-        <target>عنوان بخش</target>
+        <target>سربرگ بخش</target>
       </trans-unit>
       <trans-unit id="tl_content.mooHeadline.1">
         <source>Please enter the headline of the content pane. HTML tags are allowed.</source>
@@ -239,7 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_content.mooStyle.1">
         <source>Here you can format the section headline using CSS code.</source>
-        <target>اینجا می‌توانید عنوان بخش را با استفاده از کد سی‌اس‌اس شکل دهید.</target>
+        <target>اینجا می‌توانید بخش سربرگ را با استفاده از کد سی‌اس‌اس شکل دهید.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooClasses.0">
         <source>Element classes</source>
@@ -315,7 +315,7 @@
       </trans-unit>
       <trans-unit id="tl_content.multiSRC.0">
         <source>Source files</source>
-        <target>منبع پرونده‌ها</target>
+        <target>پرونده‌های منبع</target>
       </trans-unit>
       <trans-unit id="tl_content.multiSRC.1">
         <source>Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.</source>
@@ -323,7 +323,7 @@
       </trans-unit>
       <trans-unit id="tl_content.orderSRC.0">
         <source>Sort order</source>
-        <target>ترتیب چیدن</target>
+        <target>ترتیب مرتب‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_content.orderSRC.1">
         <source>The sort order of the items.</source>
@@ -363,11 +363,11 @@
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
-        <target>مرتب سازی بر اساس</target>
+        <target>مرتب‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.1">
         <source>Please choose the sort order.</source>
-        <target>لطفا ترتیب چیدن را انتخاب نمایید.</target>
+        <target>لطفا ترتیب مرتب‌سازی را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
         <source>Ignore files without meta data</source>
@@ -495,7 +495,7 @@
       </trans-unit>
       <trans-unit id="tl_content.form.1">
         <source>Please select a form.</source>
-        <target>لطفا یک فرم را انتخاب نمایید.</target>
+        <target>لطفا یک فرم را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.module.0">
         <source>Module</source>
@@ -543,7 +543,7 @@
       </trans-unit>
       <trans-unit id="tl_content.invisible.1">
         <source>Hide the element on the website.</source>
-        <target>غیرقابل مشاهده کردن عنصر در وب‌سایت.</target>
+        <target>پنهان کردن عنصر در وب‌سایت.</target>
       </trans-unit>
       <trans-unit id="tl_content.start.0">
         <source>Show from</source>
@@ -734,7 +734,7 @@
         <target>ويرايش تنظیمات مقاله</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
+        <source>Edit the article settings</source>
         <target>ویرایش تنظیمات مقاله</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
@@ -751,7 +751,7 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Add new after content element ID %s</source>
-        <target>ساخت یک عنصر جدید بعد از عنصر شناسه‌ی %s</target>
+        <target>افزودن یک عنصر جدید بعد از عنصر شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.toggle.0">
         <source>Toggle visibility</source>

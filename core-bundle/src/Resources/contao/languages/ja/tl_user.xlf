@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_user.name.0">
         <source>Name</source>
-        <target>氏名</target>
+        <target>名前</target>
       </trans-unit>
       <trans-unit id="tl_user.name.1">
         <source>Please enter the first and last name.</source>
@@ -177,6 +177,13 @@
         <source>Here you can grant access to one or more folders (subfolders will be included automatically).</source>
         <target>1つ以上のフォルダーにアクセスを許可できます。(下位のフォルダーは自動的に含まれます。</target>
       </trans-unit>
+      <trans-unit id="tl_user.imageSizes.0">
+        <source>Image sizes</source>
+        <target>画像サイズ</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.1">
+        <source>Here you can grant access to one or more image sizes.</source>
+      </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
         <target>許可するフォーム</target>
@@ -260,6 +267,10 @@
       <trans-unit id="tl_user.filemounts_legend">
         <source>Filemounts</source>
         <target>ファイルマウント</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>画像サイズ</target>
       </trans-unit>
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>

@@ -146,7 +146,7 @@ abstract class Frontend extends \Controller
 				// Order by domain and language
 				while ($objPages->next())
 				{
-					/** @var \PageModel $objModel */
+					/** @var PageModel $objModel */
 					$objModel = $objPages->current();
 					$objPage  = $objModel->loadDetails();
 
@@ -231,7 +231,7 @@ abstract class Frontend extends \Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getPageIdFromUrl'] as $callback)
 			{
-				$arrFragments = static::importStatic($callback[0])->$callback[1]($arrFragments);
+				$arrFragments = static::importStatic($callback[0])->{$callback[1]}($arrFragments);
 			}
 		}
 
@@ -279,7 +279,7 @@ abstract class Frontend extends \Controller
 	 */
 	public static function getRootIdFromUrl()
 	{
-		trigger_error('Using Frontend::getRootIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use Frontend::getRootPageFromUrl()->id instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Frontend::getRootIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use Frontend::getRootPageFromUrl()->id instead.', E_USER_DEPRECATED);
 
 		return static::getRootPageFromUrl()->id;
 	}
@@ -288,7 +288,7 @@ abstract class Frontend extends \Controller
 	/**
 	 * Try to find a root page based on language and URL
 	 *
-	 * @return \PageModel
+	 * @return PageModel
 	 */
 	public static function getRootPageFromUrl()
 	{
@@ -297,8 +297,8 @@ abstract class Frontend extends \Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback)
 			{
-				/** @var \PageModel $objRootPage */
-				if (is_object(($objRootPage = static::importStatic($callback[0])->$callback[1]())))
+				/** @var PageModel $objRootPage */
+				if (is_object(($objRootPage = static::importStatic($callback[0])->{$callback[1]}())))
 				{
 					return $objRootPage;
 				}
@@ -411,7 +411,7 @@ abstract class Frontend extends \Controller
 			}
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$pageId = $objPage->alias ?: $objPage->id;
@@ -442,7 +442,7 @@ abstract class Frontend extends \Controller
 	 */
 	protected function jumpToOrReload($intId, $strParams=null, $strForceLang=null)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Always redirect if there are additional arguments (see #5734)
@@ -556,7 +556,7 @@ abstract class Frontend extends \Controller
 	 */
 	protected function prepareMetaDescription($strText)
 	{
-		$strText = $this->replaceInsertTags($strText);
+		$strText = $this->replaceInsertTags($strText, false);
 		$strText = strip_tags($strText);
 		$strText = str_replace("\n", ' ', $strText);
 		$strText = \StringUtil::substr($strText, 180);
@@ -646,7 +646,7 @@ abstract class Frontend extends \Controller
 	public static function getResponseFromCache()
 	{
 		// Build the page if a user is (potentially) logged in or there is POST data
-		if (!empty($_POST) || \Input::cookie('FE_USER_AUTH') || \Input::cookie('FE_AUTO_LOGIN') || $_SESSION['DISABLE_CACHE'] || isset($_SESSION['LOGIN_ERROR']) || \Config::get('debugMode'))
+		if (!empty($_POST) || \Input::cookie('FE_USER_AUTH') || \Input::cookie('FE_AUTO_LOGIN') || $_SESSION['DISABLE_CACHE'] || isset($_SESSION['LOGIN_ERROR']) || \Message::hasMessages() || \Config::get('debugMode'))
 		{
 			return null;
 		}
@@ -719,7 +719,7 @@ abstract class Frontend extends \Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getCacheKey'] as $callback)
 			{
-				$strCacheKey = \System::importStatic($callback[0])->$callback[1]($strCacheKey);
+				$strCacheKey = \System::importStatic($callback[0])->{$callback[1]}($strCacheKey);
 			}
 		}
 
@@ -821,7 +821,7 @@ abstract class Frontend extends \Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['modifyFrontendPage'] as $callback)
 			{
-				$strBuffer = \System::importStatic($callback[0])->$callback[1]($strBuffer, null);
+				$strBuffer = \System::importStatic($callback[0])->{$callback[1]}($strBuffer, null);
 			}
 		}
 

@@ -6,8 +6,24 @@
         <target>Имя</target>
       </trans-unit>
       <trans-unit id="tl_files.name.1">
-        <source>Contao automatically adds the file extension.</source>
-        <target>Contao автоматически добавляет расширение файла.</target>
+        <source>The file or folder name (without extension).</source>
+        <target>Имя файла или каталога (без расширения).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.0">
+        <source>Path</source>
+        <target>Путь</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.1">
+        <source>The relative path to the file or folder.</source>
+        <target>Относительный путь к файлу или каталогу.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.0">
+        <source>Extension</source>
+        <target>Расширение</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.1">
+        <source>The file extension</source>
+        <target>Расширение файла</target>
       </trans-unit>
       <trans-unit id="tl_files.protected.0">
         <source>Public</source>

@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\User;
 
 /**
  * Tests the UserSessionListener class.
@@ -38,7 +39,7 @@ class UserSessionListenerTest extends TestCase
     {
         $listener = $this->getListener();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\UserSessionListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $listener);
     }
 
     /**
@@ -68,18 +69,20 @@ class UserSessionListenerTest extends TestCase
 
         $session = $this->mockSession();
 
-        $user = $this->getMockBuilder($userClass)
+        $user = $this
+            ->getMockBuilder($userClass)
             ->setMethods(['__get'])
             ->getMock()
         ;
 
-        $user->expects($this->any())
+        $user
+            ->expects($this->any())
             ->method('__get')
             ->with($this->equalTo('session'))
             ->willReturn($sessionValuesToBeSet)
         ;
 
-        $token = $this->getMock('Contao\\CoreBundle\\Security\\Authentication\\ContaoToken', [], [], '', false);
+        $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
 
         $token
             ->expects($this->any())
@@ -87,7 +90,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
 
         $tokenStorage
             ->expects($this->any())
@@ -123,7 +126,7 @@ class UserSessionListenerTest extends TestCase
             new Response()
         );
 
-        $connection = $this->getMock('Doctrine\\DBAL\\Connection', ['prepare', 'execute'], [], '', false);
+        $connection = $this->getMock('Doctrine\DBAL\Connection', ['prepare', 'execute'], [], '', false);
 
         $connection
             ->expects($this->once())
@@ -136,7 +139,8 @@ class UserSessionListenerTest extends TestCase
             ->method('execute')
         ;
 
-        $user = $this->getMockBuilder($userClass)
+        $user = $this
+            ->getMockBuilder($userClass)
             ->setMethods(['__get'])
             ->getMock()
         ;
@@ -147,7 +151,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($userTable)
         ;
 
-        $token = $this->getMock('Contao\\CoreBundle\\Security\\Authentication\\ContaoToken', [], [], '', false);
+        $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
 
         $token
             ->expects($this->any())
@@ -155,7 +159,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
 
         $tokenStorage
             ->expects($this->any())
@@ -166,9 +170,7 @@ class UserSessionListenerTest extends TestCase
         $container = $this->mockContainerWithContaoScopes();
         $container->enterScope($scope);
 
-        $session = $this->mockSession();
-
-        $listener = $this->getListener($session, $connection, $tokenStorage);
+        $listener = $this->getListener($this->mockSession(), $connection, $tokenStorage);
         $listener->setContainer($container);
         $listener->onKernelResponse($responseEvent);
     }
@@ -188,14 +190,14 @@ class UserSessionListenerTest extends TestCase
             HttpKernelInterface::MASTER_REQUEST
         );
 
-        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
+        $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
 
         $session
             ->expects($this->never())
             ->method('getBag')
         ;
 
-        $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
 
         $tokenStorage
             ->expects($this->once())
@@ -204,28 +206,6 @@ class UserSessionListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, null, $tokenStorage);
-        $listener->onKernelRequest($responseEvent);
-    }
-
-    /**
-     * Tests that the session bag is not requested upon a sub request.
-     */
-    public function testListenerSkipUponSubRequestOnKernelRequest()
-    {
-        $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::SUB_REQUEST
-        );
-
-        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
-
-        $session
-            ->expects($this->never())
-            ->method('getBag')
-        ;
-
-        $listener = $this->getListener($session);
         $listener->onKernelRequest($responseEvent);
     }
 
@@ -245,14 +225,14 @@ class UserSessionListenerTest extends TestCase
             new Response()
         );
 
-        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
+        $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
 
         $session
             ->expects($this->never())
             ->method('getBag')
         ;
 
-        $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
 
         $tokenStorage
             ->expects($this->once())
@@ -260,7 +240,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($noUserReturn)
         ;
 
-        $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
+        $connection = $this->getMock('Doctrine\DBAL\Connection', [], [], '', false);
 
         $connection
             ->expects($this->never())
@@ -277,6 +257,28 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
+     * Tests that the session bag is not requested upon a sub request.
+     */
+    public function testListenerSkipUponSubRequestOnKernelRequest()
+    {
+        $responseEvent = new GetResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::SUB_REQUEST
+        );
+
+        $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
+
+        $session
+            ->expects($this->never())
+            ->method('getBag')
+        ;
+
+        $listener = $this->getListener($session);
+        $listener->onKernelRequest($responseEvent);
+    }
+
+    /**
      * Tests that neither the session bag nor doctrine is requested upon a sub request.
      */
     public function testListenerSkipUponSubRequestOnKernelResponse()
@@ -288,14 +290,14 @@ class UserSessionListenerTest extends TestCase
             new Response()
         );
 
-        $session = $this->getMock('Symfony\\Component\\HttpFoundation\\Session\\SessionInterface');
+        $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
 
         $session
             ->expects($this->never())
             ->method('getBag')
         ;
 
-        $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
+        $connection = $this->getMock('Doctrine\DBAL\Connection', [], [], '', false);
 
         $connection
             ->expects($this->never())
@@ -312,6 +314,113 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
+     * Tests that the session bag is not requested if there is no Contao user upon kernel.request.
+     */
+    public function testListenerSkipIfNoContaoUserOnKernelRequest()
+    {
+        $responseEvent = new GetResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST
+        );
+
+        $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
+
+        $token
+            ->expects($this->any())
+            ->method('getUser')
+            ->willReturn(new User('foo', 'bar'))
+        ;
+
+        /** @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+
+        $tokenStorage
+            ->expects($this->any())
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        /** @var UserSessionListener|\PHPUnit_Framework_MockObject_MockObject $listener */
+        $listener = $this
+            ->getMockBuilder('Contao\CoreBundle\EventListener\UserSessionListener')
+            ->disableOriginalConstructor()
+            ->setMethods(['hasUser', 'isContaoMasterRequest'])
+            ->getMock()
+        ;
+
+        $listener->setTokenStorage($tokenStorage);
+
+        $listener
+            ->expects($this->any())
+            ->method('hasUser')
+            ->willReturn(true)
+        ;
+
+        $listener
+            ->expects($this->any())
+            ->method('isContaoMasterRequest')
+            ->willReturn(true)
+        ;
+
+        $listener->onKernelRequest($responseEvent);
+    }
+
+    /**
+     * Tests that neither the session bag nor doctrine is requested if there is no Contao user upon kernel.response.
+     */
+    public function testListenerSkipIfNoContaoUserOnKernelResponse()
+    {
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response()
+        );
+
+        $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
+
+        $token
+            ->expects($this->any())
+            ->method('getUser')
+            ->willReturn(new User('foo', 'bar'))
+        ;
+
+        /** @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+
+        $tokenStorage
+            ->expects($this->any())
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        /** @var UserSessionListener|\PHPUnit_Framework_MockObject_MockObject $listener */
+        $listener = $this
+            ->getMockBuilder('Contao\CoreBundle\EventListener\UserSessionListener')
+            ->disableOriginalConstructor()
+            ->setMethods(['hasUser', 'isContaoMasterRequest'])
+            ->getMock()
+        ;
+
+        $listener->setTokenStorage($tokenStorage);
+
+        $listener
+            ->expects($this->any())
+            ->method('hasUser')
+            ->willReturn(true)
+        ;
+
+        $listener
+            ->expects($this->any())
+            ->method('isContaoMasterRequest')
+            ->willReturn(true)
+        ;
+
+        $listener->onKernelResponse($responseEvent);
+    }
+
+    /**
      * Provides the data for the testSessionReplacedOnKernelRequest() method.
      *
      * @return array The test data
@@ -319,8 +428,8 @@ class UserSessionListenerTest extends TestCase
     public function scopeBagProvider()
     {
         return [
-            [ContaoCoreBundle::SCOPE_BACKEND, 'Contao\\BackendUser', 'contao_backend'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, 'Contao\\FrontendUser', 'contao_frontend'],
+            [ContaoCoreBundle::SCOPE_BACKEND, 'Contao\BackendUser', 'contao_backend'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, 'Contao\FrontendUser', 'contao_frontend'],
         ];
     }
 
@@ -332,8 +441,8 @@ class UserSessionListenerTest extends TestCase
     public function scopeTableProvider()
     {
         return [
-            [ContaoCoreBundle::SCOPE_BACKEND, 'Contao\\BackendUser', 'tl_user'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, 'Contao\\FrontendUser', 'tl_member'],
+            [ContaoCoreBundle::SCOPE_BACKEND, 'Contao\BackendUser', 'tl_user'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, 'Contao\FrontendUser', 'tl_member'],
         ];
     }
 
@@ -369,11 +478,11 @@ class UserSessionListenerTest extends TestCase
         }
 
         if (null === $connection) {
-            $connection = $this->getMock('Doctrine\\DBAL\\Connection', [], [], '', false);
+            $connection = $this->getMock('Doctrine\DBAL\Connection', [], [], '', false);
         }
 
         if (null === $tokenStorage) {
-            $tokenStorage = $this->getMock('Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface');
+            $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
         }
 
         $listener = new UserSessionListener($session, $connection);

@@ -46,7 +46,7 @@ class RebuildIndex extends \Backend implements \executable
 
 		$time = time();
 
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_rebuild_index');
 		$objTemplate->action = ampersand(\Environment::get('request'));
 		$objTemplate->indexHeadline = $GLOBALS['TL_LANG']['tl_maintenance']['searchIndex'];
@@ -80,7 +80,7 @@ class RebuildIndex extends \Backend implements \executable
 				foreach ($GLOBALS['TL_HOOKS']['getSearchablePages'] as $callback)
 				{
 					$this->import($callback[0]);
-					$arrPages = $this->$callback[0]->$callback[1]($arrPages);
+					$arrPages = $this->{$callback[0]}->{$callback[1]}($arrPages);
 				}
 			}
 

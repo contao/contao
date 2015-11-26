@@ -81,7 +81,7 @@ class Pagination
 
 	/**
 	 * Template object
-	 * @var \Template|object
+	 * @var Template|object
 	 */
 	protected $objTemplate;
 
@@ -125,14 +125,14 @@ class Pagination
 	/**
 	 * Set the number of rows, the number of results per pages and the number of links
 	 *
-	 * @param integer   $intRows          The number of rows
-	 * @param integer   $intPerPage       The number of items per page
-	 * @param integer   $intNumberOfLinks The number of links to generate
-	 * @param string    $strParameter     The parameter name
-	 * @param \Template $objTemplate      The template object
-	 * @param boolean   $blnForceParam    Force the URL parameter
+	 * @param integer  $intRows          The number of rows
+	 * @param integer  $intPerPage       The number of items per page
+	 * @param integer  $intNumberOfLinks The number of links to generate
+	 * @param string   $strParameter     The parameter name
+	 * @param Template $objTemplate      The template object
+	 * @param boolean  $blnForceParam    Force the URL parameter
 	 */
-	public function __construct($intRows, $intPerPage, $intNumberOfLinks=7, $strParameter='page', \Template $objTemplate=null, $blnForceParam=false)
+	public function __construct($intRows, $intPerPage, $intNumberOfLinks=7, $strParameter='page', Template $objTemplate=null, $blnForceParam=false)
 	{
 		$this->intPage = 1;
 		$this->intRows = (int) $intRows;
@@ -155,7 +155,7 @@ class Pagination
 
 		if ($objTemplate === null)
 		{
-			/** @var \FrontendTemplate|object $objTemplate */
+			/** @var FrontendTemplate|object $objTemplate */
 			$objTemplate = new \FrontendTemplate('pagination');
 		}
 

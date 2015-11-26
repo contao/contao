@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Front end module "change password".
@@ -35,10 +37,10 @@ class ModuleChangePassword extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['changePassword'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['changePassword'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -62,7 +64,7 @@ class ModuleChangePassword extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->import('FrontendUser', 'User');
@@ -91,17 +93,18 @@ class ModuleChangePassword extends \Module
 		$doNotSubmit = false;
 		$objMember = \MemberModel::findByPk($this->User->id);
 		$strFormId = 'tl_change_password_' . $this->id;
+		$flashBag = \System::getContainer()->get('session')->getFlashBag();
 
-		/** @var \FormTextField $objOldPassword */
+		/** @var FormTextField $objOldPassword */
 		$objOldPassword = null;
 
-		/** @var \FormPassword $objNewPassword */
+		/** @var FormPassword $objNewPassword */
 		$objNewPassword = null;
 
 		// Initialize the widgets
 		foreach ($arrFields as $strKey=>$arrField)
 		{
-			/** @var \Widget $strClass */
+			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
 
 			// Continue if the class is not defined
@@ -112,14 +115,14 @@ class ModuleChangePassword extends \Module
 
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'];
 
-			/** @var \Widget $objWidget */
+			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
 
 			// Increase the row count if it is a password field
-			if ($objWidget instanceof \FormPassword)
+			if ($objWidget instanceof FormPassword)
 			{
 				$objWidget->rowClassConfirm = 'row_' . ++$row . ((($row % 2) == 0) ? ' even' : ' odd');
 			}
@@ -181,7 +184,7 @@ class ModuleChangePassword extends \Module
 				foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1]($objMember, $objNewPassword->value, $this);
+					$this->{$callback[0]}->{$callback[1]}($objMember, $objNewPassword->value, $this);
 				}
 			}
 
@@ -191,13 +194,20 @@ class ModuleChangePassword extends \Module
 				$this->jumpToOrReload($objJumpTo->row());
 			}
 
+			$flashBag->set('mod_change_password_confirm', $GLOBALS['TL_LANG']['MSC']['newPasswordSet']);
 			$this->reload();
+		}
+
+		// Confirmation message
+		if ($flashBag->has('mod_change_password_confirm'))
+		{
+			$arrMessages = $flashBag->get('mod_change_password_confirm');
+			$this->Template->message = $arrMessages[0];
 		}
 
 		$this->Template->formId = $strFormId;
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
-		$this->Template->message = \Message::generate(false, true);
 	}
 }

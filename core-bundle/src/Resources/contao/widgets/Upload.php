@@ -43,7 +43,7 @@ class Upload extends \Widget implements \uploadable
 
 	/**
 	 * Uploader
-	 * @var \FileUpload
+	 * @var FileUpload
 	 */
 	protected $objUploader;
 

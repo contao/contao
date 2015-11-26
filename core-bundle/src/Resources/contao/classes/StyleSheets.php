@@ -931,7 +931,7 @@ class StyleSheets extends \Backend
 			foreach ($GLOBALS['TL_HOOKS']['compileDefinition'] as $callback)
 			{
 				$this->import($callback[0]);
-				$strTemp = $this->$callback[0]->$callback[1]($row, $blnWriteToFile, $vars, $parent);
+				$strTemp = $this->{$callback[0]}->{$callback[1]}($row, $blnWriteToFile, $vars, $parent);
 
 				if ($strTemp != '')
 				{
@@ -1087,7 +1087,7 @@ class StyleSheets extends \Backend
 			$class = 'FileUpload';
 		}
 
-		/** @var \FileUpload $objUploader */
+		/** @var FileUpload $objUploader */
 		$objUploader = new $class();
 
 		// Import CSS
@@ -1353,11 +1353,11 @@ class StyleSheets extends \Backend
 	/**
 	 * Export a style sheet
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @throws \Exception
 	 */
-	public function exportStyleSheet(\DataContainer $dc)
+	public function exportStyleSheet(DataContainer $dc)
 	{
 		$objStyleSheet = $this->Database->prepare("SELECT * FROM tl_style_sheet WHERE id=?")
 										->limit(1)
@@ -2219,7 +2219,7 @@ class StyleSheets extends \Backend
 						foreach ($GLOBALS['TL_HOOKS']['createDefinition'] as $callback)
 						{
 							$this->import($callback[0]);
-							$arrTemp = $this->$callback[0]->$callback[1]($strKey, $arrChunks[1], $strDefinition, $arrSet);
+							$arrTemp = $this->{$callback[0]}->{$callback[1]}($strKey, $arrChunks[1], $strDefinition, $arrSet);
 
 							if ($arrTemp && is_array($arrTemp))
 							{

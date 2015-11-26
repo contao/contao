@@ -94,19 +94,5 @@
     });
   </script>
 
-  <?php if (!$this->disableCron): ?>
-    <script>
-      new Request({
-        url:'system/cron/cron.txt',
-        onComplete: function(txt) {
-          if (!txt) txt = 0;
-          if (parseInt(txt) < (Date.now()/1000 - 300)) {
-            new Request({url:'<?= $this->route('contao_frontend_cron') ?>'}).send();
-          }
-        }
-      }).send();
-    </script>
-  <?php endif; ?>
-
 </body>
 </html>

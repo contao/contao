@@ -246,8 +246,7 @@
         <target>Filen &quot;%s&quot; är inte tillgänglig för nedladdning!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid input: %s</source>
-        <target>Felaktig inmatning: %s</target>
+        <source>Invalid option: %s</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -978,8 +977,8 @@
         <target>Aktivera/avaktivera modulen</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
-        <source>Title</source>
-        <target>Rubrik</target>
+        <source>Alternate text</source>
+        <target>Alternativ text</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -1418,6 +1417,9 @@ Detta e-postmeddelande har genererats av Contao. Du kan inte svara på det direk
         <source>No records found.</source>
         <target>Inga poster funna.</target>
       </trans-unit>
+      <trans-unit id="MSC.searchExclude">
+        <source>Unsynchronized directories are not included in the search results.</source>
+      </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
         <target>Spara</target>
@@ -1623,8 +1625,13 @@ Detta e-postmeddelande har genererats av Contao. Du kan inte svara på det direk
         <target>%s backend</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
-        <source>Contao version %s available</source>
-        <target>Contao version %s är tillgänglig</target>
+        <source>Contao version %s is available.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceEnabled">
+        <source>The maintenance mode is currently enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceDisabled">
+        <source>The maintenance mode is currently disabled.</source>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1802,14 +1809,6 @@ Detta e-postmeddelande har genererats av Contao. Du kan inte svara på det direk
         <source>%s (copy)</source>
         <target>%s (kopia)</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceMode">
-        <source>Contao is currently running in &lt;strong&gt;maintenance mode&lt;/strong&gt;, in which the website (front end) is not available. Do not disable it if you are currently installing or upgrading third-party extensions! The website might not function properly.</source>
-        <target>Contao körs just nu i &lt;strong&gt;underhållsläge&lt;/strong&gt;, vilket gör att hemsidan (frontend) inte är tillgängligt för besökarna. Slå inte av underhållsläget om du just nu installerar eller uppdaterar 3e-partsmoduler. Då kan det hända att hemsidan inte fungerar som den ska! </target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceOff">
-        <source>Disable</source>
-        <target>Inaktivera</target>
-      </trans-unit>
       <trans-unit id="MSC.buildCacheText">
         <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
         <target>Den &lt;strong&gt;interna cachen&lt;/strong&gt; har inte skapats ännu. Genom att skapa cachen ökas prestandan i applikationen vilket är starkt rekommenderat. Den interna cachen skapas automatiskt varje gång du kör &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; i kommandoprompten.</target>
@@ -1829,6 +1828,9 @@ Detta e-postmeddelande har genererats av Contao. Du kan inte svara på det direk
       <trans-unit id="MSC.register">
         <source>Register</source>
         <target>Registrera</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendActivation">
+        <source>The activation mail has been re-sent to your e-mail address.</source>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
@@ -2069,6 +2071,9 @@ Detta e-postmeddelande har genererats av Contao. Du kan inte svara på det direk
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
         <target>Spara data</target>
+      </trans-unit>
+      <trans-unit id="MSC.savedData">
+        <source>Your data has been saved.</source>
       </trans-unit>
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>

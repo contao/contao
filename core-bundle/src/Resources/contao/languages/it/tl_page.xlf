@@ -379,7 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_page.expert_legend">
         <source>Expert settings</source>
-        <target>Exporta impostazioni</target>
+        <target>Impostazioni avanzate</target>
       </trans-unit>
       <trans-unit id="tl_page.tabnav_legend">
         <source>Keyboard navigation</source>

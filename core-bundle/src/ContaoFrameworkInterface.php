@@ -11,9 +11,12 @@
 namespace Contao\CoreBundle;
 
 /**
- * Interface for the Contao framework initializer.
+ * Contao framework interface.
  *
  * @author Yanick Witschi <https://github.com/toflar>
+ *
+ * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
+ *             Use the Contao\CoreBundle\Framework\ContaoFrameworkInterface interface instead.
  */
 interface ContaoFrameworkInterface
 {

@@ -8,16 +8,20 @@ services:
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
 
+    contao.image.image_sizes:
+        class: Contao\CoreBundle\Image\ImageSizes
+        arguments:
+            - "@database_connection"
+            - "@event_dispatcher"
+            - "@contao.framework"
+
     contao.framework:
-        class: Contao\CoreBundle\ContaoFramework
+        class: Contao\CoreBundle\Framework\ContaoFramework
         arguments:
             - "@request_stack"
             - "@router"
             - "@session"
             - "%kernel.root_dir%"
-            - "@security.csrf.token_manager"
-            - "%contao.csrf_token_name%"
-            - "@contao.adapter.config"
             - "%contao.error_level%"
         calls:
             - ["setContainer", ["@service_container"]]

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Front end module "book navigation".
@@ -41,10 +43,10 @@ class ModuleBooknav extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['booknav'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['booknav'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -53,7 +55,7 @@ class ModuleBooknav extends \Module
 			return $objTemplate->parse();
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (!$this->rootPage || !in_array($this->rootPage, $objPage->trail))
@@ -89,7 +91,7 @@ class ModuleBooknav extends \Module
 		$this->arrPages[$objTarget->id] = $objTarget->row();
 		$this->getBookPages($objTarget->id, $groups, time());
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Upper page
@@ -106,6 +108,7 @@ class ModuleBooknav extends \Module
 			// Hide the link if the reference page is a forward page (see #5374)
 			if (isset($this->arrPages[$intKey]))
 			{
+				$this->Template->hasUp = true;
 				$this->Template->upHref = $this->generateFrontendUrl($this->arrPages[$intKey]);
 				$this->Template->upTitle = specialchars($this->arrPages[$intKey]['title'], true);
 				$this->Template->upPageTitle = specialchars($this->arrPages[$intKey]['pageTitle'], true);
@@ -125,6 +128,7 @@ class ModuleBooknav extends \Module
 		{
 			$intKey = $arrLookup[($intCurrent - 1)];
 
+			$this->Template->hasPrev = true;
 			$this->Template->prevHref = $this->generateFrontendUrl($this->arrPages[$intKey]);
 			$this->Template->prevTitle = specialchars($this->arrPages[$intKey]['title'], true);
 			$this->Template->prevPageTitle = specialchars($this->arrPages[$intKey]['pageTitle'], true);
@@ -136,6 +140,7 @@ class ModuleBooknav extends \Module
 		{
 			$intKey = $arrLookup[($intCurrent + 1)];
 
+			$this->Template->hasNext = true;
 			$this->Template->nextHref = $this->generateFrontendUrl($this->arrPages[$intKey]);
 			$this->Template->nextTitle = specialchars($this->arrPages[$intKey]['title'], true);
 			$this->Template->nextPageTitle = specialchars($this->arrPages[$intKey]['pageTitle'], true);

@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\BackendUser;
 use Contao\FrontendUser;
 use Contao\User;
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -24,8 +24,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @internal
  */
 class UserSessionListener
 {

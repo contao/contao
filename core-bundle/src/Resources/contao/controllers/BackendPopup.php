@@ -96,19 +96,21 @@ class BackendPopup extends \Backend
 			$objFile->sendToBrowser();
 		}
 
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_popup');
 
 		// Add the resource (see #6880)
 		if (($objModel = \FilesModel::findByPath($this->strFile)) === null)
 		{
-			$objFolder = new \Folder(is_dir(TL_ROOT . '/' . $this->strFile) ? $this->strFile : dirname($this->strFile));
-
-			if ($objFolder->shouldBeSynchronized())
+			if (\Dbafs::shouldBeSynchronized($this->strFile))
 			{
 				$objModel = \Dbafs::addResource($this->strFile);
-				$objTemplate->uuid = \StringUtil::binToUuid($objModel->uuid); // see #5211
 			}
+		}
+
+		if ($objModel !== null)
+		{
+			$objTemplate->uuid = \StringUtil::binToUuid($objModel->uuid); // see #5211
 		}
 
 		// Add the file info
@@ -145,7 +147,6 @@ class BackendPopup extends \Backend
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = specialchars($this->strFile);
 		$objTemplate->charset = \Config::get('characterSet');
-		$objTemplate->headline = basename(utf8_convert_encoding($this->strFile, \Config::get('characterSet')));
 		$objTemplate->label_uuid = $GLOBALS['TL_LANG']['MSC']['fileUuid'];
 		$objTemplate->label_imagesize = $GLOBALS['TL_LANG']['MSC']['fileImageSize'];
 		$objTemplate->label_filesize = $GLOBALS['TL_LANG']['MSC']['fileSize'];

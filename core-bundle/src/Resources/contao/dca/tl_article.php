@@ -67,7 +67,8 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
 				'href'                => '&amp;ptg=all',
-				'class'               => 'header_toggle'
+				'class'               => 'header_toggle',
+				'showOnSelect'        => true
 			),
 			'all' => array
 			(
@@ -361,6 +362,8 @@ class tl_article extends Backend
 
 	/**
 	 * Check permissions to edit table tl_page
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -439,7 +442,6 @@ class tl_article extends Backend
 			$session['CLIPBOARD']['tl_article']['id'] = $clipboard;
 		}
 
-		$error = false;
 		$permission = 0;
 
 		// Overwrite the session
@@ -498,8 +500,7 @@ class tl_article extends Backend
 
 					if ($objParent->numRows && $objParent->type == 'root')
 					{
-						$this->log('Attempt to insert an article into website root page '.Input::get('pid'), __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Attempt to insert an article into website root page ID ' . Input::get('pid') . '.');
 					}
 					break;
 
@@ -525,10 +526,9 @@ class tl_article extends Backend
 				// Check each page
 				foreach ($ids as $id)
 				{
-					if (!$error && !in_array($id, $pagemounts))
+					if (!in_array($id, $pagemounts))
 					{
-						$this->log('Page ID ' . $id . ' was not mounted', __METHOD__, TL_ERROR);
-						$error = true;
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Page ID ' . $id . ' is not mounted.');
 					}
 
 					$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
@@ -536,22 +536,12 @@ class tl_article extends Backend
 											  ->execute($id);
 
 					// Check whether the current user has permission for the current page
-					if (!$error && $objPage->numRows)
+					if ($objPage->numRows && !$this->User->isAllowed($permission, $objPage->row()))
 					{
-						if (!$this->User->isAllowed($permission, $objPage->row()))
-						{
-							$this->log('Not enough permissions to '. Input::get('act') .' '. (strlen(Input::get('id')) ? 'article ID '. Input::get('id') : ' articles') .' on page ID '. $id .' or paste it/them into page ID '. $id, __METHOD__, TL_ERROR);
-							$error = true;
-						}
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' ' . (strlen(Input::get('id')) ? 'article ID ' . Input::get('id') : ' articles') . ' on page ID ' . $id . ' or to paste it/them into page ID ' . $id . '.');
 					}
 				}
 			}
-		}
-
-		// Redirect if there is an error
-		if ($error)
-		{
-			$this->redirect('contao/main.php?act=error');
 		}
 	}
 
@@ -959,19 +949,26 @@ class tl_article extends Backend
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
-		// Check permissions to edit
+		// Set the ID and action
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
 		$this->checkPermission();
 
-		// Check permissions to publish
+		// Check the field access
 		if (!$this->User->hasAccess('tl_article::published', 'alexf'))
 		{
-			$this->log('Not enough permissions to publish/unpublish article ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish article ID "' . $intId . '".');
 		}
 
 		$objVersions = new Versions('tl_article', $intId);
@@ -985,7 +982,7 @@ class tl_article extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{

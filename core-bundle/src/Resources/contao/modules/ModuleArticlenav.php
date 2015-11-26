@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Front end module "article list".
@@ -27,7 +29,7 @@ class ModuleArticlenav extends \Module
 
 	/**
 	 * Articles
-	 * @var \Model\Collection
+	 * @var Model\Collection
 	 */
 	protected $objArticles;
 
@@ -41,10 +43,10 @@ class ModuleArticlenav extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['articlenav'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['articlenav'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -53,7 +55,7 @@ class ModuleArticlenav extends \Module
 			return $objTemplate->parse();
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->objArticles = \ArticleModel::findPublishedWithTeaserByPidAndColumn($objPage->id, $this->strColumn);
@@ -72,7 +74,7 @@ class ModuleArticlenav extends \Module
 				return '';
 			}
 
-			/** @var \ArticleModel $objArticle */
+			/** @var ArticleModel $objArticle */
 			$objArticle = $this->objArticles->current();
 			$strAlias = $objArticle->alias ?: $objArticle->id;
 
@@ -88,7 +90,7 @@ class ModuleArticlenav extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$intActive = null;
@@ -97,7 +99,7 @@ class ModuleArticlenav extends \Module
 
 		while ($this->objArticles->next())
 		{
-			/** @var \ArticleModel $objArticle */
+			/** @var ArticleModel $objArticle */
 			$objArticle = $this->objArticles->current();
 			$strAlias = $objArticle->alias ?: $objArticle->id;
 

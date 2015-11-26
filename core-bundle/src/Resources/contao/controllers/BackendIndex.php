@@ -73,7 +73,7 @@ class BackendIndex extends \Backend
 	 */
 	public function run()
 	{
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_login');
 
 		// Show a cookie warning
@@ -102,7 +102,6 @@ class BackendIndex extends \Backend
 		$objTemplate->username = $GLOBALS['TL_LANG']['tl_user']['username'][0];
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
-		$objTemplate->disableCron = \Config::get('disableCron');
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 
 		return $objTemplate->getResponse();

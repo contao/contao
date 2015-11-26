@@ -30,7 +30,7 @@ class Installer extends \Controller
 	 */
 	public function __construct()
 	{
-		trigger_error('Using the Contao\Database\Installer class has been deprecated and will no longer work in Contao 5.0. Use the Installer class from the contao/installation-bundle instead.', E_USER_DEPRECATED);
+		@trigger_error('Using the Contao\Database\Installer class has been deprecated and will no longer work in Contao 5.0. Use the Installer class from the contao/installation-bundle instead.', E_USER_DEPRECATED);
 
 		parent::__construct();
 	}
@@ -251,7 +251,7 @@ class Installer extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback)
 			{
 				$this->import($callback[0]);
-				$return = $this->$callback[0]->$callback[1]($return);
+				$return = $this->{$callback[0]}->{$callback[1]}($return);
 			}
 		}
 
@@ -296,7 +296,7 @@ class Installer extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback)
 			{
 				$this->import($callback[0]);
-				$return = $this->$callback[0]->$callback[1]($return);
+				$return = $this->{$callback[0]}->{$callback[1]}($return);
 			}
 		}
 
@@ -382,7 +382,7 @@ class Installer extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromFile'] as $callback)
 			{
 				$this->import($callback[0]);
-				$return = $this->$callback[0]->$callback[1]($return);
+				$return = $this->{$callback[0]}->{$callback[1]}($return);
 			}
 		}
 
@@ -512,7 +512,7 @@ class Installer extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDB'] as $callback)
 			{
 				$this->import($callback[0]);
-				$return = $this->$callback[0]->$callback[1]($return);
+				$return = $this->{$callback[0]}->{$callback[1]}($return);
 			}
 		}
 

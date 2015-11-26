@@ -22,8 +22,6 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @internal
  */
 class ContaoToken extends AbstractToken
 {
@@ -31,6 +29,8 @@ class ContaoToken extends AbstractToken
      * Constructor.
      *
      * @param User $user The user object
+     *
+     * @throws UsernameNotFoundException If the user is invalid
      */
     public function __construct(User $user)
     {

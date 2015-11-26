@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Generates and validates form fields
@@ -198,7 +200,7 @@ abstract class Widget extends \Controller
 		// Override the output format in the front end
 		if (TL_MODE == 'FE')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			if ($objPage->outputFormat != '')
@@ -632,7 +634,7 @@ abstract class Widget extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['parseWidget'] as $callback)
 			{
 				$this->import($callback[0]);
-				$strBuffer = $this->$callback[0]->$callback[1]($strBuffer, $this);
+				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this);
 			}
 		}
 
@@ -655,7 +657,7 @@ abstract class Widget extends \Controller
 		return sprintf('<label%s%s>%s%s%s</label>',
 						($this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : ''),
 						(($this->strClass != '') ? ' class="' . $this->strClass . '"' : ''),
-						($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].'</span> ' : ''),
+						($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
 						$this->strLabel,
 						($this->mandatory ? '<span class="mandatory">*</span>' : ''));
 	}
@@ -836,12 +838,12 @@ abstract class Widget extends \Controller
 			}
 		}
 
-		if ($this->minlength && $varInput != '' && utf8_strlen($varInput) < $this->minlength)
+		if ($this->minlength && $varInput != '' && Utf8::strlen($varInput) < $this->minlength)
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['minlength'], $this->strLabel, $this->minlength));
 		}
 
-		if ($this->maxlength && $varInput != '' && utf8_strlen($varInput) > $this->maxlength)
+		if ($this->maxlength && $varInput != '' && Utf8::strlen($varInput) > $this->maxlength)
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $this->strLabel, $this->maxlength));
 		}
@@ -975,7 +977,7 @@ abstract class Widget extends \Controller
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['email'], $this->strLabel));
 					}
-					if ($this->rgxp == 'friendly' && $strName != '')
+					if ($this->rgxp == 'friendly' && !empty($strName))
 					{
 						$varInput = $strName . ' [' . $varInput . ']';
 					}
@@ -1068,7 +1070,7 @@ abstract class Widget extends \Controller
 						foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback)
 						{
 							$this->import($callback[0]);
-							$break = $this->$callback[0]->$callback[1]($this->rgxp, $varInput, $this);
+							$break = $this->{$callback[0]}->{$callback[1]}($this->rgxp, $varInput, $this);
 
 							// Stop the loop if a callback returned true
 							if ($break === true)
@@ -1253,12 +1255,12 @@ abstract class Widget extends \Controller
 	/**
 	 * Extract the Widget attributes from a Data Container array
 	 *
-	 * @param array  $arrData  The field configuration array
-	 * @param string $strName  The field name in the form
-	 * @param mixed  $varValue The field value
-	 * @param string $strField The field name in the database
-	 * @param string $strTable The table name in the database
-	 * @param object $objDca   An optional DataContainer object
+	 * @param array              $arrData  The field configuration array
+	 * @param string             $strName  The field name in the form
+	 * @param mixed              $varValue The field value
+	 * @param string             $strField The field name in the database
+	 * @param string             $strTable The table name in the database
+     * @param DataContainer|null $objDca   An optional DataContainer object
 	 *
 	 * @return array An attributes array that can be passed to a widget
 	 */
@@ -1306,7 +1308,7 @@ abstract class Widget extends \Controller
 		if (is_array($arrData['options_callback']))
 		{
 			$arrCallback = $arrData['options_callback'];
-			$arrData['options'] = static::importStatic($arrCallback[0])->$arrCallback[1]($objDca);
+			$arrData['options'] = static::importStatic($arrCallback[0])->{$arrCallback[1]}($objDca);
 		}
 		elseif (is_callable($arrData['options_callback']))
 		{
@@ -1389,7 +1391,7 @@ abstract class Widget extends \Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getAttributesFromDca'] as $callback)
 			{
-				$arrAttributes = static::importStatic($callback[0])->$callback[1]($arrAttributes, $objDca);
+				$arrAttributes = static::importStatic($callback[0])->{$callback[1]}($arrAttributes, $objDca);
 			}
 		}
 
@@ -1436,6 +1438,10 @@ abstract class Widget extends \Controller
 		elseif (in_array($type, array('int', 'integer', 'tinyint', 'smallint', 'mediumint', 'bigint', 'float', 'double', 'dec', 'decimal')))
 		{
 			return 0;
+		}
+		elseif (strpos($sql, 'NULL') !== false && strpos($sql, 'NOT NULL') === false)
+		{
+			return null;
 		}
 
 		return '';
@@ -1493,7 +1499,7 @@ abstract class Widget extends \Controller
 	 */
 	protected function addSubmit()
 	{
-		trigger_error('Using Widget::addSubmit() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using Widget::addSubmit() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		return '';
 	}

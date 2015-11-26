@@ -500,7 +500,7 @@ class Date
 	{
 		if (TL_MODE == 'FE')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			if ($objPage->dateFormat != '' && static::isNumericFormat($objPage->dateFormat))
@@ -522,7 +522,7 @@ class Date
 	{
 		if (TL_MODE == 'FE')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			if ($objPage->timeFormat != '' && static::isNumericFormat($objPage->timeFormat))
@@ -544,7 +544,7 @@ class Date
 	{
 		if (TL_MODE == 'FE')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			if ($objPage->datimFormat != '' && static::isNumericFormat($objPage->datimFormat))
@@ -622,7 +622,7 @@ class Date
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseDate'] as $callback)
 			{
-				$strReturn = \System::importStatic($callback[0])->$callback[1]($strReturn, $strFormat, $intTstamp);
+				$strReturn = \System::importStatic($callback[0])->{$callback[1]}($strReturn, $strFormat, $intTstamp);
 			}
 		}
 

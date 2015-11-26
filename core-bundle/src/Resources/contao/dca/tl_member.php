@@ -234,8 +234,11 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'filter'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'select',
-			'options'                 => System::getCountries(),
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
+			'options_callback' => function ()
+			{
+				return System::getCountries();
+			},
 			'sql'                     => "varchar(2) NOT NULL default ''"
 		),
 		'phone' => array
@@ -289,8 +292,11 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options'                 => System::getLanguages(),
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'rgxp'=>'locale', 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
+			'options_callback' => function ()
+			{
+				return System::getLanguages();
+			},
 			'sql'                     => "varchar(5) NOT NULL default ''"
 		),
 		'groups' => array
@@ -555,7 +561,7 @@ class tl_member extends Backend
 				foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1]($objUser, $strPassword);
+					$this->{$callback[0]}->{$callback[1]}($objUser, $strPassword);
 				}
 			}
 		}
@@ -673,14 +679,24 @@ class tl_member extends Backend
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
-		// Check permissions
+		// Set the ID and action
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
+		// Check the field access
 		if (!$this->User->hasAccess('tl_member::disable', 'alexf'))
 		{
-			$this->log('Not enough permissions to activate/deactivate member ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate member ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_member', $intId);
@@ -694,7 +710,7 @@ class tl_member extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{

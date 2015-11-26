@@ -50,10 +50,15 @@
           <div id="search">
             <input type="hidden" name="FORM_SUBMIT" value="item_selector">
             <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-            <input type="text" name="keyword" id="keyword" value="<?= $this->value ?>" class="tl_text<?php if ($this->value != ''): ?> active<?php endif; ?>">
+            <input type="search" name="keyword" id="keyword" value="<?= $this->value ?>" class="tl_text<?php if ($this->value != ''): ?> active<?php endif; ?>">
             <button type="submit" name="search" class="tl_submit"><?= $this->search ?></button>
           </div>
         </form>
+        <?php if ($this->searchExclude && $this->value != ''): ?>
+          <div class="tl_message tl_message_picker">
+            <p class="tl_info"><?= $this->searchExclude ?></p>
+          </div>
+        <?php endif; ?>
       <?php endif; ?>
       <div class="tl_listing_container tree_view unselectable" id="tl_select">
         <?= $this->breadcrumb ?>

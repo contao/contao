@@ -25,6 +25,18 @@
         <source>Description</source>
         <target>Omschrijving</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceMode">
+        <source>Maintenance mode</source>
+        <target>Onderhoud modus</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceEnable">
+        <source>Enable</source>
+        <target>Activeer</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceDisable">
+        <source>Disable</source>
+        <target>Uitschakelen</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Verwijder sessiegegevens</target>
@@ -32,46 +44,6 @@
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
         <target>De cache is opgeschoond</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.liveUpdate">
-        <source>Live Update</source>
-        <target>Live Update</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.liveUpdateId">
-        <source>Live Update ID</source>
-        <target>Live Update ID</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.toLiveUpdate">
-        <source>Go to the Live Update</source>
-        <target>Ga naar Live Update</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.upToDate">
-        <source>Your Contao version %s is up to date</source>
-        <target>Uw Contao versie %s is up-to-date</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.newVersion">
-        <source>A newer Contao version %s is available</source>
-        <target>Een nieuwe Contao versie %s is beschikbaar</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.notWriteable">
-        <source>The temporary folder (system/tmp) is not writeable</source>
-        <target>De tijdelijke map (system/tmp) is niet beschrijfbaar</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.runLiveUpdate">
-        <source>Run the update</source>
-        <target>Start het updaten</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.toc">
-        <source>Content of the update archive</source>
-        <target>Inhoud van het update archief</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.backup">
-        <source>Backuped files</source>
-        <target>Backup bestanden</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.update">
-        <source>Updated files</source>
-        <target>Bijgewerkte bestanden</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.searchIndex">
         <source>Rebuild the search index</source>

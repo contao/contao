@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\ToggleViewListener;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -20,14 +19,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\Framework\ContaoFramework;
 
 /**
  * Tests the ToggleViewListener class.
  *
  * @author Andreas Schempp <https:/github.com/aschempp>
  */
-class ToggleViewListenerTest extends TestCase
+class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
@@ -50,7 +49,7 @@ class ToggleViewListenerTest extends TestCase
         parent::setUp();
 
         $this->framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -63,7 +62,7 @@ class ToggleViewListenerTest extends TestCase
     {
         $listener = new ToggleViewListener($this->framework);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\ToggleViewListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ToggleViewListener', $listener);
     }
 
     /**
@@ -72,7 +71,7 @@ class ToggleViewListenerTest extends TestCase
     public function testWithoutContainer()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request = new Request(['toggle_view' => 'desktop']);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener = new ToggleViewListener($this->framework);
@@ -90,7 +89,7 @@ class ToggleViewListenerTest extends TestCase
     public function testNotInFrontend()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $container = new Container();
         $request = new Request(['toggle_view' => 'desktop']);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -113,7 +112,7 @@ class ToggleViewListenerTest extends TestCase
     public function testNoView()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $container = new Container();
         $request = new Request();
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -136,7 +135,7 @@ class ToggleViewListenerTest extends TestCase
     public function testDesktopView()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $container = new Container();
         $request = new Request(['toggle_view' => 'desktop']);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -160,7 +159,7 @@ class ToggleViewListenerTest extends TestCase
     public function testMobileView()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $container = new Container();
         $request = new Request(['toggle_view' => 'mobile']);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -184,7 +183,7 @@ class ToggleViewListenerTest extends TestCase
     public function testInvalidView()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $container = new Container();
         $request = new Request(['toggle_view' => 'foobar']);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -208,7 +207,7 @@ class ToggleViewListenerTest extends TestCase
     public function testCookiePath()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $container = new Container();
         $request = new Request(['toggle_view' => 'desktop']);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);

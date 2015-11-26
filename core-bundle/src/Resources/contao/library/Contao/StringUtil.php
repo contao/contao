@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Provides string manipulation methods
@@ -42,7 +44,7 @@ class StringUtil
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
 		$strString = strip_tags($strString);
 
-		if (utf8_strlen($strString) <= $intNumberOfChars)
+		if (Utf8::strlen($strString) <= $intNumberOfChars)
 		{
 			return $strString;
 		}
@@ -54,7 +56,7 @@ class StringUtil
 
 		foreach ($arrChunks as $strChunk)
 		{
-			$intCharCount += utf8_strlen(static::decodeEntities($strChunk));
+			$intCharCount += Utf8::strlen(static::decodeEntities($strChunk));
 
 			if ($intCharCount++ <= $intNumberOfChars)
 			{
@@ -63,10 +65,10 @@ class StringUtil
 			}
 
 			// If the first word is longer than $intNumberOfChars already, shorten it
-			// with utf8_substr() so the method does not return an empty string.
+			// with Utf8::substr() so the method does not return an empty string.
 			if (empty($arrWords))
 			{
-				$arrWords[] = utf8_substr($strChunk, 0, $intNumberOfChars);
+				$arrWords[] = Utf8::substr($strChunk, 0, $intNumberOfChars);
 			}
 
 			if ($strEllipsis !== false)
@@ -80,7 +82,7 @@ class StringUtil
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strEllipsis === true)
 		{
-			trigger_error('Passing "true" as third argument to StringUtil::substr() has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.', E_USER_DEPRECATED);
+			@trigger_error('Passing "true" as third argument to StringUtil::substr() has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.', E_USER_DEPRECATED);
 
 			$strEllipsis = ' …';
 		}
@@ -133,7 +135,7 @@ class StringUtil
 			}
 
 			$blnModified = ($buffer !== $arrChunks[$i]);
-			$intCharCount += utf8_strlen(static::decodeEntities($arrChunks[$i]));
+			$intCharCount += Utf8::strlen(static::decodeEntities($arrChunks[$i]));
 
 			if ($intCharCount <= $intNumberOfChars)
 			{
@@ -302,24 +304,45 @@ class StringUtil
 	 */
 	public static function encodeEmail($strString)
 	{
-		$arrEmails = array();
-
-		preg_match_all('/\w([-.+!#$%&\'*\/=?^`{}|~\w]*\w)?@\w([-.\w]*\w)?\.\w{2,63}/u', $strString, $arrEmails);
-
-		foreach ((array) $arrEmails[0] as $strEmail)
+		foreach (static::extractEmail($strString) as $strEmail)
 		{
 			$strEncoded = '';
-			$arrCharacters = utf8_str_split($strEmail);
+			$arrCharacters = Utf8::str_split($strEmail);
 
 			foreach ($arrCharacters as $strCharacter)
 			{
-				$strEncoded .= sprintf((rand(0, 1) ? '&#x%X;' : '&#%s;'), utf8_ord($strCharacter));
+				$strEncoded .= sprintf((rand(0, 1) ? '&#x%X;' : '&#%s;'), Utf8::ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);
 		}
 
 		return str_replace('mailto:', '&#109;&#97;&#105;&#108;&#116;&#111;&#58;', $strString);
+	}
+
+
+	/**
+	 * Extract all e-mail addresses from a string
+	 *
+	 * @param string $strString The string
+	 *
+	 * @return array The e-mail addresses
+	 */
+	public static function extractEmail($strString)
+	{
+		$arrEmails = array();
+
+		preg_match_all('/(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', $strString, $arrEmails);
+
+		foreach ($arrEmails[0] as $strKey=>$strEmail)
+		{
+			if (!\Validator::isEmail($strEmail))
+			{
+				unset($arrEmails[0][$strKey]);
+			}
+		}
+
+		return array_values($arrEmails[0]);
 	}
 
 
@@ -710,5 +733,45 @@ class StringUtil
 		}
 
 		return $options;
+	}
+
+
+	/**
+	 * Convert the character encoding
+	 *
+	 * @param string $str  The input string
+	 * @param string $to   The target character set
+	 * @param string $from An optional source character set
+	 *
+	 * @return string The converted string
+	 */
+	public static function convertEncoding($str, $to, $from=null)
+	{
+		if ($str == '')
+		{
+			return '';
+		}
+
+		if (!$from)
+		{
+			$from = mb_detect_encoding($str, 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,ISO-8859-1');
+		}
+
+		if ($from == $to)
+		{
+			return $str;
+		}
+
+		if ($from == 'UTF-8' && $to == 'ISO-8859-1')
+		{
+			return utf8_decode($str);
+		}
+
+		if ($from == 'ISO-8859-1' && $to == 'UTF-8')
+		{
+			return utf8_encode($str);
+		}
+
+		return mb_convert_encoding($str, $to, $from);
 	}
 }

@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_user_group.name.0">
         <source>Title</source>
-        <target>Nome gruppo</target>
+        <target>Nome del modulo</target>
       </trans-unit>
       <trans-unit id="tl_user_group.name.1">
         <source>Please enter the group title.</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
-        <target>Nome gruppo</target>
+        <target>Nome del modulo</target>
       </trans-unit>
       <trans-unit id="tl_user_group.modules_legend">
         <source>Allowed modules</source>
@@ -56,6 +56,10 @@
       <trans-unit id="tl_user_group.filemounts_legend">
         <source>Filemounts</source>
         <target>Punto di partenza struttura file</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Dimensioni immagine</target>
       </trans-unit>
       <trans-unit id="tl_user_group.forms_legend">
         <source>Form permissions</source>

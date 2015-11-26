@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_content.title.0">
         <source>Title</source>
-        <target>Groepsnaam</target>
+        <target>Titel</target>
       </trans-unit>
       <trans-unit id="tl_content.title.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
@@ -734,8 +734,8 @@
         <target>Bewerk artikel instellingen</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
-        <target>Bewerk de instellingen van het artikel</target>
+        <source>Edit the article settings</source>
+        <target>Bewerk de artikel instellingen</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

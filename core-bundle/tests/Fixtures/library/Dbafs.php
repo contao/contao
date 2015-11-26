@@ -8,4 +8,9 @@ class Dbafs
     {
         return 'sync.log';
     }
+
+    public static function shouldBeSynchronized()
+    {
+        return false;
+    }
 }

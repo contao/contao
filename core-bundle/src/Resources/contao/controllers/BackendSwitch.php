@@ -70,7 +70,7 @@ class BackendSwitch extends \Backend
 			}
 		}
 
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_switch');
 		$objTemplate->user = $strUser;
 		$objTemplate->show = \Input::cookie('FE_PREVIEW');

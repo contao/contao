@@ -27,7 +27,7 @@ class ResourceFinderTest extends TestCase
     {
         $finder = new ResourceFinder();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Config\\ResourceFinder', $finder);
+        $this->assertInstanceOf('Contao\CoreBundle\Config\ResourceFinder', $finder);
     }
 
     /**
@@ -37,7 +37,7 @@ class ResourceFinderTest extends TestCase
     {
         $finder = new ResourceFinder([]);
 
-        $this->assertInstanceOf('Symfony\\Component\\Finder\\Finder', $finder->find());
+        $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->find());
     }
 
     /**
@@ -50,7 +50,7 @@ class ResourceFinderTest extends TestCase
             $this->getRootDir() . '/system/modules/foobar',
         ]);
 
-        $this->assertInstanceOf('Symfony\\Component\\Finder\\Finder', $finder->findIn('config'));
+        $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->findIn('config'));
     }
 
     /**
@@ -65,6 +65,6 @@ class ResourceFinderTest extends TestCase
             $this->getRootDir() . '/system/modules/foobar',
         ]);
 
-        $this->assertInstanceOf('Symfony\\Component\\Finder\\Finder', $finder->findIn('foo'));
+        $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->findIn('foo'));
     }
 }

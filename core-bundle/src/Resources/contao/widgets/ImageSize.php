@@ -34,6 +34,12 @@ class ImageSize extends \Widget
 	 */
 	protected $strTemplate = 'be_widget';
 
+	/**
+	 * Available options
+	 * @var array
+	 */
+	protected $arrAvailableOptions = array();
+
 
 	/**
 	 * Add specific attributes
@@ -72,13 +78,55 @@ class ImageSize extends \Widget
 	 */
 	protected function validator($varInput)
 	{
+		$this->import('BackendUser', 'User');
+
 		$varInput[0] = parent::validator($varInput[0]);
 		$varInput[1] = parent::validator($varInput[1]);
 		$varInput[2] = preg_replace('/[^a-z0-9_]+/', '', $varInput[2]);
 
+		$imageSizes = \System::getContainer()->get('contao.image.image_sizes');
+		$this->arrAvailableOptions = $this->User->isAdmin ? $imageSizes->getAllOptions() : $imageSizes->getOptionsForUser($this->User);
+
+		if (!$this->isValidOption($varInput[2]))
+		{
+			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalid'], $varInput[2]));
+		}
+
 		return $varInput;
 	}
 
+
+	/**
+	 * Check whether an input is one of the given options
+	 *
+	 * @param mixed $varInput The input string or array
+	 *
+	 * @return boolean True if the selected option exists
+	 */
+	protected function isValidOption($varInput)
+	{
+		if ($varInput == '')
+		{
+			return true;
+		}
+
+		foreach ($this->arrAvailableOptions as $strGroup=>$arrValues)
+		{
+			if ($strGroup == 'image_sizes')
+			{
+				if (isset($arrValues[$varInput]))
+				{
+					return true;
+				}
+			}
+			elseif (in_array($varInput, $arrValues))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	/**
 	 * Generate the widget and return it as string

@@ -26,17 +26,17 @@ class PageError403 extends \Frontend
 	/**
 	 * Generate an error 403 page
 	 *
-	 * @param \PageModel|integer $objRootPage
+	 * @param PageModel|integer $objRootPage
 	 */
 	public function generate($objRootPage=null)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj403 = $this->prepare($objRootPage);
 		$objPage = $obj403->loadDetails();
 
-		/** @var \PageRegular $objHandler */
+		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
 		header('HTTP/1.1 403 Forbidden');
@@ -47,19 +47,19 @@ class PageError403 extends \Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param \PageModel|integer $objRootPage
+	 * @param PageModel|integer $objRootPage
 	 *
 	 * @return Response
 	 */
 	public function getResponse($objRootPage=null)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj403 = $this->prepare($objRootPage);
 		$objPage = $obj403->loadDetails();
 
-		/** @var \PageRegular $objHandler */
+		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
 		return $objHandler->getResponse($objPage)->setStatusCode(403);
@@ -69,11 +69,13 @@ class PageError403 extends \Frontend
 	/**
 	 * Prepare the output
 	 *
-	 * @param \PageModel|integer $objRootPage
+	 * @param PageModel|integer $objRootPage
 	 *
-	 * @return \PageModel
+	 * @return PageModel
 	 *
-	 * @internal
+	 * @throws AccessDeniedException
+	 *
+	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
 	protected function prepare($objRootPage=null)
 	{
@@ -107,7 +109,7 @@ class PageError403 extends \Frontend
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}
 
-			$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj403->redirect == 'temporary') ? 302 : 301));
+			$this->redirect($this->generateFrontendUrl($objNextPage->loadDetails()->row(), null, $objRootPage->language, true), (($obj403->redirect == 'temporary') ? 302 : 301));
 		}
 
 		return $obj403;

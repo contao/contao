@@ -627,6 +627,8 @@ class tl_style extends Backend
 
 	/**
 	 * Check permissions to edit the table
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -637,8 +639,7 @@ class tl_style extends Backend
 
 		if (!$this->User->hasAccess('css', 'themes'))
 		{
-			$this->log('Not enough permissions to access the style sheets module', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the style sheets module.');
 		}
 	}
 
@@ -802,6 +803,17 @@ class tl_style extends Backend
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
+		// Set the ID and action
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
+		$this->checkPermission();
+
 		$objVersions = new Versions('tl_style', $intId);
 		$objVersions->initialize();
 
@@ -813,7 +825,7 @@ class tl_style extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{

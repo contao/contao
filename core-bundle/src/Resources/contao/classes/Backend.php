@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -283,6 +284,8 @@ abstract class Backend extends \Controller
 	 * @param string $module
 	 *
 	 * @return string
+	 *
+	 * @throws AccessDeniedException
 	 */
 	protected function getBackendModule($module)
 	{
@@ -308,8 +311,7 @@ abstract class Backend extends \Controller
 		// Check whether the current user has access to the current module
 		elseif ($module != 'undo' && !$this->User->hasAccess($module, 'modules'))
 		{
-			$this->log('Back end module "' . $module . '" was not allowed for user "' . $this->User->username . '"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . $this->User->username . '".');
 		}
 
 		/** @var SessionInterface $objSession */
@@ -348,13 +350,12 @@ abstract class Backend extends \Controller
 
 		$dc = null;
 
-		// Redirect if the current table does not belong to the current module
+		// Create the data container object
 		if ($strTable != '')
 		{
 			if (!in_array($strTable, $arrTables))
 			{
-				$this->log('Table "' . $strTable . '" is not allowed in module "' . $module . '"', __METHOD__, TL_ERROR);
-				$this->redirect('contao/main.php?act=error');
+				throw new AccessDeniedException('Table "' . $strTable . '" is not allowed in module "' . $module . '".');
 			}
 
 			// Load the language and DCA file
@@ -390,7 +391,7 @@ abstract class Backend extends \Controller
 
 			$dataContainer = 'DC_' . $GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'];
 
-			/** @var \DataContainer $dc */
+			/** @var DataContainer $dc */
 			$dc = new $dataContainer($strTable, $arrModule);
 		}
 
@@ -403,7 +404,7 @@ abstract class Backend extends \Controller
 		// Trigger the module callback
 		elseif (class_exists($arrModule['callback']))
 		{
-			/** @var \Module $objCallback */
+			/** @var Module $objCallback */
 			$objCallback = new $arrModule['callback']($dc);
 
 			$this->Template->main .= $objCallback->generate();
@@ -413,7 +414,7 @@ abstract class Backend extends \Controller
 		elseif (\Input::get('key') && isset($arrModule[\Input::get('key')]))
 		{
 			$objCallback = new $arrModule[\Input::get('key')][0]();
-			$this->Template->main .= $objCallback->$arrModule[\Input::get('key')][1]($dc);
+			$this->Template->main .= $objCallback->{$arrModule[\Input::get('key')][1]}($dc);
 
 			// Add the name of the parent element
 			if (isset($_GET['table']) && in_array(\Input::get('table'), $arrTables) && \Input::get('table') != $arrTables[0])
@@ -788,7 +789,7 @@ abstract class Backend extends \Controller
 				{
 					foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
 					{
-						if (($val = \System::importStatic($callback[0])->$callback[1]($strPtable, $intPid)) !== false)
+						if (($val = \System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
 						{
 							$objPage = $val;
 						}
@@ -811,8 +812,15 @@ abstract class Backend extends \Controller
 
 		if (isset($arrMeta[$strLanguage]))
 		{
-			\Input::setPost('alt', $arrMeta[$strLanguage]['title']);
-			\Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
+			if (\Input::post('alt') == '' && !empty($arrMeta[$strLanguage]['title']))
+			{
+				\Input::setPost('alt', $arrMeta[$strLanguage]['title']);
+			}
+
+			if (\Input::post('caption') == '' && !empty($arrMeta[$strLanguage]['caption']))
+			{
+				\Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
+			}
 		}
 	}
 
@@ -822,6 +830,7 @@ abstract class Backend extends \Controller
 	 *
 	 * @param string $strKey
 	 *
+	 * @throws AccessDeniedException
 	 * @throws \RuntimeException
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
@@ -873,7 +882,7 @@ abstract class Backend extends \Controller
 
 				if ($objPage->numRows < 1)
 				{
-					// Currently selected page does not exits
+					// Currently selected page does not exist
 					if ($intId == $intNode)
 					{
 						$objSession->set($strKey, 0);
@@ -893,7 +902,7 @@ abstract class Backend extends \Controller
 				}
 				else
 				{
-					$arrLinks[] = \Backend::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . \Controller::addToUrl('node='.$objPage->id) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
+					$arrLinks[] = \Backend::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . \Backend::addToUrl('node='.$objPage->id) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
 				}
 
 				// Do not show the mounted pages
@@ -911,16 +920,14 @@ abstract class Backend extends \Controller
 		if (!$objUser->hasAccess($arrIds, 'pagemounts'))
 		{
 			$objSession->set($strKey, 0);
-
-			\System::log('Page ID '.$intNode.' was not mounted', __METHOD__, TL_ERROR);
-			\Controller::redirect('contao/main.php?act=error');
+			throw new AccessDeniedException('Page ID ' . $intNode . ' is not mounted.');
 		}
 
 		// Limit tree
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
 
 		// Add root link
-		$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/pagemounts.gif" width="18" height="18" alt=""> <a href="' . \Controller::addToUrl('node=0') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/pagemounts.gif" width="18" height="18" alt=""> <a href="' . \Backend::addToUrl('node=0') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -935,16 +942,16 @@ abstract class Backend extends \Controller
 	/**
 	 * Add an image to each page in the tree
 	 *
-	 * @param array          $row
-	 * @param string         $label
-	 * @param \DataContainer $dc
-	 * @param string         $imageAttribute
-	 * @param boolean        $blnReturnImage
-	 * @param boolean        $blnProtected
+	 * @param array         $row
+	 * @param string        $label
+	 * @param DataContainer $dc
+	 * @param string        $imageAttribute
+	 * @param boolean       $blnReturnImage
+	 * @param boolean       $blnProtected
 	 *
 	 * @return string
 	 */
-	public static function addPageIcon($row, $label, \DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
 	{
 		if ($blnProtected)
 		{
@@ -967,7 +974,7 @@ abstract class Backend extends \Controller
 		}
 
 		// Add the breadcrumb link
-		$label = '<a href="' . \Controller::addToUrl('node='.$row['id']) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
+		$label = '<a href="' . \Backend::addToUrl('node='.$row['id']) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
 
 		// Return the image
 		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['id'].'" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['view']).'"' . (($dc->table != 'tl_page') ? ' class="tl_gray"' : '') . ' target="_blank">'.\Image::getHtml($image, '', $imageAttribute).'</a> '.$label;
@@ -979,6 +986,7 @@ abstract class Backend extends \Controller
 	 *
 	 * @param string $strKey
 	 *
+	 * @throws AccessDeniedException
 	 * @throws \RuntimeException
 	 */
 	public static function addFilesBreadcrumb($strKey='tl_files_node')
@@ -1026,7 +1034,7 @@ abstract class Backend extends \Controller
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/filemounts.gif" width="18" height="18" alt=""> <a href="' . \Controller::addToUrl('node=') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/filemounts.gif" width="18" height="18" alt=""> <a href="' . \Backend::addToUrl('node=') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -1046,7 +1054,7 @@ abstract class Backend extends \Controller
 			}
 			else
 			{
-				$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/folderC.gif" width="18" height="18" alt=""> <a href="' . \Controller::addToUrl('node='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/folderC.gif" width="18" height="18" alt=""> <a href="' . \Backend::addToUrl('node='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
 			}
 		}
 
@@ -1054,9 +1062,7 @@ abstract class Backend extends \Controller
 		if (!$objUser->hasAccess($strNode, 'filemounts'))
 		{
 			$objSession->set($strKey, '');
-
-			\System::log('Folder ID '.$strNode.' was not mounted', __METHOD__, TL_ERROR);
-			\Controller::redirect('contao/main.php?act=error');
+			throw new AccessDeniedException('Folder ID "' . $strNode . '" is not mounted');
 		}
 
 		// Limit tree
@@ -1185,7 +1191,7 @@ abstract class Backend extends \Controller
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strFilter === true)
 		{
-			trigger_error('Passing "true" to Backend::createFileList() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			@trigger_error('Passing "true" to Backend::createFileList() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 			$strFilter = 'gif,jpg,jpeg,png';
 		}
@@ -1236,7 +1242,7 @@ abstract class Backend extends \Controller
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strFilter === true)
 		{
-			trigger_error('Passing "true" to Backend::doCreateFileList() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			@trigger_error('Passing "true" to Backend::doCreateFileList() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 			$strFilter = 'gif,jpg,jpeg,png';
 		}

@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Add new at the top</source>
-        <target>Neue Formatdefinition oben erstellen</target>
+        <target>Neues Bildgrößen-Media-Query oben erstellen</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Add new after image size media query ID %s</source>

@@ -12,20 +12,18 @@ namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FrontendUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Provides a Contao front end or back end user object.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
- *
- * @internal
  */
 class ContaoUserProvider implements UserProviderInterface
 {
@@ -58,13 +56,15 @@ class ContaoUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $this->framework->initialize();
-
         if ($this->isBackendUsername($username)) {
+            $this->framework->initialize();
+
             return BackendUser::getInstance();
         }
 
         if ($this->isFrontendUsername($username)) {
+            $this->framework->initialize();
+
             return FrontendUser::getInstance();
         }
 
@@ -84,7 +84,7 @@ class ContaoUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return is_subclass_of($class, 'Contao\\User');
+        return is_subclass_of($class, 'Contao\User');
     }
 
     /**

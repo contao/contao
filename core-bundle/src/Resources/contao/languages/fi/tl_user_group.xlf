@@ -57,6 +57,10 @@
         <source>Filemounts</source>
         <target>Tiedostoasetukset</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Kuvakoot</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.forms_legend">
         <source>Form permissions</source>
         <target>Lomakkeiden käyttöoikeudet</target>

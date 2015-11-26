@@ -33,31 +33,31 @@ namespace Contao;
  * @property integer $tstamp2
  * @property integer $tstamp3
  *
- * @method static \StyleSheetModel|null findById($id, $opt=array())
- * @method static \StyleSheetModel|null findByPk($id, $opt=array())
- * @method static \StyleSheetModel|null findByIdOrAlias($val, $opt=array())
- * @method static \StyleSheetModel|null findOneBy($col, $val, $opt=array())
- * @method static \StyleSheetModel|null findByName($val, $opt=array())
- * @method static \StyleSheetModel|null findOneByPid($val, $opt=array())
- * @method static \StyleSheetModel|null findOneByTstamp($val, $opt=array())
- * @method static \StyleSheetModel|null findOneByDisablePie($val, $opt=array())
- * @method static \StyleSheetModel|null findOneByEmbedImages($val, $opt=array())
- * @method static \StyleSheetModel|null findOneByCc($val, $opt=array())
- * @method static \StyleSheetModel|null findOneByMedia($val, $opt=array())
- * @method static \StyleSheetModel|null findOneByMediaQuery($val, $opt=array())
- * @method static \StyleSheetModel|null findOneByVars($val, $opt=array())
+ * @method static StyleSheetModel|null findById($id, $opt=array())
+ * @method static StyleSheetModel|null findByPk($id, $opt=array())
+ * @method static StyleSheetModel|null findByIdOrAlias($val, $opt=array())
+ * @method static StyleSheetModel|null findOneBy($col, $val, $opt=array())
+ * @method static StyleSheetModel|null findByName($val, $opt=array())
+ * @method static StyleSheetModel|null findOneByPid($val, $opt=array())
+ * @method static StyleSheetModel|null findOneByTstamp($val, $opt=array())
+ * @method static StyleSheetModel|null findOneByDisablePie($val, $opt=array())
+ * @method static StyleSheetModel|null findOneByEmbedImages($val, $opt=array())
+ * @method static StyleSheetModel|null findOneByCc($val, $opt=array())
+ * @method static StyleSheetModel|null findOneByMedia($val, $opt=array())
+ * @method static StyleSheetModel|null findOneByMediaQuery($val, $opt=array())
+ * @method static StyleSheetModel|null findOneByVars($val, $opt=array())
  *
- * @method static \Model\Collection|\StyleSheetModel|null findByPid($val, $opt=array())
- * @method static \Model\Collection|\StyleSheetModel|null findByTstamp($val, $opt=array())
- * @method static \Model\Collection|\StyleSheetModel|null findByDisablePie($val, $opt=array())
- * @method static \Model\Collection|\StyleSheetModel|null findByEmbedImages($val, $opt=array())
- * @method static \Model\Collection|\StyleSheetModel|null findByCc($val, $opt=array())
- * @method static \Model\Collection|\StyleSheetModel|null findByMedia($val, $opt=array())
- * @method static \Model\Collection|\StyleSheetModel|null findByMediaQuery($val, $opt=array())
- * @method static \Model\Collection|\StyleSheetModel|null findByVars($val, $opt=array())
- * @method static \Model\Collection|\StyleSheetModel|null findMultipleByIds($val, $opt=array())
- * @method static \Model\Collection|\StyleSheetModel|null findBy($col, $val, $opt=array())
- * @method static \Model\Collection|\StyleSheetModel|null findAll($opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findByPid($val, $opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findByTstamp($val, $opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findByDisablePie($val, $opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findByEmbedImages($val, $opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findByCc($val, $opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findByMedia($val, $opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findByMediaQuery($val, $opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findByVars($val, $opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findMultipleByIds($val, $opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findBy($col, $val, $opt=array())
+ * @method static Model\Collection|StyleSheetModel|null findAll($opt=array())
  *
  * @method static integer countById($id, $opt=array())
  * @method static integer countByPid($val, $opt=array())
@@ -87,7 +87,7 @@ class StyleSheetModel extends \Model
 	 *
 	 * @param array $arrIds An array of style sheet IDs
 	 *
-	 * @return \Model\Collection|\StyleSheetModel|null A collection of models or null if there are no style sheets
+	 * @return Model\Collection|StyleSheetModel|null A collection of models or null if there are no style sheets
 	 */
 	public static function findByIds($arrIds)
 	{

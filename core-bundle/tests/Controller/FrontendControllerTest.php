@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Test\Controller;
 
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the FrontendController class.
@@ -27,7 +28,7 @@ class FrontendControllerTest extends TestCase
     {
         $controller = new FrontendController();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Controller\\FrontendController', $controller);
+        $this->assertInstanceOf('Contao\CoreBundle\Controller\FrontendController', $controller);
     }
 
     /**
@@ -36,19 +37,20 @@ class FrontendControllerTest extends TestCase
     public function testActions()
     {
         $framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
+        /** @var ContainerBuilder $container */
         $container = $this->mockKernel()->getContainer();
         $container->set('contao.framework', $framework);
 
         $controller = new FrontendController();
         $controller->setContainer($container);
 
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->indexAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->cronAction());
-        $this->assertInstanceOf('Symfony\\Component\\HttpFoundation\\Response', $controller->shareAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->indexAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->cronAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->shareAction());
     }
 }

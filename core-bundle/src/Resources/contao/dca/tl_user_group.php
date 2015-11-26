@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{forms_legend},forms,formp;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
+		'default'                     => '{title_legend},name;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
 	),
 
 	// Fields
@@ -180,6 +180,19 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'options'                 => array('f1', 'f2', 'f3', 'f4', 'f5', 'f6'),
 			'reference'               => &$GLOBALS['TL_LANG']['FOP'],
 			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL"
+		),
+		'imageSizes' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array('multiple'=>true),
+			'options_callback' => function ()
+			{
+				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+			},
 			'sql'                     => "blob NULL"
 		),
 		'forms' => array
@@ -336,7 +349,7 @@ class tl_user_group extends Backend
 				{
 					if ($vv['exclude'] || $vv['orig_exclude'])
 					{
-						$arrReturn[$k][specialchars($k.'::'.$kk)] = $vv['label'][0] ?: $kk;
+						$arrReturn[$k][specialchars($k.'::'.$kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#b3b3b3;padding-left:3px">[' . $kk . ']</span>' : $kk;
 					}
 				}
 			}
@@ -391,14 +404,24 @@ class tl_user_group extends Backend
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
-		// Check permissions
+		// Set the ID and action
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
+		// Check the field access permissions
 		if (!$this->User->hasAccess('tl_user_group::disable', 'alexf'))
 		{
-			$this->log('Not enough permissions to activate/deactivate user group ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate user group ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_user_group', $intId);
@@ -412,7 +435,7 @@ class tl_user_group extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{

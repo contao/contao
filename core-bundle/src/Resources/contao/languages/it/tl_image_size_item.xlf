@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.expert_legend">
         <source>Expert settings</source>
-        <target>Exporta impostazioni</target>
+        <target>Impostazioni avanzate</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.visibility_legend">
         <source>Visibility</source>

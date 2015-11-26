@@ -12,20 +12,20 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\OutputFromCacheListener;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\Framework\ContaoFramework;
 
 /**
  * Tests the OutputFromCacheListener class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class OutputFromCacheListenerTest extends TestCase
+class OutputFromCacheListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
@@ -40,9 +40,23 @@ class OutputFromCacheListenerTest extends TestCase
         parent::setUp();
 
         $this->framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
+        ;
+
+        $frontend = $this->getMock('Contao\Frontend', ['getResponseFromCache']);
+
+        $frontend
+            ->expects($this->any())
+            ->method('getResponseFromCache')
+            ->willReturn(new Response())
+        ;
+
+        $this->framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($frontend)
         ;
     }
 
@@ -53,7 +67,7 @@ class OutputFromCacheListenerTest extends TestCase
     {
         $listener = new OutputFromCacheListener($this->framework);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\OutputFromCacheListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\OutputFromCacheListener', $listener);
     }
 
     /**
@@ -62,7 +76,7 @@ class OutputFromCacheListenerTest extends TestCase
     public function testFrontendScope()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $container = new Container();
         $request = new Request();
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -85,7 +99,7 @@ class OutputFromCacheListenerTest extends TestCase
     public function testInvalidScope()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $container = new Container();
         $request = new Request();
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
@@ -108,7 +122,7 @@ class OutputFromCacheListenerTest extends TestCase
     public function testWithoutContainer()
     {
         /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]);
+        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
         $request = new Request();
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
         $listener = new OutputFromCacheListener($this->framework);

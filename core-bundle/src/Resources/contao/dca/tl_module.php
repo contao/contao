@@ -531,9 +531,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['imgSize'],
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
-			'options'                 => System::getImageSizes(),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
+			'options_callback' => function ()
+			{
+				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'useCaption' => array
@@ -770,6 +773,8 @@ class tl_module extends Backend
 
 	/**
 	 * Check permissions to edit the table
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -780,8 +785,7 @@ class tl_module extends Backend
 
 		if (!$this->User->hasAccess('modules', 'themes'))
 		{
-			$this->log('Not enough permissions to access the modules module', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the front end modules module.');
 		}
 	}
 

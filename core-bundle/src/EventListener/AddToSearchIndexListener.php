@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Frontend;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
@@ -19,8 +19,6 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
- *
- * @internal
  */
 class AddToSearchIndexListener
 {
@@ -50,6 +48,8 @@ class AddToSearchIndexListener
             return;
         }
 
-        Frontend::indexPageIfApplicable($event->getResponse());
+        /** @var Frontend $frontend */
+        $frontend = $this->framework->getAdapter('Contao\Frontend');
+        $frontend->indexPageIfApplicable($event->getResponse());
     }
 }

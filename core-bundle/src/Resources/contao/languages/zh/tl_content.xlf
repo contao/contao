@@ -734,8 +734,8 @@
         <target>编辑文章头</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
-        <target>编辑文章头</target>
+        <source>Edit the article settings</source>
+        <target>编辑文章设置</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

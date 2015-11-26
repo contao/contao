@@ -30,11 +30,11 @@ class InitializeController extends Controller
      *
      * @return InitializeControllerResponse The response object
      *
-     * @Route("/_initialize", name="contao_initialize")
+     * @Route("/_contao/initialize", name="contao_initialize")
      */
     public function indexAction()
     {
-        trigger_error('Custom entry points are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        @trigger_error('Custom entry points are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         $masterRequest = $this->get('request_stack')->getMasterRequest();
         $realRequest = Request::createFromGlobals();

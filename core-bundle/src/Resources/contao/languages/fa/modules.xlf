@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage front end modules, style sheets, page layouts and templates</source>
-        <target>مدیریت ماژول‌ها، شیوه‌نامه‌ها، چیدمان برگه‌ها و قالب‌های بخش کاربری</target>
+        <target>مدیریت ماژول‌های، شیوه‌نامه‌ها، چیدمان برگه‌ها و قالب‌های بخش کاربری</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>

@@ -883,7 +883,7 @@
       </trans-unit>
       <trans-unit id="CNT.tl">
         <source>Timor-Leste</source>
-        <target>Timor-Leste</target>
+        <target>Timor-Leste (le)</target>
       </trans-unit>
       <trans-unit id="CNT.tm">
         <source>Turkmenistan</source>
@@ -935,11 +935,11 @@
       </trans-unit>
       <trans-unit id="CNT.uy">
         <source>Uruguay</source>
-        <target>Uruguay</target>
+        <target>Uruguay (l')</target>
       </trans-unit>
       <trans-unit id="CNT.uz">
         <source>Uzbekistan</source>
-        <target>Ouzbékistan</target>
+        <target>Ouzbékistan (l')</target>
       </trans-unit>
       <trans-unit id="CNT.va">
         <source>Holy See (the)</source>
@@ -967,7 +967,7 @@
       </trans-unit>
       <trans-unit id="CNT.vu">
         <source>Vanuatu</source>
-        <target>Vanuatu</target>
+        <target>Vanuatu (le)</target>
       </trans-unit>
       <trans-unit id="CNT.wf">
         <source>Wallis and Futuna</source>
@@ -991,7 +991,7 @@
       </trans-unit>
       <trans-unit id="CNT.zm">
         <source>Zambia</source>
-        <target>Zambie</target>
+        <target>Zambie (la)</target>
       </trans-unit>
       <trans-unit id="CNT.zw">
         <source>Zimbabwe</source>

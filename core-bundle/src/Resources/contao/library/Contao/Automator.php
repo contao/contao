@@ -136,12 +136,14 @@ class Automator extends \System
 	 */
 	public function purgeImageCache()
 	{
+		$strTargetPath = \System::getContainer()->getParameter('contao.image.target_path');
+
 		// Walk through the subfolders
-		foreach (scan(TL_ROOT . '/assets/images') as $dir)
+		foreach (scan(TL_ROOT . '/' . $strTargetPath) as $dir)
 		{
 			if (strncmp($dir, '.', 1) !== 0)
 			{
-				$objFolder = new \Folder('assets/images/' . $dir);
+				$objFolder = new \Folder($strTargetPath . '/' . $dir);
 				$objFolder->purge();
 			}
 		}
@@ -169,7 +171,7 @@ class Automator extends \System
 
 		// Recreate the internal style sheets
 		$this->import('StyleSheets');
-		$this->StyleSheets->updateStylesheets();
+		$this->StyleSheets->updateStyleSheets();
 
 		// Also empty the page cache so there are no links to deleted scripts
 		$this->purgePageCache();
@@ -262,7 +264,7 @@ class Automator extends \System
 			foreach ($GLOBALS['TL_HOOKS']['removeOldFeeds'] as $callback)
 			{
 				$this->import($callback[0]);
-				$arrFeeds = array_merge($arrFeeds, $this->$callback[0]->$callback[1]());
+				$arrFeeds = array_merge($arrFeeds, $this->{$callback[0]}->{$callback[1]}());
 			}
 		}
 
@@ -370,7 +372,7 @@ class Automator extends \System
 				foreach ($GLOBALS['TL_HOOKS']['getSearchablePages'] as $callback)
 				{
 					$this->import($callback[0]);
-					$arrPages = $this->$callback[0]->$callback[1]($arrPages, $objRoot->id, true, $objRoot->language);
+					$arrPages = $this->{$callback[0]}->{$callback[1]}($arrPages, $objRoot->id, true, $objRoot->language);
 				}
 			}
 
@@ -407,7 +409,7 @@ class Automator extends \System
 			foreach ($GLOBALS['TL_HOOKS']['generateXmlFiles'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]();
+				$this->{$callback[0]}->{$callback[1]}();
 			}
 		}
 
@@ -465,7 +467,7 @@ class Automator extends \System
 	 */
 	public function rotateLogs()
 	{
-		trigger_error('Using Automator::rotateLogs() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.', E_USER_DEPRECATED);
+		@trigger_error('Using Automator::rotateLogs() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.', E_USER_DEPRECATED);
 
 		$arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/system/logs'));
 

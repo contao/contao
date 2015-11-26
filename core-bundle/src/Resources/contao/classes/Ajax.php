@@ -94,7 +94,7 @@ class Ajax extends \Backend
 
 				$this->import('BackendUser', 'User');
 
-				/** @var \BackendTemplate|object $objTemplate */
+				/** @var BackendTemplate|object $objTemplate */
 				$objTemplate = new \BackendTemplate('be_navigation');
 				$navigation = $this->User->navigation();
 				$objTemplate->modules = $navigation[\Input::post('id')]['modules'];
@@ -145,29 +145,6 @@ class Ajax extends \Backend
 				$objSessionBag->set('fieldset_states', $fs);
 				throw new NoContentResponseException();
 
-			// Check whether the temporary directory is writeable
-			case 'liveUpdate':
-				\Config::set('liveUpdateId', \Input::post('id'));
-				\Config::persist('liveUpdateId', \Input::post('id'));
-
-				// Check whether the temp directory is writeable
-				try
-				{
-					$objFile = new \File('system/tmp/' . md5(uniqid(mt_rand(), true)));
-					$objFile->close();
-					$objFile->delete();
-				}
-				catch (\Exception $e)
-				{
-					if ($e->getCode() == 0)
-					{
-						\System::loadLanguageFile('tl_maintenance');
-						throw new ResponseException($this->convertToResponse('<p class="tl_error">' . $GLOBALS['TL_LANG']['tl_maintenance']['notWriteable'] . '</p>'));
-					}
-				}
-
-				throw new NoContentResponseException();
-
 			// Toggle checkbox groups
 			case 'toggleCheckboxGroup':
 				$state = $objSessionBag->get('checkbox_groups');
@@ -182,7 +159,7 @@ class Ajax extends \Backend
 					foreach ($GLOBALS['TL_HOOKS']['executePreActions'] as $callback)
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($this->strAction);
+						$this->{$callback[0]}->{$callback[1]}($this->strAction);
 					}
 				}
 				break;
@@ -193,14 +170,18 @@ class Ajax extends \Backend
 	/**
 	 * Ajax actions that do require a data container object
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
+	 *
+	 * @throws NoContentResponseException
+	 * @throws ResponseException
+	 * @throws BadRequestHttpException
 	 */
-	public function executePostActions(\DataContainer $dc)
+	public function executePostActions(DataContainer $dc)
 	{
 		header('Content-Type: text/html; charset=' . \Config::get('characterSet'));
 
 		// Bypass any core logic for non-core drivers (see #5957)
-		if (!$dc instanceof \DC_File && !$dc instanceof \DC_Folder && !$dc instanceof \DC_Table)
+		if (!$dc instanceof DC_File && !$dc instanceof DC_Folder && !$dc instanceof DC_Table)
 		{
 			$this->executePostActionsHook($dc);
 			throw new NoContentResponseException();
@@ -218,25 +199,61 @@ class Ajax extends \Backend
 
 			// Load nodes of the page tree
 			case 'loadPagetree':
+				$varValue = null;
 				$strField = $dc->field = \Input::post('name');
 
-				/** @var \PageSelector $strClass */
+				// Call the load_callback
+				if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
+				{
+					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
+					{
+						if (is_array($callback))
+						{
+							$this->import($callback[0]);
+							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
+						}
+						elseif (is_callable($callback))
+						{
+							$varValue = $callback($varValue, $dc);
+						}
+					}
+				}
+
+				/** @var PageSelector $strClass */
 				$strClass = $GLOBALS['BE_FFL']['pageSelector'];
 
-				/** @var \PageSelector $objWidget */
-				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, null, $strField, $dc->table, $dc));
+				/** @var PageSelector $objWidget */
+				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), intval(\Input::post('level')))));
 
 			// Load nodes of the file tree
 			case 'loadFiletree':
+				$varValue = null;
 				$strField = $dc->field = \Input::post('name');
 
-				/** @var \FileSelector $strClass */
+				// Call the load_callback
+				if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
+				{
+					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
+					{
+						if (is_array($callback))
+						{
+							$this->import($callback[0]);
+							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
+						}
+						elseif (is_callable($callback))
+						{
+							$varValue = $callback($varValue, $dc);
+						}
+					}
+				}
+
+				/** @var FileSelector $strClass */
 				$strClass = $GLOBALS['BE_FFL']['fileSelector'];
 
-				/** @var \FileSelector $objWidget */
-				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, null, $strField, $dc->table, $dc));
+				/** @var FileSelector $objWidget */
+				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
 				// Load a particular node
 				if (\Input::post('folder', true) != '')
@@ -298,7 +315,7 @@ class Ajax extends \Backend
 						if (is_array($callback))
 						{
 							$this->import($callback[0]);
-							$varValue = $this->$callback[0]->$callback[1]($varValue, $dc);
+							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
 						}
 						elseif (is_callable($callback))
 						{
@@ -321,17 +338,27 @@ class Ajax extends \Backend
 					{
 						foreach ($varValue as $k=>$v)
 						{
-							$varValue[$k] = \Dbafs::addResource($v)->uuid;
+							if (\Dbafs::shouldBeSynchronized($v))
+							{
+								$objFile = \FilesModel::findByPath($v);
+
+								if ($objFile === null)
+								{
+									$objFile = \Dbafs::addResource($v);
+								}
+
+								$varValue[$k] = $objFile->uuid;
+							}
 						}
 					}
 
 					$varValue = serialize($varValue);
 				}
 
-				/** @var \FileTree|\PageTree $strClass */
+				/** @var FileTree|PageTree $strClass */
 				$strClass = $GLOBALS['BE_FFL'][$strKey];
 
-				/** @var \FileTree|\PageTree $objWidget */
+				/** @var FileTree|PageTree $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
@@ -383,7 +410,7 @@ class Ajax extends \Backend
 						}
 					}
 				}
-				elseif ($dc instanceof \DC_File)
+				elseif ($dc instanceof DC_File)
 				{
 					$val = (intval(\Input::post('state') == 1) ? true : false);
 					\Config::persist(\Input::post('field'), $val);
@@ -414,16 +441,16 @@ class Ajax extends \Backend
 	/**
 	 * Execute the post actions hook
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 */
-	protected function executePostActionsHook(\DataContainer $dc)
+	protected function executePostActionsHook(DataContainer $dc)
 	{
 		if (isset($GLOBALS['TL_HOOKS']['executePostActions']) && is_array($GLOBALS['TL_HOOKS']['executePostActions']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['executePostActions'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($this->strAction, $dc);
+				$this->{$callback[0]}->{$callback[1]}($this->strAction, $dc);
 			}
 		}
 	}

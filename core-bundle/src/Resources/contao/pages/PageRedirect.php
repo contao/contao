@@ -25,7 +25,7 @@ class PageRedirect extends \Frontend
 	/**
 	 * Redirect to an external page
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 */
 	public function generate($objPage)
 	{
@@ -35,7 +35,7 @@ class PageRedirect extends \Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
 	 * @return RedirectResponse
 	 */
@@ -47,7 +47,7 @@ class PageRedirect extends \Frontend
 	/**
 	 * Return the redirect status code
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
 	 * @return integer
 	 */

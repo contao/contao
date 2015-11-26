@@ -46,6 +46,24 @@ class FileSelector extends \Widget
 	 */
 	protected $strTemplate = 'be_widget';
 
+	/**
+	 * Valid file types
+	 * @var array
+	 */
+	protected $arrValidFileTypes = array();
+
+
+	/**
+	 * Load the database object
+	 *
+	 * @param array $arrAttributes
+	 */
+	public function __construct($arrAttributes=null)
+	{
+		$this->import('Database');
+		parent::__construct($arrAttributes);
+	}
+
 
 	/**
 	 * Generate the widget and return it as string
@@ -57,8 +75,137 @@ class FileSelector extends \Widget
 		$this->import('BackendUser', 'User');
 		$this->convertValuesToPaths();
 
+		if ($this->extensions != '')
+		{
+			$this->arrValidFileTypes = trimsplit(',', $this->extensions);
+		}
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+
+		// Store the keyword
+		if (\Input::post('FORM_SUBMIT') == 'item_selector')
+		{
+			$strKeyword = ltrim(\Input::postRaw('keyword'), '*');
+
+			// Make sure the regular expression is valid
+			if ($strKeyword != '')
+			{
+				try
+				{
+					$this->Database->prepare("SELECT * FROM tl_files WHERE name REGEXP ?")
+								   ->limit(1)
+								   ->execute($strKeyword);
+				}
+				catch (\Exception $e)
+				{
+					$strKeyword = '';
+				}
+			}
+
+			$objSessionBag->set('file_selector_search', $strKeyword);
+			$this->reload();
+		}
+
+		$tree = '';
+		$for = $objSessionBag->get('file_selector_search');
+		$arrFound = array();
+
+		// Search for a specific file
+		if ($for != '')
+		{
+			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
+			try
+			{
+				$strPattern = "CAST(name AS CHAR) REGEXP ?";
+
+				if (substr(\Config::get('dbCollation'), -3) == '_ci')
+				{
+					$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
+				}
+
+				$strType = '';
+
+				if (strpos($for, 'type:file') !== false)
+				{
+					$strType = " AND type='file'";
+					$for = trim(str_replace('type:file', '', $for));
+				}
+
+				if (strpos($for, 'type:folder') !== false)
+				{
+					$strType = " AND type='folder'";
+					$for = trim(str_replace('type:folder', '', $for));
+				}
+
+				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM tl_files WHERE $strPattern $strType GROUP BY path")
+										  ->execute($for);
+
+				if ($objRoot->numRows < 1)
+				{
+					$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array('');
+				}
+				else
+				{
+					$arrPaths = array();
+
+					// Respect existing limitations
+					if ($this->path != '')
+					{
+						while ($objRoot->next())
+						{
+							if (strncmp($this->path . '/', $objRoot->path . '/', strlen($this->path) + 1) === 0)
+							{
+								if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || in_array($objRoot->extension, $this->arrValidFileTypes))
+								{
+									$arrFound[] = $objRoot->path;
+								}
+
+								$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
+							}
+						}
+					}
+					elseif ($this->User->isAdmin)
+					{
+						// Show all files to admins
+						while ($objRoot->next())
+						{
+							if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || in_array($objRoot->extension, $this->arrValidFileTypes))
+							{
+								$arrFound[] = $objRoot->path;
+							}
+
+							$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
+						}
+					}
+					else
+					{
+						if (is_array($this->User->filemounts))
+						{
+							while ($objRoot->next())
+							{
+								// Show only mounted folders to regular users
+								foreach ($this->User->filemounts as $path)
+								{
+									if (strncmp($path . '/', $objRoot->path . '/', strlen($path) + 1) === 0)
+									{
+										if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || in_array($objRoot->extension, $this->arrValidFileTypes))
+										{
+											$arrFound[] = $objRoot->path;
+										}
+
+										$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
+									}
+								}
+							}
+						}
+					}
+
+					$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array_unique($arrPaths);
+				}
+			}
+			catch (\Exception $e) {}
+		}
 
 		$strNode = $objSessionBag->get('tl_files_picker');
 
@@ -77,8 +224,6 @@ class FileSelector extends \Widget
 			\Backend::addFilesBreadcrumb('tl_files_picker');
 		}
 
-		$tree = '';
-
 		// Root nodes (breadcrumb menu)
 		if (!empty($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root']))
 		{
@@ -86,35 +231,20 @@ class FileSelector extends \Widget
 
 			foreach ($nodes as $node)
 			{
-				$tree .= $this->renderFiletree(TL_ROOT . '/' . $node, 0, true);
+				$tree .= $this->renderFiletree(TL_ROOT . '/' . $node, 0, true, true, $arrFound);
 			}
 		}
 
 		// Show a custom path (see #4926)
 		elseif ($this->path != '')
 		{
-			$protected = true;
-			$path = $this->path;
-
-			// Check if the folder is protected (see #287)
-			do
-			{
-				if (file_exists(TL_ROOT . '/' . $path . '/.public'))
-				{
-					$protected = false;
-				}
-
-				$path = dirname($path);
-			}
-			while ($path != '.' && $protected !== false);
-
-			$tree .= $this->renderFiletree(TL_ROOT . '/' . $this->path, 0, false, $protected);
+			$tree .= $this->renderFiletree(TL_ROOT . '/' . $this->path, 0, false, $this->isProtectedPath($this->path), $arrFound);
 		}
 
 		// Start from root
 		elseif ($this->User->isAdmin)
 		{
-			$tree .= $this->renderFiletree(TL_ROOT . '/' . \Config::get('uploadPath'), 0);
+			$tree .= $this->renderFiletree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, $arrFound);
 		}
 
 		// Show mounted files to regular users
@@ -124,7 +254,7 @@ class FileSelector extends \Widget
 
 			foreach ($nodes as $node)
 			{
-				$tree .= $this->renderFiletree(TL_ROOT . '/' . $node, 0, true);
+				$tree .= $this->renderFiletree(TL_ROOT . '/' . $node, 0, true, true, $arrFound);
 			}
 		}
 
@@ -197,6 +327,11 @@ class FileSelector extends \Widget
 
 		$this->convertValuesToPaths();
 
+		if ($this->extensions != '')
+		{
+			$this->arrValidFileTypes = trimsplit(',', $this->extensions);
+		}
+
 		$blnProtected = true;
 		$strPath = $strFolder;
 
@@ -223,10 +358,11 @@ class FileSelector extends \Widget
 	 * @param integer $intMargin
 	 * @param boolean $mount
 	 * @param boolean $blnProtected
+	 * @param array   $arrFound
 	 *
 	 * @return string
 	 */
-	protected function renderFiletree($path, $intMargin, $mount=false, $blnProtected=true)
+	protected function renderFiletree($path, $intMargin, $mount=false, $blnProtected=true, $arrFound=array())
 	{
 		// Invalid path
 		if (!is_dir($path))
@@ -310,24 +446,38 @@ class FileSelector extends \Widget
 		// Process folders
 		for ($f=0, $c=count($folders); $f<$c; $f++)
 		{
-			$countFiles = 0;
 			$content = scan($folders[$f]);
-			$return .= "\n    " . '<li class="'.$folderClass.' toggle_select" onmouseover="Theme.hoverDiv(this, 1)" onmouseout="Theme.hoverDiv(this, 0)"><div class="tl_left" style="padding-left:'.$intMargin.'px">';
+			$currentFolder = str_replace(TL_ROOT . '/', '', $folders[$f]);
+			$countFiles = count($content);
 
 			// Check whether there are subfolders or files
-			foreach ($content as $v)
+			foreach ($content as $file)
 			{
-				if (is_dir($folders[$f] . '/' . $v) || $this->files || $this->filesOnly)
+				if (strncmp($file, '.', 1) === 0)
 				{
-					$countFiles++;
+					--$countFiles;
 				}
+				elseif (!$this->files && !$this->filesOnly && is_file($folders[$f] . '/' . $file))
+				{
+					--$countFiles;
+				}
+				elseif (!empty($arrFound) && !in_array($currentFolder . '/' . $file, $arrFound) && !preg_grep('/^' . preg_quote($currentFolder . '/' . $file, '/') . '\//', $arrFound))
+				{
+					--$countFiles;
+				}
+			}
+
+			if (!empty($arrFound) && $countFiles < 1 && !in_array($currentFolder, $arrFound))
+			{
+				continue;
 			}
 
 			$tid = md5($folders[$f]);
 			$folderAttribute = 'style="margin-left:20px"';
 			$session[$node][$tid] = is_numeric($session[$node][$tid]) ? $session[$node][$tid] : 0;
 			$currentFolder = str_replace(TL_ROOT . '/', '', $folders[$f]);
-			$blnIsOpen = ($session[$node][$tid] == 1 || count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
+			$blnIsOpen = (!empty($arrFound) || $session[$node][$tid] == 1 || count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
+			$return .= "\n    " . '<li class="'.$folderClass.' toggle_select hover-div"><div class="tl_left" style="padding-left:'.$intMargin.'px">';
 
 			// Add a toggle button if there are childs
 			if ($countFiles > 0)
@@ -335,7 +485,7 @@ class FileSelector extends \Widget
 				$folderAttribute = '';
 				$img = $blnIsOpen ? 'folMinus.gif' : 'folPlus.gif';
 				$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-				$return .= '<a href="'.$this->addToUrl($flag.'tg='.$tid).'" title="'.specialchars($alt).'" onclick="return AjaxRequest.toggleFiletree(this,\''.$xtnode.'_'.$tid.'\',\''.$currentFolder.'\',\''.$this->strField.'\',\''.$this->strName.'\','.$level.')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
+				$return .= '<a href="'.\Backend::addToUrl($flag.'tg='.$tid).'" title="'.specialchars($alt).'" onclick="return AjaxRequest.toggleFiletree(this,\''.$xtnode.'_'.$tid.'\',\''.$currentFolder.'\',\''.$this->strField.'\',\''.$this->strName.'\','.$level.')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
 			}
 
 			$protected = $blnProtected;
@@ -346,11 +496,11 @@ class FileSelector extends \Widget
 				$protected = false;
 			}
 
-			$folderImg = ($blnIsOpen && $countFiles > 0) ? ($protected ? 'folderOP.gif' : 'folderO.gif') : ($protected ? 'folderCP.gif' : 'folderC.gif');
+			$folderImg = $protected ? 'folderCP.gif' : 'folderC.gif';
 			$folderLabel = ($this->files || $this->filesOnly) ? '<strong>'.specialchars(basename($currentFolder)).'</strong>' : specialchars(basename($currentFolder));
 
 			// Add the current folder
-			$return .= \Image::getHtml($folderImg, '', $folderAttribute).' <a href="' . $this->addToUrl('node='.$this->urlEncode($currentFolder)) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$folderLabel.'</a></div> <div class="tl_right">';
+			$return .= \Image::getHtml($folderImg, '', $folderAttribute).' <a href="' . \Backend::addToUrl('node='.$this->urlEncode($currentFolder)) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$folderLabel.'</a></div> <div class="tl_right">';
 
 			// Add a checkbox or radio button
 			if (!$this->filesOnly)
@@ -370,10 +520,10 @@ class FileSelector extends \Widget
 			$return .= '</div><div style="clear:both"></div></li>';
 
 			// Call the next node
-			if ($countFiles > 0 && $blnIsOpen)
+			if ($blnIsOpen)
 			{
 				$return .= '<li class="parent" id="'.$xtnode.'_'.$tid.'"><ul class="level_'.$level.'">';
-				$return .= $this->renderFiletree($folders[$f], ($intMargin + $intSpacing), false, $protected);
+				$return .= $this->renderFiletree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrFound);
 				$return .= '</ul></li>';
 			}
 		}
@@ -381,13 +531,6 @@ class FileSelector extends \Widget
 		// Process files
 		if ($this->files || $this->filesOnly)
 		{
-			$allowedExtensions = null;
-
-			if ($this->extensions != '')
-			{
-				$allowedExtensions = trimsplit(',', $this->extensions);
-			}
-
 			for ($h=0, $c=count($files); $h<$c; $h++)
 			{
 				$thumbnail = '';
@@ -396,13 +539,18 @@ class FileSelector extends \Widget
 
 				$objFile = new \File($currentFile);
 
-				// Check file extension
-				if (is_array($allowedExtensions) && !in_array($objFile->extension, $allowedExtensions))
+				if (!empty($this->arrValidFileTypes) && !in_array($objFile->extension, $this->arrValidFileTypes))
 				{
 					continue;
 				}
 
-				$return .= "\n    " . '<li class="tl_file toggle_select" onmouseover="Theme.hoverDiv(this, 1)" onmouseout="Theme.hoverDiv(this, 0)"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
+				// Ignore files not matching the search criteria
+				if (!empty($arrFound) && !in_array($currentFile, $arrFound))
+				{
+					continue;
+				}
+
+				$return .= "\n    " . '<li class="tl_file toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
 
 				// Generate thumbnail
 				if ($objFile->isImage && $objFile->viewHeight > 0)
@@ -414,11 +562,18 @@ class FileSelector extends \Widget
 
 					if (\Config::get('thumbnails') && ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')))
 					{
-						$thumbnail .= '<br><img src="' . TL_FILES_URL . \Image::get($currentEncoded, 400, (($objFile->height && $objFile->height < 50) ? $objFile->height : 50), 'box') . '" alt="" style="margin:0 0 2px -19px">';
+						$imageObj = \Image::create($currentEncoded, array(400, (($objFile->height && $objFile->height < 50) ? $objFile->height : 50), 'box'));
+						$importantPart = $imageObj->getImportantPart();
+						$thumbnail .= '<br><img src="' . TL_FILES_URL . $imageObj->executeResize()->getResizedPath() . '" alt="" style="margin:0 0 2px -19px">';
+
+						if ($importantPart['x'] > 0 || $importantPart['y'] > 0 || $importantPart['width'] < $objFile->width || $importantPart['height'] < $objFile->height)
+						{
+							$thumbnail .= ' <img src="' . TL_FILES_URL . $imageObj->setZoomLevel(100)->setTargetWidth(320)->setTargetHeight((($objFile->height && $objFile->height < 40) ? $objFile->height : 40))->executeResize()->getResizedPath() . '" alt="" style="margin:0 0 2px 0">';
+						}
 					}
 				}
 
-				$return .= \Image::getHtml($objFile->icon, $objFile->mime).' '.utf8_convert_encoding(specialchars(basename($currentFile)), \Config::get('characterSet')).$thumbnail.'</div> <div class="tl_right">';
+				$return .= \Image::getHtml($objFile->icon, $objFile->mime).' '.\StringUtil::convertEncoding(specialchars(basename($currentFile)), \Config::get('characterSet')).$thumbnail.'</div> <div class="tl_right">';
 
 				// Add checkbox or radio button
 				switch ($this->fieldType)
@@ -482,5 +637,29 @@ class FileSelector extends \Widget
 		{
 			$this->varValue = array_values($objFiles->fetchEach('path'));
 		}
+	}
+
+
+	/**
+	 * Check if a path is protected (see #287)
+	 *
+	 * @param string $path
+	 *
+	 * @return boolean
+	 */
+	protected function isProtectedPath($path)
+	{
+		do
+		{
+			if (file_exists(TL_ROOT . '/' . $path . '/.public'))
+			{
+				return false;
+			}
+
+			$path = dirname($path);
+		}
+		while ($path != '.');
+
+		return true;
 	}
 }

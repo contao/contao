@@ -6,8 +6,20 @@
         <target>名称</target>
       </trans-unit>
       <trans-unit id="tl_files.name.1">
-        <source>Contao automatically adds the file extension.</source>
-        <target>请输入文件或目录名(不包括扩展名)。</target>
+        <source>The file or folder name (without extension).</source>
+      </trans-unit>
+      <trans-unit id="tl_files.path.0">
+        <source>Path</source>
+      </trans-unit>
+      <trans-unit id="tl_files.path.1">
+        <source>The relative path to the file or folder.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.0">
+        <source>Extension</source>
+        <target>延期</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.1">
+        <source>The file extension</source>
       </trans-unit>
       <trans-unit id="tl_files.protected.0">
         <source>Public</source>

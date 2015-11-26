@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Front end module "breadcrumb".
@@ -35,10 +37,10 @@ class ModuleBreadcrumb extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['breadcrumb'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['breadcrumb'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -56,7 +58,7 @@ class ModuleBreadcrumb extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$type = null;
@@ -117,11 +119,18 @@ class ModuleBreadcrumb extends \Module
 					break;
 
 				case 'forward':
-					$objNext = \PageModel::findPublishedById($pages[$i]['jumpTo']);
-
-					if ($objNext !== null)
+					if (($objNext = \PageModel::findPublishedById($pages[$i]['jumpTo'])) !== null)
 					{
-						$href = $this->generateFrontendUrl($objNext->row());
+						$strForceLang = null;
+						$objNext->loadDetails();
+
+						// Check the target page language (see #4706)
+						if (\Config::get('addLanguageToUrl'))
+						{
+							$strForceLang = $objNext->language;
+						}
+
+						$href = $this->generateFrontendUrl($objNext->row(), null, $strForceLang, true);
 						break;
 					}
 					// DO NOT ADD A break; STATEMENT
@@ -211,7 +220,7 @@ class ModuleBreadcrumb extends \Module
 			foreach ($GLOBALS['TL_HOOKS']['generateBreadcrumb'] as $callback)
 			{
 				$this->import($callback[0]);
-				$items = $this->$callback[0]->$callback[1]($items, $this);
+				$items = $this->{$callback[0]}->{$callback[1]}($items, $this);
 			}
 		}
 

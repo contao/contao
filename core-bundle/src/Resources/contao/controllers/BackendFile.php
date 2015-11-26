@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -24,7 +25,7 @@ class BackendFile extends \Backend
 
 	/**
 	 * Current Ajax object
-	 * @var \Ajax
+	 * @var Ajax
 	 */
 	protected $objAjax;
 
@@ -58,7 +59,7 @@ class BackendFile extends \Backend
 		/** @var SessionInterface $objSession */
 		$objSession = \System::getContainer()->get('session');
 
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_picker');
 		$objTemplate->main = '';
 
@@ -83,7 +84,7 @@ class BackendFile extends \Backend
 		// Set the active record
 		if ($this->Database->tableExists($strTable))
 		{
-			/** @var \Model $strModel */
+			/** @var Model $strModel */
 			$strModel = \Model::getClassFromTable($strTable);
 
 			if (class_exists($strModel))
@@ -124,7 +125,7 @@ class BackendFile extends \Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$arrValues = $this->$callback[0]->$callback[1]($arrValues, $objDca);
+					$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $objDca);
 				}
 				elseif (is_callable($callback))
 				{
@@ -133,11 +134,14 @@ class BackendFile extends \Backend
 			}
 		}
 
-		/** @var \FileSelector $strClass */
+		/** @var FileSelector $strClass */
 		$strClass = $GLOBALS['BE_FFL']['fileSelector'];
 
-		/** @var \FileSelector $objFileTree */
+		/** @var FileSelector $objFileTree */
 		$objFileTree = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$strTable]['fields'][$strField], $strField, $arrValues, $strField, $strTable, $objDca));
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = $objSession->getBag('contao_backend');
 
 		$objTemplate->main = $objFileTree->generate();
 		$objTemplate->theme = \Backend::getTheme();
@@ -145,10 +149,11 @@ class BackendFile extends \Backend
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['filepicker']);
 		$objTemplate->charset = \Config::get('characterSet');
-		$objTemplate->addSearch = false;
+		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
+		$objTemplate->searchExclude = $GLOBALS['TL_LANG']['MSC']['searchExclude'];
 		$objTemplate->action = ampersand(\Environment::get('request'));
-		$objTemplate->value = $objSession->get('file_selector_search');
+		$objTemplate->value = $objSessionBag->get('file_selector_search');
 		$objTemplate->manager = $GLOBALS['TL_LANG']['MSC']['fileManager'];
 		$objTemplate->managerHref = 'contao/main.php?do=files&amp;popup=1';
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'];

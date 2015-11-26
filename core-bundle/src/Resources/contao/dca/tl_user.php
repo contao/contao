@@ -125,8 +125,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{account_legend},disable,start,stop',
 		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
 		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{forms_legend},forms,formp;{account_legend},disable,start,stop',
-		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{forms_legend},forms,formp;{account_legend},disable,start,stop'
+		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{account_legend},disable,start,stop',
+		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{account_legend},disable,start,stop'
 	),
 
 	// Fields
@@ -178,8 +178,11 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options'                 => System::getLanguages(true),
 			'eval'                    => array('rgxp'=>'locale', 'tl_class'=>'w50'),
+			'options_callback' => function ()
+			{
+				return System::getLanguages(true);
+			},
 			'sql'                     => "varchar(5) NOT NULL default ''"
 		),
 		'backendTheme' => array
@@ -187,7 +190,10 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['backendTheme'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options'                 => Backend::getThemes(),
+			'options_callback' => function ()
+			{
+				return Backend::getThemes();
+			},
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'uploader' => array
@@ -346,6 +352,19 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL"
 		),
+		'imageSizes' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array('multiple'=>true),
+			'options_callback' => function ()
+			{
+				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+			},
+			'sql'                     => "blob NULL"
+		),
 		'forms' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['forms'],
@@ -457,6 +476,8 @@ class tl_user extends Backend
 
 	/**
 	 * Check permissions to edit table tl_user
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -477,8 +498,7 @@ class tl_user extends Backend
 			case 'delete':
 				if (Input::get('id') == $this->User->id)
 				{
-					$this->log('Attempt to delete own account ID "'.Input::get('id').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Attempt to delete own account ID ' . Input::get('id') . '.');
 				}
 				// no break;
 
@@ -492,8 +512,7 @@ class tl_user extends Backend
 
 				if ($objUser->admin && Input::get('act') != '')
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' administrator account ID "'.Input::get('id').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' administrator account ID ' . Input::get('id') . '.');
 				}
 				break;
 
@@ -865,12 +884,20 @@ class tl_user extends Backend
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
-		// Check admin accounts
+		// Set the ID and action
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
 		$this->checkPermission();
 
 		// Protect own account
@@ -879,11 +906,10 @@ class tl_user extends Backend
 			return;
 		}
 
-		// Check permissions
+		// Check the field access
 		if (!$this->User->hasAccess('tl_user::disable', 'alexf'))
 		{
-			$this->log('Not enough permissions to activate/deactivate user ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate user ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_user', $intId);
@@ -897,7 +923,7 @@ class tl_user extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{

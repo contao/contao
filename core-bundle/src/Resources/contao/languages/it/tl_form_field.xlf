@@ -455,7 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.expert_legend">
         <source>Expert settings</source>
-        <target>Exporta impostazioni</target>
+        <target>Impostazioni avanzate</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size_legend">
         <source>Rows and columns</source>

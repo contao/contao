@@ -32,7 +32,7 @@ class ResponseExceptionListenerTest extends TestCase
     {
         $listener = new ResponseExceptionListener();
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\ResponseExceptionListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ResponseExceptionListener', $listener);
     }
 
     /**

@@ -28,13 +28,13 @@ class PageError404 extends \Frontend
 	 */
 	public function generate()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj404 = $this->prepare();
 		$objPage = $obj404->loadDetails();
 
-		/** @var \PageRegular $objHandler */
+		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
 		header('HTTP/1.1 404 Not Found');
@@ -49,13 +49,13 @@ class PageError404 extends \Frontend
 	 */
 	public function getResponse()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj404 = $this->prepare();
 		$objPage = $obj404->loadDetails();
 
-		/** @var \PageRegular $objHandler */
+		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
 		return $objHandler->getResponse($objPage)->setStatusCode(404);
@@ -65,9 +65,9 @@ class PageError404 extends \Frontend
 	/**
 	 * Prepare the output
 	 *
-	 * @return \PageModel
+	 * @return PageModel
 	 *
-	 * @internal
+	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
 	protected function prepare()
 	{
@@ -127,7 +127,7 @@ class PageError404 extends \Frontend
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}
 
-			$this->redirect($this->generateFrontendUrl($objNextPage->row(), null, $objRootPage->language), (($obj404->redirect == 'temporary') ? 302 : 301));
+			$this->redirect($this->generateFrontendUrl($objNextPage->loadDetails()->row(), null, $objRootPage->language, true), (($obj404->redirect == 'temporary') ? 302 : 301));
 		}
 
 		return $obj404;

@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_content.title.0">
         <source>Title</source>
-        <target>Nome gruppo</target>
+        <target>Nome del modulo</target>
       </trans-unit>
       <trans-unit id="tl_content.title.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
@@ -623,7 +623,7 @@
       </trans-unit>
       <trans-unit id="tl_content.expert_legend">
         <source>Expert settings</source>
-        <target>Exporta impostazioni</target>
+        <target>Impostazioni avanzate</target>
       </trans-unit>
       <trans-unit id="tl_content.template_legend">
         <source>Template settings</source>
@@ -734,8 +734,8 @@
         <target>Modifica intestazione articolo</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
-        <source>Edit the settings of the article</source>
-        <target>Modifica l'intestazione di questo articolo</target>
+        <source>Edit the article settings</source>
+        <target>Modifica le impostazioni dell'articolo</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

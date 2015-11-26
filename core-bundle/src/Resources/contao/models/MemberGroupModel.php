@@ -23,28 +23,28 @@ namespace Contao;
  * @property string  $start
  * @property string  $stop
  *
- * @method static \MemberGroupModel|null findById($id, $opt=array())
- * @method static \MemberGroupModel|null findByPk($id, $opt=array())
- * @method static \MemberGroupModel|null findByIdOrAlias($val, $opt=array())
- * @method static \MemberGroupModel|null findOneBy($col, $val, $opt=array())
- * @method static \MemberGroupModel|null findOneByTstamp($val, $opt=array())
- * @method static \MemberGroupModel|null findOneByName($val, $opt=array())
- * @method static \MemberGroupModel|null findOneByRedirect($val, $opt=array())
- * @method static \MemberGroupModel|null findOneByJumpTo($val, $opt=array())
- * @method static \MemberGroupModel|null findOneByDisable($val, $opt=array())
- * @method static \MemberGroupModel|null findOneByStart($val, $opt=array())
- * @method static \MemberGroupModel|null findOneByStop($val, $opt=array())
+ * @method static MemberGroupModel|null findById($id, $opt=array())
+ * @method static MemberGroupModel|null findByPk($id, $opt=array())
+ * @method static MemberGroupModel|null findByIdOrAlias($val, $opt=array())
+ * @method static MemberGroupModel|null findOneBy($col, $val, $opt=array())
+ * @method static MemberGroupModel|null findOneByTstamp($val, $opt=array())
+ * @method static MemberGroupModel|null findOneByName($val, $opt=array())
+ * @method static MemberGroupModel|null findOneByRedirect($val, $opt=array())
+ * @method static MemberGroupModel|null findOneByJumpTo($val, $opt=array())
+ * @method static MemberGroupModel|null findOneByDisable($val, $opt=array())
+ * @method static MemberGroupModel|null findOneByStart($val, $opt=array())
+ * @method static MemberGroupModel|null findOneByStop($val, $opt=array())
  *
- * @method static \Model\Collection|\MemberGroupModel|null findByTstamp($val, $opt=array())
- * @method static \Model\Collection|\MemberGroupModel|null findByName($val, $opt=array())
- * @method static \Model\Collection|\MemberGroupModel|null findByRedirect($val, $opt=array())
- * @method static \Model\Collection|\MemberGroupModel|null findByJumpTo($val, $opt=array())
- * @method static \Model\Collection|\MemberGroupModel|null findByDisable($val, $opt=array())
- * @method static \Model\Collection|\MemberGroupModel|null findByStart($val, $opt=array())
- * @method static \Model\Collection|\MemberGroupModel|null findByStop($val, $opt=array())
- * @method static \Model\Collection|\MemberGroupModel|null findMultipleByIds($val, $opt=array())
- * @method static \Model\Collection|\MemberGroupModel|null findBy($col, $val, $opt=array())
- * @method static \Model\Collection|\MemberGroupModel|null findAll($opt=array())
+ * @method static Model\Collection|MemberGroupModel|null findByTstamp($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel|null findByName($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel|null findByRedirect($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel|null findByJumpTo($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel|null findByDisable($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel|null findByStart($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel|null findByStop($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel|null findMultipleByIds($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel|null findBy($col, $val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel|null findAll($opt=array())
  *
  * @method static integer countById($id, $opt=array())
  * @method static integer countByTstamp($val, $opt=array())
@@ -95,7 +95,7 @@ class MemberGroupModel extends \Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return \Model\Collection|\MemberGroupModel|null A collection of models or null if there are no member groups
+	 * @return Model\Collection|MemberGroupModel|null A collection of models or null if there are no member groups
 	 */
 	public static function findAllActive(array $arrOptions=array())
 	{
@@ -118,7 +118,7 @@ class MemberGroupModel extends \Model
 	 */
 	public static function findFirstActiveWithJumpToByIds($arrIds)
 	{
-		trigger_error('Using MemberGroupModel::findFirstActiveWithJumpToByIds() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findFirstActiveByMemberGroups() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using MemberGroupModel::findFirstActiveWithJumpToByIds() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findFirstActiveByMemberGroups() instead.', E_USER_DEPRECATED);
 
 		if (!is_array($arrIds) || empty($arrIds))
 		{

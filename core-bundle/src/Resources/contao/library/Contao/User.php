@@ -108,7 +108,7 @@ abstract class User extends \System
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \User
+	 * @var User
 	 */
 	protected static $objInstance;
 
@@ -310,7 +310,7 @@ abstract class User extends \System
 			foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback)
 			{
 				$this->import($callback[0], 'objAuth', true);
-				$this->objAuth->$callback[1]($this);
+				$this->objAuth->{$callback[1]}($this);
 			}
 		}
 
@@ -344,7 +344,7 @@ abstract class User extends \System
 				foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
 				{
 					$this->import($callback[0], 'objImport', true);
-					$blnLoaded = $this->objImport->$callback[1](\Input::post('username', true), \Input::postUnsafeRaw('password'), $this->strTable);
+					$blnLoaded = $this->objImport->{$callback[1]}(\Input::post('username', true), \Input::postUnsafeRaw('password'), $this->strTable);
 
 					// Load successfull
 					if ($blnLoaded === true)
@@ -424,7 +424,7 @@ abstract class User extends \System
 			foreach ($GLOBALS['TL_HOOKS']['checkCredentials'] as $callback)
 			{
 				$this->import($callback[0], 'objAuth', true);
-				$blnAuthenticated = $this->objAuth->$callback[1](\Input::post('username', true), \Input::postUnsafeRaw('password'), $this);
+				$blnAuthenticated = $this->objAuth->{$callback[1]}(\Input::post('username', true), \Input::postUnsafeRaw('password'), $this);
 
 				// Authentication successfull
 				if ($blnAuthenticated === true)
@@ -464,7 +464,7 @@ abstract class User extends \System
 			foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback)
 			{
 				$this->import($callback[0], 'objLogin', true);
-				$this->objLogin->$callback[1]($this);
+				$this->objLogin->{$callback[1]}($this);
 			}
 		}
 
@@ -499,7 +499,7 @@ abstract class User extends \System
 		}
 
 		// Check wether login is allowed (front end only)
-		elseif ($this instanceof \FrontendUser && !$this->login)
+		elseif ($this instanceof FrontendUser && !$this->login)
 		{
 			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
 			$this->log('User "' . $this->username . '" is not allowed to log in', __METHOD__, TL_ACCESS);
@@ -645,7 +645,7 @@ abstract class User extends \System
 			foreach ($GLOBALS['TL_HOOKS']['postLogout'] as $callback)
 			{
 				$this->import($callback[0], 'objLogout', true);
-				$this->objLogout->$callback[1]($this);
+				$this->objLogout->{$callback[1]}($this);
 			}
 		}
 

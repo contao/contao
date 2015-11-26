@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -37,10 +38,10 @@ class ModulePassword extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['lostPassword'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['lostPassword'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -58,7 +59,7 @@ class ModulePassword extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
@@ -105,7 +106,7 @@ class ModulePassword extends \Module
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
 		{
-			/** @var \Widget $strClass */
+			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
 
 			// Continue if the class is not defined
@@ -116,7 +117,7 @@ class ModulePassword extends \Module
 
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'];
 
-			/** @var \Widget $objWidget */
+			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 
 			$objWidget->storeValues = true;
@@ -183,7 +184,7 @@ class ModulePassword extends \Module
 		{
 			$this->strTemplate = 'mod_message';
 
-			/** @var \FrontendTemplate|object $objTemplate */
+			/** @var FrontendTemplate|object $objTemplate */
 			$objTemplate = new \FrontendTemplate($this->strTemplate);
 
 			$this->Template = $objTemplate;
@@ -196,7 +197,7 @@ class ModulePassword extends \Module
 		// Define the form field
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
 
-		/** @var \Widget $strClass */
+		/** @var Widget $strClass */
 		$strClass = $GLOBALS['TL_FFL']['password'];
 
 		// Fallback to default if the class is not defined
@@ -205,7 +206,7 @@ class ModulePassword extends \Module
 			$strClass = 'FormPassword';
 		}
 
-		/** @var \Widget $objWidget */
+		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, 'password'));
 
 		// Set row classes
@@ -237,7 +238,7 @@ class ModulePassword extends \Module
 					foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($objMember, $objWidget->value, $this);
+						$this->{$callback[0]}->{$callback[1]}($objMember, $objWidget->value, $this);
 					}
 				}
 
@@ -250,7 +251,7 @@ class ModulePassword extends \Module
 				// Confirm
 				$this->strTemplate = 'mod_message';
 
-				/** @var \FrontendTemplate|object $objTemplate */
+				/** @var FrontendTemplate|object $objTemplate */
 				$objTemplate = new \FrontendTemplate($this->strTemplate);
 
 				$this->Template = $objTemplate;
@@ -274,7 +275,7 @@ class ModulePassword extends \Module
 	/**
 	 * Create a new user and redirect
 	 *
-	 * @param \MemberModel $objMember
+	 * @param MemberModel $objMember
 	 */
 	protected function sendPasswordLink($objMember)
 	{

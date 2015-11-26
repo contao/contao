@@ -35,7 +35,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function parse()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Adjust the output format
@@ -52,7 +52,7 @@ class FrontendTemplate extends \Template
 			foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
-				$strBuffer = $this->$callback[0]->$callback[1]($strBuffer, $this->strTemplate);
+				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -64,6 +64,9 @@ class FrontendTemplate extends \Template
 	 * Send the response to the client
 	 *
 	 * @param bool $blnCheckRequest If true, check for unsued $_GET parameters
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 *             Use FrontendTemplate::getResponse() instead.
 	 */
 	public function output($blnCheckRequest=false)
 	{
@@ -95,7 +98,7 @@ class FrontendTemplate extends \Template
 	 *
 	 * @throws \UnusedArgumentsException If there are unused $_GET parameters
 	 *
-	 * @internal
+	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
 	protected function compile($blnCheckRequest=false)
 	{
@@ -117,7 +120,7 @@ class FrontendTemplate extends \Template
 			foreach ($GLOBALS['TL_HOOKS']['outputFrontendTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->strBuffer = $this->$callback[0]->$callback[1]($this->strBuffer, $this->strTemplate);
+				$this->strBuffer = $this->{$callback[0]}->{$callback[1]}($this->strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -138,7 +141,7 @@ class FrontendTemplate extends \Template
 			foreach ($GLOBALS['TL_HOOKS']['modifyFrontendPage'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->strBuffer = $this->$callback[0]->$callback[1]($this->strBuffer, $this->strTemplate);
+				$this->strBuffer = $this->{$callback[0]}->{$callback[1]}($this->strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -241,13 +244,13 @@ class FrontendTemplate extends \Template
 	 */
 	protected function addToCache()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$intCache = 0;
 
 		// Decide whether the page shall be cached
-		if (!isset($_GET['file']) && !isset($_GET['token']) && empty($_POST) && !BE_USER_LOGGED_IN && !FE_USER_LOGGED_IN && !$_SESSION['DISABLE_CACHE'] && !isset($_SESSION['LOGIN_ERROR']) && intval($objPage->cache) > 0 && !$objPage->protected)
+		if (!isset($_GET['file']) && !isset($_GET['token']) && empty($_POST) && !BE_USER_LOGGED_IN && !FE_USER_LOGGED_IN && !$_SESSION['DISABLE_CACHE'] && !isset($_SESSION['LOGIN_ERROR']) && !\Message::hasMessages() && intval($objPage->cache) > 0 && !$objPage->protected)
 		{
 			$intCache = time() + intval($objPage->cache);
 		}
@@ -271,7 +274,7 @@ class FrontendTemplate extends \Template
 				foreach ($GLOBALS['TL_HOOKS']['getCacheKey'] as $callback)
 				{
 					$this->import($callback[0]);
-					$strCacheKey = $this->$callback[0]->$callback[1]($strCacheKey);
+					$strCacheKey = $this->{$callback[0]}->{$callback[1]}($strCacheKey);
 				}
 			}
 
@@ -319,15 +322,13 @@ class FrontendTemplate extends \Template
 		{
 			if ($intCache > 0 && (\Config::get('cacheMode') == 'both' || \Config::get('cacheMode') == 'browser'))
 			{
-				header('Cache-Control: public, max-age=' . ($intCache - time()));
-				header('Pragma: public');
+				header('Cache-Control: private, max-age=' . ($intCache - time()));
 				header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
 				header('Expires: ' . gmdate('D, d M Y H:i:s', $intCache) . ' GMT');
 			}
 			else
 			{
 				header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-				header('Pragma: no-cache');
 				header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 				header('Expires: Fri, 06 Jun 1975 15:10:00 GMT');
 			}
@@ -343,7 +344,7 @@ class FrontendTemplate extends \Template
 	 */
 	protected function addToSearchIndex()
 	{
-		trigger_error('Using FrontendTemplate::addToSearchIndex() has been deprecated and will no longer work in Contao 5.0. Use the kernel.terminate event instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendTemplate::addToSearchIndex() has been deprecated and will no longer work in Contao 5.0. Use the kernel.terminate event instead.', E_USER_DEPRECATED);
 	}
 
 
@@ -359,7 +360,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function getCustomSection($strKey)
 	{
-		trigger_error('Using FrontendTemplate::getCustomSection() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::section() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendTemplate::getCustomSection() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::section() instead.', E_USER_DEPRECATED);
 
 		return '<div id="' . $strKey . '">' . $this->sections[$strKey] . '</div>' . "\n";
 	}
@@ -377,7 +378,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function getCustomSections($strKey=null)
 	{
-		trigger_error('Using FrontendTemplate::getCustomSections() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::sections() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendTemplate::getCustomSections() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::sections() instead.', E_USER_DEPRECATED);
 
 		if ($strKey != '' && $this->sPosition != $strKey)
 		{
@@ -388,7 +389,7 @@ class FrontendTemplate extends \Template
 
 		if ($strKey == 'main')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			// Use the section tag in HTML5

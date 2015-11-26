@@ -29,7 +29,6 @@ namespace {
 	class FrontendTemplate extends \Contao\FrontendTemplate {}
 	class FrontendUser extends \Contao\FrontendUser {}
 	abstract class Hybrid extends \Contao\Hybrid {}
-	class LiveUpdate extends \Contao\LiveUpdate {}
 	class Messages extends \Contao\Messages {}
 	class PurgeData extends \Contao\PurgeData {}
 	class RebuildIndex extends \Contao\RebuildIndex {}
@@ -40,7 +39,6 @@ namespace {
 	class BackendFile extends \Contao\BackendFile {}
 	class BackendHelp extends \Contao\BackendHelp {}
 	class BackendIndex extends \Contao\BackendIndex {}
-	class BackendInstall extends \Contao\BackendInstall {}
 	class BackendMain extends \Contao\BackendMain {}
 	class BackendPage extends \Contao\BackendPage {}
 	class BackendPassword extends \Contao\BackendPassword {}

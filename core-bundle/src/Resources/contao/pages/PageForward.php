@@ -26,7 +26,7 @@ class PageForward extends \Frontend
 	/**
 	 * Redirect to an internal page
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 */
 	public function generate($objPage)
 	{
@@ -36,7 +36,7 @@ class PageForward extends \Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
 	 * @return RedirectResponse
 	 */
@@ -48,7 +48,7 @@ class PageForward extends \Frontend
 	/**
 	 * Return the URL to the jumpTo or first published page
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
 	 * @return string
 	 *
@@ -58,7 +58,7 @@ class PageForward extends \Frontend
 	{
 		if ($objPage->jumpTo)
 		{
-			/** @var \PageModel $objNextPage */
+			/** @var PageModel $objNextPage */
 			$objNextPage = $objPage->getRelated('jumpTo');
 		}
 		else
@@ -73,14 +73,10 @@ class PageForward extends \Frontend
 			throw new ForwardPageNotFoundException('Forward page not found');
 		}
 
-		$strForceLang = null;
+		$objNextPage->loadDetails();
 
 		// Check the target page language (see #4706)
-		if (\Config::get('addLanguageToUrl'))
-		{
-			$objNextPage->loadDetails(); // see #3983
-			$strForceLang = $objNextPage->language;
-		}
+		$strForceLang = \Config::get('addLanguageToUrl') ? $objNextPage->language : null;
 
 		$strGet = '';
 		$strQuery = \Environment::get('queryString');
@@ -93,7 +89,7 @@ class PageForward extends \Frontend
 
 			foreach ($arrChunks as $strChunk)
 			{
-				list($k,) = explode('=', $strChunk, 2);
+				list($k) = explode('=', $strChunk, 2);
 				$arrQuery[] = $k;
 			}
 		}
@@ -132,13 +128,13 @@ class PageForward extends \Frontend
 			$strQuery = '?' . $strQuery;
 		}
 
-		return $this->generateFrontendUrl($objNextPage->row(), $strGet, $strForceLang) . $strQuery;
+		return $this->generateFrontendUrl($objNextPage->row(), $strGet, $strForceLang, true) . $strQuery;
 	}
 
 	/**
 	 * Return the redirect status code
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
 	 * @return integer
 	 */

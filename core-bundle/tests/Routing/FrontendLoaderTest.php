@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Test\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\FrontendLoader;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -22,7 +21,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendLoaderTest extends TestCase
+class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.
@@ -31,7 +30,7 @@ class FrontendLoaderTest extends TestCase
     {
         $loader = new FrontendLoader(false);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Routing\\FrontendLoader', $loader);
+        $this->assertInstanceOf('Contao\CoreBundle\Routing\FrontendLoader', $loader);
     }
 
     /**
@@ -202,7 +201,7 @@ class FrontendLoaderTest extends TestCase
      */
     private function getRouter(RouteCollection $collection, $urlSuffix = '.html')
     {
-        $loader = $this->getMock('Symfony\\Component\\Config\\Loader\\LoaderInterface');
+        $loader = $this->getMock('Symfony\Component\Config\Loader\LoaderInterface');
 
         $loader
             ->expects($this->any())
@@ -212,7 +211,7 @@ class FrontendLoaderTest extends TestCase
 
         /** @var ContainerInterface|\PHPUnit_Framework_MockObject_MockObject $container */
         $container = $this->getMock(
-            'Symfony\\Component\\DependencyInjection\\Container',
+            'Symfony\Component\DependencyInjection\Container',
             ['get', 'getParameter']
         );
 

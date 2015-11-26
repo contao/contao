@@ -8,22 +8,22 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle;
+namespace Contao\CoreBundle\Framework;
 
 use Contao\ClassLoader;
-use Contao\CoreBundle\Adapter\ConfigAdapter;
+use Contao\Config;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Input;
+use Contao\RequestToken;
 use Contao\System;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Initializes the Contao framework.
@@ -34,21 +34,21 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  * @author Dominik Tomasi <https://github.com/dtomasi>
  * @author Andreas Schempp <https://github.com/aschempp>
  *
- * @internal
+ * @internal Do not instantiate this class in your code. Use the "contao.framework" service instead.
  */
 class ContaoFramework implements ContaoFrameworkInterface
 {
     use ContainerAwareTrait;
 
     /**
+     * @var bool
+     */
+    private static $initialized = false;
+
+    /**
      * @var RouterInterface
      */
     private $router;
-
-    /**
-     * @var CsrfTokenManagerInterface
-     */
-    private $tokenManager;
 
     /**
      * @var SessionInterface
@@ -59,16 +59,6 @@ class ContaoFramework implements ContaoFrameworkInterface
      * @var string
      */
     private $rootDir;
-
-    /**
-     * @var ConfigAdapter
-     */
-    private $config;
-
-    /**
-     * @var string
-     */
-    private $csrfTokenName;
 
     /**
      * @var int
@@ -86,9 +76,9 @@ class ContaoFramework implements ContaoFrameworkInterface
     private $request;
 
     /**
-     * @var bool
+     * @var array
      */
-    private static $initialized = false;
+    private $adapterCache = [];
 
     /**
      * @var array
@@ -104,31 +94,22 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Constructor.
      *
-     * @param RequestStack              $requestStack  The request stack
-     * @param RouterInterface           $router        The router service
-     * @param SessionInterface          $session       The session service
-     * @param string                    $rootDir       The kernel root directory
-     * @param CsrfTokenManagerInterface $tokenManager  The token manager service
-     * @param string                    $csrfTokenName The name of the token
-     * @param ConfigAdapter             $config        The config adapter object
-     * @param int                       $errorLevel    The PHP error level
+     * @param RequestStack     $requestStack The request stack
+     * @param RouterInterface  $router       The router service
+     * @param SessionInterface $session      The session service
+     * @param string           $rootDir      The kernel root directory
+     * @param int              $errorLevel   The PHP error level
      */
     public function __construct(
         RequestStack $requestStack,
         RouterInterface $router,
         SessionInterface $session,
         $rootDir,
-        CsrfTokenManagerInterface $tokenManager,
-        $csrfTokenName,
-        ConfigAdapter $config,
         $errorLevel
     ) {
         $this->router = $router;
         $this->session = $session;
         $this->rootDir = dirname($rootDir);
-        $this->tokenManager = $tokenManager;
-        $this->csrfTokenName = $csrfTokenName;
-        $this->config = $config;
         $this->errorLevel = $errorLevel;
         $this->requestStack = $requestStack;
     }
@@ -164,6 +145,32 @@ class ContaoFramework implements ContaoFrameworkInterface
 
         $this->setConstants();
         $this->initializeFramework();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createInstance($class, $args = [])
+    {
+        if (in_array('getInstance', get_class_methods($class))) {
+            return call_user_func_array([$class, 'getInstance'], $args);
+        }
+
+        $reflection = new \ReflectionClass($class);
+
+        return $reflection->newInstanceArgs($args);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAdapter($class)
+    {
+        if (!isset($this->adapterCache[$class])) {
+            $this->adapterCache[$class] = new Adapter($class);
+        }
+
+        return $this->adapterCache[$class];
     }
 
     /**
@@ -274,8 +281,11 @@ class ContaoFramework implements ContaoFrameworkInterface
         // Set the container
         System::setContainer($this->container);
 
+        /** @var Config $config */
+        $config = $this->getAdapter('Contao\Config');
+
         // Preload the configuration (see #5872)
-        $this->config->preload();
+        $config->preload();
 
         // Register the class loader
         ClassLoader::scanAndRegister();
@@ -284,19 +294,13 @@ class ContaoFramework implements ContaoFrameworkInterface
         $this->setDefaultLanguage();
 
         // Fully load the configuration
-        $this->config->initialize();
+        $config->getInstance();
 
         $this->validateInstallation();
 
         Input::initialize();
 
         $this->setTimezone();
-
-        // Set the mbstring encoding
-        if (USE_MBSTRING && function_exists('mb_regex_encoding')) {
-            mb_regex_encoding($this->config->get('characterSet'));
-        }
-
         $this->triggerInitializeSystemHook();
         $this->handleRequestToken();
     }
@@ -306,10 +310,10 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function includeHelpers()
     {
-        require __DIR__ . '/Resources/contao/helper/functions.php';
-        require __DIR__ . '/Resources/contao/config/constants.php';
-        require __DIR__ . '/Resources/contao/helper/interface.php';
-        require __DIR__ . '/Resources/contao/helper/exception.php';
+        require __DIR__ . '/../Resources/contao/helper/functions.php';
+        require __DIR__ . '/../Resources/contao/config/constants.php';
+        require __DIR__ . '/../Resources/contao/helper/interface.php';
+        require __DIR__ . '/../Resources/contao/helper/exception.php';
     }
 
     /**
@@ -319,7 +323,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     {
         foreach ($this->basicClasses as $class) {
             if (!class_exists($class, false)) {
-                require_once __DIR__ . '/Resources/contao/library/Contao/' . $class . '.php';
+                require_once __DIR__ . '/../Resources/contao/library/Contao/' . $class . '.php';
                 class_alias('Contao\\' . $class, $class);
             }
         }
@@ -365,8 +369,11 @@ class ContaoFramework implements ContaoFrameworkInterface
             return;
         }
 
+        /** @var Config $config */
+        $config = $this->getAdapter('Contao\Config');
+
         // Show the "incomplete installation" message
-        if (!$this->config->isComplete()) {
+        if (!$config->isComplete()) {
             throw new IncompleteInstallationException(
                 'The installation has not been completed. Open the Contao install tool to continue.'
             );
@@ -378,8 +385,11 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function setTimezone()
     {
-        $this->iniSet('date.timezone', $this->config->get('timeZone'));
-        date_default_timezone_set($this->config->get('timeZone'));
+        /** @var Config $config */
+        $config = $this->getAdapter('Contao\Config');
+
+        $this->iniSet('date.timezone', $config->get('timeZone'));
+        date_default_timezone_set($config->get('timeZone'));
     }
 
     /**
@@ -389,7 +399,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     {
         if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
             foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
-                System::importStatic($callback[0])->$callback[1]();
+                System::importStatic($callback[0])->{$callback[1]}();
             }
         }
 
@@ -405,18 +415,15 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function handleRequestToken()
     {
+        /** @var RequestToken $requestToken */
+        $requestToken = $this->getAdapter('Contao\RequestToken');
+
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         if (!defined('REQUEST_TOKEN')) {
-            define('REQUEST_TOKEN', $this->tokenManager->getToken($this->csrfTokenName)->getValue());
+            define('REQUEST_TOKEN', $requestToken->get());
         }
 
-        if (null === $this->request || 'POST' !== $this->request->getRealMethod()) {
-            return;
-        }
-
-        $token = new CsrfToken($this->csrfTokenName, $this->request->request->get('REQUEST_TOKEN'));
-
-        if ($this->tokenManager->isTokenValid($token)) {
+        if ($this->canSkipTokenCheck() || $requestToken->validate($this->request->request->get('REQUEST_TOKEN'))) {
             return;
         }
 
@@ -438,5 +445,19 @@ class ContaoFramework implements ContaoFrameworkInterface
         if (function_exists('ini_set')) {
             ini_set($key, $value);
         }
+    }
+
+    /**
+     * Checks if the token check can be skipped.
+     *
+     * @return bool True if the token check can be skipped
+     */
+    private function canSkipTokenCheck()
+    {
+        return null === $this->request
+            || 'POST' !== $this->request->getRealMethod()
+            || !$this->request->attributes->has('_token_check')
+            || false === $this->request->attributes->get('_token_check')
+        ;
     }
 }

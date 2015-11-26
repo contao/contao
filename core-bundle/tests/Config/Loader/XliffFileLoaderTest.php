@@ -26,7 +26,7 @@ class XliffFileLoaderTest extends TestCase
     public function testInstantiation()
     {
         $this->assertInstanceOf(
-            'Contao\\CoreBundle\\Config\\Loader\\XliffFileLoader',
+            'Contao\CoreBundle\Config\Loader\XliffFileLoader',
             new XliffFileLoader($this->getRootDir() . '/app')
         );
     }

@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\Contao;
 
-use Contao\CoreBundle\Test\TestCase;
 use Contao\Input;
 
 /**
@@ -22,7 +21,7 @@ use Contao\Input;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class WidgetTest extends TestCase
+class WidgetTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Includes the helper functions if they have not yet been included.
@@ -37,6 +36,11 @@ class WidgetTest extends TestCase
     /**
      * Tests the getPost() method.
      *
+     * @param string $key      The key
+     * @param string $input    The input
+     * @param mixed  $value    The value
+     * @param string $expected The expected value
+     *
      * @dataProvider postProvider
      */
     public function testGetPost($key, $input, $value, $expected)
@@ -45,8 +49,8 @@ class WidgetTest extends TestCase
         $errorReporting = error_reporting();
         error_reporting($errorReporting & ~E_NOTICE);
 
-        $widget = $this->getMock('Contao\\Widget');
-        $class = new \ReflectionClass('Contao\\Widget');
+        $widget = $this->getMock('Contao\Widget');
+        $class = new \ReflectionClass('Contao\Widget');
         $method = $class->getMethod('getPost');
 
         $method->setAccessible(true);

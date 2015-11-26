@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_member.lastname.1">
         <source>Please enter the last name.</source>
-        <target>لطفا نام خانوادگی خود را وارد نمایید.</target>
+        <target>لطفا نام خانوادگی را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_member.dateOfBirth.0">
         <source>Date of birth</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_member.company.1">
         <source>Here you can enter a company name.</source>
-        <target>در این بخش اینجا می‌توانید نام شرکت خود را وارد نمایید.</target>
+        <target>در این بخش اینجا می‌توانید نام شرکت را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_member.street.0">
         <source>Street</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_member.city.1">
         <source>Plase enter the name of the city.</source>
-        <target>لطفا شهر خود را وارد نمایید.</target>
+        <target>لطفا شهر را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_member.state.1">
         <source>Plase enter the name of the state.</source>
-        <target>لطفا نام استان خود را وارد نمایید.</target>
+        <target>لطفا نام استان را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_member.country.0">
         <source>Country</source>
@@ -131,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_member.groups.0">
         <source>Member groups</source>
-        <target>گروه‌های کاربری</target>
+        <target>گروه‌های اعضاء</target>
       </trans-unit>
       <trans-unit id="tl_member.groups.1">
         <source>Here you can assign the member to one or more groups.</source>
@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_member.login.1">
         <source>Allow the member to log into the front end.</source>
-        <target>به عضو برای ورود به بخش کاربری اجازه می‌دهد.</target>
+        <target>اجازه دادن به عضو برای ورود به کاربری.</target>
       </trans-unit>
       <trans-unit id="tl_member.username.0">
         <source>Username</source>
@@ -151,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_member.username.1">
         <source>Please enter a unique username.</source>
-        <target>لطفا یک نام کاربری یکتایی را وارد نمایید .</target>
+        <target>لطفا یک نام کاربری یکتایی را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_member.assignDir.0">
         <source>Set home directory</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_member.address_legend">
         <source>Address details</source>
-        <target>جژئیات نشانی</target>
+        <target>جزئیات نشانی</target>
       </trans-unit>
       <trans-unit id="tl_member.contact_legend">
         <source>Contact details</source>
@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_member.groups_legend">
         <source>Member groups</source>
-        <target>گروه‌های کاربری</target>
+        <target>گروه‌های اعضاء</target>
       </trans-unit>
       <trans-unit id="tl_member.login_legend">
         <source>Login details</source>

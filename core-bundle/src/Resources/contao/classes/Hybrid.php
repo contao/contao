@@ -16,6 +16,7 @@ namespace Contao;
  *
  * @property string $hl
  * @property string $cssID
+ * @property string $attributes
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -48,13 +49,13 @@ abstract class Hybrid extends \Frontend
 
 	/**
 	 * Model
-	 * @var \Model
+	 * @var Model
 	 */
 	protected $objModel;
 
 	/**
 	 * Parent element
-	 * @var \Model|object
+	 * @var Model|object
 	 */
 	protected $objParent;
 
@@ -74,19 +75,19 @@ abstract class Hybrid extends \Frontend
 	/**
 	 * Initialize the object
 	 *
-	 * @param \ContentModel|\ModuleModel|\FormModel $objElement
-	 * @param string                                $strColumn
+	 * @param ContentModel|ModuleModel|FormModel $objElement
+	 * @param string                             $strColumn
 	 */
 	public function __construct($objElement, $strColumn='main')
 	{
 		parent::__construct();
 
 		// Store the parent element (see #4556)
-		if ($objElement instanceof \Model)
+		if ($objElement instanceof Model)
 		{
 			$this->objParent = $objElement;
 		}
-		elseif ($objElement instanceof \Model\Collection)
+		elseif ($objElement instanceof Model\Collection)
 		{
 			$this->objParent = $objElement->current();
 		}
@@ -96,7 +97,7 @@ abstract class Hybrid extends \Frontend
 			return;
 		}
 
-		/** @var \Model $strModelClass */
+		/** @var Model $strModelClass */
 		$strModelClass = \Model::getClassFromTable($this->strTable);
 
 		// Load the model
@@ -125,12 +126,16 @@ abstract class Hybrid extends \Frontend
 			}
 		}
 
+		$cssID = array();
 		$this->arrData = $objHybrid->row();
 
 		// Get the CSS ID from the parent element (!)
 		$this->cssID = deserialize($objElement->cssID, true);
 
-		$cssID = deserialize($objHybrid->attributes, true);
+		if (isset($objHybrid->attributes))
+		{
+			$cssID = deserialize($objHybrid->attributes, true);
+		}
 
 		// Override the CSS ID (see #305)
 		if (!empty($this->cssID[0]))
@@ -201,7 +206,7 @@ abstract class Hybrid extends \Frontend
 	/**
 	 * Return the model
 	 *
-	 * @return \Model
+	 * @return Model
 	 */
 	public function getModel()
 	{
@@ -227,7 +232,7 @@ abstract class Hybrid extends \Frontend
 	 */
 	public function generate()
 	{
-		if ($this->objParent instanceof \ContentModel && TL_MODE == 'FE' && !BE_USER_LOGGED_IN && ($this->objParent->invisible || ($this->objParent->start != '' && $this->objParent->start > time()) || ($this->objParent->stop != '' && $this->objParent->stop < time())))
+		if ($this->objParent instanceof ContentModel && TL_MODE == 'FE' && !BE_USER_LOGGED_IN && ($this->objParent->invisible || ($this->objParent->start != '' && $this->objParent->start > time()) || ($this->objParent->stop != '' && $this->objParent->stop < time())))
 		{
 			return '';
 		}

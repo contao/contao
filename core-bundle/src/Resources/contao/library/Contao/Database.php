@@ -71,7 +71,7 @@ class Database
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if (!empty($arrConfig))
 		{
-			trigger_error('Passing a custom configuration to Database::__construct() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			@trigger_error('Passing a custom configuration to Database::__construct() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 			$arrParams = array
 			(
@@ -137,7 +137,7 @@ class Database
 	 *
 	 * @param array $arrCustomConfig A configuration array
 	 *
-	 * @return \Database The Database object
+	 * @return Database The Database object
 	 */
 	public static function getInstance(array $arrCustomConfig=null)
 	{
@@ -175,7 +175,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Statement The Database\Statement object
+	 * @return Database\Statement The Database\Statement object
 	 */
 	public function prepare($strQuery)
 	{
@@ -190,7 +190,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Result|object The Database\Result object
+	 * @return Database\Result|object The Database\Result object
 	 */
 	public function execute($strQuery)
 	{
@@ -203,7 +203,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Result|object The Database\Result object
+	 * @return Database\Result|object The Database\Result object
 	 */
 	public function query($strQuery)
 	{
@@ -710,14 +710,14 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Result|object The Database\Result object
+	 * @return Database\Result|object The Database\Result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Database::execute() instead.
 	 */
 	public function executeUncached($strQuery)
 	{
-		trigger_error('Using Database::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Database::execute() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Database::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Database::execute() instead.', E_USER_DEPRECATED);
 
 		return $this->execute($strQuery);
 	}
@@ -728,14 +728,14 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return \Database\Result|object The Database\Result object
+	 * @return Database\Result|object The Database\Result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Database::execute() instead.
 	 */
 	public function executeCached($strQuery)
 	{
-		trigger_error('Using Database::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Database::execute() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Database::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Database::execute() instead.', E_USER_DEPRECATED);
 
 		return $this->execute($strQuery);
 	}

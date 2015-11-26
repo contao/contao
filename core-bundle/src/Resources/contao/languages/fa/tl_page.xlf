@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_page.timeFormat.1">
         <source>The time format string will be parsed with the PHP date() function.</source>
-        <target>رشته ساختار زمان که توسط تابع PHP date () استفاده خواهد شد.</target>
+        <target>رشته ساختار ساعت که توسط تابع PHP date () استفاده خواهد شد.</target>
       </trans-unit>
       <trans-unit id="tl_page.datimFormat.0">
         <source>Date and time format</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemapName.1">
         <source>Please enter the name of the sitemap file without extension.</source>
-        <target>لطفا نام پرونده نقشه وب‌سایت را بدون پسوند وارد نمتئید.</target>
+        <target>لطفا نام پرونده نقشه وب‌سایت را بدون پسوند وارد نمائید.</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
         <source>Use HTTPS</source>
@@ -219,7 +219,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cuser.0">
         <source>Owner</source>
-        <target>صاحب</target>
+        <target>مالک</target>
       </trans-unit>
       <trans-unit id="tl_page.cuser.1">
         <source>Please select a user as the owner of the page.</source>
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the sitemap.</source>
-        <target>اینجا می‌توانید چگونگی نمایش برگه پر نقشه سایت را تعریف نمایید.</target>
+        <target>اینجا می‌توانید چگونگی نمایش برگه در نقشه سایت را تعریف نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
@@ -339,7 +339,7 @@
       </trans-unit>
       <trans-unit id="tl_page.dns_legend">
         <source>DNS settings</source>
-        <target>تنظیمات DNS</target>
+        <target>تنظیمات دی‌ان‌اس</target>
       </trans-unit>
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
@@ -355,7 +355,7 @@
       </trans-unit>
       <trans-unit id="tl_page.forward_legend">
         <source>Auto-forward</source>
-        <target>منتقل کردن خودکار</target>
+        <target>انتقال خودکار</target>
       </trans-unit>
       <trans-unit id="tl_page.protected_legend">
         <source>Access protection</source>
@@ -499,7 +499,7 @@
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>
-        <target>0 (بدون ذخیره‌سازی)</target>
+        <target>0 (بدون نهان کردن)</target>
       </trans-unit>
       <trans-unit id="CACHE.5">
         <source>5 seconds</source>

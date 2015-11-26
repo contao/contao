@@ -206,4 +206,82 @@ class Message
 	{
 		return array('TL_ERROR', 'TL_CONFIRM', 'TL_NEW', 'TL_INFO', 'TL_RAW');
 	}
+
+
+	/**
+	 * Check if there are error messages
+	 *
+	 * @param string $strScope An optional message scope
+	 *
+	 * @return boolean True if there are error messages
+	 */
+	public static function hasError($strScope=TL_MODE)
+	{
+		return !empty($_SESSION['MESSAGES'][$strScope]['TL_ERROR']);
+	}
+
+
+	/**
+	 * Check if there are confirmation messages
+	 *
+	 * @param string $strScope An optional message scope
+	 *
+	 * @return boolean True if there are confirmation messages
+	 */
+	public static function hasConfirmation($strScope=TL_MODE)
+	{
+		return !empty($_SESSION['MESSAGES'][$strScope]['TL_CONFIRM']);
+	}
+
+
+	/**
+	 * Check if there are new messages
+	 *
+	 * @param string $strScope An optional message scope
+	 *
+	 * @return boolean True if there are new messages
+	 */
+	public static function hasNew($strScope=TL_MODE)
+	{
+		return !empty($_SESSION['MESSAGES'][$strScope]['TL_NEW']);
+	}
+
+
+	/**
+	 * Check if there are info messages
+	 *
+	 * @param string $strScope An optional message scope
+	 *
+	 * @return boolean True if there are info messages
+	 */
+	public static function hasInfo($strScope=TL_MODE)
+	{
+		return !empty($_SESSION['MESSAGES'][$strScope]['TL_INFO']);
+	}
+
+
+	/**
+	 * Check if there are raw messages
+	 *
+	 * @param string $strScope An optional message scope
+	 *
+	 * @return boolean True if there are raw messages
+	 */
+	public static function hasRaw($strScope=TL_MODE)
+	{
+		return !empty($_SESSION['MESSAGES'][$strScope]['TL_RAW']);
+	}
+
+
+	/**
+	 * Check if there are any messages
+	 *
+	 * @param string $strScope An optional message scope
+	 *
+	 * @return boolean True if there are messages
+	 */
+	public static function hasMessages($strScope=TL_MODE)
+	{
+		return static::hasError($strScope) || static::hasConfirmation($strScope) || static::hasNew($strScope) || static::hasInfo($strScope) || static::hasRaw($strScope);
+	}
 }

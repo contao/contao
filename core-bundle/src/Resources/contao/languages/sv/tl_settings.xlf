@@ -186,14 +186,6 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>Ange en lista med tillåtna HTML-taggar. Alla andra taggar kommer att tas bort från användarnas inmatningar.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.0">
-        <source>Maintenance mode</source>
-        <target>Underhållsläge</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.1">
-        <source>Send a 503 HTTP header and show a maintenance page in the front end.</source>
-        <target>Skicka en 503 HTTP-header och visa en underhållssida i frontend.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
         <target>Slå av referenskontroll</target>
@@ -289,14 +281,6 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
         <target>Ange en kommaseparerad lista med filtyper som kan laddas upp. &lt;br /&gt;Av säkerhetsskäl är uppladdning begränsat till filmappen och dess undermappar.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.0">
-        <source>Simultaneous file uploads</source>
-        <target>Simultan filuppladdning</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.1">
-        <source>Here you can enter the maximum number of simultaneous file uploads.</source>
-        <target>Ange det maximala antalet filer som simultant kan laddas upp till siten.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
@@ -402,14 +386,6 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
         <source>Please assign the default access rights for pages and articles.</source>
         <target>Som standard använder en sida samma behörigheter som sin föräldrasida. Men om inga behörigheter är definierade kommer dessa standardbehörigheter att användas.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.0">
-        <source>Live Update URL</source>
-        <target>Live Update URL</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.1">
-        <source>Here you can enter the Live Update URL.</source>
-        <target>Här kan du ange Live Update URL.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.title_legend">
         <source>Website title</source>
         <target>Webbsidans titel</target>
@@ -469,10 +445,6 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Standardåtkomstvärden</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.update_legend">
-        <source>Live Update</source>
-        <target>Live Update</target>
       </trans-unit>
       <trans-unit id="tl_settings.static_legend">
         <source>Static resources</source>

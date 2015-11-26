@@ -61,14 +61,7 @@ class Validator
 	 */
 	public static function isAlphabetic($varValue)
 	{
-		if (function_exists('mb_eregi'))
-		{
-			return mb_eregi('^[[:alpha:] \.-]+$', $varValue);
-		}
-		else
-		{
-			return preg_match('/^[\pL .-]+$/u', $varValue);
-		}
+		return preg_match('/^[\pL .-]+$/u', $varValue);
 	}
 
 
@@ -81,14 +74,7 @@ class Validator
 	 */
 	public static function isAlphanumeric($varValue)
 	{
-		if (function_exists('mb_eregi'))
-		{
-			return mb_eregi('^[[:alnum:] \._-]+$', $varValue);
-		}
-		else
-		{
-			return preg_match('/^[\w .-]+$/u', $varValue);
-		}
+		return preg_match('/^[\w .-]+$/u', $varValue);
 	}
 
 
@@ -153,9 +139,20 @@ class Validator
 	 */
 	public static function isEmail($varValue)
 	{
-		$email = \Idna::encodeEmail($varValue);
-
-		return filter_var($email, FILTER_VALIDATE_EMAIL) === $email;
+		/*
+		 * The regex below is based on a regex by Michael Rushton adjusted by
+		 * Rasmus Lerdorf to to only consider routeable addresses as valid. We
+		 * have also added Unicode support for the local part.
+		 *
+		 * Michael's regex carries this copyright:
+		 *
+		 * Copyright © Michael Rushton 2009-10
+		 * http://squiloople.com/
+		 * Feel free to use and redistribute this code. But please keep this copyright notice.
+		 *
+		 * @see https://github.com/php/php-src/blob/master/ext/filter/logical_filters.c#L601
+		 */
+		return preg_match('/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E\pL\pN]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F\pL\pN]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E\pL\pN]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F\pL\pN]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iDu', \Idna::encodeEmail($varValue));
 	}
 
 
@@ -168,14 +165,7 @@ class Validator
 	 */
 	public static function isUrl($varValue)
 	{
-		if (function_exists('mb_eregi'))
-		{
-			return mb_eregi('^[[:alnum:]\.\*\+\/\?\$#%:,;\{\}\(\)\[\]@&!=~_-]+$', \Idna::encodeUrl($varValue));
-		}
-		else
-		{
-			return preg_match('/^[\w\/.*+?$#%:,;{}()[\]@&!=~-]+$/u', \Idna::encodeUrl($varValue));
-		}
+		return preg_match('/^[\w\/.*+?$#%:,;{}()[\]@&!=~-]+$/u', \Idna::encodeUrl($varValue));
 	}
 
 
@@ -188,14 +178,7 @@ class Validator
 	 */
 	public static function isAlias($varValue)
 	{
-		if (function_exists('mb_eregi'))
-		{
-			return mb_eregi('^[[:alnum:]\._-]+$', $varValue);
-		}
-		else
-		{
-			return preg_match('/^[\w.-]+$/u', $varValue);
-		}
+		return preg_match('/^[\w.-]+$/u', $varValue);
 	}
 
 
@@ -208,14 +191,7 @@ class Validator
 	 */
 	public static function isFolderAlias($varValue)
 	{
-		if (function_exists('mb_eregi'))
-		{
-			return mb_eregi('^[[:alnum:]\/\._-]+$', $varValue);
-		}
-		else
-		{
-			return preg_match('/^[\w\/.-]+$/u', $varValue);
-		}
+		return preg_match('/^[\w\/.-]+$/u', $varValue);
 	}
 
 
@@ -419,7 +395,7 @@ class Validator
 		}
 
 		// Must not be longer than 255 characters
-		if (utf8_strlen($strName) > 255)
+		if (mb_strlen($strName) > 255)
 		{
 			return false;
 		}

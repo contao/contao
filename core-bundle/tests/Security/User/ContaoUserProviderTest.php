@@ -11,12 +11,11 @@
 namespace Contao\CoreBundle\Test\Security\Authentication;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\Security\Core\User\User;
-use Contao\CoreBundle\ContaoFramework;
 
 /**
  * Tests the ContaoUserProvider class.
@@ -24,7 +23,7 @@ use Contao\CoreBundle\ContaoFramework;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoUserProviderTest extends TestCase
+class ContaoUserProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
@@ -39,7 +38,7 @@ class ContaoUserProviderTest extends TestCase
         parent::setUp();
 
         $this->framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -52,7 +51,7 @@ class ContaoUserProviderTest extends TestCase
     {
         $provider = new ContaoUserProvider(new Container(), $this->framework);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Security\\User\\ContaoUserProvider', $provider);
+        $this->assertInstanceOf('Contao\CoreBundle\Security\User\ContaoUserProvider', $provider);
     }
 
     /**
@@ -69,7 +68,7 @@ class ContaoUserProviderTest extends TestCase
 
         $provider = new ContaoUserProvider($container, $this->framework);
 
-        $this->assertInstanceOf('Contao\\BackendUser', $provider->loadUserByUsername('backend'));
+        $this->assertInstanceOf('Contao\BackendUser', $provider->loadUserByUsername('backend'));
     }
 
     /**
@@ -86,7 +85,7 @@ class ContaoUserProviderTest extends TestCase
 
         $provider = new ContaoUserProvider($container, $this->framework);
 
-        $this->assertInstanceOf('Contao\\FrontendUser', $provider->loadUserByUsername('frontend'));
+        $this->assertInstanceOf('Contao\FrontendUser', $provider->loadUserByUsername('frontend'));
     }
 
     /**
@@ -148,6 +147,6 @@ class ContaoUserProviderTest extends TestCase
 
         $provider = new ContaoUserProvider($container, $this->framework);
 
-        $this->assertTrue($provider->supportsClass('Contao\\FrontendUser'));
+        $this->assertTrue($provider->supportsClass('Contao\FrontendUser'));
     }
 }

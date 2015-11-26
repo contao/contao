@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Creates and queries the search index
@@ -35,7 +37,7 @@ class Search
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Search
+	 * @var Search
 	 */
 	protected static $objInstance;
 
@@ -128,7 +130,7 @@ class Search
 		{
 			foreach ($GLOBALS['TL_HOOKS']['indexPage'] as $callback)
 			{
-				\System::importStatic($callback[0])->$callback[1]($strContent, $arrData, $arrSet);
+				\System::importStatic($callback[0])->{$callback[1]}($strContent, $arrData, $arrSet);
 			}
 		}
 
@@ -209,7 +211,7 @@ class Search
 			if ($objDuplicates->numRows)
 			{
 				// Update the URL if the new URL is shorter or the current URL is not canonical
-				if (substr_count($arrSet['url'], '/') < substr_count($objDuplicates->url, '/') || strncmp($arrSet['url'] . '?', $objDuplicates->url, utf8_strlen($arrSet['url']) + 1) === 0)
+				if (substr_count($arrSet['url'], '/') < substr_count($objDuplicates->url, '/') || strncmp($arrSet['url'] . '?', $objDuplicates->url, Utf8::strlen($arrSet['url']) + 1) === 0)
 				{
 					$objDatabase->prepare("UPDATE tl_search SET url=? WHERE id=?")
 								->execute($arrSet['url'], $objDuplicates->id);
@@ -234,17 +236,10 @@ class Search
 		unset($arrSet);
 
 		// Remove special characters
-		if (function_exists('mb_eregi_replace'))
-		{
-			$strText = mb_eregi_replace('[^[:alnum:]\'\.:,\+_-]|- | -|\' | \'|\. |\.$|: |:$|, |,$', ' ', $strText);
-		}
-		else
-		{
-			$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\'.:,+-]/u'), ' ', $strText);
-		}
+		$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\'.:,+-]/u'), ' ', $strText);
 
 		// Split words
-		$arrWords = preg_split('/ +/', utf8_strtolower($strText));
+		$arrWords = preg_split('/ +/', Utf8::strtolower($strText));
 		$arrIndex = array();
 
 		// Index words
@@ -307,24 +302,16 @@ class Search
 	 * @param integer $intOffset   An optional result offset
 	 * @param boolean $blnFuzzy    If true, the search will be fuzzy
 	 *
-	 * @return \Database\Result The database result object
+	 * @return Database\Result The database result object
 	 *
 	 * @throws \Exception If the cleaned keyword string is empty
 	 */
 	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false)
 	{
 		// Clean the keywords
-		$strKeywords = utf8_strtolower($strKeywords);
+		$strKeywords = Utf8::strtolower($strKeywords);
 		$strKeywords = \StringUtil::decodeEntities($strKeywords);
-
-		if (function_exists('mb_eregi_replace'))
-		{
-			$strKeywords = mb_eregi_replace('[^[:alnum:] \*\+\'"\.:,_-]|\. |\.$|: |:$|, |,$', ' ', $strKeywords);
-		}
-		else
-		{
-			$strKeywords = preg_replace(array('/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\' *+".:,-]/u'), ' ', $strKeywords);
-		}
+		$strKeywords = preg_replace(array('/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\' *+".:,-]/u'), ' ', $strKeywords);
 
 		// Check keyword string
 		if (!strlen($strKeywords))
@@ -454,7 +441,7 @@ class Search
 		{
 			foreach ($arrPhrases as $strPhrase)
 			{
-				$arrWords = explode('[^[:alnum:]]+', utf8_substr($strPhrase, 7, -7));
+				$arrWords = explode('[^[:alnum:]]+', Utf8::substr($strPhrase, 7, -7));
 				$arrAllKeywords[] = implode(' OR ', array_fill(0, count($arrWords), 'word=?'));
 				$arrValues = array_merge($arrValues, $arrWords);
 				$intKeywords += count($arrWords);
@@ -562,14 +549,14 @@ class Search
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return \Search The object instance
+	 * @return Search The object instance
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Search class is now static.
 	 */
 	public static function getInstance()
 	{
-		trigger_error('Using Search::getInstance() has been deprecated and will no longer work in Contao 5.0. The Search class is now static.', E_USER_DEPRECATED);
+		@trigger_error('Using Search::getInstance() has been deprecated and will no longer work in Contao 5.0. The Search class is now static.', E_USER_DEPRECATED);
 
 		if (static::$objInstance === null)
 		{

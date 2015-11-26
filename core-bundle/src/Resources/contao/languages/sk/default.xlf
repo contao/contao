@@ -244,8 +244,7 @@
         <target>Súbor &quot;%s&quot; nie je k dispozícii na stiahnutie!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid input: %s</source>
-        <target>Neplatný vstupný údaj: %s</target>
+        <source>Invalid option: %s</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -976,8 +975,8 @@
         <target>Aktivovať/deaktivovať modul</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
-        <source>Title</source>
-        <target>Nadpis</target>
+        <source>Alternate text</source>
+        <target>Alternatívny text</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -1412,6 +1411,9 @@ Tento e-mail bol automatický vygenerovaný systémom Contao. Neodpovedajte naň
         <source>No records found.</source>
         <target>Žiadne záznamy sa nenašli.</target>
       </trans-unit>
+      <trans-unit id="MSC.searchExclude">
+        <source>Unsynchronized directories are not included in the search results.</source>
+      </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
         <target>Uložiť</target>
@@ -1617,8 +1619,13 @@ Tento e-mail bol automatický vygenerovaný systémom Contao. Neodpovedajte naň
         <target>%s back end</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
-        <source>Contao version %s available</source>
-        <target>Contao verzia %s je k dispozícii</target>
+        <source>Contao version %s is available.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceEnabled">
+        <source>The maintenance mode is currently enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.maintenanceDisabled">
+        <source>The maintenance mode is currently disabled.</source>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1796,14 +1803,6 @@ Tento e-mail bol automatický vygenerovaný systémom Contao. Neodpovedajte naň
         <source>%s (copy)</source>
         <target>%s (kópia)</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceMode">
-        <source>Contao is currently running in &lt;strong&gt;maintenance mode&lt;/strong&gt;, in which the website (front end) is not available. Do not disable it if you are currently installing or upgrading third-party extensions! The website might not function properly.</source>
-        <target>Contao beží momentálne v &lt;strong&gt;móde údržby&lt;/strong&gt;. Webstránka (front end) nie je pre používateľov dostupná. Nevypínajte mód údržby ak práve inštalujete alebo aktualizujete rozšírenia! Webstránka by sa nemusela zobrazovať správne.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceOff">
-        <source>Disable</source>
-        <target>Neaktívny</target>
-      </trans-unit>
       <trans-unit id="MSC.buildCacheText">
         <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
       </trans-unit>
@@ -1822,6 +1821,9 @@ Tento e-mail bol automatický vygenerovaný systémom Contao. Neodpovedajte naň
       <trans-unit id="MSC.register">
         <source>Register</source>
         <target>Registrovať</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendActivation">
+        <source>The activation mail has been re-sent to your e-mail address.</source>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
@@ -2059,6 +2061,9 @@ Tento e-mail bol automatický vygenerovaný systémom Contao. Neodpovedajte naň
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
         <target>Uložiť údaje</target>
+      </trans-unit>
+      <trans-unit id="MSC.savedData">
+        <source>Your data has been saved.</source>
       </trans-unit>
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>

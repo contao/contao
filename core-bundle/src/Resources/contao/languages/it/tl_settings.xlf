@@ -185,14 +185,6 @@
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>Inserisci una lista dei tag consentiti. Gli altri tag verranno rimossi dall'input utente</target>
       </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.0">
-        <source>Maintenance mode</source>
-        <target>Modalità manutenzione</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.1">
-        <source>Send a 503 HTTP header and show a maintenance page in the front end.</source>
-        <target>Invia il codice HTTP 503 e mostrare una pagina di manutenzione nel front-end.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
         <target>Disabilita il token</target>
@@ -288,14 +280,6 @@
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
         <target>Inserisci una lista separata da virgole delle estensioni dei file che è possibile caricare sul server</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.0">
-        <source>Simultaneous file uploads</source>
-        <target>Numero di upload simultanei</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.1">
-        <source>Here you can enter the maximum number of simultaneous file uploads.</source>
-        <target>Inserisci il massimo numero di upload simultanei.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
@@ -401,14 +385,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>Una pagina utilizza gli stessi permessi della pagina genitore. Tuttavia se non è stato definito alcun permesso verranno utilizzati questi permessi di default.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.0">
-        <source>Live Update URL</source>
-        <target>Live Update Url</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.1">
-        <source>Here you can enter the Live Update URL.</source>
-        <target>Inserisci l'url del Live Update.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.title_legend">
         <source>Website title</source>
         <target>Titolo sito web</target>
@@ -468,10 +444,6 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Diritti di accesso predefiniti</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.update_legend">
-        <source>Live Update</source>
-        <target>Live Update (aggiornamento automatico)</target>
       </trans-unit>
       <trans-unit id="tl_settings.static_legend">
         <source>Static resources</source>

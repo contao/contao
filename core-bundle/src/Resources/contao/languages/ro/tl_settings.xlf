@@ -185,14 +185,6 @@
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>Introduceţi o listă a tagurilor HTML permise. Toate celelalte vor fi şterse din inputul utilizatorului.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.0">
-        <source>Maintenance mode</source>
-        <target>Mod mentenanţă</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maintenanceMode.1">
-        <source>Send a 503 HTTP header and show a maintenance page in the front end.</source>
-        <target>TRimite HTTP 503 în header şi arată pagina de mentenanţă în front-end.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
         <target>Anulează verificarea referer-ului</target>
@@ -288,14 +280,6 @@
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
         <target>Introduceţi o listă a extensiilor de fişiere ce pot fi încărcate, separate prin virgulă. Din motive de securitate, încărcarea de fişiere este limitată la directorul de fişiere şi subdirectoarele sale.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.0">
-        <source>Simultaneous file uploads</source>
-        <target>Fişiere încărcate simultan</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.uploadFields.1">
-        <source>Here you can enter the maximum number of simultaneous file uploads.</source>
-        <target>Introduceţi numărul maxim de fişiere pentru încărcare simultană.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
@@ -401,14 +385,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>Iniţial o pagină foloseşte aceleaşi setări ale permisiunilor ca şi pagina sa părinte. Dacă însă nu sunt definite permisiuni cele iniţiale vor fi folosite.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.0">
-        <source>Live Update URL</source>
-        <target>URL de update online</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.liveUpdateBase.1">
-        <source>Here you can enter the Live Update URL.</source>
-        <target>Introduceţi adresa de actualizare automată.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.title_legend">
         <source>Website title</source>
         <target>Titlu website</target>
@@ -468,10 +444,6 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Drepturi de acces</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.update_legend">
-        <source>Live Update</source>
-        <target>Actualizare online</target>
       </trans-unit>
       <trans-unit id="tl_settings.static_legend">
         <source>Static resources</source>

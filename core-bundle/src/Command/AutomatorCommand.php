@@ -22,12 +22,10 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
- *
- * @internal
  */
 class AutomatorCommand extends AbstractLockedCommand
 {
-    use FrameworkAwareTrait;
+    use \Contao\CoreBundle\Framework\FrameworkAwareTrait;
 
     /**
      * @var array
@@ -119,7 +117,7 @@ class AutomatorCommand extends AbstractLockedCommand
         $commands = [];
 
         // Find all public methods
-        $class = new \ReflectionClass('Contao\\Automator');
+        $class = new \ReflectionClass('Contao\Automator');
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {

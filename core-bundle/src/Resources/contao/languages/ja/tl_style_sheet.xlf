@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_style_sheet.name.0">
         <source>Name</source>
-        <target>氏名</target>
+        <target>名前</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.name.1">
         <source>Please enter the style sheet name.</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.title_legend">
         <source>Name</source>
-        <target>氏名</target>
+        <target>名前</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.expert_legend">
         <source>Expert settings</source>

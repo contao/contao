@@ -14,7 +14,7 @@ namespace Contao;
 /**
  * Resizes images
  *
- * The class resizes images and stores them in the assets/images folder.
+ * The class resizes images and stores them in the image target folder.
  *
  * Usage:
  *
@@ -36,7 +36,7 @@ class Image
 	/**
 	 * The File instance of the original image
 	 *
-	 * @var \File
+	 * @var File
 	 */
 	protected $fileObj = null;
 
@@ -100,11 +100,11 @@ class Image
 	/**
 	 * Create a new object to handle an image
 	 *
-	 * @param \File $file A file instance of the original image
+	 * @param File $file A file instance of the original image
 	 *
 	 * @throws \InvalidArgumentException If the file does not exists or cannot be processed
 	 */
-	public function __construct(\File $file)
+	public function __construct(File $file)
 	{
 		// Check whether the file exists
 		if (!$file->exists())
@@ -386,7 +386,7 @@ class Image
 			. '-t' . $this->fileObj->mtime
 		), 0, 8);
 
-		return 'assets/images/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
+		return System::getContainer()->getParameter('contao.image.target_path') . '/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
 	}
 
 
@@ -402,7 +402,7 @@ class Image
 		{
 			foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback)
 			{
-				$return = \System::importStatic($callback[0])->$callback[1]($this);
+				$return = \System::importStatic($callback[0])->{$callback[1]}($this);
 
 				if (is_string($return))
 				{
@@ -442,7 +442,7 @@ class Image
 		}
 
 		// Check whether the image exists already
-		if (!\Config::get('debugMode'))
+		if (!System::getContainer()->getParameter('contao.image.bypass_cache'))
 		{
 			// Custom target (thanks to Tristan Lins) (see #4166)
 			if ($this->getTargetPath() && !$this->getForceOverride())
@@ -478,7 +478,7 @@ class Image
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback)
 			{
-				$return = \System::importStatic($callback[0])->$callback[1]($this->getOriginalPath(), $this->getTargetWidth(), $this->getTargetHeight(), $this->getResizeMode(), $this->getCacheName(), $this->fileObj, $this->getTargetPath(), $this);
+				$return = \System::importStatic($callback[0])->{$callback[1]}($this->getOriginalPath(), $this->getTargetWidth(), $this->getTargetHeight(), $this->getResizeMode(), $this->getCacheName(), $this->fileObj, $this->getTargetPath(), $this);
 
 				if (is_string($return))
 				{
@@ -808,6 +808,11 @@ class Image
 	 */
 	public static function getHtml($src, $alt='', $attributes='')
 	{
+		if ($src == '')
+		{
+			return '';
+		}
+
 		$static = TL_FILES_URL;
 		$src = rawurldecode($src);
 
@@ -826,7 +831,7 @@ class Image
 
 		$path = $src;
 
-		if (!file_exists(TL_ROOT . '/' . $src))
+		if (!is_file(TL_ROOT .'/'. $src))
 		{
 			// Handle public bundle resources
 			if (file_exists(TL_ROOT . '/web/' . $src))
@@ -876,7 +881,7 @@ class Image
 			$image = new \File(rawurldecode($image));
 		}
 
-		/** @var \Image $imageObj */
+		/** @var Image $imageObj */
 		$imageObj = new static($image);
 
 		// tl_image_size ID as resize mode
@@ -922,7 +927,7 @@ class Image
 
 
 	/**
-	 * Resize an image and store the resized version in the assets/images folder
+	 * Resize an image and store the resized version in the image target folder
 	 *
 	 * @param string  $image        The image path
 	 * @param integer $width        The target width
@@ -952,7 +957,7 @@ class Image
 			$imageObj->setTargetPath($target);
 			$imageObj->setForceOverride($force);
 
-			if ($path = $imageObj->executeResize()->getResizedPath())
+			if (($path = $imageObj->executeResize()->getResizedPath()) != '')
 			{
 				// Strip the web/ prefix (see #337)
 				if (strncmp($path, 'web/', 4) === 0)
@@ -1021,7 +1026,7 @@ class Image
 				break;
 
 			case '%':
-				trigger_error('Using Image::getPixelValue() with a percentage value has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+				@trigger_error('Using Image::getPixelValue() with a percentage value has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 				return (int) round($value * 16 / 100);
 				break;

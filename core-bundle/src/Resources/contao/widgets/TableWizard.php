@@ -234,11 +234,11 @@ class TableWizard extends \Widget
 	/**
 	 * Return a form to choose a CSV file and import it
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 *
 	 * @return string
 	 */
-	public function importTable(\DataContainer $dc)
+	public function importTable(DataContainer $dc)
 	{
 		if (\Input::get('key') != 'table')
 		{
@@ -254,7 +254,7 @@ class TableWizard extends \Widget
 			$class = 'FileUpload';
 		}
 
-		/** @var \FileUpload $objUploader */
+		/** @var FileUpload $objUploader */
 		$objUploader = new $class();
 
 		// Import CSS

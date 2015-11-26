@@ -27,12 +27,19 @@ class Dbafs
 {
 
 	/**
+	 * Synchronize the database
+	 * @var array
+	 */
+	protected static $arrShouldBeSynchronized = array();
+
+
+	/**
 	 * Adds a file or folder with its parent folders
 	 *
 	 * @param string  $strResource      The path to the file or folder
 	 * @param boolean $blnUpdateFolders If true, the parent folders will be updated
 	 *
-	 * @return \FilesModel The files model
+	 * @return FilesModel The files model
 	 *
 	 * @throws \Exception                If a parent ID entry is missing
 	 * @throws \InvalidArgumentException If the resource is outside the upload folder
@@ -56,6 +63,24 @@ class Dbafs
 			throw new \InvalidArgumentException("Invalid resource $strResource");
 		}
 
+		$objModel = \FilesModel::findByPath($strResource);
+
+		// Return the model if it exists already
+		if ($objModel !== null)
+		{
+			$objFile = ($objModel->type == 'folder') ? new \Folder($objModel->path) : new \File($objModel->path);
+
+			// Update the timestamp and file hash (see #4818, #7828)
+			if ($objModel->hash != $objFile->hash)
+			{
+				$objModel->tstamp = time();
+				$objModel->hash   = $objFile->hash;
+				$objModel->save();
+			}
+
+			return $objModel;
+		}
+
 		$arrPaths    = array();
 		$arrChunks   = explode('/', $strResource);
 		$strPath     = array_shift($arrChunks);
@@ -72,7 +97,6 @@ class Dbafs
 
 		unset($arrChunks);
 
-		$objModel  = null;
 		$objModels = \FilesModel::findMultipleByPaths($arrPaths);
 
 		// Unset the entries in $arrPaths if the DB entry exists
@@ -85,19 +109,7 @@ class Dbafs
 					unset($arrPaths[$i]);
 					$arrPids[$objModels->path] = $objModels->uuid;
 				}
-
-				// Store the model if it exists
-				if ($objModels->path == $strResource)
-				{
-					$objModel = $objModels->current();
-				}
 			}
-		}
-
-		// Return the model if it exists already
-		if (empty($arrPaths))
-		{
-			return $objModel;
 		}
 
 		$arrPaths = array_values($arrPaths);
@@ -211,7 +223,7 @@ class Dbafs
 	 * @param string $strSource      The source path
 	 * @param string $strDestination The target path
 	 *
-	 * @return \FilesModel The files model
+	 * @return FilesModel The files model
 	 */
 	public static function moveResource($strSource, $strDestination)
 	{
@@ -282,7 +294,7 @@ class Dbafs
 	 * @param string $strSource      The source path
 	 * @param string $strDestination The target path
 	 *
-	 * @return \FilesModel The files model
+	 * @return FilesModel The files model
 	 */
 	public static function copyResource($strSource, $strDestination)
 	{
@@ -297,7 +309,7 @@ class Dbafs
 
 		$strFolder = dirname($strDestination);
 
-		/** @var \FilesModel $objNewFile */
+		/** @var FilesModel $objNewFile */
 		$objNewFile = clone $objFile->current();
 
 		// Set the new parent ID
@@ -333,7 +345,7 @@ class Dbafs
 			{
 				while ($objFiles->next())
 				{
-					/**@var \FilesModel $objNew */
+					/**@var FilesModel $objNew */
 					$objNew = clone $objFiles->current();
 
 					$objNew->pid    = $objNewFile->uuid;
@@ -363,6 +375,8 @@ class Dbafs
 	 * Removes a file or folder
 	 *
 	 * @param string $strResource The path to the file or folder
+	 *
+	 * @return null Explicitly return null
 	 */
 	public static function deleteResource($strResource)
 	{
@@ -387,6 +401,8 @@ class Dbafs
 		}
 
 		static::updateFolderHashes(dirname($strResource));
+
+		return null;
 	}
 
 
@@ -459,7 +475,7 @@ class Dbafs
 		// Consider the suhosin.memory_limit (see #7035)
 		if (extension_loaded('suhosin'))
 		{
-			if ($limit = ini_get('suhosin.memory_limit'))
+			if (($limit = ini_get('suhosin.memory_limit')) !== '')
 			{
 				@ini_set('memory_limit', $limit);
 			}
@@ -607,7 +623,7 @@ class Dbafs
 			$arrMapped = array();
 			$arrPidUpdate = array();
 
-			/** @var \Model\Collection|\FilesModel $objFiles */
+			/** @var Model\Collection|FilesModel $objFiles */
 			while ($objFiles->next())
 			{
 				$objFound = \FilesModel::findBy(array('hash=?', 'found=2'), $objFiles->hash);
@@ -700,5 +716,68 @@ class Dbafs
 
 		// Return the path to the log file
 		return $strLog;
+	}
+
+
+	/**
+	 * Check if the current resource should be synchronized with the database
+	 *
+	 * @param string $strPath The relative path
+	 *
+	 * @return bool True if the current resource needs to be synchronized with the database
+	 */
+	public static function shouldBeSynchronized($strPath)
+	{
+		if (!isset(static::$arrShouldBeSynchronized[$strPath]) || !is_bool(static::$arrShouldBeSynchronized[$strPath]))
+		{
+			static::$arrShouldBeSynchronized[$strPath] = !static::isFileSyncExclude($strPath);
+		}
+
+		return static::$arrShouldBeSynchronized[$strPath];
+	}
+
+
+	/**
+	 * Check if a file or folder is excluded from synchronization
+	 *
+	 * @param string $strPath The relative path
+	 *
+	 * @return bool True if the file or folder is excluded from synchronization
+	 */
+	protected static function isFileSyncExclude($strPath)
+	{
+		if (\Config::get('uploadPath') == 'templates')
+		{
+			return true;
+		}
+
+		if (is_file(TL_ROOT . '/' . $strPath))
+		{
+			$strPath = dirname($strPath);
+		}
+
+		// Outside the files directory
+		if (strncmp($strPath . '/', \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0)
+		{
+			return true;
+		}
+
+		// Check the excluded folders
+		if (\Config::get('fileSyncExclude') != '')
+		{
+			$arrExempt = array_map(function($e) {
+				return \Config::get('uploadPath') . '/' . $e;
+			}, trimsplit(',', \Config::get('fileSyncExclude')));
+
+			foreach ($arrExempt as $strExempt)
+			{
+				if (strncmp($strExempt . '/', $strPath . '/', strlen($strExempt) + 1) === 0)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }

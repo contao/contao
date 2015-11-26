@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_style.selector.1">
         <source>The selector defines to which element(s) the format definition applies.</source>
-        <target>Un selector define a qué elemento HTML o grupo de elementos se aplica un formato definido. Puede introducir uno o mas selectores separados por comas.</target>
+        <target>El selector define a qué elemento(s) se aplica la definición de formato.</target>
       </trans-unit>
       <trans-unit id="tl_style.category.0">
         <source>Category</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_style.comment.1">
         <source>Here you can add a comment.</source>
-        <target>Los comentarios se mostraran encima del formato definido correspondiente.</target>
+        <target>Aquí puede añadir un comentario.</target>
       </trans-unit>
       <trans-unit id="tl_style.size.0">
         <source>Size</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_style.width.1">
         <source>Here you can enter the element's width.</source>
-        <target>Por favor introduce el ancho del elemento y su unidad.</target>
+        <target>Por favor introduzca el ancho del elemento.</target>
       </trans-unit>
       <trans-unit id="tl_style.height.0">
         <source>Height</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_style.minwidth.1">
         <source>Here you can enter the element's minimum width.</source>
-        <target>Aquí puede ingresar el ancho mínimo del elemento.</target>
+        <target>Aquí puede introduzir el ancho mínimo del elemento.</target>
       </trans-unit>
       <trans-unit id="tl_style.minheight.0">
         <source>Minimum height</source>

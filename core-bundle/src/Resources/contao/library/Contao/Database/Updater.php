@@ -28,7 +28,7 @@ class Updater extends \Controller
 	 */
 	public function __construct()
 	{
-		trigger_error('Using the Contao\Database\Updater class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using the Contao\Database\Updater class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		parent::__construct();
 		$this->import('Database');
@@ -1002,11 +1002,11 @@ class Updater extends \Controller
 	/**
 	 * Create a content element
 	 *
-	 * @param \Database\Result|object $objElement A database result object
-	 * @param string                  $strPtable  The name of the parent table
-	 * @param string                  $strField   The name of the text column
+	 * @param Result|object $objElement A database result object
+	 * @param string        $strPtable  The name of the parent table
+	 * @param string        $strField   The name of the text column
 	 */
-	protected function createContentElement(\Database\Result $objElement, $strPtable, $strField)
+	protected function createContentElement(Result $objElement, $strPtable, $strField)
 	{
 		$set = array
 		(

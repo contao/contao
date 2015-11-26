@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
         <source>Search the &lt;code&gt;app/logs&lt;/code&gt; folder for the current log file and find the associated error message (usually the last one).</source>
+        <target>Busque en la carpeta &lt;code&gt;app/logs&lt;/code&gt; el fichro log actual y encuntre el mensaje asociado (en general el último).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>La ejecución de este script se ha detenido, debido a que algo no funciona debidamente. El mensaje de error actual se ha ocultado por razones de seguridad y podrá ser visto en el archivo (vea arriba). Si no entiende el mensaje de error o no sabe cómo solucionar el problema, busque en &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visite &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt; la página de ayuda de Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -60,8 +62,8 @@
         <target>La instalación no se pudo finalizar, por lo tanto Contao no funcionará debidamente.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool by pointing your browser to &lt;code&gt;/contao/install&lt;/code&gt;.</source>
-        <target>Por favor abra el instalador de Contao añadiendo en su navegador &lt;code&gt;/contao/install&lt;/code&gt;.</target>
+        <source>Please open the Contao install tool (&lt;code&gt;/install.php&lt;/code&gt;) in your browser.</source>
+        <target>Por favor abra el instalador de Contao añadiendo en su navegador (&lt;code&gt;/install.php&lt;/code&gt;).</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>

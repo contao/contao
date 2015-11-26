@@ -10,27 +10,27 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Adapter\ConfigAdapter;
-use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
+use Contao\BackendUser;
+use Contao\Config;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\PageError404;
 use Contao\StringUtil;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Renders pretty error screens for exceptions.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @internal
  */
 class PrettyErrorScreenListener
 {
@@ -45,9 +45,14 @@ class PrettyErrorScreenListener
     private $twig;
 
     /**
-     * @var ConfigAdapter
+     * @var ContaoFrameworkInterface
      */
-    private $config;
+    private $framework;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     /**
      * @var LoggerInterface
@@ -58,33 +63,35 @@ class PrettyErrorScreenListener
      * @var array
      */
     private $mapper = [
-        'Contao\\CoreBundle\\Exception\\ForwardPageNotFoundException' => 'forward_page_not_found',
-        'Contao\\CoreBundle\\Exception\\IncompleteInstallationException' => 'incomplete_installation',
-        'Contao\\CoreBundle\\Exception\\InsecureInstallationException' => 'insecure_installation',
-        'Contao\\CoreBundle\\Exception\\InvalidRequestTokenException' => 'invalid_request_token',
-        'Contao\\CoreBundle\\Exception\\NoActivePageFoundException' => 'no_active_page_found',
-        'Contao\\CoreBundle\\Exception\\NoLayoutSpecifiedException' => 'no_layout_specified',
-        'Contao\\CoreBundle\\Exception\\NoRootPageFoundException' => 'no_root_page_found',
-        'Contao\\CoreBundle\\Exception\\ServiceUnavailableException' => 'service_unavailable',
+        'Contao\CoreBundle\Exception\ForwardPageNotFoundException' => 'forward_page_not_found',
+        'Contao\CoreBundle\Exception\IncompleteInstallationException' => 'incomplete_installation',
+        'Contao\CoreBundle\Exception\InsecureInstallationException' => 'insecure_installation',
+        'Contao\CoreBundle\Exception\InvalidRequestTokenException' => 'invalid_request_token',
+        'Contao\CoreBundle\Exception\NoActivePageFoundException' => 'no_active_page_found',
+        'Contao\CoreBundle\Exception\NoLayoutSpecifiedException' => 'no_layout_specified',
+        'Contao\CoreBundle\Exception\NoRootPageFoundException' => 'no_root_page_found',
     ];
 
     /**
      * Constructor.
      *
-     * @param bool                 $prettyErrorScreens True to render the error screens
-     * @param \Twig_Environment    $twig               The twig environment
-     * @param ConfigAdapter        $config             The config adapter
-     * @param LoggerInterface|null $logger             An optional logger service
+     * @param bool                     $prettyErrorScreens True to render the error screens
+     * @param \Twig_Environment        $twig               The twig environment
+     * @param ContaoFrameworkInterface $framework          The Contao framework
+     * @param TokenStorageInterface    $tokenStorage       The token storage object
+     * @param LoggerInterface|null     $logger             An optional logger service
      */
     public function __construct(
         $prettyErrorScreens,
         \Twig_Environment $twig,
-        ConfigAdapter $config,
+        ContaoFrameworkInterface $framework,
+        TokenStorageInterface $tokenStorage,
         LoggerInterface $logger = null
     ) {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
-        $this->config = $config;
+        $this->framework = $framework;
+        $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
     }
 
@@ -112,13 +119,12 @@ class PrettyErrorScreenListener
         $exception = $event->getException();
 
         switch (true) {
-            case $exception instanceof AccessDeniedHttpException:
-                $this->renderErrorScreenByType(403, $event);
+            case $this->isBackendUser():
+                $this->renderBackendException($event);
                 break;
 
-            case $exception instanceof BadRequestHttpException:
-            case $exception instanceof InternalServerErrorHttpException:
-                $this->renderErrorScreenByException($event);
+            case $exception instanceof AccessDeniedHttpException:
+                $this->renderErrorScreenByType(403, $event);
                 break;
 
             case $exception instanceof NotFoundHttpException:
@@ -130,10 +136,21 @@ class PrettyErrorScreenListener
                 break;
 
             default:
-                $this->logException($exception);
-                $this->renderTemplate('error', 500, $event);
-                break;
+                $this->renderErrorScreenByException($event);
         }
+    }
+
+    /**
+     * Renders a back end exception.
+     *
+     * @param GetResponseForExceptionEvent $event The event object
+     */
+    private function renderBackendException(GetResponseForExceptionEvent $event)
+    {
+        $exception = $event->getException();
+
+        $this->logException($exception);
+        $this->renderTemplate('backend', $this->getStatusCodeForException($exception), $event);
     }
 
     /**
@@ -174,7 +191,7 @@ class PrettyErrorScreenListener
             return null;
         }
 
-        /** @var \PageError404 $pageHandler */
+        /** @var PageError404 $pageHandler */
         $pageHandler = new $GLOBALS['TL_PTY'][$type]();
 
         try {
@@ -193,25 +210,17 @@ class PrettyErrorScreenListener
      */
     private function renderErrorScreenByException(GetResponseForExceptionEvent $event)
     {
-        $statusCode = 500;
         $exception = $event->getException();
+        $statusCode = $this->getStatusCodeForException($exception);
 
-        // Set the status code
-        if ($exception instanceof HttpException) {
-            $statusCode = $exception->getStatusCode();
-        }
+        $this->logException($exception);
 
         // Look for a template
         do {
             $template = $this->getTemplateForException($exception);
         } while (null === $template && null !== ($exception = $exception->getPrevious()));
 
-        if (null === $template) {
-            return;
-        }
-
-        $this->logException($exception);
-        $this->renderTemplate($template, $statusCode, $event);
+        $this->renderTemplate($template ?: 'error', $statusCode, $event);
     }
 
     /**
@@ -246,7 +255,7 @@ class PrettyErrorScreenListener
         }
 
         $view = '@ContaoCore/Error/' . $template . '.html.twig';
-        $parameters = $this->getTemplateParameters($view, $statusCode, $event->getRequest()->getBasePath());
+        $parameters = $this->getTemplateParameters($view, $statusCode, $event);
 
         if (null === $parameters) {
             $event->setResponse($this->getErrorTemplate());
@@ -268,6 +277,7 @@ class PrettyErrorScreenListener
     {
         $parameters = [
             'statusCode' => 500,
+            'statusName' => 'Internal Server Error',
             'error' => [
                 'error' => 'An error occurred',
                 'matter' => 'What\'s the matter?',
@@ -287,6 +297,7 @@ class PrettyErrorScreenListener
             'template' => '@ContaoCore/Error/error.html.twig',
             'base' => '',
             'adminEmail' => '',
+            'exception' => '',
         ];
 
         return new Response($this->twig->render('@ContaoCore/Error/error.html.twig', $parameters), 500);
@@ -295,26 +306,31 @@ class PrettyErrorScreenListener
     /**
      * Returns the template parameters.
      *
-     * @param string $view       The name of the view
-     * @param int    $statusCode The HTTP status code
-     * @param string $basePath   The base path
+     * @param string                       $view       The name of the view
+     * @param int                          $statusCode The HTTP status code
+     * @param GetResponseForExceptionEvent $event      The event object
      *
      * @return array|null The template parameters or null
      */
-    private function getTemplateParameters($view, $statusCode, $basePath)
+    private function getTemplateParameters($view, $statusCode, GetResponseForExceptionEvent $event)
     {
         if (null === ($labels = $this->loadLanguageStrings())) {
             return null;
         }
 
-        $encoded = StringUtil::encodeEmail($this->config->get('adminEmail'));
+        /** @var Config $config */
+        $config = $this->framework->getAdapter('Contao\Config');
+
+        $encoded = StringUtil::encodeEmail($config->get('adminEmail'));
 
         return [
             'statusCode' => $statusCode,
+            'statusName' => Response::$statusTexts[$statusCode],
             'error' => $labels,
             'template' => $view,
-            'base' => $basePath,
+            'base' => $event->getRequest()->getBasePath(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;' . $encoded,
+            'exception' => $event->getException()->getMessage(),
         ];
     }
 
@@ -325,7 +341,7 @@ class PrettyErrorScreenListener
      */
     private function loadLanguageStrings()
     {
-        if (!class_exists('Contao\\System')) {
+        if (!class_exists('Contao\System')) {
             return null;
         }
 
@@ -350,5 +366,39 @@ class PrettyErrorScreenListener
         }
 
         $this->logger->critical('An exception occurred.', ['exception' => $exception]);
+    }
+
+    /**
+     * Checks if the user is a back end user.
+     *
+     * @return bool True if the user is a back end user.
+     */
+    private function isBackendUser()
+    {
+        $token = $this->tokenStorage->getToken();
+
+        if (null === $token) {
+            return false;
+        }
+
+        $user = $token->getUser();
+
+        if (null === $user) {
+            return false;
+        }
+
+        return $user instanceof BackendUser;
+    }
+
+    /**
+     * Returns the status code for an exception.
+     *
+     * @param \Exception $exception The exception
+     *
+     * @return int The status code
+     */
+    private function getStatusCodeForException(\Exception $exception)
+    {
+        return $exception instanceof HttpException ? $exception->getStatusCode() : 500;
     }
 }

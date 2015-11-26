@@ -30,7 +30,7 @@
       </thead>
       <tbody>
         <?php foreach ($this->versions as $version): ?>
-          <tr class="<?= $version['class'] ?> click2edit" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+          <tr class="<?= $version['class'] ?> click2edit hover-row">
             <td><?= $version['date'] ?></td>
             <td><?= $version['username'] ?: '-' ?></td>
             <td><?= $version['shortTable'] ?></td>

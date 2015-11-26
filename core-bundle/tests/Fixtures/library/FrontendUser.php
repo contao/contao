@@ -2,9 +2,7 @@
 
 namespace Contao\Fixtures;
 
-use Contao\User as BaseUser;
-
-class FrontendUser extends BaseUser
+class FrontendUser extends \Contao\User
 {
     public $authenticated = true;
 

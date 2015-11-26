@@ -91,108 +91,108 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @property string  $template
  * @property string  $templateGroup
  *
- * @method static \PageModel|null findById($id, $opt=array())
- * @method static \PageModel|null findByPk($id, $opt=array())
- * @method static \PageModel|null findByIdOrAlias($val, $opt=array())
- * @method static \PageModel|null findOneBy($col, $val, $opt=array())
- * @method static \PageModel|null findOneByPid($val, $opt=array())
- * @method static \PageModel|null findOneBySorting($val, $opt=array())
- * @method static \PageModel|null findOneByTstamp($val, $opt=array())
- * @method static \PageModel|null findOneByTitle($val, $opt=array())
- * @method static \PageModel|null findOneByAlias($val, $opt=array())
- * @method static \PageModel|null findOneByType($val, $opt=array())
- * @method static \PageModel|null findOneByPageTitle($val, $opt=array())
- * @method static \PageModel|null findOneByLanguage($val, $opt=array())
- * @method static \PageModel|null findOneByRobots($val, $opt=array())
- * @method static \PageModel|null findOneByDescription($val, $opt=array())
- * @method static \PageModel|null findOneByRedirect($val, $opt=array())
- * @method static \PageModel|null findOneByJumpTo($val, $opt=array())
- * @method static \PageModel|null findOneByUrl($val, $opt=array())
- * @method static \PageModel|null findOneByTarget($val, $opt=array())
- * @method static \PageModel|null findOneByDns($val, $opt=array())
- * @method static \PageModel|null findOneByStaticFiles($val, $opt=array())
- * @method static \PageModel|null findOneByStaticPlugins($val, $opt=array())
- * @method static \PageModel|null findOneByFallback($val, $opt=array())
- * @method static \PageModel|null findOneByAdminEmail($val, $opt=array())
- * @method static \PageModel|null findOneByDateFormat($val, $opt=array())
- * @method static \PageModel|null findOneByTimeFormat($val, $opt=array())
- * @method static \PageModel|null findOneByDatimFormat($val, $opt=array())
- * @method static \PageModel|null findOneByCreateSitemap($val, $opt=array())
- * @method static \PageModel|null findOneBySitemapName($val, $opt=array())
- * @method static \PageModel|null findOneByUseSSL($val, $opt=array())
- * @method static \PageModel|null findOneByAutoforward($val, $opt=array())
- * @method static \PageModel|null findOneByProtected($val, $opt=array())
- * @method static \PageModel|null findOneByGroups($val, $opt=array())
- * @method static \PageModel|null findOneByIncludeLayout($val, $opt=array())
- * @method static \PageModel|null findOneByLayout($val, $opt=array())
- * @method static \PageModel|null findOneByMobileLayout($val, $opt=array())
- * @method static \PageModel|null findOneByIncludeCache($val, $opt=array())
- * @method static \PageModel|null findOneByCache($val, $opt=array())
- * @method static \PageModel|null findOneByIncludeChmod($val, $opt=array())
- * @method static \PageModel|null findOneByCuser($val, $opt=array())
- * @method static \PageModel|null findOneByCgroup($val, $opt=array())
- * @method static \PageModel|null findOneByChmod($val, $opt=array())
- * @method static \PageModel|null findOneByNoSearch($val, $opt=array())
- * @method static \PageModel|null findOneByCssClass($val, $opt=array())
- * @method static \PageModel|null findOneBySitemap($val, $opt=array())
- * @method static \PageModel|null findOneByHide($val, $opt=array())
- * @method static \PageModel|null findOneByGuests($val, $opt=array())
- * @method static \PageModel|null findOneByTabindex($val, $opt=array())
- * @method static \PageModel|null findOneByAccesskey($val, $opt=array())
- * @method static \PageModel|null findOneByPublished($val, $opt=array())
- * @method static \PageModel|null findOneByStart($val, $opt=array())
- * @method static \PageModel|null findOneByStop($val, $opt=array())
+ * @method static PageModel|null findById($id, $opt=array())
+ * @method static PageModel|null findByPk($id, $opt=array())
+ * @method static PageModel|null findByIdOrAlias($val, $opt=array())
+ * @method static PageModel|null findOneBy($col, $val, $opt=array())
+ * @method static PageModel|null findOneByPid($val, $opt=array())
+ * @method static PageModel|null findOneBySorting($val, $opt=array())
+ * @method static PageModel|null findOneByTstamp($val, $opt=array())
+ * @method static PageModel|null findOneByTitle($val, $opt=array())
+ * @method static PageModel|null findOneByAlias($val, $opt=array())
+ * @method static PageModel|null findOneByType($val, $opt=array())
+ * @method static PageModel|null findOneByPageTitle($val, $opt=array())
+ * @method static PageModel|null findOneByLanguage($val, $opt=array())
+ * @method static PageModel|null findOneByRobots($val, $opt=array())
+ * @method static PageModel|null findOneByDescription($val, $opt=array())
+ * @method static PageModel|null findOneByRedirect($val, $opt=array())
+ * @method static PageModel|null findOneByJumpTo($val, $opt=array())
+ * @method static PageModel|null findOneByUrl($val, $opt=array())
+ * @method static PageModel|null findOneByTarget($val, $opt=array())
+ * @method static PageModel|null findOneByDns($val, $opt=array())
+ * @method static PageModel|null findOneByStaticFiles($val, $opt=array())
+ * @method static PageModel|null findOneByStaticPlugins($val, $opt=array())
+ * @method static PageModel|null findOneByFallback($val, $opt=array())
+ * @method static PageModel|null findOneByAdminEmail($val, $opt=array())
+ * @method static PageModel|null findOneByDateFormat($val, $opt=array())
+ * @method static PageModel|null findOneByTimeFormat($val, $opt=array())
+ * @method static PageModel|null findOneByDatimFormat($val, $opt=array())
+ * @method static PageModel|null findOneByCreateSitemap($val, $opt=array())
+ * @method static PageModel|null findOneBySitemapName($val, $opt=array())
+ * @method static PageModel|null findOneByUseSSL($val, $opt=array())
+ * @method static PageModel|null findOneByAutoforward($val, $opt=array())
+ * @method static PageModel|null findOneByProtected($val, $opt=array())
+ * @method static PageModel|null findOneByGroups($val, $opt=array())
+ * @method static PageModel|null findOneByIncludeLayout($val, $opt=array())
+ * @method static PageModel|null findOneByLayout($val, $opt=array())
+ * @method static PageModel|null findOneByMobileLayout($val, $opt=array())
+ * @method static PageModel|null findOneByIncludeCache($val, $opt=array())
+ * @method static PageModel|null findOneByCache($val, $opt=array())
+ * @method static PageModel|null findOneByIncludeChmod($val, $opt=array())
+ * @method static PageModel|null findOneByCuser($val, $opt=array())
+ * @method static PageModel|null findOneByCgroup($val, $opt=array())
+ * @method static PageModel|null findOneByChmod($val, $opt=array())
+ * @method static PageModel|null findOneByNoSearch($val, $opt=array())
+ * @method static PageModel|null findOneByCssClass($val, $opt=array())
+ * @method static PageModel|null findOneBySitemap($val, $opt=array())
+ * @method static PageModel|null findOneByHide($val, $opt=array())
+ * @method static PageModel|null findOneByGuests($val, $opt=array())
+ * @method static PageModel|null findOneByTabindex($val, $opt=array())
+ * @method static PageModel|null findOneByAccesskey($val, $opt=array())
+ * @method static PageModel|null findOneByPublished($val, $opt=array())
+ * @method static PageModel|null findOneByStart($val, $opt=array())
+ * @method static PageModel|null findOneByStop($val, $opt=array())
  *
- * @method static \Model\Collection|\PageModel|null findByPid($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findBySorting($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByTstamp($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByTitle($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByAlias($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByType($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByPageTitle($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByLanguage($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByRobots($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByDescription($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByRedirect($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByJumpTo($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByUrl($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByTarget($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByDns($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByStaticFiles($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByStaticPlugins($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByFallback($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByAdminEmail($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByDateFormat($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByTimeFormat($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByDatimFormat($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByCreateSitemap($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findBySitemapName($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByUseSSL($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByAutoforward($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByProtected($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByGroups($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByIncludeLayout($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByLayout($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByMobileLayout($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByIncludeCache($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByCache($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByIncludeChmod($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByCuser($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByCgroup($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByChmod($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByNoSearch($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByCssClass($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findBySitemap($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByHide($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByGuests($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByTabindex($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByAccesskey($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByPublished($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByStart($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findByStop($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findMultipleByIds($val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findBy($col, $val, $opt=array())
- * @method static \Model\Collection|\PageModel|null findAll($opt=array())
+ * @method static Model\Collection|PageModel|null findByPid($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findBySorting($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByTstamp($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByTitle($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByAlias($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByType($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByPageTitle($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByLanguage($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByRobots($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByDescription($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByRedirect($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByJumpTo($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByUrl($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByTarget($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByDns($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByStaticFiles($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByStaticPlugins($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByFallback($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByAdminEmail($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByDateFormat($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByTimeFormat($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByDatimFormat($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByCreateSitemap($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findBySitemapName($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByUseSSL($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByAutoforward($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByProtected($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByGroups($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByIncludeLayout($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByLayout($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByMobileLayout($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByIncludeCache($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByCache($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByIncludeChmod($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByCuser($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByCgroup($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByChmod($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByNoSearch($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByCssClass($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findBySitemap($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByHide($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByGuests($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByTabindex($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByAccesskey($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByPublished($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByStart($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findByStop($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findMultipleByIds($val, $opt=array())
+ * @method static Model\Collection|PageModel|null findBy($col, $val, $opt=array())
+ * @method static Model\Collection|PageModel|null findAll($opt=array())
  *
  * @method static integer countById($id, $opt=array())
  * @method static integer countByPid($val, $opt=array())
@@ -463,7 +463,7 @@ class PageModel extends \Model
 	 * @param array $arrAliases An array of possible alias names
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return \Model\Collection|\PageModel|null A collection of Models or null if there is no matching pages
+	 * @return Model\Collection|PageModel|null A collection of Models or null if there is no matching pages
 	 */
 	public static function findByAliases($arrAliases, array $arrOptions=array())
 	{
@@ -508,7 +508,7 @@ class PageModel extends \Model
 	 * @param mixed $varId      The numeric ID or the alias name
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return \Model\Collection|\PageModel|null A collection of models or null if there are no pages
+	 * @return Model\Collection|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
@@ -533,7 +533,7 @@ class PageModel extends \Model
 	 * @param boolean $blnShowHidden If true, hidden pages will be included
 	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
 	 *
-	 * @return \Model\Collection|\PageModel|null A collection of models or null if there are no pages
+	 * @return Model\Collection|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
 	{
@@ -557,7 +557,7 @@ class PageModel extends \Model
 	 * @param integer $arrIds     An array of page IDs
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return \Model\Collection|\PageModel|null A collection of models or null if there are no pages
+	 * @return Model\Collection|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedRegularWithoutGuestsByIds($arrIds, array $arrOptions=array())
 	{
@@ -595,7 +595,7 @@ class PageModel extends \Model
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return \Model\Collection|\PageModel|null A collection of models or null if there are no pages
+	 * @return Model\Collection|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedRegularWithoutGuestsByPid($intPid, array $arrOptions=array())
 	{
@@ -650,7 +650,7 @@ class PageModel extends \Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return \Model\Collection|\PageModel|null A collection of models or null if there are no parent pages
+	 * @return Model\Collection|PageModel|null A collection of models or null if there are no parent pages
 	 */
 	public static function findPublishedRootPages(array $arrOptions=array())
 	{
@@ -672,7 +672,7 @@ class PageModel extends \Model
 	 *
 	 * @param integer $intId The page's ID
 	 *
-	 * @return \Model\Collection|\PageModel|null A collection of models or null if there are no parent pages
+	 * @return Model\Collection|PageModel|null A collection of models or null if there are no parent pages
 	 */
 	public static function findParentsById($intId)
 	{

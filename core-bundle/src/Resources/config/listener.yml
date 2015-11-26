@@ -30,11 +30,33 @@
 # -  64: ResponseExceptionListener
 # - -96: PrettyErrorScreensListener
 #
+# Maintenance listener
+#
+# The priority of the maintenance listener must be higher than the one of the
+# Lexik maintenance bundle (defaults to 0).
+#
+# - 10: BypassMaintenanceListener
+#
 # Do not change the priorities unless you know what you are doing!
 ##
 services:
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
+        arguments:
+            - "@contao.framework"
+        tags:
+            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+    contao.listener.bypass_maintenance:
+        class: Contao\CoreBundle\EventListener\BypassMaintenanceListener
+        arguments:
+            - "@session"
+            - "%contao.security.disable_ip_check%"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 10 }
+
+    contao.listener.command_scheduler:
+        class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
             - "@contao.framework"
         tags:
@@ -69,6 +91,13 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
 
+    contao.listener.merge_http_headers:
+        class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
+        arguments:
+            - "@contao.framework"
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 256 }
+
     contao.listener.output_from_cache:
         class: Contao\CoreBundle\EventListener\OutputFromCacheListener
         arguments:
@@ -83,7 +112,8 @@ services:
         arguments:
             - "%contao.pretty_error_screens%"
             - "@twig"
-            - "@contao.adapter.config"
+            - "@contao.framework"
+            - "@security.token_storage"
             - "@logger"
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: -96 }

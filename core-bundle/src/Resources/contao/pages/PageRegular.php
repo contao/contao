@@ -25,8 +25,8 @@ class PageRegular extends \Frontend
 	/**
 	 * Generate a regular page
 	 *
-	 * @param \PageModel $objPage
-	 * @param boolean    $blnCheckRequest
+	 * @param PageModel $objPage
+	 * @param boolean   $blnCheckRequest
 	 */
 	public function generate($objPage, $blnCheckRequest=false)
 	{
@@ -39,8 +39,8 @@ class PageRegular extends \Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param \PageModel $objPage
-	 * @param boolean    $blnCheckRequest
+	 * @param PageModel $objPage
+	 * @param boolean   $blnCheckRequest
 	 *
 	 * @return Response
 	 */
@@ -55,9 +55,9 @@ class PageRegular extends \Frontend
 	/**
 	 * Generate a regular page
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
-	 * @internal
+	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
 	protected function prepare($objPage)
 	{
@@ -82,11 +82,11 @@ class PageRegular extends \Frontend
 			foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($objPage, $objLayout, $this);
+				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
 			}
 		}
 
-		/** @var \ThemeModel $objTheme */
+		/** @var ThemeModel $objTheme */
 		$objTheme = $objLayout->getRelated('pid');
 
 		// Set the layout template and template group
@@ -168,7 +168,7 @@ class PageRegular extends \Frontend
 						continue;
 					}
 
-					$this->Template->$arrModule['col'] .= $this->getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$this->Template->{$arrModule['col']} .= $this->getFrontendModule($arrModule['mod'], $arrModule['col']);
 				}
 				else
 				{
@@ -191,7 +191,7 @@ class PageRegular extends \Frontend
 			foreach ($GLOBALS['TL_HOOKS']['generatePage'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($objPage, $objLayout, $this);
+				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
 			}
 		}
 
@@ -229,9 +229,9 @@ class PageRegular extends \Frontend
 	/**
 	 * Get a page layout and return it as database result object
 	 *
-	 * @param \PageModel $objPage
+	 * @param PageModel $objPage
 	 *
-	 * @return \LayoutModel
+	 * @return LayoutModel
 	 */
 	protected function getPageLayout($objPage)
 	{
@@ -268,12 +268,12 @@ class PageRegular extends \Frontend
 	/**
 	 * Create a new template
 	 *
-	 * @param \PageModel   $objPage
-	 * @param \LayoutModel $objLayout
+	 * @param PageModel   $objPage
+	 * @param LayoutModel $objLayout
 	 */
 	protected function createTemplate($objPage, $objLayout)
 	{
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($objPage->template);
 
 		$this->Template = $objTemplate;
@@ -471,8 +471,6 @@ class PageRegular extends \Frontend
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
 		$this->Template->charset = \Config::get('characterSet');
 		$this->Template->base = \Environment::get('base');
-		$this->Template->disableCron = \Config::get('disableCron');
-		$this->Template->cronTimeout = $this->getCronTimeout();
 		$this->Template->isRTL = false;
 	}
 
@@ -480,8 +478,8 @@ class PageRegular extends \Frontend
 	/**
 	 * Create all header scripts
 	 *
-	 * @param \PageModel   $objPage
-	 * @param \LayoutModel $objLayout
+	 * @param PageModel   $objPage
+	 * @param LayoutModel $objLayout
 	 */
 	protected function createHeaderScripts($objPage, $objLayout)
 	{
@@ -697,7 +695,7 @@ class PageRegular extends \Frontend
 	/**
 	 * Create all footer scripts
 	 *
-	 * @param \LayoutModel $objLayout
+	 * @param LayoutModel $objLayout
 	 */
 	protected function createFooterScripts($objLayout)
 	{

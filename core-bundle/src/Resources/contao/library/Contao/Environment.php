@@ -31,7 +31,7 @@ class Environment
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Environment
+	 * @var Environment
 	 */
 	protected static $objInstance;
 
@@ -646,14 +646,14 @@ class Environment
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return \Environment The object instance
+	 * @return Environment The object instance
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Environment class is now static.
 	 */
 	public static function getInstance()
 	{
-		trigger_error('Using Environment::getInstance() has been deprecated and will no longer work in Contao 5.0. The Environment class is now static.', E_USER_DEPRECATED);
+		@trigger_error('Using Environment::getInstance() has been deprecated and will no longer work in Contao 5.0. The Environment class is now static.', E_USER_DEPRECATED);
 
 		if (static::$objInstance === null)
 		{

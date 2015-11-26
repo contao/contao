@@ -29,7 +29,7 @@ class FilesyncCommandTest extends TestCase
     {
         $command = new FilesyncCommand('contao:filesync');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Command\\FilesyncCommand', $command);
+        $this->assertInstanceOf('Contao\CoreBundle\Command\FilesyncCommand', $command);
     }
 
     /**

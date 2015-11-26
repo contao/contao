@@ -177,6 +177,13 @@
         <source>Here you can grant access to one or more folders (subfolders will be included automatically).</source>
         <target>Ange vilka mappar i filarkivet som användaren ska ha tillgång till. Undermappar inkluderas automatiskt.</target>
       </trans-unit>
+      <trans-unit id="tl_user.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Bildstorlekar</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.1">
+        <source>Here you can grant access to one or more image sizes.</source>
+      </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
         <target>Formulär</target>
@@ -260,6 +267,10 @@
       <trans-unit id="tl_user.filemounts_legend">
         <source>Filemounts</source>
         <target>Filarkivbehörigheter</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Bildstorlekar</target>
       </trans-unit>
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>

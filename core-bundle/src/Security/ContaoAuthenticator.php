@@ -13,7 +13,8 @@ namespace Contao\CoreBundle\Security;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\User;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -26,11 +27,11 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  * Authenticates a Contao token.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
- *
- * @internal
  */
-class ContaoAuthenticator extends ContainerAware implements SimplePreAuthenticatorInterface
+class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthenticatorInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * Creates an authentication token.
      *

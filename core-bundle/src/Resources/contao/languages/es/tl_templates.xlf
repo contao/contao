@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.original.1">
         <source>Here you can select the template that you want to customize.</source>
-        <target>Selecciona la plantilla original que quieres personalizar. Una copia local será creada en la carpeta &lt;em&gt;templates&lt;/em&gt;.</target>
+        <target>Seleccione la plantilla original que quiere personalizar. </target>
       </trans-unit>
       <trans-unit id="tl_templates.target.0">
         <source>Target folder</source>

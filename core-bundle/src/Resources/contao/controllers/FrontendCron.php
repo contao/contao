@@ -29,8 +29,15 @@ class FrontendCron extends \Frontend
 		parent::__construct();
 
 		// See #4099
-		define('BE_USER_LOGGED_IN', false);
-		define('FE_USER_LOGGED_IN', false);
+		if (!defined('BE_USER_LOGGED_IN'))
+		{
+			define('BE_USER_LOGGED_IN', false);
+		}
+
+		if (!defined('FE_USER_LOGGED_IN'))
+		{
+			define('FE_USER_LOGGED_IN', false);
+		}
 	}
 
 
@@ -103,7 +110,7 @@ class FrontendCron extends \Frontend
 			foreach ($GLOBALS['TL_CRON'][$strInterval] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]();
+				$this->{$callback[0]}->{$callback[1]}();
 			}
 
 			// Add a log entry if in debug mode (see #4729)

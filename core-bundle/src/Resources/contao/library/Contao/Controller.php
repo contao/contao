@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use League\Uri\Components\Query;
 
 
 /**
@@ -64,7 +65,7 @@ abstract class Controller extends \System
 		// Check for a theme folder
 		if (TL_MODE == 'FE')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			if ($objPage->templateGroup != '')
@@ -193,7 +194,7 @@ abstract class Controller extends \System
 			return '';
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Articles
@@ -232,7 +233,7 @@ abstract class Controller extends \System
 			{
 				foreach ($GLOBALS['TL_HOOKS']['getArticles'] as $callback)
 				{
-					$return = static::importStatic($callback[0])->$callback[1]($objPage->id, $strColumn);
+					$return = static::importStatic($callback[0])->{$callback[1]}($objPage->id, $strColumn);
 
 					if (is_string($return))
 					{
@@ -256,7 +257,7 @@ abstract class Controller extends \System
 
 			while ($objArticles->next())
 			{
-				/** @var \ArticleModel $objRow */
+				/** @var ArticleModel $objRow */
 				$objRow = $objArticles->current();
 
 				// Add the "first" and "last" classes (see #2583)
@@ -319,7 +320,7 @@ abstract class Controller extends \System
 
 			$objRow->typePrefix = 'mod_';
 
-			/** @var \Module $objModule */
+			/** @var Module $objModule */
 			$objModule = new $strClass($objRow, $strColumn);
 			$strBuffer = $objModule->generate();
 
@@ -328,7 +329,7 @@ abstract class Controller extends \System
 			{
 				foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback)
 				{
-					$strBuffer = static::importStatic($callback[0])->$callback[1]($objRow, $strBuffer, $objModule);
+					$strBuffer = static::importStatic($callback[0])->{$callback[1]}($objRow, $strBuffer, $objModule);
 				}
 			}
 
@@ -355,7 +356,7 @@ abstract class Controller extends \System
 	 */
 	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (is_object($varId))
@@ -389,7 +390,7 @@ abstract class Controller extends \System
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			if ($objRow->printable == 1)
 			{
-				trigger_error('Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+				@trigger_error('Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 				$objArticle = new \ModuleArticle($objRow);
 				$objArticle->generatePdf();
@@ -414,7 +415,7 @@ abstract class Controller extends \System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getArticle'] as $callback)
 			{
-				static::importStatic($callback[0])->$callback[1]($objRow);
+				static::importStatic($callback[0])->{$callback[1]}($objRow);
 			}
 		}
 
@@ -478,7 +479,7 @@ abstract class Controller extends \System
 
 		$objRow->typePrefix = 'ce_';
 
-		/** @var \ContentElement $objElement */
+		/** @var ContentElement $objElement */
 		$objElement = new $strClass($objRow, $strColumn);
 		$strBuffer = $objElement->generate();
 
@@ -487,7 +488,7 @@ abstract class Controller extends \System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getContentElement'] as $callback)
 			{
-				$strBuffer = static::importStatic($callback[0])->$callback[1]($objRow, $strBuffer, $objElement);
+				$strBuffer = static::importStatic($callback[0])->{$callback[1]}($objRow, $strBuffer, $objElement);
 			}
 		}
 
@@ -540,7 +541,7 @@ abstract class Controller extends \System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getForm'] as $callback)
 			{
-				$strBuffer = static::importStatic($callback[0])->$callback[1]($objRow, $strBuffer, $objElement);
+				$strBuffer = static::importStatic($callback[0])->{$callback[1]}($objRow, $strBuffer, $objElement);
 			}
 		}
 
@@ -578,7 +579,7 @@ abstract class Controller extends \System
 	/**
 	 * Calculate the page status icon name based on the page parameters
 	 *
-	 * @param object $objPage The page object
+	 * @param PageModel|Database\Result|object $objPage The page object
 	 *
 	 * @return string The status icon name
 	 */
@@ -616,7 +617,7 @@ abstract class Controller extends \System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getPageStatusIcon'] as $callback)
 			{
-				$image = static::importStatic($callback[0])->$callback[1]($objPage, $image);
+				$image = static::importStatic($callback[0])->{$callback[1]}($objPage, $image);
 			}
 		}
 
@@ -627,11 +628,11 @@ abstract class Controller extends \System
 	/**
 	 * Check whether an element is visible in the front end
 	 *
-	 * @param \Model|\ContentModel|\ModuleModel $objElement The element model
+	 * @param Model|ContentModel|ModuleModel $objElement The element model
 	 *
 	 * @return boolean True if the element is visible
 	 */
-	public static function isVisibleElement(\Model $objElement)
+	public static function isVisibleElement(Model $objElement)
 	{
 		// Only apply the restrictions in the front end
 		if (TL_MODE != 'FE' || BE_USER_LOGGED_IN)
@@ -670,7 +671,7 @@ abstract class Controller extends \System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['isVisibleElement'] as $callback)
 			{
-				$blnReturn = static::importStatic($callback[0])->$callback[1]($objElement, $blnReturn);
+				$blnReturn = static::importStatic($callback[0])->{$callback[1]}($objElement, $blnReturn);
 			}
 		}
 
@@ -708,7 +709,7 @@ abstract class Controller extends \System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['replaceDynamicScriptTags'] as $callback)
 			{
-				$strBuffer = static::importStatic($callback[0])->$callback[1]($strBuffer);
+				$strBuffer = static::importStatic($callback[0])->{$callback[1]}($strBuffer);
 			}
 		}
 
@@ -746,12 +747,6 @@ abstract class Controller extends \System
 			{
 				$strScripts .= trim($script) . "\n";
 			}
-		}
-
-		// Command scheduler
-		if (!\Config::get('disableCron'))
-		{
-			$strScripts .= "\n" . \Template::generateInlineScript('setTimeout(function(){var e=function(e,t){try{var n=new XMLHttpRequest}catch(r){return}n.open("GET",e,!0),n.onreadystatechange=function(){this.readyState==4&&this.status==200&&typeof t=="function"&&t(this.responseText)},n.send()};e("system/cron/cron.txt",function(n){parseInt(n||0)<Math.round(+(new Date)/1e3)-' . \Frontend::getCronTimeout() . '&&e("_contao/cron")})},5e3);') . "\n";
 		}
 
 		$arrReplace['[[TL_BODY]]'] = $strScripts;
@@ -938,34 +933,22 @@ abstract class Controller extends \System
 	 */
 	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
 	{
-		$strRequest = preg_replace('/^&(amp;)?/i', '', $strRequest);
+		/** @var Query $query */
+		$query = new Query(\Environment::get('queryString'));
 
-		if ($strRequest != '' && $blnAddRef)
+		// Remove the request token and referer ID
+		$query = $query->without(array_merge(array('rt', 'ref'), $arrUnset));
+
+		// Merge the request string to be added
+		$query = $query->merge(new Query(str_replace('&amp;', '&', $strRequest)));
+
+		// Add the referer ID
+		if (isset($_GET['ref']) || ($strRequest != '' && $blnAddRef))
 		{
-			$strRequest .= '&amp;ref=' . TL_REFERER_ID;
+			$query = $query->merge('ref=' . TL_REFERER_ID);
 		}
 
-		$queries = preg_split('/&(amp;)?/i', \Environment::get('queryString'));
-
-		// Overwrite existing parameters
-		foreach ($queries as $k=>$v)
-		{
-			list($key) = explode('=', $v);
-
-			if (in_array($key, $arrUnset) || preg_match('/(^|&(amp;)?)' . preg_quote($key, '/') . '=/i', $strRequest))
-			{
-				unset($queries[$k]);
-			}
-		}
-
-		$href = '?';
-
-		if (!empty($queries))
-		{
-			$href .= implode('&amp;', $queries) . '&amp;';
-		}
-
-		return TL_SCRIPT . $href . str_replace(' ', '%20', $strRequest);
+		return TL_SCRIPT . $query->getUriComponent();
 	}
 
 
@@ -1069,7 +1052,6 @@ abstract class Controller extends \System
 		$objRouter = \System::getContainer()->get('router');
 		$arrParams = [];
 		$strRoute = 'contao_frontend';
-		$strUrl = '';
 
 		// Correctly handle the "index" alias (see #3961)
 		if ($arrRow['alias'] == 'index' && $strParams == '')
@@ -1092,7 +1074,7 @@ abstract class Controller extends \System
 		}
 		elseif (TL_MODE == 'FE')
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$arrParams['_locale'] = $objPage->rootLanguage;
@@ -1124,7 +1106,7 @@ abstract class Controller extends \System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
 			{
-				$strUrl = static::importStatic($callback[0])->$callback[1]($arrRow, $strParams, $strUrl);
+				$strUrl = static::importStatic($callback[0])->{$callback[1]}($arrRow, $strParams, $strUrl);
 			}
 		}
 
@@ -1164,7 +1146,7 @@ abstract class Controller extends \System
 			$strAttribute = $arrUrls[$i+2];
 			$strUrl = $arrUrls[$i+3];
 
-			if (!preg_match('@^(https?://|ftp://|mailto:|#)@i', $strUrl))
+			if (!preg_match('@^(?:[a-z0-9]+:|#)@i', $strUrl))
 			{
 				$strUrl = $strBase . (($strUrl != '/') ? $strUrl : '');
 			}
@@ -1180,6 +1162,8 @@ abstract class Controller extends \System
 	 * Send a file to the browser so the "save as …" dialogue opens
 	 *
 	 * @param string $strFile The file path
+	 *
+	 * @throws AccessDeniedException
 	 */
 	public static function sendFileToBrowser($strFile)
 	{
@@ -1215,7 +1199,7 @@ abstract class Controller extends \System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['postDownload'] as $callback)
 			{
-				static::importStatic($callback[0])->$callback[1]($strFile);
+				static::importStatic($callback[0])->{$callback[1]}($strFile);
 			}
 		}
 
@@ -1338,6 +1322,8 @@ abstract class Controller extends \System
 	 */
 	protected function eliminateNestedPaths($arrPaths)
 	{
+		$arrPaths = array_filter($arrPaths);
+
 		if (!is_array($arrPaths) || empty($arrPaths))
 		{
 			return array();
@@ -1590,7 +1576,7 @@ abstract class Controller extends \System
 			$objFiles->reset();
 		}
 
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrEnclosures = array();
@@ -1652,7 +1638,7 @@ abstract class Controller extends \System
 	/**
 	 * Set the static URL constants
 	 *
-	 * @param \PageModel $objPage An optional page object
+	 * @param PageModel $objPage An optional page object
 	 */
 	public static function setStaticUrls($objPage=null)
 	{
@@ -1728,7 +1714,7 @@ abstract class Controller extends \System
 	 */
 	public static function getTheme()
 	{
-		trigger_error('Using Controller::getTheme() has been deprecated and will no longer work in Contao 5.0. Use Backend::getTheme() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::getTheme() has been deprecated and will no longer work in Contao 5.0. Use Backend::getTheme() instead.', E_USER_DEPRECATED);
 
 		return \Backend::getTheme();
 	}
@@ -1744,7 +1730,7 @@ abstract class Controller extends \System
 	 */
 	public static function getBackendThemes()
 	{
-		trigger_error('Using Controller::getBackendThemes() has been deprecated and will no longer work in Contao 5.0. Use Backend::getThemes() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::getBackendThemes() has been deprecated and will no longer work in Contao 5.0. Use Backend::getThemes() instead.', E_USER_DEPRECATED);
 
 		return \Backend::getThemes();
 	}
@@ -1755,22 +1741,22 @@ abstract class Controller extends \System
 	 *
 	 * @param mixed $intId A page ID or a Model object
 	 *
-	 * @return \PageModel The page model or null
+	 * @return PageModel The page model or null
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use PageModel::findWithDetails() or PageModel->loadDetails() instead.
 	 */
 	public static function getPageDetails($intId)
 	{
-		trigger_error('Using Controller::getPageDetails() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findWithDetails() or PageModel->loadDetails() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::getPageDetails() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findWithDetails() or PageModel->loadDetails() instead.', E_USER_DEPRECATED);
 
-		if ($intId instanceof \PageModel)
+		if ($intId instanceof PageModel)
 		{
 			return $intId->loadDetails();
 		}
-		elseif ($intId instanceof \Model\Collection)
+		elseif ($intId instanceof Model\Collection)
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			$objPage = $intId->current();
 
 			return $objPage->loadDetails();
@@ -1831,7 +1817,7 @@ abstract class Controller extends \System
 	 */
 	protected function removeOldFeeds($blnReturn=false)
 	{
-		trigger_error('Using Controller::removeOldFeeds() has been deprecated and will no longer work in Contao 5.0. Use Automator::purgeXmlFiles() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::removeOldFeeds() has been deprecated and will no longer work in Contao 5.0. Use Automator::purgeXmlFiles() instead.', E_USER_DEPRECATED);
 
 		$this->import('Automator');
 		$this->Automator->purgeXmlFiles($blnReturn);
@@ -1850,7 +1836,7 @@ abstract class Controller extends \System
 	 */
 	protected function classFileExists($strClass)
 	{
-		trigger_error('Using Controller::classFileExists() has been deprecated and will no longer work in Contao 5.0. Use the PHP function class_exists() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::classFileExists() has been deprecated and will no longer work in Contao 5.0. Use the PHP function class_exists() instead.', E_USER_DEPRECATED);
 
 		return class_exists($strClass);
 	}
@@ -1868,7 +1854,7 @@ abstract class Controller extends \System
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
-		trigger_error('Using Controller::restoreBasicEntities() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::restoreBasicEntities() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::restoreBasicEntities() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::restoreBasicEntities() instead.', E_USER_DEPRECATED);
 
 		return \StringUtil::restoreBasicEntities($strBuffer);
 	}
@@ -1889,7 +1875,7 @@ abstract class Controller extends \System
 	 */
 	protected function resizeImage($image, $width, $height, $mode='')
 	{
-		trigger_error('Using Controller::resizeImage() has been deprecated and will no longer work in Contao 5.0. Use Image::resize() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::resizeImage() has been deprecated and will no longer work in Contao 5.0. Use Image::resize() instead.', E_USER_DEPRECATED);
 
 		return \Image::resize($image, $width, $height, $mode);
 	}
@@ -1912,7 +1898,7 @@ abstract class Controller extends \System
 	 */
 	protected function getImage($image, $width, $height, $mode='', $target=null, $force=false)
 	{
-		trigger_error('Using Controller::getImage() has been deprecated and will no longer work in Contao 5.0. Use Image::get() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::getImage() has been deprecated and will no longer work in Contao 5.0. Use Image::get() instead.', E_USER_DEPRECATED);
 
 		return \Image::get($image, $width, $height, $mode, $target, $force);
 	}
@@ -1932,7 +1918,7 @@ abstract class Controller extends \System
 	 */
 	public static function generateImage($src, $alt='', $attributes='')
 	{
-		trigger_error('Using Controller::generateImage() has been deprecated and will no longer work in Contao 5.0. Use Image::getHtml() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::generateImage() has been deprecated and will no longer work in Contao 5.0. Use Image::getHtml() instead.', E_USER_DEPRECATED);
 
 		return \Image::getHtml($src, $alt, $attributes);
 	}
@@ -1948,7 +1934,7 @@ abstract class Controller extends \System
 	 */
 	protected function getDatePickerString()
 	{
-		trigger_error('Using Controller::getDatePickerString() has been deprecated and will no longer work in Contao 5.0. Specify "datepicker"=>true in your DCA file instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::getDatePickerString() has been deprecated and will no longer work in Contao 5.0. Specify "datepicker"=>true in your DCA file instead.', E_USER_DEPRECATED);
 
 		return true;
 	}
@@ -1964,7 +1950,7 @@ abstract class Controller extends \System
 	 */
 	protected function getBackendLanguages()
 	{
-		trigger_error('Using Controller::getBackendLanguages() has been deprecated and will no longer work in Contao 5.0. Use System::getLanguages(true) instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::getBackendLanguages() has been deprecated and will no longer work in Contao 5.0. Use System::getLanguages(true) instead.', E_USER_DEPRECATED);
 
 		return $this->getLanguages(true);
 	}
@@ -1983,7 +1969,7 @@ abstract class Controller extends \System
 	 */
 	protected function parseSimpleTokens($strBuffer, $arrData)
 	{
-		trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::parseSimpleTokens() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::parseSimpleTokens() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::parseSimpleTokens() instead.', E_USER_DEPRECATED);
 
 		return \StringUtil::parseSimpleTokens($strBuffer, $arrData);
 	}
@@ -2005,7 +1991,7 @@ abstract class Controller extends \System
 	 */
 	protected function prepareForWidget($arrData, $strName, $varValue=null, $strField='', $strTable='')
 	{
-		trigger_error('Using Controller::prepareForWidget() has been deprecated and will no longer work in Contao 5.0. Use Widget::getAttributesFromDca() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::prepareForWidget() has been deprecated and will no longer work in Contao 5.0. Use Widget::getAttributesFromDca() instead.', E_USER_DEPRECATED);
 
 		return \Widget::getAttributesFromDca($arrData, $strName, $varValue, $strField, $strTable);
 	}
@@ -2029,7 +2015,7 @@ abstract class Controller extends \System
 	 */
 	protected function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
 	{
-		trigger_error('Using Controller::getChildRecords() has been deprecated and will no longer work in Contao 5.0. Use Database::getChildRecords() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::getChildRecords() has been deprecated and will no longer work in Contao 5.0. Use Database::getChildRecords() instead.', E_USER_DEPRECATED);
 
 		return $this->Database->getChildRecords($arrParentIds, $strTable, $blnSorting, $arrReturn, $strWhere);
 	}
@@ -2048,7 +2034,7 @@ abstract class Controller extends \System
 	 */
 	protected function getParentRecords($intId, $strTable)
 	{
-		trigger_error('Using Controller::getParentRecords() has been deprecated and will no longer work in Contao 5.0. Use Database::getParentRecords() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::getParentRecords() has been deprecated and will no longer work in Contao 5.0. Use Database::getParentRecords() instead.', E_USER_DEPRECATED);
 
 		return $this->Database->getParentRecords($intId, $strTable);
 	}
@@ -2057,14 +2043,14 @@ abstract class Controller extends \System
 	/**
 	 * Print an article as PDF and stream it to the browser
 	 *
-	 * @param \ModuleModel $objArticle An article object
+	 * @param ModuleModel $objArticle An article object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use ModuleArticle->generatePdf() instead.
 	 */
 	protected function printArticleAsPdf($objArticle)
 	{
-		trigger_error('Using Controller::printArticleAsPdf() has been deprecated and will no longer work in Contao 5.0. Use ModuleArticle->generatePdf() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::printArticleAsPdf() has been deprecated and will no longer work in Contao 5.0. Use ModuleArticle->generatePdf() instead.', E_USER_DEPRECATED);
 
 		$objArticle = new \ModuleArticle($objArticle);
 		$objArticle->generatePdf();
@@ -2081,7 +2067,7 @@ abstract class Controller extends \System
 	 */
 	public static function getPageSections()
 	{
-		trigger_error('Using Controller::getPageSections() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::getPageSections() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		return array('header', 'left', 'right', 'main', 'footer');
 	}
@@ -2100,7 +2086,7 @@ abstract class Controller extends \System
 	 */
 	public static function optionSelected($strOption, $varValues)
 	{
-		trigger_error('Using Controller::optionSelected() has been deprecated and will no longer work in Contao 5.0. Use Widget::optionSelected() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::optionSelected() has been deprecated and will no longer work in Contao 5.0. Use Widget::optionSelected() instead.', E_USER_DEPRECATED);
 
 		return \Widget::optionSelected($strOption, $varValues);
 	}
@@ -2119,7 +2105,7 @@ abstract class Controller extends \System
 	 */
 	public static function optionChecked($strOption, $varValues)
 	{
-		trigger_error('Using Controller::optionChecked() has been deprecated and will no longer work in Contao 5.0. Use Widget::optionChecked() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::optionChecked() has been deprecated and will no longer work in Contao 5.0. Use Widget::optionChecked() instead.', E_USER_DEPRECATED);
 
 		return \Widget::optionChecked($strOption, $varValues);
 	}
@@ -2137,7 +2123,7 @@ abstract class Controller extends \System
 	 */
 	public static function findContentElement($strName)
 	{
-		trigger_error('Using Controller::findContentElement() has been deprecated and will no longer work in Contao 5.0. Use ContentElement::findClass() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::findContentElement() has been deprecated and will no longer work in Contao 5.0. Use ContentElement::findClass() instead.', E_USER_DEPRECATED);
 
 		return \ContentElement::findClass($strName);
 	}
@@ -2155,7 +2141,7 @@ abstract class Controller extends \System
 	 */
 	public static function findFrontendModule($strName)
 	{
-		trigger_error('Using Controller::findFrontendModule() has been deprecated and will no longer work in Contao 5.0. Use Module::findClass() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::findFrontendModule() has been deprecated and will no longer work in Contao 5.0. Use Module::findClass() instead.', E_USER_DEPRECATED);
 
 		return \Module::findClass($strName);
 	}
@@ -2172,7 +2158,7 @@ abstract class Controller extends \System
 	 */
 	protected function createInitialVersion($strTable, $intId)
 	{
-		trigger_error('Using Controller::createInitialVersion() has been deprecated and will no longer work in Contao 5.0. Use Versions->initialize() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::createInitialVersion() has been deprecated and will no longer work in Contao 5.0. Use Versions->initialize() instead.', E_USER_DEPRECATED);
 
 		$objVersions = new \Versions($strTable, $intId);
 		$objVersions->initialize();
@@ -2190,7 +2176,7 @@ abstract class Controller extends \System
 	 */
 	protected function createNewVersion($strTable, $intId)
 	{
-		trigger_error('Using Controller::createNewVersion() has been deprecated and will no longer work in Contao 5.0. Use Versions->create() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::createNewVersion() has been deprecated and will no longer work in Contao 5.0. Use Versions->create() instead.', E_USER_DEPRECATED);
 
 		$objVersions = new \Versions($strTable, $intId);
 		$objVersions->create();

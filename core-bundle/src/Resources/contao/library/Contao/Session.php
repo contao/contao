@@ -11,7 +11,9 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 
 /**
@@ -36,7 +38,7 @@ class Session
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Session
+	 * @var Session
 	 */
 	protected static $objInstance;
 
@@ -58,7 +60,15 @@ class Session
 	 */
 	protected function __construct()
 	{
-		$this->session = \System::getContainer()->get('session');
+		if (PHP_SAPI == 'cli')
+		{
+			$this->session = new SymfonySession(new MockArraySessionStorage());
+		}
+		else
+		{
+			$this->session = \System::getContainer()->get('session');
+		}
+
 		$this->sessionBag = $this->session->getBag($this->getSessionBagKey());
 	}
 
@@ -72,7 +82,7 @@ class Session
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return \Session The object instance
+	 * @return Session The object instance
 	 */
 	public static function getInstance()
 	{
@@ -94,12 +104,12 @@ class Session
 	 */
 	public function get($strKey)
 	{
-		trigger_error('Using Session::get() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Session::get() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		// Map the referer (see #281)
-		if ($strKey == 'referer')
+		if ($strKey == 'referer' || $strKey == 'popupReferer')
 		{
-			return $this->session->get('referer');
+			return $this->session->get($strKey);
 		}
 
 		return $this->sessionBag->get($strKey);
@@ -114,12 +124,12 @@ class Session
 	 */
 	public function set($strKey, $varValue)
 	{
-		trigger_error('Using Session::set() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Session::set() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		// Map the referer (see #281)
-		if ($strKey == 'referer')
+		if ($strKey == 'referer' || $strKey == 'popupReferer')
 		{
-			$this->session->set('referer', $varValue);
+			$this->session->set($strKey, $varValue);
 		}
 		else
 		{
@@ -135,7 +145,7 @@ class Session
 	 */
 	public function remove($strKey)
 	{
-		trigger_error('Using Session::remove() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Session::remove() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		// Map the referer (see #281)
 		if ($strKey == 'referer')
@@ -156,7 +166,7 @@ class Session
 	 */
 	public function getData()
 	{
-		trigger_error('Using Session::getData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Session::getData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		$data = $this->sessionBag->all();
 
@@ -181,7 +191,7 @@ class Session
 	 */
 	public function setData($arrData)
 	{
-		trigger_error('Using Session::setData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Session::setData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		if (!is_array($arrData))
 		{
@@ -208,7 +218,7 @@ class Session
 	 */
 	public function appendData($varData)
 	{
-		trigger_error('Using Session::appendData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Session::appendData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		if (is_object($varData))
 		{

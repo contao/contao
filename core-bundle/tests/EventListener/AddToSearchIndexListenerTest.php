@@ -11,18 +11,17 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\Framework\ContaoFramework;
 
 /**
  * Tests the AddToSearchIndexListener class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class AddToSearchIndexListenerTest extends TestCase
+class AddToSearchIndexListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
@@ -37,9 +36,22 @@ class AddToSearchIndexListenerTest extends TestCase
         parent::setUp();
 
         $this->framework = $this
-            ->getMockBuilder('Contao\\CoreBundle\\ContaoFramework')
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock()
+        ;
+
+        $frontend = $this->getMock('Contao\Frontend', ['indexPageIfApplicable']);
+
+        $frontend
+            ->expects($this->any())
+            ->method('indexPageIfApplicable')
+        ;
+
+        $this->framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($frontend)
         ;
     }
 
@@ -50,7 +62,7 @@ class AddToSearchIndexListenerTest extends TestCase
     {
         $listener = new AddToSearchIndexListener($this->framework);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\EventListener\\AddToSearchIndexListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\AddToSearchIndexListener', $listener);
     }
 
     /**
@@ -109,10 +121,10 @@ class AddToSearchIndexListenerTest extends TestCase
     private function mockPostResponseEvent()
     {
         return $this->getMock(
-            'Symfony\\Component\\HttpKernel\\Event\\PostResponseEvent',
+            'Symfony\Component\HttpKernel\Event\PostResponseEvent',
             ['getResponse'],
             [
-                $this->getMockForAbstractClass('Symfony\\Component\\HttpKernel\\Kernel', ['test', false]),
+                $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]),
                 new Request(),
                 new Response(),
             ]

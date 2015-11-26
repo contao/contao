@@ -57,6 +57,10 @@
         <source>Filemounts</source>
         <target>ファイルマウント</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>画像サイズ</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.forms_legend">
         <source>Form permissions</source>
         <target>フォームの権限</target>

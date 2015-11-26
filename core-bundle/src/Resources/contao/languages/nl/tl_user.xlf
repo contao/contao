@@ -177,6 +177,14 @@
         <source>Here you can grant access to one or more folders (subfolders will be included automatically).</source>
         <target>Selecteer de mappen die u wilt activeren voor de huidige gebruiker. Submappen zijn automatisch inbegrepen.</target>
       </trans-unit>
+      <trans-unit id="tl_user.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Beeldformaten</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.1">
+        <source>Here you can grant access to one or more image sizes.</source>
+        <target>Selecteer de afbeelding groottes die u wilt activeren voor de gebruiker.</target>
+      </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
         <target>Formulieren</target>
@@ -260,6 +268,10 @@
       <trans-unit id="tl_user.filemounts_legend">
         <source>Filemounts</source>
         <target>Bestandskoppelingen</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Beeldformaten</target>
       </trans-unit>
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>

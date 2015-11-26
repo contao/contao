@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
-        <target>Ungültiger Anfrage-Token</target>
+        <target>Ungültiges Anfrage-Token</target>
       </trans-unit>
       <trans-unit id="XPT.invalidToken">
         <source>The request token could not be verified.</source>
-        <target>Der Request-Token konnte nicht validiert werden.</target>
+        <target>Das Request-Token konnte nicht validiert werden.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenRetry">
         <source>Please &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;click this link&lt;/a&gt; and try again. Do not use the back button of your browser.</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainOne">
         <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
-        <target>Der Fehler tritt bei einer POST-Anfrage ohne gültigen Request-Token auf. In Contao 2.10 wurde die Referer-Prüfung durch ein Request-Token-System ersetzt. Wenn das Problem anhält, verwenden Sie eventuell eine inkompatible Drittanbieter-Erweiterung oder haben Ihre Contao-Installation nicht vollständig aktualisiert.</target>
+        <target>Der Fehler tritt bei einer POST-Anfrage ohne gültiges Request-Token auf. In Contao 2.10 wurde die Referer-Prüfung durch ein Request-Token-System ersetzt. Wenn das Problem anhält, verwenden Sie eventuell eine inkompatible Drittanbieter-Erweiterung oder haben Ihre Contao-Installation nicht vollständig aktualisiert.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
@@ -62,8 +62,8 @@
         <target>Die Installation wurde nicht abgeschlossen, daher kann Contao nicht korrekt funktionieren.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool by pointing your browser to &lt;code&gt;/contao/install&lt;/code&gt;.</source>
-        <target>Bitte öffnen Sie das Contao-Installtool, indem Sie die Route &lt;code&gt;/contao/install&lt;/code&gt; in Ihrem Browser aufrufen.</target>
+        <source>Please open the Contao install tool (&lt;code&gt;/install.php&lt;/code&gt;) in your browser.</source>
+        <target>Bitte öffnen Sie das Contao-Installtool (&lt;code&gt;/install.php&lt;/code&gt;) in Ihrem Browser.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>

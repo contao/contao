@@ -25,6 +25,18 @@
         <source>Description</source>
         <target>Beschreibung</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceMode">
+        <source>Maintenance mode</source>
+        <target>Wartungsmodus</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceEnable">
+        <source>Enable</source>
+        <target>Aktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceDisable">
+        <source>Disable</source>
+        <target>Deaktivieren</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Daten bereinigen</target>
@@ -32,46 +44,6 @@
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
         <target>Die Daten wurden bereinigt</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.liveUpdate">
-        <source>Live Update</source>
-        <target>Live Update</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.liveUpdateId">
-        <source>Live Update ID</source>
-        <target>Live Update ID</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.toLiveUpdate">
-        <source>Go to the Live Update</source>
-        <target>Zum Live Update</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.upToDate">
-        <source>Your Contao version %s is up to date</source>
-        <target>Ihre Contao-Version %s ist aktuell</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.newVersion">
-        <source>A newer Contao version %s is available</source>
-        <target>Eine neuere Contao-Version %s ist verfügbar</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.notWriteable">
-        <source>The temporary folder (system/tmp) is not writeable</source>
-        <target>Das temporäre Verzeichnis (system/tmp) ist nicht beschreibbar</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.runLiveUpdate">
-        <source>Run the update</source>
-        <target>Aktualisierung starten</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.toc">
-        <source>Content of the update archive</source>
-        <target>Inhalt des Update-Archivs</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.backup">
-        <source>Backuped files</source>
-        <target>Gesicherte Dateien</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.update">
-        <source>Updated files</source>
-        <target>Aktualisierte Dateien</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.searchIndex">
         <source>Rebuild the search index</source>

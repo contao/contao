@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Front end module "personal data".
@@ -37,10 +39,10 @@ class ModulePersonalData extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['personalData'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['personalData'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -71,7 +73,7 @@ class ModulePersonalData extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->import('FrontendUser', 'User');
@@ -89,7 +91,7 @@ class ModulePersonalData extends \Module
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1]();
+					$this->{$callback[0]}->{$callback[1]}();
 				}
 				elseif (is_callable($callback))
 				{
@@ -119,6 +121,7 @@ class ModulePersonalData extends \Module
 		$objMember = \MemberModel::findByPk($this->User->id);
 		$strTable = $objMember->getTable();
 		$strFormId = 'tl_member_' . $this->id;
+		$flashBag = \System::getContainer()->get('session')->getFlashBag();
 
 		// Initialize the versioning (see #7415)
 		$objVersions = new \Versions($strTable, $objMember->id);
@@ -138,7 +141,13 @@ class ModulePersonalData extends \Module
 				$arrData['inputType'] = 'checkbox';
 			}
 
-			/** @var \Widget $strClass */
+			// Map fileTrees to upload widgets (see #8091)
+			if ($arrData['inputType'] == 'fileTree')
+			{
+				$arrData['inputType'] = 'upload';
+			}
+
+			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
 
 			// Continue if the class does not exist
@@ -180,7 +189,7 @@ class ModulePersonalData extends \Module
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$varValue = $this->$callback[0]->$callback[1]($varValue, $this->User, $this);
+						$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this->User, $this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -189,14 +198,14 @@ class ModulePersonalData extends \Module
 				}
 			}
 
-			/** @var \Widget $objWidget */
+			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $varValue, '', '', $this));
 
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
 
 			// Increase the row count if it is a password field
-			if ($objWidget instanceof \FormPassword)
+			if ($objWidget instanceof FormPassword)
 			{
 				if ($objMember->password != '')
 				{
@@ -244,7 +253,7 @@ class ModulePersonalData extends \Module
 							if (is_array($callback))
 							{
 								$this->import($callback[0]);
-								$varValue = $this->$callback[0]->$callback[1]($varValue, $this->User, $this);
+								$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this->User, $this);
 							}
 							elseif (is_callable($callback))
 							{
@@ -330,7 +339,7 @@ class ModulePersonalData extends \Module
 				foreach ($GLOBALS['TL_HOOKS']['updatePersonalData'] as $callback)
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1]($this->User, $_SESSION['FORM_DATA'], $this);
+					$this->{$callback[0]}->{$callback[1]}($this->User, $_SESSION['FORM_DATA'], $this);
 				}
 			}
 
@@ -342,7 +351,7 @@ class ModulePersonalData extends \Module
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($this->User, $this);
+						$this->{$callback[0]}->{$callback[1]}($this->User, $this);
 					}
 					elseif (is_callable($callback))
 					{
@@ -357,6 +366,7 @@ class ModulePersonalData extends \Module
 				$this->jumpToOrReload($objJumpTo->row());
 			}
 
+			$flashBag->set('mod_personal_data_confirm', $GLOBALS['TL_LANG']['MSC']['savedData']);
 			$this->reload();
 		}
 
@@ -373,6 +383,13 @@ class ModulePersonalData extends \Module
 
 			$key = $k . (($k == 'personal') ? 'Data' : 'Details');
 			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key]] = $v;
+		}
+
+		// Confirmation message
+		if ($flashBag->has('mod_personal_data_confirm'))
+		{
+			$arrMessages = $flashBag->get('mod_personal_data_confirm');
+			$this->Template->message = $arrMessages[0];
 		}
 
 		$this->Template->categories = $arrGroups;

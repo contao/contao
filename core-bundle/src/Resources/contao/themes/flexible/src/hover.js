@@ -21,7 +21,7 @@ var Theme = {
 	 */
 	focusInput: function(id) {
 		if (id == '') return;
-		var el = $$('#'+id+' input[class^="tl_text"],#'+id+' textarea');
+		var el = $$('#' + id + ' input[class^="tl_text"],#' + id + ' textarea');
 		if (el && el.length > 0) el[0].focus();
 	},
 
@@ -30,6 +30,9 @@ var Theme = {
 	 *
 	 * @param {object} el    The DOM element
 	 * @param {int}    state The current state
+	 *
+	 * @deprecated The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5.
+	 *             Assign the CSS class "hover-row" instead.
 	 */
 	hoverRow: function(el, state) {
 		var items = $(el).getChildren();
@@ -38,6 +41,7 @@ var Theme = {
 				items[i].setStyle('background-color', (state ? '#ebfdd7' : ''));
 			}
 		}
+		console.info('The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-row" instead.');
 	},
 
 	/**
@@ -45,12 +49,16 @@ var Theme = {
 	 *
 	 * @param {object} el    The DOM element
 	 * @param {int}    state The current state
+	 *
+	 * @deprecated The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5.
+	 *             Assign the CSS class "hover-div" instead.
 	 */
 	hoverDiv: function(el, state) {
 		if (!state) {
 			el.removeAttribute('data-visited');
 		}
 		$(el).setStyle('background-color', (state ? '#ebfdd7' : ''));
+		console.info('The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-div" instead.');
 	},
 
 	/**
@@ -105,7 +113,7 @@ var Theme = {
 			if (Browser.Features.Touch) {
 				el.addEvent('click', function() {
 					if (!el.getAttribute('data-visited')) {
-						el.setAttribute('data-visited', 1);
+						el.setAttribute('data-visited', '1');
 					} else {
 						el.getElements('a').each(function(a) {
 							if (a.hasClass('edit')) {

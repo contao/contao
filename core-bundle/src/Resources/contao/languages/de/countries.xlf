@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="CNT.aq">
         <source>Antarctica</source>
-        <target>Antarktis</target>
+        <target>Antarktika</target>
       </trans-unit>
       <trans-unit id="CNT.ar">
         <source>Argentina</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="CNT.ba">
         <source>Bosnia and Herzegovina</source>
-        <target>Bosnien-Herzegowina</target>
+        <target>Bosnien und Herzegowina</target>
       </trans-unit>
       <trans-unit id="CNT.bb">
         <source>Barbados</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="CNT.bd">
         <source>Bangladesh</source>
-        <target>Bangladesh</target>
+        <target>Bangladesch</target>
       </trans-unit>
       <trans-unit id="CNT.be">
         <source>Belgium</source>
@@ -107,11 +107,11 @@
       </trans-unit>
       <trans-unit id="CNT.bm">
         <source>Bermuda</source>
-        <target>Bermuda-Inseln</target>
+        <target>Bermuda</target>
       </trans-unit>
       <trans-unit id="CNT.bn">
         <source>Brunei Darussalam</source>
-        <target>Brunei</target>
+        <target>Brunei Darussalam</target>
       </trans-unit>
       <trans-unit id="CNT.bo">
         <source>Bolivia (Plurinational State of)</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="CNT.bv">
         <source>Bouvet Island</source>
-        <target>Bouvet-Insel</target>
+        <target>Bouvetinsel</target>
       </trans-unit>
       <trans-unit id="CNT.bw">
         <source>Botswana</source>
@@ -231,7 +231,7 @@
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>
-        <target>Djibouti</target>
+        <target>Dschibuti</target>
       </trans-unit>
       <trans-unit id="CNT.dk">
         <source>Denmark</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="CNT.gf">
         <source>French Guiana</source>
-        <target>Französisch-Guyana</target>
+        <target>Französisch-Guayana</target>
       </trans-unit>
       <trans-unit id="CNT.gg">
         <source>Guernsey</source>
@@ -359,7 +359,7 @@
       </trans-unit>
       <trans-unit id="CNT.gs">
         <source>South Georgia and the South Sandwich Islands</source>
-        <target>Süd Georgia und die südlichen Sandwich Inseln</target>
+        <target>Südgeorgien und die Südlichen Sandwichinseln</target>
       </trans-unit>
       <trans-unit id="CNT.gt">
         <source>Guatemala</source>
@@ -479,7 +479,7 @@
       </trans-unit>
       <trans-unit id="CNT.kn">
         <source>Saint Kitts and Nevis</source>
-        <target>Saint Kitts und Nevis</target>
+        <target>St. Kitts und Nevis</target>
       </trans-unit>
       <trans-unit id="CNT.kp">
         <source>Korea (the Democratic People's Republic of)</source>
@@ -651,7 +651,7 @@
       </trans-unit>
       <trans-unit id="CNT.nf">
         <source>Norfolk Island</source>
-        <target>Norfolk-Insel</target>
+        <target>Norfolkinsel</target>
       </trans-unit>
       <trans-unit id="CNT.ng">
         <source>Nigeria</source>
@@ -719,7 +719,7 @@
       </trans-unit>
       <trans-unit id="CNT.pm">
         <source>Saint Pierre and Miquelon</source>
-        <target>St. Pierre und Miquelon</target>
+        <target>Saint-Pierre und Miquelon</target>
       </trans-unit>
       <trans-unit id="CNT.pn">
         <source>Pitcairn</source>
@@ -775,7 +775,7 @@
       </trans-unit>
       <trans-unit id="CNT.sb">
         <source>Solomon Islands</source>
-        <target>Salomon-Inseln</target>
+        <target>Salomonen</target>
       </trans-unit>
       <trans-unit id="CNT.sc">
         <source>Seychelles</source>
@@ -827,7 +827,7 @@
       </trans-unit>
       <trans-unit id="CNT.sr">
         <source>Suriname</source>
-        <target>Surinam</target>
+        <target>Suriname</target>
       </trans-unit>
       <trans-unit id="CNT.ss">
         <source>South Sudan</source>
@@ -835,7 +835,7 @@
       </trans-unit>
       <trans-unit id="CNT.st">
         <source>Sao Tome and Principe</source>
-        <target>São Tomé und Principe</target>
+        <target>São Tomé und Príncipe</target>
       </trans-unit>
       <trans-unit id="CNT.sv">
         <source>El Salvador</source>
@@ -847,7 +847,7 @@
       </trans-unit>
       <trans-unit id="CNT.sy">
         <source>Syrian Arab Republic</source>
-        <target>Syrien</target>
+        <target>Syrien Arabische Republik</target>
       </trans-unit>
       <trans-unit id="CNT.sz">
         <source>Swaziland</source>
@@ -883,7 +883,7 @@
       </trans-unit>
       <trans-unit id="CNT.tl">
         <source>Timor-Leste</source>
-        <target>Ost-Timor</target>
+        <target>Osttimor</target>
       </trans-unit>
       <trans-unit id="CNT.tm">
         <source>Turkmenistan</source>

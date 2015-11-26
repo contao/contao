@@ -36,6 +36,29 @@ class Messages extends \Backend
 
 
 	/**
+	 * Check for maintenance mode
+	 *
+	 * @return string
+	 */
+	public function maintenanceCheck()
+	{
+		try
+		{
+			if (\System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver()->isExists())
+			{
+				return '<p class="tl_error"><a href="contao/main.php?do=maintenance">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</a></p>';
+			}
+		}
+		catch (\Exception $e)
+		{
+			// ignore
+		}
+
+		return '';
+	}
+
+
+	/**
 	 * Return the date of the last login
 	 *
 	 * @return string

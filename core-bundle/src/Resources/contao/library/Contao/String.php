@@ -16,7 +16,7 @@ if (version_compare(PHP_VERSION, '7.0', '>=')) {
 		'The String class cannot be used in PHP ' . PHP_VERSION . '. Use the StringUtil class instead.'
 	);
 } else {
-	trigger_error(
+	@trigger_error(
 		'Using the String class has been deprecated and will no longer work in PHP 7. Use the StringUtil class instead.',
 		E_USER_DEPRECATED
 	);
@@ -36,7 +36,7 @@ class String extends \StringUtil
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \StringUtil
+	 * @var StringUtil
 	 */
 	protected static $objInstance;
 
@@ -62,14 +62,14 @@ class String extends \StringUtil
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return \String The object instance
+	 * @return String The object instance
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The String class is now static.
 	 */
 	public static function getInstance()
 	{
-		trigger_error('Using String::getInstance() has been deprecated and will no longer work in Contao 5.0. The String class is now static.', E_USER_DEPRECATED);
+		@trigger_error('Using String::getInstance() has been deprecated and will no longer work in Contao 5.0. The String class is now static.', E_USER_DEPRECATED);
 
 		if (static::$objInstance === null)
 		{

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Front end module "quick navigation".
@@ -35,10 +37,10 @@ class ModuleQuicknav extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['quicknav'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['quicknav'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -61,7 +63,7 @@ class ModuleQuicknav extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$lang = null;
@@ -112,7 +114,7 @@ class ModuleQuicknav extends \Module
 	 */
 	protected function getQuicknavPages($pid, $level=1, $host=null, $language=null)
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$groups = array();
@@ -155,7 +157,7 @@ class ModuleQuicknav extends \Module
 				{
 					if ($objSubpages->domain != '' && $objSubpages->domain != \Environment::get('host'))
 					{
-						/** @var \PageModel $objModel */
+						/** @var PageModel $objModel */
 						$objModel = $objSubpages->current();
 						$objModel->loadDetails();
 					}

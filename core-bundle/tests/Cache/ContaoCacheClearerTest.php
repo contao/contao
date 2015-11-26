@@ -37,7 +37,7 @@ class ContaoCacheClearerTest extends TestCase
     {
         $clearer = new ContaoCacheClearer(new Filesystem());
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Cache\\ContaoCacheClearer', $clearer);
+        $this->assertInstanceOf('Contao\CoreBundle\Cache\ContaoCacheClearer', $clearer);
     }
 
     /**

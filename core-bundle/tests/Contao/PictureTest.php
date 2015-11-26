@@ -11,7 +11,9 @@
 namespace Contao\CoreBundle\Test\Contao;
 
 use Contao\CoreBundle\Test\TestCase;
+use Contao\File;
 use Contao\Picture;
+use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -73,6 +75,8 @@ class PictureTest extends TestCase
         define('TL_ERROR', 'ERROR');
         define('TL_FILES_URL', '');
         define('TL_ROOT', self::$rootDir);
+
+        System::setContainer($this->mockContainerWithContaoScopes());
     }
 
     /**
@@ -80,27 +84,40 @@ class PictureTest extends TestCase
      */
     public function testInstantiation()
     {
-        $fileMock = $this->getMockBuilder('Contao\\File')
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        $fileMock = $this
+            ->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
             ->setConstructorArgs(['dummy.jpg'])
-            ->getMock();
+            ->getMock()
+        ;
 
-        $fileMock->expects($this->any())->method('exists')->will($this->returnValue(true));
+        $fileMock
+            ->expects($this->any())
+            ->method('exists')
+            ->will($this->returnValue(true))
+        ;
 
-        $fileMock->expects($this->any())->method('__get')->will($this->returnCallback(
-            function ($key) {
-                switch ($key) {
-                    case 'extension':
-                        return 'jpg';
-                    case 'path':
-                        return 'dummy.jpg';
-                    default:
-                        return null;
+        $fileMock
+            ->expects($this->any())
+            ->method('__get')
+            ->will($this->returnCallback(
+                function ($key) {
+                    switch ($key) {
+                        case 'extension':
+                            return 'jpg';
+
+                        case 'path':
+                            return 'dummy.jpg';
+
+                        default:
+                            return null;
+                    }
                 }
-            }
-        ));
+            ))
+        ;
 
-        $this->assertInstanceOf('Contao\\Picture', new Picture($fileMock));
+        $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
     }
 
     /**
@@ -215,9 +232,9 @@ class PictureTest extends TestCase
         $this->assertEquals(100, $pictureData['img']['height']);
         $this->assertCount(1, explode(',', $pictureData['img']['src']));
         $this->assertCount(3, explode(',', $pictureData['img']['srcset']));
-        $this->assertRegExp('(\\.jpg\\s+1x(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\\.jpg\\s+0\\.5x(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\\.jpg\\s+2x(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+1x(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+0\.5x(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+2x(,|$))', $pictureData['img']['srcset']);
         $this->assertEquals([], $pictureData['sources']);
     }
 
@@ -244,9 +261,9 @@ class PictureTest extends TestCase
         $this->assertEquals('100vw', $pictureData['img']['sizes']);
         $this->assertCount(1, explode(',', $pictureData['img']['src']));
         $this->assertCount(3, explode(',', $pictureData['img']['srcset']));
-        $this->assertRegExp('(\\.jpg\\s+100w(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\\.jpg\\s+50w(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\\.jpg\\s+200w(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+100w(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+50w(,|$))', $pictureData['img']['srcset']);
+        $this->assertRegExp('(\.jpg\s+200w(,|$))', $pictureData['img']['srcset']);
         $this->assertEquals([], $pictureData['sources']);
     }
 

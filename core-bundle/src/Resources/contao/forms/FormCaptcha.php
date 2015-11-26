@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -169,11 +170,11 @@ class FormCaptcha extends \Widget
 		));
 
 		$strEncoded = '';
-		$arrCharacters = utf8_str_split($question);
+		$arrCharacters = Utf8::str_split($question);
 
 		foreach ($arrCharacters as $strCharacter)
 		{
-			$strEncoded .= sprintf('&#%s;', utf8_ord($strCharacter));
+			$strEncoded .= sprintf('&#%s;', Utf8::ord($strCharacter));
 		}
 
 		return $strEncoded;
@@ -192,12 +193,11 @@ class FormCaptcha extends \Widget
 			return '';
 		}
 
-		return sprintf('<label for="ctrl_%s" class="mandatory%s">%s%s%s <span class="invisible">%s</span></label>',
+		return sprintf('<label for="ctrl_%s" class="mandatory%s"><span class="invisible">%s </span>%s<span class="mandatory">*</span><span class="invisible"> %s</span></label>',
 						$this->strId,
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						'<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].'</span> ',
+						$GLOBALS['TL_LANG']['MSC']['mandatory'],
 						$this->strLabel,
-						'<span class="mandatory">*</span>',
 						$this->getQuestion());
 	}
 

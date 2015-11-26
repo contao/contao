@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.undo.0">
         <source>Restore</source>
-        <target>Восстановить</target>
+        <target>Восстановление</target>
       </trans-unit>
       <trans-unit id="tl_undo.undo.1">
         <source>Restore entry ID %s</source>

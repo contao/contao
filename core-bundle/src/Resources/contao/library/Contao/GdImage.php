@@ -52,14 +52,14 @@ class GdImage
 	/**
 	 * Get the GD image object from an image file
 	 *
-	 * @param \File $file The file object
+	 * @param File $file The file object
 	 *
 	 * @return static The GD image object
 	 *
 	 * @throws \InvalidArgumentException If the image type cannot be processed
 	 * @throws \RuntimeException         If the image failed to be processed
 	 */
-	public static function fromFile(\File $file)
+	public static function fromFile(File $file)
 	{
 		$extension = strtolower($file->extension);
 		$function = null;

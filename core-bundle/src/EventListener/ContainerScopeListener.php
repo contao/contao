@@ -30,7 +30,7 @@ class ContainerScopeListener
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container
+     * @param ContainerInterface $container The container object
      */
     public function __construct(ContainerInterface $container)
     {
@@ -40,7 +40,7 @@ class ContainerScopeListener
     /**
      * Enters the container scope when a route has been found.
      *
-     * @param GetResponseEvent $event
+     * @param GetResponseEvent $event The event object
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -52,7 +52,7 @@ class ContainerScopeListener
     /**
      * Leaves the container scope when finishing the request.
      *
-     * @param FinishRequestEvent $event
+     * @param FinishRequestEvent $event The event object
      */
     public function onKernelFinishRequest(FinishRequestEvent $event)
     {

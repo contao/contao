@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Front end module "close account".
@@ -35,10 +37,10 @@ class ModuleCloseAccount extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['closeAccount'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['closeAccount'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -113,7 +115,7 @@ class ModuleCloseAccount extends \Module
 					foreach ($GLOBALS['TL_HOOKS']['closeAccount'] as $callback)
 					{
 						$this->import($callback[0]);
-						$this->$callback[0]->$callback[1]($this->User->id, $this->reg_close, $this);
+						$this->{$callback[0]}->{$callback[1]}($this->User->id, $this->reg_close, $this);
 					}
 				}
 

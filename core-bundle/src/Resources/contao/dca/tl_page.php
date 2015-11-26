@@ -57,7 +57,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'mode'                    => 5,
 			'icon'                    => 'pagemounts.gif',
 			'paste_button_callback'   => array('tl_page', 'pastePage'),
-			'panelLayout'             => 'filter,search'
+			'panelLayout'             => 'search'
 		),
 		'label' => array
 		(
@@ -71,7 +71,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
 				'href'                => 'ptg=all',
-				'class'               => 'header_toggle'
+				'class'               => 'header_toggle',
+				'showOnSelect'        => true
 			),
 			'all' => array
 			(
@@ -653,6 +654,8 @@ class tl_page extends Backend
 
 	/**
 	 * Check permissions to edit table tl_page
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -818,8 +821,7 @@ class tl_page extends Backend
 				// Do not allow to paste after pages on the root level (pagemounts)
 				if ((Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && Input::get('mode') == 1 && in_array(Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
 				{
-					$this->log('Not enough permissions to paste page ID '. Input::get('id') .' after mounted page ID '. Input::get('pid') .' (root level)', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');
 				}
 
 				// Check each page
@@ -864,8 +866,7 @@ class tl_page extends Backend
 				// Redirect if there is an error
 				if ($error)
 				{
-					$this->log('Not enough permissions to '. Input::get('act') .' page ID '. $cid .' or paste after/into page ID '. Input::get('pid'), __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' page ID ' . $cid . ' or paste after/into page ID ' . Input::get('pid') . '.');
 				}
 			}
 		}
@@ -1569,7 +1570,7 @@ class tl_page extends Backend
 					if (is_array($callback))
 					{
 						$this->import($callback[0]);
-						$strAlias = $this->$callback[0]->$callback[1]($strAlias, $dc);
+						$strAlias = $this->{$callback[0]}->{$callback[1]}($strAlias, $dc);
 					}
 					elseif (is_callable($callback))
 					{
@@ -1654,7 +1655,7 @@ class tl_page extends Backend
 								  ->limit(1)
 								  ->execute($row['id']);
 
-		if (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
+		if (!$this->User->hasAccess($row['type'], 'alpty') || !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
 		{
 			return Image::getHtml($icon) . ' ';
 		}
@@ -1669,19 +1670,26 @@ class tl_page extends Backend
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
-		// Check permissions to edit
+		// Set the ID and action
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
 		$this->checkPermission();
 
-		// Check permissions to publish
+		// Check the field access
 		if (!$this->User->hasAccess('tl_page::published', 'alexf'))
 		{
-			$this->log('Not enough permissions to publish/unpublish page ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish page ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_page', $intId);
@@ -1695,7 +1703,7 @@ class tl_page extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{

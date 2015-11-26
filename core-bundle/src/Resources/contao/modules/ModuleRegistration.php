@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Front end module "registration".
@@ -35,10 +37,10 @@ class ModuleRegistration extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['registration'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['registration'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -64,7 +66,7 @@ class ModuleRegistration extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
@@ -80,7 +82,7 @@ class ModuleRegistration extends \Module
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1]();
+					$this->{$callback[0]}->{$callback[1]}();
 				}
 				elseif (is_callable($callback))
 				{
@@ -99,7 +101,7 @@ class ModuleRegistration extends \Module
 
 		if ($this->memberTpl != '')
 		{
-			/** @var \FrontendTemplate|object $objTemplate */
+			/** @var FrontendTemplate|object $objTemplate */
 			$objTemplate = new \FrontendTemplate($this->memberTpl);
 
 			$this->Template = $objTemplate;
@@ -134,7 +136,7 @@ class ModuleRegistration extends \Module
 				'required' => true
 			);
 
-			/** @var \FormCaptcha $strClass */
+			/** @var FormCaptcha $strClass */
 			$strClass = $GLOBALS['TL_FFL']['captcha'];
 
 			// Fallback to default if the class is not defined
@@ -143,7 +145,7 @@ class ModuleRegistration extends \Module
 				$strClass = 'FormCaptcha';
 			}
 
-			/** @var \FormCaptcha $objCaptcha */
+			/** @var FormCaptcha $objCaptcha */
 			$objCaptcha = new $strClass($arrCaptcha);
 
 			if (\Input::post('FORM_SUBMIT') == $strFormId)
@@ -157,6 +159,16 @@ class ModuleRegistration extends \Module
 			}
 		}
 
+		$objMember = null;
+
+		// Check for a follow-up registration (see #7992)
+		if (\Input::post('email', true) != '' && ($objMember = \MemberModel::findUnactivatedByEmail(\Input::post('email', true))) !== null)
+		{
+			$this->resendActivationMail($objMember);
+
+			return;
+		}
+
 		$arrUser = array();
 		$arrFields = array();
 		$hasUpload = false;
@@ -167,12 +179,19 @@ class ModuleRegistration extends \Module
 		{
 			$arrData = $GLOBALS['TL_DCA']['tl_member']['fields'][$field];
 
-			// Map checkboxWizard to regular checkbox widget
+			// Map checkboxWizards to regular checkbox widgets
 			if ($arrData['inputType'] == 'checkboxWizard')
 			{
 				$arrData['inputType'] = 'checkbox';
 			}
 
+			// Map fileTrees to upload widgets (see #8091)
+			if ($arrData['inputType'] == 'fileTree')
+			{
+				$arrData['inputType'] = 'upload';
+			}
+
+			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
 
 			// Continue if the class is not defined
@@ -183,13 +202,19 @@ class ModuleRegistration extends \Module
 
 			$arrData['eval']['required'] = $arrData['eval']['mandatory'];
 
+			// Unset the unique field check upon follow-up registrations
+			if ($objMember !== null && $arrData['eval']['unique'] && \Input::post($field) == $objMember->$field)
+			{
+				$arrData['eval']['unique'] = false;
+			}
+
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'], '', '', $this));
 
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 
 			// Increase the row count if its a password field
-			if ($objWidget instanceof \FormPassword)
+			if ($objWidget instanceof FormPassword)
 			{
 				$objWidget->rowClassConfirm = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
 			}
@@ -201,7 +226,7 @@ class ModuleRegistration extends \Module
 				$varValue = $objWidget->value;
 
 				// Check whether the password matches the username
-				if ($objWidget instanceof \FormPassword && $varValue == \Input::post('username'))
+				if ($objWidget instanceof FormPassword && $varValue == \Input::post('username'))
 				{
 					$objWidget->addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 				}
@@ -238,7 +263,7 @@ class ModuleRegistration extends \Module
 							if (is_array($callback))
 							{
 								$this->import($callback[0]);
-								$varValue = $this->$callback[0]->$callback[1]($varValue, null);
+								$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, null);
 							}
 							elseif (is_callable($callback))
 							{
@@ -266,6 +291,13 @@ class ModuleRegistration extends \Module
 						$varValue = $objWidget->getEmptyValue();
 					}
 
+					// Encrypt the value (see #7815)
+					if ($arrData['eval']['encrypt'])
+					{
+						$varValue = \Encryption::encrypt($varValue);
+					}
+
+					// Set the new value
 					$arrUser[$field] = $varValue;
 				}
 			}
@@ -353,51 +385,7 @@ class ModuleRegistration extends \Module
 		// Send activation e-mail
 		if ($this->reg_activate)
 		{
-			// Prepare the simple token data
-			$arrTokenData = $arrData;
-			$arrTokenData['domain'] = \Idna::decode(\Environment::get('host'));
-			$arrTokenData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $arrData['activation'];
-			$arrTokenData['channels'] = '';
-
-			$bundles = \System::getContainer()->getParameter('kernel.bundles');
-
-			if (isset($bundles['ContaoNewsletterBundle']))
-			{
-				// Make sure newsletter is an array
-				if (!is_array($arrData['newsletter']))
-				{
-					if ($arrData['newsletter'] != '')
-					{
-						$arrData['newsletter'] = array($arrData['newsletter']);
-					}
-					else
-					{
-						$arrData['newsletter'] = array();
-					}
-				}
-
-				// Replace the wildcard
-				if (!empty($arrData['newsletter']))
-				{
-					$objChannels = \NewsletterChannelModel::findByIds($arrData['newsletter']);
-
-					if ($objChannels !== null)
-					{
-						$arrTokenData['channels'] = implode("\n", $objChannels->fetchEach('title'));
-					}
-				}
-			}
-
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$arrTokenData['channel'] = $arrTokenData['channels'];
-
-			$objEmail = new \Email();
-
-			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-			$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], \Idna::decode(\Environment::get('host')));
-			$objEmail->text = \StringUtil::parseSimpleTokens($this->reg_text, $arrTokenData);
-			$objEmail->sendTo($arrData['email']);
+			$this->sendActivationMail($arrData);
 		}
 
 		// Make sure newsletter is an array
@@ -445,7 +433,7 @@ class ModuleRegistration extends \Module
 			foreach ($GLOBALS['TL_HOOKS']['createNewUser'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($objNewUser->id, $arrData, $this);
+				$this->{$callback[0]}->{$callback[1]}($objNewUser->id, $arrData, $this);
 			}
 		}
 
@@ -473,13 +461,68 @@ class ModuleRegistration extends \Module
 
 
 	/**
+	 * Send the activation mail
+	 *
+	 * @param array $arrData
+	 */
+	protected function sendActivationMail($arrData)
+	{
+		// Prepare the simple token data
+		$arrTokenData = $arrData;
+		$arrTokenData['domain'] = \Idna::decode(\Environment::get('host'));
+		$arrTokenData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $arrData['activation'];
+		$arrTokenData['channels'] = '';
+
+		$bundles = \System::getContainer()->getParameter('kernel.bundles');
+
+		if (isset($bundles['ContaoNewsletterBundle']))
+		{
+			// Make sure newsletter is an array
+			if (!is_array($arrData['newsletter']))
+			{
+				if ($arrData['newsletter'] != '')
+				{
+					$arrData['newsletter'] = array($arrData['newsletter']);
+				}
+				else
+				{
+					$arrData['newsletter'] = array();
+				}
+			}
+
+			// Replace the wildcard
+			if (!empty($arrData['newsletter']))
+			{
+				$objChannels = \NewsletterChannelModel::findByIds($arrData['newsletter']);
+
+				if ($objChannels !== null)
+				{
+					$arrTokenData['channels'] = implode("\n", $objChannels->fetchEach('title'));
+				}
+			}
+		}
+
+		// Deprecated since Contao 4.0, to be removed in Contao 5.0
+		$arrTokenData['channel'] = $arrTokenData['channels'];
+
+		$objEmail = new \Email();
+
+		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
+		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], \Idna::decode(\Environment::get('host')));
+		$objEmail->text = \StringUtil::parseSimpleTokens($this->reg_text, $arrTokenData);
+		$objEmail->sendTo($arrData['email']);
+	}
+
+
+	/**
 	 * Activate an account
 	 */
 	protected function activateAcount()
 	{
 		$this->strTemplate = 'mod_message';
 
-		/** @var \FrontendTemplate|object $objTemplate */
+		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->strTemplate);
 
 		$this->Template = $objTemplate;
@@ -505,7 +548,7 @@ class ModuleRegistration extends \Module
 			foreach ($GLOBALS['TL_HOOKS']['activateAccount'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($objMember, $this);
+				$this->{$callback[0]}->{$callback[1]}($objMember, $this);
 			}
 		}
 
@@ -521,6 +564,33 @@ class ModuleRegistration extends \Module
 		// Confirm activation
 		$this->Template->type = 'confirm';
 		$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountActivated'];
+	}
+
+
+	/**
+	 * Re-send the activation mail
+	 *
+	 * @param MemberModel $objMember
+	 */
+	protected function resendActivationMail(MemberModel $objMember)
+	{
+		if ($objMember->activation == '')
+		{
+			return;
+		}
+
+		$this->strTemplate = 'mod_message';
+
+		/** @var FrontendTemplate|object $objTemplate */
+		$objTemplate = new \FrontendTemplate($this->strTemplate);
+
+		$this->Template = $objTemplate;
+
+		$this->sendActivationMail($objMember->row());
+
+		// Confirm activation
+		$this->Template->type = 'confirm';
+		$this->Template->message = $GLOBALS['TL_LANG']['MSC']['resendActivation'];
 	}
 
 

@@ -59,7 +59,7 @@
         <target>Inštalácia nebola dokončená, Contao nebude môcť fungovať správne.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool by pointing your browser to &lt;code&gt;/contao/install&lt;/code&gt;.</source>
+        <source>Please open the Contao install tool (&lt;code&gt;/install.php&lt;/code&gt;) in your browser.</source>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>

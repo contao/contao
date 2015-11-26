@@ -14,10 +14,10 @@ use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
-use Contao\CoreBundle\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DcaExtractor;
 use Contao\PageModel;
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
@@ -29,8 +29,6 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
  * Generates the Contao cache during cache warmup.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @internal
  */
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
@@ -95,6 +93,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     public function warmUp($cacheDir)
     {
+        if (!$this->isCompleteInstallation()) {
+            return;
+        }
+
         $this->framework->initialize();
 
         $this->generateConfigCache($cacheDir);
@@ -228,7 +230,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 $subfiles = $this->finder
                     ->findIn('languages/' . $language)
                     ->files()
-                    ->name('/^' . $name . '\\.(php|xlf)$/')
+                    ->name('/^' . $name . '\.(php|xlf)$/')
                 ;
 
                 try {
@@ -303,7 +305,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         $languages = [];
 
-        while ($language = $statement->fetch(\PDO::FETCH_OBJ)) {
+        while (false !== ($language = $statement->fetch(\PDO::FETCH_OBJ))) {
             if ('' === $language->language) {
                 continue;
             }
@@ -317,5 +319,21 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
 
         return array_unique($languages);
+    }
+
+    /**
+     * Checks if the installation is complete.
+     *
+     * @return bool True if the installation is complete
+     */
+    private function isCompleteInstallation()
+    {
+        try {
+            $this->connection->query('SELECT COUNT(*) FROM tl_page');
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 }

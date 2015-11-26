@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
-        <target>Membri del gruppo</target>
+        <target>Gruppi membri</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.1">
         <source>Manage member groups (front end user groups)</source>

@@ -246,9 +246,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['size'],
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
-			'options'                 => System::getImageSizes(),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
+			'options_callback' => function ()
+			{
+				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'imagemargin' => array
@@ -880,10 +883,7 @@ class tl_content extends Backend
 			case 'create':
 			case 'select':
 				// Check access to the article
-				if (!$this->checkAccessToElement(CURRENT_ID, $pagemounts, true))
-				{
-					$this->redirect('contao/main.php?act=error');
-				}
+				$this->checkAccessToElement(CURRENT_ID, $pagemounts, true);
 				break;
 
 			case 'editAll':
@@ -892,9 +892,9 @@ class tl_content extends Backend
 			case 'cutAll':
 			case 'copyAll':
 				// Check access to the parent element if a content element is moved
-				if ((Input::get('act') == 'cutAll' || Input::get('act') == 'copyAll') && !$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2)))
+				if (Input::get('act') == 'cutAll' || Input::get('act') == 'copyAll')
 				{
-					$this->redirect('contao/main.php?act=error');
+					$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2));
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND pid=?")
@@ -908,18 +908,12 @@ class tl_content extends Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				if (!$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2)))
-				{
-					$this->redirect('contao/main.php?act=error');
-				}
+				$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2));
 				// NO BREAK STATEMENT HERE
 
 			default:
 				// Check access to the content element
-				if (!$this->checkAccessToElement(Input::get('id'), $pagemounts))
-				{
-					$this->redirect('contao/main.php?act=error');
-				}
+				$this->checkAccessToElement(Input::get('id'), $pagemounts);
 				break;
 		}
 	}
@@ -932,7 +926,7 @@ class tl_content extends Backend
 	 * @param array   $pagemounts
 	 * @param boolean $blnIsPid
 	 *
-	 * @return boolean
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	protected function checkAccessToElement($id, $pagemounts, $blnIsPid=false)
 	{
@@ -952,28 +946,20 @@ class tl_content extends Backend
 		// Invalid ID
 		if ($objPage->numRows < 1)
 		{
-			$this->log('Invalid content element ID ' . $id, __METHOD__, TL_ERROR);
-
-			return false;
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid content element ID ' . $id . '.');
 		}
 
 		// The page is not mounted
 		if (!in_array($objPage->id, $pagemounts))
 		{
-			$this->log('Not enough permissions to modify article ID ' . $objPage->aid . ' on page ID ' . $objPage->id, __METHOD__, TL_ERROR);
-
-			return false;
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify article ID ' . $objPage->aid . ' on page ID ' . $objPage->id . '.');
 		}
 
 		// Not enough permissions to modify the article
 		if (!$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
 		{
-			$this->log('Not enough permissions to modify article ID ' . $objPage->aid, __METHOD__, TL_ERROR);
-
-			return false;
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify article ID ' . $objPage->aid . '.');
 		}
-
-		return true;
 	}
 
 
@@ -1572,7 +1558,7 @@ class tl_content extends Backend
 	 */
 	public function pagePicker(DataContainer $dc)
 	{
-		return ' <a href="' . ((strpos($dc->value, '{{link_url::') !== false) ? 'contao/page.php' : 'contao/file.php') . '?do=' . Input::get('do') . '&amp;table=' . $dc->table . '&amp;field=' . $dc->field . '&amp;value=' . str_replace(array('{{link_url::', '}}'), '', $dc->value) . '&amp;switch=1' . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':768,\'title\':\'' . specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MOD']['page'][0])) . '\',\'url\':this.href,\'id\':\'' . $dc->field . '\',\'tag\':\'ctrl_'. $dc->field . ((Input::get('act') == 'editAll') ? '_' . $dc->id : '') . '\',\'self\':this});return false">' . Image::getHtml('pickpage.gif', $GLOBALS['TL_LANG']['MSC']['pagepicker'], 'style="vertical-align:top;cursor:pointer"') . '</a>';
+		return ' <a href="' . (($dc->value == '' || strpos($dc->value, '{{link_url::') !== false) ? 'contao/page' : 'contao/file') . '?do=' . Input::get('do') . '&amp;table=' . $dc->table . '&amp;field=' . $dc->field . '&amp;value=' . rawurlencode(str_replace(array('{{link_url::', '}}'), '', $dc->value)) . '&amp;switch=1' . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':768,\'title\':\'' . specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MOD']['page'][0])) . '\',\'url\':this.href,\'id\':\'' . $dc->field . '\',\'tag\':\'ctrl_'. $dc->field . ((Input::get('act') == 'editAll') ? '_' . $dc->id : '') . '\',\'self\':this});return false">' . Image::getHtml('pickpage.gif', $GLOBALS['TL_LANG']['MSC']['pagepicker'], 'style="vertical-align:top;cursor:pointer"') . '</a>';
 	}
 
 
@@ -1721,12 +1707,28 @@ class tl_content extends Backend
 	 * @param integer       $intId
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
-		// Check permissions to edit
+		// Set the ID and action
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
+		$this->checkPermission();
+
+		// Check the field access
+		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
+		{
+			$this->log('Not enough permissions to publish/unpublish content element ID "'.$intId.'"', __METHOD__, TL_ERROR);
+			$this->redirect('contao/main.php?act=error');
+		}
 
 		// The onload_callbacks vary depending on the dynamic parent table (see #4894)
 		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
@@ -1736,7 +1738,7 @@ class tl_content extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->$callback[0]->$callback[1](($dc ?: $this));
+					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{
@@ -1748,8 +1750,7 @@ class tl_content extends Backend
 		// Check permissions to publish
 		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
 		{
-			$this->log('Not enough permissions to show/hide content element ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_content', $intId);
@@ -1763,7 +1764,7 @@ class tl_content extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{

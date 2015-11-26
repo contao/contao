@@ -242,7 +242,7 @@ class ZipReader
 	/**
 	 * Go to the first file of the archive
 	 *
-	 * @return \ZipReader The object instance
+	 * @return ZipReader The object instance
 	 */
 	public function first()
 	{
@@ -255,7 +255,7 @@ class ZipReader
 	/**
 	 * Go to the next file of the archive
 	 *
-	 * @return \ZipReader|boolean The object instance or false if there is no next file
+	 * @return ZipReader|boolean The object instance or false if there is no next file
 	 */
 	public function next()
 	{
@@ -273,7 +273,7 @@ class ZipReader
 	/**
 	 * Go to the previous file of the archive
 	 *
-	 * @return \ZipReader|boolean The object instance or false if there is no previous file
+	 * @return ZipReader|boolean The object instance or false if there is no previous file
 	 */
 	public function prev()
 	{
@@ -291,7 +291,7 @@ class ZipReader
 	/**
 	 * Go to the last file of the archive
 	 *
-	 * @return \ZipReader The object instance
+	 * @return ZipReader The object instance
 	 */
 	public function last()
 	{
@@ -320,7 +320,7 @@ class ZipReader
 	/**
 	 * Reset the archive
 	 *
-	 * @return \ZipReader The object instance
+	 * @return ZipReader The object instance
 	 */
 	public function reset()
 	{
@@ -538,7 +538,7 @@ class ZipReader
 			$arrFile['file_dirname'] = (($path = dirname($arrFile['file_name'])) != '.' ? $path : '');
 
 			// Add UNIX time
-			$arrFile['last_mod_file_unix'] = $this->decToUnix($arrFile['last_mod_file_time'], $arrFile['last_mod_file_date']);
+			$arrFile['last_mod_file_unix'] = $this->decToUnix((int) $arrFile['last_mod_file_time'], (int) $arrFile['last_mod_file_date']);
 
 			// Read next signature
 			$strSignature = @fread($this->resFile, 4);

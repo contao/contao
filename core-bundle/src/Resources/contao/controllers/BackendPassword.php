@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -49,7 +50,7 @@ class BackendPassword extends \Backend
 	 */
 	public function run()
 	{
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_password');
 
 		if (\Input::post('FORM_SUBMIT') == 'tl_password')
@@ -63,7 +64,7 @@ class BackendPassword extends \Backend
 				\Message::addError($GLOBALS['TL_LANG']['ERR']['passwordMatch']);
 			}
 			// Password too short
-			elseif (utf8_strlen($pw) < \Config::get('minPasswordLength'))
+			elseif (Utf8::strlen($pw) < \Config::get('minPasswordLength'))
 			{
 				\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], \Config::get('minPasswordLength')));
 			}
@@ -92,7 +93,7 @@ class BackendPassword extends \Backend
 							if (is_array($callback))
 							{
 								$this->import($callback[0]);
-								$pw = $this->$callback[0]->$callback[1]($pw);
+								$pw = $this->{$callback[0]}->{$callback[1]}($pw);
 							}
 							elseif (is_callable($callback))
 							{

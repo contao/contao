@@ -25,6 +25,18 @@
         <source>Description</source>
         <target>Descripción</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceMode">
+        <source>Maintenance mode</source>
+        <target>Modo mantenimiento</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceEnable">
+        <source>Enable</source>
+        <target>Habilitar</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.maintenanceDisable">
+        <source>Disable</source>
+        <target>Desactivado</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Eliminar datos de sesión</target>
@@ -32,46 +44,6 @@
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
         <target>La cache ha sido borrada</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.liveUpdate">
-        <source>Live Update</source>
-        <target>Live Update</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.liveUpdateId">
-        <source>Live Update ID</source>
-        <target>ID de Actualización en vivo</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.toLiveUpdate">
-        <source>Go to the Live Update</source>
-        <target>Ir a la actualización en vivo</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.upToDate">
-        <source>Your Contao version %s is up to date</source>
-        <target>La versión de Contao %s es la más actual</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.newVersion">
-        <source>A newer Contao version %s is available</source>
-        <target>La nueva versión de Contao %s está disponible</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.notWriteable">
-        <source>The temporary folder (system/tmp) is not writeable</source>
-        <target>La carpeta temporal (system/tmp) no tiene permiso de escritura</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.runLiveUpdate">
-        <source>Run the update</source>
-        <target>Ejecutar la actualización</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.toc">
-        <source>Content of the update archive</source>
-        <target>Contenido del archivo de actualización</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.backup">
-        <source>Backuped files</source>
-        <target>Archivos respaldados</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.update">
-        <source>Updated files</source>
-        <target>Archivos actualizados</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.searchIndex">
         <source>Rebuild the search index</source>

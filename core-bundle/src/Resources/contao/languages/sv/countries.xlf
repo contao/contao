@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="CNT.ae">
         <source>United Arab Emirates (the)</source>
-        <target>Förenade Arabemiraten</target>
+        <target>Förenade arabemiraten</target>
       </trans-unit>
       <trans-unit id="CNT.af">
         <source>Afghanistan</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="CNT.az">
         <source>Azerbaijan</source>
-        <target>Azerbajan</target>
+        <target>Azerbajdzjan</target>
       </trans-unit>
       <trans-unit id="CNT.ba">
         <source>Bosnia and Herzegovina</source>
@@ -423,7 +423,7 @@
       </trans-unit>
       <trans-unit id="CNT.io">
         <source>British Indian Ocean Territory (the)</source>
-        <target>British Indian Ocean Territory (the)</target>
+        <target>Brittiska territoriet i Indiska oceanen</target>
       </trans-unit>
       <trans-unit id="CNT.iq">
         <source>Iraq</source>

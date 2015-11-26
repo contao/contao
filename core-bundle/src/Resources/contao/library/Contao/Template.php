@@ -273,7 +273,7 @@ abstract class Template extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['parseTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($this);
+				$this->{$callback[0]}->{$callback[1]}($this);
 			}
 		}
 
@@ -289,7 +289,7 @@ abstract class Template extends \Controller
 	 */
 	public function output()
 	{
-		trigger_error('Using Template::output() has been deprecated and will no longer work in Contao 5.0. Use Template::getResponse() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Template::output() has been deprecated and will no longer work in Contao 5.0. Use Template::getResponse() instead.', E_USER_DEPRECATED);
 
 		$this->compile();
 
@@ -341,7 +341,7 @@ abstract class Template extends \Controller
 	/**
 	 * Compile the template
 	 *
-	 * @internal
+	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
 	protected function compile()
 	{
@@ -364,7 +364,7 @@ abstract class Template extends \Controller
 	 */
 	protected function getDebugBar()
 	{
-		trigger_error('Using Template::getDebugBar() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using Template::getDebugBar() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 	}
 
 
@@ -545,7 +545,7 @@ abstract class Template extends \Controller
 	 */
 	public function flushAllData()
 	{
-		trigger_error('Using Template::flushAllData() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using Template::flushAllData() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		if (function_exists('fastcgi_finish_request'))
 		{

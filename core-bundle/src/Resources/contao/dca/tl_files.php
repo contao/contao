@@ -56,7 +56,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
 				'href'                => 'tg=all',
-				'class'               => 'header_toggle'
+				'class'               => 'header_toggle',
+				'showOnSelect'        => true
 			),
 			'all' => array
 			(
@@ -147,11 +148,13 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'path' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['path'],
 			'eval'                    => array('unique'=>true),
 			'sql'                     => "varchar(1022) NOT NULL default ''",
 		),
 		'extension' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['extension'],
 			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
 		'hash' => array
@@ -243,6 +246,8 @@ class tl_files extends Backend
 
 	/**
 	 * Check permissions to edit the file system
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -346,8 +351,7 @@ class tl_files extends Backend
 				case 'move':
 					if (!$canUpload)
 					{
-						$this->log('No permission to upload files', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to upload files.');
 					}
 					break;
 
@@ -359,8 +363,7 @@ class tl_files extends Backend
 				case 'cutAll':
 					if (!$canEdit)
 					{
-						$this->log('No permission to create, edit, copy or move files', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to create, edit, copy or move files.');
 					}
 					break;
 
@@ -371,27 +374,23 @@ class tl_files extends Backend
 						$files = scan(TL_ROOT . '/' . $strFile);
 						if (!empty($files) && !$canDeleteRecursive)
 						{
-							$this->log('No permission to delete folder "'.$strFile.'" recursively', __METHOD__, TL_ERROR);
-							$this->redirect('contao/main.php?act=error');
+							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '" recursively.');
 						}
 						elseif (!$canDeleteOne)
 						{
-							$this->log('No permission to delete folder "'.$strFile.'"', __METHOD__, TL_ERROR);
-							$this->redirect('contao/main.php?act=error');
+							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '".');
 						}
 					}
 					elseif (!$canDeleteOne)
 					{
-						$this->log('No permission to delete file "'.$strFile.'"', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete file "' . $strFile . '".');
 					}
 					break;
 
 				default:
 					if (empty($this->User->fop))
 					{
-						$this->log('No permission to manipulate files', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to manipulate files.');
 					}
 					break;
 			}
@@ -436,15 +435,10 @@ class tl_files extends Backend
 	 */
 	public function addFileLocation(DataContainer $dc)
 	{
-		if ($dc->activeRecord === null)
-		{
-			return '';
-		}
-
 		// Unset the default help text
 		unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1]);
 
-		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->activeRecord->path) . '</p>';
+		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id) . '</p>';
 	}
 
 
@@ -459,7 +453,7 @@ class tl_files extends Backend
 	 */
 	public function checkFilename($varValue)
 	{
-		$varValue = utf8_romanize($varValue);
+		$varValue = Patchwork\Utf8::toAscii($varValue);
 		$varValue = str_replace('"', '', $varValue);
 
 		if (strpos($varValue, '/') !== false || preg_match('/\.$/', $varValue))
@@ -502,7 +496,7 @@ class tl_files extends Backend
 	 */
 	public function editFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title, false, true).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
 	}
 
 
@@ -520,7 +514,7 @@ class tl_files extends Backend
 	 */
 	public function copyFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title, false, true).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
 	}
 
 
@@ -538,7 +532,7 @@ class tl_files extends Backend
 	 */
 	public function cutFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title, false, true).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
 	}
 
 
@@ -558,11 +552,11 @@ class tl_files extends Backend
 	{
 		if (is_dir(TL_ROOT . '/' . $row['id']) && count(scan(TL_ROOT . '/' . $row['id'])) > 0)
 		{
-			return $this->User->hasAccess('f4', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title, false, true).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+			return $this->User->hasAccess('f4', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
 		}
 		else
 		{
-			return ($this->User->hasAccess('f3', 'fop') || $this->User->hasAccess('f4', 'fop')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title, false, true).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+			return ($this->User->hasAccess('f3', 'fop') || $this->User->hasAccess('f4', 'fop')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
 		}
 	}
 
@@ -600,7 +594,7 @@ class tl_files extends Backend
 			return Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
 		}
 
-		return '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title, false, true).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
+		return '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
 	}
 
 
@@ -624,7 +618,7 @@ class tl_files extends Backend
 		}
 		else
 		{
-			return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="'.specialchars($title, false, true).'"'.$attributes.' onclick="Backend.openModalIframe({\'width\':'.$row['popupWidth'].',\'title\':\''.str_replace("'", "\\'", specialchars($row['fileNameEncoded'], false, true)).'\',\'url\':this.href,\'height\':'.$row['popupHeight'].'});return false">'.Image::getHtml($icon, $label).'</a> ';
+			return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="'.specialchars($title).'"'.$attributes.' onclick="Backend.openModalIframe({\'width\':'.$row['popupWidth'].',\'title\':\''.str_replace("'", "\\'", specialchars($row['fileNameEncoded'])).'\',\'url\':this.href,\'height\':'.$row['popupHeight'].'});return false">'.Image::getHtml($icon, $label).'</a> ';
 		}
 	}
 

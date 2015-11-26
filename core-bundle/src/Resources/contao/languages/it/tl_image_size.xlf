@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_image_size.name.0">
         <source>Name</source>
-        <target>Nome e tipo di media</target>
+        <target>Nome</target>
       </trans-unit>
       <trans-unit id="tl_image_size.name.1">
         <source>Please enter the image size name.</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
-        <target>Exporta impostazioni</target>
+        <target>Impostazioni avanzate</target>
       </trans-unit>
       <trans-unit id="tl_image_size.proportional.0">
         <source>Proportional</source>

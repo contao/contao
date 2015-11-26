@@ -253,7 +253,7 @@ class Versions extends \Controller
 				}
 
 				// Get the currently available fields
-				$arrFields = array_flip($this->Database->getFieldnames($this->strTable));
+				$arrFields = array_flip($this->Database->getFieldNames($this->strTable));
 
 				// Unset fields that do not exist (see #5219)
 				$data = array_intersect_key($data, $arrFields);
@@ -286,7 +286,7 @@ class Versions extends \Controller
 						if (is_array($callback))
 						{
 							$this->import($callback[0]);
-							$this->$callback[0]->$callback[1]($this->intPid, $this->strTable, $data, $intVersion);
+							$this->{$callback[0]}->{$callback[1]}($this->intPid, $this->strTable, $data, $intVersion);
 						}
 						elseif (is_callable($callback))
 						{
@@ -458,7 +458,7 @@ class Versions extends \Controller
 			$strBuffer = '<p>'.$GLOBALS['TL_LANG']['MSC']['identicalVersions'].'</p>';
 		}
 
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_diff');
 
 		// Template variables
@@ -523,9 +523,9 @@ class Versions extends \Controller
 	/**
 	 * Add a list of versions to a template
 	 *
-	 * @param \BackendTemplate|object $objTemplate
+	 * @param BackendTemplate|object $objTemplate
 	 */
-	public static function addToTemplate(\BackendTemplate $objTemplate)
+	public static function addToTemplate(BackendTemplate $objTemplate)
 	{
 		$arrVersions = array();
 

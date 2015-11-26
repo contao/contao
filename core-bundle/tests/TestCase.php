@@ -10,11 +10,10 @@
 
 namespace Contao\CoreBundle\Test;
 
-use Contao\Config;
-use Contao\CoreBundle\Adapter\ConfigAdapter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\ContaoFramework;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
@@ -27,7 +26,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
@@ -65,7 +63,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function mockKernel()
     {
         $kernel = $this->getMock(
-            'Symfony\\Component\\HttpKernel\\Kernel',
+            'Symfony\Component\HttpKernel\Kernel',
             [
                 // KernelInterface
                 'registerBundles',
@@ -116,7 +114,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function mockRouter($url)
     {
-        $router = $this->getMock('Symfony\\Component\\Routing\\RouterInterface');
+        $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
 
         $router
             ->expects($this->any())
@@ -135,7 +133,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function mockTokenManager()
     {
         $tokenManager = $this
-            ->getMockBuilder('Symfony\\Component\\Security\\Csrf\\CsrfTokenManagerInterface')
+            ->getMockBuilder('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface')
             ->setMethods(['getToken'])
             ->getMockForAbstractClass()
         ;
@@ -163,6 +161,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function mockSession()
     {
         $session = new Session(new MockArraySessionStorage());
+        $session->setId('session_test');
         $session->start();
 
         $beBag = new ArrayAttributeBag('_contao_be_attributes');
@@ -179,41 +178,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Mocks a Config adapter.
-     *
-     * @return ConfigAdapter|\PHPUnit_Framework_MockObject_MockObject The config adapter
-     */
-    protected function mockConfig()
-    {
-        $config = $this->getMock('Contao\\CoreBundle\\Adapter\\ConfigAdapter', ['isComplete']);
-
-        $config
-            ->expects($this->any())
-            ->method('isComplete')
-            ->willReturn(true)
-        ;
-
-        $config
-            ->expects($this->any())
-            ->method('get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'characterSet':
-                        return 'UTF-8';
-
-                    case 'timeZone':
-                        return 'Europe/Berlin';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        return $config;
-    }
-
-    /**
      * Mocks a container with scopes.
      *
      * @return Container|\PHPUnit_Framework_MockObject_MockObject The container object
@@ -225,6 +189,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
         $container->setParameter('kernel.root_dir', $this->getRootDir());
         $container->setParameter('kernel.cache_dir', $this->getCacheDir());
+        $container->setParameter('kernel.debug', false);
+        $container->setParameter('contao.image.bypass_cache', false);
+        $container->setParameter('contao.image.target_path', 'assets/images');
 
         $container->set(
             'contao.resource_finder',
@@ -251,22 +218,17 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Returns a ContaoFramework instance.
      *
-     * @param RequestStack                   $requestStack  The request stack
-     * @param RouterInterface                $router        The router object
-     * @param CsrfTokenManagerInterface|null $tokenManager  An optional token manager
-     * @param ConfigAdapter|null             $configAdatper An optional config adapter
+     * @param RequestStack    $requestStack The request stack
+     * @param RouterInterface $router       The router object
+     * @param array           $adapters     An optional array of adapters
      *
      * @return ContaoFramework The object instance
      */
     public function mockContaoFramework(
         RequestStack $requestStack = null,
         RouterInterface $router = null,
-        CsrfTokenManagerInterface $tokenManager = null,
-        ConfigAdapter $configAdatper = null
+        array $adapters = []
     ) {
-        // Ensure to use the fixtures class
-        Config::preload();
-
         $container = $this->mockContainerWithContaoScopes();
 
         if (null === $requestStack) {
@@ -277,30 +239,119 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $router = $this->mockRouter('/index.html');
         }
 
-        if (null === $tokenManager) {
-            $tokenManager = new CsrfTokenManager(
-                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenGenerator\\TokenGeneratorInterface'),
-                $this->getMock('Symfony\\Component\\Security\\Csrf\\TokenStorage\\TokenStorageInterface')
-            );
+        if (!isset($adapters['Contao\Config'])) {
+            $adapters['Contao\Config'] = $this->mockConfigAdapter();
         }
 
-        if (null === $configAdatper) {
-            $configAdatper = $this->mockConfig();
+        if (!isset($adapters['Contao\RequestToken'])) {
+            $adapters['Contao\RequestToken'] = $this->mockRequestTokenAdapter();
         }
 
-        $framework = new ContaoFramework(
-            $requestStack,
-            $router,
-            $this->mockSession(),
-            $this->getRootDir() . '/app',
-            $tokenManager,
-            'contao_csrf_token',
-            $configAdatper,
-            error_reporting()
-        );
+        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
+        $framework = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->setConstructorArgs([
+                $requestStack,
+                $router,
+                $this->mockSession(),
+                $this->getRootDir() . '/app',
+                error_reporting(),
+            ])
+            ->setMethods(['getAdapter'])
+            ->getMock()
+        ;
+
+        $framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->willReturnCallback(function ($key) use ($adapters) {
+                return $adapters[$key];
+            })
+        ;
 
         $framework->setContainer($container);
 
         return $framework;
+    }
+
+    /**
+     * Mocks a config adapter.
+     *
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject The config adapter
+     */
+    protected function mockConfigAdapter()
+    {
+        $configAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $configAdapter
+            ->expects($this->any())
+            ->method('isComplete')
+            ->willReturn(true)
+        ;
+
+        $configAdapter
+            ->expects($this->any())
+            ->method('preload')
+            ->willReturn(null)
+        ;
+
+        $configAdapter
+            ->expects($this->any())
+            ->method('getInstance')
+            ->willReturn(null)
+        ;
+
+        $configAdapter
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnCallback(function ($key) {
+                switch ($key) {
+                    case 'characterSet':
+                        return 'UTF-8';
+
+                    case 'timeZone':
+                        return 'Europe/Berlin';
+
+                    default:
+                        return null;
+                }
+            })
+        ;
+
+        return $configAdapter;
+    }
+
+    /**
+     * Mocks a request token adapter.
+     *
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject The request token adapter
+     */
+    protected function mockRequestTokenAdapter()
+    {
+        $rtAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['get', 'validate'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $rtAdapter
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn('foobar')
+        ;
+
+        $rtAdapter
+            ->expects($this->any())
+            ->method('validate')
+            ->willReturn(true)
+        ;
+
+        return $rtAdapter;
     }
 }

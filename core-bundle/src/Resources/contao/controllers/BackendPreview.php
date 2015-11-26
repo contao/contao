@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -48,7 +50,7 @@ class BackendPreview extends \Backend
 	 */
 	public function run()
 	{
-		/** @var \BackendTemplate|object $objTemplate */
+		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_preview');
 
 		$objTemplate->base = \Environment::get('base');
@@ -58,18 +60,29 @@ class BackendPreview extends \Backend
 		$objTemplate->site = \Input::get('site', true);
 		$objTemplate->switchHref = \System::getContainer()->get('router')->generate('contao_backend_switch');
 
+		$strUrl = null;
+
 		if (\Input::get('url'))
 		{
-			$objTemplate->url = \Environment::get('base') . \Input::get('url');
+			$strUrl = \Environment::get('base') . \Input::get('url');
 		}
 		elseif (\Input::get('page'))
 		{
-			$objTemplate->url = $this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'), true);
+			$strUrl = $this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'), true);
 		}
 		else
 		{
-			$objTemplate->url = \System::getContainer()->get('router')->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL);
+			$event = new PreviewUrlConvertEvent();
+			\System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CONVERT, $event);
+			$strUrl = $event->getUrl();
 		}
+
+		if ($strUrl === null)
+		{
+			$strUrl = \System::getContainer()->get('router')->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+
+		$objTemplate->url = $strUrl;
 
 		// Switch to a particular member (see #6546)
 		if (\Input::get('user') && $this->User->isAdmin)

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Provide methods to handle front end forms.
@@ -37,7 +39,7 @@ class Form extends \Hybrid
 
 	/**
 	 * Model
-	 * @var \FormModel
+	 * @var FormModel
 	 */
 	protected $objModel;
 
@@ -59,6 +61,12 @@ class Form extends \Hybrid
 	 */
 	protected $strTemplate = 'form';
 
+	/**
+	 * Form usages during same request
+	 * @var array
+	 */
+	static protected $arrFormUsages = array();
+
 
 	/**
 	 * Remove name attributes in the back end so the form is not validated
@@ -69,10 +77,10 @@ class Form extends \Hybrid
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var \BackendTemplate|object $objTemplate */
+			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['CTE']['form'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['form'][0]) . ' ###';
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->title;
 			$objTemplate->href = 'contao/main.php?do=form&amp;table=tl_form_field&amp;id=' . $this->id;
@@ -131,7 +139,7 @@ class Form extends \Hybrid
 			foreach ($GLOBALS['TL_HOOKS']['compileFormFields'] as $callback)
 			{
 				$this->import($callback[0]);
-				$arrFields = $this->$callback[0]->$callback[1]($arrFields, $formId, $this);
+				$arrFields = $this->{$callback[0]}->{$callback[1]}($arrFields, $formId, $this);
 			}
 		}
 
@@ -143,7 +151,7 @@ class Form extends \Hybrid
 
 			foreach ($arrFields as $objField)
 			{
-				/** @var \FormFieldModel $objField */
+				/** @var FormFieldModel $objField */
 				$strClass = $GLOBALS['TL_FFL'][$objField->type];
 
 				// Continue if the class is not defined
@@ -182,7 +190,7 @@ class Form extends \Hybrid
 					}
 				}
 
-				/** @var \Widget $objWidget */
+				/** @var Widget $objWidget */
 				$objWidget = new $strClass($arrData);
 				$objWidget->required = $objField->mandatory ? true : false;
 
@@ -192,7 +200,7 @@ class Form extends \Hybrid
 					foreach ($GLOBALS['TL_HOOKS']['loadFormField'] as $callback)
 					{
 						$this->import($callback[0]);
-						$objWidget = $this->$callback[0]->$callback[1]($objWidget, $formId, $this->arrData, $this);
+						$objWidget = $this->{$callback[0]}->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
 					}
 				}
 
@@ -207,7 +215,7 @@ class Form extends \Hybrid
 						foreach ($GLOBALS['TL_HOOKS']['validateFormField'] as $callback)
 						{
 							$this->import($callback[0]);
-							$objWidget = $this->$callback[0]->$callback[1]($objWidget, $formId, $this->arrData, $this);
+							$objWidget = $this->{$callback[0]}->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
 						}
 					}
 
@@ -230,7 +238,7 @@ class Form extends \Hybrid
 					$hasUpload = true;
 				}
 
-				if ($objWidget instanceof \FormHidden)
+				if ($objWidget instanceof FormHidden)
 				{
 					$this->Template->hidden .= $objWidget->parse();
 					--$max_row;
@@ -256,7 +264,7 @@ class Form extends \Hybrid
 		// Add a warning to the page title
 		if ($doNotSubmit && !\Environment::get('isAjaxRequest'))
 		{
-			/** @var \PageModel $objPage */
+			/** @var PageModel $objPage */
 			global $objPage;
 
 			$title = $objPage->pageTitle ?: $objPage->title;
@@ -272,10 +280,28 @@ class Form extends \Hybrid
 			$strAttributes .= ' class="' . $arrAttributes[1] . '"';
 		}
 
+		$formId = $arrAttributes[0] ?: 'f'.$this->id;
+
+		// Count up form usages
+		if (isset(static::$arrFormUsages[$formId]))
+		{
+			static::$arrFormUsages[$formId]++;
+		}
+		else
+		{
+			static::$arrFormUsages[$formId] = 1;
+		}
+
+		// Adjust form id
+		if (static::$arrFormUsages[$formId] > 1)
+		{
+			$formId .= '_' . static::$arrFormUsages[$formId];
+		}
+
 		$this->Template->hasError = $doNotSubmit;
 		$this->Template->attributes = $strAttributes;
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
-		$this->Template->formId = $arrAttributes[0] ?: 'f'.$this->id;
+		$this->Template->formId = $formId;
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->maxFileSize = $hasUpload ? $this->objModel->getMaxUploadFileSize() : false;
 		$this->Template->novalidate = $this->novalidate ? ' novalidate' : '';
@@ -305,7 +331,7 @@ class Form extends \Hybrid
 			foreach ($GLOBALS['TL_HOOKS']['prepareFormData'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($arrSubmitted, $arrLabels, $arrFields, $this);
+				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this);
 			}
 		}
 
@@ -404,7 +430,7 @@ class Form extends \Hybrid
 			// Attach XML file
 			if ($this->format == 'xml')
 			{
-				/** @var \FrontendTemplate|object $objTemplate */
+				/** @var FrontendTemplate|object $objTemplate */
 				$objTemplate = new \FrontendTemplate('form_xml');
 
 				$objTemplate->fields = $fields;
@@ -496,7 +522,7 @@ class Form extends \Hybrid
 				foreach ($GLOBALS['TL_HOOKS']['storeFormData'] as $callback)
 				{
 					$this->import($callback[0]);
-					$arrSet = $this->$callback[0]->$callback[1]($arrSet, $this);
+					$arrSet = $this->{$callback[0]}->{$callback[1]}($arrSet, $this);
 				}
 			}
 
@@ -527,7 +553,7 @@ class Form extends \Hybrid
 			foreach ($GLOBALS['TL_HOOKS']['processFormData'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($arrSubmitted, $this->arrData, $arrFiles, $arrLabels, $this);
+				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $this->arrData, $arrFiles, $arrLabels, $this);
 			}
 		}
 
@@ -564,7 +590,7 @@ class Form extends \Hybrid
 	 */
 	protected function getMaxFileSize()
 	{
-		trigger_error('Using Form::getMaxFileSize() has been deprecated and will no longer work in Contao 5.0. Use $this->objModel->getMaxUploadFileSize() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Form::getMaxFileSize() has been deprecated and will no longer work in Contao 5.0. Use $this->objModel->getMaxUploadFileSize() instead.', E_USER_DEPRECATED);
 
 		return $this->objModel->getMaxUploadFileSize();
 	}
@@ -593,7 +619,7 @@ class Form extends \Hybrid
 
 				foreach ($_SESSION[$formId][$tl] as $message)
 				{
-					/** @var \FrontendTemplate|object $objTemplate */
+					/** @var FrontendTemplate|object $objTemplate */
 					$objTemplate = new \FrontendTemplate('form_message');
 
 					$objTemplate->message = $message;

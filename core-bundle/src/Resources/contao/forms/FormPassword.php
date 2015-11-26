@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Class FormPassword
@@ -121,7 +123,7 @@ class FormPassword extends \Widget
 			return '';
 		}
 
-		if (utf8_strlen($varInput) < \Config::get('minPasswordLength'))
+		if (Utf8::strlen($varInput) < \Config::get('minPasswordLength'))
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], \Config::get('minPasswordLength')));
 		}
@@ -185,7 +187,7 @@ class FormPassword extends \Widget
 		return sprintf('<label for="ctrl_%s_confirm" class="confirm%s">%s%s%s</label>',
 						$this->strId,
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].'</span> ' : ''),
+						($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
 						sprintf($GLOBALS['TL_LANG']['MSC']['confirmation'], $this->strLabel),
 						($this->mandatory ? '<span class="mandatory">*</span>' : ''));
 	}

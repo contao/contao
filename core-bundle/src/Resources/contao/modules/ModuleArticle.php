@@ -73,7 +73,7 @@ class ModuleArticle extends \Module
 	 */
 	protected function compile()
 	{
-		/** @var \PageModel $objPage */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		$id = 'article-' . $this->id;
@@ -165,7 +165,7 @@ class ModuleArticle extends \Module
 			{
 				$arrCss = array();
 
-				/** @var \ContentModel $objRow */
+				/** @var ContentModel $objRow */
 				$objRow = $objCte->current();
 
 				// Add the "first" and "last" classes (see #2583)
@@ -199,7 +199,7 @@ class ModuleArticle extends \Module
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($this->printable == 1)
 		{
-			trigger_error('Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			@trigger_error('Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 			$this->Template->printable = true;
 			$this->Template->pdfButton = true;
@@ -244,7 +244,7 @@ class ModuleArticle extends \Module
 			foreach ($GLOBALS['TL_HOOKS']['compileArticle'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($this->Template, $this->arrData, $this);
+				$this->{$callback[0]}->{$callback[1]}($this->Template, $this->arrData, $this);
 			}
 		}
 	}
@@ -278,7 +278,7 @@ class ModuleArticle extends \Module
 			foreach ($GLOBALS['TL_HOOKS']['printArticleAsPdf'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($strArticle, $this);
+				$this->{$callback[0]}->{$callback[1]}($strArticle, $this);
 			}
 		}
 

@@ -33,8 +33,10 @@ class InstallCommandTest extends TestCase
 
         $fs->remove($this->getRootDir() . '/assets/css');
         $fs->remove($this->getRootDir() . '/assets/images');
+        $fs->remove($this->getRootDir() . '/assets/images_test');
         $fs->remove($this->getRootDir() . '/assets/js');
         $fs->remove($this->getRootDir() . '/files');
+        $fs->remove($this->getRootDir() . '/files_test');
         $fs->remove($this->getRootDir() . '/system/cache');
         $fs->remove($this->getRootDir() . '/system/config');
         $fs->remove($this->getRootDir() . '/system/initialize.php');
@@ -50,21 +52,23 @@ class InstallCommandTest extends TestCase
     {
         $command = new InstallCommand('contao:install');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\Command\\InstallCommand', $command);
+        $this->assertInstanceOf('Contao\CoreBundle\Command\InstallCommand', $command);
     }
 
     /**
-     * Tests the output.
+     * Tests the installation.
      */
-    public function testOutput()
+    public function testInstallation()
     {
-        $command = new InstallCommand('contao:install');
-        $tester = new CommandTester($command);
-
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
+        $container->setParameter('contao.upload_path', 'files');
+        $container->setParameter('contao.image.target_path', 'assets/images');
+
+        $command = new InstallCommand('contao:install');
         $command->setContainer($container);
 
+        $tester = new CommandTester($command);
         $code = $tester->execute([]);
 
         $this->assertEquals(0, $code);
@@ -77,6 +81,27 @@ class InstallCommandTest extends TestCase
         $this->assertContains('Added the ' . $this->getRootDir() . '/system/cache/.gitignore file.', $tester->getDisplay());
         $this->assertContains('Added the ' . $this->getRootDir() . '/system/config/.gitignore file.', $tester->getDisplay());
         $this->assertContains('Added the ' . $this->getRootDir() . '/system/tmp/.gitignore file.', $tester->getDisplay());
+    }
+
+    /**
+     * Tests the installation with a custom files and images directory.
+     */
+    public function testInstallationWithCustomPaths()
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
+        $container->setParameter('contao.upload_path', 'files_test');
+        $container->setParameter('contao.image.target_path', 'assets/images_test');
+
+        $command = new InstallCommand('contao:install');
+        $command->setContainer($container);
+
+        $tester = new CommandTester($command);
+        $code = $tester->execute([]);
+
+        $this->assertEquals(0, $code);
+        $this->assertContains('Created the ' . $this->getRootDir() . '/files_test directory.', $tester->getDisplay());
+        $this->assertContains('Added the ' . $this->getRootDir() . '/assets/images_test/.gitignore file.', $tester->getDisplay());
     }
 
     /**

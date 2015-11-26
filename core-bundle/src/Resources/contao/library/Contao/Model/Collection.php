@@ -10,6 +10,9 @@
 
 namespace Contao\Model;
 
+use Contao\Database\Result;
+use Contao\Model;
+
 
 /**
  * The class handles traversing a set of models and lazy loads the database
@@ -34,7 +37,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
 	/**
 	 * Models
-	 * @var \Model[]
+	 * @var Model[]
 	 */
 	protected $arrModels = array();
 
@@ -53,7 +56,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
 		foreach ($arrModels as $objModel)
 		{
-			if (!$objModel instanceof \Model)
+			if (!$objModel instanceof Model)
 			{
 				throw new \InvalidArgumentException('Invalid type: ' . gettype($objModel));
 			}
@@ -125,19 +128,19 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Create a new collection from a database result
 	 *
-	 * @param \Database\Result $objResult The database result object
-	 * @param string           $strTable  The table name
+	 * @param Result $objResult The database result object
+	 * @param string $strTable  The table name
 	 *
 	 * @return static The model collection
 	 */
-	public static function createFromDbResult(\Database\Result $objResult, $strTable)
+	public static function createFromDbResult(Result $objResult, $strTable)
 	{
 		$arrModels = array();
 		$strClass = \Model::getClassFromTable($strTable);
 
 		while ($objResult->next())
 		{
-			/** @var \Model $strClass */
+			/** @var Model $strClass */
 			$objModel = \Model\Registry::getInstance()->fetch($strTable, $objResult->{$strClass::getPk()});
 
 			if ($objModel !== null)
@@ -228,7 +231,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Return the models as array
 	 *
-	 * @return \Model[] An array of models
+	 * @return Model[] An array of models
 	 */
 	public function getModels()
 	{
@@ -241,7 +244,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @param string $strKey The property name
 	 *
-	 * @return \Model|static The model or a model collection if there are multiple rows
+	 * @return Model|static The model or a model collection if there are multiple rows
 	 */
 	public function getRelated($strKey)
 	{
@@ -299,7 +302,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Return the current model
 	 *
-	 * @return \Model The model object
+	 * @return Model The model object
 	 */
 	public function current()
 	{
@@ -423,7 +426,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @param integer $offset The offset
 	 *
-	 * @return \Model|null The model or null
+	 * @return Model|null The model or null
 	 */
 	public function offsetGet($offset)
 	{

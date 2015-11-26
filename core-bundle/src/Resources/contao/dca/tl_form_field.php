@@ -432,6 +432,8 @@ class tl_form_field extends Backend
 
 	/**
 	 * Check permissions to edit table tl_form_field
+	 *
+	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -463,8 +465,7 @@ class tl_form_field extends Backend
 			case 'select':
 				if (!strlen(Input::get('id')) || !in_array(Input::get('id'), $root))
 				{
-					$this->log('Not enough permissions to access form ID "'.Input::get('id').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . Input::get('id') . '.');
 				}
 				break;
 
@@ -481,8 +482,7 @@ class tl_form_field extends Backend
 
 					if ($objField->numRows < 1)
 					{
-						$this->log('Invalid form field ID "'.Input::get('pid').'"', __METHOD__, TL_ERROR);
-						$this->redirect('contao/main.php?act=error');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid form field ID ' . Input::get('pid') . '.');
 					}
 
 					$pid = $objField->pid;
@@ -490,8 +490,7 @@ class tl_form_field extends Backend
 
 				if (!in_array($pid, $root))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' form field ID "'.$id.'" to form ID "'.$pid.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form field ID ' . $id . ' to form ID ' . $pid . '.');
 				}
 				// NO BREAK STATEMENT HERE
 
@@ -505,14 +504,12 @@ class tl_form_field extends Backend
 
 				if ($objField->numRows < 1)
 				{
-					$this->log('Invalid form field ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid form field ID ' . $id . '.');
 				}
 
 				if (!in_array($objField->pid, $root))
 				{
-					$this->log('Not enough permissions to '.Input::get('act').' form field ID "'.$id.'" of form ID "'.$objField->pid.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form field ID ' . $id . ' of form ID ' . $objField->pid . '.');
 				}
 				break;
 
@@ -523,8 +520,7 @@ class tl_form_field extends Backend
 			case 'copyAll':
 				if (!in_array($id, $root))
 				{
-					$this->log('Not enough permissions to access form ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}
 
 				$objForm = $this->Database->prepare("SELECT id FROM tl_form_field WHERE pid=?")
@@ -532,8 +528,7 @@ class tl_form_field extends Backend
 
 				if ($objForm->numRows < 1)
 				{
-					$this->log('Invalid form ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid form ID ' . $id . '.');
 				}
 
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
@@ -547,13 +542,11 @@ class tl_form_field extends Backend
 			default:
 				if (strlen(Input::get('act')))
 				{
-					$this->log('Invalid command "'.Input::get('act').'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
 				elseif (!in_array($id, $root))
 				{
-					$this->log('Not enough permissions to access form ID "'.$id.'"', __METHOD__, TL_ERROR);
-					$this->redirect('contao/main.php?act=error');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}
 				break;
 		}
@@ -674,9 +667,15 @@ class tl_form_field extends Backend
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
-		// Check permissions
+		// Set the ID and action
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
 		$this->checkPermission();
 
 		$objVersions = new Versions('tl_form_field', $intId);
@@ -690,7 +689,7 @@ class tl_form_field extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
 				}
 				elseif (is_callable($callback))
 				{

@@ -36,7 +36,7 @@ class Cache
 
 	/**
 	 * Object instance (Singleton)
-	 * @var \Cache
+	 * @var Cache
 	 */
 	protected static $objInstance;
 
@@ -183,14 +183,14 @@ class Cache
 	/**
 	 * Instantiate the cache object (Factory)
 	 *
-	 * @return \Cache The object instance
+	 * @return Cache The object instance
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Cache class is now static.
 	 */
 	public static function getInstance()
 	{
-		trigger_error('Using Cache::getInstance() has been deprecated and will no longer work in Contao 5.0. The Cache class is now static.', E_USER_DEPRECATED);
+		@trigger_error('Using Cache::getInstance() has been deprecated and will no longer work in Contao 5.0. The Cache class is now static.', E_USER_DEPRECATED);
 
 		if (static::$objInstance === null)
 		{

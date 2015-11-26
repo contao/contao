@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test\Referer;
 
 use Contao\CoreBundle\Referer\TokenGenerator;
-use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 
 /**
@@ -19,7 +18,7 @@ use Symfony\Component\Security\Core\Util\SecureRandomInterface;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class TokenGeneratorTest extends TestCase
+class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     const ENTROPY = 1000;
 
@@ -53,7 +52,7 @@ class TokenGeneratorTest extends TestCase
     {
         parent::setUp();
 
-        $this->random = $this->getMock('Symfony\\Component\\Security\\Core\\Util\\SecureRandomInterface');
+        $this->random = $this->getMock('Symfony\Component\Security\Core\Util\SecureRandomInterface');
         $this->generator = new TokenGenerator($this->random, self::ENTROPY);
     }
 
@@ -71,7 +70,8 @@ class TokenGeneratorTest extends TestCase
      */
     public function testGeneratedTokenHasLengthOfEight()
     {
-        $this->random->expects($this->once())
+        $this->random
+            ->expects($this->once())
             ->method('nextBytes')
             ->with(self::ENTROPY / 8)
             ->will($this->returnValue(self::$bytes))

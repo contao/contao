@@ -269,7 +269,7 @@ $GLOBALS['TL_PTY'] = array
  */
 $GLOBALS['TL_MAINTENANCE'] = array
 (
-	'LiveUpdate',
+	'Maintenance',
 	'RebuildIndex',
 	'PurgeData'
 );
@@ -308,7 +308,7 @@ $GLOBALS['TL_PURGE'] = array
 		'images' => array
 		(
 			'callback' => array('Automator', 'purgeImageCache'),
-			'affected' => array('assets/images')
+			'affected' => array(System::getContainer()->getParameter('contao.image.target_path'))
 		),
 		'scripts' => array
 		(
@@ -402,6 +402,7 @@ $GLOBALS['TL_HOOKS'] = array
 	'getSystemMessages' => array
 	(
 		array('Messages', 'versionCheck'),
+		array('Messages', 'maintenanceCheck'),
 		array('Messages', 'lastLogin'),
 		array('Messages', 'topLevelRoot'),
 		array('Messages', 'languageFallback')
