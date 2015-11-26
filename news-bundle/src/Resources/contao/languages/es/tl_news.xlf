@@ -14,8 +14,8 @@
         <target>Alias de noticia</target>
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
-        <source>The news alias is a unique reference to the article which can be called instead of its numeric ID.</source>
-        <target>Un alias de noticia es una referencia única a una noticia, puede ser utilizado como la ID de la noticia.</target>
+        <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
+        <target>El alias de noticias es una referencia única para la noticia que se puede llamar en lugar de su ID numérico.</target>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
@@ -54,8 +54,8 @@
         <target>Sumario de noticia</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
-        <source>The news teaser can be shown in a news list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>El sumario de noticia se muestra en vez de la noticia entera. Le sigue un enlance con &quot;leer más...&quot;</target>
+        <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
+        <target>El teaser de noticias se puede mostrar en una lista de noticias en lugar de toda la historia. Un enlace &quot;Leer más ...&quot; se agregará automáticamente.</target>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
@@ -238,92 +238,92 @@
         <target>Opciones de publicación</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New article</source>
-        <target>Artículo nuevo</target>
+        <source>New item</source>
+        <target>Nuevo artículo</target>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
-        <source>Create a new news article</source>
-        <target>Crear una noticia nueva</target>
+        <source>Create a new news item</source>
+        <target>Crear un artículo nuevo</target>
       </trans-unit>
       <trans-unit id="tl_news.show.0">
-        <source>Article details</source>
+        <source>Item details</source>
         <target>Detalles del artículo</target>
       </trans-unit>
       <trans-unit id="tl_news.show.1">
-        <source>Show the details of news article ID %s</source>
-        <target>Mostrar los detalles de la noticia con ID %s</target>
+        <source>Show the details of news item ID %s</source>
+        <target>Muestra los detalles del artículo de noticia ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.edit.0">
-        <source>Edit article</source>
+        <source>Edit item</source>
         <target>Editar artículo</target>
       </trans-unit>
       <trans-unit id="tl_news.edit.1">
-        <source>Edit news article ID %s</source>
-        <target>Editar noticia con ID %s</target>
+        <source>Edit news item ID %s</source>
+        <target>Editar artículo de noticia ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.copy.0">
-        <source>Duplicate article</source>
+        <source>Duplicate item</source>
         <target>Duplicar artículo</target>
       </trans-unit>
       <trans-unit id="tl_news.copy.1">
-        <source>Duplicate news article ID %s</source>
-        <target>Copiar noticia con ID %s</target>
+        <source>Duplicate news item ID %s</source>
+        <target>Duplicar artículo de noticia ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.cut.0">
-        <source>Move article</source>
+        <source>Move item</source>
         <target>Mover artículo</target>
       </trans-unit>
       <trans-unit id="tl_news.cut.1">
-        <source>Move news article ID %s</source>
-        <target>Mover noticia con ID %s</target>
+        <source>Move news item ID %s</source>
+        <target>Mover artículo de noticia ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.delete.0">
-        <source>Delete article</source>
+        <source>Delete item</source>
         <target>Eliminar artículo</target>
       </trans-unit>
       <trans-unit id="tl_news.delete.1">
-        <source>Delete news article ID %s</source>
-        <target>Eliminar noticia con ID %s</target>
+        <source>Delete news item ID %s</source>
+        <target>Eliminar artículo de noticia ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish article</source>
-        <target>Publicar/despublicar articulo</target>
+        <source>Publish/unpublish item</source>
+        <target>Publicar / no publicar el artículo</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
-        <source>Publish/unpublish news article ID %s</source>
-        <target>Publicar/despublicar el artículo de noticas con ID %s</target>
+        <source>Publish/unpublish news item ID %s</source>
+        <target>Publicar / no publicar el artículo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature article</source>
-        <target>Resaltar artículo</target>
+        <source>Feature/unfeature item</source>
+        <target>Destacar / no destacar artículo</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
-        <source>Feature/unfeature news article ID %s</source>
-        <target>Resaltar o no el artículo de noticias con ID %s.</target>
+        <source>Feature/unfeature news item ID %s</source>
+        <target>Destacar / no destacar artículo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
         <source>Edit archive settings</source>
         <target>Editar opciones de archivo</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
-        <source>Edit the archive settings</source>
-        <target>Editar opciones de archivo</target>
+        <source>Edit the news archive settings</source>
+        <target>Editar la configuración del archivo de noticias</target>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.0">
-        <source>Edit article settings</source>
+        <source>Edit item settings</source>
         <target>Editar la configuración del artículo</target>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the article settings</source>
-        <target>Editar la configuración del artículo</target>
+        <source>Edit the news item settings</source>
+        <target>Editar la configuración del artículo de noticia</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
-        <source>Paste into this archive</source>
-        <target>Pegar en este archivo</target>
+        <source>Paste into this news archive</source>
+        <target>Pegar dentro de este nuevo archivo</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news article ID %s</source>
-        <target>Pegar después del artículo de noticias con ID %s</target>
+        <source>Paste after news item ID %s</source>
+        <target>Pegar después del artículo de noticia ID %s</target>
       </trans-unit>
     </body>
   </file>

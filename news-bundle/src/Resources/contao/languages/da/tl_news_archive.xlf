@@ -133,14 +133,6 @@
         <source>Author and system administrator</source>
         <target>Forfatter og systemadministrator</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.source_teaser">
-        <source>News teasers</source>
-        <target>Nyheds uddrag</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_text">
-        <source>Full articles</source>
-        <target>Artikler</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>
         <target>Nyt arkiv</target>

@@ -90,8 +90,7 @@
         <target>Уводници вести</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source_text">
-        <source>Full articles</source>
-        <target>Комплетан чланак</target>
+        <source>Full stories</source>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
         <source>New feed</source>

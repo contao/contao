@@ -14,8 +14,7 @@
         <target>Identificator anunţ</target>
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
-        <source>The news alias is a unique reference to the article which can be called instead of its numeric ID.</source>
-        <target>Un identificator este o referinţă unică către anunţ care poate fi invocată în locul ID-ului.</target>
+        <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
@@ -54,8 +53,7 @@
         <target>Rezumat text</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
-        <source>The news teaser can be shown in a news list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Rezumatul este de regulă afişat în locul articolului, urmat de o legătură &quot;mai mult ...&quot;.</target>
+        <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
@@ -238,92 +236,71 @@
         <target>Publicare</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New article</source>
-        <target>Articol nou</target>
+        <source>New item</source>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
-        <source>Create a new news article</source>
-        <target>Creează un anunţ nou</target>
+        <source>Create a new news item</source>
       </trans-unit>
       <trans-unit id="tl_news.show.0">
-        <source>Article details</source>
-        <target>Detalii articol</target>
+        <source>Item details</source>
       </trans-unit>
       <trans-unit id="tl_news.show.1">
-        <source>Show the details of news article ID %s</source>
-        <target>Arată detaliile anunţului ID %s</target>
+        <source>Show the details of news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.0">
-        <source>Edit article</source>
-        <target>Editează articol</target>
+        <source>Edit item</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.1">
-        <source>Edit news article ID %s</source>
-        <target>Editează anunţul ID %s</target>
+        <source>Edit news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.copy.0">
-        <source>Duplicate article</source>
-        <target>Copiază articol</target>
+        <source>Duplicate item</source>
       </trans-unit>
       <trans-unit id="tl_news.copy.1">
-        <source>Duplicate news article ID %s</source>
-        <target>Copiază anunţul ID %s</target>
+        <source>Duplicate news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.cut.0">
-        <source>Move article</source>
-        <target>Mută articol</target>
+        <source>Move item</source>
       </trans-unit>
       <trans-unit id="tl_news.cut.1">
-        <source>Move news article ID %s</source>
-        <target>Mută anunţ ID %s</target>
+        <source>Move news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.delete.0">
-        <source>Delete article</source>
-        <target>Şterge articol</target>
+        <source>Delete item</source>
       </trans-unit>
       <trans-unit id="tl_news.delete.1">
-        <source>Delete news article ID %s</source>
-        <target>Şterge anunţul ID %s</target>
+        <source>Delete news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish article</source>
-        <target>Publică articol</target>
+        <source>Publish/unpublish item</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
-        <source>Publish/unpublish news article ID %s</source>
-        <target>Publică anunţul ID %s</target>
+        <source>Publish/unpublish news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature article</source>
-        <target>Publică articol special</target>
+        <source>Feature/unfeature item</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
-        <source>Feature/unfeature news article ID %s</source>
-        <target>Publică articol special ID %s</target>
+        <source>Feature/unfeature news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
         <source>Edit archive settings</source>
         <target>Editează setări arhivă</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
-        <source>Edit the archive settings</source>
-        <target>Editează setările acestei arhive</target>
+        <source>Edit the news archive settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.0">
-        <source>Edit article settings</source>
-        <target>Editează header-ul articolului</target>
+        <source>Edit item settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the article settings</source>
-        <target>Editează setările articolului</target>
+        <source>Edit the news item settings</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
-        <source>Paste into this archive</source>
-        <target>Copiază în arhivă</target>
+        <source>Paste into this news archive</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news article ID %s</source>
-        <target>Copiază după anunţul ID %s</target>
+        <source>Paste after news item ID %s</source>
       </trans-unit>
     </body>
   </file>

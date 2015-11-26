@@ -14,8 +14,7 @@
         <target>ニュースのエイリアス</target>
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
-        <source>The news alias is a unique reference to the article which can be called instead of its numeric ID.</source>
-        <target>ニュースのエイリアスは、その数値のIDの代わりにニュースを参照できる、重複しない名前です。</target>
+        <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
@@ -54,8 +53,7 @@
         <target>ニュースのティーザー</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
-        <source>The news teaser can be shown in a news list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>ニュースの完全なテキストの代わりに、ティーザーをニュースリストに表示できます。&quot;続きを読む&quot;のリンクを自動的に追加します。</target>
+        <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
@@ -238,92 +236,71 @@
         <target>公開の設定</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New article</source>
-        <target>新しい記事</target>
+        <source>New item</source>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
-        <source>Create a new news article</source>
-        <target>新しくニュース記事を作成</target>
+        <source>Create a new news item</source>
       </trans-unit>
       <trans-unit id="tl_news.show.0">
-        <source>Article details</source>
-        <target>記事の詳細</target>
+        <source>Item details</source>
       </trans-unit>
       <trans-unit id="tl_news.show.1">
-        <source>Show the details of news article ID %s</source>
-        <target>ID %sのニュース記事の詳細を表示</target>
+        <source>Show the details of news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.0">
-        <source>Edit article</source>
-        <target>記事を編集</target>
+        <source>Edit item</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.1">
-        <source>Edit news article ID %s</source>
-        <target>ID %sのニュース記事を編集</target>
+        <source>Edit news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.copy.0">
-        <source>Duplicate article</source>
-        <target>記事を複製</target>
+        <source>Duplicate item</source>
       </trans-unit>
       <trans-unit id="tl_news.copy.1">
-        <source>Duplicate news article ID %s</source>
-        <target>ID %sのニュース記事を複製</target>
+        <source>Duplicate news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.cut.0">
-        <source>Move article</source>
-        <target>記事を移動</target>
+        <source>Move item</source>
       </trans-unit>
       <trans-unit id="tl_news.cut.1">
-        <source>Move news article ID %s</source>
-        <target>ID %sのニュース記事を移動</target>
+        <source>Move news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.delete.0">
-        <source>Delete article</source>
-        <target>記事を削除</target>
+        <source>Delete item</source>
       </trans-unit>
       <trans-unit id="tl_news.delete.1">
-        <source>Delete news article ID %s</source>
-        <target>ID %sのニュース記事を削除</target>
+        <source>Delete news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish article</source>
-        <target>記事を公開または非公開</target>
+        <source>Publish/unpublish item</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
-        <source>Publish/unpublish news article ID %s</source>
-        <target>ID %sのニュース記事を公開または非公開に設定</target>
+        <source>Publish/unpublish news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature article</source>
-        <target>記事を特別または通常に設定</target>
+        <source>Feature/unfeature item</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
-        <source>Feature/unfeature news article ID %s</source>
-        <target>ID %sのニュース記事を特別または通常に設定</target>
+        <source>Feature/unfeature news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
         <source>Edit archive settings</source>
         <target>アーカイブの設定を変更</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
-        <source>Edit the archive settings</source>
-        <target>このニュースアーカイブの設定を変更</target>
+        <source>Edit the news archive settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.0">
-        <source>Edit article settings</source>
-        <target>記事の設定を変更</target>
+        <source>Edit item settings</source>
       </trans-unit>
       <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the article settings</source>
-        <target>記事の設定を変更</target>
+        <source>Edit the news item settings</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
-        <source>Paste into this archive</source>
-        <target>このアーカイブに貼り付け</target>
+        <source>Paste into this news archive</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news article ID %s</source>
-        <target>ID %sのニュース記事の後に貼り付け</target>
+        <source>Paste after news item ID %s</source>
       </trans-unit>
     </body>
   </file>

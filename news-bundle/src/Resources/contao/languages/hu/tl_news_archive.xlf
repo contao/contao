@@ -133,14 +133,6 @@
         <source>Author and system administrator</source>
         <target>Szerző és Rendszer adminisztrátor</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.source_teaser">
-        <source>News teasers</source>
-        <target>Hír előzetes</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.source_text">
-        <source>Full articles</source>
-        <target>Teljes tartalom</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New archive</source>
         <target>Új archívum</target>
