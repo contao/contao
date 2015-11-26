@@ -1,9 +1,9 @@
 Contao 4 calendar bundle
 ========================
 
-[![](https://img.shields.io/travis/contao/calendar-bundle/release/4.1.0.svg?style=flat-square)](https://travis-ci.org/contao/calendar-bundle/)
-[![](https://img.shields.io/scrutinizer/g/contao/calendar-bundle/release/4.1.0.svg?style=flat-square)](https://scrutinizer-ci.com/g/contao/calendar-bundle/)
-[![](https://img.shields.io/coveralls/contao/calendar-bundle/release/4.1.0.svg?style=flat-square)](https://coveralls.io/github/contao/calendar-bundle)
+[![](https://img.shields.io/travis/contao/calendar-bundle/master.svg?style=flat-square)](https://travis-ci.org/contao/calendar-bundle/)
+[![](https://img.shields.io/scrutinizer/g/contao/calendar-bundle/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/contao/calendar-bundle/)
+[![](https://img.shields.io/coveralls/contao/calendar-bundle/master.svg?style=flat-square)](https://coveralls.io/github/contao/calendar-bundle)
 
 Contao is an Open Source PHP Content Management System for people who want a
 professional website that is easy to maintain. Visit the [project website][1]
