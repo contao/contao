@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.1.1 (2015-XX-XX)
+
+ * Do not quote the search string in `FIND_IN_SET()` (see #424).
+
 ### 4.1.0 (2015-11-26)
 
  * Log e-mails in the database instead of a log file (see #413).
