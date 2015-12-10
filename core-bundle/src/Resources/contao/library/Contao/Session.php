@@ -54,6 +54,12 @@ class Session
 	 */
 	private $sessionBag;
 
+	/**
+	 * Session keys that are not stored in parameter bag.
+	 * @var array
+	 */
+	private $mappedKeys = array('referer', 'popupReferer', 'CURRENT_ID');
+
 
 	/**
 	 * Get the session data
@@ -107,7 +113,7 @@ class Session
 		@trigger_error('Using Session::get() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		// Map the referer (see #281)
-		if ($strKey == 'referer' || $strKey == 'popupReferer')
+		if (in_array($strKey, $this->mappedKeys))
 		{
 			return $this->session->get($strKey);
 		}
@@ -127,7 +133,7 @@ class Session
 		@trigger_error('Using Session::set() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		// Map the referer (see #281)
-		if ($strKey == 'referer' || $strKey == 'popupReferer')
+		if (in_array($strKey, $this->mappedKeys))
 		{
 			$this->session->set($strKey, $varValue);
 		}
@@ -148,9 +154,9 @@ class Session
 		@trigger_error('Using Session::remove() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
 
 		// Map the referer (see #281)
-		if ($strKey == 'referer')
+		if (in_array($strKey, $this->mappedKeys))
 		{
-			$this->session->remove('referer');
+			$this->session->remove($strKey);
 		}
 		else
 		{
@@ -170,12 +176,15 @@ class Session
 
 		$data = $this->sessionBag->all();
 
-		unset($data['referer']);
-
 		// Map the referer (see #281)
-		if ($this->session->has('referer'))
+		foreach ($this->mappedKeys as $strKey)
 		{
-			$data['referer'] = $this->session->get('referer');
+			unset($data[$strKey]);
+
+			if ($this->session->has($strKey))
+			{
+				$data[$strKey] = $this->session->get($strKey);
+			}
 		}
 
 		return $data;
@@ -199,10 +208,13 @@ class Session
 		}
 
 		// Map the referer (see #281)
-		if (isset($data['referer']))
+		foreach ($this->mappedKeys as $strKey)
 		{
-			$this->session->set('referer', $data['referer']);
-			unset($data['referer']);
+			if (isset($data[$strKey]))
+			{
+				$this->session->set($strKey, $data[$strKey]);
+				unset($data[$strKey]);
+			}
 		}
 
 		$this->sessionBag->replace($arrData);
@@ -233,9 +245,9 @@ class Session
 		foreach ($varData as $k=>$v)
 		{
 			// Map the referer (see #281)
-			if ($k == 'referer')
+			if (in_array($k, $this->mappedKeys))
 			{
-				$this->session->set('referer', $v);
+				$this->session->set($k, $v);
 			}
 			else
 			{
