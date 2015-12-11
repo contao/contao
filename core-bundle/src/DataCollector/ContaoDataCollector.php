@@ -216,29 +216,10 @@ class ContaoDataCollector extends DataCollector
 
         $this->data['summary'] = [
             'version' => $this->getContaoVersion(),
-            'scope' => $this->getContainerScope(),
             'layout' => $this->getLayoutName(),
             'framework' => $framework,
             'models' => $modelCount,
         ];
-    }
-
-    /**
-     * Returns the scope from the container.
-     *
-     * @return string
-     */
-    private function getContainerScope()
-    {
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
-            return ContaoCoreBundle::SCOPE_BACKEND;
-        }
-
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
-            return ContaoCoreBundle::SCOPE_FRONTEND;
-        }
-
-        return '';
     }
 
     /**

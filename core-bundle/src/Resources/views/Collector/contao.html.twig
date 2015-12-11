@@ -11,10 +11,6 @@
             {{ collector.summary.version }}
         </div>
         <div class="sf-toolbar-info-piece">
-            <b>Container scope</b>
-            {{ collector.summary.scope|default('n/a') }}
-        </div>
-        <div class="sf-toolbar-info-piece">
             <b>Reg. models</b>
             <span class="sf-toolbar-status sf-toolbar-status-{{ collector.summary.models > 50 ? 'red' : 'green' }}">{{ collector.summary.models }}</span>
         </div>
@@ -39,16 +35,6 @@
         <tr>
             <th>Version</th>
             <td>{{ collector.summary.version }}</td>
-        </tr>
-        <tr>
-            <th>Container scope</th>
-            <td>
-                {% if collector.summary.scope %}
-                    <span class="sf-toolbar-status sf-toolbar-status-green">{{ collector.summary.scope }}</span>
-                {% else %}
-                    <span class="sf-toolbar-status sf-toolbar-status-red">unknown</span>
-                {% endif %}
-            </td>
         </tr>
         <tr>
             <th>Registered models</th>
