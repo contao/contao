@@ -31,20 +31,25 @@
 
 {% block panel %}
     <h2>Summary</h2>
-    <table>
-        <tr>
-            <th>Version</th>
-            <td>{{ collector.summary.version }}</td>
-        </tr>
-        <tr>
-            <th>Registered models</th>
-            <td>{{ collector.summary.models }}</td>
-        </tr>
-        <tr>
-            <th>Page layout</th>
-            <td>{{ collector.summary.layout }}</td>
-        </tr>
-    </table>
+
+    <div class="metrics">
+        <div class="metric">
+            <span class="value">{{ collector.summary.version }}</span>
+            <span class="label">Contao version</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ collector.summary.models }}</span>
+            <span class="label">Registered models</span>
+        </div>
+
+        {% if collector.summary.layout %}
+            <div class="metric">
+                <span class="value">{{ collector.summary.layout }}</span>
+                <span class="label">Page layout</span>
+            </div>
+        {% endif %}
+    </div>
 
     <h2>Unknown insert tags</h2>
     {% if collector.unknowninserttags %}
