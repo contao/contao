@@ -216,9 +216,12 @@ class ContaoDataCollector extends DataCollector
 
         $this->data['summary'] = [
             'version' => $this->getContaoVersion(),
-            'layout' => $this->getLayoutName(),
             'framework' => $framework,
             'models' => $modelCount,
+            'frontend' => isset($GLOBALS['objPage']),
+            'preview' => BE_USER_LOGGED_IN === true,
+            'layout' => $this->getLayoutName(),
+            'template' => $this->getTemplateName(),
         ];
     }
 
@@ -229,18 +232,40 @@ class ContaoDataCollector extends DataCollector
      */
     private function getLayoutName()
     {
-        if (!$this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
-            return '';
-        }
+        $layout = $this->getLayout();
 
-        /** @var PageModel $objPage */
-        global $objPage;
-
-        /** @var LayoutModel $layout */
-        if (null === $objPage || null === ($layout = $objPage->getRelated('layout'))) {
+        if (null === $layout) {
             return '';
         }
 
         return sprintf('%s (ID %s)', $layout->name, $layout->id);
+    }
+
+    private function getTemplateName()
+    {
+        $layout = $this->getLayout();
+
+        if (null === $layout) {
+            return '';
+        }
+
+        return $layout->template;
+    }
+
+    /**
+     * @return LayoutModel|null
+     * @throws \Exception
+     */
+    private function getLayout()
+    {
+        /** @var PageModel $objPage */
+        global $objPage;
+
+        /** @var LayoutModel $layout */
+        if (null === $objPage) {
+            return null;
+        }
+
+        return $objPage->getRelated('layout');
     }
 }
