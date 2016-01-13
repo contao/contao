@@ -2,8 +2,8 @@
 
 {% block toolbar %}
     {% set icon %}
-        <img width="26" height="28" alt="Contao" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAcCAQAAADVGmdYAAACZUlEQVQ4y81US2gUQRCtycQfRFBQL3oIGFScrdcjESRGJeQk4s2jtwheRCE3kYiHHEREEPGsnkQFQVFBYvCb+FlJgtkQEPQiIoggIaC47m7Gqv7MTMxdnGLpne569apeVw3RP3uSXjPCVX7Lh+1rlB8U/9qImM0IJvAUbzBa2U24hwyZub91tRzH3j32FgUQkRlWP+dLeIWMP3RvJupr/4vBASKKulYQbVqFUfH8Jb8qYUyWkxYSBUhlJw9WTmGvhcUBj36FiL0gTGF+x3ai7mUBwkP4qYfc0mC27g7eZg7iPObs/jihJnRtPnOJygfswQK3bDInzABflRK++oqaFsTTuONrUSO+IEe/0RRQI5TuTAK5UAJ6x9dzkKp02Sa24BK07g2J39S9AlRmkhRxxoJaPnrLOedcDoQZUSOIq9d4tMSxKLkSSJjep2u8tMrUj/pSkGMrmCbxI0295AJMO80Xp9JSE6BXryqvhzxImDpX8hMFhTryWkQMkaThQOPSTcP+nmyX8aUAyjVcFAJjhOey3C7fFI6Ewsur2DzP8i3+pL33TF6nsME3rFaV2nZphvLxDY9x0QyYPbyWdCpqJDOSYY57Cil8VXXLojWcLbe9TNSMSy+rHPeiu5YdtIC66+pkv571teuAdK3njzxthRCXm/m4CXTLOsvvarqmzrqrmSS9kvaEnSexzyaRreVhDOW2zuEubvCxpCMfzNg1mahn70kzP12MtnPyk+z3lMds5Fnxfkl44BP5jl2lOY3zz0tcAPmK/0ZwDx7htdRQ46ESl6zCFOdfDG3lfeI1iYeq9H/9/AHhPHbawQYHsgAAAABJRU5ErkJggg==">
-        <span class="sf-toolbar-info-piece-additional sf-toolbar-status">{{ collector.summary.version }}</span>
+        {{ include('ContaoCoreBundle:Collector:contao.svg') }}
+        <span class="sf-toolbar-value">{{ collector.summary.version }}</span>
     {% endset %}
     {% set text %}
         <div class="sf-toolbar-info-piece">
@@ -19,12 +19,12 @@
             {{ collector.summary.layout|default('n/a') }}
         </div>
     {% endset %}
-    {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url } %}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true, name: 'contao', additional_classes: 'sf-toolbar-block-right' }) }}
 {% endblock %}
 
 {% block menu %}
     <span class="label">
-        <span class="icon"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAeCAQAAADwIURrAAAC20lEQVRIx7WWTWgTQRTHZ5P4GYVSetJShVqLbubthlwUBEMVP24iBsSDHvWgUkQvpXiwhyr04kHxoiCKXopezIfGBATpRaFFhIKIIJ6KRaz0oG2y63tvk81MuruBVjOEndmd95s3/zfzZoT4vz9Iwh2oyBcwBcPYNDr1l6PYMw8lKEIF7kIyGDoBLhU5Y3Z3hMaESPXDD8+Cy0QwtMrI+VS/ELm4CsgmEBLDd8pA1MM6ghZ1qMESPqvB0AJBrUtCZNbpPgW2DBxKwFO0WUawC4VgaB4/ze7cqE0da+m91ph8DpNwObNZiGwiF0dcowf0wiJa1fBfCoVat7Spo19wDn77uk0Nbm1+yibsATgtx1nXCChOXx5WoIi0bdZrCae4TDV5P9NjHYVr8AQ+so9UHJ5+MFS+Qk93t6CkmbyJ3f/4xhSWOSXiDg7lvQ31tAKLZp8SDNTNesyBcBWsy29qCHL8dgS0Cj/T2xQoPuUDDeoBHK3dAVqGuj3QgtL0rTFW1O1QIqAlcE2rTdOLjdiuGkrRP96C0hMOMdJZPZQW/4iypChQ2+XC2qGTevRFDKYbRmuATvO+N5T43+uoap1DGaHpgpR6qKzzIVDKTrRem9IUg6FFTn0nPJif3g6wH7qqjjbMHLxHu5ehSwo36nU9VHgefG5T1RvgF7zD/XYVhuyu1B7cyq8joDwNQ8tTDzUBqFaGIRg01/uWqcjFj+Wb3dXCsqonNShuWutKU55cnAIrD4Yn6VJjmsdaqhLc3AKfOFc5nJUIvI9PB8PX/UI0FNOcHFcTNdXkGS1Mt1WB+PsjfJsPh5Ins7s2tB8pcBY+yHn4LmfoDNNXcqZHfg33tMDakQCnFAEaiP2b0jvMPj7BlAFJUZ58KLTKntKqfKubtsmhrQ2zG74wtBp5meAtcGPF4WzQ2a9dMbgun0VfJpJ4eangvipCGS8/vSuwAbcUTI1vULbwa8+/+/0FfI41lT36pN8AAAAASUVORK5CYII=" alt="Contao"></span>
+        <span class="icon">{{ include('ContaoCoreBundle:Collector:contao.svg') }}</span>
         <strong>Contao</strong>
     </span>
 {% endblock %}
@@ -62,7 +62,7 @@
             <tbody>
                 {% for name in collector.unknowninserttags %}
                     <tr>
-                        <td><pre>{{ '{{' }}{{ name }}{{ '}}' }}</pre></td>
+                        <td><pre>{{ '{{' ~ name ~ '}}' }}</pre></td>
                     </tr>
                 {% endfor %}
             </tbody>
