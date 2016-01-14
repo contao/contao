@@ -413,7 +413,7 @@ abstract class Backend extends \Controller
 		// Custom action (if key is not defined in config.php the default action will be called)
 		elseif (\Input::get('key') && isset($arrModule[\Input::get('key')]))
 		{
-			$objCallback = new $arrModule[\Input::get('key')][0]();
+			$objCallback = System::importStatic($arrModule[\Input::get('key')][0]);
 			$this->Template->main .= $objCallback->{$arrModule[\Input::get('key')][1]}($dc);
 
 			// Add the name of the parent element
