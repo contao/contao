@@ -85,7 +85,7 @@ class ImageFactory
     }
 
     /**
-     * Create a ResizeConfiguration object
+     * Creates a ResizeConfiguration object
      *
      * @param int|array $size The ID of an image size or an array with width
      *                        height and resize mode
