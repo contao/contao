@@ -69,7 +69,7 @@ services:
             - "@contao.framework"
 
     contao.image.imagine:
-        class: "%contao.image.imagine.class%"
+        class: "%contao.image.imagine_class%"
         public: false
 
     contao.image.resize_calculator:

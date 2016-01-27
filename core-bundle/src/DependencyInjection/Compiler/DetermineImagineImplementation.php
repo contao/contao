@@ -27,7 +27,7 @@ class DetermineImagineImplementation implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $container->setParameter('contao.image.imagine.class', $this->getImagineImplementation());
+        $container->setParameter('contao.image.imagine_class', $this->getImagineImplementation());
     }
 
     /**
