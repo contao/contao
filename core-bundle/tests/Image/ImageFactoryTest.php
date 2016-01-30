@@ -38,7 +38,7 @@ class ImageFactoryTest extends TestCase
      *
      * @return ImageFactory
      */
-    private function createImageFactory($resizer = null, $imagine = null, $filesystem = null, $framework = null)
+    private function createImageFactory($resizer = null, $imagine = null, $imagineSvg = null, $filesystem = null, $framework = null)
     {
         if (null === $resizer) {
             $resizer = $this->getMockBuilder('Contao\CoreBundle\Image\Resizer')
@@ -50,6 +50,10 @@ class ImageFactoryTest extends TestCase
             $imagine = $this->getMock('Imagine\Image\ImagineInterface');
         }
 
+        if (null === $imagineSvg) {
+            $imagineSvg = $this->getMock('Imagine\Image\ImagineInterface');
+        }
+
         if (null === $filesystem) {
             $filesystem = new Filesystem;
         }
@@ -58,7 +62,7 @@ class ImageFactoryTest extends TestCase
             $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
         }
 
-        return new ImageFactory($resizer, $imagine, $filesystem, $framework);
+        return new ImageFactory($resizer, $imagine, $imagineSvg, $filesystem, $framework);
     }
 
     /**
@@ -101,9 +105,23 @@ class ImageFactoryTest extends TestCase
             )
             ->willReturn($imageMock);
 
-        $ImageFactory = $this->createImageFactory($resizer);
+        $imagineImageMock = $this->getMock('Imagine\Image\ImageInterface');
 
-        $image = $ImageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
+        $imagineImageMock
+            ->expects($this->once())
+            ->method('getSize')
+            ->willReturn(new Box(100, 100));
+
+        $imagine = $this->getMock('Imagine\Image\ImagineInterface');
+
+        $imagine
+            ->expects($this->once())
+            ->method('open')
+            ->willReturn($imagineImageMock);
+
+        $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine);
+
+        $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
         $this->assertSame($imageMock, $image);
     }
@@ -141,6 +159,20 @@ class ImageFactoryTest extends TestCase
             )
             ->willReturn($imageMock);
 
+        $imagineImageMock = $this->getMock('Imagine\Image\ImageInterface');
+
+        $imagineImageMock
+            ->expects($this->once())
+            ->method('getSize')
+            ->willReturn(new Box(100, 100));
+
+        $imagine = $this->getMock('Imagine\Image\ImagineInterface');
+
+        $imagine
+            ->expects($this->once())
+            ->method('open')
+            ->willReturn($imagineImageMock);
+
         $framework = $this->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
             ->getMock();
@@ -170,10 +202,9 @@ class ImageFactoryTest extends TestCase
             ->method('getAdapter')
             ->willReturn($imageSizeAdapter);
 
+        $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine, null, $framework);
 
-        $ImageFactory = $this->createImageFactory($resizer, null, null, $framework);
-
-        $image = $ImageFactory->create($path, 1, 'target/path.jpg');
+        $image = $imageFactory->create($path, 1, 'target/path.jpg');
 
         $this->assertSame($imageMock, $image);
     }
@@ -183,9 +214,9 @@ class ImageFactoryTest extends TestCase
      */
     public function testCreateWithoutResize()
     {
-        $ImageFactory = $this->createImageFactory();
+        $imageFactory = $this->createImageFactory();
 
-        $image = $ImageFactory->create($this->getRootDir() . '/images/dummy.jpg');
+        $image = $imageFactory->create($this->getRootDir() . '/images/dummy.jpg');
 
         $this->assertEquals($this->getRootDir() . '/images/dummy.jpg', $image->getPath());
     }

@@ -32,6 +32,11 @@ class ImageFactory
     private $imagine;
 
     /**
+     * @var ImagineInterface
+     */
+    private $imagineSvg;
+
+    /**
      * @var ContaoFrameworkInterface
      */
     private $framework;
@@ -46,17 +51,20 @@ class ImageFactory
      *
      * @param Resizer                  $resizer    The resizer object
      * @param ImagineInterface         $imagine    The imagine object
+     * @param ImagineInterface         $imagineSvg The imagine object for SVG files
      * @param Filesystem               $filesystem The filesystem object
      * @param ContaoFrameworkInterface $framework  The Contao framework
      */
     public function __construct(
         Resizer $resizer,
         ImagineInterface $imagine,
+        ImagineInterface $imagineSvg,
         Filesystem $filesystem,
         ContaoFrameworkInterface $framework
     ) {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
+        $this->imagineSvg = $imagineSvg;
         $this->filesystem = $filesystem;
         $this->framework = $framework;
     }
@@ -73,9 +81,19 @@ class ImageFactory
      */
     public function create($path, $size = null, $targetPath = null)
     {
-        $image = new Image($this->imagine, $this->filesystem, (string) $path);
+        if (in_array(
+            strtolower(pathinfo($path, PATHINFO_EXTENSION)),
+            ['svg', 'svgz']
+        )) {
+            $imagine = $this->imagineSvg;
+        }
+        else {
+            $imagine = $this->imagine;
+        }
 
-        if (null === $size) {
+        $image = new Image($imagine, $this->filesystem, (string) $path);
+
+        if (null === $size || $image->getDimensions()->isUndefined()) {
             return $image;
         }
 
