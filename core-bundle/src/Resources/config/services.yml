@@ -83,6 +83,7 @@ services:
             - "@contao.image.resize_calculator"
             - "@contao.image.imagine"
             - "@filesystem"
+            - %contao.image.target_path%
             - "@contao.framework"
 
     contao.image.image_factory:
