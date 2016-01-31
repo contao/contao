@@ -110,5 +110,5 @@ services:
         class: Contao\CoreBundle\Image\PictureFactory
         arguments:
             - "@contao.image.picture_generator"
-            - "@contao.image.factory"
+            - "@contao.image.image_factory"
             - "@contao.framework"

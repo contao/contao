@@ -62,7 +62,83 @@ class PictureFactory
      */
     public function create($path, $size)
     {
-        // Create an `Image` and a `PictureConfiguration`, pass it to
-        // `PictureGenerator` and return the resulting `Picture`.
+        $image = $this->imageFactory->create($path);
+
+        $config = $this->createConfig($size);
+
+        return $this->pictureGenerator->generate($image, $config);
+    }
+
+    private function createConfig($size)
+    {
+        if (!is_array($size)) {
+            $size = [0, 0, $size];
+        }
+
+        $config = new PictureConfiguration;
+
+        if (!isset($size[2]) || !is_numeric($size[2])) {
+            $resizeConfig = new ResizeConfiguration;
+            if (isset($size[0]) && $size[0]) {
+                $resizeConfig->setWidth($size[0]);
+            }
+            if (isset($size[1]) && $size[1]) {
+                $resizeConfig->setHeight($size[1]);
+            }
+            if (isset($size[2]) && $size[2]) {
+                $resizeConfig->setMode($size[2]);
+            }
+            $configItem = new PictureConfigurationItem;
+            $configItem->setResizeConfig($resizeConfig);
+            $config->setSize($configItem);
+            return $config;
+        }
+
+        $config->setSize($this->createConfigItem(
+            $this->framework
+                ->getAdapter('Contao\\ImageSizeModel')
+                ->findByPk($size[2])
+        ));
+
+        $imageSizeItems = $this->framework
+            ->getAdapter('Contao\\ImageSizeItemModel')
+            ->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
+
+        if ($imageSizeItems !== null) {
+            $configItems = [];
+            foreach ($imageSizeItems as $imageSizeItem) {
+                $configItems[] = $this->createConfigItem($imageSizeItem);
+            }
+            $config->setSizeItems($configItems);
+        }
+
+        return $config;
+    }
+
+    private function createConfigItem($imageSize)
+    {
+        $configItem = new PictureConfigurationItem;
+        $resizeConfig = new ResizeConfiguration;
+
+        if (null !== $imageSize) {
+
+            $resizeConfig
+                ->setWidth($imageSize->width)
+                ->setHeight($imageSize->height)
+                ->setMode($imageSize->resizeMode)
+                ->setZoomLevel($imageSize->zoom);
+
+            $configItem
+                ->setResizeConfig($resizeConfig)
+                ->setSizes($imageSize->sizes)
+                ->setDensities($imageSize->densities);
+
+            if (isset($imageSize->media)) {
+                $configItem->setMedia($imageSize->media);
+            }
+
+        }
+
+        return $configItem;
     }
 }
