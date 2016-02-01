@@ -15,7 +15,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Creates Image objects
+ * Creates Image objects.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
@@ -70,7 +70,7 @@ class ImageFactory
     }
 
     /**
-     * Creates an Image object
+     * Creates an Image object.
      *
      * @param string    $path       The path to the source image
      * @param int|array $size       The ID of an image size or an array with
@@ -86,8 +86,7 @@ class ImageFactory
             ['svg', 'svgz']
         )) {
             $imagine = $this->imagineSvg;
-        }
-        else {
+        } else {
             $imagine = $this->imagine;
         }
 
@@ -103,7 +102,7 @@ class ImageFactory
     }
 
     /**
-     * Creates a ResizeConfiguration object
+     * Creates a ResizeConfiguration object.
      *
      * @param int|array $size The ID of an image size or an array with width
      *                        height and resize mode
@@ -116,10 +115,9 @@ class ImageFactory
             $size = [0, 0, $size];
         }
 
-        $config = new ResizeConfiguration;
+        $config = new ResizeConfiguration();
 
         if (isset($size[2]) && is_numeric($size[2])) {
-
             $imageSize = $this->framework
                 ->getAdapter('Contao\\ImageSizeModel')
                 ->findByPk($size[2]);
@@ -133,7 +131,6 @@ class ImageFactory
 
                 return $config;
             }
-
         }
 
         if (isset($size[0]) && $size[0]) {

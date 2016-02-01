@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\Image;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 
 /**
- * Creates Picture objects
+ * Creates Picture objects.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
@@ -52,7 +52,7 @@ class PictureFactory
     }
 
     /**
-     * Creates a Picture object
+     * Creates a Picture object.
      *
      * @param string    $path The path to the source image
      * @param int|array $size The ID of an image size or an array with width
@@ -75,10 +75,10 @@ class PictureFactory
             $size = [0, 0, $size];
         }
 
-        $config = new PictureConfiguration;
+        $config = new PictureConfiguration();
 
         if (!isset($size[2]) || !is_numeric($size[2])) {
-            $resizeConfig = new ResizeConfiguration;
+            $resizeConfig = new ResizeConfiguration();
             if (isset($size[0]) && $size[0]) {
                 $resizeConfig->setWidth($size[0]);
             }
@@ -88,9 +88,10 @@ class PictureFactory
             if (isset($size[2]) && $size[2]) {
                 $resizeConfig->setMode($size[2]);
             }
-            $configItem = new PictureConfigurationItem;
+            $configItem = new PictureConfigurationItem();
             $configItem->setResizeConfig($resizeConfig);
             $config->setSize($configItem);
+
             return $config;
         }
 
@@ -117,11 +118,10 @@ class PictureFactory
 
     private function createConfigItem($imageSize)
     {
-        $configItem = new PictureConfigurationItem;
-        $resizeConfig = new ResizeConfiguration;
+        $configItem = new PictureConfigurationItem();
+        $resizeConfig = new ResizeConfiguration();
 
         if (null !== $imageSize) {
-
             $resizeConfig
                 ->setWidth($imageSize->width)
                 ->setHeight($imageSize->height)
@@ -136,7 +136,6 @@ class PictureFactory
             if (isset($imageSize->media)) {
                 $configItem->setMedia($imageSize->media);
             }
-
         }
 
         return $configItem;

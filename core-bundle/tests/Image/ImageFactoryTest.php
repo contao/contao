@@ -13,13 +13,10 @@ namespace Contao\CoreBundle\Test\Image;
 use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\Resizer;
-use Contao\CoreBundle\Image\ImageDimensions;
-use Contao\CoreBundle\Image\ImportantPart;
 use Contao\CoreBundle\Image\ResizeConfiguration;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Imagine\Image\Box;
-use Imagine\Image\Point;
 
 /**
  * Tests the ImageFactory class.
@@ -29,7 +26,7 @@ use Imagine\Image\Point;
 class ImageFactoryTest extends TestCase
 {
     /**
-     * Create an ImageFactory instance helper
+     * Create an ImageFactory instance helper.
      *
      * @param Resizer                  $resizer
      * @param ImagineInterface         $imagine
@@ -55,7 +52,7 @@ class ImageFactoryTest extends TestCase
         }
 
         if (null === $filesystem) {
-            $filesystem = new Filesystem;
+            $filesystem = new Filesystem();
         }
 
         if (null === $framework) {
@@ -92,14 +89,16 @@ class ImageFactoryTest extends TestCase
             ->expects($this->once())
             ->method('resize')
             ->with(
-                $this->callback(function($image) use($path) {
+                $this->callback(function ($image) use ($path) {
                     $this->assertEquals($path, $image->getPath());
+
                     return true;
                 }),
-                $this->callback(function($config) {
+                $this->callback(function ($config) {
                     $this->assertEquals(100, $config->getWidth());
                     $this->assertEquals(200, $config->getHeight());
                     $this->assertEquals(ResizeConfiguration::MODE_BOX, $config->getMode());
+
                     return true;
                 })
             )
@@ -145,14 +144,16 @@ class ImageFactoryTest extends TestCase
             ->expects($this->once())
             ->method('resize')
             ->with(
-                $this->callback(function($image) use($path) {
+                $this->callback(function ($image) use ($path) {
                     $this->assertEquals($path, $image->getPath());
+
                     return true;
                 }),
-                $this->callback(function($config) {
+                $this->callback(function ($config) {
                     $this->assertEquals(100, $config->getWidth());
                     $this->assertEquals(200, $config->getHeight());
                     $this->assertEquals(ResizeConfiguration::MODE_BOX, $config->getMode());
+
                     return true;
                 }),
                 $this->equalTo('target/path.jpg')
@@ -181,7 +182,7 @@ class ImageFactoryTest extends TestCase
 
         $imageSizeModel->expects($this->any())
             ->method('__get')
-            ->will($this->returnCallback(function($key) {
+            ->will($this->returnCallback(function ($key) {
                 return [
                     'width' => '100',
                     'height' => '200',
