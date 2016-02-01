@@ -218,7 +218,6 @@ class SymlinksCommand extends AbstractLockedCommand
             }
 
             $parents[] = $file->getRelativePath();
-            $parents   = array_unique($parents);
         }
 
         return $result;
