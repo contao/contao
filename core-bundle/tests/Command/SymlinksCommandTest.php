@@ -67,9 +67,9 @@ class SymlinksCommandTest extends TestCase
         $code = $tester->execute([]);
 
         $expected = <<<EOF
+Skipped foobar/html/foo because parent foobar/html will be symlinked already.
 Added web/system/modules/foobar/assets as symlink to system/modules/foobar/assets.
 Added web/system/modules/foobar/html as symlink to system/modules/foobar/html.
-Skipped system/modules/foobar/html/foo because system/modules/foobar/html has been symlinked already.
 Added system/themes/flexible as symlink to vendor/contao/test-bundle/Resources/contao/themes/flexible.
 Added web/assets as symlink to assets.
 Added web/system/themes as symlink to system/themes.
