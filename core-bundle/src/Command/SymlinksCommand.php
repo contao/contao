@@ -138,10 +138,9 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     private function createSymlinksFromFinder(Finder $finder, $prepend)
     {
-        $filtered = $this->filterNestedPaths($finder);
+        $files = $this->filterNestedPaths($finder, $prepend);
 
-        /** @var SplFileInfo $file */
-        foreach ($filtered as $file) {
+        foreach ($files as $file) {
             $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
             $this->symlink($path, 'web/' . $path);
         }
@@ -180,27 +179,41 @@ class SymlinksCommand extends AbstractLockedCommand
     {
         return Finder::create()
             ->ignoreDotFiles(false)
-            ->sort($this->getSortByPathDepthClosure())
+            ->sort(
+                function (SplFileInfo $a, SplFileInfo $b) {
+                    $countA = substr_count($a->getRelativePath(), '/');
+                    $countB = substr_count($b->getRelativePath(), '/');
+
+                    if ($countA === $countB) {
+                        return 0;
+                    }
+
+                    return ($countA < $countB) ? -1 : 1;
+                }
+            )
             ->followLinks()
-            ->in($path);
+            ->in($path)
+        ;
     }
 
     /**
-     * Filter nested paths because if a parent is symlinked, all nested paths
-     * will be symlinked automatically as well.
+     * Filters nested paths so only the top folder is symlinked.
      *
-     * @param Finder $finder
+     * @param Finder $finder  The finder object
+     * @param string $prepend The path to prepend
      *
-     * @return array
+     * @return SplFileInfo[] The filtered paths
      */
-    private function filterNestedPaths(Finder $finder)
+    private function filterNestedPaths(Finder $finder, $prepend)
     {
         $parents = [];
-        $result = iterator_to_array($finder);
+        $files = iterator_to_array($finder);
 
         /** @var SplFileInfo $file */
-        foreach ($result as $k => $file) {
-            $chunks = explode('/', $file->getRelativePath());
+        foreach ($files as $key => $file) {
+            $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
+
+            $chunks = explode('/', $path);
             array_pop($chunks);
 
             $parent = implode('/', $chunks);
@@ -208,37 +221,18 @@ class SymlinksCommand extends AbstractLockedCommand
             if (in_array($parent, $parents)) {
                 $this->output->writeln(
                     sprintf(
-                        'Skipped <error>%s</error> because parent <error>%s</error> will be symlinked already.',
-                        $file->getRelativePath(),
+                        'Skipped <error>%s</error> because <error>%s</error> will be symlinked already.',
+                        $path,
                         $parent
                     )
                 );
 
-                unset($result[$k]);
+                unset($files[$key]);
             }
 
-            $parents[] = $file->getRelativePath();
+            $parents[] = $path;
         }
 
-        return $result;
-    }
-
-    /**
-     * Returns a closure to sort paths by depth.
-     *
-     * @return \Closure The closure
-     */
-    private function getSortByPathDepthClosure()
-    {
-        return function(SplFileInfo $a, SplFileInfo $b) {
-            $countA = substr_count($a->getRelativePath(), '/');
-            $countB = substr_count($b->getRelativePath(), '/');
-
-            if ($countA === $countB) {
-                return 0;
-            }
-
-            return ($countA < $countB) ? -1 : 1;
-        };
+        return array_values($files);
     }
 }
