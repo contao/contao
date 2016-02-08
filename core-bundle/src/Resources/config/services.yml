@@ -73,7 +73,7 @@ services:
         public: false
 
     contao.image.imagine_svg:
-        class: Contao\CoreBundle\ImagineSvg\Imagine
+        class: Contao\CoreBundle\Image\ImagineSvg\Imagine
         public: false
 
     contao.image.resize_calculator:
