@@ -12,11 +12,13 @@ namespace Contao\CoreBundle\Test\Image;
 
 use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\ImportantPart;
 use Contao\CoreBundle\Image\Resizer;
 use Contao\CoreBundle\Image\ResizeConfiguration;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Imagine\Image\Box;
+use Imagine\Image\Point;
 
 /**
  * Tests the ImageFactory class.
@@ -118,7 +120,29 @@ class ImageFactoryTest extends TestCase
             ->method('open')
             ->willReturn($imagineImageMock);
 
-        $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine);
+        $framework = $this->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesModel = $this->getMock('Contao\FilesModel');
+
+        $filesModel->expects($this->any())
+            ->method('__get')
+            ->willReturn(null);
+
+        $filesAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesAdapter->expects($this->any())
+            ->method('__call')
+            ->willReturn($filesModel);
+
+        $framework->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($filesAdapter);
+
+        $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine, null, $framework);
 
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
@@ -146,6 +170,10 @@ class ImageFactoryTest extends TestCase
             ->with(
                 $this->callback(function ($image) use ($path) {
                     $this->assertEquals($path, $image->getPath());
+                    $this->assertEquals(new ImportantPart(
+                        new Point(50, 50),
+                        new Box(25, 25)
+                    ), $image->getImportantPart());
 
                     return true;
                 }),
@@ -199,15 +227,153 @@ class ImageFactoryTest extends TestCase
             ->method('__call')
             ->willReturn($imageSizeModel);
 
+        $filesModel = $this->getMock('Contao\FilesModel');
+
+        $filesModel->expects($this->any())
+            ->method('__get')
+            ->will($this->returnCallback(function ($key) {
+                return [
+                    'importantPartX' => '50',
+                    'importantPartY' => '50',
+                    'importantPartWidth' => '25',
+                    'importantPartHeight' => '25',
+                ][$key];
+            }));
+
+        $filesAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesAdapter->expects($this->any())
+            ->method('__call')
+            ->willReturn($filesModel);
+
         $framework->expects($this->any())
             ->method('getAdapter')
-            ->willReturn($imageSizeAdapter);
+            ->will($this->returnCallback(function($key) use($imageSizeAdapter, $filesAdapter) {
+                return [
+                    'Contao\\ImageSizeModel' => $imageSizeAdapter,
+                    'Contao\\FilesModel' => $filesAdapter,
+                ][$key];
+            }));
 
         $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine, null, $framework);
 
         $image = $imageFactory->create($path, 1, 'target/path.jpg');
 
         $this->assertSame($imageMock, $image);
+    }
+
+    /**
+     * Tests the create() method.
+     *
+     * @dataProvider getCreateWithLegacyMode
+     */
+    public function testCreateWithLegacyMode($mode, $expected)
+    {
+        $path = $this->getRootDir() . '/images/dummy.jpg';
+
+        $imageMock = $this->getMockBuilder('Contao\CoreBundle\Image\Image')
+             ->disableOriginalConstructor()
+             ->getMock();
+
+        $resizer = $this->getMockBuilder('Contao\CoreBundle\Image\Resizer')
+             ->disableOriginalConstructor()
+             ->getMock();
+
+        $resizer
+            ->expects($this->once())
+            ->method('resize')
+            ->with(
+                $this->callback(function ($image) use ($path, $expected) {
+                    $this->assertEquals($path, $image->getPath());
+                    $this->assertEquals(new ImportantPart(
+                        new Point($expected[0], $expected[1]),
+                        new Box($expected[2], $expected[3])
+                    ), $image->getImportantPart());
+
+                    return true;
+                }),
+                $this->callback(function ($config) {
+                    $this->assertEquals(50, $config->getWidth());
+                    $this->assertEquals(50, $config->getHeight());
+                    $this->assertEquals(ResizeConfiguration::MODE_CROP, $config->getMode());
+                    $this->assertEquals(0, $config->getZoomLevel());
+
+                    return true;
+                })
+            )
+            ->willReturn($imageMock);
+
+        $imagineImageMock = $this->getMock('Imagine\Image\ImageInterface');
+
+        $imagineImageMock
+            ->expects($this->once())
+            ->method('getSize')
+            ->willReturn(new Box(100, 100));
+
+        $imagine = $this->getMock('Imagine\Image\ImagineInterface');
+
+        $imagine
+            ->expects($this->once())
+            ->method('open')
+            ->willReturn($imagineImageMock);
+
+        $framework = $this->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesModel = $this->getMock('Contao\FilesModel');
+
+        $filesModel->expects($this->any())
+            ->method('__get')
+            ->will($this->returnCallback(function ($key) {
+                return [
+                    'importantPartX' => '50',
+                    'importantPartY' => '50',
+                    'importantPartWidth' => '25',
+                    'importantPartHeight' => '25',
+                ][$key];
+            }));
+
+        $filesAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesAdapter->expects($this->any())
+            ->method('__call')
+            ->willReturn($filesModel);
+
+        $framework->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($filesAdapter);
+
+        $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $image = $imageFactory->create($path, [50, 50, $mode]);
+
+        $this->assertSame($imageMock, $image);
+    }
+
+    /**
+     * Provides the data for the testCreateWithLegacyMode() method.
+     *
+     * @return array The data
+     */
+    public function getCreateWithLegacyMode()
+    {
+        return [
+            'Left Top'      => ['left_top',      [ 0,  0,   1,   1]],
+            'Left Center'   => ['left_center',   [ 0,  0,   1, 100]],
+            'Left Bottom'   => ['left_bottom',   [ 0, 99,   1,   1]],
+            'Center Top'    => ['center_top',    [ 0,  0, 100,   1]],
+            'Center Center' => ['center_center', [ 0,  0, 100, 100]],
+            'Center Bottom' => ['center_bottom', [ 0, 99, 100,   1]],
+            'Right Top'     => ['right_top',     [99,  0,   1,   1]],
+            'Right Center'  => ['right_center',  [99,  0,   1, 100]],
+            'Right Bottom'  => ['right_bottom',  [99, 99,   1,   1]],
+            'Invalid'       => ['top_left',      [ 0,  0, 100, 100]],
+        ];
     }
 
     /**

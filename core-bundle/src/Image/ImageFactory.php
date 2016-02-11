@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\Image;
 
+use Imagine\Image\Box;
+use Imagine\Image\Point;
 use Imagine\Image\ImagineInterface;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -91,12 +93,16 @@ class ImageFactory
         }
 
         $image = new Image($imagine, $this->filesystem, (string) $path);
+        list($resizeConfig, $importantPart) = $this->createConfig($size, $image);
 
-        if (null === $size || $image->getDimensions()->isUndefined()) {
+        if ($resizeConfig->isEmpty() || $image->getDimensions()->isUndefined()) {
             return $image;
         }
 
-        $resizeConfig = $this->createResizeConfig($size);
+        if (null === $importantPart) {
+            $importantPart = $this->createImportantPart($image->getPath());
+        }
+        $image->setImportantPart($importantPart);
 
         return $this->resizer->resize($image, $resizeConfig, $targetPath);
     }
@@ -104,12 +110,13 @@ class ImageFactory
     /**
      * Creates a ResizeConfiguration object.
      *
-     * @param int|array $size The ID of an image size or an array with width
-     *                        height and resize mode
+     * @param int|array $size  The ID of an image size or an array with width
+     *                         height and resize mode
+     * @param Image     $image The image instance
      *
-     * @return ResizeConfiguration The resize configuration
+     * @return array The resize configuration and important part
      */
-    private function createResizeConfig($size)
+    private function createConfig($size, Image $image)
     {
         if (!is_array($size)) {
             $size = [0, 0, $size];
@@ -129,7 +136,7 @@ class ImageFactory
                     ->setMode($imageSize->resizeMode)
                     ->setZoomLevel($imageSize->zoom);
 
-                return $config;
+                return [$config, null];
             }
         }
 
@@ -139,10 +146,70 @@ class ImageFactory
         if (isset($size[1]) && $size[1]) {
             $config->setHeight($size[1]);
         }
-        if (isset($size[2]) && $size[2]) {
-            $config->setMode($size[2]);
+
+        if (!isset($size[2]) || substr_count($size[2], '_') !== 1) {
+            if (isset($size[2]) && $size[2]) {
+                $config->setMode($size[2]);
+            }
+
+            return [$config, null];
         }
 
-        return $config;
+        $importantPart = [
+            0,
+            0,
+            $image->getDimensions()->getSize()->getWidth(),
+            $image->getDimensions()->getSize()->getHeight(),
+        ];
+
+        list($modeX, $modeY) = explode('_', $size[2]);
+
+        if ($modeX === 'left') {
+            $importantPart[2] = 1;
+        } elseif ($modeX === 'right') {
+            $importantPart[0] = $importantPart[2] - 1;
+            $importantPart[2] = 1;
+        }
+
+        if ($modeY === 'top') {
+            $importantPart[3] = 1;
+        } elseif ($modeY === 'bottom') {
+            $importantPart[1] = $importantPart[3] - 1;
+            $importantPart[3] = 1;
+        }
+
+        $config->setMode(ResizeConfiguration::MODE_CROP);
+
+        return [$config, new ImportantPart(
+            new Point($importantPart[0], $importantPart[1]),
+            new Box($importantPart[2], $importantPart[3])
+        )];
+    }
+
+    /**
+     * Fetches the important part from the database.
+     *
+     * @param string $path
+     *
+     * @return ImportantPart|null
+     */
+    private function createImportantPart($path)
+    {
+        $file = $this->framework
+            ->getAdapter('Contao\\FilesModel')
+            ->findByPath($path);
+
+        if (
+            null !== $file &&
+            $file->importantPartWidth &&
+            $file->importantPartHeight
+        ) {
+            return new ImportantPart(
+                new Point((int) $file->importantPartX, (int) $file->importantPartY),
+                new Box((int) $file->importantPartWidth, (int) $file->importantPartHeight)
+            );
+        }
+
+        return;
     }
 }
