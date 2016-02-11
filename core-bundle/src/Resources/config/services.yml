@@ -85,8 +85,6 @@ services:
         public: false
         arguments:
             - "@contao.image.resize_calculator"
-            - "@contao.image.imagine"
-            - "@contao.image.imagine_svg"
             - "@filesystem"
             - %contao.image.target_path%
             - "@contao.framework"
