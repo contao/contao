@@ -49,26 +49,34 @@ class ImageFactory
     private $filesystem;
 
     /**
+     * @var bool
+     */
+    private $bypassCache;
+
+    /**
      * Constructor.
      *
-     * @param Resizer                  $resizer    The resizer object
-     * @param ImagineInterface         $imagine    The imagine object
-     * @param ImagineInterface         $imagineSvg The imagine object for SVG files
-     * @param Filesystem               $filesystem The filesystem object
-     * @param ContaoFrameworkInterface $framework  The Contao framework
+     * @param Resizer                  $resizer     The resizer object
+     * @param ImagineInterface         $imagine     The imagine object
+     * @param ImagineInterface         $imagineSvg  The imagine object for SVG files
+     * @param Filesystem               $filesystem  The filesystem object
+     * @param ContaoFrameworkInterface $framework   The Contao framework
+     * @param bool                     $bypassCache True to bypass the image cache
      */
     public function __construct(
         Resizer $resizer,
         ImagineInterface $imagine,
         ImagineInterface $imagineSvg,
         Filesystem $filesystem,
-        ContaoFrameworkInterface $framework
+        ContaoFrameworkInterface $framework,
+        $bypassCache
     ) {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
         $this->imagineSvg = $imagineSvg;
         $this->filesystem = $filesystem;
         $this->framework = $framework;
+        $this->bypassCache = (bool) $bypassCache;
     }
 
     /**
@@ -104,7 +112,7 @@ class ImageFactory
         }
         $image->setImportantPart($importantPart);
 
-        return $this->resizer->resize($image, $resizeConfig, $targetPath);
+        return $this->resizer->resize($image, $resizeConfig, $targetPath, $this->bypassCache);
     }
 
     /**

@@ -97,12 +97,14 @@ services:
             - "@contao.image.imagine_svg"
             - "@filesystem"
             - "@contao.framework"
+            - %contao.image.bypass_cache%
 
     contao.image.picture_generator:
         class: Contao\CoreBundle\Image\PictureGenerator
         public: false
         arguments:
             - "@contao.image.resizer"
+            - %contao.image.bypass_cache%
 
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory

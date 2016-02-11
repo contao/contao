@@ -37,7 +37,7 @@ class ImageFactoryTest extends TestCase
      *
      * @return ImageFactory
      */
-    private function createImageFactory($resizer = null, $imagine = null, $imagineSvg = null, $filesystem = null, $framework = null)
+    private function createImageFactory($resizer = null, $imagine = null, $imagineSvg = null, $filesystem = null, $framework = null, $bypassCache = null)
     {
         if (null === $resizer) {
             $resizer = $this->getMockBuilder('Contao\CoreBundle\Image\Resizer')
@@ -61,7 +61,11 @@ class ImageFactoryTest extends TestCase
             $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
         }
 
-        return new ImageFactory($resizer, $imagine, $imagineSvg, $filesystem, $framework);
+        if (null === $bypassCache) {
+            $bypassCache = false;
+        }
+
+        return new ImageFactory($resizer, $imagine, $imagineSvg, $filesystem, $framework, $bypassCache);
     }
 
     /**
