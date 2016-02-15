@@ -351,7 +351,7 @@ class Message
 	 */
 	private function getFlashBagKey($type, $strScope = TL_MODE)
 	{
-		$scope = 'FE' === TL_MODE ? 'frontend' : 'backend';
+		$scope = 'FE' === $strScope ? 'frontend' : 'backend';
 		$type  = strtolower(str_replace('TL_', '', $type));
 
 		return 'contao.' . $scope . '.' . $type;
