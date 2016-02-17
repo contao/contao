@@ -86,7 +86,7 @@ services:
         arguments:
             - "@contao.image.resize_calculator"
             - "@filesystem"
-            - %contao.image.target_path%
+            - "%kernel.root_dir%/%contao.image.target_path%"
             - "@contao.framework"
 
     contao.image.image_factory:

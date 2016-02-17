@@ -76,7 +76,10 @@ class PictureTest extends TestCase
         define('TL_FILES_URL', '');
         define('TL_ROOT', self::$rootDir);
 
-        System::setContainer($this->mockContainerWithContaoScopes());
+        $container = $this->mockContainerWithContaoScopes();
+        $this->addImageServicesToContainer($container, self::$rootDir);
+
+        System::setContainer($container);
     }
 
     /**

@@ -10,6 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\ImportantPart;
+use Contao\CoreBundle\Image\ImageDimensions;
+use Contao\CoreBundle\Image\ResizeConfiguration;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
 
 /**
  * Resizes images
@@ -413,66 +418,6 @@ class Image
 			}
 		}
 
-		$importantPart = $this->getImportantPart();
-
-		$widthMatches = ($this->fileObj->width == $this->getTargetWidth() || !$this->getTargetWidth());
-		$heightMatches = ($this->fileObj->height == $this->getTargetHeight() || !$this->getTargetHeight());
-		$zoomMatches = (($importantPart['x'] === 0 && $importantPart['y'] === 0 && $importantPart['width'] === $this->fileObj->viewWidth && $importantPart['height'] === $this->fileObj->viewHeight) || !$this->getZoomLevel());
-
-		// No resizing required
-		if ($widthMatches && $heightMatches && $zoomMatches)
-		{
-			// Return the target image (thanks to Tristan Lins) (see #4166)
-			if ($this->getTargetPath())
-			{
-				// Copy the source image if the target image does not exist or is older than the source image
-				if (!file_exists(TL_ROOT . '/' . $this->getTargetPath()) || $this->fileObj->mtime > filemtime(TL_ROOT . '/' . $this->getTargetPath()))
-				{
-					\Files::getInstance()->copy($this->getOriginalPath(), $this->getTargetPath());
-				}
-
-				$this->resizedPath = \System::urlEncode($this->getTargetPath());
-
-				return $this;
-			}
-
-			$this->resizedPath = \System::urlEncode($this->getOriginalPath());
-
-			return $this;
-		}
-
-		// Check whether the image exists already
-		if (!System::getContainer()->getParameter('contao.image.bypass_cache'))
-		{
-			// Custom target (thanks to Tristan Lins) (see #4166)
-			if ($this->getTargetPath() && !$this->getForceOverride())
-			{
-				if (file_exists(TL_ROOT . '/' . $this->getTargetPath()) && $this->fileObj->mtime <= filemtime(TL_ROOT . '/' . $this->getTargetPath()))
-				{
-					$this->resizedPath = \System::urlEncode($this->getTargetPath());
-
-					return $this;
-				}
-			}
-
-			// Regular cache file
-			if (file_exists(TL_ROOT . '/' . $this->getCacheName()))
-			{
-				// Copy the cached file if it exists
-				if ($this->getTargetPath())
-				{
-					\Files::getInstance()->copy($this->getCacheName(), $this->getTargetPath());
-					$this->resizedPath = \System::urlEncode($this->getTargetPath());
-
-					return $this;
-				}
-
-				$this->resizedPath = \System::urlEncode($this->getCacheName());
-
-				return $this;
-			}
-		}
-
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage']))
 		{
@@ -489,117 +434,129 @@ class Image
 			}
 		}
 
-		$svgNotPossible = ($this->fileObj->isSvgImage && (!extension_loaded('dom') || !$this->fileObj->viewWidth || !$this->fileObj->viewHeight));
-		$gdNotPossible = ($this->fileObj->isGdImage && (!extension_loaded('gd') || $this->fileObj->width > \Config::get('gdMaxImgWidth') || $this->fileObj->height > \Config::get('gdMaxImgHeight') || $this->getTargetWidth() > \Config::get('gdMaxImgWidth') || $this->getTargetHeight() > \Config::get('gdMaxImgHeight')));
+		$image = $this->prepareImage();
+		$resizeConfig = $this->prepareResizeConfig();
 
-		// Return the path to the original image if it cannot be handled
-		if (!$this->fileObj->isImage || $svgNotPossible || $gdNotPossible)
+		if (!$image->getDimensions()->isUndefined() && !$resizeConfig->isEmpty())
 		{
-			$this->resizedPath = \System::urlEncode($this->getOriginalPath());
-
-			return $this;
+			$image = \System::getContainer()->get('contao.image.resizer')->resize(
+				$image,
+				$resizeConfig,
+				$this->targetPath ? TL_ROOT . '/' . $this->targetPath : null,
+				System::getContainer()->getParameter('contao.image.bypass_cache')
+			);
 		}
 
-		// Create the resized image
-		if ($this->fileObj->isSvgImage)
-		{
-			$this->executeResizeSvg();
-		}
-		else
-		{
-			$this->executeResizeGd();
+		$this->resizedPath = $image->getPath();
+
+		if (substr($this->resizedPath, 0, strlen(TL_ROOT) + 1) === TL_ROOT . '/') {
+			$this->resizedPath = substr($this->resizedPath, strlen(TL_ROOT) + 1);
 		}
 
-		// Resize the original image
-		if ($this->getTargetPath())
-		{
-			\Files::getInstance()->copy($this->getCacheName(), $this->getTargetPath());
-			$this->resizedPath = \System::urlEncode($this->getTargetPath());
-
-			return $this;
-		}
-
-		$this->resizedPath = \System::urlEncode($this->getCacheName());
+		$this->resizedPath = \System::urlEncode($this->resizedPath);
 
 		return $this;
 	}
 
 
 	/**
-	 * Resize an GD image
+	 * Prepare image object.
 	 *
-	 * @return boolean False if the target image cannot be created, otherwise true
+	 * @return \Contao\CoreBundle\Image\Image
 	 */
-	protected function executeResizeGd()
+	protected function prepareImage()
 	{
-		$sourceImage = \GdImage::fromFile($this->fileObj);
+		$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $this->fileObj->path);
 
-		$coordinates = $this->computeResize();
-		$newImage = \GdImage::fromDimensions($coordinates['width'], $coordinates['height']);
+		$image->setImportantPart($this->prepareImportantPart());
 
-		$sourceImage->copyTo($newImage, $coordinates['target_x'], $coordinates['target_y'], $coordinates['target_width'], $coordinates['target_height']);
-
-		$newImage->saveToFile(TL_ROOT . '/' . $this->getCacheName());
+		return $image;
 	}
 
 
 	/**
-	 * Resize an SVG image
+	 * Prepare important part object.
+	 *
+	 * @return ImportantPart
 	 */
-	protected function executeResizeSvg()
+	protected function prepareImportantPart()
 	{
-		$doc = new \DOMDocument();
+		$importantPart = $this->getImportantPart();
 
-		if ($this->fileObj->extension == 'svgz')
+		if (substr_count($this->resizeMode, '_') === 1)
 		{
-			$doc->loadXML(gzdecode($this->fileObj->getContent()));
-		}
-		else
-		{
-			$doc->loadXML($this->fileObj->getContent());
-		}
+			$importantPart = array(
+				'x' => 0,
+				'y' => 0,
+				'width' => $this->fileObj->viewWidth,
+				'height' => $this->fileObj->viewHeight,
+			);
 
-		$svgElement = $doc->documentElement;
+			$mode = explode('_', $this->resizeMode);
 
-		// Set the viewBox attribute from the original dimensions
-		if (!$svgElement->hasAttribute('viewBox'))
-		{
-			$origWidth = floatval($svgElement->getAttribute('width'));
-			$origHeight = floatval($svgElement->getAttribute('height'));
-
-			if ($origWidth && $origHeight)
+			if ($mode[0] === 'left')
 			{
-				$svgElement->setAttribute('viewBox', '0 0 ' . $origWidth . ' ' . $origHeight);
+				$importantPart['width'] = 1;
+			}
+			elseif ($mode[0] === 'right')
+			{
+				$importantPart['x'] = $importantPart['width'] - 1;
+				$importantPart['width'] = 1;
+			}
+
+			if ($mode[1] === 'top')
+			{
+				$importantPart['height'] = 1;
+			}
+			elseif ($mode[1] === 'bottom')
+			{
+				$importantPart['y'] = $importantPart['height'] - 1;
+				$importantPart['height'] = 1;
 			}
 		}
 
-		$coordinates = $this->computeResize();
-
-		$svgElement->setAttribute('x', $coordinates['target_x']);
-		$svgElement->setAttribute('y', $coordinates['target_y']);
-		$svgElement->setAttribute('width', $coordinates['target_width']);
-		$svgElement->setAttribute('height', $coordinates['target_height']);
-
-		$svgWrapElement = $doc->createElementNS('http://www.w3.org/2000/svg', 'svg');
-		$svgWrapElement->setAttribute('version', '1.1');
-		$svgWrapElement->setAttribute('width', $coordinates['width']);
-		$svgWrapElement->setAttribute('height', $coordinates['height']);
-		$svgWrapElement->appendChild($svgElement);
-
-		$doc->appendChild($svgWrapElement);
-
-		if ($this->fileObj->extension == 'svgz')
+		if (!$importantPart['width'] || !$importantPart['height'])
 		{
-			$xml = gzencode($doc->saveXML());
+			return null;
+		}
+
+		return new ImportantPart(
+			new Point($importantPart['x'], $importantPart['y']),
+			new Box($importantPart['width'], $importantPart['height'])
+		);
+	}
+
+
+	/**
+	 * Prepare resize configuration object.
+	 *
+	 * @return ResizeConfiguration
+	 */
+	protected function prepareResizeConfig()
+	{
+		$resizeConfig = new ResizeConfiguration();
+		$resizeConfig->setWidth($this->targetWidth);
+		$resizeConfig->setHeight($this->targetHeight);
+		$resizeConfig->setZoomLevel($this->zoomLevel);
+
+		if (substr_count($this->resizeMode, '_') === 1)
+		{
+			$resizeConfig->setMode(ResizeConfiguration::MODE_CROP);
+			$resizeConfig->setZoomLevel(0);
 		}
 		else
 		{
-			$xml = $doc->saveXML();
+			try
+			{
+				$resizeConfig->setMode($this->resizeMode);
+			}
+			catch (\InvalidArgumentException $exception)
+			{
+				$resizeConfig->setMode(ResizeConfiguration::MODE_CROP);
+			}
 		}
 
-		$objCacheFile = new \File($this->getCacheName());
-		$objCacheFile->write($xml);
-		$objCacheFile->close();
+		return $resizeConfig;
 	}
 
 
@@ -610,189 +567,23 @@ class Image
 	 */
 	public function computeResize()
 	{
-		$width = $this->getTargetWidth();
-		$height = $this->getTargetHeight();
-		$originalWidth = $this->fileObj->viewWidth;
-		$originalHeight = $this->fileObj->viewHeight;
-		$mode = $this->getResizeMode();
-		$zoom = $this->getZoomLevel();
-		$importantPart = $this->getImportantPart();
-
-		// Backwards compatibility for old modes
-		// left_top, center_top, right_top, left_center, center_center, right_center, left_bottom, center_bottom, right_bottom
-		if ($mode && substr_count($mode, '_') === 1)
-		{
-			$zoom = 0;
-			$importantPart = array('x'=>0, 'y'=>0, 'width'=>$originalWidth, 'height'=>$originalHeight);
-
-			$mode = explode('_', $mode);
-
-			if ($mode[0] === 'left')
-			{
-				$importantPart['width'] = 1;
-			}
-			elseif ($mode[0] === 'right')
-			{
-				$importantPart['x'] = $originalWidth - 1;
-				$importantPart['width'] = 1;
-			}
-
-			if ($mode[1] === 'top')
-			{
-				$importantPart['height'] = 1;
-			}
-			elseif ($mode[1] === 'bottom')
-			{
-				$importantPart['y'] = $originalHeight - 1;
-				$importantPart['height'] = 1;
-			}
-		}
-
-		$zoom = max(0, min(1, (int) $zoom / 100));
-
-		$zoomedImportantPart = array
-		(
-			'x' => $importantPart['x'] * $zoom,
-			'y' => $importantPart['y'] * $zoom,
-			'width' => $originalWidth - (($originalWidth - $importantPart['width'] - $importantPart['x']) * $zoom) - ($importantPart['x'] * $zoom),
-			'height' => $originalHeight - (($originalHeight - $importantPart['height'] - $importantPart['y']) * $zoom) - ($importantPart['y'] * $zoom),
+		$resizeCoordinates = \System::getContainer()->get('contao.image.resize_calculator')->calculate(
+			$this->prepareResizeConfig(),
+			new ImageDimensions(
+				new Box($this->fileObj->viewWidth, $this->fileObj->viewHeight),
+				$this->fileObj->viewWidth !== $this->fileObj->width
+			),
+			$this->prepareImportantPart()
 		);
-
-		// If no dimensions are specified, use the zoomed original width
-		if (!$width && !$height)
-		{
-			$width = $zoomedImportantPart['width'];
-		}
-
-		if ($mode === 'proportional' && $width && $height)
-		{
-			if ($zoomedImportantPart['width'] >= $zoomedImportantPart['height'])
-			{
-				$height = null;
-			}
-			else
-			{
-				$width = null;
-			}
-		}
-		elseif ($mode === 'box' && $width && $height)
-		{
-			if ($zoomedImportantPart['height'] * $width / $zoomedImportantPart['width'] <= $height)
-			{
-				$height = null;
-			}
-			else
-			{
-				$width = null;
-			}
-		}
-
-		// Crop mode
-		if ($width && $height)
-		{
-			// Calculate the image part for zoom 0
-			$leastZoomed = array
-			(
-				'x' => 0,
-				'y' => 0,
-				'width' => $originalWidth,
-				'height' => $originalHeight,
-			);
-
-			if ($originalHeight * $width / $originalWidth <= $height)
-			{
-				$leastZoomed['width'] = $originalHeight * $width / $height;
-
-				if ($leastZoomed['width'] > $importantPart['width'])
-				{
-					$leastZoomed['x'] = ($originalWidth - $leastZoomed['width']) * $importantPart['x'] / ($originalWidth - $importantPart['width']);
-				}
-				else
-				{
-					$leastZoomed['x'] = $importantPart['x'] + (($importantPart['width'] - $leastZoomed['width']) / 2);
-				}
-			}
-			else
-			{
-				$leastZoomed['height'] = $originalWidth * $height / $width;
-
-				if ($leastZoomed['height'] > $importantPart['height'])
-				{
-					$leastZoomed['y'] = ($originalHeight - $leastZoomed['height']) * $importantPart['y'] / ($originalHeight - $importantPart['height']);
-				}
-				else
-				{
-					$leastZoomed['y'] = $importantPart['y'] + (($importantPart['height'] - $leastZoomed['height']) / 2);
-				}
-			}
-
-			// Calculate the image part for zoom 100
-			$mostZoomed = $importantPart;
-
-			if ($importantPart['height'] * $width / $importantPart['width'] <= $height)
-			{
-				$mostZoomed['height'] = $height * $importantPart['width'] / $width;
-
-				if ($originalHeight > $importantPart['height'])
-				{
-					$mostZoomed['y'] -= ($mostZoomed['height'] - $importantPart['height']) * $importantPart['y'] / ($originalHeight - $importantPart['height']);
-				}
-			}
-			else
-			{
-				$mostZoomed['width'] = $width * $mostZoomed['height'] / $height;
-
-				if ($originalWidth > $importantPart['width'])
-				{
-					$mostZoomed['x'] -= ($mostZoomed['width'] - $importantPart['width']) * $importantPart['x'] / ($originalWidth - $importantPart['width']);
-				}
-			}
-
-			if ($mostZoomed['width'] > $leastZoomed['width'])
-			{
-				$mostZoomed = $leastZoomed;
-			}
-
-			// Apply zoom
-			foreach (array('x', 'y', 'width', 'height') as $key)
-			{
-				$zoomedImportantPart[$key] = ($mostZoomed[$key] * $zoom) + ($leastZoomed[$key] * (1 - $zoom));
-			}
-
-			$targetX = -$zoomedImportantPart['x'] * $width / $zoomedImportantPart['width'];
-			$targetY = -$zoomedImportantPart['y'] * $height / $zoomedImportantPart['height'];
-			$targetWidth = $originalWidth * $width / $zoomedImportantPart['width'];
-			$targetHeight = $originalHeight * $height / $zoomedImportantPart['height'];
-		}
-		else
-		{
-			// Calculate the height if only the width is given
-			if ($width)
-			{
-				$height = max($zoomedImportantPart['height'] * $width / $zoomedImportantPart['width'], 1);
-			}
-
-			// Calculate the width if only the height is given
-			elseif ($height)
-			{
-				$width = max($zoomedImportantPart['width'] * $height / $zoomedImportantPart['height'], 1);
-			}
-
-			// Apply zoom
-			$targetWidth = $originalWidth / $zoomedImportantPart['width'] * $width;
-			$targetHeight = $originalHeight / $zoomedImportantPart['height'] * $height;
-			$targetX = -$zoomedImportantPart['x'] * $targetWidth / $originalWidth;
-			$targetY = -$zoomedImportantPart['y'] * $targetHeight / $originalHeight;
-		}
 
 		return array
 		(
-			'width' => (int) round($width),
-			'height' => (int) round($height),
-			'target_x' => (int) round($targetX),
-			'target_y' => (int) round($targetY),
-			'target_width' => (int) round($targetWidth),
-			'target_height' => (int) round($targetHeight),
+			'width' => $resizeCoordinates->getCropSize()->getWidth(),
+			'height' => $resizeCoordinates->getCropSize()->getHeight(),
+			'target_x' => -$resizeCoordinates->getCropStart()->getX(),
+			'target_y' => -$resizeCoordinates->getCropStart()->getY(),
+			'target_width' => $resizeCoordinates->getSize()->getWidth(),
+			'target_height' => $resizeCoordinates->getSize()->getHeight(),
 		);
 	}
 

@@ -15,9 +15,17 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\CoreBundle\Image\ImagineSvg\Imagine as ImagineSvg;
+use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\Resizer;
+use Contao\CoreBundle\Image\ResizeCalculator;
+use Contao\CoreBundle\Image\PictureGenerator;
+use Imagine\Gd\Imagine as ImagineGd;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -353,5 +361,55 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         ;
 
         return $rtAdapter;
+    }
+
+    /**
+     * Adds image services to the container.
+     *
+     * @param Container $container
+     * @param string    $rootDir
+     */
+    protected function addImageServicesToContainer(Container $container, $rootDir = null)
+    {
+        $imagine = new ImagineGd();
+        $imagineSvg = new ImagineSvg();
+        $calculator = new ResizeCalculator();
+        $filesystem = new Filesystem();
+        $framework = $this->mockContaoFramework();
+
+        $resizer = new Resizer(
+            $calculator,
+            $filesystem,
+            ($rootDir ?: $this->getRootDir()) . '/' . $container->getParameter('contao.image.target_path'),
+            $framework
+        );
+
+        $imageFactory = new ImageFactory(
+            $resizer,
+            $imagine,
+            $imagineSvg,
+            $filesystem,
+            $framework,
+            $container->getParameter('contao.image.bypass_cache')
+        );
+
+        $pictureGenerator = new PictureGenerator(
+            $resizer,
+            $container->getParameter('contao.image.bypass_cache')
+        );
+
+        $pictureFactory = new PictureFactory(
+            $pictureGenerator,
+            $imageFactory,
+            $framework
+        );
+
+        $container->set('contao.image.imagine', $imagine);
+        $container->set('contao.image.imagine_svg', $imagineSvg);
+        $container->set('contao.image.resize_calculator', $calculator);
+        $container->set('contao.image.resizer', $resizer);
+        $container->set('contao.image.image_factory', $imageFactory);
+        $container->set('contao.image.picture_generator', $pictureGenerator);
+        $container->set('contao.image.picture_factory', $pictureFactory);
     }
 }

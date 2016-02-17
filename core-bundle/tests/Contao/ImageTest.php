@@ -78,7 +78,10 @@ class ImageTest extends TestCase
         define('TL_ERROR', 'ERROR');
         define('TL_ROOT', self::$rootDir);
 
-        System::setContainer($this->mockContainerWithContaoScopes());
+        $container = $this->mockContainerWithContaoScopes();
+        $this->addImageServicesToContainer($container, self::$rootDir);
+
+        System::setContainer($container);
     }
 
     /**
@@ -1336,8 +1339,8 @@ class ImageTest extends TestCase
             <svg
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
-                width="200px"
-                height="100px"
+                width="400px"
+                height="200px"
                 viewBox="100 100 400 200"
             ></svg>'
         );
@@ -1451,8 +1454,8 @@ class ImageTest extends TestCase
             <svg
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
-                width="200px"
-                height="100px"
+                width="200.1em"
+                height="100.1em"
             ></svg>'
         );
 
@@ -1470,7 +1473,7 @@ class ImageTest extends TestCase
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertEquals('0 0 200 100', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertEquals('0 0 200.1 100.1', $doc->documentElement->firstChild->getAttribute('viewBox'));
         $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
         $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
         $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
@@ -1516,8 +1519,8 @@ class ImageTest extends TestCase
                 <svg
                     version="1.1"
                     xmlns="http://www.w3.org/2000/svg"
-                    width="200px"
-                    height="100px"
+                    width="400px"
+                    height="200px"
                     viewBox="100 100 400 200"
                 ></svg>'
             )
