@@ -10,6 +10,12 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\ImportantPart;
+use Contao\CoreBundle\Image\ResizeConfiguration;
+use Contao\CoreBundle\Image\PictureConfiguration;
+use Contao\CoreBundle\Image\PictureConfigurationItem;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
 
 /**
  * Resizes images and creates picture data
@@ -195,93 +201,106 @@ class Picture
 	 */
 	public function getTemplateData()
 	{
-		$mainSource = $this->getTemplateDataSource($this->imageSize);
-		$sources = array();
+		$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $this->image->getOriginalPath());
+
+		$config = new PictureConfiguration();
+		$config->setSize($this->getConfigurationItem($this->imageSize));
+
+		$sizeItems = array();
 
 		foreach ($this->imageSizeItems as $imageSizeItem)
 		{
-			$sources[] = $this->getTemplateDataSource($imageSizeItem);
+			$sizeItems[] = $this->getConfigurationItem($imageSizeItem);
 		}
+
+		$config->setSizeItems($sizeItems);
+
+		$importantPart = $this->image->getImportantPart();
+		$image->setImportantPart(new ImportantPart(
+			new Point($importantPart['x'], $importantPart['y']),
+			new Box($importantPart['width'], $importantPart['height'])
+		));
+
+		$picture = \System::getContainer()->get('contao.image.picture_generator')->generate($image, $config);
 
 		return array
 		(
-			'img' => $mainSource,
-			'sources' => $sources,
+			'img' => $picture->getImg(),
+			'sources' => $picture->getSources(),
 		);
 	}
 
 
 	/**
-	 * Get the attributes for one picture source element
+	 * Get the config for one picture source element
 	 *
 	 * @param Model|object $imageSize The image size or image size item model
 	 *
-	 * @return array The source element attributes
+	 * @return PictureConfigurationItem
 	 */
-	protected function getTemplateDataSource($imageSize)
+	protected function getConfigurationItem($imageSize)
 	{
-		$densities = array();
+		$configItem = new PictureConfigurationItem();
+		$resizeConfig = new ResizeConfiguration();
 
-		if (!empty($imageSize->densities) && ($imageSize->width || $imageSize->height))
+		$mode = $imageSize->resizeMode;
+
+		if (substr_count($mode, '_') === 1)
 		{
-			$densities = array_filter(array_map('floatval', explode(',', $imageSize->densities)));
-		}
+			$importantPart = $this->image->setImportantPart(null)->getImportantPart();
 
-		array_unshift($densities, 1);
-		$densities = array_values(array_unique($densities));
+			$mode = explode('_', $mode);
 
-		$attributes = array();
-		$srcset = array();
-
-		foreach ($densities as $density)
-		{
-			$imageObj = clone $this->image;
-
-			$src = $imageObj->setTargetWidth($imageSize->width * $density)
-							->setTargetHeight($imageSize->height * $density)
-							->setResizeMode($imageSize->resizeMode)
-							->setZoomLevel($imageSize->zoom)
-							->executeResize()
-							->getResizedPath();
-
-			$fileObj = new \File(rawurldecode($src));
-
-			if (empty($attributes['src']))
+			if ($mode[0] === 'left')
 			{
-				$attributes['src'] = htmlspecialchars(TL_FILES_URL . $src, ENT_QUOTES);
-				$attributes['width'] = $fileObj->width;
-				$attributes['height'] = $fileObj->height;
+				$importantPart['width'] = 1;
+			}
+			elseif ($mode[0] === 'right')
+			{
+				$importantPart['x'] = $importantPart['width'] - 1;
+				$importantPart['width'] = 1;
 			}
 
-			if (count($densities) > 1)
+			if ($mode[1] === 'top')
 			{
-				// Use pixel density descriptors if the sizes attribute is empty
-				if (empty($imageSize->sizes))
-				{
-					$src .= ' ' . $density . 'x';
-				}
-				// Otherwise use width descriptors
-				else
-				{
-					$src .= ' ' . $fileObj->width . 'w';
-				}
+				$importantPart['height'] = 1;
+			}
+			elseif ($mode[1] === 'bottom')
+			{
+				$importantPart['y'] = $importantPart['height'] - 1;
+				$importantPart['height'] = 1;
 			}
 
-			$srcset[] = TL_FILES_URL . $src;
+			$this->image->setImportantPart($importantPart);
+
+			$mode = ResizeConfiguration::MODE_CROP;
 		}
 
-		$attributes['srcset'] = htmlspecialchars(implode(', ', $srcset), ENT_QUOTES);
+		$resizeConfig
+			->setWidth($imageSize->width)
+			->setHeight($imageSize->height)
+			->setZoomLevel($imageSize->zoom);
 
-		if (!empty($imageSize->sizes))
+		if ($mode)
 		{
-			$attributes['sizes'] = htmlspecialchars($imageSize->sizes, ENT_QUOTES);
+			$resizeConfig->setMode($mode);
 		}
 
-		if (!empty($imageSize->media))
+		$configItem->setResizeConfig($resizeConfig);
+
+		if (isset($imageSize->sizes))
 		{
-			$attributes['media'] = htmlspecialchars($imageSize->media, ENT_QUOTES);
+			$configItem->setSizes($imageSize->sizes);
+		}
+		if (isset($imageSize->densities))
+		{
+			$configItem->setDensities($imageSize->densities);
+		}
+		if (isset($imageSize->media))
+		{
+			$configItem->setMedia($imageSize->media);
 		}
 
-		return $attributes;
+		return $configItem;
 	}
 }
