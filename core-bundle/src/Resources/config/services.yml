@@ -86,7 +86,7 @@ services:
         arguments:
             - "@contao.image.resize_calculator"
             - "@filesystem"
-            - "%kernel.root_dir%/%contao.image.target_path%"
+            - "%contao.root_dir%/%contao.image.target_path%"
             - "@contao.framework"
 
     contao.image.image_factory:
@@ -101,11 +101,10 @@ services:
 
     contao.image.picture_generator:
         class: Contao\CoreBundle\Image\PictureGenerator
-        public: false
         arguments:
             - "@contao.image.resizer"
             - %contao.image.bypass_cache%
-            - %kernel.root_dir%
+            - %contao.root_dir%
 
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
