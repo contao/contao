@@ -76,7 +76,7 @@ trait ScopeAwareTrait
      */
     protected function isBackendScope()
     {
-        return (null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
+        return null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND);
     }
 
     /**
@@ -86,6 +86,6 @@ trait ScopeAwareTrait
      */
     protected function isFrontendScope()
     {
-        return (null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND));
+        return null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND);
     }
 }
