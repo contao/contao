@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
@@ -166,13 +165,15 @@ class ContaoDataCollector extends DataCollector
             return [];
         }
 
-        unset($data['summary']);
-        unset($data['contao_version']);
-        unset($data['classes_aliased']);
-        unset($data['classes_set']);
-        unset($data['database_queries']);
-        unset($data['unknown_insert_tags']);
-        unset($data['unknown_insert_tag_flags']);
+        unset(
+            $data['summary'],
+            $data['contao_version'],
+            $data['classes_aliased'],
+            $data['classes_set'],
+            $data['database_queries'],
+            $data['unknown_insert_tags'],
+            $data['unknown_insert_tag_flags']
+        );
 
         return $data;
     }
@@ -215,13 +216,13 @@ class ContaoDataCollector extends DataCollector
         }
 
         $this->data['summary'] = [
-            'version' => $this->getContaoVersion(),
+            'version'   => $this->getContaoVersion(),
             'framework' => $framework,
-            'models' => $modelCount,
-            'frontend' => isset($GLOBALS['objPage']),
-            'preview' => BE_USER_LOGGED_IN === true,
-            'layout' => $this->getLayoutName(),
-            'template' => $this->getTemplateName(),
+            'models'    => $modelCount,
+            'frontend'  => isset($GLOBALS['objPage']),
+            'preview'   => defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN,
+            'layout'    => $this->getLayoutName(),
+            'template'  => $this->getTemplateName(),
         ];
     }
 
