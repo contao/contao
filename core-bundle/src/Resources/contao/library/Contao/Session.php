@@ -55,7 +55,7 @@ class Session
 	private $sessionBag;
 
 	/**
-	 * Session keys that are not stored in parameter bag.
+	 * Session keys that are not stored in the parameter bag
 	 * @var array
 	 */
 	private $mappedKeys = array('referer', 'popupReferer', 'CURRENT_ID');
