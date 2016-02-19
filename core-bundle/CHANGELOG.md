@@ -1,7 +1,8 @@
 # Contao core bundle change log
 
-### 4.1.1 (2015-XX-XX)
+### 4.1.1 (2015-XX-XX) # FIXME: Copyright 2016!
 
+ * Remove the "disable IP check" field from the back end settings (see #436).
  * Do not quote the search string in `FIND_IN_SET()` (see #424).
 
 ### 4.1.0 (2015-11-26)

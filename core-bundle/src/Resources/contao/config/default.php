@@ -47,7 +47,6 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 	. '<var><video>'
 	. '<wbr>';
 $GLOBALS['TL_CONFIG']['disableRefererCheck']   = false;
-$GLOBALS['TL_CONFIG']['disableIpCheck']        = false;
 $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = [];
 
 // Database

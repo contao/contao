@@ -491,7 +491,7 @@ abstract class Frontend extends \Controller
 			$objSession = \SessionModel::findByHashAndName($hash, $strCookie);
 
 			// Validate the session ID and timeout
-			if ($objSession !== null && $objSession->sessionID == \System::getContainer()->get('session')->getId() && (\Config::get('disableIpCheck') || $objSession->ip == \Environment::get('ip')) && ($objSession->tstamp + \Config::get('sessionTimeout')) > time())
+			if ($objSession !== null && $objSession->sessionID == \System::getContainer()->get('session')->getId() && (\System::getContainer()->getParameter('contao.security.disable_ip_check') || $objSession->ip == \Environment::get('ip')) && ($objSession->tstamp + \Config::get('sessionTimeout')) > time())
 			{
 				// Disable the cache if a back end user is logged in
 				if (TL_MODE == 'FE' && $strCookie == 'BE_USER_AUTH')

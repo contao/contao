@@ -716,9 +716,10 @@ abstract class System
 	 */
 	public static function getSessionHash($strCookie)
 	{
-		$strHash = static::getContainer()->get('session')->getId();
+		$container = static::getContainer();
+		$strHash = $container->get('session')->getId();
 
-		if (!\Config::get('disableIpCheck'))
+		if (!$container->getParameter('contao.security.disable_ip_check'))
 		{
 			$strHash .= \Environment::get('ip');
 		}
