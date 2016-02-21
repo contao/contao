@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0c4740913b4925978c3d2024f2aee7f3",
-    "content-hash": "c3a56f145612b8da54d316c3e0427bf3",
+    "hash": "949fc340095a278d81c7529704817ecd",
+    "content-hash": "341c7e1979986853cf3717b56ad83364",
     "packages": [
         {
             "name": "contao-components/ace",
@@ -4178,12 +4178,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "8a2d1a2ee26fa7a2d29621adcf59706a891a3076"
+                "reference": "4c0e163977f8289288df7b37e0fd0469d3e8cbc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/8a2d1a2ee26fa7a2d29621adcf59706a891a3076",
-                "reference": "8a2d1a2ee26fa7a2d29621adcf59706a891a3076",
+                "url": "https://api.github.com/repos/composer/composer/zipball/4c0e163977f8289288df7b37e0fd0469d3e8cbc6",
+                "reference": "4c0e163977f8289288df7b37e0fd0469d3e8cbc6",
                 "shasum": ""
             },
             "require": {
@@ -4245,7 +4245,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-02-19 16:25:53"
+            "time": "2016-02-20 19:28:03"
         },
         {
             "name": "composer/semver",
