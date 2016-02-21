@@ -3,6 +3,9 @@ shallow_clone: true
 platform: x86
 clone_folder: c:\projects\contao
 
+init:
+  - SET SYMFONY_DEPRECATIONS_HELPER=weak
+
 install:
   - cinst -y OpenSSL.Light
   - SET PATH=C:\Program Files\OpenSSL;%PATH%
