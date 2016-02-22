@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\EventListener;
+namespace Contao\CoreBundle\Framework;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -19,9 +19,6 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
- *             Use Contao\CoreBundle\Framework\ScopeAwareTrait instead.
  */
 trait ScopeAwareTrait
 {
@@ -36,12 +33,6 @@ trait ScopeAwareTrait
      */
     protected function isContaoMasterRequest(KernelEvent $event)
     {
-        @trigger_error(
-            'Using Contao\CoreBundle\EventListener\ScopeAwareTrait has been deprecated and will no longer work in '
-                . 'Contao 5.0. Use Contao\CoreBundle\Framework\ScopeAwareTrait instead.',
-            E_USER_DEPRECATED
-        );
-
         return $event->isMasterRequest() && $this->isContaoScope();
     }
 
@@ -54,12 +45,6 @@ trait ScopeAwareTrait
      */
     protected function isBackendMasterRequest(KernelEvent $event)
     {
-        @trigger_error(
-            'Using Contao\CoreBundle\EventListener\ScopeAwareTrait has been deprecated and will no longer work in '
-                . 'Contao 5.0. Use Contao\CoreBundle\Framework\ScopeAwareTrait instead.',
-            E_USER_DEPRECATED
-        );
-
         return $event->isMasterRequest() && $this->isBackendScope();
     }
 
@@ -72,12 +57,6 @@ trait ScopeAwareTrait
      */
     protected function isFrontendMasterRequest(KernelEvent $event)
     {
-        @trigger_error(
-            'Using Contao\CoreBundle\EventListener\ScopeAwareTrait has been deprecated and will no longer work in '
-                . 'Contao 5.0. Use Contao\CoreBundle\Framework\ScopeAwareTrait instead.',
-            E_USER_DEPRECATED
-        );
-
         return $event->isMasterRequest() && $this->isFrontendScope();
     }
 
@@ -88,12 +67,6 @@ trait ScopeAwareTrait
      */
     protected function isContaoScope()
     {
-        @trigger_error(
-            'Using Contao\CoreBundle\EventListener\ScopeAwareTrait has been deprecated and will no longer work in '
-                . 'Contao 5.0. Use Contao\CoreBundle\Framework\ScopeAwareTrait instead.',
-            E_USER_DEPRECATED
-        );
-
         return $this->isBackendScope() || $this->isFrontendScope();
     }
 
@@ -104,12 +77,6 @@ trait ScopeAwareTrait
      */
     protected function isBackendScope()
     {
-        @trigger_error(
-            'Using Contao\CoreBundle\EventListener\ScopeAwareTrait has been deprecated and will no longer work in '
-                . 'Contao 5.0. Use Contao\CoreBundle\Framework\ScopeAwareTrait instead.',
-            E_USER_DEPRECATED
-        );
-
         return $this->isScope(ContaoCoreBundle::SCOPE_BACKEND);
     }
 
@@ -120,12 +87,6 @@ trait ScopeAwareTrait
      */
     protected function isFrontendScope()
     {
-        @trigger_error(
-            'Using Contao\CoreBundle\EventListener\ScopeAwareTrait has been deprecated and will no longer work in '
-                . 'Contao 5.0. Use Contao\CoreBundle\Framework\ScopeAwareTrait instead.',
-            E_USER_DEPRECATED
-        );
-
         return $this->isScope(ContaoCoreBundle::SCOPE_FRONTEND);
     }
 
@@ -138,12 +99,6 @@ trait ScopeAwareTrait
      */
     private function isScope($scope)
     {
-        @trigger_error(
-            'Using Contao\CoreBundle\EventListener\ScopeAwareTrait has been deprecated and will no longer work in '
-                . 'Contao 5.0. Use Contao\CoreBundle\Framework\ScopeAwareTrait instead.',
-            E_USER_DEPRECATED
-        );
-
         if (null === $this->container) {
             return false;
         }

@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\FrontendUser;
 use Contao\User;
 use Doctrine\DBAL\Connection;
