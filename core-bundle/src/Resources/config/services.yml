@@ -75,7 +75,6 @@ services:
             - "@database_connection"
         call:
             - ["setContainer", ["@service_container"]]
-            - ["pushProcessor", ["@contao.monolog.processor"]]
         tags:
             - { name: monolog.logger, channel: contao }
 
@@ -84,3 +83,5 @@ services:
         arguments:
             - "@request_stack"
             - "@security.token_storage"
+        tags:
+            - { name: monolog.processor, handler: contao }
