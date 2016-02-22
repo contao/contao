@@ -10,6 +10,11 @@ use Doctrine\DBAL\Statement;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 
+/**
+ * ContaoLogHandler
+ *
+ * @author Andreas Schempp <https://github.com/aschempp>
+ */
 class ContaoLogHandler extends AbstractProcessingHandler
 {
     use ScopeAwareTrait;
@@ -68,7 +73,7 @@ class ContaoLogHandler extends AbstractProcessingHandler
                     'source'   => (string) $this->isBackendScope() ? 'BE' : 'FE',
                     'action'   => (string) $record['extra']['tl_log.action'],
                     'username' => (string) $record['extra']['tl_log.username'],
-                    'text'     => (string) specialchars($record['formatted']),
+                    'text'     => (string) specialchars($record['message']),
                     'func'     => (string) $record['extra']['tl_log.func'],
                     'ip'       => (string) $record['extra']['tl_log.ip'],
                     'browser'  => (string) $record['extra']['tl_log.browser'],
@@ -77,21 +82,13 @@ class ContaoLogHandler extends AbstractProcessingHandler
         } catch (DBALException $e) {
             // Fall back to PHP log if database is not available
             error_log(
-                print_r($record, true),
+                $record['formatted'],
                 3,
                 TL_ROOT . '/app/logs/tl_log.log'
             );
         }
 
         $this->executeHook($record);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getDefaultFormatter()
-    {
-        return new ContaoLogFormatter();
     }
 
     /**
