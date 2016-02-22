@@ -87,6 +87,14 @@ class ContaoLogHandler extends AbstractProcessingHandler
     }
 
     /**
+     * @inheritdoc
+     */
+    protected function getDefaultFormatter()
+    {
+        return new ContaoLogFormatter();
+    }
+
+    /**
      * @return bool
      */
     private function canWriteToDb()
