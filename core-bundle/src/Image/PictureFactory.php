@@ -60,11 +60,16 @@ class PictureFactory
      *
      * @return Picture The created Picture object
      */
-    public function create($path, $size)
+    public function create($path, $size = null)
     {
-        $image = $this->imageFactory->create($path);
-
-        $config = $this->createConfig($size);
+        if (is_array($size) && isset($size[2]) && substr_count($size[2], '_') === 1) {
+            $image = $this->imageFactory->create($path, $size);
+            $config = new PictureConfiguration();
+        }
+        else {
+            $image = $this->imageFactory->create($path);
+            $config = $this->createConfig($size);
+        }
 
         return $this->pictureGenerator->generate($image, $config);
     }
