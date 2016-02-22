@@ -91,7 +91,7 @@ class ContaoLogProcessor
     /**
      * @param $record
      */
-    private function setCategory($record)
+    private function setCategory(&$record)
     {
         if (isset($record['context'][self::CONTEXT_CATEGORY])) {
             $record['extra'][self::CONTEXT_CATEGORY] = $record['context'][self::CONTEXT_CATEGORY];
