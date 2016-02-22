@@ -69,19 +69,18 @@ services:
             - "@contao.framework"
 
     contao.monolog.handler:
-        class: Contao\CoreBundle\Monolog\ContaoLogHandler
+        class: Contao\CoreBundle\Monolog\ContaoTableHandler
         arguments:
             - "@contao.framework"
             - "@database_connection"
         call:
             - ["setContainer", ["@service_container"]]
+            - ["pushProcessor", ["@contao.monolog.processor"]]
         tags:
             - { name: monolog.logger, channel: contao }
 
     contao.monolog.processor:
-        class: Contao\CoreBundle\Monolog\ContaoLogProcessor
+        class: Contao\CoreBundle\Monolog\ContaoTableProcessor
         arguments:
             - "@request_stack"
             - "@security.token_storage"
-        tags:
-            - { name: monolog.processor, handler: contao }

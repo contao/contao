@@ -7,7 +7,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Statement;
-use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Handler\AbstractHandler;
 use Monolog\Logger;
 
 /**
@@ -15,7 +15,7 @@ use Monolog\Logger;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoLogHandler extends AbstractProcessingHandler
+class ContaoTableHandler extends AbstractHandler
 {
     use ScopeAwareTrait;
 
@@ -42,8 +42,12 @@ class ContaoLogHandler extends AbstractProcessingHandler
      * @param int                      $level
      * @param bool                     $bubble
      */
-    public function __construct(ContaoFrameworkInterface $framework, Connection $db, $level = Logger::DEBUG, $bubble = false)
-    {
+    public function __construct(
+        ContaoFrameworkInterface $framework,
+        Connection $db,
+        $level = Logger::DEBUG,
+        $bubble = false
+    ) {
         parent::__construct($level, $bubble);
 
         $this->framework = $framework;
@@ -51,44 +55,57 @@ class ContaoLogHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Writes the record down to the log of the implementing handler
-     *
-     * @param  array $record
-     *
-     * @return void
+     * @inheritdoc
      */
-    protected function write(array $record)
+    public function handle(array $record)
     {
         if (!$this->canWriteToDb()) {
-            return;
+            return false;
         }
 
         try {
             /** @var \DateTime $date */
-            $date = $record['datetime'];
+            $date     = $record['datetime'];
+            $category = strtoupper(str_replace('contao_', '', $record['channel']));
+
+            $record = $this->processRecord($record);
 
             $this->statement->execute(
                 [
-                    'tstamp'   => (string) $date->format('U'),
-                    'source'   => (string) $this->isBackendScope() ? 'BE' : 'FE',
-                    'action'   => (string) $record['extra']['tl_log.action'],
-                    'username' => (string) $record['extra']['tl_log.username'],
-                    'text'     => (string) specialchars($record['message']),
-                    'func'     => (string) $record['extra']['tl_log.func'],
-                    'ip'       => (string) $record['extra']['tl_log.ip'],
-                    'browser'  => (string) $record['extra']['tl_log.browser'],
+                    'tstamp'   => $date->format('U'),
+                    'text'     => specialchars($record['message']),
+                    'source'   => $this->isBackendScope() ? 'BE' : 'FE',
+                    'action'   => $category,
+                    'username' => (string) $record['extra']['username'],
+                    'func'     => (string) $record['extra']['function'],
+                    'ip'       => (string) $record['extra']['ip'],
+                    'browser'  => (string) $record['extra']['browser'],
                 ]
             );
         } catch (DBALException $e) {
-            // Fall back to PHP log if database is not available
-            error_log(
-                $record['formatted'],
-                3,
-                TL_ROOT . '/app/logs/tl_log.log'
-            );
+            return false;
         }
 
-        $this->executeHook($record);
+        $this->executeHook($record, $category);
+
+        return false === $this->bubble;
+    }
+
+    /**
+     * Processes a record.
+     *
+     * @param  array $record
+     * @return array
+     */
+    private function processRecord(array $record)
+    {
+        if ($this->processors) {
+            foreach ($this->processors as $processor) {
+                $record = call_user_func($processor, $record);
+            }
+        }
+
+        return $record;
     }
 
     /**
@@ -114,9 +131,10 @@ class ContaoLogHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param array $record
+     * @param array  $record
+     * @param string $category
      */
-    private function executeHook(array $record)
+    private function executeHook(array $record, $category)
     {
         // HOOK: allow to add custom loggers
         if (!$this->framework->isInitialized()
@@ -135,9 +153,8 @@ class ContaoLogHandler extends AbstractProcessingHandler
         $system = $this->framework->getAdapter('Contao\System');
 
         // Must create variable to allow modification in hook
-        $text = $record['formatted'];
-        $function = $record['extra'][ContaoLogProcessor::CONTEXT_FUNCTION];
-        $category = $record['extra'][ContaoLogProcessor::CONTEXT_CATEGORY];
+        $text     = $record['message'];
+        $function = $record['extra']['function'];
 
         foreach ($GLOBALS['TL_HOOKS']['addLogEntry'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}(
