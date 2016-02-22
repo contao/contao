@@ -73,9 +73,9 @@ services:
         arguments:
             - "@contao.framework"
             - "@database_connection"
+            - "@contao.monolog.processor"
         call:
             - ["setContainer", ["@service_container"]]
-            - ["pushProcessor", ["@contao.monolog.processor"]]
         tags:
             - { name: monolog.logger, channel: contao }
 

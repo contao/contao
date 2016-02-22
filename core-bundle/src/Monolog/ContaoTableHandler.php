@@ -30,6 +30,11 @@ class ContaoTableHandler extends AbstractHandler
     private $db;
 
     /**
+     * @var callable
+     */
+    private $processor;
+
+    /**
      * @var Statement
      */
     private $statement;
@@ -39,12 +44,14 @@ class ContaoTableHandler extends AbstractHandler
      *
      * @param ContaoFrameworkInterface $framework
      * @param Connection               $db
+     * @param callable                 $processor
      * @param int                      $level
      * @param bool                     $bubble
      */
     public function __construct(
         ContaoFrameworkInterface $framework,
         Connection $db,
+        callable $processor,
         $level = Logger::DEBUG,
         $bubble = false
     ) {
@@ -52,6 +59,7 @@ class ContaoTableHandler extends AbstractHandler
 
         $this->framework = $framework;
         $this->db        = $db;
+        $this->processor = $processor;
     }
 
     /**
@@ -68,7 +76,7 @@ class ContaoTableHandler extends AbstractHandler
             $date     = $record['datetime'];
             $category = strtoupper(str_replace('contao_', '', $record['channel']));
 
-            $record = $this->processRecord($record);
+            $record = call_user_func($this->processor, $record);
 
             $this->statement->execute(
                 [
@@ -89,23 +97,6 @@ class ContaoTableHandler extends AbstractHandler
         $this->executeHook($record, $category);
 
         return false === $this->bubble;
-    }
-
-    /**
-     * Processes a record.
-     *
-     * @param  array $record
-     * @return array
-     */
-    private function processRecord(array $record)
-    {
-        if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
-        }
-
-        return $record;
     }
 
     /**
