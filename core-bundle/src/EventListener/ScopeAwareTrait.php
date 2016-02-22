@@ -64,7 +64,7 @@ trait ScopeAwareTrait
     }
 
     /**
-     * Checks whether the request is a Contao front end master request
+     * Checks whether the request is a Contao front end master request.
      *
      * @param KernelEvent $event The HttpKernel event
      *

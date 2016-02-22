@@ -39,10 +39,10 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testCollectInBackendScope()
     {
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
-
-        $collector = new ContaoDataCollector($container, ['contao/core-bundle' => '4.0.0']);
+        $collector = new ContaoDataCollector(
+            $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND),
+            ['contao/core-bundle' => '4.0.0']
+        );
 
         $GLOBALS['TL_DEBUG'] = [
             'classes_aliased' => ['ContentText <span>Contao\ContentText</span>'],
@@ -90,10 +90,7 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testCollectInFrontendScope()
     {
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
-        $collector = new ContaoDataCollector($container, []);
+        $collector = new ContaoDataCollector($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND), []);
 
         $layout = new \stdClass();
         $layout->name = 'Default';

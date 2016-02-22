@@ -28,6 +28,18 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class ContainerScopeListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        if (!method_exists('Symfony\Component\DependencyInjection\Container', 'enterScope')) {
+            $this->markTestSkipped('Container scopes are not supported in this Symfony version.');
+        }
+    }
+
+    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
@@ -103,6 +115,8 @@ class ContainerScopeListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests the onKernelController method without the container scope.
+     *
+     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      */
     public function testWithoutContainerScope()
     {
@@ -116,8 +130,5 @@ class ContainerScopeListenerTest extends \PHPUnit_Framework_TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
-
-        $this->assertFalse($container->hasScope(ContaoCoreBundle::SCOPE_BACKEND));
-        $this->assertFalse($container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
     }
 }

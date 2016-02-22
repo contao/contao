@@ -49,7 +49,7 @@ trait ScopeAwareTrait
     }
 
     /**
-     * Checks whether the request is a Contao front end master request
+     * Checks whether the request is a Contao front end master request.
      *
      * @param KernelEvent $event The HttpKernel event
      *
@@ -105,7 +105,7 @@ trait ScopeAwareTrait
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
-        if (null === $request && !$request->attributes->has('_scope')) {
+        if (null === $request || !$request->attributes->has('_scope')) {
             return false;
         }
 

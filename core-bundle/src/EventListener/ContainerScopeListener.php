@@ -19,6 +19,9 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
  * Changes the container scope based on the route configuration.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+ *             Use the _scope request attribute instead.
  */
 class ContainerScopeListener
 {
@@ -70,16 +73,12 @@ class ContainerScopeListener
      */
     private function getScopeFromEvent(KernelEvent $event)
     {
-        if (!$event->getRequest()->attributes->has('_scope')) {
+        $request = $event->getRequest();
+
+        if (!$request->attributes->has('_scope')) {
             return null;
         }
 
-        $scope = $event->getRequest()->attributes->get('_scope');
-
-        if (!$this->container->hasScope($scope)) {
-            return null;
-        }
-
-        return $scope;
+        return $request->attributes->get('_scope');
     }
 }

@@ -11,8 +11,8 @@
 namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\FrontendUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -27,10 +27,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class ContaoUserProvider implements UserProviderInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    use ScopeAwareTrait;
 
     /**
      * @var ContaoFrameworkInterface
@@ -96,7 +93,7 @@ class ContaoUserProvider implements UserProviderInterface
      */
     private function isFrontendUsername($username)
     {
-        return 'frontend' === $username && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND);
+        return 'frontend' === $username && $this->isFrontendScope();
     }
 
     /**
@@ -108,6 +105,6 @@ class ContaoUserProvider implements UserProviderInterface
      */
     private function isBackendUsername($username)
     {
-        return 'backend' === $username && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND);
+        return 'backend' === $username && $this->isBackendScope();
     }
 }

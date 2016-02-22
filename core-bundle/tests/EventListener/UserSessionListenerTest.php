@@ -64,9 +64,6 @@ class UserSessionListenerTest extends TestCase
             HttpKernelInterface::MASTER_REQUEST
         );
 
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope($scope);
-
         $session = $this->mockSession();
 
         $user = $this
@@ -99,7 +96,7 @@ class UserSessionListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, null, $tokenStorage);
-        $listener->setContainer($container);
+        $listener->setContainer($this->mockContainerWithContaoScopes($scope));
         $listener->onKernelRequest($responseEvent);
 
         /* @var AttributeBagInterface $bag */
@@ -167,11 +164,8 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope($scope);
-
         $listener = $this->getListener($this->mockSession(), $connection, $tokenStorage);
-        $listener->setContainer($container);
+        $listener->setContainer($this->mockContainerWithContaoScopes($scope));
         $listener->onKernelResponse($responseEvent);
     }
 
