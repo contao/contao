@@ -10,7 +10,9 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
@@ -38,6 +40,7 @@ class ContainerScopeListener
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->addContaoScopesIfNotSet();
     }
 
     /**
@@ -80,5 +83,19 @@ class ContainerScopeListener
         }
 
         return $request->attributes->get('_scope');
+    }
+
+    /**
+     * Adds the Contao scopes to the container.
+     */
+    private function addContaoScopesIfNotSet()
+    {
+        if (!$this->container->hasScope(ContaoCoreBundle::SCOPE_BACKEND)) {
+            $this->container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND, 'request'));
+        }
+
+        if (!$this->container->hasScope(ContaoCoreBundle::SCOPE_FRONTEND)) {
+            $this->container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND, 'request'));
+        }
     }
 }

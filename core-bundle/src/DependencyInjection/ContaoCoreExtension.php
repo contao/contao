@@ -117,8 +117,5 @@ class ContaoCoreExtension extends ConfigurableExtension
         );
 
         $container->setDefinition('contao.listener.container_scope', $definition);
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
     }
 }
