@@ -76,13 +76,7 @@ class ContainerScopeListener
      */
     private function getScopeFromEvent(KernelEvent $event)
     {
-        $request = $event->getRequest();
-
-        if (!$request->attributes->has('_scope')) {
-            return null;
-        }
-
-        return $request->attributes->get('_scope');
+        return $event->getRequest()->attributes->get('_scope');
     }
 
     /**
