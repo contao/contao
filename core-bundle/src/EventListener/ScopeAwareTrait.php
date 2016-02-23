@@ -10,82 +10,22 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\ContaoCoreBundle;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Symfony\Component\HttpKernel\Event\KernelEvent;
+@trigger_error(
+    'Using ' . __NAMESPACE__ . '\ScopeAwareTrait has been deprecated and will no longer work in Contao 5.0. '
+        . 'Use Contao\CoreBundle\Framework\ScopeAwareTrait instead.',
+    E_USER_DEPRECATED
+);
 
 /**
- * Provides methods to test the container scope.
+ * Provides methods to test the request scope.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
+ *             Use Contao\CoreBundle\Framework\ScopeAwareTrait instead.
  */
 trait ScopeAwareTrait
 {
-    use ContainerAwareTrait;
-
-    /**
-     * Checks whether the request is the master request in one of the Contao scopes.
-     *
-     * @param KernelEvent $event The HttpKernel event
-     *
-     * @return bool True the request is the master request in one of the Contao scopes
-     */
-    protected function isContaoMasterRequest(KernelEvent $event)
-    {
-        return $event->isMasterRequest() && $this->isContaoScope();
-    }
-
-    /**
-     * Checks whether the request is the master request in the back end scope.
-     *
-     * @param KernelEvent $event The HttpKernel event
-     *
-     * @return bool True the request is the master request in the back end scope
-     */
-    protected function isBackendMasterRequest(KernelEvent $event)
-    {
-        return $event->isMasterRequest() && $this->isBackendScope();
-    }
-
-    /**
-     * Checks whether the request is the master request in the front end scope.
-     *
-     * @param KernelEvent $event The HttpKernel event
-     *
-     * @return bool True if the request is the master request in the front end scope
-     */
-    protected function isFrontendMasterRequest(KernelEvent $event)
-    {
-        return $event->isMasterRequest() && $this->isFrontendScope();
-    }
-
-    /**
-     * Checks whether the container is in one of the Contao scopes.
-     *
-     * @return bool True if the container is in one of the Contao scopes
-     */
-    protected function isContaoScope()
-    {
-        return $this->isBackendScope() || $this->isFrontendScope();
-    }
-
-    /**
-     * Checks whether the container is in the back end scope.
-     *
-     * @return bool True if the container is in the back end scope
-     */
-    protected function isBackendScope()
-    {
-        return (null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
-    }
-
-    /**
-     * Checks whether the container is in the front end scope.
-     *
-     * @return bool True if the container is in the front end scope
-     */
-    protected function isFrontendScope()
-    {
-        return (null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND));
-    }
+    use \Contao\CoreBundle\Framework\ScopeAwareTrait;
 }

@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\Frontend;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 

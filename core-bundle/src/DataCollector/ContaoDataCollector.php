@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\DataCollector;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
@@ -26,10 +27,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  */
 class ContaoDataCollector extends DataCollector
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    use ScopeAwareTrait;
 
     /**
      * @var array
@@ -230,11 +228,11 @@ class ContaoDataCollector extends DataCollector
      */
     private function getContainerScope()
     {
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
+        if ($this->isBackendScope()) {
             return ContaoCoreBundle::SCOPE_BACKEND;
         }
 
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
+        if ($this->isFrontendScope()) {
             return ContaoCoreBundle::SCOPE_FRONTEND;
         }
 
@@ -248,7 +246,7 @@ class ContaoDataCollector extends DataCollector
      */
     private function getLayoutName()
     {
-        if (!$this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
+        if (!$this->isFrontendScope()) {
             return '';
         }
 

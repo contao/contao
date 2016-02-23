@@ -48,6 +48,6 @@ trait UserAwareTrait
             return false;
         }
 
-        return (!$user instanceof AnonymousToken);
+        return !$user instanceof AnonymousToken;
     }
 }

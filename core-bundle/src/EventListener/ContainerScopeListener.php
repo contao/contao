@@ -10,7 +10,9 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
@@ -19,6 +21,9 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
  * Changes the container scope based on the route configuration.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ *
+ * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+ *             Use the _scope request attribute instead.
  */
 class ContainerScopeListener
 {
@@ -35,6 +40,7 @@ class ContainerScopeListener
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->addContaoScopesIfNotSet();
     }
 
     /**
@@ -70,16 +76,20 @@ class ContainerScopeListener
      */
     private function getScopeFromEvent(KernelEvent $event)
     {
-        if (!$event->getRequest()->attributes->has('_scope')) {
-            return null;
+        return $event->getRequest()->attributes->get('_scope');
+    }
+
+    /**
+     * Adds the Contao scopes to the container.
+     */
+    private function addContaoScopesIfNotSet()
+    {
+        if (!$this->container->hasScope(ContaoCoreBundle::SCOPE_BACKEND)) {
+            $this->container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND, 'request'));
         }
 
-        $scope = $event->getRequest()->attributes->get('_scope');
-
-        if (!$this->container->hasScope($scope)) {
-            return null;
+        if (!$this->container->hasScope(ContaoCoreBundle::SCOPE_FRONTEND)) {
+            $this->container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND, 'request'));
         }
-
-        return $scope;
     }
 }

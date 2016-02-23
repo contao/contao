@@ -12,8 +12,7 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\OutputFromCacheListener;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Scope;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -25,7 +24,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class OutputFromCacheListenerTest extends \PHPUnit_Framework_TestCase
+class OutputFromCacheListenerTest extends TestCase
 {
     /**
      * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
@@ -77,17 +76,15 @@ class OutputFromCacheListenerTest extends \PHPUnit_Framework_TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $container = new Container();
+
         $request = new Request();
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new OutputFromCacheListener($this->framework);
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $listener->setContainer($container);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new OutputFromCacheListener($this->framework);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
@@ -100,17 +97,15 @@ class OutputFromCacheListenerTest extends \PHPUnit_Framework_TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $container = new Container();
+
         $request = new Request();
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new OutputFromCacheListener($this->framework);
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
-
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', 'invalid');
 
-        $listener->setContainer($container);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new OutputFromCacheListener($this->framework);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelRequest($event);
 
         $this->assertFalse($event->hasResponse());
@@ -123,12 +118,14 @@ class OutputFromCacheListenerTest extends \PHPUnit_Framework_TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+
         $request = new Request();
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new OutputFromCacheListener($this->framework);
-
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new OutputFromCacheListener($this->framework);
         $listener->onKernelRequest($event);
 
         $this->assertFalse($event->hasResponse());

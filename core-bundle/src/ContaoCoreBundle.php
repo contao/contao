@@ -43,9 +43,6 @@ class ContaoCoreBundle extends Bundle
     public function boot()
     {
         Bootup::initAll();
-
-        $this->container->addScope(new Scope(self::SCOPE_BACKEND, 'request'));
-        $this->container->addScope(new Scope(self::SCOPE_FRONTEND, 'request'));
     }
 
     /**
