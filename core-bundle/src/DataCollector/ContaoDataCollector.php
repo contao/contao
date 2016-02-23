@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
@@ -164,13 +163,15 @@ class ContaoDataCollector extends DataCollector
             return [];
         }
 
-        unset($data['summary']);
-        unset($data['contao_version']);
-        unset($data['classes_aliased']);
-        unset($data['classes_set']);
-        unset($data['database_queries']);
-        unset($data['unknown_insert_tags']);
-        unset($data['unknown_insert_tag_flags']);
+        unset(
+            $data['summary'],
+            $data['contao_version'],
+            $data['classes_aliased'],
+            $data['classes_set'],
+            $data['database_queries'],
+            $data['unknown_insert_tags'],
+            $data['unknown_insert_tag_flags']
+        );
 
         return $data;
     }
@@ -213,30 +214,14 @@ class ContaoDataCollector extends DataCollector
         }
 
         $this->data['summary'] = [
-            'version' => $this->getContaoVersion(),
-            'scope' => $this->getContainerScope(),
-            'layout' => $this->getLayoutName(),
+            'version'   => $this->getContaoVersion(),
             'framework' => $framework,
-            'models' => $modelCount,
+            'models'    => $modelCount,
+            'frontend'  => isset($GLOBALS['objPage']),
+            'preview'   => defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN,
+            'layout'    => $this->getLayoutName(),
+            'template'  => $this->getTemplateName(),
         ];
-    }
-
-    /**
-     * Returns the scope from the container.
-     *
-     * @return string
-     */
-    private function getContainerScope()
-    {
-        if ($this->isBackendScope()) {
-            return ContaoCoreBundle::SCOPE_BACKEND;
-        }
-
-        if ($this->isFrontendScope()) {
-            return ContaoCoreBundle::SCOPE_FRONTEND;
-        }
-
-        return '';
     }
 
     /**
@@ -246,18 +231,40 @@ class ContaoDataCollector extends DataCollector
      */
     private function getLayoutName()
     {
-        if (!$this->isFrontendScope()) {
-            return '';
-        }
+        $layout = $this->getLayout();
 
-        /** @var PageModel $objPage */
-        global $objPage;
-
-        /** @var LayoutModel $layout */
-        if (null === $objPage || null === ($layout = $objPage->getRelated('layout'))) {
+        if (null === $layout) {
             return '';
         }
 
         return sprintf('%s (ID %s)', $layout->name, $layout->id);
+    }
+
+    private function getTemplateName()
+    {
+        $layout = $this->getLayout();
+
+        if (null === $layout) {
+            return '';
+        }
+
+        return $layout->template;
+    }
+
+    /**
+     * @return LayoutModel|null
+     * @throws \Exception
+     */
+    private function getLayout()
+    {
+        /** @var PageModel $objPage */
+        global $objPage;
+
+        /** @var LayoutModel $layout */
+        if (null === $objPage) {
+            return null;
+        }
+
+        return $objPage->getRelated('layout');
     }
 }
