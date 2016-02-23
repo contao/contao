@@ -58,14 +58,20 @@ class ImageFactory
     private $bypassCache;
 
     /**
+     * @var array
+     */
+    private $imagineOptions;
+
+    /**
      * Constructor.
      *
-     * @param Resizer                  $resizer     The resizer object
-     * @param ImagineInterface         $imagine     The imagine object
-     * @param ImagineInterface         $imagineSvg  The imagine object for SVG files
-     * @param Filesystem               $filesystem  The filesystem object
-     * @param ContaoFrameworkInterface $framework   The Contao framework
-     * @param bool                     $bypassCache True to bypass the image cache
+     * @param Resizer                  $resizer        The resizer object
+     * @param ImagineInterface         $imagine        The imagine object
+     * @param ImagineInterface         $imagineSvg     The imagine object for SVG files
+     * @param Filesystem               $filesystem     The filesystem object
+     * @param ContaoFrameworkInterface $framework      The Contao framework
+     * @param bool                     $bypassCache    True to bypass the image cache
+     * @param array                    $imagineOptions The options for Imagine save
      */
     public function __construct(
         Resizer $resizer,
@@ -73,7 +79,8 @@ class ImageFactory
         ImagineInterface $imagineSvg,
         Filesystem $filesystem,
         ContaoFrameworkInterface $framework,
-        $bypassCache
+        $bypassCache,
+        array $imagineOptions
     ) {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
@@ -81,6 +88,7 @@ class ImageFactory
         $this->filesystem = $filesystem;
         $this->framework = $framework;
         $this->bypassCache = (bool) $bypassCache;
+        $this->imagineOptions = $imagineOptions;
     }
 
     /**
@@ -116,7 +124,7 @@ class ImageFactory
         }
         $image->setImportantPart($importantPart);
 
-        return $this->resizer->resize($image, $resizeConfig, $targetPath, $this->bypassCache);
+        return $this->resizer->resize($image, $resizeConfig, $this->imagineOptions, $targetPath, $this->bypassCache);
     }
 
     /**

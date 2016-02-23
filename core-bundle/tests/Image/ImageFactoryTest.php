@@ -34,10 +34,12 @@ class ImageFactoryTest extends TestCase
      * @param ImagineInterface         $imagine
      * @param Filesystem               $filesystem
      * @param ContaoFrameworkInterface $framework
+     * @param bool                     $bypassCache
+     * @param array                    $imagineOptions
      *
      * @return ImageFactory
      */
-    private function createImageFactory($resizer = null, $imagine = null, $imagineSvg = null, $filesystem = null, $framework = null, $bypassCache = null)
+    private function createImageFactory($resizer = null, $imagine = null, $imagineSvg = null, $filesystem = null, $framework = null, $bypassCache = null, $imagineOptions = null)
     {
         if (null === $resizer) {
             $resizer = $this->getMockBuilder('Contao\Image\Resizer')
@@ -65,7 +67,11 @@ class ImageFactoryTest extends TestCase
             $bypassCache = false;
         }
 
-        return new ImageFactory($resizer, $imagine, $imagineSvg, $filesystem, $framework, $bypassCache);
+        if (null === $imagineOptions) {
+            $imagineOptions = ['jpeg_quality' => 80];
+        }
+
+        return new ImageFactory($resizer, $imagine, $imagineSvg, $filesystem, $framework, $bypassCache, $imagineOptions);
     }
 
     /**
@@ -188,6 +194,7 @@ class ImageFactoryTest extends TestCase
 
                     return true;
                 }),
+                $this->equalTo(['jpeg_quality' => 80]),
                 $this->equalTo('target/path.jpg')
             )
             ->willReturn($imageMock);

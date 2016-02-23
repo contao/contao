@@ -81,7 +81,6 @@ $GLOBALS['TL_CONFIG']['uploadPath']     = 'files';
 $GLOBALS['TL_CONFIG']['maxFileSize']    = 2048000;
 $GLOBALS['TL_CONFIG']['imageWidth']     = 800;
 $GLOBALS['TL_CONFIG']['imageHeight']    = 600;
-$GLOBALS['TL_CONFIG']['jpgQuality']     = 80;
 $GLOBALS['TL_CONFIG']['gdMaxImgWidth']  = 3000;
 $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
 

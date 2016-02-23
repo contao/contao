@@ -39,20 +39,28 @@ class PictureFactory
     private $framework;
 
     /**
+     * @var array
+     */
+    private $imagineOptions;
+
+    /**
      * Constructor.
      *
      * @param PictureGenerator         $pictureGenerator The picture generator
      * @param ImageFactory             $imageFactory     The image factory
      * @param ContaoFrameworkInterface $framework        The Contao framework
+     * @param array                    $imagineOptions   The options for Imagine save
      */
     public function __construct(
         PictureGenerator $pictureGenerator,
         ImageFactory $imageFactory,
-        ContaoFrameworkInterface $framework
+        ContaoFrameworkInterface $framework,
+        array $imagineOptions
     ) {
         $this->pictureGenerator = $pictureGenerator;
         $this->imageFactory = $imageFactory;
         $this->framework = $framework;
+        $this->imagineOptions = $imagineOptions;
     }
 
     /**
@@ -75,7 +83,7 @@ class PictureFactory
             $config = $this->createConfig($size);
         }
 
-        return $this->pictureGenerator->generate($image, $config);
+        return $this->pictureGenerator->generate($image, $config, $this->imagineOptions);
     }
 
     private function createConfig($size)

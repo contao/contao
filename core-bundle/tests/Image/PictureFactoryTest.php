@@ -36,10 +36,11 @@ class PictureFactoryTest extends TestCase
      * @param ImagineInterface         $imagine
      * @param Filesystem               $filesystem
      * @param ContaoFrameworkInterface $framework
+     * @param array                    $imagineOptions
      *
      * @return PictureFactory
      */
-    private function createPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null)
+    private function createPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null, $imagineOptions = null)
     {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this->getMockBuilder('Contao\Image\PictureGenerator')
@@ -57,7 +58,11 @@ class PictureFactoryTest extends TestCase
             $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
         }
 
-        return new PictureFactory($pictureGenerator, $imageFactory, $framework);
+        if (null === $imagineOptions) {
+            $imagineOptions = [];
+        }
+
+        return new PictureFactory($pictureGenerator, $imageFactory, $framework, $imagineOptions);
     }
 
     /**

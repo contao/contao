@@ -10,7 +10,9 @@
 
 namespace Contao\CoreBundle\Test\Contao;
 
+use Contao\CoreBundle\Test\TestCase;
 use Contao\GdImage;
+use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -22,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class GdImageTest extends \PHPUnit_Framework_TestCase
+class GdImageTest extends TestCase
 {
     /**
      * @var string
@@ -57,6 +59,8 @@ class GdImageTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         define('TL_ROOT', self::$rootDir);
+
+        System::setContainer($this->mockContainerWithContaoScopes());
     }
 
     /**

@@ -200,6 +200,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->setParameter('kernel.debug', false);
         $container->setParameter('contao.image.bypass_cache', false);
         $container->setParameter('contao.image.target_path', 'assets/images');
+        $container->setParameter('contao.image.imagine_options', ['jpeg_quality' => 80]);
 
         $container->set(
             'contao.resource_finder',
@@ -390,7 +391,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $imagineSvg,
             $filesystem,
             $framework,
-            $container->getParameter('contao.image.bypass_cache')
+            $container->getParameter('contao.image.bypass_cache'),
+            $container->getParameter('contao.image.imagine_options')
         );
 
         $pictureGenerator = new PictureGenerator(
@@ -402,7 +404,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $pictureFactory = new PictureFactory(
             $pictureGenerator,
             $imageFactory,
-            $framework
+            $framework,
+            $container->getParameter('contao.image.imagine_options')
         );
 
         $container->set('contao.image.imagine', $imagine);

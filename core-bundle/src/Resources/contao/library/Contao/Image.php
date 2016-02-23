@@ -442,8 +442,9 @@ class Image
 			$image = \System::getContainer()->get('contao.image.resizer')->resize(
 				$image,
 				$resizeConfig,
+				\System::getContainer()->getParameter('contao.image.imagine_options'),
 				$this->targetPath ? TL_ROOT . '/' . $this->targetPath : null,
-				System::getContainer()->getParameter('contao.image.bypass_cache')
+				\System::getContainer()->getParameter('contao.image.bypass_cache')
 			);
 		}
 
