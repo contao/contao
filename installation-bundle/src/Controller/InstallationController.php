@@ -22,7 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,8 +35,10 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @Route(defaults={"_scope" = "backend"})
  */
-class InstallationController extends ContainerAware
+class InstallationController
 {
+    use ContainerAwareTrait;
+
     /**
      * @var array
      */
