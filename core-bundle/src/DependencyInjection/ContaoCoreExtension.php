@@ -10,11 +10,13 @@
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 /**
@@ -115,5 +117,8 @@ class ContaoCoreExtension extends ConfigurableExtension
         );
 
         $container->setDefinition('contao.listener.container_scope', $definition);
+
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
     }
 }

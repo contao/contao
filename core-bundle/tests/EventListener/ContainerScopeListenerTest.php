@@ -55,15 +55,15 @@ class ContainerScopeListenerTest extends \PHPUnit_Framework_TestCase
     public function testOnKernelRequest()
     {
         $container = new ContainerBuilder();
-        $listener = new ContainerScopeListener($container);
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
 
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request = new Request();
 
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
+        $listener = new ContainerScopeListener($container);
         $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
 
         $this->assertTrue($container->hasScope(ContaoCoreBundle::SCOPE_BACKEND));
@@ -76,18 +76,17 @@ class ContainerScopeListenerTest extends \PHPUnit_Framework_TestCase
     public function testOnKernelFinishRequest()
     {
         $container = new ContainerBuilder();
-        $listener = new ContainerScopeListener($container);
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
+        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
 
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request = new Request();
-        $response = new Response();
 
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $listener->onKernelFinishRequest(new FinishRequestEvent($kernel, $request, $response));
+        $listener = new ContainerScopeListener($container);
+        $listener->onKernelFinishRequest(new FinishRequestEvent($kernel, $request, new Response()));
 
         $this->assertTrue($container->hasScope(ContaoCoreBundle::SCOPE_BACKEND));
         $this->assertFalse($container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
@@ -99,15 +98,13 @@ class ContainerScopeListenerTest extends \PHPUnit_Framework_TestCase
     public function testWithoutRequestScope()
     {
         $container = new ContainerBuilder();
-        $listener = new ContainerScopeListener($container);
+        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
 
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request = new Request();
 
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
-
-        $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
+        $listener = new ContainerScopeListener($container);
+        $listener->onKernelRequest(new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST));
 
         $this->assertTrue($container->hasScope(ContaoCoreBundle::SCOPE_BACKEND));
         $this->assertFalse($container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
@@ -121,14 +118,14 @@ class ContainerScopeListenerTest extends \PHPUnit_Framework_TestCase
     public function testWithoutContainerScope()
     {
         $container = new ContainerBuilder();
-        $listener = new ContainerScopeListener($container);
 
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request = new Request();
 
+        $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
+        $listener = new ContainerScopeListener($container);
         $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
     }
 }
