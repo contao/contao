@@ -67,10 +67,12 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertEquals(
             [
                 'version' => '4.0.0',
-                'scope' => ContaoCoreBundle::SCOPE_BACKEND,
-                'layout' => '',
                 'framework' => true,
                 'models' => 5,
+                'frontend' => false,
+                'preview' => false,
+                'layout' => '',
+                'template' => '',
             ],
             $collector->getSummary()
         );
@@ -95,6 +97,7 @@ class ContaoDataCollectorTest extends TestCase
         $layout = new \stdClass();
         $layout->name = 'Default';
         $layout->id = 2;
+        $layout->template = 'fe_page';
 
         global $objPage;
 
@@ -116,10 +119,12 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertEquals(
             [
                 'version' => '',
-                'scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-                'layout' => 'Default (ID 2)',
                 'framework' => false,
                 'models' => 0,
+                'frontend' => true,
+                'preview' => false,
+                'layout' => 'Default (ID 2)',
+                'template' => 'fe_page',
             ],
             $collector->getSummary()
         );
