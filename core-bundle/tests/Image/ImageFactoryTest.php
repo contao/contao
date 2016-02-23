@@ -12,10 +12,10 @@ namespace Contao\CoreBundle\Test\Image;
 
 use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Image\ImageFactory;
-use Contao\CoreBundle\Image\ImportantPart;
-use Contao\CoreBundle\Image\Resizer;
-use Contao\CoreBundle\Image\ResizeConfiguration;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Image\ImportantPart;
+use Contao\Image\Resizer;
+use Contao\Image\ResizeConfiguration;
 use Symfony\Component\Filesystem\Filesystem;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
@@ -40,7 +40,7 @@ class ImageFactoryTest extends TestCase
     private function createImageFactory($resizer = null, $imagine = null, $imagineSvg = null, $filesystem = null, $framework = null, $bypassCache = null)
     {
         if (null === $resizer) {
-            $resizer = $this->getMockBuilder('Contao\CoreBundle\Image\Resizer')
+            $resizer = $this->getMockBuilder('Contao\Image\Resizer')
              ->disableOriginalConstructor()
              ->getMock();
         }
@@ -83,11 +83,11 @@ class ImageFactoryTest extends TestCase
     {
         $path = $this->getRootDir() . '/images/dummy.jpg';
 
-        $imageMock = $this->getMockBuilder('Contao\CoreBundle\Image\Image')
+        $imageMock = $this->getMockBuilder('Contao\Image\Image')
              ->disableOriginalConstructor()
              ->getMock();
 
-        $resizer = $this->getMockBuilder('Contao\CoreBundle\Image\Resizer')
+        $resizer = $this->getMockBuilder('Contao\Image\Resizer')
              ->disableOriginalConstructor()
              ->getMock();
 
@@ -160,11 +160,11 @@ class ImageFactoryTest extends TestCase
     {
         $path = $this->getRootDir() . '/images/dummy.jpg';
 
-        $imageMock = $this->getMockBuilder('Contao\CoreBundle\Image\Image')
+        $imageMock = $this->getMockBuilder('Contao\Image\Image')
              ->disableOriginalConstructor()
              ->getMock();
 
-        $resizer = $this->getMockBuilder('Contao\CoreBundle\Image\Resizer')
+        $resizer = $this->getMockBuilder('Contao\Image\Resizer')
              ->disableOriginalConstructor()
              ->getMock();
 
@@ -277,11 +277,11 @@ class ImageFactoryTest extends TestCase
     {
         $path = $this->getRootDir() . '/images/dummy.jpg';
 
-        $imageMock = $this->getMockBuilder('Contao\CoreBundle\Image\Image')
+        $imageMock = $this->getMockBuilder('Contao\Image\Image')
              ->disableOriginalConstructor()
              ->getMock();
 
-        $resizer = $this->getMockBuilder('Contao\CoreBundle\Image\Resizer')
+        $resizer = $this->getMockBuilder('Contao\Image\Resizer')
              ->disableOriginalConstructor()
              ->getMock();
 

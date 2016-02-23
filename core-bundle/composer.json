@@ -38,6 +38,8 @@
         "tecnickcom/tcpdf": "~6.0",
         "true/punycode": "~1.0",
         "imagine/imagine": "~0.6",
+        "contao/image": "~1.0@dev",
+        "contao/imagine-svg": "~1.0@dev",
         "contao-components/all": "~4.1"
     },
     "require-dev": {

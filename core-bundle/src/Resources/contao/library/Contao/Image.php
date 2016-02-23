@@ -10,9 +10,9 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\ImportantPart;
-use Contao\CoreBundle\Image\ImageDimensions;
-use Contao\CoreBundle\Image\ResizeConfiguration;
+use Contao\Image\ImportantPart;
+use Contao\Image\ImageDimensions;
+use Contao\Image\ResizeConfiguration;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 

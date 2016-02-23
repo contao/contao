@@ -10,10 +10,10 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\ImportantPart;
-use Contao\CoreBundle\Image\ResizeConfiguration;
-use Contao\CoreBundle\Image\PictureConfiguration;
-use Contao\CoreBundle\Image\PictureConfigurationItem;
+use Contao\Image\ImportantPart;
+use Contao\Image\ResizeConfiguration;
+use Contao\Image\PictureConfiguration;
+use Contao\Image\PictureConfigurationItem;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 

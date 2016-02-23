@@ -12,12 +12,12 @@ namespace Contao\CoreBundle\Test\Image;
 
 use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Image\PictureFactory;
-use Contao\CoreBundle\Image\ImportantPart;
-use Contao\CoreBundle\Image\Image;
-use Contao\CoreBundle\Image\Resizer;
-use Contao\CoreBundle\Image\ResizeConfiguration;
-use Contao\CoreBundle\Image\PictureConfiguration;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Image\ImportantPart;
+use Contao\Image\Image;
+use Contao\Image\Resizer;
+use Contao\Image\ResizeConfiguration;
+use Contao\Image\PictureConfiguration;
 use Symfony\Component\Filesystem\Filesystem;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
@@ -42,7 +42,7 @@ class PictureFactoryTest extends TestCase
     private function createPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null)
     {
         if (null === $pictureGenerator) {
-            $pictureGenerator = $this->getMockBuilder('Contao\CoreBundle\Image\PictureGenerator')
+            $pictureGenerator = $this->getMockBuilder('Contao\Image\PictureGenerator')
              ->disableOriginalConstructor()
              ->getMock();
         }
@@ -75,15 +75,15 @@ class PictureFactoryTest extends TestCase
     {
         $path = $this->getRootDir() . '/images/dummy.jpg';
 
-        $imageMock = $this->getMockBuilder('Contao\CoreBundle\Image\Image')
+        $imageMock = $this->getMockBuilder('Contao\Image\Image')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $pictureMock = $this->getMockBuilder('Contao\CoreBundle\Image\Picture')
+        $pictureMock = $this->getMockBuilder('Contao\Image\Picture')
              ->disableOriginalConstructor()
              ->getMock();
 
-        $pictureGenerator = $this->getMockBuilder('Contao\CoreBundle\Image\PictureGenerator')
+        $pictureGenerator = $this->getMockBuilder('Contao\Image\PictureGenerator')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -173,11 +173,11 @@ class PictureFactoryTest extends TestCase
     {
         $path = $this->getRootDir() . '/images/dummy.jpg';
 
-        $pictureMock = $this->getMockBuilder('Contao\CoreBundle\Image\Picture')
+        $pictureMock = $this->getMockBuilder('Contao\Image\Picture')
              ->disableOriginalConstructor()
              ->getMock();
 
-        $pictureGenerator = $this->getMockBuilder('Contao\CoreBundle\Image\PictureGenerator')
+        $pictureGenerator = $this->getMockBuilder('Contao\Image\PictureGenerator')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -185,7 +185,7 @@ class PictureFactoryTest extends TestCase
             ->method('generate')
             ->willReturn($pictureMock);
 
-        $imageMock = $this->getMockBuilder('Contao\CoreBundle\Image\Image')
+        $imageMock = $this->getMockBuilder('Contao\Image\Image')
              ->disableOriginalConstructor()
              ->getMock();
 

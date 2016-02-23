@@ -14,6 +14,10 @@ use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\ImagineInterface;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Image\Resizer;
+use Contao\Image\Image;
+use Contao\Image\ResizeConfiguration;
+use Contao\Image\ImportantPart;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
