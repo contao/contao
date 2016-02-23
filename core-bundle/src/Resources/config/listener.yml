@@ -4,7 +4,6 @@
 # The priorities of the following listeners must be lower than the one of the
 # Symfony route listener (defaults to 32).
 #
-# - 30: ContainerScopeListener
 # - 20: RefererIdListener
 # - 20: LocaleListener
 #
