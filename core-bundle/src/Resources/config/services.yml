@@ -69,7 +69,7 @@ services:
             - "@contao.framework"
 
     contao.image.imagine:
-        class: "%contao.image.imagine_class%"
+        class: Imagine\Gd\Imagine
         public: false
 
     contao.image.imagine_svg:
