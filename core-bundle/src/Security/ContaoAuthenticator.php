@@ -67,7 +67,7 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
         }
 
         try {
-            $user = $userProvider->loadUserByUsername($token->getSecret());
+            $user = $userProvider->loadUserByUsername($token->getKey());
 
             if ($user instanceof User) {
                 return new ContaoToken($user);
