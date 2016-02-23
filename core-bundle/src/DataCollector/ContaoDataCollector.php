@@ -214,20 +214,20 @@ class ContaoDataCollector extends DataCollector
         }
 
         $this->data['summary'] = [
-            'version'   => $this->getContaoVersion(),
+            'version' => $this->getContaoVersion(),
             'framework' => $framework,
-            'models'    => $modelCount,
-            'frontend'  => isset($GLOBALS['objPage']),
-            'preview'   => defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN,
-            'layout'    => $this->getLayoutName(),
-            'template'  => $this->getTemplateName(),
+            'models' => $modelCount,
+            'frontend' => isset($GLOBALS['objPage']),
+            'preview' => defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN,
+            'layout' => $this->getLayoutName(),
+            'template' => $this->getTemplateName(),
         ];
     }
 
     /**
-     * Returns the name of the current page layout (front end only).
+     * Returns the page layout name (front end only).
      *
-     * @return string The layout name
+     * @return string The page layout name
      */
     private function getLayoutName()
     {
@@ -240,6 +240,11 @@ class ContaoDataCollector extends DataCollector
         return sprintf('%s (ID %s)', $layout->name, $layout->id);
     }
 
+    /**
+     * Returns the template name (front end only).
+     *
+     * @return string The template name
+     */
     private function getTemplateName()
     {
         $layout = $this->getLayout();
@@ -252,15 +257,15 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * @return LayoutModel|null
-     * @throws \Exception
+     * Returns the layout model (front end only).
+     *
+     * @return LayoutModel|null The layout model
      */
     private function getLayout()
     {
         /** @var PageModel $objPage */
         global $objPage;
 
-        /** @var LayoutModel $layout */
         if (null === $objPage) {
             return null;
         }
