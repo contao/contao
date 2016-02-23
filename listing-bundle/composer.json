@@ -1,6 +1,6 @@
 {
     "name": "contao/listing-bundle",
-    "type": "symfony-bundle",
+    "type": "contao-bundle",
     "description": "Contao 4 listing bundle",
     "license": "LGPL-3.0+",
     "authors": [
@@ -11,8 +11,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "symfony/framework-bundle": "^2.7.7",
-        "contao/core-bundle": "~4.1"
+        "symfony/framework-bundle": "~2.8|~3.0",
+        "contao/core-bundle": "dev-develop as 4.2"
     },
     "conflict": {
         "contao/core": "*"
