@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\DependencyInjection;
 
-use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -103,7 +102,7 @@ class ContaoCoreExtension extends ConfigurableExtension
             [
                 'event' => 'kernel.request',
                 'method' => 'onKernelRequest',
-                'priority' => 30
+                'priority' => 30,
             ]
         );
 
@@ -112,7 +111,7 @@ class ContaoCoreExtension extends ConfigurableExtension
             [
                 'event' => 'kernel.finish_request',
                 'method' => 'onKernelFinishRequest',
-                'priority' => -254
+                'priority' => -254,
             ]
         );
 

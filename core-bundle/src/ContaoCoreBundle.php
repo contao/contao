@@ -15,7 +15,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Patchwork\Utf8\Bootup;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
