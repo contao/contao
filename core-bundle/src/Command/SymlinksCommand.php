@@ -14,6 +14,7 @@ use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -26,14 +27,19 @@ use Symfony\Component\Finder\SplFileInfo;
 class SymlinksCommand extends AbstractLockedCommand
 {
     /**
+     * @var SymfonyStyle
+     */
+    private $io;
+
+    /**
+     * @var array
+     */
+    private $rows = [];
+
+    /**
      * @var string
      */
     private $rootDir;
-
-    /**
-     * @var OutputInterface
-     */
-    private $output;
 
     /**
      * {@inheritdoc}
@@ -51,10 +57,15 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->output = $output;
+        $this->io = new SymfonyStyle($input, $output);
         $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
 
         $this->generateSymlinks();
+
+        if (!empty($this->rows)) {
+            $this->io->newLine();
+            $this->io->table(['', 'Symlink', 'Target / Error'], $this->rows);
+        }
 
         return 0;
     }
@@ -155,15 +166,27 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     private function symlink($source, $target)
     {
-        SymlinkUtil::symlink($source, $target, $this->rootDir);
+        try {
+            SymlinkUtil::symlink($source, $target, $this->rootDir);
 
-        $this->output->writeln(
-            sprintf(
-                'Added <comment>%s</comment> as symlink to <comment>%s</comment>.',
+            $this->rows[] = [
+                sprintf(
+                    '<fg=green;options=bold>%s</>',
+                    '\\' === DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94" // HEAVY CHECK MARK (U+2714)
+                ),
                 strtr($target, '\\', '/'),
-                strtr($source, '\\', '/')
-            )
-        );
+                strtr($source, '\\', '/'),
+            ];
+        } catch (\Exception $e) {
+            $this->rows[] = [
+                sprintf(
+                    '<fg=red;options=bold>%s</>',
+                    '\\' === DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" // HEAVY BALLOT X (U+2718)
+                ),
+                strtr($target, '\\', '/'),
+                '<error>' . $e->getMessage() . '</error>',
+            ];
+        }
     }
 
     /**
@@ -195,9 +218,9 @@ class SymlinksCommand extends AbstractLockedCommand
 
             for ($i = 1, $c = count($chunks); $i < $c; ++$i) {
                 if (in_array($test, $paths)) {
-                    $this->output->writeln(
+                    $this->io->text(
                         sprintf(
-                            'Skipped <error>%s</error> because <error>%s</error> has been symlinked already.',
+                            'Skipped <comment>%s</comment> because <comment>%s</comment> has been symlinked already.',
                             $dir,
                             $test
                         )
