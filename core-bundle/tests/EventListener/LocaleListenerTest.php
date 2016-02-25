@@ -25,11 +25,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class LocaleListenerTest extends TestCase
 {
     /**
-     * @var LocaleListener
-     */
-    private $listener;
-
-    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()

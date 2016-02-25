@@ -16,7 +16,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;

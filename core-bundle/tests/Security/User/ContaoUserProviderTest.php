@@ -15,7 +15,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\Security\Core\User\User;
 
 /**
