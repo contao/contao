@@ -70,17 +70,18 @@ class InstallCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
+        $display = $tester->getDisplay();
 
         $this->assertEquals(0, $code);
-        $this->assertContains('Created the ' . $this->getRootDir() . '/files directory.', $tester->getDisplay());
-        $this->assertContains('Created the ' . $this->getRootDir() . '/templates directory.', $tester->getDisplay());
-        $this->assertContains('Created the ' . $this->getRootDir() . '/web/system directory.', $tester->getDisplay());
-        $this->assertContains('Added the ' . $this->getRootDir() . '/assets/css/.gitignore file.', $tester->getDisplay());
-        $this->assertContains('Added the ' . $this->getRootDir() . '/assets/images/.gitignore file.', $tester->getDisplay());
-        $this->assertContains('Added the ' . $this->getRootDir() . '/assets/js/.gitignore file.', $tester->getDisplay());
-        $this->assertContains('Added the ' . $this->getRootDir() . '/system/cache/.gitignore file.', $tester->getDisplay());
-        $this->assertContains('Added the ' . $this->getRootDir() . '/system/config/.gitignore file.', $tester->getDisplay());
-        $this->assertContains('Added the ' . $this->getRootDir() . '/system/tmp/.gitignore file.', $tester->getDisplay());
+        $this->assertContains(' * files', $display);
+        $this->assertContains(' * templates', $display);
+        $this->assertContains(' * web/system', $display);
+        $this->assertContains(' * assets/css', $display);
+        $this->assertContains(' * assets/images', $display);
+        $this->assertContains(' * assets/js', $display);
+        $this->assertContains(' * system/cache', $display);
+        $this->assertContains(' * system/config', $display);
+        $this->assertContains(' * system/tmp', $display);
     }
 
     /**
@@ -98,10 +99,11 @@ class InstallCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
+        $display = $tester->getDisplay();
 
         $this->assertEquals(0, $code);
-        $this->assertContains('Created the ' . $this->getRootDir() . '/files_test directory.', $tester->getDisplay());
-        $this->assertContains('Added the ' . $this->getRootDir() . '/assets/images_test/.gitignore file.', $tester->getDisplay());
+        $this->assertContains(' * files_test', $display);
+        $this->assertContains(' * assets/images_test', $display);
     }
 
     /**
