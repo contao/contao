@@ -161,21 +161,21 @@ class SymlinksCommand extends AbstractLockedCommand
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
      *
-     * @param string $source The symlink name
      * @param string $target The symlink target
+     * @param string $link   The symlink path
      */
-    private function symlink($source, $target)
+    private function symlink($target, $link)
     {
         try {
-            SymlinkUtil::symlink($source, $target, $this->rootDir);
+            SymlinkUtil::symlink($target, $link, $this->rootDir);
 
             $this->rows[] = [
                 sprintf(
                     '<fg=green;options=bold>%s</>',
                     '\\' === DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94" // HEAVY CHECK MARK (U+2714)
                 ),
+                strtr($link, '\\', '/'),
                 strtr($target, '\\', '/'),
-                strtr($source, '\\', '/'),
             ];
         } catch (\Exception $e) {
             $this->rows[] = [
@@ -183,7 +183,7 @@ class SymlinksCommand extends AbstractLockedCommand
                     '<fg=red;options=bold>%s</>',
                     '\\' === DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" // HEAVY BALLOT X (U+2718)
                 ),
-                strtr($target, '\\', '/'),
+                strtr($link, '\\', '/'),
                 '<error>' . $e->getMessage() . '</error>',
             ];
         }
@@ -218,13 +218,14 @@ class SymlinksCommand extends AbstractLockedCommand
 
             for ($i = 1, $c = count($chunks); $i < $c; ++$i) {
                 if (in_array($test, $paths)) {
-                    $this->io->text(
+                    $this->rows[] = [
                         sprintf(
-                            'Skipped <comment>%s</comment> because <comment>%s</comment> has been symlinked already.',
-                            $dir,
-                            $test
-                        )
-                    );
+                            '<fg=yellow;options=bold>%s</>',
+                            '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
+                        ),
+                        'web/' . strtr($dir, '\\', '/'),
+                        '<comment>Skipped because ' . $test . ' has been symlinked already.</comment>',
+                    ];
 
                     return false;
                 }
