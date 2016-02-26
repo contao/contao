@@ -2,8 +2,8 @@
 
 namespace Contao\CoreBundle\Monolog;
 
-use Contao\CoreBundle\EventListener\ScopeAwareTrait;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Statement;
