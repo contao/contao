@@ -17,7 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\ImageFactory;
-use Contao\Image\Resizer;
+use Contao\CoreBundle\Image\Resizer;
 use Contao\Image\ResizeCalculator;
 use Contao\Image\PictureGenerator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
@@ -412,6 +412,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $container->getParameter('contao.image.imagine_options')
         );
 
+        $container->set('filesystem', $filesystem);
         $container->set('contao.image.imagine', $imagine);
         $container->set('contao.image.imagine_svg', $imagineSvg);
         $container->set('contao.image.resize_calculator', $calculator);

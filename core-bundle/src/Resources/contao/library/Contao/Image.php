@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Image\Image as NewImage;
 use Contao\Image\ImportantPart;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ResizeConfiguration;
@@ -402,38 +403,6 @@ class Image
 	 */
 	public function executeResize()
 	{
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback)
-			{
-				$return = \System::importStatic($callback[0])->{$callback[1]}($this);
-
-				if (is_string($return))
-				{
-					$this->resizedPath = \System::urlEncode($return);
-
-					return $this;
-				}
-			}
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback)
-			{
-				$return = \System::importStatic($callback[0])->{$callback[1]}($this->getOriginalPath(), $this->getTargetWidth(), $this->getTargetHeight(), $this->getResizeMode(), $this->getCacheName(), $this->fileObj, $this->getTargetPath(), $this);
-
-				if (is_string($return))
-				{
-					$this->resizedPath = \System::urlEncode($return);
-
-					return $this;
-				}
-			}
-		}
-
 		$image = $this->prepareImage();
 		$resizeConfig = $this->prepareResizeConfig();
 
@@ -464,7 +433,9 @@ class Image
 	 */
 	protected function prepareImage()
 	{
-		$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $this->fileObj->path);
+		$imagine = \System::getContainer()->get('contao.image.imagine' . ($this->fileObj->isSvgImage ? '_svg' : ''));
+
+		$image = new NewImage($imagine, \System::getContainer()->get('filesystem'), (string) TL_ROOT . '/' . $this->fileObj->path);
 
 		$image->setImportantPart($this->prepareImportantPart());
 

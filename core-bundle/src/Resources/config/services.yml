@@ -81,7 +81,7 @@ services:
         public: false
 
     contao.image.resizer:
-        class: Contao\Image\Resizer
+        class: Contao\CoreBundle\Image\Resizer
         public: false
         arguments:
             - "@contao.image.resize_calculator"

@@ -14,7 +14,7 @@ use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\ImagineInterface;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Image\Resizer;
+use Contao\Image\Resizer as ResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ImportantPart;
@@ -28,7 +28,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class ImageFactory
 {
     /**
-     * @var Resizer
+     * @var ResizerInterface
      */
     private $resizer;
 
@@ -65,7 +65,7 @@ class ImageFactory
     /**
      * Constructor.
      *
-     * @param Resizer                  $resizer        The resizer object
+     * @param ResizerInterface         $resizer        The resizer object
      * @param ImagineInterface         $imagine        The imagine object
      * @param ImagineInterface         $imagineSvg     The imagine object for SVG files
      * @param Filesystem               $filesystem     The filesystem object
@@ -74,7 +74,7 @@ class ImageFactory
      * @param array                    $imagineOptions The options for Imagine save
      */
     public function __construct(
-        Resizer $resizer,
+        ResizerInterface $resizer,
         ImagineInterface $imagine,
         ImagineInterface $imagineSvg,
         Filesystem $filesystem,

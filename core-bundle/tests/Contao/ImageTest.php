@@ -1547,7 +1547,9 @@ class ImageTest extends TestCase
      */
     public function testExecuteResizeHook()
     {
-        $GLOBALS['TL_HOOKS']['executeResize'][] = [get_class($this), 'executeResizeHookCallback'];
+        $GLOBALS['TL_HOOKS'] = [
+            'executeResize' => [[get_class($this), 'executeResizeHookCallback']],
+        ];
 
         $file = new \File('dummy.jpg');
 
@@ -1555,13 +1557,15 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(100)->setTargetHeight(100);
         $imageObj->executeResize();
 
-        $this->assertSame('dummy.jpg%3BexecuteResize%3B100%3B100%3Bcrop%3B%3BContao%5CImage', $imageObj->getResizedPath());
+        $this->assertSame('assets/dummy.jpg%26executeResize_100_100_crop__Contao-Image.jpg', $imageObj->getResizedPath());
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
         $imageObj->executeResize();
 
-        $this->assertSame('dummy.jpg%3BexecuteResize%3B200%3B200%3Bcrop%3B%3BContao%5CImage', $imageObj->getResizedPath());
+        $this->assertSame('assets/dummy.jpg%26executeResize_200_200_crop__Contao-Image.jpg', $imageObj->getResizedPath());
+
+        unset($GLOBALS['TL_HOOKS']);
     }
 
     /**
@@ -1574,7 +1578,21 @@ class ImageTest extends TestCase
     public static function executeResizeHookCallback($imageObj)
     {
         // Do not include $cacheName as it is dynamic (mtime)
-        return $imageObj->getOriginalPath() . ';executeResize;' . $imageObj->getTargetWidth() . ';' . $imageObj->getTargetHeight() . ';' . $imageObj->getResizeMode() . ';' . $imageObj->getTargetPath() . ';' . get_class($imageObj);
+        $path =
+            'assets/'
+            . $imageObj->getOriginalPath()
+            . '&executeResize_'
+            . $imageObj->getTargetWidth() . '_'
+            . $imageObj->getTargetHeight() . '_'
+            . $imageObj->getResizeMode() . '_'
+            . $imageObj->getTargetPath() . '_'
+            . str_replace('\\', '-', get_class($imageObj))
+            . '.jpg'
+        ;
+
+        file_put_contents(TL_ROOT . '/' . $path, '');
+
+        return $path;
     }
 
     /**
@@ -1589,13 +1607,15 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(50)->setTargetHeight(50);
         $imageObj->executeResize();
 
-        $GLOBALS['TL_HOOKS']['getImage'][] = [get_class($this), 'getImageHookCallback'];
+        $GLOBALS['TL_HOOKS'] = [
+            'getImage' => [[get_class($this), 'getImageHookCallback']],
+        ];
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth(100)->setTargetHeight(100);
         $imageObj->executeResize();
 
-        $this->assertSame('dummy.jpg%3BgetImage%3B100%3B100%3Bcrop%3BContao%5CFile%3B%3BContao%5CImage', $imageObj->getResizedPath());
+        $this->assertSame('assets/dummy.jpg%26getImage_100_100_crop_Contao-File__Contao-Image.jpg', $imageObj->getResizedPath());
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth(50)->setTargetHeight(50);
@@ -1608,6 +1628,8 @@ class ImageTest extends TestCase
         $imageObj->executeResize();
 
         $this->assertSame('dummy.jpg', $imageObj->getResizedPath(), 'Hook should not get called if no resize is necessary');
+
+        unset($GLOBALS['TL_HOOKS']);
     }
 
     /**
@@ -1627,7 +1649,22 @@ class ImageTest extends TestCase
     public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj)
     {
         // Do not include $cacheName as it is dynamic (mtime)
-        return $originalPath . ';getImage;' . $targetWidth . ';' . $targetHeight . ';' . $resizeMode . ';' . get_class($fileObj) . ';' . $targetPath . ';' . get_class($imageObj);
+        $path =
+            'assets/'
+            . $originalPath
+            . '&getImage_'
+            . $targetWidth . '_'
+            . $targetHeight . '_'
+            . $resizeMode . '_'
+            . str_replace('\\', '-', get_class($fileObj)) . '_'
+            . $targetPath . '_'
+            . str_replace('\\', '-', get_class($imageObj))
+            . '.jpg'
+        ;
+
+        file_put_contents(TL_ROOT . '/' . $path, '');
+
+        return $path;
     }
 
     /**

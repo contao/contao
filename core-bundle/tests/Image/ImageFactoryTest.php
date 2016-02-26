@@ -12,9 +12,9 @@ namespace Contao\CoreBundle\Test\Image;
 
 use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\Resizer;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\ImportantPart;
-use Contao\Image\Resizer;
 use Contao\Image\ResizeCalculator;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Component\Filesystem\Filesystem;
@@ -430,9 +430,15 @@ class ImageFactoryTest extends TestCase
 
     /**
      * Tests the executeResize hook.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testExecuteResizeHook()
     {
+        define('TL_ROOT', $this->getRootDir());
+        $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
+
         $path = $this->getRootDir() . '/images/dummy.jpg';
 
         $resizer = new Resizer(
@@ -468,10 +474,10 @@ class ImageFactoryTest extends TestCase
         ];
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
-        $this->assertEquals($this->getRootDir() . '/images/dummy.jpg;executeResize;100;100;crop;;Contao\Image', $image->getPath());
+        $this->assertEquals($this->getRootDir() . '/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg', $image->getPath());
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
-        $this->assertEquals($this->getRootDir() . '/images/dummy.jpg;executeResize;100;100;crop;;Contao\Image', $image->getPath());
+        $this->assertEquals($this->getRootDir() . '/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg', $image->getPath());
 
         unset($GLOBALS['TL_HOOKS']);
     }
@@ -486,14 +492,38 @@ class ImageFactoryTest extends TestCase
     public static function executeResizeHookCallback($imageObj)
     {
         // Do not include $cacheName as it is dynamic (mtime)
-        return $imageObj->getOriginalPath() . ';executeResize;' . $imageObj->getTargetWidth() . ';' . $imageObj->getTargetHeight() . ';' . $imageObj->getResizeMode() . ';' . $imageObj->getTargetPath() . ';' . get_class($imageObj);
+        $path =
+            'assets/'
+            . $imageObj->getOriginalPath()
+            . '&executeResize_'
+            . $imageObj->getTargetWidth() . '_'
+            . $imageObj->getTargetHeight() . '_'
+            . $imageObj->getResizeMode() . '_'
+            . $imageObj->getTargetPath() . '_'
+            . str_replace('\\', '-', get_class($imageObj))
+            . '.jpg'
+        ;
+
+        if (!file_exists(dirname(TL_ROOT . '/' . $path))) {
+            mkdir(dirname(TL_ROOT . '/' . $path), 0777, true);
+        }
+        file_put_contents(TL_ROOT . '/' . $path, '');
+
+        return $path;
     }
 
     /**
      * Tests the getImage hook.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testGetImageHook()
     {
+        define('TL_ROOT', $this->getRootDir());
+        $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
+        \Contao\System::setContainer($this->mockContainerWithContaoScopes());
+
         $path = $this->getRootDir() . '/images/dummy.jpg';
 
         $resizer = new Resizer(
@@ -536,7 +566,7 @@ class ImageFactoryTest extends TestCase
         ];
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
-        $this->assertEquals($this->getRootDir() . '/images/dummy.jpg;getImage;100;100;crop;Contao\File;;Contao\Image', $image->getPath());
+        $this->assertEquals($this->getRootDir() . '/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg', $image->getPath());
 
         $image = $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
         $this->assertRegExp('(/images/.*dummy.*.jpg$)', $image->getPath(), 'Hook should not get called for cached images');
@@ -564,6 +594,24 @@ class ImageFactoryTest extends TestCase
     public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj)
     {
         // Do not include $cacheName as it is dynamic (mtime)
-        return $originalPath . ';getImage;' . $targetWidth . ';' . $targetHeight . ';' . $resizeMode . ';' . get_class($fileObj) . ';' . $targetPath . ';' . get_class($imageObj);
+        $path =
+            'assets/'
+            . $originalPath
+            . '&getImage_'
+            . $targetWidth . '_'
+            . $targetHeight . '_'
+            . $resizeMode . '_'
+            . str_replace('\\', '-', get_class($fileObj)) . '_'
+            . $targetPath . '_'
+            . str_replace('\\', '-', get_class($imageObj))
+            . '.jpg'
+        ;
+
+        if (!file_exists(dirname(TL_ROOT . '/' . $path))) {
+            mkdir(dirname(TL_ROOT . '/' . $path), 0777, true);
+        }
+        file_put_contents(TL_ROOT . '/' . $path, '');
+
+        return $path;
     }
 }
