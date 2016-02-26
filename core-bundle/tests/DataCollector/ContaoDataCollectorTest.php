@@ -39,10 +39,10 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testCollectInBackendScope()
     {
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
-
-        $collector = new ContaoDataCollector($container, ['contao/core-bundle' => '4.0.0']);
+        $collector = new ContaoDataCollector(
+            $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND),
+            ['contao/core-bundle' => '4.0.0']
+        );
 
         $GLOBALS['TL_DEBUG'] = [
             'classes_aliased' => ['ContentText <span>Contao\ContentText</span>'],
@@ -67,10 +67,12 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertEquals(
             [
                 'version' => '4.0.0',
-                'scope' => ContaoCoreBundle::SCOPE_BACKEND,
-                'layout' => '',
                 'framework' => true,
                 'models' => 5,
+                'frontend' => false,
+                'preview' => false,
+                'layout' => '',
+                'template' => '',
             ],
             $collector->getSummary()
         );
@@ -90,14 +92,12 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testCollectInFrontendScope()
     {
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
-        $collector = new ContaoDataCollector($container, []);
+        $collector = new ContaoDataCollector($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND), []);
 
         $layout = new \stdClass();
         $layout->name = 'Default';
         $layout->id = 2;
+        $layout->template = 'fe_page';
 
         global $objPage;
 
@@ -119,10 +119,12 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertEquals(
             [
                 'version' => '',
-                'scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-                'layout' => 'Default (ID 2)',
                 'framework' => false,
                 'models' => 0,
+                'frontend' => true,
+                'preview' => false,
+                'layout' => 'Default (ID 2)',
+                'template' => 'fe_page',
             ],
             $collector->getSummary()
         );

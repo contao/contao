@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
@@ -24,7 +23,6 @@ use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Imagine\Gd\Imagine as ImagineGd;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -188,13 +186,13 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a container with scopes.
      *
-     * @return Container|\PHPUnit_Framework_MockObject_MockObject The container object
+     * @param string|null $scope An optional scope
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|Container The container object
      */
-    protected function mockContainerWithContaoScopes()
+    protected function mockContainerWithContaoScopes($scope = null)
     {
         $container = new Container();
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
         $container->setParameter('kernel.root_dir', $this->getRootDir());
         $container->setParameter('kernel.cache_dir', $this->getCacheDir());
         $container->setParameter('kernel.debug', false);
@@ -214,6 +212,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         $request = new Request();
         $request->server->set('REMOTE_ADDR', '123.456.789.0');
+
+        if (null !== $scope) {
+            $request->attributes->set('_scope', $scope);
+        }
 
         $requestStack = new RequestStack();
         $requestStack->push($request);

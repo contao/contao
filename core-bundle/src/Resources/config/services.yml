@@ -27,7 +27,7 @@ services:
             - ["setContainer", ["@service_container"]]
 
     contao.referer_id.manager:
-         class: "%security.csrf.token_manager.class%"
+         class: Symfony\Component\Security\Csrf\CsrfTokenManager
          public: false
          arguments:
             - "@contao.referer_id.token_generator"

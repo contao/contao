@@ -130,7 +130,7 @@ namespace {
 	class StringUtil extends \Contao\StringUtil {}
 	abstract class System extends \Contao\System {}
 	abstract class Template extends \Contao\Template {}
-	trait TemplateInheritance { use \Contao\TemplateInheritance }
+	trait TemplateInheritance { use \Contao\TemplateInheritance; }
 	class TemplateLoader extends \Contao\TemplateLoader {}
 	abstract class User extends \Contao\User {}
 	class Validator extends \Contao\Validator {}

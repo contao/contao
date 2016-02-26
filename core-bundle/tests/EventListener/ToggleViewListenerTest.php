@@ -12,8 +12,7 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\ToggleViewListener;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Scope;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +25,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
  *
  * @author Andreas Schempp <https:/github.com/aschempp>
  */
-class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
+class ToggleViewListenerTest extends TestCase
 {
     /**
      * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
@@ -72,12 +71,13 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $request = new Request(['toggle_view' => 'desktop']);
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener($this->framework);
 
+        $request = new Request(['toggle_view' => 'desktop']);
         $request->attributes->set('_route', 'dummy');
 
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new ToggleViewListener($this->framework);
         $listener->onKernelRequest($event);
 
         $this->assertFalse($event->hasResponse());
@@ -90,17 +90,15 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $container = new Container();
+
         $request = new Request(['toggle_view' => 'desktop']);
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener($this->framework);
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
-
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $listener->setContainer($container);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new ToggleViewListener($this->framework);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelRequest($event);
 
         $this->assertFalse($event->hasResponse());
@@ -113,17 +111,15 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $container = new Container();
+
         $request = new Request();
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener($this->framework);
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $listener->setContainer($container);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new ToggleViewListener($this->framework);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
         $listener->onKernelRequest($event);
 
         $this->assertFalse($event->hasResponse());
@@ -136,17 +132,15 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $container = new Container();
+
         $request = new Request(['toggle_view' => 'desktop']);
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener($this->framework);
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $listener->setContainer($container);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new ToggleViewListener($this->framework);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
@@ -160,17 +154,15 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $container = new Container();
+
         $request = new Request(['toggle_view' => 'mobile']);
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener($this->framework);
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $listener->setContainer($container);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new ToggleViewListener($this->framework);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
@@ -184,17 +176,15 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $container = new Container();
+
         $request = new Request(['toggle_view' => 'foobar']);
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener($this->framework);
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $listener->setContainer($container);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new ToggleViewListener($this->framework);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
@@ -208,23 +198,21 @@ class ToggleViewListenerTest extends \PHPUnit_Framework_TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
-        $container = new Container();
+
         $request = new Request(['toggle_view' => 'desktop']);
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new ToggleViewListener($this->framework);
-        $reflection = new \ReflectionClass($request);
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         // Set the base path to /foo/bar
+        $reflection = new \ReflectionClass($request);
         $basePath = $reflection->getProperty('basePath');
         $basePath->setAccessible(true);
         $basePath->setValue($request, '/foo/bar');
 
-        $listener->setContainer($container);
+        $listener = new ToggleViewListener($this->framework);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());

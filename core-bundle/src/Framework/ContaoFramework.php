@@ -12,14 +12,12 @@ namespace Contao\CoreBundle\Framework;
 
 use Contao\ClassLoader;
 use Contao\Config;
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -38,7 +36,7 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class ContaoFramework implements ContaoFrameworkInterface
 {
-    use ContainerAwareTrait;
+    use ScopeAwareTrait;
 
     /**
      * @var bool
@@ -193,7 +191,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         // Define the login status constants in the back end (see #4099, #5279)
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
+        if (!$this->isFrontendScope()) {
             define('BE_USER_LOGGED_IN', false);
             define('FE_USER_LOGGED_IN', false);
         }
@@ -209,11 +207,11 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function getMode()
     {
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
+        if ($this->isBackendScope()) {
             return 'BE';
         }
 
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
+        if ($this->isFrontendScope()) {
             return 'FE';
         }
 

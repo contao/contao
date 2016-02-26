@@ -53,9 +53,9 @@ class ContaoFrameworkTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
         $container->get('request_stack')->push($request);
 
         $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/index.html'));
@@ -89,11 +89,11 @@ class ContaoFrameworkTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
         $request->attributes->set('_contao_referer_id', 'foobar');
         $request->setLocale('de');
 
         $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
         $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
@@ -124,7 +124,6 @@ class ContaoFrameworkTest extends TestCase
     public function testWithoutRequest()
     {
         $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
         $container->set('request_stack', new RequestStack());
 
         $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
@@ -139,7 +138,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(defined('BE_USER_LOGGED_IN'));
         $this->assertTrue(defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(defined('TL_PATH'));
-        $this->assertEquals('BE', TL_MODE);
+        $this->assertNull(TL_MODE);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
         $this->assertNull(TL_REFERER_ID);
         $this->assertEquals('console', TL_SCRIPT);
@@ -169,8 +168,8 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(defined('TL_ROOT'));
         $this->assertTrue(defined('TL_REFERER_ID'));
         $this->assertTrue(defined('TL_SCRIPT'));
-        $this->assertFalse(defined('BE_USER_LOGGED_IN'));
-        $this->assertFalse(defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(defined('BE_USER_LOGGED_IN'));
+        $this->assertTrue(defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(defined('TL_PATH'));
         $this->assertNull(TL_MODE);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
@@ -189,8 +188,7 @@ class ContaoFrameworkTest extends TestCase
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'foobar');
 
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
         $container->setParameter('contao.csrf_token_name', 'dummy_token');
         $container->set('security.csrf.token_manager', new CsrfTokenManager());
@@ -241,8 +239,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_contao_referer_id', 'foobar');
 
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
         $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/contao/install'));
@@ -277,8 +274,7 @@ class ContaoFrameworkTest extends TestCase
         $request->setMethod('POST');
         $request->request->set('REQUEST_TOKEN', 'foobar');
 
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
         $framework = $this->mockContaoFramework(
@@ -304,8 +300,7 @@ class ContaoFrameworkTest extends TestCase
         $request->setMethod('POST');
         $request->request->set('REQUEST_TOKEN', 'invalid');
 
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
         $rtAdapter = $this
@@ -350,8 +345,7 @@ class ContaoFrameworkTest extends TestCase
         $request->setMethod('POST');
         $request->request->set('REQUEST_TOKEN', 'foobar');
 
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
         $rtAdapter = $this
@@ -393,8 +387,7 @@ class ContaoFrameworkTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
 
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
+        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
 
         $configAdapter = $this

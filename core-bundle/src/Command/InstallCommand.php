@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -27,9 +28,14 @@ class InstallCommand extends AbstractLockedCommand
     private $fs;
 
     /**
-     * @var OutputInterface
+     * @var SymfonyStyle
      */
-    private $output;
+    private $io;
+
+    /**
+     * @var array
+     */
+    private $rows = [];
 
     /**
      * @var string
@@ -77,11 +83,17 @@ class InstallCommand extends AbstractLockedCommand
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
         $this->fs = new Filesystem();
-        $this->output = $output;
+        $this->io = new SymfonyStyle($input, $output);
         $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
 
         $this->addEmptyDirs();
         $this->addIgnoredDirs();
+
+        if (!empty($this->rows)) {
+            $this->io->newLine();
+            $this->io->listing($this->rows);
+        }
+
         $this->addInitializePhp();
 
         return 0;
@@ -112,7 +124,7 @@ class InstallCommand extends AbstractLockedCommand
 
         $this->fs->mkdir($path);
 
-        $this->output->writeln('Created the <comment>' . $path . '</comment> directory.');
+        $this->rows[] = str_replace($this->rootDir . '/', '', $path);
     }
 
     /**
@@ -144,8 +156,6 @@ class InstallCommand extends AbstractLockedCommand
             $path . '/.gitignore',
             "# Create the folder and ignore its content\n*\n!.gitignore\n"
         );
-
-        $this->output->writeln('Added the <comment>' . $path . '/.gitignore</comment> file.');
     }
 
     /**
@@ -169,9 +179,11 @@ if (!defined('TL_SCRIPT')) {
     die('Your script is not compatible with Contao 4.');
 }
 
-$loader = require_once __DIR__ . '/../app/bootstrap.php.cache';
-
-require_once __DIR__ . '/../app/AppKernel.php';
+/**
+ * @var Composer\Autoload\ClassLoader
+ */
+$loader = require __DIR__ . '/../app/autoload.php';
+include_once __DIR__ . '/../app/bootstrap.php.cache';
 
 $kernel = new AppKernel('prod', false);
 $kernel->loadClassCache();
@@ -188,6 +200,6 @@ if (!$response instanceof InitializeControllerResponse) {
 EOF
         );
 
-        $this->output->writeln('Added the <comment>' . $this->rootDir . '/system/initialize.php</comment> file.');
+        $this->io->text("Added the <comment>system/initialize.php</comment> file.\n");
     }
 }

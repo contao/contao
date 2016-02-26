@@ -150,11 +150,22 @@ Use the `kernel.root_dir` instead of `TL_ROOT`:
 $rootDir = dirname(System::getContainer()->getParameter('kernel.root_dir'));
 ```
 
-Check the container scope instead of using `TL_MODE`:
+Use the `ScopeAwareTrait` trait instead of using `TL_MODE`:
 
 ```php
-$isBackEnd  = System::getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND);
-$isFrontEnd = System::getContainer()->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND);
+use Contao\CoreBundle\Framework\ScopeAwareTrait;
+
+class Test {
+    use ScopeAwareTrait;
+    
+    public function isBackend() {
+        return $this->isBackendScope();
+    }
+
+    public function isFrontend() {
+        return $this->isFrontendScope();
+    }
+}
 ```
 
 Use the kernel start time instead of `TL_START`:
