@@ -235,11 +235,9 @@ class ImageTest extends TestCase
                         case 'path':
                             return 'dummy.jpg';
 
-                        case 'width':
                         case 'viewWidth':
                             return $arguments[2];
 
-                        case 'height':
                         case 'viewHeight':
                             return $arguments[3];
 
@@ -698,11 +696,9 @@ class ImageTest extends TestCase
                         case 'path':
                             return 'dummy.jpg';
 
-                        case 'width':
                         case 'viewWidth':
                             return $arguments[2];
 
-                        case 'height':
                         case 'viewHeight':
                             return $arguments[3];
 
