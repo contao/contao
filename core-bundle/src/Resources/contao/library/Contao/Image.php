@@ -437,16 +437,13 @@ class Image
 		$image = $this->prepareImage();
 		$resizeConfig = $this->prepareResizeConfig();
 
-		if (!$image->getDimensions()->isUndefined() && !$resizeConfig->isEmpty())
-		{
-			$image = \System::getContainer()->get('contao.image.resizer')->resize(
-				$image,
-				$resizeConfig,
-				\System::getContainer()->getParameter('contao.image.imagine_options'),
-				$this->targetPath ? TL_ROOT . '/' . $this->targetPath : null,
-				\System::getContainer()->getParameter('contao.image.bypass_cache')
-			);
-		}
+		$image = \System::getContainer()->get('contao.image.resizer')->resize(
+			$image,
+			$resizeConfig,
+			\System::getContainer()->getParameter('contao.image.imagine_options'),
+			$this->targetPath ? TL_ROOT . '/' . $this->targetPath : null,
+			\System::getContainer()->getParameter('contao.image.bypass_cache')
+		);
 
 		$this->resizedPath = $image->getPath();
 

@@ -256,6 +256,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $adapters['Contao\RequestToken'] = $this->mockRequestTokenAdapter();
         }
 
+        if (!isset($adapters['Contao\FilesModel'])) {
+            $adapters['Contao\FilesModel'] = $this->getMockBuilder('Contao\FilesModel')->setMethods(['findByPath'])->getMock();
+        }
+
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
             ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')

@@ -115,10 +115,6 @@ class ImageFactory
         $image = new Image($imagine, $this->filesystem, (string) $path);
         list($resizeConfig, $importantPart) = $this->createConfig($size, $image);
 
-        if ($resizeConfig->isEmpty() || $image->getDimensions()->isUndefined()) {
-            return $image;
-        }
-
         if (null === $importantPart) {
             $importantPart = $this->createImportantPart($image->getPath());
         }
