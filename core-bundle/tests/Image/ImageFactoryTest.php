@@ -15,10 +15,12 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\ImportantPart;
 use Contao\Image\Resizer;
+use Contao\Image\ResizeCalculator;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Component\Filesystem\Filesystem;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
+use Imagine\Gd\Imagine;
 
 /**
  * Tests the ImageFactory class.
@@ -27,6 +29,16 @@ use Imagine\Image\Point;
  */
 class ImageFactoryTest extends TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function tearDown()
+    {
+        if (file_exists($this->getRootDir() . '/assets/images')) {
+            (new Filesystem())->remove($this->getRootDir() . '/assets/images');
+        }
+    }
+
     /**
      * Create an ImageFactory instance helper.
      *
@@ -414,5 +426,144 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path);
 
         $this->assertSame($imageMock, $image);
+    }
+
+    /**
+     * Tests the executeResize hook.
+     */
+    public function testExecuteResizeHook()
+    {
+        $path = $this->getRootDir() . '/images/dummy.jpg';
+
+        $resizer = new Resizer(
+            new ResizeCalculator(),
+            new Filesystem(),
+            $this->getRootDir() . '/assets/images'
+        );
+
+        $imagine = new Imagine();
+
+        $framework = $this->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesModel = $this->getMock('Contao\FilesModel');
+
+        $filesAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesAdapter->expects($this->any())
+            ->method('__call')
+            ->willReturn($filesModel);
+
+        $framework->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($filesAdapter);
+
+        $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $GLOBALS['TL_HOOKS'] = [
+            'executeResize' => [[get_class($this), 'executeResizeHookCallback']],
+        ];
+
+        $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
+        $this->assertEquals($this->getRootDir() . '/images/dummy.jpg;executeResize;100;100;crop;;Contao\Image', $image->getPath());
+
+        $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
+        $this->assertEquals($this->getRootDir() . '/images/dummy.jpg;executeResize;100;100;crop;;Contao\Image', $image->getPath());
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    /**
+     * Returns a custom image path.
+     *
+     * @param object $imageObj     The image object
+     *
+     * @return string The image path
+     */
+    public static function executeResizeHookCallback($imageObj)
+    {
+        // Do not include $cacheName as it is dynamic (mtime)
+        return $imageObj->getOriginalPath() . ';executeResize;' . $imageObj->getTargetWidth() . ';' . $imageObj->getTargetHeight() . ';' . $imageObj->getResizeMode() . ';' . $imageObj->getTargetPath() . ';' . get_class($imageObj);
+    }
+
+    /**
+     * Tests the getImage hook.
+     */
+    public function testGetImageHook()
+    {
+        $path = $this->getRootDir() . '/images/dummy.jpg';
+
+        $resizer = new Resizer(
+            new ResizeCalculator(),
+            new Filesystem(),
+            $this->getRootDir() . '/assets/images'
+        );
+
+        $imagine = new Imagine();
+
+        $framework = $this->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesModel = $this->getMock('Contao\FilesModel');
+
+        $filesAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesAdapter->expects($this->any())
+            ->method('__call')
+            ->willReturn($filesModel);
+
+        $framework->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($filesAdapter);
+
+        $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $GLOBALS['TL_HOOKS'] = [
+            'executeResize' => [[get_class($this), 'executeResizeHookCallback']],
+        ];
+
+        // Build cache before adding the hook
+        $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
+
+        $GLOBALS['TL_HOOKS'] = [
+            'getImage' => [[get_class($this), 'getImageHookCallback']],
+        ];
+
+        $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
+        $this->assertEquals($this->getRootDir() . '/images/dummy.jpg;getImage;100;100;crop;Contao\File;;Contao\Image', $image->getPath());
+
+        $image = $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
+        $this->assertRegExp('(/images/.*dummy.*.jpg$)', $image->getPath(), 'Hook should not get called for cached images');
+
+        $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
+        $this->assertEquals($this->getRootDir() . '/images/dummy.jpg', $image->getPath(), 'Hook should not get called if no resize is necessary');
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    /**
+     * Returns a custom image path.
+     *
+     * @param string $originalPath The original path
+     * @param int    $targetWidth  The target width
+     * @param int    $targetHeight The target height
+     * @param string $resizeMode   The resize mode
+     * @param string $cacheName    The cache name
+     * @param object $fileObj      The file object
+     * @param string $targetPath   The target path
+     * @param object $imageObj     The image object
+     *
+     * @return string The image path
+     */
+    public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj)
+    {
+        // Do not include $cacheName as it is dynamic (mtime)
+        return $originalPath . ';getImage;' . $targetWidth . ';' . $targetHeight . ';' . $resizeMode . ';' . get_class($fileObj) . ';' . $targetPath . ';' . get_class($imageObj);
     }
 }

@@ -1543,11 +1543,11 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Tests the getImage hook.
+     * Tests the executeResize hook.
      */
     public function testExecuteResizeHook()
     {
-        $GLOBALS['TL_HOOKS']['getImage'][] = [get_class($this), 'getImageHookCallback'];
+        $GLOBALS['TL_HOOKS']['executeResize'][] = [get_class($this), 'executeResizeHookCallback'];
 
         $file = new \File('dummy.jpg');
 
@@ -1555,7 +1555,59 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(100)->setTargetHeight(100);
         $imageObj->executeResize();
 
-        $this->assertSame($imageObj->getResizedPath(), 'dummy.jpg%3B100%3B100%3Bcrop%3BContao%5CFile%3B%3BContao%5CImage');
+        $this->assertSame('dummy.jpg%3BexecuteResize%3B100%3B100%3Bcrop%3B%3BContao%5CImage', $imageObj->getResizedPath());
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
+        $imageObj->executeResize();
+
+        $this->assertSame('dummy.jpg%3BexecuteResize%3B200%3B200%3Bcrop%3B%3BContao%5CImage', $imageObj->getResizedPath());
+    }
+
+    /**
+     * Returns a custom image path.
+     *
+     * @param object $imageObj     The image object
+     *
+     * @return string The image path
+     */
+    public static function executeResizeHookCallback($imageObj)
+    {
+        // Do not include $cacheName as it is dynamic (mtime)
+        return $imageObj->getOriginalPath() . ';executeResize;' . $imageObj->getTargetWidth() . ';' . $imageObj->getTargetHeight() . ';' . $imageObj->getResizeMode() . ';' . $imageObj->getTargetPath() . ';' . get_class($imageObj);
+    }
+
+    /**
+     * Tests the getImage hook.
+     */
+    public function testGetImageHook()
+    {
+        $file = new \File('dummy.jpg');
+
+        // Build cache before adding the hook
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(50)->setTargetHeight(50);
+        $imageObj->executeResize();
+
+        $GLOBALS['TL_HOOKS']['getImage'][] = [get_class($this), 'getImageHookCallback'];
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+        $imageObj->executeResize();
+
+        $this->assertSame('dummy.jpg%3BgetImage%3B100%3B100%3Bcrop%3BContao%5CFile%3B%3BContao%5CImage', $imageObj->getResizedPath());
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth(50)->setTargetHeight(50);
+        $imageObj->executeResize();
+
+        $this->assertRegExp('(^assets/images/.*dummy.*.jpg$)', $imageObj->getResizedPath(), 'Hook should not get called for cached images');
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
+        $imageObj->executeResize();
+
+        $this->assertSame('dummy.jpg', $imageObj->getResizedPath(), 'Hook should not get called if no resize is necessary');
     }
 
     /**
@@ -1575,7 +1627,7 @@ class ImageTest extends TestCase
     public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj)
     {
         // Do not include $cacheName as it is dynamic (mtime)
-        return $originalPath . ';' . $targetWidth . ';' . $targetHeight . ';' . $resizeMode . ';' . get_class($fileObj) . ';' . $targetPath . ';' . get_class($imageObj);
+        return $originalPath . ';getImage;' . $targetWidth . ';' . $targetHeight . ';' . $resizeMode . ';' . get_class($fileObj) . ';' . $targetPath . ';' . get_class($imageObj);
     }
 
     /**
