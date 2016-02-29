@@ -17,6 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\Resizer as ResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 use Contao\Image\ImportantPart;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -120,7 +121,14 @@ class ImageFactory
         }
         $image->setImportantPart($importantPart);
 
-        return $this->resizer->resize($image, $resizeConfig, $this->imagineOptions, $targetPath, $this->bypassCache);
+        return $this->resizer->resize(
+            $image,
+            $resizeConfig,
+            (new ResizeOptions())
+                ->setImagineOptions($this->imagineOptions)
+                ->setTargetPath($targetPath)
+                ->setBypassCache($this->bypassCache)
+        );
     }
 
     /**

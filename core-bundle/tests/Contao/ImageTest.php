@@ -1555,15 +1555,24 @@ class ImageTest extends TestCase
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth(100)->setTargetHeight(100);
+        $imageObj->setTargetPath('target.jpg');
         $imageObj->executeResize();
 
-        $this->assertSame('assets/dummy.jpg%26executeResize_100_100_crop__Contao-Image.jpg', $imageObj->getResizedPath());
+        $this->assertSame('assets/dummy.jpg%26executeResize_100_100_crop_target.jpg_Contao-Image.jpg', $imageObj->getResizedPath());
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
         $imageObj->executeResize();
 
         $this->assertSame('assets/dummy.jpg%26executeResize_200_200_crop__Contao-Image.jpg', $imageObj->getResizedPath());
+
+        $imageObj = new Image($file);
+        $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
+        file_put_contents(self::$rootDir . '/target.jpg', '');
+        $imageObj->setTargetPath('target.jpg');
+        $imageObj->executeResize();
+
+        $this->assertSame('assets/dummy.jpg%26executeResize_200_200_crop_target.jpg_Contao-Image.jpg', $imageObj->getResizedPath());
 
         unset($GLOBALS['TL_HOOKS']);
     }

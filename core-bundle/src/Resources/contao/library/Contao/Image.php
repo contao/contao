@@ -14,6 +14,7 @@ use Contao\Image\Image as NewImage;
 use Contao\Image\ImportantPart;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
@@ -406,17 +407,43 @@ class Image
 		$image = $this->prepareImage();
 		$resizeConfig = $this->prepareResizeConfig();
 
+		if (
+			!System::getContainer()->getParameter('contao.image.bypass_cache') &&
+			$this->getTargetPath() &&
+			!$this->getForceOverride() &&
+			file_exists(TL_ROOT . '/' . $this->getTargetPath()) &&
+			$this->fileObj->mtime <= filemtime(TL_ROOT . '/' . $this->getTargetPath())
+		) {
+			// HOOK: add custom logic
+			if (isset($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize']))
+			{
+				foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback)
+				{
+					$return = \System::importStatic($callback[0])->{$callback[1]}($this);
+					if (is_string($return))
+					{
+						$this->resizedPath = \System::urlEncode($return);
+						return $this;
+					}
+				}
+			}
+
+			$this->resizedPath = \System::urlEncode($this->getTargetPath());
+			return $this;
+		}
+
 		$image = \System::getContainer()->get('contao.image.resizer')->resize(
 			$image,
 			$resizeConfig,
-			\System::getContainer()->getParameter('contao.image.imagine_options'),
-			$this->targetPath ? TL_ROOT . '/' . $this->targetPath : null,
-			\System::getContainer()->getParameter('contao.image.bypass_cache')
+			(new ResizeOptions())
+				->setImagineOptions(\System::getContainer()->getParameter('contao.image.imagine_options'))
+				->setTargetPath($this->targetPath ? TL_ROOT . '/' . $this->targetPath : null)
+				->setBypassCache(\System::getContainer()->getParameter('contao.image.bypass_cache'))
 		);
 
 		$this->resizedPath = $image->getPath();
 
-		if (substr($this->resizedPath, 0, strlen(TL_ROOT) + 1) === TL_ROOT . '/') {
+		if (strpos($this->resizedPath, TL_ROOT . '/') === 0 || strpos($this->resizedPath, TL_ROOT . '\\') === 0) {
 			$this->resizedPath = substr($this->resizedPath, strlen(TL_ROOT) + 1);
 		}
 

@@ -21,6 +21,7 @@ use Contao\Image\Resizer as ImageResizer;
 use Contao\Image\Image;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeCoordinates;
+use Contao\Image\ResizeOptions;
 use Contao\Image\ImportantPart;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -39,7 +40,7 @@ class Resizer extends ImageResizer
     /**
      * {@inheritdoc}
      */
-    public function resize(Image $image, ResizeConfiguration $resizeConfig, array $imagineOptions = [], $targetPath = null, $bypassCache = false)
+    public function resize(Image $image, ResizeConfiguration $config, ResizeOptions $options)
     {
         if ((
             isset($GLOBALS['TL_HOOKS']['executeResize']) &&
@@ -63,11 +64,16 @@ class Resizer extends ImageResizer
             if (strpos($legacyPath, TL_ROOT . '/') === 0 || strpos($legacyPath, TL_ROOT . '\\') === 0) {
                 $legacyPath = substr($legacyPath, strlen(TL_ROOT) + 1);
                 $this->legacyImage = new LegacyImage(new File($legacyPath));
-                $this->legacyImage->setTargetWidth($resizeConfig->getWidth());
-                $this->legacyImage->setTargetHeight($resizeConfig->getHeight());
-                $this->legacyImage->setResizeMode($resizeConfig->getMode());
-                $this->legacyImage->setZoomLevel($resizeConfig->getZoomLevel());
-                $this->legacyImage->setTargetPath($targetPath);
+                $this->legacyImage->setTargetWidth($config->getWidth());
+                $this->legacyImage->setTargetHeight($config->getHeight());
+                $this->legacyImage->setResizeMode($config->getMode());
+                $this->legacyImage->setZoomLevel($config->getZoomLevel());
+                if ($options->getTargetPath() && (
+                    strpos($options->getTargetPath(), TL_ROOT . '/') === 0 ||
+                    strpos($options->getTargetPath(), TL_ROOT . '\\') === 0
+                )) {
+                    $this->legacyImage->setTargetPath(substr($options->getTargetPath(), strlen(TL_ROOT) + 1));
+                }
                 $importantPart = $image->getImportantPart();
                 $this->legacyImage->setImportantPart([
                     'x' => $importantPart->getPosition()->getX(),
@@ -88,7 +94,7 @@ class Resizer extends ImageResizer
             }
         }
 
-        return parent::resize($image, $resizeConfig, $imagineOptions, $targetPath, $bypassCache);
+        return parent::resize($image, $config, $options);
     }
 
     /**

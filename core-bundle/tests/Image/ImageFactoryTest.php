@@ -192,8 +192,12 @@ class ImageFactoryTest extends TestCase
 
                     return true;
                 }),
-                $this->equalTo(['jpeg_quality' => 80]),
-                $this->equalTo('target/path.jpg')
+                $this->callback(function ($options) {
+                    $this->assertEquals(['jpeg_quality' => 80], $options->getImagineOptions());
+                    $this->assertEquals($this->getRootDir() . '/target/path.jpg', $options->getTargetPath());
+
+                    return true;
+                })
             )
             ->willReturn($imageMock);
 
@@ -254,7 +258,7 @@ class ImageFactoryTest extends TestCase
 
         $imageFactory = $this->createImageFactory($resizer, null, null, null, $framework);
 
-        $image = $imageFactory->create($path, 1, 'target/path.jpg');
+        $image = $imageFactory->create($path, 1, $this->getRootDir() . '/target/path.jpg');
 
         $this->assertSame($imageMock, $image);
     }
@@ -478,6 +482,9 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
         $this->assertEquals($this->getRootDir() . '/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg', $image->getPath());
+
+        $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP], $this->getRootDir() . '/target.jpg');
+        $this->assertEquals($this->getRootDir() . '/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg', $image->getPath());
 
         unset($GLOBALS['TL_HOOKS']);
     }
