@@ -525,11 +525,9 @@ class File extends \System
 	 */
 	public function close()
 	{
-		$return = true;
-
 		if (is_resource($this->resFile))
 		{
-			$return = $this->Files->fclose($this->resFile);
+			$this->Files->fclose($this->resFile);
 		}
 
 		// Create the file path

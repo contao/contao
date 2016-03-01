@@ -20,8 +20,8 @@ namespace Contao;
  *
  *     $picture = new Picture(new File('example.jpg'));
  *     $data = $picture->setImportantPart(array('x'=>10, 'y'=>10, 'width'=>100, 'height'=>100))
- *                     ->setImageSize(\ImageSizeModel::findByPk(1))
- *                     ->setImageSizeItems(\ImageSizeItemModel::findVisibleByPid(1, array('order'=>'sorting ASC')))
+ *                     ->setImageSize(ImageSizeModel::findByPk(1))
+ *                     ->setImageSizeItems(ImageSizeItemModel::findVisibleByPid(1, array('order'=>'sorting ASC')))
  *                     ->getTemplateData();
  *
  *     // Shortcut

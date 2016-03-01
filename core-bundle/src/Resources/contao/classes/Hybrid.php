@@ -19,7 +19,6 @@ namespace Contao;
  * @property string $space
  * @property string $typePrefix
  * @property string $hl
- * @property string $cssID
  * @property string $attributes
  *
  * @author Leo Feyer <https://github.com/leofeyer>

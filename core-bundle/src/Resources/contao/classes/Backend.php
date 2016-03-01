@@ -715,7 +715,7 @@ abstract class Backend extends \Controller
 
 							while ($objArticles->next())
 							{
-								$arrPages[] = sprintf($feUrl, ($objArticle->alias ?: $objArticle->id));
+								$arrPages[] = sprintf($feUrl, ($objArticles->alias ?: $objArticles->id));
 							}
 						}
 					}
