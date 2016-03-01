@@ -160,7 +160,7 @@ class Calendar extends \Frontend
 					}
 					else
 					{
-						$arrUrls[$jumpTo] = $this->generateFrontendUrl($objParent->row(), (\Config::get('useAutoItem') ? '/%s' : '/events/%s'), $objParent->language);
+						$arrUrls[$jumpTo] = $objParent->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/events/%s');
 					}
 				}
 

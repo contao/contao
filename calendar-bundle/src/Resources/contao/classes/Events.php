@@ -431,15 +431,15 @@ abstract class Events extends \Module
 		// Link to the default page
 		if (self::$arrUrlCache[$strCacheKey] === null)
 		{
-			$objPage = \PageModel::findByPk($objEvent->getRelated('pid')->jumpTo);
+			$objPage = \PageModel::findWithDetails($objEvent->getRelated('pid')->jumpTo);
 
 			if ($objPage === null)
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'), true);
+				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'));
 			}
 			else
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objPage->row(), (\Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id)));
+				self::$arrUrlCache[$strCacheKey] = ampersand($objPage->getFrontendUrl((\Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id)));
 			}
 		}
 
