@@ -88,9 +88,6 @@ class PageRoot extends \Frontend
 	 */
 	protected function getRedirectUrl($rootPageId)
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		return $this->generateFrontendUrl($this->getNextPage($rootPageId)->row(), null, $objPage->language);
+		return $this->getNextPage($rootPageId)->getFrontendUrl();
 	}
 }
