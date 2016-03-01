@@ -50,12 +50,13 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
      *
      * @param TokenInterface        $token        The token object
      * @param UserProviderInterface $userProvider The user provider object
+     * @param string                $providerKey  The provider key
      *
      * @return ContaoToken|AnonymousToken The token object
      *
      * @throws AuthenticationException If the token cannot be handled
      */
-    public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider)
+    public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
         if ($this->canSkipAuthentication($token)) {
             return $token;
