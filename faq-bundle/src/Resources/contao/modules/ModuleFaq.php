@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -83,11 +83,15 @@ class ModuleFaq extends \Frontend
 						continue;
 					}
 
-					// Set the domain (see #6421)
-					$domain = ($objParent->rootUseSSL ? 'https://' : 'http://') . ($objParent->domain ?: \Environment::get('host')) . \Environment::get('path') . '/';
-
 					// Generate the URL
-					$arrProcessed[$objFaq->jumpTo] = $domain . $this->generateFrontendUrl($objParent->row(), (\Config::get('useAutoItem') ? '/%s' : '/items/%s'), $objParent->language);
+					$feUrl = $objParent->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
+
+					if (strncmp($feUrl, 'http://', 7) !== 0 && strncmp($feUrl, 'https://', 8) !== 0)
+					{
+						$feUrl = (($objParent->rootUseSSL ? 'https://' : 'http://') . ($objParent->domain ?: \Environment::get('host')) . \Environment::get('path') . '/') . $feUrl;
+					}
+
+					$arrProcessed[$objFaq->jumpTo] = $feUrl;
 				}
 
 				$strUrl = $arrProcessed[$objFaq->jumpTo];
