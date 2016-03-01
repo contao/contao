@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -357,7 +357,8 @@ class ModuleSubscribe extends \Module
 		// Redirect to the jumpTo page
 		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
 		{
-			$this->redirect($this->generateFrontendUrl($objTarget->row()));
+			/** @var \PageModel $objTarget */
+			$this->redirect($objTarget->getFrontendUrl());
 		}
 
 		\System::getContainer()->get('session')->getFlashBag()->set('nl_confirm', $GLOBALS['TL_LANG']['MSC']['nl_confirm']);
