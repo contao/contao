@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -35,16 +35,16 @@ namespace Contao;
  * @method static MemberGroupModel|null findOneByStart($val, $opt=array())
  * @method static MemberGroupModel|null findOneByStop($val, $opt=array())
  *
- * @method static Model\Collection|MemberGroupModel|null findByTstamp($val, $opt=array())
- * @method static Model\Collection|MemberGroupModel|null findByName($val, $opt=array())
- * @method static Model\Collection|MemberGroupModel|null findByRedirect($val, $opt=array())
- * @method static Model\Collection|MemberGroupModel|null findByJumpTo($val, $opt=array())
- * @method static Model\Collection|MemberGroupModel|null findByDisable($val, $opt=array())
- * @method static Model\Collection|MemberGroupModel|null findByStart($val, $opt=array())
- * @method static Model\Collection|MemberGroupModel|null findByStop($val, $opt=array())
- * @method static Model\Collection|MemberGroupModel|null findMultipleByIds($val, $opt=array())
- * @method static Model\Collection|MemberGroupModel|null findBy($col, $val, $opt=array())
- * @method static Model\Collection|MemberGroupModel|null findAll($opt=array())
+ * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByTstamp($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByName($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByRedirect($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByJumpTo($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByDisable($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByStart($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByStop($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findMultipleByIds($val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findBy($col, $val, $opt=array())
+ * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findAll($opt=array())
  *
  * @method static integer countById($id, $opt=array())
  * @method static integer countByTstamp($val, $opt=array())
