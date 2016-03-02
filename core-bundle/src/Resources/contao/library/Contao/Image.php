@@ -109,7 +109,15 @@ class Image
 		// Check whether the file exists
 		if (!$file->exists())
 		{
-			throw new \InvalidArgumentException('Image "' . $file->path . '" could not be found');
+			// Handle public bundle resources
+			if (file_exists(TL_ROOT . '/web/' . $file->path))
+			{
+				$file = new \File('web/' . $file->path);
+			}
+			else
+			{
+				throw new \InvalidArgumentException('Image "' . $file->path . '" could not be found');
+			}
 		}
 
 		$this->fileObj = $file;
@@ -359,7 +367,15 @@ class Image
 	 */
 	public function getResizedPath()
 	{
-		return $this->resizedPath;
+		$path = $this->resizedPath;
+
+		// Strip the web/ prefix (see #337)
+		if (strncmp($path, 'web/', 4) === 0)
+		{
+			$path = substr($path, 4);
+		}
+
+		return $path;
 	}
 
 
