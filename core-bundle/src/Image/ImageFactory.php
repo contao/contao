@@ -159,9 +159,9 @@ class ImageFactory
                     ->setHeight($imageSize->height)
                     ->setMode($imageSize->resizeMode)
                     ->setZoomLevel($imageSize->zoom);
-
-                return [$config, null];
             }
+
+            return [$config, null];
         }
 
         if (isset($size[0]) && $size[0]) {

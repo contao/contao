@@ -110,10 +110,10 @@ class ImageFactoryTest extends TestCase
              ->getMock();
 
         $resizer
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('resize')
             ->with(
-                $this->callback(function ($image) use ($path) {
+                $this->callback(function ($image) use (&$path) {
                     $this->assertEquals($path, $image->getPath());
 
                     return true;
@@ -151,6 +151,16 @@ class ImageFactoryTest extends TestCase
             ->willReturn($filesAdapter);
 
         $imageFactory = $this->createImageFactory($resizer, null, null, null, $framework);
+
+        $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
+
+        $this->assertSame($imageMock, $image);
+
+        $path = $this->getRootDir() . '/assets/images/dummy.svg';
+        if (!file_exists(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+        file_put_contents($path, '');
 
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
@@ -259,6 +269,74 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->createImageFactory($resizer, null, null, null, $framework);
 
         $image = $imageFactory->create($path, 1, $this->getRootDir() . '/target/path.jpg');
+
+        $this->assertSame($imageMock, $image);
+    }
+
+    /**
+     * Tests the create() method.
+     */
+    public function testCreateWithMissingImageSize()
+    {
+        $path = $this->getRootDir() . '/images/dummy.jpg';
+
+        $imageMock = $this->getMockBuilder('Contao\Image\Image')
+             ->disableOriginalConstructor()
+             ->getMock();
+
+        $resizer = $this->getMockBuilder('Contao\Image\Resizer')
+             ->disableOriginalConstructor()
+             ->getMock();
+
+        $resizer
+            ->expects($this->once())
+            ->method('resize')
+            ->with(
+                $this->callback(function ($image) use ($path) {
+                    $this->assertEquals($path, $image->getPath());
+
+                    return true;
+                }),
+                $this->callback(function ($config) {
+                    $this->assertTrue($config->isEmpty());
+
+                    return true;
+                })
+            )
+            ->willReturn($imageMock);
+
+        $framework = $this->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $imageSizeAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $imageSizeAdapter->expects($this->any())
+            ->method('__call')
+            ->willReturn(null);
+
+        $filesAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesAdapter->expects($this->any())
+            ->method('__call')
+            ->willReturn(null);
+
+        $framework->expects($this->any())
+            ->method('getAdapter')
+            ->will($this->returnCallback(function($key) use($imageSizeAdapter, $filesAdapter) {
+                return [
+                    'Contao\\ImageSizeModel' => $imageSizeAdapter,
+                    'Contao\\FilesModel' => $filesAdapter,
+                ][$key];
+            }));
+
+        $imageFactory = $this->createImageFactory($resizer, null, null, null, $framework);
+
+        $image = $imageFactory->create($path, 1);
 
         $this->assertSame($imageMock, $image);
     }
