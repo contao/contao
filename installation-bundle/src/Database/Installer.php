@@ -13,6 +13,7 @@ namespace Contao\InstallationBundle\Database;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\DcaExtractor;
 use Contao\SqlFileParser;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\Translator;
@@ -209,6 +210,13 @@ class Installer
 
         ksort($return);
 
+        // HOOK: allow third-party developers to modify the array (see #3281)
+        if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDca']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromDca'])) {
+            foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback) {
+                $return = System::importStatic($callback[0])->{$callback[1]}($return);
+            }
+        }
+
         return $return;
     }
 
@@ -229,6 +237,13 @@ class Installer
         }
 
         ksort($return);
+
+        // HOOK: allow third-party developers to modify the array (see #3281)
+        if (isset($GLOBALS['TL_HOOKS']['sqlGetFromFile']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromFile'])) {
+            foreach ($GLOBALS['TL_HOOKS']['sqlGetFromFile'] as $callback) {
+                $return = System::importStatic($callback[0])->{$callback[1]}($return);
+            }
+        }
 
         return $return;
     }
