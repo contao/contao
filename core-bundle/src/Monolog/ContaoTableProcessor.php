@@ -2,8 +2,6 @@
 
 namespace Contao\CoreBundle\Monolog;
 
-use Monolog\Logger;
-use Monolog\Processor\IntrospectionProcessor;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -38,10 +36,16 @@ class ContaoTableProcessor
      */
     public function __invoke(array $record)
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $userAgent = 'N/A';
+        $ipAddress = '127.0.0.1';
 
-        $record['extra']['ip']       = $request->getClientIp(); // TODO anonymize IP
-        $record['extra']['browser']  = $request->server->get('HTTP_USER_AGENT');
+        if (($request = $this->requestStack->getCurrentRequest()) !== null) {
+            $request->getClientIp(); // TODO anonymize IP
+            $userAgent = $request->server->get('HTTP_USER_AGENT');
+        }
+
+        $record['extra']['ip']       = $ipAddress;
+        $record['extra']['browser']  = $userAgent;
         $record['extra']['username'] = $this->getUsername();
         $record['extra']['function'] = (string) $record['context']['function'];
 
