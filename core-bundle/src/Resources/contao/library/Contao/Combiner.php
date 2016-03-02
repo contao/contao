@@ -224,7 +224,7 @@ class Combiner extends \System
 					$name = $arrFile['name'];
 
 					// Strip the web/ prefix (see #328)
-					if (strpos($name, 'web/') === 0)
+					if (strncmp($name, 'web/', 4) === 0)
 					{
 						$name = substr($name, 4);
 					}
