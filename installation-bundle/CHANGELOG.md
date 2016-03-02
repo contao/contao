@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.0.1 (2016-XX-XX)
+
+ * Only purge the Symfony cache after the user has authenticated (see #11).
+
 ### 1.0.0 (2015-11-26)
 
  * Also check for the `localconfig.php` file during boot (see contao/core-bundle#406).

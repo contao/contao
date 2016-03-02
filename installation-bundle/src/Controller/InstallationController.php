@@ -22,7 +22,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,8 +36,10 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @Route(defaults={"_scope" = "backend"})
  */
-class InstallationController extends ContainerAware
+class InstallationController
 {
+    use ContainerAwareTrait;
+
     /**
      * @var array
      */
@@ -76,6 +79,8 @@ class InstallationController extends ContainerAware
         if (!$this->container->get('contao.install_tool_user')->isAuthenticated()) {
             return $this->login();
         }
+
+        $this->purgeSymfonyCache();
 
         if (!$installTool->canConnectToDatabase($this->container->getParameter('database_name'))) {
             return $this->setUpDatabaseConnection();
@@ -218,6 +223,25 @@ class InstallationController extends ContainerAware
         $this->container->get('contao.install_tool_user')->setAuthenticated(true);
 
         return $this->getRedirectResponse();
+    }
+
+    /**
+     * Purges the Symfony cache.
+     */
+    private function purgeSymfonyCache()
+    {
+        $fs = new Filesystem();
+        $rootDir = $this->container->getParameter('kernel.root_dir');
+
+        $finder = Finder::create()
+            ->directories()
+            ->depth('==0')
+            ->in($rootDir . '/cache')
+        ;
+
+        foreach ($finder as $dir) {
+            $fs->remove($dir);
+        }
     }
 
     /**
