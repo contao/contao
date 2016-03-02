@@ -847,7 +847,7 @@ class Image
 
 		$path = $src;
 
-		if (!is_file(TL_ROOT .'/'. $src))
+		if (!is_file(TL_ROOT . '/' . $src))
 		{
 			// Handle public bundle resources
 			if (file_exists(TL_ROOT . '/web/' . $src))
@@ -861,6 +861,12 @@ class Image
 		}
 
 		$objFile = new \File($path);
+
+		// Strip the web/ prefix (see #337)
+		if (strncmp($src, 'web/', 4) === 0)
+		{
+			$src = substr($src, 4);
+		}
 
 		return '<img src="' . $static . \System::urlEncode($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
 	}
@@ -961,12 +967,6 @@ class Image
 			return null;
 		}
 
-		// Handle public bundle resources
-		if (!file_exists(TL_ROOT . '/' . $image) && file_exists(TL_ROOT . '/web/' . $image))
-		{
-			$image = 'web/' . $image;
-		}
-
 		try
 		{
 			$imageObj = static::create($image, array($width, $height, $mode));
@@ -975,12 +975,6 @@ class Image
 
 			if (($path = $imageObj->executeResize()->getResizedPath()) != '')
 			{
-				// Strip the web/ prefix (see #337)
-				if (strncmp($path, 'web/', 4) === 0)
-				{
-					$path = substr($path, 4);
-				}
-
 				return $path;
 			}
 		}
