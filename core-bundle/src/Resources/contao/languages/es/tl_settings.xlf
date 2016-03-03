@@ -190,8 +190,7 @@
         <target>Deshabilitar referer check</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted. Attention: potential security risk!</source>
-        <target>Selecciona esta opción si prefieres que TYPOlight no compruebe la dirección referer cuando se envía un formulario. Recuerda que deshabilitar esta opción es un gran riesgo de seguridad! Normalmente, cuestiones de tipo referer son causadas por seguridad o herramientas de anonimato.</target>
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -200,14 +199,6 @@
       <trans-unit id="tl_settings.lockPeriod.1">
         <source>An account will be locked if a wrong password is entered three times in a row.</source>
         <target>Por favor introduce el tiempo de espera en segundos que un usuario debe esperar antes de que se le permita volver a entrar en una cuenta cerrada (por defecto: 5 minutos = 300 segundos). Esta opción ayuda a que los ataques de fuerza bruta al sistema sean algo más difíciles.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.0">
-        <source>Disable IP check</source>
-        <target>Deshabilitar comprobación IP</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.1">
-        <source>Do not bind sessions to IP addresses. Choosing this option is a potential security risk!</source>
-        <target>No asociar sesiones a direcciones IP. ¡Marcar esta opción hace que el sistema sea menos seguro!</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>

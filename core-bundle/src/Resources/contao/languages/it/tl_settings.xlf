@@ -190,8 +190,7 @@
         <target>Disabilita il token</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted. Attention: potential security risk!</source>
-        <target>Seleziona questa opzione se si vuole disabilitare il controllo del token della richiesta. Attenzione: Questo potrebbe essere un potenziale rischio di sicurezza.</target>
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -200,14 +199,6 @@
       <trans-unit id="tl_settings.lockPeriod.1">
         <source>An account will be locked if a wrong password is entered three times in a row.</source>
         <target>Inserisci il tempo che un utente deve attendere prima che gli sia concesso di ritentare il login per un account bloccato (default: 5 minuti = 300 secondi). Si presume che questa caratteristica scoraggi gli attacchi brute-force.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.0">
-        <source>Disable IP check</source>
-        <target>Disabilita controllo IP</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.1">
-        <source>Do not bind sessions to IP addresses. Choosing this option is a potential security risk!</source>
-        <target>Questa opzione permette di non effettuare il controllo dell'IP. Disabilitando questo controllo si mette a rischio la sicurezza del sito!</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>

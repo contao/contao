@@ -731,8 +731,8 @@
         <target>ID %sのコンテント要素を編集</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.0">
-        <source>Edit article settings</source>
-        <target>記事の設定を変更</target>
+        <source>Edit article</source>
+        <target>記事を編集</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
         <source>Edit the article settings</source>

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -385,15 +385,16 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'dateAdded' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['dateAdded'],
+			'default'                 => time(),
 			'sorting'                 => true,
 			'flag'                    => 6,
-			'eval'                    => array('rgxp'=>'datim'),
+			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'lastLogin' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['lastLogin'],
-			'eval'                    => array('rgxp'=>'datim'),
+			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'currentLogin' => array
@@ -401,21 +402,23 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['currentLogin'],
 			'sorting'                 => true,
 			'flag'                    => 6,
-			'eval'                    => array('rgxp'=>'datim'),
+			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'loginCount' => array
 		(
+			'default'                 => 3,
+			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "smallint(5) unsigned NOT NULL default '3'"
 		),
 		'locked' => array
 		(
-			'eval'                    => array('rgxp'=>'datim'),
+			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'session' => array
 		(
-			'eval'                    => array('doNotShow'=>true),
+			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'autologin' => array
@@ -426,7 +429,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'createdOn' => array
 		(
-			'eval'                    => array('rgxp'=>'datim'),
+			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'activation' => array

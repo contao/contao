@@ -190,8 +190,7 @@
         <target>Deactivar tokens da dumondas</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted. Attention: potential security risk!</source>
-        <target>Na betg controllar ils tokens da dumondas sch'in formular vegn tramess. Attenziun: Ristg da segirezza potenzial.</target>
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -200,14 +199,6 @@
       <trans-unit id="tl_settings.lockPeriod.1">
         <source>An account will be locked if a wrong password is entered three times in a row.</source>
         <target>In conto vegn bloccà sch'in pled-clav fauss vegn endatà trais giadas ina suenter l'autra.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.0">
-        <source>Disable IP check</source>
-        <target>Deactivar la controlla dad adressas dad IP</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.1">
-        <source>Do not bind sessions to IP addresses. Choosing this option is a potential security risk!</source>
-        <target>Na betg colliar adressas dad IP cun las sessiuns. Tscherner questa opziun è ina ristga da segirezza potenziala.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>

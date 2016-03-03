@@ -730,8 +730,8 @@
         <target>Inhaltselement ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.0">
-        <source>Edit article settings</source>
-        <target>Artikeleinstellungen bearbeiten</target>
+        <source>Edit article</source>
+        <target>Artikel bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
         <source>Edit the article settings</source>

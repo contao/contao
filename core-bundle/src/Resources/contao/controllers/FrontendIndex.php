@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -114,9 +114,15 @@ class FrontendIndex extends \Frontend
 			}
 
 			// Try to find a page matching the language parameter
-			elseif (($lang = \Input::get('language')) != '' && isset($arrLangs[$lang]))
+			elseif (($lang = \Input::get('language')) && isset($arrLangs[$lang]))
 			{
 				$objNewPage = $arrLangs[$lang];
+			}
+
+			// Use the fallback language (see #8142)
+			elseif (isset($arrLangs['*']))
+			{
+				$objNewPage = $arrLangs['*'];
 			}
 
 			// Store the page object
@@ -136,7 +142,7 @@ class FrontendIndex extends \Frontend
 		}
 
 		// Throw a 500 error if the result is still ambiguous
-		if ($objPage instanceof Model\Collection && $objPage->count() != 1)
+		if ($objPage instanceof Model\Collection && $objPage->count() > 1)
 		{
 			$this->log('More than one page matches page ID "' . $pageId . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
 			throw new \LogicException('More than one page found');

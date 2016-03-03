@@ -206,12 +206,12 @@
         <target>Éditer le formulaire ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader.0">
-        <source>Edit form settings</source>
-        <target>Éditer les paramètres du formulaire</target>
+        <source>Edit form</source>
+        <target>Éditer le formulaire</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader.1">
-        <source>Edit the settings of form ID %s</source>
-        <target>Éditer les paramètres du formulaire ID %s</target>
+        <source>Edit the form settings</source>
+        <target>Éditer les paramètres du formulaire</target>
       </trans-unit>
       <trans-unit id="tl_form.copy.0">
         <source>Duplicate form</source>

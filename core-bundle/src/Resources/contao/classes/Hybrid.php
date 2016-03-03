@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -14,8 +14,11 @@ namespace Contao;
 /**
  * Parent class for objects that can be modules or content elements.
  *
- * @property string $hl
+ * @property string $headline
  * @property string $cssID
+ * @property string $space
+ * @property string $typePrefix
+ * @property string $hl
  * @property string $attributes
  *
  * @author Leo Feyer <https://github.com/leofeyer>

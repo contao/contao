@@ -174,8 +174,7 @@
         <target>Číselné znaky</target>
       </trans-unit>
       <trans-unit id="tl_form_field.digit.1">
-        <source>Allows numeric characters, minus (-), full stop (.) and space ( ).</source>
-        <target>Povolí užívateľom zadať číselné znaky, znaky: mínus (-), bodka (.) a medzera ( ).</target>
+        <source>Allows numeric characters, minus (-) and full stop (.).</source>
       </trans-unit>
       <trans-unit id="tl_form_field.alpha.0">
         <source>Alphabetic characters</source>

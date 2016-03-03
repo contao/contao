@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -434,7 +434,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <a href="'.$this->addToUrl($hrfNew).'" class="'.$clsNew.'" title="'.specialchars($ttlNew).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$lblNew.'</a>
 <a href="'.$this->addToUrl('&amp;act=paste&amp;mode=move').'" class="header_new" title="'.specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]).'" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['move'][0].'</a> ' : '') . ($blnClipboard ? '
 <a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : $this->generateGlobalButtons()) . '
-</div>' . \Message::generate(true) . ((\Input::get('act') == 'select') ? '
+</div>' . \Message::generate() . ((\Input::get('act') == 'select') ? '
 
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
 <div class="tl_formbody">
@@ -1429,6 +1429,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				// Call the onversion_callback
 				if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback']))
 				{
+					@trigger_error('Using the onversion_callback has been deprecated and will no longer work in Contao 5.0. Use the oncreate_version_callback instead.', E_USER_DEPRECATED);
+
 					foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
 					{
 						if (is_array($callback))
@@ -1442,8 +1444,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 						}
 					}
 				}
-
-				$this->log('A new version of file "'.$objFile->path.'" has been created', __METHOD__, TL_GENERAL);
 			}
 
 			// Set the current timestamp (-> DO NOT CHANGE THE ORDER version - timestamp)
@@ -1654,6 +1654,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 						// Call the onversion_callback
 						if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback']))
 						{
+							@trigger_error('Using the onversion_callback has been deprecated and will no longer work in Contao 5.0. Use the oncreate_version_callback instead.', E_USER_DEPRECATED);
+
 							foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
 							{
 								if (is_array($callback))
@@ -1667,8 +1669,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 								}
 							}
 						}
-
-						$this->log('A new version of file "'.$objFile->path.'" has been created', __METHOD__, TL_GENERAL);
 					}
 
 					// Set the current timestamp (-> DO NOT CHANGE ORDER version - timestamp)

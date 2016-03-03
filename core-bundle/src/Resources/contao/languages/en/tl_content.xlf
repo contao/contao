@@ -549,7 +549,7 @@
         <source>Edit content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.editheader.0">
-        <source>Edit article settings</source>
+        <source>Edit article</source>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
         <source>Edit the article settings</source>

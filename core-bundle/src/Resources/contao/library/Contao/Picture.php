@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -26,8 +26,8 @@ use Imagine\Image\Point;
  *
  *     $picture = new Picture(new File('example.jpg'));
  *     $data = $picture->setImportantPart(array('x'=>10, 'y'=>10, 'width'=>100, 'height'=>100))
- *                     ->setImageSize(\ImageSizeModel::findByPk(1))
- *                     ->setImageSizeItems(\ImageSizeItemModel::findVisibleByPid(1, array('order'=>'sorting ASC')))
+ *                     ->setImageSize(ImageSizeModel::findByPk(1))
+ *                     ->setImageSizeItems(ImageSizeItemModel::findVisibleByPid(1, array('order'=>'sorting ASC')))
  *                     ->getTemplateData();
  *
  *     // Shortcut

@@ -222,12 +222,12 @@
         <target>编辑文章ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.0">
-        <source>Edit article settings</source>
-        <target>编辑文章头</target>
+        <source>Edit article</source>
+        <target>编辑文章</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.1">
-        <source>Edit the settings of article ID %s</source>
-        <target>编辑ID为 %s 的文章设定</target>
+        <source>Edit the article settings</source>
+        <target>编辑文章设置</target>
       </trans-unit>
       <trans-unit id="tl_article.copy.0">
         <source>Duplicate article</source>

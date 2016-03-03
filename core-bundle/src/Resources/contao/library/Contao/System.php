@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -716,9 +716,10 @@ abstract class System
 	 */
 	public static function getSessionHash($strCookie)
 	{
-		$strHash = static::getContainer()->get('session')->getId();
+		$container = static::getContainer();
+		$strHash = $container->get('session')->getId();
 
-		if (!\Config::get('disableIpCheck'))
+		if (!$container->getParameter('contao.security.disable_ip_check'))
 		{
 			$strHash .= \Environment::get('ip');
 		}

@@ -191,8 +191,7 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
         <target>Slå av referenskontroll</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted. Attention: potential security risk!</source>
-        <target>Välj detta val om du inte vill att Contao ska kontrollera adressreferensen när ett formulär skickas. &lt;br /&gt;Kom ihåg att detta innebär en stor säkerhetsrisk!</target>
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -201,14 +200,6 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
       <trans-unit id="tl_settings.lockPeriod.1">
         <source>An account will be locked if a wrong password is entered three times in a row.</source>
         <target>Ange den tid en medlem måste vänta innan han kan logga in igen efter att kontot har låsts. (standard: 5 minuter = 300 sekunder). Denna egenskap är tillför att göra 'brute force' attacker lite svårare att genomföra.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.0">
-        <source>Disable IP check</source>
-        <target>Slå av IP-kontroll</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.1">
-        <source>Do not bind sessions to IP addresses. Choosing this option is a potential security risk!</source>
-        <target>Välj detta val om du inte vill att sessioner knyts till IP-adresser.&lt;br /&gt;Kom ihåg att detta innebär en stor säkerhetsrisk!</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>

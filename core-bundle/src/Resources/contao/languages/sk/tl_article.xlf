@@ -222,12 +222,12 @@
         <target>Upraviť článok ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.0">
-        <source>Edit article settings</source>
-        <target>Upraviť nastavenia článku</target>
+        <source>Edit article</source>
+        <target>Upraviť článok</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.1">
-        <source>Edit the settings of article ID %s</source>
-        <target>Upraviť nastavenia článku ID %s</target>
+        <source>Edit the article settings</source>
+        <target>Upraviť nastavenie článku</target>
       </trans-unit>
       <trans-unit id="tl_article.copy.0">
         <source>Duplicate article</source>

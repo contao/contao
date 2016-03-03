@@ -114,12 +114,12 @@
         <target>Muokkaa tyylisivua ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.0">
-        <source>Edit style sheet settings</source>
-        <target>Muokkaa tyylisivun asetuksia</target>
+        <source>Edit style sheet</source>
+        <target>Muokkaa tyylisivua</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.1">
-        <source>Edit the settings of style sheet ID %s</source>
-        <target>Muokkaa tyylisivun ID %s asetuksia</target>
+        <source>Edit the style sheet settings</source>
+        <target>Muokkaa tyylisivun asetuksia</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cut.0">
         <source>Move style sheet</source>

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -97,53 +97,44 @@ class ModuleQuicklink extends \Module
 		// Add the items to the pre-sorted array
 		while ($objPages->next())
 		{
-			/** @var PageModel $objModel */
-			$objModel = $objPages->current();
-
-			$arrPages[$objPages->id] = $objModel->loadDetails()->row(); // see #3765
+			$arrPages[$objPages->id] = $objPages->current();
 		}
 
 		$items = array();
+		$arrPages = array_values(array_filter($arrPages));
 
-		foreach ($arrPages as $arrPage)
+		/** @var \PageModel[] $arrPages */
+		foreach ($arrPages as $objPage)
 		{
-			$arrPage['title'] = strip_insert_tags($arrPage['title']);
-			$arrPage['pageTitle'] = strip_insert_tags($arrPage['pageTitle']);
+			$objPage->title = strip_insert_tags($objPage->title);
+			$objPage->pageTitle = strip_insert_tags($objPage->pageTitle);
 
 			// Get href
-			switch ($arrPage['type'])
+			switch ($objPage->type)
 			{
 				case 'redirect':
-					$href = $arrPage['url'];
+					$href = $objPage->url;
 					break;
 
 				case 'forward':
-					if (($objNext = \PageModel::findPublishedById($arrPage['jumpTo'])) !== null)
+					if (($objNext = $objPage->getRelated('jumpTo')) !== null)
 					{
-						$strForceLang = null;
-						$objNext->loadDetails();
-
-						// Check the target page language (see #4706)
-						if (\Config::get('addLanguageToUrl'))
-						{
-							$strForceLang = $objNext->language;
-						}
-
-						$href = $this->generateFrontendUrl($objNext->row(), null, $strForceLang, true);
+						/** @var \PageModel $objNext */
+						$href = $objNext->getFrontendUrl();
 						break;
 					}
 					// DO NOT ADD A break; STATEMENT
 
 				default:
-					$href = $this->generateFrontendUrl($arrPage, null, $arrPage['rootLanguage'], true);
+					$href = $objPage->getFrontendUrl();
 					break;
 			}
 
 			$items[] = array
 			(
 				'href' => $href,
-				'title' => specialchars($arrPage['pageTitle'] ?: $arrPage['title']),
-				'link' => $arrPage['title']
+				'title' => specialchars($objPage->pageTitle ?: $objPage->title),
+				'link' => $objPage->title
 			);
 		}
 

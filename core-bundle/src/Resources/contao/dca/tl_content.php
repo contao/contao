@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -1726,8 +1726,7 @@ class tl_content extends Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
 		{
-			$this->log('Not enough permissions to publish/unpublish content element ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
 		}
 
 		// The onload_callbacks vary depending on the dynamic parent table (see #4894)
@@ -1745,12 +1744,6 @@ class tl_content extends Backend
 					$callback(($dc ?: $this));
 				}
 			}
-		}
-
-		// Check permissions to publish
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
-		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
 		}
 
 		$objVersions = new Versions('tl_content', $intId);
