@@ -2,6 +2,7 @@
 
 ### 1.0.1 (2016-XX-XX)
 
+ * Re-add the "sqlGetFromDca" and "sqlGetFromFile" hooks (see #12).
  * Only purge the Symfony cache after the user has authenticated (see #11).
 
 ### 1.0.0 (2015-11-26)
