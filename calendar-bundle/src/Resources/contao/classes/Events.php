@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -413,7 +413,8 @@ abstract class Events extends \Module
 			case 'internal':
 				if (($objTarget = $objEvent->getRelated('jumpTo')) !== null)
 				{
-					self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objTarget->row()));
+					/** @var \PageModel $objTarget */
+					self::$arrUrlCache[$strCacheKey] = ampersand($objTarget->getFrontendUrl());
 				}
 				break;
 
@@ -421,7 +422,8 @@ abstract class Events extends \Module
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 				{
-					self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					/** @var \PageModel $objPid */
+					self::$arrUrlCache[$strCacheKey] = ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
 		}
@@ -429,15 +431,15 @@ abstract class Events extends \Module
 		// Link to the default page
 		if (self::$arrUrlCache[$strCacheKey] === null)
 		{
-			$objPage = \PageModel::findByPk($objEvent->getRelated('pid')->jumpTo);
+			$objPage = \PageModel::findWithDetails($objEvent->getRelated('pid')->jumpTo);
 
 			if ($objPage === null)
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'), true);
+				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'));
 			}
 			else
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objPage->row(), (\Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id)));
+				self::$arrUrlCache[$strCacheKey] = ampersand($objPage->getFrontendUrl((\Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id)));
 			}
 		}
 

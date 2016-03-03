@@ -1,5 +1,10 @@
 # Contao calendar bundle change log
 
+### 4.1.1 (2016-03-03)
+
+ * Always fix the domain and language when generating URLs (see contao/core#8238).
+ * Correctly render the links in the monthly/yearly event list menu (see contao/core#8140).
+
 ### 4.1.0 (2015-11-26)
 
  * Subscribe to the events to modify the front end preview URL.
