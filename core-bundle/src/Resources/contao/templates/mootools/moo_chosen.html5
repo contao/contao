@@ -1,0 +1,21 @@
+<?php
+
+// CSS files
+$GLOBALS['TL_CSS'][] = 'assets/chosen/css/chosen.min.css|static';
+$GLOBALS['TL_CSS'][] = 'assets/stylect/css/stylect.min.css|static';
+
+// JavaScript files
+$objCombiner = new Combiner();
+$objCombiner->add('assets/chosen/js/chosen.min.js');
+$objCombiner->add('assets/stylect/js/stylect.min.js');
+
+?>
+
+<script src="<?= $objCombiner->getCombinedFile() ?>"></script>
+<script>
+  (function() {
+    window.addEvent('domready', function() {
+      $$('select.tl_chosen').chosen();
+    });
+  })();
+</script>
