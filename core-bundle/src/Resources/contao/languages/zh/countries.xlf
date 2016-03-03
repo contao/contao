@@ -127,6 +127,7 @@
       </trans-unit>
       <trans-unit id="CNT.bs">
         <source>Bahamas (the)</source>
+        <target>巴哈马群岛</target>
       </trans-unit>
       <trans-unit id="CNT.bt">
         <source>Bhutan</source>
@@ -154,15 +155,19 @@
       </trans-unit>
       <trans-unit id="CNT.cc">
         <source>Cocos (Keeling) Islands (the)</source>
+        <target>科科斯群岛</target>
       </trans-unit>
       <trans-unit id="CNT.cd">
         <source>Congo (the Democratic Republic of the)</source>
+        <target>刚果（民主共和国）</target>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic (the)</source>
+        <target>中非</target>
       </trans-unit>
       <trans-unit id="CNT.cg">
         <source>Congo (the)</source>
+        <target>刚果</target>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
@@ -173,6 +178,7 @@
       </trans-unit>
       <trans-unit id="CNT.ck">
         <source>Cook Islands (the)</source>
+        <target>库克群岛</target>
       </trans-unit>
       <trans-unit id="CNT.cl">
         <source>Chile</source>
@@ -283,6 +289,7 @@
       </trans-unit>
       <trans-unit id="CNT.fo">
         <source>Faroe Islands (the)</source>
+        <target>法罗群岛</target>
       </trans-unit>
       <trans-unit id="CNT.fr">
         <source>France</source>
@@ -325,6 +332,7 @@
       </trans-unit>
       <trans-unit id="CNT.gm">
         <source>Gambia (the)</source>
+        <target>冈比亚</target>
       </trans-unit>
       <trans-unit id="CNT.gn">
         <source>Guinea</source>
@@ -375,6 +383,7 @@
       </trans-unit>
       <trans-unit id="CNT.hr">
         <source>Croatia</source>
+        <target>克罗地亚</target>
       </trans-unit>
       <trans-unit id="CNT.ht">
         <source>Haiti</source>
@@ -456,6 +465,7 @@
       </trans-unit>
       <trans-unit id="CNT.km">
         <source>Comoros (the)</source>
+        <target>科摩罗</target>
       </trans-unit>
       <trans-unit id="CNT.kn">
         <source>Saint Kitts and Nevis</source>
@@ -519,6 +529,7 @@
       </trans-unit>
       <trans-unit id="CNT.ly">
         <source>Libya</source>
+        <target>利比亚</target>
       </trans-unit>
       <trans-unit id="CNT.ma">
         <source>Morocco</source>
@@ -631,6 +642,7 @@
       </trans-unit>
       <trans-unit id="CNT.nl">
         <source>Netherlands (the)</source>
+        <target>荷兰</target>
       </trans-unit>
       <trans-unit id="CNT.no">
         <source>Norway</source>
@@ -766,6 +778,7 @@
       </trans-unit>
       <trans-unit id="CNT.sk">
         <source>Slovakia</source>
+        <target>斯洛伐克</target>
       </trans-unit>
       <trans-unit id="CNT.sl">
         <source>Sierra Leone</source>
@@ -916,6 +929,7 @@
       </trans-unit>
       <trans-unit id="CNT.wf">
         <source>Wallis and Futuna</source>
+        <target>瓦利斯群岛和富图纳群岛</target>
       </trans-unit>
       <trans-unit id="CNT.ws">
         <source>Samoa</source>

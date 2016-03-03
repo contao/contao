@@ -190,8 +190,7 @@
         <target>Vypnúť kontrolu zadávateľa</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted. Attention: potential security risk!</source>
-        <target>Nekontrolovať adresu zadávateľa pri odosielaní formulára. Upozornenie: možné bezpečnostné riziko!</target>
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -200,14 +199,6 @@
       <trans-unit id="tl_settings.lockPeriod.1">
         <source>An account will be locked if a wrong password is entered three times in a row.</source>
         <target>Účet bude uzamknutý ak užívateľ 3-krát za sebou zadá nesprávne heslo.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.0">
-        <source>Disable IP check</source>
-        <target>Vypnúť kontrolu IP</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.1">
-        <source>Do not bind sessions to IP addresses. Choosing this option is a potential security risk!</source>
-        <target>Nepriradzovať sessions k IP adresám. Upozornenie: táto voľba znamená potencionálne bezpečnostné riziko!</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>

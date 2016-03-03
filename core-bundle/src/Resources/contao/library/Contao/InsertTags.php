@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -372,31 +372,13 @@ class InsertTags extends \Controller
 
 								if ($objNext !== null)
 								{
-									$strForceLang = null;
-									$objNext->loadDetails();
-
-									// Check the target page language (see #4706)
-									if (\Config::get('addLanguageToUrl'))
-									{
-										$strForceLang = $objNext->language;
-									}
-
-									$strUrl = $this->generateFrontendUrl($objNext->row(), null, $strForceLang, true);
+									$strUrl = $objNext->getFrontendUrl();
 									break;
 								}
 								// DO NOT ADD A break; STATEMENT
 
 							default:
-								$strForceLang = null;
-								$objNextPage->loadDetails();
-
-								// Check the target page language (see #4706, #5465)
-								if (\Config::get('addLanguageToUrl'))
-								{
-									$strForceLang = $objNextPage->language;
-								}
-
-								$strUrl = $this->generateFrontendUrl($objNextPage->row(), null, $strForceLang, true);
+								$strUrl = $objNextPage->getFrontendUrl();
 								break;
 						}
 
@@ -476,7 +458,8 @@ class InsertTags extends \Controller
 						break;
 					}
 
-					$strUrl = $this->generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id));
+					/** @var PageModel $objPid */
+					$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
@@ -509,7 +492,8 @@ class InsertTags extends \Controller
 						break;
 					}
 
-					$strUrl = $this->generateFrontendUrl($objJumpTo->row(), (\Config::get('useAutoItem') ?  '/' : '/items/') . ($objFaq->alias ?: $objFaq->id));
+					/** @var PageModel $objJumpTo */
+					$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/items/') . ($objFaq->alias ?: $objFaq->id));
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
@@ -552,21 +536,24 @@ class InsertTags extends \Controller
 					{
 						if (($objJumpTo = $objNews->getRelated('jumpTo')) !== null)
 						{
-							$strUrl = $this->generateFrontendUrl($objJumpTo->row());
+							/** @var PageModel $objJumpTo */
+							$strUrl = $objJumpTo->getFrontendUrl();
 						}
 					}
 					elseif ($objNews->source == 'article')
 					{
 						if (($objArticle = \ArticleModel::findByPk($objNews->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 						{
-							$strUrl = $this->generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id));
+							/** @var PageModel $objPid */
+							$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 						}
 					}
 					else
 					{
 						if (($objArchive = $objNews->getRelated('pid')) !== null && ($objJumpTo = $objArchive->getRelated('jumpTo')) !== null)
 						{
-							$strUrl = $this->generateFrontendUrl($objJumpTo->row(), (\Config::get('useAutoItem') ?  '/' : '/items/') . ($objNews->alias ?: $objNews->id));
+							/** @var PageModel $objJumpTo */
+							$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/items/') . ($objNews->alias ?: $objNews->id));
 						}
 					}
 
@@ -611,21 +598,24 @@ class InsertTags extends \Controller
 					{
 						if (($objJumpTo = $objEvent->getRelated('jumpTo')) !== null)
 						{
-							$strUrl = $this->generateFrontendUrl($objJumpTo->row());
+							/** @var PageModel $objJumpTo */
+							$strUrl = $objJumpTo->getFrontendUrl();
 						}
 					}
 					elseif ($objEvent->source == 'article')
 					{
 						if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 						{
-							$strUrl = $this->generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id));
+							/** @var PageModel $objPid */
+							$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 						}
 					}
 					else
 					{
 						if (($objCalendar = $objEvent->getRelated('pid')) !== null && ($objJumpTo = $objCalendar->getRelated('jumpTo')) !== null)
 						{
-							$strUrl = $this->generateFrontendUrl($objJumpTo->row(), ((\Config::get('useAutoItem')) ?  '/' : '/events/') . ($objEvent->alias ?: $objEvent->id));
+							/** @var PageModel $objJumpTo */
+							$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/events/') . ($objEvent->alias ?: $objEvent->id));
 						}
 					}
 

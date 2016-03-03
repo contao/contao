@@ -206,12 +206,12 @@
         <target>Редактировать форму ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader.0">
-        <source>Edit form settings</source>
-        <target>Редактировать настройки формы</target>
+        <source>Edit form</source>
+        <target>Редактировать форму</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader.1">
-        <source>Edit the settings of form ID %s</source>
-        <target>Редактировать настройки формы ID %s</target>
+        <source>Edit the form settings</source>
+        <target>Редактировать настройки формы</target>
       </trans-unit>
       <trans-unit id="tl_form.copy.0">
         <source>Duplicate form</source>

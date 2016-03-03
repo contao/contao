@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -23,6 +23,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * Symlinks the public resources into the /web directory.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Yanick Witschi <https://github.com/toflar>
  */
 class SymlinksCommand extends AbstractLockedCommand
 {
@@ -148,8 +149,9 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     private function createSymlinksFromFinder(Finder $finder, $prepend)
     {
-        /** @var SplFileInfo $file */
-        foreach ($finder as $file) {
+        $files = $this->filterNestedPaths($finder, $prepend);
+
+        foreach ($files as $file) {
             $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
             $this->symlink($path, 'web/' . $path);
         }
@@ -198,42 +200,63 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     private function findIn($path)
     {
-        return Finder::create()->ignoreDotFiles(false)->filter($this->getFilterClosure())->followLinks()->in($path);
+        return Finder::create()
+            ->ignoreDotFiles(false)
+            ->sort(
+                function (SplFileInfo $a, SplFileInfo $b) {
+                    $countA = substr_count($a->getRelativePath(), '/');
+                    $countB = substr_count($b->getRelativePath(), '/');
+
+                    if ($countA === $countB) {
+                        return 0;
+                    }
+
+                    return ($countA < $countB) ? -1 : 1;
+                }
+            )
+            ->followLinks()
+            ->in($path)
+        ;
     }
 
     /**
-     * Returns a closure to filter recursive paths.
+     * Filters nested paths so only the top folder is symlinked.
      *
-     * @return \Closure The closure
+     * @param Finder $finder  The finder object
+     * @param string $prepend The path to prepend
+     *
+     * @return SplFileInfo[] The filtered paths
      */
-    private function getFilterClosure()
+    private function filterNestedPaths(Finder $finder, $prepend)
     {
-        return function (SplFileInfo $file) {
-            static $paths;
+        $parents = [];
+        $files = iterator_to_array($finder);
 
-            $dir = str_replace(strtr($this->rootDir, '\\', '/') . '/', '', strtr($file->getPath(), '\\', '/'));
-            $paths[] = $dir;
-            $chunks = explode('/', $dir);
-            $test = $chunks[0];
+        /** @var SplFileInfo $file */
+        foreach ($files as $key => $file) {
+            $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
 
-            for ($i = 1, $c = count($chunks); $i < $c; ++$i) {
-                if (in_array($test, $paths)) {
-                    $this->rows[] = [
-                        sprintf(
-                            '<fg=yellow;options=bold>%s</>',
-                            '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
-                        ),
-                        'web/' . strtr($dir, '\\', '/'),
-                        '<comment>Skipped because ' . $test . ' has been symlinked already.</comment>',
-                    ];
+            $chunks = explode('/', $path);
+            array_pop($chunks);
 
-                    return false;
-                }
+            $parent = implode('/', $chunks);
 
-                $test .= '/' . $chunks[$i];
+            if (in_array($parent, $parents)) {
+                $this->rows[] = [
+                    sprintf(
+                        '<fg=yellow;options=bold>%s</>',
+                        '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
+                    ),
+                    'web/' . strtr($path, '\\', '/'),
+                    '<comment>Skipped because ' . $parent . ' has been symlinked already.</comment>',
+                ];
+
+                unset($files[$key]);
             }
 
-            return true;
-        };
+            $parents[] = $path;
+        }
+
+        return array_values($files);
     }
 }

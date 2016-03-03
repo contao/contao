@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -109,7 +109,15 @@ class Image
 		// Check whether the file exists
 		if (!$file->exists())
 		{
-			throw new \InvalidArgumentException('Image "' . $file->path . '" could not be found');
+			// Handle public bundle resources
+			if (file_exists(TL_ROOT . '/web/' . $file->path))
+			{
+				$file = new \File('web/' . $file->path);
+			}
+			else
+			{
+				throw new \InvalidArgumentException('Image "' . $file->path . '" could not be found');
+			}
 		}
 
 		$this->fileObj = $file;
@@ -359,7 +367,15 @@ class Image
 	 */
 	public function getResizedPath()
 	{
-		return $this->resizedPath;
+		$path = $this->resizedPath;
+
+		// Strip the web/ prefix (see #337)
+		if (strncmp($path, 'web/', 4) === 0)
+		{
+			$path = substr($path, 4);
+		}
+
+		return $path;
 	}
 
 
@@ -831,7 +847,7 @@ class Image
 
 		$path = $src;
 
-		if (!is_file(TL_ROOT .'/'. $src))
+		if (!is_file(TL_ROOT . '/' . $src))
 		{
 			// Handle public bundle resources
 			if (file_exists(TL_ROOT . '/web/' . $src))
@@ -845,6 +861,12 @@ class Image
 		}
 
 		$objFile = new \File($path);
+
+		// Strip the web/ prefix (see #337)
+		if (strncmp($src, 'web/', 4) === 0)
+		{
+			$src = substr($src, 4);
+		}
 
 		return '<img src="' . $static . \System::urlEncode($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
 	}
@@ -945,12 +967,6 @@ class Image
 			return null;
 		}
 
-		// Handle public bundle resources
-		if (!file_exists(TL_ROOT . '/' . $image) && file_exists(TL_ROOT . '/web/' . $image))
-		{
-			$image = 'web/' . $image;
-		}
-
 		try
 		{
 			$imageObj = static::create($image, array($width, $height, $mode));
@@ -959,12 +975,6 @@ class Image
 
 			if (($path = $imageObj->executeResize()->getResizedPath()) != '')
 			{
-				// Strip the web/ prefix (see #337)
-				if (strncmp($path, 'web/', 4) === 0)
-				{
-					$path = substr($path, 4);
-				}
-
 				return $path;
 			}
 		}

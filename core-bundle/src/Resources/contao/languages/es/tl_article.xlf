@@ -222,12 +222,12 @@
         <target>Editar artículo con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.0">
-        <source>Edit article settings</source>
-        <target>Editar la configuración del artículo</target>
+        <source>Edit article</source>
+        <target>Editar artículo</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.1">
-        <source>Edit the settings of article ID %s</source>
-        <target>Editar las opciones del articulo con ID %s</target>
+        <source>Edit the article settings</source>
+        <target>Editar la configuración del artículo</target>
       </trans-unit>
       <trans-unit id="tl_article.copy.0">
         <source>Duplicate article</source>

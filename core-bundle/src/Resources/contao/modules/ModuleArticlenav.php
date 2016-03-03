@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -29,7 +29,7 @@ class ModuleArticlenav extends \Module
 
 	/**
 	 * Articles
-	 * @var Model\Collection
+	 * @var ArticleModel[]
 	 */
 	protected $objArticles;
 
@@ -78,7 +78,7 @@ class ModuleArticlenav extends \Module
 			$objArticle = $this->objArticles->current();
 			$strAlias = $objArticle->alias ?: $objArticle->id;
 
-			$this->redirect($this->generateFrontendUrl($objPage->row(), '/articles/' . $strAlias));
+			$this->redirect($objPage->getFrontendUrl('/articles/' . $strAlias));
 		}
 
 		return parent::generate();
@@ -97,10 +97,8 @@ class ModuleArticlenav extends \Module
 		$articles = array();
 		$intCount = 1;
 
-		while ($this->objArticles->next())
+		foreach ($this->objArticles as $objArticle)
 		{
-			/** @var ArticleModel $objArticle */
-			$objArticle = $this->objArticles->current();
 			$strAlias = $objArticle->alias ?: $objArticle->id;
 
 			// Active article
@@ -109,7 +107,7 @@ class ModuleArticlenav extends \Module
 				$articles[] = array
 				(
 					'isActive' => true,
-					'href' => $this->generateFrontendUrl($objPage->row(), '/articles/' . $strAlias),
+					'href' => $objPage->getFrontendUrl('/articles/' . $strAlias),
 					'title' => specialchars($objArticle->title, true),
 					'link' => $intCount
 				);
@@ -123,7 +121,7 @@ class ModuleArticlenav extends \Module
 				$articles[] = array
 				(
 					'isActive' => false,
-					'href' => $this->generateFrontendUrl($objPage->row(), '/articles/' . $strAlias),
+					'href' => $objPage->getFrontendUrl('/articles/' . $strAlias),
 					'title' => specialchars($objArticle->title, true),
 					'link' => $intCount
 				);

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -403,7 +403,7 @@ abstract class Frontend extends \Controller
 			// Omit the key if it is an auto_item key (see #5037)
 			if (\Config::get('useAutoItem') && ($k == 'auto_item' || in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
 			{
-				$strParams .= $strConnector . urlencode($v);
+				$strParams = $strConnector . urlencode($v) . $strParams;
 			}
 			else
 			{
@@ -442,6 +442,11 @@ abstract class Frontend extends \Controller
 	 */
 	protected function jumpToOrReload($intId, $strParams=null, $strForceLang=null)
 	{
+		if ($strForceLang !== null)
+		{
+			@trigger_error('Using Frontend::jumpToOrReload() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		}
+
 		/** @var PageModel $objPage */
 		global $objPage;
 
@@ -454,7 +459,7 @@ abstract class Frontend extends \Controller
 			{
 				if ($intId['id'] != $objPage->id  || $blnForceRedirect)
 				{
-					$this->redirect($this->generateFrontendUrl($intId, $strParams, $strForceLang));
+					$this->redirect($this->generateFrontendUrl($intId, $strParams, $strForceLang, true));
 				}
 			}
 		}
@@ -464,7 +469,7 @@ abstract class Frontend extends \Controller
 			{
 				if (($objNextPage = \PageModel::findPublishedById($intId)) !== null)
 				{
-					$this->redirect($this->generateFrontendUrl($objNextPage->row(), $strParams, $strForceLang));
+					$this->redirect($objNextPage->getFrontendUrl($strParams, $strForceLang));
 				}
 			}
 		}
@@ -491,7 +496,7 @@ abstract class Frontend extends \Controller
 			$objSession = \SessionModel::findByHashAndName($hash, $strCookie);
 
 			// Validate the session ID and timeout
-			if ($objSession !== null && $objSession->sessionID == \System::getContainer()->get('session')->getId() && (\Config::get('disableIpCheck') || $objSession->ip == \Environment::get('ip')) && ($objSession->tstamp + \Config::get('sessionTimeout')) > time())
+			if ($objSession !== null && $objSession->sessionID == \System::getContainer()->get('session')->getId() && (\System::getContainer()->getParameter('contao.security.disable_ip_check') || $objSession->ip == \Environment::get('ip')) && ($objSession->tstamp + \Config::get('sessionTimeout')) > time())
 			{
 				// Disable the cache if a back end user is logged in
 				if (TL_MODE == 'FE' && $strCookie == 'BE_USER_AUTH')

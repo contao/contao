@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -110,7 +110,6 @@ class TextArea extends \Widget
 		if ($this->rte)
 		{
 			$this->strClass = trim($this->strClass . ' noresize');
-			unset($this->arrAttributes['required']); // see #266
 		}
 
 		return sprintf('<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s onfocus="Backend.getScrollOffset()">%s</textarea>%s',

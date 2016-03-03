@@ -222,12 +222,12 @@
         <target>Muokkaa artikkelia ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.0">
-        <source>Edit article settings</source>
-        <target>Muokkaa artikkelin asetuksia</target>
+        <source>Edit article</source>
+        <target>Muokkaa artikkelia</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.1">
-        <source>Edit the settings of article ID %s</source>
-        <target>Muokkaa artikkelin ID %s asetuksia</target>
+        <source>Edit the article settings</source>
+        <target>Muokkaa artikkelin asetuksia</target>
       </trans-unit>
       <trans-unit id="tl_article.copy.0">
         <source>Duplicate article</source>

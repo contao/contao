@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -234,7 +234,7 @@ class Database
 			$varSet = $this->resConnection->quote($varSet);
 		}
 
-		return "FIND_IN_SET(" . $this->resConnection->quoteIdentifier($strKey) . ", " . $varSet . ")";
+		return "FIND_IN_SET(" . $strKey . ", " . $varSet . ")";
 	}
 
 

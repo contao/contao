@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -525,7 +525,10 @@ class File extends \System
 	 */
 	public function close()
 	{
-		$this->Files->fclose($this->resFile);
+		if (is_resource($this->resFile))
+		{
+			$this->Files->fclose($this->resFile);
+		}
 
 		// Create the file path
 		if (!file_exists(TL_ROOT . '/' . $this->strFile))
