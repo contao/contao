@@ -61,6 +61,17 @@
 View: %s
 Edit: %s
 </source>
+        <target>%s criou um novo comentário em seu website.
+
+---
+
+%s
+
+---
+
+Visualização: %s
+Edição: %s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
