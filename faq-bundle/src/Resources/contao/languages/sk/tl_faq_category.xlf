@@ -146,12 +146,12 @@
         <target>Upraviť kategóriu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.editheader.0">
-        <source>Edit category settings</source>
-        <target>Upraviť nastavenia kategórie</target>
+        <source>Edit category</source>
+        <target>Upraviť kategóriu</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.editheader.1">
-        <source>Edit the settings of category ID %s</source>
-        <target>Upraviť nastavenia kategórie ID %s</target>
+        <source>Edit the category settings</source>
+        <target>Upraviť túto kategóriu</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.copy.0">
         <source>Duplicate category</source>

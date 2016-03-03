@@ -146,12 +146,12 @@
         <target>编辑ID为%s的类别</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.editheader.0">
-        <source>Edit category settings</source>
-        <target>编辑类别设置</target>
+        <source>Edit category</source>
+        <target>编辑类别</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.editheader.1">
-        <source>Edit the settings of category ID %s</source>
-        <target>编辑ID为%s的类别设置</target>
+        <source>Edit the category settings</source>
+        <target>编辑类别设置</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.copy.0">
         <source>Duplicate category</source>
