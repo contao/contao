@@ -841,7 +841,18 @@ class Image
 			}
 			else
 			{
-				$src = 'system/themes/' . \Backend::getTheme() . '/images/' . $src;
+				$theme = \Backend::getTheme();
+				$filename = pathinfo($src, PATHINFO_FILENAME);
+
+				// Prefer SVG icons
+				if (file_exists(TL_ROOT . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+				{
+					$src = 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
+				}
+				else
+				{
+					$src = 'system/themes/' . $theme . '/images/' . $src;
+				}
 			}
 		}
 
