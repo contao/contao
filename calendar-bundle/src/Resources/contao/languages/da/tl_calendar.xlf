@@ -166,12 +166,10 @@
         <target>Rediger kalender-ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.0">
-        <source>Edit calendar settings</source>
-        <target>Rediger kalender indstillinger</target>
+        <source>Edit calendar</source>
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.1">
-        <source>Edit the settings of calendar ID %s</source>
-        <target>Rediger indstillingerne af kalender-ID %s</target>
+        <source>Edit the calendar settings</source>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.0">
         <source>Duplicate calendar</source>
