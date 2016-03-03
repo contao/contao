@@ -120,6 +120,16 @@ a new comment has been added on a page you have subscribed to:
 To cancel your subscription, please click here:
 %s
 </source>
+        <target>Zdravo %s,
+
+nov komentar je bil dodan na strani, na katero ste naročeni:
+
+%s
+
+---
+
+Za preklic vaše naročnine, prosim kliknite tukaj:
+%s</target>
       </trans-unit>
     </body>
   </file>
