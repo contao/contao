@@ -222,12 +222,12 @@
         <target>Upravit článek ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.0">
-        <source>Edit article settings</source>
-        <target>Upravit nastavení článku</target>
+        <source>Edit article</source>
+        <target>Editovat článek</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.1">
-        <source>Edit the settings of article ID %s</source>
-        <target>Upravit nastavení ID %s článku</target>
+        <source>Edit the article settings</source>
+        <target>Upravit nastavení článku</target>
       </trans-unit>
       <trans-unit id="tl_article.copy.0">
         <source>Duplicate article</source>

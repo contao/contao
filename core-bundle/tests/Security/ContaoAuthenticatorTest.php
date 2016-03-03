@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -48,7 +48,7 @@ class ContaoAuthenticatorTest extends TestCase
         $token = $authenticator->createToken(new Request(), 'frontend');
 
         $this->assertInstanceOf('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken', $token);
-        $this->assertEquals('frontend', $token->getKey());
+        $this->assertEquals('frontend', $token->getSecret());
         $this->assertEquals('anon.', $token->getUsername());
     }
 

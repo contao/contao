@@ -174,8 +174,8 @@
         <target>Numerieke karakters</target>
       </trans-unit>
       <trans-unit id="tl_form_field.digit.1">
-        <source>Allows numeric characters, minus (-), full stop (.) and space ( ).</source>
-        <target>Staat numerieke karakters, min (-), punt (.) en spatie ( ) toe.</target>
+        <source>Allows numeric characters, minus (-) and full stop (.).</source>
+        <target>Staat numerieke karakters, min (-), en punt (.) toe.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.alpha.0">
         <source>Alphabetic characters</source>

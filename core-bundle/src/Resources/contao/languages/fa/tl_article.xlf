@@ -222,12 +222,12 @@
         <target>ویرایش مقاله شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.0">
-        <source>Edit article settings</source>
-        <target>ويرايش تنظیمات مقاله</target>
+        <source>Edit article</source>
+        <target>ويرايش مقاله</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.1">
-        <source>Edit the settings of article ID %s</source>
-        <target>ویرایش تنظیمات مقاله شناسه‌ی %s</target>
+        <source>Edit the article settings</source>
+        <target>ویرایش تنظیمات مقاله</target>
       </trans-unit>
       <trans-unit id="tl_article.copy.0">
         <source>Duplicate article</source>

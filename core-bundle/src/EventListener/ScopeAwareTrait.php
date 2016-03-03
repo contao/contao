@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -76,7 +76,7 @@ trait ScopeAwareTrait
      */
     protected function isBackendScope()
     {
-        return (null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND));
+        return null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND);
     }
 
     /**
@@ -86,6 +86,6 @@ trait ScopeAwareTrait
      */
     protected function isFrontendScope()
     {
-        return (null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND));
+        return null !== $this->container && $this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND);
     }
 }

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -109,7 +109,7 @@ class PageError403 extends \Frontend
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}
 
-			$this->redirect($this->generateFrontendUrl($objNextPage->loadDetails()->row(), null, $objRootPage->language, true), (($obj403->redirect == 'temporary') ? 302 : 301));
+			$this->redirect($objNextPage->getFrontendUrl(), (($obj403->redirect == 'temporary') ? 302 : 301));
 		}
 
 		return $obj403;

@@ -174,8 +174,8 @@
         <target>数字</target>
       </trans-unit>
       <trans-unit id="tl_form_field.digit.1">
-        <source>Allows numeric characters, minus (-), full stop (.) and space ( ).</source>
-        <target>允许输入数字，英文减号 (-), 句号 (.)和空格 ( )</target>
+        <source>Allows numeric characters, minus (-) and full stop (.).</source>
+        <target>允许输入数字，英文减号 (-)和句号 (.)</target>
       </trans-unit>
       <trans-unit id="tl_form_field.alpha.0">
         <source>Alphabetic characters</source>

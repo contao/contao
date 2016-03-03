@@ -730,8 +730,8 @@
         <target>编辑内容元素ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.0">
-        <source>Edit article settings</source>
-        <target>编辑文章头</target>
+        <source>Edit article</source>
+        <target>编辑文章</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
         <source>Edit the article settings</source>

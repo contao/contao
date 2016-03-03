@@ -206,12 +206,12 @@
         <target>Editovat formulář ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader.0">
-        <source>Edit form settings</source>
-        <target>Upravit nastavení formuláře</target>
+        <source>Edit form</source>
+        <target>Upravit formulář</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader.1">
-        <source>Edit the settings of form ID %s</source>
-        <target>Upravit nastavení formuláře ID %s</target>
+        <source>Edit the form settings</source>
+        <target>Nastavit formulář</target>
       </trans-unit>
       <trans-unit id="tl_form.copy.0">
         <source>Duplicate form</source>

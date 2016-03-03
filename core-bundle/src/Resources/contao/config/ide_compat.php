@@ -3,7 +3,7 @@
 /**
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -126,6 +126,7 @@ namespace {
 	class Session extends \Contao\Session {}
 	class SortedIterator extends \Contao\SortedIterator {}
 	class SqlFileParser extends \Contao\SqlFileParser {}
+	/** @deprecated Use the StringUtil class instead */
 	class String extends \Contao\String {}
 	class StringUtil extends \Contao\StringUtil {}
 	abstract class System extends \Contao\System {}

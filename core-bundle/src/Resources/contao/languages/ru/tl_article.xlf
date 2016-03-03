@@ -222,12 +222,12 @@
         <target>Редактировать статью ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.0">
-        <source>Edit article settings</source>
-        <target>Редактировать настройки статьи</target>
+        <source>Edit article</source>
+        <target>Редактировать статью</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader.1">
-        <source>Edit the settings of article ID %s</source>
-        <target>Редактировать настройки статьи ID %s</target>
+        <source>Edit the article settings</source>
+        <target>Редактировать настройки статьи</target>
       </trans-unit>
       <trans-unit id="tl_article.copy.0">
         <source>Duplicate article</source>

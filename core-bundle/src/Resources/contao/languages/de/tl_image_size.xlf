@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the displayed image width(s), e.g. &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
-        <target>Hier können Sie die anzuzeigende(n) Bildbreite(n) angeben, z.B. &lt;em&gt;(max-width: 600px) 100vw 50vw&lt;/em&gt;.</target>
+        <target>Hier können Sie die anzuzeigende(n) Bildbreite(n) angeben, z.B. &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -122,12 +122,12 @@
         <target>Die Bildgröße ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_image_size.editheader.0">
-        <source>Edit image size settings</source>
-        <target>Bildgrößen-Einstellungen bearbeiten</target>
+        <source>Edit image size</source>
+        <target>Bildgröße bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_image_size.editheader.1">
-        <source>Edit the settings of image size ID %s</source>
-        <target>Die Einstellungen der Bildgröße ID %s bearbeiten</target>
+        <source>Edit the image size settings</source>
+        <target>Bildgrößen-Einstellungen bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut.0">
         <source>Move image size</source>

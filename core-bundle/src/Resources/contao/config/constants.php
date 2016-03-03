@@ -3,14 +3,14 @@
 /**
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
 
 // Core version
 define('VERSION', '4.1');
-define('BUILD', '0');
+define('BUILD', '1');
 define('LONG_TERM_SUPPORT', false);
 
 // Link constants

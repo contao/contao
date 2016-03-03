@@ -114,12 +114,12 @@
         <target>Redigera stilmall med ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.0">
-        <source>Edit style sheet settings</source>
-        <target>Redigera stilmallsinställningarna</target>
+        <source>Edit style sheet</source>
+        <target>Redigera stilmall</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.1">
-        <source>Edit the settings of style sheet ID %s</source>
-        <target>Redigera inställningarna för stilmallen med ID %s</target>
+        <source>Edit the style sheet settings</source>
+        <target>Redigera inställningarna för denna stilmall</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cut.0">
         <source>Move style sheet</source>

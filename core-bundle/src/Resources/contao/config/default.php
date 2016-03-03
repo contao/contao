@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -47,7 +47,6 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 	. '<var><video>'
 	. '<wbr>';
 $GLOBALS['TL_CONFIG']['disableRefererCheck']   = false;
-$GLOBALS['TL_CONFIG']['disableIpCheck']        = false;
 $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = [];
 
 // Database

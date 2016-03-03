@@ -190,8 +190,8 @@
         <target>Anfrage-Tokens deaktivieren</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted. Attention: potential security risk!</source>
-        <target>Das Anfrage-Token beim Absenden eines Formulars nicht prüfen. Warnung: potentielles Sicherheitsrisiko!</target>
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
+        <target>Das Anfrage-Token beim Absenden eines Formulars nicht prüfen (unsicher!).</target>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -200,14 +200,6 @@
       <trans-unit id="tl_settings.lockPeriod.1">
         <source>An account will be locked if a wrong password is entered three times in a row.</source>
         <target>Ein Konto wird gesperrt, wenn drei Mal hintereinander ein falsches Passwort eingegeben wird.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.0">
-        <source>Disable IP check</source>
-        <target>IP-Prüfung deaktivieren</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.1">
-        <source>Do not bind sessions to IP addresses. Choosing this option is a potential security risk!</source>
-        <target>Benutzersitzungen nicht an IP-Adressen binden. Warnung: potentielles Sicherheitsrisiko!</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>

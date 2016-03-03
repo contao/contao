@@ -206,12 +206,12 @@
         <target>ویرایش فرم شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader.0">
-        <source>Edit form settings</source>
-        <target>ویرایش تنظیمات فرم</target>
+        <source>Edit form</source>
+        <target>ویرایش فرم</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader.1">
-        <source>Edit the settings of form ID %s</source>
-        <target>ویرایش تنظیمات فرم شناسه‌ی %s</target>
+        <source>Edit the form settings</source>
+        <target>ویرایش تنظیمات فرم</target>
       </trans-unit>
       <trans-unit id="tl_form.copy.0">
         <source>Duplicate form</source>

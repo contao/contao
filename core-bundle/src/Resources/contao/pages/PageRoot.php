@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -88,9 +88,6 @@ class PageRoot extends \Frontend
 	 */
 	protected function getRedirectUrl($rootPageId)
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		return $this->generateFrontendUrl($this->getNextPage($rootPageId)->row(), null, $objPage->language);
+		return $this->getNextPage($rootPageId)->getFrontendUrl();
 	}
 }

@@ -206,12 +206,12 @@
         <target> Modifitgar il formular cun l'ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader.0">
-        <source>Edit form settings</source>
-        <target>Modifitgar las opziuns dal formular</target>
+        <source>Edit form</source>
+        <target>Modifitgar il formular</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader.1">
-        <source>Edit the settings of form ID %s</source>
-        <target> Modifitgar las opziuns dal formular cun l'ID %s</target>
+        <source>Edit the form settings</source>
+        <target>Modifitgar la configuraziun dal formular</target>
       </trans-unit>
       <trans-unit id="tl_form.copy.0">
         <source>Duplicate form</source>

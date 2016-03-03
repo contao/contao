@@ -114,12 +114,12 @@
         <target>Upraviť štýl ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.0">
-        <source>Edit style sheet settings</source>
-        <target>Upraviť nastavenia štýlu</target>
+        <source>Edit style sheet</source>
+        <target>Upraviť štýl</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.1">
-        <source>Edit the settings of style sheet ID %s</source>
-        <target>Upraviť nastavenia štýlu ID %s</target>
+        <source>Edit the style sheet settings</source>
+        <target>Upraviť nastavenie kaskádových štýlov</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cut.0">
         <source>Move style sheet</source>

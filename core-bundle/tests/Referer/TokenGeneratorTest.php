@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test\Referer;
 
 use Contao\CoreBundle\Referer\TokenGenerator;
-use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 
 /**
  * Tests the TokenGenerator class.
@@ -20,63 +19,12 @@ use Symfony\Component\Security\Core\Util\SecureRandomInterface;
  */
 class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    const ENTROPY = 1000;
-
-    /**
-     * @var SecureRandomInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $random;
-
-    /**
-     * @var TokenGenerator
-     */
-    private $generator;
-
-    /**
-     * @var string
-     */
-    private static $bytes;
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function setUpBeforeClass()
-    {
-        self::$bytes = base64_decode('aMf+Tct/RLn2WQ==');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->random = $this->getMock('Symfony\Component\Security\Core\Util\SecureRandomInterface');
-        $this->generator = new TokenGenerator($this->random, self::ENTROPY);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
-    {
-        $this->random = null;
-        $this->generator = null;
-    }
-
     /**
      * Tests whether the generated token is eight characters long.
      */
     public function testGeneratedTokenHasLengthOfEight()
     {
-        $this->random
-            ->expects($this->once())
-            ->method('nextBytes')
-            ->with(self::ENTROPY / 8)
-            ->will($this->returnValue(self::$bytes))
-        ;
-
-        $this->assertEquals(8, strlen($this->generator->generateToken()));
+        $generator = new TokenGenerator(1000);
+        $this->assertEquals(8, strlen($generator->generateToken()));
     }
 }

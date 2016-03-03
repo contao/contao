@@ -7,6 +7,10 @@ php:
 
 sudo: false
 
+env:
+  global:
+    - SYMFONY_DEPRECATIONS_HELPER=weak
+
 matrix:
   include:
     - php: 5.5

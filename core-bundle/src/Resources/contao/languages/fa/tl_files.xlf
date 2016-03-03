@@ -10,6 +10,7 @@
       </trans-unit>
       <trans-unit id="tl_files.path.0">
         <source>Path</source>
+        <target>مسیر</target>
       </trans-unit>
       <trans-unit id="tl_files.path.1">
         <source>The relative path to the file or folder.</source>

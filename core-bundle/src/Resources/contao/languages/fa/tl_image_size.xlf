@@ -122,12 +122,12 @@
         <target>ویرایش اندازه تصویر شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.editheader.0">
-        <source>Edit image size settings</source>
-        <target>ویرایش تنظیمات اندازه تصویر</target>
+        <source>Edit image size</source>
+        <target>ویرایش اندازه تصویر</target>
       </trans-unit>
       <trans-unit id="tl_image_size.editheader.1">
-        <source>Edit the settings of image size ID %s</source>
-        <target>ویرایش تنظیمات اندازه تصویر شناسه‌ی %s</target>
+        <source>Edit the image size settings</source>
+        <target>ویرایش تنظیمات اندازه تصویر</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut.0">
         <source>Move image size</source>

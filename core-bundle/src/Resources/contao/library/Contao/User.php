@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -280,10 +280,11 @@ abstract class User extends \System
 		}
 
 		$time = time();
-		$session = \System::getContainer()->get('session');
+		$container = \System::getContainer();
+		$session = $container->get('session');
 
 		// Validate the session
-		if ($objSession->sessionID != $session->getId() || (!\Config::get('disableIpCheck') && $objSession->ip != $this->strIp) || $objSession->hash != $this->strHash || ($objSession->tstamp + \Config::get('sessionTimeout')) < $time)
+		if ($objSession->sessionID != $session->getId() || (!$container->getParameter('contao.security.disable_ip_check') && $objSession->ip != $this->strIp) || $objSession->hash != $this->strHash || ($objSession->tstamp + \Config::get('sessionTimeout')) < $time)
 		{
 			return false;
 		}

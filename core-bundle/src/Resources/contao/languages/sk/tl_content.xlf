@@ -729,8 +729,8 @@
         <target>Upraviť element ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.0">
-        <source>Edit article settings</source>
-        <target>Upraviť nastavenia článku</target>
+        <source>Edit article</source>
+        <target>Upraviť článok</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
         <source>Edit the article settings</source>
