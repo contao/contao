@@ -86,12 +86,12 @@
         <target>Редактировать канал ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.editheader.0">
-        <source>Edit channel settings</source>
-        <target>Редактировать настройки канала</target>
+        <source>Edit channel</source>
+        <target>Редактировать канал</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.editheader.1">
-        <source>Edit the settings of channel ID %s</source>
-        <target>Редактировать настройки канала ID %s</target>
+        <source>Edit the channel settings</source>
+        <target>Редактировать настройки канала</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.copy.0">
         <source>Duplicate channel</source>
