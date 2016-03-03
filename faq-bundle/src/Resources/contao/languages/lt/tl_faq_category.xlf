@@ -146,12 +146,12 @@
         <target>Redaguoti kategoriją ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.editheader.0">
-        <source>Edit category settings</source>
-        <target>Keisti kategorijos nustatymus</target>
+        <source>Edit category</source>
+        <target>Redaguoti kategoriją</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.editheader.1">
-        <source>Edit the settings of category ID %s</source>
-        <target>Keisti kategorijos ID %s nustatymus</target>
+        <source>Edit the category settings</source>
+        <target>Redaguoti kategorijos nustatymus</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.copy.0">
         <source>Duplicate category</source>

@@ -146,12 +146,12 @@
         <target>အမျိုးအစားအိုင်ဒီ %s တည်းဖြတ်</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.editheader.0">
-        <source>Edit category settings</source>
-        <target>အမျိုးအစားချိန်ညှိချက်တည်းဖြတ်</target>
+        <source>Edit category</source>
+        <target>အမျိုးအစားတည်းဖြတ်</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.editheader.1">
-        <source>Edit the settings of category ID %s</source>
-        <target>အမျိုးအစားအိုင်ဒီ %s ချိန်ညှိချက်တည်းဖြတ်</target>
+        <source>Edit the category settings</source>
+        <target>အမျိုးအစားချိန်ညှိချက်တည်းဖြတ်</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.copy.0">
         <source>Duplicate category</source>
