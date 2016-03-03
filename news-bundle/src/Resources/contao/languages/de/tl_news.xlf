@@ -302,8 +302,8 @@
         <target>Beitrag ID %s hervorheben/zurücksetzen</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive settings</source>
-        <target>Nachrichtenarchiv bearbeiten</target>
+        <source>Edit archive</source>
+        <target>Archiv bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
         <source>Edit the news archive settings</source>

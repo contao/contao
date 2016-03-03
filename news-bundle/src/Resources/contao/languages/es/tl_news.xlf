@@ -302,8 +302,8 @@
         <target>Destacar / no destacar artículo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive settings</source>
-        <target>Editar opciones de archivo</target>
+        <source>Edit archive</source>
+        <target>Editar archivo</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
         <source>Edit the news archive settings</source>

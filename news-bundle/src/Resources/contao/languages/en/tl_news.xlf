@@ -228,7 +228,7 @@
         <source>Feature/unfeature news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive settings</source>
+        <source>Edit archive</source>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
         <source>Edit the news archive settings</source>
