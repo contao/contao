@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -167,7 +167,7 @@ class News extends \Frontend
 					}
 					else
 					{
-						$arrUrls[$jumpTo] = $this->generateFrontendUrl($objParent->row(), (\Config::get('useAutoItem') ? '/%s' : '/items/%s'), $objParent->language);
+						$arrUrls[$jumpTo] = $objParent->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
 					}
 				}
 
@@ -316,11 +316,15 @@ class News extends \Frontend
 						continue;
 					}
 
-					// Set the domain (see #6421)
-					$domain = ($objParent->rootUseSSL ? 'https://' : 'http://') . ($objParent->domain ?: \Environment::get('host')) . \Environment::get('path') . '/';
-
 					// Generate the URL
-					$arrProcessed[$objArchive->jumpTo] = $domain . $this->generateFrontendUrl($objParent->row(), (\Config::get('useAutoItem') ? '/%s' : '/items/%s'), $objParent->language);
+					$feUrl = $objParent->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
+
+					if (strncmp($feUrl, 'http://', 7) !== 0 && strncmp($feUrl, 'https://', 8) !== 0)
+					{
+						$feUrl = (($objParent->rootUseSSL ? 'https://' : 'http://') . ($objParent->domain ?: \Environment::get('host')) . \Environment::get('path') . '/') . $feUrl;
+					}
+
+					$arrProcessed[$objArchive->jumpTo] = $feUrl;
 				}
 
 				$strUrl = $arrProcessed[$objArchive->jumpTo];
@@ -381,7 +385,8 @@ class News extends \Frontend
 			case 'internal':
 				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
 				{
-					self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objTarget->row()));
+					/** @var \PageModel $objTarget */
+					self::$arrUrlCache[$strCacheKey] = ampersand($objTarget->getFrontendUrl());
 				}
 				break;
 
@@ -389,7 +394,8 @@ class News extends \Frontend
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 				{
-					self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					/** @var \PageModel $objPid */
+					self::$arrUrlCache[$strCacheKey] = ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
 		}
@@ -405,7 +411,7 @@ class News extends \Frontend
 			}
 			else
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(\Controller::generateFrontendUrl($objPage->row(), (\Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id)));
+				self::$arrUrlCache[$strCacheKey] = ampersand($objPage->getFrontendUrl((\Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id)));
 			}
 
 			// Add the current archive parameter (news archive)
@@ -441,7 +447,8 @@ class News extends \Frontend
 			case 'internal':
 				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
 				{
-					return $strBase . $this->generateFrontendUrl($objTarget->row());
+					/** @var \PageModel $objTarget */
+					return $strBase . $objTarget->getFrontendUrl();
 				}
 				break;
 
@@ -449,7 +456,8 @@ class News extends \Frontend
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 				{
-					return $strBase . ampersand($this->generateFrontendUrl($objPid->row(), '/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					/** @var \PageModel $objPid */
+					return $strBase . ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
 		}

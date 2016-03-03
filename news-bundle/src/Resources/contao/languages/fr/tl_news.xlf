@@ -302,8 +302,8 @@
         <target>Actualité ID %s vedette / standard</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive settings</source>
-        <target>Éditer les paramètres de l'archive</target>
+        <source>Edit archive</source>
+        <target>Éditer l'archive</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
         <source>Edit the news archive settings</source>
