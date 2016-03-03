@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -33,15 +33,15 @@ namespace Contao;
  * @method static NewsletterChannelModel|null findOneBySender($val, $opt=array())
  * @method static NewsletterChannelModel|null findOneBySenderName($val, $opt=array())
  *
- * @method static Model\Collection|NewsletterChannelModel|null findByTstamp($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findByTitle($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findByJumpTo($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findByTemplate($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findBySender($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findBySenderName($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findMultipleByIds($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findBy($col, $val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findAll($opt=array())
+ * @method static Model\Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByTstamp($val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByTitle($val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByJumpTo($val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByTemplate($val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findBySender($val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findBySenderName($val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findMultipleByIds($val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findBy($col, $val, $opt=array())
+ * @method static Model\Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findAll($opt=array())
  *
  * @method static integer countById($id, $opt=array())
  * @method static integer countByTstamp($val, $opt=array())
@@ -69,7 +69,7 @@ class NewsletterChannelModel extends \Model
 	 * @param array $arrIds     An array of newsletter channel IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|NewsletterChannelModel|null A collection of models or null if there are no newsletter channels
+	 * @return Model\Collection|NewsletterChannelModel[]|NewsletterChannelModel|null A collection of models or null if there are no newsletter channels
 	 */
 	public static function findByIds($arrIds, array $arrOptions=array())
 	{

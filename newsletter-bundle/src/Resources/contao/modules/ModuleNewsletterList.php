@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -97,13 +97,10 @@ class ModuleNewsletterList extends \Module
 
 				if (!isset($arrJumpTo[$objTarget->jumpTo]))
 				{
-					/** @var PageModel $objModel */
-					$objModel = $objTarget->getRelated('jumpTo');
-					$objJumpTo = $objModel->loadDetails();
-
-					if ($objJumpTo !== null)
+					if (($objJumpTo = $objTarget->getRelated('jumpTo')) !== null)
 					{
-						$arrJumpTo[$objTarget->jumpTo] = $this->generateFrontendUrl($objJumpTo->row(), (\Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+						/** @var \PageModel $objJumpTo */
+						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
 					}
 					else
 					{
