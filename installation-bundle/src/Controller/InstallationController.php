@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -23,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -78,6 +79,8 @@ class InstallationController
         if (!$this->container->get('contao.install_tool_user')->isAuthenticated()) {
             return $this->login();
         }
+
+        $this->purgeSymfonyCache();
 
         if (!$installTool->canConnectToDatabase($this->container->getParameter('database_name'))) {
             return $this->setUpDatabaseConnection();
@@ -220,6 +223,25 @@ class InstallationController
         $this->container->get('contao.install_tool_user')->setAuthenticated(true);
 
         return $this->getRedirectResponse();
+    }
+
+    /**
+     * Purges the Symfony cache.
+     */
+    private function purgeSymfonyCache()
+    {
+        $fs = new Filesystem();
+        $rootDir = $this->container->getParameter('kernel.root_dir');
+
+        $finder = Finder::create()
+            ->directories()
+            ->depth('==0')
+            ->in($rootDir . '/cache')
+        ;
+
+        foreach ($finder as $dir) {
+            $fs->remove($dir);
+        }
     }
 
     /**
