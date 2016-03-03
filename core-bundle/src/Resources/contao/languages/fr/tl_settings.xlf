@@ -190,8 +190,7 @@
         <target>Désactiver la demande de jetons</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted. Attention: potential security risk!</source>
-        <target>Ne pas vérifier la demande de jeton quand un formulaire est soumis. Attention : risque potentiel pour la sécurité !</target>
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -200,14 +199,6 @@
       <trans-unit id="tl_settings.lockPeriod.1">
         <source>An account will be locked if a wrong password is entered three times in a row.</source>
         <target>Saisir une durée d'attente (en secondes). Un compte est verrouillé si le mot de passe a été entré 3 fois de suite de manière incorrecte.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.0">
-        <source>Disable IP check</source>
-        <target>Désactiver le contrôle de l'IP</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.1">
-        <source>Do not bind sessions to IP addresses. Choosing this option is a potential security risk!</source>
-        <target>Ne pas lier les sessions aux adresses IP. Choisir cette option est un risque potentiel pour la sécurité !</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>

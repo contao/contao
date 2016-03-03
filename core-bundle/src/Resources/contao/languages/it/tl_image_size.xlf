@@ -122,12 +122,12 @@
         <target>Modifica dimensioni immagine  ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.editheader.0">
-        <source>Edit image size settings</source>
-        <target>Modifica la configurazione delle dimensioni immagine</target>
+        <source>Edit image size</source>
+        <target>Modifica dimensioni immagine </target>
       </trans-unit>
       <trans-unit id="tl_image_size.editheader.1">
-        <source>Edit the settings of image size ID %s</source>
-        <target>Modifica la configurazione delle dimensioni immagine ID %s</target>
+        <source>Edit the image size settings</source>
+        <target>Modifica la configurazione delle dimensioni dell'immagine</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut.0">
         <source>Move image size</source>

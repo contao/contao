@@ -1,9 +1,21 @@
 # Contao core bundle change log
 
-### 4.1.1 (2015-XX-XX)
+### 4.1.1 (2015-03-03)
 
  * Remove the "disable IP check" field from the back end settings (see #436).
  * Do not quote the search string in `FIND_IN_SET()` (see #424).
+ * Always fix the domain and language when generating URLs (see contao/core#8238).
+ * Fix two issues with the flexible back end theme (see contao/core#8227).
+ * Correctly toggle custom page type icons (see contao/core#8236).
+ * Correctly render the links in the monthly/yearly event list menu (see contao/core#8140).
+ * Skip the registration related fields if a user is duplicated (see contao/core#8185).
+ * Correctly show the form field type help text (see contao/core#8200).
+ * Correctly create the initial version of a record (see contao/core#8141).
+ * Correctly show the "expand preview" buttons (see contao/core#8146).
+ * Correctly check that a password does not match the username (see contao/core#8209).
+ * Check if a directory exists before executing `mkdir()` (see contao/core#8150).
+ * Do not link to the maintenance module if the user cannot access it (see contao/core#8151).
+ * Show the "new folder" button in the template manager (see contao/core#8138).
 
 ### 4.1.0 (2015-11-26)
 

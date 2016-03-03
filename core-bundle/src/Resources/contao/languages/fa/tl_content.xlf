@@ -730,8 +730,8 @@
         <target>ویرایش عنصر شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.0">
-        <source>Edit article settings</source>
-        <target>ويرايش تنظیمات مقاله</target>
+        <source>Edit article</source>
+        <target>ويرايش مقاله</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
         <source>Edit the article settings</source>

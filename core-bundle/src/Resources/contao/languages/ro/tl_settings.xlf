@@ -190,8 +190,7 @@
         <target>Anulează verificarea referer-ului</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted. Attention: potential security risk!</source>
-        <target>Alegeţi această opţiune dacă nu vreţi ca Contao să verifice adresa referer-ului atunci când un formular este trimis. Atenţie, acest lucru prezintă un risc major de securitate! În mod obişnuit problemele de acest gen sunt cauzate de securitate sau unelte de anonimizare.</target>
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -200,14 +199,6 @@
       <trans-unit id="tl_settings.lockPeriod.1">
         <source>An account will be locked if a wrong password is entered three times in a row.</source>
         <target>Introduceţi perioada de timp după care utilizatorul se poate loga în cazul unui cont blocat (iniţial: 5 minute = 300 secunde). Această opţiune este menită să facă atacurile brute-force mai dificile.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.0">
-        <source>Disable IP check</source>
-        <target>Fără verificarea adresei IP</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.1">
-        <source>Do not bind sessions to IP addresses. Choosing this option is a potential security risk!</source>
-        <target>Nu se face legătura între sesiuni şi adrese IP. Alegerea acestei opţiuni implică potenţiale riscuri de securitate!</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>

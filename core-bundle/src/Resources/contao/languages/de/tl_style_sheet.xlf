@@ -114,12 +114,12 @@
         <target>Stylesheet ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.0">
-        <source>Edit style sheet settings</source>
-        <target>Stylesheet-Einstellungen bearbeiten</target>
+        <source>Edit style sheet</source>
+        <target>Stylesheet bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.1">
-        <source>Edit the settings of style sheet ID %s</source>
-        <target>Einstellungen des Stylesheet ID %s bearbeiten</target>
+        <source>Edit the style sheet settings</source>
+        <target>Die Stylesheet-Einstellungen bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cut.0">
         <source>Move style sheet</source>

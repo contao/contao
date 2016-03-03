@@ -730,8 +730,8 @@
         <target>Redigera innehållselement med ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.0">
-        <source>Edit article settings</source>
-        <target>Redigera artikelninställningar</target>
+        <source>Edit article</source>
+        <target>Redigera artikel</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader.1">
         <source>Edit the article settings</source>

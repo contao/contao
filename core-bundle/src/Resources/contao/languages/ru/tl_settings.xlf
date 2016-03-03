@@ -190,8 +190,7 @@
         <target>Отключить запрос токенов</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted. Attention: potential security risk!</source>
-        <target>Не проверять токен запроса при отправке формы. Внимание: потенциальный риск безопасности!</target>
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -200,14 +199,6 @@
       <trans-unit id="tl_settings.lockPeriod.1">
         <source>An account will be locked if a wrong password is entered three times in a row.</source>
         <target>Учетная запись будет заблокирована, если при авторизации три раза подряд введен неверный пароль.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.0">
-        <source>Disable IP check</source>
-        <target>Отключить проверку IP-адреса</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.1">
-        <source>Do not bind sessions to IP addresses. Choosing this option is a potential security risk!</source>
-        <target>Не привязывать сессии к IP-адресам. Внимание: потенциальный риск безопасности!</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>

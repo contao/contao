@@ -114,12 +114,12 @@
         <target>Editează stilul ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.0">
-        <source>Edit style sheet settings</source>
-        <target>Editează setările de stil</target>
+        <source>Edit style sheet</source>
+        <target>Editează stil</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.1">
-        <source>Edit the settings of style sheet ID %s</source>
-        <target>Editează setările pentru stilul ID %s</target>
+        <source>Edit the style sheet settings</source>
+        <target>Editează header-ul acestui stil</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cut.0">
         <source>Move style sheet</source>

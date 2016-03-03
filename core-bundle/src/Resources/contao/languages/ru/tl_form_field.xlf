@@ -174,8 +174,8 @@
         <target>Цифровые символы</target>
       </trans-unit>
       <trans-unit id="tl_form_field.digit.1">
-        <source>Allows numeric characters, minus (-), full stop (.) and space ( ).</source>
-        <target>Разрешены цифровые символы, минус (-), точка (.) и пробел ( ).</target>
+        <source>Allows numeric characters, minus (-) and full stop (.).</source>
+        <target>Разрешены цифровые символы, минус (-) и точка (.).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.alpha.0">
         <source>Alphabetic characters</source>

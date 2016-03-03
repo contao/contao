@@ -190,8 +190,7 @@
         <target>Vypnout sledování referer</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted. Attention: potential security risk!</source>
-        <target>Nekontrolovat adresu zadavatele při odeslání formuláře. Upozornění: jisté bezpečnostní riziko!</target>
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -200,14 +199,6 @@
       <trans-unit id="tl_settings.lockPeriod.1">
         <source>An account will be locked if a wrong password is entered three times in a row.</source>
         <target>Účet může být uzamčen po 3krát po sobě špatně zadaném hesle.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.0">
-        <source>Disable IP check</source>
-        <target>Vypnout sledování IP</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableIpCheck.1">
-        <source>Do not bind sessions to IP addresses. Choosing this option is a potential security risk!</source>
-        <target>Neomezovat používání systému na adresy IP. Upozornění: jde o bezpečnostní riziko!</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
