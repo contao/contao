@@ -302,8 +302,8 @@
         <target>Invoegen/verwijder kenmerk nieuwsitem ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive settings</source>
-        <target>Bewerk archiefinstellingen</target>
+        <source>Edit archive</source>
+        <target>Bewerk archief</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
         <source>Edit the news archive settings</source>

@@ -302,8 +302,8 @@
         <target>Сделать популярным/простым элементом ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive settings</source>
-        <target>Редактировать настройки архива</target>
+        <source>Edit archive</source>
+        <target>Редактировать архив</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader.1">
         <source>Edit the news archive settings</source>

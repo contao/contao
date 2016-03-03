@@ -158,12 +158,12 @@
         <target>Archiv ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader.0">
-        <source>Edit archive settings</source>
-        <target>Nachrichtenarchiv bearbeiten</target>
+        <source>Edit archive</source>
+        <target>Archiv bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader.1">
-        <source>Edit the settings of archive ID %s</source>
-        <target>Einstellungen des Archivs ID %s bearbeiten</target>
+        <source>Edit the archive settings</source>
+        <target>Die Archiv-Einstellungen bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.0">
         <source>Duplicate archive</source>

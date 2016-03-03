@@ -158,12 +158,12 @@
         <target>Editar archivo con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader.0">
-        <source>Edit archive settings</source>
-        <target>Editar opciones de archivo</target>
+        <source>Edit archive</source>
+        <target>Editar archivo</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader.1">
-        <source>Edit the settings of archive ID %s</source>
-        <target>Editar los ajustes del archivo con ID %s</target>
+        <source>Edit the archive settings</source>
+        <target>Editar opciones de archivo</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.0">
         <source>Duplicate archive</source>
