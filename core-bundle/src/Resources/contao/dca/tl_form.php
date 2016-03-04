@@ -49,7 +49,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'label' => array
 		(
 			'fields'                  => array('title', 'formID'),
-			'format'                  => '%s <span style="color:#b3b3b3;padding-left:3px">[%s]</span>'
+			'format'                  => '%s <span style="color:#999;padding-left:3px">[%s]</span>'
 		),
 		'global_operations' => array
 		(

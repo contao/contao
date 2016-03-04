@@ -328,11 +328,11 @@ class tl_style_sheet extends Backend
 
 		if ($row['mediaQuery'] != '')
 		{
-			return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#b3b3b3;padding-left:3px">@media '. $row['mediaQuery'] . $cc .'</span>' . "</div>\n";
+			return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">@media '. $row['mediaQuery'] . $cc .'</span>' . "</div>\n";
 		}
 		elseif (!empty($media) && is_array($media))
 		{
-			return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#b3b3b3;padding-left:3px">@media '. implode(', ', $media) . $cc .'</span>' . "</div>\n";
+			return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">@media '. implode(', ', $media) . $cc .'</span>' . "</div>\n";
 		}
 		else
 		{

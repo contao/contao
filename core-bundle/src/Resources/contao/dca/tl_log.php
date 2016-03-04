@@ -42,7 +42,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		'label' => array
 		(
 			'fields'                  => array('tstamp', 'text'),
-			'format'                  => '<span style="color:#b3b3b3;padding-right:3px">[%s]</span> %s',
+			'format'                  => '<span style="color:#999;padding-right:3px">[%s]</span> %s',
 			'label_callback'          => array('tl_log', 'colorize')
 		),
 		'global_operations' => array

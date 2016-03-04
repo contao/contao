@@ -46,7 +46,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'label' => array
 		(
 			'fields'                  => array('tstamp', 'query'),
-			'format'                  => '<span style="color:#b3b3b3;padding-right:3px">[%s]</span>%s',
+			'format'                  => '<span style="color:#999;padding-right:3px">[%s]</span>%s',
 			'label_callback'          => array('tl_undo', 'ellipsis')
 		),
 		'operations' => array
