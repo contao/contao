@@ -211,11 +211,11 @@ class tl_templates extends Backend
 			// No link for the active folder
 			if ($strFolder == basename($strNode))
 			{
-				$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . Backend::getTheme() . '/images/folderC.gif" width="18" height="18" alt=""> ' . $strFolder;
+				$arrLinks[] = Image::getHtml('folderC.gif') . ' ' . $strFolder;
 			}
 			else
 			{
-				$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . Backend::getTheme() . '/images/folderC.gif" width="18" height="18" alt=""> <a href="' . $this->addToUrl('node='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.gif') . ' <a href="' . $this->addToUrl('node='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
 			}
 		}
 

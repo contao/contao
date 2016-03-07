@@ -144,7 +144,6 @@ class BackendSwitch extends \Backend
 		$objTemplate->lblShow = $GLOBALS['TL_LANG']['MSC']['hiddenShow'];
 		$objTemplate->fePreview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$objTemplate->hiddenElements = $GLOBALS['TL_LANG']['MSC']['hiddenElements'];
-		$objTemplate->closeSrc = TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/close.gif';
 		$objTemplate->action = ampersand(\Environment::get('request'));
 		$objTemplate->isAdmin = $this->User->isAdmin;
 
