@@ -313,9 +313,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
 
-		// Load the fonts to display the paste hint
-		\Config::set('loadGoogleFonts', $blnClipboard);
-
 		$this->import('Files');
 		$this->import('BackendUser', 'User');
 

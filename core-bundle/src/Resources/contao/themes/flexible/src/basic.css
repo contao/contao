@@ -294,6 +294,9 @@ select.tl_select,select.tl_select_column,select.tl_select_unit,select.tl_select_
 .checkbox_options {
 	margin:0 0 6px 21px !important;
 }
+.tl_checkbox_container .checkbox_options:last-of-type {
+	margin-bottom:0 !important;
+}
 
 /* Radio buttons */
 .tl_radio {

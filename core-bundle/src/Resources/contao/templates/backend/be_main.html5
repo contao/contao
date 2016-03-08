@@ -8,9 +8,7 @@
   <meta name="generator" content="Contao Open Source CMS">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-  <?php if ($this->loadFonts): ?>
-    <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
-  <?php endif; ?>
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
   <link rel="stylesheet" href="<?php
     $objCombiner = new Combiner();
     $objCombiner->add('assets/colorpicker/css/mooRainbow.min.css');

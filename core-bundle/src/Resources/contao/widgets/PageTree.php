@@ -172,9 +172,6 @@ class PageTree extends \Widget
 			}
 		}
 
-		// Load the fonts for the drag hint (see #4838)
-		\Config::set('loadGoogleFonts', true);
-
 		$return = '<input type="hidden" name="'.$this->strName.'" id="ctrl_'.$this->strId.'" value="'.implode(',', $arrSet).'">' . ($blnHasOrder ? '
   <input type="hidden" name="'.$this->strOrderName.'" id="ctrl_'.$this->strOrderId.'" value="'.$this->{$this->orderField}.'">' : '') . '
   <div class="selector_container">' . (($blnHasOrder && count($arrValues) > 1) ? '

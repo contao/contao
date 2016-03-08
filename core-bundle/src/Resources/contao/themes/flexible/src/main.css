@@ -440,6 +440,10 @@ input[type=search]::-webkit-search-decoration {
 	text-align:right;
 	white-space:nowrap;
 }
+.tl_right_nowrap img {
+	position:relative;
+	top:1px;
+}
 .tl_listing_container .tl_content ul li > * {
 	vertical-align:middle;
 }

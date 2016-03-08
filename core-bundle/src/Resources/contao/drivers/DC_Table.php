@@ -3412,9 +3412,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
 
-		// Load the fonts to display the paste hint
-		\Config::set('loadGoogleFonts', $blnClipboard);
-
 		$label = $GLOBALS['TL_DCA'][$table]['config']['label'];
 		$icon = $GLOBALS['TL_DCA'][$table]['list']['sorting']['icon'] ?: 'pagemounts.gif';
 		$label = \Image::getHtml($icon).' <label>'.$label.'</label>';
@@ -3991,9 +3988,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$blnMultiboard = true;
 			}
 		}
-
-		// Load the fonts to display the paste hint
-		\Config::set('loadGoogleFonts', $blnClipboard);
 
 		// Load the language file and data container array of the parent table
 		\System::loadLanguageFile($this->ptable);

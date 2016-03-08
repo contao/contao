@@ -291,9 +291,6 @@ class FileTree extends \Widget
 			}
 		}
 
-		// Load the fonts for the drag hint (see #4838)
-		\Config::set('loadGoogleFonts', true);
-
 		// Convert the binary UUIDs
 		$strSet = implode(',', array_map('StringUtil::binToUuid', $arrSet));
 		$strOrder = $blnHasOrder ? implode(',', array_map('StringUtil::binToUuid', $this->{$this->orderField})) : '';
