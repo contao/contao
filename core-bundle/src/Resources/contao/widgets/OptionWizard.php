@@ -163,7 +163,7 @@ class OptionWizard extends \Widget
 
 			// Add row buttons
 			$return .= '
-      <td style="white-space:nowrap; padding-left:3px">';
+      <td style="white-space:nowrap">';
 
 			foreach ($arrButtons as $button)
 			{

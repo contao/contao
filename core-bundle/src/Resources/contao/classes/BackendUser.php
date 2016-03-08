@@ -474,7 +474,7 @@ class BackendUser extends \User
 		{
 			if (!empty($arrGroupModules) && ($strGroupName == 'system' || $this->hasAccess(array_keys($arrGroupModules), 'modules')))
 			{
-				$arrModules[$strGroupName]['icon'] = 'modMinus.gif';
+				$arrModules[$strGroupName]['class'] = ' node-expanded';
 				$arrModules[$strGroupName]['title'] = specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
 				$arrModules[$strGroupName]['label'] = (($label = is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
 				$arrModules[$strGroupName]['href'] = \Controller::addToUrl('mtg=' . $strGroupName);
@@ -483,7 +483,7 @@ class BackendUser extends \User
 				if (!$blnShowAll && isset($session['backend_modules'][$strGroupName]) && $session['backend_modules'][$strGroupName] < 1)
 				{
 					$arrModules[$strGroupName]['modules'] = false;
-					$arrModules[$strGroupName]['icon'] = 'modPlus.gif';
+					$arrModules[$strGroupName]['class'] = ' node-collapsed';
 					$arrModules[$strGroupName]['title'] = specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
 				}
 				else
@@ -503,7 +503,7 @@ class BackendUser extends \User
 							// Mark the active module and its group
 							if (\Input::get('do') == $strModuleName)
 							{
-								$arrModules[$strGroupName]['class'] = ' trail';
+								$arrModules[$strGroupName]['class'] .= ' trail';
 								$arrModules[$strGroupName]['modules'][$strModuleName]['class'] .= ' active';
 							}
 						}
