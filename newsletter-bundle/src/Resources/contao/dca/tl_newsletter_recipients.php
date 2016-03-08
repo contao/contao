@@ -397,14 +397,14 @@ class tl_newsletter_recipients extends Backend
 
 		if ($row['addedOn'])
 		{
-			$label .= ' <span style="color:#b3b3b3;padding-left:3px">(' . sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Date::parse(Config::get('datimFormat'), $row['addedOn'])) . ')</span>';
+			$label .= ' <span style="color:#999;padding-left:3px">(' . sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Date::parse(Config::get('datimFormat'), $row['addedOn'])) . ')</span>';
 		}
 		else
 		{
-			$label .= ' <span style="color:#b3b3b3;padding-left:3px">(' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually'] . ')</span>';
+			$label .= ' <span style="color:#999;padding-left:3px">(' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually'] . ')</span>';
 		}
 
-		return sprintf('<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/images/%s.gif\')" data-icon="member.gif">%s</div></div>', TL_ASSETS_URL, Backend::getTheme(), ($row['active'] ? 'member' : 'member_'), $label) . "\n";
+		return sprintf('<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="member.svg">%s</div></div>', TL_ASSETS_URL, Backend::getTheme(), ($row['active'] ? 'member' : 'member_'), $label) . "\n";
 	}
 
 
