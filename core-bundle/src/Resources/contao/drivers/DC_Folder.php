@@ -2608,7 +2608,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		{
 			$thumbnail = '';
 			$popupWidth = 600;
-			$popupHeight = 161;
+			$popupHeight = 192;
 			$currentFile = str_replace(TL_ROOT . '/', '', $files[$h]);
 
 			$objFile = new \File($currentFile);
@@ -2635,12 +2635,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					if ($objFile->width && $objFile->height)
 					{
 						$popupWidth = ($objFile->width > 600) ? ($objFile->width + 61) : 661;
-						$popupHeight = ($objFile->height + 210);
+						$popupHeight = ($objFile->height + 236);
 					}
 					else
 					{
 						$popupWidth = 661;
-						$popupHeight = 625 / $objFile->viewWidth * $objFile->viewHeight + 210;
+						$popupHeight = 625 / $objFile->viewWidth * $objFile->viewHeight + 236;
 					}
 
 					$thumbnail .= ' <span class="tl_gray">('.$this->getReadableSize($objFile->filesize);
@@ -2666,7 +2666,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				}
 				else
 				{
-					$popupHeight = 360; // dimensionless SVGs are rendered at 300x150px, so the popup needs to be 150px + 210px high
+					$popupHeight = 386; // dimensionless SVGs are rendered at 300x150px, so the popup needs to be 150px + 236px high
 				}
 			}
 			else

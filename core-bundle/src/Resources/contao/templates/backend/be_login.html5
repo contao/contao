@@ -34,14 +34,10 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="header">
-    <h1>Contao Open Source CMS <?= VERSION ?></h1>
-  </div>
-
   <div id="container">
 
     <div id="main">
-      <h2><?= $this->headline ?></h2>
+      <h2>Contao Open Source CMS</h2>
       <form action="<?= $this->action ?>" class="tl_login_form" method="post">
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="tl_login">

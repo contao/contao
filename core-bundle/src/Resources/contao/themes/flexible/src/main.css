@@ -19,7 +19,7 @@ body.popup {
 #header {
 	margin-bottom:18px;
 	text-align:left;
-	background:#eb8623;
+	background:#f58426;
 }
 #header h1 {
 	margin:0;
@@ -575,7 +575,7 @@ input[type=search]::-webkit-search-decoration {
 	box-shadow:-10px 0 #eaeaea,10px 0 #eaeaea,-20px 0 #f3f3f3,20px 0 #f3f3f3,-30px 0 #eaeaea,30px 0 #eaeaea,-40px 0 #f3f3f3,40px 0 #f3f3f3;
 }
 .no_padding {
-	padding:6px;
+	padding:6px 6px 4px;
 }
 .tl_content h1 {
 	padding:0;
@@ -756,7 +756,7 @@ ul.level_9 .tl_left {
 	padding-right:0;
 }
 .tree_view .tl_listing img,ul.tree_view img {
-	vertical-align:-4px;
+	vertical-align:middle;
 }
 label.tl_change_selected {
 	margin-right:2px;

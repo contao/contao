@@ -15,11 +15,10 @@ body {
 /* Elements */
 h2 {
 	margin:0;
-	padding:3px 6px 4px;
-	font-size:11px;
-	font-size:.6875rem;
+	padding:4px 6px;
 	background:#eee;
 	border-bottom:1px solid #ddd;
+	font-size:.875rem;
 }
 .formbody {
 	margin:12px 0 18px;
@@ -28,33 +27,19 @@ h2 {
 .formbody .tl_select {
 	width:220px;
 }
-.formbody .tl_submit {
-	margin-top:1px;
-	vertical-align:top;
-}
-.webkit .formbody .tl_submit,.opera .formbody .tl_submit {
-	padding-top:4px;
-	padding-bottom:4px;
-}
-.opera .tl_metawizard_new .tl_submit {
-	padding-top:3px;
-	padding-bottom:3px;
-}
 .formbody .arrow {
 	position:relative;
-	top:2px;
+	top:1px;
 }
 .formbody .static-version {
 	margin-right:3px;
-	vertical-align:middle;
 }
 
 /* Messages */
 .tl_info {
-	margin:1px 0 0;
-	padding:4px 5px 5px 25px;
-	border-radius:3px;
-	background:#eff5fa url("images/show.gif") no-repeat 6px center;
+	padding:6px 6px 6px 28px;
+	border-radius:2px;
+	background:#eff5fa url("icons/show.svg") no-repeat 6px center;
 	color:#4b85ba;
 }
 .nobg .tl_info {
@@ -63,13 +48,11 @@ h2 {
 
 /* Diff */
 #diff .change {
-	margin-bottom:13px;
+	margin-bottom:1em;
 	border:1px solid #ddd;
 	background:#fcfcfc;
-	font-family:Courier,monospace;
-	font-size:12px;
-	font-size:.75rem;
-	border-radius:3px;
+	font:300 .75rem/1.25 "Roboto Mono",monospace;
+	border-radius:2px;
 }
 #diff .replace.left,#diff .delete.left {
 	background: #fdd;
@@ -94,7 +77,7 @@ h2 {
 }
 #diff dt,#diff dd {
 	margin:0;
-	padding:2px 6px 1px;
+	padding:3px 6px;
 }
 
 /* Handheld */
@@ -103,6 +86,6 @@ h2 {
 		width:35%;
 	}
 	.formbody .arrow {
-		margin-left:7px;
+		margin-left:9px;
 	}
 }
