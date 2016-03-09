@@ -55,13 +55,13 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_undo']['undo'],
 				'href'                => '&amp;act=undo',
-				'icon'                => 'undo.gif'
+				'icon'                => 'undo.svg'
 			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_undo']['show'],
 				'href'                => '&amp;act=show',
-				'icon'                => 'show.gif'
+				'icon'                => 'show.svg'
 			)
 		)
 	),

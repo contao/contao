@@ -1166,7 +1166,7 @@ a.navigation.themes {
 	background-image:url("icons/themes.svg");
 }
 a.navigation.page {
-	background-image:url("images/page.gif"); /* FIXME */
+	background-image:url("icons/page.svg");
 }
 a.navigation.member {
 	background-image:url("icons/member.svg");
@@ -1181,7 +1181,7 @@ a.navigation.group {
 	background-image:url("icons/group.svg");
 }
 a.navigation.files {
-	background-image:url("images/files.gif"); /* FIXME */
+	background-image:url("icons/files.svg");
 }
 a.navigation.log {
 	background-image:url("icons/log.svg");
@@ -1268,13 +1268,13 @@ a.navigation {
 }
 .header_store {
 	padding-left:18px;
-	background-image:url("icons/store.gif");
+	background-image:url("icons/store.svg");
 }
 .header_toggle {
-	background:url("icons/folPlus.gif") no-repeat -1px center;
+	background:url("icons/folPlus.svg") no-repeat -1px center;
 }
 .header_sync {
-	background-image:url("icons/sync.gif");
+	background-image:url("icons/sync.svg");
 }
 
 /* Visual hint for TRBL fields - thanks to Eugene Rybyakov */

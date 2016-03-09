@@ -845,7 +845,11 @@ class Image
 				$filename = pathinfo($src, PATHINFO_FILENAME);
 
 				// Prefer SVG icons
-				if (file_exists(TL_ROOT . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+				if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
+				{
+					$src = 'system/themes/' . $theme . '/icons/' . $src;
+				}
+				elseif (file_exists(TL_ROOT . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
 				{
 					$src = 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
 				}

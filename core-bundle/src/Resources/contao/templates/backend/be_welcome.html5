@@ -39,17 +39,17 @@
             <td><?= $version['active'] ? '<strong>' . $version['version'] . '</strong>' : $version['version'] ?></td>
             <td>
               <?php if ($version['deleted']): ?>
-                <a href="<?= $this->route('contao_backend', array('do'=>'undo')) ?>" title="<?= specialchars($GLOBALS['TL_LANG']['MSC']['restore']) ?>"><?= Image::getHtml('undo.gif', '', 'class="undo"') ?></a>
+                <a href="<?= $this->route('contao_backend', array('do'=>'undo')) ?>" title="<?= specialchars($GLOBALS['TL_LANG']['MSC']['restore']) ?>"><?= Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
               <?php else: ?>
                 <?php if ($version['editUrl'] != ''): ?>
-                  <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Image::getHtml('edit.gif', '', 'style="padding:0 2px"') ?></a>
+                  <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Image::getHtml('edit.svg', '', 'style="padding:0 2px"') ?></a>
                 <?php else: ?>
-                  <?= Image::getHtml('edit_.gif', '', 'style="padding:0 2px"') ?>
+                  <?= Image::getHtml('edit_.svg', '', 'style="padding:0 2px"') ?>
                 <?php endif; ?>
                 <?php if ($version['to'] > 1): ?>
-                  <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" title="<?= $this->showDifferences ?>" onclick="Backend.openModalIframe({'width':768,'title':'<?= $this->showDifferences ?>','url':this.href});return false"><?= Image::getHtml('diff.gif') ?></a>
+                  <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" title="<?= $this->showDifferences ?>" onclick="Backend.openModalIframe({'width':768,'title':'<?= $this->showDifferences ?>','url':this.href});return false"><?= Image::getHtml('diff.svg') ?></a>
                 <?php else: ?>
-                  <?= Image::getHtml('diff_.gif') ?>
+                  <?= Image::getHtml('diff_.svg') ?>
                 <?php endif; ?>
               <?php endif; ?>
             </td>

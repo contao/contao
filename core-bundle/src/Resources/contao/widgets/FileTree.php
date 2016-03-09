@@ -158,7 +158,7 @@ class FileTree extends \Widget
 					{
 						if ($objFiles->type == 'folder')
 						{
-							$arrValues[$objFiles->uuid] = \Image::getHtml('folderC.gif') . ' ' . $objFiles->path;
+							$arrValues[$objFiles->uuid] = \Image::getHtml('folderC.svg') . ' ' . $objFiles->path;
 						}
 						else
 						{

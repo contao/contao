@@ -935,7 +935,7 @@ abstract class Backend extends \Controller
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
 
 		// Add root link
-		$arrLinks[] = \Image::getHtml('pagemounts.gif') . ' <a href="' . \Backend::addToUrl('node=0') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = \Image::getHtml('pagemounts.svg') . ' <a href="' . \Backend::addToUrl('node=0') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -1042,7 +1042,7 @@ abstract class Backend extends \Controller
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = \Image::getHtml('filemounts.gif') . ' <a href="' . \Backend::addToUrl('node=') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = \Image::getHtml('filemounts.svg') . ' <a href="' . \Backend::addToUrl('node=') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -1058,11 +1058,11 @@ abstract class Backend extends \Controller
 			// No link for the active folder
 			if ($strPath == $strNode)
 			{
-				$arrLinks[] = \Image::getHtml('folderC.gif') . ' ' . $strFolder;
+				$arrLinks[] = \Image::getHtml('folderC.svg') . ' ' . $strFolder;
 			}
 			else
 			{
-				$arrLinks[] = \Image::getHtml('folderC.gif') . ' <a href="' . \Backend::addToUrl('node='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = \Image::getHtml('folderC.svg') . ' <a href="' . \Backend::addToUrl('node='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
 			}
 		}
 
