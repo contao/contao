@@ -5013,10 +5013,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 
 			$return .= '
-<div class="tl_panel">' . $submit . $arrPanels[$i] . '
-
-<div class="clear"></div>
-
+<div class="tl_panel cf">
+' . $submit . $arrPanels[$i] . '
 </div>';
 		}
 

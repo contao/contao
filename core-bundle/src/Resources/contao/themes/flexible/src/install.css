@@ -18,16 +18,22 @@ body {
 }
 #header h1 {
 	margin:0;
-	padding:19px 12px 17px 52px;
-	background:#f58426 url("icons/logo.svg") no-repeat 12px center;
+	padding:18px 12px 18px 46px;
+	background:#f58426 url("icons/logo.svg") no-repeat 15px center;
 	color:#fff;
+	font-size:1.125rem;
+}
+
+/* Main */
+#main {
+	padding-top:18px;
+	padding-bottom:12px;
 }
 
 /* Container */
 #container {
 	width:760px;
 	margin:0 auto;
-	padding:18px 0 12px;
 	background:#fff;
 }
 
@@ -147,6 +153,9 @@ fieldset.tl_tbox,fieldset.tl_box {
 	padding:6px 18px 0;
 	border:solid #f6f6f6;
 	border-width:26px 0 0;
+}
+fieldset.tl_tbox.nolegend,fieldset.tl_box.nolegend {
+	border:0;
 }
 fieldset.tl_tbox > legend,fieldset.tl_box > legend {
 	color:#77ac45;

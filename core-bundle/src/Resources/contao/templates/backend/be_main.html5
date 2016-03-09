@@ -46,7 +46,7 @@
 
   <?php if (!$this->isPopup): ?>
     <div id="header" class="collapsible<?php if ($this->isCoreOnlyMode || $this->isMaintenanceMode || $this->needsCacheBuild) echo ' xpnd'; ?>">
-      <h1><span class="title"><?= $this->websiteTitle ?></span> Contao Open Source CMS <?= $this->version ?></h1>
+      <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h">Contao</a></h1>
       <div class="collapsible_area">
         <div id="tmenu">
           <span class="header_user_container"><a href="<?= $this->route('contao_backend', array('do'=>'login', 'ref'=>TL_REFERER_ID)) ?>" class="header_user" title="<?= $this->account ?>"><?= $this->username ?></a></span>
@@ -61,8 +61,7 @@
     </div>
   <?php endif; ?>
 
-  <div id="container">
-
+  <div id="container" class="cf">
     <?php if (!$this->isPopup): ?>
       <div id="left">
         <div id="tl_navigation">
@@ -98,9 +97,6 @@
       <?php endif; ?>
       <?= $this->main ?>
     </div>
-
-    <div class="clear"></div>
-
   </div>
 
   <?php if (!$this->isPopup): ?>
@@ -110,7 +106,6 @@
         <span class="footer_preview_container"><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" target="_blank" class="footer_preview" title="<?= $this->previewTitle ?>"><?= $this->preview ?></a></span>
       </div>
     </div>
-
     <?php if ($this->pageOffset): ?>
       <script>Backend.vScrollTo($('paste_hint') ? <?= $this->pageOffset + 20 ?> : <?= $this->pageOffset ?>)</script>
       <?php System::setCookie('BE_PAGE_OFFSET', 0, 0); ?>

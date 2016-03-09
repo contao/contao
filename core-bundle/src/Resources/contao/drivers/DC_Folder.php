@@ -1257,7 +1257,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			foreach ($boxes as $v)
 			{
 				$return .= '
-<div class="'.$class.'">';
+<div class="'.$class.' cf">';
 
 				// Build rows of the current box
 				foreach ($v as $vv)
@@ -1330,7 +1330,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$class = 'tl_box';
 				$return .= '
   <input type="hidden" name="FORM_FIELDS[]" value="'.specialchars($this->strPalette).'">
-  <div class="clear"></div>
 </div>';
 			}
 		}
@@ -2357,7 +2356,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <div id="sync-results">
   <p class="left">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncResult'], \System::getFormattedNumber($arrCounts['Added'], 0), \System::getFormattedNumber($arrCounts['Changed'], 0), \System::getFormattedNumber($arrCounts['Unchanged'], 0), \System::getFormattedNumber($arrCounts['Moved'], 0), \System::getFormattedNumber($arrCounts['Deleted'], 0)) . '</p>
   <p class="right"><input type="checkbox" id="show-hidden" class="tl_checkbox" onclick="Backend.toggleUnchanged()"> <label for="show-hidden">' . $GLOBALS['TL_LANG']['tl_files']['syncShowUnchanged'] . '</label></p>
-  <div class="clear"></div>
 </div>
 <div class="tl_message nobg" id="result-list" style="margin-bottom:2em">';
 
@@ -2719,11 +2717,10 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-  <div class="tl_panel">
+  <div class="tl_panel cf">
     <div class="tl_submit_panel tl_subpanel">
       <input type="image" name="filter" id="filter" src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/icons/sync.svg" class="tl_img_submit" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
     </div>'.$search.'
-    <div class="clear"></div>
   </div>
 </div>
 </form>

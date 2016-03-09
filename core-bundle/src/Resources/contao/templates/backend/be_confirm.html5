@@ -33,8 +33,7 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="container">
-
+  <div id="container" class="cf">
     <div id="main">
       <p><img src="system/themes/<?= $this->theme ?>/icons/stop.svg" width="128" height="128" alt=""></p>
       <form action="<?= $this->route('contao_backend_confirm') ?>" class="tl_form" method="post">
@@ -53,7 +52,6 @@
         </div>
       </form>
     </div>
-
   </div>
 
 </body>

@@ -35,10 +35,9 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="container">
-
+  <div id="container" class="cf">
     <div id="main">
-      <h2>Contao Open Source CMS</h2>
+      <h1>Contao</h1>
       <form action="<?= $this->action ?>" class="tl_login_form" method="post">
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="tl_login">

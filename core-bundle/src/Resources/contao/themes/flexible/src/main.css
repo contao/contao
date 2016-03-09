@@ -17,22 +17,23 @@ body.popup {
 
 /* Header */
 #header {
+	_min-height:46px;
 	margin-bottom:18px;
 	text-align:left;
 	background:#f58426;
 }
-#header h1 {
-	margin:0;
-	padding:9px;
-}
 #header, #header a {
 	color:#fff;
 }
-#header .title:after {
-	content:" - ";
+#header h1 {
+	_position:absolute;
 }
-#header .title:empty {
-	display:none;
+#header .collapsible_area { display:none }
+#header h1 a {
+	display:block;
+	padding:12px 12px 12px 46px;
+	background:url("icons/logo.svg") no-repeat 12px center;
+	font-size:1.125rem;
 }
 #tmenu {
 	margin:0;
@@ -1352,6 +1353,9 @@ fieldset.tl_tbox,fieldset.tl_box {
 	border:solid #f6f6f6;
 	border-width:26px 0 0;
 }
+fieldset.tl_tbox.nolegend,fieldset.tl_box.nolegend {
+	border:0;
+}
 fieldset.tl_tbox > legend,fieldset.tl_box > legend {
 	color:#77ac45;
 	padding:6px 0 6px 18px;
@@ -1662,9 +1666,6 @@ fieldset.collapsed > legend {
 	}
 	#footer {
 		padding-bottom:18px;
-	}
-	#header .title {
-		display:none;
 	}
 	#tmenu {
 		line-height:2;

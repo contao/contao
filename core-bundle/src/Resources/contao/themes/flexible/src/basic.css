@@ -108,6 +108,13 @@ p {
 	line-height:0.1px;
 	font-size:0.1px;
 }
+.cf:before,.cf:after {
+	content:" ";
+	display:table;
+}
+.cf:after {
+	clear:both;
+}
 .invisible {
 	border:0;
 	clip:rect(0 0 0 0);

@@ -15,21 +15,21 @@ body {
 #container {
 	width:520px;
 	margin:5% auto 0;
-	padding:0 0 12px;
 	background:#fff;
 }
 
 /* Headlines */
-#container h2 {
+#container h1 {
 	margin:0;
-	padding:19px 12px 17px 52px;
-	background:#f58426 url("icons/logo.svg") no-repeat 12px center;
+	padding:18px 12px 18px 46px;
+	background:#f58426 url("icons/logo.svg") no-repeat 15px center;
 	color:#fff;
+	font-size:1.125rem;
 }
 
 /* Front end link */
 #go_to_frontend {
-	margin:0 18px 0 0;
+	margin:0 18px 12px 0;
 	text-align:right;
 }
 #go_to_frontend a {

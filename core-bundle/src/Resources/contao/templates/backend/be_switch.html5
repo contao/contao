@@ -33,8 +33,7 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="container">
-
+  <div id="container" class="cf">
     <div id="left">
       <p><?= $this->fePreview ?></p>
     </div>
@@ -62,7 +61,6 @@
         </div>
       </form>
     </div>
-
   </div>
 
   <?php if ($this->update): ?>

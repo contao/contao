@@ -33,11 +33,9 @@
 </head>
 <body class="<?= $this->ua ?> popup">
 
-  <div id="container">
-
+  <div id="container" class="cf">
     <div id="main">
       <?= $this->explanation ?>
-
       <?php if (!empty($this->rows)): ?>
         <table class="tl_help_table">
           <?php foreach ($this->rows as $row): ?>
@@ -55,7 +53,6 @@
         </table>
       <?php endif; ?>
     </div>
-
   </div>
 
 </body>

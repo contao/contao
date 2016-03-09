@@ -32,8 +32,7 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="container">
-
+  <div id="container" class="cf">
     <div id="main">
       <form action="<?= $this->action ?>" method="post">
         <div class="formbody">
@@ -64,7 +63,6 @@
         <?= $this->content ?>
       </div>
     </div>
-
   </div>
 
 </body>
