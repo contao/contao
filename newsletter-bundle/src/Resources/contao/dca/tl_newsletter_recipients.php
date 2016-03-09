@@ -75,31 +75,31 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'edit.gif'
+				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.gif'
+				'icon'                => 'copy.svg'
 			),
 			'cut' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.gif'
+				'icon'                => 'cut.svg'
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['toggle'],
-				'icon'                => 'visible.gif',
+				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_newsletter_recipients', 'toggleIcon')
 			),
@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['show'],
 				'href'                => 'act=show',
-				'icon'                => 'show.gif'
+				'icon'                => 'show.svg'
 			)
 		)
 	),
@@ -438,7 +438,7 @@ class tl_newsletter_recipients extends Backend
 
 		if (!$row['active'])
 		{
-			$icon = 'invisible.gif';
+			$icon = 'invisible.svg';
 		}
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['active'] ? 1 : 0) . '"').'</a> ';
