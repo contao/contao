@@ -26,18 +26,32 @@ class Messages extends \Backend
 	 */
 	public function versionCheck()
 	{
-		$this->import('BackendUser', 'User');
-
 		if (\Config::get('latestVersion') && version_compare(VERSION . '.' . BUILD, \Config::get('latestVersion'), '<'))
 		{
-			if ($this->User->hasAccess('maintenance', 'modules'))
-			{
-				return '<p class="tl_info"><a href="contao/main.php?do=maintenance">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], \Config::get('latestVersion')) . '</a></p>';
-			}
-			else
-			{
-				return '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], \Config::get('latestVersion')) . '</p>';
-			}
+			return '<p class="tl_new">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], \Config::get('latestVersion')) . '</p>';
+		}
+
+		return '';
+	}
+
+
+	/**
+	 * Check if the internal cache exists
+	 *
+	 * @return string
+	 */
+	public function needsCacheBuild()
+	{
+		$this->import('BackendUser', 'User');
+
+		if (!$this->User->hasAccess('maintenance', 'modules'))
+		{
+			return '';
+		}
+
+		if (!is_dir(\System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql'))
+		{
+			return '<p class="tl_error">' . sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], \System::getContainer()->getParameter('kernel.environment')) . '</p>';
 		}
 
 		return '';
@@ -51,11 +65,18 @@ class Messages extends \Backend
 	 */
 	public function maintenanceCheck()
 	{
+		$this->import('BackendUser', 'User');
+
+		if (!$this->User->hasAccess('maintenance', 'modules'))
+		{
+			return '';
+		}
+
 		try
 		{
 			if (\System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver()->isExists())
 			{
-				return '<p class="tl_error"><a href="contao/main.php?do=maintenance">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</a></p>';
+				return '<p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</p>';
 			}
 		}
 		catch (\Exception $e)

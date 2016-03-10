@@ -73,18 +73,6 @@ class BackendMain extends \Backend
 			$this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'));
 		}
 
-		// Convenience functions
-		if ($this->User->isAdmin)
-		{
-			// Build internal cache
-			if (\Input::get('bic'))
-			{
-				$this->import('Automator');
-				$this->Automator->generateInternalCache();
-				$this->redirect($this->getReferer());
-			}
-		}
-
 		\System::loadLanguageFile('default');
 		\System::loadLanguageFile('modules');
 	}
@@ -242,11 +230,6 @@ class BackendMain extends \Backend
 		$this->Template->expandNode = $GLOBALS['TL_LANG']['MSC']['expandNode'];
 		$this->Template->collapseNode = $GLOBALS['TL_LANG']['MSC']['collapseNode'];
 		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
-		$this->Template->isAdmin = $this->User->isAdmin;
-		$this->Template->buildCacheLink = $GLOBALS['TL_LANG']['MSC']['buildCacheLink'];
-		$this->Template->buildCacheText = sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], \System::getContainer()->getParameter('kernel.environment'));
-		$this->Template->buildCacheHref = $this->addToUrl('bic=1');
-		$this->Template->needsCacheBuild = !is_dir(\System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql');
 		$this->Template->isPopup = \Input::get('popup');
 
 		// Front end preview links

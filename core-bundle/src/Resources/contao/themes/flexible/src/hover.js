@@ -62,21 +62,9 @@ var Theme = {
 	},
 
 	/**
-	 * Work around the missing :last-child support in IE7 and IE8 (see #4017)
-	 */
-	fixLabelLastChild: function() {
-		if (Browser.ie7 || Browser.ie8) {
-			$$('.tl_checkbox_container label:last-child').each(function(el) {
-				el.setStyle('margin-bottom', 0);
-			});
-		}
-	},
-
-	/**
 	 * Stop the propagation of click events of certain elements
 	 */
 	stopClickPropagation: function() {
-
 		// Do not propagate the click events of the icons
 		$$('.picker_selector').each(function(ul) {
 			ul.getElements('a').each(function(el) {
@@ -125,8 +113,7 @@ var Theme = {
 				});
 			} else {
 				el.addEvent('click', function(e) {
-					var key = Browser.Platform.mac ?
-							e.event.metaKey : e.event.ctrlKey;
+					var key = Browser.Platform.mac ? e.event.metaKey : e.event.ctrlKey;
 					if (key && e.event.shiftKey) {
 						el.getElements('a').each(function(a) {
 							if (a.hasClass('editheader')) {
@@ -191,27 +178,15 @@ var Theme = {
 			el.fireEvent('input');
 			el.store('autogrow', true);
 		});
-	},
-
-	/**
-	 * Set up the menu toggle
-	 */
-	setupMenuToggle: function() {
-		$$('.collapsible').each(function(el) {
-			el.getElement('h1').addEvent('click', function() {
-				el.toggleClass('xpnd');
-			});
-		});
 	}
 };
 
 // Initialize
 window.addEvent('domready', function() {
-	Theme.fixLabelLastChild();
 	Theme.stopClickPropagation();
 	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
-	Theme.setupMenuToggle();
+	//Theme.setupMenuToggle();
 });
 
 // Respond to Ajax changes

@@ -17,18 +17,21 @@ body.popup {
 
 /* Header */
 #header {
-	_min-height:46px;
+	min-height:42px;
 	margin-bottom:18px;
 	text-align:left;
 	background:#f58426;
+}
+#header .inner {
+	width:960px;
+	margin:0 auto;
 }
 #header, #header a {
 	color:#fff;
 }
 #header h1 {
-	_position:absolute;
+	position:absolute;
 }
-#header .collapsible_area { display:none }
 #header h1 a {
 	display:block;
 	padding:12px 12px 12px 46px;
@@ -36,10 +39,14 @@ body.popup {
 	font-size:1.125rem;
 }
 #tmenu {
-	margin:0;
-	padding:6px 11px 8px;
 	text-align:right;
-	color:#444;
+}
+#tmenu li {
+	display:inline;
+}
+#tmenu a {
+	padding:14px;
+	display:inline-block;
 }
 
 /* Container */
@@ -170,21 +177,21 @@ h2.sub_headline_purge {
 	background:url("icons/error.svg") no-repeat left center;
 }
 .tl_error,.tl_confirm,.tl_info,.tl_new {
-	margin:0;
+	margin:0 0 1px;
 	padding:6px 6px 6px 28px;
 	line-height:1.2;
 }
 .tl_error {
-	background:#faeeee url("icons/error.svg") no-repeat 5px center;
+	background:#faeeee url("icons/error.svg") no-repeat 6px center;
 }
 .tl_confirm {
-	background:#f3f8ee url("icons/ok.svg") no-repeat 5px center;
+	background:#f3f8ee url("icons/ok.svg") no-repeat 6px center;
 }
 .tl_info {
 	background:#eff5fa url("icons/show.svg") no-repeat 6px center;
 }
 .tl_new {
-	background:#fff3e0 url("icons/featured.svg") no-repeat 5px center;
+	background:#fff3e0 url("icons/featured.svg") no-repeat 6px center;
 }
 .tl_gerror,.tl_gerror a,.tl_error,.tl_error a {
 	color:#c33;
@@ -200,20 +207,6 @@ h2.sub_headline_purge {
 }
 .nobg .tl_error,.nobg .tl_confirm,.nobg .tl_info,.nobg .tl_new {
 	background-color:transparent;
-}
-.tl_permalert { /* FIXME */
-	margin:0;
-	background-image:none;
-	padding:8px 12px 10px;
-	border-top:1px solid #ccc;
-}
-.tl_permalert a { /* FIXME */
-	float:right;
-	margin:1px 3px 0 24px;
-	color:#555;
-}
-.tl_permalert code { /* FIXME */
-	font-weight:500;
 }
 
 /* Filter */
@@ -1396,6 +1389,9 @@ fieldset.collapsed > legend {
 #tl_maintenance_cache td:first-child {
 	width:16px;
 }
+.mac #tl_maintenance_cache td:first-child .tl_checkbox {
+	top:-2px;
+}
 #tl_maintenance_cache .nw {
 	white-space:nowrap;
 }
@@ -1477,7 +1473,7 @@ fieldset.collapsed > legend {
 
 /* Wide screen */
 @media (min-width:1200px) {
-	#container,#footer {
+	#header .inner,#container,#footer {
 		width:1140px;
 	}
 	.popup #container,#main {
@@ -1604,7 +1600,7 @@ fieldset.collapsed > legend {
 
 /* Tablet */
 @media (max-width:991px) {
-	#container {
+	#header .inner,#container {
 		width:auto;
 	}
 	#main,#left {
@@ -1616,36 +1612,6 @@ fieldset.collapsed > legend {
 	}
 	#left,#footer {
 		width:745px;
-	}
-	.collapsible h1 {
-		margin:1px 1px 0 !important;
-		border-radius:3px !important;
-		border-bottom:1px solid #fff;
-		position:relative;
-		cursor:pointer;
-	}
-	.collapsible h1:after {
-		content:"";
-		display:block;
-		width:16px;
-		height:16px;
-		position:absolute;
-		top:4px;
-		right:6px;
-		background:url("images/arrows.png") left top no-repeat;
-	}
-	.collapsible_area {
-		display:none;
-	}
-	.collapsible.xpnd h1 {
-		border-radius:3px 3px 0 0 !important;
-		border-bottom:0;
-	}
-	.collapsible.xpnd h1:after {
-		background-position:left bottom;
-	}
-	.collapsible.xpnd .collapsible_area {
-		display:block;
 	}
 	#tl_navigation .tl_level_2 li {
 		min-width:150px;
@@ -1659,17 +1625,13 @@ fieldset.collapsed > legend {
 	.popup #container {
 		width:auto;
 	}
-	#header,#left,#main,#footer {
+	#header .inner,#left,#main,#footer {
 		width:auto;
 		margin-left:10px;
 		margin-right:10px;
 	}
 	#footer {
 		padding-bottom:18px;
-	}
-	#tmenu {
-		line-height:2;
-		text-align:left;
 	}
 	.header_home,.header_user,.header_preview,.header_logout {
 		margin-left:0;
