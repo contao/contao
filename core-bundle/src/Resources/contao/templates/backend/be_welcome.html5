@@ -5,6 +5,7 @@
     <div id="tl_messages">
       <h2><?= $this->systemMessages ?></h2>
       <?= $this->messages ?>
+      <p><?= $this->loginMsg ?></p>
     </div>
   <?php endif; ?>
 

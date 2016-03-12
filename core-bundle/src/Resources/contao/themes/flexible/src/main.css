@@ -48,6 +48,14 @@ body.popup {
 	padding:14px;
 	display:inline-block;
 }
+#tmenu sup {
+	position:absolute;
+	top:9px;
+	font-size:.625rem;
+	background:#f00;
+	padding:1px 2px;
+	border-radius:2px;
+}
 
 /* Container */
 #container {
@@ -822,6 +830,9 @@ ul.sgallery li {
 }
 #tl_messages h2,#tl_shortcuts h2,#tl_versions h2 {
 	margin:18px 0 6px;
+}
+#tl_messages p:not([class]) {
+	margin-top:6px;
 }
 #tl_shortcuts p a {
 	text-decoration:underline;

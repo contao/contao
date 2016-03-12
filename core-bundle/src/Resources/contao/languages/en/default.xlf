@@ -159,19 +159,16 @@
         <source>Invalid redirect target (circular reference)!</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
+        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
-      </trans-unit>
-      <trans-unit id="ERR.topLevelRegular">
-        <source>There are pages on the top-level which are not website root pages. Creating websites without a website root page is no longer supported, so please ensure that all pages are grouped under a website root page.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -891,13 +888,16 @@
         <source>Previous login</source>
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
-        <source>Previous login: %s</source>
+        <source>Your previous login was on %s. Welcome back!</source>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.1">
         <source>Last login: %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.firstLogin">
+        <source>This seems to be your first login. Welcome to Contao!</source>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
