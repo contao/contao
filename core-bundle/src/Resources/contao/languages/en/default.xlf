@@ -170,6 +170,9 @@
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
       </trans-unit>
+      <trans-unit id="ERR.topLevelRegular">
+        <source>There are top-level pages in the site structure which are not website root pages.</source>
+      </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
       </trans-unit>
@@ -888,7 +891,7 @@
         <source>Previous login</source>
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
-        <source>Your previous login was on %s. Welcome back!</source>
+        <source>Your previous login was %s. Welcome back!</source>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>

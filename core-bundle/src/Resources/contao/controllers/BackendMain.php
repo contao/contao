@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -135,15 +136,18 @@ class BackendMain extends \Backend
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_welcome');
 		$objTemplate->messages = \Message::generateUnwrapped() . \Message::getSystemMessages();
+		$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];
 
 		// Add the login message
 		if ($this->User->lastLogin > 0)
 		{
-			$objTemplate->loginMsg = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], \Date::parse(\Config::get('datimFormat'), $this->User->lastLogin));
-		}
-		else
-		{
-			$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];
+			$formatter = new DateTimeFormatter(\System::getContainer()->get('translator'));
+			$diff = $formatter->formatDiff(new \DateTime(date('Y-m-d H:i:s', $this->User->lastLogin)), new \DateTime());
+
+			$objTemplate->loginMsg = sprintf(
+				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
+				'<time datetime="' . date('Y-m-d H:i', $this->User->lastLogin) . '">' . $diff . '</time>'
+			);
 		}
 
 		// Add the versions overview

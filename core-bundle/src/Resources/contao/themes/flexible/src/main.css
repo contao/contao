@@ -1159,6 +1159,9 @@ ul.sortable button[disabled]:hover {
 	border:0;
 	z-index:10000;
 }
+time[datetime] {
+	cursor:help;
+}
 
 /* Navigation icons */
 a.navigation.article {

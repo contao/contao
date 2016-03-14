@@ -420,7 +420,7 @@ a.tl_submit {
 .tl_tip {
 	height:14px;
 	overflow:hidden;
-	cursor:pointer;
+	cursor:help;
 }
 .tip-wrap {
 	z-index:99;
