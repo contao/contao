@@ -1,13 +1,11 @@
 
 <div id="tl_soverview">
 
-  <?php if (!empty($this->messages)): ?>
-    <div id="tl_messages">
-      <h2><?= $this->systemMessages ?></h2>
-      <?= $this->messages ?>
-      <p><?= $this->loginMsg ?></p>
-    </div>
-  <?php endif; ?>
+  <div id="tl_messages">
+    <h2><?= $this->systemMessages ?></h2>
+    <?= $this->messages ?>
+    <p><?= $this->loginMsg ?></p>
+  </div>
 
   <div id="tl_shortcuts">
     <h2><?= $this->shortcuts ?></h2>

@@ -178,6 +178,19 @@ var Theme = {
 			el.fireEvent('input');
 			el.store('autogrow', true);
 		});
+	},
+
+	/**
+	 * Set up the menu toggle
+	 */
+	setupMenuToggle: function() {
+		var tog = $('burger');
+		if (tog.getParent('li').getStyle('display') == 'none') return;
+		$('tl_navigation').inject($('header'), 'after');
+		$('left').destroy();
+		tog.addEvent('click', function() {
+			document.body.toggleClass('show-navigation');
+		});
 	}
 };
 
@@ -186,7 +199,7 @@ window.addEvent('domready', function() {
 	Theme.stopClickPropagation();
 	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
-	//Theme.setupMenuToggle();
+	Theme.setupMenuToggle();
 });
 
 // Respond to Ajax changes

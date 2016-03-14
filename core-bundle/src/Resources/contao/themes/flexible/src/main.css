@@ -56,6 +56,9 @@ body.popup {
 	padding:1px 2px;
 	border-radius:2px;
 }
+#tmenu .burger {
+	display:none;
+}
 
 /* Container */
 #container {
@@ -116,8 +119,9 @@ body.popup {
 	padding:0 0 18px 6px !important;
 }
 #tl_navigation .tl_level_2 a {
+	display:block;
+	margin:2px 0;
 	font-weight:300;
-	line-height:22px;
 }
 #tl_navigation .active {
 	color:#77ac45;
@@ -126,10 +130,10 @@ body.popup {
 	margin-top:-12px;
 }
 #tl_navigation .node-collapsed {
-	background:url("icons/navexp.svg") 188px center no-repeat;
+	background:url("icons/navexp.svg") right 6px center no-repeat;
 }
 #tl_navigation .node-expanded {
-	background:url("icons/navcol.svg") 188px center no-repeat;
+	background:url("icons/navcol.svg") right 6px center no-repeat;
 }
 
 /* Buttons */
@@ -1360,6 +1364,9 @@ fieldset.tl_tbox,fieldset.tl_box {
 	border:solid #f6f6f6;
 	border-width:26px 0 0;
 }
+fieldset.tl_tbox.nolegend {
+	margin-top:0;
+}
 fieldset.tl_tbox.nolegend,fieldset.tl_box.nolegend {
 	border:0;
 }
@@ -1614,23 +1621,62 @@ fieldset.collapsed > legend {
 
 /* Tablet */
 @media (max-width:991px) {
+	html,body {
+		overflow-x:hidden;
+	}
 	#header .inner,#container {
 		width:auto;
 	}
 	#main,#left {
 		float:none;
-		margin:0 auto;
+		overflow:hidden;
 	}
-	#left {
-		margin-bottom:18px;
+	#container,#footer {
+		position:relative;
+		left:0;
+		transition:left .2s ease;
 	}
-	#left,#footer {
-		width:745px;
+	.show-navigation #container,.show-navigation #footer {
+		left:215px;
 	}
-	#tl_navigation .tl_level_2 li {
-		min-width:150px;
-		margin:1px 18px 6px 0;
-		display:inline-block;
+	#main,#footer {
+		width:auto;
+		margin-left:10px;
+		margin-right:10px;
+	}
+	#tl_navigation {
+		position:absolute;
+		top:42px;
+		width:205px;
+		padding:10px;
+		visibility:hidden;
+		opacity:0;
+		transition:visibility .2s, opacity .2s ease;
+	}
+	.show-navigation #tl_navigation {
+		visibility:visible;
+		opacity:1;
+	}
+	#tl_navigation .tl_level_1_group {
+		margin-bottom:24px;
+		padding:12px 6px !important;
+	}
+	#tl_navigation .tl_level_2 a {
+		margin:6px 0;
+		padding:6px 0 6px 32px;
+		background-size:24px;
+	}
+	#tmenu {
+		padding-right:46px;
+	}
+	#tmenu .burger {
+		display:block;
+		position:absolute;
+		top:8px;
+		right:10px;
+	}
+	#tmenu .burger img {
+		cursor:pointer;
 	}
 }
 
@@ -1716,10 +1762,6 @@ fieldset.collapsed > legend {
 		padding-left:6px !important;
 		padding-right:7px !important;
 	}
-	.tl_formbody_edit {
-		padding-left:10px;
-		padding-right:10px;
-	}
 	#tl_tablewizard {
 		width:430px;
 	}
@@ -1779,9 +1821,6 @@ fieldset.collapsed > legend {
 	}
 	.tl_file_list .ellipsis {
 		padding-right:10px;
-	}
-	#tl_navigation .tl_level_2 li {
-		min-width:110px;
 	}
 }
 

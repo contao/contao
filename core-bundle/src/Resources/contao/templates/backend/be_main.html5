@@ -53,7 +53,7 @@
           <li><a href="<?= $this->route('contao_backend', array('do'=>'login', 'ref'=>TL_REFERER_ID)) ?>"><?= $this->username ?></a></li>
           <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
           <li><a href="<?= $this->route('contao_backend_login') ?>" accesskey="q"><?= $this->logout ?></a></li>
-          <li><a>Burger</a></li>
+          <li class="burger"><?= Image::getHtml('burger.svg', '', 'id="burger"') ?></li>
         </ul>
       </div>
     </div>
