@@ -24,7 +24,7 @@
           <th>ID</th>
           <th><?= $GLOBALS['TL_LANG']['MSC']['description'] ?></th>
           <th><?= $GLOBALS['TL_LANG']['MSC']['version'] ?></th>
-          <th>&nbsp;</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>

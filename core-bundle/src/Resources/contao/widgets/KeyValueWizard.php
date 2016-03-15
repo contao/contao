@@ -164,7 +164,7 @@ class KeyValueWizard extends \Widget
     <tr>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_key'].'</th>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_value'].'</th>
-      <th>&nbsp;</th>
+      <th></th>
     </tr>
   </thead>
   <tbody class="sortable" data-tabindex="'.$tabindex.'">';

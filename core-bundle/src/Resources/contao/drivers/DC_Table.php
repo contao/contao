@@ -3780,9 +3780,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		$session[$node][$id] = (is_int($session[$node][$id])) ? $session[$node][$id] : 0;
-		$mouseover = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 || $table == $this->strTable) ? ' toggle_select hover-div"' : '"';
+		$mouseover = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 || $table == $this->strTable) ? ' toggle_select hover-div' : '';
 
-		$return .= "\n  " . '<li class="'.((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file').' click2edit'.$mouseover.'><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
+		$return .= "\n  " . '<li class="'.((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file').' click2edit'.$mouseover.' cf"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
 
 		// Calculate label and add a toggle button
 		$args = array();
@@ -3909,7 +3909,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		$return .= ($_buttons ?: '&nbsp;') . '</div><div style="clear:both"></div></li>';
+		$return .= ($_buttons ?: '&nbsp;') . '</div></li>';
 
 		// Add the records of the table itself
 		if ($table != $this->strTable)
@@ -4683,7 +4683,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 
 				$return .= '
-    <th class="tl_folder_tlist tl_right_nowrap">&nbsp;</th>
+    <th class="tl_folder_tlist tl_right_nowrap"></th>
   </tr>';
 			}
 

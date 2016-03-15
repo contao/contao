@@ -26,6 +26,7 @@ ul,li {
 table {
 	border-spacing:0;
 	border-collapse:collapse;
+	empty-cells:show;
 }
 th,td {
 	padding:0;

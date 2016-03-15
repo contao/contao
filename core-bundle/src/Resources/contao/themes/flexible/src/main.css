@@ -12,7 +12,6 @@ body {
 }
 body.popup {
 	background:#fff;
-	padding:6px 0;
 }
 
 /* Header */
@@ -67,7 +66,7 @@ body.popup {
 }
 .popup #container {
 	padding:0;
-	width:741px;
+	width:auto;
 }
 
 /* Left */
@@ -412,6 +411,9 @@ input[type=search]::-webkit-search-decoration {
 .tl_listing {
 	width:709px;
 	margin:2px 0 !important;
+}
+.popup .tl_listing {
+	width:auto;
 }
 .tl_listing_container {
 	padding:2px 0;
@@ -1127,10 +1129,9 @@ ul.sortable button[disabled]:hover {
 	background:rgba(255,255,255,.7);
 }
 #manager {
-	margin-top:9px;
-	background:#f3f3f3;
-	border-bottom:1px solid #bbb;
-	padding:3px 3px 4px;
+	padding:7px;
+	background:#f9f9f9;
+	border-bottom:1px solid #ddd;
 }
 #manager .open {
 	padding:3px 15px 3px 21px;
@@ -1497,7 +1498,7 @@ fieldset.collapsed > legend {
 	#header .inner,#container,#footer {
 		width:1140px;
 	}
-	.popup #container,#main {
+	#main {
 		width:925px;
 	}
 	.tl_listing,.tl_show {
@@ -1682,9 +1683,6 @@ fieldset.collapsed > legend {
 
 /* Handheld */
 @media (max-width:767px) {
-	.popup #container {
-		width:auto;
-	}
 	#header .inner,#left,#main,#footer {
 		width:auto;
 		margin-left:10px;
@@ -1792,10 +1790,6 @@ fieldset.collapsed > legend {
 	}
 	.tl_version_panel .tl_select {
 		width:136px;
-	}
-	#manager {
-		margin-left:10px;
-		margin-right:10px;
 	}
 	.tl_modulewizard .tl_select {
 		width:100px;

@@ -163,7 +163,7 @@ class ModuleWizard extends \Widget
   <tr>
     <th>'.$GLOBALS['TL_LANG']['MSC']['mw_module'].'</th>
     <th>'.$GLOBALS['TL_LANG']['MSC']['mw_column'].'</th>
-    <th>&nbsp;</th>
+    <th></th>
   </tr>
   </thead>
   <tbody class="sortable" data-tabindex="'.$tabindex.'">';

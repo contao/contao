@@ -144,9 +144,9 @@ class OptionWizard extends \Widget
     <tr>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_value'].'</th>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_label'].'</th>
-      <th>&nbsp;</th>
-      <th>&nbsp;</th>
-      <th>&nbsp;</th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody class="sortable" data-tabindex="'.$tabindex.'">';
