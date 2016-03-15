@@ -16,9 +16,9 @@ matrix:
 
 before_install:
   - composer selfupdate
-  - if [ -z "$deps" ]; then composer install --prefer-source; fi;
-  - if [ "$deps" = "lowest" ]; then composer update --prefer-source --prefer-lowest --prefer-stable; fi;
-  - if [ "$deps" = "highest" ]; then composer update --prefer-source; fi;
+  - if [ -z "$deps" ]; then composer install --prefer-dist; fi;
+  - if [ "$deps" = "lowest" ]; then composer update --prefer-dist --prefer-lowest --prefer-stable; fi;
+  - if [ "$deps" = "highest" ]; then composer update --prefer-dist; fi;
 
 script:
   - mkdir -p build/logs
