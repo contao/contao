@@ -260,7 +260,7 @@ class Newsletter extends \Backend
 <pre style="white-space:pre-wrap">' . $text . '</pre>
 </div>
 
-<div class="tl_tbox">
+<fieldset class="tl_tbox nolegend">
 <div class="w50">
   <h3><label for="ctrl_mpc">' . $GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][0] . '</label></h3>
   <input type="text" name="mpc" id="ctrl_mpc" value="10" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] && \Config::get('showHelp')) ? '
@@ -282,8 +282,7 @@ class Newsletter extends \Backend
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && \Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>
-<div class="clear"></div>
-</div>
+</fieldset>
 </div>';
 
 		$return .= '
@@ -548,7 +547,8 @@ class Newsletter extends \Backend
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
 <input type="hidden" name="MAX_FILE_SIZE" value="'.\Config::get('maxFileSize').'">
 
-<div class="tl_tbox">
+<fieldset class="tl_tbox nolegend">
+<div>
   <h3><label for="separator">'.$GLOBALS['TL_LANG']['MSC']['separator'][0].'</label></h3>
   <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
     <option value="comma">'.$GLOBALS['TL_LANG']['MSC']['comma'].'</option>
@@ -560,6 +560,7 @@ class Newsletter extends \Backend
   <h3>'.$GLOBALS['TL_LANG']['MSC']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['MSC']['source'][1]) ? '
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['source'][1].'</p>' : '').'
 </div>
+</fieldset>
 
 </div>
 
