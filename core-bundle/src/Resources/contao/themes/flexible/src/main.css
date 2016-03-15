@@ -239,6 +239,11 @@ h2.sub_headline_purge {
 .safari .tl_version_panel .tl_formbody,.ie .tl_version_panel .tl_formbody {
 	float:right; /* see #5854 */
 }
+.tl_img_submit {
+	position:relative;
+	top:9px;
+	vertical-align:top;
+}
 .tl_subpanel {
 	padding-left:24px;
 	float:right;
