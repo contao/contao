@@ -1001,6 +1001,39 @@ ul.sgallery li {
 	width:300px;
 }
 
+/* Paste/sort hint */
+#paste_hint {
+	position:relative;
+}
+#paste_hint p {
+	position:absolute;
+	font-family:"Architects Daughter",cursive;
+	font-size:1rem;
+	color:#838990;
+	top:18px;
+	right:30px;
+	padding:0 36px 24px 0;
+	background:url("icons/arrow_right.svg") bottom right no-repeat;
+	transform:rotate(-1deg);
+}
+#paste_hint + .tl_listing_container {
+	margin-top:48px !important;
+}
+.selector_container {
+	position:relative;
+}
+.sort_hint {
+	position:absolute;
+	font-family:"Architects Daughter",cursive;
+	font-size:1rem;
+	color:#838990;
+	top:-48px;
+	left:200px;
+	padding:0 6px 24px 42px;
+	background:url("icons/arrow_left.svg") 6px bottom no-repeat;
+	transform:rotate(-2deg);
+}
+
 /* Ajax box */
 #tl_ajaxBox {
 	width:20%;
