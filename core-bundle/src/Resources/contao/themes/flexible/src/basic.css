@@ -32,6 +32,9 @@ th,td {
 	padding:0;
 	text-align:left;
 }
+input,select,button,label,img,a.tl_submit,.tl_select {
+	vertical-align:middle;
+}
 
 /* Font */
 body {
@@ -50,7 +53,7 @@ input,textarea,select,button {
 	color:inherit;
 	line-height:inherit;
 }
-strong,b,th{
+strong,b,th {
 	font-weight:500;
 }
 .tl_gray {
@@ -95,11 +98,11 @@ p {
 	display:none;
 }
 .unselectable {
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	-webkit-touch-callout: none;
+	-moz-user-select:none;
+	-webkit-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+	-webkit-touch-callout:none;
 }
 
 /* Invisible elements */
@@ -217,9 +220,6 @@ fieldset.checkbox_container,fieldset.radio_container {
 select.tl_select,select.tl_select_column,select.tl_select_unit,select.tl_select_interval {
 	height:30px;
 }
-.webkit select.tl_select,.webkit select.tl_select_column,.webkit select.tl_select_unit,.webkit select.tl_select_interval {
-	vertical-align:1px;
-}
 .tl_select_column {
 	width:140px;
 }
@@ -244,31 +244,10 @@ select.tl_select,select.tl_select_column,select.tl_select_unit,select.tl_select_
 
 /* Checkboxes */
 .tl_checkbox {
-	margin:1px 3px 0 0;
-	vertical-align:bottom;
-}
-.mac .tl_checkbox {
 	margin:0 3px 0 0;
-	position:relative;
-	top:-1px;
-}
-.mac .tl_checkbox_single_container .tl_checkbox {
-	top:0;
-}
-.ie .tl_checkbox {
-	margin:-3px 0 -1px -2px;
-	position:relative;
-	top:1px;
-	vertical-align:middle;
-}
-.ie .tl_checkbox_single_container .tl_checkbox {
-	top:0;
 }
 .tl_tree_checkbox {
-	margin:0 3px 0 0;
-}
-.mac .tl_tree_checkbox {
-	margin:2px 3px 0 0;
+	margin:1px 3px 1px 0;
 }
 .tl_checkbox_single_container {
 	margin:16px 0 1px;
@@ -276,27 +255,18 @@ select.tl_select,select.tl_select_column,select.tl_select_unit,select.tl_select_
 .tl_checkbox_single_container label {
 	font-weight:500;
 }
-.tl_checkbox_container label {
-	display:block;
-	margin:-14px 0;
-	padding-left:20px;
-}
-.tl_checkbox_container label:last-child {
-	margin-bottom:0;
-}
 
 /* Grouped checkboxes */
 .checkbox_toggler {
 	font-weight:500;
 }
 .checkbox_toggler_first {
-	font-weight:500;
 	margin-top:3px;
+	font-weight:500;
 }
 .checkbox_toggler img,.checkbox_toggler_first img {
-	vertical-align:top;
 	position:relative;
-	top:-2px;
+	top:-1px;
 	margin-right:3px;
 }
 .checkbox_options {
@@ -308,18 +278,13 @@ select.tl_select,select.tl_select_column,select.tl_select_unit,select.tl_select_
 
 /* Radio buttons */
 .tl_radio {
-	margin:1px 3px 0 0;
-	vertical-align:1px;
+	margin:0 3px 0 0;
 }
 .win .tl_radio {
 	margin:1px 3px 3px 0; /* see #4599 */
 }
 .tl_tree_radio {
-	margin:0 3px 1px 0;
-	vertical-align:middle;
-}
-.safari .tl_radio,.safari .tl_tree_radio {
-	margin-left:1px;
+	margin:1px 3px 1px 0;
 }
 
 /* Radio table */
@@ -328,9 +293,6 @@ select.tl_select,select.tl_select_column,select.tl_select_unit,select.tl_select_
 }
 .tl_radio_table td {
 	padding:0 24px 1px 0;
-}
-.tl_radio_table img,.tl_radio_table input {
-	vertical-align:middle;
 }
 
 /* Upload fields */
@@ -345,7 +307,6 @@ select.tl_select,select.tl_select_column,select.tl_select_unit,select.tl_select_
 	border-radius:2px;
 	cursor:pointer;
 	background:#f3f3f3;
-	transition:background .3s ease;
 }
 .tl_panel .tl_submit,.tl_version_panel .tl_submit,.tl_formbody_submit .tl_submit {
 	background:#fff;

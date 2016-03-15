@@ -51,7 +51,6 @@ h2 {
 	margin-bottom:1em;
 	border:1px solid #ddd;
 	background:#fcfcfc;
-	font:300 .75rem/1.25 "Roboto Mono",monospace;
 	border-radius:2px;
 }
 #diff .replace.left,#diff .delete.left {
@@ -78,6 +77,7 @@ h2 {
 #diff dt,#diff dd {
 	margin:0;
 	padding:3px 6px;
+	font: 300 .75rem/1.25 "Roboto Mono", monospace;
 }
 
 /* Handheld */

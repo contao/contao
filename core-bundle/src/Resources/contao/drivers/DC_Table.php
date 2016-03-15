@@ -3530,7 +3530,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 </div>' : '').'
 
 <ul class="tl_listing '. $treeClass .'">
-  <li class="tl_folder_top"><div class="tl_left">'.$label.'</div> <div class="tl_right">';
+  <li class="tl_folder_top cf"><div class="tl_left">'.$label.'</div> <div class="tl_right">';
 
 		$_buttons = '&nbsp;';
 
@@ -3558,7 +3558,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		// End table
-		$return .= $_buttons . '</div><div style="clear:both"></div></li>'.$tree.'
+		$return .= $_buttons . '</div></li>'.$tree.'
 </ul>
 
 </div>';
