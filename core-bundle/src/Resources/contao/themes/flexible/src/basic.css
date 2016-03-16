@@ -306,7 +306,7 @@ select.tl_select,select.tl_select_column,select.tl_select_unit,select.tl_select_
 	border:1px solid #aaa;
 	border-radius:2px;
 	cursor:pointer;
-	background:#f3f3f3;
+	background:#eee;
 }
 .tl_panel .tl_submit,.tl_version_panel .tl_submit,.tl_formbody_submit .tl_submit {
 	background:#fff;
