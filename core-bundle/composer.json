@@ -58,6 +58,9 @@
             "Contao\\CoreBundle\\": "src/"
         }
     },
+    "config": {
+        "preferred-install": "dist"
+    },
     "extra": {
         "branch-alias": {
             "dev-develop": "4.2.x-dev"
