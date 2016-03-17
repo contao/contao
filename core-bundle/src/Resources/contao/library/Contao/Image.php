@@ -814,6 +814,51 @@ class Image
 
 
 	/**
+	 * Get the relative path to an image
+	 *
+	 * @param string $src The image name or path
+	 *
+	 * @return string The relative path
+	 */
+	public static function getPath($src)
+	{
+		if ($src == '')
+		{
+			return '';
+		}
+
+		$src = rawurldecode($src);
+
+		if (strpos($src, '/') !== false)
+		{
+			return $src;
+		}
+
+		if (strncmp($src, 'icon', 4) === 0)
+		{
+			return 'assets/contao/images/' . $src;
+		}
+
+		$theme = \Backend::getTheme();
+
+		if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
+		{
+			return 'system/themes/' . $theme . '/icons/' . $src;
+		}
+
+		$filename = pathinfo($src, PATHINFO_FILENAME);
+
+		// Prefer SVG icons
+		if (file_exists(TL_ROOT . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+		{
+			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
+		}
+
+		return 'system/themes/' . $theme . '/images/' . $src;
+	}
+
+
+	/**
 	 * Generate an image tag and return it as string
 	 *
 	 * @param string $src        The image path
@@ -824,50 +869,19 @@ class Image
 	 */
 	public static function getHtml($src, $alt='', $attributes='')
 	{
+		$src = static::getPath($src);
+
 		if ($src == '')
 		{
 			return '';
 		}
-
-		$static = TL_FILES_URL;
-		$src = rawurldecode($src);
-
-		if (strpos($src, '/') === false)
-		{
-			if (strncmp($src, 'icon', 4) === 0)
-			{
-				$static = TL_ASSETS_URL;
-				$src = 'assets/contao/images/' . $src;
-			}
-			else
-			{
-				$theme = \Backend::getTheme();
-				$filename = pathinfo($src, PATHINFO_FILENAME);
-
-				// Prefer SVG icons
-				if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
-				{
-					$src = 'system/themes/' . $theme . '/icons/' . $src;
-				}
-				elseif (file_exists(TL_ROOT . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
-				{
-					$src = 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
-				}
-				else
-				{
-					$src = 'system/themes/' . $theme . '/images/' . $src;
-				}
-			}
-		}
-
-		$path = $src;
 
 		if (!is_file(TL_ROOT . '/' . $src))
 		{
 			// Handle public bundle resources
 			if (file_exists(TL_ROOT . '/web/' . $src))
 			{
-				$path = 'web/' . $src;
+				$src = 'web/' . $src;
 			}
 			else
 			{
@@ -875,13 +889,15 @@ class Image
 			}
 		}
 
-		$objFile = new \File($path);
+		$objFile = new \File($src);
 
 		// Strip the web/ prefix (see #337)
 		if (strncmp($src, 'web/', 4) === 0)
 		{
 			$src = substr($src, 4);
 		}
+
+		$static = (strncmp($src, 'assets/', 7) === 0) ? TL_ASSETS_URL : TL_FILES_URL;
 
 		return '<img src="' . $static . \System::urlEncode($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
 	}
