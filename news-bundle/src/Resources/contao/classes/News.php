@@ -296,7 +296,7 @@ class News extends \Frontend
 				// Get the URL of the jumpTo page
 				if (!isset($arrProcessed[$objArchive->jumpTo]))
 				{
-					$objParent = \PageModel::findWithDetails($objArchive->jumpTo);
+					$objParent = \PageModel::findByPk($objArchive->jumpTo);
 
 					// The target page does not exist
 					if ($objParent === null)
@@ -317,14 +317,7 @@ class News extends \Frontend
 					}
 
 					// Generate the URL
-					$feUrl = $objParent->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
-
-					if (strncmp($feUrl, 'http://', 7) !== 0 && strncmp($feUrl, 'https://', 8) !== 0)
-					{
-						$feUrl = (($objParent->rootUseSSL ? 'https://' : 'http://') . ($objParent->domain ?: \Environment::get('host')) . \Environment::get('path') . '/') . $feUrl;
-					}
-
-					$arrProcessed[$objArchive->jumpTo] = $feUrl;
+					$arrProcessed[$objArchive->jumpTo] = $objParent->getAbsoluteUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
 				}
 
 				$strUrl = $arrProcessed[$objArchive->jumpTo];
