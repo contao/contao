@@ -144,7 +144,7 @@ class ModuleFaqReader extends \Module
 
 		$strAuthor = '';
 
-		/** @var \UserModel $objAuthor */
+		/** @var UserModel $objAuthor */
 		if (($objAuthor = $objFaq->getRelated('author')) !== null)
 		{
 			$strAuthor = $objAuthor->name;
