@@ -66,27 +66,6 @@ class ExceptionConverterListenerTest extends TestCase
     }
 
     /**
-     * Tests converting the derived PageNotFoundException exception.
-     */
-    public function testConvertDerivedPageNotFoundException()
-    {
-        $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new DerivedPageNotFoundException()
-        );
-
-        $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
-
-        $exception = $event->getException();
-
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', $exception);
-        $this->assertInstanceOf('Contao\CoreBundle\Exception\PageNotFoundException', $exception->getPrevious());
-    }
-
-    /**
      * Tests converting an ForwardPageNotFoundException exception.
      */
     public function testConvertForwardPageNotFoundException()
@@ -293,5 +272,26 @@ class ExceptionConverterListenerTest extends TestCase
         $exception = $event->getException();
 
         $this->assertInstanceOf('RuntimeException', $exception);
+    }
+
+    /**
+     * Tests converting the derived PageNotFoundException exception.
+     */
+    public function testConvertDerivedPageNotFoundException()
+    {
+        $event = new GetResponseForExceptionEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new DerivedPageNotFoundException()
+        );
+
+        $listener = new ExceptionConverterListener();
+        $listener->onKernelException($event);
+
+        $exception = $event->getException();
+
+        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', $exception);
+        $this->assertInstanceOf('Contao\CoreBundle\Exception\PageNotFoundException', $exception->getPrevious());
     }
 }

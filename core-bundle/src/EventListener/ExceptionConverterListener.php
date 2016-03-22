@@ -51,15 +51,33 @@ class ExceptionConverterListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
+        $class = $this->getTargetClass($exception);
 
-        foreach ($this->mapper as $origin => $dest) {
-            if ($exception instanceof $origin) {
-                if (null !== ($httpException = $this->convertToHttpException($exception, $dest))) {
-                    $event->setException($httpException);
-                }
-                break;
+        if (null === $class) {
+            return;
+        }
+
+        if (null !== ($httpException = $this->convertToHttpException($exception, $class))) {
+            $event->setException($httpException);
+        }
+    }
+
+    /**
+     * Maps the extension to a target class.
+     *
+     * @param \Exception $exception The exception object
+     *
+     * @return string|null The class name or null
+     */
+    private function getTargetClass(\Exception $exception)
+    {
+        foreach ($this->mapper as $source => $target) {
+            if ($exception instanceof $source) {
+                return $target;
             }
         }
+
+        return null;
     }
 
     /**
