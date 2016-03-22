@@ -47,9 +47,9 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  * @property array    $imageSize     The file dimensions (images only)
  * @property integer  $width         The file width (images only)
  * @property integer  $height        The file height (images only)
- * @property array    $imageViewSize The viewbox dimensions (SVG images only)
- * @property integer  $viewWidth     The viewbox width (SVG images only)
- * @property integer  $viewHeight    The viewbox height (SVG images only)
+ * @property array    $imageViewSize The viewbox dimensions
+ * @property integer  $viewWidth     The viewbox width
+ * @property integer  $viewHeight    The viewbox height
  * @property boolean  $isImage       True if the file is an image
  * @property boolean  $isGdImage     True if the file can be handled by the GDlib
  * @property boolean  $isSvgImage    True if the file is an SVG image
@@ -548,6 +548,7 @@ class File extends \System
 
 		// Move the temporary file to its destination
 		$return = $this->Files->rename($this->strTmp, $this->strFile);
+		$this->strTmp = null;
 
 		// Update the database
 		if (\Dbafs::shouldBeSynchronized($this->strFile))
@@ -582,7 +583,7 @@ class File extends \System
 	 */
 	public function getContent()
 	{
-		$strContent = file_get_contents(TL_ROOT . '/' . $this->strFile);
+		$strContent = file_get_contents(TL_ROOT . '/' . ($this->strTmp ?: $this->strFile));
 
 		// Remove BOMs (see #4469)
 		if (strncmp($strContent, "\xEF\xBB\xBF", 3) === 0)

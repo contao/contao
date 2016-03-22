@@ -423,7 +423,7 @@ class tl_templates extends Backend
 			}
 
 			$objDiff = new Diff($objCompareFile->getContentAsArray(), $objCurrentFile->getContentAsArray());
-			$strDiff = $objDiff->Render(new DiffRenderer(array('field'=>$strCurrentPath)));
+			$strDiff = $objDiff->render(new DiffRenderer(array('field'=>$strCurrentPath)));
 
 			// Identical versions
 			if ($strDiff == '')

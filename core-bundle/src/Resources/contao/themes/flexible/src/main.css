@@ -1163,6 +1163,12 @@ ul.sortable button[disabled]:hover {
 time[datetime] {
 	cursor:help;
 }
+.float_left {
+	float:left;
+}
+.float_right {
+	float:right;
+}
 
 /* Navigation icons */
 a.navigation.article {

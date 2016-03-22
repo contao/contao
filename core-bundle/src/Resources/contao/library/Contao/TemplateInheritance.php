@@ -258,6 +258,7 @@ trait TemplateInheritance
 	 */
 	public function insert($name, array $data=null)
 	{
+		/** @var Template $tpl */
 		if ($this instanceof Template)
 		{
 			$tpl = new static($name);
