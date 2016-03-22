@@ -51,14 +51,14 @@ class ExceptionConverterListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
-        $class = get_class($exception);
 
-        if (!isset($this->mapper[$class])) {
-            return;
-        }
-
-        if (null !== ($httpException = $this->convertToHttpException($exception, $this->mapper[$class]))) {
-            $event->setException($httpException);
+        foreach ($this->mapper as $origin => $dest) {
+            if ($exception instanceof $origin) {
+                if (null !== ($httpException = $this->convertToHttpException($exception, $dest))) {
+                    $event->setException($httpException);
+                }
+                break;
+            }
         }
     }
 
