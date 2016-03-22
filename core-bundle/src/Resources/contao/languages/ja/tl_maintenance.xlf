@@ -31,10 +31,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceEnable">
         <source>Enable</source>
+        <target>有効</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceDisable">
         <source>Disable</source>
-        <target>解除</target>
+        <target>無効</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
