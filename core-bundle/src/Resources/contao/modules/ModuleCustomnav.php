@@ -168,7 +168,7 @@ class ModuleCustomnav extends \Module
 					$row['pageTitle'] = specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex', 7) === 0);
+					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objModel->description);
 
@@ -194,7 +194,7 @@ class ModuleCustomnav extends \Module
 					$row['pageTitle'] = specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex', 7) === 0);
+					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objModel->description);
 
