@@ -395,7 +395,7 @@ class PageRegular extends \Frontend
 			{
 				if (($strVersion = $arrPackages['contao-components/jquery']) !== null)
 				{
-					$this->Template->mooScripts .= \Template::generateScriptTag('//code.jquery.com/jquery-' . $strVersion . '.min.js') . "\n";
+					$this->Template->mooScripts .= \Template::generateScriptTag('https://code.jquery.com/jquery-' . $strVersion . '.min.js') . "\n";
 
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->jSource == 'j_fallback')
@@ -421,7 +421,7 @@ class PageRegular extends \Frontend
 			{
 				if (($strVersion = $arrPackages['contao-components/mootools']) !== null)
 				{
-					$this->Template->mooScripts .= \Template::generateScriptTag('//ajax.googleapis.com/ajax/libs/mootools/' . $strVersion . '/mootools-yui-compressed.js') . "\n";
+					$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $strVersion . '/mootools-yui-compressed.js') . "\n";
 
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->mooSource == 'moo_fallback')
@@ -491,7 +491,7 @@ class PageRegular extends \Frontend
 		// Google web fonts
 		if ($objLayout->webfonts != '')
 		{
-			$strStyleSheets .= \Template::generateStyleTag('//fonts.googleapis.com/css?family=' . str_replace('|', '%7C', $objLayout->webfonts), 'all') . "\n";
+			$strStyleSheets .= \Template::generateStyleTag('https://fonts.googleapis.com/css?family=' . str_replace('|', '%7C', $objLayout->webfonts), 'all') . "\n";
 		}
 
 		// Add the Contao CSS framework style sheets

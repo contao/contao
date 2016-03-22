@@ -37,14 +37,14 @@ class FrontendShare extends \Frontend
 				$query .= '&display=popup';
 				$query .= '&redirect_uri=http%3A%2F%2Fwww.facebook.com';
 
-				return new RedirectResponse('http://www.facebook.com/sharer/sharer.php' . $query);
+				return new RedirectResponse('https://www.facebook.com/sharer/sharer.php' . $query);
 				break;
 
 			case 'twitter':
 				$query  = '?url=' . rawurlencode(\Input::get('u', true));
 				$query .= '&text=' . rawurlencode(\Input::get('t', true));
 
-				return new RedirectResponse('http://twitter.com/share' . $query);
+				return new RedirectResponse('https://twitter.com/share' . $query);
 				break;
 
 			case 'gplus':
