@@ -167,9 +167,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.0">
         <source>Edit calendar</source>
+        <target>Muokkaa kalenteria</target>
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.1">
         <source>Edit the calendar settings</source>
+        <target>Muokkaa kalenterin asetuksia</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.0">
         <source>Duplicate calendar</source>
