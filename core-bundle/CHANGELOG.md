@@ -1,6 +1,23 @@
 # Contao core bundle change log
 
-### 4.1.1 (2015-03-03)
+### 4.1.2 (2016-03-22)
+
+ * Handle derived classes in the exception converter (see #462).
+ * Prevent the autofocus attribute from being added multiple times (see contao/core#8281).
+ * Respect the SSL settings of the root page when generating sitemaps (see contao/core#8270).
+ * Read from the temporary file if it has not been closed yet (see contao/core#8269).
+ * Always use HTTPS if the target server supports SSL connections (see contao/core#8183).
+ * Adjust the meta wizard field length to the column length (see contao/core#8277).
+ * Correctly handle custom mime icon paths (see contao/core#8275).
+ * Show the 404 error page if an unpublished article is requested (see contao/core#8264).
+ * Correctly count the URLs when rebuilding the search index (see contao/core#8262).
+ * Ensure that every image has a width and height attribute (see contao/core#8162).
+ * Set the correct mime type when embedding SVG images (see contao/core#8245).
+ * Handle the "float_left" and "float_right" classes in the back end (see contao/core#8239).
+ * Consider the fallback language if a page alias is ambiguous (see contao/core#8142).
+ * Fix the error 403/404 redirect (see contao/website#74).
+
+### 4.1.1 (2016-03-03)
 
  * Remove the "disable IP check" field from the back end settings (see #436).
  * Do not quote the search string in `FIND_IN_SET()` (see #424).
