@@ -332,22 +332,7 @@ class FileSelector extends \Widget
 			$this->arrValidFileTypes = trimsplit(',', $this->extensions);
 		}
 
-		$blnProtected = true;
-		$strPath = $strFolder;
-
-		// Check for public parent folders (see #213)
-		while ($strPath != '' && $strPath != '.')
-		{
-			if (file_exists(TL_ROOT . '/' . $strPath . '/.public'))
-			{
-				$blnProtected = false;
-				break;
-			}
-
-			$strPath = dirname($strPath);
-		}
-
-		return $this->renderFiletree(TL_ROOT . '/' . $strFolder, ($level * 20), $mount, $blnProtected);
+		return $this->renderFiletree(TL_ROOT . '/' . $strFolder, ($level * 20), $mount, $this->isProtectedPath($strFolder));
 	}
 
 
