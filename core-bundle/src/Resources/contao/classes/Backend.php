@@ -652,60 +652,40 @@ abstract class Backend extends \Controller
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsSitemap=false)
 	{
-		$time = \Date::floorToMinute();
-		$objDatabase = \Database::getInstance();
+		$objPages = \PageModel::findPublishedByPid($pid, array('ignoreFePreview'=>true));
 
-		// Get published pages
-		$objPages = $objDatabase->prepare("SELECT * FROM tl_page WHERE pid=? AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1' ORDER BY sorting")
-								->execute($pid);
-
-		if ($objPages->numRows < 1)
+		if ($objPages === null)
 		{
 			return array();
 		}
 
 		$arrPages = array();
-		$objRegistry = \Model\Registry::getInstance();
 
 		// Recursively walk through all subpages
-		while ($objPages->next())
+		foreach ($objPages as $objPage)
 		{
-			$objPage = $objRegistry->fetch('tl_page', $objPages->id);
-
-			if ($objPage === null)
-			{
-				$objPage = new \PageModel($objPages);
-			}
-
 			if ($objPage->type == 'regular')
 			{
 				// Searchable and not protected
 				if ((!$objPage->noSearch || $blnIsSitemap) && (!$objPage->protected || \Config::get('indexProtected') && (!$blnIsSitemap || $objPage->sitemap == 'map_always')) && (!$blnIsSitemap || $objPage->sitemap != 'map_never'))
 				{
-					// Published
-					if ($objPage->published && ($objPage->start == '' || $objPage->start <= $time) && ($objPage->stop == '' || $objPage->stop > ($time + 60)))
+					$arrPages[] = $objPage->getAbsoluteUrl();
+
+					// Get articles with teaser
+					if (($objArticles = \ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
 					{
-						$arrPages[] = $objPage->getAbsoluteUrl();
+						$feUrl = $objPage->getAbsoluteUrl('/articles/%s');
 
-						// Get articles with teaser
-						$objArticles = $objDatabase->prepare("SELECT * FROM tl_article WHERE pid=? AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1' AND showTeaser='1' ORDER BY sorting")
-												   ->execute($objPages->id);
-
-						if ($objArticles->numRows)
+						foreach ($objArticles as $objArticle)
 						{
-							$feUrl = $objPage->getAbsoluteUrl('/articles/%s');
-
-							while ($objArticles->next())
-							{
-								$arrPages[] = sprintf($feUrl, ($objArticles->alias ?: $objArticles->id));
-							}
+							$arrPages[] = sprintf($feUrl, ($objArticle->alias ?: $objArticle->id));
 						}
 					}
 				}
 			}
 
 			// Get subpages
-			if ((!$objPage->protected || \Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsSitemap)) != false)
+			if ((!$objPage->protected || \Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsSitemap)))
 			{
 				$arrPages = array_merge($arrPages, $arrSubpages);
 			}
