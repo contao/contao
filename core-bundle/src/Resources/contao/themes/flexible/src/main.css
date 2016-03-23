@@ -792,6 +792,10 @@ label.tl_change_selected {
 }
 
 /* Picker */
+.selector_container {
+	margin-top:1px;
+	position:relative;
+}
 .selector_container ul {
 	margin-bottom:1px;
 	list-style-type:none;
@@ -802,7 +806,7 @@ label.tl_change_selected {
 	padding:2px 0;
 }
 .selector_container p {
-	margin-bottom:2px;
+	margin-bottom:1px;
 }
 ul.sgallery {
 	overflow:hidden;
@@ -1023,9 +1027,6 @@ ul.sgallery li {
 }
 #paste_hint + .tl_listing_container {
 	margin-top:48px !important;
-}
-.selector_container {
-	position:relative;
 }
 .sort_hint {
 	position:absolute;
