@@ -56,7 +56,19 @@
     "autoload": {
         "psr-4": {
             "Contao\\CoreBundle\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/Resources/contao/classes",
+            "src/Resources/contao/controllers",
+            "src/Resources/contao/drivers",
+            "src/Resources/contao/elements",
+            "src/Resources/contao/forms",
+            "src/Resources/contao/library",
+            "src/Resources/contao/models",
+            "src/Resources/contao/modules",
+            "src/Resources/contao/pages",
+            "src/Resources/contao/widgets"
+        ]
     },
     "config": {
         "preferred-install": "dist"

@@ -182,6 +182,17 @@ class ClassLoader
 			}
 		}
 
+		// Try to map the class to a Contao class loaded via Composer
+		if (strncmp($class, 'Contao\\', 7) !== 0)
+		{
+			$namespaced = 'Contao\\' . $class;
+
+			if (class_exists($namespaced) || interface_exists($namespaced) || trait_exists($namespaced))
+			{
+				return $namespaced;
+			}
+		}
+
 		return null;
 	}
 
