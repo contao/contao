@@ -99,7 +99,7 @@ class ModuleNewsletterList extends \Module
 				{
 					if (($objJumpTo = $objTarget->getRelated('jumpTo')) !== null)
 					{
-						/** @var \PageModel $objJumpTo */
+						/** @var PageModel $objJumpTo */
 						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
 					}
 					else

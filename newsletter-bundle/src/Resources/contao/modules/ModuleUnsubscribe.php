@@ -286,7 +286,7 @@ class ModuleUnsubscribe extends \Module
 		// Redirect to the jumpTo page
 		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
 		{
-			/** @var \PageModel $objTarget */
+			/** @var PageModel $objTarget */
 			$this->redirect($objTarget->getFrontendUrl());
 		}
 
