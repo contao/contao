@@ -413,7 +413,7 @@ abstract class Events extends \Module
 			case 'internal':
 				if (($objTarget = $objEvent->getRelated('jumpTo')) !== null)
 				{
-					/** @var \PageModel $objTarget */
+					/** @var PageModel $objTarget */
 					self::$arrUrlCache[$strCacheKey] = ampersand($objTarget->getFrontendUrl());
 				}
 				break;
@@ -422,7 +422,7 @@ abstract class Events extends \Module
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 				{
-					/** @var \PageModel $objPid */
+					/** @var PageModel $objPid */
 					self::$arrUrlCache[$strCacheKey] = ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;

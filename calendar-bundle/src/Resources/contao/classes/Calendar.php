@@ -420,7 +420,7 @@ class Calendar extends \Frontend
 			case 'internal':
 				if (($objTarget = $objEvent->getRelated('jumpTo')) !== null)
 				{
-					/** @var \PageModel $objTarget */
+					/** @var PageModel $objTarget */
 					$link = $strBase . $objTarget->getFrontendUrl();
 				}
 				break;
@@ -428,7 +428,7 @@ class Calendar extends \Frontend
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 				{
-					/** @var \PageModel $objPid */
+					/** @var PageModel $objPid */
 					$link = $strBase . ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
