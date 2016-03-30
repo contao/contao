@@ -24,6 +24,9 @@ namespace Contao;
  *     ClassLoader::addClass('Custom\\Calendar', 'calendar/Calendar.php');
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
+ *             Use the Composer autoloader instead.
  */
 class ClassLoader
 {
@@ -139,8 +142,10 @@ class ClassLoader
 		{
 			if (\Config::get('debugMode'))
 			{
-				$GLOBALS['TL_DEBUG']['classes_set'][] = $class;
+				$GLOBALS['TL_DEBUG']['classes_set'][$class] = $class;
 			}
+
+			@trigger_error('Using the Contao class loader has been deprecated and will no longer work in Contao 5.0. Use the Composer autoloader instead.', E_USER_DEPRECATED);
 
 			include TL_ROOT . '/' . self::$classes[$class];
 		}
@@ -152,13 +157,31 @@ class ClassLoader
 			{
 				if (\Config::get('debugMode'))
 				{
-					$GLOBALS['TL_DEBUG']['classes_aliased'][] = $class . ' <span style="color:#999">(' . $namespaced . ')</span>';
+					$GLOBALS['TL_DEBUG']['classes_aliased'][$class] = $namespaced;
 				}
+
+				@trigger_error('Using the Contao class loader has been deprecated and will no longer work in Contao 5.0. Use the Composer autoloader instead.', E_USER_DEPRECATED);
 
 				include TL_ROOT . '/' . self::$classes[$namespaced];
 			}
 
 			class_alias($namespaced, $class);
+		}
+
+		// Try to map the class to a Contao class loaded via Composer
+		elseif (strncmp($class, 'Contao\\', 7) !== 0)
+		{
+			$namespaced = 'Contao\\' . $class;
+
+			if (class_exists($namespaced) || interface_exists($namespaced) || trait_exists($namespaced))
+			{
+				if (\Config::get('debugMode'))
+				{
+					$GLOBALS['TL_DEBUG']['classes_composerized'][$class] = $namespaced;
+				}
+
+				class_alias($namespaced, $class);
+			}
 		}
 
 		// Pass the request to other autoloaders (e.g. Swift)
@@ -179,17 +202,6 @@ class ClassLoader
 			if (isset(self::$classes[$namespace . '\\' . $class]))
 			{
 				return $namespace . '\\' . $class;
-			}
-		}
-
-		// Try to map the class to a Contao class loaded via Composer
-		if (strncmp($class, 'Contao\\', 7) !== 0)
-		{
-			$namespaced = 'Contao\\' . $class;
-
-			if (class_exists($namespaced) || interface_exists($namespaced) || trait_exists($namespaced))
-			{
-				return $namespaced;
 			}
 		}
 

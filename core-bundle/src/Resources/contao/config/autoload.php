@@ -8,12 +8,6 @@
  * @license LGPL-3.0+
  */
 
-// Namespaces
-ClassLoader::addNamespaces(array
-(
-	'Contao',
-));
-
 // Templates
 TemplateLoader::addFiles(array
 (
