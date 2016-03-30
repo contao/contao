@@ -155,7 +155,7 @@ class ModuleFaqList extends \Module
 
 			if ($jumpTo > 0 && ($objTarget = \PageModel::findByPk($jumpTo)) !== null)
 			{
-				/** @var \PageModel $objTarget */
+				/** @var PageModel $objTarget */
 				$this->arrTargets[$jumpTo] = ampersand($objTarget->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s'));
 			}
 		}
