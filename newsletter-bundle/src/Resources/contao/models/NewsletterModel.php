@@ -119,7 +119,7 @@ class NewsletterModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("($t.id=? OR $t.alias=?) AND $t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$arrColumns[] = "$t.sent=1";
 		}
@@ -141,7 +141,7 @@ class NewsletterModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=?");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$arrColumns[] = "$t.sent=1";
 		}
@@ -173,7 +173,7 @@ class NewsletterModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$arrColumns[] = "$t.sent=1";
 		}
