@@ -20,7 +20,13 @@
     "autoload": {
         "psr-4": {
             "Contao\\CommentsBundle\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/Resources/contao/classes",
+            "src/Resources/contao/elements",
+            "src/Resources/contao/models",
+            "src/Resources/contao/modules"
+        ]
     },
     "config": {
         "preferred-install": "dist"
