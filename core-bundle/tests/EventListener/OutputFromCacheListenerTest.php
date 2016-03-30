@@ -45,10 +45,23 @@ class OutputFromCacheListenerTest extends TestCase
             ->getMock()
         ;
 
+        $frontendAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['getResponseFromCache'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $frontendAdapter
+            ->expects($this->any())
+            ->method('getResponseFromCache')
+            ->willReturn(new Response())
+        ;
+
         $this->framework
             ->expects($this->any())
             ->method('getAdapter')
-            ->willReturn(new Adapter('Contao\Frontend'))
+            ->willReturn($frontendAdapter)
         ;
     }
 

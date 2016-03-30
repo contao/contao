@@ -42,10 +42,23 @@ class AddToSearchIndexListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock()
         ;
 
+        $frontendAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['indexPageIfApplicable'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $frontendAdapter
+            ->expects($this->any())
+            ->method('indexPageIfApplicable')
+            ->willReturn(null)
+        ;
+
         $this->framework
             ->expects($this->any())
             ->method('getAdapter')
-            ->willReturn(new Adapter('Contao\Frontend'))
+            ->willReturn($frontendAdapter)
         ;
     }
 
