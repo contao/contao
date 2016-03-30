@@ -77,7 +77,7 @@ class ModuleArticleList extends \Module
 		// Show the articles of a different page
 		if ($this->defineRoot && $this->rootPage > 0)
 		{
-			if (($objTarget = $this->objModel->getRelated('rootPage')) !== null)
+			if (($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)
 			{
 				$id = $objTarget->id;
 

@@ -399,7 +399,7 @@ abstract class Module extends \Frontend
 						}
 
 						// Hide the link if the target page is invisible
-						if ($objNext === null || !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time()))
+						if (!$objNext instanceof PageModel || !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time()))
 						{
 							continue(2);
 						}

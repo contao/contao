@@ -361,7 +361,7 @@ class ModulePersonalData extends \Module
 			}
 
 			// Check whether there is a jumpTo page
-			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) !== null)
+			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}

@@ -370,7 +370,7 @@ class InsertTags extends \Controller
 									$objNext = \PageModel::findFirstPublishedRegularByPid($objNextPage->id);
 								}
 
-								if ($objNext !== null)
+								if ($objNext instanceof PageModel)
 								{
 									$strUrl = $objNext->getFrontendUrl();
 									break;
@@ -453,7 +453,7 @@ class InsertTags extends \Controller
 				case 'article_open':
 				case 'article_url':
 				case 'article_title':
-					if (($objArticle = \ArticleModel::findByIdOrAlias($elements[1])) === null || ($objPid = $objArticle->getRelated('pid')) === null)
+					if (($objArticle = \ArticleModel::findByIdOrAlias($elements[1])) === null || !($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 					{
 						break;
 					}
@@ -487,7 +487,7 @@ class InsertTags extends \Controller
 				case 'faq_open':
 				case 'faq_url':
 				case 'faq_title':
-					if (($objFaq = \FaqModel::findByIdOrAlias($elements[1])) === null || ($objPid = $objFaq->getRelated('pid')) === null || ($objJumpTo = $objPid->getRelated('jumpTo')) === null)
+					if (($objFaq = \FaqModel::findByIdOrAlias($elements[1])) === null || !($objPid = $objFaq->getRelated('pid')) instanceof FaqCategoryModel || !($objJumpTo = $objPid->getRelated('jumpTo')) instanceof PageModel)
 					{
 						break;
 					}
@@ -534,7 +534,7 @@ class InsertTags extends \Controller
 					}
 					elseif ($objNews->source == 'internal')
 					{
-						if (($objJumpTo = $objNews->getRelated('jumpTo')) !== null)
+						if (($objJumpTo = $objNews->getRelated('jumpTo')) instanceof PageModel)
 						{
 							/** @var PageModel $objJumpTo */
 							$strUrl = $objJumpTo->getFrontendUrl();
@@ -542,7 +542,7 @@ class InsertTags extends \Controller
 					}
 					elseif ($objNews->source == 'article')
 					{
-						if (($objArticle = \ArticleModel::findByPk($objNews->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+						if (($objArticle = \ArticleModel::findByPk($objNews->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 						{
 							/** @var PageModel $objPid */
 							$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
@@ -550,7 +550,7 @@ class InsertTags extends \Controller
 					}
 					else
 					{
-						if (($objArchive = $objNews->getRelated('pid')) !== null && ($objJumpTo = $objArchive->getRelated('jumpTo')) !== null)
+						if (($objArchive = $objNews->getRelated('pid')) instanceof NewsArchiveModel && ($objJumpTo = $objArchive->getRelated('jumpTo')) instanceof PageModel)
 						{
 							/** @var PageModel $objJumpTo */
 							$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/items/') . ($objNews->alias ?: $objNews->id));
@@ -596,7 +596,7 @@ class InsertTags extends \Controller
 					}
 					elseif ($objEvent->source == 'internal')
 					{
-						if (($objJumpTo = $objEvent->getRelated('jumpTo')) !== null)
+						if (($objJumpTo = $objEvent->getRelated('jumpTo')) instanceof PageModel)
 						{
 							/** @var PageModel $objJumpTo */
 							$strUrl = $objJumpTo->getFrontendUrl();
@@ -604,7 +604,7 @@ class InsertTags extends \Controller
 					}
 					elseif ($objEvent->source == 'article')
 					{
-						if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+						if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 						{
 							/** @var PageModel $objPid */
 							$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
@@ -612,7 +612,7 @@ class InsertTags extends \Controller
 					}
 					else
 					{
-						if (($objCalendar = $objEvent->getRelated('pid')) !== null && ($objJumpTo = $objCalendar->getRelated('jumpTo')) !== null)
+						if (($objCalendar = $objEvent->getRelated('pid')) instanceof CalendarModel && ($objJumpTo = $objCalendar->getRelated('jumpTo')) instanceof PageModel)
 						{
 							/** @var PageModel $objJumpTo */
 							$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/events/') . ($objEvent->alias ?: $objEvent->id));

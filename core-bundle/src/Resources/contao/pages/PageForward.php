@@ -67,7 +67,7 @@ class PageForward extends \Frontend
 		}
 
 		// Forward page does not exist
-		if ($objNextPage === null)
+		if (!$objNextPage instanceof PageModel)
 		{
 			$this->log('Forward page ID "' . $objPage->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
 			throw new ForwardPageNotFoundException('Forward page not found');
