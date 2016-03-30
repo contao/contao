@@ -73,7 +73,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
 		{
-			/** @var \PageModel $objTarget */
+			/** @var PageModel $objTarget */
 			$this->strUrl = $objTarget->getFrontendUrl();
 		}
 

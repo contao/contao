@@ -385,7 +385,7 @@ class News extends \Frontend
 			case 'internal':
 				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
 				{
-					/** @var \PageModel $objTarget */
+					/** @var PageModel $objTarget */
 					self::$arrUrlCache[$strCacheKey] = ampersand($objTarget->getFrontendUrl());
 				}
 				break;
@@ -394,7 +394,7 @@ class News extends \Frontend
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 				{
-					/** @var \PageModel $objPid */
+					/** @var PageModel $objPid */
 					self::$arrUrlCache[$strCacheKey] = ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
@@ -447,7 +447,7 @@ class News extends \Frontend
 			case 'internal':
 				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
 				{
-					/** @var \PageModel $objTarget */
+					/** @var PageModel $objTarget */
 					return $strBase . $objTarget->getFrontendUrl();
 				}
 				break;
@@ -456,7 +456,7 @@ class News extends \Frontend
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
 				{
-					/** @var \PageModel $objPid */
+					/** @var PageModel $objPid */
 					return $strBase . ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
