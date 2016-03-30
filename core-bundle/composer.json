@@ -70,6 +70,12 @@
             "src/Resources/contao/widgets"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\CoreBundle\\Test\\": "tests/",
+            "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
+        }
+    },
     "config": {
         "preferred-install": "dist"
     },

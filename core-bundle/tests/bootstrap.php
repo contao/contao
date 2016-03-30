@@ -36,26 +36,26 @@ $fixtureLoader = function ($class) {
         return;
     }
 
+    if (strpos($class, '\\') !== false && 0 !== strncmp($class, 'Contao\\', 7)) {
+        return;
+    }
+
     if (0 === strncmp($class, 'Contao\\', 7)) {
         $class = substr($class, 7);
     }
 
     $file = strtr($class, '\\', '/');
 
-    if (file_exists(__DIR__ . '/Fixtures/library/' . $file . '.php')) {
-        include_once __DIR__ . '/Fixtures/library/' . $file . '.php';
-        class_alias('Contao\Fixtures\\' . $class, 'Contao\\' . $class);
-        class_alias('Contao\Fixtures\\' . $class, $class);
-    } elseif (file_exists(__DIR__ . '/../src/Resources/contao/library/Contao/' . $file . '.php')) {
-        include_once __DIR__ . '/../src/Resources/contao/library/Contao/' . $file . '.php';
-        class_alias('Contao\\' . $class, $class);
+    if (!file_exists(__DIR__ . '/Fixtures/library/' . $file . '.php')) {
+        return;
     }
+
+    include_once __DIR__ . '/Fixtures/library/' . $file . '.php';
+
+    class_alias('Contao\Fixtures\\' . $class, 'Contao\\' . $class);
+    class_alias('Contao\Fixtures\\' . $class, $class);
 };
 
 spl_autoload_register($fixtureLoader, true, true);
-
-/** @var Composer\Autoload\ClassLoader $loader */
-$loader->addPsr4('Contao\CoreBundle\Test\\', __DIR__);
-$loader->addPsr4('Contao\TestBundle\\', __DIR__ . '/Fixtures/vendor/contao/test-bundle');
 
 return $loader;
