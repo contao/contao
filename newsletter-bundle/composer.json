@@ -20,7 +20,12 @@
     "autoload": {
         "psr-4": {
             "Contao\\NewsletterBundle\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/Resources/contao/classes",
+            "src/Resources/contao/models",
+            "src/Resources/contao/modules"
+        ]
     },
     "config": {
         "preferred-install": "dist"
