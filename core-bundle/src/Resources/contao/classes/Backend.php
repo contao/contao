@@ -456,7 +456,7 @@ abstract class Backend extends \Controller
 				case 'show':
 				case 'showAll':
 				case 'undo':
-					if (!$dc instanceof \listable)
+					if (!($dc instanceof \listable))
 					{
 						$this->log('Data container ' . $strTable . ' is not listable', __METHOD__, TL_ERROR);
 						trigger_error('The current data container is not listable', E_USER_ERROR);
@@ -470,7 +470,7 @@ abstract class Backend extends \Controller
 				case 'copyAll':
 				case 'move':
 				case 'edit':
-					if (!$dc instanceof \editable)
+					if (!($dc instanceof \editable))
 					{
 						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, TL_ERROR);
 						trigger_error('The current data container is not editable', E_USER_ERROR);

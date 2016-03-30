@@ -453,7 +453,7 @@ class InsertTags extends \Controller
 				case 'article_open':
 				case 'article_url':
 				case 'article_title':
-					if (($objArticle = \ArticleModel::findByIdOrAlias($elements[1])) === null || !($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
+					if (($objArticle = \ArticleModel::findByIdOrAlias($elements[1])) === null || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
 					{
 						break;
 					}
@@ -487,7 +487,7 @@ class InsertTags extends \Controller
 				case 'faq_open':
 				case 'faq_url':
 				case 'faq_title':
-					if (($objFaq = \FaqModel::findByIdOrAlias($elements[1])) === null || !($objPid = $objFaq->getRelated('pid')) instanceof FaqCategoryModel || !($objJumpTo = $objPid->getRelated('jumpTo')) instanceof PageModel)
+					if (($objFaq = \FaqModel::findByIdOrAlias($elements[1])) === null || !(($objPid = $objFaq->getRelated('pid')) instanceof FaqCategoryModel) || !(($objJumpTo = $objPid->getRelated('jumpTo')) instanceof PageModel))
 					{
 						break;
 					}

@@ -61,7 +61,7 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
             return $token;
         }
 
-        if (!$token instanceof AnonymousToken) {
+        if (!($token instanceof AnonymousToken)) {
             throw new AuthenticationException('The ContaoAuthenticator can only handle AnonymousToken.');
         }
 
