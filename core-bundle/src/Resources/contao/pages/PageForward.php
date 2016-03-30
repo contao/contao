@@ -123,7 +123,7 @@ class PageForward extends \Frontend
 			$strQuery = '?' . $strQuery;
 		}
 
-		return $objNextPage->getFrontendUrl($strGet) . $strQuery;
+		return $objNextPage->getAbsoluteUrl($strGet) . $strQuery;
 	}
 
 	/**
