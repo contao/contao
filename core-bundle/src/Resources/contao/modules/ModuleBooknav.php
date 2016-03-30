@@ -23,7 +23,7 @@ class ModuleBooknav extends \Module
 
 	/**
 	 * Pages array
-	 * @var \PageModel[]
+	 * @var PageModel[]
 	 */
 	protected $arrPages = array();
 

@@ -124,7 +124,7 @@ class ModuleCustomnav extends \Module
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
 		$objTemplate->level = 'level_1';
 
-		/** @var \PageModel[] $arrPages */
+		/** @var PageModel[] $arrPages */
 		foreach ($arrPages as $objModel)
 		{
 			$_groups = deserialize($objModel->groups);
@@ -142,7 +142,7 @@ class ModuleCustomnav extends \Module
 					case 'forward':
 						if (($objNext = $objModel->getRelated('jumpTo')) !== null)
 						{
-							/** @var \PageModel $objNext */
+							/** @var PageModel $objNext */
 							$href = $objNext->getFrontendUrl();
 							break;
 						}

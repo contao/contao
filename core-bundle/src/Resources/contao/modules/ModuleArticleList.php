@@ -81,7 +81,7 @@ class ModuleArticleList extends \Module
 			{
 				$id = $objTarget->id;
 
-				/** @var \PageModel $objTarget */
+				/** @var PageModel $objTarget */
 				$this->Template->request = $objTarget->getFrontendUrl();
 			}
 		}

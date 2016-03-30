@@ -103,7 +103,7 @@ class ModuleQuicklink extends \Module
 		$items = array();
 		$arrPages = array_values(array_filter($arrPages));
 
-		/** @var \PageModel[] $arrPages */
+		/** @var PageModel[] $arrPages */
 		foreach ($arrPages as $objPage)
 		{
 			$objPage->title = strip_insert_tags($objPage->title);
@@ -119,7 +119,7 @@ class ModuleQuicklink extends \Module
 				case 'forward':
 					if (($objNext = $objPage->getRelated('jumpTo')) !== null)
 					{
-						/** @var \PageModel $objNext */
+						/** @var PageModel $objNext */
 						$href = $objNext->getFrontendUrl();
 						break;
 					}
