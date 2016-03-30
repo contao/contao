@@ -18,6 +18,6 @@ class FrontendUser extends \Contao\User
 
     public function setUserFromDb()
     {
-        // do nothing
+        // ignore
     }
 }
