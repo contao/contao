@@ -20,7 +20,10 @@
     "autoload": {
         "psr-4": {
             "Contao\\ListingBundle\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/Resources/contao/modules"
+        ]
     },
     "config": {
         "preferred-install": "dist"
