@@ -134,19 +134,27 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($isInitialized)
         ;
 
-        /** @var News|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $news = $this->getMock('Contao\News', ['generateNewsUrl']);
+        $newsAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['generateNewsUrl'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
-        $news
+        $newsAdapter
             ->expects($this->any())
             ->method('generateNewsUrl')
             ->willReturn('news/james-wilson-returns.html')
         ;
 
-        /** @var NewsModel|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $newsModel = $this->getMock('Contao\NewsModel', ['findByPk']);
+        $newsModelAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['findByPk'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
-        $newsModel
+        $newsModelAdapter
             ->expects($this->any())
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
@@ -163,13 +171,13 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
         $framework
             ->expects($this->any())
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($news, $newsModel) {
+            ->willReturnCallback(function ($key) use ($newsAdapter, $newsModelAdapter) {
                 switch ($key) {
                     case 'Contao\News':
-                        return $news;
+                        return $newsAdapter;
 
                     case 'Contao\NewsModel':
-                        return $newsModel;
+                        return $newsModelAdapter;
 
                     default:
                         return null;
