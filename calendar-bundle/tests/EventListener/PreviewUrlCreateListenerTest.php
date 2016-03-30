@@ -10,7 +10,6 @@
 
 namespace Contao\CalendarBundle\Test\EventListener;
 
-use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
@@ -160,10 +159,14 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($isInitialized)
         ;
 
-        /** @var CalendarEventsModel|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $eventsModel = $this->getMock('Contao\CalendarEventsModel', ['findByPk']);
+        $eventsModelAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->setMethods(['findByPk'])
+            ->getMock()
+        ;
 
-        $eventsModel
+        $eventsModelAdapter
             ->expects($this->any())
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
@@ -180,10 +183,10 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
         $framework
             ->expects($this->any())
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($eventsModel) {
+            ->willReturnCallback(function ($key) use ($eventsModelAdapter) {
                 switch ($key) {
                     case 'Contao\CalendarEventsModel':
-                        return $eventsModel;
+                        return $eventsModelAdapter;
 
                     default:
                         return null;
