@@ -31,7 +31,7 @@ if (
 }
 
 // Autoload the fixture classes
-spl_autoload_register(function ($class) {
+$fixtureLoader = function ($class) {
     if (class_exists($class, false)) {
         return;
     }
@@ -50,7 +50,9 @@ spl_autoload_register(function ($class) {
         include_once __DIR__ . '/../src/Resources/contao/library/Contao/' . $file . '.php';
         class_alias('Contao\\' . $class, $class);
     }
-});
+};
+
+spl_autoload_register($fixtureLoader, true, true);
 
 /** @var Composer\Autoload\ClassLoader $loader */
 $loader->addPsr4('Contao\CoreBundle\Test\\', __DIR__);
