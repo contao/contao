@@ -32,7 +32,7 @@ if (
 
 // Autoload the fixture classes
 $fixtureLoader = function ($class) {
-    if (class_exists($class, false)) {
+    if (class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false)) {
         return;
     }
 
@@ -46,14 +46,16 @@ $fixtureLoader = function ($class) {
 
     $file = strtr($class, '\\', '/');
 
-    if (!file_exists(__DIR__ . '/Fixtures/library/' . $file . '.php')) {
-        return;
+    if (file_exists(__DIR__ . '/Fixtures/library/' . $file . '.php')) {
+        include_once __DIR__ . '/Fixtures/library/' . $file . '.php';
+        class_alias('Contao\Fixtures\\' . $class, 'Contao\\' . $class);
     }
 
-    include_once __DIR__ . '/Fixtures/library/' . $file . '.php';
+    $namespaced = 'Contao\\' . $class;
 
-    class_alias('Contao\Fixtures\\' . $class, 'Contao\\' . $class);
-    class_alias('Contao\Fixtures\\' . $class, $class);
+    if (class_exists($namespaced) || interface_exists($namespaced) || trait_exists($namespaced)) {
+        class_alias($namespaced, $class);
+    }
 };
 
 spl_autoload_register($fixtureLoader, true, true);
