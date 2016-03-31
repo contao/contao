@@ -26,14 +26,14 @@ class Messages extends \Backend
 	 */
 	public function versionCheck()
 	{
-		$objFile = new \File('system/tmp/latest-version.txt');
+		$cache = \System::getContainer()->get('contao.cache');
 
-		if (!$objFile->exists())
+		if (!$cache->contains('latest-version'))
 		{
 			return '';
 		}
 
-		$strVersion = trim($objFile->getContent());
+		$strVersion = $cache->fetch('latest-version');
 
 		if ($strVersion && version_compare(VERSION . '.' . BUILD, $strVersion, '<'))
 		{
