@@ -117,7 +117,7 @@ class ModuleQuicklink extends \Module
 					break;
 
 				case 'forward':
-					if (($objNext = $objPage->getRelated('jumpTo')) !== null)
+					if (($objNext = $objPage->getRelated('jumpTo')) instanceof PageModel)
 					{
 						/** @var PageModel $objNext */
 						$href = $objNext->getFrontendUrl();

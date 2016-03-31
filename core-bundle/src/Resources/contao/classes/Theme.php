@@ -346,7 +346,7 @@ class Theme extends \Backend
 			}
 
 			// Continue if there is no XML file
-			if (!$xml instanceof \DOMDocument)
+			if (!($xml instanceof \DOMDocument))
 			{
 				\Message::addError(sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strZipFile)));
 				continue;

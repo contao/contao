@@ -73,7 +73,7 @@ class ModuleBooknav extends \Module
 	protected function compile()
 	{
 		// Get the root page
-		if (($objTarget = $this->objModel->getRelated('rootPage')) === null)
+		if (!(($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel))
 		{
 			return;
 		}
