@@ -55,10 +55,10 @@ class InstallTool
      */
     public function isLocked()
     {
-        $file = new \File('system/tmp/login-count.txt');
+        $cache = \System::getContainer()->get('contao.cache');
 
-        if ($file->exists()) {
-            return intval($file->getContent()) >= 3;
+        if ($cache->contains('login-count')) {
+            return intval($cache->fetch('login-count')) >= 3;
         }
 
         return false;
@@ -105,9 +105,15 @@ class InstallTool
      */
     public function increaseLoginCount()
     {
-        $file = new \File('system/tmp/login-count.txt');
-        $file->write($file->exists() ? intval($file->getContent()) + 1 : 1);
-        $file->close();
+        $cache = \System::getContainer()->get('contao.cache');
+
+        if ($cache->contains('login-count')) {
+            $count = intval($cache->fetch('login-count')) + 1;
+        } else {
+            $count = 1;
+        }
+
+        $cache->save('login-count', $count);
     }
 
     /**

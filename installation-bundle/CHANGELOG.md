@@ -1,7 +1,8 @@
 # Contao installation bundle change log
 
-### 1.0.1 (2016-XX-XX)
+### 1.1.0 (2016-XX-XX)
 
+ * Use the Contao cache to store the login count (see contao/core-bundle#442).
  * Re-add the "sqlGetFromDca" and "sqlGetFromFile" hooks (see #12).
  * Only purge the Symfony cache after the user has authenticated (see #11).
 
