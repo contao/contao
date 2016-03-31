@@ -79,8 +79,8 @@ class ModuleNewsletterList extends \Module
 		{
 			while ($objNewsletter->next())
 			{
-				/** @var NewsletterModel $objNewsletter */
-				if (($objTarget = $objNewsletter->getRelated('pid')) === null)
+				/** @var NewsletterChannelModel $objTarget */
+				if (!($objTarget = $objNewsletter->getRelated('pid')) instanceof NewsletterChannelModel)
 				{
 					continue;
 				}
@@ -97,7 +97,7 @@ class ModuleNewsletterList extends \Module
 
 				if (!isset($arrJumpTo[$objTarget->jumpTo]))
 				{
-					if (($objJumpTo = $objTarget->getRelated('jumpTo')) !== null)
+					if (($objJumpTo = $objTarget->getRelated('jumpTo')) instanceof PageModel)
 					{
 						/** @var PageModel $objJumpTo */
 						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');

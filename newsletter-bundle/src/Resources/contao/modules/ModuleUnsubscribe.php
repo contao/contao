@@ -284,7 +284,7 @@ class ModuleUnsubscribe extends \Module
 		$objEmail->sendTo($strEmail);
 
 		// Redirect to the jumpTo page
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
+		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objTarget */
 			$this->redirect($objTarget->getFrontendUrl());
