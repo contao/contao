@@ -145,7 +145,7 @@ class ModuleFaqReader extends \Module
 		$strAuthor = '';
 
 		// Add the author
-		if (($objAuthor = $objFaq->getRelated('author')) !== null)
+		if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel)
 		{
 			$strAuthor = $objAuthor->name;
 		}
@@ -189,7 +189,7 @@ class ModuleFaqReader extends \Module
 		if ($objCategory->notify != 'notify_admin')
 		{
 			/** @var UserModel $objAuthor */
-			if (($objAuthor = $objFaq->getRelated('author')) !== null && $objAuthor->email != '')
+			if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
 			{
 				$arrNotifies[] = $objAuthor->email;
 			}
