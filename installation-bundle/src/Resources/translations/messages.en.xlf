@@ -16,7 +16,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, open the local configuration file and set &lt;code&gt;installCount&lt;/code&gt; to &lt;code&gt;0&lt;/code&gt;.</target>
+        <target>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, delete the file &lt;code&gt;system/tmp/login-count.txt&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>

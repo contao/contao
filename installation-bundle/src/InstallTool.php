@@ -55,7 +55,13 @@ class InstallTool
      */
     public function isLocked()
     {
-        return Config::get('installCount') >= 3;
+        $file = new \File('system/tmp/login-count.txt');
+
+        if ($file->exists()) {
+            return intval($file->getContent()) >= 3;
+        }
+
+        return false;
     }
 
     /**
@@ -99,7 +105,9 @@ class InstallTool
      */
     public function increaseLoginCount()
     {
-        $this->persistConfig('installCount', $this->getConfig('installCount') + 1);
+        $file = new \File('system/tmp/login-count.txt');
+        $file->write($file->exists() ? intval($file->getContent()) + 1 : 1);
+        $file->close();
     }
 
     /**
@@ -107,7 +115,7 @@ class InstallTool
      */
     public function resetLoginCount()
     {
-        $this->persistConfig('installCount', 0);
+        \File::putContent('system/tmp/login-count.txt', 0);
     }
 
     /**
