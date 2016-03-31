@@ -55,8 +55,7 @@ class Automator extends \System
 
 		if (!$objRequest->hasError())
 		{
-			\Config::set('latestVersion', $objRequest->response);
-			\Config::persist('latestVersion', $objRequest->response);
+			\File::putContent('system/tmp/latest-version.txt', $objRequest->response);
 		}
 
 		// Add a log entry
