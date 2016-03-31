@@ -123,7 +123,7 @@ class Comments extends \Frontend
 				// Reply
 				if ($objComments->addReply && $objComments->reply != '')
 				{
-					if (($objAuthor = $objComments->getRelated('author')) !== null)
+					if (($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
 					{
 						$objPartial->addReply = true;
 						$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
