@@ -411,7 +411,7 @@ abstract class Events extends \Module
 
 			// Link to an internal page
 			case 'internal':
-				if (($objTarget = $objEvent->getRelated('jumpTo')) !== null)
+				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
 				{
 					/** @var PageModel $objTarget */
 					self::$arrUrlCache[$strCacheKey] = ampersand($objTarget->getFrontendUrl());
@@ -420,7 +420,7 @@ abstract class Events extends \Module
 
 			// Link to an article
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					/** @var PageModel $objPid */
 					self::$arrUrlCache[$strCacheKey] = ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
@@ -431,9 +431,9 @@ abstract class Events extends \Module
 		// Link to the default page
 		if (self::$arrUrlCache[$strCacheKey] === null)
 		{
-			$objPage = \PageModel::findWithDetails($objEvent->getRelated('pid')->jumpTo);
+			$objPage = \PageModel::findByPk($objEvent->getRelated('pid')->jumpTo);
 
-			if ($objPage === null)
+			if (!($objPage instanceof PageModel))
 			{
 				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'));
 			}

@@ -306,7 +306,7 @@ class ModuleEventReader extends \Events
 		if ($objCalendar->notify != 'notify_admin')
 		{
 			/** @var UserModel $objAuthor */
-			if (($objAuthor = $objEvent->getRelated('author')) !== null && $objAuthor->email != '')
+			if (($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
 			{
 				$arrNotifies[] = $objAuthor->email;
 			}

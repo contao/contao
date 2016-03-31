@@ -418,7 +418,7 @@ class Calendar extends \Frontend
 				break;
 
 			case 'internal':
-				if (($objTarget = $objEvent->getRelated('jumpTo')) !== null)
+				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
 				{
 					/** @var PageModel $objTarget */
 					$link = $strBase . $objTarget->getFrontendUrl();
@@ -426,7 +426,7 @@ class Calendar extends \Frontend
 				break;
 
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					/** @var PageModel $objPid */
 					$link = $strBase . ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
