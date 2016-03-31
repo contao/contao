@@ -158,7 +158,7 @@ class ModuleNewsReader extends \ModuleNews
 		if ($objArchive->notify != 'notify_admin')
 		{
 			/** @var UserModel $objAuthor */
-			if (($objAuthor = $objArticle->getRelated('author')) !== null && $objAuthor->email != '')
+			if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
 			{
 				$arrNotifies[] = $objAuthor->email;
 			}

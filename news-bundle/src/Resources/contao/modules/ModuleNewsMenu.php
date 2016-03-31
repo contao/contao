@@ -71,7 +71,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 		$this->strUrl = preg_replace('/\?.*$/', '', \Environment::get('request'));
 
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
+		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objTarget */
 			$this->strUrl = $objTarget->getFrontendUrl();

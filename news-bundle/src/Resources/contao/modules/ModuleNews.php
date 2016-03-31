@@ -256,7 +256,7 @@ abstract class ModuleNews extends \Module
 
 				case 'author':
 					/** @var UserModel $objAuthor */
-					if (($objAuthor = $objArticle->getRelated('author')) !== null)
+					if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 					{
 						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
 					}

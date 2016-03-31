@@ -145,9 +145,7 @@ class News extends \Frontend
 
 			while ($objArticle->next())
 			{
-				/** @var PageModel $objPage */
-				$objPage = $objArticle->getRelated('pid');
-				$jumpTo = $objPage->jumpTo;
+				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
 
 				// No jumpTo page set (see #4784)
 				if (!$jumpTo)
@@ -383,7 +381,7 @@ class News extends \Frontend
 
 			// Link to an internal page
 			case 'internal':
-				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
+				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
 				{
 					/** @var PageModel $objTarget */
 					self::$arrUrlCache[$strCacheKey] = ampersand($objTarget->getFrontendUrl());
@@ -392,7 +390,7 @@ class News extends \Frontend
 
 			// Link to an article
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					/** @var PageModel $objPid */
 					self::$arrUrlCache[$strCacheKey] = ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
@@ -405,7 +403,7 @@ class News extends \Frontend
 		{
 			$objPage = \PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
 
-			if ($objPage === null)
+			if (!($objPage instanceof PageModel))
 			{
 				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'), true);
 			}
@@ -445,7 +443,7 @@ class News extends \Frontend
 
 			// Link to an internal page
 			case 'internal':
-				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
+				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
 				{
 					/** @var PageModel $objTarget */
 					return $strBase . $objTarget->getFrontendUrl();
@@ -454,7 +452,7 @@ class News extends \Frontend
 
 			// Link to an article
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					/** @var PageModel $objPid */
 					return $strBase . ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
