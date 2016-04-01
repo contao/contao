@@ -384,7 +384,7 @@ abstract class DataContainer extends \Backend
 					break;
 			}
 
-			$wizard .= ' ' . \Image::getHtml('assets/datepicker/images/icon.gif', '', 'title="'.specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']).'" id="toggle_' . $objWidget->id . '" style="cursor:pointer"') . '
+			$wizard .= ' ' . \Image::getHtml('assets/datepicker/images/icon.svg', '', 'title="'.specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']).'" id="toggle_' . $objWidget->id . '" style="cursor:pointer"') . '
   <script>
     window.addEvent("domready", function() {
       new Picker.Date($("ctrl_' . $objWidget->id . '"), {
