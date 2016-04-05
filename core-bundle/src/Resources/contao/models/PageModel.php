@@ -29,6 +29,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @property string  $description
  * @property string  $redirect
  * @property integer $jumpTo
+ * @property boolean $redirectBack
  * @property string  $url
  * @property boolean $target
  * @property string  $dns
@@ -107,6 +108,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @method static PageModel|null findOneByDescription($val, $opt=array())
  * @method static PageModel|null findOneByRedirect($val, $opt=array())
  * @method static PageModel|null findOneByJumpTo($val, $opt=array())
+ * @method static PageModel|null findOneByRedirectBack($val, $opt=array())
  * @method static PageModel|null findOneByUrl($val, $opt=array())
  * @method static PageModel|null findOneByTarget($val, $opt=array())
  * @method static PageModel|null findOneByDns($val, $opt=array())
@@ -155,6 +157,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @method static Model\Collection|PageModel[]|PageModel|null findByDescription($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByRedirect($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByJumpTo($val, $opt=array())
+ * @method static Model\Collection|PageModel[]|PageModel|null findByRedirectBack($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByUrl($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByTarget($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByDns($val, $opt=array())
@@ -207,6 +210,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @method static integer countByDescription($val, $opt=array())
  * @method static integer countByRedirect($val, $opt=array())
  * @method static integer countByJumpTo($val, $opt=array())
+ * @method static integer countByRedirectBack($val, $opt=array())
  * @method static integer countByUrl($val, $opt=array())
  * @method static integer countByTarget($val, $opt=array())
  * @method static integer countByDns($val, $opt=array())

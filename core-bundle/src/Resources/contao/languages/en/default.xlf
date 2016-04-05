@@ -404,6 +404,12 @@
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website within the site structure.</source>
       </trans-unit>
+      <trans-unit id="PTY.logout.0">
+        <source>Logout</source>
+      </trans-unit>
+      <trans-unit id="PTY.logout.1">
+        <source>This type of page automatically logs out the user.</source>
+      </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
       </trans-unit>
