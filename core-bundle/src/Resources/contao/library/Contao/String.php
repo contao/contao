@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 if (version_compare(PHP_VERSION, '7.0', '>=')) {
 	throw new \RuntimeException(
 		'The String class cannot be used in PHP ' . PHP_VERSION . '. Use the StringUtil class instead.'

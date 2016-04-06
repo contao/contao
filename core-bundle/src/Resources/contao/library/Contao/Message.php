@@ -9,6 +9,7 @@
  */
 
 namespace Contao;
+
 use Symfony\Component\HttpFoundation\Session\Session;
 
 
@@ -26,8 +27,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  *     Message::addInfo('You can upload only two files');
  *
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @deprecated Using \Contao\Message is deprecated. Use Symfony's flashbag messages instead.
  */
 class Message
 {
@@ -103,8 +102,6 @@ class Message
 	 */
 	public static function add($strMessage, $strType, $strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
 		if ($strMessage == '')
 		{
 			return;
@@ -148,8 +145,6 @@ class Message
 	 */
 	public static function generateUnwrapped($strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
 		$strMessages = '';
 
 		foreach (static::getTypes() as $strType)

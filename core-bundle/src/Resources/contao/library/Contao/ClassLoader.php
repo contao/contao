@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+@trigger_error('Using the Contao\ClassLoader class has been deprecated and will no longer work in Contao 5.0. Use the Composer autoloader instead.', E_USER_DEPRECATED);
+
 
 /**
  * Automatically loads class files based on a mapper array
@@ -145,8 +147,6 @@ class ClassLoader
 				$GLOBALS['TL_DEBUG']['classes_set'][$class] = $class;
 			}
 
-			@trigger_error('Using the Contao class loader has been deprecated and will no longer work in Contao 5.0. Use the Composer autoloader instead.', E_USER_DEPRECATED);
-
 			include TL_ROOT . '/' . self::$classes[$class];
 		}
 
@@ -159,8 +159,6 @@ class ClassLoader
 				{
 					$GLOBALS['TL_DEBUG']['classes_aliased'][$class] = $namespaced;
 				}
-
-				@trigger_error('Using the Contao class loader has been deprecated and will no longer work in Contao 5.0. Use the Composer autoloader instead.', E_USER_DEPRECATED);
 
 				include TL_ROOT . '/' . self::$classes[$namespaced];
 			}
