@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  *     Message::addInfo('You can upload only two files');
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
  * @deprecated Using \Contao\Message is deprecated. Use Symfony's flashbag messages instead.
  */
 class Message
@@ -39,8 +40,6 @@ class Message
 	 */
 	public static function addError($strMessage, $strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
 		static::add($strMessage, 'TL_ERROR', $strScope);
 	}
 
@@ -53,8 +52,6 @@ class Message
 	 */
 	public static function addConfirmation($strMessage, $strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
 		static::add($strMessage, 'TL_CONFIRM', $strScope);
 	}
 
@@ -67,8 +64,6 @@ class Message
 	 */
 	public static function addNew($strMessage, $strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
 		static::add($strMessage, 'TL_NEW', $strScope);
 	}
 
@@ -81,8 +76,6 @@ class Message
 	 */
 	public static function addInfo($strMessage, $strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
 		static::add($strMessage, 'TL_INFO', $strScope);
 	}
 
@@ -95,8 +88,6 @@ class Message
 	 */
 	public static function addRaw($strMessage, $strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
 		static::add($strMessage, 'TL_RAW', $strScope);
 	}
 
@@ -124,10 +115,7 @@ class Message
 			throw new \Exception("Invalid message type $strType");
 		}
 
-		static::getSession()->getFlashBag()->add(static::getFlashBagKey(
-			$strType,
-			$strScope
-		), $strMessage);
+		\System::getContainer()->get('session')->getFlashBag()->add(static::getFlashBagKey($strType, $strScope ), $strMessage);
 	}
 
 
@@ -140,8 +128,6 @@ class Message
 	 */
 	public static function generate($strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
 		$strMessages = static::generateUnwrapped($strScope);
 
 		if ($strMessages != '')
@@ -168,17 +154,10 @@ class Message
 
 		foreach (static::getTypes() as $strType)
 		{
-
 			$strClass = strtolower($strType);
+			$arrMessages = \System::getContainer()->get('session')->getFlashBag()->get(static::getFlashBagKey($strType, $strScope));
 
-			$messages = static::getSession()->getFlashBag()->get(static::getFlashBagKey(
-				$strType,
-				$strScope
-			));
-
-			$messages = array_unique($messages);
-
-			foreach ($messages as $strMessage)
+			foreach (array_unique($arrMessages) as $strMessage)
 			{
 				if ($strType == 'TL_RAW')
 				{
@@ -192,10 +171,7 @@ class Message
 
 			if (!$_POST)
 			{
-				static::getSession()->getFlashBag()->set(static::getFlashBagKey(
-					$strType,
-					$strScope
-				), null);
+				\System::getContainer()->get('session')->getFlashBag()->set(static::getFlashBagKey($strType, $strScope), null);
 			}
 		}
 
@@ -208,9 +184,7 @@ class Message
 	 */
 	public static function reset()
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
-		static::getSession()->getFlashBag()->clear();
+		\System::getContainer()->get('session')->getFlashBag()->clear();
 	}
 
 
@@ -221,8 +195,6 @@ class Message
 	 */
 	public static function getTypes()
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
 		return array('TL_ERROR', 'TL_CONFIRM', 'TL_NEW', 'TL_INFO', 'TL_RAW');
 	}
 
@@ -236,12 +208,7 @@ class Message
 	 */
 	public static function hasError($strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
-		return static::getSession()->getFlashBag()->has(static::getFlashBagKey(
-			'error',
-			$strScope
-		));
+		return \System::getContainer()->get('session')->getFlashBag()->has(static::getFlashBagKey('error', $strScope));
 	}
 
 
@@ -254,12 +221,7 @@ class Message
 	 */
 	public static function hasConfirmation($strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
-		return static::getSession()->getFlashBag()->has(static::getFlashBagKey(
-			'confirm',
-			$strScope
-		));
+		return \System::getContainer()->get('session')->getFlashBag()->has(static::getFlashBagKey('confirm', $strScope));
 	}
 
 
@@ -272,12 +234,7 @@ class Message
 	 */
 	public static function hasNew($strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
-		return static::getSession()->getFlashBag()->has(static::getFlashBagKey(
-			'new',
-			$strScope
-		));
+		return \System::getContainer()->get('session')->getFlashBag()->has(static::getFlashBagKey('new', $strScope));
 	}
 
 
@@ -290,12 +247,7 @@ class Message
 	 */
 	public static function hasInfo($strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
-		return static::getSession()->getFlashBag()->has(static::getFlashBagKey(
-			'info',
-			$strScope
-		));
+		return \System::getContainer()->get('session')->getFlashBag()->has(static::getFlashBagKey('info', $strScope));
 	}
 
 
@@ -308,12 +260,7 @@ class Message
 	 */
 	public static function hasRaw($strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
-		return static::getSession()->getFlashBag()->has(static::getFlashBagKey(
-			'raw',
-			$strScope
-		));
+		return \System::getContainer()->get('session')->getFlashBag()->has(static::getFlashBagKey('raw', $strScope));
 	}
 
 
@@ -326,34 +273,20 @@ class Message
 	 */
 	public static function hasMessages($strScope=TL_MODE)
 	{
-		trigger_error('Using \Contao\Message is deprecated. Use Symfony\'s flashbag messages instead.', E_USER_DEPRECATED);
-
 		return static::hasError($strScope) || static::hasConfirmation($strScope) || static::hasNew($strScope) || static::hasInfo($strScope) || static::hasRaw($strScope);
 	}
 
-	/**
-	 * Gets the session.
-	 *
-	 * @return Session
-	 */
-	private static function getSession()
-	{
-		return \System::getContainer()->get('session');
-	}
 
 	/**
-	 * Gets the flash bag key.
+	 * Return the flash bag key
 	 *
-	 * @param             $type
-	 * @param null|string $strScope
+	 * @param string      $strType  The message type
+	 * @param string|null $strScope The message scope
 	 *
-	 * @return string
+	 * @return string The flash bag key
 	 */
-	private function getFlashBagKey($type, $strScope = TL_MODE)
+	protected function getFlashBagKey($strType, $strScope=TL_MODE)
 	{
-		$scope = 'FE' === $strScope ? 'frontend' : 'backend';
-		$type  = strtolower(str_replace('TL_', '', $type));
-
-		return 'contao.' . $scope . '.' . $type;
+		return 'contao.' . (('FE' === $strScope) ? 'frontend' : 'backend') . '.' . strtolower(str_replace('TL_', '', $strType));
 	}
 }
