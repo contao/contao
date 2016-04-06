@@ -280,7 +280,7 @@ class Message
 	 *
 	 * @return string The flash bag key
 	 */
-	protected function getFlashBagKey($strType, $strScope=TL_MODE)
+	protected static function getFlashBagKey($strType, $strScope=TL_MODE)
 	{
 		return 'contao.' . (('FE' === $strScope) ? 'frontend' : 'backend') . '.' . strtolower(str_replace('TL_', '', $strType));
 	}
