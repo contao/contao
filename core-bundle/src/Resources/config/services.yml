@@ -6,6 +6,27 @@ services:
             - ""
             - 0022
 
+    contao.cache.clear_internal:
+        class: Contao\CoreBundle\Cache\ContaoCacheClearer
+        public: false
+        arguments:
+            - "@filesystem"
+        tags:
+            - { name: kernel.cache_clearer }
+
+    contao.cache.warm_internal:
+        class: Contao\CoreBundle\Cache\ContaoCacheWarmer
+        public: false
+        arguments:
+            - "@filesystem"
+            - "@contao.resource_finder"
+            - "@contao.resource_locator"
+            - "%kernel.root_dir%"
+            - "@doctrine.dbal.default_connection"
+            - "@contao.framework"
+        tags:
+            - { name: kernel.cache_warmer }
+
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         public: false
