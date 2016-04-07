@@ -67,3 +67,19 @@ services:
         arguments:
             - "@service_container"
             - "@contao.framework"
+
+    contao.session.contao_backend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        public: false
+        arguments:
+            - "_contao_be_attributes"
+        calls:
+            - ["setName", ["contao_backend"]]
+
+    contao.session.contao_frontend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        public: false
+        arguments:
+            - "_contao_fe_attributes"
+        calls:
+            - ["setName", ["contao_frontend"]]

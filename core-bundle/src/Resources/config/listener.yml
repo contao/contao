@@ -13,13 +13,6 @@
 #
 # - 10: InitializeSystemListener
 #
-# Session listener
-#
-# The priority of the session listener must be higher than the other listeners but
-# lower than the one of the Symfony session listener (defaults to 128).
-#
-# - 64: SessionListener
-#
 # Exception listener
 #
 # The priority of the exception listeners must be higher than the one of the
@@ -131,13 +124,6 @@ services:
         class: Contao\CoreBundle\EventListener\ResponseExceptionListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 64 }
-
-    contao.listener.session:
-        class: Contao\CoreBundle\EventListener\SessionListener
-        arguments:
-            - "@session"
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 64 }
 
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
