@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -27,7 +26,7 @@ class PageLogout extends \Frontend
 	 *
 	 * @param PageModel $objPage
 	 *
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function getResponse($objPage)
 	{
