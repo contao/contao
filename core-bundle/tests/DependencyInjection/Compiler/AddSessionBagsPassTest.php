@@ -39,12 +39,18 @@ class AddSessionBagsPassTest extends \PHPUnit_Framework_TestCase
         $container = new ContainerBuilder();
         $container->setDefinition('session', new Definition('Symfony\Component\HttpFoundation\Session\Session'));
 
+        $container->setDefinition(
+            'contao.session.contao_backend',
+            new Definition('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag')
+        );
+
+        $container->setDefinition(
+            'contao.session.contao_frontend',
+            new Definition('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag')
+        );
+
         $pass = new AddSessionBagsPass();
         $pass->process($container);
-
-        $this->assertTrue($container->hasDefinition('session'));
-        $this->assertTrue($container->hasDefinition('contao.session_bag.contao_backend'));
-        $this->assertTrue($container->hasDefinition('contao.session_bag.contao_frontend'));
 
         $methodCalls = $container->findDefinition('session')->getMethodCalls();
 
@@ -53,8 +59,8 @@ class AddSessionBagsPassTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('registerBag', $methodCalls[1][0]);
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $methodCalls[0][1][0]);
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $methodCalls[1][1][0]);
-        $this->assertEquals('contao.session_bag.contao_backend', (string) $methodCalls[0][1][0]);
-        $this->assertEquals('contao.session_bag.contao_frontend', (string) $methodCalls[1][1][0]);
+        $this->assertEquals('contao.session.contao_backend', (string) $methodCalls[0][1][0]);
+        $this->assertEquals('contao.session.contao_frontend', (string) $methodCalls[1][1][0]);
     }
 
     /**
@@ -68,7 +74,5 @@ class AddSessionBagsPassTest extends \PHPUnit_Framework_TestCase
         $pass->process($container);
 
         $this->assertFalse($container->hasDefinition('session'));
-        $this->assertFalse($container->hasDefinition('contao.session_bag.contao_backend'));
-        $this->assertFalse($container->hasDefinition('contao.session_bag.contao_frontend'));
     }
 }
