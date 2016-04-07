@@ -12,6 +12,7 @@ namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Patchwork\Utf8\Bootup;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -55,6 +56,7 @@ class ContaoCoreBundle extends Bundle
             new AddPackagesPass($container->getParameter('kernel.root_dir') . '/../vendor/composer/installed.json')
         );
 
+        $container->addCompilerPass(new AddSessionBagsPass());
         $container->addCompilerPass(new AddResourcesPathsPass());
     }
 }
