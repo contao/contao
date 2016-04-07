@@ -3856,7 +3856,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 		else
 		{
-			$return .= \Image::getHtml('iconPLAIN.gif', '') . ' ' . $label;
+			$return .= \Image::getHtml('iconPLAIN.svg', '') . ' ' . $label;
 		}
 
 		$return .= '</div> <div class="tl_right">';

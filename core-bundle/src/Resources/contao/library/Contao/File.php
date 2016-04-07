@@ -815,7 +815,7 @@ class File extends \System
 			return $GLOBALS['TL_MIME'][$this->extension];
 		}
 
-		return array('application/octet-stream', 'iconPLAIN.gif');
+		return array('application/octet-stream', 'iconPLAIN.svg');
 	}
 
 
