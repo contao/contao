@@ -992,12 +992,10 @@ class tl_page extends Backend
 								  ->limit(1)
 								  ->execute($dc->id);
 
-		if (!$objPage->numRows || $objPage->type != 'logout')
+		if ($objPage->numRows && $objPage->type == 'logout')
 		{
-			return;
+			$GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo']['eval']['mandatory'] = true;
 		}
-
-		$GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo']['eval']['mandatory'] = true;
 	}
 
 
