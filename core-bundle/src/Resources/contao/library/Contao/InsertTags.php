@@ -565,68 +565,6 @@ class InsertTags extends \Controller
 					}
 					break;
 
-				// Events
-				case 'event':
-				case 'event_open':
-				case 'event_url':
-				case 'event_title':
-					if (($objEvent = \CalendarEventsModel::findByIdOrAlias($elements[1])) === null)
-					{
-						break;
-					}
-
-					$strUrl = '';
-
-					if ($objEvent->source == 'external')
-					{
-						$strUrl = $objEvent->url;
-					}
-					elseif ($objEvent->source == 'internal')
-					{
-						if (($objJumpTo = $objEvent->getRelated('jumpTo')) instanceof PageModel)
-						{
-							/** @var PageModel $objJumpTo */
-							$strUrl = $objJumpTo->getFrontendUrl();
-						}
-					}
-					elseif ($objEvent->source == 'article')
-					{
-						if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-						{
-							/** @var PageModel $objPid */
-							$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
-						}
-					}
-					else
-					{
-						if (($objCalendar = $objEvent->getRelated('pid')) instanceof CalendarModel && ($objJumpTo = $objCalendar->getRelated('jumpTo')) instanceof PageModel)
-						{
-							/** @var PageModel $objJumpTo */
-							$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/events/') . ($objEvent->alias ?: $objEvent->id));
-						}
-					}
-
-					// Replace the tag
-					switch (strtolower($elements[0]))
-					{
-						case 'event':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, specialchars($objEvent->title), $objEvent->title);
-							break;
-
-						case 'event_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, specialchars($objEvent->title));
-							break;
-
-						case 'event_url':
-							$arrCache[$strTag] = $strUrl;
-							break;
-
-						case 'event_title':
-							$arrCache[$strTag] = specialchars($objEvent->title);
-							break;
-					}
-					break;
-
 				// Article teaser
 				case 'article_teaser':
 					$objTeaser = \ArticleModel::findByIdOrAlias($elements[1]);
@@ -647,29 +585,9 @@ class InsertTags extends \Controller
 					}
 					break;
 
-				// Event teaser
-				case 'event_teaser':
-					$objTeaser = \CalendarEventsModel::findByIdOrAlias($elements[1]);
-
-					if ($objTeaser !== null)
-					{
-						$arrCache[$strTag] = \StringUtil::toHtml5($objTeaser->teaser);
-					}
-					break;
-
 				// News feed URL
 				case 'news_feed':
 					$objFeed = \NewsFeedModel::findByPk($elements[1]);
-
-					if ($objFeed !== null)
-					{
-						$arrCache[$strTag] = $objFeed->feedBase . 'share/' . $objFeed->alias . '.xml';
-					}
-					break;
-
-				// Calendar feed URL
-				case 'calendar_feed':
-					$objFeed = \CalendarFeedModel::findByPk($elements[1]);
 
 					if ($objFeed !== null)
 					{
