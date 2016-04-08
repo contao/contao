@@ -1211,7 +1211,7 @@ class InsertTags extends \Controller
 		}
 
 		// Run the replacement recursively (see #8172)
-		if (strpos($strBuffer, '{{') !== false)
+		if (preg_match('/{{([^{}]+)}}/', $strBuffer))
 		{
 			++$this->intNestingLevel;
 		}
