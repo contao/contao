@@ -503,68 +503,6 @@ class InsertTags extends \Controller
 					}
 					break;
 
-				// News
-				case 'news':
-				case 'news_open':
-				case 'news_url':
-				case 'news_title':
-					if (($objNews = \NewsModel::findByIdOrAlias($elements[1])) === null)
-					{
-						break;
-					}
-
-					$strUrl = '';
-
-					if ($objNews->source == 'external')
-					{
-						$strUrl = $objNews->url;
-					}
-					elseif ($objNews->source == 'internal')
-					{
-						if (($objJumpTo = $objNews->getRelated('jumpTo')) instanceof PageModel)
-						{
-							/** @var PageModel $objJumpTo */
-							$strUrl = $objJumpTo->getFrontendUrl();
-						}
-					}
-					elseif ($objNews->source == 'article')
-					{
-						if (($objArticle = \ArticleModel::findByPk($objNews->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-						{
-							/** @var PageModel $objPid */
-							$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
-						}
-					}
-					else
-					{
-						if (($objArchive = $objNews->getRelated('pid')) instanceof NewsArchiveModel && ($objJumpTo = $objArchive->getRelated('jumpTo')) instanceof PageModel)
-						{
-							/** @var PageModel $objJumpTo */
-							$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/items/') . ($objNews->alias ?: $objNews->id));
-						}
-					}
-
-					// Replace the tag
-					switch (strtolower($elements[0]))
-					{
-						case 'news':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, specialchars($objNews->headline), $objNews->headline);
-							break;
-
-						case 'news_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, specialchars($objNews->headline));
-							break;
-
-						case 'news_url':
-							$arrCache[$strTag] = $strUrl;
-							break;
-
-						case 'news_title':
-							$arrCache[$strTag] = specialchars($objNews->headline);
-							break;
-					}
-					break;
-
 				// Article teaser
 				case 'article_teaser':
 					$objTeaser = \ArticleModel::findByIdOrAlias($elements[1]);
@@ -572,26 +510,6 @@ class InsertTags extends \Controller
 					if ($objTeaser !== null)
 					{
 						$arrCache[$strTag] = \StringUtil::toHtml5($objTeaser->teaser);
-					}
-					break;
-
-				// News teaser
-				case 'news_teaser':
-					$objTeaser = \NewsModel::findByIdOrAlias($elements[1]);
-
-					if ($objTeaser !== null)
-					{
-						$arrCache[$strTag] = \StringUtil::toHtml5($objTeaser->teaser);
-					}
-					break;
-
-				// News feed URL
-				case 'news_feed':
-					$objFeed = \NewsFeedModel::findByPk($elements[1]);
-
-					if ($objFeed !== null)
-					{
-						$arrCache[$strTag] = $objFeed->feedBase . 'share/' . $objFeed->alias . '.xml';
 					}
 					break;
 
