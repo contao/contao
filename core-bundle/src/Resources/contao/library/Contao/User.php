@@ -62,18 +62,6 @@ namespace Contao;
  * @property integer $currentLogin
  * @property integer $loginCount
  * @property integer $locked
- * @property string  $calendars
- * @property string  $calendarp
- * @property string  $calendarfeeds
- * @property string  $calendarfeedp
- * @property string  $faqs
- * @property string  $faqp
- * @property string  $news
- * @property string  $newp
- * @property string  $newsfeeds
- * @property string  $newsfeedp
- * @property string  $newsletters
- * @property string  $newsletterp
  * @property string  $firstname
  * @property string  $lastname
  * @property string  $dateOfBirth
@@ -94,7 +82,6 @@ namespace Contao;
  * @property string  $autologin
  * @property integer $createdOn
  * @property string  $activation
- * @property string  $newsletter
  * @property string  $loginPage
  * @property object  $objImport
  * @property object  $objAuth

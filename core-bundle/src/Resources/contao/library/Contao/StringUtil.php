@@ -496,7 +496,7 @@ class StringUtil
 
 
 	/**
-	 * Parse simple tokens that can be used to personalize newsletters
+	 * Parse simple tokens
 	 *
 	 * @param string $strString The string to be parsed
 	 * @param array  $arrData   The replacement data

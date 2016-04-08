@@ -37,8 +37,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *     }
  *
  * @property \Automator                                $Automator   The automator object
- * @property \Calendar                                 $Calendar    The calendar object
- * @property \Comments                                 $Comments    The comments object
  * @property \Config                                   $Config      The config object
  * @property \Database                                 $Database    The database object
  * @property \Files                                    $Files       The files object
@@ -46,7 +44,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * @property \Database\Installer                       $Installer   The database installer object
  * @property \Database\Updater                         $Updater     The database updater object
  * @property \Messages                                 $Messages    The messages object
- * @property \News                                     $News        The news object
  * @property \Session                                  $Session     The session object
  * @property \StyleSheets                              $StyleSheets The style sheets object
  * @property \BackendTemplate|\FrontendTemplate|object $Template    The template object
