@@ -503,40 +503,6 @@ class InsertTags extends \Controller
 					}
 					break;
 
-				// FAQ
-				case 'faq':
-				case 'faq_open':
-				case 'faq_url':
-				case 'faq_title':
-					if (($objFaq = \FaqModel::findByIdOrAlias($elements[1])) === null || !(($objPid = $objFaq->getRelated('pid')) instanceof FaqCategoryModel) || !(($objJumpTo = $objPid->getRelated('jumpTo')) instanceof PageModel))
-					{
-						break;
-					}
-
-					/** @var PageModel $objJumpTo */
-					$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/items/') . ($objFaq->alias ?: $objFaq->id));
-
-					// Replace the tag
-					switch (strtolower($elements[0]))
-					{
-						case 'faq':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, specialchars($objFaq->question), $objFaq->question);
-							break;
-
-						case 'faq_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, specialchars($objFaq->question));
-							break;
-
-						case 'faq_url':
-							$arrCache[$strTag] = $strUrl;
-							break;
-
-						case 'faq_title':
-							$arrCache[$strTag] = specialchars($objFaq->question);
-							break;
-					}
-					break;
-
 				// News
 				case 'news':
 				case 'news_open':
