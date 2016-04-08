@@ -3,3 +3,8 @@ services:
         class: Contao\FaqBundle\EventListener\FileMetaInformationListener
         arguments:
             - "@contao.framework"
+
+    contao_faq.listener.insert_tags:
+        class: Contao\FaqBundle\EventListener\InsertTagsListener
+        arguments:
+            - "@contao.framework"
