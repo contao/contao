@@ -779,25 +779,19 @@ abstract class Widget extends \Controller
 
 		// Support arrays (thanks to Andreas Schempp)
 		$arrParts = explode('[', str_replace(']', '', $strKey));
+		$varValue = \Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
-		if (!empty($arrParts))
+		foreach ($arrParts as $part)
 		{
-			$varValue = \Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
-
-			foreach ($arrParts as $part)
+			if (!is_array($varValue))
 			{
-				if (!is_array($varValue))
-				{
-					break;
-				}
-
-				$varValue = $varValue[$part];
+				break;
 			}
 
-			return $varValue;
+			$varValue = $varValue[$part];
 		}
 
-		return \Input::$strMethod($strKey, $this->decodeEntities);
+		return $varValue;
 	}
 
 
