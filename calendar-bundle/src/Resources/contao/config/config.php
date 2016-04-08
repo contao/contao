@@ -46,11 +46,12 @@ $GLOBALS['TL_CRON']['daily'][] = array('Calendar', 'generateFeeds');
 
 
 /**
- * Register hook to add news items to the indexer
+ * Register hooks
  */
 $GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('Calendar', 'purgeOldFeeds');
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Calendar', 'getSearchablePages');
 $GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('Calendar', 'generateFeeds');
+$GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'][] = array('contao_calendar.listener.file_meta_information', 'onAddFileMetaInformationToRequest');
 
 
 /**
