@@ -25,6 +25,13 @@ class InsertTags extends \Controller
 {
 
 	/**
+	 * The nesting level
+	 * @var integer
+	 */
+	protected $intNestingLevel = 0;
+
+
+	/**
 	 * Make the constructor public
 	 */
 	public function __construct()
@@ -1206,12 +1213,13 @@ class InsertTags extends \Controller
 		// Run the replacement recursively (see #8172)
 		if (strpos($strBuffer, '{{') !== false)
 		{
-			do
-			{
-				$strHash = md5($strBuffer);
-				$strBuffer = $this->replace($strBuffer, $blnCache);
-			}
-			while (md5($strBuffer) != $strHash);
+			++$this->intNestingLevel;
+		}
+
+		if ($this->intNestingLevel > 0)
+		{
+			--$this->intNestingLevel;
+			$strBuffer = $this->replace($strBuffer, $blnCache);
 		}
 
 		return \StringUtil::restoreBasicEntities($strBuffer);
