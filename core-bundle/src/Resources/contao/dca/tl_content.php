@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC;{image_legend},alt,title,size,imagemargin,imageUrl,fullsize,caption;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,sortBy,metaIgnore;{image_legend},size,imagemargin,perRow,fullsize,perPage,numberOfItems;{template_legend:hide},galleryTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
 		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{poster_legend:hide},posterSRC;{player_legend},playerSize,autoplay;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
-		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{poster_legend:hide},posterSRC;{player_legend},playerSize,autoplay;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
+		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},playerSize,autoplay;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'download'                    => '{type_legend},type,headline;{source_legend},singleSRC;{dwnconfig_legend},linkTitle,titleText;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'downloads'                   => '{type_legend},type,headline;{source_legend},multiSRC,sortBy,metaIgnore;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
 		'alias'                       => '{type_legend},type;{include_legend},cteAlias;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
@@ -619,7 +619,11 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['youtube'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'mandatory'=>true),
+			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'rgxp'=>'url'),
+			'save_callback' => array
+			(
+				array('tl_content', 'extractYouTubeId')
+			),
 			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
 		'posterSRC' => array
@@ -1055,7 +1059,6 @@ class tl_content extends Backend
 				break;
 
 			case 'player':
-			case 'youtube':
 				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'j_mediaelement'));
 				break;
 
@@ -1658,6 +1661,29 @@ class tl_content extends Backend
 		if ($dc->activeRecord->singleSRC != $varValue)
 		{
 			$this->addFileMetaInformationToRequest($varValue, ($dc->activeRecord->ptable ?: 'tl_article'), $dc->activeRecord->pid);
+		}
+
+		return $varValue;
+	}
+
+	/**
+	 * Extract the YouTube ID from an URL
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function extractYouTubeId($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord->singleSRC != $varValue)
+		{
+			$matches = array();
+
+			if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $varValue, $matches))
+			{
+				$varValue = $matches[1];
+			}
 		}
 
 		return $varValue;

@@ -1,0 +1,9 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <!-- indexer::stop -->
+  <iframe<?= $this->size ?> type="text/html" src="<?= $this->src ?>" frameborder="0" allowfullscreen></iframe>
+  <!-- indexer::continue -->
+
+<?php $this->endblock(); ?>
