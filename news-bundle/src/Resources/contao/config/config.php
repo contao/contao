@@ -51,6 +51,7 @@ $GLOBALS['TL_CRON']['daily'][] = array('News', 'generateFeeds');
 $GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('News', 'purgeOldFeeds');
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('News', 'getSearchablePages');
 $GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('News', 'generateFeeds');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_news.listener.insert_tags', 'onReplaceInsertTags');
 $GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'][] = array('contao_news.listener.file_meta_information', 'onAddFileMetaInformationToRequest');
 
 

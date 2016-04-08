@@ -4,6 +4,11 @@ services:
         arguments:
             - "@contao.framework"
 
+    contao_news.listener.insert_tags:
+        class: Contao\NewsBundle\EventListener\InsertTagsListener
+        arguments:
+            - "@contao.framework"
+
     contao_news.listener.preview_url_create:
         class: Contao\NewsBundle\EventListener\PreviewUrlCreateListener
         arguments:
