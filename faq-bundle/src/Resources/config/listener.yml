@@ -1,0 +1,5 @@
+services:
+    contao_faq.listener.file_meta_information:
+        class: Contao\FaqBundle\EventListener\FileMetaInformationListener
+        arguments:
+            - "@contao.framework"
