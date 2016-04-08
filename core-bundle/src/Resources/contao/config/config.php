@@ -178,7 +178,8 @@ $GLOBALS['TL_CTE'] = array
 		'image'           => 'ContentImage',
 		'gallery'         => 'ContentGallery',
 		'player'          => 'ContentMedia',
-		'youtube'         => 'ContentYouTube'
+		'youtube'         => 'ContentYouTube',
+		'vimeo'           => 'ContentVimeo'
 	),
 	'files' => array
 	(

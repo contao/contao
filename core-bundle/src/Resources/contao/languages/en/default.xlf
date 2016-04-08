@@ -326,6 +326,12 @@
       <trans-unit id="CTE.youtube.1">
         <source>Adds a YouTube video.</source>
       </trans-unit>
+      <trans-unit id="CTE.vimeo.0">
+        <source>Vimeo</source>
+      </trans-unit>
+      <trans-unit id="CTE.vimeo.1">
+        <source>Adds a Vimeo video.</source>
+      </trans-unit>
       <trans-unit id="CTE.files">
         <source>File elements</source>
       </trans-unit>

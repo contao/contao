@@ -12,18 +12,18 @@ namespace Contao;
 
 
 /**
- * Content element "YouTube".
+ * Content element "Vimeo".
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentYouTube extends \ContentElement
+class ContentVimeo extends \ContentElement
 {
 
 	/**
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'ce_youtube';
+	protected $strTemplate = 'ce_vimeo';
 
 
 	/**
@@ -33,14 +33,14 @@ class ContentYouTube extends \ContentElement
 	 */
 	public function generate()
 	{
-		if ($this->youtube == '')
+		if ($this->vimeo == '')
 		{
 			return '';
 		}
 
 		if (TL_MODE == 'BE')
 		{
-			return '<p><a href="https://youtu.be/' . $this->youtube . '" target="_blank">youtu.be/' . $this->youtube . '</a></p>';
+			return '<p><a href="https://vimeo.com/' . $this->vimeo . '" target="_blank">vimeo.com/' . $this->vimeo . '</a></p>';
 		}
 
 		return parent::generate();
@@ -63,6 +63,6 @@ class ContentYouTube extends \ContentElement
 			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
 
-		$this->Template->src = 'https://www.youtube.com/embed/' . $this->youtube;
+		$this->Template->src = 'https://player.vimeo.com/video/' . $this->vimeo;
 	}
 }

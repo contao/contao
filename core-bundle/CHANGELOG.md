@@ -2,6 +2,7 @@
 
 ### 4.2.0-beta1 (2016-XX-XX)
 
+ * Add the Vimeo content element (see contao/core#8219).
  * Improve the YouTube element (see contao/core#7514).
  * Update the Piwik tracking code (see contao/core#8229).
  * Use instanceof to check the return value of Model::getRelated() (see #451).

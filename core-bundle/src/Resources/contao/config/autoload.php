@@ -76,6 +76,7 @@ TemplateLoader::addFiles(array
 	'ce_text'             => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
 	'ce_toplink'          => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
 	'ce_youtube'          => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
+	'ce_vimeo'            => 'vendor/contao/core-bundle/src/Resources/contao/templates/elements',
 	'form'                => 'vendor/contao/core-bundle/src/Resources/contao/templates/forms',
 	'form_captcha'        => 'vendor/contao/core-bundle/src/Resources/contao/templates/forms',
 	'form_checkbox'       => 'vendor/contao/core-bundle/src/Resources/contao/templates/forms',
