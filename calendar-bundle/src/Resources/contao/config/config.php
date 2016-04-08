@@ -51,6 +51,7 @@ $GLOBALS['TL_CRON']['daily'][] = array('Calendar', 'generateFeeds');
 $GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('Calendar', 'purgeOldFeeds');
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Calendar', 'getSearchablePages');
 $GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('Calendar', 'generateFeeds');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_calendar.listener.insert_tags', 'onReplaceInsertTags');
 $GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'][] = array('contao_calendar.listener.file_meta_information', 'onAddFileMetaInformationToRequest');
 
 
