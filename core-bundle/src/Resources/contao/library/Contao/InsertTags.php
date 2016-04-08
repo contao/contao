@@ -61,6 +61,11 @@ class InsertTags extends \Controller
 
 		$tags = preg_split('/{{([^{}]+)}}/', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
+		if (count($tags) < 2)
+		{
+			return \StringUtil::restoreBasicEntities($strBuffer);
+		}
+
 		$strBuffer = '';
 
 		// Create one cache per cache setting (see #7700)
@@ -1211,7 +1216,7 @@ class InsertTags extends \Controller
 		}
 
 		// Run the replacement recursively (see #8172)
-		if (preg_match('/{{[^{}]+}}/', $strBuffer))
+		if (strpos($strBuffer, '{{') !== false)
 		{
 			++$this->intNestingLevel;
 		}
