@@ -20,8 +20,8 @@ if ($PiwikSite > 0 && $PiwikPath != 'www.example.com/piwik/' && !BE_USER_LOGGED_
     var u = ('https:' == document.location.protocol ? 'https://' : 'http://') + '<?= $PiwikPath ?>';
     _paq.push(['setTrackerUrl', u + 'piwik.php']);
     _paq.push(['setSiteId', <?= $PiwikSite ?>]);
-    var g = document.createElement('script'); g.src = u + 'piwik.js'; g.async = true;
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(g, s);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
 

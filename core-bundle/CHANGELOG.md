@@ -2,6 +2,7 @@
 
 ### 4.2.0-beta1 (2016-XX-XX)
 
+ * Update the Piwik tracking code (see contao/core#8229).
  * Use instanceof to check the return value of Model::getRelated() (see #451).
  * Use the Composer class loader to load the Contao classes (see #437).
  * Add the "ignoreFePreview" flag to the model classes (see #452).
