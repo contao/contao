@@ -27,7 +27,7 @@ class ContentVimeo extends \ContentElement
 
 
 	/**
-	 * Show the YouTube link in the back end
+	 * Show the Vimeo link in the back end
 	 *
 	 * @return string
 	 */
