@@ -2,6 +2,7 @@
 
 ### 4.2.0-beta1 (2016-XX-XX)
 
+ * Recursively replace insert tags (see #473).
  * Add the Vimeo content element (see contao/core#8219).
  * Improve the YouTube element (see contao/core#7514).
  * Update the Piwik tracking code (see contao/core#8229).
