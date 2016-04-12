@@ -601,7 +601,7 @@ abstract class Controller extends \System
 		}
 
 		// Page hidden from menu
-		if ($objPage->hide && !in_array($objPage->type, array('redirect', 'forward', 'root', 'error_403', 'error_404')))
+		if ($objPage->hide && !in_array($objPage->type, array('root', 'error_403', 'error_404')))
 		{
 			$sub += 2;
 		}
