@@ -80,7 +80,17 @@ abstract class ModuleNews extends \Module
 		$objTemplate = new \FrontendTemplate($this->news_template);
 		$objTemplate->setData($objArticle->row());
 
-		$objTemplate->class = (($objArticle->cssClass != '') ? ' ' . $objArticle->cssClass : '') . $strClass;
+		if ($objArticle->cssClass != '')
+		{
+			$strClass = ' ' . $objArticle->cssClass . $strClass;
+		}
+
+		if ($objArticle->featured)
+		{
+			$strClass = ' featured' . $strClass;
+		}
+
+		$objTemplate->class = $strClass;
 		$objTemplate->newsHeadline = $objArticle->headline;
 		$objTemplate->subHeadline = $objArticle->subheadline;
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
