@@ -23,8 +23,14 @@
         urls.each(function(el) {
           el.getAttribute('data-url') && new Request({
             url: el.getAttribute('data-url'),
-            onComplete: function() {
+            onSuccess: function() {
               el.addClass('tl_green');
+            },
+            onFailure: function(xhr) {
+              el.addClass('tl_red');
+              el.set('text', '[' + xhr.status + '] ' + el.get('text'));
+            },
+            onComplete: function() {
               if (++completed >= urls.length) {
                 $('index_loading').setStyle('display', 'none');
                 $('index_complete').setStyle('display', 'block');
