@@ -2,6 +2,7 @@
 
 ### 4.2.0-beta1 (2016-XX-XX)
 
+ * Support filters in the tree view (see contao/core#7074).
  * Recursively replace insert tags (see #473).
  * Add the Vimeo content element (see contao/core#8219).
  * Improve the YouTube element (see contao/core#7514).

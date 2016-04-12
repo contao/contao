@@ -619,6 +619,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['youtube'],
 			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'rgxp'=>'url'),
 			'save_callback' => array
@@ -631,6 +632,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['vimeo'],
 			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'rgxp'=>'url'),
 			'save_callback' => array
@@ -667,6 +669,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['sliderDelay'],
 			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
@@ -674,8 +677,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderSpeed' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['sliderSpeed'],
-			'default'                 => 300,
 			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default '300'"
@@ -775,6 +778,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['groups'],
 			'exclude'                 => true,
+			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),

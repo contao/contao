@@ -3432,74 +3432,41 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$blnHasSorting = $this->Database->fieldExists('sorting', $table);
 		$arrFound = array();
 
-		// Limit the results by modifying $this->root
-		if ($session['search'][$this->strTable]['value'] != '')
+		if (!empty($this->procedure))
 		{
-			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
-			try
+			$fld = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? 'pid' : 'id';
+
+			$objRoot = $this->Database->prepare("SELECT $fld FROM {$this->strTable} WHERE " . implode(' AND ', $this->procedure))
+									  ->execute($this->values);
+
+			if ($objRoot->numRows < 1)
 			{
-				$for = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? 'pid' : 'id';
-
-				if ($session['search'][$this->strTable]['field'] == 'id')
+				$this->root = array();
+			}
+			else
+			{
+				// Respect existing limitations (root IDs)
+				if (!empty($this->root))
 				{
-					$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE id=?")
-											  ->execute($session['search'][$this->strTable]['value']);
-				}
-				else
-				{
-					$strPattern = "CAST(%s AS CHAR) REGEXP ?";
+					$arrRoot = array();
 
-					if (substr(\Config::get('dbCollation'), -3) == '_ci')
+					while ($objRoot->next())
 					{
-						$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
-					}
-
-					$fld = $session['search'][$this->strTable]['field'];
-
-					if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
-					{
-						list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
-
-						$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE (" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ") GROUP BY $for")
-												  ->execute($session['search'][$this->strTable]['value'], $session['search'][$this->strTable]['value']);
-					}
-					else
-					{
-						$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE " . sprintf($strPattern, $fld) . " GROUP BY $for")
-												  ->execute($session['search'][$this->strTable]['value']);
-					}
-				}
-
-				if ($objRoot->numRows < 1)
-				{
-					$this->root = array();
-				}
-				else
-				{
-					// Respect existing limitations (root IDs)
-					if (is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']))
-					{
-						$arrRoot = array();
-
-						while ($objRoot->next())
+						if (count(array_intersect($this->root, $this->Database->getParentRecords($objRoot->$fld, $table))) > 0)
 						{
-							if (count(array_intersect($this->root, $this->Database->getParentRecords($objRoot->$for, $table))) > 0)
-							{
-								$arrRoot[] = $objRoot->$for;
-							}
+							$arrRoot[] = $objRoot->$fld;
 						}
+					}
 
-						$arrFound = $arrRoot;
-						$this->root = $this->eliminateNestedPages($arrFound);
-					}
-					else
-					{
-						$arrFound = $objRoot->fetchEach($for);
-						$this->root = $this->eliminateNestedPages($arrFound);
-					}
+					$arrFound = $arrRoot;
+					$this->root = $this->eliminateNestedPages($arrFound);
+				}
+				else
+				{
+					$arrFound = $objRoot->fetchEach($fld);
+					$this->root = $this->eliminateNestedPages($arrFound);
 				}
 			}
-			catch (\Exception $e) {}
 		}
 
 		// Call a recursive function that builds the tree
@@ -5530,7 +5497,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$arrValues[] = CURRENT_ID;
 			}
 
-			if (!empty($this->root) && is_array($this->root))
+			if (!$this->treeView && !empty($this->root) && is_array($this->root))
 			{
 				$arrProcedure[] = "id IN(" . implode(',', array_map('intval', $this->root)) . ")";
 			}
