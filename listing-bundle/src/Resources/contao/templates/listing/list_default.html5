@@ -77,7 +77,7 @@
         <?php endforeach; ?>
         <?php if ($this->details && isset($col)): ?>
           <?php if ($col['details']): ?>
-            <td class="body <?= $this->col_last ?> col_last"><a href="<?= $col['url'] ?>"><img src="<?= TL_FILES_URL ?>assets/contao/images/info.gif" alt=""></a></td>
+            <td class="body <?= $this->col_last ?> col_last"><a href="<?= $col['url'] ?>"><img src="<?= TL_FILES_URL ?>assets/contao/images/info.svg" alt=""></a></td>
           <?php else: ?>
             <td class="body <?= $this->col_last ?> col_last">&nbsp;</td>
           <?php endif; ?>
