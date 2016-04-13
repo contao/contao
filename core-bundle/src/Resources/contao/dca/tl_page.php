@@ -978,7 +978,7 @@ class tl_page extends Backend
 
 
 	/**
-	 * Make the redirect page mandatory of the page is a logout page
+	 * Make the redirect page mandatory if the page is a logout page
 	 *
 	 * @param DataContainer $dc
 	 *
