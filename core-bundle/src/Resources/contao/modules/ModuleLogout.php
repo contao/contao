@@ -12,11 +12,16 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
+@trigger_error('Using the logout module has been deprecated and will no longer work in Contao 5.0. Use the logout page instead.', E_USER_DEPRECATED);
+
 
 /**
  * Front end module "logout".
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+ *             Use the logout page instead.
  */
 class ModuleLogout extends \Module
 {

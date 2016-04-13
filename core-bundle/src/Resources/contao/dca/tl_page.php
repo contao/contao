@@ -27,7 +27,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			array('tl_page', 'checkPermission'),
 			array('tl_page', 'addBreadcrumb'),
 			array('tl_page', 'setRootType'),
-			array('tl_page', 'showFallbackWarning')
+			array('tl_page', 'showFallbackWarning'),
+			array('tl_page', 'makeRedirectPageMandatory')
 		),
 		'onsubmit_callback' => array
 		(
@@ -164,6 +165,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'forward'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},redirect,jumpTo;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published',
 		'redirect'                    => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published',
 		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{dns_legend},dns,useSSL,staticFiles,staticPlugins,language,fallback;{global_legend:hide},dateFormat,timeFormat,datimFormat,adminEmail;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published',
+		'logout'                      => '{title_legend},title,alias,type;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},hide;;{publish_legend},published',
 		'error_403'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published',
 		'error_404'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published'
 	),
@@ -299,6 +301,13 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
+		'redirectBack' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['redirectBack'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'url' => array
 		(
@@ -965,6 +974,28 @@ class tl_page extends Backend
 		$this->import('Messages');
 		Message::addRaw($this->Messages->languageFallback());
 		Message::addRaw($this->Messages->topLevelRoot());
+	}
+
+
+	/**
+	 * Make the redirect page mandatory of the page is a logout page
+	 *
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 *
+	 * @throws Exception
+	 */
+	public function makeRedirectPageMandatory(DataContainer $dc)
+	{
+		$objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+								  ->limit(1)
+								  ->execute($dc->id);
+
+		if ($objPage->numRows && $objPage->type == 'logout')
+		{
+			$GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo']['eval']['mandatory'] = true;
+		}
 	}
 
 
