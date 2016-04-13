@@ -4904,6 +4904,23 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			return '';
 		}
 
+		// Reset all filters
+		if (isset($_POST['filter_reset']) && \Input::post('FORM_SUBMIT') == 'tl_filters')
+		{
+			/** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+
+			$data = $objSessionBag->all();
+
+			unset($data['filter'][$this->strTable]);
+			unset($data['sorting'][$this->strTable]);
+			unset($data['search'][$this->strTable]);
+
+			$objSessionBag->replace($data);
+
+			$this->reload();
+		}
+
 		$intFilterPanel = 0;
 		$arrPanels = array();
 
@@ -4982,6 +4999,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 <div class="tl_submit_panel tl_subpanel">
 <input type="image" name="filter" id="filter" src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/reload.gif" class="tl_img_submit" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
+<input type="image" name="filter_reset" id="filter_reset" value="1" src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/delete.gif" class="tl_img_submit" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '" alt="' . specialchars($GLOBALS['TL_LANG']['MSC']['reset']) . '">
 </div>';
 			}
 
