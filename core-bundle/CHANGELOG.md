@@ -2,6 +2,7 @@
 
 ### 4.2.0-beta1 (2016-XX-XX)
 
+ * Show the record ID and table name in the diff view (see contao/core#5800).
  * Add a "reset filters" button (see contao/core#6239).
  * Support filters in the tree view (see contao/core#7074).
  * Recursively replace insert tags (see #473).
