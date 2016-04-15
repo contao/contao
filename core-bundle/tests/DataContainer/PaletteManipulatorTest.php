@@ -21,114 +21,122 @@ class PaletteManipulatorTest extends TestCase
      */
     public function testInstantiation()
     {
-        $pm = new PaletteManipulator('', [], '');
+        $pm = PaletteManipulator::create();
 
         static::assertInstanceOf('Contao\CoreBundle\DataContainer\PaletteManipulator', $pm);
     }
 
-    public function testPrependFieldToPalette()
+    public function testBeforeFieldToPalette()
     {
-        $pm = PaletteManipulator::prepend('config_legend', 'foo');
+        $pm = PaletteManipulator::create()
+            ->addField('foo', 'config_legend', PaletteManipulator::POSITION_PREPEND, 'config_legend')
+        ;
 
         static::assertEquals(
             '{config_legend},foo,bar',
-            $pm->applyTo('{config_legend},bar')
+            $pm->applyToString('{config_legend},bar')
         );
 
         static::assertEquals(
             '{config_legend},foo,bar;{foo_legend},baz',
-            $pm->applyTo('{config_legend},bar;{foo_legend},baz')
+            $pm->applyToString('{config_legend},bar;{foo_legend},baz')
         );
 
         static::assertEquals(
             '{foo_legend},baz;{config_legend},foo',
-            $pm->applyTo('{foo_legend},baz')
+            $pm->applyToString('{foo_legend},baz')
         );
     }
 
     public function testAppendFieldToPalette()
     {
-        $pm = PaletteManipulator::append('config_legend', 'bar');
+        $pm = PaletteManipulator::create()
+            ->addField('bar', 'config_legend', PaletteManipulator::POSITION_APPEND, 'config_legend')
+        ;
 
         static::assertEquals(
             '{config_legend},foo,bar',
-            $pm->applyTo('{config_legend},foo')
+            $pm->applyToString('{config_legend},foo')
         );
 
         static::assertEquals(
             '{config_legend},foo,bar;{foo_legend},baz',
-            $pm->applyTo('{config_legend},foo;{foo_legend},baz')
+            $pm->applyToString('{config_legend},foo;{foo_legend},baz')
         );
 
         static::assertEquals(
             '{foo_legend},baz;{config_legend},bar',
-            $pm->applyTo('{foo_legend},baz')
+            $pm->applyToString('{foo_legend},baz')
         );
     }
 
     public function testBeforeLegend()
     {
-        $pm = PaletteManipulator::beforeLegend('foo_legend', 'config_legend', 'foo');
+        $pm = PaletteManipulator::create()
+            ->addLegend('config_legend', 'foo_legend', PaletteManipulator::POSITION_BEFORE)
+            ->addField('foo', 'config_legend', PaletteManipulator::POSITION_APPEND)
+        ;
 
         static::assertEquals(
             '{config_legend},foo;{foo_legend},baz',
-            $pm->applyTo('{foo_legend},baz')
+            $pm->applyToString('{foo_legend},baz')
         );
 
         static::assertEquals(
             '{bar_legend},baz;{config_legend},foo',
-            $pm->applyTo('{bar_legend},baz')
+            $pm->applyToString('{bar_legend},baz')
         );
     }
 
     public function testAfterLegend()
     {
-        $pm = PaletteManipulator::afterLegend('foo_legend', 'config_legend', 'foo');
+        $pm = PaletteManipulator::create()
+            ->addLegend('config_legend', 'foo_legend', PaletteManipulator::POSITION_AFTER)
+            ->addField('foo', 'config_legend')
+        ;
 
         static::assertEquals(
             '{foo_legend},baz;{config_legend},foo',
-            $pm->applyTo('{foo_legend},baz')
+            $pm->applyToString('{foo_legend},baz')
         );
 
         static::assertEquals(
             '{bar_legend},baz;{config_legend},foo',
-            $pm->applyTo('{bar_legend},baz')
+            $pm->applyToString('{bar_legend},baz')
         );
     }
 
     public function testBeforeField()
     {
-        $pm = PaletteManipulator::beforeField('foo', 'bar');
+        $pm = PaletteManipulator::create()
+            ->addField('bar', 'foo', PaletteManipulator::POSITION_BEFORE)
+        ;
 
         static::assertEquals(
             '{config_legend},bar,foo',
-            $pm->applyTo('{config_legend},foo')
+            $pm->applyToString('{config_legend},foo')
         );
 
         static::assertEquals(
-            '{config_legend},baz;bar',
-            $pm->applyTo('{config_legend},baz')
+            '{config_legend},baz,bar',
+            $pm->applyToString('{config_legend},baz')
         );
     }
 
     public function testAfterField()
     {
-        $pm = PaletteManipulator::afterField('foo', 'bar');
+        $pm = PaletteManipulator::create()
+            ->addField('bar', 'foo', PaletteManipulator::POSITION_AFTER)
+        ;
 
         static::assertEquals(
-            '{config_legend},baz;bar',
-            $pm->applyTo('{config_legend},baz')
+            '{config_legend},foo,bar',
+            $pm->applyToString('{config_legend},foo')
         );
-    }
-
-    public function testFallback()
-    {
-        $pm = PaletteManipulator::beforeField('foo', 'bar');
-        $fallback = PaletteManipulator::prepend('config_legend', 'bar');
 
         static::assertEquals(
-            '{config_legend},bar,baz',
-            $pm->setFallback($fallback)->applyTo('{config_legend},baz')
+            '{config_legend},baz,bar',
+            $pm->applyToString('{config_legend},baz')
         );
     }
 }
