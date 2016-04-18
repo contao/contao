@@ -13,9 +13,7 @@ $objCombiner->add('assets/stylect/js/stylect.min.js');
 
 <script src="<?= $objCombiner->getCombinedFile() ?>"></script>
 <script>
-  (function() {
-    window.addEvent('domready', function() {
-      $$('select.tl_chosen').chosen();
-    });
-  })();
+  window.addEvent('domready', function() {
+    $$('select.tl_chosen').chosen();
+  });
 </script>
