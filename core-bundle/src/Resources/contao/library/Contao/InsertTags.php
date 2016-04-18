@@ -34,7 +34,7 @@ class InsertTags extends \Controller
 
 
 	/**
-	 * Replace insert tags with their values
+	 * Recursively replace insert tags with their values
 	 *
 	 * @param string  $strBuffer The text with the tags to be replaced
 	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
@@ -42,6 +42,28 @@ class InsertTags extends \Controller
 	 * @return string The text with the replaced tags
 	 */
 	public function replace($strBuffer, $blnCache=true)
+	{
+		$strBuffer = $this->doReplace($strBuffer, $blnCache);
+
+		// Run the replacement recursively (see #8172)
+		while (($strTmp = $this->doReplace($strBuffer, $blnCache)) != $strBuffer)
+		{
+			$strBuffer = $strTmp;
+		}
+
+		return $strBuffer;
+	}
+
+
+	/**
+	 * Replace insert tags with their values
+	 *
+	 * @param string  $strBuffer The text with the tags to be replaced
+	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
+	 *
+	 * @return string The text with the replaced tags
+	 */
+	protected function doReplace($strBuffer, $blnCache)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -1206,12 +1228,6 @@ class InsertTags extends \Controller
 			}
 
 			$strBuffer .= $arrCache[$strTag];
-		}
-
-		// Run the replacement recursively (see #8172)
-		if (!$blnCache && strpos($strBuffer, '{{') !== false)
-		{
-			$strBuffer = $this->replace($strBuffer, $blnCache);
 		}
 
 		return \StringUtil::restoreBasicEntities($strBuffer);
