@@ -46,7 +46,7 @@ class InsertTags extends \Controller
 		$strBuffer = $this->doReplace($strBuffer, $blnCache);
 
 		// Run the replacement recursively (see #8172)
-		while (($strTmp = $this->doReplace($strBuffer, $blnCache)) != $strBuffer)
+		while (strpos($strBuffer, '{{') !== false && ($strTmp = $this->doReplace($strBuffer, $blnCache)) != $strBuffer)
 		{
 			$strBuffer = $strTmp;
 		}
