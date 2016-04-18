@@ -4,24 +4,24 @@
  * To use this script, please fill in your Piwik site ID and Piwik URL below
  */
 $PiwikSite = 0;
-$PiwikPath = 'www.example.com/piwik/';
+$PiwikPath = '//www.example.com/piwik/';
 
 
 /**
  * DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING!
  */
-if ($PiwikSite > 0 && $PiwikPath != 'www.example.com/piwik/' && !BE_USER_LOGGED_IN && !$this->hasAuthenticatedBackendUser()): ?>
+if ($PiwikSite > 0 && $PiwikPath != '//www.example.com/piwik/' && !BE_USER_LOGGED_IN && !$this->hasAuthenticatedBackendUser()): ?>
 
 <script>
   var _paq = _paq || [];
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u = ('https:' == document.location.protocol ? 'https://' : 'http://') + '<?= $PiwikPath ?>';
-    _paq.push(['setTrackerUrl', u + 'piwik.php']);
+    var u='<?= $PiwikPath ?>';
+    _paq.push(['setTrackerUrl', u+'js/']);
     _paq.push(['setSiteId', <?= $PiwikSite ?>]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    g.async=true; g.defer=true; g.src=u+'js/'; s.parentNode.insertBefore(g,s);
   })();
 </script>
 
