@@ -1209,7 +1209,7 @@ class InsertTags extends \Controller
 		}
 
 		// Run the replacement recursively (see #8172)
-		if (strpos($strBuffer, '{{') !== false)
+		if (!$blnCache && strpos($strBuffer, '{{') !== false)
 		{
 			$strBuffer = $this->replace($strBuffer, $blnCache);
 		}
