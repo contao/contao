@@ -22,7 +22,16 @@ class PaletteManipulator
     const POSITION_BEFORE  = 'before';
     const POSITION_AFTER   = 'after';
 
+    /**
+     * Legends to be added to the palette.
+     * @var array
+     */
     private $legends = [];
+
+    /**
+     * Fields to be added to the palette.
+     * @var array
+     */
     private $fields  = [];
 
     /**
@@ -323,17 +332,11 @@ class PaletteManipulator
      */
     private function applyField(array &$config, array $action, $skipLegends = false)
     {
-        switch ($action['position']) {
-            case self::POSITION_PREPEND:
-            case self::POSITION_APPEND:
-                return $this->applyFieldToLegend($config, $action, $skipLegends);
-
-            case self::POSITION_BEFORE:
-            case self::POSITION_AFTER:
-                return $this->applyFieldToField($config, $action, $skipLegends);
+        if ($action['position'] === self::POSITION_PREPEND || $action['position'] === self::POSITION_APPEND) {
+            return $this->applyFieldToLegend($config, $action, $skipLegends);
         }
 
-        return false;
+        return $this->applyFieldToField($config, $action, $skipLegends);
     }
 
     /**
@@ -370,14 +373,25 @@ class PaletteManipulator
         return $this->applyFallback($config, $action, $skipLegends);
     }
 
+    /**
+     * Adds a field after a field.
+     *
+     * @param array $config
+     * @param array $action
+     * @param bool  $skipLegends
+     *
+     * @return bool
+     */
     private function applyFieldToField(array &$config, array $action, $skipLegends = false)
     {
+        $offset = (int) (self::POSITION_AFTER === $action['position']);
+
         foreach ($action['parents'] as $parent) {
             $legend = $this->findLegendForField($config, $parent);
 
-            if (is_string($legend)) {
-                $offset  = array_search($parent, $config[$legend]['fields'], true);
-                $offset += (int) (self::POSITION_AFTER === $action['position']);
+            if (false !== $legend) {
+                $legend = (string) $legend;
+                $offset += array_search($parent, $config[$legend]['fields'], true);
 
                 array_splice($config[$legend]['fields'], $offset, 0, $action['fields']);
 
@@ -388,6 +402,15 @@ class PaletteManipulator
         return $this->applyFallback($config, $action, $skipLegends);
     }
 
+    /**
+     * Handles fallback when adding a field fails. Adds a new legend if possible or append to the last available one.
+     *
+     * @param array $config
+     * @param array $action
+     * @param bool  $skipLegends
+     *
+     * @return bool
+     */
     private function applyFallback(array &$config, array $action, $skipLegends = false)
     {
         // Call fallback closure if none of the parents was found.
@@ -428,6 +451,9 @@ class PaletteManipulator
     }
 
     /**
+     * Search all legends for a field.
+     * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
+     *
      * @param array  $config
      * @param string $field
      *
