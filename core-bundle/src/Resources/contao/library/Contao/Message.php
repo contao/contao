@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Session\Session;
-
 
 /**
  * Stores and outputs messages
