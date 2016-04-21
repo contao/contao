@@ -107,7 +107,7 @@ class NewsletterModel extends \Model
 	 * @param array   $arrPids    An array of newsletter channel IDs
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return \NewsletterModel|null The model or null if there are no sent newsletters
+	 * @return NewsletterModel|null The model or null if there are no sent newsletters
 	 */
 	public static function findSentByParentAndIdOrAlias($varId, $arrPids, array $arrOptions=array())
 	{
