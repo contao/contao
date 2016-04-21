@@ -169,33 +169,19 @@ class File extends \System
 			case 'basename':
 				if (!isset($this->arrPathinfo[$strKey]))
 				{
-					$this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
+					$this->arrPathinfo = $this->getPathinfo();
 				}
 				return $this->arrPathinfo['basename'];
 				break;
 
 			case 'dirname':
-				if (!isset($this->arrPathinfo[$strKey]))
-				{
-					$this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
-				}
-				return $this->arrPathinfo['dirname'];
-				break;
-
-			case 'extension':
-				if (!isset($this->arrPathinfo['extension']))
-				{
-					$this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
-				}
-				return strtolower($this->arrPathinfo['extension']);
-				break;
-
 			case 'filename':
+			case 'extension':
 				if (!isset($this->arrPathinfo[$strKey]))
 				{
-					$this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
+					$this->arrPathinfo = $this->getPathinfo();
 				}
-				return $this->arrPathinfo['filename'];
+				return $this->arrPathinfo[$strKey];
 				break;
 
 			case 'tmpname':
@@ -861,5 +847,43 @@ class File extends \System
 		{
 			return md5_file(TL_ROOT . '/' . $this->strFile);
 		}
+	}
+
+
+	/**
+	 * Return the path info (binary-safe)
+	 *
+	 * @return array The path info
+	 *
+	 * @see https://github.com/PHPMailer/PHPMailer/blob/master/class.phpmailer.php#L3520
+	 */
+	protected function getPathinfo()
+	{
+		$matches = array();
+		$return = array('dirname'=>'', 'basename'=>'', 'extension'=>'', 'filename'=>'');
+
+		preg_match('%^(.*?)[\\\\/]*(([^/\\\\]*?)(\.([^\.\\\\/]+?)|))[\\\\/\.]*$%im', $this->strFile, $matches);
+
+		if (isset($matches[1]))
+		{
+			$return['dirname'] = $matches[1];
+		}
+
+		if (isset($matches[2]))
+		{
+			$return['basename'] = $matches[2];
+		}
+
+		if (isset($matches[5]))
+		{
+			$return['extension'] = $matches[5];
+		}
+
+		if (isset($matches[3]))
+		{
+			$return['filename'] = $matches[3];
+		}
+
+		return $return;
 	}
 }

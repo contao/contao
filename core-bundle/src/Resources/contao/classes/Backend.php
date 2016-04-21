@@ -829,16 +829,16 @@ abstract class Backend extends \Controller
 		$objSession = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['node']))
+		if (isset($_GET['pn']))
 		{
 			// Check the path (thanks to Arnaud Buchoux)
-			if (\Validator::isInsecurePath(\Input::get('node', true)))
+			if (\Validator::isInsecurePath(\Input::get('pn', true)))
 			{
-				throw new \RuntimeException('Insecure path ' . \Input::get('node', true));
+				throw new \RuntimeException('Insecure path ' . \Input::get('pn', true));
 			}
 
-			$objSession->set($strKey, \Input::get('node', true));
-			\Controller::redirect(preg_replace('/&node=[^&]*/', '', \Environment::get('request')));
+			$objSession->set($strKey, \Input::get('pn', true));
+			\Controller::redirect(preg_replace('/&pn=[^&]*/', '', \Environment::get('request')));
 		}
 
 		$intNode = $objSession->get($strKey);
@@ -892,7 +892,7 @@ abstract class Backend extends \Controller
 				}
 				else
 				{
-					$arrLinks[] = \Backend::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . \Backend::addToUrl('node='.$objPage->id) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
+					$arrLinks[] = \Backend::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . \Backend::addToUrl('pn='.$objPage->id) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
 				}
 
 				// Do not show the mounted pages
@@ -917,7 +917,7 @@ abstract class Backend extends \Controller
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
 
 		// Add root link
-		$arrLinks[] = \Image::getHtml('pagemounts.gif') . ' <a href="' . \Backend::addToUrl('node=0') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = \Image::getHtml('pagemounts.gif') . ' <a href="' . \Backend::addToUrl('pn=0') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -964,7 +964,7 @@ abstract class Backend extends \Controller
 		}
 
 		// Add the breadcrumb link
-		$label = '<a href="' . \Backend::addToUrl('node='.$row['id']) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
+		$label = '<a href="' . \Backend::addToUrl('pn='.$row['id']) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
 
 		// Return the image
 		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['id'].'" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['view']).'"' . (($dc->table != 'tl_page') ? ' class="tl_gray"' : '') . ' target="_blank">'.\Image::getHtml($image, '', $imageAttribute).'</a> '.$label;
@@ -985,16 +985,16 @@ abstract class Backend extends \Controller
 		$objSession = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['node']))
+		if (isset($_GET['fn']))
 		{
 			// Check the path (thanks to Arnaud Buchoux)
-			if (\Validator::isInsecurePath(\Input::get('node', true)))
+			if (\Validator::isInsecurePath(\Input::get('fn', true)))
 			{
-				throw new \RuntimeException('Insecure path ' . \Input::get('node', true));
+				throw new \RuntimeException('Insecure path ' . \Input::get('fn', true));
 			}
 
-			$objSession->set($strKey, \Input::get('node', true));
-			\Controller::redirect(preg_replace('/(&|\?)node=[^&]*/', '', \Environment::get('request')));
+			$objSession->set($strKey, \Input::get('fn', true));
+			\Controller::redirect(preg_replace('/(&|\?)fn=[^&]*/', '', \Environment::get('request')));
 		}
 
 		$strNode = $objSession->get($strKey);
@@ -1024,7 +1024,7 @@ abstract class Backend extends \Controller
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = \Image::getHtml('filemounts.gif') . ' <a href="' . \Backend::addToUrl('node=') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = \Image::getHtml('filemounts.gif') . ' <a href="' . \Backend::addToUrl('fn=') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -1044,7 +1044,7 @@ abstract class Backend extends \Controller
 			}
 			else
 			{
-				$arrLinks[] = \Image::getHtml('folderC.gif') . ' <a href="' . \Backend::addToUrl('node='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = \Image::getHtml('folderC.gif') . ' <a href="' . \Backend::addToUrl('fn='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
 			}
 		}
 
