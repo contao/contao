@@ -369,7 +369,6 @@ class Environment
 	 */
 	protected static function ip()
 	{
-		/** @var Request $request */
 		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
