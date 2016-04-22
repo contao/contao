@@ -1,5 +1,13 @@
 # Contao FAQ bundle change log
 
+### 4.1.3 (2016-04-21)
+
+ * Adjust the phpDoc return types of the models.
+
+### 4.1.2 (2016-03-22)
+
+ * Respect the SSL settings of the root page when generating sitemaps (see contao/core#8270).
+
 ### 4.1.1 (2016-03-03)
 
  * Always fix the domain and language when generating URLs (see contao/core#8238).
