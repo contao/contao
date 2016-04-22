@@ -1,0 +1,29 @@
+services:
+    contao.command.automator:
+        class: Contao\CoreBundle\Command\AutomatorCommand
+        calls:
+            - ["setFramework", ["@contao.framework"]]
+        tags:
+            -  { name: console.command }
+
+    contao.command.filesync:
+        class: Contao\CoreBundle\Command\FilesyncCommand
+        calls:
+            - ["setFramework", ["@contao.framework"]]
+        tags:
+            -  { name: console.command }
+
+    contao.command.install:
+        class: Contao\CoreBundle\Command\InstallCommand
+        tags:
+            -  { name: console.command }
+
+    contao.command.symlinks:
+        class: Contao\CoreBundle\Command\SymlinksCommand
+        tags:
+            -  { name: console.command }
+
+    contao.command.version:
+        class: Contao\CoreBundle\Command\VersionCommand
+        tags:
+            -  { name: console.command }
