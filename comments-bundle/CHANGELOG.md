@@ -1,5 +1,9 @@
 # Contao comments bundle change log
 
+### 4.1.3 (2016-04-XX)
+
+ * Adjust the phpDoc return types of the models.
+
 ### 4.1.1 (2016-03-03)
 
  * Add a missing `rgxp` setting (see contao/core#8173).
