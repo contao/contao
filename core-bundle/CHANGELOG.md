@@ -2,6 +2,7 @@
 
 ### 4.2.0-beta1 (2016-XX-XX)
 
+ * Add the PaletteManipulator class to modify DCA palettes (see #474).
  * Optimize the jQuery and MooTools templates (see contao/core#8017).
  * Show the record ID and table name in the diff view (see contao/core#5800).
  * Add a "reset filters" button (see contao/core#6239).
