@@ -34,12 +34,12 @@
         <target>Het IP adres van de abonnee.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.0">
-        <source>Token key</source>
-        <target>Token sleutel</target>
+        <source>Activation token</source>
+        <target>Activatie token</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.1">
-        <source>The confirmation token of the subscription.</source>
-        <target>Bevestigings token van het abonnement.</target>
+        <source>The activation token of the subscription.</source>
+        <target>Activatie token van het abonnement.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.confirmed.0">
         <source>Confirmation date</source>

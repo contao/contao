@@ -1,5 +1,10 @@
 # Contao newsletter bundle change log
 
+### 4.1.3 (2016-04-22)
+
+ * Fix an error message in the newsletter subscription module (see contao/core#7887).
+ * Correctly pass the channel ID to the newsletter list template (see contao/core#8311).
+
 ### 4.1.2 (2016-03-22)
 
  * Respect the SSL settings of the root page when generating sitemaps (see contao/core#8270).

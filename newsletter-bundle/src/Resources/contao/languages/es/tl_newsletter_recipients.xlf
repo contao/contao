@@ -34,12 +34,13 @@
         <target>La dirección IP del suscriptor</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.0">
-        <source>Token key</source>
-        <target>Vale</target>
+        <source>Activation token</source>
+        <target>Activación del token</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.1">
-        <source>The confirmation token of the subscription.</source>
-        <target>El vale de confirmación de la suscripción</target>
+        <source>The activation token of the subscription.</source>
+        <target>
+El token de activación de la suscripción.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.confirmed.0">
         <source>Confirmation date</source>
