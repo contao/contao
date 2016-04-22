@@ -14,6 +14,7 @@
       </trans-unit>
       <trans-unit id="tl_files.path.1">
         <source>The relative path to the file or folder.</source>
+        <target>مسیر نسبی برای پرونده یا پوشه.</target>
       </trans-unit>
       <trans-unit id="tl_files.extension.0">
         <source>Extension</source>
@@ -21,6 +22,7 @@
       </trans-unit>
       <trans-unit id="tl_files.extension.1">
         <source>The file extension</source>
+        <target>پسوند پرونده</target>
       </trans-unit>
       <trans-unit id="tl_files.protected.0">
         <source>Public</source>

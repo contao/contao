@@ -2149,8 +2149,7 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
         <target>Creà ils</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
-        <source>Activated on</source>
-        <target>Activà ils</target>
+        <source>Activation token</source>
       </trans-unit>
       <trans-unit id="MSC.relevance">
         <source>%s relevance</source>

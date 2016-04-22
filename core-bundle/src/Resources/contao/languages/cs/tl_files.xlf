@@ -7,12 +7,15 @@
       </trans-unit>
       <trans-unit id="tl_files.name.1">
         <source>The file or folder name (without extension).</source>
+        <target>Název souboru nebo adresáře (bez přípony).</target>
       </trans-unit>
       <trans-unit id="tl_files.path.0">
         <source>Path</source>
+        <target>Cesta</target>
       </trans-unit>
       <trans-unit id="tl_files.path.1">
         <source>The relative path to the file or folder.</source>
+        <target>Relativní cesta k souboru nebo adresáři.</target>
       </trans-unit>
       <trans-unit id="tl_files.extension.0">
         <source>Extension</source>
@@ -20,6 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_files.extension.1">
         <source>The file extension</source>
+        <target>Přípona souboru.</target>
       </trans-unit>
       <trans-unit id="tl_files.protected.0">
         <source>Public</source>
