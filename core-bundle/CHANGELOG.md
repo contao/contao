@@ -2,6 +2,7 @@
 
 ### 4.1.3 (2016-04-XX)
 
+ * Use data URIs for the image preview in the back end.
  * Use DIRECTORY_SEPARATOR to convert kernel.cache_dir into a relative path (see #464).
  * Always trigger the "isVisibleElement" hook (see contao/core#8312).
  * Do not change all sessions when switching users (see contao/core#8158).

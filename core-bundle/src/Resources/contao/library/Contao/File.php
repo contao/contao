@@ -45,6 +45,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  * @property string   $mtime         The mtime
  * @property string   $atime         The atime
  * @property string   $icon          The mime icon name
+ * @property string   $dataUri       The data URI
  * @property array    $imageSize     The file dimensions (images only)
  * @property integer  $width         The file width (images only)
  * @property integer  $height        The file height (images only)
@@ -230,6 +231,10 @@ class File extends \System
 
 			case 'icon':
 				return $this->getIcon();
+				break;
+
+			case 'dataUri':
+				return 'data:' . $this->mime . ';base64,' . base64_encode($this->getContent());
 				break;
 
 			case 'imageSize':
