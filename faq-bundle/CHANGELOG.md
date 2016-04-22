@@ -1,6 +1,6 @@
 # Contao FAQ bundle change log
 
-### 4.1.3 (2016-04-XX)
+### 4.1.3 (2016-04-21)
 
  * Adjust the phpDoc return types of the models.
 
