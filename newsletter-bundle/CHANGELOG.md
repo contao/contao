@@ -1,6 +1,6 @@
 # Contao newsletter bundle change log
 
-### 4.1.3 (2016-04-XX)
+### 4.1.3 (2016-04-22)
 
  * Fix an error message in the newsletter subscription module (see contao/core#7887).
  * Correctly pass the channel ID to the newsletter list template (see contao/core#8311).
