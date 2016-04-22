@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Contao Open Source CMS
+ * This file is part of Contao.
  *
  * Copyright (c) 2005-2016 Leo Feyer
  *
@@ -14,13 +14,12 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Test\TestCase;
 
 /**
- * Tests the PaletteManipulator class
+ * Tests the PaletteManipulator class.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
 class PaletteManipulatorTest extends TestCase
 {
-
     /**
      * Tests the object instantiation.
      */
@@ -31,7 +30,10 @@ class PaletteManipulatorTest extends TestCase
         static::assertInstanceOf('Contao\CoreBundle\DataContainer\PaletteManipulator', $pm);
     }
 
-    public function testBeforeFieldToPalette()
+    /**
+     * Tests prepending a field.
+     */
+    public function testPrependFieldToPalette()
     {
         $pm = PaletteManipulator::create()
             ->addField('foo', 'config_legend', PaletteManipulator::POSITION_PREPEND, 'config_legend')
@@ -53,6 +55,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests appending a field.
+     */
     public function testAppendFieldToPalette()
     {
         $pm = PaletteManipulator::create()
@@ -75,6 +80,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests adding a legend before another legend.
+     */
     public function testBeforeLegend()
     {
         $pm = PaletteManipulator::create()
@@ -93,6 +101,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests adding a legend after another legend.
+     */
     public function testAfterLegend()
     {
         $pm = PaletteManipulator::create()
@@ -111,6 +122,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests adding a field before another field.
+     */
     public function testBeforeField()
     {
         $pm = PaletteManipulator::create()
@@ -128,6 +142,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests adding a field after another field.
+     */
     public function testAfterField()
     {
         $pm = PaletteManipulator::create()
@@ -145,6 +162,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests skipping legends.
+     */
     public function testSkipLegends()
     {
         $pm = PaletteManipulator::create()
@@ -162,6 +182,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests adding a field to multiple parents.
+     */
     public function testMultipleParents()
     {
         $pm = PaletteManipulator::create()
@@ -174,6 +197,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests adding a field to an empty palette.
+     */
     public function testAddFieldToEmptyPalette()
     {
         $pm = PaletteManipulator::create()
@@ -205,6 +231,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests adding a field to a nameless legend.
+     */
     public function testAddToNamelessLegend()
     {
         $pm = PaletteManipulator::create()
@@ -217,6 +246,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests that empty legends are ignored.
+     */
     public function testIgnoresEmptyLegend()
     {
         $pm = PaletteManipulator::create()
@@ -230,6 +262,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests that duplicate legends are ignored.
+     */
     public function testIgnoresDuplicateLegend()
     {
         $pm = PaletteManipulator::create()
@@ -243,6 +278,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests adding collapsed legends.
+     */
     public function testHideLegend()
     {
         $pm = PaletteManipulator::create()
@@ -256,6 +294,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests applying the changes to a DCA palette.
+     */
     public function testApplyToDcaPalette()
     {
         $pm = PaletteManipulator::create()
@@ -273,6 +314,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests applying the changes to a DCA subpalette.
+     */
     public function testApplyToDcaSubpalette()
     {
         $pm = PaletteManipulator::create()
@@ -289,6 +333,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests that the fallback creates a palette.
+     */
     public function testFallbackCreatesPalette()
     {
         $pm = PaletteManipulator::create()
@@ -306,6 +353,9 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    /**
+     * Tests the fallback callback.
+     */
     public function testFallbackClosure()
     {
         $closureCalled = false;
@@ -335,13 +385,15 @@ class PaletteManipulatorTest extends TestCase
     }
 
     /**
-     * @expectedException \UnderflowException
+     * Tests applying changes to a missing palette.
+     *
+     * @expectedException \InvalidArgumentException
      */
     public function testMissingDcaPalette()
     {
         $pm = PaletteManipulator::create()
-                                ->addLegend('foobar_legend', '', PaletteManipulator::POSITION_APPEND)
-                                ->addField(['foo', 'bar'], 'foobar_legend', PaletteManipulator::POSITION_APPEND)
+            ->addLegend('foobar_legend', '', PaletteManipulator::POSITION_APPEND)
+            ->addField(['foo', 'bar'], 'foobar_legend', PaletteManipulator::POSITION_APPEND)
         ;
 
         // Make sure the palette is not here (for whatever reason another test might have set it)
@@ -351,7 +403,9 @@ class PaletteManipulatorTest extends TestCase
     }
 
     /**
-     * @expectedException \UnderflowException
+     * Tests applying changes to a missing subpalette.
+     *
+     * @expectedException \InvalidArgumentException
      */
     public function testMissingDcaSubpalette()
     {
@@ -366,7 +420,9 @@ class PaletteManipulatorTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * Tests adding a field at an invalid position.
+     *
+     * @expectedException \LogicException
      */
     public function testInvalidPosition()
     {
@@ -377,7 +433,9 @@ class PaletteManipulatorTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * Tests adding a field with a fallback at an invalid position.
+     *
+     * @expectedException \LogicException
      */
     public function testInvalidFallbackPosition()
     {
@@ -389,7 +447,7 @@ class PaletteManipulatorTest extends TestCase
                 'foobar_legend',
                 PaletteManipulator::POSITION_AFTER
             )
-            ->applyToString('foo');
+            ->applyToString('foo')
         ;
     }
 }
