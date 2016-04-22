@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "symfony/framework-bundle": "~2.8",
         "symfony/console": "~2.8",
         "symfony/filesystem": "~2.8",
@@ -40,7 +40,7 @@
         "contao-components/all": "^4.1.2"
     },
     "require-dev": {
-        "composer/composer": "~1.0@dev",
+        "composer/composer": "~1.0",
         "fabpot/php-cs-fixer": "~1.8",
         "lexik/maintenance-bundle": "~2.0",
         "phpunit/phpunit": "~4.5",

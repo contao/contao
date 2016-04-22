@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Request;
-
 
 /**
  * Reads the environment variables
@@ -369,7 +367,6 @@ class Environment
 	 */
 	protected static function ip()
 	{
-		/** @var Request $request */
 		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)

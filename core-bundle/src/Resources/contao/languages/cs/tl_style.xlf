@@ -151,6 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_style.alignment.1">
         <source>Margin, padding, align, vertical-align, text-align and white-space.</source>
+        <target>Odsazení zvenčí, zevnitř, vertikální uspořádání, zarovnání textu a zalamování řádků</target>
       </trans-unit>
       <trans-unit id="tl_style.margin.0">
         <source>Margin</source>
@@ -206,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_style.background.1">
         <source>Background-color, background-image, background-position, background-repeat, box-shadow and linear-gradient.</source>
+        <target>Barva pozadí (background-color), obrázek pozadí (background-image), umístění pozadí (background-position) a opakování pozadí (background-repeat).</target>
       </trans-unit>
       <trans-unit id="tl_style.bgcolor.0">
         <source>Background color and opacity</source>
@@ -333,6 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_style.font.1">
         <source>Font-family, font-size, font-color, line-height, font-style, text-transform, text-indent, letter-spacing and word-spacing.</source>
+        <target>Druh písma (font-family), velkost písma (font-size), barva písma (font-color), výška řádku (line-height), formát písma (font-style) a odazení písma (white-space).</target>
       </trans-unit>
       <trans-unit id="tl_style.fontfamily.0">
         <source>Font family</source>

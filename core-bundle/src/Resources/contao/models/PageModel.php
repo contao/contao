@@ -267,7 +267,7 @@ class PageModel extends \Model
 	 * @param integer $intId      The page ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no published page
+	 * @return PageModel|null The model or null if there is no published page
 	 */
 	public static function findPublishedById($intId, array $arrOptions=array())
 	{
@@ -291,7 +291,7 @@ class PageModel extends \Model
 	 * @param mixed  $varLanguage An ISO language code or an array of ISO language codes
 	 * @param array  $arrOptions  An optional options array
 	 *
-	 * @return static The model or null if there is no matching root page
+	 * @return PageModel|null The model or null if there is no matching root page
 	 */
 	public static function findFirstPublishedRootByHostAndLanguage($strHost, $varLanguage, array $arrOptions=array())
 	{
@@ -351,7 +351,7 @@ class PageModel extends \Model
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no published page
+	 * @return PageModel|null The model or null if there is no published page
 	 */
 	public static function findFirstPublishedByPid($intPid, array $arrOptions=array())
 	{
@@ -379,7 +379,7 @@ class PageModel extends \Model
 	 * @param integer $intPid The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no published regular page
+	 * @return PageModel|null The model or null if there is no published regular page
 	 */
 	public static function findFirstPublishedRegularByPid($intPid, array $arrOptions=array())
 	{
@@ -407,7 +407,7 @@ class PageModel extends \Model
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no 403 page
+	 * @return PageModel|null The model or null if there is no 403 page
 	 */
 	public static function find403ByPid($intPid, array $arrOptions=array())
 	{
@@ -435,7 +435,7 @@ class PageModel extends \Model
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no 404 page
+	 * @return PageModel|null The model or null if there is no 404 page
 	 */
 	public static function find404ByPid($intPid, array $arrOptions=array())
 	{
@@ -628,7 +628,7 @@ class PageModel extends \Model
 	 * @param string $strHost    The hostname
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return static The page model or null if there is not fallback page
+	 * @return PageModel|null The model or null if there is not fallback page
 	 */
 	public static function findPublishedFallbackByHostname($strHost, array $arrOptions=array())
 	{
@@ -698,7 +698,7 @@ class PageModel extends \Model
 	 *
 	 * @param string $arrIds An array of member group IDs
 	 *
-	 * @return static The model or null if there is no matching member group
+	 * @return PageModel|null The model or null if there is no matching member group
 	 */
 	public static function findFirstActiveByMemberGroups($arrIds)
 	{
@@ -729,7 +729,7 @@ class PageModel extends \Model
 	 *
 	 * @param integer $intId The page's ID
 	 *
-	 * @return static The model or null if there is no matching page
+	 * @return PageModel|null The model or null if there is no matching page
 	 */
 	public static function findWithDetails($intId)
 	{
@@ -747,7 +747,7 @@ class PageModel extends \Model
 	/**
 	 * Get the details of a page including inherited parameters
 	 *
-	 * @return static The page model
+	 * @return PageModel The page model
 	 *
 	 * @throws NoRootPageFoundException If no root page is found
 	 */

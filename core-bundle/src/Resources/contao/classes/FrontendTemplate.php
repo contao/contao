@@ -307,7 +307,7 @@ class FrontendTemplate extends \Template
 				var_export(TL_ASSETS_URL, true)
 			);
 
-			$strCachePath = str_replace(TL_ROOT . '/', '', \System::getContainer()->getParameter('kernel.cache_dir'));
+			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 			// Create the cache file
 			$strMd5CacheKey = md5($strCacheKey);

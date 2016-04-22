@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceEnable">
         <source>Enable</source>
+        <target>Povolit</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceDisable">
         <source>Disable</source>
