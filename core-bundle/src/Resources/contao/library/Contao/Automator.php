@@ -74,7 +74,7 @@ class Automator extends \System
 		$objDatabase->execute("TRUNCATE TABLE tl_search");
 		$objDatabase->execute("TRUNCATE TABLE tl_search_index");
 
-		$strCachePath = str_replace(TL_ROOT . '/', '', \System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 		// Purge the cache folder
 		$objFolder = new \Folder($strCachePath . '/contao/search');
@@ -185,7 +185,7 @@ class Automator extends \System
 	 */
 	public function purgePageCache()
 	{
-		$strCacheDir = str_replace(TL_ROOT . '/', '', \System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 		$objFolder = new \Folder($strCacheDir . '/contao/html');
 		$objFolder->purge();
@@ -200,7 +200,7 @@ class Automator extends \System
 	 */
 	public function purgeSearchCache()
 	{
-		$strCacheDir = str_replace(TL_ROOT . '/', '', \System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 		$objFolder = new \Folder($strCacheDir . '/contao/search');
 		$objFolder->purge();

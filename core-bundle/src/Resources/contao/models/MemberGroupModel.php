@@ -73,7 +73,7 @@ class MemberGroupModel extends \Model
 	 * @param integer $intId      The member group ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no member group
+	 * @return MemberGroupModel|null The model or null if there is no member group
 	 */
 	public static function findPublishedById($intId, array $arrOptions=array())
 	{
@@ -111,7 +111,7 @@ class MemberGroupModel extends \Model
 	 *
 	 * @param string $arrIds An array of member group IDs
 	 *
-	 * @return static The model or null if there is no matching member group
+	 * @return MemberGroupModel|null The model or null if there is no matching member group
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use PageModel::findFirstActiveByMemberGroups() instead.

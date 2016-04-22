@@ -55,11 +55,8 @@ class BackendMain extends \Backend
 		// Password change required
 		if ($this->User->pwChange)
 		{
-			/** @var SessionInterface $session */
-			$session = \System::getContainer()->get('session');
-
-			$objSession = $this->Database->prepare("SELECT su FROM tl_session WHERE sessionID=? AND pid=?")
-										 ->execute($session->getId(), $this->User->id);
+			$objSession = $this->Database->prepare("SELECT su FROM tl_session WHERE hash=?")
+										 ->execute($this->getSessionHash('BE_USER_AUTH'));
 
 			if (!$objSession->su)
 			{

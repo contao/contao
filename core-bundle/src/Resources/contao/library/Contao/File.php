@@ -33,7 +33,8 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  * @property string   $name          The file name and extension
  * @property string   $basename      Alias of $name
  * @property string   $dirname       The path of the parent folder
- * @property string   $extension     The file extension
+ * @property string   $extension     The lowercase file extension
+ * @property string   $origext       The original file extension
  * @property string   $filename      The file name without extension
  * @property string   $tmpname       The name of the temporary file
  * @property string   $path          The file path
@@ -44,6 +45,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  * @property string   $mtime         The mtime
  * @property string   $atime         The atime
  * @property string   $icon          The mime icon name
+ * @property string   $dataUri       The data URI
  * @property array    $imageSize     The file dimensions (images only)
  * @property integer  $width         The file width (images only)
  * @property integer  $height        The file height (images only)
@@ -169,33 +171,33 @@ class File extends \System
 			case 'basename':
 				if (!isset($this->arrPathinfo[$strKey]))
 				{
-					$this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
+					$this->arrPathinfo = $this->getPathinfo();
 				}
 				return $this->arrPathinfo['basename'];
 				break;
 
 			case 'dirname':
+			case 'filename':
 				if (!isset($this->arrPathinfo[$strKey]))
 				{
-					$this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
+					$this->arrPathinfo = $this->getPathinfo();
 				}
-				return $this->arrPathinfo['dirname'];
-				break;
+				return $this->arrPathinfo[$strKey];
 
 			case 'extension':
 				if (!isset($this->arrPathinfo['extension']))
 				{
-					$this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
+					$this->arrPathinfo = $this->getPathinfo();
 				}
 				return strtolower($this->arrPathinfo['extension']);
 				break;
 
-			case 'filename':
-				if (!isset($this->arrPathinfo[$strKey]))
+			case 'origext':
+				if (!isset($this->arrPathinfo['extension']))
 				{
-					$this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
+					$this->arrPathinfo = $this->getPathinfo();
 				}
-				return $this->arrPathinfo['filename'];
+				return $this->arrPathinfo['extension'];
 				break;
 
 			case 'tmpname':
@@ -229,6 +231,10 @@ class File extends \System
 
 			case 'icon':
 				return $this->getIcon();
+				break;
+
+			case 'dataUri':
+				return 'data:' . $this->mime . ';base64,' . base64_encode($this->getContent());
 				break;
 
 			case 'imageSize':
@@ -861,5 +867,43 @@ class File extends \System
 		{
 			return md5_file(TL_ROOT . '/' . $this->strFile);
 		}
+	}
+
+
+	/**
+	 * Return the path info (binary-safe)
+	 *
+	 * @return array The path info
+	 *
+	 * @see https://github.com/PHPMailer/PHPMailer/blob/master/class.phpmailer.php#L3520
+	 */
+	protected function getPathinfo()
+	{
+		$matches = array();
+		$return = array('dirname'=>'', 'basename'=>'', 'extension'=>'', 'filename'=>'');
+
+		preg_match('%^(.*?)[\\\\/]*(([^/\\\\]*?)(\.([^\.\\\\/]+?)|))[\\\\/\.]*$%im', $this->strFile, $matches);
+
+		if (isset($matches[1]))
+		{
+			$return['dirname'] = $matches[1];
+		}
+
+		if (isset($matches[2]))
+		{
+			$return['basename'] = $matches[2];
+		}
+
+		if (isset($matches[5]))
+		{
+			$return['extension'] = $matches[5];
+		}
+
+		if (isset($matches[3]))
+		{
+			$return['filename'] = $matches[3];
+		}
+
+		return $return;
 	}
 }

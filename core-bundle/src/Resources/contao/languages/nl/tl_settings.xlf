@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.websiteTitle.1">
         <source>Please enter the title of the website.</source>
-        <target>Geef de titel van uw website op.</target>
+        <target>Geef een titel voor de website op.</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
@@ -191,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
         <source>Do not check the request token when a form is submitted (insecure!).</source>
+        <target>Request token niet controleren wanneer een formulier wordt ingediend (onveilig!)</target>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>

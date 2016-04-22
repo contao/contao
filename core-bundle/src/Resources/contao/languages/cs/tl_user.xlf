@@ -183,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_user.imageSizes.1">
         <source>Here you can grant access to one or more image sizes.</source>
+        <target>Zde můžete určit přístup k jednomu nebo více velkostem obrázku.</target>
       </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>

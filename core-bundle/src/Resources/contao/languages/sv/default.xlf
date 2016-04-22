@@ -2148,8 +2148,7 @@ Detta e-postmeddelande har genererats av Contao. Du kan inte svara på det direk
         <target>Skapad</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
-        <source>Activated on</source>
-        <target>Aktiverad</target>
+        <source>Activation token</source>
       </trans-unit>
       <trans-unit id="MSC.relevance">
         <source>%s relevance</source>

@@ -132,7 +132,7 @@ class BackendPopup extends \Backend
 				$objTemplate->src = $this->urlEncode($this->strFile);
 			}
 
-			$objTemplate->href = ampersand(\Environment::get('request'), true) . '&amp;download=1';
+			$objTemplate->href = $objFile->dataUri;
 			$objTemplate->filesize = $this->getReadableSize($objFile->filesize) . ' (' . number_format($objFile->filesize, 0, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']) . ' Byte)';
 		}
 

@@ -41,7 +41,7 @@
         "contao-components/all": "^4.1.2"
     },
     "require-dev": {
-        "composer/composer": "~1.0@dev",
+        "composer/composer": "~1.0",
         "fabpot/php-cs-fixer": "~1.8",
         "lexik/maintenance-bundle": "~2.0",
         "phpunit/phpunit": "~4.5",

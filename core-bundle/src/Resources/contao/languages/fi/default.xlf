@@ -2140,8 +2140,7 @@ Tämä viesti on Contaon generoima, eikä siihen voi vastata.
         <target>Luotu</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
-        <source>Activated on</source>
-        <target>Aktivoitu</target>
+        <source>Activation token</source>
       </trans-unit>
       <trans-unit id="MSC.relevance">
         <source>%s relevance</source>
