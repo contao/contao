@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Request;
-
 
 /**
  * Reads the environment variables
