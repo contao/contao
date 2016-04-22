@@ -1,6 +1,6 @@
 # Contao calendar bundle change log
 
-### 4.1.3 (2016-04-XX)
+### 4.1.3 (2016-04-22)
 
  * Adjust the phpDoc return types of the models.
  * Always allow to navigate to the current month in the calendar (see contao/core#8283).
