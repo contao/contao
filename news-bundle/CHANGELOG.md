@@ -1,5 +1,9 @@
 # Contao news bundle change log
 
+### 4.1.3 (2016-04-22)
+
+ * Adjust the phpDoc return types of the models.
+
 ### 4.1.2 (2016-03-22)
 
  * Respect the SSL settings of the root page when generating sitemaps (see contao/core#8270).
