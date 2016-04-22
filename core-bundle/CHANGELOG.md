@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.1.3 (2016-04-XX)
+### 4.1.3 (2016-04-22)
 
  * Use data URIs for the image preview in the back end.
  * Use DIRECTORY_SEPARATOR to convert kernel.cache_dir into a relative path (see #464).
