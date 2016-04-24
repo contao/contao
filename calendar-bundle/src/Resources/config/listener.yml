@@ -4,6 +4,11 @@ services:
         arguments:
             - "@contao.framework"
 
+    contao_calendar.listener.generate_page:
+        class: Contao\CalendarBundle\EventListener\GeneratePageListener
+        arguments:
+            - "@contao.framework"
+
     contao_calendar.listener.insert_tags:
         class: Contao\CalendarBundle\EventListener\InsertTagsListener
         arguments:
