@@ -51,7 +51,7 @@ class ImageFactoryTest extends TestCase
      *
      * @return ImageFactory
      */
-    private function createImageFactory($resizer = null, $imagine = null, $imagineSvg = null, $filesystem = null, $framework = null, $bypassCache = null, $imagineOptions = null)
+    private function createImageFactory($resizer = null, $imagine = null, $imagineSvg = null, $filesystem = null, $framework = null, $bypassCache = null, $imagineOptions = null, $validExtensions = null)
     {
         if (null === $resizer) {
             $resizer = $this->getMockBuilder('Contao\Image\Resizer')
@@ -83,7 +83,11 @@ class ImageFactoryTest extends TestCase
             $imagineOptions = ['jpeg_quality' => 80];
         }
 
-        return new ImageFactory($resizer, $imagine, $imagineSvg, $filesystem, $framework, $bypassCache, $imagineOptions);
+        if (null === $validExtensions) {
+            $validExtensions = ['jpg', 'svg'];
+        }
+
+        return new ImageFactory($resizer, $imagine, $imagineSvg, $filesystem, $framework, $bypassCache, $imagineOptions, $validExtensions);
     }
 
     /**
@@ -165,6 +169,18 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
         $this->assertSame($imageMock, $image);
+    }
+
+    /**
+     * Tests the create() method.
+     */
+    public function testCreateInvalidExtension()
+    {
+        $imageFactory = $this->createImageFactory();
+
+        $this->setExpectedException('InvalidArgumentException');
+
+        $imageFactory->create($this->getRootDir() . '/images/dummy.foo');
     }
 
     /**

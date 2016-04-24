@@ -507,6 +507,7 @@ class Config
 			'uploadPath'       => 'contao.upload_path',
 			'debugMode'        => 'kernel.debug',
 			'disableIpCheck'   => 'contao.security.disable_ip_check',
+			'validImageTypes'  => 'contao.image.valid_extensions',
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)

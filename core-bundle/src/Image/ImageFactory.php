@@ -64,6 +64,11 @@ class ImageFactory
     private $imagineOptions;
 
     /**
+     * @var array
+     */
+    private $validExtensions;
+
+    /**
      * Constructor.
      *
      * @param ResizerInterface         $resizer        The resizer object
@@ -81,7 +86,8 @@ class ImageFactory
         Filesystem $filesystem,
         ContaoFrameworkInterface $framework,
         $bypassCache,
-        array $imagineOptions
+        array $imagineOptions,
+        array $validExtensions
     ) {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
@@ -90,6 +96,7 @@ class ImageFactory
         $this->framework = $framework;
         $this->bypassCache = (bool) $bypassCache;
         $this->imagineOptions = $imagineOptions;
+        $this->validExtensions = $validExtensions;
     }
 
     /**
@@ -104,13 +111,16 @@ class ImageFactory
      */
     public function create($path, $size = null, $targetPath = null)
     {
-        if (in_array(
-            strtolower(pathinfo($path, PATHINFO_EXTENSION)),
-            ['svg', 'svgz']
-        )) {
+        $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        if (in_array($fileExtension, ['svg', 'svgz'])) {
             $imagine = $this->imagineSvg;
         } else {
             $imagine = $this->imagine;
+        }
+
+        if (!in_array($fileExtension, $this->validExtensions)) {
+            throw new \InvalidArgumentException('Image type "' . $fileExtension . '" was not allowed to be processed');
         }
 
         $image = new Image($imagine, $this->filesystem, (string) $path);

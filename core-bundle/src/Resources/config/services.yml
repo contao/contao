@@ -126,6 +126,7 @@ services:
             - "@contao.framework"
             - %contao.image.bypass_cache%
             - %contao.image.imagine_options%
+            - %contao.image.valid_extensions%
 
     contao.image.picture_generator:
         class: Contao\Image\PictureGenerator
