@@ -647,37 +647,6 @@ class PageRegular extends \Frontend
 		// Always add conditional style sheets at the end
 		$strStyleSheets .= $strCcStyleSheets;
 
-		$newsfeeds = deserialize($objLayout->newsfeeds);
-		$calendarfeeds = deserialize($objLayout->calendarfeeds);
-
-		// Add newsfeeds
-		if (!empty($newsfeeds) && is_array($newsfeeds))
-		{
-			$objFeeds = \NewsFeedModel::findByIds($newsfeeds);
-
-			if ($objFeeds !== null)
-			{
-				while($objFeeds->next())
-				{
-					$strStyleSheets .= \Template::generateFeedTag(($objFeeds->feedBase ?: \Environment::get('base')) . 'share/' . $objFeeds->alias . '.xml', $objFeeds->format, $objFeeds->title) . "\n";
-				}
-			}
-		}
-
-		// Add calendarfeeds
-		if (!empty($calendarfeeds) && is_array($calendarfeeds))
-		{
-			$objFeeds = \CalendarFeedModel::findByIds($calendarfeeds);
-
-			if ($objFeeds !== null)
-			{
-				while($objFeeds->next())
-				{
-					$strStyleSheets .= \Template::generateFeedTag(($objFeeds->feedBase ?: \Environment::get('base')) . 'share/' . $objFeeds->alias . '.xml', $objFeeds->format, $objFeeds->title) . "\n";
-				}
-			}
-		}
-
 		// Add a placeholder for dynamic <head> tags (see #4203)
 		$strHeadTags = '[[TL_HEAD]]';
 

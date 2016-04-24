@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections,sPosition;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder;{picturefill_legend:hide},picturefill;{feed_legend:hide},newsfeeds,calendarfeeds;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
+		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections,sPosition;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder;{picturefill_legend:hide},picturefill;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
 	),
 
 	// Subpalettes
@@ -273,24 +273,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'options'                 => array('external_first', 'internal_first'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'sql'                     => "varchar(16) NOT NULL default ''"
-		),
-		'newsfeeds' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['newsfeeds'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'options_callback'        => array('tl_layout', 'getNewsfeeds'),
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
-		),
-		'calendarfeeds' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['calendarfeeds'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'options_callback'        => array('tl_layout', 'getCalendarfeeds'),
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
 		),
 		'modules' => array
 		(
@@ -572,70 +554,6 @@ class tl_layout extends Backend
 		while ($objStyleSheet->next())
 		{
 			$return[$objStyleSheet->id] = $objStyleSheet->name;
-		}
-
-		return $return;
-	}
-
-
-	/**
-	 * Return all news archives with XML feeds
-	 *
-	 * @return array
-	 */
-	public function getNewsfeeds()
-	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		if (!isset($bundles['ContaoNewsBundle']))
-		{
-			return array();
-		}
-
-		$objFeed = NewsFeedModel::findAll();
-
-		if ($objFeed === null)
-		{
-			return array();
-		}
-
-		$return = array();
-
-		while ($objFeed->next())
-		{
-			$return[$objFeed->id] = $objFeed->title;
-		}
-
-		return $return;
-	}
-
-
-	/**
-	 * Return all calendars with XML feeds
-	 *
-	 * @return array
-	 */
-	public function getCalendarfeeds()
-	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		if (!isset($bundles['ContaoCalendarBundle']))
-		{
-			return array();
-		}
-
-		$objFeed = CalendarFeedModel::findAll();
-
-		if ($objFeed === null)
-		{
-			return array();
-		}
-
-		$return = array();
-
-		while ($objFeed->next())
-		{
-			$return[$objFeed->id] = $objFeed->title;
 		}
 
 		return $return;
