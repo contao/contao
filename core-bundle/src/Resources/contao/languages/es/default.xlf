@@ -2156,8 +2156,8 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <target>Creado en</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
-        <source>Activated on</source>
-        <target>Activado en</target>
+        <source>Activation token</source>
+        <target>Activación del token</target>
       </trans-unit>
       <trans-unit id="MSC.relevance">
         <source>%s relevance</source>

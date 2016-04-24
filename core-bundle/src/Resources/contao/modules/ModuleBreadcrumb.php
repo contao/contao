@@ -98,7 +98,7 @@ class ModuleBreadcrumb extends \Module
 			array_pop($pages);
 		}
 
-		/** @var \PageModel[] $pages */
+		/** @var PageModel[] $pages */
 		for ($i=(count($pages)-1); $i>0; $i--)
 		{
 			if (($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !BE_USER_LOGGED_IN))
@@ -119,9 +119,9 @@ class ModuleBreadcrumb extends \Module
 					break;
 
 				case 'forward':
-					if (($objNext = $pages[$i]->getRelated('jumpTo')) !== null)
+					if (($objNext = $pages[$i]->getRelated('jumpTo')) instanceof PageModel)
 					{
-						/** @var \PageModel $objNext */
+						/** @var PageModel $objNext */
 						$href = $objNext->getFrontendUrl();
 						break;
 					}

@@ -232,10 +232,10 @@ class PrettyErrorScreenListener
      */
     private function getTemplateForException(\Exception $exception)
     {
-        $class = get_class($exception);
-
-        if (isset($this->mapper[$class])) {
-            return $this->mapper[$class];
+        foreach ($this->mapper as $class => $template) {
+            if ($exception instanceof $class) {
+                return $template;
+            }
         }
 
         return null;
@@ -293,6 +293,7 @@ class PrettyErrorScreenListener
                     . 'not know how to fix the problem, search the '
                     . '<a href="https://contao.org/faq.html">Contao FAQs</a> or visit the '
                     . '<a href="https://contao.org/support.html">Contao support page</a>.',
+                'hint' => 'To customize this notice, create a custom Twig template overriding %s.',
             ],
             'template' => '@ContaoCore/Error/error.html.twig',
             'base' => '',

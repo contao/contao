@@ -68,6 +68,7 @@ namespace Contao;
  * @property string  $customTpl
  * @property string  $playerSRC
  * @property string  $youtube
+ * @property string  $vimeo
  * @property string  $posterSRC
  * @property string  $playerSize
  * @property boolean $autoplay
@@ -119,7 +120,7 @@ abstract class ContentElement extends \Frontend
 
 	/**
 	 * Model
-	 * @var ContentElement
+	 * @var ContentModel
 	 */
 	protected $objModel;
 
@@ -150,13 +151,17 @@ abstract class ContentElement extends \Frontend
 	 */
 	public function __construct($objElement, $strColumn='main')
 	{
-		if ($objElement instanceof Model)
+		if ($objElement instanceof Model || $objElement instanceof Model\Collection)
 		{
-			$this->objModel = $objElement;
-		}
-		elseif ($objElement instanceof Model\Collection)
-		{
-			$this->objModel = $objElement->current();
+			/** @var ContentModel $objModel */
+			$objModel = $objElement;
+
+			if ($objModel instanceof Model\Collection)
+			{
+				$objModel = $objModel->current();
+			}
+
+			$this->objModel = $objModel;
 		}
 
 		parent::__construct();

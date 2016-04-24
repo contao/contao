@@ -86,37 +86,6 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Returns the aliased classes.
-     *
-     * @return array The aliased classes
-     */
-    public function getClassesAliased()
-    {
-        $aliases = [];
-        $data = $this->getData('classes_aliased');
-
-        foreach ($data as $class) {
-            $alias = $class;
-            $original = '';
-            $pos = strpos($class, '<span');
-
-            if (false !== $pos) {
-                $alias = trim(substr($class, 0, $pos));
-                $original = trim(strip_tags(substr($class, $pos)), ' ()');
-            }
-
-            $aliases[$alias] = [
-                'alias' => $alias,
-                'original' => $original,
-            ];
-        }
-
-        ksort($aliases);
-
-        return $aliases;
-    }
-
-    /**
      * Returns the set classes.
      *
      * @return array The set classes
@@ -126,6 +95,34 @@ class ContaoDataCollector extends DataCollector
         $data = $this->getData('classes_set');
 
         sort($data);
+
+        return $data;
+    }
+
+    /**
+     * Returns the aliased classes.
+     *
+     * @return array The aliased classes
+     */
+    public function getClassesAliased()
+    {
+        $data = $this->getData('classes_aliased');
+
+        ksort($data);
+
+        return $data;
+    }
+
+    /**
+     * Returns the composerized classes.
+     *
+     * @return array The composerized classes
+     */
+    public function getClassesComposerized()
+    {
+        $data = $this->getData('classes_composerized');
+
+        ksort($data);
 
         return $data;
     }
@@ -166,8 +163,9 @@ class ContaoDataCollector extends DataCollector
         unset(
             $data['summary'],
             $data['contao_version'],
-            $data['classes_aliased'],
             $data['classes_set'],
+            $data['classes_aliased'],
+            $data['classes_composerized'],
             $data['database_queries'],
             $data['unknown_insert_tags'],
             $data['unknown_insert_tag_flags']

@@ -247,6 +247,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalid">
         <source>Invalid option: %s</source>
+        <target>Opzione non valida: %s</target>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -1420,6 +1421,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
+        <target>Le cartelle non sincronizzate non sono incluse nei risultati di ricerca.</target>
       </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
@@ -1627,12 +1629,15 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
+        <target>È disponibile la versione %s di Contao</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
+        <target>Modalità manutenzione abilitata.</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceDisabled">
         <source>The maintenance mode is currently disabled.</source>
+        <target>Modalità manutenzione disabilitata.</target>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1832,6 +1837,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.resendActivation">
         <source>The activation mail has been re-sent to your e-mail address.</source>
+        <target>La mail di attivazione è stata reinviata al tuo indirizzo e-mail.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
@@ -2150,8 +2156,8 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <target>Creato il</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
-        <source>Activated on</source>
-        <target>Attivato dal</target>
+        <source>Activation token</source>
+        <target>Token di attivazione</target>
       </trans-unit>
       <trans-unit id="MSC.relevance">
         <source>%s relevance</source>

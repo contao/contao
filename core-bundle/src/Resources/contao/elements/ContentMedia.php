@@ -66,7 +66,7 @@ class ContentMedia extends \ContentElement
 			while ($objFiles->next())
 			{
 				$objFile = new \File($objFiles->path);
-				$return .= '<li><img src="' . TL_ASSETS_URL . 'assets/contao/images/' . $objFile->icon . '" width="18" height="18" alt="" class="mime_icon"> <span>' . $objFile->name . '</span> <span class="size">(' . $this->getReadableSize($objFile->size) . ')</span></li>';
+				$return .= '<li>' . \Image::getHtml($objFile->icon, '', 'class="mime_icon"') . ' <span>' . $objFile->name . '</span> <span class="size">(' . $this->getReadableSize($objFile->size) . ')</span></li>';
 			}
 
 			return $return . '</ul>';
@@ -85,19 +85,6 @@ class ContentMedia extends \ContentElement
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
-
-		$this->Template->size = '';
-
-		// Set the size
-		if ($this->playerSize != '')
-		{
-			$size = deserialize($this->playerSize);
-
-			if (is_array($size))
-			{
-				$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
-			}
-		}
 
 		$this->Template->poster = false;
 
@@ -150,6 +137,24 @@ class ContentMedia extends \ContentElement
 			$objFile->title = specialchars($strTitle);
 
 			$arrFiles[$objFile->extension] = $objFile;
+		}
+
+		$size = deserialize($this->playerSize);
+
+		if (!is_array($size) || empty($size[0]) || empty($size[1]))
+		{
+			if ($this->Template->isVideo)
+			{
+				$this->Template->size = ' width="640" height="360"';
+			}
+			else
+			{
+				$this->Template->size = ' width="400" height="30"';
+			}
+		}
+		else
+		{
+			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
 
 		$this->Template->files = array_values(array_filter($arrFiles));

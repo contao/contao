@@ -1,4 +1,32 @@
 services:
+    contao.cache:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments:
+            - "%kernel.cache_dir%/contao/cache"
+            - ""
+            - 0022
+
+    contao.cache.clear_internal:
+        class: Contao\CoreBundle\Cache\ContaoCacheClearer
+        public: false
+        arguments:
+            - "@filesystem"
+        tags:
+            - { name: kernel.cache_clearer }
+
+    contao.cache.warm_internal:
+        class: Contao\CoreBundle\Cache\ContaoCacheWarmer
+        public: false
+        arguments:
+            - "@filesystem"
+            - "@contao.resource_finder"
+            - "@contao.resource_locator"
+            - "%kernel.root_dir%"
+            - "@doctrine.dbal.default_connection"
+            - "@contao.framework"
+        tags:
+            - { name: kernel.cache_warmer }
+
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         public: false
@@ -113,3 +141,19 @@ services:
             - "@contao.image.image_factory"
             - "@contao.framework"
             - %contao.image.imagine_options%
+
+    contao.session.contao_backend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        public: false
+        arguments:
+            - "_contao_be_attributes"
+        calls:
+            - ["setName", ["contao_backend"]]
+
+    contao.session.contao_frontend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        public: false
+        arguments:
+            - "_contao_fe_attributes"
+        calls:
+            - ["setName", ["contao_frontend"]]

@@ -91,7 +91,7 @@ class ModuleSearch extends \Module
 		$this->Template->advanced = ($this->searchType == 'advanced');
 
 		// Redirect page
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
+		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objTarget */
 			$this->Template->action = $objTarget->getFrontendUrl();
@@ -138,7 +138,7 @@ class ModuleSearch extends \Module
 				return;
 			}
 
-			$strCachePath = str_replace(TL_ROOT . '/', '', \System::getContainer()->getParameter('kernel.cache_dir'));
+			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
 			$arrResult = null;
 			$strChecksum = md5($strKeywords . $strQueryType . $intRootId . $blnFuzzy);

@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\OutputFromCacheListener;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,9 +45,14 @@ class OutputFromCacheListenerTest extends TestCase
             ->getMock()
         ;
 
-        $frontend = $this->getMock('Contao\Frontend', ['getResponseFromCache']);
+        $frontendAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['getResponseFromCache'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
-        $frontend
+        $frontendAdapter
             ->expects($this->any())
             ->method('getResponseFromCache')
             ->willReturn(new Response())
@@ -55,7 +61,7 @@ class OutputFromCacheListenerTest extends TestCase
         $this->framework
             ->expects($this->any())
             ->method('getAdapter')
-            ->willReturn($frontend)
+            ->willReturn($frontendAdapter)
         ;
     }
 

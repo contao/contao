@@ -178,7 +178,8 @@ $GLOBALS['TL_CTE'] = array
 		'image'           => 'ContentImage',
 		'gallery'         => 'ContentGallery',
 		'player'          => 'ContentMedia',
-		'youtube'         => 'ContentYouTube'
+		'youtube'         => 'ContentYouTube',
+		'vimeo'           => 'ContentVimeo'
 	),
 	'files' => array
 	(
@@ -259,6 +260,7 @@ $GLOBALS['TL_PTY'] = array
 	'forward'   => 'PageForward',
 	'redirect'  => 'PageRedirect',
 	'root'      => 'PageRoot',
+	'logout'    => 'PageLogout',
 	'error_403' => 'PageError403',
 	'error_404' => 'PageError404'
 );

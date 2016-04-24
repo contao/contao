@@ -53,7 +53,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'mode'                    => 6,
 			'fields'                  => array('published DESC', 'title', 'author'),
 			'paste_button_callback'   => array('tl_article', 'pasteArticle'),
-			'panelLayout'             => 'search'
+			'panelLayout'             => 'filter;search'
 		),
 		'label' => array
 		(
@@ -207,8 +207,9 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_article']['author'],
 			'default'                 => BackendUser::getInstance()->id,
-			'search'                  => true,
 			'exclude'                 => true,
+			'search'                  => true,
+			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -219,6 +220,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_article']['inColumn'],
 			'exclude'                 => true,
+			'filter'                  => true,
 			'default'                 => 'main',
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_article', 'getActiveLayoutSections'),
@@ -236,8 +238,8 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'showTeaser' => array
 		(
-			'exclude'                 => true,
 			'label'                   => &$GLOBALS['TL_LANG']['tl_article']['showTeaser'],
+			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -291,6 +293,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_article']['groups'],
 			'exclude'                 => true,
+			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
@@ -316,8 +319,9 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'published' => array
 		(
-			'exclude'                 => true,
 			'label'                   => &$GLOBALS['TL_LANG']['tl_article']['published'],
+			'exclude'                 => true,
+			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'doNotCopy'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"

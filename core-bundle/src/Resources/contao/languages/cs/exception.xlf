@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
         <source>Search the &lt;code&gt;app/logs&lt;/code&gt; folder for the current log file and find the associated error message (usually the last one).</source>
+        <target>Prohledejte adresář &lt;code&gt;app/logs&lt;/code&gt; a najděte tam soubor s příslušným chybovým hlášením (většinou se jedná o poslední položku).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Spouštění skriptu bylo pozastaveno, protože něco nefunguje správně. Daná chybová zpráva je skrytá u této poznámky z bezpečnostních důvodů a lze ji najít v souboru (viz výš). Pokud nerozumíte chybové zprávě nebo nevíte, jak lze daný problém opravit, prohledejte &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; nebo navštivte &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;stránku podpory Contaa&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -61,6 +63,7 @@
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
         <source>Please open the Contao install tool (&lt;code&gt;/install.php&lt;/code&gt;) in your browser.</source>
+        <target>Prosím spuťte instalační nástroj Contaa tím, že do adresního pole Vašeho prohlížeče zadáte &lt;code&gt;/contao/install&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>

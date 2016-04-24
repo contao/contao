@@ -77,7 +77,7 @@ class Versions extends \Controller
 		{
 			$objFile = \FilesModel::findByPk($intPid);
 
-			if ($objFile !== null && in_array($objFile->extension, trimsplit(',', \Config::get('editableFiles'))))
+			if ($objFile !== null && in_array($objFile->extension, trimsplit(',', strtolower(\Config::get('editableFiles')))))
 			{
 				$this->strPath = $objFile->path;
 			}
@@ -490,7 +490,7 @@ class Versions extends \Controller
 						}
 
 						$objDiff = new \Diff($from[$k], $to[$k]);
-						$strBuffer .= $objDiff->Render(new DiffRenderer(array('field'=>($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] ?: (isset($GLOBALS['TL_LANG']['MSC'][$k]) ? (is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k]) : $k)))));
+						$strBuffer .= $objDiff->render(new DiffRenderer(array('field'=>($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] ?: (isset($GLOBALS['TL_LANG']['MSC'][$k]) ? (is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k]) : $k)))));
 					}
 				}
 			}
@@ -555,7 +555,7 @@ class Versions extends \Controller
 <select name="version" class="tl_select">'.$versions.'
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">'.$GLOBALS['TL_LANG']['MSC']['restore'].'</button>
-<a href="'.$this->addToUrl('versions=1&amp;popup=1').'" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']).'" onclick="Backend.openModalIframe({\'width\':768,\'title\':\''.specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['showDifferences'])).'\',\'url\':this.href});return false">'.\Image::getHtml('diff.gif').'</a>
+<a href="'.\Backend::addToUrl('versions=1&amp;popup=1').'" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']).'" onclick="Backend.openModalIframe({\'width\':768,\'title\':\''.specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))).'\',\'url\':this.href});return false">'.\Image::getHtml('diff.gif').'</a>
 </div>
 </form>
 

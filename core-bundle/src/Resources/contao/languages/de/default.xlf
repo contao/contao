@@ -1749,7 +1749,7 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       </trans-unit>
       <trans-unit id="MSC.applyTitle">
         <source>Apply the changes</source>
-        <target>Die Änderungen anwenden</target>
+        <target>Änderungen anwenden</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -2156,8 +2156,8 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <target>Erstellt am</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
-        <source>Activated on</source>
-        <target>Aktiviert am</target>
+        <source>Activation token</source>
+        <target>Aktivierungstoken</target>
       </trans-unit>
       <trans-unit id="MSC.relevance">
         <source>%s relevance</source>

@@ -124,7 +124,7 @@ class ModuleCustomnav extends \Module
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
 		$objTemplate->level = 'level_1';
 
-		/** @var \PageModel[] $arrPages */
+		/** @var PageModel[] $arrPages */
 		foreach ($arrPages as $objModel)
 		{
 			$_groups = deserialize($objModel->groups);
@@ -140,9 +140,9 @@ class ModuleCustomnav extends \Module
 						break;
 
 					case 'forward':
-						if (($objNext = $objModel->getRelated('jumpTo')) !== null)
+						if (($objNext = $objModel->getRelated('jumpTo')) instanceof PageModel)
 						{
-							/** @var \PageModel $objNext */
+							/** @var PageModel $objNext */
 							$href = $objNext->getFrontendUrl();
 							break;
 						}
@@ -168,7 +168,7 @@ class ModuleCustomnav extends \Module
 					$row['pageTitle'] = specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex', 7) === 0);
+					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objModel->description);
 
@@ -194,7 +194,7 @@ class ModuleCustomnav extends \Module
 					$row['pageTitle'] = specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex', 7) === 0);
+					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objModel->description);
 

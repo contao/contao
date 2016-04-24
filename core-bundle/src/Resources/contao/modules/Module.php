@@ -175,13 +175,17 @@ abstract class Module extends \Frontend
 	 */
 	public function __construct($objModule, $strColumn='main')
 	{
-		if ($objModule instanceof Model)
+		if ($objModule instanceof Model || $objModule instanceof Model\Collection)
 		{
-			$this->objModel = $objModule;
-		}
-		elseif ($objModule instanceof Model\Collection)
-		{
-			$this->objModel = $objModule->current();
+			/** @var ModuleModel $objModel */
+			$objModel = $objModule;
+
+			if ($objModel instanceof Model\Collection)
+			{
+				$objModel = $objModel->current();
+			}
+
+			$this->objModel = $objModel;
 		}
 
 		parent::__construct();
@@ -399,7 +403,7 @@ abstract class Module extends \Frontend
 						}
 
 						// Hide the link if the target page is invisible
-						if ($objNext === null || !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time()))
+						if (!($objNext instanceof PageModel) || !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time()))
 						{
 							continue(2);
 						}
@@ -416,7 +420,7 @@ abstract class Module extends \Frontend
 				$trail = in_array($objSubpage->id, $objPage->trail);
 
 				// Active page
-				if (($objPage->id == $objSubpage->id || $objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) && !$this instanceof ModuleSitemap && $href == \Environment::get('request'))
+				if (($objPage->id == $objSubpage->id || $objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) && !($this instanceof ModuleSitemap) && $href == \Environment::get('request'))
 				{
 					// Mark active forward pages (see #4822)
 					$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . (($objSubpage->cssClass != '') ? ' ' . $objSubpage->cssClass : '');
@@ -446,7 +450,7 @@ abstract class Module extends \Frontend
 				$row['pageTitle'] = specialchars($objSubpage->pageTitle, true);
 				$row['link'] = $objSubpage->title;
 				$row['href'] = $href;
-				$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex', 7) === 0);
+				$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0);
 				$row['target'] = '';
 				$row['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objSubpage->description);
 

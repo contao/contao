@@ -45,8 +45,9 @@ class ContaoDataCollectorTest extends TestCase
         );
 
         $GLOBALS['TL_DEBUG'] = [
-            'classes_aliased' => ['ContentText <span>Contao\ContentText</span>'],
             'classes_set' => ['Contao\System'],
+            'classes_aliased' => ['ContentText' => 'Contao\ContentText'],
+            'classes_composerized' => ['ContentImage' => 'Contao\ContentImage'],
             'unknown_insert_tags' => ['foo'],
             'unknown_insert_tag_flags' => ['bar'],
             'additional_data' => 'data',
@@ -54,15 +55,8 @@ class ContaoDataCollectorTest extends TestCase
 
         $collector->collect(new Request(), new Response());
 
-        $this->assertEquals(
-            [
-                'ContentText' => [
-                    'alias' => 'ContentText',
-                    'original' => 'Contao\ContentText',
-                ],
-            ],
-            $collector->getClassesAliased()
-        );
+        $this->assertEquals(['ContentText' => 'Contao\ContentText'], $collector->getClassesAliased());
+        $this->assertEquals(['ContentImage' => 'Contao\ContentImage'], $collector->getClassesComposerized());
 
         $this->assertEquals(
             [

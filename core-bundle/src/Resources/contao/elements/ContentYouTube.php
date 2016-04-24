@@ -23,7 +23,7 @@ class ContentYouTube extends \ContentElement
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'ce_player';
+	protected $strTemplate = 'ce_youtube';
 
 
 	/**
@@ -40,7 +40,7 @@ class ContentYouTube extends \ContentElement
 
 		if (TL_MODE == 'BE')
 		{
-			return '<p><a href="http://youtu.be/' . $this->youtube . '" target="_blank">http://youtu.be/' . $this->youtube . '</a></p>';
+			return '<p><a href="https://youtu.be/' . $this->youtube . '" target="_blank">youtu.be/' . $this->youtube . '</a></p>';
 		}
 
 		return parent::generate();
@@ -52,36 +52,17 @@ class ContentYouTube extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$this->Template->size = '';
+		$size = deserialize($this->playerSize);
 
-		// Set the size
-		if ($this->playerSize != '')
+		if (!is_array($size) || empty($size[0]) || empty($size[1]))
 		{
-			$size = deserialize($this->playerSize);
-
-			if (is_array($size))
-			{
-				$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
-			}
+			$this->Template->size = ' width="640" height="360"';
+		}
+		else
+		{
+			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
 
-		$this->Template->poster = false;
-
-		// Optional poster
-		if ($this->posterSRC != '')
-		{
-			if (($objFile = \FilesModel::findByUuid($this->posterSRC)) !== null)
-			{
-				$this->Template->poster = $objFile->path;
-			}
-		}
-
-		$objFile = new \stdClass();
-		$objFile->mime = 'video/x-youtube';
-		$objFile->path = '//www.youtube.com/watch?v=' . $this->youtube;
-
-		$this->Template->isVideo = true;
-		$this->Template->files = array($objFile);
-		$this->Template->autoplay = $this->autoplay;
+		$this->Template->src = 'https://www.youtube.com/embed/' . $this->youtube;
 	}
 }

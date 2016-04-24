@@ -77,7 +77,7 @@ class FileSelector extends \Widget
 
 		if ($this->extensions != '')
 		{
-			$this->arrValidFileTypes = trimsplit(',', $this->extensions);
+			$this->arrValidFileTypes = trimsplit(',', strtolower($this->extensions));
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
@@ -332,22 +332,7 @@ class FileSelector extends \Widget
 			$this->arrValidFileTypes = trimsplit(',', $this->extensions);
 		}
 
-		$blnProtected = true;
-		$strPath = $strFolder;
-
-		// Check for public parent folders (see #213)
-		while ($strPath != '' && $strPath != '.')
-		{
-			if (file_exists(TL_ROOT . '/' . $strPath . '/.public'))
-			{
-				$blnProtected = false;
-				break;
-			}
-
-			$strPath = dirname($strPath);
-		}
-
-		return $this->renderFiletree(TL_ROOT . '/' . $strFolder, ($level * 20), $mount, $blnProtected);
+		return $this->renderFiletree(TL_ROOT . '/' . $strFolder, ($level * 20), $mount, $this->isProtectedPath($strFolder));
 	}
 
 
@@ -500,7 +485,7 @@ class FileSelector extends \Widget
 			$folderLabel = ($this->files || $this->filesOnly) ? '<strong>'.specialchars(basename($currentFolder)).'</strong>' : specialchars(basename($currentFolder));
 
 			// Add the current folder
-			$return .= \Image::getHtml($folderImg, '', $folderAttribute).' <a href="' . \Backend::addToUrl('node='.$this->urlEncode($currentFolder)) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$folderLabel.'</a></div> <div class="tl_right">';
+			$return .= \Image::getHtml($folderImg, '', $folderAttribute).' <a href="' . \Backend::addToUrl('fn='.$this->urlEncode($currentFolder)) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$folderLabel.'</a></div> <div class="tl_right">';
 
 			// Add a checkbox or radio button
 			if (!$this->filesOnly)
@@ -564,11 +549,11 @@ class FileSelector extends \Widget
 					{
 						$imageObj = \Image::create($currentEncoded, array(400, (($objFile->height && $objFile->height < 50) ? $objFile->height : 50), 'box'));
 						$importantPart = $imageObj->getImportantPart();
-						$thumbnail .= '<br><img src="' . TL_FILES_URL . $imageObj->executeResize()->getResizedPath() . '" alt="" style="margin:0 0 2px -19px">';
+						$thumbnail .= '<br>' . \Image::getHtml($imageObj->executeResize()->getResizedPath(), '', 'style="margin:0 0 2px -19px"');
 
 						if ($importantPart['x'] > 0 || $importantPart['y'] > 0 || $importantPart['width'] < $objFile->width || $importantPart['height'] < $objFile->height)
 						{
-							$thumbnail .= ' <img src="' . TL_FILES_URL . $imageObj->setZoomLevel(100)->setTargetWidth(320)->setTargetHeight((($objFile->height && $objFile->height < 40) ? $objFile->height : 40))->executeResize()->getResizedPath() . '" alt="" style="margin:0 0 2px 0">';
+							$thumbnail .= ' ' . \Image::getHtml($imageObj->setZoomLevel(100)->setTargetWidth(320)->setTargetHeight((($objFile->height && $objFile->height < 40) ? $objFile->height : 40))->executeResize()->getResizedPath(), '', 'style="margin:0 0 2px 0"');
 						}
 					}
 				}

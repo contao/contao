@@ -55,11 +55,8 @@ class BackendMain extends \Backend
 		// Password change required
 		if ($this->User->pwChange)
 		{
-			/** @var SessionInterface $session */
-			$session = \System::getContainer()->get('session');
-
-			$objSession = $this->Database->prepare("SELECT su FROM tl_session WHERE sessionID=? AND pid=?")
-										 ->execute($session->getId(), $this->User->id);
+			$objSession = $this->Database->prepare("SELECT su FROM tl_session WHERE hash=?")
+										 ->execute($this->getSessionHash('BE_USER_AUTH'));
 
 			if (!$objSession->su)
 			{
@@ -175,6 +172,7 @@ class BackendMain extends \Backend
 
 		$objTemplate->welcome = sprintf($GLOBALS['TL_LANG']['MSC']['welcomeTo'], \Config::get('websiteTitle'));
 		$objTemplate->showDifferences = specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['showDifferences']));
+		$objTemplate->recordOfTable = specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['recordOfTable']));
 		$objTemplate->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$objTemplate->shortcuts = $GLOBALS['TL_LANG']['MSC']['shortcuts'][0];
 		$objTemplate->shortcutsLink = $GLOBALS['TL_LANG']['MSC']['shortcuts'][1];

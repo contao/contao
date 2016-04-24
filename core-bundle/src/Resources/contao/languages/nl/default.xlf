@@ -2156,8 +2156,8 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <target>Aangemaakt op</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
-        <source>Activated on</source>
-        <target>Geactiveerd op</target>
+        <source>Activation token</source>
+        <target>Activatie token</target>
       </trans-unit>
       <trans-unit id="MSC.relevance">
         <source>%s relevance</source>

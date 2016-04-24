@@ -56,6 +56,12 @@
       <trans-unit id="tl_page.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
       </trans-unit>
+      <trans-unit id="tl_page.redirectBack.0">
+        <source>Redirect to last page visited</source>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.1">
+        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
+      </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
       </trans-unit>

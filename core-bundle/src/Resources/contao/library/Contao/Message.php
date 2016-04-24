@@ -110,12 +110,7 @@ class Message
 			throw new \Exception("Invalid message type $strType");
 		}
 
-		if (!is_array($_SESSION['MESSAGES'][$strScope][$strType]))
-		{
-			$_SESSION['MESSAGES'][$strScope][$strType] = array();
-		}
-
-		$_SESSION['MESSAGES'][$strScope][$strType][] = $strMessage;
+		\System::getContainer()->get('session')->getFlashBag()->add(static::getFlashBagKey($strType, $strScope ), $strMessage);
 	}
 
 
@@ -148,25 +143,14 @@ class Message
 	 */
 	public static function generateUnwrapped($strScope=TL_MODE)
 	{
-		if (empty($_SESSION['MESSAGES'][$strScope]))
-		{
-			return '';
-		}
-
 		$strMessages = '';
-		$arrMessages = &$_SESSION['MESSAGES'][$strScope];
 
 		foreach (static::getTypes() as $strType)
 		{
-			if (!is_array($arrMessages[$strType]))
-			{
-				continue;
-			}
-
 			$strClass = strtolower($strType);
-			$arrMessages[$strType] = array_unique($arrMessages[$strType]);
+			$arrMessages = \System::getContainer()->get('session')->getFlashBag()->get(static::getFlashBagKey($strType, $strScope));
 
-			foreach ($arrMessages[$strType] as $strMessage)
+			foreach (array_unique($arrMessages) as $strMessage)
 			{
 				if ($strType == 'TL_RAW')
 				{
@@ -180,7 +164,7 @@ class Message
 
 			if (!$_POST)
 			{
-				$arrMessages[$strType] = array();
+				\System::getContainer()->get('session')->getFlashBag()->set(static::getFlashBagKey($strType, $strScope), null);
 			}
 		}
 
@@ -193,7 +177,7 @@ class Message
 	 */
 	public static function reset()
 	{
-		unset($_SESSION['MESSAGES']);
+		\System::getContainer()->get('session')->getFlashBag()->clear();
 	}
 
 
@@ -217,7 +201,7 @@ class Message
 	 */
 	public static function hasError($strScope=TL_MODE)
 	{
-		return !empty($_SESSION['MESSAGES'][$strScope]['TL_ERROR']);
+		return \System::getContainer()->get('session')->getFlashBag()->has(static::getFlashBagKey('error', $strScope));
 	}
 
 
@@ -230,7 +214,7 @@ class Message
 	 */
 	public static function hasConfirmation($strScope=TL_MODE)
 	{
-		return !empty($_SESSION['MESSAGES'][$strScope]['TL_CONFIRM']);
+		return \System::getContainer()->get('session')->getFlashBag()->has(static::getFlashBagKey('confirm', $strScope));
 	}
 
 
@@ -243,7 +227,7 @@ class Message
 	 */
 	public static function hasNew($strScope=TL_MODE)
 	{
-		return !empty($_SESSION['MESSAGES'][$strScope]['TL_NEW']);
+		return \System::getContainer()->get('session')->getFlashBag()->has(static::getFlashBagKey('new', $strScope));
 	}
 
 
@@ -256,7 +240,7 @@ class Message
 	 */
 	public static function hasInfo($strScope=TL_MODE)
 	{
-		return !empty($_SESSION['MESSAGES'][$strScope]['TL_INFO']);
+		return \System::getContainer()->get('session')->getFlashBag()->has(static::getFlashBagKey('info', $strScope));
 	}
 
 
@@ -269,7 +253,7 @@ class Message
 	 */
 	public static function hasRaw($strScope=TL_MODE)
 	{
-		return !empty($_SESSION['MESSAGES'][$strScope]['TL_RAW']);
+		return \System::getContainer()->get('session')->getFlashBag()->has(static::getFlashBagKey('raw', $strScope));
 	}
 
 
@@ -283,5 +267,19 @@ class Message
 	public static function hasMessages($strScope=TL_MODE)
 	{
 		return static::hasError($strScope) || static::hasConfirmation($strScope) || static::hasNew($strScope) || static::hasInfo($strScope) || static::hasRaw($strScope);
+	}
+
+
+	/**
+	 * Return the flash bag key
+	 *
+	 * @param string      $strType  The message type
+	 * @param string|null $strScope The message scope
+	 *
+	 * @return string The flash bag key
+	 */
+	protected static function getFlashBagKey($strType, $strScope=TL_MODE)
+	{
+		return 'contao.' . (('FE' === $strScope) ? 'frontend' : 'backend') . '.' . strtolower(str_replace('TL_', '', $strType));
 	}
 }

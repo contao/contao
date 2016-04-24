@@ -384,7 +384,7 @@ abstract class DataContainer extends \Backend
 					break;
 			}
 
-			$wizard .= ' <img src="assets/datepicker/images/icon.gif" width="20" height="20" alt="" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']).'" id="toggle_' . $objWidget->id . '" style="vertical-align:-6px;cursor:pointer">
+			$wizard .= ' ' . \Image::getHtml('assets/datepicker/images/icon.gif', '', 'title="'.specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']).'" id="toggle_' . $objWidget->id . '" style="vertical-align:-6px;cursor:pointer"') . '
   <script>
     window.addEvent("domready", function() {
       new Picker.Date($("ctrl_' . $objWidget->id . '"), {
@@ -519,12 +519,13 @@ abstract class DataContainer extends \Backend
 					}
 				}
 
+				$objImage = new \File($image);
 				$ctrl = 'ctrl_preview_' . substr(md5($image), 0, 8);
 
 				$strPreview = '
 
 <div id="' . $ctrl . '" class="tl_edit_preview" data-original-width="' . $objFile->viewWidth . '" data-original-height="' . $objFile->viewHeight . '">
-' . \Image::getHtml($image) . '
+  <img src="' . $objImage->dataUri . '" width="' . $objImage->width . '" height="' . $objImage->height . '" alt="">
 </div>';
 
 				// Add the script to mark the important part

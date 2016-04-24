@@ -125,7 +125,7 @@ class ModuleCloseAccount extends \Module
 				if ($this->reg_close == 'close_delete')
 				{
 					$objMember->delete();
-					$this->log('User account ID ' . $this->User->id . ' (' . $this->User->email . ') has been deleted', __METHOD__, TL_ACCESS);
+					$this->log('User account ID ' . $this->User->id . ' (' . \Idna::decodeEmail($this->User->email) . ') has been deleted', __METHOD__, TL_ACCESS);
 				}
 				// Deactivate the account
 				else
@@ -133,13 +133,13 @@ class ModuleCloseAccount extends \Module
 					$objMember->disable = 1;
 					$objMember->tstamp = time();
 					$objMember->save();
-					$this->log('User account ID ' . $this->User->id . ' (' . $this->User->email . ') has been deactivated', __METHOD__, TL_ACCESS);
+					$this->log('User account ID ' . $this->User->id . ' (' . \Idna::decodeEmail($this->User->email) . ') has been deactivated', __METHOD__, TL_ACCESS);
 				}
 
 				$this->User->logout();
 
 				// Check whether there is a jumpTo page
-				if (($objJumpTo = $this->objModel->getRelated('jumpTo')) !== null)
+				if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 				{
 					$this->jumpToOrReload($objJumpTo->row());
 				}

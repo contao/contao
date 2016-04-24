@@ -243,9 +243,9 @@ class ModulePassword extends \Module
 				}
 
 				// Redirect to the jumpTo page
-				if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) !== null)
+				if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
 				{
-					/** @var \PageModel $objTarget */
+					/** @var PageModel $objTarget */
 					$this->redirect($objTarget->getFrontendUrl());
 				}
 
@@ -301,10 +301,10 @@ class ModulePassword extends \Module
 		$objEmail->text = \StringUtil::parseSimpleTokens($this->reg_password, $arrData);
 		$objEmail->sendTo($objMember->email);
 
-		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . $objMember->email . ')', __METHOD__, TL_ACCESS);
+		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . \Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
 
 		// Check whether there is a jumpTo page
-		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) !== null)
+		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			$this->jumpToOrReload($objJumpTo->row());
 		}

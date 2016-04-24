@@ -346,7 +346,7 @@ class Theme extends \Backend
 			}
 
 			// Continue if there is no XML file
-			if (!$xml instanceof \DOMDocument)
+			if (!($xml instanceof \DOMDocument))
 			{
 				\Message::addError(sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strZipFile)));
 				continue;
@@ -1111,7 +1111,7 @@ class Theme extends \Backend
 				$objArchive->addFile($strFolder .'/'. $strFile, $strTarget .'/'. $strFile);
 
 				$arrRow = array();
-				$objFile = new \File($strFolder .'/'. $strFile, true);
+				$objFile = new \File($strFolder .'/'. $strFile);
 				$objModel = \FilesModel::findByPath($strFolder .'/'. $strFile);
 
 				if ($objModel !== null)
@@ -1167,7 +1167,7 @@ class Theme extends \Backend
 			return;
 		}
 
-		$arrAllowed = trimsplit(',', \Config::get('templateFiles'));
+		$arrAllowed = trimsplit(',', strtolower(\Config::get('templateFiles')));
 		array_push($arrAllowed, 'sql'); // see #7048
 
 		// Add all template files to the archive

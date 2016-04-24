@@ -7,6 +7,7 @@
   <base href="<?= $this->base ?>">
   <meta name="generator" content="Contao Open Source CMS">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="referrer" content="origin">
 
   <link rel="stylesheet" href="<?php
     $objCombiner = new Combiner();
@@ -39,7 +40,7 @@
   <div id="container">
 
     <div id="main">
-      <p><img src="system/themes/<?= $this->theme ?>/images/stop.png" width="128" height="128" alt=""></p>
+      <p><?= Image::getHtml('stop.png') ?></p>
       <form action="<?= $this->route('contao_backend_confirm') ?>" class="tl_form" method="post">
         <div class="tl_formbody_edit">
           <input type="hidden" name="FORM_SUBMIT" value="invalid_token_url">

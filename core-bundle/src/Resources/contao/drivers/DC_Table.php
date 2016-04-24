@@ -538,6 +538,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			{
 				$row[$i] = ($value != '') ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
 			}
+			elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] == 'email')
+			{
+				$row[$i] = \Idna::decodeEmail($value);
+			}
 			elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] == 'textarea' && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['allowHtml'] || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['preserveTags']))
 			{
 				$row[$i] = specialchars($value);
@@ -3432,74 +3436,41 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$blnHasSorting = $this->Database->fieldExists('sorting', $table);
 		$arrFound = array();
 
-		// Limit the results by modifying $this->root
-		if ($session['search'][$this->strTable]['value'] != '')
+		if (!empty($this->procedure))
 		{
-			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
-			try
+			$fld = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? 'pid' : 'id';
+
+			$objRoot = $this->Database->prepare("SELECT $fld FROM {$this->strTable} WHERE " . implode(' AND ', $this->procedure))
+									  ->execute($this->values);
+
+			if ($objRoot->numRows < 1)
 			{
-				$for = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? 'pid' : 'id';
-
-				if ($session['search'][$this->strTable]['field'] == 'id')
+				$this->root = array();
+			}
+			else
+			{
+				// Respect existing limitations (root IDs)
+				if (!empty($this->root))
 				{
-					$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE id=?")
-											  ->execute($session['search'][$this->strTable]['value']);
-				}
-				else
-				{
-					$strPattern = "CAST(%s AS CHAR) REGEXP ?";
+					$arrRoot = array();
 
-					if (substr(\Config::get('dbCollation'), -3) == '_ci')
+					while ($objRoot->next())
 					{
-						$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
-					}
-
-					$fld = $session['search'][$this->strTable]['field'];
-
-					if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
-					{
-						list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
-
-						$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE (" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ") GROUP BY $for")
-												  ->execute($session['search'][$this->strTable]['value'], $session['search'][$this->strTable]['value']);
-					}
-					else
-					{
-						$objRoot = $this->Database->prepare("SELECT $for FROM {$this->strTable} WHERE " . sprintf($strPattern, $fld) . " GROUP BY $for")
-												  ->execute($session['search'][$this->strTable]['value']);
-					}
-				}
-
-				if ($objRoot->numRows < 1)
-				{
-					$this->root = array();
-				}
-				else
-				{
-					// Respect existing limitations (root IDs)
-					if (is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']))
-					{
-						$arrRoot = array();
-
-						while ($objRoot->next())
+						if (count(array_intersect($this->root, $this->Database->getParentRecords($objRoot->$fld, $table))) > 0)
 						{
-							if (count(array_intersect($this->root, $this->Database->getParentRecords($objRoot->$for, $table))) > 0)
-							{
-								$arrRoot[] = $objRoot->$for;
-							}
+							$arrRoot[] = $objRoot->$fld;
 						}
+					}
 
-						$arrFound = $arrRoot;
-						$this->root = $this->eliminateNestedPages($arrFound);
-					}
-					else
-					{
-						$arrFound = $objRoot->fetchEach($for);
-						$this->root = $this->eliminateNestedPages($arrFound);
-					}
+					$arrFound = $arrRoot;
+					$this->root = $this->eliminateNestedPages($arrFound);
+				}
+				else
+				{
+					$arrFound = $objRoot->fetchEach($fld);
+					$this->root = $this->eliminateNestedPages($arrFound);
 				}
 			}
-			catch (\Exception $e) {}
 		}
 
 		// Call a recursive function that builds the tree
@@ -4937,6 +4908,23 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			return '';
 		}
 
+		// Reset all filters
+		if (isset($_POST['filter_reset']) && \Input::post('FORM_SUBMIT') == 'tl_filters')
+		{
+			/** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+
+			$data = $objSessionBag->all();
+
+			unset($data['filter'][$this->strTable]);
+			unset($data['sorting'][$this->strTable]);
+			unset($data['search'][$this->strTable]);
+
+			$objSessionBag->replace($data);
+
+			$this->reload();
+		}
+
 		$intFilterPanel = 0;
 		$arrPanels = array();
 
@@ -5015,6 +5003,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 <div class="tl_submit_panel tl_subpanel">
 <input type="image" name="filter" id="filter" src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/reload.gif" class="tl_img_submit" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
+<input type="image" name="filter_reset" id="filter_reset" value="1" src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/delete.gif" class="tl_img_submit" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '" alt="' . specialchars($GLOBALS['TL_LANG']['MSC']['reset']) . '">
 </div>';
 			}
 
@@ -5530,7 +5519,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$arrValues[] = CURRENT_ID;
 			}
 
-			if (!empty($this->root) && is_array($this->root))
+			if (!$this->treeView && !empty($this->root) && is_array($this->root))
 			{
 				$arrProcedure[] = "id IN(" . implode(',', array_map('intval', $this->root)) . ")";
 			}

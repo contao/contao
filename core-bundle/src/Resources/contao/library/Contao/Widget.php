@@ -726,6 +726,12 @@ abstract class Widget extends \Controller
 
 		$varValue = $this->arrAttributes[$strKey];
 
+		// Prevent the autofocus attribute from being added multiple times (see #8281)
+		if ($strKey == 'autofocus')
+		{
+			unset($this->arrAttributes[$strKey]);
+		}
+
 		if ($strKey == 'disabled' || $strKey == 'readonly' || $strKey == 'required' || $strKey == 'autofocus' || $strKey == 'multiple')
 		{
 			return ' ' . $strKey;
@@ -773,25 +779,19 @@ abstract class Widget extends \Controller
 
 		// Support arrays (thanks to Andreas Schempp)
 		$arrParts = explode('[', str_replace(']', '', $strKey));
+		$varValue = \Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
-		if (!empty($arrParts))
+		foreach ($arrParts as $part)
 		{
-			$varValue = \Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
-
-			foreach ($arrParts as $part)
+			if (!is_array($varValue))
 			{
-				if (!is_array($varValue))
-				{
-					break;
-				}
-
-				$varValue = $varValue[$part];
+				break;
 			}
 
-			return $varValue;
+			$varValue = $varValue[$part];
 		}
 
-		return \Input::$strMethod($strKey, $this->decodeEntities);
+		return $varValue;
 	}
 
 

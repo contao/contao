@@ -26,17 +26,26 @@ class Messages extends \Backend
 	 */
 	public function versionCheck()
 	{
-		$this->import('BackendUser', 'User');
+		$cache = \System::getContainer()->get('contao.cache');
 
-		if (\Config::get('latestVersion') && version_compare(VERSION . '.' . BUILD, \Config::get('latestVersion'), '<'))
+		if (!$cache->contains('latest-version'))
 		{
+			return '';
+		}
+
+		$strVersion = $cache->fetch('latest-version');
+
+		if ($strVersion && version_compare(VERSION . '.' . BUILD, $strVersion, '<'))
+		{
+			$this->import('BackendUser', 'User');
+
 			if ($this->User->hasAccess('maintenance', 'modules'))
 			{
-				return '<p class="tl_info"><a href="contao/main.php?do=maintenance">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], \Config::get('latestVersion')) . '</a></p>';
+				return '<p class="tl_info"><a href="contao/main.php?do=maintenance">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], $strVersion) . '</a></p>';
 			}
 			else
 			{
-				return '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], \Config::get('latestVersion')) . '</p>';
+				return '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], $strVersion) . '</p>';
 			}
 		}
 

@@ -106,24 +106,6 @@
         <p><em>No unknown insert tag flags used on the page.</em></p>
     {% endif %}
 
-    <h2>Classes aliased</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Alias name</th>
-                <th>Original name</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for class in collector.classesaliased %}
-                <tr>
-                    <td><pre>{{ class.alias }}</pre></td>
-                    <td><pre>{{ class.original }}</pre></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
     <h2>Classes set</h2>
     <table>
         <thead>
@@ -134,7 +116,43 @@
         <tbody>
             {% for class in collector.classesset %}
                 <tr>
-                    <td><pre>{{ class }}</pre></td>
+                    <td><code>{{ class }}</code></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Classes aliased</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Alias name</th>
+                <th>Original name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alias, original in collector.classesaliased %}
+                <tr>
+                    <td><code>{{ alias }}</code></td>
+                    <td><code>{{ original }}</code></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Classes composerized</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Alias name</th>
+                <th>Original name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alias, original in collector.classescomposerized %}
+                <tr>
+                    <td><code>{{ alias }}</code></td>
+                    <td><code>{{ original }}</code></td>
                 </tr>
             {% endfor %}
         </tbody>

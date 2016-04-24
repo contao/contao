@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
+use Contao\CoreBundle\Framework\Adapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
@@ -41,17 +42,23 @@ class AddToSearchIndexListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock()
         ;
 
-        $frontend = $this->getMock('Contao\Frontend', ['indexPageIfApplicable']);
+        $frontendAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['indexPageIfApplicable'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
-        $frontend
+        $frontendAdapter
             ->expects($this->any())
             ->method('indexPageIfApplicable')
+            ->willReturn(null)
         ;
 
         $this->framework
             ->expects($this->any())
             ->method('getAdapter')
-            ->willReturn($frontend)
+            ->willReturn($frontendAdapter)
         ;
     }
 

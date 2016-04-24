@@ -451,7 +451,7 @@ class ModuleRegistration extends \Module
 		}
 
 		// Check whether there is a jumpTo page
-		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) !== null)
+		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			$this->jumpToOrReload($objJumpTo->row());
 		}
@@ -553,12 +553,12 @@ class ModuleRegistration extends \Module
 		}
 
 		// Log activity
-		$this->log('User account ID ' . $objMember->id . ' (' . $objMember->email . ') has been activated', __METHOD__, TL_ACCESS);
+		$this->log('User account ID ' . $objMember->id . ' (' . \Idna::decodeEmail($objMember->email) . ') has been activated', __METHOD__, TL_ACCESS);
 
 		// Redirect to the jumpTo page
-		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) !== null)
+		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
 		{
-			/** @var \PageModel $objTarget */
+			/** @var PageModel $objTarget */
 			$this->redirect($objTarget->getFrontendUrl());
 		}
 

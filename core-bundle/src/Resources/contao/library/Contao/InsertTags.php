@@ -34,7 +34,7 @@ class InsertTags extends \Controller
 
 
 	/**
-	 * Replace insert tags with their values
+	 * Recursively replace insert tags with their values
 	 *
 	 * @param string  $strBuffer The text with the tags to be replaced
 	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
@@ -42,6 +42,28 @@ class InsertTags extends \Controller
 	 * @return string The text with the replaced tags
 	 */
 	public function replace($strBuffer, $blnCache=true)
+	{
+		$strBuffer = $this->doReplace($strBuffer, $blnCache);
+
+		// Run the replacement recursively (see #8172)
+		while (strpos($strBuffer, '{{') !== false && ($strTmp = $this->doReplace($strBuffer, $blnCache)) != $strBuffer)
+		{
+			$strBuffer = $strTmp;
+		}
+
+		return $strBuffer;
+	}
+
+
+	/**
+	 * Replace insert tags with their values
+	 *
+	 * @param string  $strBuffer The text with the tags to be replaced
+	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
+	 *
+	 * @return string The text with the replaced tags
+	 */
+	protected function doReplace($strBuffer, $blnCache)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -52,7 +74,12 @@ class InsertTags extends \Controller
 			return \StringUtil::restoreBasicEntities($strBuffer);
 		}
 
-		$tags = preg_split('/{{(([^{}]*|(?R))*)}}/', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$tags = preg_split('/{{([^{}]+)}}/', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+		if (count($tags) < 2)
+		{
+			return \StringUtil::restoreBasicEntities($strBuffer);
+		}
 
 		$strBuffer = '';
 
@@ -60,7 +87,7 @@ class InsertTags extends \Controller
 		static $arrItCache;
 		$arrCache = &$arrItCache[$blnCache];
 
-		for ($_rit=0, $_cnt=count($tags); $_rit<$_cnt; $_rit+=3)
+		for ($_rit=0, $_cnt=count($tags); $_rit<$_cnt; $_rit+=2)
 		{
 			$strBuffer .= $tags[$_rit];
 			$strTag = $tags[$_rit+1];
@@ -69,12 +96,6 @@ class InsertTags extends \Controller
 			if ($strTag == '')
 			{
 				continue;
-			}
-
-			// Run the replacement again if there are more tags (see #4402)
-			if (strpos($strTag, '{{') !== false)
-			{
-				$strTag = $this->replace($strTag, $blnCache);
 			}
 
 			$flags = explode('|', $strTag);
@@ -351,7 +372,7 @@ class InsertTags extends \Controller
 						switch ($objNextPage->type)
 						{
 							case 'redirect':
-								$strUrl = $this->replaceInsertTags($objNextPage->url); // see #6765
+								$strUrl = $objNextPage->url;
 
 								if (strncasecmp($strUrl, 'mailto:', 7) === 0)
 								{
@@ -370,7 +391,7 @@ class InsertTags extends \Controller
 									$objNext = \PageModel::findFirstPublishedRegularByPid($objNextPage->id);
 								}
 
-								if ($objNext !== null)
+								if ($objNext instanceof PageModel)
 								{
 									$strUrl = $objNext->getFrontendUrl();
 									break;
@@ -425,7 +446,7 @@ class InsertTags extends \Controller
 				case 'insert_article':
 					if (($strOutput = $this->getArticle($elements[1], false, true)) !== false)
 					{
-						$arrCache[$strTag] = $this->replaceInsertTags(ltrim($strOutput), $blnCache);
+						$arrCache[$strTag] = ltrim($strOutput);
 					}
 					else
 					{
@@ -435,17 +456,17 @@ class InsertTags extends \Controller
 
 				// Insert content element
 				case 'insert_content':
-					$arrCache[$strTag] = $this->replaceInsertTags($this->getContentElement($elements[1]), $blnCache);
+					$arrCache[$strTag] = $this->getContentElement($elements[1]);
 					break;
 
 				// Insert module
 				case 'insert_module':
-					$arrCache[$strTag] = $this->replaceInsertTags($this->getFrontendModule($elements[1]), $blnCache);
+					$arrCache[$strTag] = $this->getFrontendModule($elements[1]);
 					break;
 
 				// Insert form
 				case 'insert_form':
-					$arrCache[$strTag] = $this->replaceInsertTags($this->getForm($elements[1]), $blnCache);
+					$arrCache[$strTag] = $this->getForm($elements[1]);
 					break;
 
 				// Article
@@ -453,7 +474,7 @@ class InsertTags extends \Controller
 				case 'article_open':
 				case 'article_url':
 				case 'article_title':
-					if (($objArticle = \ArticleModel::findByIdOrAlias($elements[1])) === null || ($objPid = $objArticle->getRelated('pid')) === null)
+					if (($objArticle = \ArticleModel::findByIdOrAlias($elements[1])) === null || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
 					{
 						break;
 					}
@@ -487,7 +508,7 @@ class InsertTags extends \Controller
 				case 'faq_open':
 				case 'faq_url':
 				case 'faq_title':
-					if (($objFaq = \FaqModel::findByIdOrAlias($elements[1])) === null || ($objPid = $objFaq->getRelated('pid')) === null || ($objJumpTo = $objPid->getRelated('jumpTo')) === null)
+					if (($objFaq = \FaqModel::findByIdOrAlias($elements[1])) === null || !(($objPid = $objFaq->getRelated('pid')) instanceof FaqCategoryModel) || !(($objJumpTo = $objPid->getRelated('jumpTo')) instanceof PageModel))
 					{
 						break;
 					}
@@ -534,7 +555,7 @@ class InsertTags extends \Controller
 					}
 					elseif ($objNews->source == 'internal')
 					{
-						if (($objJumpTo = $objNews->getRelated('jumpTo')) !== null)
+						if (($objJumpTo = $objNews->getRelated('jumpTo')) instanceof PageModel)
 						{
 							/** @var PageModel $objJumpTo */
 							$strUrl = $objJumpTo->getFrontendUrl();
@@ -542,7 +563,7 @@ class InsertTags extends \Controller
 					}
 					elseif ($objNews->source == 'article')
 					{
-						if (($objArticle = \ArticleModel::findByPk($objNews->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+						if (($objArticle = \ArticleModel::findByPk($objNews->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 						{
 							/** @var PageModel $objPid */
 							$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
@@ -550,7 +571,7 @@ class InsertTags extends \Controller
 					}
 					else
 					{
-						if (($objArchive = $objNews->getRelated('pid')) !== null && ($objJumpTo = $objArchive->getRelated('jumpTo')) !== null)
+						if (($objArchive = $objNews->getRelated('pid')) instanceof NewsArchiveModel && ($objJumpTo = $objArchive->getRelated('jumpTo')) instanceof PageModel)
 						{
 							/** @var PageModel $objJumpTo */
 							$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/items/') . ($objNews->alias ?: $objNews->id));
@@ -596,7 +617,7 @@ class InsertTags extends \Controller
 					}
 					elseif ($objEvent->source == 'internal')
 					{
-						if (($objJumpTo = $objEvent->getRelated('jumpTo')) !== null)
+						if (($objJumpTo = $objEvent->getRelated('jumpTo')) instanceof PageModel)
 						{
 							/** @var PageModel $objJumpTo */
 							$strUrl = $objJumpTo->getFrontendUrl();
@@ -604,7 +625,7 @@ class InsertTags extends \Controller
 					}
 					elseif ($objEvent->source == 'article')
 					{
-						if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+						if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 						{
 							/** @var PageModel $objPid */
 							$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
@@ -612,7 +633,7 @@ class InsertTags extends \Controller
 					}
 					else
 					{
-						if (($objCalendar = $objEvent->getRelated('pid')) !== null && ($objJumpTo = $objCalendar->getRelated('jumpTo')) !== null)
+						if (($objCalendar = $objEvent->getRelated('pid')) instanceof CalendarModel && ($objJumpTo = $objCalendar->getRelated('jumpTo')) instanceof PageModel)
 						{
 							/** @var PageModel $objJumpTo */
 							$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/events/') . ($objEvent->alias ?: $objEvent->id));
@@ -646,7 +667,7 @@ class InsertTags extends \Controller
 
 					if ($objTeaser !== null)
 					{
-						$arrCache[$strTag] = \StringUtil::toHtml5($this->replaceInsertTags($objTeaser->teaser, $blnCache));
+						$arrCache[$strTag] = \StringUtil::toHtml5($objTeaser->teaser);
 					}
 					break;
 
@@ -749,7 +770,7 @@ class InsertTags extends \Controller
 				case 'iflng':
 					if ($elements[1] != '' && $elements[1] != $objPage->language)
 					{
-						for (; $_rit<$_cnt; $_rit+=3)
+						for (; $_rit<$_cnt; $_rit+=2)
 						{
 							if ($tags[$_rit+1] == 'iflng' || $tags[$_rit+1] == 'iflng::' . $objPage->language)
 							{
@@ -768,7 +789,7 @@ class InsertTags extends \Controller
 
 						if (in_array($objPage->language, $langs))
 						{
-							for (; $_rit<$_cnt; $_rit+=3)
+							for (; $_rit<$_cnt; $_rit+=2)
 							{
 								if ($tags[$_rit+1] == 'ifnlng')
 								{

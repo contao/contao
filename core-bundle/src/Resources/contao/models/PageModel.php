@@ -29,6 +29,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @property string  $description
  * @property string  $redirect
  * @property integer $jumpTo
+ * @property boolean $redirectBack
  * @property string  $url
  * @property boolean $target
  * @property string  $dns
@@ -107,6 +108,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @method static PageModel|null findOneByDescription($val, $opt=array())
  * @method static PageModel|null findOneByRedirect($val, $opt=array())
  * @method static PageModel|null findOneByJumpTo($val, $opt=array())
+ * @method static PageModel|null findOneByRedirectBack($val, $opt=array())
  * @method static PageModel|null findOneByUrl($val, $opt=array())
  * @method static PageModel|null findOneByTarget($val, $opt=array())
  * @method static PageModel|null findOneByDns($val, $opt=array())
@@ -155,6 +157,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @method static Model\Collection|PageModel[]|PageModel|null findByDescription($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByRedirect($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByJumpTo($val, $opt=array())
+ * @method static Model\Collection|PageModel[]|PageModel|null findByRedirectBack($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByUrl($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByTarget($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByDns($val, $opt=array())
@@ -207,6 +210,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @method static integer countByDescription($val, $opt=array())
  * @method static integer countByRedirect($val, $opt=array())
  * @method static integer countByJumpTo($val, $opt=array())
+ * @method static integer countByRedirectBack($val, $opt=array())
  * @method static integer countByUrl($val, $opt=array())
  * @method static integer countByTarget($val, $opt=array())
  * @method static integer countByDns($val, $opt=array())
@@ -267,14 +271,14 @@ class PageModel extends \Model
 	 * @param integer $intId      The page ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no published page
+	 * @return PageModel|null The model or null if there is no published page
 	 */
 	public static function findPublishedById($intId, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.id=?");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -285,13 +289,36 @@ class PageModel extends \Model
 
 
 	/**
+	 * Find published pages by their PID
+	 *
+	 * @param integer $intPid     The parent ID
+	 * @param array   $arrOptions An optional options array
+	 *
+	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 */
+	public static function findPublishedByPid($intPid, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.pid=?");
+
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		{
+			$time = \Date::floorToMinute();
+			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+		}
+
+		return static::findBy($arrColumns, $intPid, $arrOptions);
+	}
+
+
+	/**
 	 * Find the first published root page by its host name and language
 	 *
 	 * @param string $strHost     The host name
 	 * @param mixed  $varLanguage An ISO language code or an array of ISO language codes
 	 * @param array  $arrOptions  An optional options array
 	 *
-	 * @return static The model or null if there is no matching root page
+	 * @return PageModel|null The model or null if there is no matching root page
 	 */
 	public static function findFirstPublishedRootByHostAndLanguage($strHost, $varLanguage, array $arrOptions=array())
 	{
@@ -316,7 +343,7 @@ class PageModel extends \Model
 				$arrOptions['order'] = "$t.dns DESC" . (!empty($varLanguage) ? ", " . $objDatabase->findInSet("$t.language", array_reverse($varLanguage)) . " DESC" : "") . ", $t.sorting";
 			}
 
-			if (!BE_USER_LOGGED_IN)
+			if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 			{
 				$time = \Date::floorToMinute();
 				$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -334,7 +361,7 @@ class PageModel extends \Model
 				$arrOptions['order'] = "$t.dns DESC, $t.fallback";
 			}
 
-			if (!BE_USER_LOGGED_IN)
+			if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 			{
 				$time = \Date::floorToMinute();
 				$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -351,14 +378,14 @@ class PageModel extends \Model
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no published page
+	 * @return PageModel|null The model or null if there is no published page
 	 */
 	public static function findFirstPublishedByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_403' AND $t.type!='error_404'");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -379,14 +406,14 @@ class PageModel extends \Model
 	 * @param integer $intPid The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no published regular page
+	 * @return PageModel|null The model or null if there is no published regular page
 	 */
 	public static function findFirstPublishedRegularByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='regular'");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -407,14 +434,14 @@ class PageModel extends \Model
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no 403 page
+	 * @return PageModel|null The model or null if there is no 403 page
 	 */
 	public static function find403ByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_403'");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -435,14 +462,14 @@ class PageModel extends \Model
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return static The model or null if there is no 404 page
+	 * @return PageModel|null The model or null if there is no 404 page
 	 */
 	public static function find404ByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_404'");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -463,7 +490,7 @@ class PageModel extends \Model
 	 * @param array $arrAliases An array of possible alias names
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|PageModel[]|PageModel|null A collection of Models or null if there is no matching pages
+	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findByAliases($arrAliases, array $arrOptions=array())
 	{
@@ -487,7 +514,7 @@ class PageModel extends \Model
 		$arrColumns = array("$t.alias IN('" . implode("','", array_filter($arrAliases)) . "')");
 
 		// Check the publication status (see #4652)
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -516,7 +543,7 @@ class PageModel extends \Model
 		$arrColumns = array("($t.id=? OR $t.alias=?)");
 		$arrValues = array((is_numeric($varId) ? $varId : 0), $varId);
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -574,7 +601,7 @@ class PageModel extends \Model
 			$arrColumns[] = "$t.guests=''";
 		}
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -607,7 +634,7 @@ class PageModel extends \Model
 			$arrColumns[] = "$t.guests=''";
 		}
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -628,14 +655,14 @@ class PageModel extends \Model
 	 * @param string $strHost    The hostname
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return static The page model or null if there is not fallback page
+	 * @return PageModel|null The model or null if there is not fallback page
 	 */
 	public static function findPublishedFallbackByHostname($strHost, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.dns=? AND $t.fallback='1'");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -657,7 +684,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.type=?");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -698,7 +725,7 @@ class PageModel extends \Model
 	 *
 	 * @param string $arrIds An array of member group IDs
 	 *
-	 * @return static The model or null if there is no matching member group
+	 * @return PageModel|null The model or null if there is no matching member group
 	 */
 	public static function findFirstActiveByMemberGroups($arrIds)
 	{
@@ -729,7 +756,7 @@ class PageModel extends \Model
 	 *
 	 * @param integer $intId The page's ID
 	 *
-	 * @return static The model or null if there is no matching page
+	 * @return PageModel|null The model or null if there is no matching page
 	 */
 	public static function findWithDetails($intId)
 	{
@@ -747,7 +774,7 @@ class PageModel extends \Model
 	/**
 	 * Get the details of a page including inherited parameters
 	 *
-	 * @return static The page model
+	 * @return PageModel The page model
 	 *
 	 * @throws NoRootPageFoundException If no root page is found
 	 */
@@ -942,5 +969,25 @@ class PageModel extends \Model
 		}
 
 		return \Controller::generateFrontendUrl($this->loadDetails()->row(), $strParams, $strForceLang, true);
+	}
+
+
+	/**
+	 * Generate an absolute URL depending on the current rewriteURL setting
+	 *
+	 * @param string $strParams An optional string of URL parameters
+	 *
+	 * @return string An absolute URL that can be used in the front end
+	 */
+	public function getAbsoluteUrl($strParams=null)
+	{
+		$strUrl = \Controller::generateFrontendUrl($this->loadDetails()->row(), $strParams, null, true);
+
+		if (strncmp($strUrl, 'http://', 7) !== 0 && strncmp($strUrl, 'https://', 8) !== 0)
+		{
+			$strUrl = ($this->rootUseSSL ? 'https://' : 'http://') . \Environment::get('host') . TL_PATH . '/' . $strUrl;
+		}
+
+		return $strUrl;
 	}
 }

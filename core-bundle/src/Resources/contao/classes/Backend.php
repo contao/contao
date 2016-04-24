@@ -456,7 +456,7 @@ abstract class Backend extends \Controller
 				case 'show':
 				case 'showAll':
 				case 'undo':
-					if (!$dc instanceof \listable)
+					if (!($dc instanceof \listable))
 					{
 						$this->log('Data container ' . $strTable . ' is not listable', __METHOD__, TL_ERROR);
 						trigger_error('The current data container is not listable', E_USER_ERROR);
@@ -470,7 +470,7 @@ abstract class Backend extends \Controller
 				case 'copyAll':
 				case 'move':
 				case 'edit':
-					if (!$dc instanceof \editable)
+					if (!($dc instanceof \editable))
 					{
 						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, TL_ERROR);
 						trigger_error('The current data container is not editable', E_USER_ERROR);
@@ -652,78 +652,40 @@ abstract class Backend extends \Controller
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsSitemap=false)
 	{
-		$time = \Date::floorToMinute();
-		$objDatabase = \Database::getInstance();
+		$objPages = \PageModel::findPublishedByPid($pid, array('ignoreFePreview'=>true));
 
-		// Get published pages
-		$objPages = $objDatabase->prepare("SELECT * FROM tl_page WHERE pid=? AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1' ORDER BY sorting")
-								->execute($pid);
-
-		if ($objPages->numRows < 1)
+		if ($objPages === null)
 		{
 			return array();
 		}
 
-		// Fallback domain
-		if ($domain == '')
-		{
-			$domain = \Environment::get('base');
-		}
-
 		$arrPages = array();
-		$objRegistry = \Model\Registry::getInstance();
 
 		// Recursively walk through all subpages
-		while ($objPages->next())
+		foreach ($objPages as $objPage)
 		{
-			$objPage = $objRegistry->fetch('tl_page', $objPages->id);
-
-			if ($objPage === null)
-			{
-				$objPage = new \PageModel($objPages);
-			}
-
 			if ($objPage->type == 'regular')
 			{
 				// Searchable and not protected
 				if ((!$objPage->noSearch || $blnIsSitemap) && (!$objPage->protected || \Config::get('indexProtected') && (!$blnIsSitemap || $objPage->sitemap == 'map_always')) && (!$blnIsSitemap || $objPage->sitemap != 'map_never'))
 				{
-					// Published
-					if ($objPage->published && ($objPage->start == '' || $objPage->start <= $time) && ($objPage->stop == '' || $objPage->stop > ($time + 60)))
+					$arrPages[] = $objPage->getAbsoluteUrl();
+
+					// Get articles with teaser
+					if (($objArticles = \ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
 					{
-						$feUrl = $objPage->getFrontendUrl();
+						$feUrl = $objPage->getAbsoluteUrl('/articles/%s');
 
-						if (strncmp($feUrl, 'http://', 7) !== 0 && strncmp($feUrl, 'https://', 8) !== 0)
+						foreach ($objArticles as $objArticle)
 						{
-							$feUrl = $domain . $feUrl;
-						}
-
-						$arrPages[] = $feUrl;
-
-						// Get articles with teaser
-						$objArticles = $objDatabase->prepare("SELECT * FROM tl_article WHERE pid=? AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1' AND showTeaser='1' ORDER BY sorting")
-												   ->execute($objPages->id);
-
-						if ($objArticles->numRows)
-						{
-							$feUrl = $objPage->getFrontendUrl('/articles/%s');
-
-							if (strncmp($feUrl, 'http://', 7) !== 0 && strncmp($feUrl, 'https://', 8) !== 0)
-							{
-								$feUrl = $domain . $feUrl;
-							}
-
-							while ($objArticles->next())
-							{
-								$arrPages[] = sprintf($feUrl, ($objArticles->alias ?: $objArticles->id));
-							}
+							$arrPages[] = sprintf($feUrl, ($objArticle->alias ?: $objArticle->id));
 						}
 					}
 				}
 			}
 
 			// Get subpages
-			if ((!$objPage->protected || \Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsSitemap)) != false)
+			if ((!$objPage->protected || \Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsSitemap)))
 			{
 				$arrPages = array_merge($arrPages, $arrSubpages);
 			}
@@ -847,16 +809,16 @@ abstract class Backend extends \Controller
 		$objSession = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['node']))
+		if (isset($_GET['pn']))
 		{
 			// Check the path (thanks to Arnaud Buchoux)
-			if (\Validator::isInsecurePath(\Input::get('node', true)))
+			if (\Validator::isInsecurePath(\Input::get('pn', true)))
 			{
-				throw new \RuntimeException('Insecure path ' . \Input::get('node', true));
+				throw new \RuntimeException('Insecure path ' . \Input::get('pn', true));
 			}
 
-			$objSession->set($strKey, \Input::get('node', true));
-			\Controller::redirect(preg_replace('/&node=[^&]*/', '', \Environment::get('request')));
+			$objSession->set($strKey, \Input::get('pn', true));
+			\Controller::redirect(preg_replace('/&pn=[^&]*/', '', \Environment::get('request')));
 		}
 
 		$intNode = $objSession->get($strKey);
@@ -910,7 +872,7 @@ abstract class Backend extends \Controller
 				}
 				else
 				{
-					$arrLinks[] = \Backend::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . \Backend::addToUrl('node='.$objPage->id) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
+					$arrLinks[] = \Backend::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . \Backend::addToUrl('pn='.$objPage->id) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
 				}
 
 				// Do not show the mounted pages
@@ -935,7 +897,7 @@ abstract class Backend extends \Controller
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
 
 		// Add root link
-		$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/pagemounts.gif" width="18" height="18" alt=""> <a href="' . \Backend::addToUrl('node=0') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = \Image::getHtml('pagemounts.gif') . ' <a href="' . \Backend::addToUrl('pn=0') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -982,7 +944,7 @@ abstract class Backend extends \Controller
 		}
 
 		// Add the breadcrumb link
-		$label = '<a href="' . \Backend::addToUrl('node='.$row['id']) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
+		$label = '<a href="' . \Backend::addToUrl('pn='.$row['id']) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
 
 		// Return the image
 		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['id'].'" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['view']).'"' . (($dc->table != 'tl_page') ? ' class="tl_gray"' : '') . ' target="_blank">'.\Image::getHtml($image, '', $imageAttribute).'</a> '.$label;
@@ -1003,16 +965,16 @@ abstract class Backend extends \Controller
 		$objSession = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['node']))
+		if (isset($_GET['fn']))
 		{
 			// Check the path (thanks to Arnaud Buchoux)
-			if (\Validator::isInsecurePath(\Input::get('node', true)))
+			if (\Validator::isInsecurePath(\Input::get('fn', true)))
 			{
-				throw new \RuntimeException('Insecure path ' . \Input::get('node', true));
+				throw new \RuntimeException('Insecure path ' . \Input::get('fn', true));
 			}
 
-			$objSession->set($strKey, \Input::get('node', true));
-			\Controller::redirect(preg_replace('/(&|\?)node=[^&]*/', '', \Environment::get('request')));
+			$objSession->set($strKey, \Input::get('fn', true));
+			\Controller::redirect(preg_replace('/(&|\?)fn=[^&]*/', '', \Environment::get('request')));
 		}
 
 		$strNode = $objSession->get($strKey);
@@ -1042,7 +1004,7 @@ abstract class Backend extends \Controller
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/filemounts.gif" width="18" height="18" alt=""> <a href="' . \Backend::addToUrl('node=') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = \Image::getHtml('filemounts.gif') . ' <a href="' . \Backend::addToUrl('fn=') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -1058,11 +1020,11 @@ abstract class Backend extends \Controller
 			// No link for the active folder
 			if ($strPath == $strNode)
 			{
-				$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/folderC.gif" width="18" height="18" alt=""> ' . $strFolder;
+				$arrLinks[] = \Image::getHtml('folderC.gif') . ' ' . $strFolder;
 			}
 			else
 			{
-				$arrLinks[] = '<img src="' . TL_FILES_URL . 'system/themes/' . \Backend::getTheme() . '/images/folderC.gif" width="18" height="18" alt=""> <a href="' . \Backend::addToUrl('node='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = \Image::getHtml('folderC.gif') . ' <a href="' . \Backend::addToUrl('fn='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
 			}
 		}
 
