@@ -516,6 +516,11 @@ class Config
 				$GLOBALS['TL_CONFIG'][$strKey] = $container->getParameter($strParam);
 			}
 		}
+
+		if ($container->hasParameter('contao.image.imagine_options'))
+		{
+			$GLOBALS['TL_CONFIG']['jpgQuality'] = $container->getParameter('contao.image.imagine_options')['jpeg_quality'];
+		}
 	}
 
 
