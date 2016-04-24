@@ -4,6 +4,11 @@ services:
         arguments:
             - "@contao.framework"
 
+    contao_news.listener.generate_page:
+        class: Contao\NewsBundle\EventListener\GeneratePageListener
+        arguments:
+            - "@contao.framework"
+
     contao_news.listener.insert_tags:
         class: Contao\NewsBundle\EventListener\InsertTagsListener
         arguments:
