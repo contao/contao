@@ -699,4 +699,72 @@ class ImageFactoryTest extends TestCase
 
         return $path;
     }
+
+    /**
+     * Tests empty getImage and executeResize hooks.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testEmptyHooks()
+    {
+        define('TL_ROOT', $this->getRootDir());
+        $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
+        \Contao\System::setContainer($this->mockContainerWithContaoScopes());
+
+        $path = $this->getRootDir() . '/images/dummy.jpg';
+
+        $resizer = new Resizer(
+            new ResizeCalculator(),
+            new Filesystem(),
+            $this->getRootDir() . '/assets/images'
+        );
+
+        $imagine = new Imagine();
+
+        $framework = $this->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesModel = $this->getMock('Contao\FilesModel');
+
+        $filesAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $filesAdapter->expects($this->any())
+            ->method('__call')
+            ->willReturn($filesModel);
+
+        $framework->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($filesAdapter);
+
+        $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $GLOBALS['TL_HOOKS'] = [
+            'executeResize' => [[get_class($this), 'emptyHookCallback']],
+        ];
+
+        $GLOBALS['TL_HOOKS'] = [
+            'getImage' => [[get_class($this), 'emptyHookCallback']],
+        ];
+
+        $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
+        $this->assertRegExp('(/images/.*dummy.*.jpg$)', $image->getPath(), 'Empty hook should be ignored');
+        $this->assertEquals(100, $image->getDimensions()->getSize()->getWidth());
+        $this->assertEquals(100, $image->getDimensions()->getSize()->getHeight());
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    /**
+     * Returns null.
+     *
+     * @return null
+     */
+    public static function emptyHookCallback()
+    {
+        return null;
+    }
 }
