@@ -14,13 +14,14 @@ namespace Contao\CoreBundle\DataContainer;
  * Adds fields and legends to DCA palettes.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PaletteManipulator
 {
-    const POSITION_PREPEND = 'prepend';
-    const POSITION_APPEND = 'append';
     const POSITION_BEFORE = 'before';
     const POSITION_AFTER = 'after';
+    const POSITION_PREPEND = 'prepend';
+    const POSITION_APPEND = 'append';
 
     /**
      * @var array
@@ -73,11 +74,11 @@ class PaletteManipulator
      *
      * If $position is PREPEND or APPEND, pass a legend as parent; otherwise pass a field name.
      *
-     * @param string|array          $name             The name of the new field(s)
-     * @param string|array          $parent           The parent legend or legends (first match wins)
-     * @param string                $position         The position of the new field(s)
-     * @param string|array|\Closure $fallback         The fallback palette(s) or a callback
-     * @param string                $fallbackPosition The fallback position (PREPEND or APPEND to legend)
+     * @param string|array               $name             The name or names of the new field(s)
+     * @param string|array               $parent           The parent legend or legends (first match wins)
+     * @param string                     $position         The position of the new field(s)
+     * @param string|array|callable|null $fallback         The fallback palette(s) or a callback
+     * @param string                     $fallbackPosition The fallback position (PREPEND or APPEND to legend)
      *
      * @return static The object instance
      *
@@ -114,16 +115,10 @@ class PaletteManipulator
      * @param string $table The DCA table name
      *
      * @return static The object instance
-     *
-     * @throws \InvalidArgumentException If the DCA for the given table is not loaded or the palette does not exist
      */
     public function applyToPalette($name, $table)
     {
-        if (!isset($GLOBALS['TL_DCA'][$table]['palettes'][$name])) {
-            throw new \InvalidArgumentException(sprintf('Palette "%s" not found in table "%s"', $name, $table));
-        }
-
-        $GLOBALS['TL_DCA'][$table]['palettes'][$name] = $this->apply($GLOBALS['TL_DCA'][$table]['palettes'][$name]);
+        $this->applyTo($name, $table, 'palettes');
 
         return $this;
     }
@@ -135,19 +130,10 @@ class PaletteManipulator
      * @param string $table The DCA table name
      *
      * @return static The object instance
-     *
-     * @throws \InvalidArgumentException If the DCA for the given table is not loaded or the subpalette does not exist
      */
     public function applyToSubpalette($name, $table)
     {
-        if (!isset($GLOBALS['TL_DCA'][$table]['subpalettes'][$name])) {
-            throw new \InvalidArgumentException(sprintf('Subpalette "%s" not found in table "%s"', $name, $table));
-        }
-
-        $GLOBALS['TL_DCA'][$table]['subpalettes'][$name] = $this->apply(
-            $GLOBALS['TL_DCA'][$table]['subpalettes'][$name],
-            true
-        );
+        $this->applyTo($name, $table, 'subpalettes');
 
         return $this;
     }
@@ -162,7 +148,24 @@ class PaletteManipulator
      */
     public function applyToString($palette, $skipLegends = false)
     {
-        return $this->apply($palette, $skipLegends);
+        $config = $this->explode($palette);
+
+        if (!$skipLegends) {
+            foreach ($this->legends as $legend) {
+                $this->applyLegend($config, $legend);
+            }
+        }
+
+        // Make sure there is at least one legend
+        if (0 === count($config)) {
+            $config = [['fields' => [], 'hide' => false]];
+        }
+
+        foreach ($this->fields as $field) {
+            $this->applyField($config, $field, $skipLegends);
+        }
+
+        return $this->implode($config);
     }
 
     /**
@@ -175,15 +178,42 @@ class PaletteManipulator
     private function validatePosition($position)
     {
         static $positions = [
-            self::POSITION_PREPEND,
-            self::POSITION_APPEND,
             self::POSITION_BEFORE,
             self::POSITION_AFTER,
+            self::POSITION_PREPEND,
+            self::POSITION_APPEND,
         ];
 
         if (!in_array($position, $positions, true)) {
-            throw new \LogicException('Legend position must be one of the PaletteManipulator constants');
+            throw new \LogicException('Invalid legend position');
         }
+    }
+
+    /**
+     * Applies the changes to a palette or subpalette.
+     *
+     * @param string $name  The palette name
+     * @param string $table The DCA table name
+     * @param string $type  The palette type
+     *
+     * @throws \InvalidArgumentException If the DCA for the given table is not loaded or the palette does not exist
+     */
+    private function applyTo($name, $table, $type)
+    {
+        if ('palettes' !== $type && 'subpalettes' !== $type) {
+            throw new \InvalidArgumentException('Type must be "palettes" or "subpalettes"');
+        }
+
+        if (!isset($GLOBALS['TL_DCA'][$table][$type][$name])) {
+            throw new \InvalidArgumentException(
+                sprintf('Palette or subpalette "%s" not found in table "%s"', $name, $table)
+            );
+        }
+
+        $GLOBALS['TL_DCA'][$table][$type][$name] = $this->applyToString(
+            $GLOBALS['TL_DCA'][$table][$type][$name],
+            'subpalettes' === $type
+        );
     }
 
     /**
@@ -255,36 +285,6 @@ class PaletteManipulator
     }
 
     /**
-     * Applies all changes to a palette.
-     *
-     * @param string $palette     The palette
-     * @param bool   $skipLegends True to ignore legends (e.g. for subpalettes)
-     *
-     * @return string
-     */
-    private function apply($palette, $skipLegends = false)
-    {
-        $config = $this->explode($palette);
-
-        if (!$skipLegends) {
-            foreach ($this->legends as $legend) {
-                $this->applyLegend($config, $legend);
-            }
-        }
-
-        // Make sure there is at least one legend
-        if (0 === count($config)) {
-            $config = [['fields' => [], 'hide' => false]];
-        }
-
-        foreach ($this->fields as $field) {
-            $this->applyField($config, $field, $skipLegends);
-        }
-
-        return $this->implode($config);
-    }
-
-    /**
      * Adds a new legend to the configuration array.
      *
      * @param array $config The configuration array
@@ -334,16 +334,14 @@ class PaletteManipulator
      * @param array $config      The configuration array
      * @param array $action      The action array
      * @param bool  $skipLegends True to ignore legends (e.g. for subpalettes)
-     *
-     * @return bool True if the operation was successful
      */
     private function applyField(array &$config, array $action, $skipLegends = false)
     {
-        if ($action['position'] === self::POSITION_PREPEND || $action['position'] === self::POSITION_APPEND) {
-            return $this->applyFieldToLegend($config, $action, $skipLegends);
+        if (self::POSITION_PREPEND === $action['position'] || self::POSITION_APPEND === $action['position']) {
+            $this->applyFieldToLegend($config, $action, $skipLegends);
+        } else {
+            $this->applyFieldToField($config, $action, $skipLegends);
         }
-
-        return $this->applyFieldToField($config, $action, $skipLegends);
     }
 
     /**
@@ -352,8 +350,6 @@ class PaletteManipulator
      * @param array $config      The configuration array
      * @param array $action      The action array
      * @param bool  $skipLegends True to ignore legends (e.g. for subpalettes)
-     *
-     * @return bool True if the operation was successful
      */
     private function applyFieldToLegend(array &$config, array $action, $skipLegends = false)
     {
@@ -373,11 +369,11 @@ class PaletteManipulator
                 $offset = self::POSITION_PREPEND === $action['position'] ? 0 : count($config[$parent]['fields']);
                 array_splice($config[$parent]['fields'], $offset, 0, $action['fields']);
 
-                return true;
+                return;
             }
         }
 
-        return $this->applyFallback($config, $action, $skipLegends);
+        $this->applyFallback($config, $action, $skipLegends);
     }
 
     /**
@@ -386,8 +382,6 @@ class PaletteManipulator
      * @param array $config      The configuration array
      * @param array $action      The action array
      * @param bool  $skipLegends True to ignore legends (e.g. for subpalettes)
-     *
-     * @return bool True if the operation was successful
      */
     private function applyFieldToField(array &$config, array $action, $skipLegends = false)
     {
@@ -401,11 +395,11 @@ class PaletteManipulator
                 $offset += array_search($parent, $config[$legend]['fields'], true);
                 array_splice($config[$legend]['fields'], $offset, 0, $action['fields']);
 
-                return true;
+                return;
             }
         }
 
-        return $this->applyFallback($config, $action, $skipLegends);
+        $this->applyFallback($config, $action, $skipLegends);
     }
 
     /**
@@ -416,14 +410,14 @@ class PaletteManipulator
      * @param array $config      The configuration array
      * @param array $action      The action array
      * @param bool  $skipLegends True to ignore legends (e.g. for subpalettes)
-     *
-     * @return bool True if the operation was successful
      */
     private function applyFallback(array &$config, array $action, $skipLegends = false)
     {
         // Execute the closure if none of the parents was found
-        if ($action['fallback'] instanceof \Closure) {
-            return $action['fallback']($config, $action, $skipLegends);
+        if (is_callable($action['fallback'])) {
+            $action['fallback']($config, $action, $skipLegends);
+
+            return;
         }
 
         end($config);
@@ -432,10 +426,14 @@ class PaletteManipulator
         if (null !== $action['fallback']) {
             foreach ($action['fallback'] as $parent) {
                 if (array_key_exists($parent, $config)) {
-                    $offset = self::POSITION_PREPEND === $action['fallbackPosition'] ? 0 : count($config[$parent]['fields']);
+                    $offset = self::POSITION_PREPEND === $action['fallbackPosition']
+                        ? 0
+                        : count($config[$parent]['fields'])
+                    ;
+
                     array_splice($config[$parent]['fields'], $offset, 0, $action['fields']);
 
-                    return true;
+                    return;
                 }
             }
 
@@ -455,8 +453,6 @@ class PaletteManipulator
         // If everything fails, add to the last legend
         $offset = self::POSITION_PREPEND === $action['fallbackPosition'] ? 0 : count($config[$fallback]['fields']);
         array_splice($config[$fallback]['fields'], $offset, 0, $action['fields']);
-
-        return true;
     }
 
     /**
