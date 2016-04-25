@@ -1,0 +1,17 @@
+# Components
+/components/
+
+# Tests
+/tests/Fixtures/app/cache/contao/
+/tests/Fixtures/assets/*
+!/tests/Fixtures/assets/.gitignore
+/tests/Fixtures/system/cache/
+/tests/Fixtures/system/config/
+/tests/Fixtures/system/logs/
+/tests/Fixtures/system/themes/*
+!/tests/Fixtures/system/themes/.gitignore
+/tests/Fixtures/system/tmp/
+/tests/Fixtures/web/
+
+# Vendor
+/vendor/

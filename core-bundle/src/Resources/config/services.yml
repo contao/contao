@@ -1,0 +1,113 @@
+services:
+    contao.cache:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments:
+            - "%kernel.cache_dir%/contao/cache"
+            - ""
+            - 0022
+
+    contao.cache.clear_internal:
+        class: Contao\CoreBundle\Cache\ContaoCacheClearer
+        public: false
+        arguments:
+            - "@filesystem"
+        tags:
+            - { name: kernel.cache_clearer }
+
+    contao.cache.warm_internal:
+        class: Contao\CoreBundle\Cache\ContaoCacheWarmer
+        public: false
+        arguments:
+            - "@filesystem"
+            - "@contao.resource_finder"
+            - "@contao.resource_locator"
+            - "%kernel.root_dir%"
+            - "@doctrine.dbal.default_connection"
+            - "@contao.framework"
+        tags:
+            - { name: kernel.cache_warmer }
+
+    contao.data_collector:
+        class: Contao\CoreBundle\DataCollector\ContaoDataCollector
+        public: false
+        arguments:
+            - "@service_container"
+            - "%kernel.packages%"
+        tags:
+            - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
+
+    contao.image.image_sizes:
+        class: Contao\CoreBundle\Image\ImageSizes
+        arguments:
+            - "@database_connection"
+            - "@event_dispatcher"
+            - "@contao.framework"
+
+    contao.framework:
+        class: Contao\CoreBundle\Framework\ContaoFramework
+        arguments:
+            - "@request_stack"
+            - "@router"
+            - "@session"
+            - "%kernel.root_dir%"
+            - "%contao.error_level%"
+        calls:
+            - ["setContainer", ["@service_container"]]
+
+    contao.referer_id.manager:
+         class: Symfony\Component\Security\Csrf\CsrfTokenManager
+         public: false
+         arguments:
+            - "@contao.referer_id.token_generator"
+            - "@security.csrf.token_storage"
+
+    contao.referer_id.token_generator:
+         class: Contao\CoreBundle\Referer\TokenGenerator
+         public: false
+
+    contao.resource_finder:
+        class: Contao\CoreBundle\Config\ResourceFinder
+        arguments:
+            - "%contao.resources_paths%"
+
+    contao.resource_locator:
+        class: Symfony\Component\Config\FileLocator
+        arguments:
+            - "%contao.resources_paths%"
+
+    contao.routing.frontend_loader:
+        class: Contao\CoreBundle\Routing\FrontendLoader
+        public: false
+        arguments:
+            - "%contao.prepend_locale%"
+        tags:
+            - { name: routing.loader }
+
+    contao.security.authenticator:
+        class: Contao\CoreBundle\Security\ContaoAuthenticator
+        public: false
+        calls:
+            - ["setContainer", ["@service_container"]]
+
+    contao.security.user_provider:
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
+        public: false
+        arguments:
+            - "@service_container"
+            - "@contao.framework"
+
+    contao.session.contao_backend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        public: false
+        arguments:
+            - "_contao_be_attributes"
+        calls:
+            - ["setName", ["contao_backend"]]
+
+    contao.session.contao_frontend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        public: false
+        arguments:
+            - "_contao_fe_attributes"
+        calls:
+            - ["setName", ["contao_frontend"]]

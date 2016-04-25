@@ -1,0 +1,6 @@
+
+<div class="custom">
+  <?php foreach ($this->sections as $id=>$content): ?>
+    <?php $this->insert('block_section', array('id'=>$id, 'content'=>$content)); ?>
+  <?php endforeach; ?>
+</div>

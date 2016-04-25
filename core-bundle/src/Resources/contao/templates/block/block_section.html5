@@ -1,0 +1,6 @@
+
+<div id="<?= standardize($this->id, true) ?>">
+  <div class="inside">
+    <?= $this->content ?>
+  </div>
+</div>

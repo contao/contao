@@ -1,0 +1,8 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <?= $this->images ?>
+  <?= $this->pagination ?>
+
+<?php $this->endblock(); ?>
