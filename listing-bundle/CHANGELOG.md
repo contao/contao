@@ -1,5 +1,5 @@
 # Contao listing bundle change log
 
-### 4.1.3 (2016-04-22)
+### 4.2.0-beta1 (2016-XX-XX)
 
- * Remove the custom template field from the listing module (see contao/core#8297).
+ * Add an SVG icon and adjust to the new back end theme (see contao/core#4608).
