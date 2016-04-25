@@ -69,21 +69,21 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_comments']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'edit.gif',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_comments', 'editComment')
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_comments']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_comments', 'deleteComment')
 			),
 			'toggle' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_comments']['toggle'],
-				'icon'                => 'visible.gif',
+				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_comments', 'toggleIcon')
 			),
@@ -91,7 +91,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_comments']['show'],
 				'href'                => 'act=show',
-				'icon'                => 'show.gif'
+				'icon'                => 'show.svg'
 			)
 		)
 	),
@@ -551,7 +551,7 @@ class tl_comments extends Backend
 	 */
 	public function editComment($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -569,7 +569,7 @@ class tl_comments extends Backend
 	 */
 	public function deleteComment($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -603,7 +603,7 @@ class tl_comments extends Backend
 
 		if (!$row['published'])
 		{
-			$icon = 'invisible.gif';
+			$icon = 'invisible.svg';
 		}
 
 		if (!$this->isAllowedToEditComment($row['parent'], $row['source']))

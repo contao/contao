@@ -29,7 +29,7 @@ array_insert($GLOBALS['BE_MOD']['content'], 5, array
 	'comments' => array
 	(
 		'tables'     => array('tl_comments'),
-		'icon'       => 'bundles/contaocomments/icon.gif',
+		'icon'       => 'bundles/contaocomments/icon.svg',
 		'stylesheet' => 'bundles/contaocomments/style.css'
 	)
 ));
