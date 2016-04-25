@@ -115,14 +115,14 @@ class InstallationController implements ContainerAwareInterface
     {
         $rootDir = $this->container->getParameter('kernel.root_dir');
 
-        if (is_dir($rootDir . '/../files') && is_link($rootDir . '/../web/assets')) {
+        if (is_dir($rootDir.'/../files') && is_link($rootDir.'/../web/assets')) {
             return;
         }
 
         // Install the bundle assets
         $command = new AssetsInstallCommand();
         $command->setContainer($this->container);
-        $command->run(new ArgvInput(['assets:install', '--relative', $rootDir . '/../web']), new NullOutput());
+        $command->run(new ArgvInput(['assets:install', '--relative', $rootDir.'/../web']), new NullOutput());
 
         // Add the Contao directories
         $command = new InstallCommand();
@@ -237,7 +237,7 @@ class InstallationController implements ContainerAwareInterface
         $finder = Finder::create()
             ->directories()
             ->depth('==0')
-            ->in($rootDir . '/cache')
+            ->in($rootDir.'/cache')
         ;
 
         foreach ($finder as $dir) {
@@ -307,12 +307,12 @@ class InstallationController implements ContainerAwareInterface
         $finder = Finder::create()
             ->files()
             ->name('Version*Update.php')
-            ->in(__DIR__ . '/../Database')
+            ->in(__DIR__.'/../Database')
         ;
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $class = 'Contao\InstallationBundle\Database\\' . $file->getBasename('.php');
+            $class = 'Contao\InstallationBundle\Database\\'.$file->getBasename('.php');
 
             /** @var AbstractVersionUpdate $update */
             $update = new $class($this->container->get('database_connection'));
@@ -513,7 +513,7 @@ class InstallationController implements ContainerAwareInterface
     {
         return new Response(
             $this->container->get('twig')->render(
-                '@ContaoInstallation/' . $name,
+                '@ContaoInstallation/'.$name,
                 $this->addRequestTokenToContext($context)
             )
         );

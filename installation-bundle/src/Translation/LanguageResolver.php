@@ -49,7 +49,7 @@ class LanguageResolver
     public function getLocale()
     {
         foreach ($this->getAcceptedLocales() as $locale) {
-            if (file_exists($this->translationsDir . '/messages.' . $locale . '.xlf')) {
+            if (file_exists($this->translationsDir.'/messages.'.$locale.'.xlf')) {
                 return $locale;
             }
         }
@@ -80,7 +80,7 @@ class LanguageResolver
 
             // Language plus dialect, e.g. "en-US" or "fr-FR"
             if (isset($chunks[1])) {
-                $locale = $chunks[0] . '-' . strtoupper($chunks[1]);
+                $locale = $chunks[0].'-'.strtoupper($chunks[1]);
 
                 if (preg_match('/^[a-z]{2}(\-[A-Z]{2})?$/', $locale)) {
                     $locales[] = $locale;

@@ -59,8 +59,8 @@ class InstallationKernel extends \AppKernel
      */
     private function canBootRealSystem()
     {
-        return file_exists($this->getRootDir() . '/config/parameters.yml')
-            && file_exists($this->getRootDir() . '/../system/config/localconfig.php')
+        return file_exists($this->getRootDir().'/config/parameters.yml')
+            && file_exists($this->getRootDir().'/../system/config/localconfig.php')
         ;
     }
 
@@ -83,7 +83,7 @@ class InstallationKernel extends \AppKernel
         $requestStack = $container->get('request_stack');
         $requestStack->push($request);
 
-        $resolver = new LanguageResolver($requestStack, __DIR__ . '/../Resources/translations');
+        $resolver = new LanguageResolver($requestStack, __DIR__.'/../Resources/translations');
 
         $container->get('translator')->setLocale($resolver->getLocale());
         $container->get('contao.framework')->initialize();
@@ -94,10 +94,10 @@ class InstallationKernel extends \AppKernel
      */
     private function bootHelperSystem()
     {
-        $contaoDir = $this->getRootDir() . '/../vendor/contao/core-bundle';
+        $contaoDir = $this->getRootDir().'/../vendor/contao/core-bundle';
 
-        require_once $contaoDir . '/src/Resources/contao/config/constants.php';
-        require_once $contaoDir . '/src/Resources/contao/helper/functions.php';
+        require_once $contaoDir.'/src/Resources/contao/config/constants.php';
+        require_once $contaoDir.'/src/Resources/contao/helper/functions.php';
 
         // Register the class loader
         $libraryLoader = new LibraryLoader($this->getRootDir());

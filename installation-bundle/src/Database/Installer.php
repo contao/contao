@@ -94,7 +94,7 @@ class Installer
             }
         }
 
-        throw new \InvalidArgumentException('Invalid hash ' . $hash);
+        throw new \InvalidArgumentException('Invalid hash '.$hash);
     }
 
     /**
@@ -127,7 +127,7 @@ class Installer
                 ];
 
                 if (isset($column['Collation']) && $column['Collation'] !== $table['Collation']) {
-                    $field['collation'] = 'COLLATE ' . $column['Collation'];
+                    $field['collation'] = 'COLLATE '.$column['Collation'];
                 }
 
                 $field['null'] = ('YES' === $column['Null']) ? 'NULL' : 'NOT NULL';
@@ -137,7 +137,7 @@ class Installer
                 }
 
                 if (isset($column['Default'])) {
-                    $field['default'] = 'default ' . $this->connection->quote($column['Default']);
+                    $field['default'] = 'default '.$this->connection->quote($column['Default']);
                 }
 
                 $return[$table['Name']]['TABLE_FIELDS'][$column['Field']] = trim(implode(' ', $field));
@@ -162,9 +162,9 @@ class Installer
                 if ('PRIMARY' === $name) {
                     $tmp[$name]['key'] = 'PRIMARY KEY ';
                 } elseif ('0' === $index['Non_Unique']) {
-                    $tmp[$name]['key'] = 'UNIQUE KEY ' . $this->quote($name);
+                    $tmp[$name]['key'] = 'UNIQUE KEY '.$this->quote($name);
                 } else {
-                    $tmp[$name]['key'] = 'KEY ' . $this->quote($name);
+                    $tmp[$name]['key'] = 'KEY '.$this->quote($name);
                 }
 
                 $tmp[$name]['columns'] = [$this->quoteColumn($index)];
@@ -172,7 +172,7 @@ class Installer
 
             foreach ($tmp as $name => $conf) {
                 $return[$table['Name']]['TABLE_CREATE_DEFINITIONS'][$name] =
-                    $conf['key'] . ' (' . implode(', ', $conf['columns']) . ')'
+                    $conf['key'].' ('.implode(', ', $conf['columns']).')'
                 ;
             }
         }
@@ -272,7 +272,7 @@ class Installer
         $column = $this->quote($tableIndex['Column_Name']);
 
         if (!empty($tableIndex['Sub_Part'])) {
-            $column .= '(' . $tableIndex['Sub_Part'] . ')';
+            $column .= '('.$tableIndex['Sub_Part'].')';
         }
 
         return $column;
@@ -312,7 +312,7 @@ class Installer
             $definitions = '';
 
             if (!empty($sqlTarget[$table]['TABLE_CREATE_DEFINITIONS'])) {
-                $definitions = ",\n  " . implode(",\n  ", $sqlTarget[$table]['TABLE_CREATE_DEFINITIONS']);
+                $definitions = ",\n  ".implode(",\n  ", $sqlTarget[$table]['TABLE_CREATE_DEFINITIONS']);
             }
 
             $command = sprintf(

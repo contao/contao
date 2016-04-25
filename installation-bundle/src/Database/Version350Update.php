@@ -33,7 +33,7 @@ class Version350Update extends AbstractVersionUpdate
             ->getListTableIndexesSQL('tl_member', $this->connection->getDatabase())
         ;
 
-        $index = $this->connection->fetchAssoc($sql . " AND INDEX_NAME = 'username'");
+        $index = $this->connection->fetchAssoc($sql." AND INDEX_NAME = 'username'");
 
         return '0' !== $index['Non_Unique'];
     }

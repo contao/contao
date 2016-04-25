@@ -81,10 +81,10 @@ class InstallTool
     {
         // The localconfig.php file is created by the Config class
         foreach (['dcaconfig', 'initconfig', 'langconfig'] as $file) {
-            if (!file_exists($this->rootDir . '/../system/config/' . $file . '.php')) {
+            if (!file_exists($this->rootDir.'/../system/config/'.$file.'.php')) {
                 file_put_contents(
-                    $this->rootDir . '/../system/config/' . $file . '.php',
-                    '<?php' . "\n\n// Put your custom configuration here\n"
+                    $this->rootDir.'/../system/config/'.$file.'.php',
+                    '<?php'."\n\n// Put your custom configuration here\n"
                 );
             }
         }
@@ -156,7 +156,7 @@ class InstallTool
         $quotedName = $this->connection->quoteIdentifier($name);
 
         try {
-            $this->connection->query('use ' . $quotedName);
+            $this->connection->query('use '.$quotedName);
         } catch (DBALException $e) {
             return false;
         }
@@ -212,7 +212,7 @@ class InstallTool
             ->getListTableColumnsSQL('tl_layout', $this->connection->getDatabase())
         ;
 
-        $column = $this->connection->fetchAssoc($sql . " AND COLUMN_NAME = 'sections'");
+        $column = $this->connection->fetchAssoc($sql." AND COLUMN_NAME = 'sections'");
 
         return 'varchar(1022)' !== $column['Type'];
     }
@@ -240,7 +240,7 @@ class InstallTool
         $finder = Finder::create()
             ->files()
             ->name('*.sql')
-            ->in($this->rootDir . '/../templates')
+            ->in($this->rootDir.'/../templates')
         ;
 
         $templates = [];
@@ -266,12 +266,12 @@ class InstallTool
 
             foreach ($tables as $table) {
                 if (0 === strncmp($table, 'tl_', 3)) {
-                    $this->connection->query('TRUNCATE TABLE ' . $this->connection->quoteIdentifier($table));
+                    $this->connection->query('TRUNCATE TABLE '.$this->connection->quoteIdentifier($table));
                 }
             }
         }
 
-        $data = file($this->rootDir . '/../templates/' . $template);
+        $data = file($this->rootDir.'/../templates/'.$template);
 
         foreach (preg_grep('/^INSERT /', $data) as $query) {
             $this->connection->query($query);
@@ -413,7 +413,7 @@ class InstallTool
                 $e->getTraceAsString()
             ),
             3,
-            $this->rootDir . '/logs/prod-' . date('Y-m-d') . '.log'
+            $this->rootDir.'/logs/prod-'.date('Y-m-d').'.log'
         );
     }
 }
