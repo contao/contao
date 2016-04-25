@@ -44,7 +44,7 @@ class PaletteManipulator
     }
 
     /**
-     * Adds a new legend to the palette.
+     * Adds a new legend.
      *
      * If the legend already exists, nothing will be changed.
      *
@@ -70,7 +70,7 @@ class PaletteManipulator
     }
 
     /**
-     * Adds a new field to the palette.
+     * Adds a new field.
      *
      * If $position is PREPEND or APPEND, pass a legend as parent; otherwise pass a field name.
      *
@@ -205,9 +205,7 @@ class PaletteManipulator
         }
 
         if (!isset($GLOBALS['TL_DCA'][$table][$type][$name])) {
-            throw new \InvalidArgumentException(
-                sprintf('Palette or subpalette "%s" not found in table "%s"', $name, $table)
-            );
+            throw new \InvalidArgumentException(sprintf('(Sub)palette "%s" not found in table "%s"', $name, $table));
         }
 
         $GLOBALS['TL_DCA'][$table][$type][$name] = $this->applyToString(
@@ -233,7 +231,6 @@ class PaletteManipulator
         $legendMap = [];
 
         foreach (array_map('trim', explode(';', $palette)) as $group) {
-            $legend = null;
             $hide = false;
             $fields = array_map('trim', explode(',', $group));
 
@@ -316,7 +313,7 @@ class PaletteManipulator
                 $offset = array_search($parent, array_keys($config), true);
                 $offset += (int) (self::POSITION_AFTER === $action['position']);
 
-                // Necessary because array_splice() would remove keys from $replacement array
+                // Necessary because array_splice() would remove the keys from the replacement array
                 $before = array_splice($config, 0, $offset);
                 $config = $before + $template + $config;
 
@@ -364,13 +361,8 @@ class PaletteManipulator
             $action['parents'] = [key($config)];
         }
 
-        foreach ($action['parents'] as $parent) {
-            if (array_key_exists($parent, $config)) {
-                $offset = self::POSITION_PREPEND === $action['position'] ? 0 : count($config[$parent]['fields']);
-                array_splice($config[$parent]['fields'], $offset, 0, $action['fields']);
-
-                return;
-            }
+        if ($this->canApplyToParent($config, $action, 'parents', 'position')) {
+            return;
         }
 
         $this->applyFallback($config, $action, $skipLegends);
@@ -413,28 +405,27 @@ class PaletteManipulator
      */
     private function applyFallback(array &$config, array $action, $skipLegends = false)
     {
-        // Execute the closure if none of the parents was found
         if (is_callable($action['fallback'])) {
             $action['fallback']($config, $action, $skipLegends);
-
-            return;
+        } else {
+            $this->applyFallbackPalette($config, $action);
         }
+    }
 
+    /**
+     * Aplies the fallback to a palette.
+     *
+     * @param array $config The configuration array
+     * @param array $action Th eaction array
+     */
+    private function applyFallbackPalette(array &$config, array $action)
+    {
         end($config);
         $fallback = key($config);
 
         if (null !== $action['fallback']) {
-            foreach ($action['fallback'] as $parent) {
-                if (array_key_exists($parent, $config)) {
-                    $offset = self::POSITION_PREPEND === $action['fallbackPosition']
-                        ? 0
-                        : count($config[$parent]['fields'])
-                    ;
-
-                    array_splice($config[$parent]['fields'], $offset, 0, $action['fields']);
-
-                    return;
-                }
+            if ($this->canApplyToParent($config, $action, 'fallback', 'fallbackPosition')) {
+                return;
             }
 
             // If the fallback palette was not found, create a new one
@@ -463,13 +454,37 @@ class PaletteManipulator
      * @param array  $config The configuration array
      * @param string $field  The field name
      *
-     * @return string|bool The legend or false
+     * @return string|false The legend or false
      */
     private function findLegendForField(array &$config, $field)
     {
         foreach ($config as $legend => $group) {
             if (in_array($field, $group['fields'], true)) {
                 return $legend;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Tries to apply to a parent.
+     *
+     * @param array  $config   The configuration array
+     * @param array  $action   The action array
+     * @param string $key      The action key
+     * @param string $position The position key
+     *
+     * @return bool True if the operation was successful
+     */
+    private function canApplyToParent(array &$config, array $action, $key, $position)
+    {
+        foreach ($action[$key] as $parent) {
+            if (array_key_exists($parent, $config)) {
+                $offset = self::POSITION_PREPEND === $action[$position] ? 0 : count($config[$parent]['fields']);
+                array_splice($config[$parent]['fields'], $offset, 0, $action['fields']);
+
+                return true;
             }
         }
 
