@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=<?= $this->charset ?>" />
   <title><?= $this->title ?> - Contao Open Source CMS <?= VERSION ?></title>
 </head>
-<frameset rows="33,*" frameborder="0" framespacing="0">
+<frameset rows="41,*" frameborder="0" framespacing="0">
   <frame src="<?= $this->switchHref; ?>" name="switch" frameborder="0" scrolling="no" noresize="noresize" />
   <frame src="<?= $this->url ?>" name="website" frameborder="0" noresize="noresize" />
 </frameset>

@@ -592,7 +592,7 @@ abstract class Controller extends \System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$image = $objPage->type.'.gif';
+		$image = $objPage->type.'.svg';
 
 		// Page not published or not active
 		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
@@ -615,7 +615,7 @@ abstract class Controller extends \System
 		// Get the image name
 		if ($sub > 0)
 		{
-			$image = $objPage->type.'_'.$sub.'.gif';
+			$image = $objPage->type.'_'.$sub.'.svg';
 		}
 
 		// HOOK: add custom logic

@@ -9,9 +9,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="referrer" content="origin">
 
-  <?php if ($this->loadFonts): ?>
-    <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
-  <?php endif; ?>
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
   <link rel="stylesheet" href="<?php
     $objCombiner = new Combiner();
     $objCombiner->add('assets/colorpicker/css/mooRainbow.min.css');
@@ -48,32 +46,28 @@
 <body id="top" class="<?= $this->ua ?><?php if ($this->isPopup) echo ' popup'; ?>">
 
   <?php if (!$this->isPopup): ?>
-    <div id="header" class="collapsible<?php if ($this->isCoreOnlyMode || $this->isMaintenanceMode || $this->needsCacheBuild) echo ' xpnd'; ?>">
-      <h1><span class="title"><?= $this->websiteTitle ?></span> Contao Open Source CMS <?= $this->version ?></h1>
-      <div class="collapsible_area">
-        <div id="tmenu">
-          <span class="header_user_container"><a href="<?= $this->route('contao_backend', array('do'=>'login', 'ref'=>TL_REFERER_ID)) ?>" class="header_user" title="<?= $this->account ?>"><?= $this->username ?></a></span>
-          <span class="header_preview_container"><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" target="_blank" class="header_preview" title="<?= $this->previewTitle ?>" accesskey="f"><?= $this->preview ?></a></span>
-          <span class="header_home_container"><a href="<?= $this->route('contao_backend') ?>" class="header_home" title="<?= $this->homeTitle ?>" accesskey="h"><?= $this->home ?></a></span>
-          <span class="header_logout_container"><a href="<?= $this->route('contao_backend_login') ?>" class="header_logout" title="<?= $this->logoutTitle ?>" accesskey="q"><?= $this->logout ?></a></span>
-        </div>
-        <?php if ($this->needsCacheBuild): ?>
-          <p class="tl_error tl_permalert"><?php if ($this->isAdmin): ?><a href="<?= $this->buildCacheHref ?>" class="tl_submit"><?= $this->buildCacheLink ?></a><?php endif; ?><?= $this->buildCacheText ?></p>
-        <?php endif; ?>
+    <div id="header">
+      <div class="inner">
+        <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h">Contao</a></h1>
+        <ul id="tmenu">
+          <li><a href="<?= $this->route('contao_backend') ?>">Alerts<?php if ($this->systemErrorMessages > 0): ?> <sup><?= $this->systemErrorMessages ?></sup><?php endif; ?></a></li>
+          <li><a href="<?= $this->route('contao_backend', array('do'=>'login', 'ref'=>TL_REFERER_ID)) ?>"><?= $this->username ?></a></li>
+          <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
+          <li><a href="<?= $this->route('contao_backend_login') ?>" accesskey="q"><?= $this->logout ?></a></li>
+          <li class="burger"><?= Image::getHtml('burger.svg', '', 'id="burger"') ?></li>
+        </ul>
       </div>
     </div>
   <?php endif; ?>
 
-  <div id="container">
-
+  <div id="container" class="cf">
     <?php if (!$this->isPopup): ?>
       <div id="left">
-        <div id="tl_navigation" class="collapsible">
-          <h1><?= $this->backendModules ?></h1>
+        <div id="tl_navigation">
           <a href="<?= $this->request ?>#skipNavigation" class="invisible"><?= $this->skipNavigation ?></a>
-          <ul class="tl_level_1 collapsible_area">
+          <ul class="tl_level_1">
             <?php foreach ($this->modules as $strGroup=>$arrModules): ?>
-              <li class="tl_level_1_group<?= $arrModules['class'] ?>"><a href="<?= $arrModules['href'] ?>" title="<?= $arrModules['title'] ?>" onclick="return AjaxRequest.toggleNavigation(this,'<?= $strGroup ?>')"><?= Image::getHtml($arrModules['icon']) ?><?= $arrModules['label'] ?></a></li>
+              <li class="tl_level_1_group<?= $arrModules['class'] ?>"><a href="<?= $arrModules['href'] ?>" onclick="return AjaxRequest.toggleNavigation(this,'<?= $strGroup ?>')"><?= $arrModules['label'] ?></a></li>
               <?php if ($arrModules['modules']): ?>
                 <li class="tl_parent" id="<?= $strGroup ?>">
                   <ul class="tl_level_2">
@@ -102,9 +96,6 @@
       <?php endif; ?>
       <?= $this->main ?>
     </div>
-
-    <div class="clear"></div>
-
   </div>
 
   <?php if (!$this->isPopup): ?>
@@ -114,7 +105,6 @@
         <span class="footer_preview_container"><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" target="_blank" class="footer_preview" title="<?= $this->previewTitle ?>"><?= $this->preview ?></a></span>
       </div>
     </div>
-
     <?php if ($this->pageOffset): ?>
       <script>Backend.vScrollTo($('paste_hint') ? <?= $this->pageOffset + 20 ?> : <?= $this->pageOffset ?>)</script>
       <?php System::setCookie('BE_PAGE_OFFSET', 0, 0); ?>

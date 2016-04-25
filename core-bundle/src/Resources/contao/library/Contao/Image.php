@@ -836,10 +836,40 @@ class Image
 
 		if (strncmp($src, 'icon', 4) === 0)
 		{
+			if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
+			{
+				return 'assets/contao/images/' . $src;
+			}
+
+			$filename = pathinfo($src, PATHINFO_FILENAME);
+
+			// Prefer SVG icons
+			if (file_exists(TL_ROOT . '/assets/contao/images/' . $filename . '.svg'))
+			{
+				return 'assets/contao/images/' . $filename . '.svg';
+			}
+
 			return 'assets/contao/images/' . $src;
 		}
+		else
+		{
+			$theme = \Backend::getTheme();
 
-		return 'system/themes/' . \Backend::getTheme() . '/images/' . $src;
+			if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
+			{
+				return 'system/themes/' . $theme . '/icons/' . $src;
+			}
+
+			$filename = pathinfo($src, PATHINFO_FILENAME);
+
+			// Prefer SVG icons
+			if (file_exists(TL_ROOT . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+			{
+				return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
+			}
+
+			return 'system/themes/' . $theme . '/images/' . $src;
+		}
 	}
 
 

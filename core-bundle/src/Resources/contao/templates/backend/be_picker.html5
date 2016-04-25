@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="referrer" content="origin">
 
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
   <link rel="stylesheet" href="<?php
     $objCombiner = new Combiner();
     $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
@@ -34,7 +35,7 @@
 </head>
 <body class="<?= $this->ua ?> popup">
 
-  <div id="container">
+  <div id="container" class="cf">
     <div id="main">
       <?php if ($this->managerHref || $this->switchHref): ?>
         <div id="manager">

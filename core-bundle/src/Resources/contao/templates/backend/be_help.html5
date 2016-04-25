@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="referrer" content="origin">
 
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
   <link rel="stylesheet" href="<?php
     $objCombiner = new Combiner();
     $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
@@ -33,12 +34,9 @@
 </head>
 <body class="<?= $this->ua ?> popup">
 
-  <div id="container">
-
+  <div id="container" class="cf">
     <div id="main">
-      <h1><?= $this->helpWizard ?></h1>
       <?= $this->explanation ?>
-
       <?php if (!empty($this->rows)): ?>
         <table class="tl_help_table">
           <?php foreach ($this->rows as $row): ?>
@@ -56,7 +54,6 @@
         </table>
       <?php endif; ?>
     </div>
-
   </div>
 
 </body>

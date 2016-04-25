@@ -2,6 +2,7 @@
 
 ### 4.2.0-beta1 (2016-XX-XX)
 
+ * Modernize the back end theme and use SVG icons (see contao/core#4608).
  * Add the PaletteManipulator class to modify DCA palettes (see #474).
  * Optimize the jQuery and MooTools templates (see contao/core#8017).
  * Show the record ID and table name in the diff view (see contao/core#5800).

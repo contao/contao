@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -68,18 +69,6 @@ class BackendMain extends \Backend
 		if (\Input::get('do') == 'feRedirect')
 		{
 			$this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'));
-		}
-
-		// Convenience functions
-		if ($this->User->isAdmin)
-		{
-			// Build internal cache
-			if (\Input::get('bic'))
-			{
-				$this->import('Automator');
-				$this->Automator->generateInternalCache();
-				$this->redirect($this->getReferer());
-			}
 		}
 
 		\System::loadLanguageFile('default');
@@ -143,28 +132,19 @@ class BackendMain extends \Backend
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_welcome');
-		$objTemplate->messages = \Message::generateUnwrapped();
+		$objTemplate->messages = \Message::generateUnwrapped() . \Message::getSystemMessages();
+		$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];
 
-		// HOOK: add custom messages
-		if (isset($GLOBALS['TL_HOOKS']['getSystemMessages']) && is_array($GLOBALS['TL_HOOKS']['getSystemMessages']))
+		// Add the login message
+		if ($this->User->lastLogin > 0)
 		{
-			$arrMessages = array();
+			$formatter = new DateTimeFormatter(\System::getContainer()->get('translator'));
+			$diff = $formatter->formatDiff(new \DateTime(date('Y-m-d H:i:s', $this->User->lastLogin)), new \DateTime());
 
-			foreach ($GLOBALS['TL_HOOKS']['getSystemMessages'] as $callback)
-			{
-				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}();
-
-				if ($strBuffer != '')
-				{
-					$arrMessages[] = $strBuffer;
-				}
-			}
-
-			if (!empty($arrMessages))
-			{
-				$objTemplate->messages .= "\n" . implode("\n", $arrMessages);
-			}
+			$objTemplate->loginMsg = sprintf(
+				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
+				'<time datetime="' . date('Y-m-d H:i', $this->User->lastLogin) . '">' . $diff . '</time>'
+			);
 		}
 
 		// Add the versions overview
@@ -240,13 +220,8 @@ class BackendMain extends \Backend
 		$this->Template->expandNode = $GLOBALS['TL_LANG']['MSC']['expandNode'];
 		$this->Template->collapseNode = $GLOBALS['TL_LANG']['MSC']['collapseNode'];
 		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
-		$this->Template->loadFonts = \Config::get('loadGoogleFonts');
-		$this->Template->isAdmin = $this->User->isAdmin;
-		$this->Template->buildCacheLink = $GLOBALS['TL_LANG']['MSC']['buildCacheLink'];
-		$this->Template->buildCacheText = sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], \System::getContainer()->getParameter('kernel.environment'));
-		$this->Template->buildCacheHref = $this->addToUrl('bic=1');
-		$this->Template->needsCacheBuild = !is_dir(\System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql');
 		$this->Template->isPopup = \Input::get('popup');
+		$this->Template->systemErrorMessages = \Message::countSystemErrorMessages();
 
 		// Front end preview links
 		if (defined('CURRENT_ID') && CURRENT_ID != '')

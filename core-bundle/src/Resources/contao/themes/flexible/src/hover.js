@@ -62,21 +62,9 @@ var Theme = {
 	},
 
 	/**
-	 * Work around the missing :last-child support in IE7 and IE8 (see #4017)
-	 */
-	fixLabelLastChild: function() {
-		if (Browser.ie7 || Browser.ie8) {
-			$$('.tl_checkbox_container label:last-child').each(function(el) {
-				el.setStyle('margin-bottom', 0);
-			});
-		}
-	},
-
-	/**
 	 * Stop the propagation of click events of certain elements
 	 */
 	stopClickPropagation: function() {
-
 		// Do not propagate the click events of the icons
 		$$('.picker_selector').each(function(ul) {
 			ul.getElements('a').each(function(el) {
@@ -125,8 +113,7 @@ var Theme = {
 				});
 			} else {
 				el.addEvent('click', function(e) {
-					var key = Browser.Platform.mac ?
-							e.event.metaKey : e.event.ctrlKey;
+					var key = Browser.Platform.mac ? e.event.metaKey : e.event.ctrlKey;
 					if (key && e.event.shiftKey) {
 						el.getElements('a').each(function(a) {
 							if (a.hasClass('editheader')) {
@@ -183,7 +170,7 @@ var Theme = {
 					.replace(/</g, '&lt;')
 					.replace(/>/g, '&gt;')
 					.replace(/\n|\r\n/g, '<br>X'));
-				var height = Math.max(line, dummy.getSize().y);
+				var height = Math.max(line, dummy.getSize().y) + 2;
 				if (this.clientHeight != height) this.tween('height', height);
 			}).set('tween', { 'duration':100 }).setStyle('height', line + 'px');
 
@@ -197,17 +184,18 @@ var Theme = {
 	 * Set up the menu toggle
 	 */
 	setupMenuToggle: function() {
-		$$('.collapsible').each(function(el) {
-			el.getElement('h1').addEvent('click', function() {
-				el.toggleClass('xpnd');
-			});
+		var tog = $('burger');
+		if (tog.getParent('li').getStyle('display') == 'none') return;
+		$('tl_navigation').inject($('header'), 'after');
+		$('left').destroy();
+		tog.addEvent('click', function() {
+			document.body.toggleClass('show-navigation');
 		});
 	}
 };
 
 // Initialize
 window.addEvent('domready', function() {
-	Theme.fixLabelLastChild();
 	Theme.stopClickPropagation();
 	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();

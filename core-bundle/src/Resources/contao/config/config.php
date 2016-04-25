@@ -347,6 +347,10 @@ $GLOBALS['TL_PURGE'] = array
 		'symlinks' => array
 		(
 			'callback' => array('Automator', 'generateSymlinks')
+		),
+		'cache' => array
+		(
+			'callback' => array('Automator', 'generateInternalCache')
 		)
 	)
 );
@@ -404,9 +408,8 @@ $GLOBALS['TL_HOOKS'] = array
 	'getSystemMessages' => array
 	(
 		array('Messages', 'versionCheck'),
+		array('Messages', 'needsCacheBuild'),
 		array('Messages', 'maintenanceCheck'),
-		array('Messages', 'lastLogin'),
-		array('Messages', 'topLevelRoot'),
 		array('Messages', 'languageFallback')
 	)
 );

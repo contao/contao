@@ -158,7 +158,7 @@ class FileTree extends \Widget
 					{
 						if ($objFiles->type == 'folder')
 						{
-							$arrValues[$objFiles->uuid] = \Image::getHtml('folderC.gif') . ' ' . $objFiles->path;
+							$arrValues[$objFiles->uuid] = \Image::getHtml('folderC.svg') . ' ' . $objFiles->path;
 						}
 						else
 						{
@@ -290,9 +290,6 @@ class FileTree extends \Widget
 				unset($arrNew);
 			}
 		}
-
-		// Load the fonts for the drag hint (see #4838)
-		\Config::set('loadGoogleFonts', true);
 
 		// Convert the binary UUIDs
 		$strSet = implode(',', array_map('StringUtil::binToUuid', $arrSet));

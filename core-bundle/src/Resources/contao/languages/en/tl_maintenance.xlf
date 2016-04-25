@@ -128,6 +128,12 @@
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
       </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.cache.0">
+        <source>Build the internal cache</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.cache.1">
+        <source>Builds the cached versions of the config, DCA and language files.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
