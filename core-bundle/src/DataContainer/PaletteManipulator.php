@@ -173,7 +173,7 @@ class PaletteManipulator
      *
      * @param string $position The position
      *
-     * @throws \LogicException If the position is not valid
+     * @throws \InvalidArgumentException If the position is not valid
      */
     private function validatePosition($position)
     {
@@ -185,7 +185,7 @@ class PaletteManipulator
         ];
 
         if (!in_array($position, $positions, true)) {
-            throw new \LogicException('Invalid legend position');
+            throw new \InvalidArgumentException('Invalid legend position');
         }
     }
 

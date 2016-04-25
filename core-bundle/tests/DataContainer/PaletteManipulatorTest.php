@@ -435,7 +435,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests adding a field with a fallback at an invalid position.
      *
-     * @expectedException \LogicException
+     * @expectedException \InvalidArgumentException
      */
     public function testInvalidFallbackPosition()
     {
