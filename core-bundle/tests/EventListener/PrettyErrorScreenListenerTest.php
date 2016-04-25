@@ -134,7 +134,7 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testContaoPageHandler($type, \Exception $exception)
     {
-        $GLOBALS['TL_PTY']['error_' . $type] = 'Contao\PageError' . $type;
+        $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\PageError'.$type;
 
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),

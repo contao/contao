@@ -93,14 +93,14 @@ class LocaleListener
     private function formatLocaleId($locale)
     {
         if (!preg_match('/^[a-z]{2}([_-][a-z]{2})?$/i', $locale)) {
-            throw new \InvalidArgumentException('"' . $locale . '" is not a supported locale.');
+            throw new \InvalidArgumentException(sprintf('"%s" is not a supported locale.', $locale));
         }
 
         $values = preg_split('/-|_/', $locale);
         $locale = strtolower($values[0]);
 
         if (isset($values[1])) {
-            $locale .= '_' . strtoupper($values[1]);
+            $locale .= '_'.strtoupper($values[1]);
         }
 
         return $locale;
@@ -116,11 +116,11 @@ class LocaleListener
      */
     public static function createWithLocales($defaultLocale, $rootDir)
     {
-        $dirs = [__DIR__ . '/../Resources/contao/languages'];
+        $dirs = [__DIR__.'/../Resources/contao/languages'];
 
         // app/Resources/contao/languages
-        if (is_dir($rootDir . '/Resources/contao/languages')) {
-            $dirs[] = $rootDir . '/Resources/contao/languages';
+        if (is_dir($rootDir.'/Resources/contao/languages')) {
+            $dirs[] = $rootDir.'/Resources/contao/languages';
         }
 
         $finder = Finder::create()->directories()->depth(0)->in($dirs);

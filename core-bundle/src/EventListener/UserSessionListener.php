@@ -95,7 +95,7 @@ class UserSessionListener
         }
 
         $this->connection
-            ->prepare('UPDATE ' . $user->getTable() . ' SET session=? WHERE id=?')
+            ->prepare('UPDATE '.$user->getTable().' SET session=? WHERE id=?')
             ->execute([serialize($this->getSessionBag()->all()), $user->id])
         ;
     }

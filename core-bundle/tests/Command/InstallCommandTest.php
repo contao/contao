@@ -31,18 +31,18 @@ class InstallCommandTest extends TestCase
     {
         $fs = new Filesystem();
 
-        $fs->remove($this->getRootDir() . '/assets/css');
-        $fs->remove($this->getRootDir() . '/assets/images');
-        $fs->remove($this->getRootDir() . '/assets/images_test');
-        $fs->remove($this->getRootDir() . '/assets/js');
-        $fs->remove($this->getRootDir() . '/files');
-        $fs->remove($this->getRootDir() . '/files_test');
-        $fs->remove($this->getRootDir() . '/system/cache');
-        $fs->remove($this->getRootDir() . '/system/config');
-        $fs->remove($this->getRootDir() . '/system/initialize.php');
-        $fs->remove($this->getRootDir() . '/system/tmp');
-        $fs->remove($this->getRootDir() . '/templates');
-        $fs->remove($this->getRootDir() . '/web');
+        $fs->remove($this->getRootDir().'/assets/css');
+        $fs->remove($this->getRootDir().'/assets/images');
+        $fs->remove($this->getRootDir().'/assets/images_test');
+        $fs->remove($this->getRootDir().'/assets/js');
+        $fs->remove($this->getRootDir().'/files');
+        $fs->remove($this->getRootDir().'/files_test');
+        $fs->remove($this->getRootDir().'/system/cache');
+        $fs->remove($this->getRootDir().'/system/config');
+        $fs->remove($this->getRootDir().'/system/initialize.php');
+        $fs->remove($this->getRootDir().'/system/tmp');
+        $fs->remove($this->getRootDir().'/templates');
+        $fs->remove($this->getRootDir().'/web');
     }
 
     /**
@@ -61,7 +61,7 @@ class InstallCommandTest extends TestCase
     public function testInstallation()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
+        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('contao.upload_path', 'files');
         $container->setParameter('contao.image.target_path', 'assets/images');
 
@@ -90,7 +90,7 @@ class InstallCommandTest extends TestCase
     public function testInstallationWithCustomPaths()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
+        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('contao.upload_path', 'files_test');
         $container->setParameter('contao.image.target_path', 'assets/images_test');
 

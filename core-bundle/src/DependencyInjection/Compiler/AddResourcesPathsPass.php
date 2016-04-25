@@ -48,8 +48,8 @@ class AddResourcesPathsPass implements CompilerPassInterface
             }
         }
 
-        if (is_dir($rootDir . '/app/Resources/contao')) {
-            $paths[] = $rootDir . '/app/Resources/contao';
+        if (is_dir($rootDir.'/app/Resources/contao')) {
+            $paths[] = $rootDir.'/app/Resources/contao';
         }
 
         return $paths;
@@ -66,7 +66,7 @@ class AddResourcesPathsPass implements CompilerPassInterface
     {
         $reflection = new \ReflectionClass($class);
 
-        if (is_dir($dir = dirname($reflection->getFileName()) . '/Resources/contao')) {
+        if (is_dir($dir = dirname($reflection->getFileName()).'/Resources/contao')) {
             return $dir;
         }
 

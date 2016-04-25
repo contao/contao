@@ -203,7 +203,7 @@ class ContaoFrameworkTest extends TestCase
                 $container->get('request_stack'),
                 $this->mockRouter('/contao/install'),
                 $this->mockSession(),
-                $this->getRootDir() . '/app',
+                $this->getRootDir().'/app',
                 error_reporting(),
             ])
             ->setMethods(['isInitialized'])

@@ -32,7 +32,7 @@ class ContaoModuleBundleTest extends TestCase
     {
         parent::setUp();
 
-        $this->bundle = new ContaoModuleBundle('foobar', $this->getRootDir() . '/app');
+        $this->bundle = new ContaoModuleBundle('foobar', $this->getRootDir().'/app');
     }
 
     /**
@@ -49,7 +49,7 @@ class ContaoModuleBundleTest extends TestCase
     public function testGetPath()
     {
         $this->assertEquals(
-            $this->getRootDir() . '/system/modules/foobar',
+            $this->getRootDir().'/system/modules/foobar',
             $this->bundle->getPath()
         );
     }
@@ -61,6 +61,6 @@ class ContaoModuleBundleTest extends TestCase
      */
     public function testModuleFolderExists()
     {
-        $this->bundle = new ContaoModuleBundle('invalid', $this->getRootDir() . '/app');
+        $this->bundle = new ContaoModuleBundle('invalid', $this->getRootDir().'/app');
     }
 }

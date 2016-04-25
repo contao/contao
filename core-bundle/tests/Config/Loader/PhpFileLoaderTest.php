@@ -50,13 +50,13 @@ class PhpFileLoaderTest extends TestCase
     {
         $this->assertTrue(
             $this->loader->supports(
-                $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/config.php'
+                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php'
             )
         );
 
         $this->assertFalse(
             $this->loader->supports(
-                $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf'
+                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf'
             )
         );
     }
@@ -68,7 +68,7 @@ class PhpFileLoaderTest extends TestCase
     {
         $this->assertEquals(
             "\n\n\$GLOBALS['TL_TEST'] = true;\n",
-            $this->loader->load($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/config/config.php')
+            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php')
         );
 
         $content = <<<'EOF'
@@ -94,12 +94,12 @@ EOF;
 
         $this->assertEquals(
             $content,
-            $this->loader->load($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/dca/tl_test.php')
+            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test.php')
         );
 
         $this->assertEquals(
             "\n\n\$GLOBALS['TL_TEST'] = true;\n",
-            $this->loader->load($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php')
+            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php')
         );
     }
 }

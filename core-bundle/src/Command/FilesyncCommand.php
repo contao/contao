@@ -43,7 +43,7 @@ class FilesyncCommand extends AbstractLockedCommand
         $this->getFramework()->initialize();
 
         $strLog = Dbafs::syncFiles();
-        $output->writeln('Synchronization complete (see <info>' . $strLog . '</info>).');
+        $output->writeln(sprintf('Synchronization complete (see <info>%s</info>).', $strLog));
 
         return 0;
     }

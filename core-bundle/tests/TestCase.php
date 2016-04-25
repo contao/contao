@@ -40,7 +40,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getRootDir()
     {
-        return __DIR__ . '/Fixtures';
+        return __DIR__.'/Fixtures';
     }
 
     /**
@@ -50,7 +50,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getCacheDir()
     {
-        return $this->getRootDir() . '/app/cache';
+        return $this->getRootDir().'/app/cache';
     }
 
     /**
@@ -193,12 +193,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         $container->set(
             'contao.resource_finder',
-            new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
         );
 
         $container->set(
             'contao.resource_locator',
-            new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
+            new FileLocator($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
         );
 
         $request = new Request();
@@ -256,7 +256,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                 $requestStack,
                 $router,
                 $this->mockSession(),
-                $this->getRootDir() . '/app',
+                $this->getRootDir().'/app',
                 error_reporting(),
             ])
             ->setMethods(['getAdapter'])

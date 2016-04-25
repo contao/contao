@@ -57,7 +57,7 @@ class AutomatorCommand extends AbstractLockedCommand
         try {
             $this->runAutomator($input, $output);
         } catch (\InvalidArgumentException $e) {
-            $output->writeln($e->getMessage() . ' (see help contao:automator).');
+            $output->writeln(sprintf('%s (see help contao:automator).', $e->getMessage()));
 
             return 1;
         }
@@ -75,7 +75,7 @@ class AutomatorCommand extends AbstractLockedCommand
      */
     public function __toString()
     {
-        return "The name of the task:\n  - " . implode("\n  - ", $this->getCommands());
+        return sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()));
     }
 
     /**
@@ -145,7 +145,7 @@ class AutomatorCommand extends AbstractLockedCommand
 
         if (null !== $task) {
             if (!in_array($task, $commands)) {
-                throw new \InvalidArgumentException('Invalid task "' . $task . '"'); // no full stop here
+                throw new \InvalidArgumentException(sprintf('Invalid task "%s"', $task)); // no full stop here
             }
 
             return $task;

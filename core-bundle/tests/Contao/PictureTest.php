@@ -34,19 +34,19 @@ class PictureTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        self::$rootDir = __DIR__ . '/../../tmp';
+        self::$rootDir = __DIR__.'/../../tmp';
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
-        $fs->mkdir(self::$rootDir . '/assets');
-        $fs->mkdir(self::$rootDir . '/assets/images');
+        $fs->mkdir(self::$rootDir.'/assets');
+        $fs->mkdir(self::$rootDir.'/assets/images');
 
         foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
-            $fs->mkdir(self::$rootDir . '/assets/images/' . $subdir);
+            $fs->mkdir(self::$rootDir.'/assets/images/'.$subdir);
         }
 
-        $fs->mkdir(self::$rootDir . '/system');
-        $fs->mkdir(self::$rootDir . '/system/tmp');
+        $fs->mkdir(self::$rootDir.'/system');
+        $fs->mkdir(self::$rootDir.'/system/tmp');
     }
 
     /**
@@ -65,7 +65,7 @@ class PictureTest extends TestCase
     {
         parent::setUp();
 
-        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', self::$rootDir . '/dummy.jpg');
+        copy(__DIR__.'/../Fixtures/images/dummy.jpg', self::$rootDir.'/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
@@ -272,7 +272,7 @@ class PictureTest extends TestCase
      */
     public function testGetTemplateDataUrlEncoded()
     {
-        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', self::$rootDir . '/dummy with spaces.jpg');
+        copy(__DIR__.'/../Fixtures/images/dummy.jpg', self::$rootDir.'/dummy with spaces.jpg');
 
         $picture = new Picture(new \File('dummy with spaces.jpg'));
 
