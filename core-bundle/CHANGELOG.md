@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.2.0-beta1 (2016-XX-XX)
+### 4.2.0-beta1 (2016-04-25)
 
  * Remove the internal cache routines from the maintenance module (see #459).
  * Modernize the back end theme and use SVG icons (see contao/core#4608).
