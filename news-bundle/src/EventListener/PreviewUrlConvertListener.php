@@ -66,7 +66,7 @@ class PreviewUrlConvertListener
         /** @var News $newsAdapter */
         $newsAdapter = $this->framework->getAdapter('Contao\News');
 
-        $event->setUrl($request->getSchemeAndHttpHost() . '/' . $newsAdapter->generateNewsUrl($news));
+        $event->setUrl($request->getSchemeAndHttpHost().'/'.$newsAdapter->generateNewsUrl($news));
     }
 
     /**
