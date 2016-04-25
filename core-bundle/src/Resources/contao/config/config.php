@@ -327,11 +327,6 @@ $GLOBALS['TL_PURGE'] = array
 			'callback' => array('Automator', 'purgeSearchCache'),
 			'affected' => array('%s/contao/search')
 		),
-		'internal' => array
-		(
-			'callback' => array('Automator', 'purgeInternalCache'),
-			'affected' => array('%s/contao/config', '%s/contao/dca', '%s/contao/languages', '%s/contao/sql')
-		),
 		'temp' => array
 		(
 			'callback' => array('Automator', 'purgeTempFolder'),
@@ -347,10 +342,6 @@ $GLOBALS['TL_PURGE'] = array
 		'symlinks' => array
 		(
 			'callback' => array('Automator', 'generateSymlinks')
-		),
-		'cache' => array
-		(
-			'callback' => array('Automator', 'generateInternalCache')
 		)
 	)
 );
@@ -408,7 +399,6 @@ $GLOBALS['TL_HOOKS'] = array
 	'getSystemMessages' => array
 	(
 		array('Messages', 'versionCheck'),
-		array('Messages', 'needsCacheBuild'),
 		array('Messages', 'maintenanceCheck'),
 		array('Messages', 'languageFallback')
 	)

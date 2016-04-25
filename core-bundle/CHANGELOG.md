@@ -2,6 +2,7 @@
 
 ### 4.2.0-beta1 (2016-XX-XX)
 
+ * Remove the internal cache routines from the maintenance module (see #459).
  * Modernize the back end theme and use SVG icons (see contao/core#4608).
  * Add the PaletteManipulator class to modify DCA palettes (see #474).
  * Optimize the jQuery and MooTools templates (see contao/core#8017).

@@ -54,29 +54,6 @@ class Messages extends \Backend
 
 
 	/**
-	 * Check if the internal cache exists
-	 *
-	 * @return string
-	 */
-	public function needsCacheBuild()
-	{
-		$this->import('BackendUser', 'User');
-
-		if (!$this->User->hasAccess('maintenance', 'modules'))
-		{
-			return '';
-		}
-
-		if (!is_dir(\System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql'))
-		{
-			return '<p class="tl_error">' . sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], \System::getContainer()->getParameter('kernel.environment')) . '</p>';
-		}
-
-		return '';
-	}
-
-
-	/**
 	 * Check for maintenance mode
 	 *
 	 * @return string

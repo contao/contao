@@ -104,12 +104,6 @@
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.0">
-        <source>Purge the internal cache</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.1">
-        <source>Removes the cached versions of the config, DCA and language files.</source>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
       </trans-unit>
@@ -127,12 +121,6 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.cache.0">
-        <source>Build the internal cache</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.cache.1">
-        <source>Builds the cached versions of the config, DCA and language files.</source>
       </trans-unit>
     </body>
   </file>
