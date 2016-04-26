@@ -19,6 +19,7 @@ use Contao\InstallationBundle\Database\Installer;
 use Contao\InstallationBundle\InstallTool;
 use Contao\InstallationBundle\InstallToolUser;
 use Contao\InstallationBundle\Translation\LanguageResolver;
+use Doctrine\Common\Cache\FilesystemCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -152,6 +153,12 @@ class ContainerFactory
         $container->set(
             'contao.resource_locator',
             new FileLocator($container->getParameter('contao.resources_paths'))
+        );
+
+        // Add the Contao cache
+        $container->set(
+            'contao.cache',
+            new FilesystemCache($rootDir.'/cache/install/contao/cache', '', 0022)
         );
 
         // Add the installer services
