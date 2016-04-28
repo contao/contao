@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.2.0-RC1 (2016-05-XX)
+
+ * Add keys to the cronjobs array (see #440).
+
 ### 4.2.0-beta1 (2016-04-25)
 
  * Remove the internal cache routines from the maintenance module (see #459).

@@ -373,18 +373,18 @@ $GLOBALS['TL_CRON'] = array
 (
 	'monthly' => array
 	(
-		array('Automator', 'purgeImageCache')
+		'purgeImageCache' => array('Automator', 'purgeImageCache')
 	),
 	'weekly' => array
 	(
-		array('Automator', 'generateSitemap'),
-		array('Automator', 'purgeScriptCache'),
-		array('Automator', 'purgeSearchCache')
+		'generateSitemap' => array('Automator', 'generateSitemap'),
+		'purgeScriptCache' => array('Automator', 'purgeScriptCache'),
+		'purgeSearchCache' => array('Automator', 'purgeSearchCache')
 	),
 	'daily' => array
 	(
-		array('Automator', 'purgeTempFolder'),
-		array('Automator', 'checkForUpdates')
+		'purgeTempFolder' => array('Automator', 'purgeTempFolder'),
+		'checkForUpdates' => array('Automator', 'checkForUpdates')
 	),
 	'hourly' => array(),
 	'minutely' => array()
