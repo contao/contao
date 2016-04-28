@@ -1955,16 +1955,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 							if (count($strAjax) > 1)
 							{
-								$current = $strAjax[$thisId];
+								$current = "\n" . '<div id="'.$thisId.'">' . $strAjax[$thisId] . '</div>';
 								unset($strAjax[$thisId]);
 								end($strAjax);
 								$thisId = key($strAjax);
-								$strAjax[$thisId] = $current;
+								$strAjax[$thisId] .= $current;
 							}
 						}
 
-						$blnAjax = false;
-						$thisId  = '';
 						$return .= "\n" . '</div>';
 
 						continue;
@@ -1973,7 +1971,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (preg_match('/^\[.*\]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
-						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : false;
+						$strAjax[$thisId] = '';
+						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : $blnAjax;
 						$return .= "\n" . '<div id="'.$thisId.'">';
 
 						continue;
