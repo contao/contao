@@ -77,7 +77,7 @@ class PaletteManipulator
      * @param string|array               $name             The name or names of the new field(s)
      * @param string|array               $parent           The parent legend or legends (first match wins)
      * @param string                     $position         The position of the new field(s)
-     * @param string|array|callable|null $fallback         The fallback palette(s) or a callback
+     * @param string|array|\Closure|null $fallback         The fallback palette(s) or a callback
      * @param string                     $fallbackPosition The fallback position (PREPEND or APPEND to legend)
      *
      * @return static The object instance
@@ -118,7 +118,13 @@ class PaletteManipulator
      */
     public function applyToPalette($name, $table)
     {
-        $this->applyTo($name, $table, 'palettes');
+        $palettes = &$GLOBALS['TL_DCA'][$table]['palettes'];
+
+        if (!isset($palettes[$name])) {
+            throw new \InvalidArgumentException(sprintf('Palette "%s" not found in table "%s"', $name, $table));
+        }
+
+        $palettes[$name] = $this->applyToString($palettes[$name]);
 
         return $this;
     }
@@ -133,7 +139,13 @@ class PaletteManipulator
      */
     public function applyToSubpalette($name, $table)
     {
-        $this->applyTo($name, $table, 'subpalettes');
+        $subpalettes = &$GLOBALS['TL_DCA'][$table]['subpalettes'];
+
+        if (!isset($subpalettes[$name])) {
+            throw new \InvalidArgumentException(sprintf('Subpalette "%s" not found in table "%s"', $name, $table));
+        }
+
+        $subpalettes[$name] = $this->applyToString($subpalettes[$name], true);
 
         return $this;
     }
@@ -187,31 +199,6 @@ class PaletteManipulator
         if (!in_array($position, $positions, true)) {
             throw new \InvalidArgumentException('Invalid legend position');
         }
-    }
-
-    /**
-     * Applies the changes to a palette or subpalette.
-     *
-     * @param string $name  The palette name
-     * @param string $table The DCA table name
-     * @param string $type  The palette type
-     *
-     * @throws \InvalidArgumentException If the DCA for the given table is not loaded or the palette does not exist
-     */
-    private function applyTo($name, $table, $type)
-    {
-        if ('palettes' !== $type && 'subpalettes' !== $type) {
-            throw new \InvalidArgumentException('Type must be "palettes" or "subpalettes"');
-        }
-
-        if (!isset($GLOBALS['TL_DCA'][$table][$type][$name])) {
-            throw new \InvalidArgumentException(sprintf('(Sub)palette "%s" not found in table "%s"', $name, $table));
-        }
-
-        $GLOBALS['TL_DCA'][$table][$type][$name] = $this->applyToString(
-            $GLOBALS['TL_DCA'][$table][$type][$name],
-            'subpalettes' === $type
-        );
     }
 
     /**
