@@ -42,7 +42,7 @@ array_insert($GLOBALS['FE_MOD'], 2, array
 /**
  * Cron jobs
  */
-$GLOBALS['TL_CRON']['daily'][] = array('News', 'generateFeeds');
+$GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array('News', 'generateFeeds');
 
 
 /**
