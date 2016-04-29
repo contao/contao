@@ -507,7 +507,6 @@ class Config
 			'uploadPath'       => 'contao.upload_path',
 			'debugMode'        => 'kernel.debug',
 			'disableIpCheck'   => 'contao.security.disable_ip_check',
-			'validImageTypes'  => 'contao.image.valid_extensions',
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)
@@ -516,6 +515,11 @@ class Config
 			{
 				$GLOBALS['TL_CONFIG'][$strKey] = $container->getParameter($strParam);
 			}
+		}
+
+		if ($container->hasParameter('contao.image.valid_extensions'))
+		{
+			$GLOBALS['TL_CONFIG']['validImageTypes'] = implode(',', $container->getParameter('contao.image.valid_extensions'));
 		}
 
 		if ($container->hasParameter('contao.image.imagine_options'))
