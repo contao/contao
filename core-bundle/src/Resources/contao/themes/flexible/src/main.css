@@ -78,9 +78,8 @@ body.popup {
 /* Main */
 #main {
 	width:745px;
-	margin-left:10px;
 	background:#fff;
-	float:left;
+	float:right;
 }
 .popup #main {
 	padding:0;
@@ -688,6 +687,12 @@ input[type=search]::-webkit-search-decoration {
 .tl_tree_xtnd .tl_file .tl_left {
 	margin-left:22px;
 	text-indent:-22px;
+}
+.tl_left a:last-of-type {
+	vertical-align:middle;
+}
+.tl_left a:first-of-type {
+	vertical-align:initial;
 }
 ul.level_1 .tl_left {
 	width:400px;
