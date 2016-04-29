@@ -246,39 +246,33 @@ class File extends \System
 					}
 					elseif ($this->isSvgImage)
 					{
-						$doc = new \DOMDocument();
+						try
+						{
+							$dimensions = System::getContainer()->get('contao.image.image_factory')
+								->create(TL_ROOT . '/' . $this->strFile)
+								->getDimensions();
 
-						if ($this->extension == 'svgz')
-						{
-							$doc->loadXML(gzdecode($this->getContent()));
+							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
+							{
+								$this->arrImageSize = array
+								(
+									$dimensions->getSize()->getWidth(),
+									$dimensions->getSize()->getHeight(),
+									0, // replace this with IMAGETYPE_SVG when it becomes available
+									'width="' . $dimensions->getSize()->getWidth() . '" height="' . $dimensions->getSize()->getHeight() . '"',
+									'bits' => 8,
+									'channels' => 3,
+									'mime' => $this->getMimeType()
+								);
+							}
+							else
+							{
+								$this->arrImageViewSize = false;
+							}
 						}
-						else
+						catch(\Exception $e)
 						{
-							$doc->loadXML($this->getContent());
-						}
-
-						$svgElement = $doc->documentElement;
-
-						if ($svgElement->getAttribute('width') && $svgElement->getAttribute('height') && substr(rtrim($svgElement->getAttribute('width')), -1) != '%' && substr(rtrim($svgElement->getAttribute('height')), -1) != '%')
-						{
-							$this->arrImageSize = array
-							(
-								\Image::getPixelValue($svgElement->getAttribute('width')),
-								\Image::getPixelValue($svgElement->getAttribute('height'))
-							);
-						}
-
-						if ($this->arrImageSize && $this->arrImageSize[0] && $this->arrImageSize[1])
-						{
-							$this->arrImageSize[2] = 0; // replace this with IMAGETYPE_SVG when it becomes available
-							$this->arrImageSize[3] = 'width="' . $this->arrImageSize[0] . '" height="' . $this->arrImageSize[1] . '"';
-							$this->arrImageSize['bits'] = 8;
-							$this->arrImageSize['channels'] = 3;
-							$this->arrImageSize['mime'] = $this->getMimeType();
-						}
-						else
-						{
-							$this->arrImageSize = false;
+							$this->arrImageViewSize = false;
 						}
 					}
 				}
@@ -306,31 +300,24 @@ class File extends \System
 					}
 					elseif ($this->isSvgImage)
 					{
-						$doc = new \DOMDocument();
-
-						if ($this->extension == 'svgz')
+						try
 						{
-							$doc->loadXML(gzdecode($this->getContent()));
-						}
-						else
-						{
-							$doc->loadXML($this->getContent());
-						}
-
-						$svgElement = $doc->documentElement;
-
-						if ($svgElement->getAttribute('viewBox'))
-						{
-							$svgViewBox = preg_split('/[\s,]+/', $svgElement->getAttribute('viewBox'));
+							$dimensions = System::getContainer()->get('contao.image.image_factory')
+								->create(TL_ROOT . '/' . $this->strFile)
+								->getDimensions();
 
 							$this->arrImageViewSize = array
 							(
-								intval($svgViewBox[2]),
-								intval($svgViewBox[3])
+								intval($dimensions->getSize()->getWidth()),
+								intval($dimensions->getSize()->getHeight())
 							);
-						}
 
-						if (!$this->arrImageViewSize || !$this->arrImageViewSize[0] || !$this->arrImageViewSize[1])
+							if (!$this->arrImageViewSize || !$this->arrImageViewSize[0] || !$this->arrImageViewSize[1])
+							{
+								$this->arrImageViewSize = false;
+							}
+						}
+						catch(\Exception $e)
 						{
 							$this->arrImageViewSize = false;
 						}
