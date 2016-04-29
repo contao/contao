@@ -98,11 +98,9 @@ services:
 
     contao.image.imagine:
         class: Imagine\Gd\Imagine
-        public: false
 
     contao.image.imagine_svg:
         class: Contao\ImagineSvg\Imagine
-        public: false
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator
