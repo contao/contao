@@ -584,7 +584,7 @@ input[type=search]::-webkit-search-decoration {
 	box-shadow:-10px 0 #eaeaea,10px 0 #eaeaea,-20px 0 #f3f3f3,20px 0 #f3f3f3,-30px 0 #eaeaea,30px 0 #eaeaea,-40px 0 #f3f3f3,40px 0 #f3f3f3;
 }
 .no_padding {
-	padding:6px 6px 4px;
+	padding:5px 6px;
 }
 .tl_content h1 {
 	padding:0;
@@ -610,10 +610,6 @@ input[type=search]::-webkit-search-decoration {
 .tl_content_left {
 	float:left;
 	width:500px;
-}
-.webkit .tl_content_left {
-	margin-top:1px;
-	margin-bottom:1px;
 }
 .tl_content_right {
 	float:right;
@@ -857,10 +853,6 @@ ul.sgallery li {
 }
 #tl_versions td {
 	padding:4px;
-}
-#tl_versions td img {
-	position:relative;
-	top:1px;
 }
 #tl_versions td:first-child {
 	white-space:nowrap;
@@ -1268,7 +1260,6 @@ a.navigation {
 	background-image:url("icons/back.svg");
 }
 .header_new {
-	padding-left:18px;
 	background-image:url("icons/new.svg");
 }
 .header_rss {
@@ -1281,6 +1272,7 @@ a.navigation {
 	background-image:url("icons/deleteAll.svg");
 }
 .header_new_folder {
+	padding-left:24px;
 	background-image:url("icons/newfolder.svg");
 }
 .header_css_import {
@@ -1294,7 +1286,7 @@ a.navigation {
 	background-image:url("icons/store.svg");
 }
 .header_toggle {
-	background:url("icons/folPlus.svg") no-repeat -1px center;
+	background-image:url("icons/folPlus.svg");
 }
 .header_sync {
 	background-image:url("icons/sync.svg");
