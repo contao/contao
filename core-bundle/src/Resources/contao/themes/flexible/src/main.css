@@ -113,12 +113,15 @@ body.popup {
 	font-weight:500;
 	border-bottom:1px solid #ddd;
 }
+#tl_navigation .tl_level_1_group a {
+	display:block;
+}
 #tl_navigation .tl_level_2 {
 	padding:0 0 18px 6px !important;
 }
 #tl_navigation .tl_level_2 a {
 	display:block;
-	margin:2px 0;
+	margin:3px 0;
 	font-weight:300;
 }
 #tl_navigation .active {
@@ -1233,6 +1236,8 @@ a.navigation,.header_icon,.header_home,.header_user,.header_preview,.header_clip
 }
 a.navigation {
 	margin-left:0;
+	padding-left:28px;
+	background-size:20px;
 }
 .list_icon {
 	margin-left:-3px;
