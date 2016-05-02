@@ -39,11 +39,9 @@ h2 {
 .tl_info {
 	padding:6px 6px 6px 28px;
 	border-radius:2px;
-	background:#eff5fa url("icons/show.svg") no-repeat 6px center;
+	background:url("icons/show.svg") no-repeat left center;
 	color:#4b85ba;
-}
-.nobg .tl_info {
-	background-color:transparent;
+	line-height:1.2;
 }
 
 /* Diff */

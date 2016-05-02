@@ -177,7 +177,7 @@ h2.sub_headline_purge {
 	background:url("icons/purge.svg") no-repeat left center;
 }
 .tl_message {
-	margin:18px 18px 0;
+	margin:0 18px;
 }
 .tl_message_picker {
 	margin-top:27px;
@@ -190,20 +190,20 @@ h2.sub_headline_purge {
 }
 .tl_error,.tl_confirm,.tl_info,.tl_new {
 	margin:0 0 1px;
-	padding:6px 6px 6px 28px;
+	padding:3px 6px 3px 22px;
 	line-height:1.2;
 }
 .tl_error {
-	background:#faeeee url("icons/error.svg") no-repeat 6px center;
+	background:url("icons/error.svg") no-repeat left center;
 }
 .tl_confirm {
-	background:#f3f8ee url("icons/ok.svg") no-repeat 6px center;
+	background:url("icons/ok.svg") no-repeat left center;
 }
 .tl_info {
-	background:#eff5fa url("icons/show.svg") no-repeat 6px center;
+	background:url("icons/show.svg") no-repeat left center;
 }
 .tl_new {
-	background:#fff3e0 url("icons/featured.svg") no-repeat 6px center;
+	background:url("icons/featured.svg") no-repeat left center;
 }
 .tl_gerror,.tl_gerror a,.tl_error,.tl_error a {
 	color:#c33;
@@ -216,9 +216,6 @@ h2.sub_headline_purge {
 }
 .tl_new,.tl_new a {
 	color:#d68c23;
-}
-.nobg .tl_error,.nobg .tl_confirm,.nobg .tl_info,.nobg .tl_new {
-	background-color:transparent;
 }
 
 /* Filter */
@@ -1366,7 +1363,8 @@ label.error,legend.error {
 	font-size:.75rem;
 }
 .tl_formbody_edit > .tl_error {
-	margin-top:18px;
+	margin-left:18px;
+	margin-right:18px;
 }
 
 /* Fieldsets */
@@ -1481,6 +1479,10 @@ fieldset.collapsed > legend {
 }
 #sync-results .right {
 	float:right;
+}
+#result-list {
+	margin-top:1em;
+	margin-bottom:1em;
 }
 
 /* DropZone */
