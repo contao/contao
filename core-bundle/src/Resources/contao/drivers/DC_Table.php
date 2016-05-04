@@ -1917,7 +1917,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Render boxes
 			foreach ($boxes as $k=>$v)
 			{
-				$strAjax = '';
+				$strAjax = array();
 				$blnAjax = false;
 				$key = '';
 				$cls = '';
@@ -1939,6 +1939,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 
 				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_'.$key.'"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
+				$thisId = '';
 
 				// Build rows of the current box
 				foreach ($v as $vv)
@@ -1947,10 +1948,21 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					{
 						if ($blnAjax && \Environment::get('isAjaxRequest'))
 						{
-							return $strAjax . '<input type="hidden" name="FORM_FIELDS[]" value="'.specialchars($this->strPalette).'">';
+							if ($ajaxId == $thisId)
+							{
+								return $strAjax[$thisId] . '<input type="hidden" name="FORM_FIELDS[]" value="'.specialchars($this->strPalette).'">';
+							}
+
+							if (count($strAjax) > 1)
+							{
+								$current = "\n" . '<div id="'.$thisId.'">' . $strAjax[$thisId] . '</div>';
+								unset($strAjax[$thisId]);
+								end($strAjax);
+								$thisId = key($strAjax);
+								$strAjax[$thisId] .= $current;
+							}
 						}
 
-						$blnAjax = false;
 						$return .= "\n" . '</div>';
 
 						continue;
@@ -1959,7 +1971,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (preg_match('/^\[.*\]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
-						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : false;
+						$strAjax[$thisId] = '';
+						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : $blnAjax;
 						$return .= "\n" . '<div id="'.$thisId.'">';
 
 						continue;
@@ -2003,7 +2016,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $strAjax .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
+					$blnAjax ? $strAjax[$thisId] .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
 				}
 
 				$class = 'tl_box';
