@@ -88,11 +88,12 @@ class UrlGenerator implements UrlGeneratorInterface
     private function prepareParameters($alias, array $parameters)
     {
         $hasAutoItem = false;
-        $autoItem = array_key_exists('auto_item', $parameters) ? [$parameters['auto_item']] : $GLOBALS['TL_AUTO_ITEM'];
+        $autoItem = (isset($GLOBALS['TL_AUTO_ITEM']) && is_array($GLOBALS['TL_AUTO_ITEM'])) ? $GLOBALS['TL_AUTO_ITEM'] : [];
+        $autoItem = array_key_exists('auto_item', $parameters) ? [$parameters['auto_item']] : $autoItem;
 
         $parameters['alias'] = preg_replace_callback(
-            '/\{([^\}])\}/',
-            function ($matches) use ($alias, $parameters, $autoItem, &$hasAutoItem) {
+            '/\{([^\}]+)\}/',
+            function ($matches) use ($alias, &$parameters, $autoItem, &$hasAutoItem) {
                 $param = $matches[1];
 
                 if (!isset($parameters[$param])) {
@@ -101,13 +102,16 @@ class UrlGenerator implements UrlGeneratorInterface
                     );
                 }
 
+                $value = $parameters[$param];
+                unset($parameters[$param]);
+
                 if (!$hasAutoItem && in_array($param, $autoItem, true)) {
                     $hasAutoItem = true;
 
-                    return $parameters[$param];
+                    return $value;
                 }
 
-                return $param . '/' . $parameters[$param];
+                return $param . '/' . $value;
             },
             $alias
         );
