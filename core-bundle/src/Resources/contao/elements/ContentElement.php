@@ -85,7 +85,6 @@ namespace Contao;
  * @property string  $groups
  * @property boolean $guests
  * @property string  $cssID
- * @property string  $space
  * @property boolean $invisible
  * @property string  $start
  * @property string  $stop

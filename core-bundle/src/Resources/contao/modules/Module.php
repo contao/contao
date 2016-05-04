@@ -84,7 +84,6 @@ namespace Contao;
  * @property string  $groups
  * @property boolean $guests
  * @property string  $cssID
- * @property string  $space
  * @property string  $hl
  *
  * @author Leo Feyer <https://github.com/leofeyer>
