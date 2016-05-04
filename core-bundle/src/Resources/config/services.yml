@@ -83,6 +83,12 @@ services:
         tags:
             - { name: routing.loader }
 
+    contao.routing.url_generator:
+        class: Contao\CoreBundle\Routing\UrlGenerator
+        arguments:
+            - "@router"
+            - "%contao.prepend_locale%"
+
     contao.security.authenticator:
         class: Contao\CoreBundle\Security\ContaoAuthenticator
         public: false

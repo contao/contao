@@ -1078,19 +1078,9 @@ abstract class Controller extends \System
 			}
 		}
 
-		$objRouter = \System::getContainer()->get('router');
+		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
 		$arrParams = [];
-		$strRoute = 'contao_frontend';
-
-		// Correctly handle the "index" alias (see #3961)
-		if ($arrRow['alias'] == 'index' && $strParams == '')
-		{
-			$strRoute = 'contao_index';
-		}
-		else
-		{
-			$arrParams['alias'] = ($arrRow['alias'] ?: $arrRow['id']) . $strParams;
-		}
+		$strAlias = ($arrRow['alias'] ?: $arrRow['id']) . $strParams;
 
 		// Set the language
 		if ($strForceLang != '')
@@ -1113,7 +1103,7 @@ abstract class Controller extends \System
 			$arrParams['_locale'] = $objPage->rootLanguage;
 		}
 
-		$strUrl = $objRouter->generate($strRoute, $arrParams);
+		$strUrl = $objUrlGenerator->generate($strAlias, $arrParams);
 		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 		// Decode sprintf placeholders
