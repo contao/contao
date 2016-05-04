@@ -1917,7 +1917,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Render boxes
 			foreach ($boxes as $k=>$v)
 			{
-				$strAjax = array();
+				$arrAjax = array();
 				$blnAjax = false;
 				$key = '';
 				$cls = '';
@@ -1950,16 +1950,16 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						{
 							if ($ajaxId == $thisId)
 							{
-								return $strAjax[$thisId] . '<input type="hidden" name="FORM_FIELDS[]" value="'.specialchars($this->strPalette).'">';
+								return $arrAjax[$thisId] . '<input type="hidden" name="FORM_FIELDS[]" value="'.specialchars($this->strPalette).'">';
 							}
 
-							if (count($strAjax) > 1)
+							if (count($arrAjax) > 1)
 							{
-								$current = "\n" . '<div id="'.$thisId.'">' . $strAjax[$thisId] . '</div>';
-								unset($strAjax[$thisId]);
-								end($strAjax);
-								$thisId = key($strAjax);
-								$strAjax[$thisId] .= $current;
+								$current = "\n" . '<div id="'.$thisId.'">' . $arrAjax[$thisId] . '</div>';
+								unset($arrAjax[$thisId]);
+								end($arrAjax);
+								$thisId = key($arrAjax);
+								$arrAjax[$thisId] .= $current;
 							}
 						}
 
@@ -1971,7 +1971,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if (preg_match('/^\[.*\]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
-						$strAjax[$thisId] = '';
+						$arrAjax[$thisId] = '';
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : $blnAjax;
 						$return .= "\n" . '<div id="'.$thisId.'">';
 
@@ -2016,7 +2016,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $strAjax[$thisId] .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
+					$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
 				}
 
 				$class = 'tl_box';
