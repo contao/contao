@@ -55,7 +55,7 @@ class FileMetaInformationListener
             );
         }
 
-        if ('tl_news' === $table) {
+        if ('tl_news_archive' === $table) {
             return $this->getResult(
                 'SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_news_archive WHERE id=?)',
                 $id
