@@ -48,18 +48,6 @@ namespace Contao;
  * @property integer $currentLogin
  * @property integer $loginCount
  * @property integer $locked
- * @property string  $calendars
- * @property string  $calendarp
- * @property string  $calendarfeeds
- * @property string  $calendarfeedp
- * @property string  $faqs
- * @property string  $faqp
- * @property string  $news
- * @property string  $newp
- * @property string  $newsfeeds
- * @property string  $newsfeedp
- * @property string  $newsletters
- * @property string  $newsletterp
  *
  * @method static UserModel|null findById($id, $opt=array())
  * @method static UserModel|null findByPk($id, $opt=array())
@@ -98,18 +86,6 @@ namespace Contao;
  * @method static UserModel|null findOneByCurrentLogin($val, $opt=array())
  * @method static UserModel|null findOneByLoginCount($val, $opt=array())
  * @method static UserModel|null findOneByLocked($val, $opt=array())
- * @method static UserModel|null findOneByCalendars($val, $opt=array())
- * @method static UserModel|null findOneByCalendarp($val, $opt=array())
- * @method static UserModel|null findOneByCalendarfeeds($val, $opt=array())
- * @method static UserModel|null findOneByCalendarfeedp($val, $opt=array())
- * @method static UserModel|null findOneByFaqs($val, $opt=array())
- * @method static UserModel|null findOneByFaqp($val, $opt=array())
- * @method static UserModel|null findOneByNews($val, $opt=array())
- * @method static UserModel|null findOneByNewp($val, $opt=array())
- * @method static UserModel|null findOneByNewsfeeds($val, $opt=array())
- * @method static UserModel|null findOneByNewsfeedp($val, $opt=array())
- * @method static UserModel|null findOneByNewsletters($val, $opt=array())
- * @method static UserModel|null findOneByNewsletterp($val, $opt=array())
  *
  * @method static Model\Collection|UserModel[]|UserModel|null findByTstamp($val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByName($val, $opt=array())
@@ -143,18 +119,6 @@ namespace Contao;
  * @method static Model\Collection|UserModel[]|UserModel|null findByCurrentLogin($val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByLoginCount($val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByLocked($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByCalendars($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByCalendarp($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByCalendarfeeds($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByCalendarfeedp($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByFaqs($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByFaqp($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByNews($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByNewp($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByNewsfeeds($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByNewsfeedp($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByNewsletters($val, $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByNewsletterp($val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findMultipleByIds($val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findBy($col, $val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findAll($opt=array())
@@ -193,18 +157,6 @@ namespace Contao;
  * @method static integer countByCurrentLogin($val, $opt=array())
  * @method static integer countByLoginCount($val, $opt=array())
  * @method static integer countByLocked($val, $opt=array())
- * @method static integer countByCalendars($val, $opt=array())
- * @method static integer countByCalendarp($val, $opt=array())
- * @method static integer countByCalendarfeeds($val, $opt=array())
- * @method static integer countByCalendarfeedp($val, $opt=array())
- * @method static integer countByFaqs($val, $opt=array())
- * @method static integer countByFaqp($val, $opt=array())
- * @method static integer countByNews($val, $opt=array())
- * @method static integer countByNewp($val, $opt=array())
- * @method static integer countByNewsfeeds($val, $opt=array())
- * @method static integer countByNewsfeedp($val, $opt=array())
- * @method static integer countByNewsletters($val, $opt=array())
- * @method static integer countByNewsletterp($val, $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

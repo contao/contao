@@ -728,31 +728,6 @@ abstract class Backend extends \Controller
 							  ->execute($intPid);
 				break;
 
-			case 'tl_news':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_news_archive WHERE id=(SELECT pid FROM tl_news WHERE id=?))")
-							  ->execute($intPid);
-				break;
-
-			case 'tl_news_archive':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_news_archive WHERE id=?)")
-							  ->execute($intPid);
-				break;
-
-			case 'tl_calendar_events':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_calendar WHERE id=(SELECT pid FROM tl_calendar_events WHERE id=?))")
-							  ->execute($intPid);
-				break;
-
-			case 'tl_calendar':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_calendar WHERE id=?)")
-							  ->execute($intPid);
-				break;
-
-			case 'tl_faq_category':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_faq_category WHERE id=?)")
-							  ->execute($intPid);
-				break;
-
 			default:
 				// HOOK: support custom modules
 				if (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
