@@ -81,9 +81,9 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests that the listener returns an empty string if there is no URL.
+     * Tests that the listener returns an empty string if there is no category model.
      */
-    public function testReturnEmptyStringIfNoUrl()
+    public function testReturnEmptyStringIfNoCategoryModel()
     {
         $listener = new InsertTagsListener($this->mockContaoFramework(false, true));
 
