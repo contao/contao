@@ -20,6 +20,7 @@ use Contao\PageModel;
  * Handles FAQ insert tags.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InsertTagsListener
 {
@@ -113,18 +114,42 @@ class InsertTagsListener
     {
         switch ($key) {
             case 'faq':
-                return sprintf('<a href="%s" title="%s">%s</a>', $url, specialchars($faq->question), $faq->question);
+                return sprintf(
+                    '<a href="%s" title="%s">%s</a>',
+                    $url,
+                    $this->specialchars($faq->question),
+                    $faq->question
+                );
 
             case 'faq_open':
-                return sprintf('<a href="%s" title="%s">', $url, specialchars($faq->question));
+                return sprintf(
+                    '<a href="%s" title="%s">',
+                    $url,
+                    $this->specialchars($faq->question)
+                );
 
             case 'faq_url':
                 return $url;
 
             case 'faq_title':
-                return specialchars($faq->question);
+                return $this->specialchars($faq->question);
         }
 
         return false;
+    }
+
+    /**
+     * Converts special characters to HTML entities preventing double encodings.
+     *
+     * @param string $str
+     *
+     * @return string
+     */
+    private function specialchars($str)
+    {
+        /** @var Config $config */
+        $config = $this->framework->getAdapter('Contao\Config');
+
+        return htmlspecialchars($str, ENT_COMPAT, $config->get('characterSet'), false);
     }
 }
