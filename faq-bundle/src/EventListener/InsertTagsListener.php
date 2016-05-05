@@ -48,7 +48,7 @@ class InsertTagsListener
     public function onReplaceInsertTags($tag)
     {
         $elements = explode('::', $tag);
-        $key      = strtolower($elements[0]);
+        $key = strtolower($elements[0]);
 
         if (!in_array($key, ['faq', 'faq_open', 'faq_url', 'faq_title'], true)) {
             return false;
@@ -107,6 +107,6 @@ class InsertTagsListener
         /** @var Config $config */
         $config = $this->framework->getAdapter('Contao\Config');
 
-        return $jumpTo->getFrontendUrl(($config->get('useAutoItem') ?  '/' : '/items/') . ($faq->alias ?: $faq->id));
+        return $jumpTo->getFrontendUrl(($config->get('useAutoItem') ? '/' : '/items/').($faq->alias ?: $faq->id));
     }
 }
