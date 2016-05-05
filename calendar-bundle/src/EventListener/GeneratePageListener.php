@@ -62,7 +62,7 @@ class GeneratePageListener
 
         foreach ($feeds as $feed) {
             $GLOBALS['TL_HEAD'][] = $template->generateFeedTag(
-                    ($feed->feedBase ?: $base) . 'share/' . $feed->alias . '.xml',
+                    ($feed->feedBase ?: $base).'share/'.$feed->alias.'.xml',
                     $feed->format,
                     $feed->title
                 )

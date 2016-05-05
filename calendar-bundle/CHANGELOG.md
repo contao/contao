@@ -2,6 +2,7 @@
 
 ### 4.2.0-RC1 (2016-05-XX)
 
+ * Add listeners to subscribe to the core hooks (see #3).
  * Add keys to the cronjobs array (see contao/core-bundle#440).
 
 ### 4.2.0-beta1 (2016-04-25)

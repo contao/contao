@@ -50,7 +50,7 @@ class InsertTagsListener
     public function onReplaceInsertTags($tag)
     {
         $elements = explode('::', $tag);
-        $key      = strtolower($elements[0]);
+        $key = strtolower($elements[0]);
 
         if ('calendar_feed' === $key) {
             return $this->replaceFeedInsertTag((int) $elements[1]);
@@ -82,7 +82,7 @@ class InsertTagsListener
             return '';
         }
 
-        return $feed->feedBase . 'share/' . $feed->alias . '.xml';
+        return $feed->feedBase.'share/'.$feed->alias.'.xml';
     }
 
     /**
@@ -190,7 +190,7 @@ class InsertTagsListener
         if (($article = $event->getRelated('articleId')) instanceof ArticleModel
             && ($targetPage = $article->getRelated('pid')) instanceof PageModel
         ) {
-            return $targetPage->getFrontendUrl('/articles/' . ($article->alias ?: $article->id));
+            return $targetPage->getFrontendUrl('/articles/'.($article->alias ?: $article->id));
         }
 
         return '';
@@ -213,7 +213,7 @@ class InsertTagsListener
             $config = $this->framework->getAdapter('Contao\Config');
 
             return $targetPage->getFrontendUrl(
-                ($config->get('useAutoItem') ? '/' : '/events/') . ($event->alias ?: $event->id)
+                ($config->get('useAutoItem') ? '/' : '/events/').($event->alias ?: $event->id)
             );
         }
 
