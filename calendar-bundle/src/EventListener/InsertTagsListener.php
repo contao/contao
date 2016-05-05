@@ -17,6 +17,7 @@ use Contao\CalendarModel;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageModel;
+use Contao\StringUtil;
 
 /**
  * Handles insert tags for calendars.
@@ -31,6 +32,17 @@ class InsertTagsListener
     private $framework;
 
     /**
+     * @var array
+     */
+    private $supportedTags = [
+        'event',
+        'event_open',
+        'event_url',
+        'event_title',
+        'event_teaser',
+    ];
+
+    /**
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
@@ -41,7 +53,7 @@ class InsertTagsListener
     }
 
     /**
-     * Replaces insert tags known to this bundle.
+     * Replaces calendar insert tags.
      *
      * @param string $tag
      *
@@ -53,18 +65,18 @@ class InsertTagsListener
         $key = strtolower($elements[0]);
 
         if ('calendar_feed' === $key) {
-            return $this->replaceFeedInsertTag((int) $elements[1]);
+            return $this->replaceFeedInsertTag($elements[1]);
         }
 
-        if (in_array($key, ['event', 'event_open', 'event_url', 'event_title', 'event_teaser'], true)) {
-            $this->replaceEventInsertTags($key, $elements[1]);
+        if (in_array($key, $this->supportedTags, true)) {
+            return $this->replaceEventInsertTag($key, $elements[1]);
         }
 
         return false;
     }
 
     /**
-     * Replaces insert tag for calendar feed.
+     * Replaces the calendar feed insert tag.
      *
      * @param int $feedId
      *
@@ -72,76 +84,46 @@ class InsertTagsListener
      */
     private function replaceFeedInsertTag($feedId)
     {
-        /** @var CalendarFeedModel $feed */
-        $feed = $this->framework
-            ->getAdapter('Contao\CalendarFeedModel')
-            ->findByPk($feedId)
-        ;
+        $this->framework->initialize();
 
-        if (null === $feed) {
+        /** @var CalendarFeedModel $adapter */
+        $adapter = $this->framework->getAdapter('Contao\CalendarFeedModel');
+
+        if (null === ($feed = $adapter->findByPk($feedId))) {
             return '';
         }
 
-        return $feed->feedBase.'share/'.$feed->alias.'.xml';
+        return sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias);
     }
 
     /**
-     * Replaces event-related insert tags.
+     * Replaces an event-related insert tag.
      *
      * @param string $insertTag
      * @param string $idOrAlias
      *
      * @return string
      */
-    private function replaceEventInsertTags($insertTag, $idOrAlias)
+    private function replaceEventInsertTag($insertTag, $idOrAlias)
     {
         $this->framework->initialize();
 
-        /** @var CalendarEventsModel $event */
-        $event = $this->framework
-            ->getAdapter('Contao\CalendarEventsModel')
-            ->findByIdOrAlias($idOrAlias)
-        ;
+        /** @var CalendarEventsModel $adapter */
+        $adapter = $this->framework->getAdapter('Contao\CalendarEventsModel');
 
-        if (null === $event) {
+        if (null === ($event = $adapter->findByIdOrAlias($idOrAlias))) {
             return '';
         }
 
-        switch ($insertTag) {
-            case 'event':
-                return sprintf(
-                    '<a href="%s" title="%s">%s</a>',
-                    $this->generateEventUrl($event),
-                    specialchars($event->title),
-                    $event->title
-                );
-
-            case 'event_open':
-                return sprintf(
-                    '<a href="%s" title="%s">',
-                    $this->generateEventUrl($event),
-                    specialchars($event->title)
-                );
-
-            case 'event_url':
-                return $this->generateEventUrl($event);
-
-            case 'event_title':
-                return specialchars($event->title);
-
-            case 'event_teaser':
-                return \StringUtil::toHtml5($event->teaser);
-        }
-
-        return '';
+        return $this->generateReplacement($event, $insertTag);
     }
 
     /**
-     * Generate URL for an calendar event.
+     * Generates an event URL.
      *
      * @param CalendarEventsModel $event
      *
-     * @return string|false
+     * @return string
      */
     private function generateEventUrl(CalendarEventsModel $event)
     {
@@ -150,71 +132,110 @@ class InsertTagsListener
         }
 
         if ('internal' === $event->source) {
-            return $this->generateEventPageUrl($event);
+            return $this->generatePageUrl($event);
         }
 
         if ('article' === $event->source) {
-            return $this->generateEventArticleUrl($event);
+            return $this->generateArticleUrl($event);
         }
 
-        return $this->generateEventCalendarUrl($event);
+        return $this->generateEventReaderUrl($event);
     }
 
     /**
-     * Generates URL to page for given event.
+     * Generates the URL to a page.
      *
      * @param CalendarEventsModel $event
      *
      * @return string
      */
-    private function generateEventPageUrl(CalendarEventsModel $event)
+    private function generatePageUrl(CalendarEventsModel $event)
     {
         /** @var PageModel $targetPage */
-        if (($targetPage = $event->getRelated('jumpTo')) instanceof PageModel) {
-            return $targetPage->getFrontendUrl();
+        if (!(($targetPage = $event->getRelated('jumpTo')) instanceof PageModel)) {
+            return '';
         }
 
-        return '';
+        return $targetPage->getFrontendUrl();
     }
 
     /**
-     * Generates URL to article for given event.
+     * Generates the URL to an article.
      *
      * @param CalendarEventsModel $event
      *
      * @return string
      */
-    private function generateEventArticleUrl(CalendarEventsModel $event)
+    private function generateArticleUrl(CalendarEventsModel $event)
     {
         /** @var PageModel $targetPage */
-        if (($article = $event->getRelated('articleId')) instanceof ArticleModel
-            && ($targetPage = $article->getRelated('pid')) instanceof PageModel
+        if (!(($article = $event->getRelated('articleId')) instanceof ArticleModel)
+            || !(($targetPage = $article->getRelated('pid')) instanceof PageModel)
         ) {
-            return $targetPage->getFrontendUrl('/articles/'.($article->alias ?: $article->id));
+            return '';
         }
 
-        return '';
+        return $targetPage->getFrontendUrl('/articles/'.($article->alias ?: $article->id));
     }
 
     /**
-     * Generates URL for calendar of given event.
+     * Generates URL to an event.
      *
      * @param CalendarEventsModel $event
      *
      * @return string
      */
-    private function generateEventCalendarUrl(CalendarEventsModel $event)
+    private function generateEventReaderUrl(CalendarEventsModel $event)
     {
         /** @var PageModel $targetPage */
-        if (($calendar = $event->getRelated('pid')) instanceof CalendarModel
-            && ($targetPage = $calendar->getRelated('jumpTo')) instanceof PageModel
+        if (!(($calendar = $event->getRelated('pid')) instanceof CalendarModel)
+            || !(($targetPage = $calendar->getRelated('jumpTo')) instanceof PageModel)
         ) {
-            /** @var Config $config */
-            $config = $this->framework->getAdapter('Contao\Config');
+            return '';
+        }
 
-            return $targetPage->getFrontendUrl(
-                ($config->get('useAutoItem') ? '/' : '/events/').($event->alias ?: $event->id)
-            );
+        /** @var Config $config */
+        $config = $this->framework->getAdapter('Contao\Config');
+
+        return $targetPage->getFrontendUrl(
+            ($config->get('useAutoItem') ? '/' : '/events/').($event->alias ?: $event->id)
+        );
+    }
+
+    /**
+     * Generates the replacement string.
+     *
+     * @param CalendarEventsModel $event
+     * @param string              $insertTag
+     *
+     * @return string|false
+     */
+    private function generateReplacement(CalendarEventsModel $event, $insertTag)
+    {
+        switch ($insertTag) {
+            case 'event':
+                return sprintf(
+                    '<a href="%s" title="%s">%s</a>',
+                    $this->generateEventUrl($event),
+                    StringUtil::specialchars($event->title),
+                    $event->title
+                );
+
+            case 'event_open':
+                return sprintf(
+                    '<a href="%s" title="%s">',
+                    $this->generateEventUrl($event),
+                    StringUtil::specialchars($event->title)
+                );
+
+            case 'event_url':
+                return $this->generateEventUrl($event);
+
+            case 'event_title':
+                return StringUtil::specialchars($event->title);
+
+            case 'event_teaser':
+                return StringUtil::toHtml5($event->teaser);
         }
 
         return '';

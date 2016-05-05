@@ -78,7 +78,7 @@ class FileMetaInformationListener
         $this->framework->initialize();
 
         /** @var Database $database */
-        $database = $this->framework->getAdapter('Contao\Database')->getInstance();
+        $database = $this->framework->createInstance('Contao\Database');
 
         return $database->prepare($query)->execute($params);
     }
