@@ -16,6 +16,7 @@ use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\NewsFeedModel;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\Template;
 
 /**
@@ -49,7 +50,7 @@ class GeneratePageListener
      */
     public function onGeneratePage(PageModel $objPage, LayoutModel $objLayout)
     {
-        $newsfeeds = deserialize($objLayout->newsfeeds);
+        $newsfeeds = StringUtil::deserialize($objLayout->newsfeeds);
 
         if (empty($newsfeeds) || !is_array($newsfeeds)) {
             return;

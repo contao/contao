@@ -69,7 +69,7 @@ class InsertTagsListener
         }
 
         if (in_array($key, $this->supportedTags, true)) {
-            $this->replaceNewsInsertTags($key, $elements[1]);
+            return $this->replaceNewsInsertTags($key, $elements[1]);
         }
 
         return false;
