@@ -284,7 +284,7 @@ class tl_theme extends Backend
 
 			if ($objFile !== null)
 			{
-				$label = Image::getHtml(Image::get($objFile->path, 160, 120, 'center_top'), '', 'class="theme_preview"') . ' ' . $label;
+				$label = Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(160, 120, 'center_top'))->getUrl(TL_ROOT), '', 'class="theme_preview"') . ' ' . $label;
 			}
 		}
 

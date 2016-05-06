@@ -1008,8 +1008,7 @@ class InsertTags extends \Controller
 						if (strtolower($elements[0]) == 'image')
 						{
 							$dimensions = '';
-							$imageObj = \Image::create($strFile, array($width, $height, $mode));
-							$src = $imageObj->executeResize()->getResizedPath();
+							$src = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl(TL_ROOT);
 							$objFile = new \File(rawurldecode($src));
 
 							// Add the image dimensions
@@ -1024,7 +1023,12 @@ class InsertTags extends \Controller
 						// Picture
 						else
 						{
-							$picture = \Picture::create($strFile, array(0, 0, $size))->getTemplateData();
+							$picture = \System::getContainer()->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $strFile, $size);
+							$picture = array
+							(
+								'img' => $picture->getImg(),
+								'sources' => $picture->getSources()
+							);
 							$picture['alt'] = $alt;
 							$picture['class'] = $class;
 							$pictureTemplate = new \FrontendTemplate($strTemplate);
