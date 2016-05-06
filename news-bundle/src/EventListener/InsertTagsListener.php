@@ -17,6 +17,7 @@ use Contao\NewsArchiveModel;
 use Contao\NewsFeedModel;
 use Contao\NewsModel;
 use Contao\PageModel;
+use Contao\StringUtil;
 
 /**
  * Handles insert tags for news.
@@ -31,6 +32,17 @@ class InsertTagsListener
     private $framework;
 
     /**
+     * @var array
+     */
+    private $supportedTags = [
+        'news',
+        'news_open',
+        'news_url',
+        'news_title',
+        'news_teaser',
+    ];
+
+    /**
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
@@ -41,7 +53,7 @@ class InsertTagsListener
     }
 
     /**
-     * Replaces insert tags known to this bundle.
+     * Replaces news insert tags.
      *
      * @param string $tag
      *
@@ -50,13 +62,13 @@ class InsertTagsListener
     public function onReplaceInsertTags($tag)
     {
         $elements = explode('::', $tag);
-        $key      = strtolower($elements[0]);
+        $key = strtolower($elements[0]);
 
         if ('news_feed' === $key) {
-            return $this->replaceFeedInsertTag((int) $elements[1]);
+            return $this->replaceFeedInsertTag($elements[1]);
         }
 
-        if (in_array($key, ['news', 'news_open', 'news_url', 'news_title', 'news_teaser'], true)) {
+        if (in_array($key, $this->supportedTags, true)) {
             $this->replaceNewsInsertTags($key, $elements[1]);
         }
 
@@ -64,7 +76,7 @@ class InsertTagsListener
     }
 
     /**
-     * Replaces insert tag for news feed.
+     * Replaces the news feed insert tag.
      *
      * @param int $feedId
      *
@@ -72,21 +84,20 @@ class InsertTagsListener
      */
     private function replaceFeedInsertTag($feedId)
     {
-        /** @var NewsFeedModel $feed */
-        $feed = $this->framework
-            ->getAdapter('Contao\NewsFeedModel')
-            ->findByPk($feedId)
-        ;
+        $this->framework->initialize();
 
-        if (null === $feed) {
+        /** @var NewsFeedModel $adapter */
+        $adapter = $this->framework->getAdapter('Contao\NewsFeedModel');
+
+        if (null === ($feed = $adapter->findByPk($feedId))) {
             return '';
         }
 
-        return $feed->feedBase . 'share/' . $feed->alias . '.xml';
+        return sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias);
     }
 
     /**
-     * Replaces news-related insert tags.
+     * Replaces a news-related insert tag.
      *
      * @param string $insertTag
      * @param string $idOrAlias
@@ -97,51 +108,22 @@ class InsertTagsListener
     {
         $this->framework->initialize();
 
-        /** @var NewsModel $news */
-        $news = $this->framework
-            ->getAdapter('Contao\NewsModel')
-            ->findByIdOrAlias($idOrAlias)
-        ;
+        /** @var NewsModel $adapter */
+        $adapter = $this->framework->getAdapter('Contao\NewsModel');
 
-        if (null === $news) {
+        if (null === ($news = $adapter->findByIdOrAlias($idOrAlias))) {
             return '';
         }
 
-        switch ($insertTag) {
-            case 'news':
-                return sprintf(
-                    '<a href="%s" title="%s">%s</a>',
-                    $this->generateNewsUrl($news),
-                    specialchars($news->headline),
-                    $news->headline
-                );
-
-            case 'news_open':
-                return sprintf(
-                    '<a href="%s" title="%s">',
-                    $this->generateNewsUrl($news),
-                    specialchars($news->headline)
-                );
-
-            case 'news_url':
-                return $this->generateNewsUrl($news);
-
-            case 'news_title':
-                return specialchars($news->headline);
-
-            case 'news_teaser':
-                return \StringUtil::toHtml5($news->teaser);
-        }
-
-        return '';
+        return $this->generateReplacement($news, $insertTag);
     }
 
     /**
-     * Generate URL for an news item.
+     * Generates a news URL.
      *
      * @param NewsModel $news
      *
-     * @return string|false
+     * @return string
      */
     private function generateNewsUrl(NewsModel $news)
     {
@@ -150,71 +132,110 @@ class InsertTagsListener
         }
 
         if ('internal' === $news->source) {
-            return $this->generateNewsPageUrl($news);
+            return $this->generatePageUrl($news);
         }
 
         if ('article' === $news->source) {
-            return $this->generateNewsArticleUrl($news);
+            return $this->generateArticleUrl($news);
         }
 
-        return $this->generateNewsArchiveUrl($news);
+        return $this->generateNewsReaderUrl($news);
     }
 
     /**
-     * Generates URL to page for given news.
+     * Generates the URL to a page.
      *
      * @param NewsModel $news
      *
      * @return string
      */
-    private function generateNewsPageUrl(NewsModel $news)
+    private function generatePageUrl(NewsModel $news)
     {
         /** @var PageModel $targetPage */
-        if (($targetPage = $news->getRelated('jumpTo')) instanceof PageModel) {
-            return $targetPage->getFrontendUrl();
+        if (!(($targetPage = $news->getRelated('jumpTo')) instanceof PageModel)) {
+            return '';
         }
 
-        return '';
+        return $targetPage->getFrontendUrl();
     }
 
     /**
-     * Generates URL to article for given news item.
+     * Generates the URL to an article.
      *
      * @param NewsModel $news
      *
      * @return string
      */
-    private function generateNewsArticleUrl(NewsModel $news)
+    private function generateArticleUrl(NewsModel $news)
     {
         /** @var PageModel $targetPage */
-        if (($article = $news->getRelated('articleId')) instanceof ArticleModel
-            && ($targetPage = $article->getRelated('pid')) instanceof PageModel
+        if (!(($article = $news->getRelated('articleId')) instanceof ArticleModel)
+            || !(($targetPage = $article->getRelated('pid')) instanceof PageModel)
         ) {
-            return $targetPage->getFrontendUrl('/articles/' . ($article->alias ?: $article->id));
+            return '';
         }
 
-        return '';
+        return $targetPage->getFrontendUrl('/articles/'.($article->alias ?: $article->id));
     }
 
     /**
-     * Generates URL for archive of given news item.
+     * Generates URL to a news item.
      *
      * @param NewsModel $news
      *
      * @return string
      */
-    private function generateNewsArchiveUrl(NewsModel $news)
+    private function generateNewsReaderUrl(NewsModel $news)
     {
         /** @var PageModel $targetPage */
-        if (($archive = $news->getRelated('pid')) instanceof NewsArchiveModel
-            && ($targetPage = $archive->getRelated('jumpTo')) instanceof PageModel
+        if (!(($archive = $news->getRelated('pid')) instanceof NewsArchiveModel)
+            || !(($targetPage = $archive->getRelated('jumpTo')) instanceof PageModel)
         ) {
-            /** @var Config $config */
-            $config = $this->framework->getAdapter('Contao\Config');
+            return '';
+        }
 
-            return $targetPage->getFrontendUrl(
-                ($config->get('useAutoItem') ? '/' : '/items/') . ($news->alias ?: $news->id)
-            );
+        /** @var Config $config */
+        $config = $this->framework->getAdapter('Contao\Config');
+
+        return $targetPage->getFrontendUrl(
+            ($config->get('useAutoItem') ? '/' : '/items/').($news->alias ?: $news->id)
+        );
+    }
+
+    /**
+     * Generates the replacement string.
+     *
+     * @param NewsModel $news
+     * @param string    $insertTag
+     *
+     * @return string
+     */
+    private function generateReplacement(NewsModel $news, $insertTag)
+    {
+        switch ($insertTag) {
+            case 'news':
+                return sprintf(
+                    '<a href="%s" title="%s">%s</a>',
+                    $this->generateNewsUrl($news),
+                    StringUtil::specialchars($news->headline),
+                    $news->headline
+                );
+
+            case 'news_open':
+                return sprintf(
+                    '<a href="%s" title="%s">',
+                    $this->generateNewsUrl($news),
+                    StringUtil::specialchars($news->headline)
+                );
+
+            case 'news_url':
+                return $this->generateNewsUrl($news);
+
+            case 'news_title':
+                return StringUtil::specialchars($news->headline);
+
+            case 'news_teaser':
+                return StringUtil::toHtml5($news->teaser);
         }
 
         return '';

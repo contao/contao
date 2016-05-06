@@ -66,20 +66,20 @@ class FileMetaInformationListener
     }
 
     /**
-     * Fetches result from database.
+     * Fetches the result from the database.
      *
      * @param string $query
-     * @param mixed  $params
+     * @param int    $id
      *
-     * @return Result|object
+     * @return Result
      */
-    private function getResult($query, $params)
+    private function getResult($query, $id)
     {
         $this->framework->initialize();
 
         /** @var Database $database */
-        $database = $this->framework->getAdapter('Contao\Database')->getInstance();
+        $database = $this->framework->createInstance('Contao\Database');
 
-        return $database->prepare($query)->execute($params);
+        return $database->prepare($query)->execute($id);
     }
 }
