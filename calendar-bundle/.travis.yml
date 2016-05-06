@@ -13,8 +13,11 @@ matrix:
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
 
 before_install:
+  - phpenv config-rm xdebug.ini
+
+before_script:
   - composer selfupdate
-  - composer update $COMPOSER_FLAGS --no-interaction
+  - travis_wait composer update $COMPOSER_FLAGS --no-interaction
 
 script:
   - mkdir -p build/logs
