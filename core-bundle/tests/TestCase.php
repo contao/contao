@@ -260,7 +260,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         }
 
         if (!isset($adapters['Contao\FilesModel'])) {
-            $adapters['Contao\FilesModel'] = $this->getMockBuilder('Contao\FilesModel')->setMethods(['findByPath'])->getMock();
+            $adapters['Contao\FilesModel'] = $this->mockFilesModelAdapter();
         }
 
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
@@ -369,6 +369,29 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         ;
 
         return $rtAdapter;
+    }
+
+    /**
+     * Mocks a files model adapter.
+     *
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject The files model adapter
+     */
+    protected function mockFilesModelAdapter()
+    {
+        $adapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['__call'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $adapter
+            ->expects($this->any())
+            ->method('__call')
+            ->willReturn(null)
+        ;
+
+        return $adapter;
     }
 
     /**

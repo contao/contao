@@ -102,10 +102,11 @@ class ImageFactory
     /**
      * Creates an Image object.
      *
-     * @param string    $path       The path to the source image
-     * @param int|array $size       The ID of an image size or an array with
-     *                              width height and resize mode
-     * @param string    $targetPath The absolute target path
+     * @param string                        $path The path to the source image
+     * @param int|array|ResizeConfiguration $size The ID of an image size
+     *                                            or an array with width, height and resize mode
+     *                                            or a ResizeConfiguration object
+     * @param string    $targetPath               The absolute target path
      *
      * @return Image The created image object
      */
@@ -124,16 +125,23 @@ class ImageFactory
         }
 
         $image = new Image($imagine, $this->filesystem, (string) $path);
-        list($resizeConfig, $importantPart) = $this->createConfig($size, $image);
 
-        if ($resizeConfig->isEmpty() && $targetPath === null) {
-            return $image;
+        if (is_object($size) && $size instanceof ResizeConfiguration) {
+            $resizeConfig = $size;
+            $importantPart = null;
+        }
+        else {
+            list($resizeConfig, $importantPart) = $this->createConfig($size, $image);
         }
 
         if (null === $importantPart) {
             $importantPart = $this->createImportantPart($image->getPath());
         }
         $image->setImportantPart($importantPart);
+
+        if ($resizeConfig->isEmpty() && $targetPath === null) {
+            return $image;
+        }
 
         return $this->resizer->resize(
             $image,
