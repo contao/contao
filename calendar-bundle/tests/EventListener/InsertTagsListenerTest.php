@@ -386,7 +386,6 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
                         return 'https://contao.org';
 
                     default:
-                        var_dump($key);
                         return null;
                 }
             })
