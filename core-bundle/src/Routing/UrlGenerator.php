@@ -2,9 +2,7 @@
 
 namespace Contao\CoreBundle\Routing;
 
-use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
@@ -88,8 +86,7 @@ class UrlGenerator implements UrlGeneratorInterface
     private function prepareParameters($alias, array $parameters)
     {
         $hasAutoItem = false;
-        $autoItem = (isset($GLOBALS['TL_AUTO_ITEM']) && is_array($GLOBALS['TL_AUTO_ITEM'])) ? $GLOBALS['TL_AUTO_ITEM'] : [];
-        $autoItem = array_key_exists('auto_item', $parameters) ? [$parameters['auto_item']] : $autoItem;
+        $autoItem = $this->getAutoItems($parameters);
 
         $parameters['alias'] = preg_replace_callback(
             '/\{([^\}]+)\}/',
@@ -117,5 +114,23 @@ class UrlGenerator implements UrlGeneratorInterface
         );
 
         return $parameters;
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return array
+     */
+    private function getAutoItems(array $parameters)
+    {
+        if (array_key_exists('auto_item', $parameters)) {
+            return [$parameters['auto_item']];
+        }
+
+        if ((isset($GLOBALS['TL_AUTO_ITEM']) && is_array($GLOBALS['TL_AUTO_ITEM']))) {
+            return $GLOBALS['TL_AUTO_ITEM'];
+        }
+
+        return [];
     }
 }
