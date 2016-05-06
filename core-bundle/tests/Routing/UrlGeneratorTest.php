@@ -90,7 +90,7 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
                 'foo/{items}/{article}',
                 ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items']
             )['alias']
-        );q
+        );
     }
 
     /**
