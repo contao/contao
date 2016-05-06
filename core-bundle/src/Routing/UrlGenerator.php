@@ -112,11 +112,11 @@ class UrlGenerator implements UrlGeneratorInterface
     private function prepareAlias($alias, array &$parameters)
     {
         $hasAutoItem = false;
-        $autoItem = $this->getAutoItems($parameters);
+        $autoItems = $this->getAutoItems($parameters);
 
         $parameters['alias'] = preg_replace_callback(
             '/\{([^\}]+)\}/',
-            function ($matches) use ($alias, &$parameters, $autoItem, &$hasAutoItem) {
+            function ($matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem) {
                 $param = $matches[1];
 
                 if (!isset($parameters[$param])) {
@@ -128,7 +128,7 @@ class UrlGenerator implements UrlGeneratorInterface
                 $value = $parameters[$param];
                 unset($parameters[$param]);
 
-                if (!$hasAutoItem && in_array($param, $autoItem, true)) {
+                if (!$hasAutoItem && in_array($param, $autoItems, true)) {
                     $hasAutoItem = true;
 
                     return $value;
