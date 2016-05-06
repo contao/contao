@@ -47,7 +47,7 @@ class CheckBoxWizard extends \Widget
 		switch ($strKey)
 		{
 			case 'options':
-				$this->arrOptions = deserialize($varValue);
+				$this->arrOptions = \StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -140,7 +140,7 @@ class CheckBoxWizard extends \Widget
 
 			foreach ($arrButtons as $strButton)
 			{
-				$strButtons .= '<a href="'.$this->addToUrl('&amp;'.$strCommand.'='.$strButton.'&amp;cid='.$i.'&amp;id='.$this->currentRecord).'" class="button-move" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['move_'.$strButton][1]).'" onclick="Backend.checkboxWizard(this,\''.$strButton.'\',\'ctrl_'.$this->strId.'\');return false">'.\Image::getHtml($strButton.'.svg', $GLOBALS['TL_LANG']['MSC']['move_'.$strButton][0], 'class="tl_checkbox_wizard_img"').'</a> ';
+				$strButtons .= '<a href="'.$this->addToUrl('&amp;'.$strCommand.'='.$strButton.'&amp;cid='.$i.'&amp;id='.$this->currentRecord).'" class="button-move" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move_'.$strButton][1]).'" onclick="Backend.checkboxWizard(this,\''.$strButton.'\',\'ctrl_'.$this->strId.'\');return false">'.\Image::getHtml($strButton.'.svg', $GLOBALS['TL_LANG']['MSC']['move_'.$strButton][0], 'class="tl_checkbox_wizard_img"').'</a> ';
 			}
 
 			$arrOptions[] = $this->generateCheckbox($arrOption, $i, $strButtons);
@@ -181,7 +181,7 @@ class CheckBoxWizard extends \Widget
 		return sprintf('<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> %s<label for="opt_%s">%s</label></span>',
 						$this->strName . ($this->multiple ? '[]' : ''),
 						$this->strId.'_'.$i,
-						($this->multiple ? specialchars($arrOption['value']) : 1),
+						($this->multiple ? \StringUtil::specialchars($arrOption['value']) : 1),
 						((is_array($this->varValue) && in_array($arrOption['value'], $this->varValue) || $this->varValue == $arrOption['value']) ? ' checked="checked"' : ''),
 						$this->getAttributes(),
 						$strButtons,

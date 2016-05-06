@@ -64,7 +64,7 @@
                   <option value=""><?= $this->default ?></option>
                   <option value="">---</option>
                   <?php foreach ($this->languages as $key=>$lang): ?>
-                    <option value="<?= specialchars($key) ?>"><?= $lang ?></option>
+                    <option value="<?= StringUtil::specialchars($key) ?>"><?= $lang ?></option>
                   <?php endforeach; ?>
                 </select>
               </td>

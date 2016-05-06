@@ -87,7 +87,7 @@ class ContentTeaser extends \ContentElement
 		$this->Template->text = \StringUtil::toHtml5($objArticle->teaser);
 
 		$this->Template->headline = $objArticle->title;
-		$this->Template->readMore = specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));
+		$this->Template->readMore = \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));
 		$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
 	}
 }

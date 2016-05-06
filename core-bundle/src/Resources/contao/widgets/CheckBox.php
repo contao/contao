@@ -48,7 +48,7 @@ class CheckBox extends \Widget
 		switch ($strKey)
 		{
 			case 'options':
-				$this->arrOptions = deserialize($varValue);
+				$this->arrOptions = \StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -120,7 +120,7 @@ class CheckBox extends \Widget
 				continue;
 			}
 
-			$id = 'cbc_' . $this->strId . '_' . standardize($i);
+			$id = 'cbc_' . $this->strId . '_' . \StringUtil::standardize($i);
 
 			$img = 'folPlus.svg';
 			$display = 'none';
@@ -190,7 +190,7 @@ class CheckBox extends \Widget
 		return sprintf('<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s%s%s</label>',
 						$this->strName . ($this->multiple ? '[]' : ''),
 						$this->strId.'_'.$i,
-						($this->multiple ? specialchars($arrOption['value']) : 1),
+						($this->multiple ? \StringUtil::specialchars($arrOption['value']) : 1),
 						$this->isChecked($arrOption),
 						$this->getAttributes(),
 						$this->strId.'_'.$i,

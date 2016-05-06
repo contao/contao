@@ -158,7 +158,7 @@ class TextField extends \Widget
 							$this->strName,
 							$this->strId,
 							(($this->strClass != '') ? ' ' . $this->strClass : ''),
-							specialchars($this->varValue),
+							\StringUtil::specialchars($this->varValue),
 							$this->getAttributes(),
 							$this->wizard);
 		}
@@ -183,7 +183,7 @@ class TextField extends \Widget
 									$this->strName,
 									$this->strId.'_'.$i,
 									$this->size,
-									specialchars(@$this->varValue[$i]), // see #4979
+									\StringUtil::specialchars(@$this->varValue[$i]), // see #4979
 									$this->getAttributes());
 		}
 

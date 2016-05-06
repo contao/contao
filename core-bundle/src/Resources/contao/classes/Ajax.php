@@ -331,7 +331,7 @@ class Ajax extends \Backend
 				// Convert the selected values
 				if ($varValue != '')
 				{
-					$varValue = trimsplit("\t", $varValue);
+					$varValue = \StringUtil::trimsplit("\t", $varValue);
 
 					// Automatically add resources to the DBAFS
 					if ($strKey == 'fileTree')

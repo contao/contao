@@ -136,20 +136,20 @@ class Feed
 		$xml  = '<?xml version="1.0" encoding="' . \Config::get('characterSet') . '"?>';
 		$xml .= '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">';
 		$xml .= '<channel>';
-		$xml .= '<title>' . specialchars($this->title) . '</title>';
-		$xml .= '<description>' . specialchars($this->description) . '</description>';
-		$xml .= '<link>' . specialchars($this->link) . '</link>';
+		$xml .= '<title>' . \StringUtil::specialchars($this->title) . '</title>';
+		$xml .= '<description>' . \StringUtil::specialchars($this->description) . '</description>';
+		$xml .= '<link>' . \StringUtil::specialchars($this->link) . '</link>';
 		$xml .= '<language>' . $this->language . '</language>';
 		$xml .= '<pubDate>' . date('r', $this->published) . '</pubDate>';
 		$xml .= '<generator>Contao Open Source CMS</generator>';
-		$xml .= '<atom:link href="' . specialchars(\Environment::get('base') . 'share/' . $this->strName) . '.xml" rel="self" type="application/rss+xml" />';
+		$xml .= '<atom:link href="' . \StringUtil::specialchars(\Environment::get('base') . 'share/' . $this->strName) . '.xml" rel="self" type="application/rss+xml" />';
 
 		foreach ($this->arrItems as $objItem)
 		{
 			$xml .= '<item>';
-			$xml .= '<title>' . specialchars(strip_tags($objItem->title)) . '</title>';
+			$xml .= '<title>' . \StringUtil::specialchars(strip_tags($objItem->title)) . '</title>';
 			$xml .= '<description><![CDATA[' . preg_replace('/[\n\r]+/', ' ', $objItem->description) . ']]></description>';
-			$xml .= '<link>' . specialchars($objItem->link) . '</link>';
+			$xml .= '<link>' . \StringUtil::specialchars($objItem->link) . '</link>';
 			$xml .= '<pubDate>' . date('r', $objItem->published) . '</pubDate>';
 
 			// Add the GUID
@@ -167,7 +167,7 @@ class Feed
 			}
 			else
 			{
-				$xml .= '<guid>' . specialchars($objItem->link) . '</guid>';
+				$xml .= '<guid>' . \StringUtil::specialchars($objItem->link) . '</guid>';
 			}
 
 			// Enclosures
@@ -200,22 +200,22 @@ class Feed
 
 		$xml  = '<?xml version="1.0" encoding="' . \Config::get('characterSet') . '"?>';
 		$xml .= '<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="' . $this->language . '">';
-		$xml .= '<title>' . specialchars($this->title) . '</title>';
-		$xml .= '<subtitle>' . specialchars($this->description) . '</subtitle>';
-		$xml .= '<link rel="alternate" href="' . specialchars($this->link) . '" />';
-		$xml .= '<id>' . specialchars($this->link) . '</id>';
+		$xml .= '<title>' . \StringUtil::specialchars($this->title) . '</title>';
+		$xml .= '<subtitle>' . \StringUtil::specialchars($this->description) . '</subtitle>';
+		$xml .= '<link rel="alternate" href="' . \StringUtil::specialchars($this->link) . '" />';
+		$xml .= '<id>' . \StringUtil::specialchars($this->link) . '</id>';
 		$xml .= '<updated>' . preg_replace('/00$/', ':00', date('Y-m-d\TH:i:sO', $this->published)) . '</updated>';
 		$xml .= '<generator>Contao Open Source CMS</generator>';
-		$xml .= '<link href="' . specialchars(\Environment::get('base') . 'share/' . $this->strName) . '.xml" rel="self" />';
+		$xml .= '<link href="' . \StringUtil::specialchars(\Environment::get('base') . 'share/' . $this->strName) . '.xml" rel="self" />';
 
 		foreach ($this->arrItems as $objItem)
 		{
 			$xml .= '<entry>';
-			$xml .= '<title>' . specialchars($objItem->title) . '</title>';
+			$xml .= '<title>' . \StringUtil::specialchars($objItem->title) . '</title>';
 			$xml .= '<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">' . preg_replace('/[\n\r]+/', ' ', \StringUtil::toXhtml($objItem->description)) . '</div></content>';
-			$xml .= '<link rel="alternate" href="' . specialchars($objItem->link) . '" />';
+			$xml .= '<link rel="alternate" href="' . \StringUtil::specialchars($objItem->link) . '" />';
 			$xml .= '<updated>' . preg_replace('/00$/', ':00', date('Y-m-d\TH:i:sO', $objItem->published)) . '</updated>';
-			$xml .= '<id>' . ($objItem->guid ? $objItem->guid : specialchars($objItem->link)) . '</id>';
+			$xml .= '<id>' . ($objItem->guid ? $objItem->guid : \StringUtil::specialchars($objItem->link)) . '</id>';
 			$xml .= '<author><name>' . $objItem->author . '</name></author>';
 
 			// Enclosures

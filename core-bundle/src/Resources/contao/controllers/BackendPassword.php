@@ -119,11 +119,11 @@ class BackendPassword extends \Backend
 		$objTemplate->messages = \Message::generate();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['pw_new']);
+		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pw_new']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->action = ampersand(\Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['pw_change'];
-		$objTemplate->submitButton = specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
+		$objTemplate->submitButton = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 

@@ -50,7 +50,7 @@ class ModuleCustomnav extends \Module
 		}
 
 		// Always return an array (see #4616)
-		$this->pages = deserialize($this->pages, true);
+		$this->pages = \StringUtil::deserialize($this->pages, true);
 
 		if (empty($this->pages) || $this->pages[0] == '')
 		{
@@ -95,7 +95,7 @@ class ModuleCustomnav extends \Module
 		// Sort the array keys according to the given order
 		if ($this->orderPages != '')
 		{
-			$tmp = deserialize($this->orderPages);
+			$tmp = \StringUtil::deserialize($this->orderPages);
 
 			if (!empty($tmp) && is_array($tmp))
 			{
@@ -127,7 +127,7 @@ class ModuleCustomnav extends \Module
 		/** @var PageModel[] $arrPages */
 		foreach ($arrPages as $objModel)
 		{
-			$_groups = deserialize($objModel->groups);
+			$_groups = \StringUtil::deserialize($objModel->groups);
 
 			// Do not show protected pages unless a back end or front end user is logged in
 			if (!$objModel->protected || BE_USER_LOGGED_IN || (is_array($_groups) && count(array_intersect($_groups, $groups))) || $this->showProtected)
@@ -164,8 +164,8 @@ class ModuleCustomnav extends \Module
 					$row['isActive'] = true;
 					$row['isTrail'] = false;
 					$row['class'] = trim('active ' . $strClass);
-					$row['title'] = specialchars($objModel->title, true);
-					$row['pageTitle'] = specialchars($objModel->pageTitle, true);
+					$row['title'] = \StringUtil::specialchars($objModel->title, true);
+					$row['pageTitle'] = \StringUtil::specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
@@ -190,8 +190,8 @@ class ModuleCustomnav extends \Module
 					$row['isActive'] = false;
 					$row['isTrail'] = $trail;
 					$row['class'] = $strClass;
-					$row['title'] = specialchars($objModel->title, true);
-					$row['pageTitle'] = specialchars($objModel->pageTitle, true);
+					$row['title'] = \StringUtil::specialchars($objModel->title, true);
+					$row['pageTitle'] = \StringUtil::specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
@@ -218,7 +218,7 @@ class ModuleCustomnav extends \Module
 
 		$this->Template->request = \Environment::get('indexFreeRequest');
 		$this->Template->skipId = 'skipNavigation' . $this->id;
-		$this->Template->skipNavigation = specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
+		$this->Template->skipNavigation = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
 		$this->Template->items = !empty($items) ? $objTemplate->parse() : '';
 	}
 }

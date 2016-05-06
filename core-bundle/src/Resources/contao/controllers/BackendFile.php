@@ -147,7 +147,7 @@ class BackendFile extends \Backend
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['filepicker']);
+		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['filepicker']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];

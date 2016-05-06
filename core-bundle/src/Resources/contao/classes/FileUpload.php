@@ -160,7 +160,7 @@ class FileUpload extends \Backend
 				$strExtension = strtolower(substr($file['name'], strrpos($file['name'], '.') + 1));
 
 				// File type not allowed
-				if (!in_array($strExtension, trimsplit(',', strtolower(\Config::get('uploadTypes')))))
+				if (!in_array($strExtension, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))))
 				{
 					\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $strExtension));
 					$this->log('File type "'.$strExtension.'" is not allowed to be uploaded ('.$file['name'].')', __METHOD__, TL_ERROR);

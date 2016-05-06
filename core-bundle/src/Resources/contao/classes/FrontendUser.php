@@ -266,7 +266,7 @@ class FrontendUser extends \User
 		{
 			if (!is_numeric($v))
 			{
-				$this->$k = deserialize($v);
+				$this->$k = \StringUtil::deserialize($v);
 			}
 		}
 

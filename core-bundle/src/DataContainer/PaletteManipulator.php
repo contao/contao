@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\DataContainer;
 
+use Contao\StringUtil;
+
 /**
  * Adds fields and legends to DCA palettes.
  *
@@ -216,10 +218,11 @@ class PaletteManipulator
 
         $legendCount = 0;
         $legendMap = [];
+        $groups = StringUtil::trimsplit(';', $palette);
 
-        foreach (array_map('trim', explode(';', $palette)) as $group) {
+        foreach ($groups as $group) {
             $hide = false;
-            $fields = array_map('trim', explode(',', $group));
+            $fields = StringUtil::trimsplit(',', $group);
 
             if (preg_match('#\{(.+?)(:hide)?\}#', $fields[0], $matches)) {
                 $legend = $matches[1];

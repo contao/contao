@@ -877,7 +877,7 @@ class tl_module extends Backend
 
 		while ($objLayout->next())
 		{
-			$arrCustom = array_merge($arrCustom, trimsplit(',', $objLayout->sections));
+			$arrCustom = array_merge($arrCustom, StringUtil::trimsplit(',', $objLayout->sections));
 		}
 
 		$arrCustom = array_unique($arrCustom);

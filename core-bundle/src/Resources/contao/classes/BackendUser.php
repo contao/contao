@@ -284,7 +284,7 @@ class BackendUser extends \User
 		}
 
 		// Set permissions
-		$chmod = deserialize($row['chmod']);
+		$chmod = \StringUtil::deserialize($row['chmod']);
 		$chmod = is_array($chmod) ? $chmod : array($chmod);
 		$permission = array('w'.$int);
 
@@ -349,7 +349,7 @@ class BackendUser extends \User
 		{
 			if (!is_numeric($v))
 			{
-				$this->$k = deserialize($v);
+				$this->$k = \StringUtil::deserialize($v);
 			}
 		}
 
@@ -400,9 +400,9 @@ class BackendUser extends \User
 			{
 				foreach ($inherit as $field)
 				{
-					$value = deserialize($objGroup->$field, true);
+					$value = \StringUtil::deserialize($objGroup->$field, true);
 
-					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and deserialize(true) here
+					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
 					if (!empty($value))
 					{
 						$this->$field = array_merge((is_array($this->$field) ? $this->$field : (($this->$field != '') ? array($this->$field) : array())), $value);
@@ -475,7 +475,7 @@ class BackendUser extends \User
 			if (!empty($arrGroupModules) && ($strGroupName == 'system' || $this->hasAccess(array_keys($arrGroupModules), 'modules')))
 			{
 				$arrModules[$strGroupName]['class'] = ' node-expanded';
-				$arrModules[$strGroupName]['title'] = specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
+				$arrModules[$strGroupName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
 				$arrModules[$strGroupName]['label'] = (($label = is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
 				$arrModules[$strGroupName]['href'] = \Controller::addToUrl('mtg=' . $strGroupName);
 
@@ -484,7 +484,7 @@ class BackendUser extends \User
 				{
 					$arrModules[$strGroupName]['modules'] = false;
 					$arrModules[$strGroupName]['class'] = ' node-collapsed';
-					$arrModules[$strGroupName]['title'] = specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
+					$arrModules[$strGroupName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
 				}
 				else
 				{
@@ -494,7 +494,7 @@ class BackendUser extends \User
 						if ($strModuleName == 'undo' || $this->hasAccess($strModuleName, 'modules'))
 						{
 							$arrModules[$strGroupName]['modules'][$strModuleName] = $arrModuleConfig;
-							$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);
+							$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);
 							$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = (($label = is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName]) ? $GLOBALS['TL_LANG']['MOD'][$strModuleName][0] : $GLOBALS['TL_LANG']['MOD'][$strModuleName]) != false) ? $label : $strModuleName;
 							$arrModules[$strGroupName]['modules'][$strModuleName]['icon'] = !empty($arrModuleConfig['icon']) ? sprintf(' style="background-image:url(\'%s%s\')"', TL_ASSETS_URL, $arrModuleConfig['icon']) : '';
 							$arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation ' . $strModuleName;

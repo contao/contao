@@ -39,7 +39,7 @@ class ModuleRandomImage extends \Module
 	 */
 	public function generate()
 	{
-		$this->multiSRC = deserialize($this->multiSRC);
+		$this->multiSRC = \StringUtil::deserialize($this->multiSRC);
 
 		if (!is_array($this->multiSRC) || empty($this->multiSRC))
 		{
@@ -92,7 +92,7 @@ class ModuleRandomImage extends \Module
 				// Use the file name as title if none is given
 				if ($arrMeta['title'] == '')
 				{
-					$arrMeta['title'] = specialchars($objFile->basename);
+					$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
 				}
 
 				// Add the image
@@ -137,7 +137,7 @@ class ModuleRandomImage extends \Module
 					// Use the file name as title if none is given
 					if ($arrMeta['title'] == '')
 					{
-						$arrMeta['title'] = specialchars($objFile->basename);
+						$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
 					}
 
 					// Add the image

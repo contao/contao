@@ -104,7 +104,7 @@ class PageRegular extends \Frontend
 		// Initialize modules and sections
 		$arrCustomSections = array();
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
-		$arrModules = deserialize($objLayout->modules);
+		$arrModules = \StringUtil::deserialize($objLayout->modules);
 
 		$arrModuleIds = array();
 
@@ -213,7 +213,7 @@ class PageRegular extends \Frontend
 		}
 
 		// Assign the title and description
-		$this->Template->title = strip_insert_tags($this->replaceInsertTags($objLayout->titleTag)); // see #7097
+		$this->Template->title = \StringUtil::stripInsertTags($this->replaceInsertTags($objLayout->titleTag)); // see #7097
 		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ' , '', ''), $objPage->description);
 
 		// Body onload and body classes
@@ -281,7 +281,7 @@ class PageRegular extends \Frontend
 		$this->Template->viewport = '';
 		$this->Template->framework = '';
 
-		$arrFramework = deserialize($objLayout->framework);
+		$arrFramework = \StringUtil::deserialize($objLayout->framework);
 
 		// Generate the CSS framework
 		if (is_array($arrFramework) && in_array('layout.css', $arrFramework))
@@ -296,7 +296,7 @@ class PageRegular extends \Frontend
 			// Wrapper
 			if ($objLayout->static)
 			{
-				$arrSize = deserialize($objLayout->width);
+				$arrSize = \StringUtil::deserialize($objLayout->width);
 
 				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
 				{
@@ -308,7 +308,7 @@ class PageRegular extends \Frontend
 			// Header
 			if ($objLayout->rows == '2rwh' || $objLayout->rows == '3rw')
 			{
-				$arrSize = deserialize($objLayout->headerHeight);
+				$arrSize = \StringUtil::deserialize($objLayout->headerHeight);
 
 				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
 				{
@@ -321,7 +321,7 @@ class PageRegular extends \Frontend
 			// Left column
 			if ($objLayout->cols == '2cll' || $objLayout->cols == '3cl')
 			{
-				$arrSize = deserialize($objLayout->widthLeft);
+				$arrSize = \StringUtil::deserialize($objLayout->widthLeft);
 
 				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
 				{
@@ -333,7 +333,7 @@ class PageRegular extends \Frontend
 			// Right column
 			if ($objLayout->cols == '2clr' || $objLayout->cols == '3cl')
 			{
-				$arrSize = deserialize($objLayout->widthRight);
+				$arrSize = \StringUtil::deserialize($objLayout->widthRight);
 
 				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
 				{
@@ -351,7 +351,7 @@ class PageRegular extends \Frontend
 			// Footer
 			if ($objLayout->rows == '2rwf' || $objLayout->rows == '3rw')
 			{
-				$arrSize = deserialize($objLayout->footerHeight);
+				$arrSize = \StringUtil::deserialize($objLayout->footerHeight);
 
 				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
 				{
@@ -485,8 +485,8 @@ class PageRegular extends \Frontend
 	{
 		$strStyleSheets = '';
 		$strCcStyleSheets = '';
-		$arrStyleSheets = deserialize($objLayout->stylesheet);
-		$arrFramework = deserialize($objLayout->framework);
+		$arrStyleSheets = \StringUtil::deserialize($objLayout->stylesheet);
+		$arrFramework = \StringUtil::deserialize($objLayout->framework);
 
 		// Google web fonts
 		if ($objLayout->webfonts != '')
@@ -521,7 +521,7 @@ class PageRegular extends \Frontend
 			{
 				while ($objStylesheets->next())
 				{
-					$media = implode(',', deserialize($objStylesheets->media));
+					$media = implode(',', \StringUtil::deserialize($objStylesheets->media));
 
 					// Overwrite the media type with a custom media query
 					if ($objStylesheets->mediaQuery != '')
@@ -577,7 +577,7 @@ class PageRegular extends \Frontend
 			}
 		}
 
-		$arrExternal = deserialize($objLayout->external);
+		$arrExternal = \StringUtil::deserialize($objLayout->external);
 
 		// External style sheets
 		if (!empty($arrExternal) && is_array($arrExternal))
@@ -585,7 +585,7 @@ class PageRegular extends \Frontend
 			// Consider the sorting order (see #5038)
 			if ($objLayout->orderExt != '')
 			{
-				$tmp = deserialize($objLayout->orderExt);
+				$tmp = \StringUtil::deserialize($objLayout->orderExt);
 
 				if (!empty($tmp) && is_array($tmp))
 				{
@@ -673,7 +673,7 @@ class PageRegular extends \Frontend
 		// jQuery
 		if ($objLayout->addJQuery)
 		{
-			$arrJquery = deserialize($objLayout->jquery, true);
+			$arrJquery = \StringUtil::deserialize($objLayout->jquery, true);
 
 			foreach ($arrJquery as $strTemplate)
 			{
@@ -691,7 +691,7 @@ class PageRegular extends \Frontend
 		// MooTools
 		if ($objLayout->addMooTools)
 		{
-			$arrMootools = deserialize($objLayout->mootools, true);
+			$arrMootools = \StringUtil::deserialize($objLayout->mootools, true);
 
 			foreach ($arrMootools as $strTemplate)
 			{
@@ -709,7 +709,7 @@ class PageRegular extends \Frontend
 		// Add the framework agnostic JavaScripts
 		if ($objLayout->scripts != '')
 		{
-			$arrScripts = deserialize($objLayout->scripts, true);
+			$arrScripts = \StringUtil::deserialize($objLayout->scripts, true);
 
 			foreach ($arrScripts as $strTemplate)
 			{
@@ -733,7 +733,7 @@ class PageRegular extends \Frontend
 		// Add the analytics scripts
 		if ($objLayout->analytics != '')
 		{
-			$arrAnalytics = deserialize($objLayout->analytics, true);
+			$arrAnalytics = \StringUtil::deserialize($objLayout->analytics, true);
 
 			foreach ($arrAnalytics as $strTemplate)
 			{

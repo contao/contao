@@ -184,7 +184,7 @@ class Form extends \Hybrid
 				// Unset the default value depending on the field type (see #4722)
 				if (!empty($arrData['value']))
 				{
-					if (!in_array('value', trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type])))
+					if (!in_array('value', \StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type])))
 					{
 						$arrData['value'] = '';
 					}
@@ -273,7 +273,7 @@ class Form extends \Hybrid
 		}
 
 		$strAttributes = '';
-		$arrAttributes = deserialize($this->attributes, true);
+		$arrAttributes = \StringUtil::deserialize($this->attributes, true);
 
 		if ($arrAttributes[1] != '')
 		{
@@ -351,7 +351,7 @@ class Form extends \Hybrid
 					continue;
 				}
 
-				$v = deserialize($v);
+				$v = \StringUtil::deserialize($v);
 
 				// Skip empty fields
 				if ($this->skipEmpty && !is_array($v) && !strlen($v))

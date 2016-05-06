@@ -656,7 +656,7 @@ abstract class User extends \System
 			return false;
 		}
 
-		$groups = deserialize($this->arrData['groups']);
+		$groups = \StringUtil::deserialize($this->arrData['groups']);
 
 		// No groups assigned
 		if (empty($groups) || !is_array($groups))

@@ -38,7 +38,7 @@
             <td><?= $version['active'] ? '<strong>' . $version['version'] . '</strong>' : $version['version'] ?></td>
             <td>
               <?php if ($version['deleted']): ?>
-                <a href="<?= $this->route('contao_backend', array('do'=>'undo')) ?>" title="<?= specialchars($GLOBALS['TL_LANG']['MSC']['restore']) ?>"><?= Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
+                <a href="<?= $this->route('contao_backend', array('do'=>'undo')) ?>" title="<?= StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['restore']) ?>"><?= Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
               <?php else: ?>
                 <?php if ($version['editUrl'] != ''): ?>
                   <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Image::getHtml('edit.svg', '', 'style="padding:0 2px"') ?></a>

@@ -141,7 +141,7 @@ class BackendConfirm extends \Backend
 
 		// Template variables
 		$objTemplate->confirm = true;
-		$objTemplate->link = specialchars($url);
+		$objTemplate->link = \StringUtil::specialchars($url);
 		$objTemplate->info = $arrInfo;
 		$objTemplate->labels = $GLOBALS['TL_LANG']['CONFIRM'];
 		$objTemplate->explain = $GLOBALS['TL_LANG']['ERR']['invalidTokenUrl'];
@@ -150,7 +150,7 @@ class BackendConfirm extends \Backend
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['invalidTokenUrl']);
+		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['invalidTokenUrl']);
 		$objTemplate->charset = \Config::get('characterSet');
 
 		return $objTemplate->getResponse();

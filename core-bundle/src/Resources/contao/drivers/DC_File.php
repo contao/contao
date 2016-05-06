@@ -121,14 +121,14 @@ class DC_File extends \DataContainer implements \editable
 
 		// Build an array from boxes and rows
 		$this->strPalette = $this->getPalette();
-		$boxes = trimsplit(';', $this->strPalette);
+		$boxes = \StringUtil::trimsplit(';', $this->strPalette);
 		$legends = array();
 
 		if (!empty($boxes))
 		{
 			foreach ($boxes as $k=>$v)
 			{
-				$boxes[$k] = trimsplit(',', $v);
+				$boxes[$k] = \StringUtil::trimsplit(',', $v);
 
 				foreach ($boxes[$k] as $kk=>$vv)
 				{
@@ -195,7 +195,7 @@ class DC_File extends \DataContainer implements \editable
 					{
 						if ($blnAjax && \Environment::get('isAjaxRequest'))
 						{
-							return $strAjax . '<input type="hidden" name="FORM_FIELDS[]" value="'.specialchars($this->strPalette).'">';
+							return $strAjax . '<input type="hidden" name="FORM_FIELDS[]" value="'.\StringUtil::specialchars($this->strPalette).'">';
 						}
 
 						$blnAjax = false;
@@ -222,7 +222,7 @@ class DC_File extends \DataContainer implements \editable
 					{
 						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'])
 						{
-							$this->varValue = deserialize($this->varValue);
+							$this->varValue = \StringUtil::deserialize($this->varValue);
 						}
 
 						if (!is_array($this->varValue))
@@ -323,7 +323,7 @@ class DC_File extends \DataContainer implements \editable
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = '
 <div id="tl_buttons">
-<a href="'.$this->getReferer(true).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
 '.\Message::generate().'
 <form action="'.ampersand(\Environment::get('request'), true).'" id="'.$this->strTable.'" class="tl_form" method="post"'.(!empty($this->onsubmit) ? ' onsubmit="'.implode(' ', $this->onsubmit).'"' : '').'>
@@ -331,7 +331,7 @@ class DC_File extends \DataContainer implements \editable
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="'.$this->strTable.'">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-<input type="hidden" name="FORM_FIELDS[]" value="'.specialchars($this->strPalette).'">'.($this->noReload ? '
+<input type="hidden" name="FORM_FIELDS[]" value="'.\StringUtil::specialchars($this->strPalette).'">'.($this->noReload ? '
 
 <p class="tl_error">'.$GLOBALS['TL_LANG']['ERR']['general'].'</p>' : '').$return;
 
@@ -407,7 +407,7 @@ class DC_File extends \DataContainer implements \editable
 			// Convert binary UUIDs (see #6893)
 			if ($arrData['inputType'] == 'fileTree')
 			{
-				$varValue = deserialize($varValue);
+				$varValue = \StringUtil::deserialize($varValue);
 
 				if (!is_array($varValue))
 				{
@@ -429,7 +429,7 @@ class DC_File extends \DataContainer implements \editable
 			// Handle entities
 			if ($arrData['inputType'] == 'text' || $arrData['inputType'] == 'textarea')
 			{
-				$varValue = deserialize($varValue);
+				$varValue = \StringUtil::deserialize($varValue);
 
 				if (!is_array($varValue))
 				{
@@ -476,11 +476,11 @@ class DC_File extends \DataContainer implements \editable
 		{
 			\Config::persist($this->strField, $varValue);
 
-			$deserialize = deserialize($varValue);
+			$deserialize = \StringUtil::deserialize($varValue);
 			$prior = is_bool(\Config::get($this->strField)) ? (\Config::get($this->strField) ? 'true' : 'false') : \Config::get($this->strField);
 
 			// Add a log entry
-			if (!is_array(deserialize($prior)) && !is_array($deserialize))
+			if (!is_array(\StringUtil::deserialize($prior)) && !is_array($deserialize))
 			{
 				if ($arrData['inputType'] == 'password' || $arrData['inputType'] == 'textStore')
 				{

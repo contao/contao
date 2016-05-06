@@ -77,7 +77,7 @@ class FileSelector extends \Widget
 
 		if ($this->extensions != '')
 		{
-			$this->arrValidFileTypes = trimsplit(',', strtolower($this->extensions));
+			$this->arrValidFileTypes = \StringUtil::trimsplit(',', strtolower($this->extensions));
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
@@ -320,7 +320,7 @@ class FileSelector extends \Widget
 
 				if ($objField->numRows)
 				{
-					$this->varValue = deserialize($objField->{$this->strField});
+					$this->varValue = \StringUtil::deserialize($objField->{$this->strField});
 				}
 				break;
 		}
@@ -329,7 +329,7 @@ class FileSelector extends \Widget
 
 		if ($this->extensions != '')
 		{
-			$this->arrValidFileTypes = trimsplit(',', $this->extensions);
+			$this->arrValidFileTypes = \StringUtil::trimsplit(',', $this->extensions);
 		}
 
 		return $this->renderFiletree(TL_ROOT . '/' . $strFolder, ($level * 20), $mount, $this->isProtectedPath($strFolder));
@@ -470,7 +470,7 @@ class FileSelector extends \Widget
 				$folderAttribute = '';
 				$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';
 				$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-				$return .= '<a href="'.\Backend::addToUrl($flag.'tg='.$tid).'" title="'.specialchars($alt).'" onclick="return AjaxRequest.toggleFiletree(this,\''.$xtnode.'_'.$tid.'\',\''.$currentFolder.'\',\''.$this->strField.'\',\''.$this->strName.'\','.$level.')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
+				$return .= '<a href="'.\Backend::addToUrl($flag.'tg='.$tid).'" title="'.\StringUtil::specialchars($alt).'" onclick="return AjaxRequest.toggleFiletree(this,\''.$xtnode.'_'.$tid.'\',\''.$currentFolder.'\',\''.$this->strField.'\',\''.$this->strName.'\','.$level.')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
 			}
 
 			$protected = $blnProtected;
@@ -482,10 +482,10 @@ class FileSelector extends \Widget
 			}
 
 			$folderImg = $protected ? 'folderCP.svg' : 'folderC.svg';
-			$folderLabel = ($this->files || $this->filesOnly) ? '<strong>'.specialchars(basename($currentFolder)).'</strong>' : specialchars(basename($currentFolder));
+			$folderLabel = ($this->files || $this->filesOnly) ? '<strong>'.\StringUtil::specialchars(basename($currentFolder)).'</strong>' : \StringUtil::specialchars(basename($currentFolder));
 
 			// Add the current folder
-			$return .= \Image::getHtml($folderImg, '', $folderAttribute).' <a href="' . \Backend::addToUrl('fn='.$this->urlEncode($currentFolder)) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$folderLabel.'</a></div> <div class="tl_right">';
+			$return .= \Image::getHtml($folderImg, '', $folderAttribute).' <a href="' . \Backend::addToUrl('fn='.$this->urlEncode($currentFolder)) . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$folderLabel.'</a></div> <div class="tl_right">';
 
 			// Add a checkbox or radio button
 			if (!$this->filesOnly)
@@ -493,11 +493,11 @@ class FileSelector extends \Widget
 				switch ($this->fieldType)
 				{
 					case 'checkbox':
-						$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.md5($currentFolder).'" class="tl_tree_checkbox" value="'.specialchars($currentFolder).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFolder, $this->varValue).'>';
+						$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.md5($currentFolder).'" class="tl_tree_checkbox" value="'.\StringUtil::specialchars($currentFolder).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFolder, $this->varValue).'>';
 						break;
 
 					case 'radio':
-						$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.md5($currentFolder).'" class="tl_tree_radio" value="'.specialchars($currentFolder).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFolder, $this->varValue).'>';
+						$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.md5($currentFolder).'" class="tl_tree_radio" value="'.\StringUtil::specialchars($currentFolder).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFolder, $this->varValue).'>';
 						break;
 				}
 			}
@@ -558,17 +558,17 @@ class FileSelector extends \Widget
 					}
 				}
 
-				$return .= \Image::getHtml($objFile->icon, $objFile->mime).' '.\StringUtil::convertEncoding(specialchars(basename($currentFile)), \Config::get('characterSet')).$thumbnail.'</div> <div class="tl_right">';
+				$return .= \Image::getHtml($objFile->icon, $objFile->mime).' '.\StringUtil::convertEncoding(\StringUtil::specialchars(basename($currentFile)), \Config::get('characterSet')).$thumbnail.'</div> <div class="tl_right">';
 
 				// Add checkbox or radio button
 				switch ($this->fieldType)
 				{
 					case 'checkbox':
-						$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.md5($currentFile).'" class="tl_tree_checkbox" value="'.specialchars($currentFile).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFile, $this->varValue).'>';
+						$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.md5($currentFile).'" class="tl_tree_checkbox" value="'.\StringUtil::specialchars($currentFile).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFile, $this->varValue).'>';
 						break;
 
 					case 'radio':
-						$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.md5($currentFile).'" class="tl_tree_radio" value="'.specialchars($currentFile).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFile, $this->varValue).'>';
+						$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.md5($currentFile).'" class="tl_tree_radio" value="'.\StringUtil::specialchars($currentFile).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFile, $this->varValue).'>';
 						break;
 				}
 

@@ -28,6 +28,13 @@ class StringUtil
 {
 
 	/**
+	 * Trimsplit cache
+	 * @var array
+	 */
+	protected static $arrSplitCache = array();
+
+
+	/**
 	 * Shorten a string to a given number of characters
 	 *
 	 * The function preserves words, so the result might be a bit shorter or
@@ -269,7 +276,7 @@ class StringUtil
 	{
 		$strString = static::decodeEntities($strString);
 		$strString = static::restoreBasicEntities($strString);
-		$strString = standardize(strip_tags($strString));
+		$strString = static::standardize(strip_tags($strString));
 
 		return $strString;
 	}
@@ -773,5 +780,176 @@ class StringUtil
 		}
 
 		return mb_convert_encoding($str, $to, $from);
+	}
+
+
+	/**
+	 * Convert special characters to HTML entities preventing double conversions
+	 *
+	 * @param string  $strString          The input string
+	 * @param boolean $blnStripInsertTags True to strip insert tags
+	 *
+	 * @return string The converted string
+	 */
+	public static function specialchars($strString, $blnStripInsertTags=false)
+	{
+		if ($blnStripInsertTags)
+		{
+			$strString = static::stripInsertTags($strString);
+		}
+
+		// Use ENT_COMPAT here (see #4889)
+		return htmlspecialchars($strString, ENT_COMPAT, \Config::get('characterSet'), false);
+	}
+
+
+	/**
+	 * Remove Contao insert tags from a string
+	 *
+	 * @param string $strString The input string
+	 *
+	 * @return string The converted string
+	 */
+	public static function stripInsertTags($strString)
+	{
+		$count = 0;
+
+		do
+		{
+			$strString = preg_replace('/\{\{[^\{\}]*\}\}/', '', $strString, -1, $count);
+		}
+		while ($count > 0);
+
+		return $strString;
+	}
+
+
+	/**
+	 * Standardize a parameter (strip special characters and convert spaces)
+	 *
+	 * @param string  $strString            The input string
+	 * @param boolean $blnPreserveUppercase True to preserver uppercase characters
+	 *
+	 * @return string The converted string
+	 */
+	public static function standardize($strString, $blnPreserveUppercase=false)
+	{
+		$arrSearch = array('/[^a-zA-Z0-9 \.\&\/_-]+/', '/[ \.\&\/-]+/');
+		$arrReplace = array('', '-');
+
+		$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet']);
+		$strString = static::stripInsertTags($strString);
+		$strString = Utf8::toAscii($strString);
+		$strString = preg_replace($arrSearch, $arrReplace, $strString);
+
+		if (is_numeric(substr($strString, 0, 1)))
+		{
+			$strString = 'id-' . $strString;
+		}
+
+		if (!$blnPreserveUppercase)
+		{
+			$strString = strtolower($strString);
+		}
+
+		return trim($strString, '-');
+	}
+
+
+	/**
+	 * Return an unserialized array or the argument
+	 *
+	 * @param mixed   $varValue      The serialized string
+	 * @param boolean $blnForceArray True to always return an array
+	 *
+	 * @return array|string|null The array, an empty string or null
+	 */
+	public static function deserialize($varValue, $blnForceArray=false)
+	{
+		// Already an array
+		if (is_array($varValue))
+		{
+			return $varValue;
+		}
+
+		// Null
+		if ($varValue === null)
+		{
+			return $blnForceArray ? array() : null;
+		}
+
+		// Not a string
+		if (!is_string($varValue))
+		{
+			return $blnForceArray ? array($varValue) : $varValue;
+		}
+
+		// Empty string
+		if (trim($varValue) == '')
+		{
+			return $blnForceArray ? array() : '';
+		}
+
+		// Potentially including an object (see #6724)
+		if (preg_match('/[OoC]:\+?[0-9]+:"/', $varValue))
+		{
+			trigger_error('StringUtil::deserialize() does not allow serialized objects', E_USER_WARNING);
+
+			return $blnForceArray ? array($varValue) : $varValue;
+		}
+
+		$varUnserialized = @unserialize($varValue);
+
+		if (is_array($varUnserialized))
+		{
+			$varValue = $varUnserialized;
+		}
+		elseif ($blnForceArray)
+		{
+			$varValue = array($varValue);
+		}
+
+		return $varValue;
+	}
+
+
+	/**
+	 * Split a string into fragments, remove whitespace and return fragments as array
+	 *
+	 * @param string  $strPattern The split pattern
+	 * @param string  $strString  The input string
+	 * @param integer $intLimit   An optional limit
+	 *
+	 * @return array The fragments array
+	 */
+	public static function trimsplit($strPattern, $strString, $intLimit=null)
+	{
+		$strKey = md5($strPattern.$strString);
+
+		// Load from cache
+		if (isset(static::$arrSplitCache[$strKey]))
+		{
+			return static::$arrSplitCache[$strKey];
+		}
+
+		// Split
+		if (strlen($strPattern) == 1)
+		{
+			$arrFragments = array_map('trim', explode($strPattern, $strString, $intLimit));
+		}
+		else
+		{
+			$arrFragments = array_map('trim', preg_split('/'.$strPattern.'/ui', $strString, $intLimit));
+		}
+
+		// Empty array
+		if (count($arrFragments) < 2 && !strlen($arrFragments[0]))
+		{
+			$arrFragments = array();
+		}
+
+		static::$arrSplitCache[$strKey] = $arrFragments;
+
+		return $arrFragments;
 	}
 }

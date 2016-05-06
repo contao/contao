@@ -348,11 +348,11 @@ class tl_form extends Backend
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrFormp = deserialize($objUser->formp);
+							$arrFormp = StringUtil::deserialize($objUser->formp);
 
 							if (is_array($arrFormp) && in_array('create', $arrFormp))
 							{
-								$arrForms = deserialize($objUser->forms);
+								$arrForms = StringUtil::deserialize($objUser->forms);
 								$arrForms[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET forms=? WHERE id=?")
@@ -367,11 +367,11 @@ class tl_form extends Backend
 													   ->limit(1)
 													   ->execute($this->User->groups[0]);
 
-							$arrFormp = deserialize($objGroup->formp);
+							$arrFormp = StringUtil::deserialize($objGroup->formp);
 
 							if (is_array($arrFormp) && in_array('create', $arrFormp))
 							{
-								$arrForms = deserialize($objGroup->forms);
+								$arrForms = StringUtil::deserialize($objGroup->forms);
 								$arrForms[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user_group SET forms=? WHERE id=?")
@@ -484,7 +484,7 @@ class tl_form extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_form') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_form') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -502,7 +502,7 @@ class tl_form extends Backend
 	 */
 	public function copyForm($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'formp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'formp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -520,6 +520,6 @@ class tl_form extends Backend
 	 */
 	public function deleteForm($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'formp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'formp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 }

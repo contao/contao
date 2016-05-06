@@ -50,7 +50,7 @@ class ContentModule extends \ContentElement
 		/** @var Module $objModule */
 		$objModule = new $strClass($objModule, $this->strColumn);
 
-		$cssID = deserialize($objModule->cssID, true);
+		$cssID = \StringUtil::deserialize($objModule->cssID, true);
 
 		// Override the CSS ID (see #305)
 		if (!empty($this->cssID[0]))

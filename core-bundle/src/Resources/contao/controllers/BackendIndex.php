@@ -89,7 +89,7 @@ class BackendIndex extends \Backend
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->languages = \System::getLanguages(true);
-		$objTemplate->title = specialchars($strHeadline);
+		$objTemplate->title = \StringUtil::specialchars($strHeadline);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->action = ampersand(\Environment::get('request'));
 		$objTemplate->userLanguage = $GLOBALS['TL_LANG']['tl_user']['language'][0];
@@ -98,7 +98,7 @@ class BackendIndex extends \Backend
 		$objTemplate->curUsername = \Input::post('username') ?: '';
 		$objTemplate->uClass = ($_POST && empty($_POST['username'])) ? ' class="login_error"' : '';
 		$objTemplate->pClass = ($_POST && empty($_POST['password'])) ? ' class="login_error"' : '';
-		$objTemplate->loginButton = specialchars($GLOBALS['TL_LANG']['MSC']['loginBT']);
+		$objTemplate->loginButton = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['loginBT']);
 		$objTemplate->username = $GLOBALS['TL_LANG']['tl_user']['username'][0];
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];

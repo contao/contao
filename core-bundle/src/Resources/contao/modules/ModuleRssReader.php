@@ -57,7 +57,7 @@ class ModuleRssReader extends \Module
 		}
 
 		$this->objFeed = new \SimplePie();
-		$arrUrls = trimsplit('[\n\t ]', trim($this->rss_feed));
+		$arrUrls = \StringUtil::trimsplit('[\n\t ]', trim($this->rss_feed));
 
 		if (count($arrUrls) > 1)
 		{

@@ -121,7 +121,7 @@ class Image
 		}
 
 		$this->fileObj = $file;
-		$arrAllowedTypes = array_map('trim', explode(',', strtolower(\Config::get('validImageTypes'))));
+		$arrAllowedTypes = \StringUtil::trimsplit(',', strtolower(\Config::get('validImageTypes')));
 
 		// Check the file type
 		if (!in_array($this->fileObj->extension, $arrAllowedTypes))
@@ -914,7 +914,7 @@ class Image
 
 		$static = (strncmp($src, 'assets/', 7) === 0) ? TL_ASSETS_URL : TL_FILES_URL;
 
-		return '<img src="' . $static . \System::urlEncode($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
+		return '<img src="' . $static . \System::urlEncode($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . \StringUtil::specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
 	}
 
 

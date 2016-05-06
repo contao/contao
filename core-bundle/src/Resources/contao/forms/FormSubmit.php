@@ -129,8 +129,8 @@ class FormSubmit extends \Widget
 							$this->src,
 							$this->strId,
 							(($this->strClass != '') ? ' ' . $this->strClass : ''),
-							specialchars($this->slabel),
-							specialchars($this->slabel),
+							\StringUtil::specialchars($this->slabel),
+							\StringUtil::specialchars($this->slabel),
 							$this->getAttributes(),
 							$this->strTagEnding);
 		}

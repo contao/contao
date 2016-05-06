@@ -91,6 +91,8 @@ function scan($strFolder, $blnUncached=false)
  */
 function specialchars($strString, $blnStripInsertTags=false)
 {
+	@trigger_error('Using specialchars() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::specialchars() instead.', E_USER_DEPRECATED);
+
 	if ($blnStripInsertTags)
 	{
 		$strString = strip_insert_tags($strString);
@@ -111,6 +113,8 @@ function specialchars($strString, $blnStripInsertTags=false)
  */
 function standardize($strString, $blnPreserveUppercase=false)
 {
+	@trigger_error('Using standardize() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::standardize() instead.', E_USER_DEPRECATED);
+
 	$arrSearch = array('/[^a-zA-Z0-9 \.\&\/_-]+/', '/[ \.\&\/-]+/');
 	$arrReplace = array('', '-');
 
@@ -142,6 +146,8 @@ function standardize($strString, $blnPreserveUppercase=false)
  */
 function strip_insert_tags($strString)
 {
+	@trigger_error('Using strip_insert_tags() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::stripInsertTags() instead.', E_USER_DEPRECATED);
+
 	$count = 0;
 
 	do
@@ -164,6 +170,8 @@ function strip_insert_tags($strString)
  */
 function deserialize($varValue, $blnForceArray=false)
 {
+	@trigger_error('Using deserialize() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::deserialize() instead.', E_USER_DEPRECATED);
+
 	// Already an array
 	if (is_array($varValue))
 	{
@@ -221,6 +229,8 @@ function deserialize($varValue, $blnForceArray=false)
  */
 function trimsplit($strPattern, $strString)
 {
+	@trigger_error('Using trimsplit() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::trimsplit() instead.', E_USER_DEPRECATED);
+
 	global $arrSplitCache;
 
 	$strKey = md5($strPattern.$strString);

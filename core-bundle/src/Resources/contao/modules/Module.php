@@ -146,14 +146,14 @@ abstract class Module extends \Frontend
 		parent::__construct();
 
 		$this->arrData = $objModule->row();
-		$this->cssID = deserialize($objModule->cssID, true);
+		$this->cssID = \StringUtil::deserialize($objModule->cssID, true);
 
 		if ($this->customTpl != '' && TL_MODE == 'FE')
 		{
 			$this->strTemplate = $this->customTpl;
 		}
 
-		$arrHeadline = deserialize($objModule->headline);
+		$arrHeadline = \StringUtil::deserialize($objModule->headline);
 		$this->headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$this->hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
@@ -315,7 +315,7 @@ abstract class Module extends \Frontend
 			}
 
 			$subitems = '';
-			$_groups = deserialize($objSubpage->groups);
+			$_groups = \StringUtil::deserialize($objSubpage->groups);
 
 			// Override the domain (see #3765)
 			if ($host !== null)
@@ -401,8 +401,8 @@ abstract class Module extends \Frontend
 
 				$row['subitems'] = $subitems;
 				$row['class'] = trim($strClass);
-				$row['title'] = specialchars($objSubpage->title, true);
-				$row['pageTitle'] = specialchars($objSubpage->pageTitle, true);
+				$row['title'] = \StringUtil::specialchars($objSubpage->title, true);
+				$row['pageTitle'] = \StringUtil::specialchars($objSubpage->pageTitle, true);
 				$row['link'] = $objSubpage->title;
 				$row['href'] = $href;
 				$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0);

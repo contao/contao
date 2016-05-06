@@ -95,7 +95,7 @@ class ModuleQuicknav extends \Module
 
 		$this->Template->formId = 'tl_quicknav_' . $this->id;
 		$this->Template->targetPage = $GLOBALS['TL_LANG']['MSC']['targetPage'];
-		$this->Template->button = specialchars($GLOBALS['TL_LANG']['MSC']['go']);
+		$this->Template->button = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicknav'];
 		$this->Template->request = ampersand(\Environment::get('request'), true);
 		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host, $lang);
@@ -139,7 +139,7 @@ class ModuleQuicknav extends \Module
 
 		foreach ($objSubpages as $objSubpage)
 		{
-			$_groups = deserialize($objSubpage->groups);
+			$_groups = \StringUtil::deserialize($objSubpage->groups);
 
 			// Override the domain (see #3765)
 			if ($host !== null)
@@ -158,9 +158,9 @@ class ModuleQuicknav extends \Module
 					$arrPages[] = array
 					(
 						'level' => ($level - 2),
-						'title' => specialchars(strip_insert_tags($objSubpage->pageTitle ?: $objSubpage->title)),
+						'title' => \StringUtil::specialchars(\StringUtil::stripInsertTags($objSubpage->pageTitle ?: $objSubpage->title)),
 						'href' => $objSubpage->getFrontendUrl(),
-						'link' => strip_insert_tags($objSubpage->title)
+						'link' => \StringUtil::stripInsertTags($objSubpage->title)
 					);
 
 					// Subpages

@@ -166,14 +166,14 @@ abstract class ContentElement extends \Frontend
 		parent::__construct();
 
 		$this->arrData = $objElement->row();
-		$this->cssID = deserialize($objElement->cssID, true);
+		$this->cssID = \StringUtil::deserialize($objElement->cssID, true);
 
 		if ($this->customTpl != '' && TL_MODE == 'FE')
 		{
 			$this->strTemplate = $this->customTpl;
 		}
 
-		$arrHeadline = deserialize($objElement->headline);
+		$arrHeadline = \StringUtil::deserialize($objElement->headline);
 		$this->headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$this->hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;

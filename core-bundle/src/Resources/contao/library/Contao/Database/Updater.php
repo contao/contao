@@ -150,7 +150,7 @@ class Updater extends \Controller
 
 		while ($objUser->next())
 		{
-			$modules = deserialize($objUser->modules);
+			$modules = \StringUtil::deserialize($objUser->modules);
 
 			if (!is_array($modules) || empty($modules))
 			{
@@ -357,7 +357,7 @@ class Updater extends \Controller
 		// Rename "responsive.css" to "grid.css"
 		while ($objLayout->next())
 		{
-			$arrCss = deserialize($objLayout->framework);
+			$arrCss = \StringUtil::deserialize($objLayout->framework);
 
 			if (($key = array_search('responsive.css', $arrCss)) !== false)
 			{
@@ -387,7 +387,7 @@ class Updater extends \Controller
 			// jQuery already activated
 			if ($objLayout->addjQuery)
 			{
-				$arrJQuery = deserialize($objLayout->jquery);
+				$arrJQuery = \StringUtil::deserialize($objLayout->jquery);
 
 				// Add j_mediaelement
 				if (!is_array($arrJQuery))
@@ -407,7 +407,7 @@ class Updater extends \Controller
 				$arrSet['jquery'] = serialize(array('j_mediaelement'));
 			}
 
-			$arrMooTools = deserialize($objLayout->mootools);
+			$arrMooTools = \StringUtil::deserialize($objLayout->mootools);
 
 			// Unset the moo_mediaelement template
 			if (($key = array_search('moo_mediaelement', $arrMooTools)) !== false)
@@ -436,7 +436,7 @@ class Updater extends \Controller
 		// Add the "enable" flag to all modules
 		while ($objLayout->next())
 		{
-			$arrModules = deserialize($objLayout->modules);
+			$arrModules = \StringUtil::deserialize($objLayout->modules);
 
 			foreach (array_keys($arrModules) as $key)
 			{
@@ -480,7 +480,7 @@ class Updater extends \Controller
 		while ($objLayout->next())
 		{
 			$strSections = '';
-			$tmp = deserialize($objLayout->sections);
+			$tmp = \StringUtil::deserialize($objLayout->sections);
 
 			if (!empty($tmp) && is_array($tmp))
 			{
@@ -550,7 +550,7 @@ class Updater extends \Controller
 		while ($objLayout->next())
 		{
 			$strFramework = '';
-			$tmp = deserialize($objLayout->framework);
+			$tmp = \StringUtil::deserialize($objLayout->framework);
 
 			if (!empty($tmp) && is_array($tmp))
 			{
@@ -598,7 +598,7 @@ class Updater extends \Controller
 			// Check whether j_slider is enabled
 			if ($objLayout->addJQuery)
 			{
-				$jquery = deserialize($objLayout->jquery);
+				$jquery = \StringUtil::deserialize($objLayout->jquery);
 
 				if (!empty($jquery) && is_array($jquery))
 				{
@@ -616,7 +616,7 @@ class Updater extends \Controller
 			// Check whether moo_slider is enabled
 			if ($objLayout->addMooTools)
 			{
-				$mootools = deserialize($objLayout->mootools);
+				$mootools = \StringUtil::deserialize($objLayout->mootools);
 
 				if (!empty($mootools) && is_array($mootools))
 				{
@@ -909,7 +909,7 @@ class Updater extends \Controller
 
 		while ($objRow->next())
 		{
-			$arrValues = deserialize($objRow->$field, true);
+			$arrValues = \StringUtil::deserialize($objRow->$field, true);
 
 			if (empty($arrValues))
 			{

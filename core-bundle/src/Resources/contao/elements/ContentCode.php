@@ -35,7 +35,7 @@ class ContentCode extends \ContentElement
 	{
 		if (TL_MODE == 'BE')
 		{
-			$return = '<pre>'. specialchars($this->code) .'</pre>';
+			$return = '<pre>'. htmlspecialchars($this->code) .'</pre>';
 
 			if ($this->headline != '')
 			{

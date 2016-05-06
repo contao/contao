@@ -46,7 +46,7 @@ class ContentDownload extends \ContentElement
 			return '';
 		}
 
-		$allowedDownload = trimsplit(',', strtolower(\Config::get('allowedDownload')));
+		$allowedDownload = \StringUtil::trimsplit(',', strtolower(\Config::get('allowedDownload')));
 
 		// Return if the file type is not allowed
 		if (!in_array($objFile->extension, $allowedDownload))
@@ -77,7 +77,7 @@ class ContentDownload extends \ContentElement
 
 		if ($this->linkTitle == '')
 		{
-			$this->linkTitle = specialchars($objFile->basename);
+			$this->linkTitle = \StringUtil::specialchars($objFile->basename);
 		}
 
 		$strHref = \Environment::get('request');
@@ -91,7 +91,7 @@ class ContentDownload extends \ContentElement
 		$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . \System::urlEncode($objFile->value);
 
 		$this->Template->link = $this->linkTitle;
-		$this->Template->title = specialchars($this->titleText ?: sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename));
+		$this->Template->title = \StringUtil::specialchars($this->titleText ?: sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename));
 		$this->Template->href = $strHref;
 		$this->Template->filesize = $this->getReadableSize($objFile->filesize, 1);
 		$this->Template->icon = \Image::getPath($objFile->icon);

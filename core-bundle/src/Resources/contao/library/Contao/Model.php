@@ -623,7 +623,7 @@ abstract class Model
 		}
 		elseif ($arrRelation['type'] == 'hasMany' || $arrRelation['type'] == 'belongsToMany')
 		{
-			$arrValues = deserialize($this->$strKey, true);
+			$arrValues = \StringUtil::deserialize($this->$strKey, true);
 			$strField = $arrRelation['table'] . '.' . $arrRelation['field'];
 
 			// Handle UUIDs (see #6525)

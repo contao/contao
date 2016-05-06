@@ -532,7 +532,7 @@ class tl_member extends Backend
 			return '';
 		}
 
-		return '<a href="contao/preview.php?user='.$row['username'].'" target="_blank" title="'.specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
+		return '<a href="contao/preview.php?user='.$row['username'].'" target="_blank" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
 	}
 
 
@@ -672,7 +672,7 @@ class tl_member extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
 	}
 
 

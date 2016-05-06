@@ -538,7 +538,7 @@ abstract class Frontend extends \Controller
 	 */
 	public static function getMetaData($strData, $strLanguage)
 	{
-		$arrData = deserialize($strData);
+		$arrData = \StringUtil::deserialize($strData);
 
 		// Convert the language to a locale (see #5678)
 		$strLanguage = str_replace('-', '_', $strLanguage);

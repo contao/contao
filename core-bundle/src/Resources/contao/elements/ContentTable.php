@@ -31,10 +31,10 @@ class ContentTable extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$rows = deserialize($this->tableitems);
+		$rows = \StringUtil::deserialize($this->tableitems);
 
 		$this->Template->id = 'table_' . $this->id;
-		$this->Template->summary = specialchars($this->summary);
+		$this->Template->summary = \StringUtil::specialchars($this->summary);
 		$this->Template->useHeader = $this->thead ? true : false;
 		$this->Template->useFooter = $this->tfoot ? true : false;
 		$this->Template->useLeftTh = $this->tleft ? true : false;

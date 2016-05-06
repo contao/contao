@@ -90,7 +90,7 @@
       <h1 class="main_headline"><?= $this->headline ?></h1>
       <?php if ($this->managerHref): ?>
         <div id="manager">
-          <a href="<?= $this->managerHref ?>" class="close" title="<?= specialchars($this->manager) ?>"><?= $this->manager ?></a>
+          <a href="<?= $this->managerHref ?>" class="close" title="<?= StringUtil::specialchars($this->manager) ?>"><?= $this->manager ?></a>
         </div>
       <?php endif; ?>
       <?php if ($this->error): ?>

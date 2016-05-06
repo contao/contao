@@ -103,7 +103,7 @@ class FrontendTemplate extends \Template
 	protected function compile($blnCheckRequest=false)
 	{
 		$this->keywords = '';
-		$arrKeywords = array_map('trim', explode(',', $GLOBALS['TL_KEYWORDS']));
+		$arrKeywords = \StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS']);
 
 		// Add the meta keywords
 		if (strlen($arrKeywords[0]))
@@ -404,7 +404,7 @@ class FrontendTemplate extends \Template
 		// Standardize the IDs (thanks to Tsarma) (see #4251)
 		foreach ($this->sections as $k=>$v)
 		{
-			$sections .= "\n" . '<' . $tag . ' id="' . standardize($k, true) . '">' . "\n" . '<div class="inside">' . "\n" . $v . "\n" . '</div>' . "\n" . '</' . $tag . '>' . "\n";
+			$sections .= "\n" . '<' . $tag . ' id="' . \StringUtil::standardize($k, true) . '">' . "\n" . '<div class="inside">' . "\n" . $v . "\n" . '</div>' . "\n" . '</' . $tag . '>' . "\n";
 		}
 
 		if ($sections == '')

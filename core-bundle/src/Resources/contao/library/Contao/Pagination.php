@@ -266,28 +266,28 @@ class Pagination
 		(
 			'link' => $this->lblFirst,
 			'href' => $this->linkToPage(1),
-			'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
+			'title' => sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
 		);
 
 		$objTemplate->previous = array
 		(
 			'link' => $this->lblPrevious,
 			'href' => $this->linkToPage($this->intPage - 1),
-			'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage - 1))
+			'title' => sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage - 1))
 		);
 
 		$objTemplate->next = array
 		(
 			'link' => $this->lblNext,
 			'href' => $this->linkToPage($this->intPage + 1),
-			'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage + 1))
+			'title' => sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage + 1))
 		);
 
 		$objTemplate->last = array
 		(
 			'link' => $this->lblLast,
 			'href' => $this->linkToPage($this->intTotalPages),
-			'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
+			'title' => sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
 		);
 
 		$objTemplate->class = 'pagination-' . $this->strParameter;
@@ -381,7 +381,7 @@ class Pagination
 				(
 					'page'  => $i,
 					'href'  => $this->linkToPage($i),
-					'title' => specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i))
+					'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i))
 				);
 			}
 		}
