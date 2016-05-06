@@ -137,11 +137,11 @@ abstract class Hybrid extends \Frontend
 		$this->arrData = $objHybrid->row();
 
 		// Get the CSS ID from the parent element (!)
-		$this->cssID = deserialize($objElement->cssID, true);
+		$this->cssID = \StringUtil::deserialize($objElement->cssID, true);
 
 		if (isset($objHybrid->attributes))
 		{
-			$cssID = deserialize($objHybrid->attributes, true);
+			$cssID = \StringUtil::deserialize($objHybrid->attributes, true);
 		}
 
 		// Override the CSS ID (see #305)
@@ -160,7 +160,7 @@ abstract class Hybrid extends \Frontend
 
 		$this->typePrefix = $objElement->typePrefix;
 
-		$arrHeadline = deserialize($objElement->headline);
+		$arrHeadline = \StringUtil::deserialize($objElement->headline);
 		$this->headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$this->hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;

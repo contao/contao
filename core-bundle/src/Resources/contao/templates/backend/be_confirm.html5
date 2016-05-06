@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="referrer" content="origin">
 
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
   <link rel="stylesheet" href="<?php
     $objCombiner = new Combiner();
     $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
@@ -33,14 +34,9 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="header">
-    <h1>Contao Open Source CMS <?= VERSION ?></h1>
-  </div>
-
-  <div id="container">
-
+  <div id="container" class="cf">
     <div id="main">
-      <p><?= Image::getHtml('stop.png') ?></p>
+      <p><?= Image::getHtml('stop.svg') ?></p>
       <form action="<?= $this->route('contao_backend_confirm') ?>" class="tl_form" method="post">
         <div class="tl_formbody_edit">
           <input type="hidden" name="FORM_SUBMIT" value="invalid_token_url">
@@ -57,7 +53,6 @@
         </div>
       </form>
     </div>
-
   </div>
 
 </body>

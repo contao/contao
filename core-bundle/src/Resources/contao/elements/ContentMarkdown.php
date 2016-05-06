@@ -37,7 +37,7 @@ class ContentMarkdown extends \ContentElement
 	{
 		if (TL_MODE == 'BE')
 		{
-			$return = '<pre>'. specialchars($this->code) .'</pre>';
+			$return = '<pre>'. \StringUtil::specialchars($this->code) .'</pre>';
 
 			if ($this->headline != '')
 			{

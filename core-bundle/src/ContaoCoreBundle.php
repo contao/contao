@@ -55,7 +55,7 @@ class ContaoCoreBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(
-            new AddPackagesPass($container->getParameter('kernel.root_dir') . '/../vendor/composer/installed.json')
+            new AddPackagesPass($container->getParameter('kernel.root_dir').'/../vendor/composer/installed.json')
         );
 
         $container->addCompilerPass(new AddSessionBagsPass());

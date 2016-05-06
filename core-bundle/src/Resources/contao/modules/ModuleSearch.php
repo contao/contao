@@ -81,12 +81,12 @@ class ModuleSearch extends \Module
 
 		$this->Template->uniqueId = $this->id;
 		$this->Template->queryType = $strQueryType;
-		$this->Template->keyword = specialchars($strKeywords);
+		$this->Template->keyword = \StringUtil::specialchars($strKeywords);
 		$this->Template->keywordLabel = $GLOBALS['TL_LANG']['MSC']['keywords'];
 		$this->Template->optionsLabel = $GLOBALS['TL_LANG']['MSC']['options'];
-		$this->Template->search = specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
-		$this->Template->matchAll = specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
-		$this->Template->matchAny = specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
+		$this->Template->search = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
+		$this->Template->matchAll = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
+		$this->Template->matchAny = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
 		$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
 		$this->Template->advanced = ($this->searchType == 'advanced');
 
@@ -194,7 +194,7 @@ class ModuleSearch extends \Module
 						}
 						else
 						{
-							$groups = deserialize($v['groups']);
+							$groups = \StringUtil::deserialize($v['groups']);
 
 							if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
 							{
@@ -260,14 +260,14 @@ class ModuleSearch extends \Module
 				$objTemplate->url = $arrResult[$i]['url'];
 				$objTemplate->link = $arrResult[$i]['title'];
 				$objTemplate->href = $arrResult[$i]['url'];
-				$objTemplate->title = specialchars($arrResult[$i]['title']);
+				$objTemplate->title = \StringUtil::specialchars($arrResult[$i]['title']);
 				$objTemplate->class = (($i == ($from - 1)) ? 'first ' : '') . (($i == ($to - 1) || $i == ($count - 1)) ? 'last ' : '') . (($i % 2 == 0) ? 'even' : 'odd');
 				$objTemplate->relevance = sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
 				$objTemplate->filesize = $arrResult[$i]['filesize'];
 				$objTemplate->matches = $arrResult[$i]['matches'];
 
 				$arrContext = array();
-				$arrMatches = trimsplit(',', $arrResult[$i]['matches']);
+				$arrMatches = \StringUtil::trimsplit(',', $arrResult[$i]['matches']);
 
 				// Get the context
 				foreach ($arrMatches as $strWord)

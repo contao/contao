@@ -62,33 +62,33 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_layout']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'edit.gif'
+				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_layout']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.gif'
+				'icon'                => 'copy.svg'
 			),
 			'cut' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_layout']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.gif',
+				'icon'                => 'cut.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_layout']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_layout']['show'],
 				'href'                => 'act=show',
-				'icon'                => 'show.gif'
+				'icon'                => 'show.svg'
 			)
 		)
 	),
@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections,sPosition;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder;{picturefill_legend:hide},picturefill;{feed_legend:hide},newsfeeds,calendarfeeds;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
+		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections,sPosition;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder;{picturefill_legend:hide},picturefill;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
 	),
 
 	// Subpalettes
@@ -273,24 +273,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'options'                 => array('external_first', 'internal_first'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'sql'                     => "varchar(16) NOT NULL default ''"
-		),
-		'newsfeeds' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['newsfeeds'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'options_callback'        => array('tl_layout', 'getNewsfeeds'),
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
-		),
-		'calendarfeeds' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['calendarfeeds'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'options_callback'        => array('tl_layout', 'getCalendarfeeds'),
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
 		),
 		'modules' => array
 		(
@@ -579,70 +561,6 @@ class tl_layout extends Backend
 
 
 	/**
-	 * Return all news archives with XML feeds
-	 *
-	 * @return array
-	 */
-	public function getNewsfeeds()
-	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		if (!isset($bundles['ContaoNewsBundle']))
-		{
-			return array();
-		}
-
-		$objFeed = NewsFeedModel::findAll();
-
-		if ($objFeed === null)
-		{
-			return array();
-		}
-
-		$return = array();
-
-		while ($objFeed->next())
-		{
-			$return[$objFeed->id] = $objFeed->title;
-		}
-
-		return $return;
-	}
-
-
-	/**
-	 * Return all calendars with XML feeds
-	 *
-	 * @return array
-	 */
-	public function getCalendarfeeds()
-	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		if (!isset($bundles['ContaoCalendarBundle']))
-		{
-			return array();
-		}
-
-		$objFeed = CalendarFeedModel::findAll();
-
-		if ($objFeed === null)
-		{
-			return array();
-		}
-
-		$return = array();
-
-		while ($objFeed->next())
-		{
-			$return[$objFeed->id] = $objFeed->title;
-		}
-
-		return $return;
-	}
-
-
-	/**
 	 * Return all page templates as array
 	 *
 	 * @return array
@@ -719,7 +637,7 @@ class tl_layout extends Backend
 	 */
 	public function styleSheetLink(DataContainer $dc)
 	{
-		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;rt=' . REQUEST_TOKEN . '" title="' . specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\''.specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])).'\',\'url\':this.href});return false">' . Image::getHtml('edit.gif', '', 'style="vertical-align:text-bottom"') . '</a>';
+		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])).'\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', '', 'style="vertical-align:text-bottom"') . '</a>';
 	}
 
 
@@ -737,7 +655,7 @@ class tl_layout extends Backend
 			return '';
 		}
 
-		$array = deserialize($value);
+		$array = StringUtil::deserialize($value);
 
 		if (empty($array) || !is_array($array))
 		{

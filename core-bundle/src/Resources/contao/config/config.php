@@ -327,11 +327,6 @@ $GLOBALS['TL_PURGE'] = array
 			'callback' => array('Automator', 'purgeSearchCache'),
 			'affected' => array('%s/contao/search')
 		),
-		'internal' => array
-		(
-			'callback' => array('Automator', 'purgeInternalCache'),
-			'affected' => array('%s/contao/config', '%s/contao/dca', '%s/contao/languages', '%s/contao/sql')
-		),
 		'temp' => array
 		(
 			'callback' => array('Automator', 'purgeTempFolder'),
@@ -378,18 +373,18 @@ $GLOBALS['TL_CRON'] = array
 (
 	'monthly' => array
 	(
-		array('Automator', 'purgeImageCache')
+		'purgeImageCache' => array('Automator', 'purgeImageCache')
 	),
 	'weekly' => array
 	(
-		array('Automator', 'generateSitemap'),
-		array('Automator', 'purgeScriptCache'),
-		array('Automator', 'purgeSearchCache')
+		'generateSitemap' => array('Automator', 'generateSitemap'),
+		'purgeScriptCache' => array('Automator', 'purgeScriptCache'),
+		'purgeSearchCache' => array('Automator', 'purgeSearchCache')
 	),
 	'daily' => array
 	(
-		array('Automator', 'purgeTempFolder'),
-		array('Automator', 'checkForUpdates')
+		'purgeTempFolder' => array('Automator', 'purgeTempFolder'),
+		'checkForUpdates' => array('Automator', 'checkForUpdates')
 	),
 	'hourly' => array(),
 	'minutely' => array()
@@ -405,8 +400,6 @@ $GLOBALS['TL_HOOKS'] = array
 	(
 		array('Messages', 'versionCheck'),
 		array('Messages', 'maintenanceCheck'),
-		array('Messages', 'lastLogin'),
-		array('Messages', 'topLevelRoot'),
 		array('Messages', 'languageFallback')
 	)
 );

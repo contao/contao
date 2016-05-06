@@ -80,9 +80,9 @@ class SymlinksCommand extends AbstractLockedCommand
         $uploadPath = $this->getContainer()->getParameter('contao.upload_path');
 
         // Remove the base folders in the document root
-        $fs->remove($this->rootDir . '/web/' . $uploadPath);
-        $fs->remove($this->rootDir . '/web/system/modules');
-        $fs->remove($this->rootDir . '/web/vendor');
+        $fs->remove($this->rootDir.'/web/'.$uploadPath);
+        $fs->remove($this->rootDir.'/web/system/modules');
+        $fs->remove($this->rootDir.'/web/vendor');
 
         $this->symlinkFiles($uploadPath);
         $this->symlinkModules();
@@ -102,7 +102,7 @@ class SymlinksCommand extends AbstractLockedCommand
     private function symlinkFiles($uploadPath)
     {
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir . '/' . $uploadPath)->files()->name('.public'),
+            $this->findIn($this->rootDir.'/'.$uploadPath)->files()->name('.public'),
             $uploadPath
         );
     }
@@ -117,7 +117,7 @@ class SymlinksCommand extends AbstractLockedCommand
         };
 
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir . '/system/modules')->files()->filter($filter)->name('.htaccess'),
+            $this->findIn($this->rootDir.'/system/modules')->files()->filter($filter)->name('.htaccess'),
             'system/modules'
         );
     }
@@ -131,13 +131,13 @@ class SymlinksCommand extends AbstractLockedCommand
         $themes = $this->getContainer()->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
-            $path = str_replace(strtr($this->rootDir, '\\', '/') . '/', '', strtr($theme->getPathname(), '\\', '/'));
+            $path = str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($theme->getPathname(), '\\', '/'));
 
             if (0 === strpos($path, 'system/modules/')) {
                 continue;
             }
 
-            $this->symlink($path, 'system/themes/' . basename($path));
+            $this->symlink($path, 'system/themes/'.basename($path));
         }
     }
 
@@ -152,8 +152,8 @@ class SymlinksCommand extends AbstractLockedCommand
         $files = $this->filterNestedPaths($finder, $prepend);
 
         foreach ($files as $file) {
-            $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
-            $this->symlink($path, 'web/' . $path);
+            $path = rtrim($prepend.'/'.$file->getRelativePath(), '/');
+            $this->symlink($path, 'web/'.$path);
         }
     }
 
@@ -186,7 +186,7 @@ class SymlinksCommand extends AbstractLockedCommand
                     '\\' === DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" // HEAVY BALLOT X (U+2718)
                 ),
                 strtr($link, '\\', '/'),
-                '<error>' . $e->getMessage() . '</error>',
+                sprintf('<error>%s</error>', $e->getMessage()),
             ];
         }
     }
@@ -234,7 +234,7 @@ class SymlinksCommand extends AbstractLockedCommand
 
         /** @var SplFileInfo $file */
         foreach ($files as $key => $file) {
-            $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
+            $path = rtrim($prepend.'/'.$file->getRelativePath(), '/');
 
             $chunks = explode('/', $path);
             array_pop($chunks);
@@ -247,8 +247,8 @@ class SymlinksCommand extends AbstractLockedCommand
                         '<fg=yellow;options=bold>%s</>',
                         '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
                     ),
-                    'web/' . strtr($path, '\\', '/'),
-                    '<comment>Skipped because ' . $parent . ' has been symlinked already.</comment>',
+                    'web/'.strtr($path, '\\', '/'),
+                    sprintf('<comment>Skipped because %s has been symlinked already.</comment>', $parent),
                 ];
 
                 unset($files[$key]);

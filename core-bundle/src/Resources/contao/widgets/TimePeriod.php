@@ -72,7 +72,7 @@ class TimePeriod extends \Widget
 				break;
 
 			case 'options':
-				$this->arrUnits = deserialize($varValue);
+				$this->arrUnits = \StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -144,7 +144,7 @@ class TimePeriod extends \Widget
 		foreach ($this->arrUnits as $arrUnit)
 		{
 			$arrUnits[] = sprintf('<option value="%s"%s>%s</option>',
-								   specialchars($arrUnit['value']),
+								   \StringUtil::specialchars($arrUnit['value']),
 								   $this->isSelected($arrUnit),
 								   $arrUnit['label']);
 		}
@@ -158,7 +158,7 @@ class TimePeriod extends \Widget
 						$this->strName,
 						$this->strId,
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						specialchars($this->varValue['value']),
+						\StringUtil::specialchars($this->varValue['value']),
 						$this->getAttributes(),
 						$this->strName,
 						$this->getAttribute('disabled'),

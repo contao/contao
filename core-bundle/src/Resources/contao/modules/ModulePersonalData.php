@@ -51,7 +51,7 @@ class ModulePersonalData extends \Module
 			return $objTemplate->parse();
 		}
 
-		$this->editable = deserialize($this->editable);
+		$this->editable = \StringUtil::deserialize($this->editable);
 
 		// Return if there are not editable fields or if there is no logged in user
 		if (!is_array($this->editable) || empty($this->editable) || !FE_USER_LOGGED_IN)
@@ -394,7 +394,7 @@ class ModulePersonalData extends \Module
 
 		$this->Template->categories = $arrGroups;
 		$this->Template->formId = $strFormId;
-		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
+		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->rowLast = 'row_' . $row . ((($row % 2) == 0) ? ' even' : ' odd');

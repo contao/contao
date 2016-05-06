@@ -120,7 +120,7 @@ class Theme extends \Backend
 		// Return the form
 		return '
 <div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
 '.\Message::generate().'
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_theme_import" class="tl_form" method="post" enctype="multipart/form-data">
@@ -159,7 +159,7 @@ class Theme extends \Backend
 	{
 		$return = '
 <div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
 '.\Message::generate().'
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_theme_import" class="tl_form" method="post">
@@ -367,7 +367,7 @@ class Theme extends \Backend
 					{
 						if ($fields->item($k)->getAttribute('name') == 'folders')
 						{
-							$arrNewFolders = deserialize($fields->item($k)->nodeValue);
+							$arrNewFolders = \StringUtil::deserialize($fields->item($k)->nodeValue);
 							break;
 						}
 					}
@@ -489,7 +489,7 @@ class Theme extends \Backend
 						// Adjust the style sheet IDs of the page layout
 						elseif ($table == 'tl_layout' && $name == 'stylesheet')
 						{
-							$stylesheets = deserialize($value);
+							$stylesheets = \StringUtil::deserialize($value);
 
 							if (is_array($stylesheets))
 							{
@@ -505,7 +505,7 @@ class Theme extends \Backend
 						// Adjust the module IDs of the page layout
 						elseif ($table == 'tl_layout' && $name == 'modules')
 						{
-							$modules = deserialize($value);
+							$modules = \StringUtil::deserialize($value);
 
 							if (is_array($modules))
 							{
@@ -537,7 +537,7 @@ class Theme extends \Backend
 						// Adjust the file paths in style sheets and tl_files
 						elseif (($table == 'tl_style_sheet' || $table == 'tl_style' || ($table == 'tl_files' && $name == 'path')) && strpos($value, 'files') !== false)
 						{
-							$tmp = deserialize($value);
+							$tmp = \StringUtil::deserialize($value);
 
 							if (is_array($tmp))
 							{
@@ -575,7 +575,7 @@ class Theme extends \Backend
 						// Replace the file paths in multiSRC fields with their tl_files ID
 						elseif ($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] == 'fileTree' || in_array($name, $arrOrder))
 						{
-							$tmp = deserialize($value);
+							$tmp = \StringUtil::deserialize($value);
 
 							if (is_array($tmp))
 							{
@@ -596,7 +596,7 @@ class Theme extends \Backend
 						// Adjust the imageSize widget data
 						elseif ($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] == 'imageSize')
 						{
-							$imageSizes = deserialize($value, true);
+							$imageSizes = \StringUtil::deserialize($value, true);
 
 							if (!empty($imageSizes))
 							{
@@ -959,7 +959,7 @@ class Theme extends \Backend
 		$arrOrder = $objDcaExtractor->getOrderFields();
 
 		// Add the folders
-		$arrFolders = deserialize($objTheme->folders);
+		$arrFolders = \StringUtil::deserialize($objTheme->folders);
 
 		if (!empty($arrFolders) && is_array($arrFolders))
 		{
@@ -1019,7 +1019,7 @@ class Theme extends \Backend
 			// Replace the IDs of multiSRC fields with their paths (see #4952)
 			elseif ($GLOBALS['TL_DCA'][$t]['fields'][$k]['inputType'] == 'fileTree' || in_array($k, $arrOrder))
 			{
-				$arrFiles = deserialize($v);
+				$arrFiles = \StringUtil::deserialize($v);
 
 				if (!empty($arrFiles) && is_array($arrFiles))
 				{
@@ -1167,7 +1167,7 @@ class Theme extends \Backend
 			return;
 		}
 
-		$arrAllowed = trimsplit(',', strtolower(\Config::get('templateFiles')));
+		$arrAllowed = \StringUtil::trimsplit(',', strtolower(\Config::get('templateFiles')));
 		array_push($arrAllowed, 'sql'); // see #7048
 
 		// Add all template files to the archive

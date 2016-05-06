@@ -27,7 +27,7 @@ class ContaoCacheClearerTest extends TestCase
     protected function tearDown()
     {
         $fs = new Filesystem();
-        $fs->remove($this->getCacheDir() . '/contao');
+        $fs->remove($this->getCacheDir().'/contao');
     }
 
     /**

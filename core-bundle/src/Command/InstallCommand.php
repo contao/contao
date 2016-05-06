@@ -105,10 +105,10 @@ class InstallCommand extends AbstractLockedCommand
     private function addEmptyDirs()
     {
         foreach ($this->emptyDirs as $path) {
-            $this->addEmptyDir($this->rootDir . '/' . $path);
+            $this->addEmptyDir($this->rootDir.'/'.$path);
         }
 
-        $this->addEmptyDir($this->rootDir . '/' . $this->getContainer()->getParameter('contao.upload_path'));
+        $this->addEmptyDir($this->rootDir.'/'.$this->getContainer()->getParameter('contao.upload_path'));
     }
 
     /**
@@ -124,7 +124,7 @@ class InstallCommand extends AbstractLockedCommand
 
         $this->fs->mkdir($path);
 
-        $this->rows[] = str_replace($this->rootDir . '/', '', $path);
+        $this->rows[] = str_replace($this->rootDir.'/', '', $path);
     }
 
     /**
@@ -133,10 +133,10 @@ class InstallCommand extends AbstractLockedCommand
     private function addIgnoredDirs()
     {
         foreach ($this->ignoredDirs as $path) {
-            $this->addIgnoredDir($this->rootDir . '/' . $path);
+            $this->addIgnoredDir($this->rootDir.'/'.$path);
         }
 
-        $this->addIgnoredDir($this->rootDir . '/' . $this->getContainer()->getParameter('contao.image.target_path'));
+        $this->addIgnoredDir($this->rootDir.'/'.$this->getContainer()->getParameter('contao.image.target_path'));
     }
 
     /**
@@ -148,12 +148,12 @@ class InstallCommand extends AbstractLockedCommand
     {
         $this->addEmptyDir($path);
 
-        if ($this->fs->exists($path . '/.gitignore')) {
+        if ($this->fs->exists($path.'/.gitignore')) {
             return;
         }
 
         $this->fs->dumpFile(
-            $path . '/.gitignore',
+            $path.'/.gitignore',
             "# Create the folder and ignore its content\n*\n!.gitignore\n"
         );
     }
@@ -163,12 +163,12 @@ class InstallCommand extends AbstractLockedCommand
      */
     private function addInitializePhp()
     {
-        if ($this->fs->exists($this->rootDir . '/system/initialize.php')) {
+        if ($this->fs->exists($this->rootDir.'/system/initialize.php')) {
             return;
         }
 
         $this->fs->dumpFile(
-            $this->rootDir . '/system/initialize.php',
+            $this->rootDir.'/system/initialize.php',
             <<<'EOF'
 <?php
 

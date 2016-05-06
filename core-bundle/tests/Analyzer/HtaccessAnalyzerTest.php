@@ -27,7 +27,7 @@ class HtaccessAnalyzerTest extends TestCase
     public function testInstantiation()
     {
         $file = new SplFileInfo(
-            $this->getRootDir() . '/system/modules/foobar/assets/.htaccess',
+            $this->getRootDir().'/system/modules/foobar/assets/.htaccess',
             'system/modules/foobar/assets',
             'system/modules/foobar/assets/.htaccess'
         );
@@ -43,7 +43,7 @@ class HtaccessAnalyzerTest extends TestCase
     public function testGrantsAccess()
     {
         $file = new SplFileInfo(
-            $this->getRootDir() . '/system/modules/foobar/assets/.htaccess',
+            $this->getRootDir().'/system/modules/foobar/assets/.htaccess',
             'system/modules/foobar/assets',
             'system/modules/foobar/assets/.htaccess'
         );
@@ -53,7 +53,7 @@ class HtaccessAnalyzerTest extends TestCase
         $this->assertTrue($htaccess->grantsAccess());
 
         $file = new SplFileInfo(
-            $this->getRootDir() . '/system/modules/foobar/html/.htaccess',
+            $this->getRootDir().'/system/modules/foobar/html/.htaccess',
             'system/modules/foobar/html',
             'system/modules/foobar/html/.htaccess'
         );
@@ -69,7 +69,7 @@ class HtaccessAnalyzerTest extends TestCase
     public function testDoesNotGrantAccess()
     {
         $file = new SplFileInfo(
-            $this->getRootDir() . '/system/modules/foobar/private/.htaccess',
+            $this->getRootDir().'/system/modules/foobar/private/.htaccess',
             'system/modules/foobar/private',
             'system/modules/foobar/private/.htaccess'
         );

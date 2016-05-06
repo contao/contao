@@ -767,7 +767,7 @@ class Dbafs
 		{
 			$arrExempt = array_map(function($e) {
 				return \Config::get('uploadPath') . '/' . $e;
-			}, trimsplit(',', \Config::get('fileSyncExclude')));
+			}, \StringUtil::trimsplit(',', \Config::get('fileSyncExclude')));
 
 			foreach ($arrExempt as $strExempt)
 			{

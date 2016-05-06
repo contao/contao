@@ -31,8 +31,6 @@ namespace Contao;
  * @property string  $external
  * @property string  $orderExt
  * @property string  $loadingOrder
- * @property string  $newsfeeds
- * @property string  $calendarfeeds
  * @property string  $modules
  * @property string  $template
  * @property string  $doctype
@@ -76,8 +74,6 @@ namespace Contao;
  * @method static LayoutModel|null findOneByExternal($val, $opt=array())
  * @method static LayoutModel|null findOneByOrderExt($val, $opt=array())
  * @method static LayoutModel|null findOneByLoadingOrder($val, $opt=array())
- * @method static LayoutModel|null findOneByNewsfeeds($val, $opt=array())
- * @method static LayoutModel|null findOneByCalendarfeeds($val, $opt=array())
  * @method static LayoutModel|null findOneByModules($val, $opt=array())
  * @method static LayoutModel|null findOneByTemplate($val, $opt=array())
  * @method static LayoutModel|null findOneByDoctype($val, $opt=array())
@@ -117,8 +113,6 @@ namespace Contao;
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByExternal($val, $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByOrderExt($val, $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByLoadingOrder($val, $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByNewsfeeds($val, $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByCalendarfeeds($val, $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByModules($val, $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByTemplate($val, $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByDoctype($val, $opt=array())
@@ -162,8 +156,6 @@ namespace Contao;
  * @method static integer countByExternal($val, $opt=array())
  * @method static integer countByOrderExt($val, $opt=array())
  * @method static integer countByLoadingOrder($val, $opt=array())
- * @method static integer countByNewsfeeds($val, $opt=array())
- * @method static integer countByCalendarfeeds($val, $opt=array())
  * @method static integer countByModules($val, $opt=array())
  * @method static integer countByTemplate($val, $opt=array())
  * @method static integer countByDoctype($val, $opt=array())

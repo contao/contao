@@ -36,7 +36,7 @@ class GdImageTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        self::$rootDir = __DIR__ . '/../../tmp';
+        self::$rootDir = __DIR__.'/../../tmp';
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
@@ -102,11 +102,11 @@ class GdImageTest extends TestCase
         $image = imagecreatetruecolor(100, 100);
         imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
 
-        $method = 'image' . $type;
-        $method($image, self::$rootDir . '/test.' . $type);
+        $method = 'image'.$type;
+        $method($image, self::$rootDir.'/test.'.$type);
         imagedestroy($image);
 
-        $image = GdImage::fromFile(new \File('test.' . $type));
+        $image = GdImage::fromFile(new \File('test.'.$type));
 
         $this->assertInternalType('resource', $image->getResource());
         $this->assertEquals(100, imagesx($image->getResource()));
@@ -132,7 +132,7 @@ class GdImageTest extends TestCase
      */
     public function testSaveToFile($type)
     {
-        $file = self::$rootDir . '/test.' . $type;
+        $file = self::$rootDir.'/test.'.$type;
         $image = GdImage::fromDimensions(100, 100);
 
         $image->saveToFile($file);
@@ -141,7 +141,7 @@ class GdImageTest extends TestCase
 
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
 
-        $this->assertEquals('image/' . $type, $finfo->file($file));
+        $this->assertEquals('image/'.$type, $finfo->file($file));
     }
 
     /**

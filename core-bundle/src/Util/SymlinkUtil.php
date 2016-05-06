@@ -36,9 +36,9 @@ class SymlinkUtil
         $fs = new Filesystem();
 
         if ('\\' === DIRECTORY_SEPARATOR) {
-            $fs->symlink($rootDir . '/' . $target, $rootDir . '/' . $link);
+            $fs->symlink($rootDir.'/'.$target, $rootDir.'/'.$link);
         } else {
-            $fs->symlink(rtrim($fs->makePathRelative($target, dirname($link)), '/'), $rootDir . '/' . $link);
+            $fs->symlink(rtrim($fs->makePathRelative($target, dirname($link)), '/'), $rootDir.'/'.$link);
         }
     }
 
@@ -68,8 +68,8 @@ class SymlinkUtil
 
         $fs = new Filesystem();
 
-        if ($fs->exists($rootDir . '/' . $link) && !is_link($rootDir . '/' . $link)) {
-            throw new \LogicException('The path "' . $link . '" exists and is not a symlink.');
+        if ($fs->exists($rootDir.'/'.$link) && !is_link($rootDir.'/'.$link)) {
+            throw new \LogicException(sprintf('The path "%s" exists and is not a symlink.', $link));
         }
     }
 }

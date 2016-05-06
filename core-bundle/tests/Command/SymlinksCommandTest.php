@@ -32,10 +32,10 @@ class SymlinksCommandTest extends TestCase
     {
         $fs = new Filesystem();
 
-        $fs->remove($this->getRootDir() . '/app/cache');
-        $fs->remove($this->getRootDir() . '/system/logs');
-        $fs->remove($this->getRootDir() . '/system/themes/flexible');
-        $fs->remove($this->getRootDir() . '/web');
+        $fs->remove($this->getRootDir().'/app/cache');
+        $fs->remove($this->getRootDir().'/system/logs');
+        $fs->remove($this->getRootDir().'/system/themes/flexible');
+        $fs->remove($this->getRootDir().'/web');
     }
 
     /**
@@ -54,12 +54,12 @@ class SymlinksCommandTest extends TestCase
     public function testOutput()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
+        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('contao.upload_path', 'app');
 
         $container->set(
             'contao.resource_finder',
-            new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
         );
 
         $command = new SymlinksCommand('contao:symlinks');

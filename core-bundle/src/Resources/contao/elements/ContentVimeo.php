@@ -52,7 +52,7 @@ class ContentVimeo extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$size = deserialize($this->playerSize);
+		$size = \StringUtil::deserialize($this->playerSize);
 
 		if (!is_array($size) || empty($size[0]) || empty($size[1]))
 		{

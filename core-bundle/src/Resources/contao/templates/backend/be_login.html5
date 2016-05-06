@@ -8,7 +8,9 @@
   <meta name="generator" content="Contao Open Source CMS">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="referrer" content="origin">
+  <meta name="robots" content="noindex,follow">
 
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
   <link rel="stylesheet" href="<?php
     $objCombiner = new Combiner();
     $objCombiner->add('assets/stylect/css/stylect.min.css');
@@ -35,14 +37,9 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="header">
-    <h1>Contao Open Source CMS <?= VERSION ?></h1>
-  </div>
-
-  <div id="container">
-
+  <div id="container" class="cf">
     <div id="main">
-      <h2><?= $this->headline ?></h2>
+      <h1>Contao</h1>
       <form action="<?= $this->action ?>" class="tl_login_form" method="post">
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="tl_login">
@@ -67,7 +64,7 @@
                   <option value=""><?= $this->default ?></option>
                   <option value="">---</option>
                   <?php foreach ($this->languages as $key=>$lang): ?>
-                    <option value="<?= specialchars($key) ?>"><?= $lang ?></option>
+                    <option value="<?= StringUtil::specialchars($key) ?>"><?= $lang ?></option>
                   <?php endforeach; ?>
                 </select>
               </td>

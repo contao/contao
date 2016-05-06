@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="referrer" content="origin">
 
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
   <link rel="stylesheet" href="<?php
     $objCombiner = new Combiner();
     $objCombiner->add('assets/stylect/css/stylect.min.css');
@@ -33,8 +34,7 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="container">
-
+  <div id="container" class="cf">
     <div id="left">
       <p><?= $this->fePreview ?></p>
     </div>
@@ -62,7 +62,6 @@
         </div>
       </form>
     </div>
-
   </div>
 
   <?php if ($this->update): ?>

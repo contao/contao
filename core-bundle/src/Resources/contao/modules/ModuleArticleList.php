@@ -102,12 +102,12 @@ class ModuleArticleList extends \Module
 				continue;
 			}
 
-			$cssID = deserialize($objArticles->cssID, true);
+			$cssID = \StringUtil::deserialize($objArticles->cssID, true);
 
 			$articles[] = array
 			(
 				'link' => $objArticles->title,
-				'title' => specialchars($objArticles->title),
+				'title' => \StringUtil::specialchars($objArticles->title),
 				'id' => $cssID[0] ?: 'article-' . $objArticles->id,
 				'articleId' => $objArticles->id
 			);

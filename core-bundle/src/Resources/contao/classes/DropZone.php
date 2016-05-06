@@ -30,7 +30,7 @@ class DropZone extends \FileUpload
 		$intMaxSize = intval($this->getMaximumUploadSize() / 1024 / 1024);
 
 		// String of accepted file extensions
-		$strAccepted = implode(',', array_map(function($a) { return '.' . $a; }, trimsplit(',', strtolower(\Config::get('uploadTypes')))));
+		$strAccepted = implode(',', array_map(function($a) { return '.' . $a; }, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))));
 
 		// Add the scripts
 		$GLOBALS['TL_CSS'][] = 'assets/dropzone/css/dropzone.min.css';

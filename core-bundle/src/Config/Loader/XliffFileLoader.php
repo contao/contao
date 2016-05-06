@@ -75,7 +75,7 @@ class XliffFileLoader extends Loader
     {
         $xml = $this->getDomDocumentFromFile($name);
 
-        $return = "\n// " . str_replace(strtr($this->rootDir, '\\', '/') . '/', '', strtr($name, '\\', '/')) . "\n";
+        $return = "\n// ".str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
         $units = $xml->getElementsByTagName('trans-unit');
 
         /** @var \DOMElement[] $units */
@@ -155,7 +155,7 @@ class XliffFileLoader extends Loader
 
         // Handle keys with dots
         if (preg_match('/tl_layout\.[a-z]+\.css\./', $unit->getAttribute('id'))) {
-            $chunks = [$chunks[0], $chunks[1] . '.' . $chunks[2], $chunks[3]];
+            $chunks = [$chunks[0], $chunks[1].'.'.$chunks[2], $chunks[3]];
         }
 
         return $chunks;
@@ -175,28 +175,31 @@ class XliffFileLoader extends Loader
     {
         switch (count($chunks)) {
             case 2:
-                return "\$GLOBALS['TL_LANG']['"
-                    . $chunks[0] . "']["
-                    . $this->quoteKey($chunks[1]) . '] = '
-                    . $this->quoteValue($value) . ";\n"
-                ;
+                return sprintf(
+                    "\$GLOBALS['TL_LANG']['%s'][%s] = %s;\n",
+                    $chunks[0],
+                    $this->quoteKey($chunks[1]),
+                    $this->quoteValue($value)
+                );
 
             case 3:
-                return "\$GLOBALS['TL_LANG']['"
-                    . $chunks[0] . "']["
-                    . $this->quoteKey($chunks[1]) . ']['
-                    . $this->quoteKey($chunks[2]) . '] = '
-                    . $this->quoteValue($value) . ";\n"
-                ;
+                return sprintf(
+                    "\$GLOBALS['TL_LANG']['%s'][%s][%s] = %s;\n",
+                    $chunks[0],
+                    $this->quoteKey($chunks[1]),
+                    $this->quoteKey($chunks[2]),
+                    $this->quoteValue($value)
+                );
 
             case 4:
-                return "\$GLOBALS['TL_LANG']['"
-                    . $chunks[0] . "']["
-                    . $this->quoteKey($chunks[1]) . ']['
-                    . $this->quoteKey($chunks[2]) . ']['
-                    . $this->quoteKey($chunks[3]) . '] = '
-                    . $this->quoteValue($value) . ";\n"
-                ;
+                return sprintf(
+                    "\$GLOBALS['TL_LANG']['%s'][%s][%s][%s] = %s;\n",
+                    $chunks[0],
+                    $this->quoteKey($chunks[1]),
+                    $this->quoteKey($chunks[2]),
+                    $this->quoteKey($chunks[3]),
+                    $this->quoteValue($value)
+                );
         }
 
         throw new \OutOfBoundsException('Cannot load less than 2 or more than 4 levels in XLIFF language files.');
@@ -240,7 +243,7 @@ class XliffFileLoader extends Loader
             return intval($key);
         }
 
-        return "'" . str_replace("'", "\\'", $key) . "'";
+        return "'".str_replace("'", "\\'", $key)."'";
     }
 
     /**
@@ -255,9 +258,9 @@ class XliffFileLoader extends Loader
         $value = str_replace("\n", '\n', $value);
 
         if (strpos($value, '\n') !== false) {
-            return '"' . str_replace(['$', '"'], ['\\$', '\\"'], $value) . '"';
+            return '"'.str_replace(['$', '"'], ['\\$', '\\"'], $value).'"';
         }
 
-        return "'" . str_replace("'", "\\'", $value) . "'";
+        return "'".str_replace("'", "\\'", $value)."'";
     }
 }

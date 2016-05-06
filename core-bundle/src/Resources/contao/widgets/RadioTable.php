@@ -59,7 +59,7 @@ class RadioTable extends \Widget
 				break;
 
 			case 'options':
-				$this->arrOptions = deserialize($varValue);
+				$this->arrOptions = \StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -113,9 +113,9 @@ class RadioTable extends \Widget
 
 				if (strlen($value))
 				{
-					$label = \Image::getHtml($value.'.gif', $label, 'title="'.specialchars($label).'"');
+					$label = \Image::getHtml($value.'.svg', $label, 'title="'.\StringUtil::specialchars($label).'"');
 					$return .= '
-      <td><input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.$i.'_'.$j.'" class="tl_radio" value="'.specialchars($value).'" onfocus="Backend.getScrollOffset()"'.$this->isChecked($this->arrOptions[$j]).$this->getAttributes().'> <label for="'.$this->strName.'_'.$i.'_'.$j.'">'.$label.'</label></td>';
+      <td><input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.$i.'_'.$j.'" class="tl_radio" value="'.\StringUtil::specialchars($value).'" onfocus="Backend.getScrollOffset()"'.$this->isChecked($this->arrOptions[$j]).$this->getAttributes().'> <label for="'.$this->strName.'_'.$i.'_'.$j.'">'.$label.'</label></td>';
 				}
 
 				// Else return an empty cell

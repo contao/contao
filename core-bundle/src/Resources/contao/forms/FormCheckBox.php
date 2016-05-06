@@ -61,7 +61,7 @@ class FormCheckBox extends \Widget
 		switch ($strKey)
 		{
 			case 'options':
-				$this->arrOptions = deserialize($varValue);
+				$this->arrOptions = \StringUtil::deserialize($varValue);
 				break;
 
 			case 'rgxp':
@@ -192,7 +192,7 @@ class FormCheckBox extends \Widget
 				$arrOptions[] = array
 				(
 					'type'  => 'group_start',
-					'label' => specialchars($arrOption['label'])
+					'label' => \StringUtil::specialchars($arrOption['label'])
 				);
 
 				$blnHasGroups = true;

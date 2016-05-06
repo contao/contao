@@ -98,7 +98,7 @@ class ModuleArticle extends \Module
 		if ($this->multiMode && $this->showTeaser)
 		{
 			$this->cssID = array($id, '');
-			$arrCss = deserialize($this->teaserCssID);
+			$arrCss = \StringUtil::deserialize($this->teaserCssID);
 
 			// Override the CSS ID and class
 			if (is_array($arrCss) && count($arrCss) == 2)
@@ -118,7 +118,7 @@ class ModuleArticle extends \Module
 			$this->Template->headline = $this->headline;
 			$this->Template->href = $objPage->getFrontendUrl($href);
 			$this->Template->teaser = $this->teaser;
-			$this->Template->readMore = specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline), true);
+			$this->Template->readMore = \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline), true);
 			$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
 
 			return;
@@ -135,7 +135,7 @@ class ModuleArticle extends \Module
 		// Overwrite the page title (see #2853 and #4955)
 		if (!$this->blnNoMarkup && $strArticle != '' && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title != '')
 		{
-			$objPage->pageTitle = strip_tags(strip_insert_tags($this->title));
+			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($this->title));
 
 			if ($this->teaser != '')
 			{
@@ -150,7 +150,7 @@ class ModuleArticle extends \Module
 		if (!$this->multiMode && $strArticle != '' && ($strArticle == $this->id || $strArticle == $this->alias))
 		{
 			$this->Template->backlink = 'javascript:history.go(-1)'; // see #6955
-			$this->Template->back = specialchars($GLOBALS['TL_LANG']['MSC']['goBack']);
+			$this->Template->back = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goBack']);
 		}
 
 		$arrElements = array();
@@ -208,7 +208,7 @@ class ModuleArticle extends \Module
 		// New structure
 		elseif ($this->printable != '')
 		{
-			$options = deserialize($this->printable);
+			$options = \StringUtil::deserialize($this->printable);
 
 			if (!empty($options) && is_array($options))
 			{
@@ -231,11 +231,11 @@ class ModuleArticle extends \Module
 			$this->Template->encTitle = rawurlencode($objPage->pageTitle);
 			$this->Template->href = $request . ((strpos($request, '?') !== false) ? '&amp;' : '?') . 'pdf=' . $this->id;
 
-			$this->Template->printTitle = specialchars($GLOBALS['TL_LANG']['MSC']['printPage']);
-			$this->Template->pdfTitle = specialchars($GLOBALS['TL_LANG']['MSC']['printAsPdf']);
-			$this->Template->facebookTitle = specialchars($GLOBALS['TL_LANG']['MSC']['facebookShare']);
-			$this->Template->twitterTitle = specialchars($GLOBALS['TL_LANG']['MSC']['twitterShare']);
-			$this->Template->gplusTitle = specialchars($GLOBALS['TL_LANG']['MSC']['gplusShare']);
+			$this->Template->printTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printPage']);
+			$this->Template->pdfTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printAsPdf']);
+			$this->Template->facebookTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['facebookShare']);
+			$this->Template->twitterTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['twitterShare']);
+			$this->Template->gplusTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['gplusShare']);
 		}
 
 		// HOOK: add custom logic
@@ -364,7 +364,7 @@ class ModuleArticle extends \Module
 
 		// Close and output PDF document
 		$pdf->lastPage();
-		$pdf->Output(standardize(ampersand($this->title, false)) . '.pdf', 'D');
+		$pdf->Output(\StringUtil::standardize(ampersand($this->title, false)) . '.pdf', 'D');
 
 		// Stop script execution
 		exit;

@@ -534,7 +534,7 @@ abstract class Template extends \Controller
 	 */
 	public static function generateFeedTag($href, $format, $title)
 	{
-		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . specialchars($title) . '">';
+		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . \StringUtil::specialchars($title) . '">';
 	}
 
 

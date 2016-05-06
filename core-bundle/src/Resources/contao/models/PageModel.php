@@ -788,7 +788,7 @@ class PageModel extends \Model
 
 		// Set some default values
 		$this->protected = (boolean) $this->protected;
-		$this->groups = $this->protected ? deserialize($this->groups) : false;
+		$this->groups = $this->protected ? \StringUtil::deserialize($this->groups) : false;
 		$this->layout = $this->includeLayout ? $this->layout : false;
 		$this->mobileLayout = $this->includeLayout ? $this->mobileLayout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
@@ -862,7 +862,7 @@ class PageModel extends \Model
 					if ($objParentPage->protected && $this->protected === false)
 					{
 						$this->protected = true;
-						$this->groups = deserialize($objParentPage->groups);
+						$this->groups = \StringUtil::deserialize($objParentPage->groups);
 					}
 				}
 			}

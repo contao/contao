@@ -37,8 +37,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *     }
  *
  * @property \Automator                                $Automator   The automator object
- * @property \Calendar                                 $Calendar    The calendar object
- * @property \Comments                                 $Comments    The comments object
  * @property \Config                                   $Config      The config object
  * @property \Database                                 $Database    The database object
  * @property \Files                                    $Files       The files object
@@ -46,7 +44,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * @property \Database\Installer                       $Installer   The database installer object
  * @property \Database\Updater                         $Updater     The database updater object
  * @property \Messages                                 $Messages    The messages object
- * @property \News                                     $News        The news object
  * @property \Session                                  $Session     The session object
  * @property \StyleSheets                              $StyleSheets The style sheets object
  * @property \BackendTemplate|\FrontendTemplate|object $Template    The template object
@@ -249,7 +246,7 @@ abstract class System
 		}
 
 		\Database::getInstance()->prepare("INSERT INTO tl_log (tstamp, source, action, username, text, func, ip, browser) VALUES(?, ?, ?, ?, ?, ?, ?, ?)")
-							   ->execute(time(), (TL_MODE == 'FE' ? 'FE' : 'BE'), $strCategory, ($GLOBALS['TL_USERNAME'] ? $GLOBALS['TL_USERNAME'] : ''), specialchars($strText), $strFunction, $strIp, $strUa);
+							   ->execute(time(), (TL_MODE == 'FE' ? 'FE' : 'BE'), $strCategory, ($GLOBALS['TL_USERNAME'] ? $GLOBALS['TL_USERNAME'] : ''), \StringUtil::specialchars($strText), $strFunction, $strIp, $strUa);
 
 		// HOOK: allow to add custom loggers
 		if (isset($GLOBALS['TL_HOOKS']['addLogEntry']) && is_array($GLOBALS['TL_HOOKS']['addLogEntry']))

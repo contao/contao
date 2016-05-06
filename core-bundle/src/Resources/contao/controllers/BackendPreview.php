@@ -55,7 +55,7 @@ class BackendPreview extends \Backend
 
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);
+		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->site = \Input::get('site', true);
 		$objTemplate->switchHref = \System::getContainer()->get('router')->generate('contao_backend_switch');

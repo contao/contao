@@ -47,7 +47,7 @@ class ContentAlias extends \ContentElement
 		/** @var ContentElement $objElement */
 		$objElement = new $strClass($objElement);
 
-		$cssID = deserialize($objElement->cssID, true);
+		$cssID = \StringUtil::deserialize($objElement->cssID, true);
 
 		// Override the CSS ID (see #305)
 		if (!empty($this->cssID[0]))

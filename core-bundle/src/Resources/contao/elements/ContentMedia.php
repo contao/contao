@@ -44,7 +44,7 @@ class ContentMedia extends \ContentElement
 			return '';
 		}
 
-		$source = deserialize($this->playerSRC);
+		$source = \StringUtil::deserialize($this->playerSRC);
 
 		if (!is_array($source) || empty($source))
 		{
@@ -122,7 +122,7 @@ class ContentMedia extends \ContentElement
 		// Pass File objects to the template
 		while ($objFiles->next())
 		{
-			$arrMeta = deserialize($objFiles->meta);
+			$arrMeta = \StringUtil::deserialize($objFiles->meta);
 
 			if (is_array($arrMeta) && isset($arrMeta[$strLanguage]))
 			{
@@ -134,12 +134,12 @@ class ContentMedia extends \ContentElement
 			}
 
 			$objFile = new \File($objFiles->path);
-			$objFile->title = specialchars($strTitle);
+			$objFile->title = \StringUtil::specialchars($strTitle);
 
 			$arrFiles[$objFile->extension] = $objFile;
 		}
 
-		$size = deserialize($this->playerSize);
+		$size = \StringUtil::deserialize($this->playerSize);
 
 		if (!is_array($size) || empty($size[0]) || empty($size[1]))
 		{

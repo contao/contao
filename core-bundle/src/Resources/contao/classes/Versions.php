@@ -77,7 +77,7 @@ class Versions extends \Controller
 		{
 			$objFile = \FilesModel::findByPk($intPid);
 
-			if ($objFile !== null && in_array($objFile->extension, trimsplit(',', strtolower(\Config::get('editableFiles')))))
+			if ($objFile !== null && in_array($objFile->extension, \StringUtil::trimsplit(',', strtolower(\Config::get('editableFiles')))))
 			{
 				$this->strPath = $objFile->path;
 			}
@@ -264,7 +264,7 @@ class Versions extends \Controller
 			return;
 		}
 
-		$data = deserialize($objData->data);
+		$data = \StringUtil::deserialize($objData->data);
 
 		if (!is_array($data))
 		{
@@ -381,34 +381,34 @@ class Versions extends \Controller
 			if (\Input::post('to') && isset($arrVersions[\Input::post('to')]))
 			{
 				$intTo = \Input::post('to');
-				$to = deserialize($arrVersions[\Input::post('to')]['data']);
+				$to = \StringUtil::deserialize($arrVersions[\Input::post('to')]['data']);
 			}
 			elseif (\Input::get('to') && isset($arrVersions[\Input::get('to')]))
 			{
 				$intTo = \Input::get('to');
-				$to = deserialize($arrVersions[\Input::get('to')]['data']);
+				$to = \StringUtil::deserialize($arrVersions[\Input::get('to')]['data']);
 			}
 			else
 			{
 				$intTo = $intIndex;
-				$to = deserialize($arrVersions[$intTo]['data']);
+				$to = \StringUtil::deserialize($arrVersions[$intTo]['data']);
 			}
 
 			// From
 			if (\Input::post('from') && isset($arrVersions[\Input::post('from')]))
 			{
 				$intFrom = \Input::post('from');
-				$from = deserialize($arrVersions[\Input::post('from')]['data']);
+				$from = \StringUtil::deserialize($arrVersions[\Input::post('from')]['data']);
 			}
 			elseif (\Input::get('from') && isset($arrVersions[\Input::get('from')]))
 			{
 				$intFrom = \Input::get('from');
-				$from = deserialize($arrVersions[\Input::get('from')]['data']);
+				$from = \StringUtil::deserialize($arrVersions[\Input::get('from')]['data']);
 			}
 			elseif ($intIndex > 1)
 			{
 				$intFrom = $intIndex-1;
-				$from = deserialize($arrVersions[$intFrom]['data']);
+				$from = \StringUtil::deserialize($arrVersions[$intFrom]['data']);
 			}
 
 			// Only continue if both version numbers are set
@@ -441,11 +441,11 @@ class Versions extends \Controller
 						}
 
 						// Convert serialized arrays into strings
-						if (is_array(($tmp = deserialize($to[$k]))) && !is_array($to[$k]))
+						if (is_array(($tmp = \StringUtil::deserialize($to[$k]))) && !is_array($to[$k]))
 						{
 							$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 						}
-						if (is_array(($tmp = deserialize($from[$k]))) && !is_array($from[$k]))
+						if (is_array(($tmp = \StringUtil::deserialize($from[$k]))) && !is_array($from[$k]))
 						{
 							$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 						}
@@ -510,11 +510,11 @@ class Versions extends \Controller
 		$objTemplate->versions = $arrVersions;
 		$objTemplate->to = $intTo;
 		$objTemplate->from = $intFrom;
-		$objTemplate->showLabel = specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->showLabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->action = ampersand(\Environment::get('request'));
 
@@ -555,7 +555,7 @@ class Versions extends \Controller
 <select name="version" class="tl_select">'.$versions.'
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">'.$GLOBALS['TL_LANG']['MSC']['restore'].'</button>
-<a href="'.\Backend::addToUrl('versions=1&amp;popup=1').'" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']).'" onclick="Backend.openModalIframe({\'width\':768,\'title\':\''.specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))).'\',\'url\':this.href});return false">'.\Image::getHtml('diff.gif').'</a>
+<a href="'.\Backend::addToUrl('versions=1&amp;popup=1').'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']).'" onclick="Backend.openModalIframe({\'width\':768,\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))).'\',\'url\':this.href});return false">'.\Image::getHtml('diff.svg').'</a>
 </div>
 </form>
 

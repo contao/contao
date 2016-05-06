@@ -44,7 +44,7 @@ class ModuleUser extends \BackendModule
 			'default' => $GLOBALS['TL_DCA'][$this->table]['palettes']['login']
 		);
 
-		$arrFields = trimsplit('[,;]', $GLOBALS['TL_DCA'][$this->table]['palettes']['default']);
+		$arrFields = \StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$this->table]['palettes']['default']);
 
 		foreach ($arrFields as $strField)
 		{

@@ -1,7 +1,14 @@
 # Contao core bundle change log
 
-### 4.2.0-beta1 (2016-XX-XX)
+### 4.2.0-RC1 (2016-05-XX)
 
+ * Support subpalettes in subpalettes (see #450).
+ * Add keys to the cronjobs array (see #440).
+
+### 4.2.0-beta1 (2016-04-25)
+
+ * Remove the internal cache routines from the maintenance module (see #459).
+ * Modernize the back end theme and use SVG icons (see contao/core#4608).
  * Add the PaletteManipulator class to modify DCA palettes (see #474).
  * Optimize the jQuery and MooTools templates (see contao/core#8017).
  * Show the record ID and table name in the diff view (see contao/core#5800).

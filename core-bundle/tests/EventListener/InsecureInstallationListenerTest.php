@@ -73,7 +73,7 @@ class InsecureInstallationListenerTest extends TestCase
 
         $request = $this->getRequestObject();
         $request->server->set('REQUEST_URI', '/app_dev.php?do=test');
-        $request->server->set('SCRIPT_FILENAME', $this->getRootDir() . '/app_dev.php');
+        $request->server->set('SCRIPT_FILENAME', $this->getRootDir().'/app_dev.php');
 
         $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
 
@@ -91,7 +91,7 @@ class InsecureInstallationListenerTest extends TestCase
         $request = new Request();
 
         $request->server->set('SCRIPT_NAME', 'app_dev.php');
-        $request->server->set('SCRIPT_FILENAME', $this->getRootDir() . '/web/app_dev.php');
+        $request->server->set('SCRIPT_FILENAME', $this->getRootDir().'/web/app_dev.php');
         $request->server->set('REMOTE_ADDR', '123.456.789.0');
         $request->server->set('REQUEST_URI', '/web/app_dev.php?do=test');
 

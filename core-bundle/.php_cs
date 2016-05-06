@@ -22,11 +22,8 @@ return Symfony\CS\Config\Config::create()
     ->level(Symfony\CS\FixerInterface::SYMFONY_LEVEL)
     ->fixers([
         'header_comment',
-        'concat_with_spaces',
         'short_array_syntax',
-        '-phpdoc_to_comment',
         '-empty_return',
-        '-concat_without_spaces',
     ])
     ->finder($finder)
 ;

@@ -124,7 +124,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $dumper = new CombinedFileDumper(
             $this->filesystem,
             new PhpFileLoader(),
-            $cacheDir . '/contao'
+            $cacheDir.'/contao'
         );
 
         $dumper->dump($this->locator->locate('config/autoload.php', null, false), 'config/autoload.php');
@@ -149,14 +149,14 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             $base = ($pages->dns ?: '*');
 
             if ($pages->fallback) {
-                $mapper[$base . '/empty.fallback'] = $base . '/empty.' . $pages->language;
+                $mapper[$base.'/empty.fallback'] = $base.'/empty.'.$pages->language;
             }
 
-            $mapper[$base . '/empty.' . $pages->language] = $base . '/empty.' . $pages->language;
+            $mapper[$base.'/empty.'.$pages->language] = $base.'/empty.'.$pages->language;
         }
 
         $this->filesystem->dumpFile(
-            $cacheDir . '/contao/config/mapping.php',
+            $cacheDir.'/contao/config/mapping.php',
             sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true))
         );
     }
@@ -171,7 +171,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $dumper = new CombinedFileDumper(
             $this->filesystem,
             new PhpFileLoader(),
-            $cacheDir . '/contao'
+            $cacheDir.'/contao'
         );
 
         $processed = [];
@@ -187,8 +187,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             $processed[] = $file->getBasename();
 
             $dumper->dump(
-                $this->locator->locate('dca/' . $file->getBasename(), null, false),
-                'dca/' . $file->getBasename()
+                $this->locator->locate('dca/'.$file->getBasename(), null, false),
+                'dca/'.$file->getBasename()
             );
         }
     }
@@ -203,7 +203,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $dumper = new CombinedFileDumper(
             $this->filesystem,
             new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->rootDir)])),
-            $cacheDir . '/contao'
+            $cacheDir.'/contao'
         );
 
         $dumper->setHeader("<?php\n");
@@ -212,7 +212,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             $processed = [];
 
             try {
-                $files = $this->finder->findIn('languages/' . $language)->files()->name('/\.(php|xlf)$/');
+                $files = $this->finder->findIn('languages/'.$language)->files()->name('/\.(php|xlf)$/');
             } catch (\InvalidArgumentException $e) {
                 continue; // the language does not exist
             }
@@ -228,9 +228,9 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 $processed[] = $name;
 
                 $subfiles = $this->finder
-                    ->findIn('languages/' . $language)
+                    ->findIn('languages/'.$language)
                     ->files()
-                    ->name('/^' . $name . '\.(php|xlf)$/')
+                    ->name('/^'.$name.'\.(php|xlf)$/')
                 ;
 
                 try {
@@ -274,13 +274,14 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
             $this->filesystem->dumpFile(
                 sprintf('%s/contao/sql/%s.php', $cacheDir, $table),
-                "<?php\n\n"
-                    . sprintf("\$this->arrMeta = %s;\n\n", var_export($extract->getMeta(), true))
-                    . sprintf("\$this->arrFields = %s;\n\n", var_export($extract->getFields(), true))
-                    . sprintf("\$this->arrOrderFields = %s;\n\n", var_export($extract->getOrderFields(), true))
-                    . sprintf("\$this->arrKeys = %s;\n\n", var_export($extract->getKeys(), true))
-                    . sprintf("\$this->arrRelations = %s;\n\n", var_export($extract->getRelations(), true))
-                    . "\$this->blnIsDbTable = true;\n"
+                sprintf(
+                    "<?php\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n\$this->blnIsDbTable = true;\n",
+                    sprintf('$this->arrMeta = %s;', var_export($extract->getMeta(), true)),
+                    sprintf('$this->arrFields = %s;', var_export($extract->getFields(), true)),
+                    sprintf('$this->arrOrderFields = %s;', var_export($extract->getOrderFields(), true)),
+                    sprintf('$this->arrKeys = %s;', var_export($extract->getKeys(), true)),
+                    sprintf('$this->arrRelations = %s;', var_export($extract->getRelations(), true))
+                )
             );
         }
     }

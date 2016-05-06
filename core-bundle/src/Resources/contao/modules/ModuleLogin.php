@@ -87,7 +87,7 @@ class ModuleLogin extends \Module
 
 				if ($objMember !== null)
 				{
-					$arrGroups = deserialize($objMember->groups);
+					$arrGroups = \StringUtil::deserialize($objMember->groups);
 
 					if (!empty($arrGroups) && is_array($arrGroups))
 					{
@@ -163,7 +163,7 @@ class ModuleLogin extends \Module
 
 			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
-			$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
+			$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
 			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $this->User->username);
 			$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
 
@@ -197,8 +197,8 @@ class ModuleLogin extends \Module
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
-		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['login']);
-		$this->Template->value = specialchars(\Input::post('username'));
+		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
+		$this->Template->value = \StringUtil::specialchars(\Input::post('username'));
 		$this->Template->formId = 'tl_login_' . $this->id;
 		$this->Template->autologin = ($this->autologin && \Config::get('autologin') > 0);
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];

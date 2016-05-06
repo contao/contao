@@ -207,7 +207,7 @@ class ModuleChangePassword extends \Module
 
 		$this->Template->formId = $strFormId;
 		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
+		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 	}
 }

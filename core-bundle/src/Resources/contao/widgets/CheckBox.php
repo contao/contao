@@ -48,7 +48,7 @@ class CheckBox extends \Widget
 		switch ($strKey)
 		{
 			case 'options':
-				$this->arrOptions = deserialize($varValue);
+				$this->arrOptions = \StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -120,18 +120,18 @@ class CheckBox extends \Widget
 				continue;
 			}
 
-			$id = 'cbc_' . $this->strId . '_' . standardize($i);
+			$id = 'cbc_' . $this->strId . '_' . \StringUtil::standardize($i);
 
-			$img = 'folPlus';
+			$img = 'folPlus.svg';
 			$display = 'none';
 
 			if (!isset($state[$id]) || !empty($state[$id]))
 			{
-				$img = 'folMinus';
+				$img = 'folMinus.svg';
 				$display = 'block';
 			}
 
-			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . $this->addToUrl('cbc=' . $id) . '" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');Backend.getScrollOffset();return false">' . \Image::getHtml($img . '.gif') . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'' . $id . '\')"> <label for="check_all_' . $id . '" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
+			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . $this->addToUrl('cbc=' . $id) . '" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');Backend.getScrollOffset();return false">' . \Image::getHtml($img) . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'' . $id . '\')"> <label for="check_all_' . $id . '" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
 
 			// Multidimensional array
 			foreach ($arrOption as $k=>$v)
@@ -190,7 +190,7 @@ class CheckBox extends \Widget
 		return sprintf('<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s%s%s</label>',
 						$this->strName . ($this->multiple ? '[]' : ''),
 						$this->strId.'_'.$i,
-						($this->multiple ? specialchars($arrOption['value']) : 1),
+						($this->multiple ? \StringUtil::specialchars($arrOption['value']) : 1),
 						$this->isChecked($arrOption),
 						$this->getAttributes(),
 						$this->strId.'_'.$i,

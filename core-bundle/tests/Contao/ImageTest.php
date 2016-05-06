@@ -37,19 +37,19 @@ class ImageTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        self::$rootDir = __DIR__ . '/../../tmp';
+        self::$rootDir = __DIR__.'/../../tmp';
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
-        $fs->mkdir(self::$rootDir . '/assets');
-        $fs->mkdir(self::$rootDir . '/assets/images');
+        $fs->mkdir(self::$rootDir.'/assets');
+        $fs->mkdir(self::$rootDir.'/assets/images');
 
         foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
-            $fs->mkdir(self::$rootDir . '/assets/images/' . $subdir);
+            $fs->mkdir(self::$rootDir.'/assets/images/'.$subdir);
         }
 
-        $fs->mkdir(self::$rootDir . '/system');
-        $fs->mkdir(self::$rootDir . '/system/tmp');
+        $fs->mkdir(self::$rootDir.'/system');
+        $fs->mkdir(self::$rootDir.'/system/tmp');
     }
 
     /**
@@ -68,7 +68,7 @@ class ImageTest extends TestCase
     {
         parent::setUp();
 
-        copy(__DIR__ . '/../Fixtures/images/dummy.jpg', self::$rootDir . '/dummy.jpg');
+        copy(__DIR__.'/../Fixtures/images/dummy.jpg', self::$rootDir.'/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
@@ -1329,7 +1329,7 @@ class ImageTest extends TestCase
     public function testExecuteResizeSvg()
     {
         file_put_contents(
-            self::$rootDir . '/dummy.svg',
+            self::$rootDir.'/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1368,7 +1368,7 @@ class ImageTest extends TestCase
     public function testExecuteResizeSvgPercentageDimensions()
     {
         file_put_contents(
-            self::$rootDir . '/dummy.svg',
+            self::$rootDir.'/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1407,7 +1407,7 @@ class ImageTest extends TestCase
     public function testExecuteResizeSvgWithoutDimensions()
     {
         file_put_contents(
-            self::$rootDir . '/dummy.svg',
+            self::$rootDir.'/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1444,7 +1444,7 @@ class ImageTest extends TestCase
     public function testExecuteResizeSvgWithoutViewBox()
     {
         file_put_contents(
-            self::$rootDir . '/dummy.svg',
+            self::$rootDir.'/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1482,7 +1482,7 @@ class ImageTest extends TestCase
     public function testExecuteResizeSvgWithoutViewBoxAndDimensions()
     {
         file_put_contents(
-            self::$rootDir . '/dummy.svg',
+            self::$rootDir.'/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1508,7 +1508,7 @@ class ImageTest extends TestCase
     public function testExecuteResizeSvgz()
     {
         file_put_contents(
-            self::$rootDir . '/dummy.svgz',
+            self::$rootDir.'/dummy.svgz',
             gzencode(
                 '<?xml version="1.0" encoding="utf-8"?>
                 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -1703,9 +1703,9 @@ class ImageTest extends TestCase
             'ex' => ['2ex', 16],
             'pt' => ['12pt', 16],
             'pc' => ['1pc', 16],
-            'in' => [(1 / 6) . 'in', 16],
-            'cm' => [(2.54 / 6) . 'cm', 16],
-            'mm' => [(25.4 / 6) . 'mm', 16],
+            'in' => [(1 / 6).'in', 16],
+            'cm' => [(2.54 / 6).'cm', 16],
+            'mm' => [(25.4 / 6).'mm', 16],
             'invalid' => ['abc', 0],
         ];
     }
