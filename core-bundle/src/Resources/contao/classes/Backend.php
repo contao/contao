@@ -721,26 +721,24 @@ abstract class Backend extends \Controller
 		$objPage = null;
 		$db = \Database::getInstance();
 
-		switch ($strPtable)
+		if ($strPtable == 'tl_article')
 		{
-			case 'tl_article':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)")
-							  ->execute($intPid);
-				break;
-
-			default:
-				// HOOK: support custom modules
-				if (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
+			$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)")
+						  ->execute($intPid);
+		}
+		else
+		{
+			// HOOK: support custom modules
+			if (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
+			{
+				foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
 				{
-					foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
+					if (($val = \System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
 					{
-						if (($val = \System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
-						{
-							$objPage = $val;
-						}
+						$objPage = $val;
 					}
 				}
-				break;
+			}
 		}
 
 		if ($objPage === null || $objPage->numRows < 1)
