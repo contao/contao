@@ -26,6 +26,9 @@ namespace Contao;
  *            ->saveToFile('image.jpg');
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+ *             Use Imagine instead.
  */
 class GdImage
 {
@@ -42,9 +45,14 @@ class GdImage
 	 * Create a new object to handle a GD image
 	 *
 	 * @param resource $gdResource The GD resource handle
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+	 *             Use Imagine instead.
 	 */
 	public function __construct($gdResource)
 	{
+		@trigger_error('The Contao\GdImage class has been deprecated and will no longer work in Contao 5.0. Use Imagine instead.', E_USER_DEPRECATED);
+
 		$this->setResource($gdResource);
 	}
 
@@ -58,9 +66,14 @@ class GdImage
 	 *
 	 * @throws \InvalidArgumentException If the image type cannot be processed
 	 * @throws \RuntimeException         If the image failed to be processed
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+	 *             Use Imagine instead.
 	 */
 	public static function fromFile(File $file)
 	{
+		@trigger_error('GdImage::fromFile() has been deprecated and will no longer work in Contao 5.0. Use Imagine instead.', E_USER_DEPRECATED);
+
 		$extension = strtolower($file->extension);
 		$function = null;
 
@@ -97,9 +110,14 @@ class GdImage
 	 * @param integer $height The image height
 	 *
 	 * @return static The GD image object
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+	 *             Use Imagine instead.
 	 */
 	public static function fromDimensions($width, $height)
 	{
+		@trigger_error('GdImage::fromDimensions() has been deprecated and will no longer work in Contao 5.0. Use Imagine instead.', E_USER_DEPRECATED);
+
 		$image = imagecreatetruecolor($width, $height);
 
 		$arrGdInfo = gd_info();

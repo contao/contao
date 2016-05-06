@@ -36,6 +36,9 @@ use Imagine\Image\Point;
  *
  * @author Martin Auswöger <https://github.com/ausi>
  * @author Yanick Witschi <https://github.com/Toflar>
+ *
+ * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+ *             Use the contao.image.picture_factory service instead.
  */
 class Picture
 {
@@ -66,9 +69,14 @@ class Picture
 	 * Create a new object to handle a picture element
 	 *
 	 * @param File $file A file instance of the source image
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+	 *             Use the contao.image.picture_factory service instead.
 	 */
 	public function __construct(File $file)
 	{
+		@trigger_error('The Contao\Picture class has been deprecated and will no longer work in Contao 5.0. Use $container->get(\'contao.image.picture_factory\')->create() instead.', E_USER_DEPRECATED);
+
 		$this->image = new \Image($file);
 	}
 
@@ -80,9 +88,14 @@ class Picture
 	 * @param array|integer $size  The image size as array (width, height, resize mode) or an tl_image_size ID
 	 *
 	 * @return static The created picture instance
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+	 *             Use the contao.image.picture_factory service instead.
 	 */
 	public static function create($file, $size=null)
 	{
+		@trigger_error('Picture::create() has been deprecated and will no longer work in Contao 5.0. Use $container->get(\'contao.image.picture_factory\')->create() instead.', E_USER_DEPRECATED);
+
 		if (is_string($file))
 		{
 			$file = new \File(rawurldecode($file));
