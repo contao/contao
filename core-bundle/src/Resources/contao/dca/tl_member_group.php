@@ -276,6 +276,9 @@ class tl_member_group extends Backend
 		$objVersions = new Versions('tl_member_group', $intId);
 		$objVersions->initialize();
 
+		// Reverse the logic (member groups have disable=1)
+		$blnVisible = !$blnVisible;
+
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_member_group']['fields']['disable']['save_callback']))
 		{
@@ -294,7 +297,7 @@ class tl_member_group extends Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_member_group SET tstamp=" . time() .", disable='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_member_group SET tstamp=" . time() .", disable='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
