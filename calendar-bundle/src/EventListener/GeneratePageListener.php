@@ -61,7 +61,7 @@ class GeneratePageListener
         /** @var CalendarFeedModel $adapter */
         $adapter = $this->framework->getAdapter('Contao\CalendarFeedModel');
 
-        if (null === ($feeds = $adapter->findByIds($calendarfeeds))) {
+        if (!(($feeds = $adapter->findByIds($calendarfeeds)) instanceof Collection)) {
             return;
         }
 
