@@ -15,6 +15,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
+use Contao\StringUtil;
 
 /**
  * Handles FAQ insert tags.
@@ -117,7 +118,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
                     $url,
-                    $this->specialchars($faq->question),
+                    StringUtil::specialchars($faq->question),
                     $faq->question
                 );
 
@@ -125,31 +126,16 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">',
                     $url,
-                    $this->specialchars($faq->question)
+                    StringUtil::specialchars($faq->question)
                 );
 
             case 'faq_url':
                 return $url;
 
             case 'faq_title':
-                return $this->specialchars($faq->question);
+                return StringUtil::specialchars($faq->question);
         }
 
         return false;
-    }
-
-    /**
-     * Converts special characters to HTML entities preventing double encodings.
-     *
-     * @param string $str
-     *
-     * @return string
-     */
-    private function specialchars($str)
-    {
-        /** @var Config $config */
-        $config = $this->framework->getAdapter('Contao\Config');
-
-        return htmlspecialchars($str, ENT_COMPAT, $config->get('characterSet'), false);
     }
 }

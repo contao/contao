@@ -310,11 +310,11 @@ class tl_faq_category extends Backend
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrFaqp = deserialize($objUser->faqp);
+							$arrFaqp = StringUtil::deserialize($objUser->faqp);
 
 							if (is_array($arrFaqp) && in_array('create', $arrFaqp))
 							{
-								$arrFaqs = deserialize($objUser->faqs);
+								$arrFaqs = StringUtil::deserialize($objUser->faqs);
 								$arrFaqs[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET faqs=? WHERE id=?")
@@ -329,11 +329,11 @@ class tl_faq_category extends Backend
 													   ->limit(1)
 													   ->execute($this->User->groups[0]);
 
-							$arrFaqp = deserialize($objGroup->faqp);
+							$arrFaqp = StringUtil::deserialize($objGroup->faqp);
 
 							if (is_array($arrFaqp) && in_array('create', $arrFaqp))
 							{
-								$arrFaqs = deserialize($objGroup->faqs);
+								$arrFaqs = StringUtil::deserialize($objGroup->faqs);
 								$arrFaqs[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user_group SET faqs=? WHERE id=?")
@@ -396,7 +396,7 @@ class tl_faq_category extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_faq_category') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_faq_category') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -414,7 +414,7 @@ class tl_faq_category extends Backend
 	 */
 	public function copyCategory($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'faqp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'faqp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -432,6 +432,6 @@ class tl_faq_category extends Backend
 	 */
 	public function deleteCategory($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'faqp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'faqp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 }

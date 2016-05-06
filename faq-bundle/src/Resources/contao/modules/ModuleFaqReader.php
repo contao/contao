@@ -68,7 +68,7 @@ class ModuleFaqReader extends \Module
 			return '';
 		}
 
-		$this->faq_categories = deserialize($this->faq_categories);
+		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
 
 		// Do not index or cache the page if there are no categories
 		if (!is_array($this->faq_categories) || empty($this->faq_categories))
@@ -107,7 +107,7 @@ class ModuleFaqReader extends \Module
 		// Overwrite the page title and description (see #2853 and #4955)
 		if ($objFaq->question != '')
 		{
-			$objPage->pageTitle = strip_tags(strip_insert_tags($objFaq->question));
+			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objFaq->question));
 			$objPage->description = $this->prepareMetaDescription($objFaq->question);
 		}
 
