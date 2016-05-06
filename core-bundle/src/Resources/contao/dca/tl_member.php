@@ -740,21 +740,5 @@ class tl_member extends Backend
 			$this->Database->prepare("DELETE FROM tl_session WHERE name='FE_USER_AUTH' AND pid=?")
 						   ->execute($intId);
 		}
-
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		// HOOK: update newsletter subscriptions
-		if (isset($bundles['ContaoNewsletterBundle']))
-		{
-			$objUser = $this->Database->prepare("SELECT email FROM tl_member WHERE id=?")
-									  ->limit(1)
-									  ->execute($intId);
-
-			if ($objUser->numRows)
-			{
-				$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=$time, active=? WHERE email=?")
-							   ->execute(($blnVisible ? 1 : ''), $objUser->email);
-			}
-		}
 	}
 }
