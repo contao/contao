@@ -267,6 +267,9 @@ class tl_content_news extends Backend
 		$objVersions = new Versions('tl_content', $intId);
 		$objVersions->initialize();
 
+		// Reverse the logic (elements have invisible=1)
+		$blnVisible = !$blnVisible;
+
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
 		{
@@ -285,7 +288,7 @@ class tl_content_news extends Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_content SET tstamp=". time() .", invisible='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_content SET tstamp=". time() .", invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
