@@ -12,8 +12,10 @@ matrix:
     - php: 7.0
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
 
-before_script:
+before_install:
   - phpenv config-rm xdebug.ini
+
+before_script:
   - composer selfupdate
   - travis_wait composer update $COMPOSER_FLAGS --no-interaction
 
