@@ -23,7 +23,7 @@ class Newsletter extends \Backend
 {
 
 	/**
-	 * Renturn a form to choose an existing style sheet and import it
+	 * Return a form to choose an existing style sheet and import it
 	 *
 	 * @param DataContainer $dc
 	 *
@@ -667,9 +667,37 @@ class Newsletter extends \Backend
 				continue;
 			}
 
-			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=1 WHERE pid=? AND email=?")
+			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='1' WHERE pid=? AND email=?")
 						   ->execute($intNewsletter, $objUser->email);
 		}
+	}
+
+	/**
+	 * Synchronize the newsletter subscriptions if the visibility is toggled
+	 *
+	 * @param boolean       $blnDisabled
+	 * @param DataContainer $dc
+	 *
+	 * @return boolean
+	 */
+	public function onToggleVisibility($blnDisabled, DataContainer $dc)
+	{
+		if (!$dc->id)
+		{
+			return $blnDisabled;
+		}
+
+		$objUser = $this->Database->prepare("SELECT email FROM tl_member WHERE id=?")
+								  ->limit(1)
+								  ->execute($dc->id);
+
+		if ($objUser->numRows)
+		{
+			$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=?, active=? WHERE email=?")
+						   ->execute(time(), ($blnDisabled ? '' : '1'), $objUser->email);
+		}
+
+		return $blnDisabled;
 	}
 
 
