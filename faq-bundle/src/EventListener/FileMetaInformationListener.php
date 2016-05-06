@@ -62,7 +62,7 @@ class FileMetaInformationListener
      * @param string $query
      * @param mixed  $params
      *
-     * @return Result|object
+     * @return Result
      */
     private function getResult($query, $params)
     {
