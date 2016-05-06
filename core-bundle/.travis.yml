@@ -17,12 +17,15 @@ matrix:
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
 
 before_install:
+  - phpenv config-rm xdebug.ini
+
+before_script:
   - composer selfupdate
-  - composer update $COMPOSER_FLAGS --no-interaction
+  - travis_wait composer update $COMPOSER_FLAGS --no-interaction
 
 script:
   - mkdir -p build/logs
-  - php vendor/bin/phpunit --testsuite latest --coverage-clover build/logs/clover.xml
+  - php -d zend_extension=xdebug.so vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
   - php vendor/bin/coveralls
