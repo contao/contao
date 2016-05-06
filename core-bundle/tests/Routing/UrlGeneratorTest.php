@@ -19,6 +19,10 @@ use Contao\CoreBundle\Routing\UrlGenerator;
  */
 class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        unset($GLOBALS['TL_AUTO_ITEM']);
+    }
 
     /**
      * Tests the object instantiation.
@@ -80,10 +84,19 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
             $this->generator()->generate('foo/{items}', ['items' => 'bar', 'auto_item' => 'items'])['alias']
         );
 
+        $this->assertEquals(
+            'foo/bar/article/test',
+            $this->generator()->generate(
+                'foo/{items}/{article}',
+                ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items']
+            )['alias']
+        );
+
         $GLOBALS['TL_AUTO_ITEM'] = ['items'];
         $this->assertEquals('foo/bar', $this->generator()->generate('foo/{items}', ['items' => 'bar'])['alias']);
-        unset($GLOBALS['TL_AUTO_ITEM']);
 
+        $GLOBALS['TL_AUTO_ITEM'] = ['items', 'article'];
+        $this->assertEquals('foo/bar', $this->generator()->generate('foo/{items}', ['items' => 'bar'])['alias']);
         $this->assertEquals(
             'foo/bar/article/test',
             $this->generator()->generate(
