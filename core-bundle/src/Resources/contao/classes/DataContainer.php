@@ -751,7 +751,7 @@ abstract class DataContainer extends \Backend
 				// Add the theme path if only the file name is given
 				if (strpos($v['icon'], '/') === false)
 				{
-					$v['icon'] = 'system/themes/' . \Backend::getTheme() . '/images/' . $v['icon'];
+					$v['icon'] = \Image::getPath($v['icon']);
 				}
 
 				$attributes = sprintf('style="background-image:url(\'%s%s\')"', TL_ASSETS_URL, $v['icon']) . $attributes;
