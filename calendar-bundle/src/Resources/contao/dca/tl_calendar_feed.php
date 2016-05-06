@@ -285,11 +285,11 @@ class tl_calendar_feed extends Backend
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrNewsfeedp = deserialize($objUser->calendarfeedp);
+							$arrNewsfeedp = StringUtil::deserialize($objUser->calendarfeedp);
 
 							if (is_array($arrNewsfeedp) && in_array('create', $arrNewsfeedp))
 							{
-								$arrNewsfeeds = deserialize($objUser->calendarfeeds);
+								$arrNewsfeeds = StringUtil::deserialize($objUser->calendarfeeds);
 								$arrNewsfeeds[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET calendarfeeds=? WHERE id=?")
@@ -304,11 +304,11 @@ class tl_calendar_feed extends Backend
 													   ->limit(1)
 													   ->execute($this->User->groups[0]);
 
-							$arrNewsfeedp = deserialize($objGroup->calendarfeedp);
+							$arrNewsfeedp = StringUtil::deserialize($objGroup->calendarfeedp);
 
 							if (is_array($arrNewsfeedp) && in_array('create', $arrNewsfeedp))
 							{
-								$arrNewsfeeds = deserialize($objGroup->calendarfeeds);
+								$arrNewsfeeds = StringUtil::deserialize($objGroup->calendarfeeds);
 								$arrNewsfeeds[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user_group SET calendarfeeds=? WHERE id=?")
@@ -459,7 +459,7 @@ class tl_calendar_feed extends Backend
 			return $varValue;
 		}
 
-		$varValue = standardize($varValue); // see #5096
+		$varValue = StringUtil::standardize($varValue); // see #5096
 
 		$this->import('Automator');
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);

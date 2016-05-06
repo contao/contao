@@ -79,7 +79,7 @@ abstract class Events extends \Module
 						continue;
 					}
 
-					$groups = deserialize($objCalendar->groups);
+					$groups = \StringUtil::deserialize($objCalendar->groups);
 
 					if (!is_array($groups) || empty($groups) || count(array_intersect($groups, $this->User->groups)) < 1)
 					{
@@ -130,7 +130,7 @@ abstract class Events extends \Module
 				// Recurring events
 				if ($objEvents->recurring)
 				{
-					$arrRepeat = deserialize($objEvents->repeatEach);
+					$arrRepeat = \StringUtil::deserialize($objEvents->repeatEach);
 
 					if ($arrRepeat['value'] < 1)
 					{
@@ -253,7 +253,7 @@ abstract class Events extends \Module
 		// Recurring event
 		if ($objEvents->recurring)
 		{
-			$arrRange = deserialize($objEvents->repeatEach);
+			$arrRange = \StringUtil::deserialize($objEvents->repeatEach);
 			$strKey = 'cal_' . $arrRange['unit'];
 			$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
 
@@ -276,7 +276,7 @@ abstract class Events extends \Module
 		$arrEvent['calendar'] = $objEvents->getRelated('pid');
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
-		$arrEvent['title'] = specialchars($objEvents->title, true);
+		$arrEvent['title'] = \StringUtil::specialchars($objEvents->title, true);
 		$arrEvent['href'] = $this->generateEventUrl($objEvents);
 		$arrEvent['class'] = ($objEvents->cssClass != '') ? ' ' . $objEvents->cssClass : '';
 		$arrEvent['recurring'] = $recurring;

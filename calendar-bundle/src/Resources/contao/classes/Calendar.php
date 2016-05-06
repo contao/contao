@@ -110,7 +110,7 @@ class Calendar extends \Frontend
 	 */
 	protected function generateFiles($arrFeed)
 	{
-		$arrCalendars = deserialize($arrFeed['calendars']);
+		$arrCalendars = \StringUtil::deserialize($arrFeed['calendars']);
 
 		if (!is_array($arrCalendars) || empty($arrCalendars))
 		{
@@ -176,7 +176,7 @@ class Calendar extends \Frontend
 				// Recurring events
 				if ($objArticle->recurring)
 				{
-					$arrRepeat = deserialize($objArticle->repeatEach);
+					$arrRepeat = \StringUtil::deserialize($objArticle->repeatEach);
 
 					if ($arrRepeat['value'] < 1)
 					{
@@ -467,7 +467,7 @@ class Calendar extends \Frontend
 		// Enclosures
 		if ($objEvent->addEnclosure)
 		{
-			$arrEnclosure = deserialize($objEvent->enclosure, true);
+			$arrEnclosure = \StringUtil::deserialize($objEvent->enclosure, true);
 
 			if (is_array($arrEnclosure))
 			{

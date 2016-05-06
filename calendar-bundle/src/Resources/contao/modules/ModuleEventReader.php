@@ -68,7 +68,7 @@ class ModuleEventReader extends \Events
 			return '';
 		}
 
-		$this->cal_calendar = $this->sortOutProtected(deserialize($this->cal_calendar));
+		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar));
 
 		// Do not index or cache the page if there are no calendars
 		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))
@@ -109,7 +109,7 @@ class ModuleEventReader extends \Events
 		// Overwrite the page title (see #2853 and #4955)
 		if ($objEvent->title != '')
 		{
-			$objPage->pageTitle = strip_tags(strip_insert_tags($objEvent->title));
+			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objEvent->title));
 		}
 
 		// Overwrite the page description
@@ -125,7 +125,7 @@ class ModuleEventReader extends \Events
 		// Do not show dates in the past if the event is recurring (see #923)
 		if ($objEvent->recurring)
 		{
-			$arrRange = deserialize($objEvent->repeatEach);
+			$arrRange = \StringUtil::deserialize($objEvent->repeatEach);
 
 			while ($intStartTime < time() && $intEndTime < $objEvent->repeatEnd)
 			{
@@ -165,7 +165,7 @@ class ModuleEventReader extends \Events
 		// Recurring event
 		if ($objEvent->recurring)
 		{
-			$arrRange = deserialize($objEvent->repeatEach);
+			$arrRange = \StringUtil::deserialize($objEvent->repeatEach);
 			$strKey = 'cal_' . $arrRange['unit'];
 			$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
 
@@ -246,7 +246,7 @@ class ModuleEventReader extends \Events
 				// Override the default image size
 				if ($this->imgSize != '')
 				{
-					$size = deserialize($this->imgSize);
+					$size = \StringUtil::deserialize($this->imgSize);
 
 					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]))
 					{

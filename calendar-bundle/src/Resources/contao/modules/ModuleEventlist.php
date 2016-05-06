@@ -56,7 +56,7 @@ class ModuleEventlist extends \Events
 			return $objTemplate->parse();
 		}
 
-		$this->cal_calendar = $this->sortOutProtected(deserialize($this->cal_calendar, true));
+		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar, true));
 
 		// Return if there are no calendars
 		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))
@@ -223,7 +223,7 @@ class ModuleEventlist extends \Events
 		// Override the default image size
 		if ($this->imgSize != '')
 		{
-			$size = deserialize($this->imgSize);
+			$size = \StringUtil::deserialize($this->imgSize);
 
 			if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]))
 			{
@@ -274,7 +274,7 @@ class ModuleEventlist extends \Events
 			// Add the template variables
 			$objTemplate->classList = $event['class'] . ((($headerCount % 2) == 0) ? ' even' : ' odd') . (($headerCount == 0) ? ' first' : '') . ($blnIsLastEvent ? ' last' : '') . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ((($eventCount % 2) == 0) ? ' even' : ' odd') . (($eventCount == 0) ? ' first' : '') . ((($offset + $eventCount + 1) >= $limit) ? ' last' : '') . ' cal_' . $event['parent'];
-			$objTemplate->readMore = specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
+			$objTemplate->readMore = \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
 			$objTemplate->more = $GLOBALS['TL_LANG']['MSC']['more'];
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 
