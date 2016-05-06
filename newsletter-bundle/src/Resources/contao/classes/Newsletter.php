@@ -70,7 +70,7 @@ class Newsletter extends \Backend
 		// Add attachments
 		if ($objNewsletter->addFile)
 		{
-			$files = deserialize($objNewsletter->files);
+			$files = \StringUtil::deserialize($objNewsletter->files);
 
 			if (!empty($files) && is_array($files))
 			{
@@ -225,7 +225,7 @@ class Newsletter extends \Backend
 		// Preview newsletter
 		$return = '
 <div id="tl_buttons">
-<a href="'.$this->getReferer(true).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
 '.\Message::generate().'
 <form action="'.TL_SCRIPT.'" id="tl_newsletter_send" class="tl_form" method="get">
@@ -538,7 +538,7 @@ class Newsletter extends \Backend
 		// Return form
 		return '
 <div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=import', '', \Environment::get('request'))).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.ampersand(str_replace('&key=import', '', \Environment::get('request'))).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
 '.\Message::generate().'
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_recipients_import" class="tl_form" method="post" enctype="multipart/form-data">
@@ -610,7 +610,7 @@ class Newsletter extends \Backend
 	 */
 	public function createNewUser($intUser, $arrData)
 	{
-		$arrNewsletters = deserialize($arrData['newsletter'], true);
+		$arrNewsletters = \StringUtil::deserialize($arrData['newsletter'], true);
 
 		// Return if there are no newsletters
 		if (!is_array($arrNewsletters))
@@ -649,7 +649,7 @@ class Newsletter extends \Backend
 	 */
 	public function activateAccount($objUser)
 	{
-		$arrNewsletters = deserialize($objUser->newsletter, true);
+		$arrNewsletters = \StringUtil::deserialize($objUser->newsletter, true);
 
 		// Return if there are no newsletters
 		if (!is_array($arrNewsletters))
@@ -714,12 +714,12 @@ class Newsletter extends \Backend
 		}
 
 		$time = time();
-		$varValue = deserialize($varValue, true);
+		$varValue = \StringUtil::deserialize($varValue, true);
 
 		// Get all channel IDs (thanks to Andreas Schempp)
 		if ($blnIsFrontend && $objModule instanceof Module)
 		{
-			$arrChannel = deserialize($objModule->newsletters, true);
+			$arrChannel = \StringUtil::deserialize($objModule->newsletters, true);
 		}
 		else
 		{
@@ -875,7 +875,7 @@ class Newsletter extends \Backend
 		}
 		else
 		{
-			$newsletters = deserialize($objModule->newsletters, true);
+			$newsletters = \StringUtil::deserialize($objModule->newsletters, true);
 
 			if (!is_array($newsletters) || empty($newsletters))
 			{

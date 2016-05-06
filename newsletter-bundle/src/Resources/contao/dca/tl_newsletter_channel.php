@@ -255,11 +255,11 @@ class tl_newsletter_channel extends Backend
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrNewsletterp = deserialize($objUser->newsletterp);
+							$arrNewsletterp = StringUtil::deserialize($objUser->newsletterp);
 
 							if (is_array($arrNewsletterp) && in_array('create', $arrNewsletterp))
 							{
-								$arrNewsletters = deserialize($objUser->newsletters);
+								$arrNewsletters = StringUtil::deserialize($objUser->newsletters);
 								$arrNewsletters[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET newsletters=? WHERE id=?")
@@ -274,11 +274,11 @@ class tl_newsletter_channel extends Backend
 													   ->limit(1)
 													   ->execute($this->User->groups[0]);
 
-							$arrNewsletterp = deserialize($objGroup->newsletterp);
+							$arrNewsletterp = StringUtil::deserialize($objGroup->newsletterp);
 
 							if (is_array($arrNewsletterp) && in_array('create', $arrNewsletterp))
 							{
-								$arrNewsletters = deserialize($objGroup->newsletters);
+								$arrNewsletters = StringUtil::deserialize($objGroup->newsletters);
 								$arrNewsletters[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user_group SET newsletters=? WHERE id=?")
@@ -341,7 +341,7 @@ class tl_newsletter_channel extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_newsletter_channel') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_newsletter_channel') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -359,7 +359,7 @@ class tl_newsletter_channel extends Backend
 	 */
 	public function copyChannel($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'newsletterp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'newsletterp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -377,6 +377,6 @@ class tl_newsletter_channel extends Backend
 	 */
 	public function deleteChannel($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'newsletterp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'newsletterp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 }

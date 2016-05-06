@@ -49,7 +49,7 @@ class ModuleSubscribe extends \Module
 			return $objTemplate->parse();
 		}
 
-		$this->nl_channels = deserialize($this->nl_channels);
+		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
 
 		// Return if there are no channels
 		if (!is_array($this->nl_channels) || empty($this->nl_channels))
@@ -149,7 +149,7 @@ class ModuleSubscribe extends \Module
 		// Default template variables
 		$this->Template->channels = $arrChannels;
 		$this->Template->showChannels = !$this->nl_hideChannels;
-		$this->Template->submit = specialchars($GLOBALS['TL_LANG']['MSC']['subscribe']);
+		$this->Template->submit = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['subscribe']);
 		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->action = \Environment::get('indexFreeRequest');
