@@ -1492,7 +1492,7 @@ class StyleSheets extends \Backend
 				continue;
 			}
 
-			$arrChunks = \StringUtil::trimsplit(':', $strDefinition, 2);
+			$arrChunks = array_map('trim', explode(':', $strDefinition, 2));
 			$strKey = strtolower($arrChunks[0]);
 
 			switch ($strKey)

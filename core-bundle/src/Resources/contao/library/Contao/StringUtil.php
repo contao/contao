@@ -918,11 +918,10 @@ class StringUtil
 	 *
 	 * @param string  $strPattern The split pattern
 	 * @param string  $strString  The input string
-	 * @param integer $intLimit   An optional limit
 	 *
 	 * @return array The fragments array
 	 */
-	public static function trimsplit($strPattern, $strString, $intLimit=null)
+	public static function trimsplit($strPattern, $strString)
 	{
 		$strKey = md5($strPattern.$strString);
 
@@ -935,11 +934,11 @@ class StringUtil
 		// Split
 		if (strlen($strPattern) == 1)
 		{
-			$arrFragments = array_map('trim', explode($strPattern, $strString, $intLimit));
+			$arrFragments = array_map('trim', explode($strPattern, $strString));
 		}
 		else
 		{
-			$arrFragments = array_map('trim', preg_split('/'.$strPattern.'/ui', $strString, $intLimit));
+			$arrFragments = array_map('trim', preg_split('/'.$strPattern.'/ui', $strString));
 		}
 
 		// Empty array
