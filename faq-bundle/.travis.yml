@@ -14,7 +14,7 @@ matrix:
 
 before_install:
   - composer selfupdate
-  - composer update $COMPOSER_FLAGS --no-interaction
+  - travis_wait composer update $COMPOSER_FLAGS --no-interaction
 
 script:
   - mkdir -p build/logs
