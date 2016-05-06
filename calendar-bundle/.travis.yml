@@ -21,7 +21,7 @@ before_script:
 
 script:
   - mkdir -p build/logs
-  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - php -d zend_extension=xdebug.so vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
   - php vendor/bin/coveralls
