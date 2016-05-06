@@ -4,7 +4,6 @@ namespace Contao\CoreBundle\Routing;
 
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
@@ -27,8 +26,8 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Constructor.
      *
-     * @param UrlMatcherInterface $router
-     * @param bool                $prependLocale
+     * @param UrlGeneratorInterface $router
+     * @param bool                  $prependLocale
      */
     public function __construct(UrlGeneratorInterface $router, $prependLocale)
     {
