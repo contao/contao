@@ -447,7 +447,8 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_calendar_events', 'getArticleAlias'),
 			'eval'                    => array('chosen'=>true, 'mandatory'=>true),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'relation'                => array('table'=>'tl_article', 'type'=>'hasOne', 'load'=>'lazy'),
 		),
 		'url' => array
 		(
