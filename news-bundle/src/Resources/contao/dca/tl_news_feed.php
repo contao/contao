@@ -285,11 +285,11 @@ class tl_news_feed extends Backend
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrNewsfeedp = deserialize($objUser->newsfeedp);
+							$arrNewsfeedp = StringUtil::deserialize($objUser->newsfeedp);
 
 							if (is_array($arrNewsfeedp) && in_array('create', $arrNewsfeedp))
 							{
-								$arrNewsfeeds = deserialize($objUser->newsfeeds);
+								$arrNewsfeeds = StringUtil::deserialize($objUser->newsfeeds);
 								$arrNewsfeeds[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET newsfeeds=? WHERE id=?")
@@ -304,11 +304,11 @@ class tl_news_feed extends Backend
 													   ->limit(1)
 													   ->execute($this->User->groups[0]);
 
-							$arrNewsfeedp = deserialize($objGroup->newsfeedp);
+							$arrNewsfeedp = StringUtil::deserialize($objGroup->newsfeedp);
 
 							if (is_array($arrNewsfeedp) && in_array('create', $arrNewsfeedp))
 							{
-								$arrNewsfeeds = deserialize($objGroup->newsfeeds);
+								$arrNewsfeeds = StringUtil::deserialize($objGroup->newsfeeds);
 								$arrNewsfeeds[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user_group SET newsfeeds=? WHERE id=?")
@@ -460,7 +460,7 @@ class tl_news_feed extends Backend
 			return $varValue;
 		}
 
-		$varValue = standardize($varValue); // see #5096
+		$varValue = StringUtil::standardize($varValue); // see #5096
 
 		$this->import('Automator');
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);

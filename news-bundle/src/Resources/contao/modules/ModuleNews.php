@@ -48,7 +48,7 @@ abstract class ModuleNews extends \Module
 						continue;
 					}
 
-					$groups = deserialize($objArchive->groups);
+					$groups = \StringUtil::deserialize($objArchive->groups);
 
 					if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
 					{
@@ -168,7 +168,7 @@ abstract class ModuleNews extends \Module
 				// Override the default image size
 				if ($this->imgSize != '')
 				{
-					$size = deserialize($this->imgSize);
+					$size = \StringUtil::deserialize($this->imgSize);
 
 					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]))
 					{
@@ -244,7 +244,7 @@ abstract class ModuleNews extends \Module
 	 */
 	protected function getMetaFields($objArticle)
 	{
-		$meta = deserialize($this->news_metaFields);
+		$meta = \StringUtil::deserialize($this->news_metaFields);
 
 		if (!is_array($meta))
 		{
@@ -324,7 +324,7 @@ abstract class ModuleNews extends \Module
 		{
 			return sprintf('<a href="%s" title="%s" itemprop="url">%s%s</a>',
 							\News::generateNewsUrl($objArticle, $blnAddArchive),
-							specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
+							\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
 							$strLink,
 							($blnIsReadMore ? '<span class="invisible"> '.$objArticle->headline.'</span>' : ''));
 		}
@@ -344,7 +344,7 @@ abstract class ModuleNews extends \Module
 		// External link
 		return sprintf('<a href="%s" title="%s"%s itemprop="url">%s</a>',
 						$strArticleUrl,
-						specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
+						\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
 						($objArticle->target ? ' target="_blank"' : ''),
 						$strLink);
 	}

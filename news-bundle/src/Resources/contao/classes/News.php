@@ -110,7 +110,7 @@ class News extends \Frontend
 	 */
 	protected function generateFiles($arrFeed)
 	{
-		$arrArchives = deserialize($arrFeed['archives']);
+		$arrArchives = \StringUtil::deserialize($arrFeed['archives']);
 
 		if (!is_array($arrArchives) || empty($arrArchives))
 		{
@@ -225,7 +225,7 @@ class News extends \Frontend
 				// Enclosures
 				if ($objArticle->addEnclosure)
 				{
-					$arrEnclosure = deserialize($objArticle->enclosure, true);
+					$arrEnclosure = \StringUtil::deserialize($objArticle->enclosure, true);
 
 					if (is_array($arrEnclosure))
 					{

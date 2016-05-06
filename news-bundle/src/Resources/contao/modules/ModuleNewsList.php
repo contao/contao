@@ -50,7 +50,7 @@ class ModuleNewsList extends \ModuleNews
 			return $objTemplate->parse();
 		}
 
-		$this->news_archives = $this->sortOutProtected(deserialize($this->news_archives));
+		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
 		// Return if there are no archives
 		if (!is_array($this->news_archives) || empty($this->news_archives))
