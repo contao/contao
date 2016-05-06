@@ -22,7 +22,7 @@ Edit your `composer.json` file and add the following requirement:
 
 ```json
 "require": {
-    "contao/core-bundle": "~4.0"
+    "contao/core-bundle": "~4.2"
 }
 ```
 
@@ -66,7 +66,7 @@ There is a meta package at [contao/contao][4], which you can require in your
 
 ```json
 "require": {
-    "contao/contao": "~4.0"
+    "contao/contao": "~4.2"
 }
 ```
 
@@ -74,13 +74,14 @@ This is the same as:
 
 ```json
 "require": {
-    "contao/calendar-bundle": "~4.0",
-    "contao/comments-bundle": "~4.0",
-    "contao/core-bundle": "~4.0",
-    "contao/faq-bundle": "~4.0",
-    "contao/listing-bundle": "~4.0",
-    "contao/news-bundle": "~4.0",
-    "contao/newsletter-bundle": "~4.0"
+    "contao/calendar-bundle": "~4.2",
+    "contao/comments-bundle": "~4.2",
+    "contao/core-bundle": "~4.2",
+    "contao/faq-bundle": "~4.2",
+    "contao/installation-bundle": "~1.0",
+    "contao/listing-bundle": "~4.2",
+    "contao/news-bundle": "~4.2",
+    "contao/newsletter-bundle": "~4.2"
 }
 ```
 
