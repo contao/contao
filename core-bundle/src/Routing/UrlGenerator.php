@@ -65,16 +65,43 @@ class UrlGenerator implements UrlGeneratorInterface
         $route = 'index' === $name ? 'contao_index' : 'contao_frontend';
         $parameters = is_array($parameters) ? $parameters : [];
 
-        if (!$this->prependLocale && array_key_exists('_locale', $parameters)) {
-            unset($parameters['_locale']);
-        }
+        // Store original request context
+        $context = $this->getContext();
+        $_host = $context->getHost();
+        $_scheme = $context->getScheme();
+        $_httpPort = $context->getHttpPort();
+        $_httpsPort = $context->getHttpsPort();
 
-        $parameters = $this->prepareParameters($name, $parameters);
+        $this->prepareLocale($parameters);
+        $this->prepareAlias($name, $parameters);
+        $this->prepareDomain($context, $parameters, $referenceType);
 
-        return $this->router->generate($route, $parameters, $referenceType);
+        $url = $this->router->generate($route, $parameters, $referenceType);
+
+        // Reset request context
+        $context->setHost($_host);
+        $context->setScheme($_scheme);
+        $context->setHttpPort($_httpPort);
+        $context->setHttpsPort($_httpsPort);
+
+        return $url;
     }
 
     /**
+     * Removes locale parameter if it is disabled for the URL
+     *
+     * @param array $parameters
+     */
+    private function prepareLocale(array &$parameters)
+    {
+        if (!$this->prependLocale && array_key_exists('_locale', $parameters)) {
+            unset($parameters['_locale']);
+        }
+    }
+
+    /**
+     * Parse alias and write to parameters
+     *
      * @param string $alias
      * @param array  $parameters
      *
@@ -82,7 +109,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @throws MissingMandatoryParametersException
      */
-    private function prepareParameters($alias, array $parameters)
+    private function prepareAlias($alias, array &$parameters)
     {
         $hasAutoItem = false;
         $autoItem = $this->getAutoItems($parameters);
@@ -111,11 +138,45 @@ class UrlGenerator implements UrlGeneratorInterface
             },
             $alias
         );
-
-        return $parameters;
     }
 
     /**
+     * Force router to add host to URL if neccessary
+     *
+     * @param RequestContext $context
+     * @param array          $parameters
+     * @param int            $referenceType
+     */
+    private function prepareDomain(RequestContext $context, array &$parameters, &$referenceType)
+    {
+        if (!array_key_exists('_domain', $parameters) || '' === $parameters['_domain']) {
+            unset($parameters['_domain'], $parameters['_ssl']);
+            return;
+        }
+
+        list($host, $port) = explode(':', $parameters['_domain'], 2);
+
+        if ($host !== $context->getHost()) {
+            $context->setHost($host);
+            $context->setHttpPort($port ?: 80);
+
+            if (UrlGeneratorInterface::ABSOLUTE_URL !== $referenceType) {
+                $referenceType = UrlGeneratorInterface::NETWORK_PATH;
+            }
+
+            if (array_key_exists('_ssl', $parameters)) {
+                $context->setScheme($parameters['_ssl'] ? 'https' : 'http');
+                $context->setHttpsPort($port ?: 443);
+                $referenceType = UrlGeneratorInterface::ABSOLUTE_URL;
+            }
+        }
+
+        unset($parameters['_domain'], $parameters['_ssl']);
+    }
+
+    /**
+     * Get auto_item names from parameters or global array
+     *
      * @param array $parameters
      *
      * @return array
