@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\Routing;
 
 use Contao\CoreBundle\Routing\UrlGenerator;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * Tests the UrlGenerator class.
@@ -122,9 +123,12 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
     private function mockRouter($returnArgument = 0)
     {
-        $mock = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $mock->method('generate')->willReturnArgument($returnArgument);
+        $router = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $router->method('generate')->willReturnArgument($returnArgument);
 
-        return $mock;
+        $context = new RequestContext();
+        $router->method('getContext')->willReturn($context);
+
+        return $router;
     }
 }
