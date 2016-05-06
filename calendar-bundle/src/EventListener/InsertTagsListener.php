@@ -208,7 +208,7 @@ class InsertTagsListener
      * @param CalendarEventsModel $event
      * @param string              $insertTag
      *
-     * @return string|false
+     * @return string
      */
     private function generateReplacement(CalendarEventsModel $event, $insertTag)
     {

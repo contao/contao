@@ -14,6 +14,7 @@ use Contao\CalendarFeedModel;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Environment;
 use Contao\LayoutModel;
+use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
@@ -70,9 +71,9 @@ class GeneratePageListener
     /**
      * Adds the feed markup to the page header.
      *
-     * @param CalendarFeedModel[] $feeds
+     * @param Collection|CalendarFeedModel[] $feeds
      */
-    private function addFeedMarkupToPageHeader($feeds)
+    private function addFeedMarkupToPageHeader(Collection $feeds)
     {
         /** @var Template $template */
         $template = $this->framework->getAdapter('Contao\Template');
