@@ -69,12 +69,12 @@
           <a href="<?= $this->request ?>#skipNavigation" class="invisible"><?= $this->skipNavigation ?></a>
           <ul class="tl_level_1">
             <?php foreach ($this->modules as $strGroup=>$arrModules): ?>
-              <li class="tl_level_1_group<?= $arrModules['class'] ?>"><a href="<?= $arrModules['href'] ?>" onclick="return AjaxRequest.toggleNavigation(this,'<?= $strGroup ?>')"><?= $arrModules['label'] ?></a></li>
+              <li class="tl_level_1_group<?= $arrModules['class'] ?>"><a href="<?= $arrModules['href'] ?>" class="group-<?= $strGroup ?>" onclick="return AjaxRequest.toggleNavigation(this,'<?= $strGroup ?>')"><?= $arrModules['label'] ?></a></li>
               <?php if ($arrModules['modules']): ?>
                 <li class="tl_parent" id="<?= $strGroup ?>">
                   <ul class="tl_level_2">
                     <?php foreach ($arrModules['modules'] as $arrConfig): ?>
-                      <li><a href="<?= $arrConfig['href'] ?>" class="<?= $arrConfig['class'] ?>" title="<?= $arrConfig['title'] ?>"<?= $arrConfig['icon'] ?>><?= $arrConfig['label'] ?></a></li>
+                      <li><a href="<?= $arrConfig['href'] ?>" class="<?= $arrConfig['class'] ?>" title="<?= $arrConfig['title'] ?>"><?= $arrConfig['label'] ?></a></li>
                     <?php endforeach; ?>
                   </ul>
                 </li>

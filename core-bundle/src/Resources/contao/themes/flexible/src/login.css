@@ -34,7 +34,7 @@ body {
 }
 #go_to_frontend a {
 	padding:3px 0 3px 21px;
-	background:url("icons/login.svg") no-repeat left center;
+	background:url("icons/manager.svg") no-repeat left center;
 	color:#666;
 }
 

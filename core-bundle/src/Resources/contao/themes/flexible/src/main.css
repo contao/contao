@@ -104,37 +104,48 @@ body.popup {
 }
 
 /* Navigation */
-#tl_navigation .tl_level_1 {
-	margin-top:6px;
-}
 #tl_navigation .tl_level_1_group {
-	margin-bottom:18px;
-	padding:6px !important;
 	font-weight:500;
 	border-bottom:1px solid #ddd;
 }
 #tl_navigation .tl_level_1_group a {
 	display:block;
+	padding:12px 9px 12px 30px;
+}
+#tl_navigation .tl_level_1_group .group-content {
+	background:url("icons/article.svg") 6px center no-repeat;
+}
+#tl_navigation .tl_level_1_group .group-design {
+	background:url("icons/themes.svg") 7px center no-repeat;
+}
+#tl_navigation .tl_level_1_group .group-accounts {
+	background:url("icons/mgroup.svg") 6px center no-repeat;
+	background-size:18px;
+}
+#tl_navigation .tl_level_1_group .group-system {
+	background:url("icons/settings.svg") 8px center no-repeat;
+}
+#tl_navigation .tl_parent {
+	border-bottom:1px solid #ddd;
 }
 #tl_navigation .tl_level_2 {
-	padding:0 0 18px 6px !important;
+	padding:6px 0;
+	background:#fff;
 }
 #tl_navigation .tl_level_2 a {
 	display:block;
-	margin:3px 0;
+	padding:4px 9px;
 	font-weight:300;
 }
-#tl_navigation .active {
+#tl_navigation .tl_level_2 .active {
 	color:#77ac45;
-}
-#tl_navigation .tl_parent {
-	margin-top:-12px;
+	font-weight:500;
 }
 #tl_navigation .node-collapsed {
-	background:url("icons/navexp.svg") right 6px center no-repeat;
+	background:#f3f3f3 url("icons/navexp.svg") right 6px center no-repeat;
 }
 #tl_navigation .node-expanded {
-	background:url("icons/navcol.svg") right 6px center no-repeat;
+	background:#f3f3f3 url("icons/navcol.svg") right 6px center no-repeat;
 }
 
 /* Buttons */
@@ -1168,65 +1179,13 @@ time[datetime] {
 	float:right;
 }
 
-/* Navigation icons */
-a.navigation.article {
-	background-image:url("icons/article.svg");
-}
-a.navigation.form {
-	background-image:url("icons/form.svg");
-}
-a.navigation.themes {
-	background-image:url("icons/themes.svg");
-}
-a.navigation.page {
-	background-image:url("icons/page.svg");
-}
-a.navigation.member {
-	background-image:url("icons/member.svg");
-}
-a.navigation.mgroup {
-	background-image:url("icons/mgroup.svg");
-}
-a.navigation.user {
-	background-image:url("icons/user.svg");
-}
-a.navigation.group {
-	background-image:url("icons/group.svg");
-}
-a.navigation.files {
-	background-image:url("icons/files.svg");
-}
-a.navigation.log {
-	background-image:url("icons/log.svg");
-}
-a.navigation.settings {
-	background-image:url("icons/settings.svg");
-}
-a.navigation.maintenance {
-	background-image:url("icons/cache.svg");
-}
-a.navigation.undo {
-	background-image:url("icons/undo.svg");
-}
-a.navigation.login {
-	background-image:url("icons/login.svg");
-}
-a.navigation.tpl_editor {
-	background-image:url("icons/template_editor.svg");
-}
-
 /* Default icon classes */
-a.navigation,.header_icon,.header_home,.header_user,.header_preview,.header_clipboard,.header_logout,.header_back,.header_new,.header_rss,
-.header_edit_all,.header_delete_all,.header_new_folder,.header_css_import,.header_theme_import,.header_store,.header_toggle,.header_sync {
+.header_icon,.header_clipboard,.header_back,.header_new,.header_rss,.header_edit_all,.header_delete_all,
+.header_new_folder,.header_css_import,.header_theme_import,.header_store,.header_toggle,.header_sync {
 	padding:3px 0 3px 21px;
 	background-position:left center;
 	background-repeat:no-repeat;
 	margin-left:15px;
-}
-a.navigation {
-	margin-left:0;
-	padding-left:28px;
-	background-size:20px;
 }
 .list_icon {
 	margin-left:-3px;
@@ -1241,20 +1200,8 @@ a.navigation {
 }
 
 /* Header icons */
-.header_home {
-	background-image:url("icons/home.svg");
-}
-.header_user {
-	background-image:url("icons/login.svg");
-}
-.header_preview {
-	background-image:url("icons/preview.svg");
-}
 .header_clipboard {
 	background-image:url("icons/clipboard.svg");
-}
-.header_logout {
-	background-image:url("icons/logout.svg");
 }
 .header_back {
 	background-image:url("icons/back.svg");
@@ -1691,10 +1638,6 @@ fieldset.collapsed > legend {
 	}
 	#footer {
 		padding-bottom:18px;
-	}
-	.header_home,.header_user,.header_preview,.header_logout {
-		margin-left:0;
-		margin-right:15px;
 	}
 	div.tl_tbox,div.tl_box,fieldset.tl_tbox > div,fieldset.tl_box > div {
 		position:relative;
