@@ -19,7 +19,6 @@ array_insert($GLOBALS['BE_MOD']['content'], 4, array
 		'tables'     => array('tl_newsletter_channel', 'tl_newsletter', 'tl_newsletter_recipients'),
 		'send'       => array('Newsletter', 'send'),
 		'import'     => array('Newsletter', 'importRecipients'),
-		'icon'       => 'bundles/contaonewsletter/icon.svg',
 		'stylesheet' => 'bundles/contaonewsletter/style.css'
 	)
 ));
