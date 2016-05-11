@@ -400,19 +400,16 @@ input[type=search]::-webkit-search-decoration {
 	font-size:.875rem;
 }
 #index_loading {
-	margin:0 0 12px;
-	padding:12px 12px 12px 36px;
-	background:url("icons/loading.svg") no-repeat 2px center;
-	background-size:24px;
-	font-size:1rem;
+	margin:0;
+	padding:12px 12px 12px 24px;
+	background:url("icons/loading.svg") no-repeat left center;
+	background-size:16px;
 	color:#4b85ba;
 }
 #index_complete {
-	margin:0 0 12px;
-	padding:12px 12px 12px 36px;
+	margin:0;
+	padding:12px 12px 12px 24px;
 	background:url("icons/ok.svg") no-repeat left center;
-	background-size:24px;
-	font-size:1rem;
 	color:#77ac45;
 }
 
