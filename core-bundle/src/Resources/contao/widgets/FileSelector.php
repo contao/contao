@@ -553,7 +553,7 @@ class FileSelector extends \Widget
 
 						if ($importantPart['x'] > 0 || $importantPart['y'] > 0 || $importantPart['width'] < $objFile->width || $importantPart['height'] < $objFile->height)
 						{
-							$thumbnail .= ' ' . \Image::getHtml($imageObj->setZoomLevel(100)->setTargetWidth(320)->setTargetHeight((($objFile->height && $objFile->height < 40) ? $objFile->height : 40))->executeResize()->getResizedPath(), '', 'style="margin:0 0 2px 0"');
+							$thumbnail .= ' ' . \Image::getHtml($imageObj->setZoomLevel(100)->setTargetWidth(320)->setTargetHeight((($objFile->height && $objFile->height < 40) ? $objFile->height : 40))->executeResize()->getResizedPath(), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 						}
 					}
 				}

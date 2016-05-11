@@ -2647,7 +2647,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 						if ($importantPart['x'] > 0 || $importantPart['y'] > 0 || $importantPart['width'] < $objFile->width || $importantPart['height'] < $objFile->height)
 						{
-							$thumbnail .= ' ' . \Image::getHtml($imageObj->setZoomLevel(100)->setTargetWidth(320)->setTargetHeight((($objFile->height && $objFile->height < 40) ? $objFile->height : 40))->executeResize()->getResizedPath(), '', 'style="margin:0 0 2px 0"');
+							$thumbnail .= ' ' . \Image::getHtml($imageObj->setZoomLevel(100)->setTargetWidth(320)->setTargetHeight((($objFile->height && $objFile->height < 40) ? $objFile->height : 40))->executeResize()->getResizedPath(), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 						}
 					}
 				}
@@ -2697,6 +2697,21 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 */
 	protected function panel()
 	{
+		// Reset all filters
+		if (isset($_POST['filter_reset']) && \Input::post('FORM_SUBMIT') == 'tl_filters')
+		{
+			/** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+
+			$data = $objSessionBag->all();
+
+			unset($data['search'][$this->strTable]);
+
+			$objSessionBag->replace($data);
+
+			$this->reload();
+		}
+
 		$search = $this->searchMenu();
 
 		if (\Input::post('FORM_SUBMIT') == 'tl_filters')
@@ -2712,6 +2727,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
   <div class="tl_panel cf">
     <div class="tl_submit_panel tl_subpanel">
       <input type="image" name="filter" id="filter" src="' . \Image::getPath('sync.svg') . '" class="tl_img_submit" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
+      <input type="image" name="filter_reset" id="filter_reset" value="1" src="' . \Image::getPath('delete.svg') . '" class="tl_img_submit" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '" alt="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['reset']) . '">
     </div>'.$search.'
   </div>
 </div>
