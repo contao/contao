@@ -125,7 +125,7 @@ body.popup {
 #tl_navigation .tl_level_1_group .group-system {
 	background:url("icons/settings.svg") 8px center no-repeat;
 }
-#tl_navigation .tl_parent {
+#tl_navigation .tl_parent:not(:last-child) {
 	border-bottom:1px solid #ddd;
 }
 #tl_navigation .tl_level_2 {
