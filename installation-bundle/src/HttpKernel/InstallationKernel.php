@@ -12,6 +12,7 @@ namespace Contao\InstallationBundle\HttpKernel;
 
 use Contao\ClassLoader;
 use Contao\Config;
+use Contao\Environment;
 use Contao\InstallationBundle\ClassLoader\LibraryLoader;
 use Contao\InstallationBundle\DependencyInjection\ContainerFactory;
 use Contao\InstallationBundle\Translation\LanguageResolver;
@@ -84,9 +85,16 @@ class InstallationKernel extends \AppKernel
         $requestStack->push($request);
 
         $resolver = new LanguageResolver($requestStack, __DIR__.'/../Resources/translations');
+        $locale = $resolver->getLocale();
 
-        $container->get('translator')->setLocale($resolver->getLocale());
+        $container->get('translator')->setLocale($locale);
         $container->get('contao.framework')->initialize();
+
+        $twig = $container->get('twig');
+
+        $twig->addGlobal('path', $request->getBasePath());
+        $twig->addGlobal('language', str_replace('_', '-', $locale));
+        $twig->addGlobal('ua', Environment::get('agent')->class);
     }
 
     /**
