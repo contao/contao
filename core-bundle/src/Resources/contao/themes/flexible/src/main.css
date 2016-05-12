@@ -1577,12 +1577,12 @@ fieldset.collapsed > legend {
 		float:none;
 		overflow:hidden;
 	}
-	#container,#footer {
+	#main,#footer {
 		position:relative;
 		left:0;
 		transition:left .2s ease;
 	}
-	.show-navigation #container,.show-navigation #footer {
+	.show-navigation #main,.show-navigation #footer {
 		left:215px;
 	}
 	#main,#footer {
@@ -1592,25 +1592,18 @@ fieldset.collapsed > legend {
 	}
 	#tl_navigation {
 		position:absolute;
-		top:42px;
+		top:50px;
+		left:-215px;
 		width:205px;
-		padding:10px;
-		visibility:hidden;
-		opacity:0;
-		transition:visibility .2s, opacity .2s ease;
+		padding:10px 0;
+		transition:left .2s ease;
 	}
 	.show-navigation #tl_navigation {
-		visibility:visible;
-		opacity:1;
-	}
-	#tl_navigation .tl_level_1_group {
-		margin-bottom:24px;
-		padding:12px 6px !important;
+		left:10px;
 	}
 	#tl_navigation .tl_level_2 a {
-		margin:6px 0;
-		padding:6px 0 6px 32px;
-		background-size:24px;
+		padding-top:6px;
+		padding-bottom:6px;
 	}
 	#tmenu {
 		padding-right:46px;

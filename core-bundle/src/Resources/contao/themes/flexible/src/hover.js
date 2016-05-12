@@ -184,11 +184,7 @@ var Theme = {
 	 * Set up the menu toggle
 	 */
 	setupMenuToggle: function() {
-		var tog = $('burger');
-		if (tog.getParent('li').getStyle('display') == 'none') return;
-		$('tl_navigation').inject($('header'), 'after');
-		$('left').destroy();
-		tog.addEvent('click', function() {
+		$('burger').addEvent('click', function() {
 			document.body.toggleClass('show-navigation');
 		});
 	}
