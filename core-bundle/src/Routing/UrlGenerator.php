@@ -111,6 +111,10 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private function prepareAlias($alias, array &$parameters)
     {
+        if ('index' === $alias) {
+            return;
+        }
+
         $hasAutoItem = false;
         $autoItems = $this->getAutoItems($parameters);
 

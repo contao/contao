@@ -35,8 +35,6 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testRoute()
     {
-        $this->assertEquals('contao_index', $this->generator(false, 0)->generate('index'));
-        $this->assertEquals('contao_index', $this->generator(true, 0)->generate('index'));
         $this->assertEquals('contao_frontend', $this->generator(false, 0)->generate('foobar'));
         $this->assertEquals('contao_frontend', $this->generator(true, 0)->generate('foobar'));
         $this->assertEquals('contao_frontend', $this->generator(false, 0)->generate('foobar/test'));
@@ -47,6 +45,20 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foobar', $this->generator()->generate('foobar')['alias']);
         $this->assertEquals('foobar/test', $this->generator()->generate('foobar/test')['alias']);
         $this->assertEquals('foobar/article/test', $this->generator()->generate('foobar/article/test')['alias']);
+    }
+
+    public function testIndex()
+    {
+        $this->assertEquals('contao_index', $this->generator(false, 0)->generate('index'));
+        $this->assertEquals('contao_index', $this->generator(true, 0)->generate('index'));
+        $this->assertArrayNotHasKey('alias', $this->generator()->generate('index'));
+
+        $this->assertEquals('contao_frontend', $this->generator(false, 0)->generate('index/foobar'));
+        $this->assertArrayHasKey('alias', $this->generator()->generate('index/foobar'));
+
+        $this->assertEquals('contao_frontend', $this->generator(false, 0)->generate('index/{foo}', ['foo' => 'bar']));
+        $this->assertArrayHasKey('alias', $this->generator()->generate('index/{foo}', ['foo' => 'bar']));
+        $this->assertEquals('index/foo/bar', $this->generator()->generate('index/{foo}', ['foo' => 'bar'])['alias']);
     }
 
     public function testRemovesLocale()
