@@ -674,11 +674,9 @@ abstract class Backend extends \Controller
 					// Get articles with teaser
 					if (($objArticles = \ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
 					{
-						$feUrl = $objPage->getAbsoluteUrl('/articles/%s');
-
 						foreach ($objArticles as $objArticle)
 						{
-							$arrPages[] = sprintf($feUrl, ($objArticle->alias ?: $objArticle->id));
+							$arrPages[] = $objPage->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 						}
 					}
 				}
