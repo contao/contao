@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * @property \Automator                                $Automator   The automator object
  * @property \Config                                   $Config      The config object
  * @property \Database                                 $Database    The database object
+ * @property \Environment                              $Environment The environment object
  * @property \Files                                    $Files       The files object
  * @property \Input                                    $Input       The input object
  * @property \Database\Installer                       $Installer   The database installer object
@@ -104,7 +105,6 @@ abstract class System
 	protected function __construct()
 	{
 		$this->import('Config');
-		$this->import('Session');
 	}
 
 
@@ -122,7 +122,7 @@ abstract class System
 	{
 		if (!isset($this->arrObjects[$strKey]))
 		{
-			if ($strKey == 'Input' || $strKey == 'Environment')
+			if ($strKey == 'Input' || $strKey == 'Environment' || $strKey == 'Session')
 			{
 				$this->arrObjects[$strKey] = $strKey::getInstance();
 			}
