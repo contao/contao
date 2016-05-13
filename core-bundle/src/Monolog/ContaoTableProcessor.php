@@ -35,15 +35,22 @@ class ContaoTableProcessor
     private $tokenStorage;
 
     /**
+     * @var bool
+     */
+    private $anonymizeIp;
+
+    /**
      * Constructor.
      *
      * @param RequestStack          $requestStack
      * @param TokenStorageInterface $tokenStorage
+     * @param bool                  $anonymizeIp
      */
-    public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage)
+    public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, $anonymizeIp = true)
     {
         $this->requestStack = $requestStack;
         $this->tokenStorage = $tokenStorage;
+        $this->anonymizeIp = $anonymizeIp;
     }
 
     /**
@@ -73,11 +80,17 @@ class ContaoTableProcessor
 
     private function updateIp(ContaoContext $context, Request $request = null)
     {
-        if (null !== $context->getIp()) {
-            return;
+        $ip = $context->getIp();
+
+        if (null === $ip) {
+            $ip = null === $request ? '127.0.0.1' : $request->getClientIp();
         }
 
-        $context->setIp(null === $request ? '127.0.0.1' : $request->getClientIp());
+        if ($this->anonymizeIp) {
+            $ip = $this->anonymizeIp($ip);
+        }
+
+        $context->setIp($ip);
     }
 
     private function updateBrowser(ContaoContext $context, Request $request = null)
@@ -107,5 +120,23 @@ class ContaoTableProcessor
         }
 
         $context->setSource($this->isBackendScope() ? 'BE' : 'FE');
+    }
+
+    /**
+     * @param string $ip
+     *
+     * @return string
+     */
+    private function anonymizeIp($ip)
+    {
+        if ('127.0.0.1' === $ip || '::1' === $ip) {
+            return $ip;
+        }
+
+        if (false !== strpos($ip, ':')) {
+            return substr_replace($ip, ':0000', strrpos($ip, ':'));
+        }
+
+        return substr_replace($ip, '.0', strrpos($ip, '.'));
     }
 }
