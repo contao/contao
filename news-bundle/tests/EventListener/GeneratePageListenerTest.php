@@ -15,6 +15,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\NewsBundle\EventListener\GeneratePageListener;
 use Contao\Model\Collection;
+use Contao\PageModel;
 
 /**
  * Tests the GeneratePageListener class.
@@ -38,6 +39,7 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnGeneratePage()
     {
+        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
         $pageModel = $this
             ->getMockBuilder('Contao\PageModel')
             ->disableOriginalConstructor()
@@ -83,6 +85,7 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReturnIfNoFeeds()
     {
+        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
         $pageModel = $this
             ->getMockBuilder('Contao\PageModel')
             ->disableOriginalConstructor()
@@ -123,6 +126,7 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReturnIfNoModels()
     {
+        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
         $pageModel = $this
             ->getMockBuilder('Contao\PageModel')
             ->disableOriginalConstructor()

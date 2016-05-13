@@ -14,6 +14,9 @@ namespace Contao;
 /**
  * Parent class for news modules.
  *
+ * @property string $news_template
+ * @property mixed  news_metaFields
+ * 
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class ModuleNews extends \Module

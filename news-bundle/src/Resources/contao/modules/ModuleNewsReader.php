@@ -17,6 +17,10 @@ use Patchwork\Utf8;
 /**
  * Front end module "news reader".
  *
+ * @property Comments $Comments
+ * @property string   $com_template
+ * @property array    $news_archives
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsReader extends \ModuleNews

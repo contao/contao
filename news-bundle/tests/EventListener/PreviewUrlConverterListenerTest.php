@@ -13,7 +13,6 @@ namespace Contao\NewsBundle\Test\EventListener;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\News;
 use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

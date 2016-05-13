@@ -17,6 +17,12 @@ use Patchwork\Utf8;
 /**
  * Front end module "news archive".
  *
+ * @property int    $news_startDay
+ * @property bool   $news_showQuantity
+ * @property array  $news_archives
+ * @property string $news_order
+ * @property string $news_format
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsMenu extends \ModuleNews

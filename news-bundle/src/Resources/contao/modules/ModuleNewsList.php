@@ -17,6 +17,9 @@ use Patchwork\Utf8;
 /**
  * Front end module "news list".
  *
+ * @property array  $news_archives
+ * @property string $news_featured
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsList extends \ModuleNews

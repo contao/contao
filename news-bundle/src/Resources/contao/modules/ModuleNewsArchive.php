@@ -17,6 +17,11 @@ use Patchwork\Utf8;
 /**
  * Front end module "news archive".
  *
+ * @property array  $news_archives
+ * @property string $news_jumpToCurrent
+ * @property string $news_format
+ * @property int    $news_readerModule
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsArchive extends \ModuleNews
