@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -968,7 +969,30 @@ class PageModel extends \Model
 			@trigger_error('Using PageModel::getFrontendUrl() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 		}
 
-		return \Controller::generateFrontendUrl($this->loadDetails()->row(), $strParams, $strForceLang, true);
+		$this->loadDetails();
+
+		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
+
+		$strUrl = $objUrlGenerator->generate
+		(
+			($this->alias ?: $this->id),
+			array
+			(
+				'_locale' => ($strForceLang ?: $this->rootLanguage),
+				'_domain' => $this->domain,
+				'_ssl' => (bool) $this->rootUseSSL,
+			)
+		);
+
+		// Make the URL relative to the base path
+		if (0 === strpos($strUrl, '/'))
+		{
+			$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		}
+
+		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
+
+		return $strUrl;
 	}
 
 
@@ -981,11 +1005,63 @@ class PageModel extends \Model
 	 */
 	public function getAbsoluteUrl($strParams=null)
 	{
-		$strUrl = \Controller::generateFrontendUrl($this->loadDetails()->row(), $strParams, null, true);
+		$this->loadDetails();
 
-		if (strncmp($strUrl, 'http://', 7) !== 0 && strncmp($strUrl, 'https://', 8) !== 0)
+		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
+
+		$strUrl = $objUrlGenerator->generate
+		(
+			($this->alias ?: $this->id),
+			array
+			(
+				'_locale' => $this->rootLanguage,
+				'_domain' => $this->domain,
+				'_ssl' => (bool) $this->rootUseSSL,
+			),
+			UrlGeneratorInterface::ABSOLUTE_URL
+		);
+
+		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
+
+		return $strUrl;
+	}
+
+
+	/**
+	 * Modifies a URL from the URL generator.
+	 *
+	 * @param string $strUrl
+	 * @param string $strParams
+	 *
+	 * @return string
+	 */
+	private function applyLegacyLogic($strUrl, $strParams)
+	{
+		// Decode sprintf placeholders
+		if (strpos($strParams, '%') !== false)
 		{
-			$strUrl = ($this->rootUseSSL ? 'https://' : 'http://') . \Environment::get('host') . TL_PATH . '/' . $strUrl;
+			@trigger_error('Using sprintf placeholders in URLs has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+			$arrMatches = array();
+			preg_match_all('/%([sducoxXbgGeEfF])/', $strParams, $arrMatches);
+
+			foreach (array_unique($arrMatches[1]) as $v)
+			{
+				$strUrl = str_replace('%25' . $v, '%' . $v, $strUrl);
+			}
+		}
+
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
+		{
+			@trigger_error('Using the "generateFrontendUrl" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
+			{
+				$strUrl = \System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams, $strUrl);
+			}
+
+			return $strUrl;
 		}
 
 		return $strUrl;
