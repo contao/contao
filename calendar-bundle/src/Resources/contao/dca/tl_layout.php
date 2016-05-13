@@ -15,7 +15,7 @@
 Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('feed_legend', 'modules_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
     ->addField('calendarfeeds', 'feed_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
-    ->applyToPalette('tl_layout', 'default')
+    ->applyToPalette('default', 'tl_layout')
 ;
 
 
