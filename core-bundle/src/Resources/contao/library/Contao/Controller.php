@@ -1051,18 +1051,13 @@ abstract class Controller extends \System
 	 * @param boolean $blnFixDomain Check the domain of the target page and append it if necessary
 	 *
 	 * @return string An URL that can be used in the front end
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+	 *             Use the contao.routing.url_generator service or PageModel::getFrontendUrl() instead.
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		if ($strForceLang !== null)
-		{
-			@trigger_error('Using Controller::generateFrontendUrl() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-		}
-
-		if ($blnFixDomain !== true)
-		{
-			@trigger_error('Using Controller::generateFrontendUrl() without $blnFixDomain has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-		}
+		@trigger_error('Using Controller::generateFrontendUrl() has been deprecated and will no longer work in Contao 5.0. Use the contao.routing.url_generator service or PageModel::getFrontendUrl() instead.', E_USER_DEPRECATED);
 
 		if (!isset($arrRow['rootId']))
 		{
