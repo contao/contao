@@ -190,11 +190,7 @@ h2.sub_headline_purge {
 	background:url("icons/purge.svg") no-repeat left center;
 }
 .tl_message {
-	margin:0 18px;
-}
-.tl_message_picker {
-	margin-top:27px;
-	margin-bottom:-9px;
+	margin:27px 18px -9px;
 }
 .tl_gerror {
 	margin:12px 9px 6px;

@@ -438,7 +438,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').(($session['search'][$this->strTable]['value'] != '') ? '
 
-<div class="tl_message tl_message_picker">
+<div class="tl_message">
  <p class="tl_info">'.$GLOBALS['TL_LANG']['MSC']['searchExclude'].'</p>
 </div>' : '').($blnClipboard ? '
 
