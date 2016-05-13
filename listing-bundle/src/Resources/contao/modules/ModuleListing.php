@@ -17,6 +17,16 @@ use Patchwork\Utf8;
 /**
  * Provide methods to render content element "listing".
  *
+ * @property string $list_table
+ * @property string $list_info
+ * @property string $list_info_layout
+ * @property string $list_info_where
+ * @property string $list_fields
+ * @property string $list_sort
+ * @property string $list_where
+ * @property string $list_search
+ * @property string $list_layout
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleListing extends \Module
