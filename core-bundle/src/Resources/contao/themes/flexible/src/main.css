@@ -38,18 +38,20 @@ body.popup {
 	font-size:1.125rem;
 }
 #tmenu {
+	margin-right:3px;
 	text-align:right;
 }
 #tmenu li {
 	display:inline;
 }
 #tmenu a {
-	padding:14px;
+	padding:11px 9px;
 	display:inline-block;
 }
 #tmenu sup {
 	position:absolute;
 	top:9px;
+	margin-left:-7px;
 	font-size:.625rem;
 	background:#f00;
 	padding:1px 2px;
@@ -1606,22 +1608,24 @@ fieldset.collapsed > legend {
 		padding-bottom:6px;
 	}
 	#tmenu {
-		padding-right:46px;
+		margin-right:10px;
+	}
+	#tmenu a {
+		padding-left:6px;
+		padding-right:6px;
 	}
 	#tmenu .burger {
-		display:block;
-		position:absolute;
-		top:8px;
-		right:10px;
+		display:inline;
 	}
 	#tmenu .burger img {
 		cursor:pointer;
+		padding-left:5px;
 	}
 }
 
 /* Handheld */
 @media (max-width:767px) {
-	#header .inner,#left,#main,#footer {
+	#left,#main,#footer {
 		width:auto;
 		margin-left:10px;
 		margin-right:10px;
@@ -1632,7 +1636,7 @@ fieldset.collapsed > legend {
 	div.tl_tbox,div.tl_box,fieldset.tl_tbox > div,fieldset.tl_box > div {
 		position:relative;
 	}
-	.tl_header,.tl_content,.tl_content.indent,.tl_listing {
+	#header .inner,.tl_header,.tl_content,.tl_content.indent,.tl_listing {
 		width:auto;
 	}
 	.tl_content_left {
