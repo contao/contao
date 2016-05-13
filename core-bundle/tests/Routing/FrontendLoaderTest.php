@@ -106,11 +106,6 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
             '/foobar.html',
             $router->generate('contao_frontend', ['alias' => 'foobar'])
         );
-
-        $this->assertEquals(
-            '/foobar.html',
-            $router->generate('contao_frontend', ['alias' => 'foobar', '_locale' => 'en'])
-        );
     }
 
     /**
@@ -154,11 +149,6 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             '/',
             $router->generate('contao_index')
-        );
-
-        $this->assertEquals(
-            '/',
-            $router->generate('contao_index', ['_locale' => 'en'])
         );
     }
 

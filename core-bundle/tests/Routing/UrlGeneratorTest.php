@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\Routing;
 
 use Contao\CoreBundle\Routing\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
@@ -20,6 +21,9 @@ use Symfony\Component\Routing\RequestContext;
  */
 class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp()
     {
         unset($GLOBALS['TL_AUTO_ITEM']);
@@ -33,6 +37,9 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Routing\UrlGenerator', $this->generator());
     }
 
+    /**
+     * Tests the router.
+     */
     public function testRoute()
     {
         $this->assertEquals('contao_frontend', $this->generator(false, 0)->generate('foobar'));
@@ -40,6 +47,9 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('contao_frontend', $this->generator(false, 0)->generate('foobar/test'));
     }
 
+    /**
+     * Tests the router without parameters.
+     */
     public function testWithoutParameters()
     {
         $this->assertEquals('foobar', $this->generator()->generate('foobar')['alias']);
@@ -47,6 +57,9 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foobar/article/test', $this->generator()->generate('foobar/article/test')['alias']);
     }
 
+    /**
+     * Tests that the index fragment is omitted.
+     */
     public function testIndex()
     {
         $this->assertEquals('contao_index', $this->generator(false, 0)->generate('index'));
@@ -61,6 +74,9 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('index/foo/bar', $this->generator()->generate('index/{foo}', ['foo' => 'bar'])['alias']);
     }
 
+    /**
+     * Tests that the locale is removed if prepend_locale is not set.
+     */
     public function testRemovesLocale()
     {
         $params = $this->generator(false)->generate('foobar', ['_locale' => 'en']);
@@ -72,6 +88,9 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('_locale', $params);
     }
 
+    /**
+     * Tests the parameter replacement.
+     */
     public function testReplaceParameters()
     {
         $params = ['items' => 'bar', 'article' => 'test'];
@@ -89,6 +108,9 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('items', $result);
     }
 
+    /**
+     * Tests the auto_item support.
+     */
     public function testAutoItem()
     {
         $this->assertEquals(
@@ -104,11 +126,10 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
             )['alias']
         );
 
-        $GLOBALS['TL_AUTO_ITEM'] = ['items'];
+        $GLOBALS['TL_AUTO_ITEM'] = ['article', 'items'];
+
         $this->assertEquals('foo/bar', $this->generator()->generate('foo/{items}', ['items' => 'bar'])['alias']);
 
-        $GLOBALS['TL_AUTO_ITEM'] = ['items', 'article'];
-        $this->assertEquals('foo/bar', $this->generator()->generate('foo/{items}', ['items' => 'bar'])['alias']);
         $this->assertEquals(
             'foo/bar/article/test',
             $this->generator()->generate(
@@ -119,6 +140,8 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests that an exception is thrown if a parameter is missing.
+     *
      * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      */
     public function testThrowsExceptionOnMissingParameter()
@@ -126,18 +149,41 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->generator()->generate('foo/{article}');
     }
 
+    /**
+     * Returns an UrlGenerator object.
+     *
+     * @param bool $prependLocale
+     * @param int  $returnArgument
+     *
+     * @return UrlGenerator
+     */
     private function generator($prependLocale = false, $returnArgument = 1)
     {
         return new UrlGenerator($this->mockRouter($returnArgument), $prependLocale);
     }
 
+    /**
+     * Mocks a router object.
+     *
+     * @param int $returnArgument
+     *
+     * @return UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
     private function mockRouter($returnArgument = 0)
     {
         $router = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $router->method('generate')->willReturnArgument($returnArgument);
 
-        $context = new RequestContext();
-        $router->method('getContext')->willReturn($context);
+        $router
+            ->expects($this->any())
+            ->method('generate')
+            ->willReturnArgument($returnArgument)
+        ;
+
+        $router
+            ->expects($this->any())
+            ->method('getContext')
+            ->willReturn(new RequestContext())
+        ;
 
         return $router;
     }
