@@ -13,11 +13,13 @@ matrix:
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
 
 before_install:
+  - cp $HOME/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini /tmp
   - phpenv config-rm xdebug.ini
 
 before_script:
   - composer selfupdate
   - travis_wait composer update $COMPOSER_FLAGS --no-interaction
+  - phpenv config-add /tmp/xdebug.ini
 
 script:
   - mkdir -p build/logs
