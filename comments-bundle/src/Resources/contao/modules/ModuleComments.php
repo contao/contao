@@ -16,6 +16,14 @@ use Patchwork\Utf8;
 /**
  * Class ModuleComments
  *
+ * @property Comments $Comments
+ * @property bool     $com_moderate
+ * @property bool     $com_bbcode
+ * @property bool     $com_disableCaptcha
+ * @property bool     $com_requireLogin
+ * @property string   $com_order
+ * @property string   $com_template
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleComments extends \Module
