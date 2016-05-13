@@ -17,6 +17,15 @@ use Patchwork\Utf8;
 /**
  * Front end module "event list".
  *
+ * @property bool   $cal_noSpan
+ * @property string $cal_template
+ * @property int    $cal_limit
+ * @property string $cal_order
+ * @property array  $cal_calendar
+ * @property string $cal_format
+ * @property bool   $cal_ignoreDynamic
+ * @property int    $cal_readerModule
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventlist extends \Events

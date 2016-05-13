@@ -16,6 +16,10 @@ use Patchwork\Utf8;
 /**
  * Front end module "event menu".
  *
+ * @property bool   $cal_showQuantity
+ * @property string $cal_order
+ * @property string $cal_format
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventMenu extends \ModuleCalendar

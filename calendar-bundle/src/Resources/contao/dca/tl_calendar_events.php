@@ -517,6 +517,8 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
+ * @property Contao\Calendar $Calendar
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_calendar_events extends Backend

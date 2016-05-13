@@ -17,6 +17,11 @@ use Patchwork\Utf8;
 /**
  * Front end module "event reader".
  *
+ * @property Comments $Comments
+ * @property string   $com_template
+ * @property string   $cal_template
+ * @property array    $cal_calendar
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventReader extends \Events

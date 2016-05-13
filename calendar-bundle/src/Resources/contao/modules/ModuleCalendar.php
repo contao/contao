@@ -17,6 +17,10 @@ use Patchwork\Utf8;
 /**
  * Front end module "calendar".
  *
+ * @property int    $cal_startDay
+ * @property array  $cal_calendar
+ * @property string $cal_ctemplate
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleCalendar extends \Events
