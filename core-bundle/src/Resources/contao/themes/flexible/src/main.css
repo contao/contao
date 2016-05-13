@@ -45,7 +45,7 @@ body.popup {
 	display:inline;
 }
 #tmenu a {
-	padding:11px 9px;
+	padding:12px 9px;
 	display:inline-block;
 }
 #tmenu sup {
@@ -190,7 +190,7 @@ h2.sub_headline_purge {
 	background:url("icons/purge.svg") no-repeat left center;
 }
 .tl_message {
-	margin:27px 18px -9px;
+	margin:18px 18px -12px;
 }
 .tl_gerror {
 	margin:12px 9px 6px;
@@ -1615,7 +1615,7 @@ fieldset.collapsed > legend {
 	}
 	#tmenu .burger img {
 		cursor:pointer;
-		padding-left:5px;
+		padding-left:3px;
 	}
 }
 

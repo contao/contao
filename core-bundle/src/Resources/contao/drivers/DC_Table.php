@@ -5010,8 +5010,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$submit = '
 
 <div class="tl_submit_panel tl_subpanel">
-<input type="image" name="filter" id="filter" src="' . \Image::getPath('sync.svg') . '" class="tl_img_submit" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
-<input type="image" name="filter_reset" id="filter_reset" value="1" src="' . \Image::getPath('delete.svg') . '" class="tl_img_submit" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '" alt="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['reset']) . '">
+<input type="image" name="filter" id="filter" src="' . \Image::getPath('filter-apply.svg') . '" class="tl_img_submit" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
+<input type="image" name="filter_reset" id="filter_reset" value="1" src="' . \Image::getPath('filter-reset.svg') . '" class="tl_img_submit" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '" alt="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['reset']) . '">
 </div>';
 			}
 
