@@ -975,7 +975,7 @@ class PageModel extends \Model
 
 		$strUrl = $objUrlGenerator->generate
 		(
-			($this->alias ?: $this->id),
+			($this->alias ?: $this->id) . $strParams,
 			array
 			(
 				'_locale' => ($strForceLang ?: $this->rootLanguage),
@@ -1011,7 +1011,7 @@ class PageModel extends \Model
 
 		$strUrl = $objUrlGenerator->generate
 		(
-			($this->alias ?: $this->id),
+			($this->alias ?: $this->id) . $strParams,
 			array
 			(
 				'_locale' => $this->rootLanguage,
