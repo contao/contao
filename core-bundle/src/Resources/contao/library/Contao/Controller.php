@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use League\Uri\Components\Query;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -1078,19 +1079,7 @@ abstract class Controller extends \System
 			}
 		}
 
-		$objRouter = \System::getContainer()->get('router');
 		$arrParams = [];
-		$strRoute = 'contao_frontend';
-
-		// Correctly handle the "index" alias (see #3961)
-		if ($arrRow['alias'] == 'index' && $strParams == '')
-		{
-			$strRoute = 'contao_index';
-		}
-		else
-		{
-			$arrParams['alias'] = ($arrRow['alias'] ?: $arrRow['id']) . $strParams;
-		}
 
 		// Set the language
 		if ($strForceLang != '')
@@ -1113,8 +1102,21 @@ abstract class Controller extends \System
 			$arrParams['_locale'] = $objPage->rootLanguage;
 		}
 
-		$strUrl = $objRouter->generate($strRoute, $arrParams);
-		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		// Add the domain if it differs from the current one (see #3765 and #6927)
+		if ($blnFixDomain)
+		{
+			$arrParams['_domain'] = $arrRow['domain'];
+			$arrParams['_ssl'] = (bool) $arrRow['rootUseSSL'];
+		}
+
+		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
+		$strUrl = $objUrlGenerator->generate(($arrRow['alias'] ?: $arrRow['id']) . $strParams, $arrParams);
+
+		// Remove path from absolute URLs
+		if (0 === strpos($strUrl, '/'))
+		{
+			$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		}
 
 		// Decode sprintf placeholders
 		if (strpos($strParams, '%') !== false)
@@ -1126,12 +1128,6 @@ abstract class Controller extends \System
 			{
 				$strUrl = str_replace('%25' . $v, '%' . $v, $strUrl);
 			}
-		}
-
-		// Add the domain if it differs from the current one (see #3765 and #6927)
-		if ($blnFixDomain && !empty($arrRow['domain']) && $arrRow['domain'] != \Environment::get('host'))
-		{
-			$strUrl = ($arrRow['rootUseSSL'] ? 'https://' : 'http://') . $arrRow['domain'] . \Environment::get('path') . '/' . $strUrl;
 		}
 
 		// HOOK: add custom logic
