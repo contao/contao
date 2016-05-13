@@ -16,6 +16,11 @@ use Patchwork\Utf8;
 /**
  * Front end module "newsletter unsubscribe".
  *
+ * @property bool   $nl_hideChannels
+ * @property string $nl_unsubscribe
+ * @property array  $nl_channels
+ * @property string $nl_template
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleUnsubscribe extends \Module

@@ -704,9 +704,9 @@ class Newsletter extends \Backend
 	/**
 	 * Synchronize newsletter subscription of existing users
 	 *
-	 * @param mixed       $varValue
-	 * @param MemberModel $objUser
-	 * @param ModuleModel $objModule
+	 * @param mixed              $varValue
+	 * @param MemberModel        $objUser
+	 * @param ModuleModel|object $objModule
 	 *
 	 * @return mixed
 	 */
@@ -878,7 +878,7 @@ class Newsletter extends \Backend
 	/**
 	 * Get all editable newsletters and return them as array
 	 *
-	 * @param ModuleModel $objModule
+	 * @param ModuleModel|object $objModule
 	 *
 	 * @return array
 	 */
