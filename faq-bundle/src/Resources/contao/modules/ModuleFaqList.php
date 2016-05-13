@@ -16,6 +16,9 @@ use Patchwork\Utf8;
 /**
  * Class ModuleFaqList
  *
+ * @property array $faq_categories
+ * @property int   $faq_readerModule
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaqList extends \Module
