@@ -82,7 +82,6 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('article', $result);
         $this->assertArrayHasKey('items', $result);
 
-
         $result = $this->generator()->generate('foo/{items}/{article}', $params);
 
         $this->assertEquals('foo/items/bar/article/test', $result['alias']);
@@ -126,7 +125,6 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $this->generator()->generate('foo/{article}');
     }
-
 
     private function generator($prependLocale = false, $returnArgument = 1)
     {

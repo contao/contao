@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of Contao.
+ *
+ * Copyright (c) 2005-2016 Leo Feyer
+ *
+ * @license LGPL-3.0+
+ */
+
 namespace Contao\CoreBundle\Routing;
 
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
@@ -7,7 +15,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
- * UrlGenerator
+ * Generates Contao URLs.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -36,7 +44,7 @@ class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setContext(RequestContext $context)
     {
@@ -44,7 +52,7 @@ class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getContext()
     {
@@ -52,7 +60,7 @@ class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @todo write explanation
+     * Generates a Contao URL.
      *
      * @param string $name
      * @param array  $parameters
@@ -63,10 +71,14 @@ class UrlGenerator implements UrlGeneratorInterface
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
         $route = 'index' === $name ? 'contao_index' : 'contao_frontend';
-        $parameters = is_array($parameters) ? $parameters : [];
 
-        // Store original request context
+        if (!is_array($parameters)) {
+            $parameters = [];
+        }
+
         $context = $this->getContext();
+
+        // Store the original request context
         $_host = $context->getHost();
         $_scheme = $context->getScheme();
         $_httpPort = $context->getHttpPort();
@@ -78,7 +90,7 @@ class UrlGenerator implements UrlGeneratorInterface
 
         $url = $this->router->generate($route, $parameters, $referenceType);
 
-        // Reset request context
+        // Reset the request context
         $context->setHost($_host);
         $context->setScheme($_scheme);
         $context->setHttpPort($_httpPort);
@@ -88,7 +100,7 @@ class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * Removes locale parameter if it is disabled for the URL
+     * Removes the locale parameter if it is disabled.
      *
      * @param array $parameters
      */
@@ -100,7 +112,7 @@ class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * Parse alias and write to parameters
+     * Adds the parameters to the alias.
      *
      * @param string $alias
      * @param array  $parameters
@@ -138,14 +150,14 @@ class UrlGenerator implements UrlGeneratorInterface
                     return $value;
                 }
 
-                return $param . '/' . $value;
+                return $param.'/'.$value;
             },
             $alias
         );
     }
 
     /**
-     * Force router to add host to URL if neccessary
+     * Forces the router to add the host if necessary.
      *
      * @param RequestContext $context
      * @param array          $parameters
@@ -153,8 +165,9 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private function prepareDomain(RequestContext $context, array &$parameters, &$referenceType)
     {
-        if (!array_key_exists('_domain', $parameters) || '' === $parameters['_domain']) {
+        if (!isset($parameters['_domain']) || '' === $parameters['_domain']) {
             unset($parameters['_domain'], $parameters['_ssl']);
+
             return;
         }
 
@@ -168,8 +181,8 @@ class UrlGenerator implements UrlGeneratorInterface
                 $referenceType = UrlGeneratorInterface::NETWORK_PATH;
             }
 
-            if (array_key_exists('_ssl', $parameters)) {
-                $context->setScheme($parameters['_ssl'] ? 'https' : 'http');
+            if (isset($parameters['_domain']) && true === $parameters['_ssl']) {
+                $context->setScheme('https');
                 $context->setHttpsPort($port ?: 443);
                 $referenceType = UrlGeneratorInterface::ABSOLUTE_URL;
             }
@@ -179,7 +192,7 @@ class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * Get auto_item names from parameters or global array
+     * Returns the auto_item key from the parameters or the global array.
      *
      * @param array $parameters
      *
@@ -187,11 +200,11 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private function getAutoItems(array $parameters)
     {
-        if (array_key_exists('auto_item', $parameters)) {
+        if (isset($parameters['auto_item'])) {
             return [$parameters['auto_item']];
         }
 
-        if ((isset($GLOBALS['TL_AUTO_ITEM']) && is_array($GLOBALS['TL_AUTO_ITEM']))) {
+        if (isset($GLOBALS['TL_AUTO_ITEM']) && is_array($GLOBALS['TL_AUTO_ITEM'])) {
             return $GLOBALS['TL_AUTO_ITEM'];
         }
 

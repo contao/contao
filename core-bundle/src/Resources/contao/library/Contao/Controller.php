@@ -1079,9 +1079,7 @@ abstract class Controller extends \System
 			}
 		}
 
-		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
 		$arrParams = [];
-		$strAlias = ($arrRow['alias'] ?: $arrRow['id']) . $strParams;
 
 		// Set the language
 		if ($strForceLang != '')
@@ -1111,7 +1109,8 @@ abstract class Controller extends \System
 			$arrParams['_ssl'] = (bool) $arrRow['rootUseSSL'];
 		}
 
-		$strUrl = $objUrlGenerator->generate($strAlias, $arrParams);
+		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
+		$strUrl = $objUrlGenerator->generate(($arrRow['alias'] ?: $arrRow['id']) . $strParams, $arrParams);
 
 		// Remove path from absolute URLs
 		if (0 === strpos($strUrl, '/'))
