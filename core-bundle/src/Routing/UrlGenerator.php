@@ -79,10 +79,10 @@ class UrlGenerator implements UrlGeneratorInterface
         $context = $this->getContext();
 
         // Store the original request context
-        $_host = $context->getHost();
-        $_scheme = $context->getScheme();
-        $_httpPort = $context->getHttpPort();
-        $_httpsPort = $context->getHttpsPort();
+        $host = $context->getHost();
+        $scheme = $context->getScheme();
+        $httpPort = $context->getHttpPort();
+        $httpsPort = $context->getHttpsPort();
 
         $this->prepareLocale($parameters);
         $this->prepareAlias($name, $parameters);
@@ -91,10 +91,10 @@ class UrlGenerator implements UrlGeneratorInterface
         $url = $this->router->generate($route, $parameters, $referenceType);
 
         // Reset the request context
-        $context->setHost($_host);
-        $context->setScheme($_scheme);
-        $context->setHttpPort($_httpPort);
-        $context->setHttpsPort($_httpsPort);
+        $context->setHost($host);
+        $context->setScheme($scheme);
+        $context->setHttpPort($httpPort);
+        $context->setHttpsPort($httpsPort);
 
         return $url;
     }
@@ -116,8 +116,6 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @param string $alias
      * @param array  $parameters
-     *
-     * @return array
      *
      * @throws MissingMandatoryParametersException
      */
@@ -165,30 +163,34 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private function prepareDomain(RequestContext $context, array &$parameters, &$referenceType)
     {
-        if (!isset($parameters['_domain']) || '' === $parameters['_domain']) {
-            unset($parameters['_domain'], $parameters['_ssl']);
-
-            return;
-        }
-
-        list($host, $port) = explode(':', $parameters['_domain'], 2);
-
-        if ($host !== $context->getHost()) {
-            $context->setHost($host);
-            $context->setHttpPort($port ?: 80);
-
-            if (UrlGeneratorInterface::ABSOLUTE_URL !== $referenceType) {
-                $referenceType = UrlGeneratorInterface::NETWORK_PATH;
-            }
-
-            if (isset($parameters['_domain']) && true === $parameters['_ssl']) {
-                $context->setScheme('https');
-                $context->setHttpsPort($port ?: 443);
-                $referenceType = UrlGeneratorInterface::ABSOLUTE_URL;
-            }
+        if (isset($parameters['_domain']) && '' !== $parameters['_domain']) {
+            $this->setContextFromDomain($context, $parameters, $referenceType);
         }
 
         unset($parameters['_domain'], $parameters['_ssl']);
+    }
+
+    /**
+     * Sets the context from the domain.
+     *
+     * @param RequestContext $context
+     * @param array          $parameters
+     * @param string         $referenceType
+     */
+    private function setContextFromDomain(RequestContext $context, array &$parameters, &$referenceType)
+    {
+        list($host, $port) = explode(':', $parameters['_domain'], 2);
+
+        if ($host === $context->getHost()) {
+            return;
+        }
+
+        $isSsl = true === $parameters['_ssl'];
+        $referenceType = UrlGeneratorInterface::ABSOLUTE_URL;
+
+        $context->setHost($host);
+        $context->setScheme($isSsl ? 'https' : 'http');
+        $context->setHttpPort($port ?: ($isSsl ? 443 : 80));
     }
 
     /**
