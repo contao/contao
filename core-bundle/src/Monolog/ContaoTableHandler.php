@@ -1,9 +1,16 @@
 <?php
 
+/*
+ * This file is part of Contao.
+ *
+ * Copyright (c) 2005-2015 Leo Feyer
+ *
+ * @license LGPL-3.0+
+ */
+
 namespace Contao\CoreBundle\Monolog;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Statement;
@@ -17,8 +24,6 @@ use Monolog\Logger;
  */
 class ContaoTableHandler extends AbstractHandler
 {
-    use ScopeAwareTrait;
-
     /**
      * @var ContaoFrameworkInterface
      */
@@ -72,29 +77,35 @@ class ContaoTableHandler extends AbstractHandler
         }
 
         try {
-            /** @var \DateTime $date */
-            $date     = $record['datetime'];
-            $category = strtoupper(str_replace('contao_', '', $record['channel']));
-
             $record = call_user_func($this->processor, $record);
+
+            if (!isset($record['extra']['contao']) || !$record['extra']['contao'] instanceof ContaoContext) {
+                return false;
+            }
+
+            /** @var \DateTime $date */
+            $date = $record['datetime'];
+
+            /** @var ContaoContext $context */
+            $context = $record['extra']['contao'];
 
             $this->statement->execute(
                 [
                     'tstamp'   => $date->format('U'),
                     'text'     => specialchars($record['message']),
-                    'source'   => $this->isBackendScope() ? 'BE' : 'FE',
-                    'action'   => $category,
-                    'username' => (string) $record['extra']['username'],
-                    'func'     => (string) $record['extra']['function'],
-                    'ip'       => (string) $record['extra']['ip'],
-                    'browser'  => (string) $record['extra']['browser'],
+                    'source'   => (string) $context->getSource(),
+                    'action'   => (string) $context->getAction(),
+                    'username' => (string) $context->getUsername(),
+                    'func'     => (string) $context->getFunc(),
+                    'ip'       => (string) $context->getIp(),
+                    'browser'  => (string) $context->getBrowser(),
                 ]
             );
         } catch (DBALException $e) {
             return false;
         }
 
-        $this->executeHook($record, $category);
+        $this->executeHook($record['message'], $context);
 
         return false === $this->bubble;
     }
@@ -122,10 +133,10 @@ class ContaoTableHandler extends AbstractHandler
     }
 
     /**
-     * @param array  $record
-     * @param string $category
+     * @param string        $message
+     * @param ContaoContext $context
      */
-    private function executeHook(array $record, $category)
+    private function executeHook($message, ContaoContext $context)
     {
         // HOOK: allow to add custom loggers
         if (!$this->framework->isInitialized()
@@ -143,15 +154,15 @@ class ContaoTableHandler extends AbstractHandler
         /** @var \Contao\System $system */
         $system = $this->framework->getAdapter('Contao\System');
 
-        // Must create variable to allow modification in hook
-        $text     = $record['message'];
-        $function = $record['extra']['function'];
+        // Must create variable to allow modification-by-reference in hook
+        $func = $context->getFunc();
+        $action = $context->getAction();
 
         foreach ($GLOBALS['TL_HOOKS']['addLogEntry'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}(
-                $text,
-                $function,
-                $category
+                $message,
+                $func,
+                $action
             );
         }
     }

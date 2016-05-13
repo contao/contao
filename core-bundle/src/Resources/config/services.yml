@@ -74,8 +74,6 @@ services:
             - "@contao.framework"
             - "@database_connection"
             - "@contao.monolog.processor"
-        call:
-            - ["setContainer", ["@service_container"]]
         tags:
             - { name: monolog.logger, channel: contao }
             - { name: monolog.logger, channel: contao_general }
@@ -94,3 +92,5 @@ services:
         arguments:
             - "@request_stack"
             - "@security.token_storage"
+        call:
+            - ["setContainer", ["@service_container"]]

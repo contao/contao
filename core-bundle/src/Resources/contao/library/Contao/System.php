@@ -12,9 +12,10 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\Monolog\ContaoTableProcessor;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use League\Uri\Components\Query;
 use Patchwork\Utf8;
+use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -243,14 +244,15 @@ abstract class System
 		trigger_error('Using System::log() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead', E_USER_DEPRECATED);
 
 		$channel = 'contao_' . strtolower($strCategory);
+		$level   = TL_ERROR === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
 
 		if (static::getContainer()->has('monolog.logger.' . $channel)) {
 			$logger = static::getContainer()->get('monolog.logger.' . $channel);
 		} else {
-			$logger = static::getContainer()->get('monolog.logger.contao');
+			$logger = static::getContainer()->get('logger');
 		}
 
-		$logger->addInfo($strText, array('function' => $strFunction));
+		$logger->log($level, $strText, array('contao' => ContaoContext::create($strFunction, $strCategory)));
 	}
 
 
