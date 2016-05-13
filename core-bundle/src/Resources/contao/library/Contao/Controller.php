@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use League\Uri\Components\Query;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -140,15 +139,7 @@ abstract class Controller extends \System
 							foreach ($arrThemeTemplates as $strFile)
 							{
 								$strTemplate = basename($strFile, strrchr($strFile, '.'));
-
-								if (!isset($arrTemplates[$strTemplate]))
-								{
-									$arrTemplates[$strTemplate][] = $objTheme->name;
-								}
-								else
-								{
-									$arrTemplates[$strTemplate][] = $objTheme->name;
-								}
+								$arrTemplates[$strTemplate][] = $objTheme->name;
 							}
 						}
 					}

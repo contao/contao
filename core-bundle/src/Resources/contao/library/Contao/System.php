@@ -48,7 +48,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * @property \Session                                  $Session     The session object
  * @property \StyleSheets                              $StyleSheets The style sheets object
  * @property \BackendTemplate|\FrontendTemplate|object $Template    The template object
- * @property \BackendUser|\FrontendUser                $User        The user object
+ * @property \BackendUser|\FrontendUser|object         $User        The user object
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
