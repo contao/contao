@@ -21,7 +21,7 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
         'feed_legend',
         Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND
     )
-    ->applyToPalette('tl_layout', 'default')
+    ->applyToPalette('default', 'tl_layout')
 ;
 
 
