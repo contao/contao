@@ -45,10 +45,10 @@ class ContaoContext
      * @param string|null $browser
      * @param string|null $source
      */
-    public function __construct($func, $action = self::GENERAL, $username = null, $ip = null, $browser = null, $source = null)
+    public function __construct($func, $action = null, $username = null, $ip = null, $browser = null, $source = null)
     {
-        if ('' === (string) $func || '' === (string) $action) {
-            throw new \InvalidArgumentException('Function and category for Contao context must not be empty');
+        if ('' === (string) $func) {
+            throw new \InvalidArgumentException('Function for Contao context must not be empty');
         }
 
         $this->func     = $func;
@@ -68,11 +68,19 @@ class ContaoContext
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getAction()
     {
         return $this->action;
+    }
+
+    /**
+     * @param string $action
+     */
+    public function setAction($action)
+    {
+        $this->action = (string) $action;
     }
 
     /**

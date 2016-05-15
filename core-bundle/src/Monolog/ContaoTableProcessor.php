@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Monolog;
 
 use Contao\CoreBundle\Framework\ScopeAwareTrait;
+use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -67,6 +68,7 @@ class ContaoTableProcessor
         $context = $record['context']['contao'];
         $request = $this->requestStack->getCurrentRequest();
 
+        $this->updateAction($context, $record['channel'], $record['level']);
         $this->updateIp($context, $request);
         $this->updateBrowser($context, $request);
         $this->updateUsername($context);
@@ -76,6 +78,21 @@ class ContaoTableProcessor
         unset($record['context']['contao']);
 
         return $record;
+    }
+
+    private function updateAction(ContaoContext $context, $channel, $level)
+    {
+        if (null !== $context->getAction()) {
+            return;
+        }
+
+        if (0 === strpos($channel, 'contao_')) {
+            $context->setAction(strtoupper(substr($channel, 7)));
+        } elseif ($level >= Logger::ERROR) {
+            $context->setAction(ContaoContext::ERROR);
+        } else {
+            $context->setAction(ContaoContext::GENERAL);
+        }
     }
 
     private function updateIp(ContaoContext $context, Request $request = null)
