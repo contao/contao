@@ -243,14 +243,8 @@ abstract class System
 	{
 		trigger_error('Using System::log() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead', E_USER_DEPRECATED);
 
-		$channel = 'contao_' . strtolower($strCategory);
-		$level   = TL_ERROR === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
-
-		if (static::getContainer()->has('monolog.logger.' . $channel)) {
-			$logger = static::getContainer()->get('monolog.logger.' . $channel);
-		} else {
-			$logger = static::getContainer()->get('logger');
-		}
+		$level = TL_ERROR === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
+		$logger = static::getContainer()->get('logger');
 
 		$logger->log($level, $strText, array('contao' => ContaoContext::create($strFunction, $strCategory)));
 	}

@@ -76,16 +76,6 @@ services:
             - "@contao.monolog.processor"
         tags:
             - { name: monolog.logger, channel: contao }
-            - { name: monolog.logger, channel: contao_general }
-            - { name: monolog.logger, channel: contao_error }
-            - { name: monolog.logger, channel: contao_access }
-            - { name: monolog.logger, channel: contao_files }
-            - { name: monolog.logger, channel: contao_cron }
-            - { name: monolog.logger, channel: contao_forms }
-            - { name: monolog.logger, channel: contao_email }
-            - { name: monolog.logger, channel: contao_configuration }
-            - { name: monolog.logger, channel: contao_newsletter }
-            - { name: monolog.logger, channel: contao_repository }
 
     contao.monolog.processor:
         class: Contao\CoreBundle\Monolog\ContaoTableProcessor

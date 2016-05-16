@@ -68,7 +68,7 @@ class ContaoTableProcessor
         $context = $record['context']['contao'];
         $request = $this->requestStack->getCurrentRequest();
 
-        $this->updateAction($context, $record['channel'], $record['level']);
+        $this->updateAction($context, $record['level']);
         $this->updateIp($context, $request);
         $this->updateBrowser($context, $request);
         $this->updateUsername($context);
@@ -80,15 +80,13 @@ class ContaoTableProcessor
         return $record;
     }
 
-    private function updateAction(ContaoContext $context, $channel, $level)
+    private function updateAction(ContaoContext $context, $level)
     {
         if (null !== $context->getAction()) {
             return;
         }
 
-        if (0 === strpos($channel, 'contao_')) {
-            $context->setAction(strtoupper(substr($channel, 7)));
-        } elseif ($level >= Logger::ERROR) {
+        if ($level >= Logger::ERROR) {
             $context->setAction(ContaoContext::ERROR);
         } else {
             $context->setAction(ContaoContext::GENERAL);
