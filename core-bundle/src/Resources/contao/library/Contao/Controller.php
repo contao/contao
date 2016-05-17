@@ -210,13 +210,13 @@ abstract class Controller extends \System
 					// Send a 404 header if there is no published article
 					if (null === $objArticle)
 					{
-						throw new PageNotFoundException('Page not found');
+						throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 					}
 
 					// Send a 403 header if the article cannot be accessed
 					if (!static::isVisibleElement($objArticle))
 					{
-						throw new AccessDeniedException('Access denied');
+						throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
 					}
 
 					// Add the "first" and "last" classes (see #2583)

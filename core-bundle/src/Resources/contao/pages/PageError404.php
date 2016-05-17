@@ -113,7 +113,7 @@ class PageError404 extends \Frontend
 		// Die if there is no page at all
 		if (null === $obj404)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		// Forward to another page
