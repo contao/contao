@@ -105,7 +105,7 @@ class ModuleFaqReader extends \Module
 
 		if (null === $objFaq)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		// Overwrite the page title and description (see #2853 and #4955)
