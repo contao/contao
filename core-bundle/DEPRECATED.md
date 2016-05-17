@@ -157,7 +157,7 @@ use Contao\CoreBundle\Framework\ScopeAwareTrait;
 
 class Test {
     use ScopeAwareTrait;
-    
+
     public function isBackend() {
         return $this->isBackendScope();
     }
