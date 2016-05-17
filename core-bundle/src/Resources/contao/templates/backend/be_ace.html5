@@ -29,6 +29,7 @@ window.ace && window.addEvent('domready', function() {
   editor.getSession().setValue(ta.value);
   editor.getSession().setMode("ace/mode/<?= Backend::getAceType($this->type) ?>");
   editor.getSession().setUseSoftTabs(false);
+  editor.getSession().setUseWrapMode(true);
   editor.setAutoScrollEditorIntoView(true);
 
   // Add the fullscreen command
