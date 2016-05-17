@@ -2,6 +2,7 @@
 
 ### 4.2.0-RC1 (2016-05-XX)
 
+ * Correctly determine the script_name in the Environment class (see #426).
  * Add the URL generator (see #480).
  * Support subpalettes in subpalettes (see #450).
  * Add keys to the cronjobs array (see #440).
