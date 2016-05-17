@@ -110,7 +110,7 @@ class ModuleCalendar extends \Events
 		}
 		catch (\OutOfBoundsException $e)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		$time = \Date::floorToMinute();

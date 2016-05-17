@@ -108,7 +108,7 @@ class ModuleEventReader extends \Events
 
 		if (null === $objEvent)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		// Overwrite the page title (see #2853 and #4955)
