@@ -627,7 +627,7 @@ abstract class Frontend extends \Controller
 				if ($blnIndex)
 				{
 					$arrData = array(
-						'url'       => \Environment::get('relativeRequest'),
+						'url'       => \Environment::get('base') . \Environment::get('relativeRequest'),
 						'content'   => $objResponse->getContent(),
 						'title'     => $objPage->pageTitle ?: $objPage->title,
 						'protected' => ($objPage->protected ? '1' : ''),
