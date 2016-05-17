@@ -1402,7 +1402,7 @@ fieldset.collapsed > legend {
 /* File synchronization */
 #sync-results {
 	overflow:hidden;
-	margin:6px 18px 0;
+	margin:24px 18px 0;
 }
 #sync-results p {
 	margin-bottom:0;
