@@ -163,7 +163,7 @@ class ModuleListing extends \Module
 		// Thanks to Hagen Klemp (see #4485)
 		if ($per_page > 0 && ($page < 1 || $page > max(ceil($objTotal->count/$per_page), 1)))
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 
