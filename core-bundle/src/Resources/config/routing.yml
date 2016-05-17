@@ -7,7 +7,7 @@ contao_backend_redirect:
     path: /contao/
     defaults:
         _scope: backend
-        _controller: FrameworkBundle:Redirect:redirect
+        _controller: "FrameworkBundle:Redirect:redirect"
         route: contao_backend
         permanent: true
 
@@ -20,7 +20,7 @@ contao_root:
     defaults:
         _scope: frontend
         _token_check: true
-        _controller: ContaoCoreBundle:Frontend:index
+        _controller: "ContaoCoreBundle:Frontend:index"
 
 # The catch all route must be the last one!
 contao_catch_all:
@@ -28,6 +28,6 @@ contao_catch_all:
     defaults:
         _scope: frontend
         _token_check: true
-        _controller: ContaoCoreBundle:Frontend:index
+        _controller: "ContaoCoreBundle:Frontend:index"
     requirements:
         _url_fragment: .*
