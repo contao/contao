@@ -78,7 +78,7 @@
       </table>
       <?php if ($this->href): ?>
         <div id="download">
-          <a href="<?= $this->href ?>"><?= Image::getHtml($this->icon, '', 'class="mime_icon"') ?> <?= $this->download ?></a>
+          <a href="<?= $this->href ?>" download="<?= basename($this->path) ?>"><?= Image::getHtml($this->icon, '', 'class="mime_icon"') ?> <?= $this->download ?></a>
         </div>
       <?php endif; ?>
       <?php if ($this->isImage): ?>

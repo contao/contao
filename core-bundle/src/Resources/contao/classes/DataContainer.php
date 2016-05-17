@@ -511,7 +511,7 @@ abstract class DataContainer extends \Backend
 				{
 					if ($objFile->width > 699 || $objFile->height > 524 || !$objFile->width || !$objFile->height)
 					{
-						$image = \Image::get($objFile->path, 699, 524, 'box');
+						$image = rawurldecode(\Image::get($objFile->path, 699, 524, 'box'));
 					}
 					else
 					{
