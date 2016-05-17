@@ -238,7 +238,7 @@ class ModuleNewsMenu extends \ModuleNews
 		}
 		catch (\OutOfBoundsException $e)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		$intYear = date('Y', $this->Date->tstamp);

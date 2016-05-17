@@ -107,7 +107,7 @@ class ModuleNewsReader extends \ModuleNews
 
 		if (null === $objArticle)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		$arrArticle = $this->parseArticle($objArticle);
