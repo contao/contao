@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### 1.1.0-RC1 (2016-05-XX)
+### 1.1.0-RC1 (2016-05-18)
 
  * Pass the language and path to the Twig templates (see #15).
  * Fix the library loader and add the contao.cache service to the installation kernel (see #13).
