@@ -1,6 +1,6 @@
 # Contao calendar bundle change log
 
-### 4.2.0-RC1 (2016-05-XX)
+### 4.2.0-RC1 (2016-05-18)
 
  * Add listeners to subscribe to the core hooks (see #3).
  * Add keys to the cronjobs array (see contao/core-bundle#440).
