@@ -246,7 +246,7 @@ abstract class System
 		$level = TL_ERROR === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
 		$logger = static::getContainer()->get('logger');
 
-		$logger->log($level, $strText, array('contao' => ContaoContext::create($strFunction, $strCategory)));
+		$logger->log($level, $strText, array('contao' => new ContaoContext($strFunction, $strCategory)));
 	}
 
 

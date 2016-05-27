@@ -162,25 +162,4 @@ class ContaoContext
             ]
         );
     }
-
-    /**
-     * @param string      $function
-     * @param string      $action
-     * @param string|null $username
-     * @param string|null $ip
-     * @param string|null $browser
-     * @param string|null $source
-     *
-     * @return static
-     */
-    public static function create(
-        $function,
-        $action = self::GENERAL,
-        $username = null,
-        $ip = null,
-        $browser = null,
-        $source = null
-    ) {
-        return new static($function, $action, $username, $ip, $browser, $source);
-    }
 }
