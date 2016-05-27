@@ -67,8 +67,9 @@ class ContaoTableProcessor
 
         $context = $record['context']['contao'];
         $request = $this->requestStack->getCurrentRequest();
+        $level   = isset($record['level']) ? $record['level'] : 0;
 
-        $this->updateAction($context, $record['level']);
+        $this->updateAction($context, $level);
         $this->updateIp($context, $request);
         $this->updateBrowser($context, $request);
         $this->updateUsername($context);
