@@ -2,6 +2,7 @@
 
 ### 4.2.0 (2016-06-XX)
 
+ * Fix the filter reset buttons (see #496).
  * Fix the filename case of the new SVG icons (see #492).
 
 ### 4.2.0-RC1 (2016-05-18)

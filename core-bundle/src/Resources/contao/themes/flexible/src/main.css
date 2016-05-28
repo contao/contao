@@ -248,9 +248,24 @@ h2.sub_headline_purge {
 	float:right; /* see #5854 */
 }
 .tl_img_submit {
+	width:16px;
+	height:16px;
+	border:0;
+	margin:0;
+	padding:0;
+	font-size:1px;
+	overflow:hidden;
+	text-indent:-999em;
 	position:relative;
 	top:9px;
 	vertical-align:top;
+	cursor:pointer;
+}
+.filter_apply {
+	background:url("icons/filter-apply.svg") center center no-repeat;
+}
+.filter_reset {
+	background:url("icons/filter-reset.svg") center center no-repeat;
 }
 .tl_subpanel {
 	padding-left:24px;
@@ -258,6 +273,7 @@ h2.sub_headline_purge {
 }
 .tl_submit_panel {
 	padding-left:6px;
+	padding-right:3px;
 }
 .tl_panel .active,.tl_panel_bottom .active,#search .active {
 	background:#ffd;
