@@ -131,12 +131,12 @@ body.popup {
 	border-bottom:1px solid #ddd;
 }
 #tl_navigation .tl_level_2 {
-	padding:6px 0;
+	padding:5px 0;
 	background:#fff;
 }
 #tl_navigation .tl_level_2 a {
 	display:block;
-	padding:4px 9px;
+	padding:5px 9px;
 	font-weight:300;
 }
 #tl_navigation .tl_level_2 .active {
