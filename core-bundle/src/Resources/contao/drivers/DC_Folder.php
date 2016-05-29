@@ -1516,7 +1516,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Walk through each record
 			foreach ($ids as $id)
 			{
-				$this->intId = md5($id);
+				$this->intId = $id;
 				$this->strPalette = \StringUtil::trimsplit('[;,]', $this->getPalette());
 
 				$objModel = null;
@@ -1550,6 +1550,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				$class = 'tl_box';
 				$formFields = array();
+				$strHash = md5($id);
 
 				foreach ($this->strPalette as $v)
 				{
@@ -1565,8 +1566,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					}
 
 					$this->strField = $v;
-					$this->strInputName = $v.'_'.$this->intId;
-					$formFields[] = $v.'_'.$this->intId;
+					$this->strInputName = $v.'_'.$strHash;
+					$formFields[] = $v.'_'.$strHash;
 
 					// Load the current value
 					if ($v == 'name')
@@ -1611,7 +1612,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				// Close box
 				$return .= '
-  <input type="hidden" name="FORM_FIELDS_'.$this->intId.'[]" value="'.\StringUtil::specialchars(implode(',', $formFields)).'">
+  <input type="hidden" name="FORM_FIELDS_'.$strHash.'[]" value="'.\StringUtil::specialchars(implode(',', $formFields)).'">
 </div>';
 
 				// Save the record
