@@ -410,7 +410,6 @@ input[type=search]::-webkit-search-decoration {
 	padding:11px 12px 12px;
 	background:#ffc;
 	border:1px solid #f90;
-	font-size:14px;
 	font-size:.875rem;
 }
 #index_loading {
@@ -1447,7 +1446,6 @@ fieldset.collapsed > legend {
 	transition:all .15s linear;
 }
 .dz-message span {
-	font-size:21px;
 	font-size:1.3125rem;
 	color:#ccc;
 }
