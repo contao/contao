@@ -10,12 +10,12 @@
 
 namespace Contao\CoreBundle\Monolog;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Statement;
 use Monolog\Handler\AbstractHandler;
 use Monolog\Logger;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * ContaoLogHandler
@@ -24,15 +24,7 @@ use Monolog\Logger;
  */
 class ContaoTableHandler extends AbstractHandler
 {
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $db;
+    use ContainerAwareTrait;
 
     /**
      * @var callable
@@ -47,23 +39,14 @@ class ContaoTableHandler extends AbstractHandler
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $framework
-     * @param Connection               $db
-     * @param callable                 $processor
-     * @param int                      $level
-     * @param bool                     $bubble
+     * @param callable $processor
+     * @param int      $level
+     * @param bool     $bubble
      */
-    public function __construct(
-        ContaoFrameworkInterface $framework,
-        Connection $db,
-        callable $processor,
-        $level = Logger::DEBUG,
-        $bubble = false
-    ) {
+    public function __construct(callable $processor, $level = Logger::DEBUG, $bubble = false)
+    {
         parent::__construct($level, $bubble);
 
-        $this->framework = $framework;
-        $this->db        = $db;
         $this->processor = $processor;
     }
 
@@ -119,8 +102,12 @@ class ContaoTableHandler extends AbstractHandler
             return true;
         }
 
+        if (null === $this->container || !$this->container->has('doctrine.dbal.connection')) {
+            return false;
+        }
+
         try {
-            $this->statement = $this->db->prepare('
+            $this->statement = $this->container->get('doctrine.dbal.connection')->prepare('
                 INSERT INTO tl_log (tstamp, source, action, username, text, func, ip, browser)
                 VALUES (:tstamp, :source, :action, :username, :text, :func, :ip, :browser)
             ');
@@ -138,8 +125,14 @@ class ContaoTableHandler extends AbstractHandler
      */
     private function executeHook($message, ContaoContext $context)
     {
+        if (null === $this->container || !$this->container->has('contao.framework')) {
+            return;
+        }
+
+        $framework = $this->container->get('contao.framework');
+
         // HOOK: allow to add custom loggers
-        if (!$this->framework->isInitialized()
+        if (!$framework->isInitialized()
             || !isset($GLOBALS['TL_HOOKS']['addLogEntry'])
             || !is_array($GLOBALS['TL_HOOKS']['addLogEntry'])
         ) {
@@ -152,7 +145,7 @@ class ContaoTableHandler extends AbstractHandler
         );
 
         /** @var \Contao\System $system */
-        $system = $this->framework->getAdapter('Contao\System');
+        $system = $framework->getAdapter('Contao\System');
 
         // Must create variable to allow modification-by-reference in hook
         $func = $context->getFunc();
