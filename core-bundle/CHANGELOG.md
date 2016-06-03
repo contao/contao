@@ -2,6 +2,7 @@
 
 ### 4.2.0 (2016-06-XX)
 
+ * Remove the "type" attribute from the Youtube/Vimeo iframe tag.
  * Fix the filter reset buttons (see #496).
  * Fix the filename case of the new SVG icons (see #492).
 
