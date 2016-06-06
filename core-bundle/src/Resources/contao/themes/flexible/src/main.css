@@ -221,7 +221,7 @@ h2.sub_headline_purge {
 	color:#589b0e;
 }
 .tl_info,.tl_info a {
-	color:#4b85ba;
+	color:#427aae;
 }
 .tl_new,.tl_new a {
 	color:#d68c23;
@@ -418,7 +418,7 @@ input[type=search]::-webkit-search-decoration {
 	padding:12px 12px 12px 24px;
 	background:url("icons/loading.svg") no-repeat left center;
 	background-size:16px;
-	color:#4b85ba;
+	color:#427aae;
 }
 #index_complete {
 	margin:0;
@@ -631,7 +631,7 @@ input[type=search]::-webkit-search-decoration {
 	color:#589b0e;
 }
 .tl_content span.comment {
-	color:#4b85ba;
+	color:#427aae;
 	display:inline-block;
 	margin-bottom:3px;
 }
