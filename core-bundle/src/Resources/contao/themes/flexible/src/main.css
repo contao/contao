@@ -1254,29 +1254,20 @@ time[datetime] {
 .tl_text_trbl,.tl_imageSize_0,.tl_imageSize_1,#ctrl_playerSize input {
 	background:url("icons/hints.svg") no-repeat right 1px top -11px;
 }
-#ctrl_playerSize_0 {
-	background-position:right 1px top -11px !important;
-}
-#ctrl_playerSize_1 {
+#ctrl_playerSize_1,.tl_imageSize_1 {
 	background-position:right 1px top -39px !important;
 }
-.tl_imageSize_0 {
-	background-position:right 1px !important;
-}
-.tl_imageSize_1 {
-	background-position:right -18px !important;
-}
 .trbl_top {
-	background-position:right -39px !important;
+	background-position:right 1px top -68px !important;
 }
 .trbl_right {
-	background-position:right -59px !important;
+	background-position:right 1px top -95px !important;
 }
 .trbl_bottom {
-	background-position:right -79px !important;
+	background-position:right 1px top -124px !important;
 }
 .trbl_left {
-	background-position:right -99px !important;
+	background-position:right 1px top -152px !important;
 }
 #ctrl_shadowsize_top {
 	background-position:right 1px top -180px !important;
@@ -1291,16 +1282,16 @@ time[datetime] {
 	background-position:right 1px top -265px !important;
 }
 #ctrl_borderradius_top {
-	background-position:left -199px !important;
+	background-position:left -293px !important;
 }
 #ctrl_borderradius_right {
-	background-position:right -219px !important;
+	background-position:right 1px top -321px !important;
 }
 #ctrl_borderradius_bottom {
-	background-position:right -241px !important;
+	background-position:right 1px top -341px !important;
 }
 #ctrl_borderradius_left {
-	background-position:left -261px !important;
+	background-position:left -369px !important;
 }
 
 /* Error messages */

@@ -2,6 +2,7 @@
 
 ### 4.2.0 (2016-06-XX)
 
+ * Correctly aling the input hints (see #503).
  * Disable the "preview as" button if a member is not allowed to log in (see #502).
  * Remove the "type" attribute from the Youtube/Vimeo iframe tag.
  * Fix the filter reset buttons (see #496).
