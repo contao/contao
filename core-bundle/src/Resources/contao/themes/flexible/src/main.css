@@ -391,6 +391,7 @@ input[type=search]::-webkit-search-decoration {
 .tl_edit_preview_enabled {
 	position:relative;
 	cursor:crosshair;
+	display:inline-block;
 }
 .tl_edit_preview_important_part {
 	position:absolute;
