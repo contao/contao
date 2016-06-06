@@ -2,6 +2,7 @@
 
 ### 4.2.0 (2016-06-XX)
 
+ * Disable the "preview as" button if a member is not allowed to log in (see #502).
  * Remove the "type" attribute from the Youtube/Vimeo iframe tag.
  * Fix the filter reset buttons (see #496).
  * Fix the filename case of the new SVG icons (see #492).

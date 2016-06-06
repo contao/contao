@@ -532,6 +532,11 @@ class tl_member extends Backend
 			return '';
 		}
 
+		if (!$row['login'] || $row['username'] == '')
+		{
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
+		}
+
 		return '<a href="contao/preview.php?user='.$row['username'].'" target="_blank" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
 	}
 
