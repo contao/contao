@@ -30,7 +30,7 @@ services:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
         arguments:
             - "@contao.monolog.processor"
-        call:
+        calls:
             - ["setContainer", ["@service_container"]]
         tags:
             - { name: monolog.logger, channel: contao }
@@ -40,7 +40,7 @@ services:
         arguments:
             - "@request_stack"
             - "@security.token_storage"
-        call:
+        calls:
             - ["setContainer", ["@service_container"]]
 
     contao.referer_id.manager:

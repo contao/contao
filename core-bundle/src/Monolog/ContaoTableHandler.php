@@ -55,14 +55,14 @@ class ContaoTableHandler extends AbstractHandler
      */
     public function handle(array $record)
     {
-        if (!$this->canWriteToDb()) {
-            return false;
-        }
-
         try {
             $record = call_user_func($this->processor, $record);
 
             if (!isset($record['extra']['contao']) || !$record['extra']['contao'] instanceof ContaoContext) {
+                return false;
+            }
+
+            if (!$this->canWriteToDb()) {
                 return false;
             }
 
@@ -102,12 +102,12 @@ class ContaoTableHandler extends AbstractHandler
             return true;
         }
 
-        if (null === $this->container || !$this->container->has('doctrine.dbal.connection')) {
+        if (null === $this->container || !$this->container->has('doctrine.dbal.default_connection')) {
             return false;
         }
 
         try {
-            $this->statement = $this->container->get('doctrine.dbal.connection')->prepare('
+            $this->statement = $this->container->get('doctrine.dbal.default_connection')->prepare('
                 INSERT INTO tl_log (tstamp, source, action, username, text, func, ip, browser)
                 VALUES (:tstamp, :source, :action, :username, :text, :func, :ip, :browser)
             ');
