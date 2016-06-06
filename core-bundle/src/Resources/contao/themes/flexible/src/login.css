@@ -52,7 +52,7 @@ body {
 	color:#666;
 }
 #tl_license a:hover,#tl_license a:focus,#tl_license a:active {
-	color:#77ac45;
+	color:#589b0e;
 }
 
 /* Error messages */
@@ -76,7 +76,7 @@ body {
 	background:url("icons/show.svg") no-repeat 1px center;
 }
 .tl_confirm {
-	color:#77ac45;
+	color:#589b0e;
 	background:url("icons/ok.svg") no-repeat left center;
 }
 

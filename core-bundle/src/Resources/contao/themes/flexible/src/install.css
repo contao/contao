@@ -81,7 +81,7 @@ fieldset p:last-of-type {
 }
 .tl_col_0 {
 	padding:12px 0 3px;
-	color:#77ac45;
+	color:#589b0e;
 }
 .tl_col_1 {
 	vertical-align:top;
@@ -100,7 +100,7 @@ fieldset p:last-of-type {
 	background:url("icons/error.svg") no-repeat left center;
 }
 .tl_confirm {
-	color:#77ac45;
+	color:#589b0e;
 	background:url("icons/ok.svg") no-repeat left center;
 }
 .tl_info {
@@ -158,7 +158,7 @@ fieldset.tl_tbox.nolegend,fieldset.tl_box.nolegend {
 	border:0;
 }
 fieldset.tl_tbox > legend,fieldset.tl_box > legend {
-	color:#77ac45;
+	color:#589b0e;
 	padding:6px 0 6px 18px;
 	background:#f6f6f6 url("icons/navcol.svg") left center no-repeat;
 	cursor:pointer;
