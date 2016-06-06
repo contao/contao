@@ -28,6 +28,7 @@ services:
 
     contao.monolog.handler:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
+        public: false
         arguments:
             - "@contao.monolog.processor"
         calls:
@@ -37,6 +38,7 @@ services:
 
     contao.monolog.processor:
         class: Contao\CoreBundle\Monolog\ContaoTableProcessor
+        public: false
         arguments:
             - "@request_stack"
             - "@security.token_storage"
