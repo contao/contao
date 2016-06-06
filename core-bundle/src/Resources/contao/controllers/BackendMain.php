@@ -143,7 +143,7 @@ class BackendMain extends \Backend
 
 			$objTemplate->loginMsg = sprintf(
 				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
-				'<time datetime="' . date('Y-m-d H:i', $this->User->lastLogin) . '">' . $diff . '</time>'
+				'<time title="' . \Date::parse(\Config::get('datimFormat'), $this->User->lastLogin) . '">' . $diff . '</time>'
 			);
 		}
 
