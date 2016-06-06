@@ -190,7 +190,7 @@ h2.sub_headline_purge {
 	background:url("icons/purge.svg") no-repeat left center;
 }
 .tl_message {
-	margin:18px 18px -12px;
+	margin:18px 18px 0;
 }
 .tl_gerror {
 	margin:12px 9px 6px;
@@ -438,6 +438,12 @@ input[type=search]::-webkit-search-decoration {
 .tl_listing_container {
 	padding:2px 0;
 	margin:24px 18px;
+}
+#paste_hint + .tl_listing_container {
+	margin-top:48px !important;
+}
+.tl_message + .tl_listing_container {
+	margin-top:12px;
 }
 .tl_folder_list,.tl_folder_tlist {
 	padding:6px 0;
@@ -1033,6 +1039,9 @@ ul.sgallery li {
 #paste_hint {
 	position:relative;
 }
+.tl_message + #paste_hint {
+	margin-top:-12px;
+}
 #paste_hint p {
 	position:absolute;
 	font-family:"Architects Daughter",cursive;
@@ -1043,9 +1052,6 @@ ul.sgallery li {
 	padding:0 36px 24px 0;
 	background:url("icons/arrow_right.svg") bottom right no-repeat;
 	transform:rotate(-1deg);
-}
-#paste_hint + .tl_listing_container {
-	margin-top:48px !important;
 }
 .sort_hint {
 	position:absolute;
@@ -1409,7 +1415,7 @@ fieldset.collapsed > legend {
 /* File synchronization */
 #sync-results {
 	overflow:hidden;
-	margin:24px 18px 0;
+	margin:18px 18px 0;
 }
 #sync-results p {
 	margin-bottom:0;
