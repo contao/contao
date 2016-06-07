@@ -29,8 +29,6 @@ services:
     contao.monolog.handler:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
         public: false
-        arguments:
-            - "@contao.monolog.processor"
         calls:
             - ["setContainer", ["@service_container"]]
         tags:
@@ -44,6 +42,8 @@ services:
             - "@security.token_storage"
         calls:
             - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: monolog.processor }
 
     contao.referer_id.manager:
          class: Symfony\Component\Security\Csrf\CsrfTokenManager

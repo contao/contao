@@ -10,11 +10,10 @@
 
 namespace Contao\CoreBundle\Monolog;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Statement;
-use Monolog\Handler\AbstractHandler;
-use Monolog\Logger;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\AbstractProcessingHandler;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
@@ -22,14 +21,14 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoTableHandler extends AbstractHandler
+class ContaoTableHandler extends AbstractProcessingHandler
 {
     use ContainerAwareTrait;
 
     /**
-     * @var callable
+     * @var string
      */
-    private $processor;
+    private $dbalServiceName = 'doctrine.dbal.default_connection';
 
     /**
      * @var Statement
@@ -37,17 +36,23 @@ class ContaoTableHandler extends AbstractHandler
     private $statement;
 
     /**
-     * Constructor.
+     * Gets the service name for the DBAL database connection.
      *
-     * @param callable $processor
-     * @param int      $level
-     * @param bool     $bubble
+     * @return string
      */
-    public function __construct(callable $processor, $level = Logger::DEBUG, $bubble = false)
+    public function getDbalServiceName()
     {
-        parent::__construct($level, $bubble);
+        return $this->dbalServiceName;
+    }
 
-        $this->processor = $processor;
+    /**
+     * Sets the service name for the DBAL database connection.
+     *
+     * @param string $name
+     */
+    public function setDbalServiceName($name)
+    {
+        $this->dbalServiceName = $name;
     }
 
     /**
@@ -55,45 +60,71 @@ class ContaoTableHandler extends AbstractHandler
      */
     public function handle(array $record)
     {
+        if (!$this->isHandling($record)) {
+            return false;
+        }
+
+        $record = $this->processRecord($record);
+
+        $record['formatted'] = $this->getFormatter()->format($record);
+
+        if (!isset($record['extra']['contao']) || !$record['extra']['contao'] instanceof ContaoContext) {
+            return false;
+        }
+
+        if (!$this->canWriteToDb()) {
+            return false;
+        }
+
         try {
-            $record = call_user_func($this->processor, $record);
-
-            if (!isset($record['extra']['contao']) || !$record['extra']['contao'] instanceof ContaoContext) {
-                return false;
-            }
-
-            if (!$this->canWriteToDb()) {
-                return false;
-            }
-
-            /** @var \DateTime $date */
-            $date = $record['datetime'];
-
-            /** @var ContaoContext $context */
-            $context = $record['extra']['contao'];
-
-            $this->statement->execute(
-                [
-                    'tstamp'   => $date->format('U'),
-                    'text'     => specialchars($record['message']),
-                    'source'   => (string) $context->getSource(),
-                    'action'   => (string) $context->getAction(),
-                    'username' => (string) $context->getUsername(),
-                    'func'     => (string) $context->getFunc(),
-                    'ip'       => (string) $context->getIp(),
-                    'browser'  => (string) $context->getBrowser(),
-                ]
-            );
+            $this->write($record);
         } catch (DBALException $e) {
             return false;
         }
 
-        $this->executeHook($record['message'], $context);
+        $this->executeHook($record['message'], $record['extra']['contao']);
 
         return false === $this->bubble;
     }
 
     /**
+     * @inheritdoc
+     *
+     * @throws DBALException
+     */
+    protected function write(array $record)
+    {
+        /** @var \DateTime $date */
+        $date = $record['datetime'];
+
+        /** @var ContaoContext $context */
+        $context = $record['extra']['contao'];
+
+        $this->statement->execute(
+            [
+                'tstamp'   => $date->format('U'),
+                'text'     => specialchars((string) $record['formatted']),
+                'source'   => (string) $context->getSource(),
+                'action'   => (string) $context->getAction(),
+                'username' => (string) $context->getUsername(),
+                'func'     => (string) $context->getFunc(),
+                'ip'       => (string) $context->getIp(),
+                'browser'  => (string) $context->getBrowser(),
+            ]
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getDefaultFormatter()
+    {
+        return new LineFormatter('%message%');
+    }
+
+    /**
+     * Verifies database connection and prepares the statement.
+     *
      * @return bool
      */
     private function canWriteToDb()
@@ -102,12 +133,12 @@ class ContaoTableHandler extends AbstractHandler
             return true;
         }
 
-        if (null === $this->container || !$this->container->has('doctrine.dbal.default_connection')) {
+        if (null === $this->container || !$this->container->has($this->dbalServiceName)) {
             return false;
         }
 
         try {
-            $this->statement = $this->container->get('doctrine.dbal.default_connection')->prepare('
+            $this->statement = $this->container->get($this->dbalServiceName)->prepare('
                 INSERT INTO tl_log (tstamp, source, action, username, text, func, ip, browser)
                 VALUES (:tstamp, :source, :action, :username, :text, :func, :ip, :browser)
             ');
@@ -120,6 +151,8 @@ class ContaoTableHandler extends AbstractHandler
     }
 
     /**
+     * Executes the legacy hook if the Contao framework is booted.
+     *
      * @param string        $message
      * @param ContaoContext $context
      */
