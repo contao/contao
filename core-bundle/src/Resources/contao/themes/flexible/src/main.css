@@ -228,6 +228,9 @@ h2.sub_headline_purge {
 }
 
 /* Filter */
+.styled_select_wrapper {
+	display:inline-block;
+}
 .tl_panel,.tl_version_panel {
 	padding:6px 6px 7px 0;
 	background:#f3f3f3;
@@ -1685,6 +1688,9 @@ fieldset.collapsed > legend {
 		position:relative;
 		padding:3px 6px;
 	}
+	.styled_select_wrapper {
+		display:block;
+	}
 	.tl_filter strong {
 		display:none;
 	}
@@ -1695,6 +1701,10 @@ fieldset.collapsed > legend {
 		box-sizing:border-box;
 		width:-webkit-calc(100% - 6px);
 		width:calc(100% - 6px);
+	}
+	.tl_filter select.tl_select {
+		width:-webkit-calc(100% + 6px);
+		width:calc(100% + 6px);
 	}
 	.tl_submit_panel {
 		float:right;
