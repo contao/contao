@@ -859,7 +859,8 @@ ul.sgallery li {
 #tl_soverview table {
 	width:709px;
 }
-#tl_messages,#tl_shortcuts {
+#tl_shortcuts {
+	margin-top:32px;
 	margin-bottom:32px;
 }
 #tl_messages h2,#tl_shortcuts h2,#tl_versions h2 {

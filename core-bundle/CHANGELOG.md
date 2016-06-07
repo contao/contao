@@ -2,6 +2,7 @@
 
 ### 4.2.0 (2016-06-XX)
 
+ * Show the system messages in a modal dialog (see #486).
  * Make DropZone the default uploader in the file manager (see #504).
  * Correctly aling the input hints (see #503).
  * Disable the "preview as" button if a member is not allowed to log in (see #502).

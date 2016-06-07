@@ -132,7 +132,7 @@ class BackendMain extends \Backend
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_welcome');
-		$objTemplate->messages = \Message::generateUnwrapped() . $this->getSystemMessages();
+		$objTemplate->messages = \Message::generateUnwrapped() . \Backend::getSystemMessages();
 		$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];
 
 		// Add the login message
@@ -159,40 +159,6 @@ class BackendMain extends \Backend
 		$objTemplate->editElement = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['editElement']);
 
 		return $objTemplate->parse();
-	}
-
-
-	/**
-	 * Return the system messages as HTML
-	 *
-	 * @return string The messages HTML markup
-	 */
-	protected function getSystemMessages()
-	{
-		$strMessages = '';
-
-		// HOOK: add custom messages
-		if (isset($GLOBALS['TL_HOOKS']['getSystemMessages']) && is_array($GLOBALS['TL_HOOKS']['getSystemMessages']))
-		{
-			$arrMessages = array();
-
-			foreach ($GLOBALS['TL_HOOKS']['getSystemMessages'] as $callback)
-			{
-				$strBuffer = \System::importStatic($callback[0])->{$callback[1]}();
-
-				if ($strBuffer != '')
-				{
-					$arrMessages[] = $strBuffer;
-				}
-			}
-
-			if (!empty($arrMessages))
-			{
-				$strMessages .= implode("\n", $arrMessages);
-			}
-		}
-
-		return $strMessages;
 	}
 
 
@@ -256,7 +222,10 @@ class BackendMain extends \Backend
 		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
 		$this->Template->isPopup = \Input::get('popup');
 		$this->Template->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
-		$this->Template->systemErrorMessages = substr_count($this->getSystemMessages(), 'class="tl_error"');
+
+		$strSystemMessages = \Backend::getSystemMessages();
+		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');
+		$this->Template->systemErrorMessagesCount = substr_count($strSystemMessages, 'class="tl_error"');
 
 		// Front end preview links
 		if (defined('CURRENT_ID') && CURRENT_ID != '')

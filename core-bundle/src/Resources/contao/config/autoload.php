@@ -14,6 +14,7 @@ TemplateLoader::addFiles(array
 	'analytics_google'    => 'vendor/contao/core-bundle/src/Resources/contao/templates/analytics',
 	'analytics_piwik'     => 'vendor/contao/core-bundle/src/Resources/contao/templates/analytics',
 	'be_ace'              => 'vendor/contao/core-bundle/src/Resources/contao/templates/backend',
+	'be_alerts'           => 'vendor/contao/core-bundle/src/Resources/contao/templates/backend',
 	'be_confirm'          => 'vendor/contao/core-bundle/src/Resources/contao/templates/backend',
 	'be_diff'             => 'vendor/contao/core-bundle/src/Resources/contao/templates/backend',
 	'be_error'            => 'vendor/contao/core-bundle/src/Resources/contao/templates/backend',
