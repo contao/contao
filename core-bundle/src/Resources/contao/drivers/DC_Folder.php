@@ -1038,7 +1038,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// See #4086
 		if (!class_exists($class))
 		{
-			$class = 'FileUpload';
+			$class = 'DropZone';
 		}
 
 		/** @var FileUpload $objUploader */

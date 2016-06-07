@@ -29,17 +29,8 @@ class Theme extends \Backend
 	 */
 	public function importTheme()
 	{
-		$this->import('BackendUser', 'User');
-		$class = $this->User->uploader;
-
-		// See #4086 and #7046
-		if (!class_exists($class) || $class == 'DropZone')
-		{
-			$class = 'FileUpload';
-		}
-
 		/** @var FileUpload $objUploader */
-		$objUploader = new $class();
+		$objUploader = new \FileUpload();
 
 		if (\Input::post('FORM_SUBMIT') == 'tl_theme_import')
 		{
