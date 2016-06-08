@@ -187,6 +187,25 @@ var Theme = {
 		$('burger').addEvent('click', function() {
 			document.body.toggleClass('show-navigation');
 		});
+	},
+
+	/**
+	 * Hide the menu on scroll
+	 */
+	hideMenuOnScroll: function() {
+		var pos = 0;
+
+		window.addEvent('scroll', function() {
+			var y = window.getScroll().y;
+
+			if (y > 1 && y > pos) {
+				$('header').addClass('down');
+			} else {
+				$('header').removeClass('down');
+			}
+
+			pos = y;
+		});
 	}
 };
 
@@ -196,6 +215,7 @@ window.addEvent('domready', function() {
 	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
+	Theme.hideMenuOnScroll();
 });
 
 // Respond to Ajax changes

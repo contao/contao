@@ -46,7 +46,7 @@
 <body id="top" class="<?= $this->ua ?><?php if ($this->isPopup) echo ' popup'; ?>">
 
   <?php if (!$this->isPopup): ?>
-    <div id="header">
+    <div id="header"<?php if ($this->pageOffset) echo ' class="down"'; ?>>
       <div class="inner">
         <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">Contao</a></h1>
         <ul id="tmenu">

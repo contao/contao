@@ -1584,6 +1584,16 @@ fieldset.collapsed > legend {
 	html,body {
 		overflow-x:hidden;
 	}
+	#header {
+		width:100%;
+		position:fixed;
+		top:0;
+		z-index:1;
+		transition:top .2s ease;
+	}
+	#container {
+		padding-top:60px;
+	}
 	#header .inner,#container {
 		width:auto;
 	}
@@ -1641,6 +1651,9 @@ fieldset.collapsed > legend {
 		width:auto;
 		margin-left:10px;
 		margin-right:10px;
+	}
+	#header.down {
+		top:-42px;
 	}
 	#footer {
 		padding-bottom:18px;
