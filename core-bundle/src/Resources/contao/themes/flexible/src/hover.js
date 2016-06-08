@@ -193,19 +193,34 @@ var Theme = {
 	 * Hide the menu on scroll
 	 */
 	hideMenuOnScroll: function() {
-		var pos = 0;
+		if (!('ontouchmove' in window)) return;
 
-		window.addEvent('scroll', function() {
-			var y = window.getScroll().y;
+		var wh = window.getSize().y,
+			dh = window.getScrollSize().y - wh,
+			anchor = 0;
 
-			if (y > 1 && y > pos) {
-				$('header').addClass('down');
-			} else {
-				$('header').removeClass('down');
-			}
+		if (wh >= dh) return;
 
-			pos = y;
-		});
+		window
+			.addEvent('touchmove', function() {
+				var ws = window.getScroll().y;
+
+				if (Math.abs(anchor - ws) < 20) return;
+
+				if (ws > 0 && ws > anchor) {
+					$('header').addClass('down');
+				} else {
+					$('header').removeClass('down');
+				}
+
+				anchor = ws;
+			})
+			.addEvent('scroll', function() {
+				if (window.getScroll().y < 1) {
+					$('header').removeClass('down');
+				}
+			})
+		;
 	}
 };
 
