@@ -228,9 +228,6 @@ h2.sub_headline_purge {
 }
 
 /* Filter */
-.styled_select_wrapper {
-	display:inline-block;
-}
 .tl_panel,.tl_version_panel {
 	padding:6px 6px 7px 0;
 	background:#f3f3f3;
