@@ -940,6 +940,11 @@ class tl_article extends Backend
 
 		if (!$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
 		{
+			if ($row['published'])
+			{
+				$icon = preg_replace('/\.svg$/i', '_.svg', $icon); // see #8126
+			}
+
 			return Image::getHtml($icon) . ' ';
 		}
 
