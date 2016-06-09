@@ -421,17 +421,8 @@ class Newsletter extends \Backend
 			return '';
 		}
 
-		$this->import('BackendUser', 'User');
-		$class = $this->User->uploader;
-
-		// See #4086 and #7046
-		if (!class_exists($class) || $class == 'DropZone')
-		{
-			$class = 'FileUpload';
-		}
-
 		/** @var FileUpload $objUploader */
-		$objUploader = new $class();
+		$objUploader = new \FileUpload();
 
 		// Import recipients
 		if (\Input::post('FORM_SUBMIT') == 'tl_recipients_import')
