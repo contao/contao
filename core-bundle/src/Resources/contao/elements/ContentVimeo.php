@@ -63,6 +63,13 @@ class ContentVimeo extends \ContentElement
 			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
 
-		$this->Template->src = 'https://player.vimeo.com/video/' . $this->vimeo;
+		$url = 'https://player.vimeo.com/video/' . $this->vimeo;
+
+		if ($this->autoplay)
+		{
+			$url .= '?autoplay=1';
+		}
+
+		$this->Template->src = $url;
 	}
 }

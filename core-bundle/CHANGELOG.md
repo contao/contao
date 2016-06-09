@@ -2,6 +2,7 @@
 
 ### 4.2.0 (2016-06-XX)
 
+ * Correctly implement the "autoplay" option in the YouTube/Vimeo element (see #509).
  * Show the system messages in a modal dialog (see #486).
  * Make DropZone the default uploader in the file manager (see #504).
  * Correctly aling the input hints (see #503).
