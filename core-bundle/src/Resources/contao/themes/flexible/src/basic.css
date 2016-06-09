@@ -53,6 +53,9 @@ input,textarea,select,button {
 	color:inherit;
 	line-height:inherit;
 }
+input {
+	line-height:normal; /* see #501 */
+}
 strong,b,th {
 	font-weight:500;
 }
