@@ -106,6 +106,7 @@ services:
         class: Contao\CoreBundle\Routing\UrlGenerator
         arguments:
             - "@router"
+            - "@contao.framework"
             - "%contao.prepend_locale%"
 
     contao.security.authenticator:
