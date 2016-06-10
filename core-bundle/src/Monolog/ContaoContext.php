@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Monolog;
 
 /**
- * ContaoContext
+ * Contao-specific logger context.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -28,18 +28,41 @@ class ContaoContext
     const NEWSLETTER = 'NEWSLETTER';
     const REPOSITORY = 'REPOSITORY';
 
+    /**
+     * @var string
+     */
     private $func;
+
+    /**
+     * @var string|null
+     */
     private $action;
+
+    /**
+     * @var string|null
+     */
     private $username;
+
+    /**
+     * @var string|null
+     */
     private $ip;
+
+    /**
+     * @var string|null
+     */
     private $browser;
+
+    /**
+     * @var string|null
+     */
     private $source;
 
     /**
      * Constructor.
      *
      * @param string      $func
-     * @param string      $action
+     * @param string|null $action
      * @param string|null $username
      * @param string|null $ip
      * @param string|null $browser
@@ -48,18 +71,20 @@ class ContaoContext
     public function __construct($func, $action = null, $username = null, $ip = null, $browser = null, $source = null)
     {
         if ('' === (string) $func) {
-            throw new \InvalidArgumentException('Function for Contao context must not be empty');
+            throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
         }
 
-        $this->func     = $func;
-        $this->action   = $action;
+        $this->func = $func;
+        $this->action = $action;
         $this->username = $username;
-        $this->ip       = $ip;
-        $this->browser  = $browser;
+        $this->ip = $ip;
+        $this->browser = $browser;
         $this->source = $source;
     }
 
     /**
+     * Returns the function name.
+     *
      * @return string
      */
     public function getFunc()
@@ -68,6 +93,8 @@ class ContaoContext
     }
 
     /**
+     * Returns the action.
+     *
      * @return string|null
      */
     public function getAction()
@@ -76,6 +103,8 @@ class ContaoContext
     }
 
     /**
+     * Sets the action.
+     *
      * @param string $action
      */
     public function setAction($action)
@@ -84,6 +113,8 @@ class ContaoContext
     }
 
     /**
+     * Returns the username.
+     *
      * @return string|null
      */
     public function getUsername()
@@ -92,6 +123,8 @@ class ContaoContext
     }
 
     /**
+     * Sets the username.
+     *
      * @param string $username
      */
     public function setUsername($username)
@@ -100,6 +133,8 @@ class ContaoContext
     }
 
     /**
+     * Returns the IP address.
+     *
      * @return string|null
      */
     public function getIp()
@@ -108,6 +143,8 @@ class ContaoContext
     }
 
     /**
+     * Sets the IP address.
+     *
      * @param string|null $ip
      */
     public function setIp($ip)
@@ -116,6 +153,8 @@ class ContaoContext
     }
 
     /**
+     * Returns the browser.
+     *
      * @return string|null
      */
     public function getBrowser()
@@ -124,6 +163,8 @@ class ContaoContext
     }
 
     /**
+     * Sets the browser.
+     *
      * @param string $browser
      */
     public function setBrowser($browser)
@@ -132,6 +173,8 @@ class ContaoContext
     }
 
     /**
+     * Returns the source.
+     *
      * @return string|null
      */
     public function getSource()
@@ -140,6 +183,8 @@ class ContaoContext
     }
 
     /**
+     * Sets the source.
+     *
      * @param string $source
      */
     public function setSource($source)
@@ -148,17 +193,19 @@ class ContaoContext
     }
 
     /**
+     * Returns a JSON representation of the object.
+     *
      * @return string
      */
     public function __toString()
     {
         return json_encode(
             [
-                'func'     => $this->func,
-                'action'   => $this->action,
+                'func' => $this->func,
+                'action' => $this->action,
                 'username' => $this->username,
-                'ip'       => $this->ip,
-                'browser'  => $this->browser,
+                'ip' => $this->ip,
+                'browser' => $this->browser,
             ]
         );
     }

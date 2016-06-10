@@ -3,21 +3,21 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Monolog;
 
-use Doctrine\DBAL\DBALException;
+use Contao\System;
 use Doctrine\DBAL\Statement;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
- * ContaoLogHandler
+ * Sends logs to the Contao tl_log table.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -36,7 +36,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
     private $statement;
 
     /**
-     * Gets the service name for the DBAL database connection.
+     * Returns the service name for the database connection.
      *
      * @return string
      */
@@ -46,7 +46,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Sets the service name for the DBAL database connection.
+     * Sets the service name for the database connection.
      *
      * @param string $name
      */
@@ -56,7 +56,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function handle(array $record)
     {
@@ -68,7 +68,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
 
         $record['formatted'] = $this->getFormatter()->format($record);
 
-        if (!isset($record['extra']['contao']) || !$record['extra']['contao'] instanceof ContaoContext) {
+        if (!isset($record['extra']['contao']) || !($record['extra']['contao'] instanceof ContaoContext)) {
             return false;
         }
 
@@ -84,9 +84,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @inheritdoc
-     *
-     * @throws DBALException
+     * {@inheritdoc}
      */
     protected function write(array $record)
     {
@@ -100,20 +98,20 @@ class ContaoTableHandler extends AbstractProcessingHandler
 
         $this->statement->execute(
             [
-                'tstamp'   => $date->format('U'),
-                'text'     => specialchars((string) $record['formatted']),
-                'source'   => (string) $context->getSource(),
-                'action'   => (string) $context->getAction(),
+                'tstamp' => $date->format('U'),
+                'text' => specialchars((string) $record['formatted']),
+                'source' => (string) $context->getSource(),
+                'action' => (string) $context->getAction(),
                 'username' => (string) $context->getUsername(),
-                'func'     => (string) $context->getFunc(),
-                'ip'       => (string) $context->getIp(),
-                'browser'  => (string) $context->getBrowser(),
+                'func' => (string) $context->getFunc(),
+                'ip' => (string) $context->getIp(),
+                'browser' => (string) $context->getBrowser(),
             ]
         );
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getDefaultFormatter()
     {
@@ -121,10 +119,9 @@ class ContaoTableHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Verifies database connection and prepares the statement.
+     * Verifies the database connection and prepares the statement.
      *
-     * @throws \RuntimeException if the container has not been injected or DBAL service is missing
-     * @throws DBALException
+     * @throws \RuntimeException if the container has not been injected or the database service is missing
      */
     private function createStatement()
     {
@@ -133,7 +130,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
         }
 
         if (null === $this->container || !$this->container->has($this->dbalServiceName)) {
-            throw new \RuntimeException('Cannot create database statement.');
+            throw new \RuntimeException('The container has not been injected or the database service is missing');
         }
 
         $this->statement = $this->container->get($this->dbalServiceName)->prepare('
@@ -156,7 +153,6 @@ class ContaoTableHandler extends AbstractProcessingHandler
 
         $framework = $this->container->get('contao.framework');
 
-        // HOOK: allow to add custom loggers
         if (!$framework->isInitialized()
             || !isset($GLOBALS['TL_HOOKS']['addLogEntry'])
             || !is_array($GLOBALS['TL_HOOKS']['addLogEntry'])
@@ -165,23 +161,19 @@ class ContaoTableHandler extends AbstractProcessingHandler
         }
 
         trigger_error(
-            "\$GLOBALS['TL_HOOKS']['addLogEntry'] is deprecated in Contao 4.2 and will be removed in Contao 5.",
+            'The "addLogEntry" hook is deprecated in Contao 4.2 and will be removed in Contao 5.',
             E_USER_DEPRECATED
         );
 
-        /** @var \Contao\System $system */
+        /** @var System $system */
         $system = $framework->getAdapter('Contao\System');
 
-        // Must create variable to allow modification-by-reference in hook
+        // Must create variables to allow modification-by-reference in hook
         $func = $context->getFunc();
         $action = $context->getAction();
 
         foreach ($GLOBALS['TL_HOOKS']['addLogEntry'] as $callback) {
-            $system->importStatic($callback[0])->{$callback[1]}(
-                $message,
-                $func,
-                $action
-            );
+            $system->importStatic($callback[0])->{$callback[1]}($message, $func, $action);
         }
     }
 }
