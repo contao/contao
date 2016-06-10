@@ -72,13 +72,9 @@ class ContaoTableHandler extends AbstractProcessingHandler
             return false;
         }
 
-        if (!$this->canWriteToDb()) {
-            return false;
-        }
-
         try {
             $this->write($record);
-        } catch (DBALException $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
@@ -94,6 +90,8 @@ class ContaoTableHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
+        $this->createStatement();
+
         /** @var \DateTime $date */
         $date = $record['datetime'];
 
@@ -125,29 +123,23 @@ class ContaoTableHandler extends AbstractProcessingHandler
     /**
      * Verifies database connection and prepares the statement.
      *
-     * @return bool
+     * @throws \RuntimeException if the container has not been injected or DBAL service is missing
+     * @throws DBALException
      */
-    private function canWriteToDb()
+    private function createStatement()
     {
         if (null !== $this->statement) {
-            return true;
+            return;
         }
 
         if (null === $this->container || !$this->container->has($this->dbalServiceName)) {
-            return false;
+            throw new \RuntimeException('Cannot create database statement.');
         }
 
-        try {
-            $this->statement = $this->container->get($this->dbalServiceName)->prepare('
-                INSERT INTO tl_log (tstamp, source, action, username, text, func, ip, browser)
-                VALUES (:tstamp, :source, :action, :username, :text, :func, :ip, :browser)
-            ');
-        } catch (DBALException $e) {
-            // Ignore if table does not exist
-            return false;
-        }
-
-        return true;
+        $this->statement = $this->container->get($this->dbalServiceName)->prepare('
+            INSERT INTO tl_log (tstamp, source, action, username, text, func, ip, browser)
+            VALUES (:tstamp, :source, :action, :username, :text, :func, :ip, :browser)
+        ');
     }
 
     /**
