@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\Routing;
 
+use Contao\Config;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
@@ -27,6 +29,11 @@ class UrlGenerator implements UrlGeneratorInterface
     private $router;
 
     /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
+
+    /**
      * @var bool
      */
     private $prependLocale;
@@ -34,12 +41,14 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Constructor.
      *
-     * @param UrlGeneratorInterface $router
-     * @param bool                  $prependLocale
+     * @param UrlGeneratorInterface    $router
+     * @param ContaoFrameworkInterface $framework
+     * @param bool                     $prependLocale
      */
-    public function __construct(UrlGeneratorInterface $router, $prependLocale)
+    public function __construct(UrlGeneratorInterface $router, ContaoFrameworkInterface $framework, $prependLocale)
     {
         $this->router = $router;
+        $this->framework = $framework;
         $this->prependLocale = $prependLocale;
     }
 
@@ -70,7 +79,7 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
-        $route = 'index' === $name ? 'contao_index' : 'contao_frontend';
+        $this->framework->initialize();
 
         if (!is_array($parameters)) {
             $parameters = [];
@@ -88,7 +97,11 @@ class UrlGenerator implements UrlGeneratorInterface
         $this->prepareAlias($name, $parameters);
         $this->prepareDomain($context, $parameters, $referenceType);
 
-        $url = $this->router->generate($route, $parameters, $referenceType);
+        $url = $this->router->generate(
+            'index' === $name ? 'contao_index' : 'contao_frontend',
+            $parameters,
+            $referenceType
+        );
 
         // Reset the request context
         $context->setHost($host);
@@ -128,9 +141,12 @@ class UrlGenerator implements UrlGeneratorInterface
         $hasAutoItem = false;
         $autoItems = $this->getAutoItems($parameters);
 
+        /** @var Config $config */
+        $config = $this->framework->getAdapter('Contao\Config');
+
         $parameters['alias'] = preg_replace_callback(
             '/\{([^\}]+)\}/',
-            function ($matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem) {
+            function ($matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem, $config) {
                 $param = $matches[1];
 
                 if (!isset($parameters[$param])) {
@@ -142,13 +158,13 @@ class UrlGenerator implements UrlGeneratorInterface
                 $value = $parameters[$param];
                 unset($parameters[$param]);
 
-                if (!$hasAutoItem && in_array($param, $autoItems, true)) {
-                    $hasAutoItem = true;
-
-                    return $value;
+                if (!$config->get('useAutoItem') || $hasAutoItem || !in_array($param, $autoItems, true)) {
+                    return $param.'/'.$value;
                 }
 
-                return $param.'/'.$value;
+                $hasAutoItem = true;
+
+                return $value;
             },
             $alias
         );
