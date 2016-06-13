@@ -206,7 +206,7 @@ abstract class User extends \System
 		{
 			return 'anon.';
 		}
-		
+
 		return $this->username ?: ($this->getTable() . '.' . $this->intId);
 	}
 
