@@ -588,9 +588,7 @@ class tl_form_field extends Backend
 			return $strType . "\n" . $objWidget->value . "\n</div>\n";
 		}
 
-		return $strType . '
-<table class="tl_form_field_preview">
-'.$strWidget.'</table>
+		return $strType . $strWidget . '
 </div>' . "\n";
 	}
 
