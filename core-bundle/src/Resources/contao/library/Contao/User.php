@@ -202,7 +202,12 @@ abstract class User extends \System
 	 */
 	public function __toString()
 	{
-		return $this->intId ? $this->username : 'anon.';
+		if (!$this->intId)
+		{
+			return 'anon.';
+		}
+		
+		return $this->username ?: ($this->getTable() . '.' . $this->intId);
 	}
 
 
