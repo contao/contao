@@ -165,7 +165,7 @@ class News extends \Frontend
 					}
 					else
 					{
-						$arrUrls[$jumpTo] = $objParent->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
+						$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
 					}
 				}
 
@@ -179,7 +179,7 @@ class News extends \Frontend
 				$objItem = new \FeedItem();
 
 				$objItem->title = $objArticle->headline;
-				$objItem->link = $this->getLink($objArticle, $strUrl, $strLink);
+				$objItem->link = $this->getLink($objArticle, $strUrl);
 				$objItem->published = $objArticle->date;
 				$objItem->author = $objArticle->authorName;
 
@@ -439,7 +439,7 @@ class News extends \Frontend
 				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
 				{
 					/** @var PageModel $objTarget */
-					return $strBase . $objTarget->getFrontendUrl();
+					return $objTarget->getAbsoluteUrl();
 				}
 				break;
 
@@ -448,13 +448,19 @@ class News extends \Frontend
 				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					/** @var PageModel $objPid */
-					return $strBase . ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					return ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
 		}
 
+		// Backwards compatibility (see #8329)
+		if ($strBase != '' && !preg_match('#^https?://#', $strUrl))
+		{
+			$strUrl = $strBase . $strUrl;
+		}
+
 		// Link to the default page
-		return $strBase . sprintf($strUrl, ($objItem->alias ?: $objItem->id));
+		return sprintf($strUrl, ($objItem->alias ?: $objItem->id));
 	}
 
 
