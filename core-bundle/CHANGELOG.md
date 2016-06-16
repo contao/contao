@@ -2,6 +2,7 @@
 
 ### 4.2.0 (2016-06-XX)
 
+ * Always use the relative path in DC_Folder (see contao/core#8370).
  * Handle the `useAutoItem` option in the URL generator (see #489).
  * Correctly implement the "autoplay" option in the YouTube/Vimeo element (see #509).
  * Show the system messages in a modal dialog (see #486).

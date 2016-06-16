@@ -1270,7 +1270,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					{
 						$objFile = is_dir(TL_ROOT . '/' . $this->intId) ? new \Folder($this->intId) : new \File($this->intId);
 
-						$this->strPath = $objFile->dirname;
+						$this->strPath = str_replace(TL_ROOT . '/', '', $objFile->dirname);
 						$this->strExtension = ($objFile->origext != '') ? '.'.$objFile->origext : '';
 						$this->varValue = $objFile->filename;
 
@@ -1574,7 +1574,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					{
 						$objFile = is_dir(TL_ROOT . '/' . $id) ? new \Folder($id) : new \File($id);
 
-						$this->strPath = $objFile->dirname;
+						$this->strPath = str_replace(TL_ROOT . '/', '', $objFile->dirname);
 						$this->strExtension = ($objFile->origext != '') ? '.'.$objFile->origext : '';
 						$this->varValue = $objFile->filename;
 
