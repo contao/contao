@@ -132,10 +132,13 @@ class ModuleEventReader extends \Events
 		{
 			$arrRange = \StringUtil::deserialize($objEvent->repeatEach);
 
-			while ($intStartTime < time() && $intEndTime < $objEvent->repeatEnd)
+			if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
-				$intStartTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intStartTime);
-				$intEndTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intEndTime);
+				while ($intStartTime < time() && $intEndTime < $objEvent->repeatEnd)
+				{
+					$intStartTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intStartTime);
+					$intEndTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intEndTime);
+				}
 			}
 		}
 
@@ -171,12 +174,16 @@ class ModuleEventReader extends \Events
 		if ($objEvent->recurring)
 		{
 			$arrRange = \StringUtil::deserialize($objEvent->repeatEach);
-			$strKey = 'cal_' . $arrRange['unit'];
-			$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
 
-			if ($objEvent->recurrences > 0)
+			if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
-				$until = sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
+				$strKey = 'cal_' . $arrRange['unit'];
+				$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
+
+				if ($objEvent->recurrences > 0)
+				{
+					$until = sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
+				}
 			}
 		}
 
