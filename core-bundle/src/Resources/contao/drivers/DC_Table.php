@@ -2181,7 +2181,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				\Message::reset();
 				\System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
-				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['edit']['href'], false, array('s2e', 'act')));
+				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['edit']['href'], false, array('s2e', 'act', 'mode', 'pid')));
 			}
 			elseif (isset($_POST['saveNback']))
 			{
