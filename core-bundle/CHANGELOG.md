@@ -1,8 +1,20 @@
 # Contao core bundle change log
 
-### 4.2.0 (2016-06-XX)
+### 4.2.0 (2016-06-17)
 
  * Always use the relative path in DC_Folder (see contao/core#8370).
+ * Use the correct empty value when resetting copied fields (see contao/core#8365).
+ * Remove the "required" attribute if a subpalette is closed (see contao/core#8192).
+ * Correctly calculate the maximum file size for DropZone (see contao/core#8098).
+ * Versionize and show password changes (see contao/core#8301).
+ * Make File::$dirname an absolute path again (see contao/core#8325).
+ * Store the full URLs in the search index (see #491).
+ * Standardize the group names in the checkbox widget (see contao/core#8002).
+ * Prevent models from being registered twice (see contao/core#8224).
+ * Prevent horizontal scrolling in the ACE editor (see contao/core#8328).
+ * Correctly render the breadcrumb links in the template editor (see contao/core#8341).
+ * Remove the role attributes from the navigation templates (see contao/core#8343).
+ * Do not add `role="tablist"` to the accordion container (see contao/core#8344).
  * Handle the `useAutoItem` option in the URL generator (see #489).
  * Correctly implement the "autoplay" option in the YouTube/Vimeo element (see #509).
  * Show the system messages in a modal dialog (see #486).
