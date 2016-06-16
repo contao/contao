@@ -1,7 +1,9 @@
 # Contao core bundle change log
 
-### 4.2.0 (2016-06-17)
+### 4.2.0 (2016-06-18)
 
+ * Also check for the back end cookie when loading from cache (see contao/core#8249).
+ * Unset "mode" and "pid" upon save and edit (see contao/core#8292).
  * Always use the relative path in DC_Folder (see contao/core#8370).
  * Use the correct empty value when resetting copied fields (see contao/core#8365).
  * Remove the "required" attribute if a subpalette is closed (see contao/core#8192).
