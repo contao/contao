@@ -452,6 +452,5 @@ class tl_user_group extends Backend
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_user_group.id='.$intId.'" has been created'.$this->getParentEntries('tl_user_group', $intId), __METHOD__, TL_GENERAL);
 	}
 }

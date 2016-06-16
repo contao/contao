@@ -40,7 +40,7 @@
     },
     "require-dev": {
         "composer/composer": "~1.0",
-        "fabpot/php-cs-fixer": "~1.8",
+        "friendsofphp/php-cs-fixer": "~1.8",
         "lexik/maintenance-bundle": "~2.0",
         "monolog/monolog": "~1.11",
         "phpunit/phpunit": "~4.5",
@@ -83,5 +83,7 @@
         "branch-alias": {
             "dev-develop": "4.3.x-dev"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
