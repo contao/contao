@@ -12,7 +12,7 @@
     "require": {
         "php": ">=5.5.0",
         "symfony/framework-bundle": "~2.8|~3.0",
-        "contao/core-bundle": "dev-release/4.2.0 as 4.2.0"
+        "contao/core-bundle": "~4.2"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~1.8",
@@ -45,7 +45,5 @@
         "branch-alias": {
             "dev-develop": "4.3.x-dev"
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }

@@ -1,5 +1,9 @@
 # Contao news bundle change log
 
+### 4.2.0 (2016-06-18)
+
+ * Correctly generate the feed links in a multi-domain setup (see contao/core#8329).
+
 ### 4.2.0-RC1 (2016-05-18)
 
  * Add the URI when throwing 403 and 404 exceptions (see contao/core#369).
