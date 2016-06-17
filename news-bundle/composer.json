@@ -28,9 +28,13 @@
             "Contao\\NewsBundle\\": "src/"
         },
         "classmap": [
-            "src/Resources/contao/classes",
-            "src/Resources/contao/models",
-            "src/Resources/contao/modules"
+            "src/Resources/contao"
+        ],
+        "exclude-from-classmap": [
+            "src/Resources/contao/config",
+            "src/Resources/contao/dca",
+            "src/Resources/contao/languages",
+            "src/Resources/contao/templates"
         ]
     },
     "autoload-dev": {
