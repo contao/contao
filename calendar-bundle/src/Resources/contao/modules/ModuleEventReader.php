@@ -17,6 +17,11 @@ use Patchwork\Utf8;
 /**
  * Front end module "event reader".
  *
+ * @property Comments $Comments
+ * @property string   $com_template
+ * @property string   $cal_template
+ * @property array    $cal_calendar
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventReader extends \Events
@@ -68,7 +73,7 @@ class ModuleEventReader extends \Events
 			return '';
 		}
 
-		$this->cal_calendar = $this->sortOutProtected(deserialize($this->cal_calendar));
+		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar));
 
 		// Do not index or cache the page if there are no calendars
 		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))
@@ -103,13 +108,13 @@ class ModuleEventReader extends \Events
 
 		if (null === $objEvent)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		// Overwrite the page title (see #2853 and #4955)
 		if ($objEvent->title != '')
 		{
-			$objPage->pageTitle = strip_tags(strip_insert_tags($objEvent->title));
+			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objEvent->title));
 		}
 
 		// Overwrite the page description
@@ -125,12 +130,15 @@ class ModuleEventReader extends \Events
 		// Do not show dates in the past if the event is recurring (see #923)
 		if ($objEvent->recurring)
 		{
-			$arrRange = deserialize($objEvent->repeatEach);
+			$arrRange = \StringUtil::deserialize($objEvent->repeatEach);
 
-			while ($intStartTime < time() && $intEndTime < $objEvent->repeatEnd)
+			if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
-				$intStartTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intStartTime);
-				$intEndTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intEndTime);
+				while ($intStartTime < time() && $intEndTime < $objEvent->repeatEnd)
+				{
+					$intStartTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intStartTime);
+					$intEndTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intEndTime);
+				}
 			}
 		}
 
@@ -165,13 +173,17 @@ class ModuleEventReader extends \Events
 		// Recurring event
 		if ($objEvent->recurring)
 		{
-			$arrRange = deserialize($objEvent->repeatEach);
-			$strKey = 'cal_' . $arrRange['unit'];
-			$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
+			$arrRange = \StringUtil::deserialize($objEvent->repeatEach);
 
-			if ($objEvent->recurrences > 0)
+			if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
-				$until = sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
+				$strKey = 'cal_' . $arrRange['unit'];
+				$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
+
+				if ($objEvent->recurrences > 0)
+				{
+					$until = sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
+				}
 			}
 		}
 
@@ -246,7 +258,7 @@ class ModuleEventReader extends \Events
 				// Override the default image size
 				if ($this->imgSize != '')
 				{
-					$size = deserialize($this->imgSize);
+					$size = \StringUtil::deserialize($this->imgSize);
 
 					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]))
 					{
@@ -306,7 +318,7 @@ class ModuleEventReader extends \Events
 		if ($objCalendar->notify != 'notify_admin')
 		{
 			/** @var UserModel $objAuthor */
-			if (($objAuthor = $objEvent->getRelated('author')) !== null && $objAuthor->email != '')
+			if (($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
 			{
 				$arrNotifies[] = $objAuthor->email;
 			}

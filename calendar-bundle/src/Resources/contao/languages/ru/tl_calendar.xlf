@@ -167,11 +167,9 @@
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.0">
         <source>Edit calendar</source>
-        <target>Редактировать календарь</target>
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.1">
         <source>Edit the calendar settings</source>
-        <target>Редактировать настройки календаря</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.0">
         <source>Duplicate calendar</source>

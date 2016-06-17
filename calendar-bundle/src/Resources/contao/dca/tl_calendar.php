@@ -79,27 +79,27 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['edit'],
 				'href'                => 'table=tl_calendar_events',
-				'icon'                => 'edit.gif'
+				'icon'                => 'edit.svg'
 			),
 			'editheader' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['editheader'],
 				'href'                => 'act=edit',
-				'icon'                => 'header.gif',
+				'icon'                => 'header.svg',
 				'button_callback'     => array('tl_calendar', 'editHeader')
 			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['copy'],
 				'href'                => 'act=copy',
-				'icon'                => 'copy.gif',
+				'icon'                => 'copy.svg',
 				'button_callback'     => array('tl_calendar', 'copyCalendar')
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_calendar', 'deleteCalendar')
 			),
@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['show'],
 				'href'                => 'act=show',
-				'icon'                => 'show.gif'
+				'icon'                => 'show.svg'
 			)
 		)
 	),
@@ -252,6 +252,8 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
+ * @property Contao\Calendar $Calendar
+ * 
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_calendar extends Backend
@@ -334,11 +336,11 @@ class tl_calendar extends Backend
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrCalendarp = deserialize($objUser->calendarp);
+							$arrCalendarp = StringUtil::deserialize($objUser->calendarp);
 
 							if (is_array($arrCalendarp) && in_array('create', $arrCalendarp))
 							{
-								$arrCalendars = deserialize($objUser->calendars);
+								$arrCalendars = StringUtil::deserialize($objUser->calendars);
 								$arrCalendars[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET calendars=? WHERE id=?")
@@ -353,11 +355,11 @@ class tl_calendar extends Backend
 													   ->limit(1)
 													   ->execute($this->User->groups[0]);
 
-							$arrCalendarp = deserialize($objGroup->calendarp);
+							$arrCalendarp = StringUtil::deserialize($objGroup->calendarp);
 
 							if (is_array($arrCalendarp) && in_array('create', $arrCalendarp))
 							{
-								$arrCalendars = deserialize($objGroup->calendars);
+								$arrCalendars = StringUtil::deserialize($objGroup->calendars);
 								$arrCalendars[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user_group SET calendars=? WHERE id=?")
@@ -474,7 +476,7 @@ class tl_calendar extends Backend
 	 */
 	public function manageFeeds($href, $label, $title, $class, $attributes)
 	{
-		return ($this->User->isAdmin || !empty($this->User->calendarfeeds) || $this->User->hasAccess('create', 'calendarfeedp')) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
+		return ($this->User->isAdmin || !empty($this->User->calendarfeeds) || $this->User->hasAccess('create', 'calendarfeedp')) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
 	}
 
 
@@ -492,7 +494,7 @@ class tl_calendar extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_calendar') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_calendar') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -510,7 +512,7 @@ class tl_calendar extends Backend
 	 */
 	public function copyCalendar($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'calendarp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('create', 'calendarp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -528,6 +530,6 @@ class tl_calendar extends Backend
 	 */
 	public function deleteCalendar($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'calendarp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('delete', 'calendarp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
 }

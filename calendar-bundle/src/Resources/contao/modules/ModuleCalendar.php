@@ -17,6 +17,10 @@ use Patchwork\Utf8;
 /**
  * Front end module "calendar".
  *
+ * @property int    $cal_startDay
+ * @property array  $cal_calendar
+ * @property string $cal_ctemplate
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleCalendar extends \Events
@@ -62,7 +66,7 @@ class ModuleCalendar extends \Events
 			return $objTemplate->parse();
 		}
 
-		$this->cal_calendar = $this->sortOutProtected(deserialize($this->cal_calendar, true));
+		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar, true));
 
 		// Return if there are no calendars
 		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))
@@ -73,9 +77,9 @@ class ModuleCalendar extends \Events
 		$this->strUrl = preg_replace('/\?.*$/', '', \Environment::get('request'));
 		$this->strLink = $this->strUrl;
 
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) !== null)
+		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			/** @var \PageModel $objTarget */
+			/** @var PageModel $objTarget */
 			$this->strLink = $objTarget->getFrontendUrl();
 		}
 
@@ -106,7 +110,7 @@ class ModuleCalendar extends \Events
 		}
 		catch (\OutOfBoundsException $e)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		$time = \Date::floorToMinute();
@@ -133,7 +137,7 @@ class ModuleCalendar extends \Events
 		if (($objMinMax->dateFrom !== null && $intPrevYm >= date('Ym', $objMinMax->dateFrom)) || $intPrevYm >= date('Ym'))
 		{
 			$objTemplate->prevHref = $this->strUrl . '?month=' . $intPrevYm;
-			$objTemplate->prevTitle = specialchars($lblPrevious);
+			$objTemplate->prevTitle = \StringUtil::specialchars($lblPrevious);
 			$objTemplate->prevLink = $GLOBALS['TL_LANG']['MSC']['cal_previous'] . ' ' . $lblPrevious;
 			$objTemplate->prevLabel = $GLOBALS['TL_LANG']['MSC']['cal_previous'];
 		}
@@ -151,7 +155,7 @@ class ModuleCalendar extends \Events
 		if (($objMinMax->dateTo !== null && $intNextYm <= date('Ym', max($objMinMax->dateTo, $objMinMax->repeatUntil))) || $intNextYm <= date('Ym'))
 		{
 			$objTemplate->nextHref = $this->strUrl . '?month=' . $intNextYm;
-			$objTemplate->nextTitle = specialchars($lblNext);
+			$objTemplate->nextTitle = \StringUtil::specialchars($lblNext);
 			$objTemplate->nextLink = $lblNext . ' ' . $GLOBALS['TL_LANG']['MSC']['cal_next'];
 			$objTemplate->nextLabel = $GLOBALS['TL_LANG']['MSC']['cal_next'];
 		}
@@ -287,7 +291,7 @@ class ModuleCalendar extends \Events
 			$arrDays[$strWeekClass][$i]['label'] = $intDay;
 			$arrDays[$strWeekClass][$i]['class'] = 'days active' . $strClass;
 			$arrDays[$strWeekClass][$i]['href'] = $this->strLink . '?day=' . $intKey;
-			$arrDays[$strWeekClass][$i]['title'] = sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), count($arrEvents));
+			$arrDays[$strWeekClass][$i]['title'] = sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), count($arrEvents));
 			$arrDays[$strWeekClass][$i]['events'] = $arrEvents;
 		}
 

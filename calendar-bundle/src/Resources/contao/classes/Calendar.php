@@ -110,7 +110,7 @@ class Calendar extends \Frontend
 	 */
 	protected function generateFiles($arrFeed)
 	{
-		$arrCalendars = deserialize($arrFeed['calendars']);
+		$arrCalendars = \StringUtil::deserialize($arrFeed['calendars']);
 
 		if (!is_array($arrCalendars) || empty($arrCalendars))
 		{
@@ -160,7 +160,7 @@ class Calendar extends \Frontend
 					}
 					else
 					{
-						$arrUrls[$jumpTo] = $objParent->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/events/%s');
+						$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(\Config::get('useAutoItem') ? '/%s' : '/events/%s');
 					}
 				}
 
@@ -171,14 +171,14 @@ class Calendar extends \Frontend
 				}
 
 				$strUrl = $arrUrls[$jumpTo];
-				$this->addEvent($objArticle, $objArticle->startTime, $objArticle->endTime, $strUrl, $strLink);
+				$this->addEvent($objArticle, $objArticle->startTime, $objArticle->endTime, $strUrl);
 
 				// Recurring events
 				if ($objArticle->recurring)
 				{
-					$arrRepeat = deserialize($objArticle->repeatEach);
+					$arrRepeat = \StringUtil::deserialize($objArticle->repeatEach);
 
-					if ($arrRepeat['value'] < 1)
+					if (!is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
 						continue;
 					}
@@ -201,7 +201,7 @@ class Calendar extends \Frontend
 
 						if ($intStartTime >= $time)
 						{
-							$this->addEvent($objArticle, $intStartTime, $intEndTime, $strUrl, $strLink);
+							$this->addEvent($objArticle, $intStartTime, $intEndTime, $strUrl);
 						}
 					}
 				}
@@ -374,7 +374,7 @@ class Calendar extends \Frontend
 	 * @param string              $strUrl
 	 * @param string              $strBase
 	 */
-	protected function addEvent($objEvent, $intStart, $intEnd, $strUrl, $strBase)
+	protected function addEvent($objEvent, $intStart, $intEnd, $strUrl, $strBase='')
 	{
 		if ($intEnd < time()) // see #3917
 		{
@@ -409,6 +409,13 @@ class Calendar extends \Frontend
 
 		// Add title and link
 		$title .= ' ' . $objEvent->title;
+
+		// Backwards compatibility (see #8329)
+		if ($strBase != '' && !preg_match('#^https?://#', $strUrl))
+		{
+			$strUrl = $strBase . $strUrl;
+		}
+
 		$link = '';
 
 		switch ($objEvent->source)
@@ -418,26 +425,24 @@ class Calendar extends \Frontend
 				break;
 
 			case 'internal':
-				if (($objTarget = $objEvent->getRelated('jumpTo')) !== null)
+				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
 				{
-					/** @var \PageModel $objTarget */
-					$link = $strBase . $objTarget->getFrontendUrl();
+					/** @var PageModel $objTarget */
+					$link = $objTarget->getAbsoluteUrl();
 				}
 				break;
 
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
-					/** @var \PageModel $objPid */
-					$link = $strBase . ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					/** @var PageModel $objPid */
+					$link = ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
-		}
 
-		// Link to the default page
-		if ($link == '')
-		{
-			$link = $strBase . sprintf($strUrl, ($objEvent->alias ?: $objEvent->id));
+			default:
+				$link = sprintf($strUrl, ($objEvent->alias ?: $objEvent->id));
+				break;
 		}
 
 		// Store the whole row (see #5085)
@@ -467,7 +472,7 @@ class Calendar extends \Frontend
 		// Enclosures
 		if ($objEvent->addEnclosure)
 		{
-			$arrEnclosure = deserialize($objEvent->enclosure, true);
+			$arrEnclosure = \StringUtil::deserialize($objEvent->enclosure, true);
 
 			if (is_array($arrEnclosure))
 			{

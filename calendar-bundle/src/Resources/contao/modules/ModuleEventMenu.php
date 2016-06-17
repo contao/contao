@@ -16,6 +16,10 @@ use Patchwork\Utf8;
 /**
  * Front end module "event menu".
  *
+ * @property bool   $cal_showQuantity
+ * @property string $cal_order
+ * @property string $cal_format
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventMenu extends \ModuleCalendar
@@ -114,7 +118,7 @@ class ModuleEventMenu extends \ModuleCalendar
 			$arrItems[$intYear]['date'] = $intDate;
 			$arrItems[$intYear]['link'] = $intYear;
 			$arrItems[$intYear]['href'] = $this->strLink . '?year=' . $intDate;
-			$arrItems[$intYear]['title'] = specialchars($intYear . ' (' . $quantity . ')');
+			$arrItems[$intYear]['title'] = \StringUtil::specialchars($intYear . ' (' . $quantity . ')');
 			$arrItems[$intYear]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 			$arrItems[$intYear]['isActive'] = (\Input::get('year') == $intDate);
 			$arrItems[$intYear]['quantity'] = $quantity;
@@ -168,7 +172,7 @@ class ModuleEventMenu extends \ModuleCalendar
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
 				$arrItems[$intYear][$intMonth]['href'] = $this->strLink . '?month=' . $intDate;
-				$arrItems[$intYear][$intMonth]['title'] = specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.$intYear . ' (' . $quantity . ')');
+				$arrItems[$intYear][$intMonth]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.$intYear . ' (' . $quantity . ')');
 				$arrItems[$intYear][$intMonth]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 				$arrItems[$intYear][$intMonth]['isActive'] = (\Input::get('month') == $intDate);
 				$arrItems[$intYear][$intMonth]['quantity'] = $quantity;

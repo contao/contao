@@ -71,26 +71,26 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_feed']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'edit.gif'
+				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_feed']['copy'],
 				'href'                => 'act=copy',
-				'icon'                => 'copy.gif'
+				'icon'                => 'copy.svg'
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_feed']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_feed']['show'],
 				'href'                => 'act=show',
-				'icon'                => 'show.gif'
+				'icon'                => 'show.svg'
 			)
 		)
 	),
@@ -211,6 +211,8 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
+ * @property Contao\Calendar $Calendar
+ * 
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_calendar_feed extends Backend
@@ -285,11 +287,11 @@ class tl_calendar_feed extends Backend
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrNewsfeedp = deserialize($objUser->calendarfeedp);
+							$arrNewsfeedp = StringUtil::deserialize($objUser->calendarfeedp);
 
 							if (is_array($arrNewsfeedp) && in_array('create', $arrNewsfeedp))
 							{
-								$arrNewsfeeds = deserialize($objUser->calendarfeeds);
+								$arrNewsfeeds = StringUtil::deserialize($objUser->calendarfeeds);
 								$arrNewsfeeds[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET calendarfeeds=? WHERE id=?")
@@ -304,11 +306,11 @@ class tl_calendar_feed extends Backend
 													   ->limit(1)
 													   ->execute($this->User->groups[0]);
 
-							$arrNewsfeedp = deserialize($objGroup->calendarfeedp);
+							$arrNewsfeedp = StringUtil::deserialize($objGroup->calendarfeedp);
 
 							if (is_array($arrNewsfeedp) && in_array('create', $arrNewsfeedp))
 							{
-								$arrNewsfeeds = deserialize($objGroup->calendarfeeds);
+								$arrNewsfeeds = StringUtil::deserialize($objGroup->calendarfeeds);
 								$arrNewsfeeds[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user_group SET calendarfeeds=? WHERE id=?")
@@ -459,7 +461,7 @@ class tl_calendar_feed extends Backend
 			return $varValue;
 		}
 
-		$varValue = standardize($varValue); // see #5096
+		$varValue = StringUtil::standardize($varValue); // see #5096
 
 		$this->import('Automator');
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);

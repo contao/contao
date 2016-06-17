@@ -10,11 +10,9 @@
 
 namespace Contao\CalendarBundle\Test\EventListener;
 
-use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Events;
 use Contao\CalendarBundle\EventListener\PreviewUrlConvertListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -134,19 +132,27 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($isInitialized)
         ;
 
-        /** @var Events|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $events = $this->getMock('Contao\Events', ['generateEventUrl']);
+        $eventsAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['generateEventUrl'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
-        $events
+        $eventsAdapter
             ->expects($this->any())
             ->method('generateEventUrl')
             ->willReturn('events/winter-holidays.html')
         ;
 
-        /** @var CalendarEventsModel|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $eventsModel = $this->getMock('Contao\CalendarEventsModel', ['findByPk']);
+        $eventsModelAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['findByPk'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
-        $eventsModel
+        $eventsModelAdapter
             ->expects($this->any())
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
@@ -163,13 +169,13 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
         $framework
             ->expects($this->any())
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($events, $eventsModel) {
+            ->willReturnCallback(function ($key) use ($eventsAdapter, $eventsModelAdapter) {
                 switch ($key) {
                     case 'Contao\Events':
-                        return $events;
+                        return $eventsAdapter;
 
                     case 'Contao\CalendarEventsModel':
-                        return $eventsModel;
+                        return $eventsModelAdapter;
 
                     default:
                         return null;

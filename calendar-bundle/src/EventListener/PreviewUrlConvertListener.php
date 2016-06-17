@@ -66,7 +66,7 @@ class PreviewUrlConvertListener
         /** @var Events $eventsAdapter */
         $eventsAdapter = $this->framework->getAdapter('Contao\Events');
 
-        $event->setUrl($request->getSchemeAndHttpHost() . '/' . $eventsAdapter->generateEventUrl($eventModel));
+        $event->setUrl($request->getSchemeAndHttpHost().'/'.$eventsAdapter->generateEventUrl($eventModel));
     }
 
     /**

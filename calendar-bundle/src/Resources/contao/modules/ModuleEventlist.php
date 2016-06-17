@@ -17,6 +17,15 @@ use Patchwork\Utf8;
 /**
  * Front end module "event list".
  *
+ * @property bool   $cal_noSpan
+ * @property string $cal_template
+ * @property int    $cal_limit
+ * @property string $cal_order
+ * @property array  $cal_calendar
+ * @property string $cal_format
+ * @property bool   $cal_ignoreDynamic
+ * @property int    $cal_readerModule
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventlist extends \Events
@@ -56,7 +65,7 @@ class ModuleEventlist extends \Events
 			return $objTemplate->parse();
 		}
 
-		$this->cal_calendar = $this->sortOutProtected(deserialize($this->cal_calendar, true));
+		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar, true));
 
 		// Return if there are no calendars
 		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))
@@ -139,13 +148,13 @@ class ModuleEventlist extends \Events
 		}
 		catch (\OutOfBoundsException $e)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
-		list($strBegin, $strEnd, $strEmpty) = $this->getDatesFromFormat($this->Date, $this->cal_format);
+		list($intStart, $intEnd, $strEmpty) = $this->getDatesFromFormat($this->Date, $this->cal_format);
 
 		// Get all events
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $strBegin, $strEnd);
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $intStart, $intEnd);
 		$sort = ($this->cal_order == 'descending') ? 'krsort' : 'ksort';
 
 		// Sort the days
@@ -158,21 +167,19 @@ class ModuleEventlist extends \Events
 		}
 
 		$arrEvents = array();
-		$dateBegin = date('Ymd', $strBegin);
-		$dateEnd = date('Ymd', $strEnd);
 
 		// Remove events outside the scope
 		foreach ($arrAllEvents as $key=>$days)
 		{
-			if ($key < $dateBegin || $key > $dateEnd)
-			{
-				continue;
-			}
-
 			foreach ($days as $day=>$events)
 			{
 				foreach ($events as $event)
 				{
+					if ($event['endTime'] < $intStart || $event['startTime'] > $intEnd)
+					{
+						continue;
+					}
+
 					$event['firstDay'] = $GLOBALS['TL_LANG']['DAYS'][date('w', $day)];
 					$event['firstDate'] = \Date::parse($objPage->dateFormat, $day);
 
@@ -202,7 +209,7 @@ class ModuleEventlist extends \Events
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
 			{
-				throw new PageNotFoundException('Page not found');
+				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
 
 			$offset = ($page - 1) * $this->perPage;
@@ -223,7 +230,7 @@ class ModuleEventlist extends \Events
 		// Override the default image size
 		if ($this->imgSize != '')
 		{
-			$size = deserialize($this->imgSize);
+			$size = \StringUtil::deserialize($this->imgSize);
 
 			if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]))
 			{
@@ -274,7 +281,7 @@ class ModuleEventlist extends \Events
 			// Add the template variables
 			$objTemplate->classList = $event['class'] . ((($headerCount % 2) == 0) ? ' even' : ' odd') . (($headerCount == 0) ? ' first' : '') . ($blnIsLastEvent ? ' last' : '') . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ((($eventCount % 2) == 0) ? ' even' : ' odd') . (($eventCount == 0) ? ' first' : '') . ((($offset + $eventCount + 1) >= $limit) ? ' last' : '') . ' cal_' . $event['parent'];
-			$objTemplate->readMore = specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
+			$objTemplate->readMore = \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
 			$objTemplate->more = $GLOBALS['TL_LANG']['MSC']['more'];
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 

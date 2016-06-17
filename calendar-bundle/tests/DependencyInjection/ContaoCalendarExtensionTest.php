@@ -41,6 +41,9 @@ class ContaoCalendarExtensionTest extends \PHPUnit_Framework_TestCase
         $extension = new ContaoCalendarExtension();
         $extension->load([], $container);
 
+        $this->assertTrue($container->has('contao_calendar.listener.file_meta_information'));
+        $this->assertTrue($container->has('contao_calendar.listener.generate_page'));
+        $this->assertTrue($container->has('contao_calendar.listener.insert_tags'));
         $this->assertTrue($container->has('contao_calendar.listener.preview_url_create'));
         $this->assertTrue($container->has('contao_calendar.listener.preview_url_convert'));
     }

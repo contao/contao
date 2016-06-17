@@ -67,7 +67,7 @@ class PreviewUrlCreateListener
             return;
         }
 
-        $event->setQuery('calendar=' . $eventModel->id);
+        $event->setQuery('calendar='.$eventModel->id);
     }
 
     /**
