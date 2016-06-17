@@ -8,13 +8,6 @@
  * @license LGPL-3.0+
  */
 
-// Classes
-ClassLoader::addClasses(array
-(
-	// Modules
-	'Contao\ModuleListing' => 'vendor/contao/listing-bundle/src/Resources/contao/modules/ModuleListing.php',
-));
-
 // Templates
 TemplateLoader::addFiles(array
 (

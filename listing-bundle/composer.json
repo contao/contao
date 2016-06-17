@@ -1,6 +1,6 @@
 {
     "name": "contao/listing-bundle",
-    "type": "symfony-bundle",
+    "type": "contao-bundle",
     "description": "Contao 4 listing bundle",
     "license": "LGPL-3.0+",
     "authors": [
@@ -10,9 +10,9 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "symfony/framework-bundle": "^2.7.7",
-        "contao/core-bundle": "~4.1"
+        "php": ">=5.5.0",
+        "symfony/framework-bundle": "~2.8|~3.0",
+        "contao/core-bundle": "~4.2"
     },
     "conflict": {
         "contao/core": "*"
@@ -20,11 +20,17 @@
     "autoload": {
         "psr-4": {
             "Contao\\ListingBundle\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/Resources/contao/modules"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
     },
     "extra": {
         "branch-alias": {
-            "dev-develop": "4.2.x-dev"
+            "dev-develop": "4.3.x-dev"
         }
     }
 }

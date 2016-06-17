@@ -17,6 +17,16 @@ use Patchwork\Utf8;
 /**
  * Provide methods to render content element "listing".
  *
+ * @property string $list_table
+ * @property string $list_info
+ * @property string $list_info_layout
+ * @property string $list_info_where
+ * @property string $list_fields
+ * @property string $list_sort
+ * @property string $list_where
+ * @property string $list_search
+ * @property string $list_layout
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleListing extends \Module
@@ -108,7 +118,7 @@ class ModuleListing extends \Module
 		$strOptions = '';
 
 		$this->Template->searchable = false;
-		$arrSearchFields = trimsplit(',', $this->list_search);
+		$arrSearchFields = \StringUtil::trimsplit(',', $this->list_search);
 
 		if (!empty($arrSearchFields) && is_array($arrSearchFields))
 		{
@@ -153,7 +163,7 @@ class ModuleListing extends \Module
 		// Thanks to Hagen Klemp (see #4485)
 		if ($per_page > 0 && ($page < 1 || $page > max(ceil($objTotal->count/$per_page), 1)))
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 
@@ -244,7 +254,7 @@ class ModuleListing extends \Module
 		 */
 		$arrTh = array();
 		$arrTd = array();
-		$arrFields = trimsplit(',', $this->list_fields);
+		$arrFields = \StringUtil::trimsplit(',', $this->list_fields);
 
 		// THEAD
 		for ($i=0, $c=count($arrFields); $i<$c; $i++)
@@ -270,7 +280,7 @@ class ModuleListing extends \Module
 			(
 				'link' => $strField,
 				'href' => (ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
-				'title' => specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
+				'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
 				'class' => $class . (($i == 0) ? ' col_first' : '') //. ((($i + 1) == count($arrFields)) ? ' col_last' : '')
 			);
 		}
@@ -336,8 +346,8 @@ class ModuleListing extends \Module
 		 */
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->details = ($this->list_info != '') ? true : false;
-		$this->Template->search_label = specialchars($GLOBALS['TL_LANG']['MSC']['search']);
-		$this->Template->per_page_label = specialchars($GLOBALS['TL_LANG']['MSC']['list_perPage']);
+		$this->Template->search_label = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['search']);
+		$this->Template->per_page_label = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['list_perPage']);
 		$this->Template->fields_label = $GLOBALS['TL_LANG']['MSC']['all_fields'][0];
 		$this->Template->keywords_label = $GLOBALS['TL_LANG']['MSC']['keywords'];
 		$this->Template->search = \Input::get('search');
@@ -369,7 +379,7 @@ class ModuleListing extends \Module
 		$this->Template->referer = 'javascript:history.go(-1)';
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
-		$this->list_info = deserialize($this->list_info);
+		$this->list_info = \StringUtil::deserialize($this->list_info);
 		$this->list_info_where = $this->replaceInsertTags($this->list_info_where, false);
 
 		$objRecord = $this->Database->prepare("SELECT " . $this->list_info . " FROM " . $this->list_table . " WHERE " . (($this->list_info_where != '') ? "(" . $this->list_info_where . ") AND " : "") . $this->strPk . "=?")
@@ -421,7 +431,7 @@ class ModuleListing extends \Module
 	 */
 	protected function formatValue($k, $value, $blnListSingle=false)
 	{
-		$value = deserialize($value);
+		$value = \StringUtil::deserialize($value);
 
 		// Return if empty
 		if (empty($value))
