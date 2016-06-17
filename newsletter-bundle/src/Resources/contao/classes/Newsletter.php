@@ -23,7 +23,7 @@ class Newsletter extends \Backend
 {
 
 	/**
-	 * Renturn a form to choose an existing style sheet and import it
+	 * Return a form to choose an existing style sheet and import it
 	 *
 	 * @param DataContainer $dc
 	 *
@@ -70,7 +70,7 @@ class Newsletter extends \Backend
 		// Add attachments
 		if ($objNewsletter->addFile)
 		{
-			$files = deserialize($objNewsletter->files);
+			$files = \StringUtil::deserialize($objNewsletter->files);
 
 			if (!empty($files) && is_array($files))
 			{
@@ -225,9 +225,9 @@ class Newsletter extends \Backend
 		// Preview newsletter
 		$return = '
 <div id="tl_buttons">
-<a href="'.$this->getReferer(true).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
-'.\Message::generate().'
+'.\System::getContainer()->get('twig')->render('@ContaoCore/messages.html.twig').'
 <form action="'.TL_SCRIPT.'" id="tl_newsletter_send" class="tl_form" method="get">
 <div class="tl_formbody_edit tl_newsletter_send">
 <input type="hidden" name="do" value="' . \Input::get('do') . '">
@@ -260,7 +260,7 @@ class Newsletter extends \Backend
 <pre style="white-space:pre-wrap">' . $text . '</pre>
 </div>
 
-<div class="tl_tbox">
+<fieldset class="tl_tbox nolegend">
 <div class="w50">
   <h3><label for="ctrl_mpc">' . $GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][0] . '</label></h3>
   <input type="text" name="mpc" id="ctrl_mpc" value="10" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] && \Config::get('showHelp')) ? '
@@ -282,8 +282,7 @@ class Newsletter extends \Backend
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && \Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>
-<div class="clear"></div>
-</div>
+</fieldset>
 </div>';
 
 		$return .= '
@@ -422,17 +421,8 @@ class Newsletter extends \Backend
 			return '';
 		}
 
-		$this->import('BackendUser', 'User');
-		$class = $this->User->uploader;
-
-		// See #4086 and #7046
-		if (!class_exists($class) || $class == 'DropZone')
-		{
-			$class = 'FileUpload';
-		}
-
 		/** @var FileUpload $objUploader */
-		$objUploader = new $class();
+		$objUploader = new \FileUpload();
 
 		// Import recipients
 		if (\Input::post('FORM_SUBMIT') == 'tl_recipients_import')
@@ -539,16 +529,17 @@ class Newsletter extends \Backend
 		// Return form
 		return '
 <div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=import', '', \Environment::get('request'))).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.ampersand(str_replace('&key=import', '', \Environment::get('request'))).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
-'.\Message::generate().'
+'.\System::getContainer()->get('twig')->render('@ContaoCore/messages.html.twig').'
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_recipients_import" class="tl_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_recipients_import">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
 <input type="hidden" name="MAX_FILE_SIZE" value="'.\Config::get('maxFileSize').'">
 
-<div class="tl_tbox">
+<fieldset class="tl_tbox nolegend">
+<div>
   <h3><label for="separator">'.$GLOBALS['TL_LANG']['MSC']['separator'][0].'</label></h3>
   <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
     <option value="comma">'.$GLOBALS['TL_LANG']['MSC']['comma'].'</option>
@@ -560,6 +551,7 @@ class Newsletter extends \Backend
   <h3>'.$GLOBALS['TL_LANG']['MSC']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['MSC']['source'][1]) ? '
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['source'][1].'</p>' : '').'
 </div>
+</fieldset>
 
 </div>
 
@@ -609,7 +601,7 @@ class Newsletter extends \Backend
 	 */
 	public function createNewUser($intUser, $arrData)
 	{
-		$arrNewsletters = deserialize($arrData['newsletter'], true);
+		$arrNewsletters = \StringUtil::deserialize($arrData['newsletter'], true);
 
 		// Return if there are no newsletters
 		if (!is_array($arrNewsletters))
@@ -648,7 +640,7 @@ class Newsletter extends \Backend
 	 */
 	public function activateAccount($objUser)
 	{
-		$arrNewsletters = deserialize($objUser->newsletter, true);
+		$arrNewsletters = \StringUtil::deserialize($objUser->newsletter, true);
 
 		// Return if there are no newsletters
 		if (!is_array($arrNewsletters))
@@ -666,18 +658,46 @@ class Newsletter extends \Backend
 				continue;
 			}
 
-			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=1 WHERE pid=? AND email=?")
+			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='1' WHERE pid=? AND email=?")
 						   ->execute($intNewsletter, $objUser->email);
 		}
+	}
+
+	/**
+	 * Synchronize the newsletter subscriptions if the visibility is toggled
+	 *
+	 * @param boolean       $blnDisabled
+	 * @param DataContainer $dc
+	 *
+	 * @return boolean
+	 */
+	public function onToggleVisibility($blnDisabled, DataContainer $dc)
+	{
+		if (!$dc->id)
+		{
+			return $blnDisabled;
+		}
+
+		$objUser = $this->Database->prepare("SELECT email FROM tl_member WHERE id=?")
+								  ->limit(1)
+								  ->execute($dc->id);
+
+		if ($objUser->numRows)
+		{
+			$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=?, active=? WHERE email=?")
+						   ->execute(time(), ($blnDisabled ? '' : '1'), $objUser->email);
+		}
+
+		return $blnDisabled;
 	}
 
 
 	/**
 	 * Synchronize newsletter subscription of existing users
 	 *
-	 * @param mixed       $varValue
-	 * @param MemberModel $objUser
-	 * @param ModuleModel $objModule
+	 * @param mixed              $varValue
+	 * @param MemberModel        $objUser
+	 * @param ModuleModel|object $objModule
 	 *
 	 * @return mixed
 	 */
@@ -713,12 +733,12 @@ class Newsletter extends \Backend
 		}
 
 		$time = time();
-		$varValue = deserialize($varValue, true);
+		$varValue = \StringUtil::deserialize($varValue, true);
 
 		// Get all channel IDs (thanks to Andreas Schempp)
 		if ($blnIsFrontend && $objModule instanceof Module)
 		{
-			$arrChannel = deserialize($objModule->newsletters, true);
+			$arrChannel = \StringUtil::deserialize($objModule->newsletters, true);
 		}
 		else
 		{
@@ -849,7 +869,7 @@ class Newsletter extends \Backend
 	/**
 	 * Get all editable newsletters and return them as array
 	 *
-	 * @param ModuleModel $objModule
+	 * @param ModuleModel|object $objModule
 	 *
 	 * @return array
 	 */
@@ -874,7 +894,7 @@ class Newsletter extends \Backend
 		}
 		else
 		{
-			$newsletters = deserialize($objModule->newsletters, true);
+			$newsletters = \StringUtil::deserialize($objModule->newsletters, true);
 
 			if (!is_array($newsletters) || empty($newsletters))
 			{

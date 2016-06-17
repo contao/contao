@@ -16,6 +16,8 @@ use Patchwork\Utf8;
 /**
  * Front end module "newsletter list".
  *
+ * @property array $nl_channels
+ * 
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsletterList extends \Module
@@ -49,7 +51,7 @@ class ModuleNewsletterList extends \Module
 			return $objTemplate->parse();
 		}
 
-		$this->nl_channels = deserialize($this->nl_channels);
+		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
 
 		// Return if there are no channels
 		if (!is_array($this->nl_channels) || empty($this->nl_channels))
@@ -79,8 +81,8 @@ class ModuleNewsletterList extends \Module
 		{
 			while ($objNewsletter->next())
 			{
-				/** @var PageModel $objTarget */
-				if (($objTarget = $objNewsletter->getRelated('pid')) === null)
+				/** @var NewsletterChannelModel $objTarget */
+				if (!($objTarget = $objNewsletter->getRelated('pid')) instanceof NewsletterChannelModel)
 				{
 					continue;
 				}
@@ -97,9 +99,9 @@ class ModuleNewsletterList extends \Module
 
 				if (!isset($arrJumpTo[$objTarget->jumpTo]))
 				{
-					if (($objJumpTo = $objTarget->getRelated('jumpTo')) !== null)
+					if (($objJumpTo = $objTarget->getRelated('jumpTo')) instanceof PageModel)
 					{
-						/** @var \PageModel $objJumpTo */
+						/** @var PageModel $objJumpTo */
 						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
 					}
 					else
@@ -114,7 +116,7 @@ class ModuleNewsletterList extends \Module
 				$arrNewsletter[] = array
 				(
 					'subject' => $objNewsletter->subject,
-					'title' => strip_insert_tags($objNewsletter->subject),
+					'title' => \StringUtil::stripInsertTags($objNewsletter->subject),
 					'href' => sprintf($strUrl, $strAlias),
 					'date' => \Date::parse($objPage->dateFormat, $objNewsletter->date),
 					'datim' => \Date::parse($objPage->datimFormat, $objNewsletter->date),

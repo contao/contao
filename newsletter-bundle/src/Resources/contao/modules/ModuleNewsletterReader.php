@@ -17,6 +17,8 @@ use Patchwork\Utf8;
 /**
  * Front end module "newsletter reader".
  *
+ * @property array $nl_channels
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsletterReader extends \Module
@@ -68,7 +70,7 @@ class ModuleNewsletterReader extends \Module
 			return '';
 		}
 
-		$this->nl_channels = deserialize($this->nl_channels);
+		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
 
 		// Do not index or cache the page if there are no channels
 		if (!is_array($this->nl_channels) || empty($this->nl_channels))
@@ -102,13 +104,13 @@ class ModuleNewsletterReader extends \Module
 
 		if (null === $objNewsletter)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		// Overwrite the page title (see #2853 and #4955)
 		if ($objNewsletter->subject != '')
 		{
-			$objPage->pageTitle = strip_tags(strip_insert_tags($objNewsletter->subject));
+			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objNewsletter->subject));
 		}
 
 		// Add enclosure
