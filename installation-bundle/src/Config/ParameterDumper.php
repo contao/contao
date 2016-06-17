@@ -37,12 +37,12 @@ class ParameterDumper
     public function __construct($rootDir)
     {
         $this->rootDir = $rootDir;
-        $this->parameters = Yaml::parse(file_get_contents($rootDir . '/config/parameters.yml.dist'));
+        $this->parameters = Yaml::parse(file_get_contents($rootDir.'/config/parameters.yml.dist'));
 
-        if (file_exists($rootDir . '/config/parameters.yml')) {
+        if (file_exists($rootDir.'/config/parameters.yml')) {
             $this->parameters = array_merge(
                 $this->parameters,
-                Yaml::parse(file_get_contents($rootDir . '/config/parameters.yml'))
+                Yaml::parse(file_get_contents($rootDir.'/config/parameters.yml'))
             );
         }
     }
@@ -83,6 +83,9 @@ class ParameterDumper
             $this->parameters['parameters']['database_port'] = (int) $this->parameters['parameters']['database_port'];
         }
 
-        file_put_contents($this->rootDir . '/config/parameters.yml', Yaml::dump($this->parameters));
+        file_put_contents(
+            $this->rootDir.'/config/parameters.yml',
+            "# This file has been auto-generated during installation\n".Yaml::dump($this->parameters)
+        );
     }
 }

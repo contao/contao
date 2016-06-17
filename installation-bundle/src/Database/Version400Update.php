@@ -50,7 +50,7 @@ class Version400Update extends AbstractVersionUpdate
 
             // Check if j_slider is enabled
             if ($layout->addJQuery) {
-                $jquery = deserialize($layout->jquery);
+                $jquery = \StringUtil::deserialize($layout->jquery);
 
                 if (!empty($jquery) && is_array($jquery)) {
                     if (false !== ($key = array_search('j_slider', $jquery))) {
@@ -65,7 +65,7 @@ class Version400Update extends AbstractVersionUpdate
 
             // Check if moo_slider is enabled
             if ($layout->addMooTools) {
-                $mootools = deserialize($layout->mootools);
+                $mootools = \StringUtil::deserialize($layout->mootools);
 
                 if (!empty($mootools) && is_array($mootools)) {
                     if (false !== ($key = array_search('moo_slider', $mootools))) {
@@ -89,7 +89,7 @@ class Version400Update extends AbstractVersionUpdate
         $statement = $this->connection->query("SELECT id, mootools FROM tl_layout WHERE framework!=''");
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
-            $mootools = deserialize($layout->mootools);
+            $mootools = \StringUtil::deserialize($layout->mootools);
 
             if (!empty($mootools) && is_array($mootools)) {
                 if (false !== ($key = array_search('moo_slimbox', $mootools))) {
@@ -106,7 +106,7 @@ class Version400Update extends AbstractVersionUpdate
         $statement = $this->connection->query("SELECT id, framework FROM tl_layout WHERE framework!=''");
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
-            $framework = deserialize($layout->framework);
+            $framework = \StringUtil::deserialize($layout->framework);
 
             if (!empty($framework) && is_array($framework)) {
                 if (false !== ($key = array_search('tinymce.css', $framework))) {

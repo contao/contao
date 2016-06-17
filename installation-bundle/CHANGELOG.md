@@ -1,20 +1,14 @@
 # Contao installation bundle change log
 
-### 1.0.1 (2016-XX-XX)
+### 1.1.0 (2016-06-18)
 
- * Re-add the "sqlGetFromDca" and "sqlGetFromFile" hooks (see #12).
- * Only purge the Symfony cache after the user has authenticated (see #11).
+ * Redirect to the /contao/install route as soon as the real system can be booted.
 
-### 1.0.0 (2015-11-26)
+### 1.1.0-RC1 (2016-05-18)
 
- * Also check for the `localconfig.php` file during boot (see contao/core-bundle#406).
+ * Pass the language and path to the Twig templates (see #15).
+ * Fix the library loader and add the contao.cache service to the installation kernel (see #13).
 
-### 1.0.0-RC1 (2015-10-11)
+### 1.1.0-beta1 (2016-04-25)
 
- * Add the version 4.1 update routines.
- * Purge the Symfony cache upon each request (see contao/core-bundle#347).
-
-### 1.0.0-beta1 (2015-10-21)
-
- * Add all translations which are at least 95% complete.
- * Boot the real system as soon as the `parameters.yml` file exists.
+ * Use the Contao cache to store the login count (see contao/core-bundle#442).

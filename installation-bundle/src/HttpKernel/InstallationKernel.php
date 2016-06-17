@@ -13,10 +13,12 @@ namespace Contao\InstallationBundle\HttpKernel;
 use Contao\ClassLoader;
 use Contao\Config;
 use Contao\InstallationBundle\ClassLoader\LibraryLoader;
+use Contao\InstallationBundle\Controller\InstallationController;
 use Contao\InstallationBundle\DependencyInjection\ContainerFactory;
-use Contao\InstallationBundle\Translation\LanguageResolver;
 use Contao\System;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Provides a special installation kernel.
@@ -30,13 +32,8 @@ class InstallationKernel extends \AppKernel
      */
     public function boot()
     {
-        if ($this->canBootRealSystem()) {
-            parent::boot();
-            $this->bootRealSystem();
-        } else {
-            $this->initializeBundles();
-            $this->bootHelperSystem();
-        }
+        $this->initializeBundles();
+        $this->bootHelperSystem();
     }
 
     /**
@@ -57,36 +54,29 @@ class InstallationKernel extends \AppKernel
      *
      * @return bool True if the real system can be booted
      */
-    private function canBootRealSystem()
+    public function canBootRealSystem()
     {
-        return file_exists($this->getRootDir() . '/config/parameters.yml')
-            && file_exists($this->getRootDir() . '/../system/config/localconfig.php')
+        return file_exists($this->getRootDir().'/config/parameters.yml')
+            && file_exists($this->getRootDir().'/../system/config/localconfig.php')
         ;
     }
 
     /**
-     * Boots the real system.
+     * {@inheritdoc}
      */
-    private function bootRealSystem()
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        $request = Request::createFromGlobals();
+        if ($this->canBootRealSystem()) {
+            return new RedirectResponse('../contao/install');
+        }
 
-        $request->attributes->add([
-            '_route' => 'contao_install',
-            '_route_params' => [
-                '_scope' => 'backend',
-            ],
-        ]);
+        $this->boot();
 
-        $container = $this->getContainer();
+        $controller = new InstallationController();
+        $controller->setContainer($this->getContainer());
+        $response = $controller->installAction();
 
-        $requestStack = $container->get('request_stack');
-        $requestStack->push($request);
-
-        $resolver = new LanguageResolver($requestStack, __DIR__ . '/../Resources/translations');
-
-        $container->get('translator')->setLocale($resolver->getLocale());
-        $container->get('contao.framework')->initialize();
+        return $response;
     }
 
     /**
@@ -94,10 +84,10 @@ class InstallationKernel extends \AppKernel
      */
     private function bootHelperSystem()
     {
-        $contaoDir = $this->getRootDir() . '/../vendor/contao/core-bundle';
+        $contaoDir = $this->getRootDir().'/../vendor/contao/core-bundle';
 
-        require_once $contaoDir . '/src/Resources/contao/config/constants.php';
-        require_once $contaoDir . '/src/Resources/contao/helper/functions.php';
+        require_once $contaoDir.'/src/Resources/contao/config/constants.php';
+        require_once $contaoDir.'/src/Resources/contao/helper/functions.php';
 
         // Register the class loader
         $libraryLoader = new LibraryLoader($this->getRootDir());

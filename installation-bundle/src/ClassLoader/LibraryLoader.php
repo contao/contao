@@ -55,14 +55,20 @@ class LibraryLoader
         }
 
         $class = str_replace('Contao\\', '', $class);
-        $dir = $this->rootDir . '/../vendor/contao/core-bundle/src/Resources/contao';
-        $file = strtr($class, '\\', '/') . '.php';
+        $dir = $this->rootDir.'/../vendor/contao/core-bundle/src/Resources/contao';
+        $file = strtr($class, '\\', '/').'.php';
 
-        if (!file_exists($dir . '/library/Contao/' . $file)) {
+        if (!file_exists($dir.'/library/Contao/'.$file)) {
             return;
         }
 
-        include $dir . '/library/Contao/' . $file;
-        class_alias('Contao\\' . $class, $class);
+        $fqcn = 'Contao\\'.$class;
+
+        // The fully qualified class name might have been autoloaded by Composer
+        if (!class_exists($fqcn, false) && !interface_exists($fqcn, false) && !trait_exists($fqcn, false)) {
+            include $dir.'/library/Contao/'.$file;
+        }
+
+        class_alias($fqcn, $class);
     }
 }

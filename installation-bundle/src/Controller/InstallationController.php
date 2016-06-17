@@ -13,6 +13,7 @@ namespace Contao\InstallationBundle\Controller;
 use Contao\CoreBundle\Command\InstallCommand;
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\Encryption;
+use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
@@ -22,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -34,26 +36,36 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @Route(defaults={"_scope" = "backend"})
+ * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
  */
-class InstallationController
+class InstallationController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
     /**
      * @var array
      */
-    private $context = [];
+    private $context = [
+        'error' => '',
+        'import_error' => '',
+        'import_date' => '',
+        'hide_admin' => false,
+        'admin_error' => '',
+    ];
 
     /**
      * Handles the installation process.
      *
      * @return Response The response object
      *
-     * @Route("/_contao/install", name="contao_install")
+     * @Route("/install", name="contao_install")
      */
-    public function indexAction()
+    public function installAction()
     {
+        if ($this->container->has('contao.framework')) {
+            $this->container->get('contao.framework')->initialize();
+        }
+
         $installTool = $this->container->get('contao.install_tool');
 
         $this->runPostInstallCommands();
@@ -114,14 +126,14 @@ class InstallationController
     {
         $rootDir = $this->container->getParameter('kernel.root_dir');
 
-        if (is_dir($rootDir . '/../files') && is_link($rootDir . '/../web/assets')) {
+        if (is_dir($rootDir.'/../files') && is_link($rootDir.'/../web/assets')) {
             return;
         }
 
         // Install the bundle assets
         $command = new AssetsInstallCommand();
         $command->setContainer($this->container);
-        $command->run(new ArgvInput(['assets:install', '--relative', $rootDir . '/../web']), new NullOutput());
+        $command->run(new ArgvInput(['assets:install', '--relative', $rootDir.'/../web']), new NullOutput());
 
         // Add the Contao directories
         $command = new InstallCommand();
@@ -236,7 +248,7 @@ class InstallationController
         $finder = Finder::create()
             ->directories()
             ->depth('==0')
-            ->in($rootDir . '/cache')
+            ->in($rootDir.'/cache')
         ;
 
         foreach ($finder as $dir) {
@@ -306,12 +318,12 @@ class InstallationController
         $finder = Finder::create()
             ->files()
             ->name('Version*Update.php')
-            ->in(__DIR__ . '/../Database')
+            ->in(__DIR__.'/../Database')
         ;
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $class = 'Contao\InstallationBundle\Database\\' . $file->getBasename('.php');
+            $class = 'Contao\InstallationBundle\Database\\'.$file->getBasename('.php');
 
             /** @var AbstractVersionUpdate $update */
             $update = new $class($this->container->get('database_connection'));
@@ -512,8 +524,8 @@ class InstallationController
     {
         return new Response(
             $this->container->get('twig')->render(
-                '@ContaoInstallation/' . $name,
-                $this->addRequestTokenToContext($context)
+                '@ContaoInstallation/'.$name,
+                $this->addDefaultsToContext($context)
             )
         );
     }
@@ -527,7 +539,7 @@ class InstallationController
      */
     private function trans($key)
     {
-        return $this->container->get('translator.default')->trans($key);
+        return $this->container->get('translator')->trans($key);
     }
 
     /**
@@ -541,22 +553,50 @@ class InstallationController
     }
 
     /**
-     * Adds the request token to the template context.
+     * Adds the default values to the context.
      *
-     * @param array $context The context
+     * @param array $context The context array
      *
-     * @return array The context with the request token
+     * @return array The context array
      */
-    private function addRequestTokenToContext(array $context)
+    private function addDefaultsToContext(array $context)
     {
-        $context['request_token'] = '';
+        $context = array_merge($this->context, $context);
 
-        if ($this->container->hasParameter('contao.csrf_token_name')) {
-            $tokenName = $this->container->getParameter('contao.csrf_token_name');
-            $token = $this->container->get('security.csrf.token_manager')->getToken($tokenName);
-            $context['request_token'] = $token->getValue();
+        if (!isset($context['request_token'])) {
+            $context['request_token'] = $this->getRequestToken();
+        }
+
+        if (!isset($context['language'])) {
+            $context['language'] = $this->container->get('translator')->getLocale();
+        }
+
+        if (!isset($context['ua'])) {
+            $context['ua'] = Environment::get('agent')->class;
+        }
+
+        if (!isset($context['path'])) {
+            $context['path'] = $this->container->get('request_stack')->getCurrentRequest()->getBasePath();
         }
 
         return $context;
+    }
+
+    /**
+     * Returns the request token.
+     *
+     * @return string The request token
+     */
+    private function getRequestToken()
+    {
+        if (!$this->container->hasParameter('contao.csrf_token_name')) {
+            return '';
+        }
+
+        return $this->container
+            ->get('security.csrf.token_manager')
+            ->getToken($this->container->getParameter('contao.csrf_token_name'))
+            ->getValue()
+        ;
     }
 }
