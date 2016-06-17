@@ -163,16 +163,16 @@ class tl_templates extends Backend
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['tn']))
+		if (isset($_GET['fn']))
 		{
 			// Check the path (thanks to Arnaud Buchoux)
-			if (Validator::isInsecurePath(Input::get('tn', true)))
+			if (Validator::isInsecurePath(Input::get('fn', true)))
 			{
-				throw new RuntimeException('Insecure path ' . Input::get('tn', true));
+				throw new RuntimeException('Insecure path ' . Input::get('fn', true));
 			}
 
-			$objSessionBag->set('tl_templates_node', Input::get('tn', true));
-			$this->redirect(preg_replace('/(&|\?)tn=[^&]*/', '', Environment::get('request')));
+			$objSessionBag->set('tl_templates_node', Input::get('fn', true));
+			$this->redirect(preg_replace('/(&|\?)fn=[^&]*/', '', Environment::get('request')));
 		}
 
 		$strNode = $objSessionBag->get('tl_templates_node');
@@ -201,7 +201,7 @@ class tl_templates extends Backend
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . $this->addToUrl('tn=') . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . $this->addToUrl('fn=') . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -215,7 +215,7 @@ class tl_templates extends Backend
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('tn='.$strPath) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn='.$strPath) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
 			}
 		}
 

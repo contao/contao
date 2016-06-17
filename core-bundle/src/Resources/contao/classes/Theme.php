@@ -29,17 +29,8 @@ class Theme extends \Backend
 	 */
 	public function importTheme()
 	{
-		$this->import('BackendUser', 'User');
-		$class = $this->User->uploader;
-
-		// See #4086 and #7046
-		if (!class_exists($class) || $class == 'DropZone')
-		{
-			$class = 'FileUpload';
-		}
-
 		/** @var FileUpload $objUploader */
-		$objUploader = new $class();
+		$objUploader = new \FileUpload();
 
 		if (\Input::post('FORM_SUBMIT') == 'tl_theme_import')
 		{
@@ -421,6 +412,36 @@ class Theme extends \Backend
 			$tl_image_size = $this->Database->getNextId('tl_image_size');
 			$tl_image_size_item = $this->Database->getNextId('tl_image_size_item');
 
+			// Build the mapper data (see #8326)
+			for ($i=0; $i<$tables->length; $i++)
+			{
+				$rows = $tables->item($i)->childNodes;
+				$table = $tables->item($i)->getAttribute('name');
+
+				// Skip invalid tables
+				if (!in_array($table, array_keys($arrLocks)))
+				{
+					continue;
+				}
+
+				// Loop through the rows
+				for ($j=0; $j<$rows->length; $j++)
+				{
+					$fields = $rows->item($j)->childNodes;
+
+					// Loop through the fields
+					for ($k=0; $k<$fields->length; $k++)
+					{
+						// Increment the ID
+						if ($fields->item($k)->getAttribute('name') == 'id')
+						{
+							$arrMapper[$table][$fields->item($k)->nodeValue] = ${$table}++;
+							break;
+						}
+					}
+				}
+			}
+
 			// Loop through the tables
 			for ($i=0; $i<$tables->length; $i++)
 			{
@@ -458,9 +479,7 @@ class Theme extends \Backend
 						// Increment the ID
 						elseif ($name == 'id')
 						{
-							$id = ${$table}++;
-							$arrMapper[$table][$value] = $id;
-							$value = $id;
+							$value = $arrMapper[$table][$value];
 						}
 
 						// Increment the parent IDs
@@ -709,9 +728,9 @@ class Theme extends \Backend
 		// Add the tables
 		$this->addTableTlTheme($xml, $tables, $objTheme);
 		$this->addTableTlStyleSheet($xml, $tables, $objTheme);
+		$this->addTableTlImageSize($xml, $tables, $objTheme);
 		$this->addTableTlModule($xml, $tables, $objTheme);
 		$this->addTableTlLayout($xml, $tables, $objTheme);
-		$this->addTableTlImageSize($xml, $tables, $objTheme);
 
 		// Generate the archive
 		$strTmp = md5(uniqid(mt_rand(), true));

@@ -34,7 +34,7 @@ class SymlinksCommandTest extends TestCase
 
         $fs->remove($this->getRootDir().'/app/cache');
         $fs->remove($this->getRootDir().'/system/logs');
-        $fs->remove($this->getRootDir().'/system/themes/flexible');
+        $fs->remove($this->getRootDir().'/system/themes');
         $fs->remove($this->getRootDir().'/web');
     }
 

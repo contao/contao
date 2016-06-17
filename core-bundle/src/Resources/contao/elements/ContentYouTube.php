@@ -63,6 +63,13 @@ class ContentYouTube extends \ContentElement
 			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
 
-		$this->Template->src = 'https://www.youtube.com/embed/' . $this->youtube;
+		$url = 'https://www.youtube.com/embed/' . $this->youtube;
+
+		if ($this->autoplay)
+		{
+			$url .= '?autoplay=1';
+		}
+
+		$this->Template->src = $url;
 	}
 }

@@ -112,7 +112,7 @@ class BackendHelp extends \Backend
 					{
 						$rows[] = $arrData['reference'][$key];
 					}
-					elseif (!is_array($arrData['reference'][$option]))
+					elseif (is_array($arrData['reference'][$option]))
 					{
 						$rows[] = $arrData['reference'][$option];
 					}

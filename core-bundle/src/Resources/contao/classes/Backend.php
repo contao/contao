@@ -923,6 +923,40 @@ abstract class Backend extends \Controller
 
 
 	/**
+	 * Return the system messages as HTML
+	 *
+	 * @return string The messages HTML markup
+	 */
+	public static function getSystemMessages()
+	{
+		$strMessages = '';
+
+		// HOOK: add custom messages
+		if (isset($GLOBALS['TL_HOOKS']['getSystemMessages']) && is_array($GLOBALS['TL_HOOKS']['getSystemMessages']))
+		{
+			$arrMessages = array();
+
+			foreach ($GLOBALS['TL_HOOKS']['getSystemMessages'] as $callback)
+			{
+				$strBuffer = \System::importStatic($callback[0])->{$callback[1]}();
+
+				if ($strBuffer != '')
+				{
+					$arrMessages[] = $strBuffer;
+				}
+			}
+
+			if (!empty($arrMessages))
+			{
+				$strMessages .= implode("\n", $arrMessages);
+			}
+		}
+
+		return $strMessages;
+	}
+
+
+	/**
 	 * Add a breadcrumb menu to the file tree
 	 *
 	 * @param string $strKey

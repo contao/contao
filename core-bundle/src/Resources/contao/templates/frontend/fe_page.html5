@@ -48,7 +48,7 @@
         <div id="container">
 
           <?php $this->block('main'); ?>
-            <main id="main" role="main" itemscope itemtype="http://schema.org/WebPageElement" itemprop="mainContentOfPage">
+            <main id="main" itemscope itemtype="http://schema.org/WebPageElement" itemprop="mainContentOfPage">
               <div class="inside">
                 <?= $this->main ?>
               </div>

@@ -53,6 +53,9 @@ input,textarea,select,button {
 	color:inherit;
 	line-height:inherit;
 }
+input {
+	line-height:normal; /* see #501 */
+}
 strong,b,th {
 	font-weight:500;
 }
@@ -60,13 +63,13 @@ strong,b,th {
 	color:#999;
 }
 .tl_green {
-	color:#77ac45;
+	color:#589b0e;
 }
 .tl_red {
 	color:#c33;
 }
 .tl_blue {
-	color:#4b85ba;
+	color:#427aae;
 }
 .tl_orange {
 	color:#f90;
@@ -81,7 +84,7 @@ a {
 	text-decoration:none;
 }
 a:hover,a:focus,a:active {
-	color:#77ac45;
+	color:#589b0e;
 }
 hr {
 	height:1px;

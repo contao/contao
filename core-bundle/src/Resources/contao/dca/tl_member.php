@@ -532,6 +532,11 @@ class tl_member extends Backend
 			return '';
 		}
 
+		if (!$row['login'] || $row['username'] == '')
+		{
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
+		}
+
 		return '<a href="contao/preview.php?user='.$row['username'].'" target="_blank" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
 	}
 
@@ -732,7 +737,6 @@ class tl_member extends Backend
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_member.id='.$intId.'" has been created'.$this->getParentEntries('tl_member', $intId), __METHOD__, TL_GENERAL);
 
 		// Remove the session if the user is disabled (see #5353)
 		if (!$blnVisible)
