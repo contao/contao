@@ -17,6 +17,10 @@ use Patchwork\Utf8;
 /**
  * Class ModuleFaqReader
  *
+ * @property Comments $Comments
+ * @property string   $com_template
+ * @property array    $faq_categories
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaqReader extends \Module
@@ -68,7 +72,7 @@ class ModuleFaqReader extends \Module
 			return '';
 		}
 
-		$this->faq_categories = deserialize($this->faq_categories);
+		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
 
 		// Do not index or cache the page if there are no categories
 		if (!is_array($this->faq_categories) || empty($this->faq_categories))
@@ -101,13 +105,13 @@ class ModuleFaqReader extends \Module
 
 		if (null === $objFaq)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		// Overwrite the page title and description (see #2853 and #4955)
 		if ($objFaq->question != '')
 		{
-			$objPage->pageTitle = strip_tags(strip_insert_tags($objFaq->question));
+			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objFaq->question));
 			$objPage->description = $this->prepareMetaDescription($objFaq->question);
 		}
 
@@ -145,7 +149,7 @@ class ModuleFaqReader extends \Module
 		$strAuthor = '';
 
 		/** @var UserModel $objAuthor */
-		if (($objAuthor = $objFaq->getRelated('author')) !== null)
+		if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel)
 		{
 			$strAuthor = $objAuthor->name;
 		}
@@ -189,7 +193,7 @@ class ModuleFaqReader extends \Module
 		if ($objCategory->notify != 'notify_admin')
 		{
 			/** @var UserModel $objAuthor */
-			if (($objAuthor = $objFaq->getRelated('author')) !== null && $objAuthor->email != '')
+			if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
 			{
 				$arrNotifies[] = $objAuthor->email;
 			}

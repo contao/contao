@@ -16,6 +16,8 @@ use Patchwork\Utf8;
 /**
  * Class ModuleFaqPage
  *
+ * @property array $faq_categories
+ * 
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaqPage extends \Module
@@ -49,7 +51,7 @@ class ModuleFaqPage extends \Module
 			return $objTemplate->parse();
 		}
 
-		$this->faq_categories = deserialize($this->faq_categories);
+		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
 
 		// Return if there are no categories
 		if (!is_array($this->faq_categories) || empty($this->faq_categories))

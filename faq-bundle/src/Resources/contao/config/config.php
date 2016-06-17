@@ -16,8 +16,7 @@ array_insert($GLOBALS['BE_MOD']['content'], 2, array
 (
 	'faq' => array
 	(
-		'tables' => array('tl_faq_category', 'tl_faq'),
-		'icon'   => 'bundles/contaofaq/icon.gif'
+		'tables' => array('tl_faq_category', 'tl_faq')
 	)
 ));
 
@@ -40,6 +39,8 @@ array_insert($GLOBALS['FE_MOD'], 3, array
  * Register hooks
  */
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('ModuleFaq', 'getSearchablePages');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_faq.listener.insert_tags', 'onReplaceInsertTags');
+$GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'][] = array('contao_faq.listener.file_meta_information', 'onAddFileMetaInformationToRequest');
 
 
 /**

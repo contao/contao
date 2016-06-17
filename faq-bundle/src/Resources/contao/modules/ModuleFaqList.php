@@ -16,6 +16,9 @@ use Patchwork\Utf8;
 /**
  * Class ModuleFaqList
  *
+ * @property array $faq_categories
+ * @property int   $faq_readerModule
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaqList extends \Module
@@ -55,7 +58,7 @@ class ModuleFaqList extends \Module
 			return $objTemplate->parse();
 		}
 
-		$this->faq_categories = deserialize($this->faq_categories);
+		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
 
 		// Return if there are no categories
 		if (!is_array($this->faq_categories) || empty($this->faq_categories))
@@ -93,7 +96,7 @@ class ModuleFaqList extends \Module
 		while ($objFaq->next())
 		{
 			$arrTemp = $objFaq->row();
-			$arrTemp['title'] = specialchars($objFaq->question, true);
+			$arrTemp['title'] = \StringUtil::specialchars($objFaq->question, true);
 			$arrTemp['href'] = $this->generateFaqLink($objFaq);
 
 			/** @var FaqCategoryModel $objPid */
@@ -155,7 +158,7 @@ class ModuleFaqList extends \Module
 
 			if ($jumpTo > 0 && ($objTarget = \PageModel::findByPk($jumpTo)) !== null)
 			{
-				/** @var \PageModel $objTarget */
+				/** @var PageModel $objTarget */
 				$this->arrTargets[$jumpTo] = ampersand($objTarget->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s'));
 			}
 		}
