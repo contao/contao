@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
+@trigger_error('Using the Contao\Session class has been deprecated and will no longer work in Contao 5.0. Use the session service instead.', E_USER_DEPRECATED);
+
 
 /**
  * Handles reading and updating the session data
@@ -31,7 +33,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  * @author Leo Feyer <https://github.com/leofeyer>
  *
  * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
- *             Use the Symfony session via the container instead.
+ *             Use the session service instead.
  */
 class Session
 {
@@ -110,8 +112,6 @@ class Session
 	 */
 	public function get($strKey)
 	{
-		@trigger_error('Using Session::get() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
-
 		// Map the referer (see #281)
 		if (in_array($strKey, $this->mappedKeys))
 		{
@@ -130,8 +130,6 @@ class Session
 	 */
 	public function set($strKey, $varValue)
 	{
-		@trigger_error('Using Session::set() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
-
 		// Map the referer (see #281)
 		if (in_array($strKey, $this->mappedKeys))
 		{
@@ -151,8 +149,6 @@ class Session
 	 */
 	public function remove($strKey)
 	{
-		@trigger_error('Using Session::remove() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
-
 		// Map the referer (see #281)
 		if (in_array($strKey, $this->mappedKeys))
 		{
@@ -172,8 +168,6 @@ class Session
 	 */
 	public function getData()
 	{
-		@trigger_error('Using Session::getData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
-
 		$data = $this->sessionBag->all();
 
 		// Map the referer (see #281)
@@ -200,8 +194,6 @@ class Session
 	 */
 	public function setData($arrData)
 	{
-		@trigger_error('Using Session::setData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
-
 		if (!is_array($arrData))
 		{
 			throw new \Exception('Array required to set session data');
@@ -230,8 +222,6 @@ class Session
 	 */
 	public function appendData($varData)
 	{
-		@trigger_error('Using Session::appendData() has been deprecated and will no longer work in Contao 5.0. Use the Symfony session via the container instead.', E_USER_DEPRECATED);
-
 		if (is_object($varData))
 		{
 			$varData = get_object_vars($varData);

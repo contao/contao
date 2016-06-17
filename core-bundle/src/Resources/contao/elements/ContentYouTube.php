@@ -23,7 +23,7 @@ class ContentYouTube extends \ContentElement
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'ce_player';
+	protected $strTemplate = 'ce_youtube';
 
 
 	/**
@@ -52,36 +52,24 @@ class ContentYouTube extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$this->Template->size = '';
+		$size = \StringUtil::deserialize($this->playerSize);
 
-		// Set the size
-		if ($this->playerSize != '')
+		if (!is_array($size) || empty($size[0]) || empty($size[1]))
 		{
-			$size = deserialize($this->playerSize);
-
-			if (is_array($size))
-			{
-				$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
-			}
+			$this->Template->size = ' width="640" height="360"';
+		}
+		else
+		{
+			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
 
-		$this->Template->poster = false;
+		$url = 'https://www.youtube.com/embed/' . $this->youtube;
 
-		// Optional poster
-		if ($this->posterSRC != '')
+		if ($this->autoplay)
 		{
-			if (($objFile = \FilesModel::findByUuid($this->posterSRC)) !== null)
-			{
-				$this->Template->poster = $objFile->path;
-			}
+			$url .= '?autoplay=1';
 		}
 
-		$objFile = new \stdClass();
-		$objFile->mime = 'video/x-youtube';
-		$objFile->path = 'https://www.youtube.com/watch?v=' . $this->youtube;
-
-		$this->Template->isVideo = true;
-		$this->Template->files = array($objFile);
-		$this->Template->autoplay = $this->autoplay;
+		$this->Template->src = $url;
 	}
 }

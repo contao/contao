@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -68,18 +69,6 @@ class BackendMain extends \Backend
 		if (\Input::get('do') == 'feRedirect')
 		{
 			$this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'));
-		}
-
-		// Convenience functions
-		if ($this->User->isAdmin)
-		{
-			// Build internal cache
-			if (\Input::get('bic'))
-			{
-				$this->import('Automator');
-				$this->Automator->generateInternalCache();
-				$this->redirect($this->getReferer());
-			}
 		}
 
 		\System::loadLanguageFile('default');
@@ -143,39 +132,31 @@ class BackendMain extends \Backend
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_welcome');
-		$objTemplate->messages = \Message::generateUnwrapped();
+		$objTemplate->messages = \Message::generateUnwrapped() . \Backend::getSystemMessages();
+		$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];
 
-		// HOOK: add custom messages
-		if (isset($GLOBALS['TL_HOOKS']['getSystemMessages']) && is_array($GLOBALS['TL_HOOKS']['getSystemMessages']))
+		// Add the login message
+		if ($this->User->lastLogin > 0)
 		{
-			$arrMessages = array();
+			$formatter = new DateTimeFormatter(\System::getContainer()->get('translator'));
+			$diff = $formatter->formatDiff(new \DateTime(date('Y-m-d H:i:s', $this->User->lastLogin)), new \DateTime());
 
-			foreach ($GLOBALS['TL_HOOKS']['getSystemMessages'] as $callback)
-			{
-				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}();
-
-				if ($strBuffer != '')
-				{
-					$arrMessages[] = $strBuffer;
-				}
-			}
-
-			if (!empty($arrMessages))
-			{
-				$objTemplate->messages .= "\n" . implode("\n", $arrMessages);
-			}
+			$objTemplate->loginMsg = sprintf(
+				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
+				'<time title="' . \Date::parse(\Config::get('datimFormat'), $this->User->lastLogin) . '">' . $diff . '</time>'
+			);
 		}
 
 		// Add the versions overview
 		\Versions::addToTemplate($objTemplate);
 
 		$objTemplate->welcome = sprintf($GLOBALS['TL_LANG']['MSC']['welcomeTo'], \Config::get('websiteTitle'));
-		$objTemplate->showDifferences = specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['showDifferences']));
+		$objTemplate->showDifferences = \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['showDifferences']));
+		$objTemplate->recordOfTable = \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['recordOfTable']));
 		$objTemplate->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$objTemplate->shortcuts = $GLOBALS['TL_LANG']['MSC']['shortcuts'][0];
 		$objTemplate->shortcutsLink = $GLOBALS['TL_LANG']['MSC']['shortcuts'][1];
-		$objTemplate->editElement = specialchars($GLOBALS['TL_LANG']['MSC']['editElement']);
+		$objTemplate->editElement = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['editElement']);
 
 		return $objTemplate->parse();
 	}
@@ -219,33 +200,32 @@ class BackendMain extends \Backend
 		$this->Template->theme = \Backend::getTheme();
 		$this->Template->base = \Environment::get('base');
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
-		$this->Template->title = specialchars($this->Template->title);
+		$this->Template->title = \StringUtil::specialchars($this->Template->title);
 		$this->Template->charset = \Config::get('characterSet');
 		$this->Template->account = $GLOBALS['TL_LANG']['MOD']['login'][1];
 		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
-		$this->Template->previewTitle = specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
+		$this->Template->previewTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
 		$this->Template->pageOffset = \Input::cookie('BE_PAGE_OFFSET');
 		$this->Template->logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
-		$this->Template->logoutTitle = specialchars($GLOBALS['TL_LANG']['MSC']['logoutBTTitle']);
+		$this->Template->logoutTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logoutBTTitle']);
 		$this->Template->backendModules = $GLOBALS['TL_LANG']['MSC']['backendModules'];
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['user'] . ' ' . $GLOBALS['TL_USERNAME'];
-		$this->Template->skipNavigation = specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
+		$this->Template->skipNavigation = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
 		$this->Template->request = ampersand(\Environment::get('request'));
 		$this->Template->top = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 		$this->Template->modules = $this->User->navigation();
 		$this->Template->home = $GLOBALS['TL_LANG']['MSC']['home'];
 		$this->Template->homeTitle = $GLOBALS['TL_LANG']['MSC']['homeTitle'];
-		$this->Template->backToTop = specialchars($GLOBALS['TL_LANG']['MSC']['backToTopTitle']);
+		$this->Template->backToTop = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backToTopTitle']);
 		$this->Template->expandNode = $GLOBALS['TL_LANG']['MSC']['expandNode'];
 		$this->Template->collapseNode = $GLOBALS['TL_LANG']['MSC']['collapseNode'];
 		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
-		$this->Template->loadFonts = \Config::get('loadGoogleFonts');
-		$this->Template->isAdmin = $this->User->isAdmin;
-		$this->Template->buildCacheLink = $GLOBALS['TL_LANG']['MSC']['buildCacheLink'];
-		$this->Template->buildCacheText = sprintf($GLOBALS['TL_LANG']['MSC']['buildCacheText'], \System::getContainer()->getParameter('kernel.environment'));
-		$this->Template->buildCacheHref = $this->addToUrl('bic=1');
-		$this->Template->needsCacheBuild = !is_dir(\System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql');
 		$this->Template->isPopup = \Input::get('popup');
+		$this->Template->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
+
+		$strSystemMessages = \Backend::getSystemMessages();
+		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');
+		$this->Template->systemErrorMessagesCount = substr_count($strSystemMessages, 'class="tl_error"');
 
 		// Front end preview links
 		if (defined('CURRENT_ID') && CURRENT_ID != '')

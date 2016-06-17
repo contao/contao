@@ -16,7 +16,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Patchwork\Utf8\Bootup;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -44,9 +43,6 @@ class ContaoCoreBundle extends Bundle
     public function boot()
     {
         Bootup::initAll();
-
-        $this->container->addScope(new Scope(self::SCOPE_BACKEND, 'request'));
-        $this->container->addScope(new Scope(self::SCOPE_FRONTEND, 'request'));
     }
 
     /**
@@ -57,7 +53,7 @@ class ContaoCoreBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(
-            new AddPackagesPass($container->getParameter('kernel.root_dir') . '/../vendor/composer/installed.json')
+            new AddPackagesPass($container->getParameter('kernel.root_dir').'/../vendor/composer/installed.json')
         );
 
         $container->addCompilerPass(new AddSessionBagsPass());

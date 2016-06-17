@@ -139,7 +139,7 @@ class ModuleCloseAccount extends \Module
 				$this->User->logout();
 
 				// Check whether there is a jumpTo page
-				if (($objJumpTo = $this->objModel->getRelated('jumpTo')) !== null)
+				if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 				{
 					$this->jumpToOrReload($objJumpTo->row());
 				}
@@ -152,7 +152,7 @@ class ModuleCloseAccount extends \Module
 
 		$this->Template->formId = $strFormId;
 		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
+		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
 		$this->Template->rowLast = 'row_1 row_last odd';
 	}
 }

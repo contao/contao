@@ -1,89 +1,54 @@
 # Contao core bundle change log
 
-### 4.1.3 (2016-04-22)
+### 4.2.0 (2016-06-18)
 
- * Use data URIs for the image preview in the back end.
- * Use DIRECTORY_SEPARATOR to convert kernel.cache_dir into a relative path (see #464).
- * Always trigger the "isVisibleElement" hook (see contao/core#8312).
- * Do not change all sessions when switching users (see contao/core#8158).
- * Do not allow to close fieldsets with empty required fields (see contao/core#8300).
- * Make the path related properties of the File class binary-safe (see contao/core#8295).
- * Correctly validate and decode IDNA e-mail addresses (see contao/core#8306).
- * Skip forward pages entirely in the book navigation module (see contao/core#5074).
- * Do not add the X-Priority header in the Email class (see contao/core#8298).
- * Determine the search index checksum in a more reliable way (see contao/core#7652).
+ * Also check for the back end cookie when loading from cache (see contao/core#8249).
+ * Unset "mode" and "pid" upon save and edit (see contao/core#8292).
+ * Always use the relative path in DC_Folder (see contao/core#8370).
+ * Use the correct empty value when resetting copied fields (see contao/core#8365).
+ * Remove the "required" attribute if a subpalette is closed (see contao/core#8192).
+ * Correctly calculate the maximum file size for DropZone (see contao/core#8098).
+ * Versionize and show password changes (see contao/core#8301).
+ * Make File::$dirname an absolute path again (see contao/core#8325).
+ * Store the full URLs in the search index (see #491).
+ * Standardize the group names in the checkbox widget (see contao/core#8002).
+ * Prevent models from being registered twice (see contao/core#8224).
+ * Prevent horizontal scrolling in the ACE editor (see contao/core#8328).
+ * Correctly render the breadcrumb links in the template editor (see contao/core#8341).
+ * Remove the role attributes from the navigation templates (see contao/core#8343).
+ * Do not add `role="tablist"` to the accordion container (see contao/core#8344).
+ * Handle the `useAutoItem` option in the URL generator (see #489).
+ * Correctly implement the "autoplay" option in the YouTube/Vimeo element (see #509).
+ * Show the system messages in a modal dialog (see #486).
+ * Make DropZone the default uploader in the file manager (see #504).
+ * Correctly aling the input hints (see #503).
+ * Disable the "preview as" button if a member is not allowed to log in (see #502).
+ * Remove the "type" attribute from the Youtube/Vimeo iframe tag.
+ * Fix the filter reset buttons (see #496).
+ * Fix the filename case of the new SVG icons (see #492).
 
-### 4.1.2 (2016-03-22)
+### 4.2.0-RC1 (2016-05-18)
 
- * Handle derived classes in the exception converter (see #462).
- * Prevent the autofocus attribute from being added multiple times (see contao/core#8281).
- * Respect the SSL settings of the root page when generating sitemaps (see contao/core#8270).
- * Read from the temporary file if it has not been closed yet (see contao/core#8269).
- * Always use HTTPS if the target server supports SSL connections (see contao/core#8183).
- * Adjust the meta wizard field length to the column length (see contao/core#8277).
- * Correctly handle custom mime icon paths (see contao/core#8275).
- * Show the 404 error page if an unpublished article is requested (see contao/core#8264).
- * Correctly count the URLs when rebuilding the search index (see contao/core#8262).
- * Ensure that every image has a width and height attribute (see contao/core#8162).
- * Set the correct mime type when embedding SVG images (see contao/core#8245).
- * Handle the "float_left" and "float_right" classes in the back end (see contao/core#8239).
- * Consider the fallback language if a page alias is ambiguous (see contao/core#8142).
- * Fix the error 403/404 redirect (see contao/website#74).
+ * Add the URI when throwing 403 and 404 exceptions (see #369).
+ * Correctly determine the script_name in the Environment class (see #426).
+ * Add the URL generator (see #480).
+ * Support subpalettes in subpalettes (see #450).
+ * Add keys to the cronjobs array (see #440).
 
-### 4.1.1 (2016-03-03)
+### 4.2.0-beta1 (2016-04-25)
 
- * Remove the "disable IP check" field from the back end settings (see #436).
- * Do not quote the search string in `FIND_IN_SET()` (see #424).
- * Always fix the domain and language when generating URLs (see contao/core#8238).
- * Fix two issues with the flexible back end theme (see contao/core#8227).
- * Correctly toggle custom page type icons (see contao/core#8236).
- * Correctly render the links in the monthly/yearly event list menu (see contao/core#8140).
- * Skip the registration related fields if a user is duplicated (see contao/core#8185).
- * Correctly show the form field type help text (see contao/core#8200).
- * Correctly create the initial version of a record (see contao/core#8141).
- * Correctly show the "expand preview" buttons (see contao/core#8146).
- * Correctly check that a password does not match the username (see contao/core#8209).
- * Check if a directory exists before executing `mkdir()` (see contao/core#8150).
- * Do not link to the maintenance module if the user cannot access it (see contao/core#8151).
- * Show the "new folder" button in the template manager (see contao/core#8138).
-
-### 4.1.0 (2015-11-26)
-
- * Log e-mails in the database instead of a log file (see #413).
- * Use events to modify the front end preview URL.
- * Handle closures in the back end help controller (see #408).
- * Fix saving the image size widget if no option is selected (see #411).
- * Correctly set the ID when toggling fields via Ajax (see contao/core#8043).
-
-### 4.1.0-RC1 (2015-11-10)
-
- * Limit access to the image sizes per user or user group (see #319).
- * Support the Lexik maintenance bundle if it is installed (see #283).
- * Throw an exception instead of redirecting to `/contao?act=error` (see #395).
- * Make the image caching and target path configurable (see #381).
- * Call the load_callback when loading the page/file tree via ajax (see #398).
- * Load the random_compat library in the Composer script handler (see #397).
- * Never cache a page if there are messages (see #343).
- * Adjust the code to be compatible with PHP7 (see contao/core#8018).
- * Fix several issues with the new file search and add the `type:file` and `type:folder` flags (see #392).
- * Only warm the Contao cache if the installation has been completed (see #383).
- * Support retrieving services in `System::import()` and `System::importStatic()` (see #376).
- * Handle an empty input in the meta wizard (see #382).
- * Use the `kernel.terminate` event for the command scheduler (see #244).
- * Support news and event links in the front end preview (see contao/core#7504).
-
-### 4.1.0-beta1 (2015-10-21)
-
- * Add all translations which are at least 95% complete.
- * Update the hash of an existing file in `Dbafs::addResource()` (see contao/core#7828).
- * Add a more accurate e-mail validation with unicode support (see #367).
- * Add the "env::base_url" insert tag (see #322).
- * Make the file manager and file picker searchable (see contao/core#7196).
- * Show the website title in the back end (see contao/core#7840).
- * Re-send the activation mail upon a second registration attempt (see contao/core#7992).
- * Always show the "save and edit" button (see contao/core#3567).
- * Highlight the rows on hover via CSS (see contao/core#7837).
- * Show the important part in the file tree (see contao/core#7865).
- * Also show the field names in "edit multiple" mode (see contao/core#7868).
- * Add a button to remove single images from the file tree selection (see contao/core#6684).
- * Support overwriting resources in `app/Resources/contao` (see #314).
+ * Remove the internal cache routines from the maintenance module (see #459).
+ * Modernize the back end theme and use SVG icons (see contao/core#4608).
+ * Add the PaletteManipulator class to modify DCA palettes (see #474).
+ * Optimize the jQuery and MooTools templates (see contao/core#8017).
+ * Show the record ID and table name in the diff view (see contao/core#5800).
+ * Add a "reset filters" button (see contao/core#6239).
+ * Support filters in the tree view (see contao/core#7074).
+ * Recursively replace insert tags (see #473).
+ * Add the Vimeo content element (see contao/core#8219).
+ * Improve the YouTube element (see contao/core#7514).
+ * Update the Piwik tracking code (see contao/core#8229).
+ * Use instanceof to check the return value of Model::getRelated() (see #451).
+ * Use the Composer class loader to load the Contao classes (see #437).
+ * Add the "ignoreFePreview" flag to the model classes (see #452).
+ * Clean up the code of the file selector (see #456).

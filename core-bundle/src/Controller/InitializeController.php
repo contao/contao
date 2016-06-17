@@ -56,7 +56,11 @@ class InitializeController extends Controller
 
         // Initialize the framework with the real request
         $this->get('request_stack')->push($realRequest);
-        $this->container->enterScope($scope);
+
+        if (method_exists('Symfony\Component\DependencyInjection\Container', 'enterScope')) {
+            $this->container->enterScope($scope);
+        }
+
         $this->container->get('contao.framework')->initialize();
 
         // Add the master request again. When Kernel::handle() is finished,

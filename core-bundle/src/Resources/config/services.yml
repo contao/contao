@@ -1,4 +1,32 @@
 services:
+    contao.cache:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments:
+            - "%kernel.cache_dir%/contao/cache"
+            - ""
+            - 0022
+
+    contao.cache.clear_internal:
+        class: Contao\CoreBundle\Cache\ContaoCacheClearer
+        public: false
+        arguments:
+            - "@filesystem"
+        tags:
+            - { name: kernel.cache_clearer }
+
+    contao.cache.warm_internal:
+        class: Contao\CoreBundle\Cache\ContaoCacheWarmer
+        public: false
+        arguments:
+            - "@filesystem"
+            - "@contao.resource_finder"
+            - "@contao.resource_locator"
+            - "%kernel.root_dir%"
+            - "@doctrine.dbal.default_connection"
+            - "@contao.framework"
+        tags:
+            - { name: kernel.cache_warmer }
+
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         public: false
@@ -26,8 +54,27 @@ services:
         calls:
             - ["setContainer", ["@service_container"]]
 
+    contao.monolog.handler:
+        class: Contao\CoreBundle\Monolog\ContaoTableHandler
+        public: false
+        calls:
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: monolog.logger, channel: contao }
+
+    contao.monolog.processor:
+        class: Contao\CoreBundle\Monolog\ContaoTableProcessor
+        public: false
+        arguments:
+            - "@request_stack"
+            - "@security.token_storage"
+        calls:
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: monolog.processor }
+
     contao.referer_id.manager:
-         class: "%security.csrf.token_manager.class%"
+         class: Symfony\Component\Security\Csrf\CsrfTokenManager
          public: false
          arguments:
             - "@contao.referer_id.token_generator"
@@ -54,6 +101,13 @@ services:
             - "%contao.prepend_locale%"
         tags:
             - { name: routing.loader }
+
+    contao.routing.url_generator:
+        class: Contao\CoreBundle\Routing\UrlGenerator
+        arguments:
+            - "@router"
+            - "@contao.framework"
+            - "%contao.prepend_locale%"
 
     contao.security.authenticator:
         class: Contao\CoreBundle\Security\ContaoAuthenticator

@@ -185,7 +185,7 @@ class PrettyErrorScreenListener
      */
     private function getResponseFromPageHandler($type)
     {
-        $type = 'error_' . $type;
+        $type = 'error_'.$type;
 
         if (!isset($GLOBALS['TL_PTY'][$type]) || !class_exists($GLOBALS['TL_PTY'][$type])) {
             return null;
@@ -254,7 +254,7 @@ class PrettyErrorScreenListener
             return;
         }
 
-        $view = '@ContaoCore/Error/' . $template . '.html.twig';
+        $view = '@ContaoCore/Error/'.$template.'.html.twig';
         $parameters = $this->getTemplateParameters($view, $statusCode, $event);
 
         if (null === $parameters) {
@@ -282,17 +282,18 @@ class PrettyErrorScreenListener
                 'error' => 'An error occurred',
                 'matter' => 'What\'s the matter?',
                 'errorOccurred' => 'An error occurred while executing this script. Something does not work properly. '
-                    . 'Additionally an error occurred while trying to display the error message.',
+                    .'Additionally an error occurred while trying to display the error message.',
                 'howToFix' => 'How can I fix the issue?',
                 'errorFixOne' => 'Search the <code>app/logs</code> folder for the current log file and find the '
-                    . 'associated error message (usually the last one).',
+                    .'associated error message (usually the last one).',
                 'more' => 'Tell me more, please',
                 'errorExplain' => 'The script execution stopped, because something does not work properly. The '
-                    . 'actual error message is hidden by this notice for security reasons and can be '
-                    . 'found in the current log file (see above). If you do not understand the error message or do '
-                    . 'not know how to fix the problem, search the '
-                    . '<a href="https://contao.org/faq.html">Contao FAQs</a> or visit the '
-                    . '<a href="https://contao.org/support.html">Contao support page</a>.',
+                    .'actual error message is hidden by this notice for security reasons and can be '
+                    .'found in the current log file (see above). If you do not understand the error message or do '
+                    .'not know how to fix the problem, search the '
+                    .'<a href="https://contao.org/faq.html">Contao FAQs</a> or visit the '
+                    .'<a href="https://contao.org/support.html">Contao support page</a>.',
+                'hint' => 'To customize this notice, create a custom Twig template overriding %s.',
             ],
             'template' => '@ContaoCore/Error/error.html.twig',
             'base' => '',
@@ -329,7 +330,7 @@ class PrettyErrorScreenListener
             'error' => $labels,
             'template' => $view,
             'base' => $event->getRequest()->getBasePath(),
-            'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;' . $encoded,
+            'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
             'exception' => $event->getException()->getMessage(),
         ];
     }

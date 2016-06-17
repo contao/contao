@@ -57,11 +57,8 @@ class ContaoAuthenticatorTest extends TestCase
      */
     public function testAuthenticateToken()
     {
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
         $authenticator = new ContaoAuthenticator();
-        $authenticator->setContainer($container);
+        $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
 
         $provider = $this->mockUserProvider();
 
@@ -88,11 +85,8 @@ class ContaoAuthenticatorTest extends TestCase
      */
     public function testAuthenticateInvalidToken()
     {
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
         $authenticator = new ContaoAuthenticator();
-        $authenticator->setContainer($container);
+        $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
         $authenticator->authenticateToken(new PreAuthenticatedToken('foo', 'bar', 'console'), $this->mockUserProvider(), 'console');
     }
 

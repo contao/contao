@@ -59,7 +59,7 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        'file' => __DIR__ . '/../Fixtures/app/config/parameters.yml',
+                        'file' => __DIR__.'/../Fixtures/app/config/parameters.yml',
                     ],
                 ]
             )
@@ -81,8 +81,8 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        ['file' => __DIR__ . '/../Fixtures/app/config/parameters.yml'],
-                        ['file' => __DIR__ . '/../Fixtures/app/config/test.yml'],
+                        ['file' => __DIR__.'/../Fixtures/app/config/parameters.yml'],
+                        ['file' => __DIR__.'/../Fixtures/app/config/test.yml'],
                     ],
                 ]
             )
@@ -122,19 +122,19 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertRandomSecretDoesNotExist();
 
-        touch(__DIR__ . '/../Fixtures/app/config/parameters.yml');
+        touch(__DIR__.'/../Fixtures/app/config/parameters.yml');
 
         $this->handler->generateRandomSecret(
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        'file' => __DIR__ . '/../Fixtures/app/config/parameters.yml',
+                        'file' => __DIR__.'/../Fixtures/app/config/parameters.yml',
                     ],
                 ]
             )
         );
 
-        unlink(__DIR__ . '/../Fixtures/app/config/parameters.yml');
+        unlink(__DIR__.'/../Fixtures/app/config/parameters.yml');
 
         $this->assertRandomSecretDoesNotExist();
     }
@@ -146,20 +146,20 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertRandomSecretDoesNotExist();
 
-        touch(__DIR__ . '/../Fixtures/app/config/parameters.yml');
+        touch(__DIR__.'/../Fixtures/app/config/parameters.yml');
 
         $this->handler->generateRandomSecret(
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        ['file' => __DIR__ . '/../Fixtures/app/config/parameters.yml'],
-                        ['file' => __DIR__ . '/../Fixtures/app/config/test.yml'],
+                        ['file' => __DIR__.'/../Fixtures/app/config/parameters.yml'],
+                        ['file' => __DIR__.'/../Fixtures/app/config/test.yml'],
                     ],
                 ]
             )
         );
 
-        unlink(__DIR__ . '/../Fixtures/app/config/parameters.yml');
+        unlink(__DIR__.'/../Fixtures/app/config/parameters.yml');
 
         $this->assertRandomSecretDoesNotExist();
     }

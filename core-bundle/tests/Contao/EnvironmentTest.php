@@ -29,8 +29,8 @@ class EnvironmentTest extends TestCase
         Environment::reset();
         Environment::set('path', '/core');
 
-        require __DIR__ . '/../../src/Resources/contao/config/default.php';
-        require __DIR__ . '/../../src/Resources/contao/config/agents.php';
+        require __DIR__.'/../../src/Resources/contao/config/default.php';
+        require __DIR__.'/../../src/Resources/contao/config/agents.php';
     }
 
     /**
@@ -62,7 +62,7 @@ class EnvironmentTest extends TestCase
             'SERVER_NAME' => 'localhost',
             'SERVER_ADDR' => '127.0.0.1',
             'DOCUMENT_ROOT' => $this->getRootDir(),
-            'SCRIPT_FILENAME' => $this->getRootDir() . '/core/index.php',
+            'SCRIPT_FILENAME' => $this->getRootDir().'/core/index.php',
             'SERVER_PROTOCOL' => 'HTTP/1.1',
             'QUERY_STRING' => 'do=test',
             'REQUEST_URI' => '/core/en/academy.html?do=test',
@@ -92,7 +92,7 @@ class EnvironmentTest extends TestCase
             'SERVER_NAME' => 'localhost',
             'SERVER_ADDR' => '127.0.0.1',
             'DOCUMENT_ROOT' => $this->getRootDir(),
-            'SCRIPT_FILENAME' => $this->getRootDir() . '/core/index.php',
+            'SCRIPT_FILENAME' => $this->getRootDir().'/core/index.php',
             'SERVER_PROTOCOL' => 'HTTP/1.1',
             'QUERY_STRING' => 'do=test',
             'REQUEST_URI' => '/core/en/academy.html?do=test',
@@ -126,7 +126,7 @@ class EnvironmentTest extends TestCase
             'SERVER_NAME' => 'localhost',
             'SERVER_ADDR' => '127.0.0.1',
             'DOCUMENT_ROOT' => $this->getRootDir(),
-            'SCRIPT_FILENAME' => $this->getRootDir() . '/core/index.php',
+            'SCRIPT_FILENAME' => $this->getRootDir().'/core/index.php',
             'SERVER_PROTOCOL' => 'HTTP/1.1',
             'QUERY_STRING' => 'do=test',
             'REQUEST_URI' => '/core/en/academy.html?do=test',
@@ -159,7 +159,7 @@ class EnvironmentTest extends TestCase
         $this->assertFalse($agent->mobile);
 
         $this->assertEquals('HTTP/1.1', Environment::get('serverProtocol'));
-        $this->assertEquals($this->getRootDir() . '/core/index.php', Environment::get('scriptFilename'));
+        $this->assertEquals($this->getRootDir().'/core/index.php', Environment::get('scriptFilename'));
         $this->assertEquals('/core/index.php', Environment::get('scriptName'));
         $this->assertEquals($this->getRootDir(), Environment::get('documentRoot'));
         $this->assertEquals('/core/en/academy.html?do=test', Environment::get('requestUri'));
@@ -177,7 +177,7 @@ class EnvironmentTest extends TestCase
         $this->assertEquals('index.php', Environment::get('script'));
         $this->assertEquals('en/academy.html?do=test', Environment::get('request'));
         $this->assertEquals('en/academy.html?do=test', Environment::get('indexFreeRequest'));
-        $this->assertEquals('http://localhost' . Environment::get('path') . '/', Environment::get('base'));
+        $this->assertEquals('http://localhost'.Environment::get('path').'/', Environment::get('base'));
         $this->assertFalse(Environment::get('isAjaxRequest'));
     }
 

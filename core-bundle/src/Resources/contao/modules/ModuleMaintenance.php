@@ -37,14 +37,14 @@ class ModuleMaintenance extends \BackendModule
 
 		$this->Template->content = '';
 		$this->Template->href = $this->getReferer(true);
-		$this->Template->title = specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
+		$this->Template->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
 		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['backBT'];
 
 		foreach ($GLOBALS['TL_MAINTENANCE'] as $callback)
 		{
 			$this->import($callback);
 
-			if (!$this->$callback instanceof \executable)
+			if (!($this->$callback instanceof \executable))
 			{
 				throw new \Exception("$callback is not an executable class");
 			}

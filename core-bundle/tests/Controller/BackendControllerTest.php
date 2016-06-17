@@ -59,5 +59,6 @@ class BackendControllerTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->pageAction());
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->popupAction());
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->switchAction());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->alertsAction());
     }
 }

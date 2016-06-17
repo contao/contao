@@ -10,18 +10,17 @@
 
 namespace Contao\CoreBundle\Security;
 
-use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\User;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterface;
 
 /**
  * Authenticates a Contao token.
@@ -30,7 +29,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthenticatorInterface
 {
-    use ContainerAwareTrait;
+    use ScopeAwareTrait;
 
     /**
      * Creates an authentication token.
@@ -62,7 +61,7 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
             return $token;
         }
 
-        if (!$token instanceof AnonymousToken) {
+        if (!($token instanceof AnonymousToken)) {
             throw new AuthenticationException('The ContaoAuthenticator can only handle AnonymousToken.');
         }
 
@@ -111,8 +110,6 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
             throw new \LogicException('The service container has not been set.');
         }
 
-        return !$this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)
-            && !$this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)
-        ;
+        return !$this->isContaoScope();
     }
 }

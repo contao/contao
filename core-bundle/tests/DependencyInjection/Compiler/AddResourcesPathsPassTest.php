@@ -39,7 +39,7 @@ class AddResourcesPathsPassTest extends TestCase
         $pass = new AddResourcesPathsPass();
 
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
+        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
 
         $container->setParameter('kernel.bundles', [
             'FrameworkBundle' => 'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
@@ -51,7 +51,7 @@ class AddResourcesPathsPassTest extends TestCase
 
         $this->assertTrue($container->hasParameter('contao.resources_paths'));
 
-        $path = $this->getRootDir() . '/vendor/contao/test-bundle';
+        $path = $this->getRootDir().'/vendor/contao/test-bundle';
 
         if ('\\' === DIRECTORY_SEPARATOR) {
             $path = strtr($path, '/', '\\');
@@ -59,9 +59,9 @@ class AddResourcesPathsPassTest extends TestCase
 
         $this->assertEquals(
             [
-                $path . '/Resources/contao',
-                $this->getRootDir() . '/system/modules/foobar',
-                $this->getRootDir() . '/app/Resources/contao',
+                $path.'/Resources/contao',
+                $this->getRootDir().'/system/modules/foobar',
+                $this->getRootDir().'/app/Resources/contao',
             ],
             $container->getParameter('contao.resources_paths')
         );

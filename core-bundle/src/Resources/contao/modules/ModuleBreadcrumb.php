@@ -89,7 +89,7 @@ class ModuleBreadcrumb extends \Module
 				'isRoot'   => true,
 				'isActive' => false,
 				'href'     => (($objFirstPage !== null) ? $objFirstPage->getFrontendUrl() : \Environment::get('base')),
-				'title'    => specialchars($objPages->pageTitle ?: $objPages->title, true),
+				'title'    => \StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
 				'link'     => $objPages->title,
 				'data'     => $objFirstPage->row(),
 				'class'    => ''
@@ -98,7 +98,7 @@ class ModuleBreadcrumb extends \Module
 			array_pop($pages);
 		}
 
-		/** @var \PageModel[] $pages */
+		/** @var PageModel[] $pages */
 		for ($i=(count($pages)-1); $i>0; $i--)
 		{
 			if (($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !BE_USER_LOGGED_IN))
@@ -119,9 +119,9 @@ class ModuleBreadcrumb extends \Module
 					break;
 
 				case 'forward':
-					if (($objNext = $pages[$i]->getRelated('jumpTo')) !== null)
+					if (($objNext = $pages[$i]->getRelated('jumpTo')) instanceof PageModel)
 					{
-						/** @var \PageModel $objNext */
+						/** @var PageModel $objNext */
 						$href = $objNext->getFrontendUrl();
 						break;
 					}
@@ -137,7 +137,7 @@ class ModuleBreadcrumb extends \Module
 				'isRoot'   => false,
 				'isActive' => false,
 				'href'     => $href,
-				'title'    => specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
+				'title'    => \StringUtil::specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
 				'link'     => $pages[$i]->title,
 				'data'     => $pages[$i]->row(),
 				'class'    => ''
@@ -152,7 +152,7 @@ class ModuleBreadcrumb extends \Module
 				'isRoot'   => false,
 				'isActive' => false,
 				'href'     => $pages[0]->getFrontendUrl(),
-				'title'    => specialchars($pages[0]->pageTitle ?: $pages[0]->title, true),
+				'title'    => \StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title, true),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
 				'class'    => ''
@@ -180,7 +180,7 @@ class ModuleBreadcrumb extends \Module
 					'isRoot'   => false,
 					'isActive' => true,
 					'href'     => $pages[0]->getFrontendUrl('/articles/' . $strAlias),
-					'title'    => specialchars($objArticle->title, true),
+					'title'    => \StringUtil::specialchars($objArticle->title, true),
 					'link'     => $objArticle->title,
 					'data'     => $objArticle->row(),
 					'class'    => ''
@@ -196,7 +196,7 @@ class ModuleBreadcrumb extends \Module
 				'isRoot'   => false,
 				'isActive' => true,
 				'href'     => $pages[0]->getFrontendUrl(),
-				'title'    => specialchars($pages[0]->pageTitle ?: $pages[0]->title),
+				'title'    => \StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
 				'class'    => ''

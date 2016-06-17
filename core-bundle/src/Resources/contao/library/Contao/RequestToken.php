@@ -12,6 +12,8 @@ namespace Contao;
 
 use Symfony\Component\Security\Csrf\CsrfToken;
 
+@trigger_error('Using the Contao\RequestToken class has been deprecated and will no longer work in Contao 5.0. Use the Symfony CSRF service via the container instead.', E_USER_DEPRECATED);
+
 
 /**
  * Generates and validates request tokens
@@ -41,7 +43,7 @@ class RequestToken
 	 */
 	public static function initialize()
 	{
-		@trigger_error('Using RequestToken::initialize() has been deprecated and will no longer work in Contao 5.0. Use the Symfony CSRF service via the container instead.', E_USER_DEPRECATED);
+		// ignore
 	}
 
 

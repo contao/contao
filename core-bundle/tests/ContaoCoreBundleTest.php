@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Test;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Scope;
 
 /**
  * Tests the ContaoCoreBundle class.
@@ -39,22 +38,6 @@ class ContaoCoreBundleTest extends TestCase
         $bundle = new ContaoCoreBundle();
 
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\ContaoCoreExtension', $bundle->getContainerExtension());
-    }
-
-    /**
-     * Tests the boot() method.
-     */
-    public function testBoot()
-    {
-        $container = new ContainerBuilder();
-        $container->addScope(new Scope('request'));
-
-        $bundle = new ContaoCoreBundle();
-        $bundle->setContainer($container);
-        $bundle->boot();
-
-        $this->assertTrue($container->hasScope(ContaoCoreBundle::SCOPE_BACKEND));
-        $this->assertTrue($container->hasScope(ContaoCoreBundle::SCOPE_FRONTEND));
     }
 
     /**

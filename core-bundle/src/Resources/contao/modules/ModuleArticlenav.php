@@ -108,7 +108,7 @@ class ModuleArticlenav extends \Module
 				(
 					'isActive' => true,
 					'href' => $objPage->getFrontendUrl('/articles/' . $strAlias),
-					'title' => specialchars($objArticle->title, true),
+					'title' => \StringUtil::specialchars($objArticle->title, true),
 					'link' => $intCount
 				);
 
@@ -122,7 +122,7 @@ class ModuleArticlenav extends \Module
 				(
 					'isActive' => false,
 					'href' => $objPage->getFrontendUrl('/articles/' . $strAlias),
-					'title' => specialchars($objArticle->title, true),
+					'title' => \StringUtil::specialchars($objArticle->title, true),
 					'link' => $intCount
 				);
 			}

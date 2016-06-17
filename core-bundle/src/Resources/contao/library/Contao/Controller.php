@@ -52,7 +52,7 @@ abstract class Controller extends \System
 	 */
 	public static function getTemplate($strTemplate, $strFormat='html5')
 	{
-		$arrAllowed = trimsplit(',', strtolower(\Config::get('templateFiles')));
+		$arrAllowed = \StringUtil::trimsplit(',', strtolower(\Config::get('templateFiles')));
 		array_push($arrAllowed, 'html5'); // see #3398
 
 		if (!in_array($strFormat, $arrAllowed))
@@ -139,15 +139,7 @@ abstract class Controller extends \System
 							foreach ($arrThemeTemplates as $strFile)
 							{
 								$strTemplate = basename($strFile, strrchr($strFile, '.'));
-
-								if (!isset($arrTemplates[$strTemplate]))
-								{
-									$arrTemplates[$strTemplate][] = $objTheme->name;
-								}
-								else
-								{
-									$arrTemplates[$strTemplate][] = $objTheme->name;
-								}
+								$arrTemplates[$strTemplate][] = $objTheme->name;
 							}
 						}
 					}
@@ -218,13 +210,13 @@ abstract class Controller extends \System
 					// Send a 404 header if there is no published article
 					if (null === $objArticle)
 					{
-						throw new PageNotFoundException('Page not found');
+						throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 					}
 
 					// Send a 403 header if the article cannot be accessed
 					if (!static::isVisibleElement($objArticle))
 					{
-						throw new AccessDeniedException('Access denied');
+						throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
 					}
 
 					// Add the "first" and "last" classes (see #2583)
@@ -403,7 +395,7 @@ abstract class Controller extends \System
 			}
 			elseif ($objRow->printable != '')
 			{
-				$options = deserialize($objRow->printable);
+				$options = \StringUtil::deserialize($objRow->printable);
 
 				if (is_array($options) && in_array('pdf', $options))
 				{
@@ -592,7 +584,7 @@ abstract class Controller extends \System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$image = $objPage->type.'.gif';
+		$image = $objPage->type.'.svg';
 
 		// Page not published or not active
 		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
@@ -601,7 +593,7 @@ abstract class Controller extends \System
 		}
 
 		// Page hidden from menu
-		if ($objPage->hide && !in_array($objPage->type, array('redirect', 'forward', 'root', 'error_403', 'error_404')))
+		if ($objPage->hide && !in_array($objPage->type, array('root', 'error_403', 'error_404')))
 		{
 			$sub += 2;
 		}
@@ -615,7 +607,7 @@ abstract class Controller extends \System
 		// Get the image name
 		if ($sub > 0)
 		{
-			$image = $objPage->type.'_'.$sub.'.gif';
+			$image = $objPage->type.'_'.$sub.'.svg';
 		}
 
 		// HOOK: add custom logic
@@ -654,7 +646,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$groups = deserialize($objElement->groups);
+					$groups = \StringUtil::deserialize($objElement->groups);
 
 					if (empty($groups) || !is_array($groups) || !count(array_intersect($groups, \FrontendUser::getInstance()->groups)))
 					{
@@ -1050,18 +1042,13 @@ abstract class Controller extends \System
 	 * @param boolean $blnFixDomain Check the domain of the target page and append it if necessary
 	 *
 	 * @return string An URL that can be used in the front end
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+	 *             Use the contao.routing.url_generator service or PageModel::getFrontendUrl() instead.
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		if ($strForceLang !== null)
-		{
-			@trigger_error('Using Controller::generateFrontendUrl() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-		}
-
-		if ($blnFixDomain !== true)
-		{
-			@trigger_error('Using Controller::generateFrontendUrl() without $blnFixDomain has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-		}
+		@trigger_error('Using Controller::generateFrontendUrl() has been deprecated and will no longer work in Contao 5.0. Use the contao.routing.url_generator service or PageModel::getFrontendUrl() instead.', E_USER_DEPRECATED);
 
 		if (!isset($arrRow['rootId']))
 		{
@@ -1078,19 +1065,7 @@ abstract class Controller extends \System
 			}
 		}
 
-		$objRouter = \System::getContainer()->get('router');
 		$arrParams = [];
-		$strRoute = 'contao_frontend';
-
-		// Correctly handle the "index" alias (see #3961)
-		if ($arrRow['alias'] == 'index' && $strParams == '')
-		{
-			$strRoute = 'contao_index';
-		}
-		else
-		{
-			$arrParams['alias'] = ($arrRow['alias'] ?: $arrRow['id']) . $strParams;
-		}
 
 		// Set the language
 		if ($strForceLang != '')
@@ -1113,8 +1088,21 @@ abstract class Controller extends \System
 			$arrParams['_locale'] = $objPage->rootLanguage;
 		}
 
-		$strUrl = $objRouter->generate($strRoute, $arrParams);
-		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		// Add the domain if it differs from the current one (see #3765 and #6927)
+		if ($blnFixDomain)
+		{
+			$arrParams['_domain'] = $arrRow['domain'];
+			$arrParams['_ssl'] = (bool) $arrRow['rootUseSSL'];
+		}
+
+		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
+		$strUrl = $objUrlGenerator->generate(($arrRow['alias'] ?: $arrRow['id']) . $strParams, $arrParams);
+
+		// Remove path from absolute URLs
+		if (0 === strpos($strUrl, '/'))
+		{
+			$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		}
 
 		// Decode sprintf placeholders
 		if (strpos($strParams, '%') !== false)
@@ -1126,12 +1114,6 @@ abstract class Controller extends \System
 			{
 				$strUrl = str_replace('%25' . $v, '%' . $v, $strUrl);
 			}
-		}
-
-		// Add the domain if it differs from the current one (see #3765 and #6927)
-		if ($blnFixDomain && !empty($arrRow['domain']) && $arrRow['domain'] != \Environment::get('host'))
-		{
-			$strUrl = ($arrRow['rootUseSSL'] ? 'https://' : 'http://') . $arrRow['domain'] . \Environment::get('path') . '/' . $strUrl;
 		}
 
 		// HOOK: add custom logic
@@ -1219,7 +1201,7 @@ abstract class Controller extends \System
 		}
 
 		$objFile = new \File($strFile);
-		$arrAllowedTypes = trimsplit(',', strtolower(\Config::get('allowedDownload')));
+		$arrAllowedTypes = \StringUtil::trimsplit(',', strtolower(\Config::get('allowedDownload')));
 
 		// Check whether the file type is allowed to be downloaded
 		if (!in_array($objFile->extension, $arrAllowedTypes))
@@ -1423,7 +1405,7 @@ abstract class Controller extends \System
 		}
 
 		$imgSize = $objFile->imageSize;
-		$size = deserialize($arrItem['size']);
+		$size = \StringUtil::deserialize($arrItem['size']);
 
 		if (is_numeric($size))
 		{
@@ -1441,7 +1423,7 @@ abstract class Controller extends \System
 			$intMaxWidth = (TL_MODE == 'BE') ? 320 : \Config::get('maxImageWidth');
 		}
 
-		$arrMargin = (TL_MODE == 'BE') ? array() : deserialize($arrItem['imagemargin']);
+		$arrMargin = (TL_MODE == 'BE') ? array() : \StringUtil::deserialize($arrItem['imagemargin']);
 
 		// Store the original dimensions
 		$objTemplate->width = $imgSize[0];
@@ -1508,8 +1490,8 @@ abstract class Controller extends \System
 			$objTemplate->imgSize = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
 		}
 
-		$picture['alt'] = specialchars($arrItem['alt']);
-		$picture['title'] = specialchars($arrItem['title']);
+		$picture['alt'] = \StringUtil::specialchars($arrItem['alt']);
+		$picture['title'] = \StringUtil::specialchars($arrItem['title']);
 
 		$objTemplate->picture = $picture;
 
@@ -1563,8 +1545,8 @@ abstract class Controller extends \System
 
 		// Do not urlEncode() here because getImage() already does (see #3817)
 		$objTemplate->src = TL_FILES_URL . $src;
-		$objTemplate->alt = specialchars($arrItem['alt']);
-		$objTemplate->title = specialchars($arrItem['title']);
+		$objTemplate->alt = \StringUtil::specialchars($arrItem['alt']);
+		$objTemplate->title = \StringUtil::specialchars($arrItem['title']);
 		$objTemplate->linkTitle = $objTemplate->title;
 		$objTemplate->fullsize = $arrItem['fullsize'] ? true : false;
 		$objTemplate->addBefore = ($arrItem['floating'] != 'below');
@@ -1584,7 +1566,7 @@ abstract class Controller extends \System
 	 */
 	public static function addEnclosuresToTemplate($objTemplate, $arrItem, $strKey='enclosure')
 	{
-		$arrEnclosures = deserialize($arrItem[$strKey]);
+		$arrEnclosures = \StringUtil::deserialize($arrItem[$strKey]);
 
 		if (!is_array($arrEnclosures) || empty($arrEnclosures))
 		{
@@ -1618,7 +1600,7 @@ abstract class Controller extends \System
 		global $objPage;
 
 		$arrEnclosures = array();
-		$allowedDownload = trimsplit(',', strtolower(\Config::get('allowedDownload')));
+		$allowedDownload = \StringUtil::trimsplit(',', strtolower(\Config::get('allowedDownload')));
 
 		// Add download links
 		while ($objFiles->next())
@@ -1651,14 +1633,14 @@ abstract class Controller extends \System
 				// Use the file name as title if none is given
 				if ($arrMeta['title'] == '')
 				{
-					$arrMeta['title'] = specialchars($objFile->basename);
+					$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
 				}
 
 				$arrEnclosures[] = array
 				(
 					'link'      => $arrMeta['title'],
 					'filesize'  => static::getReadableSize($objFile->filesize),
-					'title'     => specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'title'     => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 					'href'      => $strHref,
 					'enclosure' => $objFiles->path,
 					'icon'      => \Image::getPath($objFile->icon),

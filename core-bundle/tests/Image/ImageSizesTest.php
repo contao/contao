@@ -47,7 +47,7 @@ class ImageSizesTest extends TestCase
     {
         System::setContainer($this->mockContainerWithContaoScopes());
 
-        require_once __DIR__ . '/../../src/Resources/contao/config/config.php';
+        require_once __DIR__.'/../../src/Resources/contao/config/config.php';
 
         $this->connection = $this->getMock('Doctrine\DBAL\Connection', ['fetchAll'], [], '', false);
         $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');

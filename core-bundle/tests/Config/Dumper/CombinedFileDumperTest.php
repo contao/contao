@@ -102,7 +102,7 @@ class CombinedFileDumperTest extends TestCase
         $filesystem
             ->expects($this->once())
             ->method('dumpFile')
-            ->with($this->getCacheDir() . '/test.php', $expects)
+            ->with($this->getCacheDir().'/test.php', $expects)
         ;
 
         return $filesystem;

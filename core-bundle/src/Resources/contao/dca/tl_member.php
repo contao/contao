@@ -74,25 +74,25 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_member']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'edit.gif'
+				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_member']['copy'],
 				'href'                => 'act=copy',
-				'icon'                => 'copy.gif'
+				'icon'                => 'copy.svg'
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_member']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_member']['toggle'],
-				'icon'                => 'visible.gif',
+				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_member', 'toggleIcon')
 			),
@@ -100,13 +100,13 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_member']['show'],
 				'href'                => 'act=show',
-				'icon'                => 'show.gif'
+				'icon'                => 'show.svg'
 			),
 			'su' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_member']['su'],
 				'href'                => 'key=su',
-				'icon'                => 'su.gif',
+				'icon'                => 'su.svg',
 				'button_callback'     => array('tl_member', 'switchUser')
 			)
 		)
@@ -508,7 +508,7 @@ class tl_member extends Backend
 			$image .= '_';
 		}
 
-		$args[0] = sprintf('<div class="list_icon_new" style="background-image:url(\'%ssystem/themes/%s/images/%s.gif\')" data-icon="%s.gif" data-icon-disabled="%s.gif">&nbsp;</div>', TL_ASSETS_URL, Backend::getTheme(), $image, rtrim($image, '_'), rtrim($image, '_') . '_');
+		$args[0] = sprintf('<div class="list_icon_new" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">&nbsp;</div>', TL_ASSETS_URL, Backend::getTheme(), $image, rtrim($image, '_'), rtrim($image, '_') . '_');
 
 		return $args;
 	}
@@ -532,7 +532,12 @@ class tl_member extends Backend
 			return '';
 		}
 
-		return '<a href="contao/preview.php?user='.$row['username'].'" target="_blank" title="'.specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
+		if (!$row['login'] || $row['username'] == '')
+		{
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
+		}
+
+		return '<a href="contao/preview.php?user='.$row['username'].'" target="_blank" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
 	}
 
 
@@ -581,7 +586,7 @@ class tl_member extends Backend
 	public function storeDateAdded($dc)
 	{
 		// Front end call
-		if (!$dc instanceof DataContainer)
+		if (!($dc instanceof DataContainer))
 		{
 			return;
 		}
@@ -669,10 +674,10 @@ class tl_member extends Backend
 
 		if ($row['disable'])
 		{
-			$icon = 'invisible.gif';
+			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
 	}
 
 
@@ -705,6 +710,9 @@ class tl_member extends Backend
 		$objVersions = new Versions('tl_member', $intId);
 		$objVersions->initialize();
 
+		// Reverse the logic (members have disabled=1)
+		$blnVisible = !$blnVisible;
+
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_member']['fields']['disable']['save_callback']))
 		{
@@ -725,33 +733,16 @@ class tl_member extends Backend
 		$time = time();
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_member SET tstamp=$time, disable='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_member SET tstamp=$time, disable='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_member.id='.$intId.'" has been created'.$this->getParentEntries('tl_member', $intId), __METHOD__, TL_GENERAL);
 
 		// Remove the session if the user is disabled (see #5353)
 		if (!$blnVisible)
 		{
 			$this->Database->prepare("DELETE FROM tl_session WHERE name='FE_USER_AUTH' AND pid=?")
 						   ->execute($intId);
-		}
-
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		// HOOK: update newsletter subscriptions
-		if (isset($bundles['ContaoNewsletterBundle']))
-		{
-			$objUser = $this->Database->prepare("SELECT email FROM tl_member WHERE id=?")
-									  ->limit(1)
-									  ->execute($intId);
-
-			if ($objUser->numRows)
-			{
-				$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=$time, active=? WHERE email=?")
-							   ->execute(($blnVisible ? 1 : ''), $objUser->email);
-			}
 		}
 	}
 }

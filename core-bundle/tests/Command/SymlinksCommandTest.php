@@ -32,8 +32,10 @@ class SymlinksCommandTest extends TestCase
     {
         $fs = new Filesystem();
 
-        $fs->remove($this->getRootDir() . '/system/logs');
-        $fs->remove($this->getRootDir() . '/web');
+        $fs->remove($this->getRootDir().'/app/cache');
+        $fs->remove($this->getRootDir().'/system/logs');
+        $fs->remove($this->getRootDir().'/system/themes');
+        $fs->remove($this->getRootDir().'/web');
     }
 
     /**
@@ -52,12 +54,12 @@ class SymlinksCommandTest extends TestCase
     public function testOutput()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.root_dir', $this->getRootDir() . '/app');
+        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('contao.upload_path', 'app');
 
         $container->set(
             'contao.resource_finder',
-            new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
         );
 
         $command = new SymlinksCommand('contao:symlinks');
@@ -65,19 +67,23 @@ class SymlinksCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
-
-        $expected = <<<EOF
-Skipped system/modules/foobar/html/foo because system/modules/foobar/html will be symlinked already.
-Added web/system/modules/foobar/assets as symlink to system/modules/foobar/assets.
-Added web/system/modules/foobar/html as symlink to system/modules/foobar/html.
-Added system/themes/flexible as symlink to vendor/contao/test-bundle/Resources/contao/themes/flexible.
-Added web/assets as symlink to assets.
-Added web/system/themes as symlink to system/themes.
-Added system/logs as symlink to app/logs.\n
-EOF;
+        $display = $tester->getDisplay();
 
         $this->assertEquals(0, $code);
-        $this->assertEquals($expected, str_replace("\r", '', $tester->getDisplay()));
+        $this->assertContains('web/system/modules/foobar/assets', $display);
+        $this->assertContains('system/modules/foobar/assets', $display);
+        $this->assertContains('web/system/modules/foobar/html', $display);
+        $this->assertContains('system/modules/foobar/html', $display);
+        $this->assertContains('web/system/modules/foobar/html/foo', $display);
+        $this->assertContains('Skipped because system/modules/foobar/html has been symlinked already.', $display);
+        $this->assertContains('system/themes/flexible', $display);
+        $this->assertContains('vendor/contao/test-bundle/Resources/contao/themes/flexible', $display);
+        $this->assertContains('web/assets', $display);
+        $this->assertContains('assets', $display);
+        $this->assertContains('web/system/themes', $display);
+        $this->assertContains('system/themes', $display);
+        $this->assertContains('system/logs', $display);
+        $this->assertContains('app/logs', $display);
     }
 
     /**

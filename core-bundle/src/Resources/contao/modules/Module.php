@@ -84,51 +84,6 @@ namespace Contao;
  * @property string  $groups
  * @property boolean $guests
  * @property string  $cssID
- * @property string  $space
- * @property string  $cal_calendar
- * @property boolean $cal_noSpan
- * @property integer $cal_startDay
- * @property string  $cal_format
- * @property boolean $cal_ignoreDynamic
- * @property string  $cal_order
- * @property integer $cal_readerModule
- * @property integer $cal_limit
- * @property string  $cal_template
- * @property string  $cal_ctemplate
- * @property boolean $cal_showQuantity
- * @property string  $com_order
- * @property boolean $com_moderate
- * @property boolean $com_bbcode
- * @property boolean $com_requireLogin
- * @property boolean $com_disableCaptcha
- * @property string  $com_template
- * @property string  $faq_categories
- * @property integer $faq_readerModule
- * @property string  $list_table
- * @property string  $list_fields
- * @property string  $list_where
- * @property string  $list_search
- * @property string  $list_sort
- * @property string  $list_info
- * @property string  $list_info_where
- * @property string  $list_layout
- * @property string  $list_info_layout
- * @property string  $news_archives
- * @property string  $news_featured
- * @property string  $news_jumpToCurrent
- * @property integer $news_readerModule
- * @property string  $news_metaFields
- * @property string  $news_template
- * @property string  $news_format
- * @property integer $news_startDay
- * @property string  $news_order
- * @property boolean $news_showQuantity
- * @property string  $newsletters
- * @property string  $nl_channels
- * @property boolean $nl_hideChannels
- * @property string  $nl_subscribe
- * @property string  $nl_unsubscribe
- * @property string  $nl_template
  * @property string  $hl
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -191,14 +146,14 @@ abstract class Module extends \Frontend
 		parent::__construct();
 
 		$this->arrData = $objModule->row();
-		$this->cssID = deserialize($objModule->cssID, true);
+		$this->cssID = \StringUtil::deserialize($objModule->cssID, true);
 
 		if ($this->customTpl != '' && TL_MODE == 'FE')
 		{
 			$this->strTemplate = $this->customTpl;
 		}
 
-		$arrHeadline = deserialize($objModule->headline);
+		$arrHeadline = \StringUtil::deserialize($objModule->headline);
 		$this->headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$this->hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
@@ -360,7 +315,7 @@ abstract class Module extends \Frontend
 			}
 
 			$subitems = '';
-			$_groups = deserialize($objSubpage->groups);
+			$_groups = \StringUtil::deserialize($objSubpage->groups);
 
 			// Override the domain (see #3765)
 			if ($host !== null)
@@ -403,7 +358,7 @@ abstract class Module extends \Frontend
 						}
 
 						// Hide the link if the target page is invisible
-						if ($objNext === null || !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time()))
+						if (!($objNext instanceof PageModel) || !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time()))
 						{
 							continue(2);
 						}
@@ -420,7 +375,7 @@ abstract class Module extends \Frontend
 				$trail = in_array($objSubpage->id, $objPage->trail);
 
 				// Active page
-				if (($objPage->id == $objSubpage->id || $objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) && !$this instanceof ModuleSitemap && $href == \Environment::get('request'))
+				if (($objPage->id == $objSubpage->id || $objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) && !($this instanceof ModuleSitemap) && $href == \Environment::get('request'))
 				{
 					// Mark active forward pages (see #4822)
 					$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . (($objSubpage->cssClass != '') ? ' ' . $objSubpage->cssClass : '');
@@ -446,8 +401,8 @@ abstract class Module extends \Frontend
 
 				$row['subitems'] = $subitems;
 				$row['class'] = trim($strClass);
-				$row['title'] = specialchars($objSubpage->title, true);
-				$row['pageTitle'] = specialchars($objSubpage->pageTitle, true);
+				$row['title'] = \StringUtil::specialchars($objSubpage->title, true);
+				$row['pageTitle'] = \StringUtil::specialchars($objSubpage->pageTitle, true);
 				$row['link'] = $objSubpage->title;
 				$row['href'] = $href;
 				$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0);

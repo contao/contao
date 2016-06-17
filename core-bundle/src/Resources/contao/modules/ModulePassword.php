@@ -165,10 +165,10 @@ class ModulePassword extends \Module
 		}
 
 		$this->Template->formId = $strFormId;
-		$this->Template->username = specialchars($GLOBALS['TL_LANG']['MSC']['username']);
-		$this->Template->email = specialchars($GLOBALS['TL_LANG']['MSC']['emailAddress']);
+		$this->Template->username = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['username']);
+		$this->Template->email = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['emailAddress']);
 		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['requestPassword']);
+		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['requestPassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 	}
 
@@ -178,7 +178,7 @@ class ModulePassword extends \Module
 	 */
 	protected function setNewPassword()
 	{
-		$objMember = \MemberModel::findByActivation(\Input::get('token'));
+		$objMember = \MemberModel::findOneByActivation(\Input::get('token'));
 
 		if ($objMember === null || $objMember->login == '')
 		{
@@ -193,6 +193,15 @@ class ModulePassword extends \Module
 
 			return;
 		}
+
+		$strTable = $objMember->getTable();
+
+		// Initialize the versioning (see #8301)
+		$objVersions = new \Versions($strTable, $objMember->id);
+		$objVersions->setUsername($objMember->username);
+		$objVersions->setUserId(0);
+		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
+		$objVersions->initialize();
 
 		// Define the form field
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
@@ -232,6 +241,12 @@ class ModulePassword extends \Module
 				$objMember->password = $objWidget->value;
 				$objMember->save();
 
+				// Create a new version
+				if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
+				{
+					$objVersions->create();
+				}
+
 				// HOOK: set new password callback
 				if (isset($GLOBALS['TL_HOOKS']['setNewPassword']) && is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
 				{
@@ -243,9 +258,9 @@ class ModulePassword extends \Module
 				}
 
 				// Redirect to the jumpTo page
-				if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) !== null)
+				if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
 				{
-					/** @var \PageModel $objTarget */
+					/** @var PageModel $objTarget */
 					$this->redirect($objTarget->getFrontendUrl());
 				}
 
@@ -269,7 +284,7 @@ class ModulePassword extends \Module
 		$this->Template->formId = $strToken;
 		$this->Template->fields = $objWidget->parse();
 		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['setNewPassword']);
+		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['setNewPassword']);
 	}
 
 
@@ -304,7 +319,7 @@ class ModulePassword extends \Module
 		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . \Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
 
 		// Check whether there is a jumpTo page
-		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) !== null)
+		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			$this->jumpToOrReload($objJumpTo->row());
 		}

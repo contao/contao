@@ -821,7 +821,7 @@ class File extends \System
 			return $GLOBALS['TL_MIME'][$this->extension];
 		}
 
-		return array('application/octet-stream', 'iconPLAIN.gif');
+		return array('application/octet-stream', 'iconPLAIN.svg');
 	}
 
 
@@ -886,7 +886,7 @@ class File extends \System
 
 		if (isset($matches[1]))
 		{
-			$return['dirname'] = $matches[1];
+			$return['dirname'] = TL_ROOT . '/' . $matches[1]; // see #8325
 		}
 
 		if (isset($matches[2]))

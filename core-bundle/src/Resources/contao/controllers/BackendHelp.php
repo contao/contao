@@ -112,7 +112,7 @@ class BackendHelp extends \Backend
 					{
 						$rows[] = $arrData['reference'][$key];
 					}
-					elseif (!is_array($arrData['reference'][$option]))
+					elseif (is_array($arrData['reference'][$option]))
 					{
 						$rows[] = $arrData['reference'][$option];
 					}
@@ -145,7 +145,7 @@ class BackendHelp extends \Backend
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['helpWizardTitle']);
+		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizardTitle']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->headline = $arrData['label'][0] ?: $field;
 		$objTemplate->helpWizard = $GLOBALS['TL_LANG']['MSC']['helpWizard'];

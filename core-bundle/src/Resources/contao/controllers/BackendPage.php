@@ -137,7 +137,7 @@ class BackendPage extends \Backend
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']);
+		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];

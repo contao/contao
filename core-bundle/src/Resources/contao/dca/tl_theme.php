@@ -89,55 +89,55 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'edit.gif'
+				'icon'                => 'edit.svg'
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['show'],
 				'href'                => 'act=show',
-				'icon'                => 'show.gif',
+				'icon'                => 'show.svg',
 				'attributes'          => 'style="margin-right:3px"'
 			),
 			'css' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['css'],
 				'href'                => 'table=tl_style_sheet',
-				'icon'                => 'css.gif',
+				'icon'                => 'css.svg',
 				'button_callback'     => array('tl_theme', 'editCss')
 			),
 			'modules' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['modules'],
 				'href'                => 'table=tl_module',
-				'icon'                => 'modules.gif',
+				'icon'                => 'modules.svg',
 				'button_callback'     => array('tl_theme', 'editModules')
 			),
 			'layout' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['layout'],
 				'href'                => 'table=tl_layout',
-				'icon'                => 'layout.gif',
+				'icon'                => 'layout.svg',
 				'button_callback'     => array('tl_theme', 'editLayout')
 			),
 			'imageSizes' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['imageSizes'],
 				'href'                => 'table=tl_image_size',
-				'icon'                => 'sizes.gif',
+				'icon'                => 'sizes.svg',
 				'button_callback'     => array('tl_theme', 'editImageSizes')
 			),
 			'exportTheme' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['exportTheme'],
 				'href'                => 'key=exportTheme',
-				'icon'                => 'theme_export.gif',
+				'icon'                => 'theme_export.svg',
 				'button_callback'     => array('tl_theme', 'exportTheme')
 			)
 		)
@@ -374,7 +374,7 @@ class tl_theme extends Backend
 	 */
 	public function importTheme($href, $label, $title, $class, $attributes)
 	{
-		return $this->User->hasAccess('theme_import', 'themes') ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
+		return $this->User->hasAccess('theme_import', 'themes') ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
 	}
 
 
@@ -385,7 +385,7 @@ class tl_theme extends Backend
 	 */
 	public function themeStore()
 	{
-		return '<a href="https://themes.contao.org" target="_blank" title="' . specialchars($GLOBALS['TL_LANG']['tl_theme']['store'][1]) . '" class="header_store">' . $GLOBALS['TL_LANG']['tl_theme']['store'][0] . '</a>';
+		return '<a href="https://themes.contao.org" target="_blank" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_theme']['store'][1]) . '" class="header_store">' . $GLOBALS['TL_LANG']['tl_theme']['store'][0] . '</a>';
 	}
 
 
@@ -403,7 +403,7 @@ class tl_theme extends Backend
 	 */
 	public function editCss($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('css', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('css', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -421,7 +421,7 @@ class tl_theme extends Backend
 	 */
 	public function editModules($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('modules', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('modules', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -439,7 +439,7 @@ class tl_theme extends Backend
 	 */
 	public function editLayout($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('layout', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('layout', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -457,7 +457,7 @@ class tl_theme extends Backend
 	 */
 	public function editImageSizes($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('image_sizes', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('image_sizes', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -475,6 +475,6 @@ class tl_theme extends Backend
 	 */
 	public function exportTheme($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('theme_export', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('theme_export', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 }

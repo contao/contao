@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of Contao.
+ * Contao Open Source CMS
  *
  * Copyright (c) 2005-2016 Leo Feyer
  *
@@ -35,6 +35,7 @@ namespace {
 	class StyleSheets extends \Contao\StyleSheets {}
 	class Theme extends \Contao\Theme {}
 	class Versions extends \Contao\Versions {}
+	class BackendAlerts extends \Contao\BackendAlerts {}
 	class BackendConfirm extends \Contao\BackendConfirm {}
 	class BackendFile extends \Contao\BackendFile {}
 	class BackendHelp extends \Contao\BackendHelp {}
@@ -131,7 +132,7 @@ namespace {
 	class StringUtil extends \Contao\StringUtil {}
 	abstract class System extends \Contao\System {}
 	abstract class Template extends \Contao\Template {}
-	trait TemplateInheritance { use \Contao\TemplateInheritance }
+	trait TemplateInheritance { use \Contao\TemplateInheritance; }
 	class TemplateLoader extends \Contao\TemplateLoader {}
 	abstract class User extends \Contao\User {}
 	class Validator extends \Contao\Validator {}

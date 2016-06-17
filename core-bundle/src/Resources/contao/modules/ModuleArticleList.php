@@ -77,11 +77,11 @@ class ModuleArticleList extends \Module
 		// Show the articles of a different page
 		if ($this->defineRoot && $this->rootPage > 0)
 		{
-			if (($objTarget = $this->objModel->getRelated('rootPage')) !== null)
+			if (($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)
 			{
 				$id = $objTarget->id;
 
-				/** @var \PageModel $objTarget */
+				/** @var PageModel $objTarget */
 				$this->Template->request = $objTarget->getFrontendUrl();
 			}
 		}
@@ -102,12 +102,12 @@ class ModuleArticleList extends \Module
 				continue;
 			}
 
-			$cssID = deserialize($objArticles->cssID, true);
+			$cssID = \StringUtil::deserialize($objArticles->cssID, true);
 
 			$articles[] = array
 			(
 				'link' => $objArticles->title,
-				'title' => specialchars($objArticles->title),
+				'title' => \StringUtil::specialchars($objArticles->title),
 				'id' => $cssID[0] ?: 'article-' . $objArticles->id,
 				'articleId' => $objArticles->id
 			);

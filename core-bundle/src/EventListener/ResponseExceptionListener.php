@@ -29,7 +29,7 @@ class ResponseExceptionListener
     {
         $exception = $event->getException();
 
-        if (!$exception instanceof ResponseException) {
+        if (!($exception instanceof ResponseException)) {
             return;
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of Contao.
+ * Contao Open Source CMS
  *
  * Copyright (c) 2005-2016 Leo Feyer
  *
@@ -9,8 +9,8 @@
  */
 
 // Core version
-define('VERSION', '4.1');
-define('BUILD', '3');
+define('VERSION', '4.2');
+define('BUILD', '0');
 define('LONG_TERM_SUPPORT', false);
 
 // Link constants

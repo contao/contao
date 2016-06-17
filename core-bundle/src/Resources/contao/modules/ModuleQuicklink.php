@@ -56,7 +56,7 @@ class ModuleQuicklink extends \Module
 		}
 
 		// Always return an array (see #4616)
-		$this->pages = deserialize($this->pages, true);
+		$this->pages = \StringUtil::deserialize($this->pages, true);
 
 		if (empty($this->pages) || $this->pages[0] == '')
 		{
@@ -86,7 +86,7 @@ class ModuleQuicklink extends \Module
 		// Sort the array keys according to the given order
 		if ($this->orderPages != '')
 		{
-			$tmp = deserialize($this->orderPages);
+			$tmp = \StringUtil::deserialize($this->orderPages);
 
 			if (!empty($tmp) && is_array($tmp))
 			{
@@ -103,11 +103,11 @@ class ModuleQuicklink extends \Module
 		$items = array();
 		$arrPages = array_values(array_filter($arrPages));
 
-		/** @var \PageModel[] $arrPages */
+		/** @var PageModel[] $arrPages */
 		foreach ($arrPages as $objPage)
 		{
-			$objPage->title = strip_insert_tags($objPage->title);
-			$objPage->pageTitle = strip_insert_tags($objPage->pageTitle);
+			$objPage->title = \StringUtil::stripInsertTags($objPage->title);
+			$objPage->pageTitle = \StringUtil::stripInsertTags($objPage->pageTitle);
 
 			// Get href
 			switch ($objPage->type)
@@ -117,9 +117,9 @@ class ModuleQuicklink extends \Module
 					break;
 
 				case 'forward':
-					if (($objNext = $objPage->getRelated('jumpTo')) !== null)
+					if (($objNext = $objPage->getRelated('jumpTo')) instanceof PageModel)
 					{
-						/** @var \PageModel $objNext */
+						/** @var PageModel $objNext */
 						$href = $objNext->getFrontendUrl();
 						break;
 					}
@@ -133,7 +133,7 @@ class ModuleQuicklink extends \Module
 			$items[] = array
 			(
 				'href' => $href,
-				'title' => specialchars($objPage->pageTitle ?: $objPage->title),
+				'title' => \StringUtil::specialchars($objPage->pageTitle ?: $objPage->title),
 				'link' => $objPage->title
 			);
 		}
@@ -142,6 +142,6 @@ class ModuleQuicklink extends \Module
 		$this->Template->formId = 'tl_quicklink_' . $this->id;
 		$this->Template->request = ampersand(\Environment::get('request'), true);
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
-		$this->Template->button = specialchars($GLOBALS['TL_LANG']['MSC']['go']);
+		$this->Template->button = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 	}
 }

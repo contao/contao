@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\FrontendUser;
 use Contao\User;
 use Doctrine\DBAL\Connection;
@@ -65,7 +66,7 @@ class UserSessionListener
 
         $user = $this->getUserObject();
 
-        if (!$user instanceof User) {
+        if (!($user instanceof User)) {
             return;
         }
 
@@ -89,12 +90,12 @@ class UserSessionListener
 
         $user = $this->getUserObject();
 
-        if (!$user instanceof User) {
+        if (!($user instanceof User)) {
             return;
         }
 
         $this->connection
-            ->prepare('UPDATE ' . $user->getTable() . ' SET session=? WHERE id=?')
+            ->prepare('UPDATE '.$user->getTable().' SET session=? WHERE id=?')
             ->execute([serialize($this->getSessionBag()->all()), $user->id])
         ;
     }

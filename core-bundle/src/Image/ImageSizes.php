@@ -90,7 +90,7 @@ class ImageSizes
         $this->loadOptions();
 
         $event = new ImageSizesEvent(
-            $user->isAdmin ? $this->options : $this->filterOptions(deserialize($user->imageSizes, true)),
+            $user->isAdmin ? $this->options : $this->filterOptions(\StringUtil::deserialize($user->imageSizes, true)),
             $user
         );
 

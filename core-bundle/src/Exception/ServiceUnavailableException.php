@@ -10,6 +10,12 @@
 
 namespace Contao\CoreBundle\Exception;
 
+@trigger_error(
+    'Using the ServiceUnavailableException class has been deprecated and will no longer work in Contao 5.0. Use the '
+        .'Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException class instead.',
+    E_USER_DEPRECATED
+);
+
 /**
  * Serivce unavailable exception.
  *
@@ -20,19 +26,4 @@ namespace Contao\CoreBundle\Exception;
  */
 class ServiceUnavailableException extends \RuntimeException
 {
-    /**
-     * Constructor.
-     *
-     * @param string          $message  The exception message
-     * @param int             $code     The exception code
-     * @param \Exception|null $previous The previous exception
-     */
-    public function __construct($message = '', $code = 0, \Exception $previous = null)
-    {
-        @trigger_error(
-            'Using the ServiceUnavailableException has been deprecated and will no longer work in Contao 5.0. Use '
-                . 'the Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException instead.',
-            E_USER_DEPRECATED
-        );
-    }
 }

@@ -32,7 +32,7 @@ class ContentList extends \ContentElement
 	protected function compile()
 	{
 		$arrItems = array();
-		$items = deserialize($this->listitems);
+		$items = \StringUtil::deserialize($this->listitems);
 		$limit = count($items) - 1;
 
 		for ($i=0, $c=count($items); $i<$c; $i++)

@@ -13,8 +13,6 @@ namespace Contao\CoreBundle\Test\EventListener;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\Test\TestCase;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -23,6 +21,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * Tests the RefererIdListener class.
  *
  * @author Yanick Witschi <https:/github.com/toflar>
+ * @author Leo Feyer <https:/github.com/leofeyer>
  */
 class RefererIdListenerTest extends TestCase
 {
@@ -43,15 +42,14 @@ class RefererIdListenerTest extends TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+
         $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
         $listener = new RefererIdListener($this->mockTokenManager());
-        $container = new Container();
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
-
-        $listener->setContainer($container);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelRequest($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
@@ -65,15 +63,14 @@ class RefererIdListenerTest extends TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+
         $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
+
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
         $listener = new RefererIdListener($this->mockTokenManager());
-        $container = new Container();
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_FRONTEND);
-
-        $listener->setContainer($container);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
         $listener->onKernelRequest($event);
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));
@@ -86,15 +83,14 @@ class RefererIdListenerTest extends TestCase
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+
         $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
+
         $listener = new RefererIdListener($this->mockTokenManager());
-        $container = new Container();
-
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
-
-        $listener->setContainer($container);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelRequest($event);
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));

@@ -456,7 +456,7 @@ abstract class Backend extends \Controller
 				case 'show':
 				case 'showAll':
 				case 'undo':
-					if (!$dc instanceof \listable)
+					if (!($dc instanceof \listable))
 					{
 						$this->log('Data container ' . $strTable . ' is not listable', __METHOD__, TL_ERROR);
 						trigger_error('The current data container is not listable', E_USER_ERROR);
@@ -470,7 +470,7 @@ abstract class Backend extends \Controller
 				case 'copyAll':
 				case 'move':
 				case 'edit':
-					if (!$dc instanceof \editable)
+					if (!($dc instanceof \editable))
 					{
 						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, TL_ERROR);
 						trigger_error('The current data container is not editable', E_USER_ERROR);
@@ -652,60 +652,38 @@ abstract class Backend extends \Controller
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsSitemap=false)
 	{
-		$time = \Date::floorToMinute();
-		$objDatabase = \Database::getInstance();
+		$objPages = \PageModel::findPublishedByPid($pid, array('ignoreFePreview'=>true));
 
-		// Get published pages
-		$objPages = $objDatabase->prepare("SELECT * FROM tl_page WHERE pid=? AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1' ORDER BY sorting")
-								->execute($pid);
-
-		if ($objPages->numRows < 1)
+		if ($objPages === null)
 		{
 			return array();
 		}
 
 		$arrPages = array();
-		$objRegistry = \Model\Registry::getInstance();
 
 		// Recursively walk through all subpages
-		while ($objPages->next())
+		foreach ($objPages as $objPage)
 		{
-			$objPage = $objRegistry->fetch('tl_page', $objPages->id);
-
-			if ($objPage === null)
-			{
-				$objPage = new \PageModel($objPages);
-			}
-
 			if ($objPage->type == 'regular')
 			{
 				// Searchable and not protected
 				if ((!$objPage->noSearch || $blnIsSitemap) && (!$objPage->protected || \Config::get('indexProtected') && (!$blnIsSitemap || $objPage->sitemap == 'map_always')) && (!$blnIsSitemap || $objPage->sitemap != 'map_never'))
 				{
-					// Published
-					if ($objPage->published && ($objPage->start == '' || $objPage->start <= $time) && ($objPage->stop == '' || $objPage->stop > ($time + 60)))
+					$arrPages[] = $objPage->getAbsoluteUrl();
+
+					// Get articles with teaser
+					if (($objArticles = \ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
 					{
-						$arrPages[] = $objPage->getAbsoluteUrl();
-
-						// Get articles with teaser
-						$objArticles = $objDatabase->prepare("SELECT * FROM tl_article WHERE pid=? AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1' AND showTeaser='1' ORDER BY sorting")
-												   ->execute($objPages->id);
-
-						if ($objArticles->numRows)
+						foreach ($objArticles as $objArticle)
 						{
-							$feUrl = $objPage->getAbsoluteUrl('/articles/%s');
-
-							while ($objArticles->next())
-							{
-								$arrPages[] = sprintf($feUrl, ($objArticles->alias ?: $objArticles->id));
-							}
+							$arrPages[] = $objPage->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 						}
 					}
 				}
 			}
 
 			// Get subpages
-			if ((!$objPage->protected || \Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsSitemap)) != false)
+			if ((!$objPage->protected || \Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsSitemap)))
 			{
 				$arrPages = array_merge($arrPages, $arrSubpages);
 			}
@@ -731,7 +709,7 @@ abstract class Backend extends \Controller
 			return;
 		}
 
-		$arrMeta = deserialize($objFile->meta);
+		$arrMeta = \StringUtil::deserialize($objFile->meta);
 
 		if (empty($arrMeta))
 		{
@@ -741,51 +719,24 @@ abstract class Backend extends \Controller
 		$objPage = null;
 		$db = \Database::getInstance();
 
-		switch ($strPtable)
+		if ($strPtable == 'tl_article')
 		{
-			case 'tl_article':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)")
-							  ->execute($intPid);
-				break;
-
-			case 'tl_news':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_news_archive WHERE id=(SELECT pid FROM tl_news WHERE id=?))")
-							  ->execute($intPid);
-				break;
-
-			case 'tl_news_archive':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_news_archive WHERE id=?)")
-							  ->execute($intPid);
-				break;
-
-			case 'tl_calendar_events':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_calendar WHERE id=(SELECT pid FROM tl_calendar_events WHERE id=?))")
-							  ->execute($intPid);
-				break;
-
-			case 'tl_calendar':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_calendar WHERE id=?)")
-							  ->execute($intPid);
-				break;
-
-			case 'tl_faq_category':
-				$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_faq_category WHERE id=?)")
-							  ->execute($intPid);
-				break;
-
-			default:
-				// HOOK: support custom modules
-				if (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
+			$objPage = $db->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)")
+						  ->execute($intPid);
+		}
+		else
+		{
+			// HOOK: support custom modules
+			if (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
+			{
+				foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
 				{
-					foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
+					if (($val = \System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
 					{
-						if (($val = \System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
-						{
-							$objPage = $val;
-						}
+						$objPage = $val;
 					}
 				}
-				break;
+			}
 		}
 
 		if ($objPage === null || $objPage->numRows < 1)
@@ -892,7 +843,7 @@ abstract class Backend extends \Controller
 				}
 				else
 				{
-					$arrLinks[] = \Backend::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . \Backend::addToUrl('pn='.$objPage->id) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
+					$arrLinks[] = \Backend::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . \Backend::addToUrl('pn='.$objPage->id) . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
 				}
 
 				// Do not show the mounted pages
@@ -917,7 +868,7 @@ abstract class Backend extends \Controller
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
 
 		// Add root link
-		$arrLinks[] = \Image::getHtml('pagemounts.gif') . ' <a href="' . \Backend::addToUrl('pn=0') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = \Image::getHtml('pagemounts.svg') . ' <a href="' . \Backend::addToUrl('pn=0') . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -964,10 +915,44 @@ abstract class Backend extends \Controller
 		}
 
 		// Add the breadcrumb link
-		$label = '<a href="' . \Backend::addToUrl('pn='.$row['id']) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
+		$label = '<a href="' . \Backend::addToUrl('pn='.$row['id']) . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
 
 		// Return the image
-		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['id'].'" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['view']).'"' . (($dc->table != 'tl_page') ? ' class="tl_gray"' : '') . ' target="_blank">'.\Image::getHtml($image, '', $imageAttribute).'</a> '.$label;
+		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['id'].'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']).'"' . (($dc->table != 'tl_page') ? ' class="tl_gray"' : '') . ' target="_blank">'.\Image::getHtml($image, '', $imageAttribute).'</a> '.$label;
+	}
+
+
+	/**
+	 * Return the system messages as HTML
+	 *
+	 * @return string The messages HTML markup
+	 */
+	public static function getSystemMessages()
+	{
+		$strMessages = '';
+
+		// HOOK: add custom messages
+		if (isset($GLOBALS['TL_HOOKS']['getSystemMessages']) && is_array($GLOBALS['TL_HOOKS']['getSystemMessages']))
+		{
+			$arrMessages = array();
+
+			foreach ($GLOBALS['TL_HOOKS']['getSystemMessages'] as $callback)
+			{
+				$strBuffer = \System::importStatic($callback[0])->{$callback[1]}();
+
+				if ($strBuffer != '')
+				{
+					$arrMessages[] = $strBuffer;
+				}
+			}
+
+			if (!empty($arrMessages))
+			{
+				$strMessages .= implode("\n", $arrMessages);
+			}
+		}
+
+		return $strMessages;
 	}
 
 
@@ -1024,7 +1009,7 @@ abstract class Backend extends \Controller
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = \Image::getHtml('filemounts.gif') . ' <a href="' . \Backend::addToUrl('fn=') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = \Image::getHtml('filemounts.svg') . ' <a href="' . \Backend::addToUrl('fn=') . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -1040,11 +1025,11 @@ abstract class Backend extends \Controller
 			// No link for the active folder
 			if ($strPath == $strNode)
 			{
-				$arrLinks[] = \Image::getHtml('folderC.gif') . ' ' . $strFolder;
+				$arrLinks[] = \Image::getHtml('folderC.svg') . ' ' . $strFolder;
 			}
 			else
 			{
-				$arrLinks[] = \Image::getHtml('folderC.gif') . ' <a href="' . \Backend::addToUrl('fn='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = \Image::getHtml('folderC.svg') . ' <a href="' . \Backend::addToUrl('fn='.$strPath) . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
 			}
 		}
 
@@ -1159,7 +1144,7 @@ abstract class Backend extends \Controller
 			}
 			else
 			{
-				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, (('{{link_url::' . $objPages->id . '}}' == \Input::get('value')) ? ' selected="selected"' : ''), str_repeat(' &nbsp; &nbsp; ', $level), specialchars($objPages->title));
+				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, (('{{link_url::' . $objPages->id . '}}' == \Input::get('value')) ? ' selected="selected"' : ''), str_repeat(' &nbsp; &nbsp; ', $level), \StringUtil::specialchars($objPages->title));
 				$strOptions .= $this->doCreatePageList($objPages->id, $level);
 			}
 		}
@@ -1278,13 +1263,13 @@ abstract class Backend extends \Controller
 					continue;
 				}
 
-				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, (($strFolder . '/' . $strFile == \Input::get('value')) ? ' selected="selected"' : ''), specialchars($strFile));
+				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, (($strFolder . '/' . $strFile == \Input::get('value')) ? ' selected="selected"' : ''), \StringUtil::specialchars($strFile));
 			}
 		}
 
 		if (strlen($strFiles))
 		{
-			return '<optgroup label="' . specialchars($strFolder) . '">' . $strFiles . $strFolders . '</optgroup>';
+			return '<optgroup label="' . \StringUtil::specialchars($strFolder) . '">' . $strFiles . $strFolders . '</optgroup>';
 		}
 
 		return $strFiles . $strFolders;

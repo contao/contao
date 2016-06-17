@@ -34,7 +34,7 @@ class InsertTags extends \Controller
 
 
 	/**
-	 * Replace insert tags with their values
+	 * Recursively replace insert tags with their values
 	 *
 	 * @param string  $strBuffer The text with the tags to be replaced
 	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
@@ -42,6 +42,28 @@ class InsertTags extends \Controller
 	 * @return string The text with the replaced tags
 	 */
 	public function replace($strBuffer, $blnCache=true)
+	{
+		$strBuffer = $this->doReplace($strBuffer, $blnCache);
+
+		// Run the replacement recursively (see #8172)
+		while (strpos($strBuffer, '{{') !== false && ($strTmp = $this->doReplace($strBuffer, $blnCache)) != $strBuffer)
+		{
+			$strBuffer = $strTmp;
+		}
+
+		return $strBuffer;
+	}
+
+
+	/**
+	 * Replace insert tags with their values
+	 *
+	 * @param string  $strBuffer The text with the tags to be replaced
+	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
+	 *
+	 * @return string The text with the replaced tags
+	 */
+	protected function doReplace($strBuffer, $blnCache)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -52,7 +74,12 @@ class InsertTags extends \Controller
 			return \StringUtil::restoreBasicEntities($strBuffer);
 		}
 
-		$tags = preg_split('/{{(([^{}]*|(?R))*)}}/', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$tags = preg_split('/{{([^{}]+)}}/', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+		if (count($tags) < 2)
+		{
+			return \StringUtil::restoreBasicEntities($strBuffer);
+		}
 
 		$strBuffer = '';
 
@@ -60,7 +87,7 @@ class InsertTags extends \Controller
 		static $arrItCache;
 		$arrCache = &$arrItCache[$blnCache];
 
-		for ($_rit=0, $_cnt=count($tags); $_rit<$_cnt; $_rit+=3)
+		for ($_rit=0, $_cnt=count($tags); $_rit<$_cnt; $_rit+=2)
 		{
 			$strBuffer .= $tags[$_rit];
 			$strTag = $tags[$_rit+1];
@@ -69,12 +96,6 @@ class InsertTags extends \Controller
 			if ($strTag == '')
 			{
 				continue;
-			}
-
-			// Run the replacement again if there are more tags (see #4402)
-			if (strpos($strTag, '{{') !== false)
-			{
-				$strTag = $this->replace($strTag, $blnCache);
 			}
 
 			$flags = explode('|', $strTag);
@@ -247,7 +268,7 @@ class InsertTags extends \Controller
 							break;
 						}
 
-						$value = deserialize($value);
+						$value = \StringUtil::deserialize($value);
 
 						// Decrypt the value
 						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'])
@@ -289,7 +310,7 @@ class InsertTags extends \Controller
 						}
 
 						// Convert special characters (see #1890)
-						$arrCache[$strTag] = specialchars($arrCache[$strTag]);
+						$arrCache[$strTag] = \StringUtil::specialchars($arrCache[$strTag]);
 					}
 					break;
 
@@ -351,7 +372,7 @@ class InsertTags extends \Controller
 						switch ($objNextPage->type)
 						{
 							case 'redirect':
-								$strUrl = $this->replaceInsertTags($objNextPage->url); // see #6765
+								$strUrl = $objNextPage->url;
 
 								if (strncasecmp($strUrl, 'mailto:', 7) === 0)
 								{
@@ -370,7 +391,7 @@ class InsertTags extends \Controller
 									$objNext = \PageModel::findFirstPublishedRegularByPid($objNextPage->id);
 								}
 
-								if ($objNext !== null)
+								if ($objNext instanceof PageModel)
 								{
 									$strUrl = $objNext->getFrontendUrl();
 									break;
@@ -391,11 +412,11 @@ class InsertTags extends \Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'link':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, specialchars($strTitle), $strTarget, $strName);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, \StringUtil::specialchars($strTitle), $strTarget, $strName);
 							break;
 
 						case 'link_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>', $strUrl, specialchars($strTitle), $strTarget);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>', $strUrl, \StringUtil::specialchars($strTitle), $strTarget);
 							break;
 
 						case 'link_url':
@@ -403,7 +424,7 @@ class InsertTags extends \Controller
 							break;
 
 						case 'link_title':
-							$arrCache[$strTag] = specialchars($strTitle);
+							$arrCache[$strTag] = \StringUtil::specialchars($strTitle);
 							break;
 
 						case 'link_target':
@@ -418,6 +439,7 @@ class InsertTags extends \Controller
 
 				// Closing link tag
 				case 'link_close':
+				case 'email_close':
 					$arrCache[$strTag] = '</a>';
 					break;
 
@@ -425,7 +447,7 @@ class InsertTags extends \Controller
 				case 'insert_article':
 					if (($strOutput = $this->getArticle($elements[1], false, true)) !== false)
 					{
-						$arrCache[$strTag] = $this->replaceInsertTags(ltrim($strOutput), $blnCache);
+						$arrCache[$strTag] = ltrim($strOutput);
 					}
 					else
 					{
@@ -435,17 +457,17 @@ class InsertTags extends \Controller
 
 				// Insert content element
 				case 'insert_content':
-					$arrCache[$strTag] = $this->replaceInsertTags($this->getContentElement($elements[1]), $blnCache);
+					$arrCache[$strTag] = $this->getContentElement($elements[1]);
 					break;
 
 				// Insert module
 				case 'insert_module':
-					$arrCache[$strTag] = $this->replaceInsertTags($this->getFrontendModule($elements[1]), $blnCache);
+					$arrCache[$strTag] = $this->getFrontendModule($elements[1]);
 					break;
 
 				// Insert form
 				case 'insert_form':
-					$arrCache[$strTag] = $this->replaceInsertTags($this->getForm($elements[1]), $blnCache);
+					$arrCache[$strTag] = $this->getForm($elements[1]);
 					break;
 
 				// Article
@@ -453,7 +475,7 @@ class InsertTags extends \Controller
 				case 'article_open':
 				case 'article_url':
 				case 'article_title':
-					if (($objArticle = \ArticleModel::findByIdOrAlias($elements[1])) === null || ($objPid = $objArticle->getRelated('pid')) === null)
+					if (($objArticle = \ArticleModel::findByIdOrAlias($elements[1])) === null || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
 					{
 						break;
 					}
@@ -465,11 +487,11 @@ class InsertTags extends \Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'article':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, specialchars($objArticle->title), $objArticle->title);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, \StringUtil::specialchars($objArticle->title), $objArticle->title);
 							break;
 
 						case 'article_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, specialchars($objArticle->title));
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, \StringUtil::specialchars($objArticle->title));
 							break;
 
 						case 'article_url':
@@ -477,165 +499,7 @@ class InsertTags extends \Controller
 							break;
 
 						case 'article_title':
-							$arrCache[$strTag] = specialchars($objArticle->title);
-							break;
-					}
-					break;
-
-				// FAQ
-				case 'faq':
-				case 'faq_open':
-				case 'faq_url':
-				case 'faq_title':
-					if (($objFaq = \FaqModel::findByIdOrAlias($elements[1])) === null || ($objPid = $objFaq->getRelated('pid')) === null || ($objJumpTo = $objPid->getRelated('jumpTo')) === null)
-					{
-						break;
-					}
-
-					/** @var PageModel $objJumpTo */
-					$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/items/') . ($objFaq->alias ?: $objFaq->id));
-
-					// Replace the tag
-					switch (strtolower($elements[0]))
-					{
-						case 'faq':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, specialchars($objFaq->question), $objFaq->question);
-							break;
-
-						case 'faq_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, specialchars($objFaq->question));
-							break;
-
-						case 'faq_url':
-							$arrCache[$strTag] = $strUrl;
-							break;
-
-						case 'faq_title':
-							$arrCache[$strTag] = specialchars($objFaq->question);
-							break;
-					}
-					break;
-
-				// News
-				case 'news':
-				case 'news_open':
-				case 'news_url':
-				case 'news_title':
-					if (($objNews = \NewsModel::findByIdOrAlias($elements[1])) === null)
-					{
-						break;
-					}
-
-					$strUrl = '';
-
-					if ($objNews->source == 'external')
-					{
-						$strUrl = $objNews->url;
-					}
-					elseif ($objNews->source == 'internal')
-					{
-						if (($objJumpTo = $objNews->getRelated('jumpTo')) !== null)
-						{
-							/** @var PageModel $objJumpTo */
-							$strUrl = $objJumpTo->getFrontendUrl();
-						}
-					}
-					elseif ($objNews->source == 'article')
-					{
-						if (($objArticle = \ArticleModel::findByPk($objNews->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
-						{
-							/** @var PageModel $objPid */
-							$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
-						}
-					}
-					else
-					{
-						if (($objArchive = $objNews->getRelated('pid')) !== null && ($objJumpTo = $objArchive->getRelated('jumpTo')) !== null)
-						{
-							/** @var PageModel $objJumpTo */
-							$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/items/') . ($objNews->alias ?: $objNews->id));
-						}
-					}
-
-					// Replace the tag
-					switch (strtolower($elements[0]))
-					{
-						case 'news':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, specialchars($objNews->headline), $objNews->headline);
-							break;
-
-						case 'news_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, specialchars($objNews->headline));
-							break;
-
-						case 'news_url':
-							$arrCache[$strTag] = $strUrl;
-							break;
-
-						case 'news_title':
-							$arrCache[$strTag] = specialchars($objNews->headline);
-							break;
-					}
-					break;
-
-				// Events
-				case 'event':
-				case 'event_open':
-				case 'event_url':
-				case 'event_title':
-					if (($objEvent = \CalendarEventsModel::findByIdOrAlias($elements[1])) === null)
-					{
-						break;
-					}
-
-					$strUrl = '';
-
-					if ($objEvent->source == 'external')
-					{
-						$strUrl = $objEvent->url;
-					}
-					elseif ($objEvent->source == 'internal')
-					{
-						if (($objJumpTo = $objEvent->getRelated('jumpTo')) !== null)
-						{
-							/** @var PageModel $objJumpTo */
-							$strUrl = $objJumpTo->getFrontendUrl();
-						}
-					}
-					elseif ($objEvent->source == 'article')
-					{
-						if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
-						{
-							/** @var PageModel $objPid */
-							$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
-						}
-					}
-					else
-					{
-						if (($objCalendar = $objEvent->getRelated('pid')) !== null && ($objJumpTo = $objCalendar->getRelated('jumpTo')) !== null)
-						{
-							/** @var PageModel $objJumpTo */
-							$strUrl = $objJumpTo->getFrontendUrl((\Config::get('useAutoItem') ?  '/' : '/events/') . ($objEvent->alias ?: $objEvent->id));
-						}
-					}
-
-					// Replace the tag
-					switch (strtolower($elements[0]))
-					{
-						case 'event':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, specialchars($objEvent->title), $objEvent->title);
-							break;
-
-						case 'event_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, specialchars($objEvent->title));
-							break;
-
-						case 'event_url':
-							$arrCache[$strTag] = $strUrl;
-							break;
-
-						case 'event_title':
-							$arrCache[$strTag] = specialchars($objEvent->title);
+							$arrCache[$strTag] = \StringUtil::specialchars($objArticle->title);
 							break;
 					}
 					break;
@@ -646,47 +510,7 @@ class InsertTags extends \Controller
 
 					if ($objTeaser !== null)
 					{
-						$arrCache[$strTag] = \StringUtil::toHtml5($this->replaceInsertTags($objTeaser->teaser, $blnCache));
-					}
-					break;
-
-				// News teaser
-				case 'news_teaser':
-					$objTeaser = \NewsModel::findByIdOrAlias($elements[1]);
-
-					if ($objTeaser !== null)
-					{
 						$arrCache[$strTag] = \StringUtil::toHtml5($objTeaser->teaser);
-					}
-					break;
-
-				// Event teaser
-				case 'event_teaser':
-					$objTeaser = \CalendarEventsModel::findByIdOrAlias($elements[1]);
-
-					if ($objTeaser !== null)
-					{
-						$arrCache[$strTag] = \StringUtil::toHtml5($objTeaser->teaser);
-					}
-					break;
-
-				// News feed URL
-				case 'news_feed':
-					$objFeed = \NewsFeedModel::findByPk($elements[1]);
-
-					if ($objFeed !== null)
-					{
-						$arrCache[$strTag] = $objFeed->feedBase . 'share/' . $objFeed->alias . '.xml';
-					}
-					break;
-
-				// Calendar feed URL
-				case 'calendar_feed':
-					$objFeed = \CalendarFeedModel::findByPk($elements[1]);
-
-					if ($objFeed !== null)
-					{
-						$arrCache[$strTag] = $objFeed->feedBase . 'share/' . $objFeed->alias . '.xml';
 					}
 					break;
 
@@ -737,11 +561,11 @@ class InsertTags extends \Controller
 
 					if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
 					{
-						$arrCache[$strTag] = '<a href="' . $strUrl . $strGlue . 'toggle_view=desktop" class="toggle_desktop" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['toggleDesktop'][1]) . '">' . $GLOBALS['TL_LANG']['MSC']['toggleDesktop'][0] . '</a>';
+						$arrCache[$strTag] = '<a href="' . $strUrl . $strGlue . 'toggle_view=desktop" class="toggle_desktop" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['toggleDesktop'][1]) . '">' . $GLOBALS['TL_LANG']['MSC']['toggleDesktop'][0] . '</a>';
 					}
 					else
 					{
-						$arrCache[$strTag] = '<a href="' . $strUrl . $strGlue . 'toggle_view=mobile" class="toggle_mobile" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['toggleMobile'][1]) . '">' . $GLOBALS['TL_LANG']['MSC']['toggleMobile'][0] . '</a>';
+						$arrCache[$strTag] = '<a href="' . $strUrl . $strGlue . 'toggle_view=mobile" class="toggle_mobile" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['toggleMobile'][1]) . '">' . $GLOBALS['TL_LANG']['MSC']['toggleMobile'][0] . '</a>';
 					}
 					break;
 
@@ -749,7 +573,7 @@ class InsertTags extends \Controller
 				case 'iflng':
 					if ($elements[1] != '' && $elements[1] != $objPage->language)
 					{
-						for (; $_rit<$_cnt; $_rit+=3)
+						for (; $_rit<$_cnt; $_rit+=2)
 						{
 							if ($tags[$_rit+1] == 'iflng' || $tags[$_rit+1] == 'iflng::' . $objPage->language)
 							{
@@ -764,11 +588,11 @@ class InsertTags extends \Controller
 				case 'ifnlng':
 					if ($elements[1] != '')
 					{
-						$langs = trimsplit(',', $elements[1]);
+						$langs = \StringUtil::trimsplit(',', $elements[1]);
 
 						if (in_array($objPage->language, $langs))
 						{
-							for (; $_rit<$_cnt; $_rit+=3)
+							for (; $_rit<$_cnt; $_rit+=2)
 							{
 								if ($tags[$_rit+1] == 'ifnlng')
 								{
@@ -843,7 +667,7 @@ class InsertTags extends \Controller
 						$elements[1] = 'mainTitle';
 					}
 
-					// Do not use specialchars() here (see #4687)
+					// Do not use \StringUtil::specialchars() here (see #4687)
 					$arrCache[$strTag] = $objPage->{$elements[1]};
 					break;
 
@@ -910,7 +734,7 @@ class InsertTags extends \Controller
 									break;
 
 								case 'alt':
-									$alt = specialchars($value);
+									$alt = \StringUtil::specialchars($value);
 									break;
 
 								case 'class':

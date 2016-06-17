@@ -60,7 +60,7 @@ class ScriptHandler
             self::loadRandomCompat($event);
         }
 
-        putenv(static::RANDOM_SECRET_NAME . '=' . bin2hex(random_bytes(32)));
+        putenv(static::RANDOM_SECRET_NAME.'='.bin2hex(random_bytes(32)));
     }
 
     /**
@@ -88,7 +88,7 @@ class ScriptHandler
         );
 
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException('An error occurred while executing the "' . $cmd . '" command.');
+            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command.', $cmd));
         }
     }
 
@@ -142,7 +142,7 @@ class ScriptHandler
         $path = $composer->getInstallationManager()->getInstaller('library')->getInstallPath($package);
 
         foreach ($autoload['files'] as $file) {
-            include_once $path . '/' . $file;
+            include_once $path.'/'.$file;
         }
     }
 }

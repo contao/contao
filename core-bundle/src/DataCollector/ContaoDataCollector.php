@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
-use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
@@ -26,10 +26,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  */
 class ContaoDataCollector extends DataCollector
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    use ScopeAwareTrait;
 
     /**
      * @var array
@@ -89,37 +86,6 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Returns the aliased classes.
-     *
-     * @return array The aliased classes
-     */
-    public function getClassesAliased()
-    {
-        $aliases = [];
-        $data = $this->getData('classes_aliased');
-
-        foreach ($data as $class) {
-            $alias = $class;
-            $original = '';
-            $pos = strpos($class, '<span');
-
-            if (false !== $pos) {
-                $alias = trim(substr($class, 0, $pos));
-                $original = trim(strip_tags(substr($class, $pos)), ' ()');
-            }
-
-            $aliases[$alias] = [
-                'alias' => $alias,
-                'original' => $original,
-            ];
-        }
-
-        ksort($aliases);
-
-        return $aliases;
-    }
-
-    /**
      * Returns the set classes.
      *
      * @return array The set classes
@@ -129,6 +95,34 @@ class ContaoDataCollector extends DataCollector
         $data = $this->getData('classes_set');
 
         sort($data);
+
+        return $data;
+    }
+
+    /**
+     * Returns the aliased classes.
+     *
+     * @return array The aliased classes
+     */
+    public function getClassesAliased()
+    {
+        $data = $this->getData('classes_aliased');
+
+        ksort($data);
+
+        return $data;
+    }
+
+    /**
+     * Returns the composerized classes.
+     *
+     * @return array The composerized classes
+     */
+    public function getClassesComposerized()
+    {
+        $data = $this->getData('classes_composerized');
+
+        ksort($data);
 
         return $data;
     }
@@ -166,13 +160,16 @@ class ContaoDataCollector extends DataCollector
             return [];
         }
 
-        unset($data['summary']);
-        unset($data['contao_version']);
-        unset($data['classes_aliased']);
-        unset($data['classes_set']);
-        unset($data['database_queries']);
-        unset($data['unknown_insert_tags']);
-        unset($data['unknown_insert_tag_flags']);
+        unset(
+            $data['summary'],
+            $data['contao_version'],
+            $data['classes_set'],
+            $data['classes_aliased'],
+            $data['classes_composerized'],
+            $data['database_queries'],
+            $data['unknown_insert_tags'],
+            $data['unknown_insert_tag_flags']
+        );
 
         return $data;
     }
@@ -216,50 +213,61 @@ class ContaoDataCollector extends DataCollector
 
         $this->data['summary'] = [
             'version' => $this->getContaoVersion(),
-            'scope' => $this->getContainerScope(),
-            'layout' => $this->getLayoutName(),
             'framework' => $framework,
             'models' => $modelCount,
+            'frontend' => isset($GLOBALS['objPage']),
+            'preview' => defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN,
+            'layout' => $this->getLayoutName(),
+            'template' => $this->getTemplateName(),
         ];
     }
 
     /**
-     * Returns the scope from the container.
+     * Returns the page layout name (front end only).
      *
-     * @return string
-     */
-    private function getContainerScope()
-    {
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_BACKEND)) {
-            return ContaoCoreBundle::SCOPE_BACKEND;
-        }
-
-        if ($this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
-            return ContaoCoreBundle::SCOPE_FRONTEND;
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns the name of the current page layout (front end only).
-     *
-     * @return string The layout name
+     * @return string The page layout name
      */
     private function getLayoutName()
     {
-        if (!$this->container->isScopeActive(ContaoCoreBundle::SCOPE_FRONTEND)) {
-            return '';
-        }
+        $layout = $this->getLayout();
 
-        /** @var PageModel $objPage */
-        global $objPage;
-
-        /** @var LayoutModel $layout */
-        if (null === $objPage || null === ($layout = $objPage->getRelated('layout'))) {
+        if (null === $layout) {
             return '';
         }
 
         return sprintf('%s (ID %s)', $layout->name, $layout->id);
+    }
+
+    /**
+     * Returns the template name (front end only).
+     *
+     * @return string The template name
+     */
+    private function getTemplateName()
+    {
+        $layout = $this->getLayout();
+
+        if (null === $layout) {
+            return '';
+        }
+
+        return $layout->template;
+    }
+
+    /**
+     * Returns the layout model (front end only).
+     *
+     * @return LayoutModel|null The layout model
+     */
+    private function getLayout()
+    {
+        /* @var PageModel $objPage */
+        global $objPage;
+
+        if (null === $objPage) {
+            return null;
+        }
+
+        return $objPage->getRelated('layout');
     }
 }

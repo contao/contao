@@ -32,7 +32,7 @@ class HtaccessAnalyzer
     public function __construct(\SplFileInfo $file)
     {
         if (!$file->isFile()) {
-            throw new \InvalidArgumentException($file . ' is not a file.');
+            throw new \InvalidArgumentException(sprintf('%s is not a file.', $file));
         }
 
         $this->file = $file;

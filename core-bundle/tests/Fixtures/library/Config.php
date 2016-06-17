@@ -42,7 +42,7 @@ class Config
 
     public static function preload()
     {
-        // do nothing
+        // ignore
     }
 
     public static function isComplete()

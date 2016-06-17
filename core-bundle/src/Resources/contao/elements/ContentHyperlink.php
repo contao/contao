@@ -58,7 +58,7 @@ class ContentHyperlink extends \ContentElement
 				$this->addImageToTemplate($this->Template, $this->arrData);
 
 				$this->Template->useImage = true;
-				$this->Template->linkTitle = specialchars($this->linkTitle);
+				$this->Template->linkTitle = \StringUtil::specialchars($this->linkTitle);
 			}
 		}
 
@@ -78,7 +78,7 @@ class ContentHyperlink extends \ContentElement
 		$this->Template->embed_pre = $embed[0];
 		$this->Template->embed_post = $embed[1];
 		$this->Template->link = $this->linkTitle;
-		$this->Template->linkTitle = specialchars($this->titleText ?: $this->linkTitle);
+		$this->Template->linkTitle = \StringUtil::specialchars($this->titleText ?: $this->linkTitle);
 		$this->Template->target = '';
 
 		// Override the link target

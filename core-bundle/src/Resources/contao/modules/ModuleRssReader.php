@@ -57,7 +57,7 @@ class ModuleRssReader extends \Module
 		}
 
 		$this->objFeed = new \SimplePie();
-		$arrUrls = trimsplit('[\n\t ]', trim($this->rss_feed));
+		$arrUrls = \StringUtil::trimsplit('[\n\t ]', trim($this->rss_feed));
 
 		if (count($arrUrls) > 1)
 		{
@@ -143,7 +143,7 @@ class ModuleRssReader extends \Module
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil(count($arrItems)/$this->perPage), 1))
 			{
-				throw new PageNotFoundException('Page not found');
+				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
 
 			// Set limit and offset

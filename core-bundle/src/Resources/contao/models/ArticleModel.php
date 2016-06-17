@@ -32,7 +32,6 @@ namespace Contao;
  * @property string  $groups
  * @property boolean $guests
  * @property string  $cssID
- * @property string  $space
  * @property boolean $published
  * @property string  $start
  * @property string  $stop
@@ -170,7 +169,7 @@ class ArticleModel extends \Model
 			$arrValues[] = $intPid;
 		}
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -193,7 +192,7 @@ class ArticleModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.id=?");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -218,7 +217,7 @@ class ArticleModel extends \Model
 		$arrColumns = array("$t.pid=? AND $t.inColumn=?");
 		$arrValues = array($intPid, $strColumn);
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -230,6 +229,34 @@ class ArticleModel extends \Model
 		}
 
 		return static::findBy($arrColumns, $arrValues, $arrOptions);
+	}
+
+
+	/**
+	 * Find all published articles with teaser by their parent ID
+	 *
+	 * @param integer $intPid     The page ID
+	 * @param array   $arrOptions An optional options array
+	 *
+	 * @return Model\Collection|ArticleModel[]|ArticleModel|null A collection of models or null if there are no articles in the given column
+	 */
+	public static function findPublishedWithTeaserByPid($intPid, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.pid=? AND $t.showTeaser=1");
+
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		{
+			$time = \Date::floorToMinute();
+			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+		}
+
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = "$t.sorting";
+		}
+
+		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
 
 
@@ -248,7 +275,7 @@ class ArticleModel extends \Model
 		$arrColumns = array("$t.pid=? AND $t.inColumn=? AND $t.showTeaser=1");
 		$arrValues = array($intPid, $strColumn);
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";

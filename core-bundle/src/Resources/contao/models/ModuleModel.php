@@ -84,51 +84,6 @@ namespace Contao;
  * @property string  $groups
  * @property boolean $guests
  * @property string  $cssID
- * @property string  $space
- * @property string  $cal_calendar
- * @property boolean $cal_noSpan
- * @property integer $cal_startDay
- * @property string  $cal_format
- * @property boolean $cal_ignoreDynamic
- * @property string  $cal_order
- * @property integer $cal_readerModule
- * @property integer $cal_limit
- * @property string  $cal_template
- * @property string  $cal_ctemplate
- * @property boolean $cal_showQuantity
- * @property string  $com_order
- * @property boolean $com_moderate
- * @property boolean $com_bbcode
- * @property boolean $com_requireLogin
- * @property boolean $com_disableCaptcha
- * @property string  $com_template
- * @property string  $faq_categories
- * @property integer $faq_readerModule
- * @property string  $list_table
- * @property string  $list_fields
- * @property string  $list_where
- * @property string  $list_search
- * @property string  $list_sort
- * @property string  $list_info
- * @property string  $list_info_where
- * @property string  $list_layout
- * @property string  $list_info_layout
- * @property string  $news_archives
- * @property string  $news_featured
- * @property string  $news_jumpToCurrent
- * @property integer $news_readerModule
- * @property string  $news_metaFields
- * @property string  $news_template
- * @property string  $news_format
- * @property integer $news_startDay
- * @property string  $news_order
- * @property boolean $news_showQuantity
- * @property string  $newsletters
- * @property string  $nl_channels
- * @property boolean $nl_hideChannels
- * @property string  $nl_subscribe
- * @property string  $nl_unsubscribe
- * @property string  $nl_template
  * @property string  $typePrefix
  * @property string  $classes
  *
@@ -207,50 +162,6 @@ namespace Contao;
  * @method static ModuleModel|null findOneByGuests($val, $opt=array())
  * @method static ModuleModel|null findOneByCssID($val, $opt=array())
  * @method static ModuleModel|null findOneBySpace($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_calendar($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_noSpan($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_startDay($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_format($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_ignoreDynamic($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_order($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_readerModule($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_limit($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_template($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_ctemplate($val, $opt=array())
- * @method static ModuleModel|null findOneByCal_showQuantity($val, $opt=array())
- * @method static ModuleModel|null findOneByCom_order($val, $opt=array())
- * @method static ModuleModel|null findOneByCom_moderate($val, $opt=array())
- * @method static ModuleModel|null findOneByCom_bbcode($val, $opt=array())
- * @method static ModuleModel|null findOneByCom_requireLogin($val, $opt=array())
- * @method static ModuleModel|null findOneByCom_disableCaptcha($val, $opt=array())
- * @method static ModuleModel|null findOneByCom_template($val, $opt=array())
- * @method static ModuleModel|null findOneByFaq_categories($val, $opt=array())
- * @method static ModuleModel|null findOneByFaq_readerModule($val, $opt=array())
- * @method static ModuleModel|null findOneByList_table($val, $opt=array())
- * @method static ModuleModel|null findOneByList_fields($val, $opt=array())
- * @method static ModuleModel|null findOneByList_where($val, $opt=array())
- * @method static ModuleModel|null findOneByList_search($val, $opt=array())
- * @method static ModuleModel|null findOneByList_sort($val, $opt=array())
- * @method static ModuleModel|null findOneByList_info($val, $opt=array())
- * @method static ModuleModel|null findOneByList_info_where($val, $opt=array())
- * @method static ModuleModel|null findOneByList_layout($val, $opt=array())
- * @method static ModuleModel|null findOneByList_info_layout($val, $opt=array())
- * @method static ModuleModel|null findOneByNews_archives($val, $opt=array())
- * @method static ModuleModel|null findOneByNews_featured($val, $opt=array())
- * @method static ModuleModel|null findOneByNews_jumpToCurrent($val, $opt=array())
- * @method static ModuleModel|null findOneByNews_readerModule($val, $opt=array())
- * @method static ModuleModel|null findOneByNews_metaFields($val, $opt=array())
- * @method static ModuleModel|null findOneByNews_template($val, $opt=array())
- * @method static ModuleModel|null findOneByNews_format($val, $opt=array())
- * @method static ModuleModel|null findOneByNews_startDay($val, $opt=array())
- * @method static ModuleModel|null findOneByNews_order($val, $opt=array())
- * @method static ModuleModel|null findOneByNews_showQuantity($val, $opt=array())
- * @method static ModuleModel|null findOneByNewsletters($val, $opt=array())
- * @method static ModuleModel|null findOneByNl_channels($val, $opt=array())
- * @method static ModuleModel|null findOneByNl_hideChannels($val, $opt=array())
- * @method static ModuleModel|null findOneByNl_subscribe($val, $opt=array())
- * @method static ModuleModel|null findOneByNl_unsubscribe($val, $opt=array())
- * @method static ModuleModel|null findOneByNl_template($val, $opt=array())
  *
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByPid($val, $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByTstamp($val, $opt=array())
@@ -323,50 +234,6 @@ namespace Contao;
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByGuests($val, $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCssID($val, $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySpace($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_calendar($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_noSpan($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_startDay($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_format($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_ignoreDynamic($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_order($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_readerModule($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_limit($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_template($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_ctemplate($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCal_showQuantity($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCom_order($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCom_moderate($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCom_bbcode($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCom_requireLogin($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCom_disableCaptcha($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCom_template($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFaq_categories($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFaq_readerModule($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByList_table($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByList_fields($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByList_where($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByList_search($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByList_sort($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByList_info($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByList_info_where($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByList_layout($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByList_info_layout($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNews_archives($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNews_featured($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNews_jumpToCurrent($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNews_readerModule($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNews_metaFields($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNews_template($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNews_format($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNews_startDay($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNews_order($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNews_showQuantity($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNewsletters($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNl_channels($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNl_hideChannels($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNl_subscribe($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNl_unsubscribe($val, $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNl_template($val, $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findMultipleByIds($val, $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBy($col, $val, $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findAll($opt=array())
@@ -443,50 +310,6 @@ namespace Contao;
  * @method static integer countByGuests($val, $opt=array())
  * @method static integer countByCssID($val, $opt=array())
  * @method static integer countBySpace($val, $opt=array())
- * @method static integer countByCal_calendar($val, $opt=array())
- * @method static integer countByCal_noSpan($val, $opt=array())
- * @method static integer countByCal_startDay($val, $opt=array())
- * @method static integer countByCal_format($val, $opt=array())
- * @method static integer countByCal_ignoreDynamic($val, $opt=array())
- * @method static integer countByCal_order($val, $opt=array())
- * @method static integer countByCal_readerModule($val, $opt=array())
- * @method static integer countByCal_limit($val, $opt=array())
- * @method static integer countByCal_template($val, $opt=array())
- * @method static integer countByCal_ctemplate($val, $opt=array())
- * @method static integer countByCal_showQuantity($val, $opt=array())
- * @method static integer countByCom_order($val, $opt=array())
- * @method static integer countByCom_moderate($val, $opt=array())
- * @method static integer countByCom_bbcode($val, $opt=array())
- * @method static integer countByCom_requireLogin($val, $opt=array())
- * @method static integer countByCom_disableCaptcha($val, $opt=array())
- * @method static integer countByCom_template($val, $opt=array())
- * @method static integer countByFaq_categories($val, $opt=array())
- * @method static integer countByFaq_readerModule($val, $opt=array())
- * @method static integer countByList_table($val, $opt=array())
- * @method static integer countByList_fields($val, $opt=array())
- * @method static integer countByList_where($val, $opt=array())
- * @method static integer countByList_search($val, $opt=array())
- * @method static integer countByList_sort($val, $opt=array())
- * @method static integer countByList_info($val, $opt=array())
- * @method static integer countByList_info_where($val, $opt=array())
- * @method static integer countByList_layout($val, $opt=array())
- * @method static integer countByList_info_layout($val, $opt=array())
- * @method static integer countByNews_archives($val, $opt=array())
- * @method static integer countByNews_featured($val, $opt=array())
- * @method static integer countByNews_jumpToCurrent($val, $opt=array())
- * @method static integer countByNews_readerModule($val, $opt=array())
- * @method static integer countByNews_metaFields($val, $opt=array())
- * @method static integer countByNews_template($val, $opt=array())
- * @method static integer countByNews_format($val, $opt=array())
- * @method static integer countByNews_startDay($val, $opt=array())
- * @method static integer countByNews_order($val, $opt=array())
- * @method static integer countByNews_showQuantity($val, $opt=array())
- * @method static integer countByNewsletters($val, $opt=array())
- * @method static integer countByNl_channels($val, $opt=array())
- * @method static integer countByNl_hideChannels($val, $opt=array())
- * @method static integer countByNl_subscribe($val, $opt=array())
- * @method static integer countByNl_unsubscribe($val, $opt=array())
- * @method static integer countByNl_template($val, $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

@@ -12,8 +12,10 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use League\Uri\Components\Query;
 use Patchwork\Utf8;
+use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -37,20 +39,18 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *     }
  *
  * @property \Automator                                $Automator   The automator object
- * @property \Calendar                                 $Calendar    The calendar object
- * @property \Comments                                 $Comments    The comments object
  * @property \Config                                   $Config      The config object
  * @property \Database                                 $Database    The database object
+ * @property \Environment                              $Environment The environment object
  * @property \Files                                    $Files       The files object
  * @property \Input                                    $Input       The input object
  * @property \Database\Installer                       $Installer   The database installer object
  * @property \Database\Updater                         $Updater     The database updater object
  * @property \Messages                                 $Messages    The messages object
- * @property \News                                     $News        The news object
  * @property \Session                                  $Session     The session object
  * @property \StyleSheets                              $StyleSheets The style sheets object
  * @property \BackendTemplate|\FrontendTemplate|object $Template    The template object
- * @property \BackendUser|\FrontendUser                $User        The user object
+ * @property \BackendUser|\FrontendUser|object         $User        The user object
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -107,7 +107,6 @@ abstract class System
 	protected function __construct()
 	{
 		$this->import('Config');
-		$this->import('Session');
 	}
 
 
@@ -125,7 +124,7 @@ abstract class System
 	{
 		if (!isset($this->arrObjects[$strKey]))
 		{
-			if ($strKey == 'Input' || $strKey == 'Environment')
+			if ($strKey == 'Input' || $strKey == 'Environment' || $strKey == 'Session')
 			{
 				$this->arrObjects[$strKey] = $strKey::getInstance();
 			}
@@ -233,32 +232,18 @@ abstract class System
 	 * @param string $strText     The log message
 	 * @param string $strFunction The function name
 	 * @param string $strCategory The category name
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
+	 *             Use the logger service instead.
 	 */
 	public static function log($strText, $strFunction, $strCategory)
 	{
-		$strUa = 'N/A';
-		$strIp = '127.0.0.1';
+		trigger_error('Using System::log() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead', E_USER_DEPRECATED);
 
-		if (\Environment::get('httpUserAgent'))
-		{
-			$strUa = \Environment::get('httpUserAgent');
-		}
-		if (\Environment::get('remoteAddr'))
-		{
-			$strIp = static::anonymizeIp(\Environment::get('ip'));
-		}
+		$level = TL_ERROR === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
+		$logger = static::getContainer()->get('monolog.logger.contao');
 
-		\Database::getInstance()->prepare("INSERT INTO tl_log (tstamp, source, action, username, text, func, ip, browser) VALUES(?, ?, ?, ?, ?, ?, ?, ?)")
-							   ->execute(time(), (TL_MODE == 'FE' ? 'FE' : 'BE'), $strCategory, ($GLOBALS['TL_USERNAME'] ? $GLOBALS['TL_USERNAME'] : ''), specialchars($strText), $strFunction, $strIp, $strUa);
-
-		// HOOK: allow to add custom loggers
-		if (isset($GLOBALS['TL_HOOKS']['addLogEntry']) && is_array($GLOBALS['TL_HOOKS']['addLogEntry']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['addLogEntry'] as $callback)
-			{
-				static::importStatic($callback[0])->{$callback[1]}($strText, $strFunction, $strCategory);
-			}
-		}
+		$logger->log($level, $strText, array('contao' => new ContaoContext($strFunction, $strCategory)));
 	}
 
 

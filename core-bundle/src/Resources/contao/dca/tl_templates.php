@@ -81,41 +81,41 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'edit.gif'
+				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.gif',
+				'icon'                => 'copy.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'cut' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.gif',
+				'icon'                => 'cut.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'source' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
 				'href'                => 'act=source',
-				'icon'                => 'editor.gif',
+				'icon'                => 'editor.svg',
 				'button_callback'     => array('tl_templates', 'editSource')
 			),
 			'compare' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_templates']['compare'],
 				'href'                => 'key=compare',
-				'icon'                => 'diffTemplate.gif',
+				'icon'                => 'diffTemplate.svg',
 				'button_callback'     => array('tl_templates', 'compareButton')
 			)
 		)
@@ -163,16 +163,16 @@ class tl_templates extends Backend
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['tn']))
+		if (isset($_GET['fn']))
 		{
 			// Check the path (thanks to Arnaud Buchoux)
-			if (Validator::isInsecurePath(Input::get('tn', true)))
+			if (Validator::isInsecurePath(Input::get('fn', true)))
 			{
-				throw new RuntimeException('Insecure path ' . Input::get('tn', true));
+				throw new RuntimeException('Insecure path ' . Input::get('fn', true));
 			}
 
-			$objSessionBag->set('tl_templates_node', Input::get('tn', true));
-			$this->redirect(preg_replace('/(&|\?)tn=[^&]*/', '', Environment::get('request')));
+			$objSessionBag->set('tl_templates_node', Input::get('fn', true));
+			$this->redirect(preg_replace('/(&|\?)fn=[^&]*/', '', Environment::get('request')));
 		}
 
 		$strNode = $objSessionBag->get('tl_templates_node');
@@ -201,7 +201,7 @@ class tl_templates extends Backend
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('filemounts.gif') . ' <a href="' . $this->addToUrl('tn=') . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . $this->addToUrl('fn=') . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -211,11 +211,11 @@ class tl_templates extends Backend
 			// No link for the active folder
 			if ($strFolder == basename($strNode))
 			{
-				$arrLinks[] = Image::getHtml('folderC.gif') . ' ' . $strFolder;
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' ' . $strFolder;
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.gif') . ' <a href="' . $this->addToUrl('tn='.$strPath) . '" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn='.$strPath) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
 			}
 		}
 
@@ -239,7 +239,7 @@ class tl_templates extends Backend
 	public function addNewTemplate()
 	{
 		$arrAllTemplates = array();
-		$arrAllowed = trimsplit(',', strtolower(Config::get('templateFiles')));
+		$arrAllowed = StringUtil::trimsplit(',', strtolower(Config::get('templateFiles')));
 
 		/** @var SplFileInfo[] $files */
 		$files = System::getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.(' . implode('|', $arrAllowed) . ')$/');
@@ -330,7 +330,7 @@ class tl_templates extends Backend
 		// Show form
 		return '
 <div id="tl_buttons">
-<a href="'.$this->getReferer(true).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>'.(($strError != '') ? '
 
 <div class="tl_message">
@@ -341,7 +341,7 @@ class tl_templates extends Backend
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_create_template">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-<div class="tl_tbox">
+<fieldset class="tl_tbox nolegend">
 <div>
   <h3><label for="ctrl_original">'.$GLOBALS['TL_LANG']['tl_templates']['original'][0].'</label></h3>
   <select name="original" id="ctrl_original" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()">'.$strAllTemplates.'</select>'.(($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
@@ -352,7 +352,7 @@ class tl_templates extends Backend
   <select name="target" id="ctrl_target" class="tl_select" onfocus="Backend.getScrollOffset()"><option value="templates">templates</option>'. $this->getTargetFolders('templates') .'</select>'.(($GLOBALS['TL_LANG']['tl_templates']['target'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_templates']['target'][1].'</p>' : '').'
 </div>
-</div>
+</fieldset>
 </div>
 
 <div class="tl_formbody_submit">
@@ -462,12 +462,12 @@ class tl_templates extends Backend
 		$objTemplate->staticTo = $dc->id;
 		$objTemplate->versions = $arrComparable;
 		$objTemplate->from = $strCompareName;
-		$objTemplate->showLabel = specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->showLabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->content = $strBuffer;
 		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->charset = Config::get('characterSet');
 
 		Config::set('debugMode', false);
@@ -490,7 +490,7 @@ class tl_templates extends Backend
 	 */
 	public function compareButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return is_file(TL_ROOT . '/' . $row['id']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . specialchars($title) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . specialchars(str_replace("'", "\\'", $row['id'])) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return is_file(TL_ROOT . '/' . $row['id']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $row['id'])) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -537,7 +537,7 @@ class tl_templates extends Backend
 	 */
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
-		return is_file(TL_ROOT . '/' . $row['id']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return is_file(TL_ROOT . '/' . $row['id']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 

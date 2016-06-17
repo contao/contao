@@ -70,7 +70,7 @@ class FileTree extends \Widget
 									 ->limit(1)
 									 ->execute($this->activeRecord->id);
 
-			$tmp = deserialize($objRow->{$this->orderField});
+			$tmp = \StringUtil::deserialize($objRow->{$this->orderField});
 			$this->{$this->orderField} = (!empty($tmp) && is_array($tmp)) ? array_filter($tmp) : array();
 		}
 	}
@@ -139,7 +139,7 @@ class FileTree extends \Widget
 		if (!empty($this->varValue)) // Can be an array
 		{
 			$objFiles = \FilesModel::findMultipleByUuids((array)$this->varValue);
-			$allowedDownload = trimsplit(',', strtolower(\Config::get('allowedDownload')));
+			$allowedDownload = \StringUtil::trimsplit(',', strtolower(\Config::get('allowedDownload')));
 
 			if ($objFiles !== null)
 			{
@@ -158,7 +158,7 @@ class FileTree extends \Widget
 					{
 						if ($objFiles->type == 'folder')
 						{
-							$arrValues[$objFiles->uuid] = \Image::getHtml('folderC.gif') . ' ' . $objFiles->path;
+							$arrValues[$objFiles->uuid] = \Image::getHtml('folderC.svg') . ' ' . $objFiles->path;
 						}
 						else
 						{
@@ -174,7 +174,7 @@ class FileTree extends \Widget
 									$image = \Image::get($objFiles->path, 80, 60, 'center_center');
 								}
 
-								$arrValues[$objFiles->uuid] = \Image::getHtml($image, '', 'class="gimage" title="' . specialchars($strInfo) . '"');
+								$arrValues[$objFiles->uuid] = \Image::getHtml($image, '', 'class="gimage" title="' . \StringUtil::specialchars($strInfo) . '"');
 							}
 							else
 							{
@@ -218,7 +218,7 @@ class FileTree extends \Widget
 											$image = \Image::get($objSubfiles->path, 80, 60, 'center_center');
 										}
 
-										$arrValues[$objSubfiles->uuid] = \Image::getHtml($image, '', 'class="gimage" title="' . specialchars($strInfo) . '"');
+										$arrValues[$objSubfiles->uuid] = \Image::getHtml($image, '', 'class="gimage" title="' . \StringUtil::specialchars($strInfo) . '"');
 									}
 								}
 								else
@@ -248,7 +248,7 @@ class FileTree extends \Widget
 										$image = \Image::get($objFiles->path, 80, 60, 'center_center');
 									}
 
-									$arrValues[$objFiles->uuid] = \Image::getHtml($image, '', 'class="gimage removable" title="' . specialchars($strInfo) . '"');
+									$arrValues[$objFiles->uuid] = \Image::getHtml($image, '', 'class="gimage removable" title="' . \StringUtil::specialchars($strInfo) . '"');
 								}
 							}
 							else
@@ -291,9 +291,6 @@ class FileTree extends \Widget
 			}
 		}
 
-		// Load the fonts for the drag hint (see #4838)
-		\Config::set('loadGoogleFonts', true);
-
 		// Convert the binary UUIDs
 		$strSet = implode(',', array_map('StringUtil::binToUuid', $arrSet));
 		$strOrder = $blnHasOrder ? implode(',', array_map('StringUtil::binToUuid', $this->{$this->orderField})) : '';
@@ -310,7 +307,7 @@ class FileTree extends \Widget
 		}
 
 		$return .= '</ul>
-    <p><a href="contao/file.php?do='.\Input::get('do').'&amp;table='.$this->strTable.'&amp;field='.$this->strField.'&amp;act=show&amp;id='.$this->activeRecord->id.'&amp;value='.implode(',', array_keys($arrSet)).'&amp;rt='.REQUEST_TOKEN.'" class="tl_submit" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':768,\'title\':\''.specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['filepicker'])).'\',\'url\':this.href,\'id\':\''.$this->strId.'\'});return false">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>' . ($blnHasOrder ? '
+    <p><a href="contao/file.php?do='.\Input::get('do').'&amp;table='.$this->strTable.'&amp;field='.$this->strField.'&amp;act=show&amp;id='.$this->activeRecord->id.'&amp;value='.implode(',', array_keys($arrSet)).'&amp;rt='.REQUEST_TOKEN.'" class="tl_submit" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':768,\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['filepicker'])).'\',\'url\':this.href,\'id\':\''.$this->strId.'\'});return false">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>' . ($blnHasOrder ? '
     <script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '') . '
   </div>';
 

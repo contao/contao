@@ -11,41 +11,41 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "symfony/framework-bundle": "~2.8",
-        "symfony/console": "~2.8",
-        "symfony/filesystem": "~2.8",
-        "symfony/finder": "~2.8",
-        "symfony/http-foundation": "~2.8",
-        "symfony/security": "~2.8",
+        "symfony/framework-bundle": "~2.8|~3.0",
+        "symfony/console": "~2.8|~3.0",
+        "symfony/filesystem": "~2.8|~3.0",
+        "symfony/finder": "~2.8|~3.0",
+        "symfony/http-foundation": "~2.8|~3.0",
+        "symfony/security": "~2.8|~3.0",
         "symfony/swiftmailer-bundle": "~2.3",
-        "symfony/yaml": "~2.8",
+        "symfony/yaml": "~2.8|~3.0",
         "sensio/framework-extra-bundle": "^3.0.2",
+        "psr/log": "~1.0",
         "twig/twig": "~1.20",
-        "doctrine/doctrine-bundle": "^1.5.2",
-        "doctrine/annotations": "^1.2.7",
-        "doctrine/cache": "^1.3.2",
-        "doctrine/common": "^2.5.1",
+        "doctrine/doctrine-bundle": "~1.6",
+        "doctrine/doctrine-cache-bundle": "~1.3",
         "swiftmailer/swiftmailer": "^5.2.1",
         "leafo/scssphp": "~0.1",
         "league/uri": "~4.0",
+        "knplabs/knp-time-bundle": "^1.5.2",
         "matthiasmullie/minify": "~1.3",
         "michelf/php-markdown": "~1.4",
         "oyejorge/less.php": "~1.7",
-        "paragonie/random_compat": "~1.0",
         "patchwork/utf8": "~1.2",
         "phpspec/php-diff": "~1.0",
         "simplepie/simplepie": "~1.3",
         "tecnickcom/tcpdf": "~6.0",
         "true/punycode": "~1.0",
-        "contao-components/all": "^4.1.2"
+        "contao-components/all": "~5.0"
     },
     "require-dev": {
         "composer/composer": "~1.0",
-        "fabpot/php-cs-fixer": "~1.8",
+        "friendsofphp/php-cs-fixer": "~1.8",
         "lexik/maintenance-bundle": "~2.0",
+        "monolog/monolog": "~1.11",
         "phpunit/phpunit": "~4.5",
         "satooshi/php-coveralls": "~0.6",
-        "symfony/phpunit-bridge": "~2.8"
+        "symfony/phpunit-bridge": "~2.8|~3.0"
     },
     "suggest": {
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
@@ -56,11 +56,32 @@
     "autoload": {
         "psr-4": {
             "Contao\\CoreBundle\\": "src/"
+        },
+        "classmap": [
+            "src/Resources/contao/classes",
+            "src/Resources/contao/controllers",
+            "src/Resources/contao/drivers",
+            "src/Resources/contao/elements",
+            "src/Resources/contao/forms",
+            "src/Resources/contao/library",
+            "src/Resources/contao/models",
+            "src/Resources/contao/modules",
+            "src/Resources/contao/pages",
+            "src/Resources/contao/widgets"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\CoreBundle\\Test\\": "tests/",
+            "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
         }
+    },
+    "config": {
+        "preferred-install": "dist"
     },
     "extra": {
         "branch-alias": {
-            "dev-develop": "4.2.x-dev"
+            "dev-develop": "4.3.x-dev"
         }
     }
 }

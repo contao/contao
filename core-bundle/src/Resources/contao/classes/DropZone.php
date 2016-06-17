@@ -27,10 +27,10 @@ class DropZone extends \FileUpload
 	public function generateMarkup()
 	{
 		// Maximum file size in MB
-		$intMaxSize = intval($this->getMaximumUploadSize() / 1024 / 1024);
+		$intMaxSize = round($this->getMaximumUploadSize() / 1024 / 1024);
 
 		// String of accepted file extensions
-		$strAccepted = implode(',', array_map(function($a) { return '.' . $a; }, trimsplit(',', strtolower(\Config::get('uploadTypes')))));
+		$strAccepted = implode(',', array_map(function($a) { return '.' . $a; }, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))));
 
 		// Add the scripts
 		$GLOBALS['TL_CSS'][] = 'assets/dropzone/css/dropzone.min.css';
@@ -56,7 +56,7 @@ class DropZone extends \FileUpload
         acceptedFiles: "' . $strAccepted . '",
         previewsContainer: ".dropzone-previews",
         uploadMultiple: true
-      }).on("processing", function() {
+      }).on("drop", function() {
         $$(".dz-message").setStyle("padding", "12px 18px 0");
       });
       $$("div.tl_formbody_submit").setStyle("display", "none");

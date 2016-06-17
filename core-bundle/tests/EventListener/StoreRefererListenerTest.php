@@ -66,12 +66,10 @@ class StoreRefererListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope($scope);
-
-        $session = $this->mockSession();
+        $container = $this->mockContainerWithContaoScopes($scope);
 
         // Set the current referer URLs
+        $session = $this->mockSession();
         $session->set('referer', $currentReferer);
 
         $listener = $this->getListener($session, $tokenStorage);
@@ -151,9 +149,7 @@ class StoreRefererListenerTest extends TestCase
             new Response()
         );
 
-        $container = $this->mockContainerWithContaoScopes();
-        $container->enterScope(ContaoCoreBundle::SCOPE_BACKEND);
-
+        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
 
         $session

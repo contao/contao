@@ -46,8 +46,8 @@ class ResourceFinderTest extends TestCase
     public function testFindIn()
     {
         $finder = new ResourceFinder([
-            $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-            $this->getRootDir() . '/system/modules/foobar',
+            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao',
+            $this->getRootDir().'/system/modules/foobar',
         ]);
 
         $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->findIn('config'));
@@ -61,8 +61,8 @@ class ResourceFinderTest extends TestCase
     public function testFindInInvalidSubpath()
     {
         $finder = new ResourceFinder([
-            $this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao',
-            $this->getRootDir() . '/system/modules/foobar',
+            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao',
+            $this->getRootDir().'/system/modules/foobar',
         ]);
 
         $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->findIn('foo'));

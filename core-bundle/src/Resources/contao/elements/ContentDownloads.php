@@ -51,7 +51,7 @@ class ContentDownloads extends \ContentElement
 		}
 		else
 		{
-			$this->multiSRC = deserialize($this->multiSRC);
+			$this->multiSRC = \StringUtil::deserialize($this->multiSRC);
 		}
 
 		// Return if there are no files
@@ -100,7 +100,7 @@ class ContentDownloads extends \ContentElement
 		$auxDate = array();
 
 		$objFiles = $this->objFiles;
-		$allowedDownload = trimsplit(',', strtolower(\Config::get('allowedDownload')));
+		$allowedDownload = \StringUtil::trimsplit(',', strtolower(\Config::get('allowedDownload')));
 
 		// Get all files
 		while ($objFiles->next())
@@ -138,7 +138,7 @@ class ContentDownloads extends \ContentElement
 				// Use the file name as title if none is given
 				if ($arrMeta['title'] == '')
 				{
-					$arrMeta['title'] = specialchars($objFile->basename);
+					$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
 				}
 
 				$strHref = \Environment::get('request');
@@ -157,7 +157,7 @@ class ContentDownloads extends \ContentElement
 					'id'        => $objFiles->id,
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
-					'title'     => specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'title'     => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 					'link'      => $arrMeta['title'],
 					'caption'   => $arrMeta['caption'],
 					'href'      => $strHref,
@@ -214,7 +214,7 @@ class ContentDownloads extends \ContentElement
 					// Use the file name as title if none is given
 					if ($arrMeta['title'] == '')
 					{
-						$arrMeta['title'] = specialchars($objFile->basename);
+						$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
 					}
 
 					$strHref = \Environment::get('request');
@@ -233,7 +233,7 @@ class ContentDownloads extends \ContentElement
 						'id'        => $objSubfiles->id,
 						'uuid'      => $objSubfiles->uuid,
 						'name'      => $objFile->basename,
-						'title'     => specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+						'title'     => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 						'link'      => $arrMeta['title'],
 						'caption'   => $arrMeta['caption'],
 						'href'      => $strHref,
@@ -278,7 +278,7 @@ class ContentDownloads extends \ContentElement
 			case 'custom':
 				if ($this->orderSRC != '')
 				{
-					$tmp = deserialize($this->orderSRC);
+					$tmp = \StringUtil::deserialize($this->orderSRC);
 
 					if (!empty($tmp) && is_array($tmp))
 					{

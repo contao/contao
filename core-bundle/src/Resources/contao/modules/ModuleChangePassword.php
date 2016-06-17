@@ -94,6 +94,14 @@ class ModuleChangePassword extends \Module
 		$objMember = \MemberModel::findByPk($this->User->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 		$flashBag = \System::getContainer()->get('session')->getFlashBag();
+		$strTable = $objMember->getTable();
+
+		// Initialize the versioning (see #8301)
+		$objVersions = new \Versions($strTable, $objMember->id);
+		$objVersions->setUsername($objMember->username);
+		$objVersions->setUserId(0);
+		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
+		$objVersions->initialize();
 
 		/** @var FormTextField $objOldPassword */
 		$objOldPassword = null;
@@ -178,6 +186,12 @@ class ModuleChangePassword extends \Module
 			$objMember->password = $objNewPassword->value;
 			$objMember->save();
 
+			// Create a new version
+			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
+			{
+				$objVersions->create();
+			}
+
 			// HOOK: set new password callback
 			if (isset($GLOBALS['TL_HOOKS']['setNewPassword']) && is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
 			{
@@ -189,7 +203,7 @@ class ModuleChangePassword extends \Module
 			}
 
 			// Check whether there is a jumpTo page
-			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) !== null)
+			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}
@@ -207,7 +221,7 @@ class ModuleChangePassword extends \Module
 
 		$this->Template->formId = $strFormId;
 		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
+		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 	}
 }

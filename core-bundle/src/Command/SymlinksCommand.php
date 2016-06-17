@@ -14,6 +14,7 @@ use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -27,14 +28,19 @@ use Symfony\Component\Finder\SplFileInfo;
 class SymlinksCommand extends AbstractLockedCommand
 {
     /**
+     * @var SymfonyStyle
+     */
+    private $io;
+
+    /**
+     * @var array
+     */
+    private $rows = [];
+
+    /**
      * @var string
      */
     private $rootDir;
-
-    /**
-     * @var OutputInterface
-     */
-    private $output;
 
     /**
      * {@inheritdoc}
@@ -52,10 +58,15 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->output = $output;
+        $this->io = new SymfonyStyle($input, $output);
         $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
 
         $this->generateSymlinks();
+
+        if (!empty($this->rows)) {
+            $this->io->newLine();
+            $this->io->table(['', 'Symlink', 'Target / Error'], $this->rows);
+        }
 
         return 0;
     }
@@ -69,9 +80,9 @@ class SymlinksCommand extends AbstractLockedCommand
         $uploadPath = $this->getContainer()->getParameter('contao.upload_path');
 
         // Remove the base folders in the document root
-        $fs->remove($this->rootDir . '/web/' . $uploadPath);
-        $fs->remove($this->rootDir . '/web/system/modules');
-        $fs->remove($this->rootDir . '/web/vendor');
+        $fs->remove($this->rootDir.'/web/'.$uploadPath);
+        $fs->remove($this->rootDir.'/web/system/modules');
+        $fs->remove($this->rootDir.'/web/vendor');
 
         $this->symlinkFiles($uploadPath);
         $this->symlinkModules();
@@ -91,7 +102,7 @@ class SymlinksCommand extends AbstractLockedCommand
     private function symlinkFiles($uploadPath)
     {
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir . '/' . $uploadPath)->files()->name('.public'),
+            $this->findIn($this->rootDir.'/'.$uploadPath)->files()->name('.public'),
             $uploadPath
         );
     }
@@ -106,7 +117,7 @@ class SymlinksCommand extends AbstractLockedCommand
         };
 
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir . '/system/modules')->files()->filter($filter)->name('.htaccess'),
+            $this->findIn($this->rootDir.'/system/modules')->files()->filter($filter)->name('.htaccess'),
             'system/modules'
         );
     }
@@ -120,13 +131,13 @@ class SymlinksCommand extends AbstractLockedCommand
         $themes = $this->getContainer()->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
-            $path = str_replace(strtr($this->rootDir, '\\', '/') . '/', '', strtr($theme->getPathname(), '\\', '/'));
+            $path = str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($theme->getPathname(), '\\', '/'));
 
             if (0 === strpos($path, 'system/modules/')) {
                 continue;
             }
 
-            $this->symlink($path, 'system/themes/' . basename($path));
+            $this->symlink($path, 'system/themes/'.basename($path));
         }
     }
 
@@ -141,8 +152,8 @@ class SymlinksCommand extends AbstractLockedCommand
         $files = $this->filterNestedPaths($finder, $prepend);
 
         foreach ($files as $file) {
-            $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
-            $this->symlink($path, 'web/' . $path);
+            $path = rtrim($prepend.'/'.$file->getRelativePath(), '/');
+            $this->symlink($path, 'web/'.$path);
         }
     }
 
@@ -152,20 +163,32 @@ class SymlinksCommand extends AbstractLockedCommand
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
      *
-     * @param string $source The symlink name
      * @param string $target The symlink target
+     * @param string $link   The symlink path
      */
-    private function symlink($source, $target)
+    private function symlink($target, $link)
     {
-        SymlinkUtil::symlink($source, $target, $this->rootDir);
+        try {
+            SymlinkUtil::symlink($target, $link, $this->rootDir);
 
-        $this->output->writeln(
-            sprintf(
-                'Added <comment>%s</comment> as symlink to <comment>%s</comment>.',
+            $this->rows[] = [
+                sprintf(
+                    '<fg=green;options=bold>%s</>',
+                    '\\' === DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94" // HEAVY CHECK MARK (U+2714)
+                ),
+                strtr($link, '\\', '/'),
                 strtr($target, '\\', '/'),
-                strtr($source, '\\', '/')
-            )
-        );
+            ];
+        } catch (\Exception $e) {
+            $this->rows[] = [
+                sprintf(
+                    '<fg=red;options=bold>%s</>',
+                    '\\' === DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" // HEAVY BALLOT X (U+2718)
+                ),
+                strtr($link, '\\', '/'),
+                sprintf('<error>%s</error>', $e->getMessage()),
+            ];
+        }
     }
 
     /**
@@ -211,7 +234,7 @@ class SymlinksCommand extends AbstractLockedCommand
 
         /** @var SplFileInfo $file */
         foreach ($files as $key => $file) {
-            $path = rtrim($prepend . '/' . $file->getRelativePath(), '/');
+            $path = rtrim($prepend.'/'.$file->getRelativePath(), '/');
 
             $chunks = explode('/', $path);
             array_pop($chunks);
@@ -219,13 +242,14 @@ class SymlinksCommand extends AbstractLockedCommand
             $parent = implode('/', $chunks);
 
             if (in_array($parent, $parents)) {
-                $this->output->writeln(
+                $this->rows[] = [
                     sprintf(
-                        'Skipped <error>%s</error> because <error>%s</error> will be symlinked already.',
-                        $path,
-                        $parent
-                    )
-                );
+                        '<fg=yellow;options=bold>%s</>',
+                        '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
+                    ),
+                    'web/'.strtr($path, '\\', '/'),
+                    sprintf('<comment>Skipped because %s has been symlinked already.</comment>', $parent),
+                ];
 
                 unset($files[$key]);
             }

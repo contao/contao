@@ -23,8 +23,14 @@
         urls.each(function(el) {
           el.getAttribute('data-url') && new Request({
             url: el.getAttribute('data-url'),
-            onComplete: function() {
+            onSuccess: function() {
               el.addClass('tl_green');
+            },
+            onFailure: function(xhr) {
+              el.addClass('tl_red');
+              el.set('text', '[' + xhr.status + '] ' + el.get('text'));
+            },
+            onComplete: function() {
               if (++completed >= urls.length) {
                 $('index_loading').setStyle('display', 'none');
                 $('index_complete').setStyle('display', 'block');
@@ -48,17 +54,19 @@
         <input type="hidden" name="act" value="index">
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
-        <div class="tl_tbox">
-          <h3><label for="ctrl_user"><?= $this->indexLabel ?></label></h3>
-          <select name="user" id="ctrl_user" class="tl_select">
-            <?php foreach ($this->user as $id=>$name): ?>
-              <option value="<?= $id ?>"><?= $name ?></option>
-            <?php endforeach; ?>
-          </select>
-          <?php if ($this->indexHelp): ?>
-            <p class="tl_help tl_tip"><?= $this->indexHelp ?></p>
-          <?php endif; ?>
-        </div>
+        <fieldset class="tl_tbox nolegend">
+          <div>
+            <h3><label for="ctrl_user"><?= $this->indexLabel ?></label></h3>
+            <select name="user" id="ctrl_user" class="tl_select">
+              <?php foreach ($this->user as $id=>$name): ?>
+                <option value="<?= $id ?>"><?= $name ?></option>
+              <?php endforeach; ?>
+            </select>
+            <?php if ($this->indexHelp): ?>
+              <p class="tl_help tl_tip"><?= $this->indexHelp ?></p>
+            <?php endif; ?>
+          </div>
+        </fieldset>
       </div>
       <div class="tl_submit_container">
         <button type="submit" id="index" class="tl_submit"><?= $this->indexSubmit ?></button>

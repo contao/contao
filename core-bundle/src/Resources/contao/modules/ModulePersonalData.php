@@ -51,7 +51,7 @@ class ModulePersonalData extends \Module
 			return $objTemplate->parse();
 		}
 
-		$this->editable = deserialize($this->editable);
+		$this->editable = \StringUtil::deserialize($this->editable);
 
 		// Return if there are not editable fields or if there is no logged in user
 		if (!is_array($this->editable) || empty($this->editable) || !FE_USER_LOGGED_IN)
@@ -324,7 +324,6 @@ class ModulePersonalData extends \Module
 			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
 			{
 				$objVersions->create();
-				$this->log('A new version of record "'.$strTable.'.id='.$objMember->id.'" has been created'.$this->getParentEntries($strTable, $objMember->id), __METHOD__, TL_GENERAL);
 			}
 		}
 
@@ -361,7 +360,7 @@ class ModulePersonalData extends \Module
 			}
 
 			// Check whether there is a jumpTo page
-			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) !== null)
+			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}
@@ -394,7 +393,7 @@ class ModulePersonalData extends \Module
 
 		$this->Template->categories = $arrGroups;
 		$this->Template->formId = $strFormId;
-		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
+		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->rowLast = 'row_' . $row . ((($row % 2) == 0) ? ' even' : ' odd');

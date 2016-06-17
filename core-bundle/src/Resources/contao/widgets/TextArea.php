@@ -119,7 +119,7 @@ class TextArea extends \Widget
 						$this->intRows,
 						$this->intCols,
 						$this->getAttributes(),
-						specialchars($this->varValue),
+						\StringUtil::specialchars($this->varValue),
 						$this->wizard);
 	}
 }

@@ -67,25 +67,25 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_user_group']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'edit.gif'
+				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_user_group']['copy'],
 				'href'                => 'act=copy',
-				'icon'                => 'copy.gif'
+				'icon'                => 'copy.svg'
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_user_group']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_user_group']['toggle'],
-				'icon'                => 'visible.gif',
+				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_user_group', 'toggleIcon')
 			),
@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_user_group']['show'],
 				'href'                => 'act=show',
-				'icon'                => 'show.gif'
+				'icon'                => 'show.svg'
 			)
 		)
 	),
@@ -285,7 +285,7 @@ class tl_user_group extends Backend
 			$image .= '_';
 		}
 
-		return sprintf('<div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/images/%s.gif\')" data-icon="%s.gif" data-icon-disabled="%s.gif">%s</div>', TL_ASSETS_URL, Backend::getTheme(), $image, rtrim($image, '_'), rtrim($image, '_') . '_', $label);
+		return sprintf('<div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">%s</div>', TL_ASSETS_URL, Backend::getTheme(), $image, rtrim($image, '_'), rtrim($image, '_') . '_', $label);
 	}
 
 
@@ -349,7 +349,7 @@ class tl_user_group extends Backend
 				{
 					if ($vv['exclude'] || $vv['orig_exclude'])
 					{
-						$arrReturn[$k][specialchars($k.'::'.$kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#b3b3b3;padding-left:3px">[' . $kk . ']</span>' : $kk;
+						$arrReturn[$k][StringUtil::specialchars($k.'::'.$kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#999;padding-left:3px">[' . $kk . ']</span>' : $kk;
 					}
 				}
 			}
@@ -391,10 +391,10 @@ class tl_user_group extends Backend
 
 		if ($row['disable'])
 		{
-			$icon = 'invisible.gif';
+			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
 	}
 
 
@@ -427,6 +427,9 @@ class tl_user_group extends Backend
 		$objVersions = new Versions('tl_user_group', $intId);
 		$objVersions->initialize();
 
+		// Reverse the logic (user groups have disable=1)
+		$blnVisible = !$blnVisible;
+
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['fields']['disable']['save_callback']))
 		{
@@ -445,10 +448,9 @@ class tl_user_group extends Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_user_group SET tstamp=". time() .", disable='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_user_group SET tstamp=". time() .", disable='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_user_group.id='.$intId.'" has been created'.$this->getParentEntries('tl_user_group', $intId), __METHOD__, TL_GENERAL);
 	}
 }

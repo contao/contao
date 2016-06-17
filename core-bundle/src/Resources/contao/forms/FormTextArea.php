@@ -104,7 +104,7 @@ class FormTextArea extends \Widget
 				break;
 
 			case 'size':
-				$arrSize = deserialize($varValue);
+				$arrSize = \StringUtil::deserialize($varValue);
 				$this->intRows = $arrSize[0];
 				$this->intCols = $arrSize[1];
 				break;
@@ -144,7 +144,7 @@ class FormTextArea extends \Widget
 				break;
 
 			case 'value':
-				return specialchars(str_replace('\n', "\n", $this->varValue));
+				return \StringUtil::specialchars(str_replace('\n', "\n", $this->varValue));
 				break;
 
 			default:

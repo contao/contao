@@ -29,17 +29,8 @@ class Theme extends \Backend
 	 */
 	public function importTheme()
 	{
-		$this->import('BackendUser', 'User');
-		$class = $this->User->uploader;
-
-		// See #4086 and #7046
-		if (!class_exists($class) || $class == 'DropZone')
-		{
-			$class = 'FileUpload';
-		}
-
 		/** @var FileUpload $objUploader */
-		$objUploader = new $class();
+		$objUploader = new \FileUpload();
 
 		if (\Input::post('FORM_SUBMIT') == 'tl_theme_import')
 		{
@@ -120,7 +111,7 @@ class Theme extends \Backend
 		// Return the form
 		return '
 <div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
 '.\Message::generate().'
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_theme_import" class="tl_form" method="post" enctype="multipart/form-data">
@@ -159,7 +150,7 @@ class Theme extends \Backend
 	{
 		$return = '
 <div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
 '.\Message::generate().'
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_theme_import" class="tl_form" method="post">
@@ -346,7 +337,7 @@ class Theme extends \Backend
 			}
 
 			// Continue if there is no XML file
-			if (!$xml instanceof \DOMDocument)
+			if (!($xml instanceof \DOMDocument))
 			{
 				\Message::addError(sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strZipFile)));
 				continue;
@@ -367,7 +358,7 @@ class Theme extends \Backend
 					{
 						if ($fields->item($k)->getAttribute('name') == 'folders')
 						{
-							$arrNewFolders = deserialize($fields->item($k)->nodeValue);
+							$arrNewFolders = \StringUtil::deserialize($fields->item($k)->nodeValue);
 							break;
 						}
 					}
@@ -421,6 +412,36 @@ class Theme extends \Backend
 			$tl_image_size = $this->Database->getNextId('tl_image_size');
 			$tl_image_size_item = $this->Database->getNextId('tl_image_size_item');
 
+			// Build the mapper data (see #8326)
+			for ($i=0; $i<$tables->length; $i++)
+			{
+				$rows = $tables->item($i)->childNodes;
+				$table = $tables->item($i)->getAttribute('name');
+
+				// Skip invalid tables
+				if (!in_array($table, array_keys($arrLocks)))
+				{
+					continue;
+				}
+
+				// Loop through the rows
+				for ($j=0; $j<$rows->length; $j++)
+				{
+					$fields = $rows->item($j)->childNodes;
+
+					// Loop through the fields
+					for ($k=0; $k<$fields->length; $k++)
+					{
+						// Increment the ID
+						if ($fields->item($k)->getAttribute('name') == 'id')
+						{
+							$arrMapper[$table][$fields->item($k)->nodeValue] = ${$table}++;
+							break;
+						}
+					}
+				}
+			}
+
 			// Loop through the tables
 			for ($i=0; $i<$tables->length; $i++)
 			{
@@ -458,9 +479,7 @@ class Theme extends \Backend
 						// Increment the ID
 						elseif ($name == 'id')
 						{
-							$id = ${$table}++;
-							$arrMapper[$table][$value] = $id;
-							$value = $id;
+							$value = $arrMapper[$table][$value];
 						}
 
 						// Increment the parent IDs
@@ -489,7 +508,7 @@ class Theme extends \Backend
 						// Adjust the style sheet IDs of the page layout
 						elseif ($table == 'tl_layout' && $name == 'stylesheet')
 						{
-							$stylesheets = deserialize($value);
+							$stylesheets = \StringUtil::deserialize($value);
 
 							if (is_array($stylesheets))
 							{
@@ -505,7 +524,7 @@ class Theme extends \Backend
 						// Adjust the module IDs of the page layout
 						elseif ($table == 'tl_layout' && $name == 'modules')
 						{
-							$modules = deserialize($value);
+							$modules = \StringUtil::deserialize($value);
 
 							if (is_array($modules))
 							{
@@ -537,7 +556,7 @@ class Theme extends \Backend
 						// Adjust the file paths in style sheets and tl_files
 						elseif (($table == 'tl_style_sheet' || $table == 'tl_style' || ($table == 'tl_files' && $name == 'path')) && strpos($value, 'files') !== false)
 						{
-							$tmp = deserialize($value);
+							$tmp = \StringUtil::deserialize($value);
 
 							if (is_array($tmp))
 							{
@@ -575,7 +594,7 @@ class Theme extends \Backend
 						// Replace the file paths in multiSRC fields with their tl_files ID
 						elseif ($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] == 'fileTree' || in_array($name, $arrOrder))
 						{
-							$tmp = deserialize($value);
+							$tmp = \StringUtil::deserialize($value);
 
 							if (is_array($tmp))
 							{
@@ -596,7 +615,7 @@ class Theme extends \Backend
 						// Adjust the imageSize widget data
 						elseif ($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] == 'imageSize')
 						{
-							$imageSizes = deserialize($value, true);
+							$imageSizes = \StringUtil::deserialize($value, true);
 
 							if (!empty($imageSizes))
 							{
@@ -709,9 +728,9 @@ class Theme extends \Backend
 		// Add the tables
 		$this->addTableTlTheme($xml, $tables, $objTheme);
 		$this->addTableTlStyleSheet($xml, $tables, $objTheme);
+		$this->addTableTlImageSize($xml, $tables, $objTheme);
 		$this->addTableTlModule($xml, $tables, $objTheme);
 		$this->addTableTlLayout($xml, $tables, $objTheme);
-		$this->addTableTlImageSize($xml, $tables, $objTheme);
 
 		// Generate the archive
 		$strTmp = md5(uniqid(mt_rand(), true));
@@ -959,7 +978,7 @@ class Theme extends \Backend
 		$arrOrder = $objDcaExtractor->getOrderFields();
 
 		// Add the folders
-		$arrFolders = deserialize($objTheme->folders);
+		$arrFolders = \StringUtil::deserialize($objTheme->folders);
 
 		if (!empty($arrFolders) && is_array($arrFolders))
 		{
@@ -1019,7 +1038,7 @@ class Theme extends \Backend
 			// Replace the IDs of multiSRC fields with their paths (see #4952)
 			elseif ($GLOBALS['TL_DCA'][$t]['fields'][$k]['inputType'] == 'fileTree' || in_array($k, $arrOrder))
 			{
-				$arrFiles = deserialize($v);
+				$arrFiles = \StringUtil::deserialize($v);
 
 				if (!empty($arrFiles) && is_array($arrFiles))
 				{
@@ -1167,7 +1186,7 @@ class Theme extends \Backend
 			return;
 		}
 
-		$arrAllowed = trimsplit(',', strtolower(\Config::get('templateFiles')));
+		$arrAllowed = \StringUtil::trimsplit(',', strtolower(\Config::get('templateFiles')));
 		array_push($arrAllowed, 'sql'); // see #7048
 
 		// Add all template files to the archive

@@ -313,7 +313,7 @@ class Config
 			return false;
 		}
 
-		if (!static::get('licenseAccepted'))
+		if (!static::has('licenseAccepted'))
 		{
 			return false;
 		}

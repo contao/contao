@@ -11,13 +11,11 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -42,7 +40,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getRootDir()
     {
-        return __DIR__ . '/Fixtures';
+        return __DIR__.'/Fixtures';
     }
 
     /**
@@ -52,7 +50,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getCacheDir()
     {
-        return $this->getRootDir() . '/app/cache';
+        return $this->getRootDir().'/app/cache';
     }
 
     /**
@@ -180,13 +178,13 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a container with scopes.
      *
-     * @return Container|\PHPUnit_Framework_MockObject_MockObject The container object
+     * @param string|null $scope An optional scope
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|Container The container object
      */
-    protected function mockContainerWithContaoScopes()
+    protected function mockContainerWithContaoScopes($scope = null)
     {
         $container = new Container();
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_BACKEND));
-        $container->addScope(new Scope(ContaoCoreBundle::SCOPE_FRONTEND));
         $container->setParameter('kernel.root_dir', $this->getRootDir());
         $container->setParameter('kernel.cache_dir', $this->getCacheDir());
         $container->setParameter('kernel.debug', false);
@@ -195,16 +193,21 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         $container->set(
             'contao.resource_finder',
-            new ResourceFinder($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
         );
 
         $container->set(
             'contao.resource_locator',
-            new FileLocator($this->getRootDir() . '/vendor/contao/test-bundle/Resources/contao')
+            new FileLocator($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
         );
 
         $request = new Request();
         $request->server->set('REMOTE_ADDR', '123.456.789.0');
+        $request->server->set('SCRIPT_NAME', '/core/index.php');
+
+        if (null !== $scope) {
+            $request->attributes->set('_scope', $scope);
+        }
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -254,7 +257,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                 $requestStack,
                 $router,
                 $this->mockSession(),
-                $this->getRootDir() . '/app',
+                $this->getRootDir().'/app',
                 error_reporting(),
             ])
             ->setMethods(['getAdapter'])

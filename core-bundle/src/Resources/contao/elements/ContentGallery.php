@@ -53,7 +53,7 @@ class ContentGallery extends \ContentElement
 		}
 		else
 		{
-			$this->multiSRC = deserialize($this->multiSRC);
+			$this->multiSRC = \StringUtil::deserialize($this->multiSRC);
 		}
 
 		// Return if there are no files
@@ -122,7 +122,7 @@ class ContentGallery extends \ContentElement
 				// Use the file name as title if none is given
 				if ($arrMeta['title'] == '')
 				{
-					$arrMeta['title'] = specialchars($objFile->basename);
+					$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
 				}
 
 				// Add the image
@@ -182,7 +182,7 @@ class ContentGallery extends \ContentElement
 					// Use the file name as title if none is given
 					if ($arrMeta['title'] == '')
 					{
-						$arrMeta['title'] = specialchars($objFile->basename);
+						$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
 					}
 
 					// Add the image
@@ -230,7 +230,7 @@ class ContentGallery extends \ContentElement
 			case 'custom':
 				if ($this->orderSRC != '')
 				{
-					$tmp = deserialize($this->orderSRC);
+					$tmp = \StringUtil::deserialize($this->orderSRC);
 
 					if (!empty($tmp) && is_array($tmp))
 					{
@@ -287,7 +287,7 @@ class ContentGallery extends \ContentElement
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
 			{
-				throw new PageNotFoundException('Page not found');
+				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
 
 			// Set limit and offset

@@ -55,8 +55,7 @@ class Automator extends \System
 
 		if (!$objRequest->hasError())
 		{
-			\Config::set('latestVersion', $objRequest->response);
-			\Config::persist('latestVersion', $objRequest->response);
+			\System::getContainer()->get('contao.cache')->save('latest-version', $objRequest->response);
 		}
 
 		// Add a log entry

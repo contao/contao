@@ -145,7 +145,7 @@ class PurgeData extends \Backend implements \executable
 		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['clearCache'];
 		$objTemplate->job = $GLOBALS['TL_LANG']['tl_maintenance']['job'];
 		$objTemplate->description = $GLOBALS['TL_LANG']['tl_maintenance']['description'];
-		$objTemplate->submit = specialchars($GLOBALS['TL_LANG']['tl_maintenance']['clearCache']);
+		$objTemplate->submit = \StringUtil::specialchars($GLOBALS['TL_LANG']['tl_maintenance']['clearCache']);
 		$objTemplate->help = (\Config::get('showHelp') && ($GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] != '')) ? $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] : '';
 
 		return $objTemplate->parse();

@@ -62,18 +62,6 @@ namespace Contao;
  * @property integer $currentLogin
  * @property integer $loginCount
  * @property integer $locked
- * @property string  $calendars
- * @property string  $calendarp
- * @property string  $calendarfeeds
- * @property string  $calendarfeedp
- * @property string  $faqs
- * @property string  $faqp
- * @property string  $news
- * @property string  $newp
- * @property string  $newsfeeds
- * @property string  $newsfeedp
- * @property string  $newsletters
- * @property string  $newsletterp
  * @property string  $firstname
  * @property string  $lastname
  * @property string  $dateOfBirth
@@ -94,7 +82,6 @@ namespace Contao;
  * @property string  $autologin
  * @property integer $createdOn
  * @property string  $activation
- * @property string  $newsletter
  * @property string  $loginPage
  * @property object  $objImport
  * @property object  $objAuth
@@ -215,7 +202,12 @@ abstract class User extends \System
 	 */
 	public function __toString()
 	{
-		return $this->intId ? $this->username : 'anon.';
+		if (!$this->intId)
+		{
+			return 'anon.';
+		}
+
+		return $this->username ?: ($this->getTable() . '.' . $this->intId);
 	}
 
 
@@ -669,7 +661,7 @@ abstract class User extends \System
 			return false;
 		}
 
-		$groups = deserialize($this->arrData['groups']);
+		$groups = \StringUtil::deserialize($this->arrData['groups']);
 
 		// No groups assigned
 		if (empty($groups) || !is_array($groups))

@@ -84,7 +84,6 @@ namespace Contao;
  * @property string  $groups
  * @property boolean $guests
  * @property string  $cssID
- * @property string  $space
  * @property boolean $invisible
  * @property string  $start
  * @property string  $stop
@@ -385,7 +384,7 @@ class ContentModel extends \Model
 			$arrColumns = array("$t.pid=? AND $t.ptable=?");
 		}
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.invisible=''";
@@ -423,7 +422,7 @@ class ContentModel extends \Model
 			$arrColumns = array("$t.pid=? AND $t.ptable=?");
 		}
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.invisible=''";

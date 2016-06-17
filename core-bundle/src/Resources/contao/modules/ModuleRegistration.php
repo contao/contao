@@ -49,7 +49,7 @@ class ModuleRegistration extends \Module
 			return $objTemplate->parse();
 		}
 
-		$this->editable = deserialize($this->editable);
+		$this->editable = \StringUtil::deserialize($this->editable);
 
 		// Return if there are no editable fields
 		if (!is_array($this->editable) || empty($this->editable))
@@ -353,7 +353,7 @@ class ModuleRegistration extends \Module
 
 		$this->Template->categories = $arrGroups;
 		$this->Template->formId = $strFormId;
-		$this->Template->slabel = specialchars($GLOBALS['TL_LANG']['MSC']['register']);
+		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['register']);
 		$this->Template->action = \Environment::get('indexFreeRequest');
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
@@ -407,7 +407,7 @@ class ModuleRegistration extends \Module
 			if ($objHomeDir !== null)
 			{
 				$this->import('Files');
-				$strUserDir = standardize($arrData['username']) ?: 'user_' . $objNewUser->id;
+				$strUserDir = \StringUtil::standardize($arrData['username']) ?: 'user_' . $objNewUser->id;
 
 				// Add the user ID if the directory exists
 				while (is_dir(TL_ROOT . '/' . $objHomeDir->path . '/' . $strUserDir))
@@ -451,7 +451,7 @@ class ModuleRegistration extends \Module
 		}
 
 		// Check whether there is a jumpTo page
-		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) !== null)
+		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			$this->jumpToOrReload($objJumpTo->row());
 		}
@@ -527,7 +527,7 @@ class ModuleRegistration extends \Module
 
 		$this->Template = $objTemplate;
 
-		$objMember = \MemberModel::findByActivation(\Input::get('token'));
+		$objMember = \MemberModel::findOneByActivation(\Input::get('token'));
 
 		if ($objMember === null)
 		{
@@ -556,9 +556,9 @@ class ModuleRegistration extends \Module
 		$this->log('User account ID ' . $objMember->id . ' (' . \Idna::decodeEmail($objMember->email) . ') has been activated', __METHOD__, TL_ACCESS);
 
 		// Redirect to the jumpTo page
-		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) !== null)
+		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
 		{
-			/** @var \PageModel $objTarget */
+			/** @var PageModel $objTarget */
 			$this->redirect($objTarget->getFrontendUrl());
 		}
 
@@ -619,7 +619,7 @@ class ModuleRegistration extends \Module
 				continue;
 			}
 
-			$v = deserialize($v);
+			$v = \StringUtil::deserialize($v);
 
 			if ($k == 'dateOfBirth' && strlen($v))
 			{

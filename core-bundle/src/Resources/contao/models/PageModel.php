@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -29,6 +30,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @property string  $description
  * @property string  $redirect
  * @property integer $jumpTo
+ * @property boolean $redirectBack
  * @property string  $url
  * @property boolean $target
  * @property string  $dns
@@ -107,6 +109,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @method static PageModel|null findOneByDescription($val, $opt=array())
  * @method static PageModel|null findOneByRedirect($val, $opt=array())
  * @method static PageModel|null findOneByJumpTo($val, $opt=array())
+ * @method static PageModel|null findOneByRedirectBack($val, $opt=array())
  * @method static PageModel|null findOneByUrl($val, $opt=array())
  * @method static PageModel|null findOneByTarget($val, $opt=array())
  * @method static PageModel|null findOneByDns($val, $opt=array())
@@ -155,6 +158,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @method static Model\Collection|PageModel[]|PageModel|null findByDescription($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByRedirect($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByJumpTo($val, $opt=array())
+ * @method static Model\Collection|PageModel[]|PageModel|null findByRedirectBack($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByUrl($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByTarget($val, $opt=array())
  * @method static Model\Collection|PageModel[]|PageModel|null findByDns($val, $opt=array())
@@ -207,6 +211,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
  * @method static integer countByDescription($val, $opt=array())
  * @method static integer countByRedirect($val, $opt=array())
  * @method static integer countByJumpTo($val, $opt=array())
+ * @method static integer countByRedirectBack($val, $opt=array())
  * @method static integer countByUrl($val, $opt=array())
  * @method static integer countByTarget($val, $opt=array())
  * @method static integer countByDns($val, $opt=array())
@@ -274,13 +279,36 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.id=?");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
 		return static::findOneBy($arrColumns, $intId, $arrOptions);
+	}
+
+
+	/**
+	 * Find published pages by their PID
+	 *
+	 * @param integer $intPid     The parent ID
+	 * @param array   $arrOptions An optional options array
+	 *
+	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 */
+	public static function findPublishedByPid($intPid, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.pid=?");
+
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		{
+			$time = \Date::floorToMinute();
+			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+		}
+
+		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
 
 
@@ -316,7 +344,7 @@ class PageModel extends \Model
 				$arrOptions['order'] = "$t.dns DESC" . (!empty($varLanguage) ? ", " . $objDatabase->findInSet("$t.language", array_reverse($varLanguage)) . " DESC" : "") . ", $t.sorting";
 			}
 
-			if (!BE_USER_LOGGED_IN)
+			if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 			{
 				$time = \Date::floorToMinute();
 				$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -334,7 +362,7 @@ class PageModel extends \Model
 				$arrOptions['order'] = "$t.dns DESC, $t.fallback";
 			}
 
-			if (!BE_USER_LOGGED_IN)
+			if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 			{
 				$time = \Date::floorToMinute();
 				$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -358,7 +386,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_403' AND $t.type!='error_404'");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -386,7 +414,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='regular'");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -414,7 +442,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_403'");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -442,7 +470,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_404'");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -463,7 +491,7 @@ class PageModel extends \Model
 	 * @param array $arrAliases An array of possible alias names
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|PageModel[]|PageModel|null A collection of Models or null if there is no matching pages
+	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findByAliases($arrAliases, array $arrOptions=array())
 	{
@@ -487,7 +515,7 @@ class PageModel extends \Model
 		$arrColumns = array("$t.alias IN('" . implode("','", array_filter($arrAliases)) . "')");
 
 		// Check the publication status (see #4652)
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -516,7 +544,7 @@ class PageModel extends \Model
 		$arrColumns = array("($t.id=? OR $t.alias=?)");
 		$arrValues = array((is_numeric($varId) ? $varId : 0), $varId);
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -574,7 +602,7 @@ class PageModel extends \Model
 			$arrColumns[] = "$t.guests=''";
 		}
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -607,7 +635,7 @@ class PageModel extends \Model
 			$arrColumns[] = "$t.guests=''";
 		}
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -635,7 +663,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.dns=? AND $t.fallback='1'");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -657,7 +685,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.type=?");
 
-		if (!BE_USER_LOGGED_IN)
+		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -761,7 +789,7 @@ class PageModel extends \Model
 
 		// Set some default values
 		$this->protected = (boolean) $this->protected;
-		$this->groups = $this->protected ? deserialize($this->groups) : false;
+		$this->groups = $this->protected ? \StringUtil::deserialize($this->groups) : false;
 		$this->layout = $this->includeLayout ? $this->layout : false;
 		$this->mobileLayout = $this->includeLayout ? $this->mobileLayout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
@@ -835,7 +863,7 @@ class PageModel extends \Model
 					if ($objParentPage->protected && $this->protected === false)
 					{
 						$this->protected = true;
-						$this->groups = deserialize($objParentPage->groups);
+						$this->groups = \StringUtil::deserialize($objParentPage->groups);
 					}
 				}
 			}
@@ -941,7 +969,30 @@ class PageModel extends \Model
 			@trigger_error('Using PageModel::getFrontendUrl() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 		}
 
-		return \Controller::generateFrontendUrl($this->loadDetails()->row(), $strParams, $strForceLang, true);
+		$this->loadDetails();
+
+		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
+
+		$strUrl = $objUrlGenerator->generate
+		(
+			($this->alias ?: $this->id) . $strParams,
+			array
+			(
+				'_locale' => ($strForceLang ?: $this->rootLanguage),
+				'_domain' => $this->domain,
+				'_ssl' => (bool) $this->rootUseSSL,
+			)
+		);
+
+		// Make the URL relative to the base path
+		if (0 === strpos($strUrl, '/'))
+		{
+			$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		}
+
+		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
+
+		return $strUrl;
 	}
 
 
@@ -954,11 +1005,63 @@ class PageModel extends \Model
 	 */
 	public function getAbsoluteUrl($strParams=null)
 	{
-		$strUrl = \Controller::generateFrontendUrl($this->loadDetails()->row(), $strParams, null, true);
+		$this->loadDetails();
 
-		if (strncmp($strUrl, 'http://', 7) !== 0 && strncmp($strUrl, 'https://', 8) !== 0)
+		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
+
+		$strUrl = $objUrlGenerator->generate
+		(
+			($this->alias ?: $this->id) . $strParams,
+			array
+			(
+				'_locale' => $this->rootLanguage,
+				'_domain' => $this->domain,
+				'_ssl' => (bool) $this->rootUseSSL,
+			),
+			UrlGeneratorInterface::ABSOLUTE_URL
+		);
+
+		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
+
+		return $strUrl;
+	}
+
+
+	/**
+	 * Modifies a URL from the URL generator.
+	 *
+	 * @param string $strUrl
+	 * @param string $strParams
+	 *
+	 * @return string
+	 */
+	private function applyLegacyLogic($strUrl, $strParams)
+	{
+		// Decode sprintf placeholders
+		if (strpos($strParams, '%') !== false)
 		{
-			$strUrl = ($this->rootUseSSL ? 'https://' : 'http://') . \Environment::get('host') . TL_PATH . '/' . $strUrl;
+			@trigger_error('Using sprintf placeholders in URLs has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+			$arrMatches = array();
+			preg_match_all('/%([sducoxXbgGeEfF])/', $strParams, $arrMatches);
+
+			foreach (array_unique($arrMatches[1]) as $v)
+			{
+				$strUrl = str_replace('%25' . $v, '%' . $v, $strUrl);
+			}
+		}
+
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
+		{
+			@trigger_error('Using the "generateFrontendUrl" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
+			{
+				$strUrl = \System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams, $strUrl);
+			}
+
+			return $strUrl;
 		}
 
 		return $strUrl;

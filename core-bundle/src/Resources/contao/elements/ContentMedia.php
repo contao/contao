@@ -44,7 +44,7 @@ class ContentMedia extends \ContentElement
 			return '';
 		}
 
-		$source = deserialize($this->playerSRC);
+		$source = \StringUtil::deserialize($this->playerSRC);
 
 		if (!is_array($source) || empty($source))
 		{
@@ -86,19 +86,6 @@ class ContentMedia extends \ContentElement
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$this->Template->size = '';
-
-		// Set the size
-		if ($this->playerSize != '')
-		{
-			$size = deserialize($this->playerSize);
-
-			if (is_array($size))
-			{
-				$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
-			}
-		}
-
 		$this->Template->poster = false;
 
 		// Optional poster
@@ -135,7 +122,7 @@ class ContentMedia extends \ContentElement
 		// Pass File objects to the template
 		while ($objFiles->next())
 		{
-			$arrMeta = deserialize($objFiles->meta);
+			$arrMeta = \StringUtil::deserialize($objFiles->meta);
 
 			if (is_array($arrMeta) && isset($arrMeta[$strLanguage]))
 			{
@@ -147,9 +134,27 @@ class ContentMedia extends \ContentElement
 			}
 
 			$objFile = new \File($objFiles->path);
-			$objFile->title = specialchars($strTitle);
+			$objFile->title = \StringUtil::specialchars($strTitle);
 
 			$arrFiles[$objFile->extension] = $objFile;
+		}
+
+		$size = \StringUtil::deserialize($this->playerSize);
+
+		if (!is_array($size) || empty($size[0]) || empty($size[1]))
+		{
+			if ($this->Template->isVideo)
+			{
+				$this->Template->size = ' width="640" height="360"';
+			}
+			else
+			{
+				$this->Template->size = ' width="400" height="30"';
+			}
+		}
+		else
+		{
+			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
 
 		$this->Template->files = array_values(array_filter($arrFiles));

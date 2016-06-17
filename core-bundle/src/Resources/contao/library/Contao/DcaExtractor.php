@@ -317,7 +317,7 @@ class DcaExtractor extends \Controller
 			// Handle multi-column indexes (see #5556)
 			if (strpos($k, ',') !== false)
 			{
-				$f = array_map($quote, trimsplit(',', $k));
+				$f = array_map($quote, \StringUtil::trimsplit(',', $k));
 				$k = str_replace(',', '_', $k);
 			}
 			else

@@ -141,11 +141,11 @@ class BackendPopup extends \Backend
 		$objTemplate->ctime = \Date::parse(\Config::get('datimFormat'), $objFile->ctime);
 		$objTemplate->mtime = \Date::parse(\Config::get('datimFormat'), $objFile->mtime);
 		$objTemplate->atime = \Date::parse(\Config::get('datimFormat'), $objFile->atime);
-		$objTemplate->path = specialchars($this->strFile);
+		$objTemplate->path = \StringUtil::specialchars($this->strFile);
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = specialchars($this->strFile);
+		$objTemplate->title = \StringUtil::specialchars($this->strFile);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->label_uuid = $GLOBALS['TL_LANG']['MSC']['fileUuid'];
 		$objTemplate->label_imagesize = $GLOBALS['TL_LANG']['MSC']['fileImageSize'];
@@ -154,7 +154,7 @@ class BackendPopup extends \Backend
 		$objTemplate->label_mtime = $GLOBALS['TL_LANG']['MSC']['fileModified'];
 		$objTemplate->label_atime = $GLOBALS['TL_LANG']['MSC']['fileAccessed'];
 		$objTemplate->label_path = $GLOBALS['TL_LANG']['MSC']['filePath'];
-		$objTemplate->download = specialchars($GLOBALS['TL_LANG']['MSC']['fileDownload']);
+		$objTemplate->download = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fileDownload']);
 
 		return $objTemplate->getResponse();
 	}

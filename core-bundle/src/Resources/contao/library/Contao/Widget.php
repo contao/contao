@@ -236,7 +236,7 @@ abstract class Widget extends \Controller
 				break;
 
 			case 'value':
-				$this->varValue = deserialize($varValue);
+				$this->varValue = \StringUtil::deserialize($varValue);
 
 				// Decrypt the value if it is encrypted
 				if ($this->arrConfiguration['encrypt'])
@@ -779,25 +779,19 @@ abstract class Widget extends \Controller
 
 		// Support arrays (thanks to Andreas Schempp)
 		$arrParts = explode('[', str_replace(']', '', $strKey));
+		$varValue = \Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
-		if (!empty($arrParts))
+		foreach ($arrParts as $part)
 		{
-			$varValue = \Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
-
-			foreach ($arrParts as $part)
+			if (!is_array($varValue))
 			{
-				if (!is_array($varValue))
-				{
-					break;
-				}
-
-				$varValue = $varValue[$part];
+				break;
 			}
 
-			return $varValue;
+			$varValue = $varValue[$part];
 		}
 
-		return \Input::$strMethod($strKey, $this->decodeEntities);
+		return $varValue;
 	}
 
 
@@ -991,7 +985,7 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is list of valid e-mail addresses
 				case 'emails':
-					$arrEmails = trimsplit(',', $varInput);
+					$arrEmails = \StringUtil::trimsplit(',', $varInput);
 
 					foreach ($arrEmails as $strEmail)
 					{
@@ -1377,7 +1371,7 @@ abstract class Widget extends \Controller
 			}
 		}
 
-		$arrAttributes['value'] = deserialize($varValue);
+		$arrAttributes['value'] = \StringUtil::deserialize($varValue);
 
 		// Convert timestamps
 		if ($varValue != '' && in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))

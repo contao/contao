@@ -538,7 +538,7 @@ abstract class Frontend extends \Controller
 	 */
 	public static function getMetaData($strData, $strLanguage)
 	{
-		$arrData = deserialize($strData);
+		$arrData = \StringUtil::deserialize($strData);
 
 		// Convert the language to a locale (see #5678)
 		$strLanguage = str_replace('-', '_', $strLanguage);
@@ -627,7 +627,7 @@ abstract class Frontend extends \Controller
 				if ($blnIndex)
 				{
 					$arrData = array(
-						'url'       => \Environment::get('relativeRequest'),
+						'url'       => \Environment::get('base') . \Environment::get('relativeRequest'),
 						'content'   => $objResponse->getContent(),
 						'title'     => $objPage->pageTitle ?: $objPage->title,
 						'protected' => ($objPage->protected ? '1' : ''),
@@ -651,7 +651,7 @@ abstract class Frontend extends \Controller
 	public static function getResponseFromCache()
 	{
 		// Build the page if a user is (potentially) logged in or there is POST data
-		if (!empty($_POST) || \Input::cookie('FE_USER_AUTH') || \Input::cookie('FE_AUTO_LOGIN') || $_SESSION['DISABLE_CACHE'] || isset($_SESSION['LOGIN_ERROR']) || \Message::hasMessages() || \Config::get('debugMode'))
+		if (!empty($_POST) || \Input::cookie('BE_USER_AUTH') || \Input::cookie('FE_USER_AUTH') || \Input::cookie('FE_AUTO_LOGIN') || $_SESSION['DISABLE_CACHE'] || isset($_SESSION['LOGIN_ERROR']) || \Message::hasMessages() || \Config::get('debugMode'))
 		{
 			return null;
 		}

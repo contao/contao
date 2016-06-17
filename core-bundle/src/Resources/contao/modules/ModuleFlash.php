@@ -77,7 +77,7 @@ class ModuleFlash extends \Module
 		$this->Template->flashvars = 'URL=' . \Environment::get('base');
 		$this->Template->version = $this->version ?: '6.0.0';
 
-		$size = deserialize($this->size);
+		$size = \StringUtil::deserialize($this->size);
 
 		$this->Template->width = $size[0];
 		$this->Template->height = $size[1];
