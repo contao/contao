@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_content.com_order.0">
         <source>Sort order</source>
-        <target>Sorteer volgorde</target>
+        <target>Sorteer-volgorde</target>
       </trans-unit>
       <trans-unit id="tl_content.com_order.1">
         <source>Please choose the sort order.</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>Alleen aangemelde gebruikers kunnen reacties geven.</target>
+        <target>Alleen aangemelde gebruikers toestaan om te reageren.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable the security question</source>
