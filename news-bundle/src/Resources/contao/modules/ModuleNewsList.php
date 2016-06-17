@@ -17,6 +17,9 @@ use Patchwork\Utf8;
 /**
  * Front end module "news list".
  *
+ * @property array  $news_archives
+ * @property string $news_featured
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsList extends \ModuleNews
@@ -50,7 +53,7 @@ class ModuleNewsList extends \ModuleNews
 			return $objTemplate->parse();
 		}
 
-		$this->news_archives = $this->sortOutProtected(deserialize($this->news_archives));
+		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
 		// Return if there are no archives
 		if (!is_array($this->news_archives) || empty($this->news_archives))
@@ -119,7 +122,7 @@ class ModuleNewsList extends \ModuleNews
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
 			{
-				throw new PageNotFoundException('Page not found');
+				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
 
 			// Set limit and offset

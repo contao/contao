@@ -79,27 +79,27 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_archive']['edit'],
 				'href'                => 'table=tl_news',
-				'icon'                => 'edit.gif'
+				'icon'                => 'edit.svg'
 			),
 			'editheader' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_archive']['editheader'],
 				'href'                => 'act=edit',
-				'icon'                => 'header.gif',
+				'icon'                => 'header.svg',
 				'button_callback'     => array('tl_news_archive', 'editHeader')
 			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_archive']['copy'],
 				'href'                => 'act=copy',
-				'icon'                => 'copy.gif',
+				'icon'                => 'copy.svg',
 				'button_callback'     => array('tl_news_archive', 'copyArchive')
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_archive']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_news_archive', 'deleteArchive')
 			),
@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_archive']['show'],
 				'href'                => 'act=show',
-				'icon'                => 'show.gif'
+				'icon'                => 'show.svg'
 			)
 		)
 	),
@@ -252,6 +252,8 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
+ * @property Contao\News $News
+ * 
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_news_archive extends Backend
@@ -334,11 +336,11 @@ class tl_news_archive extends Backend
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrNewp = deserialize($objUser->newp);
+							$arrNewp = StringUtil::deserialize($objUser->newp);
 
 							if (is_array($arrNewp) && in_array('create', $arrNewp))
 							{
-								$arrNews = deserialize($objUser->news);
+								$arrNews = StringUtil::deserialize($objUser->news);
 								$arrNews[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET news=? WHERE id=?")
@@ -353,11 +355,11 @@ class tl_news_archive extends Backend
 													   ->limit(1)
 													   ->execute($this->User->groups[0]);
 
-							$arrNewp = deserialize($objGroup->newp);
+							$arrNewp = StringUtil::deserialize($objGroup->newp);
 
 							if (is_array($arrNewp) && in_array('create', $arrNewp))
 							{
-								$arrNews = deserialize($objGroup->news);
+								$arrNews = StringUtil::deserialize($objGroup->news);
 								$arrNews[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user_group SET news=? WHERE id=?")
@@ -474,7 +476,7 @@ class tl_news_archive extends Backend
 	 */
 	public function manageFeeds($href, $label, $title, $class, $attributes)
 	{
-		return ($this->User->isAdmin || !empty($this->User->newsfeeds) || $this->User->hasAccess('create', 'newsfeedp')) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
+		return ($this->User->isAdmin || !empty($this->User->newsfeeds) || $this->User->hasAccess('create', 'newsfeedp')) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
 	}
 
 
@@ -492,7 +494,7 @@ class tl_news_archive extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_news_archive') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_news_archive') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -510,7 +512,7 @@ class tl_news_archive extends Backend
 	 */
 	public function copyArchive($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('create', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -528,6 +530,6 @@ class tl_news_archive extends Backend
 	 */
 	public function deleteArchive($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+		return $this->User->hasAccess('delete', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 }

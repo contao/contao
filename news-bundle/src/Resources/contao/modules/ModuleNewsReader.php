@@ -17,6 +17,10 @@ use Patchwork\Utf8;
 /**
  * Front end module "news reader".
  *
+ * @property Comments $Comments
+ * @property string   $com_template
+ * @property array    $news_archives
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsReader extends \ModuleNews
@@ -68,7 +72,7 @@ class ModuleNewsReader extends \ModuleNews
 			return '';
 		}
 
-		$this->news_archives = $this->sortOutProtected(deserialize($this->news_archives));
+		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
 		// Do not index or cache the page if there are no archives
 		if (!is_array($this->news_archives) || empty($this->news_archives))
@@ -103,7 +107,7 @@ class ModuleNewsReader extends \ModuleNews
 
 		if (null === $objArticle)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		$arrArticle = $this->parseArticle($objArticle);
@@ -112,7 +116,7 @@ class ModuleNewsReader extends \ModuleNews
 		// Overwrite the page title (see #2853 and #4955)
 		if ($objArticle->headline != '')
 		{
-			$objPage->pageTitle = strip_tags(strip_insert_tags($objArticle->headline));
+			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objArticle->headline));
 		}
 
 		// Overwrite the page description
@@ -158,7 +162,7 @@ class ModuleNewsReader extends \ModuleNews
 		if ($objArchive->notify != 'notify_admin')
 		{
 			/** @var UserModel $objAuthor */
-			if (($objAuthor = $objArticle->getRelated('author')) !== null && $objAuthor->email != '')
+			if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
 			{
 				$arrNotifies[] = $objAuthor->email;
 			}

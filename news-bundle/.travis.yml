@@ -9,20 +9,21 @@ sudo: false
 
 matrix:
   include:
-    - php: 5.5
-      env: deps=highest
-    - php: 5.6
-      env: deps=lowest
+    - php: 7.0
+      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
 
 before_install:
+  - cp $HOME/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini /tmp
+  - phpenv config-rm xdebug.ini
+
+before_script:
   - composer selfupdate
-  - if [ -z "$deps" ]; then composer install --prefer-source; fi;
-  - if [ "$deps" = "lowest" ]; then composer update --prefer-source --prefer-lowest --prefer-stable; fi;
-  - if [ "$deps" = "highest" ]; then composer update --prefer-source; fi;
+  - travis_wait composer update $COMPOSER_FLAGS --no-interaction
+  - phpenv config-add /tmp/xdebug.ini
 
 script:
   - mkdir -p build/logs
-  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - php -d zend_extension=xdebug.so vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
   - php vendor/bin/coveralls

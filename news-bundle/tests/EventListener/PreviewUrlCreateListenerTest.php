@@ -14,7 +14,6 @@ use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
-use Contao\NewsModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -160,10 +159,14 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($isInitialized)
         ;
 
-        /** @var NewsModel|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $newsModel = $this->getMock('Contao\NewsModel', ['findByPk']);
+        $newsModelAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->setMethods(['findByPk'])
+            ->getMock()
+        ;
 
-        $newsModel
+        $newsModelAdapter
             ->expects($this->any())
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
@@ -180,10 +183,10 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
         $framework
             ->expects($this->any())
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($newsModel) {
+            ->willReturnCallback(function ($key) use ($newsModelAdapter) {
                 switch ($key) {
                     case 'Contao\NewsModel':
-                        return $newsModel;
+                        return $newsModelAdapter;
 
                     default:
                         return null;

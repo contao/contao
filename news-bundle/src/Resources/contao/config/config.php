@@ -17,7 +17,6 @@ array_insert($GLOBALS['BE_MOD']['content'], 1, array
 	'news' => array
 	(
 		'tables'      => array('tl_news_archive', 'tl_news', 'tl_news_feed', 'tl_content'),
-		'icon'        => 'bundles/contaonews/icon.gif',
 		'table'       => array('TableWizard', 'importTable'),
 		'list'        => array('ListWizard', 'importList')
 	)
@@ -42,15 +41,18 @@ array_insert($GLOBALS['FE_MOD'], 2, array
 /**
  * Cron jobs
  */
-$GLOBALS['TL_CRON']['daily'][] = array('News', 'generateFeeds');
+$GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array('News', 'generateFeeds');
 
 
 /**
- * Register hook to add news items to the indexer
+ * Register hooks
  */
 $GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('News', 'purgeOldFeeds');
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('News', 'getSearchablePages');
+$GLOBALS['TL_HOOKS']['generatePage'][] = array('contao_news.listener.generate_page', 'onGeneratePage');
 $GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('News', 'generateFeeds');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_news.listener.insert_tags', 'onReplaceInsertTags');
+$GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'][] = array('contao_news.listener.file_meta_information', 'onAddFileMetaInformationToRequest');
 
 
 /**

@@ -67,7 +67,7 @@ class PreviewUrlCreateListener
             return;
         }
 
-        $event->setQuery('news=' . $newsModel->id);
+        $event->setQuery('news='.$newsModel->id);
     }
 
     /**

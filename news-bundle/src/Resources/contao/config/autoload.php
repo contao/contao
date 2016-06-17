@@ -8,25 +8,6 @@
  * @license LGPL-3.0+
  */
 
-// Classes
-ClassLoader::addClasses(array
-(
-	// Classes
-	'Contao\News'              => 'vendor/contao/news-bundle/src/Resources/contao/classes/News.php',
-
-	// Models
-	'Contao\NewsArchiveModel'  => 'vendor/contao/news-bundle/src/Resources/contao/models/NewsArchiveModel.php',
-	'Contao\NewsFeedModel'     => 'vendor/contao/news-bundle/src/Resources/contao/models/NewsFeedModel.php',
-	'Contao\NewsModel'         => 'vendor/contao/news-bundle/src/Resources/contao/models/NewsModel.php',
-
-	// Modules
-	'Contao\ModuleNews'        => 'vendor/contao/news-bundle/src/Resources/contao/modules/ModuleNews.php',
-	'Contao\ModuleNewsArchive' => 'vendor/contao/news-bundle/src/Resources/contao/modules/ModuleNewsArchive.php',
-	'Contao\ModuleNewsList'    => 'vendor/contao/news-bundle/src/Resources/contao/modules/ModuleNewsList.php',
-	'Contao\ModuleNewsMenu'    => 'vendor/contao/news-bundle/src/Resources/contao/modules/ModuleNewsMenu.php',
-	'Contao\ModuleNewsReader'  => 'vendor/contao/news-bundle/src/Resources/contao/modules/ModuleNewsReader.php',
-));
-
 // Templates
 TemplateLoader::addFiles(array
 (

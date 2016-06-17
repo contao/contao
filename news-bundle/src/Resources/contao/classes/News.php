@@ -110,7 +110,7 @@ class News extends \Frontend
 	 */
 	protected function generateFiles($arrFeed)
 	{
-		$arrArchives = deserialize($arrFeed['archives']);
+		$arrArchives = \StringUtil::deserialize($arrFeed['archives']);
 
 		if (!is_array($arrArchives) || empty($arrArchives))
 		{
@@ -145,9 +145,7 @@ class News extends \Frontend
 
 			while ($objArticle->next())
 			{
-				/** @var PageModel $objPage */
-				$objPage = $objArticle->getRelated('pid');
-				$jumpTo = $objPage->jumpTo;
+				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
 
 				// No jumpTo page set (see #4784)
 				if (!$jumpTo)
@@ -167,7 +165,7 @@ class News extends \Frontend
 					}
 					else
 					{
-						$arrUrls[$jumpTo] = $objParent->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
+						$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
 					}
 				}
 
@@ -181,7 +179,7 @@ class News extends \Frontend
 				$objItem = new \FeedItem();
 
 				$objItem->title = $objArticle->headline;
-				$objItem->link = $this->getLink($objArticle, $strUrl, $strLink);
+				$objItem->link = $this->getLink($objArticle, $strUrl);
 				$objItem->published = $objArticle->date;
 				$objItem->author = $objArticle->authorName;
 
@@ -227,7 +225,7 @@ class News extends \Frontend
 				// Enclosures
 				if ($objArticle->addEnclosure)
 				{
-					$arrEnclosure = deserialize($objArticle->enclosure, true);
+					$arrEnclosure = \StringUtil::deserialize($objArticle->enclosure, true);
 
 					if (is_array($arrEnclosure))
 					{
@@ -376,18 +374,18 @@ class News extends \Frontend
 
 			// Link to an internal page
 			case 'internal':
-				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
+				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
 				{
-					/** @var \PageModel $objTarget */
+					/** @var PageModel $objTarget */
 					self::$arrUrlCache[$strCacheKey] = ampersand($objTarget->getFrontendUrl());
 				}
 				break;
 
 			// Link to an article
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
-					/** @var \PageModel $objPid */
+					/** @var PageModel $objPid */
 					self::$arrUrlCache[$strCacheKey] = ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
@@ -398,7 +396,7 @@ class News extends \Frontend
 		{
 			$objPage = \PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
 
-			if ($objPage === null)
+			if (!($objPage instanceof PageModel))
 			{
 				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'), true);
 			}
@@ -438,25 +436,31 @@ class News extends \Frontend
 
 			// Link to an internal page
 			case 'internal':
-				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
+				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
 				{
-					/** @var \PageModel $objTarget */
-					return $strBase . $objTarget->getFrontendUrl();
+					/** @var PageModel $objTarget */
+					return $objTarget->getAbsoluteUrl();
 				}
 				break;
 
 			// Link to an article
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
-					/** @var \PageModel $objPid */
-					return $strBase . ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					/** @var PageModel $objPid */
+					return ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
 				}
 				break;
 		}
 
+		// Backwards compatibility (see #8329)
+		if ($strBase != '' && !preg_match('#^https?://#', $strUrl))
+		{
+			$strUrl = $strBase . $strUrl;
+		}
+
 		// Link to the default page
-		return $strBase . sprintf($strUrl, ($objItem->alias ?: $objItem->id));
+		return sprintf($strUrl, ($objItem->alias ?: $objItem->id));
 	}
 
 

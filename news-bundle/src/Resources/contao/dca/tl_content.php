@@ -24,6 +24,8 @@ if (Input::get('do') == 'news')
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
+ * @property Contao\News $News
+ * 
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_content_news extends Backend
@@ -206,10 +208,10 @@ class tl_content_news extends Backend
 
 		if ($row['invisible'])
 		{
-			$icon = 'invisible.gif';
+			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
 	}
 
 
@@ -267,6 +269,9 @@ class tl_content_news extends Backend
 		$objVersions = new Versions('tl_content', $intId);
 		$objVersions->initialize();
 
+		// Reverse the logic (elements have invisible=1)
+		$blnVisible = !$blnVisible;
+
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
 		{
@@ -285,10 +290,9 @@ class tl_content_news extends Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_content SET tstamp=". time() .", invisible='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_content SET tstamp=". time() .", invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_content.id='.$intId.'" has been created'.$this->getParentEntries('tl_content', $intId), __METHOD__, TL_GENERAL);
 	}
 }

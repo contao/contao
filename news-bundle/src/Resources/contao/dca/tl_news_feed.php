@@ -71,26 +71,26 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_feed']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'edit.gif'
+				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_feed']['copy'],
 				'href'                => 'act=copy',
-				'icon'                => 'copy.gif'
+				'icon'                => 'copy.svg'
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_feed']['delete'],
 				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
+				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_feed']['show'],
 				'href'                => 'act=show',
-				'icon'                => 'show.gif'
+				'icon'                => 'show.svg'
 			)
 		)
 	),
@@ -211,6 +211,8 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
+ * @property Contao\News $News
+ * 
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_news_feed extends Backend
@@ -285,11 +287,11 @@ class tl_news_feed extends Backend
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrNewsfeedp = deserialize($objUser->newsfeedp);
+							$arrNewsfeedp = StringUtil::deserialize($objUser->newsfeedp);
 
 							if (is_array($arrNewsfeedp) && in_array('create', $arrNewsfeedp))
 							{
-								$arrNewsfeeds = deserialize($objUser->newsfeeds);
+								$arrNewsfeeds = StringUtil::deserialize($objUser->newsfeeds);
 								$arrNewsfeeds[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET newsfeeds=? WHERE id=?")
@@ -304,11 +306,11 @@ class tl_news_feed extends Backend
 													   ->limit(1)
 													   ->execute($this->User->groups[0]);
 
-							$arrNewsfeedp = deserialize($objGroup->newsfeedp);
+							$arrNewsfeedp = StringUtil::deserialize($objGroup->newsfeedp);
 
 							if (is_array($arrNewsfeedp) && in_array('create', $arrNewsfeedp))
 							{
-								$arrNewsfeeds = deserialize($objGroup->newsfeeds);
+								$arrNewsfeeds = StringUtil::deserialize($objGroup->newsfeeds);
 								$arrNewsfeeds[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user_group SET newsfeeds=? WHERE id=?")
@@ -460,7 +462,7 @@ class tl_news_feed extends Backend
 			return $varValue;
 		}
 
-		$varValue = standardize($varValue); // see #5096
+		$varValue = StringUtil::standardize($varValue); // see #5096
 
 		$this->import('Automator');
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);

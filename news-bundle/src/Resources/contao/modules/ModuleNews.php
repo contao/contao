@@ -14,6 +14,9 @@ namespace Contao;
 /**
  * Parent class for news modules.
  *
+ * @property string $news_template
+ * @property mixed  news_metaFields
+ * 
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class ModuleNews extends \Module
@@ -48,7 +51,7 @@ abstract class ModuleNews extends \Module
 						continue;
 					}
 
-					$groups = deserialize($objArchive->groups);
+					$groups = \StringUtil::deserialize($objArchive->groups);
 
 					if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
 					{
@@ -80,7 +83,17 @@ abstract class ModuleNews extends \Module
 		$objTemplate = new \FrontendTemplate($this->news_template);
 		$objTemplate->setData($objArticle->row());
 
-		$objTemplate->class = (($objArticle->cssClass != '') ? ' ' . $objArticle->cssClass : '') . $strClass;
+		if ($objArticle->cssClass != '')
+		{
+			$strClass = ' ' . $objArticle->cssClass . $strClass;
+		}
+
+		if ($objArticle->featured)
+		{
+			$strClass = ' featured' . $strClass;
+		}
+
+		$objTemplate->class = $strClass;
 		$objTemplate->newsHeadline = $objArticle->headline;
 		$objTemplate->subHeadline = $objArticle->subheadline;
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
@@ -158,7 +171,7 @@ abstract class ModuleNews extends \Module
 				// Override the default image size
 				if ($this->imgSize != '')
 				{
-					$size = deserialize($this->imgSize);
+					$size = \StringUtil::deserialize($this->imgSize);
 
 					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]))
 					{
@@ -234,7 +247,7 @@ abstract class ModuleNews extends \Module
 	 */
 	protected function getMetaFields($objArticle)
 	{
-		$meta = deserialize($this->news_metaFields);
+		$meta = \StringUtil::deserialize($this->news_metaFields);
 
 		if (!is_array($meta))
 		{
@@ -256,7 +269,7 @@ abstract class ModuleNews extends \Module
 
 				case 'author':
 					/** @var UserModel $objAuthor */
-					if (($objAuthor = $objArticle->getRelated('author')) !== null)
+					if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 					{
 						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
 					}
@@ -314,7 +327,7 @@ abstract class ModuleNews extends \Module
 		{
 			return sprintf('<a href="%s" title="%s" itemprop="url">%s%s</a>',
 							\News::generateNewsUrl($objArticle, $blnAddArchive),
-							specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
+							\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
 							$strLink,
 							($blnIsReadMore ? '<span class="invisible"> '.$objArticle->headline.'</span>' : ''));
 		}
@@ -334,7 +347,7 @@ abstract class ModuleNews extends \Module
 		// External link
 		return sprintf('<a href="%s" title="%s"%s itemprop="url">%s</a>',
 						$strArticleUrl,
-						specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
+						\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
 						($objArticle->target ? ' target="_blank"' : ''),
 						$strLink);
 	}
