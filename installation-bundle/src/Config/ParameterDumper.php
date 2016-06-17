@@ -83,6 +83,9 @@ class ParameterDumper
             $this->parameters['parameters']['database_port'] = (int) $this->parameters['parameters']['database_port'];
         }
 
-        file_put_contents($this->rootDir.'/config/parameters.yml', Yaml::dump($this->parameters));
+        file_put_contents(
+            $this->rootDir.'/config/parameters.yml',
+            "# This file has been auto-generated during installation\n".Yaml::dump($this->parameters)
+        );
     }
 }

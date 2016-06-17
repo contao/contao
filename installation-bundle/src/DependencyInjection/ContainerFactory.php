@@ -13,7 +13,6 @@ namespace Contao\InstallationBundle\DependencyInjection;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
-use Contao\Environment;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Database\Installer;
 use Contao\InstallationBundle\InstallTool;
@@ -106,16 +105,13 @@ class ContainerFactory
         }
 
         $container->setParameter('locale', $locale);
-        $container->set('translator.default', $translator);
+        $container->set('translator', $translator);
 
         // Set up Twig
         $twigLoader = new \Twig_Loader_Filesystem();
         $twigLoader->addPath(__DIR__.'/../Resources/views', 'ContaoInstallation');
 
         $twig = new \Twig_Environment($twigLoader);
-        $twig->addGlobal('path', $request->getBasePath());
-        $twig->addGlobal('language', str_replace('_', '-', $locale));
-        $twig->addGlobal('ua', Environment::get('agent')->class);
 
         $twig->addFunction(new \Twig_SimpleFunction('asset', function ($path) use ($request) {
             return '/'.ltrim($request->getBasePath().'/'.$path, '/');
@@ -167,7 +163,7 @@ class ContainerFactory
             new Installer(
                 $container->get('database_connection'),
                 $container->get('contao.resource_finder'),
-                $container->get('translator.default')
+                $container->get('translator')
             )
         );
 

@@ -16,7 +16,7 @@ use Contao\SqlFileParser;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Handles the database installation.
@@ -36,7 +36,7 @@ class Installer
     private $finder;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -48,11 +48,11 @@ class Installer
     /**
      * Constructor.
      *
-     * @param Connection     $connection The database connection
-     * @param ResourceFinder $finder     The Contao resource finder
-     * @param Translator     $translator The translator object
+     * @param Connection          $connection The database connection
+     * @param ResourceFinder      $finder     The Contao resource finder
+     * @param TranslatorInterface $translator The translator object
      */
-    public function __construct(Connection $connection, ResourceFinder $finder, Translator $translator)
+    public function __construct(Connection $connection, ResourceFinder $finder, TranslatorInterface $translator)
     {
         $this->connection = $connection;
         $this->finder = $finder;

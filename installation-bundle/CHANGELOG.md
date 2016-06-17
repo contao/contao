@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.1.0 (2016-06-18)
+
+ * Redirect to the /contao/install route as soon as the real system can be booted.
+
 ### 1.1.0-RC1 (2016-05-18)
 
  * Pass the language and path to the Twig templates (see #15).
