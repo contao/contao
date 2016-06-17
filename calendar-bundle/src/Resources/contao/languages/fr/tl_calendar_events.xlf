@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.article.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.</source>
-        <target>En cliquant sur le lien &quot;En savoir plus ...&quot; les visiteurs seront redirigés vers un article.</target>
+        <target>En cliquant sur le lien &quot;En savoir plus ...&quot;, les visiteurs seront redirigés vers un article.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
         <source>External URL</source>
@@ -179,7 +179,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>En cliquant sur le lien &quot;En savoir plus ...&quot; les visiteurs seront redirigés vers un site externe.</target>
+        <target>En cliquant sur le lien &quot;En savoir plus ...&quot;, les visiteurs seront redirigés vers un site externe.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
