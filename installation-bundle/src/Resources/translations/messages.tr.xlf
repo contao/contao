@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Üç defa arka arkaya girmiş olduğunuz geçersiz şifre sebebiyle, güvenliğiniz için, kurulum aracı kilitlenmiştir. Tekrar girişi açabilmek için, yerel konfigürasyon dosyasını açınız ve &lt;code&gt;installCount&lt;/code&gt; yazan yere &lt;code&gt;0&lt;/code&gt; yazınız.</target>
         
       </trans-unit>
       <trans-unit id="5">

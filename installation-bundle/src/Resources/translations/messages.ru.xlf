@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>В целях безопасности, мастер установки Contao заблокирован после ввода, более чем трех раз подряд, неправильного пароля. Для разблокирования, откройте локальный файл конфигурации и установите в поле &lt;code&gt;installCount&lt;/code&gt; значение &lt;code&gt;0&lt;/code&gt;.</target>
+        <target>В целях безопасности, мастер установки Contao заблокирован после ввода, более чем трех раз подряд, неправильного пароля. Для разблокирования, запустите &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt; в командной строке.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -298,7 +298,7 @@
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_email</source>
-        <target>Введите действующий e-mail адрес.</target>
+        <target>Введите действующий e-mail адрес!</target>
         
       </trans-unit>
       <trans-unit id="61">

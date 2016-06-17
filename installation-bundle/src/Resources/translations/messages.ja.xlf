@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>連続して3回以上誤ったパスワードが入力された後、セキュリティ上の理由でインストールツールはロックされています。ロックを解除するには、サイトにローカルな構成ファイルを編集して、&lt;code&gt;installCount&lt;/code&gt;を&lt;code&gt;0&lt;/code&gt;にします。</target>
+        <target>セキュリティ上の理由により、連続して3回以上誤ったパスワードを入力した後のインストールツールはロックされています。ロックを解除するにはコマンド行で&lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt;を実行してください。</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -273,7 +273,7 @@
       </trans-unit>
       <trans-unit id="55">
         <source>admin_name</source>
-        <target>氏名</target>
+        <target>名前</target>
         
       </trans-unit>
       <trans-unit id="56">
