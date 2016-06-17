@@ -210,12 +210,10 @@
         <target>Neplatný cíl přesměrování (cyklický odkaz)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>U žádné z aktivních stránek typu »Kořen nového webu« bez zadání DNS nebyla vybrána možnost »Přesměrování na jazykovou verzi«. To znamená, že jsou dané stránky k dipozici jen v jednom jazyce, který jste zadali v nastavení systému! Návštěvníci a vyhledávací</target>
+        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>U žádné z aktivních stránek typu »Kořen nového webu« pro &lt;strong&gt;%s&lt;/strong&gt; nebyla vybrána možnost »Přesměrování na jazykovou verzi«. To znamená, že jsou dané stránky k dipozici jen v jednom jazyce, který jste zadali v nastavení systému! Návštěvníci a vy</target>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -226,8 +224,7 @@
         <target>Na nejvyšší úrovni se musí nacházet &quot;Kořenové stránky webu&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are pages on the top-level which are not website root pages. Creating websites without a website root page is no longer supported, so please ensure that all pages are grouped under a website root page.</source>
-        <target>Na nejvyšší úrovni Vaší webové stránky se nachází takové, které nejsou definované jako &quot;Kořenové stránky webu&quot;. Tento způsob struktury webu již není podporován. Proto prosím určete kořenovou stránku webu a ujistěte se, že se k ní náležící stránky nachází pod ní.</target>
+        <source>There are top-level pages in the site structure which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -433,6 +430,14 @@
         <source>Adds a YouTube video.</source>
         <target>Přidat video z YouTube</target>
       </trans-unit>
+      <trans-unit id="CTE.vimeo.0">
+        <source>Vimeo</source>
+        <target>Vimeo</target>
+      </trans-unit>
+      <trans-unit id="CTE.vimeo.1">
+        <source>Adds a Vimeo video.</source>
+        <target>Přidat video z Vimea</target>
+      </trans-unit>
       <trans-unit id="CTE.files">
         <source>File elements</source>
         <target>Soubory</target>
@@ -528,6 +533,14 @@
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website within the site structure.</source>
         <target>Pokud chcete vytvořit více než jeden web se stejným stromem stránek, můžete zde definovat nový počáteční bod. Kořen stránky obsahuje DNS záznam, jazyk nebo oboje.</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.0">
+        <source>Logout</source>
+        <target>Odhlásit se</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.1">
+        <source>This type of page automatically logs out the user.</source>
+        <target>Tento druh stránky automaticky odhlásí uživatele.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -1186,8 +1199,7 @@
         <target>Předešlé přihlášení</target>
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
-        <source>Previous login: %s</source>
-        <target>Předešlé přihlášení: %s</target>
+        <source>Your previous login was %s. Welcome back!</source>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1196,6 +1208,9 @@
       <trans-unit id="MSC.currentLogin.1">
         <source>Last login: %s</source>
         <target>Poslední přihlášení: %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.firstLogin">
+        <source>This seems to be your first login. Welcome to Contao!</source>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1456,8 +1471,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>Změnit heslo</target>
       </trans-unit>
       <trans-unit id="MSC.pw_change">
-        <source>Please enter a new password</source>
-        <target>Zadejte prosím nové heslo</target>
+        <source>Please enter a new password.</source>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1743,6 +1757,14 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <source>Apply the changes</source>
         <target>Provést změny</target>
       </trans-unit>
+      <trans-unit id="MSC.reset">
+        <source>Reset</source>
+        <target>Smazat</target>
+      </trans-unit>
+      <trans-unit id="MSC.resetTitle">
+        <source>Reset the filters</source>
+        <target>Smazat filtry</target>
+      </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
         <target>Povinný údaj</target>
@@ -1806,14 +1828,6 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
         <target>%s (kopie)</target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheText">
-        <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
-        <target> &lt;strong&gt;Vnitřní mezúložiště&lt;/strong&gt; nebo ještě vytvořeno. Jeho vytvožením se zvýší rychlost Contaa a tento krok se vřele doporučuje. Vnitřní meziúložiště se tvoří automaticky pokaždé, když spustíte &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; pomocí příkazového řádku.</target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheLink">
-        <source>Build the cache</source>
-        <target>Vytvořit meziúložiště</target>
       </trans-unit>
       <trans-unit id="MSC.name">
         <source>Name</source>
@@ -1914,6 +1928,10 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.showDifferences">
         <source>Show differences</source>
         <target>Zobrazit rozdíly</target>
+      </trans-unit>
+      <trans-unit id="MSC.recordOfTable">
+        <source>Record %s of table %s</source>
+        <target>Záznam %s tabulky %s</target>
       </trans-unit>
       <trans-unit id="MSC.editElement">
         <source>Edit the element</source>

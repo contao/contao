@@ -210,12 +210,10 @@
         <target>Cible de redirection non valide (redondance cyclique).</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Aucune des pages racines sans nom de domaine n'a l'option de langue de secours configurée, ce qui signifie que ces sites ne sont disponibles que dans la langue que vous avez défini dans les réglages de la page ! Les visiteurs (et moteurs de recherche) qui ne parlent pas cette langue ne seront pas en mesure de naviguer sur votre site.</target>
+        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Aucune des pages racines de &lt;strong&gt;%s&lt;/strong&gt; n'a l'option de langue de secours configurée, ce qui signifie que ces sites ne sont disponibles que dans la langue que vous avez défini dans les réglages de la page ! Les visiteurs (et moteurs de recherche) qui ne parlent pas cette langue ne seront pas en mesure de naviguer sur votre site.</target>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -226,8 +224,7 @@
         <target>Les pages de premier niveau doivent être des pages racines.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are pages on the top-level which are not website root pages. Creating websites without a website root page is no longer supported, so please ensure that all pages are grouped under a website root page.</source>
-        <target>Il y a des pages de premier niveau qui ne sont pas des pages racines. La création de sites sans une page racine n'est plus supportée, faites en sorte que toutes les pages soient regroupées sous une page racine.</target>
+        <source>There are top-level pages in the site structure which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -433,6 +430,14 @@
         <source>Adds a YouTube video.</source>
         <target>Ajoute une vidéo YouTube.</target>
       </trans-unit>
+      <trans-unit id="CTE.vimeo.0">
+        <source>Vimeo</source>
+        <target>Vimeo</target>
+      </trans-unit>
+      <trans-unit id="CTE.vimeo.1">
+        <source>Adds a Vimeo video.</source>
+        <target>Ajoute une vidéo Vimeo.</target>
+      </trans-unit>
       <trans-unit id="CTE.files">
         <source>File elements</source>
         <target>Éléments fichier</target>
@@ -528,6 +533,14 @@
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website within the site structure.</source>
         <target>Ce type de page est le point de départ pour créer un site internet dans la structure de site.</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.0">
+        <source>Logout</source>
+        <target>Se déconnecter</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.1">
+        <source>This type of page automatically logs out the user.</source>
+        <target>Ce type de page déconnecte automatiquement l'utilisateur.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -1186,8 +1199,8 @@
         <target>Précédente connexion</target>
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
-        <source>Previous login: %s</source>
-        <target>Précédente connexion : %s</target>
+        <source>Your previous login was %s. Welcome back!</source>
+        <target>Votre précédente connexion était %s. Heureux de vous revoir !</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1196,6 +1209,10 @@
       <trans-unit id="MSC.currentLogin.1">
         <source>Last login: %s</source>
         <target>Dernière connexion : %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.firstLogin">
+        <source>This seems to be your first login. Welcome to Contao!</source>
+        <target>Cela semble être votre première connexion. Bienvenue dans Contao !</target>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1464,8 +1481,8 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
         <target>Changer le mot de passe</target>
       </trans-unit>
       <trans-unit id="MSC.pw_change">
-        <source>Please enter a new password</source>
-        <target>Saisir un nouveau mot de passe</target>
+        <source>Please enter a new password.</source>
+        <target>Saisir un nouveau mot de passe.</target>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1751,6 +1768,14 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
         <source>Apply the changes</source>
         <target>Appliquer les changements</target>
       </trans-unit>
+      <trans-unit id="MSC.reset">
+        <source>Reset</source>
+        <target>Réinitialiser</target>
+      </trans-unit>
+      <trans-unit id="MSC.resetTitle">
+        <source>Reset the filters</source>
+        <target>Réinitialiser les filtres</target>
+      </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
         <target>Champ obligatoire</target>
@@ -1814,14 +1839,6 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
         <target>%s (copie)</target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheText">
-        <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
-        <target>Le &lt;strong&gt;cache interne&lt;/strong&gt; n'a pas encore été construit. Construire le cache interne permettra d'améliorer les performances de l'application et est fortement recommandé. Le cache interne sera construit automatiquement à chaque fois que vous exécuterez &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; en ligne de commande.</target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheLink">
-        <source>Build the cache</source>
-        <target>Construire le cache</target>
       </trans-unit>
       <trans-unit id="MSC.name">
         <source>Name</source>
@@ -1922,6 +1939,10 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       <trans-unit id="MSC.showDifferences">
         <source>Show differences</source>
         <target>Afficher les différences</target>
+      </trans-unit>
+      <trans-unit id="MSC.recordOfTable">
+        <source>Record %s of table %s</source>
+        <target>Enregistrement %s de la table %s</target>
       </trans-unit>
       <trans-unit id="MSC.editElement">
         <source>Edit the element</source>

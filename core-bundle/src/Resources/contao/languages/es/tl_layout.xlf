@@ -249,22 +249,6 @@
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
         <target>Aqui puedes añadir fuentes web de Google a tu página. Especifica la familia fuente sin la base URL (por ejemplo.&lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_layout.newsfeeds.0">
-        <source>News feeds</source>
-        <target>Feeds noticias RSS</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.newsfeeds.1">
-        <source>Please select the news feeds you want to add to the layout.</source>
-        <target>Por favor selecciona los feeds de noticias RSS que quieres incluir en el diseño actual.</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.calendarfeeds.0">
-        <source>Calendar feeds</source>
-        <target>Feeds calendarios</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.calendarfeeds.1">
-        <source>Please select the calendar feeds you want to add to the layout.</source>
-        <target>Por favor selecciona los feeds de calendarios RSS que quieres incluir en el diseño actual.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
         <target>Módulos incluidos</target>
@@ -460,10 +444,6 @@
       <trans-unit id="tl_layout.picturefill_legend">
         <source>Responsive images</source>
         <target>Imágenes adaptativas</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>Suministros RSS/Atom</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>

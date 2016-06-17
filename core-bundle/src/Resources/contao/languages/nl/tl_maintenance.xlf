@@ -137,14 +137,6 @@
         <source>Removes the cached versions of the search results.</source>
         <target>Verwijdert de gecachte versies van de zoekresultaten.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.0">
-        <source>Purge the internal cache</source>
-        <target>Opschonen interne cache</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.1">
-        <source>Removes the cached versions of the config, DCA and language files.</source>
-        <target>Verwijderd de gecachede versies van de config, DCA en taal bestanden.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>Opschonen temp map</target>

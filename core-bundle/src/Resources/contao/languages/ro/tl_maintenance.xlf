@@ -136,13 +136,6 @@
         <source>Removes the cached versions of the search results.</source>
         <target>Şterge versiunile din cache ale rezultatelor de căutare.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.0">
-        <source>Purge the internal cache</source>
-        <target>Şterge cache-ul intern</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.1">
-        <source>Removes the cached versions of the config, DCA and language files.</source>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>Şterge directorul temp</target>

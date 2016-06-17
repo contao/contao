@@ -137,14 +137,6 @@
         <source>Removes the cached versions of the search results.</source>
         <target>Smazat uložené verze výsledků vyhledávání.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.0">
-        <source>Purge the internal cache</source>
-        <target>Vyčistit vnitřní meziúložiště</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.1">
-        <source>Removes the cached versions of the config, DCA and language files.</source>
-        <target>Smaže uložené verze nastavení, polí DCA a jazykových souborů.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>Vyčistit složky s dočasnými soubory</target>

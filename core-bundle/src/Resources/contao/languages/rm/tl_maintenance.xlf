@@ -136,14 +136,6 @@
         <source>Removes the cached versions of the search results.</source>
         <target>Allontanescha las versiuns en il cache dals resultats da tschertga.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.0">
-        <source>Purge the internal cache</source>
-        <target>Schubregiar il cache intern</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.1">
-        <source>Removes the cached versions of the config, DCA and language files.</source>
-        <target>Allontanescha las versiun en iil cache da la configuraziun, dal DCA e da las datotecas da lingua.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>Schubregiar l'ordinatur temporar</target>

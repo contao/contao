@@ -210,12 +210,10 @@
         <target>Destinaziun da renviar nunvalida (renviar en cirquit)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Nagina da las ragischs da pagina activas senza indicaziuns explicitas da DNS è definida sco lingua da standard. Quai munta che questas paginas èn be accessiblas en la lingua che ti has definì en las preferenzas da la pagina! Visitaders e maschinas da tschertgar che na discurran betg questa lingua na vegnan betg ad esser abel da navigar en tia pagina.</target>
+        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Nagina da las ragischs da pagina activas per &lt;strong&gt;%s&lt;/strong&gt; è definida sco lingua da standard. Quai munta che questas paginas èn be accessiblas en la lingua che ti has definì en las preferenzas da la pagina! Visitaders e maschinas da tschertgar che na discurran betg questa lingua na vegnan betg ad esser abel da navigar en tia pagina.</target>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -226,8 +224,7 @@
         <target>Paginas sin il pli aut livel ston esser ragischs da pagina!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are pages on the top-level which are not website root pages. Creating websites without a website root page is no longer supported, so please ensure that all pages are grouped under a website root page.</source>
-        <target>Sin il pli aut livel existan paginas che n'èn betg ragischs da paginas d'internet. Crear paginas d'internet senza ragischs na vegn betg pli sustegnì. Controllescha perquai, che tut las paginas èn gruppadas sut ina ragisch d'ina pagina d'internet.</target>
+        <source>There are top-level pages in the site structure which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -432,6 +429,12 @@
         <source>Adds a YouTube video.</source>
         <target>Agiuntescha in video da YouTube.</target>
       </trans-unit>
+      <trans-unit id="CTE.vimeo.0">
+        <source>Vimeo</source>
+      </trans-unit>
+      <trans-unit id="CTE.vimeo.1">
+        <source>Adds a Vimeo video.</source>
+      </trans-unit>
       <trans-unit id="CTE.files">
         <source>File elements</source>
         <target>Elements da datotecas</target>
@@ -527,6 +530,13 @@
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website within the site structure.</source>
         <target>Quest tip marchescha il punct d'entschatta d'ina nova pagina d'internet entaifer la structura da la pagina</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.0">
+        <source>Logout</source>
+        <target>Partir</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.1">
+        <source>This type of page automatically logs out the user.</source>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -1185,8 +1195,7 @@
         <target>Ultima annunzia</target>
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
-        <source>Previous login: %s</source>
-        <target>Ultima annunzia: %s</target>
+        <source>Your previous login was %s. Welcome back!</source>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1195,6 +1204,9 @@
       <trans-unit id="MSC.currentLogin.1">
         <source>Last login: %s</source>
         <target>Ultima annunzia: %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.firstLogin">
+        <source>This seems to be your first login. Welcome to Contao!</source>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1462,8 +1474,7 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
         <target>Midar il pled-clav</target>
       </trans-unit>
       <trans-unit id="MSC.pw_change">
-        <source>Please enter a new password</source>
-        <target>Endatescha p. pl. in nov pled-clav</target>
+        <source>Please enter a new password.</source>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1746,6 +1757,12 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
         <source>Apply the changes</source>
         <target>Applitgar las midadas</target>
       </trans-unit>
+      <trans-unit id="MSC.reset">
+        <source>Reset</source>
+      </trans-unit>
+      <trans-unit id="MSC.resetTitle">
+        <source>Reset the filters</source>
+      </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
         <target>Champ obligatoric</target>
@@ -1809,14 +1826,6 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
         <target>%s (copia)</target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheText">
-        <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
-        <target>Il &lt;strong&gt;cache intern&lt;/strong&gt; n'è anc betg vegnì creà. Crear il cache intern vegn ad augmentar la prestaziun da l'applicaziun ed è fitg recummandà. Il cache intern vegn creà automaticamain mintga giada che ti exequeschas &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; sin la lingia da cummonds. </target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheLink">
-        <source>Build the cache</source>
-        <target>Crear il cache</target>
       </trans-unit>
       <trans-unit id="MSC.name">
         <source>Name</source>
@@ -1916,6 +1925,9 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
       <trans-unit id="MSC.showDifferences">
         <source>Show differences</source>
         <target>Mussar las differenzas</target>
+      </trans-unit>
+      <trans-unit id="MSC.recordOfTable">
+        <source>Record %s of table %s</source>
       </trans-unit>
       <trans-unit id="MSC.editElement">
         <source>Edit the element</source>

@@ -136,14 +136,6 @@
         <source>Removes the cached versions of the search results.</source>
         <target>Raderar de sparade versionerna av sökresultat.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.0">
-        <source>Purge the internal cache</source>
-        <target>Rensa intern cache</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.1">
-        <source>Removes the cached versions of the config, DCA and language files.</source>
-        <target>Rensar bort den cache:ade versionerna av konfiguration, DCA och språkfiler.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>Rensa temp-folder</target>

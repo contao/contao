@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
-        <target>State</target>
+        <target>Статус</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
         <source>Plase enter the name of the state.</source>

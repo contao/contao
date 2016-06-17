@@ -73,6 +73,14 @@
         <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
         <target>Bitte wählen Sie die Seite aus, zu der Besucher weitergeleitet werden. Wenn Sie keine Zielseite auswählen, wird automatisch zur ersten regulären Unterseite weitergeleitet.</target>
       </trans-unit>
+      <trans-unit id="tl_page.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Zur zuletzt besuchten Seite</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.1">
+        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
+        <target>Den Benutzer zurück zu der zuletzt besuchten Seiten anstatt der Weiterleitungsseite leiten.</target>
+      </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
         <target>Sprachen-Fallback</target>
@@ -142,8 +150,8 @@
         <target>HTTPS verwenden</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>Generate the URLs with &lt;em&gt;https://&lt;/em&gt; (e.g. in sitemaps).</source>
-        <target>Die URLs mit &lt;em&gt;https://&lt;/em&gt; generieren (z.B. in Sitemaps).</target>
+        <source>This website is available via HTTPS.</source>
+        <target>Diese Webseite ist über HTTPS verfügbar.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

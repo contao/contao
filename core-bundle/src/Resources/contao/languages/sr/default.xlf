@@ -210,12 +210,10 @@
         <target>Неисправна дестинација редирекције (кружна референца)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Ниједна од активних root страница без експлицитног подешавања DNS-а нема дефинисан основни језик, што значи да су сајтови доступни само у верзији језика који сте дефинисали у подешавањима странице! Посетиоци и претраживачи који не користе тај језик неће бити у могућности да претражују или користе ваш сајт.</target>
+        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Ниједна од активних root страница  сајта &lt;strong&gt;%s&lt;/strong&gt; нема дефинисан основни језик, што значи да су сајтови доступни само у верзији језика који сте дефинисали у подешавањима странице! Посетиоци и претраживачи који не користе тај језик неће бити у могућности да претражују или користе ваш сајт.</target>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -226,8 +224,7 @@
         <target>Странице са највишим нивоом у хијерархији морају бити root странице сајта.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are pages on the top-level which are not website root pages. Creating websites without a website root page is no longer supported, so please ensure that all pages are grouped under a website root page.</source>
-        <target>Постоје странице у врху хијерархије које нису постављене као root странице. Креирање сајтова без root странице више није подржано, па Вас молимо да осигурате да су све странице груписане испод root странице.</target>
+        <source>There are top-level pages in the site structure which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -432,6 +429,12 @@
         <source>Adds a YouTube video.</source>
         <target>Додавање YouTube видеа.</target>
       </trans-unit>
+      <trans-unit id="CTE.vimeo.0">
+        <source>Vimeo</source>
+      </trans-unit>
+      <trans-unit id="CTE.vimeo.1">
+        <source>Adds a Vimeo video.</source>
+      </trans-unit>
       <trans-unit id="CTE.files">
         <source>File elements</source>
         <target>Елементи фајлова</target>
@@ -527,6 +530,13 @@
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website within the site structure.</source>
         <target>Овај тип странице означава стартну тачку новог сајта у оквиру укупне структуре сајта.</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.0">
+        <source>Logout</source>
+        <target>Одјава</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.1">
+        <source>This type of page automatically logs out the user.</source>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -1185,8 +1195,7 @@
         <target>Претходно логовање</target>
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
-        <source>Previous login: %s</source>
-        <target>Претходна логовања: %s</target>
+        <source>Your previous login was %s. Welcome back!</source>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1195,6 +1204,9 @@
       <trans-unit id="MSC.currentLogin.1">
         <source>Last login: %s</source>
         <target>Последње логовање: %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.firstLogin">
+        <source>This seems to be your first login. Welcome to Contao!</source>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1461,8 +1473,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>Промени лозинку</target>
       </trans-unit>
       <trans-unit id="MSC.pw_change">
-        <source>Please enter a new password</source>
-        <target>Унесите нову лозинку</target>
+        <source>Please enter a new password.</source>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1745,6 +1756,12 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <source>Apply the changes</source>
         <target>Примени промене</target>
       </trans-unit>
+      <trans-unit id="MSC.reset">
+        <source>Reset</source>
+      </trans-unit>
+      <trans-unit id="MSC.resetTitle">
+        <source>Reset the filters</source>
+      </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
         <target>Обавезна поља</target>
@@ -1808,14 +1825,6 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
         <target>%s (копија)</target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheText">
-        <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
-        <target>&lt;strong&gt;Интерни кеш&lt;/strong&gt; није још креиран. Креирање кеша повећава перформансе апликација и изразито је препоручено да то урадите. Интерни кеш ће бити генерисан аутоматски сваки пут када покренете &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; преко командне линије.</target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheLink">
-        <source>Build the cache</source>
-        <target>Креирај кеш</target>
       </trans-unit>
       <trans-unit id="MSC.name">
         <source>Name</source>
@@ -1915,6 +1924,9 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.showDifferences">
         <source>Show differences</source>
         <target>Прикажи разлике</target>
+      </trans-unit>
+      <trans-unit id="MSC.recordOfTable">
+        <source>Record %s of table %s</source>
       </trans-unit>
       <trans-unit id="MSC.editElement">
         <source>Edit the element</source>

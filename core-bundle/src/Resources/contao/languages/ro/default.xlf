@@ -208,12 +208,10 @@
         <target>Redirecţionare spre o destinaţie invalidă (referinţă circulară)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Niciuna dintre paginile rădăcină active ale website-ului, fără o setare explicită DNS, nu are opţiunea de limbă de rezervă stabilită, ceea ce înseamnă că aceste website-uri sunt disponibile numai în limba pe care o aveti definită în setări la pagină! Utilizatori şi motoarele de căutare care nu acceptă această limbă nu vor putea accesa website-ul.</target>
+        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Niciuna dintre paginile rădăcină active ale website-ul &lt;strong&gt;%s&lt;/strong&gt; nu are opţiunea de limbă de rezervă stabilită, ceea ce înseamnă că aceste website-uri sunt disponibile numai în limba pe care o aveti definită în setări la pagină! Utilizatori şi motoarele de căutare care nu acceptă această limbă nu vor putea accesa website-ul.</target>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -224,8 +222,7 @@
         <target>Paginile de top trebuie să fie pagini rădăcină!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are pages on the top-level which are not website root pages. Creating websites without a website root page is no longer supported, so please ensure that all pages are grouped under a website root page.</source>
-        <target>Există pagini pe nivelul de top, care nu sunt pagini rădăcină alewebsite-ului. Crearea de website-uri fără o pagină rădăcină nu mai este acceptată, aşadar vă rugăm să vă asiguraţi că toate paginile sunt grupate sub o pagină rădăcină.</target>
+        <source>There are top-level pages in the site structure which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -430,6 +427,12 @@
         <source>Adds a YouTube video.</source>
         <target>Adaugă un video de pe YouTube</target>
       </trans-unit>
+      <trans-unit id="CTE.vimeo.0">
+        <source>Vimeo</source>
+      </trans-unit>
+      <trans-unit id="CTE.vimeo.1">
+        <source>Adds a Vimeo video.</source>
+      </trans-unit>
       <trans-unit id="CTE.files">
         <source>File elements</source>
         <target>Fişiere</target>
@@ -525,6 +528,13 @@
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website within the site structure.</source>
         <target>Dacă doriţi să creaţi mai mult de un site în acelaşi arbore de pagini, puteţi defini un nou punct de început aici. O pagină-rădăcină conţine o înregistrare DNS sau o limbă, sau ambele.</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.0">
+        <source>Logout</source>
+        <target>Ieşire</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.1">
+        <source>This type of page automatically logs out the user.</source>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -1182,7 +1192,7 @@
         <source>Previous login</source>
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
-        <source>Previous login: %s</source>
+        <source>Your previous login was %s. Welcome back!</source>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1191,6 +1201,9 @@
       <trans-unit id="MSC.currentLogin.1">
         <source>Last login: %s</source>
         <target>Ultima autentificare: %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.firstLogin">
+        <source>This seems to be your first login. Welcome to Contao!</source>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1457,8 +1470,7 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
         <target>Schimbă parola</target>
       </trans-unit>
       <trans-unit id="MSC.pw_change">
-        <source>Please enter a new password</source>
-        <target>Introduceţi o nouă parolă</target>
+        <source>Please enter a new password.</source>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1741,6 +1753,12 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
         <source>Apply the changes</source>
         <target>Aplică schimbările</target>
       </trans-unit>
+      <trans-unit id="MSC.reset">
+        <source>Reset</source>
+      </trans-unit>
+      <trans-unit id="MSC.resetTitle">
+        <source>Reset the filters</source>
+      </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
         <target>Câmp obligatoriu</target>
@@ -1804,13 +1822,6 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
         <target>%s (copie)</target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheText">
-        <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheLink">
-        <source>Build the cache</source>
-        <target>Generează cache</target>
       </trans-unit>
       <trans-unit id="MSC.name">
         <source>Name</source>
@@ -1907,6 +1918,9 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
       <trans-unit id="MSC.showDifferences">
         <source>Show differences</source>
         <target>Arată diferenţele</target>
+      </trans-unit>
+      <trans-unit id="MSC.recordOfTable">
+        <source>Record %s of table %s</source>
       </trans-unit>
       <trans-unit id="MSC.editElement">
         <source>Edit the element</source>

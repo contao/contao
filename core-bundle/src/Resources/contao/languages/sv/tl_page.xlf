@@ -73,6 +73,14 @@
         <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
         <target>Välj den sida som besökare kommer att omdirigeras till. Lämna tomt för att omdirigera till den första ordinarie undersidan.</target>
       </trans-unit>
+      <trans-unit id="tl_page.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Omdirigera till senaste besökta sidan</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.1">
+        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
+        <target>Omdirigera användare till senaste besökta sidan efter inloggning / utloggning.</target>
+      </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
         <target>Språkreträtt</target>
@@ -142,8 +150,7 @@
         <target>Använd HTTPS</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>Generate the URLs with &lt;em&gt;https://&lt;/em&gt; (e.g. in sitemaps).</source>
-        <target>Generera URLer med &lt;em&gt;https://&lt;/em&gt; (t.ex. i sajtkartor).</target>
+        <source>This website is available via HTTPS.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

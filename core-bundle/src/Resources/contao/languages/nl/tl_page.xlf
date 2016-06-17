@@ -73,6 +73,14 @@
         <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
         <target>Kies de pagina naar waar bezoekers worden omgeleid. Laat open om te worden omgeleid naar de eerste subpagina.</target>
       </trans-unit>
+      <trans-unit id="tl_page.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Doorsturen naar de laatst bezochte pagina</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.1">
+        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
+        <target>Stuur de gebruiker door naar de laatst bezochte pagina na login/logout.</target>
+      </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
         <target>Taal reservepagina</target>
@@ -142,8 +150,7 @@
         <target>Gebruik HTTPS</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>Generate the URLs with &lt;em&gt;https://&lt;/em&gt; (e.g. in sitemaps).</source>
-        <target>Genereer de URL's met &lt;em&gt;https://&lt;/em&gt; (b.v. in sitemaps).</target>
+        <source>This website is available via HTTPS.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
@@ -251,7 +258,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
-        <target>CSS klasse</target>
+        <target>CSS class</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.1">
         <source>The class(es) will be used in the navigation menu and the &amp;lt;body&amp;gt; tag.</source>

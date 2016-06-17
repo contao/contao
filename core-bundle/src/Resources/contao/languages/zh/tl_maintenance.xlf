@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceEnable">
         <source>Enable</source>
+        <target>启用</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceDisable">
         <source>Disable</source>
@@ -135,14 +136,6 @@
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
         <target>删除搜索结果的缓存版本。</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.0">
-        <source>Purge the internal cache</source>
-        <target>清除内部缓存</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.1">
-        <source>Removes the cached versions of the config, DCA and language files.</source>
-        <target>移除配置，DCA和语言文件的缓存版本。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>

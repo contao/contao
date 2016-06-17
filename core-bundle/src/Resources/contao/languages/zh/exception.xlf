@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
         <source>Search the &lt;code&gt;app/logs&lt;/code&gt; folder for the current log file and find the associated error message (usually the last one).</source>
+        <target>在日志文件夹&lt;code&gt;app/logs&lt;/code&gt;中搜索当前日志来发现相关错误信息 (一般是最后一个文件).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>由于有时不能正常工作，脚本执行已停止，因为安全原因实际的错误信息已隐藏，真实的错误信息可以在当前日志文件 (见上文) 中找到。如果您不明白错误信息或者不知道如何修正问题，请搜索 &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao 问与答&lt;/a&gt; 或访问 &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao 支持页面&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -61,6 +63,7 @@
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
         <source>Please open the Contao install tool (&lt;code&gt;/install.php&lt;/code&gt;) in your browser.</source>
+        <target>请在你的浏览器中打开Contao安装工具 (&lt;code&gt;/install.php&lt;/code&gt;).</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>

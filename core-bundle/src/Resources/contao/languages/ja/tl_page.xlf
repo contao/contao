@@ -73,6 +73,14 @@
         <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
         <target>ページをアクセスしたときに移動するページを選択してください。空にすると、下位にある最初の通常のページに移動します。</target>
       </trans-unit>
+      <trans-unit id="tl_page.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>最後に参照していたページに移動</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.1">
+        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
+        <target>リダイレクト先のページの代わりに、ユーザーが最後に参照していたページに移動します。</target>
+      </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
         <target>言語の代替</target>
@@ -142,8 +150,8 @@
         <target>HTTPSを使用</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>Generate the URLs with &lt;em&gt;https://&lt;/em&gt; (e.g. in sitemaps).</source>
-        <target>(例えばサイトマップの)URLを&lt;em&gt;https://&lt;/em&gt;で生成します。</target>
+        <source>This website is available via HTTPS.</source>
+        <target>このウェブサイトはHTTPS経由で利用できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_member.firstname.1">
         <source>Please enter the first name.</source>
-        <target>Geef de voornaam op.</target>
+        <target>Geef voornaam op.</target>
       </trans-unit>
       <trans-unit id="tl_member.lastname.0">
         <source>Last name</source>

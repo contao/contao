@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="XPT.errorOccurred">
         <source>An error occurred while executing this script. Something does not work properly.</source>
-        <target>Er is een fout opgetreden tijdens het uitvoeren van het script. Het lijkt erop dat iets niet helemaal naar behoren werkt.</target>
+        <target>Er is een fout opgetreden tijdens het uitvoeren van het script. Iets werkt niet helemaal correct.</target>
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
         <source>Search the &lt;code&gt;app/logs&lt;/code&gt; folder for the current log file and find the associated error message (usually the last one).</source>

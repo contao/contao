@@ -249,22 +249,6 @@
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
         <target>您可以在这里为您的网站添加谷歌web字体。指定不带base URL的字体 (如：&lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;)。</target>
       </trans-unit>
-      <trans-unit id="tl_layout.newsfeeds.0">
-        <source>News feeds</source>
-        <target>新闻源</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.newsfeeds.1">
-        <source>Please select the news feeds you want to add to the layout.</source>
-        <target>请选择您要添加到布局中的新闻源。</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.calendarfeeds.0">
-        <source>Calendar feeds</source>
-        <target>日历源</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.calendarfeeds.1">
-        <source>Please select the calendar feeds you want to add to the layout.</source>
-        <target>请选择您要添加到布局中的日历源。</target>
-      </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
         <target>包含的模块</target>
@@ -460,10 +444,6 @@
       <trans-unit id="tl_layout.picturefill_legend">
         <source>Responsive images</source>
         <target>响应式图片</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom源</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>

@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_module.headline.0">
         <source>Headline</source>
-        <target>Koptekst</target>
+        <target>Hoofdtitel</target>
       </trans-unit>
       <trans-unit id="tl_module.headline.1">
         <source>Here you can add a headline to the module.</source>
@@ -419,7 +419,7 @@
       </trans-unit>
       <trans-unit id="tl_module.orderSRC.0">
         <source>Sort order</source>
-        <target>Sorteer volgorde</target>
+        <target>Sorteer-volgorde</target>
       </trans-unit>
       <trans-unit id="tl_module.orderSRC.1">
         <source>The sort order of the items.</source>
