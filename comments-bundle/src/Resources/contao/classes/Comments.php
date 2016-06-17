@@ -66,7 +66,7 @@ class Comments extends \Frontend
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$objConfig->perPage), 1))
 			{
-				throw new PageNotFoundException('Page not found');
+				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
 
 			// Set limit and offset
@@ -123,7 +123,7 @@ class Comments extends \Frontend
 				// Reply
 				if ($objComments->addReply && $objComments->reply != '')
 				{
-					if (($objAuthor = $objComments->getRelated('author')) !== null)
+					if (($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
 					{
 						$objPartial->addReply = true;
 						$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
@@ -306,7 +306,7 @@ class Comments extends \Frontend
 			}
 
 			// Do not parse any tags in the comment
-			$strComment = specialchars(trim($arrWidgets['comment']->value));
+			$strComment = \StringUtil::specialchars(trim($arrWidgets['comment']->value));
 			$strComment = str_replace(array('&amp;', '&lt;', '&gt;'), array('[&]', '[lt]', '[gt]'), $strComment);
 
 			// Remove multiple line feeds

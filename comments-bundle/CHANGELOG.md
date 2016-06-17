@@ -1,24 +1,13 @@
 # Contao comments bundle change log
 
-### 4.1.3 (2016-04-22)
+### 4.2.0 (2016-06-18)
 
- * Adjust the phpDoc return types of the models.
+ * Correctly validate and decode IDNA e-mail addresses (see contao/core#8306).
 
-### 4.1.1 (2016-03-03)
+### 4.2.0-RC1 (2016-05-18)
 
- * Add a missing `rgxp` setting (see contao/core#8173).
- * Do not show the "copy" button in "edit multiple" mode (see contao/core#8214).
+ * Add the URI when throwing 403 and 404 exceptions (see contao/core#369).
 
-### 4.1.0 (2015-11-26)
+### 4.2.0-beta1 (2016-04-25)
 
- * Correctly set the ID when toggling fields via Ajax (see contao/core#8043).
-
-### 4.1.0-RC1 (2015-11-10)
-
- * Throw an exception instead of redirecting to `/contao?act=error` (see contao/core-bundle#395).
- * Adjust the code to be compatible with PHP7 (see contao/core#8018).
-
-### 4.1.0-beta1 (2015-10-21)
-
- * Add all translations which are at least 95% complete.
- * Check the moderation status when sending new comment mails (see contao/core#7478).
+ * Add an SVG icon and adjust to the new back end theme (see contao/core#4608).
