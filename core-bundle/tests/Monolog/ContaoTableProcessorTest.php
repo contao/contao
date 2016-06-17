@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Tests the ContaoTableProcessor class.
@@ -32,12 +33,7 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testInstantiation()
     {
-        $processor = new ContaoTableProcessor(
-            $this->getMock('Symfony\Component\HttpFoundation\RequestStack'),
-            $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableProcessor', $processor);
+        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableProcessor', $this->createContaoTableProcessor());
     }
 
     /**
@@ -45,10 +41,7 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testInvokation()
     {
-        $processor = new ContaoTableProcessor(
-            $this->getMock('Symfony\Component\HttpFoundation\RequestStack'),
-            $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')
-        );
+        $processor = $this->createContaoTableProcessor();
 
         $this->assertEmpty($processor([]));
         $this->assertEquals(['foo' => 'bar'], $processor(['foo' => 'bar']));
@@ -65,10 +58,7 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testActionOnErrorLevel($logLevel, $expectedAction)
     {
-        $processor = new ContaoTableProcessor(
-            $this->getMock('Symfony\Component\HttpFoundation\RequestStack'),
-            $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')
-        );
+        $processor = $this->createContaoTableProcessor();
 
         $record = $processor(
             [
@@ -86,14 +76,13 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * Tests that an existing action is not changed.
      *
+     * @param int $logLevel
+     *
      * @dataProvider actionLevelProvider
      */
     public function testExistingActionIsNotChanged($logLevel)
     {
-        $processor = new ContaoTableProcessor(
-            $this->getMock('Symfony\Component\HttpFoundation\RequestStack'),
-            $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')
-        );
+        $processor = $this->createContaoTableProcessor();
 
         $record = $processor(
             [
@@ -121,10 +110,7 @@ class ContaoTableProcessorTest extends TestCase
             ->willReturn(null)
         ;
 
-        $processor = new ContaoTableProcessor(
-            $requestStack,
-            $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')
-        );
+        $processor = $this->createContaoTableProcessor($requestStack);
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
@@ -147,22 +133,14 @@ class ContaoTableProcessorTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $processor = new ContaoTableProcessor(
-            $requestStack,
-            $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'),
-            false
-        );
+        $processor = $this->createContaoTableProcessor($requestStack, null, false);
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
         $this->assertEquals($input, $context->getIp());
 
-        $processor = new ContaoTableProcessor(
-            $requestStack,
-            $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'),
-            true
-        );
+        $processor = $this->createContaoTableProcessor($requestStack, null, true);
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
@@ -180,10 +158,7 @@ class ContaoTableProcessorTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $processor = new ContaoTableProcessor(
-            $requestStack,
-            $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')
-        );
+        $processor = $this->createContaoTableProcessor($requestStack);
 
         /** @var ContaoContext $context */
         $context = $processor(
@@ -221,10 +196,7 @@ class ContaoTableProcessorTest extends TestCase
         $tokenStorage = new TokenStorage();
         $tokenStorage->setToken($token);
 
-        $processor = new ContaoTableProcessor(
-            $this->getMock('Symfony\Component\HttpFoundation\RequestStack'),
-            $tokenStorage
-        );
+        $processor = $this->createContaoTableProcessor(null, $tokenStorage);
 
         /** @var ContaoContext $context */
         $context = $processor(
@@ -257,11 +229,7 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testSource($container, $contextSource, $expectedSource)
     {
-        $processor = new ContaoTableProcessor(
-            $this->getMock('Symfony\Component\HttpFoundation\RequestStack'),
-            $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')
-        );
-
+        $processor = $this->createContaoTableProcessor();
         $processor->setContainer($container);
 
         $result = $processor(
@@ -360,5 +328,27 @@ class ContaoTableProcessorTest extends TestCase
         ;
 
         return $container;
+    }
+
+    /**
+     * Creates the ContaoTableProcessor object.
+     *
+     * @param RequestStack          $requestStack
+     * @param TokenStorageInterface $tokenStorage
+     * @param bool                  $anonymizeIp
+     *
+     * @return ContaoTableProcessor
+     */
+    private function createContaoTableProcessor($requestStack = null, $tokenStorage = null, $anonymizeIp = true)
+    {
+        if (null === $requestStack) {
+            $requestStack = $this->getMock('Symfony\Component\HttpFoundation\RequestStack');
+        }
+
+        if (null === $tokenStorage) {
+            $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        }
+
+        return new ContaoTableProcessor($requestStack, $tokenStorage, $anonymizeIp);
     }
 }
