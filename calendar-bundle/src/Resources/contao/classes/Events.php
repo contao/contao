@@ -15,7 +15,7 @@ namespace Contao;
  * Provide methods to get all events of a certain period from the database.
  *
  * @property bool $cal_noSpan
- * 
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Events extends \Module
@@ -134,7 +134,7 @@ abstract class Events extends \Module
 				{
 					$arrRepeat = \StringUtil::deserialize($objEvents->repeatEach);
 
-					if ($arrRepeat['value'] < 1)
+					if (!is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
 						continue;
 					}
@@ -211,19 +211,12 @@ abstract class Events extends \Module
 			$intCalendar = func_get_arg(6);
 		}
 
-		$span = \Calendar::calculateSpan($intStart, $intEnd);
-
-		// Adjust the start time of a multi-day event (see #6802)
-		if ($this->cal_noSpan && $span > 0 && $intStart < $intBegin && $intBegin < $intEnd)
-		{
-			$intStart = $intBegin;
-		}
-
 		$intDate = $intStart;
 		$intKey = date('Ymd', $intStart);
 		$strDate = \Date::parse($objPage->dateFormat, $intStart);
 		$strDay = $GLOBALS['TL_LANG']['DAYS'][date('w', $intStart)];
 		$strMonth = $GLOBALS['TL_LANG']['MONTHS'][(date('n', $intStart)-1)];
+		$span = \Calendar::calculateSpan($intStart, $intEnd);
 
 		if ($span > 0)
 		{
@@ -256,12 +249,16 @@ abstract class Events extends \Module
 		if ($objEvents->recurring)
 		{
 			$arrRange = \StringUtil::deserialize($objEvents->repeatEach);
-			$strKey = 'cal_' . $arrRange['unit'];
-			$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
 
-			if ($objEvents->recurrences > 0)
+			if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
-				$until = sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvents->repeatEnd));
+				$strKey = 'cal_' . $arrRange['unit'];
+				$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
+
+				if ($objEvents->recurrences > 0)
+				{
+					$until = sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvents->repeatEnd));
+				}
 			}
 		}
 
@@ -364,7 +361,7 @@ abstract class Events extends \Module
 		for ($i=1; $i<=$span && $intDate<=$intLimit; $i++)
 		{
 			// Only show first occurrence
-			if ($this->cal_noSpan && $intDate >= $intBegin)
+			if ($this->cal_noSpan)
 			{
 				break;
 			}

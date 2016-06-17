@@ -905,11 +905,14 @@ class tl_calendar_events extends Backend
 			{
 				$arrRange = StringUtil::deserialize($dc->activeRecord->repeatEach);
 
-				$arg = $arrRange['value'] * $dc->activeRecord->recurrences;
-				$unit = $arrRange['unit'];
+				if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+				{
+					$arg = $arrRange['value'] * $dc->activeRecord->recurrences;
+					$unit = $arrRange['unit'];
 
-				$strtotime = '+ ' . $arg . ' ' . $unit;
-				$arrSet['repeatEnd'] = strtotime($strtotime, $arrSet['endTime']);
+					$strtotime = '+ ' . $arg . ' ' . $unit;
+					$arrSet['repeatEnd'] = strtotime($strtotime, $arrSet['endTime']);
+				}
 			}
 		}
 
@@ -1096,7 +1099,6 @@ class tl_calendar_events extends Backend
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_calendar_events.id='.$intId.'" has been created'.$this->getParentEntries('tl_calendar_events', $intId), __METHOD__, TL_GENERAL);
 
 		// Update the RSS feed (for some reason it does not work without sleep(1))
 		sleep(1);
