@@ -1,0 +1,39 @@
+{
+    "name": "contao/comments-bundle",
+    "type": "contao-bundle",
+    "description": "Contao 4 comments bundle",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "symfony/framework-bundle": "~2.8|~3.0",
+        "contao/core-bundle": "~4.2"
+    },
+    "conflict": {
+        "contao/core": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\CommentsBundle\\": "src/"
+        },
+        "classmap": [
+            "src/Resources/contao/classes",
+            "src/Resources/contao/elements",
+            "src/Resources/contao/models",
+            "src/Resources/contao/modules"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "4.3.x-dev"
+        }
+    }
+}
