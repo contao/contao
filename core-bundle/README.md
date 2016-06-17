@@ -1,9 +1,9 @@
 Contao 4 core bundle
 ====================
 
-[![](https://img.shields.io/travis/contao/core-bundle/develop.svg?style=flat-square)](https://travis-ci.org/contao/core-bundle/)
-[![](https://img.shields.io/scrutinizer/g/contao/core-bundle/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/contao/core-bundle/)
-[![](https://img.shields.io/coveralls/contao/core-bundle/develop.svg?style=flat-square)](https://coveralls.io/github/contao/core-bundle)
+[![](https://img.shields.io/travis/contao/core-bundle/master.svg?style=flat-square)](https://travis-ci.org/contao/core-bundle/)
+[![](https://img.shields.io/scrutinizer/g/contao/core-bundle/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/contao/core-bundle/)
+[![](https://img.shields.io/coveralls/contao/core-bundle/master.svg?style=flat-square)](https://coveralls.io/github/contao/core-bundle)
 
 Contao is an Open Source PHP Content Management System for people who want a
 professional website that is easy to maintain. Visit the [project website][1]
@@ -78,7 +78,7 @@ This is the same as:
     "contao/comments-bundle": "~4.2",
     "contao/core-bundle": "~4.2",
     "contao/faq-bundle": "~4.2",
-    "contao/installation-bundle": "~1.0",
+    "contao/installation-bundle": "~1.1",
     "contao/listing-bundle": "~4.2",
     "contao/news-bundle": "~4.2",
     "contao/newsletter-bundle": "~4.2"
