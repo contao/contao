@@ -342,9 +342,7 @@ class PrettyErrorScreenListener
      */
     private function loadLanguageStrings()
     {
-        if (!$this->framework->isInitialized()) {
-            return null;
-        }
+        $this->framework->initialize();
 
         System::loadLanguageFile('exception');
 
