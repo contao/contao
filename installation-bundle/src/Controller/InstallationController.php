@@ -49,6 +49,7 @@ class InstallationController implements ContainerAwareInterface
         'error' => '',
         'import_error' => '',
         'import_date' => '',
+        'has_admin' => false,
         'hide_admin' => false,
         'admin_error' => '',
     ];
