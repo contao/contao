@@ -1795,6 +1795,9 @@ class tl_content extends Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
 		}
 
+		// Reverse the logic (elements have invisible=1)
+		$blnVisible = !$blnVisible;
+
 		// The onload_callbacks vary depending on the dynamic parent table (see #4894)
 		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
 		{
@@ -1833,10 +1836,9 @@ class tl_content extends Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_content SET tstamp=". time() .", invisible='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_content SET tstamp=". time() .", invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_content.id='.$intId.'" has been created'.$this->getParentEntries('tl_content', $intId), __METHOD__, TL_GENERAL);
 	}
 }

@@ -355,6 +355,9 @@ class tl_image_size_item extends Backend
 		$objVersions = new Versions('tl_image_size_item', $intId);
 		$objVersions->initialize();
 
+		// Reverse the logic (image sizes have invisible=1)
+		$blnVisible = !$blnVisible;
+
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_image_size_item']['fields']['invisible']['save_callback']))
 		{
@@ -373,10 +376,9 @@ class tl_image_size_item extends Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_image_size_item SET tstamp=". time() .", invisible='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_image_size_item SET tstamp=". time() .", invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_image_size_item.id='.$intId.'" has been created'.$this->getParentEntries('tl_image_size_item', $intId), __METHOD__, TL_GENERAL);
 	}
 }

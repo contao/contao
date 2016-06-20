@@ -532,6 +532,11 @@ class tl_member extends Backend
 			return '';
 		}
 
+		if (!$row['login'] || $row['username'] == '')
+		{
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
+		}
+
 		return '<a href="contao/preview.php?user='.$row['username'].'" target="_blank" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
 	}
 
@@ -705,6 +710,9 @@ class tl_member extends Backend
 		$objVersions = new Versions('tl_member', $intId);
 		$objVersions->initialize();
 
+		// Reverse the logic (members have disabled=1)
+		$blnVisible = !$blnVisible;
+
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_member']['fields']['disable']['save_callback']))
 		{
@@ -725,33 +733,16 @@ class tl_member extends Backend
 		$time = time();
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_member SET tstamp=$time, disable='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_member SET tstamp=$time, disable='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_member.id='.$intId.'" has been created'.$this->getParentEntries('tl_member', $intId), __METHOD__, TL_GENERAL);
 
 		// Remove the session if the user is disabled (see #5353)
 		if (!$blnVisible)
 		{
 			$this->Database->prepare("DELETE FROM tl_session WHERE name='FE_USER_AUTH' AND pid=?")
 						   ->execute($intId);
-		}
-
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		// HOOK: update newsletter subscriptions
-		if (isset($bundles['ContaoNewsletterBundle']))
-		{
-			$objUser = $this->Database->prepare("SELECT email FROM tl_member WHERE id=?")
-									  ->limit(1)
-									  ->execute($intId);
-
-			if ($objUser->numRows)
-			{
-				$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=$time, active=? WHERE email=?")
-							   ->execute(($blnVisible ? 1 : ''), $objUser->email);
-			}
 		}
 	}
 }

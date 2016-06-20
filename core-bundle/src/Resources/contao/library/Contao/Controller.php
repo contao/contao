@@ -139,15 +139,7 @@ abstract class Controller extends \System
 							foreach ($arrThemeTemplates as $strFile)
 							{
 								$strTemplate = basename($strFile, strrchr($strFile, '.'));
-
-								if (!isset($arrTemplates[$strTemplate]))
-								{
-									$arrTemplates[$strTemplate][] = $objTheme->name;
-								}
-								else
-								{
-									$arrTemplates[$strTemplate][] = $objTheme->name;
-								}
+								$arrTemplates[$strTemplate][] = $objTheme->name;
 							}
 						}
 					}
@@ -218,13 +210,13 @@ abstract class Controller extends \System
 					// Send a 404 header if there is no published article
 					if (null === $objArticle)
 					{
-						throw new PageNotFoundException('Page not found');
+						throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 					}
 
 					// Send a 403 header if the article cannot be accessed
 					if (!static::isVisibleElement($objArticle))
 					{
-						throw new AccessDeniedException('Access denied');
+						throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
 					}
 
 					// Add the "first" and "last" classes (see #2583)
@@ -1050,18 +1042,13 @@ abstract class Controller extends \System
 	 * @param boolean $blnFixDomain Check the domain of the target page and append it if necessary
 	 *
 	 * @return string An URL that can be used in the front end
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+	 *             Use the contao.routing.url_generator service or PageModel::getFrontendUrl() instead.
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		if ($strForceLang !== null)
-		{
-			@trigger_error('Using Controller::generateFrontendUrl() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-		}
-
-		if ($blnFixDomain !== true)
-		{
-			@trigger_error('Using Controller::generateFrontendUrl() without $blnFixDomain has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-		}
+		@trigger_error('Using Controller::generateFrontendUrl() has been deprecated and will no longer work in Contao 5.0. Use the contao.routing.url_generator service or PageModel::getFrontendUrl() instead.', E_USER_DEPRECATED);
 
 		if (!isset($arrRow['rootId']))
 		{
@@ -1078,19 +1065,7 @@ abstract class Controller extends \System
 			}
 		}
 
-		$objRouter = \System::getContainer()->get('router');
 		$arrParams = [];
-		$strRoute = 'contao_frontend';
-
-		// Correctly handle the "index" alias (see #3961)
-		if ($arrRow['alias'] == 'index' && $strParams == '')
-		{
-			$strRoute = 'contao_index';
-		}
-		else
-		{
-			$arrParams['alias'] = ($arrRow['alias'] ?: $arrRow['id']) . $strParams;
-		}
 
 		// Set the language
 		if ($strForceLang != '')
@@ -1113,8 +1088,21 @@ abstract class Controller extends \System
 			$arrParams['_locale'] = $objPage->rootLanguage;
 		}
 
-		$strUrl = $objRouter->generate($strRoute, $arrParams);
-		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		// Add the domain if it differs from the current one (see #3765 and #6927)
+		if ($blnFixDomain)
+		{
+			$arrParams['_domain'] = $arrRow['domain'];
+			$arrParams['_ssl'] = (bool) $arrRow['rootUseSSL'];
+		}
+
+		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
+		$strUrl = $objUrlGenerator->generate(($arrRow['alias'] ?: $arrRow['id']) . $strParams, $arrParams);
+
+		// Remove path from absolute URLs
+		if (0 === strpos($strUrl, '/'))
+		{
+			$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		}
 
 		// Decode sprintf placeholders
 		if (strpos($strParams, '%') !== false)
@@ -1126,12 +1114,6 @@ abstract class Controller extends \System
 			{
 				$strUrl = str_replace('%25' . $v, '%' . $v, $strUrl);
 			}
-		}
-
-		// Add the domain if it differs from the current one (see #3765 and #6927)
-		if ($blnFixDomain && !empty($arrRow['domain']) && $arrRow['domain'] != \Environment::get('host'))
-		{
-			$strUrl = ($arrRow['rootUseSSL'] ? 'https://' : 'http://') . $arrRow['domain'] . \Environment::get('path') . '/' . $strUrl;
 		}
 
 		// HOOK: add custom logic

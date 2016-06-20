@@ -929,7 +929,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					// Reset doNotCopy and fallback fields to their default value
 					elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotCopy'] || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['fallback'])
 					{
-						$v = '';
+						$v = \Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
 
 						// Use array_key_exists to allow NULL (see #5252)
 						if (array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]))
@@ -1147,7 +1147,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						// Reset doNotCopy and fallback fields to their default value
 						elseif ($GLOBALS['TL_DCA'][$v]['fields'][$kk]['eval']['doNotCopy'] || $GLOBALS['TL_DCA'][$v]['fields'][$kk]['eval']['fallback'])
 						{
-							$vv = '';
+							$vv = \Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$v]['fields'][$kk]['sql']);
 
 							// Use array_key_exists to allow NULL (see #5252)
 							if (array_key_exists('default', $GLOBALS['TL_DCA'][$v]['fields'][$kk]))
@@ -2181,7 +2181,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				\Message::reset();
 				\System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
-				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['edit']['href'], false, array('s2e', 'act')));
+				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['edit']['href'], false, array('s2e', 'act', 'mode', 'pid')));
 			}
 			elseif (isset($_POST['saveNback']))
 			{
@@ -2612,7 +2612,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Show all non-excluded fields
 			foreach ($fields as $field)
 			{
-				if ($field == 'pid' || $field == 'sorting' || (!$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] && (strlen($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback']))))
+				if ($field == 'pid' || $field == 'sorting' || (!$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] && (strlen($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback']) || is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback']))))
 				{
 					$options .= '
   <input type="checkbox" name="all_fields[]" id="all_'.$field.'" class="tl_checkbox" value="'.\StringUtil::specialchars($field).'"> <label for="all_'.$field.'" class="tl_checkbox_label">'.(($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: $GLOBALS['TL_LANG']['MSC'][$field][0]).' <span style="color:#999;padding-left:3px">['.$field.']</span>').'</label><br>';
@@ -2934,7 +2934,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Show all non-excluded fields
 			foreach ($fields as $field)
 			{
-				if ($field == 'pid' || $field == 'sorting' || (!$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] && (strlen($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback']))))
+				if ($field == 'pid' || $field == 'sorting' || (!$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] && (strlen($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback']) || is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback']))))
 				{
 					$options .= '
   <input type="checkbox" name="all_fields[]" id="all_'.$field.'" class="tl_checkbox" value="'.\StringUtil::specialchars($field).'"> <label for="all_'.$field.'" class="tl_checkbox_label">'.(($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: $GLOBALS['TL_LANG']['MSC'][$field][0]).' <span style="color:#999;padding-left:3px">['.$field.']</span>').'</label><br>';
@@ -3881,7 +3881,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5)
 				{
 					$_buttons .= ($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id) || $arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || in_array($id, $arrClipboard['id'])) || (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && !$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] && in_array($id, $this->root))) ? \Image::getHtml('pasteafter_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$id.(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ';
-					$_buttons .= ($arrClipboard['mode'] == 'paste' && ($blnCircularReference || $arrClipboard['id'] == $id) || $arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || in_array($id, $arrClipboard['id']))) ? \Image::getHtml('pasteinto_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$id.(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ';
+					$_buttons .= ($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id) || $arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || in_array($id, $arrClipboard['id']))) ? \Image::getHtml('pasteinto_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$id.(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ';
 				}
 
 				// Extended tree
@@ -5010,23 +5010,23 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$submit = '
 
 <div class="tl_submit_panel tl_subpanel">
-<input type="image" name="filter" id="filter" src="' . \Image::getPath('sync.svg') . '" class="tl_img_submit" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
-<input type="image" name="filter_reset" id="filter_reset" value="1" src="' . \Image::getPath('delete.svg') . '" class="tl_img_submit" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '" alt="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['reset']) . '">
+  <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
+  <button name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
 </div>';
 			}
 
 			$return .= '
 <div class="tl_panel cf">
-' . $submit . $arrPanels[$i] . '
+  ' . $submit . $arrPanels[$i] . '
 </div>';
 		}
 
 		$return = '
 <form action="'.ampersand(\Environment::get('request'), true).'" class="tl_form" method="post">
 <div class="tl_formbody">
-<input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-' . $return . '
+  <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
+  <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
+  ' . $return . '
 </div>
 </form>
 ';

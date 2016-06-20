@@ -132,7 +132,7 @@ class BackendMain extends \Backend
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_welcome');
-		$objTemplate->messages = \Message::generateUnwrapped() . \Message::getSystemMessages();
+		$objTemplate->messages = \Message::generateUnwrapped() . \Backend::getSystemMessages();
 		$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];
 
 		// Add the login message
@@ -143,7 +143,7 @@ class BackendMain extends \Backend
 
 			$objTemplate->loginMsg = sprintf(
 				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
-				'<time datetime="' . date('Y-m-d H:i', $this->User->lastLogin) . '">' . $diff . '</time>'
+				'<time title="' . \Date::parse(\Config::get('datimFormat'), $this->User->lastLogin) . '">' . $diff . '</time>'
 			);
 		}
 
@@ -221,7 +221,11 @@ class BackendMain extends \Backend
 		$this->Template->collapseNode = $GLOBALS['TL_LANG']['MSC']['collapseNode'];
 		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
 		$this->Template->isPopup = \Input::get('popup');
-		$this->Template->systemErrorMessages = \Message::countSystemErrorMessages();
+		$this->Template->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
+
+		$strSystemMessages = \Backend::getSystemMessages();
+		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');
+		$this->Template->systemErrorMessagesCount = substr_count($strSystemMessages, 'class="tl_error"');
 
 		// Front end preview links
 		if (defined('CURRENT_ID') && CURRENT_ID != '')

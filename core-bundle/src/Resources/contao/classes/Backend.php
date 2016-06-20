@@ -674,11 +674,9 @@ abstract class Backend extends \Controller
 					// Get articles with teaser
 					if (($objArticles = \ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
 					{
-						$feUrl = $objPage->getAbsoluteUrl('/articles/%s');
-
 						foreach ($objArticles as $objArticle)
 						{
-							$arrPages[] = sprintf($feUrl, ($objArticle->alias ?: $objArticle->id));
+							$arrPages[] = $objPage->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 						}
 					}
 				}
@@ -921,6 +919,40 @@ abstract class Backend extends \Controller
 
 		// Return the image
 		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['id'].'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']).'"' . (($dc->table != 'tl_page') ? ' class="tl_gray"' : '') . ' target="_blank">'.\Image::getHtml($image, '', $imageAttribute).'</a> '.$label;
+	}
+
+
+	/**
+	 * Return the system messages as HTML
+	 *
+	 * @return string The messages HTML markup
+	 */
+	public static function getSystemMessages()
+	{
+		$strMessages = '';
+
+		// HOOK: add custom messages
+		if (isset($GLOBALS['TL_HOOKS']['getSystemMessages']) && is_array($GLOBALS['TL_HOOKS']['getSystemMessages']))
+		{
+			$arrMessages = array();
+
+			foreach ($GLOBALS['TL_HOOKS']['getSystemMessages'] as $callback)
+			{
+				$strBuffer = \System::importStatic($callback[0])->{$callback[1]}();
+
+				if ($strBuffer != '')
+				{
+					$arrMessages[] = $strBuffer;
+				}
+			}
+
+			if (!empty($arrMessages))
+			{
+				$strMessages .= implode("\n", $arrMessages);
+			}
+		}
+
+		return $strMessages;
 	}
 
 

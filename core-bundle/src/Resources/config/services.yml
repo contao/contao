@@ -54,6 +54,25 @@ services:
         calls:
             - ["setContainer", ["@service_container"]]
 
+    contao.monolog.handler:
+        class: Contao\CoreBundle\Monolog\ContaoTableHandler
+        public: false
+        calls:
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: monolog.logger, channel: contao }
+
+    contao.monolog.processor:
+        class: Contao\CoreBundle\Monolog\ContaoTableProcessor
+        public: false
+        arguments:
+            - "@request_stack"
+            - "@security.token_storage"
+        calls:
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: monolog.processor }
+
     contao.referer_id.manager:
          class: Symfony\Component\Security\Csrf\CsrfTokenManager
          public: false
@@ -82,6 +101,13 @@ services:
             - "%contao.prepend_locale%"
         tags:
             - { name: routing.loader }
+
+    contao.routing.url_generator:
+        class: Contao\CoreBundle\Routing\UrlGenerator
+        arguments:
+            - "@router"
+            - "@contao.framework"
+            - "%contao.prepend_locale%"
 
     contao.security.authenticator:
         class: Contao\CoreBundle\Security\ContaoAuthenticator

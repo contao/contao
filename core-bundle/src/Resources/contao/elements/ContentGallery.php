@@ -287,7 +287,7 @@ class ContentGallery extends \ContentElement
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
 			{
-				throw new PageNotFoundException('Page not found');
+				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
 
 			// Set limit and offset

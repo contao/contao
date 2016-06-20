@@ -184,13 +184,43 @@ var Theme = {
 	 * Set up the menu toggle
 	 */
 	setupMenuToggle: function() {
-		var tog = $('burger');
-		if (tog.getParent('li').getStyle('display') == 'none') return;
-		$('tl_navigation').inject($('header'), 'after');
-		$('left').destroy();
-		tog.addEvent('click', function() {
+		$('burger').addEvent('click', function() {
 			document.body.toggleClass('show-navigation');
 		});
+	},
+
+	/**
+	 * Hide the menu on scroll
+	 */
+	hideMenuOnScroll: function() {
+		if (!('ontouchmove' in window)) return;
+
+		var wh = window.getSize().y,
+			dh = window.getScrollSize().y - wh,
+			anchor = 0;
+
+		if (wh >= dh) return;
+
+		window
+			.addEvent('touchmove', function() {
+				var ws = window.getScroll().y;
+
+				if (Math.abs(anchor - ws) < 20) return;
+
+				if (ws > 0 && ws > anchor) {
+					$('header').addClass('down');
+				} else {
+					$('header').removeClass('down');
+				}
+
+				anchor = ws;
+			})
+			.addEvent('scroll', function() {
+				if (window.getScroll().y < 1) {
+					$('header').removeClass('down');
+				}
+			})
+		;
 	}
 };
 
@@ -200,6 +230,7 @@ window.addEvent('domready', function() {
 	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
+	Theme.hideMenuOnScroll();
 });
 
 // Respond to Ajax changes

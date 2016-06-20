@@ -588,9 +588,7 @@ class tl_form_field extends Backend
 			return $strType . "\n" . $objWidget->value . "\n</div>\n";
 		}
 
-		return $strType . '
-<table class="tl_form_field_preview">
-'.$strWidget.'</table>
+		return $strType . $strWidget . '
 </div>' . "\n";
 	}
 
@@ -681,6 +679,9 @@ class tl_form_field extends Backend
 		$objVersions = new Versions('tl_form_field', $intId);
 		$objVersions->initialize();
 
+		// Reverse the logic (form fields have invisible=1)
+		$blnVisible = !$blnVisible;
+
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['invisible']['save_callback']))
 		{
@@ -699,10 +700,9 @@ class tl_form_field extends Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_form_field SET tstamp=". time() .", invisible='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_form_field SET tstamp=". time() .", invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_form_field.id='.$intId.'" has been created'.$this->getParentEntries('tl_form_field', $intId), __METHOD__, TL_GENERAL);
 	}
 }

@@ -404,7 +404,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
-
 		),
 		'stop' => array
 		(
@@ -918,6 +917,9 @@ class tl_user extends Backend
 		$objVersions = new Versions('tl_user', $intId);
 		$objVersions->initialize();
 
+		// Reverse the logic (users have disable=1)
+		$blnVisible = !$blnVisible;
+
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_user']['fields']['disable']['save_callback']))
 		{
@@ -936,11 +938,10 @@ class tl_user extends Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_user SET tstamp=". time() .", disable='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_user SET tstamp=". time() .", disable='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_user.id='.$intId.'" has been created'.$this->getParentEntries('tl_user', $intId), __METHOD__, TL_GENERAL);
 
 		// Remove the session if the user is disabled (see #5353)
 		if (!$blnVisible)

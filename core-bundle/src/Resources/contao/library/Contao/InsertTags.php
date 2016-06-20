@@ -439,6 +439,7 @@ class InsertTags extends \Controller
 
 				// Closing link tag
 				case 'link_close':
+				case 'email_close':
 					$arrCache[$strTag] = '</a>';
 					break;
 

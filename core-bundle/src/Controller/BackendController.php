@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\BackendAlerts;
 use Contao\BackendConfirm;
 use Contao\BackendFile;
 use Contao\BackendHelp;
@@ -190,6 +191,22 @@ class BackendController extends Controller
         $this->container->get('contao.framework')->initialize();
 
         $controller = new BackendSwitch();
+
+        return $controller->run();
+    }
+
+    /**
+     * Renders the alerts content.
+     *
+     * @return Response
+     *
+     * @Route("/alerts", name="contao_backend_alerts")
+     */
+    public function alertsAction()
+    {
+        $this->container->get('contao.framework')->initialize();
+
+        $controller = new BackendAlerts();
 
         return $controller->run();
     }

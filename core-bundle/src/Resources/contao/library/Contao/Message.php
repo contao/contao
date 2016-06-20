@@ -110,7 +110,7 @@ class Message
 			throw new \Exception("Invalid message type $strType");
 		}
 
-		\System::getContainer()->get('session')->getFlashBag()->add(static::getFlashBagKey($strType, $strScope ), $strMessage);
+		\System::getContainer()->get('session')->getFlashBag()->add(static::getFlashBagKey($strType, $strScope), $strMessage);
 	}
 
 
@@ -160,11 +160,6 @@ class Message
 				{
 					$strMessages .= '<p class="' . $strClass . '">' . $strMessage . '</p>';
 				}
-			}
-
-			if (!$_POST)
-			{
-				\System::getContainer()->get('session')->getFlashBag()->set(static::getFlashBagKey($strType, $strScope), null);
 			}
 		}
 
@@ -271,52 +266,6 @@ class Message
 
 
 	/**
-	 * Return the system messages as HTML
-	 *
-	 * @return string The messages HTML markup
-	 */
-	public static function getSystemMessages()
-	{
-		$strMessages = '';
-
-		// HOOK: add custom messages
-		if (isset($GLOBALS['TL_HOOKS']['getSystemMessages']) && is_array($GLOBALS['TL_HOOKS']['getSystemMessages']))
-		{
-			$arrMessages = array();
-
-			foreach ($GLOBALS['TL_HOOKS']['getSystemMessages'] as $callback)
-			{
-				$strBuffer = \System::importStatic($callback[0])->{$callback[1]}();
-
-				if ($strBuffer != '')
-				{
-					$arrMessages[] = $strBuffer;
-				}
-			}
-
-			if (!empty($arrMessages))
-			{
-				$strMessages .= implode("\n", $arrMessages);
-			}
-		}
-
-		return $strMessages;
-	}
-
-
-	/**
-	 * Count the system error messages
-	 *
-	 * @return integer The number of system error messages
-	 */
-	public static function countSystemErrorMessages()
-	{
-		// TODO: should we cache this?
-		return substr_count(static::getSystemMessages(), 'class="tl_error"');
-	}
-
-
-	/**
 	 * Return the flash bag key
 	 *
 	 * @param string      $strType  The message type
@@ -326,6 +275,6 @@ class Message
 	 */
 	protected static function getFlashBagKey($strType, $strScope=TL_MODE)
 	{
-		return 'contao.' . (('FE' === $strScope) ? 'frontend' : 'backend') . '.' . strtolower(str_replace('TL_', '', $strType));
+		return 'contao.' . $strScope . '.' . strtolower(str_replace('TL_', '', $strType));
 	}
 }

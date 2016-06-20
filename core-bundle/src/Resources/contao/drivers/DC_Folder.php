@@ -439,7 +439,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').(($session['search'][$this->strTable]['value'] != '') ? '
 
-<div class="tl_message tl_message_picker">
+<div class="tl_message">
  <p class="tl_info">'.$GLOBALS['TL_LANG']['MSC']['searchExclude'].'</p>
 </div>' : '').($blnClipboard ? '
 
@@ -1039,7 +1039,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// See #4086
 		if (!class_exists($class))
 		{
-			$class = 'FileUpload';
+			$class = 'DropZone';
 		}
 
 		/** @var FileUpload $objUploader */
@@ -1271,7 +1271,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					{
 						$objFile = is_dir(TL_ROOT . '/' . $this->intId) ? new \Folder($this->intId) : new \File($this->intId);
 
-						$this->strPath = $objFile->dirname;
+						$this->strPath = str_replace(TL_ROOT . '/', '', $objFile->dirname);
 						$this->strExtension = ($objFile->origext != '') ? '.'.$objFile->origext : '';
 						$this->varValue = $objFile->filename;
 
@@ -1517,7 +1517,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Walk through each record
 			foreach ($ids as $id)
 			{
-				$this->intId = md5($id);
+				$this->intId = $id;
 				$this->strPalette = \StringUtil::trimsplit('[;,]', $this->getPalette());
 
 				$objModel = null;
@@ -1551,6 +1551,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				$class = 'tl_box';
 				$formFields = array();
+				$strHash = md5($id);
 
 				foreach ($this->strPalette as $v)
 				{
@@ -1566,15 +1567,15 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					}
 
 					$this->strField = $v;
-					$this->strInputName = $v.'_'.$this->intId;
-					$formFields[] = $v.'_'.$this->intId;
+					$this->strInputName = $v.'_'.$strHash;
+					$formFields[] = $v.'_'.$strHash;
 
 					// Load the current value
 					if ($v == 'name')
 					{
 						$objFile = is_dir(TL_ROOT . '/' . $id) ? new \Folder($id) : new \File($id);
 
-						$this->strPath = $objFile->dirname;
+						$this->strPath = str_replace(TL_ROOT . '/', '', $objFile->dirname);
 						$this->strExtension = ($objFile->origext != '') ? '.'.$objFile->origext : '';
 						$this->varValue = $objFile->filename;
 
@@ -1612,7 +1613,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				// Close box
 				$return .= '
-  <input type="hidden" name="FORM_FIELDS_'.$this->intId.'[]" value="'.\StringUtil::specialchars(implode(',', $formFields)).'">
+  <input type="hidden" name="FORM_FIELDS_'.$strHash.'[]" value="'.\StringUtil::specialchars(implode(',', $formFields)).'">
 </div>';
 
 				// Save the record
@@ -2646,7 +2647,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 						$importantPart = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded))->getImportantPart();
 						if ($importantPart->getPosition()->getX() > 0 || $importantPart->getPosition()->getY() > 0 || $importantPart->getSize()->getWidth() < $objFile->width || $importantPart->getSize()->getHeight() < $objFile->height)
 						{
-							$thumbnail .= ' ' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(320)->setHeight(40)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl(TL_ROOT), '', 'style="margin:0 0 2px 0"');
+							$thumbnail .= ' ' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(320)->setHeight(40)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl(TL_ROOT), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 						}
 					}
 				}
@@ -2696,6 +2697,21 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 */
 	protected function panel()
 	{
+		// Reset all filters
+		if (isset($_POST['filter_reset']) && \Input::post('FORM_SUBMIT') == 'tl_filters')
+		{
+			/** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+
+			$data = $objSessionBag->all();
+
+			unset($data['search'][$this->strTable]);
+
+			$objSessionBag->replace($data);
+
+			$this->reload();
+		}
+
 		$search = $this->searchMenu();
 
 		if (\Input::post('FORM_SUBMIT') == 'tl_filters')
@@ -2710,7 +2726,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
   <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
   <div class="tl_panel cf">
     <div class="tl_submit_panel tl_subpanel">
-      <input type="image" name="filter" id="filter" src="' . \Image::getPath('sync.svg') . '" class="tl_img_submit" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '" alt="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['apply']) . '">
+      <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
+      <button name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
     </div>'.$search.'
   </div>
 </div>

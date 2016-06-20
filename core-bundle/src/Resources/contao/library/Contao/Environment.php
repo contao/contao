@@ -114,7 +114,14 @@ class Environment
 	 */
 	protected static function scriptName()
 	{
-		return (static::$strSapi == 'cgi' || static::$strSapi == 'isapi' || static::$strSapi == 'cgi-fcgi' || static::$strSapi == 'fpm-fcgi') && (@$_SERVER['ORIG_PATH_INFO'] ?: $_SERVER['PATH_INFO']) ? (@$_SERVER['ORIG_PATH_INFO'] ?: $_SERVER['PATH_INFO']) : (@$_SERVER['ORIG_SCRIPT_NAME'] ?: $_SERVER['SCRIPT_NAME']);
+		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request === null)
+		{
+			return @$_SERVER['ORIG_SCRIPT_NAME'] ?: $_SERVER['SCRIPT_NAME'];
+		}
+
+		return $request->getScriptName();
 	}
 
 

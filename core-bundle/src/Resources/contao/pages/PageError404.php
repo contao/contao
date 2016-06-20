@@ -72,7 +72,7 @@ class PageError404 extends \Frontend
 	protected function prepare()
 	{
 		// Check the search index (see #3761)
-		\Search::removeEntry(\Environment::get('relativeRequest'));
+		\Search::removeEntry(\Environment::get('base') . \Environment::get('relativeRequest'));
 
 		// Find the matching root page
 		$objRootPage = $this->getRootPageFromUrl();
@@ -113,7 +113,7 @@ class PageError404 extends \Frontend
 		// Die if there is no page at all
 		if (null === $obj404)
 		{
-			throw new PageNotFoundException('Page not found');
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
 		// Forward to another page

@@ -34,7 +34,7 @@ body {
 }
 #go_to_frontend a {
 	padding:3px 0 3px 21px;
-	background:url("icons/login.svg") no-repeat left center;
+	background:url("icons/manager.svg") no-repeat left center;
 	color:#666;
 }
 
@@ -52,7 +52,7 @@ body {
 	color:#666;
 }
 #tl_license a:hover,#tl_license a:focus,#tl_license a:active {
-	color:#77ac45;
+	color:#589b0e;
 }
 
 /* Error messages */
@@ -72,11 +72,11 @@ body {
 	background:url("icons/error.svg") no-repeat left center;
 }
 .tl_info {
-	color:#4b85ba;
+	color:#427aae;
 	background:url("icons/show.svg") no-repeat 1px center;
 }
 .tl_confirm {
-	color:#77ac45;
+	color:#589b0e;
 	background:url("icons/ok.svg") no-repeat left center;
 }
 

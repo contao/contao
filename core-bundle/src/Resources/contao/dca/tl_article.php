@@ -201,7 +201,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 				array('tl_article', 'generateAlias')
 			),
 			'sql'                     => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
-
 		),
 		'author' => array
 		(
@@ -940,6 +939,11 @@ class tl_article extends Backend
 
 		if (!$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
 		{
+			if ($row['published'])
+			{
+				$icon = preg_replace('/\.svg$/i', '_.svg', $icon); // see #8126
+			}
+
 			return Image::getHtml($icon) . ' ';
 		}
 
@@ -1000,6 +1004,5 @@ class tl_article extends Backend
 					   ->execute($intId);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_article.id='.$intId.'" has been created'.$this->getParentEntries('tl_article', $intId), __METHOD__, TL_GENERAL);
 	}
 }

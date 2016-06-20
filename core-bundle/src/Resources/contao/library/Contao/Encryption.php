@@ -76,7 +76,7 @@ class Encryption
 			$strKey = \System::getContainer()->getParameter('contao.encryption_key');
 		}
 
-		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size(static::$resTd), MCRYPT_RAND);
+		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size(static::$resTd));
 		mcrypt_generic_init(static::$resTd, md5($strKey), $iv);
 		$strEncrypted = mcrypt_generic(static::$resTd, $varValue);
 		$strEncrypted = base64_encode($iv.$strEncrypted);
