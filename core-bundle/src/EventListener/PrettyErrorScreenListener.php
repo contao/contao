@@ -342,7 +342,7 @@ class PrettyErrorScreenListener
      */
     private function loadLanguageStrings()
     {
-        if (!class_exists('Contao\System')) {
+        if (!$this->framework->isInitialized()) {
             return null;
         }
 
