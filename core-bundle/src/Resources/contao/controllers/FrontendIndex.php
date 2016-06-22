@@ -136,7 +136,7 @@ class FrontendIndex extends \Frontend
 		if ($objPage === null)
 		{
 			$this->User->authenticate();
-			$this->log('No active page for page ID "' . $pageId . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
+			$this->log('No active page for page ID "' . $pageId . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_GENERAL);
 
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
