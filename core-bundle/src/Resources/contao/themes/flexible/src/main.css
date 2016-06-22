@@ -975,10 +975,6 @@ ul.sgallery li {
 .tl_listwizard .tl_text {
 	width:586px;
 }
-.tl_listwizard_img {
-	position:relative;
-	top:3px;
-}
 
 /* Checkbox wizard */
 .tl_checkbox_wizard .fixed {
@@ -1099,12 +1095,6 @@ ul.sgallery li {
 }
 .js .drag-handle {
 	display:inline;
-}
-.parent_view .drag-handle,.tl_tablewizard .drag-handle {
-	top:0;
-}
-.tl_listwizard .drag-handle {
-	top:3px;
 }
 .js .button-move {
 	width:0;
