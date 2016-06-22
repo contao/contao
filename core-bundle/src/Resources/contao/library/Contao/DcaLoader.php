@@ -85,7 +85,10 @@ class DcaLoader extends \Controller
 					include $file;
 				}
 			}
-			catch (\InvalidArgumentException $e) {}
+			catch (\InvalidArgumentException $e)
+			{
+				\System::getContainer()->get('monolog.logger.contao')->notice($e->getMessage(), ['exception' => $e]);
+			}
 		}
 
 		// HOOK: allow to load custom settings
