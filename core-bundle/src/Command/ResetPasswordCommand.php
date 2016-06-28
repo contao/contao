@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Command;
 use Contao\Config;
 use Contao\Encryption;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,6 +46,10 @@ class ResetPasswordCommand extends ContainerAwareCommand
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
+        if (null === $input->getArgument('username')) {
+            throw new RuntimeException('You must enter a username on the command.');
+        }
+
         if (null !== $input->getOption('password')) {
             return;
         }
@@ -53,7 +58,7 @@ class ResetPasswordCommand extends ContainerAwareCommand
         $confirm  = $this->askForPassword('Please confirm the password:', $input, $output);
 
         if ($password !== $confirm) {
-            throw new \LogicException('Your passwords do not match');
+            throw new RuntimeException('Your passwords do not match');
         }
 
         $input->setOption('password', $password);
@@ -122,7 +127,7 @@ class ResetPasswordCommand extends ContainerAwareCommand
         $passwordLength = $config->get('passwordLength');
 
         if (strlen($password) < $passwordLength) {
-            throw new \UnderflowException(sprintf('Password must be at least %s characters.', $passwordLength));
+            throw new RuntimeException(sprintf('Password must be at least %s characters.', $passwordLength));
         }
 
         /** @var Encryption $encryption */
