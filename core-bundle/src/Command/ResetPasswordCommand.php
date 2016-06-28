@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\Config;
 use Contao\Encryption;
+use Patchwork\Utf8;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -115,7 +116,7 @@ class ResetPasswordCommand extends ContainerAwareCommand
      *
      * @return string
      *
-     * @throws \UnderflowException
+     * @throws RuntimeException
      */
     private function validateAndHashPassword($password)
     {
@@ -124,9 +125,9 @@ class ResetPasswordCommand extends ContainerAwareCommand
 
         /** @var Config $confirm */
         $config = $framework->getAdapter('Contao\Config');
-        $passwordLength = $config->get('passwordLength');
+        $passwordLength = $config->get('minPasswordLength') ?: 8;
 
-        if (strlen($password) < $passwordLength) {
+        if (Utf8::strlen($password) < $passwordLength) {
             throw new RuntimeException(sprintf('Password must be at least %s characters.', $passwordLength));
         }
 
