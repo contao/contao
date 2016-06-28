@@ -76,7 +76,8 @@ class ResetPasswordCommand extends ContainerAwareCommand
 
         $hash = $this->validateAndHashPassword($input->getOption('password'));
 
-        $this->getContainer()
+        $affected = $this
+            ->getContainer()
             ->get('database_connection')
             ->update(
                 'tl_user',
@@ -84,6 +85,10 @@ class ResetPasswordCommand extends ContainerAwareCommand
                 ['username' => $input->getArgument('username')]
             )
         ;
+
+        if (0 === $affected) {
+            throw new RuntimeException(sprintf('User "%s" was not found.', $input->getArgument('username')));
+        }
 
         return 0;
     }
