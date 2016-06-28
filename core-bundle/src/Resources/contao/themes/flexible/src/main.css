@@ -174,19 +174,9 @@ h1.main_headline {
 	display:none;
 }
 h2.sub_headline {
-	margin:3px 18px 9px;
-	padding:7px 0 7px 32px;
+	margin:3px 18px;
+	padding:7px 0;
 	color:#589b0e;
-}
-h2.sub_headline {
-	background:url("icons/current.svg") no-repeat left center;
-}
-h2.sub_headline_index {
-	margin-bottom:0;
-	background:url("icons/index.svg") no-repeat left center;
-}
-h2.sub_headline_purge {
-	background:url("icons/purge.svg") no-repeat left center;
 }
 .tl_message {
 	margin:18px 18px 0;
@@ -369,6 +359,12 @@ input[type=search]::-webkit-search-decoration {
 	padding-top:0;
 	padding-bottom:24px;
 	border:0;
+}
+#tl_maintenance_mode .tl_tbox {
+	padding-top:4px;
+}
+#tl_maintenance_index .tl_tbox {
+	margin-top:-13px;
 }
 
 /* Picker search */
@@ -1362,6 +1358,9 @@ fieldset.collapsed > legend {
 }
 #tl_maintenance_cache .nw {
 	white-space:nowrap;
+}
+#tl_maintenance_cache .tl_checkbox_container {
+	margin-top:12px;
 }
 #tl_maintenance_cache .tl_checkbox_container label {
 	font-weight:500;
