@@ -175,15 +175,14 @@ h1.main_headline {
 }
 h2.sub_headline {
 	margin:3px 18px 9px;
-	padding:7px 0 7px 40px;
+	padding:7px 0 7px 32px;
 	color:#589b0e;
-	font-size:1.125rem;
-	font-weight:400;
 }
 h2.sub_headline {
 	background:url("icons/current.svg") no-repeat left center;
 }
 h2.sub_headline_index {
+	margin-bottom:0;
 	background:url("icons/index.svg") no-repeat left center;
 }
 h2.sub_headline_purge {
@@ -353,18 +352,23 @@ input[type=search]::-webkit-search-decoration {
 }
 
 /* Maintenance */
-.maintenance_inactive .tl_submit_container {
-	background:none;
-	margin:-12px 0 28px;
-	padding-top:0;
-	padding-bottom:0;
-	border:0;
-}
 .maintenance_inactive {
-	margin-top:48px;
+	border-top:10px solid #eaeaea;
 }
 #tl_buttons+.maintenance_inactive {
-	margin-top:12px;
+	margin-top:9px;
+}
+.maintenance_inactive .tl_tbox {
+	padding-bottom:14px;
+}
+.maintenance_inactive h2.sub_headline {
+	margin-top:18px;
+}
+.maintenance_inactive .tl_submit_container {
+	background:none;
+	padding-top:0;
+	padding-bottom:24px;
+	border:0;
 }
 
 /* Picker search */
