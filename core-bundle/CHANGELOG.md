@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.2.1 (2016-XX-XX)
+
+ * Provide the back end fonts in different variants (see #523).
+
 ### 4.2.0 (2016-06-18)
 
  * Also check for the back end cookie when loading from cache (see contao/core#8249).
