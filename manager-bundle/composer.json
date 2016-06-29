@@ -1,0 +1,30 @@
+{
+    "name": "contao/manager-bundle",
+    "type": "symfony-bundle",
+    "description": "Contao 4 manager bundle",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Andreas Schempp",
+            "homepage": "https://github.com/aschempp"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "contao/core-bundle": "4.3.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.5",
+        "symfony/phpunit-bridge": "~2.8|~3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\ManagerBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\ManagerBundle\\Test\\": "tests/"
+        }
+    }
+}
