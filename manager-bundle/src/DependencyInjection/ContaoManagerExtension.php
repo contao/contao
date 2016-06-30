@@ -11,18 +11,16 @@
 namespace Contao\ManagerBundle\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\PrependContaoExtensionInterface;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Adds the bundle services to the container.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoManagerExtension extends ConfigurableExtension implements PrependExtensionInterface
+class ContaoManagerExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * @inheritdoc
@@ -36,16 +34,7 @@ class ContaoManagerExtension extends ConfigurableExtension implements PrependExt
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader(
-            $container,
-            new FileLocator(__DIR__.'/../Resources/config')
-        );
-
-        $loader->load('services.yml');
     }
 }
