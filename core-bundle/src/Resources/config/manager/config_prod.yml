@@ -1,0 +1,17 @@
+imports:
+    - { resource: config.yml }
+
+# Monolog configuration
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:      rotating_file
+            max_files: 10
+            path:      "%kernel.logs_dir%/%kernel.environment%.log"
+            level:     info
+        console:
+            type: console

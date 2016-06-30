@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class ContaoCoreExtension extends ConfigurableExtension
+class ContaoCoreExtension extends ConfigurableExtension implements PrependContaoExtensionInterface
 {
     /**
      * @var array
@@ -120,5 +120,22 @@ class ContaoCoreExtension extends ConfigurableExtension
         );
 
         $container->setDefinition('contao.listener.container_scope', $definition);
+    }
+
+    /**
+     * Allow an extension to prepend the extension configurations.
+     *
+     * @param ContainerBuilder $container
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        $env = $container->getParameter('kernel.environment');
+
+        $loader = new YamlFileLoader(
+            $container,
+            new FileLocator(__DIR__.'/../Resources/config/manager')
+        );
+
+        $loader->load('config_' . $env . '.yml');
     }
 }
