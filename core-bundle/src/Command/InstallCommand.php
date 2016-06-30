@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Command;
 
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -109,6 +110,10 @@ class InstallCommand extends AbstractLockedCommand
         }
 
         $this->addEmptyDir($this->rootDir.'/'.$this->getContainer()->getParameter('contao.upload_path'));
+
+        if ($this->getContainer()->get('kernel') instanceof ContaoKernel) {
+            $this->addEmptyDir($this->rootDir . '/system/logs');
+        }
     }
 
     /**

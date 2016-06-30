@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -96,7 +97,10 @@ class SymlinksCommand extends AbstractLockedCommand
         // Symlink the assets and themes directory
         $this->symlink('assets', 'web/assets');
         $this->symlink('system/themes', 'web/system/themes');
-        $this->symlink('var/logs', 'system/logs');
+
+        if (!$this->getContainer()->get('kernel') instanceof ContaoKernel) {
+            $this->symlink('var/logs', 'system/logs');
+        }
     }
 
     /**
