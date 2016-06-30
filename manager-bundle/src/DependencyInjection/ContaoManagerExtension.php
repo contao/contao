@@ -10,8 +10,10 @@
 
 namespace Contao\ManagerBundle\DependencyInjection;
 
+use Contao\CoreBundle\DependencyInjection\PrependContaoExtensionInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
@@ -20,8 +22,20 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoManagerExtension extends ConfigurableExtension
+class ContaoManagerExtension extends ConfigurableExtension implements PrependExtensionInterface
 {
+    /**
+     * @inheritdoc
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        foreach ($container->getExtensions() as $extension) {
+            if ($extension instanceof PrependContaoExtensionInterface && !$extension instanceof PrependExtensionInterface) {
+                $extension->prepend($container);
+            }
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
