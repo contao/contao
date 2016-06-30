@@ -1,0 +1,23 @@
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: en
+    secret: ThisTokenIsNotSoSecretChangeIt
+
+# Framework configuration
+framework:
+    secret: "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing_%kernel.environment%.yml"
+        strict_requirements: "%kernel.debug%"
+    templating:
+        engines: ['twig']
+    default_locale:  "%locale%"
+    session:
+        handler_id: ~
+    csrf_protection: ~
+    translator: { fallbacks: ["%locale%"] }
+
+# Contao configuration
+contao:
+    encryption_key: "%secret%"

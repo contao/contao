@@ -1,0 +1,3 @@
+# Twig configuration
+twig:
+    strict_variables: "%kernel.debug%"
