@@ -9,12 +9,22 @@
  * @license LGPL-3.0+
  */
 
-use Contao\ManagerBundle\ContaoKernel;
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 set_time_limit(0);
 
-$loader = require __DIR__.'/../../../autoload.php';
+if (is_dir($vendor = __DIR__.'/../vendor')) {
+    require($vendor.'/autoload.php');
+} elseif (is_dir($vendor = __DIR__.'/../../../../vendor')) {
+    require($vendor.'/autoload.php');
+} else {
+    die(
+        'You must set up the project dependencies, run the following commands:'.PHP_EOL.
+        'curl -s http://getcomposer.org/installer | php'.PHP_EOL.
+        'php composer.phar install'.PHP_EOL
+    );
+}
 
 $kernel = new ContaoKernel('prod', false);
 $application = new Application($kernel);
