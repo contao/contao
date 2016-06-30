@@ -11,7 +11,14 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "contao/core-bundle": "4.3.x-dev"
+        "symfony/symfony": "~2.8|~3.0",
+        "symfony/monolog-bundle": "~2.8",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "sensio/distribution-bundle": "~5.0",
+        "sensio/framework-extra-bundle": "^3.0.2",
+        "doctrine/doctrine-bundle": "~1.6",
+        "contao/core-bundle": "~4.2",
+        "contao/installation-bundle": "~1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.5",
