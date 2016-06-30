@@ -184,7 +184,8 @@ var Theme = {
 	 * Set up the menu toggle
 	 */
 	setupMenuToggle: function() {
-		$('burger').addEvent('click', function() {
+		var burger = $('burger');
+		burger && burger.addEvent('click', function() {
 			document.body.toggleClass('show-navigation');
 		});
 	},
