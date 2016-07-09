@@ -1705,7 +1705,7 @@ fieldset.collapsed > legend {
 		position:relative;
 		padding:3px 6px;
 	}
-	.styled_select_wrapper {
+	.tl_filter .styled_select_wrapper {
 		display:block;
 	}
 	.tl_filter strong {
