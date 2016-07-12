@@ -403,6 +403,21 @@ class tl_templates extends Backend
 				$strBuffer .= '<p class="tl_info" style="margin-bottom:1em">' . sprintf($GLOBALS['TL_LANG']['tl_templates']['overridesAnotherTpl'], $strComparePath) . '</p>';
 			}
 		}
+		else
+		{
+			// Try to find the base template by strippig suffixes
+			while (strpos($strName, '_') !== false)
+			{
+				$strName = substr($strName, 0, strrpos($strName, '_'));
+
+				if (isset($arrTemplates[$strName]))
+				{
+					$strCompareName = $strName;
+					$strComparePath = $arrTemplates[$strCompareName] . '/' .$strCompareName . '.' . $strExtension;
+					break;
+				}
+			}
+		}
 
 		// User selected template to compare against
 		if (Input::post('from') && isset($arrTemplates[Input::post('from')]))
