@@ -26,35 +26,30 @@ class BundleAutoloader
     protected $rootDir;
 
     /**
-     * @var string
-     */
-    protected $environment;
-
-    /**
      * Constructor
      *
-     * @param string $rootDir     The kernel root directory
-     * @param string $environment The current environment
+     * @param string $rootDir The kernel root directory
      */
-    public function __construct($rootDir, $environment)
+    public function __construct($rootDir)
     {
-        $this->rootDir     = $rootDir;
-        $this->environment = $environment;
+        $this->rootDir = $rootDir;
     }
 
     /**
      * Returns an ordered bundle map
      *
+     * @param string $environment
+     *
      * @return array The bundles map
      */
-    public function load()
+    public function load($environment)
     {
         $resolver = new ConfigResolver();
 
         $this->addBundlesToResolver($resolver, $this->findAutoloadFiles(), new JsonParser());
         $this->addBundlesToResolver($resolver, $this->findLegacyModules(), new IniParser());
 
-        return $resolver->getBundlesMapForEnvironment($this->environment);
+        return $resolver->getBundlesMapForEnvironment($environment);
     }
 
     /**

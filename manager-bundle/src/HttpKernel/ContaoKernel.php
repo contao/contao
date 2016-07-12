@@ -114,8 +114,8 @@ class ContaoKernel extends Kernel
      */
     protected function generateBundlesMap()
     {
-        $autoloader = new BundleAutoloader($this->getRootDir(), $this->getEnvironment());
+        $autoloader = new BundleAutoloader($this->getRootDir());
 
-        return $autoloader->load();
+        return $autoloader->load($this->getEnvironment());
     }
 }

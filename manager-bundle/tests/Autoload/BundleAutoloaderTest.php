@@ -16,7 +16,7 @@ class BundleAutoloaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testInstanceOf()
     {
-        $bundleLoader = new BundleAutoloader('rootDir', 'env');
+        $bundleLoader = new BundleAutoloader('rootDir');
 
         $this->assertInstanceOf('Contao\ManagerBundle\Autoload\BundleAutoloader', $bundleLoader);
     }
@@ -24,8 +24,7 @@ class BundleAutoloaderTest extends \PHPUnit_Framework_TestCase
     public function testLoad()
     {
         $bundleLoader = new BundleAutoloader(
-            __DIR__ . '/../Fixtures/Autoload/BundleAutoloader/dummyRootDirName',
-            'all'
+            __DIR__ . '/../Fixtures/Autoload/BundleAutoloader/dummyRootDirName'
         );
 
         $this->assertSame(
@@ -33,7 +32,7 @@ class BundleAutoloaderTest extends \PHPUnit_Framework_TestCase
                 'ContaoCoreBundle'  => 'Contao\CoreBundle\ContaoCoreBundle',
                 'legacy-module'     => null
             ],
-            $bundleLoader->load()
+            $bundleLoader->load('all')
         );
     }
 }
