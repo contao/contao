@@ -34,5 +34,5 @@
             "Contao\\ManagerBundle\\Test\\": "tests/"
         }
     },
-    "bin": ["bin/contao"]
+    "bin": ["bin/contao-console"]
 }

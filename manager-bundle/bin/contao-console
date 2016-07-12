@@ -13,6 +13,9 @@ use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 set_time_limit(0);
+ini_set('error_reporting', -1);
+ini_set('display_startup_errors', 1);
+ini_set('display_errors', 1);
 
 if (is_dir($vendor = __DIR__.'/../vendor')) {
     require($vendor.'/autoload.php');
@@ -26,6 +29,6 @@ if (is_dir($vendor = __DIR__.'/../vendor')) {
     );
 }
 
-$kernel = new ContaoKernel('prod', false);
+$kernel = new ContaoKernel('prod', true);
 $application = new Application($kernel);
 $application->run();
