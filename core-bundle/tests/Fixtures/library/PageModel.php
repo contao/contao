@@ -2,7 +2,9 @@
 
 namespace Contao\Fixtures;
 
-class PageModel implements \ArrayAccess, \Countable, \IteratorAggregate
+use Contao\Model\Collection;
+
+class PageModel
 {
     private $data;
     private $index = -1;
@@ -24,7 +26,7 @@ class PageModel implements \ArrayAccess, \Countable, \IteratorAggregate
         $page2->fallback = '';
         $page2->language = 'en';
 
-        return new self([$page1, $page2]);
+        return new Collection([$page1, $page2], 'tl_page');
     }
 
     public function __get($key)
@@ -39,35 +41,5 @@ class PageModel implements \ArrayAccess, \Countable, \IteratorAggregate
         }
 
         return true;
-    }
-
-    public function count()
-    {
-        return count($this->data);
-    }
-
-    public function offsetExists($offset)
-    {
-        return isset($this->data[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->data[$offset];
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        throw new \RuntimeException('This collection is immutable');
-    }
-
-    public function offsetUnset($offset)
-    {
-        throw new \RuntimeException('This collection is immutable');
-    }
-
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->data);
     }
 }
