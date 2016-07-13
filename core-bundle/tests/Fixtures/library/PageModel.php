@@ -2,7 +2,7 @@
 
 namespace Contao\Fixtures;
 
-class PageModel
+class PageModel implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     private $data;
     private $index = -1;
@@ -39,5 +39,35 @@ class PageModel
         }
 
         return true;
+    }
+
+    public function count()
+    {
+        return count($this->data);
+    }
+
+    public function offsetExists($offset)
+    {
+        return isset($this->data[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->data[$offset];
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        throw new \RuntimeException('This collection is immutable');
+    }
+
+    public function offsetUnset($offset)
+    {
+        throw new \RuntimeException('This collection is immutable');
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->data);
     }
 }
