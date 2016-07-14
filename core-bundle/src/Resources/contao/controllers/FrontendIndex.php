@@ -135,9 +135,6 @@ class FrontendIndex extends \Frontend
 		// Throw a 404 error if the page could not be found
 		if ($objPage === null)
 		{
-			$this->User->authenticate();
-			$this->log('No active page for page ID "' . $pageId . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_GENERAL);
-
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
@@ -207,9 +204,6 @@ class FrontendIndex extends \Frontend
 		// Check wether the language matches the root page language
 		if (\Config::get('addLanguageToUrl') && \Input::get('language') != $objPage->rootLanguage)
 		{
-			$this->User->authenticate();
-			$this->log('No active page for page ID "' . $pageId . '" and language "' . \Input::get('language') . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
-
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
@@ -229,7 +223,6 @@ class FrontendIndex extends \Frontend
 		// Authenticate the user
 		if (!$this->User->authenticate() && $objPage->protected && !BE_USER_LOGGED_IN)
 		{
-			$this->log('Access to page ID "' . $pageId . '" denied (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
 			throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
 		}
 
