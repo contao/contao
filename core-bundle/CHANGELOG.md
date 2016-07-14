@@ -2,6 +2,7 @@
 
 ### 4.2.1 (2016-XX-XX)
 
+ * Do not run the command scheduler if the installation is incomplete (see #541).
  * Do not index randomly ordered image galleries.
  * Fix the filter menu layout on mobile devices.
  * Provide the back end fonts in different variants (see #523).

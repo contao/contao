@@ -106,6 +106,59 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
+     * Tests that the listener does nothing if the installation is incomplete.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testIncompleteInstallation()
+    {
+        $adapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['get', 'isComplete'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $adapter
+            ->expects($this->never())
+            ->method('get')
+        ;
+
+        $adapter
+            ->expects($this->any())
+            ->method('isComplete')
+            ->willReturn(false)
+        ;
+
+        $this->framework = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $this->framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($adapter)
+        ;
+
+        $this->framework
+            ->expects($this->any())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $this->framework
+            ->expects($this->never())
+            ->method('createInstance')
+        ;
+
+        $listener = new CommandSchedulerListener($this->framework);
+        $listener->onKernelTerminate();
+    }
+
+    /**
      * Tests that the listener does nothing if the command scheduler has been disabled.
      *
      * @runInSeparateProcess
@@ -115,7 +168,7 @@ class CommandSchedulerListenerTest extends TestCase
     {
         $adapter = $this
             ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['get'])
+            ->setMethods(['get', 'isComplete'])
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -123,6 +176,12 @@ class CommandSchedulerListenerTest extends TestCase
         $adapter
             ->expects($this->any())
             ->method('get')
+            ->willReturn(true)
+        ;
+
+        $adapter
+            ->expects($this->any())
+            ->method('isComplete')
             ->willReturn(true)
         ;
 
@@ -142,6 +201,11 @@ class CommandSchedulerListenerTest extends TestCase
             ->expects($this->any())
             ->method('isInitialized')
             ->willReturn(true)
+        ;
+
+        $this->framework
+            ->expects($this->never())
+            ->method('createInstance')
         ;
 
         $listener = new CommandSchedulerListener($this->framework);
