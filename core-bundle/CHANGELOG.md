@@ -2,6 +2,7 @@
 
 ### 4.2.1 (2016-XX-XX)
 
+ * Do not index randomly ordered image galleries.
  * Provide the back end fonts in different variants (see #523).
 
 ### 4.2.0 (2016-06-18)
