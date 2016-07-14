@@ -1,5 +1,9 @@
 # Contao calendar bundle change log
 
+### 4.2.1 (2016-XX-XX)
+
+ * Generate the feed files in the correct folder.
+
 ### 4.2.0 (2016-06-18)
 
  * Validate the settings when loading a recurring event (see contao/core#8286).
