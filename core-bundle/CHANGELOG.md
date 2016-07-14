@@ -3,7 +3,10 @@
 ### 4.2.1 (2016-XX-XX)
 
  * Do not index randomly ordered image galleries.
+ * Fix the filter menu layout on mobile devices.
  * Provide the back end fonts in different variants (see #523).
+ * Fix the message markup in the member templates.
+ * Correctly load the language strings in the pretty error screen listener.
 
 ### 4.2.0 (2016-06-18)
 
