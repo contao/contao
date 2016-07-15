@@ -1,5 +1,9 @@
 # Contao news bundle change log
 
+### 4.2.1 (2016-07-15)
+
+ * Generate the feed files in the correct folder.
+
 ### 4.2.0 (2016-06-18)
 
  * Correctly generate the feed links in a multi-domain setup (see contao/core#8329).
