@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="MSC.com_name">
         <source>Name</source>
-        <target>Ime in medijski tipi</target>
+        <target>Naziv</target>
       </trans-unit>
       <trans-unit id="MSC.com_email">
         <source>E-mail (not published)</source>

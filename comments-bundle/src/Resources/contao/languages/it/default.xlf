@@ -61,9 +61,21 @@
 View: %s
 Edit: %s
 </source>
+        <target>%s ha inserito un nuovo commento sul sito.
+
+---
+
+%s
+
+---
+
+Visualizza: %s
+Modifica: %s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <target>Questo commento deve essere confermato nel back-end prima di apparire sul sito!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>
