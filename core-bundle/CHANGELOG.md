@@ -1,7 +1,8 @@
 # Contao core bundle change log
 
-### 4.2.1 (2016-XX-XX)
+### 4.2.1 (2016-07-15)
 
+ * Strip soft hyphens when indexing a page (see contao/core#8389).
  * Do not run the command scheduler if the installation is incomplete (see #541).
  * Do not index randomly ordered image galleries.
  * Fix the filter menu layout on mobile devices.
