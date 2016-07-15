@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.editheader.1">
         <source>Edit the category settings</source>
-        <target>Bewerk deze categorie</target>
+        <target>Bewerk categorie-instellingen</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Add new at the top</source>
-        <target>Maak een nieuwe lay-out definitie aan het begin</target>
+        <target>Maak nieuw aan het begin</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Add new after question ID %s</source>
