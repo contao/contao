@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### 1.1.1 (2016-XX-XX)
+### 1.1.1 (2016-07-15)
 
  * Use the URL generator to generate the back end login URL (see #18).
 
