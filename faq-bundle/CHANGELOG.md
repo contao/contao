@@ -1,5 +1,9 @@
 # Contao FAQ bundle change log
 
+### 4.2.1 (2016-07-15)
+
+ * Fix a whitespace issue in the mod_faqpage.html5 template.
+
 ### 4.2.0 (2016-06-18)
 
  * Do not log new versions twice.
