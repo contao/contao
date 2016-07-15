@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Per ragioni di sicurezza lo strumento di installazione è stato bloccato. Questo succede se viene sbagliata più volte la password di installazione. Per sbloccare il sistema occorre aprire il file di configurazione e impostare la variabile &lt;em&gt;installCount&lt;/em&gt; a &lt;em&gt;0&lt;/em&gt;.</target>
+        <target>Per ragioni di sicurezza lo strumento di installazione è stato bloccato dopo aver sbagliato la password tre volte. Per sbloccare lo strumento di installazione esegui &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt; da linea di comando.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -273,7 +273,7 @@
       </trans-unit>
       <trans-unit id="55">
         <source>admin_name</source>
-        <target>Nome e tipo di media</target>
+        <target>Nome</target>
         
       </trans-unit>
       <trans-unit id="56">

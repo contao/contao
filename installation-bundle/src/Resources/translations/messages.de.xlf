@@ -13,12 +13,12 @@
       </trans-unit>
       <trans-unit id="3">
         <source>locked_headline</source>
-        <target>Das Installtool wurde gesperrt</target>
+        <target>Das Installtool wurde gesperrt!</target>
         
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Aus Sicherheitsgründen wurde das Installtool gesperrt, nachdem dreimal hintereinander ein falsches Passwort eingegeben wurde. Um es zu entsperren, öffnen Sie die lokale Konfigurationsdatei und setzen Sie &lt;code&gt;installCount&lt;/code&gt; auf &lt;code&gt;0&lt;/code&gt;.</target>
+        <target>Aus Sicherheitsgründen wurde das Installtool gesperrt, nachdem dreimal hintereinander ein falsches Passwort eingegeben wurde. Um es zu entsperren, führen Sie den Befehl &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt; auf der Konsole aus.</target>
         
       </trans-unit>
       <trans-unit id="5">

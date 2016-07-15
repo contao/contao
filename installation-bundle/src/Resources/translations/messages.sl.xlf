@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Zaradi varnostnih razlogov se je namestitveno orodje zaklenilo. Napačno geslo je bilo vpisano več kot trikrat zaporedoma. Da bi odklenili orodje je potrebno odpreti lokalno namestitveno datoteko in nastaviti &lt;code&gt;installCount&lt;/code&gt; na &lt;code&gt;0&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="5">
