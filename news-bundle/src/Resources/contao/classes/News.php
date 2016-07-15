@@ -246,7 +246,7 @@ class News extends \Frontend
 		}
 
 		// Create the file
-		\File::putContent('share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
+		\File::putContent('web/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
 	}
 
 
