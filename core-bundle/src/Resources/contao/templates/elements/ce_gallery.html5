@@ -1,4 +1,4 @@
-<?php $this->extend('block_searchable'); ?>
+<?php $this->extend($this->isRandomOrder ? 'block_unsearchable' : 'block_searchable'); ?>
 
 <?php $this->block('content'); ?>
 

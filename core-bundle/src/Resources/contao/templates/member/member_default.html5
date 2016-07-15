@@ -7,7 +7,7 @@
   <?php endif; ?>
 
   <?php if ($this->message): ?>
-    <?= $this->message ?>
+    <p class="tl_confirm"><?= $this->message ?></p>
   <?php endif; ?>
 
   <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post" enctype="<?= $this->enctype ?>">

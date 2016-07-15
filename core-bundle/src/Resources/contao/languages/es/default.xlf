@@ -1324,8 +1324,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <target>Ir al front end</target>
       </trans-unit>
       <trans-unit id="MSC.fePreview">
-        <source>Front end preview</source>
-        <target>Front end vista preliminar</target>
+        <source>Preview</source>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
@@ -1744,8 +1743,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <target>Por favor regrese al selector de páginas o fichero y haga una selección antes de cerrar el diálogo.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>System messages</source>
-        <target>Mensajes del sistema</target>
+        <source>Notifications</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

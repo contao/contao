@@ -1309,8 +1309,7 @@ Tento e-mail bol automatický vygenerovaný systémom Contao. Neodpovedajte naň
         <target>Prejsť na front end</target>
       </trans-unit>
       <trans-unit id="MSC.fePreview">
-        <source>Front end preview</source>
-        <target>Náhľad webu</target>
+        <source>Preview</source>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
@@ -1724,8 +1723,7 @@ Tento e-mail bol automatický vygenerovaný systémom Contao. Neodpovedajte naň
         <target>Vráťte sa prosím do správcu stránok alebo súborov a urobte výber, predtým než zavriete toto dialógové okno. </target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>System messages</source>
-        <target>Systémové správy</target>
+        <source>Notifications</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

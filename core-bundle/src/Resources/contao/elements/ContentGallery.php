@@ -262,6 +262,7 @@ class ContentGallery extends \ContentElement
 
 			case 'random':
 				shuffle($images);
+				$this->Template->isRandomOrder = true;
 				break;
 		}
 

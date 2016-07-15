@@ -286,8 +286,7 @@
         <target>Ota käyttöön / poista käytöstä jäsenen ID %s tili </target>
       </trans-unit>
       <trans-unit id="tl_member.su.0">
-        <source>Front end preview</source>
-        <target>Sivuston esikatselu</target>
+        <source>Preview</source>
       </trans-unit>
       <trans-unit id="tl_member.su.1">
         <source>Preview the front end as member ID %s</source>

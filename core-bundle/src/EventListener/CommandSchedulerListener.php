@@ -48,7 +48,7 @@ class CommandSchedulerListener
         /** @var Config $config */
         $config = $this->framework->getAdapter('Contao\Config');
 
-        if ($config->get('disableCron')) {
+        if (!$config->isComplete() || $config->get('disableCron')) {
             return;
         }
 

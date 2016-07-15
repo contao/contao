@@ -145,14 +145,14 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             return;
         }
 
-        while ($pages->next()) {
-            $base = ($pages->dns ?: '*');
+        foreach ($pages as $page) {
+            $base = ($page->dns ?: '*');
 
-            if ($pages->fallback) {
-                $mapper[$base.'/empty.fallback'] = $base.'/empty.'.$pages->language;
+            if ($page->fallback) {
+                $mapper[$base.'/empty.fallback'] = $base.'/empty.'.$page->language;
             }
 
-            $mapper[$base.'/empty.'.$pages->language] = $base.'/empty.'.$pages->language;
+            $mapper[$base.'/empty.'.$page->language] = $base.'/empty.'.$page->language;
         }
 
         $this->filesystem->dumpFile(

@@ -1324,8 +1324,8 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <target>Zum Frontend</target>
       </trans-unit>
       <trans-unit id="MSC.fePreview">
-        <source>Front end preview</source>
-        <target>Frontend-Vorschau</target>
+        <source>Preview</source>
+        <target>Vorschau</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
@@ -1744,8 +1744,8 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <target>Bitte gehen Sie zurück zum Seiten- bzw. Dateiwähler und nehmen Sie dort eine Auswahl vor, bevor Sie den Dialog schließen.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>System messages</source>
-        <target>Systemnachrichten</target>
+        <source>Notifications</source>
+        <target>Mitteilungen</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
