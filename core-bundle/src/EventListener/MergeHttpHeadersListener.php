@@ -92,10 +92,8 @@ class MergeHttpHeadersListener
                 header_remove($name);
             }
 
-            // Do not replace existing response headers
-            if (!$response->headers->has($name)) {
-                $response->headers->set($name, trim($content));
-            }
+            // Do not replace existing headers as the response object has a higher priority
+            $response->headers->set($name, trim($content), false);
         }
 
         return $response;

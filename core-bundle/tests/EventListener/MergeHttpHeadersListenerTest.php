@@ -127,42 +127,10 @@ class MergeHttpHeadersListenerTest extends TestCase
         $response = $responseEvent->getResponse();
 
         $this->assertTrue($response->headers->has('FOOBAR'));
-        $this->assertSame('content', $response->headers->get('FOOBAR', null, false)[0]);
-    }
 
-    /**
-     * Tests that headers are not appended.
-     */
-    public function testHeadersAreNotAppendedIfAlreadyPresentInResponse()
-    {
-        $response = new Response();
-        $response->headers->set('FOOBAR', 'content');
+        $allHeaders = $response->headers->get('FOOBAR', null, false);
 
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            $response
-        );
-
-        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
-
-        $framework
-            ->expects($this->once())
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
-        $headersCount = count($response->headers->get('FOOBAR', null, false));
-
-        $listener = new MergeHttpHeadersListener($framework);
-        $listener->setHeaders(['FOOBAR: new-content']);
-        $listener->onKernelResponse($responseEvent);
-
-        $response = $responseEvent->getResponse();
-
-        $this->assertTrue($response->headers->has('FOOBAR'));
-        $this->assertSame($headersCount, count($response->headers->get('FOOBAR', null, false)));
+        $this->assertSame('content', $allHeaders[0]);
+        $this->assertSame('new-content', $allHeaders[1]);
     }
 }
