@@ -225,6 +225,7 @@
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages in the site structure which are not website root pages.</source>
+        <target>Il y a des pages de niveau supérieur dans la structure du site qui ne sont pas des pages racines du site.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -1321,7 +1322,7 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
         <target>Aller sur le front office</target>
       </trans-unit>
       <trans-unit id="MSC.fePreview">
-        <source>Front end preview</source>
+        <source>Preview</source>
         <target>Aperçu</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
@@ -1741,8 +1742,8 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
         <target>Veuillez revenir au sélecteur de pages ou de fichiers et faire une sélection avant de fermer la boîte de dialogue.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>System messages</source>
-        <target>Messages du système</target>
+        <source>Notifications</source>
+        <target>Notifications</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

@@ -1311,8 +1311,7 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
         <target>Mergi la front-end</target>
       </trans-unit>
       <trans-unit id="MSC.fePreview">
-        <source>Front end preview</source>
-        <target>Previzualizare</target>
+        <source>Preview</source>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
@@ -1726,8 +1725,7 @@ Acest mesaj a fost generat de Contao. Nu puteţi face reply direct la acest emai
         <target>Mergeţi înapoi la selectorul de pagină sau fişier şi faceţi o selecţie înainte să închideţi dialogul.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>System messages</source>
-        <target>Mesaje de sistem</target>
+        <source>Notifications</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

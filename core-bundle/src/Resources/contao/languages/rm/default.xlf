@@ -1315,8 +1315,7 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
         <target>Ir al front-end</target>
       </trans-unit>
       <trans-unit id="MSC.fePreview">
-        <source>Front end preview</source>
-        <target>Prevista dal front-end</target>
+        <source>Preview</source>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
@@ -1730,8 +1729,7 @@ Quest e-mail è vegnì generà da Contao. Ti na pos betg respunder directamain s
         <target>Turna a la pagina da tscherner datotecas u paginas e fa ina selecziun avant che ti serras la fanestra.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>System messages</source>
-        <target>Messadis dal sistem</target>
+        <source>Notifications</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

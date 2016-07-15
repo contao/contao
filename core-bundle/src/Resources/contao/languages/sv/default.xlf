@@ -1314,8 +1314,7 @@ Detta e-postmeddelande har genererats av Contao. Du kan inte svara på det direk
         <target>Gå till frontend</target>
       </trans-unit>
       <trans-unit id="MSC.fePreview">
-        <source>Front end preview</source>
-        <target>Förhandsvisa</target>
+        <source>Preview</source>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
@@ -1729,8 +1728,7 @@ Detta e-postmeddelande har genererats av Contao. Du kan inte svara på det direk
         <target>Gå tillbaka till sid- eller filväljaren och gör ett val innan du stänger dialogen.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>System messages</source>
-        <target>Systemmeddelande</target>
+        <source>Notifications</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

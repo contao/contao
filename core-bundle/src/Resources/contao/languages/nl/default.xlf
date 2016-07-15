@@ -211,9 +211,11 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
+        <target>Geen enkele van de actieve website root pagina's zonder een expliciete DNS instelling heeft de optie om terug te vallen op een andere taal ingesteld.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
+        <target>Geen enkele van de actieve website root pagina's voor &lt;strong&gt;%s&lt;/strong&gt; heeft de optie om terug te vallen op een andere taal ingesteld.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -225,6 +227,7 @@
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages in the site structure which are not website root pages.</source>
+        <target>Er zijn top-level pagina's in de site structuur welke geen website root pagina's zijn.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -1200,6 +1203,7 @@
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
         <source>Your previous login was %s. Welcome back!</source>
+        <target>Uw vorige login was %s. Welkom terug!</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1211,6 +1215,7 @@
       </trans-unit>
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
+        <target>Dit lijkt uw eerste login te zijn. Welkom bij Contao!</target>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1319,8 +1324,8 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <target>Ga naar front-end</target>
       </trans-unit>
       <trans-unit id="MSC.fePreview">
-        <source>Front end preview</source>
-        <target>Front-end voorbeeld</target>
+        <source>Preview</source>
+        <target>Voorbeeldweergave</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
@@ -1480,6 +1485,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.pw_change">
         <source>Please enter a new password.</source>
+        <target>Geef een nieuw wachtwoord op.</target>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1738,8 +1744,8 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <target>Ga terug naar de pagina of bestandkiezer en maak een selectie voordat u het dialoogvenster sluit.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>System messages</source>
-        <target>Systeemmeldingen</target>
+        <source>Notifications</source>
+        <target>Meldingen</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
