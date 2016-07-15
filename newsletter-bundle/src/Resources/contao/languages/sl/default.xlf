@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidToken">
         <source>The activation link is invalid or outdated.</source>
-        <target>Povezava za aktivacijo je napačna ali potečena.</target>
+        <target>Povezava za aktivacijo je napačna ali je potekla.</target>
       </trans-unit>
       <trans-unit id="ERR.noChannels">
         <source>Please select at least one channel.</source>

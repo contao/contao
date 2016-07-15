@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.editheader.1">
         <source>Edit the channel settings</source>
-        <target>Bewerk de instellingen van dit nieuwsbriefkanaal</target>
+        <target>Bewerk de instellingen van dit kanaal</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.0">
         <source>Activate/deactivate recipient</source>

@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.editheader.0">
         <source>Edit channel</source>
-        <target>チャンネルを変更</target>
+        <target>チャンネルを編集</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.editheader.1">
         <source>Edit the channel settings</source>

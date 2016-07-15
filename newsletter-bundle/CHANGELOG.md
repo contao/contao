@@ -1,5 +1,9 @@
 # Contao newsletter bundle change log
 
+### 4.2.1 (2016-07-15)
+
+ * Require at least version 4.2.1 of the contao/core-bundle.
+
 ### 4.2.0 (2016-06-18)
 
  * Make DropZone the default uploader in the file manager (see contao/core-bundle#504).

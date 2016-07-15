@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.editheader.1">
         <source>Edit the channel settings</source>
-        <target>Bewerk de instellingen van dit nieuwsbriefkanaal</target>
+        <target>Bewerk de instellingen van dit kanaal</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>
