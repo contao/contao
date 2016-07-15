@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.1.1 (2016-XX-XX)
+
+ * Use the URL generator to generate the back end login URL (see #18).
+
 ### 1.1.0 (2016-06-18)
 
  * Redirect to the /contao/install route as soon as the real system can be booted.

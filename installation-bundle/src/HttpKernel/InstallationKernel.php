@@ -19,6 +19,10 @@ use Contao\System;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides a special installation kernel.
@@ -67,7 +71,7 @@ class InstallationKernel extends \AppKernel
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         if ($this->canBootRealSystem()) {
-            return new RedirectResponse('../contao/install');
+            return new RedirectResponse($this->getBackendLoginUrl());
         }
 
         $this->boot();
@@ -100,5 +104,24 @@ class InstallationKernel extends \AppKernel
         System::setContainer($this->container);
 
         ClassLoader::scanAndRegister();
+    }
+
+    /**
+     * Returns the back end login URL.
+     *
+     * @return string The back end login URL
+     */
+    private function getBackendLoginUrl()
+    {
+        $routes = new RouteCollection();
+        $routes->add('contao_backend_login', new Route('/contao/login'));
+
+        $context = new RequestContext();
+        $context->fromRequest(Request::createFromGlobals());
+        $context->setBaseUrl('');
+
+        $generator = new UrlGenerator($routes, $context);
+
+        return $generator->generate('contao_backend_login');
     }
 }
