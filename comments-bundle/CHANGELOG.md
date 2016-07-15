@@ -1,5 +1,9 @@
 # Contao comments bundle change log
 
+### 4.2.1 (2016-07-15)
+
+ * Fix the message markup of the comments form.
+
 ### 4.2.0 (2016-06-18)
 
  * Correctly validate and decode IDNA e-mail addresses (see contao/core#8306).
