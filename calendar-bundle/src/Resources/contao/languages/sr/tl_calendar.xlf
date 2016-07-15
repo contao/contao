@@ -167,9 +167,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.0">
         <source>Edit calendar</source>
+        <target>Уреди календар</target>
       </trans-unit>
       <trans-unit id="tl_calendar.editheader.1">
         <source>Edit the calendar settings</source>
+        <target>Уреди подешавања календара</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.0">
         <source>Duplicate calendar</source>
@@ -189,11 +191,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>
-        <target>RSS извор</target>
+        <target>RSS приказивач садржаја</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage RSS feeds</source>
-        <target>Управљање RSS извором</target>
+        <target>Управљај RSS приказивачем садржаја</target>
       </trans-unit>
     </body>
   </file>

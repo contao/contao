@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.title.1">
         <source>Please enter the event title.</source>
-        <target>لطفا یک عنوان برای رویداد وارد نمایید.</target>
+        <target>لطفا عنوان رویداد وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.alias.0">
         <source>Event alias</source>

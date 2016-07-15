@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
         <source>RSS feed permissions</source>
-        <target>Подешавања RSS Feed-a</target>
+        <target>Подешавања RSS приказивача</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>

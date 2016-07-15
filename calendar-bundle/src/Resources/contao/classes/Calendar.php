@@ -46,7 +46,7 @@ class Calendar extends \Frontend
 		if (\Input::get('act') == 'delete')
 		{
 			$this->import('Files');
-			$this->Files->delete('share/' . $objCalendar->feedName . '.xml');
+			$this->Files->delete('web/share/' . $objCalendar->feedName . '.xml');
 		}
 
 		// Update XML file
@@ -274,7 +274,7 @@ class Calendar extends \Frontend
 		}
 
 		// Create the file
-		\File::putContent('share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
+		\File::putContent('web/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
 	}
 
 

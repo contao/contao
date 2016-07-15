@@ -147,7 +147,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.source.1">
         <source>Here you can override the default redirect target.</source>
-        <target>Geef op naar welke pagina het nieuwsbericht verwijst.</target>
+        <target>Standaard doelpagina overschrijven.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.default.0">
         <source>Use default</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.cssClass.0">
         <source>CSS class</source>
-        <target>CSS klasse</target>
+        <target>CSS class</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cssClass.1">
         <source>Here you can enter one or more classes.</source>
@@ -243,7 +243,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Geef datum en tijdstip van de laatste aanpassing.</target>
+        <target>Datum en tijdstip van de laatste aanpassing.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.title_legend">
         <source>Title and author</source>
@@ -363,7 +363,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader.1">
         <source>Edit the calendar settings</source>
-        <target>Bewerk de huidige kalender</target>
+        <target>Bewerk kalender instellingen</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editmeta.0">
         <source>Edit event settings</source>
