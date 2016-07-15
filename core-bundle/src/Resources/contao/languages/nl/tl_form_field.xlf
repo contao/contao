@@ -371,7 +371,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.class.0">
         <source>CSS class</source>
-        <target>CSS klasse</target>
+        <target>CSS class</target>
       </trans-unit>
       <trans-unit id="tl_form_field.class.1">
         <source>Here you can enter one or more classes.</source>
@@ -539,7 +539,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Add new at the top</source>
-        <target>Maak een nieuwe lay-out definitie aan het begin</target>
+        <target>Maak nieuw aan het begin</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Add new after field ID %s</source>

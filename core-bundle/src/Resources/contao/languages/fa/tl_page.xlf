@@ -73,6 +73,14 @@
         <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
         <target>لطفا برگه مقصد را که می‌خواهید بازگردانی به آن برگه صورت گیرد، از ساختار درختی زیر انتخاب نمایید.</target>
       </trans-unit>
+      <trans-unit id="tl_page.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>بازگردانی به آخرین برگه دیده شده</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.1">
+        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
+        <target>بازگردانی به عقب کاربر به آخرین برگه دیده شده به جای برگه بازگردانی.</target>
+      </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
         <target>زبان جایگزین</target>
@@ -142,8 +150,8 @@
         <target>استفاده از HTTPS</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>Generate the URLs with &lt;em&gt;https://&lt;/em&gt; (e.g. in sitemaps).</source>
-        <target>نشانی‌های وب با &lt;em&gt;https://&lt;/em&gt; تولید می‌کند (برای نمونه در نقشه‌سایت‌ها).</target>
+        <source>This website is available via HTTPS.</source>
+        <target>این وب‌سایت از طریق HTTPS دردسترس است.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

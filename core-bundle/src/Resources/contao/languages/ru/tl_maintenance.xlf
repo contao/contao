@@ -137,14 +137,6 @@
         <source>Removes the cached versions of the search results.</source>
         <target>Удаляет кэшированные версии результатов поиска.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.0">
-        <source>Purge the internal cache</source>
-        <target>Очистить внутренний кеш</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.1">
-        <source>Removes the cached versions of the config, DCA and language files.</source>
-        <target>Удаляет кэшированные версии файлов конфигурации, DCA и языковые файлы.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>Очистить временные файлы</target>

@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
-        <target>State</target>
+        <target>Статус</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
         <source>Plase enter the name of the state.</source>
@@ -286,8 +286,7 @@
         <target>Активирај/деактивирај члана ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.su.0">
-        <source>Front end preview</source>
-        <target>Преглед ФронтЕнда</target>
+        <source>Preview</source>
       </trans-unit>
       <trans-unit id="tl_member.su.1">
         <source>Preview the front end as member ID %s</source>

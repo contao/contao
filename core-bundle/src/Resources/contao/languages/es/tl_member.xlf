@@ -286,8 +286,7 @@
         <target>Activar/desactivar el miembro con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.su.0">
-        <source>Front end preview</source>
-        <target>Front end vista preliminar</target>
+        <source>Preview</source>
       </trans-unit>
       <trans-unit id="tl_member.su.1">
         <source>Preview the front end as member ID %s</source>

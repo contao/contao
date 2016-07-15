@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
-        <target>Saisir le nom du module.</target>
+        <target>Saisir le titre du module.</target>
       </trans-unit>
       <trans-unit id="tl_module.headline.0">
         <source>Headline</source>

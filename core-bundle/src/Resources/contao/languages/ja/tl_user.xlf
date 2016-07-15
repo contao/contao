@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_user.filemounts.1">
         <source>Here you can grant access to one or more folders (subfolders will be included automatically).</source>
-        <target>1つ以上のフォルダーにアクセスを許可できます。(下位のフォルダーは自動的に含まれます。</target>
+        <target>1つ以上のフォルダーにアクセスを許可できます。(下位のフォルダーは自動的に含まれます。)</target>
       </trans-unit>
       <trans-unit id="tl_user.imageSizes.0">
         <source>Image sizes</source>
@@ -183,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_user.imageSizes.1">
         <source>Here you can grant access to one or more image sizes.</source>
+        <target>1つ以上の画像サイズにアクセスを許可できます。</target>
       </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
