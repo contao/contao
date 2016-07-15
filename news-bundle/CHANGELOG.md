@@ -1,6 +1,6 @@
 # Contao news bundle change log
 
-### 4.2.1 (2016-XX-XX)
+### 4.2.1 (2016-07-15)
 
  * Generate the feed files in the correct folder.
 
