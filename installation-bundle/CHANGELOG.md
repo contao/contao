@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.1.2 (2016-XX-XX)
+
+ * Fix the install tool redirect when the real system is bootable.
+
 ### 1.1.1 (2016-07-15)
 
  * Use the URL generator to generate the back end login URL (see #18).
