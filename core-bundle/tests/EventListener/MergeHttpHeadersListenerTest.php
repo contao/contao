@@ -133,4 +133,42 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('content', $allHeaders[0]);
         $this->assertSame('new-content', $allHeaders[1]);
     }
+
+    /**
+     * Tests that the Content-Type headers is only added once.
+     */
+    public function testContentTypeOnlyAddedOnce()
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'content');
+
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            $response
+        );
+
+        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
+        $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
+
+        $framework
+            ->expects($this->once())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $listener = new MergeHttpHeadersListener($framework);
+        $listener->setHeaders(['Content-Type: new-content']);
+        $listener->onKernelResponse($responseEvent);
+
+        $response = $responseEvent->getResponse();
+
+        $this->assertTrue($response->headers->has('Content-Type'));
+
+        $allHeaders = $response->headers->get('Content-Type', null, false);
+
+        $this->assertCount(1, $allHeaders);
+        $this->assertSame('content', $allHeaders[0]);
+    }
 }

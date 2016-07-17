@@ -92,6 +92,11 @@ class MergeHttpHeadersListener
                 header_remove($name);
             }
 
+            // Do not add more than one Content-Type header (see #532)
+            if ('Content-Type' === $name && $response->headers->has($name)) {
+                continue;
+            }
+
             // Do not replace existing headers as the response object has a higher priority
             $response->headers->set($name, trim($content), false);
         }
