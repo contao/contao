@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.2.2 (2016-XX-XX)
+
+ * Check if the tl_cron table exists in the command scheduler (see #541).
+
 ### 4.2.1 (2016-07-15)
 
  * Strip soft hyphens when indexing a page (see contao/core#8389).
