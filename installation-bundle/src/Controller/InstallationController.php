@@ -46,12 +46,8 @@ class InstallationController implements ContainerAwareInterface
      * @var array
      */
     private $context = [
-        'error' => '',
-        'import_error' => '',
-        'import_date' => '',
         'has_admin' => false,
         'hide_admin' => false,
-        'admin_error' => '',
     ];
 
     /**

@@ -4,7 +4,7 @@
   <fieldset class="tl_tbox nolegend">
     <h3>{{ 'login'|trans }}</h3>
     <p class="tl_info" id="cookies">{{ 'allow_cookies'|trans }}</p>
-    {% if error %}
+    {% if error is defined %}
       <p class="tl_error">{{ error }}</p>
     {% endif %}
     <p>{{ 'login_explanation'|trans }}</p>
