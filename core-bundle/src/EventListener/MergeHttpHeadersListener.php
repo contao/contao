@@ -34,7 +34,13 @@ class MergeHttpHeadersListener
     /**
      * @var array
      */
-    private $multiHeaders = ['Set-Cookie', 'Link'];
+    private $multiHeaders = [
+        'set-cookie',
+        'link',
+        'vary',
+        'pragma',
+        'cache-control',
+    ];
 
     /**
      * Constructor.
@@ -90,23 +96,25 @@ class MergeHttpHeadersListener
     /**
      * Adds a multi-value header.
      *
-     * @param string $header
+     * @param string $name
      */
-    public function addMultiHeader($header)
+    public function addMultiHeader($name)
     {
-        if (!in_array($header, $this->multiHeaders)) {
-            $this->multiHeaders[] = $header;
+        $uniqueKey = $this->getUniqueKey($name);
+
+        if (!in_array($uniqueKey, $this->multiHeaders)) {
+            $this->multiHeaders[] = $uniqueKey;
         }
     }
 
     /**
      * Removes a multi-value header
      *
-     * @param string $header
+     * @param string $name
      */
-    public function removeMultiHeader($header)
+    public function removeMultiHeader($name)
     {
-        if (false !== ($i = array_search($header, $this->multiHeaders))) {
+        if (false !== ($i = array_search($this->getUniqueKey($name), $this->multiHeaders))) {
             unset($this->multiHeaders[$i]);
         }
     }
@@ -141,13 +149,27 @@ class MergeHttpHeadersListener
                 header_remove($name);
             }
 
-            if (in_array($name, $this->multiHeaders)) {
-                $response->headers->set($name, trim($content), false);
-            } elseif (!$response->headers->has($name)) {
-                $response->headers->set($name, trim($content));
+            $uniqueKey = $this->getUniqueKey($name);
+
+            if (in_array($uniqueKey, $this->multiHeaders)) {
+                $response->headers->set($uniqueKey, trim($content), false);
+            } elseif (!$response->headers->has($uniqueKey)) {
+                $response->headers->set($uniqueKey, trim($content));
             }
         }
 
         return $response;
+    }
+
+    /**
+     * Returns the unique header key.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    private function getUniqueKey($name)
+    {
+        return str_replace('_', '-', strtolower($name));
     }
 }
