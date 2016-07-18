@@ -32,6 +32,11 @@ class MergeHttpHeadersListener
     private $headers = [];
 
     /**
+     * @var array
+     */
+    private $multiHeaders = ['Set-Cookie', 'Link'];
+
+    /**
      * Constructor.
      *
      * @param ContaoFrameworkInterface $contaoFramework The Contao framework
@@ -92,13 +97,11 @@ class MergeHttpHeadersListener
                 header_remove($name);
             }
 
-            // Do not add more than one Content-Type header (see #532)
-            if ('Content-Type' === $name && $response->headers->has($name)) {
-                continue;
+            if (in_array($name, $this->multiHeaders)) {
+                $response->headers->set($name, trim($content), false);
+            } elseif (!$response->headers->has($name)) {
+                $response->headers->set($name, trim($content));
             }
-
-            // Do not replace existing headers as the response object has a higher priority
-            $response->headers->set($name, trim($content), false);
         }
 
         return $response;

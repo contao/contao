@@ -59,10 +59,10 @@ class MergeHttpHeadersListenerTest extends TestCase
         ;
 
         $listener = new MergeHttpHeadersListener($framework);
-        $listener->setHeaders(['FOOBAR: foobar']);
+        $listener->setHeaders(['Content-Type: text/html']);
         $listener->onKernelResponse($responseEvent);
 
-        $this->assertFalse($responseEvent->getResponse()->headers->has('FOOBAR'));
+        $this->assertFalse($responseEvent->getResponse()->headers->has('Content-Type'));
     }
 
     /**
@@ -87,88 +87,50 @@ class MergeHttpHeadersListenerTest extends TestCase
         ;
 
         $listener = new MergeHttpHeadersListener($framework);
-        $listener->setHeaders(['FOOBAR: content']);
-        $listener->onKernelResponse($responseEvent);
-
-        $response = $responseEvent->getResponse();
-
-        $this->assertTrue($response->headers->has('FOOBAR'));
-        $this->assertSame('content', $response->headers->get('FOOBAR'));
-    }
-
-    /**
-     * Tests that existing headers are not overriden.
-     */
-    public function testHeadersAreNotOverridenIfAlreadyPresentInResponse()
-    {
-        $response = new Response();
-        $response->headers->set('FOOBAR', 'content');
-
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            $response
-        );
-
-        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
-
-        $framework
-            ->expects($this->once())
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
-        $listener = new MergeHttpHeadersListener($framework);
-        $listener->setHeaders(['FOOBAR: new-content']);
-        $listener->onKernelResponse($responseEvent);
-
-        $response = $responseEvent->getResponse();
-
-        $this->assertTrue($response->headers->has('FOOBAR'));
-
-        $allHeaders = $response->headers->get('FOOBAR', null, false);
-
-        $this->assertSame('content', $allHeaders[0]);
-        $this->assertSame('new-content', $allHeaders[1]);
-    }
-
-    /**
-     * Tests that the Content-Type headers is only added once.
-     */
-    public function testContentTypeOnlyAddedOnce()
-    {
-        $response = new Response();
-        $response->headers->set('Content-Type', 'content');
-
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            $response
-        );
-
-        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
-
-        $framework
-            ->expects($this->once())
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
-        $listener = new MergeHttpHeadersListener($framework);
-        $listener->setHeaders(['Content-Type: new-content']);
+        $listener->setHeaders(['Content-Type: text/html']);
         $listener->onKernelResponse($responseEvent);
 
         $response = $responseEvent->getResponse();
 
         $this->assertTrue($response->headers->has('Content-Type'));
+        $this->assertSame('text/html', $response->headers->get('Content-Type'));
+    }
 
-        $allHeaders = $response->headers->get('Content-Type', null, false);
+    /**
+     * Tests that multi-value headers are not overriden.
+     */
+    public function testMultiValueHeadersAreNotOverriden()
+    {
+        $response = new Response();
+        $response->headers->set('Set-Cookie', 'content');
 
-        $this->assertCount(1, $allHeaders);
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            $response
+        );
+
+        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
+        $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
+
+        $framework
+            ->expects($this->once())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $listener = new MergeHttpHeadersListener($framework);
+        $listener->setHeaders(['Set-Cookie: new-content']);
+        $listener->onKernelResponse($responseEvent);
+
+        $response = $responseEvent->getResponse();
+
+        $this->assertTrue($response->headers->has('Set-Cookie'));
+
+        $allHeaders = $response->headers->get('Set-Cookie', null, false);
+
         $this->assertSame('content', $allHeaders[0]);
+        $this->assertSame('new-content', $allHeaders[1]);
     }
 }
