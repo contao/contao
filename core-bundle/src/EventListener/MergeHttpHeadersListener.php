@@ -68,6 +68,50 @@ class MergeHttpHeadersListener
     }
 
     /**
+     * Returns the multi-value headers.
+     *
+     * @return array
+     */
+    public function getMultiHeaders()
+    {
+        return $this->multiHeaders;
+    }
+
+    /**
+     * Sets the multi-value headers.
+     *
+     * @param array $headers
+     */
+    public function setMultiHeader(array $headers)
+    {
+        $this->multiHeaders = $headers;
+    }
+
+    /**
+     * Adds a multi-value header.
+     *
+     * @param string $header
+     */
+    public function addMultiHeader($header)
+    {
+        if (!in_array($header, $this->multiHeaders)) {
+            $this->multiHeaders[] = $header;
+        }
+    }
+
+    /**
+     * Removes a multi-value header
+     *
+     * @param string $header
+     */
+    public function removeMultiHeader($header)
+    {
+        if (false !== ($i = array_search($header, $this->multiHeaders))) {
+            unset($this->multiHeaders[$i]);
+        }
+    }
+
+    /**
      * Adds the Contao headers to the Symfony response.
      *
      * @param FilterResponseEvent $event The event object
