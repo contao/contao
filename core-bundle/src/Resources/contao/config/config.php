@@ -371,10 +371,6 @@ $GLOBALS['TL_CROP'] = array
  */
 $GLOBALS['TL_CRON'] = array
 (
-	'monthly' => array
-	(
-		'purgeImageCache' => array('Automator', 'purgeImageCache')
-	),
 	'weekly' => array
 	(
 		'generateSitemap' => array('Automator', 'generateSitemap'),
