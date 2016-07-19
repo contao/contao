@@ -79,7 +79,12 @@ class ScriptHandler
             throw new \RuntimeException('The php executable could not be found.');
         }
 
-        $process = new Process(sprintf('%s app/console --ansi %s', $phpPath, $cmd));
+        $ansi = '';
+        if ($event->getIO()->isDecorated()) {
+            $ansi = '--ansi';
+        }
+
+        $process = new Process(sprintf('%s app/console %s %s', $phpPath, $ansi, $cmd));
 
         $process->run(
             function ($type, $buffer) use ($event) {
