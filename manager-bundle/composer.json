@@ -34,5 +34,8 @@
             "Contao\\ManagerBundle\\Test\\": "tests/"
         }
     },
-    "bin": ["bin/contao-console"]
+    "bin": ["bin/contao-console"],
+    "extra": {
+        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManagerPlugin"
+    }
 }
