@@ -10,6 +10,8 @@
 
 namespace Contao\ManagerBundle\Autoload;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
 /**
  * Provides methods to access the configuration
  *
@@ -17,11 +19,6 @@ namespace Contao\ManagerBundle\Autoload;
  */
 class Config implements ConfigInterface
 {
-    /**
-     * @var string
-     */
-    protected $class;
-
     /**
      * @var string
      */
@@ -58,24 +55,6 @@ class Config implements ConfigInterface
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getClass()
-    {
-        return $this->class;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setClass($class)
-    {
-        $this->class = $class;
-
-        return $this;
     }
 
     /**
@@ -130,5 +109,13 @@ class Config implements ConfigInterface
         $this->loadAfter = $loadAfter;
 
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBundleInstance(KernelInterface $kernel)
+    {
+        return new $this->name;
     }
 }

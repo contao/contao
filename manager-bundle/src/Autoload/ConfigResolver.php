@@ -52,7 +52,7 @@ class ConfigResolver
         // Only add bundles which match the environment
         foreach ($this->configs as $config) {
             if ($this->matchesEnvironment($config->getEnvironments(), $environment)) {
-                $bundles[$config->getName()] = $config->getClass();
+                $bundles[$config->getName()] = $config;
             }
         }
 

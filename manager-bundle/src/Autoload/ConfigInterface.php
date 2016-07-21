@@ -10,6 +10,9 @@
 
 namespace Contao\ManagerBundle\Autoload;
 
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 /**
  * Autoload configuration interface
  *
@@ -17,22 +20,6 @@ namespace Contao\ManagerBundle\Autoload;
  */
 interface ConfigInterface
 {
-    /**
-     * Returns the class
-     *
-     * @return string The class
-     */
-    public function getClass();
-
-    /**
-     * Sets the class name
-     *
-     * @param string $class The class name
-     *
-     * @return $this The object instance
-     */
-    public function setClass($class);
-
     /**
      * Returns the name
      *
@@ -87,4 +74,13 @@ interface ConfigInterface
      * @return $this The object instance
      */
     public function setLoadAfter(array $loadAfter);
+
+    /**
+     * Returns a bundle instance for this configuration.
+     *
+     * @param KernelInterface $kernel
+     *
+     * @return BundleInterface
+     */
+    public function getBundleInstance(KernelInterface $kernel);
 }

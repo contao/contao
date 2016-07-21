@@ -10,8 +10,6 @@
 
 namespace Contao\ManagerBundle\Autoload;
 
-use Symfony\Component\Finder\SplFileInfo;
-
 /**
  * Converts an INI configuration file into a ConfigInterface instance
  *
@@ -40,7 +38,7 @@ class IniParser implements ParserInterface
      */
     public function parse($file)
     {
-        $config = new Config($file);
+        $config = new ModuleConfig($file);
 
         $path = $this->modulesDir . '/' . $file . '/config/autoload.ini';
 
