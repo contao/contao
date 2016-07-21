@@ -1,0 +1,5 @@
+{
+    "bundles": [
+        "Contao\\CoreBundle\\ContaoCoreBundle"
+    ]
+}
