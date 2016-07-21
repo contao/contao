@@ -38,15 +38,38 @@ class IniParser implements ParserInterface
      */
     public function parse($file)
     {
+        $configs = [];
         $config = new ModuleConfig($file);
+        $configs[] = $config;
 
         $path = $this->modulesDir . '/' . $file . '/config/autoload.ini';
 
         if (file_exists($path)) {
-            $config->setLoadAfter($this->normalize($this->parseIniFile($path)));
+            $requires = $this->parseIniFile($path);
+
+            if (0 !== count($requires)) {
+                // Recursively load all modules that are required by other modules
+                foreach ($requires as &$module) {
+                    $optional = false;
+
+                    if (0 === strpos($module, '*')) {
+                        $optional = true;
+                        $module = substr($module, 1);
+                    }
+
+                    // Do not add optional modules that are not installed, ContaoModuleBundle would throw exception
+                    if ($optional && !is_dir($this->modulesDir . '/' . $module)) {
+                        continue;
+                    }
+
+                    $configs = array_merge($configs, $this->parse($module));
+                }
+
+                $config->setLoadAfter($requires);
+            }
         }
 
-        return [$config];
+        return $configs;
     }
 
     /**
@@ -66,31 +89,10 @@ class IniParser implements ParserInterface
             throw new \RuntimeException("File $file cannot be decoded");
         }
 
-        return $ini;
-    }
-
-    /**
-     * Normalize the configuration array
-     *
-     * @param array $ini The configuration array
-     *
-     * @return array The normalized array
-     */
-    protected function normalize(array $ini)
-    {
         if (!isset($ini['requires']) || !is_array($ini['requires'])) {
             return [];
         }
 
-        $requires = $ini['requires'];
-
-        // Convert optional requirements
-        foreach ($requires as &$v) {
-            if (0 === strpos($v, '*')) {
-                $v = substr($v, 1);
-            }
-        }
-
-        return $requires;
+        return $ini['requires'];
     }
 }
