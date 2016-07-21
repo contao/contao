@@ -18,7 +18,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
 {
     public function testInstanceOf()
     {
-        $parser = new IniParser();
+        $parser = new IniParser('');
 
         $this->assertInstanceOf('Contao\ManagerBundle\Autoload\IniParser', $parser);
         $this->assertInstanceOf('Contao\ManagerBundle\Autoload\ParserInterface', $parser);
@@ -26,15 +26,10 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDummyModuleWithRequires()
     {
-        $parser = new IniParser();
-        $file = new SplFileInfo(
-            __DIR__ . '/../Fixtures/Autoload/IniParser/dummy-module-with-requires',
-            'relativePath',
-            'relativePathName'
-        );
+        $parser = new IniParser(__DIR__ . '/../Fixtures/Autoload/IniParser');
 
         /** @var ConfigInterface[] $configs */
-        $configs = $parser->parse($file);
+        $configs = $parser->parse('dummy-module-with-requires');
 
         $this->assertCount(1, $configs);
         $this->assertInstanceOf('Contao\ManagerBundle\Autoload\ConfigInterface', $configs[0]);
@@ -48,15 +43,10 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDummyModuleWithoutAutoload()
     {
-        $parser = new IniParser();
-        $file = new SplFileInfo(
-            __DIR__ . '/../Fixtures/Autoload/IniParser/dummy-module-without-autoload',
-            'relativePath',
-            'relativePathName'
-        );
+        $parser = new IniParser(__DIR__ . '/../Fixtures/Autoload/IniParser');
 
         /** @var ConfigInterface[] $configs */
-        $configs = $parser->parse($file);
+        $configs = $parser->parse('dummy-module-without-autoload');
 
         $this->assertCount(1, $configs);
         $this->assertInstanceOf('Contao\ManagerBundle\Autoload\ConfigInterface', $configs[0]);
@@ -70,15 +60,10 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
 
     public function testDummyModuleWithoutRequires()
     {
-        $parser = new IniParser();
-        $file = new SplFileInfo(
-            __DIR__ . '/../Fixtures/Autoload/IniParser/dummy-module-without-requires',
-            'relativePath',
-            'relativePathName'
-        );
+        $parser = new IniParser(__DIR__ . '/../Fixtures/Autoload/IniParser');
 
         /** @var ConfigInterface[] $configs */
-        $configs = $parser->parse($file);
+        $configs = $parser->parse('dummy-module-without-requires');
 
         $this->assertCount(1, $configs);
         $this->assertInstanceOf('Contao\ManagerBundle\Autoload\ConfigInterface', $configs[0]);
@@ -95,12 +80,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testDummyModuleWithHorribleBrokenIni()
     {
-        $parser = new IniParser();
-        $file   = new SplFileInfo(
-            __DIR__ . '/../Fixtures/Autoload/IniParser/dummy-module-with-invalid-autoload',
-            'relativePath',
-            'relativePathName'
-        );
+        $parser = new IniParser(__DIR__ . '/../Fixtures/Autoload/IniParser');
 
         /**
          * refs php - test the return value of a method that triggers an error with PHPUnit - Stack Overflow
@@ -110,7 +90,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         \PHPUnit_Framework_Error_Notice::$enabled = false;
         error_reporting(0);
 
-        $this->setExpectedException('RuntimeException', "File $file/config/autoload.ini cannot be decoded");
-        $parser->parse($file);
+        $this->setExpectedException('RuntimeException', 'File ' . __DIR__ . '/../Fixtures/Autoload/IniParser/dummy-module-with-invalid-autoload/config/autoload.ini cannot be decoded');
+        $parser->parse('dummy-module-with-invalid-autoload');
     }
 }

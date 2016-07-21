@@ -21,13 +21,28 @@ use Symfony\Component\Finder\SplFileInfo;
 class IniParser implements ParserInterface
 {
     /**
+     * @var string
+     */
+    private $modulesDir;
+
+    /**
+     * Constructor.
+     *
+     * @param string $modulesDir
+     */
+    public function __construct($modulesDir)
+    {
+        $this->modulesDir = $modulesDir;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function parse($file)
     {
-        $config = new Config(basename($file));
+        $config = new Config($file);
 
-        $path = $file . '/config/autoload.ini';
+        $path = $this->modulesDir . '/' . $file . '/config/autoload.ini';
 
         if (file_exists($path)) {
             $config->setLoadAfter($this->normalize($this->parseIniFile($path)));
