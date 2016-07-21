@@ -37,7 +37,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $configs[0]->getClass());
         $this->assertEquals('dummy-module-with-requires', $configs[0]->getName());
         $this->assertEquals([], $configs[0]->getReplace());
-        $this->assertEquals(['all'], $configs[0]->getEnvironments());
+        $this->assertEquals([], $configs[0]->getEnvironments());
         $this->assertEquals(['core', 'news', 'calendar'], $configs[0]->getLoadAfter());
     }
 
@@ -54,7 +54,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $configs[0]->getClass());
         $this->assertEquals('dummy-module-without-autoload', $configs[0]->getName());
         $this->assertEquals([], $configs[0]->getReplace());
-        $this->assertEquals(['all'], $configs[0]->getEnvironments());
+        $this->assertEquals([], $configs[0]->getEnvironments());
         $this->assertEquals([], $configs[0]->getLoadAfter());
     }
 
@@ -71,7 +71,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $configs[0]->getClass());
         $this->assertEquals('dummy-module-without-requires', $configs[0]->getName());
         $this->assertEquals([], $configs[0]->getReplace());
-        $this->assertEquals(['all'], $configs[0]->getEnvironments());
+        $this->assertEquals([], $configs[0]->getEnvironments());
         $this->assertEquals([], $configs[0]->getLoadAfter());
     }
 

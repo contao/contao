@@ -119,7 +119,7 @@ class ConfigResolver
      */
     protected function matchesEnvironment(array $environments, $environment)
     {
-        return in_array($environment, $environments, true) || in_array('all', $environments, true);
+        return 0 === count($environments) || in_array($environment, $environments, true);
     }
 
     /**

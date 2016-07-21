@@ -32,7 +32,7 @@ class Config implements ConfigInterface
     /**
      * @var array
      */
-    protected $environments = ['all'];
+    protected $environments = [];
 
     /**
      * @var array

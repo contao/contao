@@ -64,7 +64,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\ManagerBundle\Autoload\ConfigInterface', $config);
         $this->assertEquals('Contao\CoreBundle\ContaoCoreBundle', $config->getName());
         $this->assertEquals([], $config->getReplace());
-        $this->assertEquals(['all'], $config->getEnvironments());
+        $this->assertEquals([], $config->getEnvironments());
         $this->assertEquals([], $config->getLoadAfter());
     }
 
