@@ -10,8 +10,6 @@
 
 namespace Contao\ManagerBundle\Autoload;
 
-use Symfony\Component\Finder\SplFileInfo;
-
 /**
  * Configuration parser interface
  *
@@ -23,9 +21,9 @@ interface ParserInterface
     /**
      * Parses a configuration file
      *
-     * @param SplFileInfo $file The file object
+     * @param string $file The absolute file path
      *
      * @return ConfigInterface[]
      */
-    public function parse(SplFileInfo $file);
+    public function parse($file);
 }

@@ -23,7 +23,7 @@ class JsonParser implements ParserInterface
     /**
      * {@inheritdoc}
      */
-    public function parse(SplFileInfo $file)
+    public function parse($file)
     {
         $configs = [];
         $json = $this->parseJsonFile($file);
@@ -55,20 +55,20 @@ class JsonParser implements ParserInterface
     /**
      * Parses the file and returns the configuration array
      *
-     * @param SplFileInfo $file The file object
+     * @param string $file The absolute file path
      *
      * @return array The configuration array
      *
      * @throws \InvalidArgumentException If $file is not a file
      * @throws \RuntimeException         If the file cannot be decoded or there are no bundles
      */
-    protected function parseJsonFile(SplFileInfo $file)
+    private function parseJsonFile($file)
     {
-        if (!$file->isFile()) {
+        if (!is_file($file)) {
             throw new \InvalidArgumentException("$file is not a file");
         }
 
-        $json = json_decode($file->getContents(), true);
+        $json = json_decode(file_get_contents($file), true);
 
         if (null === $json) {
             throw new \RuntimeException("File $file cannot be decoded");

@@ -23,9 +23,9 @@ class IniParser implements ParserInterface
     /**
      * {@inheritdoc}
      */
-    public function parse(SplFileInfo $file)
+    public function parse($file)
     {
-        $config = new Config($file->getBasename());
+        $config = new Config(basename($file));
 
         $path = $file . '/config/autoload.ini';
 
