@@ -1,44 +1,48 @@
 {
-    "bundles": {
-        "Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle": {},
-        "Symfony\\Bundle\\SecurityBundle\\SecurityBundle": {},
-        "Symfony\\Bundle\\TwigBundle\\TwigBundle": {},
-        "Symfony\\Bundle\\MonologBundle\\MonologBundle": {},
-        "Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle": {},
-        "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle": {},
-        "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle": {},
-        "Knp\\Bundle\\TimeBundle\\KnpTimeBundle": {},
-        "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle": {},
-        "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle": {},
-        "Contao\\CoreBundle\\ContaoCoreBundle": {
+    "bundles": [
+        "Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle",
+        "Symfony\\Bundle\\SecurityBundle\\SecurityBundle",
+        "Symfony\\Bundle\\TwigBundle\\TwigBundle",
+        "Symfony\\Bundle\\MonologBundle\\MonologBundle",
+        "Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle",
+        "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle",
+        "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle",
+        "Knp\\Bundle\\TimeBundle\\KnpTimeBundle",
+        "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
+        "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
+        {
+            "name": "Contao\\CoreBundle\\ContaoCoreBundle",
             "replace": ["core"],
             "load-after": [
-                "FrameworkBundle",
-                "SecurityBundle",
-                "TwigBundle",
-                "MonologBundle",
-                "SwiftmailerBundle",
-                "DoctrineBundle",
-                "DoctrineCacheBundle",
-                "KnpTimeBundle",
-                "LexikMaintenanceBundle",
-                "SensioFrameworkExtraBundle"
+                "Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle",
+                "Symfony\\Bundle\\SecurityBundle\\SecurityBundle",
+                "Symfony\\Bundle\\TwigBundle\\TwigBundle",
+                "Symfony\\Bundle\\MonologBundle\\MonologBundle",
+                "Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle",
+                "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle",
+                "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle",
+                "Knp\\Bundle\\TimeBundle\\KnpTimeBundle",
+                "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
+                "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle"
             ]
         },
-        "Contao\\InstallationBundle\\ContaoInstallationBundle": {
+        {
+            "name": "Contao\\InstallationBundle\\ContaoInstallationBundle",
             "load-after": [
-                "ContaoCoreBundle"
+                "Contao\\CoreBundle\\ContaoCoreBundle"
             ]
         },
-
-        "Symfony\\Bundle\\DebugBundle\\DebugBundle": {
+        {
+            "name": "Symfony\\Bundle\\DebugBundle\\DebugBundle",
             "environments": ["dev", "test"]
         },
-        "Symfony\\Bundle\\WebProfilerBundle\\WebProfilerBundle": {
+        {
+            "name": "Symfony\\Bundle\\WebProfilerBundle\\WebProfilerBundle",
             "environments": ["dev", "test"]
         },
-        "Sensio\\Bundle\\DistributionBundle\\SensioDistributionBundle": {
+        {
+            "name": "Sensio\\Bundle\\DistributionBundle\\SensioDistributionBundle",
             "environments": ["dev", "test"]
         }
-    }
+    ]
 }

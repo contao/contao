@@ -37,13 +37,13 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $configs = $parser->parse($file);
 
         $this->assertCount(1, $configs);
-        $this->assertInstanceOf('Contao\ManagerBundle\Autoload\ConfigInterface', $configs[0]);
 
-        $this->assertEquals('Contao\CoreBundle\ContaoCoreBundle', $configs[0]->getClass());
-        $this->assertEquals('ContaoCoreBundle', $configs[0]->getName());
-        $this->assertEquals([], $configs[0]->getReplace());
-        $this->assertEquals(['all'], $configs[0]->getEnvironments());
-        $this->assertEquals([], $configs[0]->getLoadAfter());
+        $config = reset($configs);
+        $this->assertInstanceOf('Contao\ManagerBundle\Autoload\ConfigInterface', $config);
+        $this->assertEquals('Contao\CoreBundle\ContaoCoreBundle', $config->getName());
+        $this->assertEquals([], $config->getReplace());
+        $this->assertEquals(['all'], $config->getEnvironments());
+        $this->assertEquals([], $config->getLoadAfter());
     }
 
     public function testNoKeysDefinedAutoload()
@@ -59,13 +59,13 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $configs = $parser->parse($file);
 
         $this->assertCount(1, $configs);
-        $this->assertInstanceOf('Contao\ManagerBundle\Autoload\ConfigInterface', $configs[0]);
 
-        $this->assertEquals('Contao\CoreBundle\ContaoCoreBundle', $configs[0]->getClass());
-        $this->assertEquals('ContaoCoreBundle', $configs[0]->getName());
-        $this->assertEquals([], $configs[0]->getReplace());
-        $this->assertEquals(['all'], $configs[0]->getEnvironments());
-        $this->assertEquals([], $configs[0]->getLoadAfter());
+        $config = reset($configs);
+        $this->assertInstanceOf('Contao\ManagerBundle\Autoload\ConfigInterface', $config);
+        $this->assertEquals('Contao\CoreBundle\ContaoCoreBundle', $config->getName());
+        $this->assertEquals([], $config->getReplace());
+        $this->assertEquals(['all'], $config->getEnvironments());
+        $this->assertEquals([], $config->getLoadAfter());
     }
 
     /**

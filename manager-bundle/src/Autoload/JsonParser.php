@@ -10,8 +10,6 @@
 
 namespace Contao\ManagerBundle\Autoload;
 
-use Symfony\Component\Finder\SplFileInfo;
-
 /**
  * Converts a JSON configuration file into a configuration array
  *
@@ -28,23 +26,9 @@ class JsonParser implements ParserInterface
         $configs = [];
         $json = $this->parseJsonFile($file);
 
-        foreach ($json['bundles'] as $class => &$options) {
-            $ref = new \ReflectionClass($class);
-
-            $config = new Config($ref->getShortName());
-            $config->setClass($class);
-
-            if (isset($options['replace'])) {
-                $config->setReplace($options['replace']);
-            }
-
-            if (isset($options['environments'])) {
-                $config->setEnvironments($options['environments']);
-            }
-
-            if (isset($options['load-after'])) {
-                $config->setLoadAfter($options['load-after']);
-            }
+        if (!empty($json['bundles'])) {
+            $this->parseBundles($json['bundles'], $configs);
+        }
 
             $configs[] = $config;
         }
@@ -79,5 +63,43 @@ class JsonParser implements ParserInterface
         }
 
         return $json;
+    }
+
+    /**
+     * Parses the bundle array and generates config objects.
+     *
+     * @param array $bundles
+     * @param array $configs
+     *
+     * @throws \RuntimeException
+     */
+    private function parseBundles(array $bundles, array &$configs)
+    {
+        foreach ($bundles as $options) {
+            // Only one value given, must be class name
+            if (!is_array($options)) {
+                $options = ['name' => $options];
+            }
+
+            if (!isset($options['name'])) {
+                throw new \RuntimeException(sprintf('Missing name for bundle config (%s)', json_encode($options)));
+            }
+
+            $config = new Config($options['name']);
+
+            if (isset($options['replace'])) {
+                $config->setReplace($options['replace']);
+            }
+
+            if (isset($options['environments'])) {
+                $config->setEnvironments($options['environments']);
+            }
+
+            if (isset($options['load-after'])) {
+                $config->setLoadAfter($options['load-after']);
+            }
+
+            $configs[] = $config;
+        }
     }
 }
