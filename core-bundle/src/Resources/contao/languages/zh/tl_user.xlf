@@ -183,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_user.imageSizes.1">
         <source>Here you can grant access to one or more image sizes.</source>
+        <target>在这里您可以授权访问一张或多张图片尺寸.</target>
       </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>

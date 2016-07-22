@@ -31,10 +31,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceEnable">
         <source>Enable</source>
+        <target>有効</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.maintenanceDisable">
         <source>Disable</source>
-        <target>解除</target>
+        <target>無効</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
@@ -136,14 +137,6 @@
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
         <target>検索結果のキャッシュしたバージョンを削除します。</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.0">
-        <source>Purge the internal cache</source>
-        <target>内部キャッシュを消去</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.1">
-        <source>Removes the cached versions of the config, DCA and language files.</source>
-        <target>構成、DCA、言語ファイルのキャッシュした版を削除します。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>

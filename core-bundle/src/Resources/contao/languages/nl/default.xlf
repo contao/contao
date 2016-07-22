@@ -210,12 +210,12 @@
         <target>Ongeldige omleiding (kringverwijzing)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Geen van de actieve website startpagina's zonder een expliciete DNS-instelling hebben de taal reserveoptie ingesteld, dit betekent dat deze websites enkel beschikbaar zijn in een taal die u heeft gedefinieerd in de pagina-instellingen! Bezoekers en zoekmachines die deze taal niet hebben ingesteld, kunnen uw website niet gebruiken.</target>
+        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
+        <target>Geen enkele van de actieve website root pagina's zonder een expliciete DNS instelling heeft de optie om terug te vallen op een andere taal ingesteld.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set, which means that these websites are only available in the one language you have defined in the page settings! Visitors and search engines who do not speak this language will not be able to browse your website.</source>
-        <target>Geen van de actieve website startpagina's voor &lt;strong&gt;%s&lt;/strong&gt; heeft de taal reserveoptie ingesteld, dit betekent dat deze websites enkel beschikbaar zijn in de taal welke u heeft gedefinieerd in de pagina instellingen! Bezoekers en zoekmachines die deze taal niet hebben ingesteld, kunnen uw website niet gebruiken.</target>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
+        <target>Geen enkele van de actieve website root pagina's voor &lt;strong&gt;%s&lt;/strong&gt; heeft de optie om terug te vallen op een andere taal ingesteld.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -226,8 +226,8 @@
         <target>Top-level pagina's moeten website startpagina's zijn!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are pages on the top-level which are not website root pages. Creating websites without a website root page is no longer supported, so please ensure that all pages are grouped under a website root page.</source>
-        <target>Er bevinden zich pagina's in het top-level welke geen website startpagina's zijn. Aanmaken van websites zonder een website startpagina wordt niet langer ondersteund, zorg ervoor dat alle pagina's zijn gegroepeerd onder een website startpagina.</target>
+        <source>There are top-level pages in the site structure which are not website root pages.</source>
+        <target>Er zijn top-level pagina's in de site structuur welke geen website root pagina's zijn.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -275,7 +275,7 @@
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
-        <target>Koptekst</target>
+        <target>Hoofdtitel</target>
       </trans-unit>
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
@@ -433,6 +433,14 @@
         <source>Adds a YouTube video.</source>
         <target>Voegt een You Tube video in</target>
       </trans-unit>
+      <trans-unit id="CTE.vimeo.0">
+        <source>Vimeo</source>
+        <target>Vimeo</target>
+      </trans-unit>
+      <trans-unit id="CTE.vimeo.1">
+        <source>Adds a Vimeo video.</source>
+        <target>Voegt een Vimeo video toe.</target>
+      </trans-unit>
       <trans-unit id="CTE.files">
         <source>File elements</source>
         <target>Bestandsonderdelen</target>
@@ -528,6 +536,14 @@
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website within the site structure.</source>
         <target>Dit type pagina markeert het startpunt van een nieuwe website binnen de site structuur.</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.0">
+        <source>Logout</source>
+        <target>Afmelden</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.1">
+        <source>This type of page automatically logs out the user.</source>
+        <target>Deze pagina logt de gebruiker automatisch uit.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -1186,8 +1202,8 @@
         <target>Eerdere inlog</target>
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
-        <source>Previous login: %s</source>
-        <target>Eerdere inlog: %s</target>
+        <source>Your previous login was %s. Welcome back!</source>
+        <target>Uw vorige login was %s. Welkom terug!</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1196,6 +1212,10 @@
       <trans-unit id="MSC.currentLogin.1">
         <source>Last login: %s</source>
         <target>Laatste keer ingelogd: %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.firstLogin">
+        <source>This seems to be your first login. Welcome to Contao!</source>
+        <target>Dit lijkt uw eerste login te zijn. Welkom bij Contao!</target>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1304,8 +1324,8 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <target>Ga naar front-end</target>
       </trans-unit>
       <trans-unit id="MSC.fePreview">
-        <source>Front end preview</source>
-        <target>Front-end voorbeeld</target>
+        <source>Preview</source>
+        <target>Voorbeeldweergave</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
@@ -1464,8 +1484,8 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <target>Wijzig wachtwoord</target>
       </trans-unit>
       <trans-unit id="MSC.pw_change">
-        <source>Please enter a new password</source>
-        <target>Geef een nieuw wachtwoord op</target>
+        <source>Please enter a new password.</source>
+        <target>Geef een nieuw wachtwoord op.</target>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1724,8 +1744,8 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <target>Ga terug naar de pagina of bestandkiezer en maak een selectie voordat u het dialoogvenster sluit.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>System messages</source>
-        <target>Systeemmeldingen</target>
+        <source>Notifications</source>
+        <target>Meldingen</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
@@ -1750,6 +1770,14 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       <trans-unit id="MSC.applyTitle">
         <source>Apply the changes</source>
         <target>Wijzigingen toepassen</target>
+      </trans-unit>
+      <trans-unit id="MSC.reset">
+        <source>Reset</source>
+        <target>Reset</target>
+      </trans-unit>
+      <trans-unit id="MSC.resetTitle">
+        <source>Reset the filters</source>
+        <target>Reset filters</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -1814,14 +1842,6 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
         <target>%s (kopie)</target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheText">
-        <source>The &lt;strong&gt;internal cache&lt;/strong&gt; has not been built yet. Building the internal cache will improve the performance of the application and is highly recommended. The internal cache will be built automatically every time you run &lt;code&gt;app/console cache:warmup -e %s&lt;/code&gt; on the command line.</source>
-        <target>De &lt;strong&gt;interne cache&lt;/strong&gt; moet nog worden opgebouwd. Opbouwen van de interne cache zorgt ervoor dat de prestatie van de applicatie verbetert en wordt dan ook aanbevolen. De interne cache zal automatisch worden opgebouwd telkens als u &lt;code&gt; app/console cache:warmup -e %s &lt;/code&gt; op de opdrachtregel start.</target>
-      </trans-unit>
-      <trans-unit id="MSC.buildCacheLink">
-        <source>Build the cache</source>
-        <target>Opbouwen van de cache</target>
       </trans-unit>
       <trans-unit id="MSC.name">
         <source>Name</source>
@@ -1922,6 +1942,10 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       <trans-unit id="MSC.showDifferences">
         <source>Show differences</source>
         <target>Toon de verschillen</target>
+      </trans-unit>
+      <trans-unit id="MSC.recordOfTable">
+        <source>Record %s of table %s</source>
+        <target>Record %s van tabel %s</target>
       </trans-unit>
       <trans-unit id="MSC.editElement">
         <source>Edit the element</source>

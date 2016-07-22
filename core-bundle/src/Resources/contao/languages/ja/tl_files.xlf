@@ -7,12 +7,15 @@
       </trans-unit>
       <trans-unit id="tl_files.name.1">
         <source>The file or folder name (without extension).</source>
+        <target>ファイルまたはフォルダーの(拡張子なしの)名前</target>
       </trans-unit>
       <trans-unit id="tl_files.path.0">
         <source>Path</source>
+        <target>パス</target>
       </trans-unit>
       <trans-unit id="tl_files.path.1">
         <source>The relative path to the file or folder.</source>
+        <target>ファイルまたはフォルダーへの相対パス</target>
       </trans-unit>
       <trans-unit id="tl_files.extension.0">
         <source>Extension</source>
@@ -20,6 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_files.extension.1">
         <source>The file extension</source>
+        <target>ファイルの拡張子</target>
       </trans-unit>
       <trans-unit id="tl_files.protected.0">
         <source>Public</source>

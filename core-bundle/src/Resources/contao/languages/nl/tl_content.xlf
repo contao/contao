@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
-        <target>Koptekst</target>
+        <target>Hoofdtitel</target>
       </trans-unit>
       <trans-unit id="tl_content.headline.1">
         <source>Here you can add a headline to the content element.</source>
@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_content.sortOrder.0">
         <source>Sort order</source>
-        <target>Sorteer volgorde</target>
+        <target>Sorteer-volgorde</target>
       </trans-unit>
       <trans-unit id="tl_content.sortOrder.1">
         <source>Please choose the sort order.</source>
@@ -323,7 +323,7 @@
       </trans-unit>
       <trans-unit id="tl_content.orderSRC.0">
         <source>Sort order</source>
-        <target>Sorteer volgorde</target>
+        <target>Sorteer-volgorde</target>
       </trans-unit>
       <trans-unit id="tl_content.orderSRC.1">
         <source>The sort order of the items.</source>
@@ -406,8 +406,16 @@
         <target>YouTube ID</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube.1">
-        <source>Please enter the YouTube video ID (e.g. &lt;em&gt;nsqh9jHkHlM&lt;/em&gt;).</source>
-        <target>Vul YouTube-video ID in (b.v. &lt;em&gt; nsqh9jHkHlM &lt;/em&gt;).</target>
+        <source>Please enter the YouTube video ID (e.g. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</source>
+        <target>Vul YouTube-video ID in (b.v. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo.0">
+        <source>Vimeo ID</source>
+        <target>Vimeo ID</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo.1">
+        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;95674578&lt;/em&gt;).</source>
+        <target>Vul Vimeo ID in (b.v. &lt;em&gt;95674578&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -747,11 +755,11 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Add new at the top</source>
-        <target>Maak een nieuwe lay-out definitie aan het begin</target>
+        <target>Maak nieuw aan het begin</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Add new after content element ID %s</source>
-        <target>Maak een nieuw inhoudselement achter inhoudselement ID %s</target>
+        <target>Maak nieuw achter inhoudselement ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.toggle.0">
         <source>Toggle visibility</source>

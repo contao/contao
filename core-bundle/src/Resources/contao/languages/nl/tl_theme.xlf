@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Geef datum en tijdstip van de laatste aanpassing.</target>
+        <target>Datum en tijdstip van de laatste aanpassing.</target>
       </trans-unit>
       <trans-unit id="tl_theme.title_legend">
         <source>Title and author</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.store.0">
         <source>Theme store</source>
-        <target>Theme store</target>
+        <target>Contao theme store</target>
       </trans-unit>
       <trans-unit id="tl_theme.store.1">
         <source>Find more themes in the Contao theme store</source>

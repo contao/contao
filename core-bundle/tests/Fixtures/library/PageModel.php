@@ -2,6 +2,8 @@
 
 namespace Contao\Fixtures;
 
+use Contao\Model\Collection;
+
 class PageModel
 {
     private $data;
@@ -24,7 +26,7 @@ class PageModel
         $page2->fallback = '';
         $page2->language = 'en';
 
-        return new self([$page1, $page2]);
+        return new Collection([$page1, $page2], 'tl_page');
     }
 
     public function __get($key)

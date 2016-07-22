@@ -133,8 +133,6 @@ class ModuleSearch extends \Module
 			// Return if there are no pages
 			if (!is_array($arrPages) || empty($arrPages))
 			{
-				$this->log('No searchable pages found', __METHOD__, TL_ERROR);
-
 				return;
 			}
 

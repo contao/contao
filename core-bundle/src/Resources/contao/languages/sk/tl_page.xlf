@@ -73,6 +73,14 @@
         <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
         <target>Vyberte stránku na ktorú budú návštevníci premerovaní. Ak ponecháte toto pole prázdne budú presmerovaní na úvodnú stránku.</target>
       </trans-unit>
+      <trans-unit id="tl_page.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Presmerovanie na posledne navštívenú stránku</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.1">
+        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
+        <target>Presmeruje užívateľa späť na posledne navštívenú stránku namiesto zadanej stránky presmerovania.</target>
+      </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
         <target>Presmerovanie na jazykovú verziu</target>
@@ -142,8 +150,7 @@
         <target>Použiť HTTPS</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>Generate the URLs with &lt;em&gt;https://&lt;/em&gt; (e.g. in sitemaps).</source>
-        <target>Vygeneruje URL adresy začínajúce &lt;em&gt;https://&lt;/em&gt;  (napríklad v Mape stránok).</target>
+        <source>This website is available via HTTPS.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

@@ -607,7 +607,7 @@
       </trans-unit>
       <trans-unit id="tl_style.editheader.0">
         <source>Edit style sheet</source>
-        <target>スタイルシートを変更</target>
+        <target>スタイルシートを編集</target>
       </trans-unit>
       <trans-unit id="tl_style.editheader.1">
         <source>Edit the style sheet settings</source>

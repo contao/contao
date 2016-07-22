@@ -57,6 +57,9 @@ services:
     contao.monolog.handler:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
         public: false
+        arguments:
+            - debug
+            - false
         calls:
             - ["setContainer", ["@service_container"]]
         tags:

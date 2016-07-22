@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Geef datum en tijdstip van de laatste aanpassing.</target>
+        <target>Datum en tijdstip van de laatste aanpassing.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.title_legend">
         <source>Name</source>
@@ -151,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.import.1">
         <source>Import existing CSS files</source>
-        <target>Importeer een bestaand CSS bestand</target>
+        <target>Importeer bestaande CSS bestanden</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.export.0">
         <source>Export style sheet</source>

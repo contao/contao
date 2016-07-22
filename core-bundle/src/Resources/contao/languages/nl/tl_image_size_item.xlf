@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Geef datum en tijdstip van de laatste aanpassing.</target>
+        <target>Datum en tijdstip van de laatste aanpassing.</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.title_legend">
         <source>Image size settings</source>
@@ -91,7 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.editheader.1">
         <source>Edit the image size settings</source>
-        <target>Bewerk afmetingen afbeelding</target>
+        <target>Bewerk beeldformaat instellingen</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Add new at the top</source>
-        <target>Maak een nieuwe lay-out definitie aan het begin</target>
+        <target>Maak nieuw aan het begin</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Add new after image size media query ID %s</source>

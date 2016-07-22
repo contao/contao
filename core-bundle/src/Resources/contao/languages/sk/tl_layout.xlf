@@ -246,22 +246,6 @@
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
         <target>Tu môžete pridať Google web fonty na vaše webové stránky. Zvoľte typ fontu bez URL (napr. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_layout.newsfeeds.0">
-        <source>News feeds</source>
-        <target>Kanály Noviniek (News feeds)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.newsfeeds.1">
-        <source>Please select the news feeds you want to add to the layout.</source>
-        <target>Zvoľte prosím kanály Noviniek, ktoré chcete pridať do tohoto layoutu.</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.calendarfeeds.0">
-        <source>Calendar feeds</source>
-        <target>Kanály Kalendára (Calendar feeds)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.calendarfeeds.1">
-        <source>Please select the calendar feeds you want to add to the layout.</source>
-        <target>Zvoľte prosím kanály Kalendára, ktoré chcete pridať do tohoto layoutu.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
         <target>Vrátane modulov</target>
@@ -456,10 +440,6 @@
       <trans-unit id="tl_layout.picturefill_legend">
         <source>Responsive images</source>
         <target>Responsive obrázky</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom kanály (feeds)</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>

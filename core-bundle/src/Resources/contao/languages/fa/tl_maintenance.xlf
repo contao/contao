@@ -137,14 +137,6 @@
         <source>Removes the cached versions of the search results.</source>
         <target>نسخه‌های ذخیره شده نتایج جستجو را حذف می‌کند.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.0">
-        <source>Purge the internal cache</source>
-        <target>پاکسازی نهان‌گاه داخلی</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.internal.1">
-        <source>Removes the cached versions of the config, DCA and language files.</source>
-        <target>نسخه‌های نهان شده‌ی تنظیمات، دی‌سی‌ای و پرونده‌های زبان را حذف می‌نماید.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>پاکسازی پوشه موقت</target>

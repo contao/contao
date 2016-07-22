@@ -623,7 +623,7 @@
       </trans-unit>
       <trans-unit id="tl_style.pastenew.0">
         <source>Add new at the top</source>
-        <target>Neue Formatdefinition oben erstellen</target>
+        <target>Neues Inhaltselement oben erstellen</target>
       </trans-unit>
       <trans-unit id="tl_style.pastenew.1">
         <source>Add new after format definition ID %s</source>
