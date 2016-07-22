@@ -238,8 +238,8 @@ class Picture
 
 		return array
 		(
-			'img' => $picture->getImg(),
-			'sources' => $picture->getSources(),
+			'img' => $picture->getImg(TL_ROOT),
+			'sources' => $picture->getSources(TL_ROOT),
 		);
 	}
 

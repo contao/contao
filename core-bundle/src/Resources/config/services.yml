@@ -162,7 +162,6 @@ services:
         arguments:
             - "@contao.image.resizer"
             - %contao.image.bypass_cache%
-            - %contao.root_dir%
 
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory

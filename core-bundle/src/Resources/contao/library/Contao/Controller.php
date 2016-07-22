@@ -1472,8 +1472,8 @@ abstract class Controller extends \System
 			$picture = \System::getContainer()->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size);
 			$picture = array
 			(
-				'img' => $picture->getImg(),
-				'sources' => $picture->getSources()
+				'img' => $picture->getImg(TL_ROOT),
+				'sources' => $picture->getSources(TL_ROOT)
 			);
 
 			if ($src !== $arrItem['singleSRC'])
