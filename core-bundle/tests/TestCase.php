@@ -334,6 +334,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                     case 'timeZone':
                         return 'Europe/Berlin';
 
+                    case 'gdMaxImgWidth':
+                    case 'gdMaxImgHeight':
+                        return 3000;
+
                     default:
                         return null;
                 }
@@ -415,6 +419,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ($rootDir ?: $this->getRootDir()) . '/' . $container->getParameter('contao.image.target_path'),
             $framework
         );
+        $resizer->setContaoFramework($framework);
 
         $imageFactory = new ImageFactory(
             $resizer,

@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Image;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\ImagineInterface;
+use Imagine\Gd\Imagine as GdImagine;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image as LegacyImage;
 use Contao\File;
@@ -36,6 +37,18 @@ class Resizer extends ImageResizer
      * @var LegacyImage
      */
     private $legacyImage;
+
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
+
+    /**
+     * Set the Contao framework
+     */
+    public function setContaoFramework(ContaoFrameworkInterface $framework) {
+        $this->framework = $framework;
+    }
 
     /**
      * {@inheritdoc}
@@ -118,6 +131,16 @@ class Resizer extends ImageResizer
                     return $this->createImage($image, TL_ROOT . '/' . $return);
                 }
             }
+        }
+
+        $config = $this->framework->getAdapter('Contao\Config');
+        if ($image->getImagine() instanceof GdImagine && (
+            $image->getDimensions()->getSize()->getWidth() > $config->get('gdMaxImgWidth') ||
+            $image->getDimensions()->getSize()->getHeight() > $config->get('gdMaxImgHeight') ||
+            $coordinates->getSize()->getWidth() > $config->get('gdMaxImgWidth') ||
+            $coordinates->getSize()->getHeight() > $config->get('gdMaxImgHeight')
+        )) {
+            return $this->createImage($image, $image->getPath());
         }
 
         return parent::executeResize($image, $coordinates, $path, $imagineOptions);

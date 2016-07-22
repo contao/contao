@@ -139,6 +139,8 @@ services:
             - "@contao.image.resize_calculator"
             - "@filesystem"
             - "%contao.root_dir%/%contao.image.target_path%"
+        calls:
+            - ["setFramework", ["@contao.framework"]]
 
     contao.image.image_factory:
         class: Contao\CoreBundle\Image\ImageFactory

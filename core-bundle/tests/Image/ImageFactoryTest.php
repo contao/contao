@@ -781,9 +781,24 @@ class ImageFactoryTest extends TestCase
             ->method('__call')
             ->willReturn($filesModel);
 
+        $configAdapter = $this->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $configAdapter->expects($this->any())
+            ->method('__call')
+            ->willReturn(3000);
+
         $framework->expects($this->any())
             ->method('getAdapter')
-            ->willReturn($filesAdapter);
+            ->will($this->returnCallback(function ($key) use($filesAdapter, $configAdapter) {
+                return [
+                    'Contao\FilesModel' => $filesAdapter,
+                    'Contao\Config' => $configAdapter,
+                ][$key];
+            }));
+
+        $resizer->setContaoFramework($framework);
 
         $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine, null, $framework);
 
