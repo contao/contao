@@ -143,7 +143,7 @@ services:
             - "@filesystem"
             - "%contao.root_dir%/%contao.image.target_path%"
         calls:
-            - ["setFramework", ["@contao.framework"]]
+            - ["setContaoFramework", ["@contao.framework"]]
 
     contao.image.image_factory:
         class: Contao\CoreBundle\Image\ImageFactory
