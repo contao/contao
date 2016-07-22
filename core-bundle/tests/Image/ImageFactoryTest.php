@@ -424,11 +424,18 @@ class ImageFactoryTest extends TestCase
      */
     public function testCreateWithLegacyMode($mode, $expected)
     {
-        $path = $this->getRootDir() . '/images/dummy.jpg';
+        $path = $this->getRootDir() . '/images/none.jpg';
 
         $imageMock = $this->getMockBuilder('Contao\Image\Image')
              ->disableOriginalConstructor()
              ->getMock();
+
+        $filesystem = $this->getMock('Symfony\Component\Filesystem\Filesystem');
+
+        $filesystem
+            ->expects($this->once())
+            ->method('exists')
+            ->willReturn(true);
 
         $resizer = $this->getMockBuilder('Contao\Image\Resizer')
              ->disableOriginalConstructor()
@@ -501,7 +508,7 @@ class ImageFactoryTest extends TestCase
             ->method('getAdapter')
             ->willReturn($filesAdapter);
 
-        $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine, null, $framework);
+        $imageFactory = $this->createImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
 
         $image = $imageFactory->create($path, [50, 50, $mode]);
 
