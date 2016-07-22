@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Image\PictureGenerator;
+use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\PictureConfigurationItem;
@@ -24,7 +24,7 @@ use Contao\Image\PictureConfigurationItem;
 class PictureFactory
 {
     /**
-     * @var PictureGenerator
+     * @var PictureGeneratorInterface
      */
     private $pictureGenerator;
 
@@ -46,13 +46,13 @@ class PictureFactory
     /**
      * Constructor.
      *
-     * @param PictureGenerator         $pictureGenerator The picture generator
-     * @param ImageFactory             $imageFactory     The image factory
-     * @param ContaoFrameworkInterface $framework        The Contao framework
-     * @param array                    $imagineOptions   The options for Imagine save
+     * @param PictureGeneratorInterface $pictureGenerator The picture generator
+     * @param ImageFactory              $imageFactory     The image factory
+     * @param ContaoFrameworkInterface  $framework        The Contao framework
+     * @param array                     $imagineOptions   The options for Imagine save
      */
     public function __construct(
-        PictureGenerator $pictureGenerator,
+        PictureGeneratorInterface $pictureGenerator,
         ImageFactory $imageFactory,
         ContaoFrameworkInterface $framework,
         array $imagineOptions

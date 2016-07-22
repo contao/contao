@@ -14,9 +14,10 @@ use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\ImagineInterface;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Image\Resizer as ResizerInterface;
+use Contao\Image\ResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ImportantPart;
 use Symfony\Component\Filesystem\Filesystem;
@@ -71,13 +72,14 @@ class ImageFactory
     /**
      * Constructor.
      *
-     * @param ResizerInterface         $resizer        The resizer object
-     * @param ImagineInterface         $imagine        The imagine object
-     * @param ImagineInterface         $imagineSvg     The imagine object for SVG files
-     * @param Filesystem               $filesystem     The filesystem object
-     * @param ContaoFrameworkInterface $framework      The Contao framework
-     * @param bool                     $bypassCache    True to bypass the image cache
-     * @param array                    $imagineOptions The options for Imagine save
+     * @param ResizerInterface         $resizer         The resizer object
+     * @param ImagineInterface         $imagine         The imagine object
+     * @param ImagineInterface         $imagineSvg      The imagine object for SVG files
+     * @param Filesystem               $filesystem      The filesystem object
+     * @param ContaoFrameworkInterface $framework       The Contao framework
+     * @param bool                     $bypassCache     True to bypass the image cache
+     * @param array                    $imagineOptions  The options for Imagine save
+     * @param array                    $validExtensions Valid filename extensions
      */
     public function __construct(
         ResizerInterface $resizer,
@@ -102,11 +104,11 @@ class ImageFactory
     /**
      * Creates an Image object.
      *
-     * @param string                        $path The path to the source image
-     * @param int|array|ResizeConfiguration $size The ID of an image size
-     *                                            or an array with width, height and resize mode
-     *                                            or a ResizeConfiguration object
-     * @param string    $targetPath               The absolute target path
+     * @param string                                 $path The path to the source image
+     * @param int|array|ResizeConfigurationInterface $size The ID of an image size
+     *                                                     or an array with width, height and resize mode
+     *                                                     or a ResizeConfiguration object
+     * @param string    $targetPath                        The absolute target path
      *
      * @return Image The created image object
      */
@@ -126,7 +128,7 @@ class ImageFactory
 
         $image = new Image($imagine, $this->filesystem, (string) $path);
 
-        if (is_object($size) && $size instanceof ResizeConfiguration) {
+        if (is_object($size) && $size instanceof ResizeConfigurationInterface) {
             $resizeConfig = $size;
             $importantPart = null;
         }
@@ -224,7 +226,7 @@ class ImageFactory
             $importantPart[3] = 1;
         }
 
-        $config->setMode(ResizeConfiguration::MODE_CROP);
+        $config->setMode(ResizeConfigurationInterface::MODE_CROP);
 
         return [$config, new ImportantPart(
             new Point($importantPart[0], $importantPart[1]),

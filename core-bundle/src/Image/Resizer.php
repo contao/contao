@@ -19,11 +19,11 @@ use Contao\Image as LegacyImage;
 use Contao\File;
 use Contao\System;
 use Contao\Image\Resizer as ImageResizer;
-use Contao\Image\Image;
-use Contao\Image\ResizeConfiguration;
-use Contao\Image\ResizeCoordinates;
-use Contao\Image\ResizeOptions;
-use Contao\Image\ImportantPart;
+use Contao\Image\ImageInterface;
+use Contao\Image\ResizeConfigurationInterface;
+use Contao\Image\ResizeCoordinatesInterface;
+use Contao\Image\ResizeOptionsInterface;
+use Contao\Image\ImportantPartInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -53,7 +53,7 @@ class Resizer extends ImageResizer
     /**
      * {@inheritdoc}
      */
-    public function resize(Image $image, ResizeConfiguration $config, ResizeOptions $options)
+    public function resize(ImageInterface $image, ResizeConfigurationInterface $config, ResizeOptionsInterface $options)
     {
         if ((
             isset($GLOBALS['TL_HOOKS']['executeResize']) &&
@@ -113,7 +113,7 @@ class Resizer extends ImageResizer
     /**
      * {@inheritdoc}
      */
-    protected function executeResize(Image $image, ResizeCoordinates $coordinates, $path, array $imagineOptions)
+    protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, $path, array $imagineOptions)
     {
         if (isset($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage']) && $this->legacyImage) {
             foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback) {
