@@ -442,6 +442,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $pictureGenerator,
             $imageFactory,
             $framework,
+            $container->getParameter('contao.image.bypass_cache'),
             $container->getParameter('contao.image.imagine_options')
         );
 

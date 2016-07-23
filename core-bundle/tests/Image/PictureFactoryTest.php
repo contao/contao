@@ -40,7 +40,7 @@ class PictureFactoryTest extends TestCase
      *
      * @return PictureFactory
      */
-    private function createPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null, $imagineOptions = null)
+    private function createPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null, $bypassCache = null, $imagineOptions = null)
     {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this->getMockBuilder('Contao\Image\PictureGenerator')
@@ -58,11 +58,15 @@ class PictureFactoryTest extends TestCase
             $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
         }
 
+        if (null === $bypassCache) {
+            $bypassCache = false;
+        }
+
         if (null === $imagineOptions) {
             $imagineOptions = [];
         }
 
-        return new PictureFactory($pictureGenerator, $imageFactory, $framework, $imagineOptions);
+        return new PictureFactory($pictureGenerator, $imageFactory, $framework, $bypassCache, $imagineOptions);
     }
 
     /**

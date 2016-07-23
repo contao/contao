@@ -14,6 +14,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 use Contao\Image\PictureConfigurationItem;
 
 /**
@@ -39,6 +40,11 @@ class PictureFactory
     private $framework;
 
     /**
+     * @var bool
+     */
+    private $bypassCache;
+
+    /**
      * @var array
      */
     private $imagineOptions;
@@ -49,17 +55,20 @@ class PictureFactory
      * @param PictureGeneratorInterface $pictureGenerator The picture generator
      * @param ImageFactory              $imageFactory     The image factory
      * @param ContaoFrameworkInterface  $framework        The Contao framework
+     * @param bool                      $bypassCache      True to bypass the image cache
      * @param array                     $imagineOptions   The options for Imagine save
      */
     public function __construct(
         PictureGeneratorInterface $pictureGenerator,
         ImageFactory $imageFactory,
         ContaoFrameworkInterface $framework,
+        $bypassCache,
         array $imagineOptions
     ) {
         $this->pictureGenerator = $pictureGenerator;
         $this->imageFactory = $imageFactory;
         $this->framework = $framework;
+        $this->bypassCache = (bool) $bypassCache;
         $this->imagineOptions = $imagineOptions;
     }
 
@@ -83,7 +92,13 @@ class PictureFactory
             $config = $this->createConfig($size);
         }
 
-        return $this->pictureGenerator->generate($image, $config, $this->imagineOptions);
+        return $this->pictureGenerator->generate(
+            $image,
+            $config,
+            (new ResizeOptions())
+                ->setImagineOptions($this->imagineOptions)
+                ->setBypassCache($this->bypassCache)
+        );
     }
 
     private function createConfig($size)

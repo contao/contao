@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\Image\ImportantPart;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Imagine\Image\Box;
@@ -234,7 +235,7 @@ class Picture
 			new Box($importantPart['width'], $importantPart['height'])
 		));
 
-		$picture = \System::getContainer()->get('contao.image.picture_generator')->generate($image, $config);
+		$picture = \System::getContainer()->get('contao.image.picture_generator')->generate($image, $config, (new ResizeOptions())->setImagineOptions(\System::getContainer()->getParameter('contao.image.imagine_options'))->setBypassCache(\System::getContainer()->getParameter('contao.image.bypass_cache')));
 
 		return array
 		(

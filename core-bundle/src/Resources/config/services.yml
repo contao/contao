@@ -161,7 +161,6 @@ services:
         class: Contao\Image\PictureGenerator
         arguments:
             - "@contao.image.resizer"
-            - %contao.image.bypass_cache%
 
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
@@ -169,6 +168,7 @@ services:
             - "@contao.image.picture_generator"
             - "@contao.image.image_factory"
             - "@contao.framework"
+            - %contao.image.bypass_cache%
             - %contao.image.imagine_options%
 
     contao.session.contao_backend:
