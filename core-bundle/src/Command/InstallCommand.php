@@ -47,6 +47,7 @@ class InstallCommand extends AbstractLockedCommand
      */
     private $emptyDirs = [
         'system',
+        'system/config',
         'templates',
         'web/system',
     ];
@@ -58,7 +59,6 @@ class InstallCommand extends AbstractLockedCommand
         'assets/css',
         'assets/js',
         'system/cache',
-        'system/config',
         'system/modules',
         'system/themes',
         'system/tmp',
