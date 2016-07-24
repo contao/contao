@@ -106,7 +106,7 @@ class AutomatorCommandTest extends TestCase
 
         $code = $tester->execute([
             'command' => $command->getName(),
-            'task' => 'checkForUpdates',
+            'task' => 'purgeTempFolder',
         ]);
 
         $this->assertEquals(0, $code);

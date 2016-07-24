@@ -371,16 +371,13 @@ $GLOBALS['TL_CROP'] = array
  */
 $GLOBALS['TL_CRON'] = array
 (
-	'weekly' => array
-	(
-		'generateSitemap' => array('Automator', 'generateSitemap'),
-		'purgeScriptCache' => array('Automator', 'purgeScriptCache'),
-		'purgeSearchCache' => array('Automator', 'purgeSearchCache')
-	),
+	'monthly' => array(),
+	'weekly' => array(),
 	'daily' => array
 	(
 		'purgeTempFolder' => array('Automator', 'purgeTempFolder'),
-		'checkForUpdates' => array('Automator', 'checkForUpdates')
+		'purgeSearchCache' => array('Automator', 'purgeSearchCache'),
+		'generateSitemap' => array('Automator', 'generateSitemap')
 	),
 	'hourly' => array(),
 	'minutely' => array()
