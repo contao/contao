@@ -35,7 +35,7 @@ class ToggleViewListener
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $framework The Contao framework service
+     * @param ContaoFrameworkInterface $framework
      */
     public function __construct(ContaoFrameworkInterface $framework)
     {
@@ -45,7 +45,7 @@ class ToggleViewListener
     /**
      * Toggles the TL_VIEW cookie and redirects back to the referring page.
      *
-     * @param GetResponseEvent $event The event object
+     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -66,8 +66,8 @@ class ToggleViewListener
     /**
      * Generates the TL_VIEW cookie based on the toggle_view value.
      *
-     * @param string $value    The cookie value
-     * @param string $basePath The request base path
+     * @param string $value
+     * @param string $basePath
      *
      * @return Cookie The cookie object
      */

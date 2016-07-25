@@ -41,10 +41,10 @@ class StoreRefererListenerTest extends TestCase
     /**
      * Tests that the referer is stored upon kernel.response.
      *
-     * @param string  $scope           The container scope
-     * @param Request $request         The request object
-     * @param array   $currentReferer  The current referer
-     * @param array   $expectedReferer The expected referer
+     * @param string  $scope
+     * @param Request $request
+     * @param array   $currentReferer
+     * @param array   $expectedReferer
      *
      * @dataProvider refererStoredOnKernelResponseProvider
      */
@@ -82,7 +82,7 @@ class StoreRefererListenerTest extends TestCase
     /**
      * Tests that the session is not written when there is no user.
      *
-     * @param AnonymousToken $noUserReturn The user token
+     * @param AnonymousToken $noUserReturn
      *
      * @dataProvider noUserProvider
      */
@@ -174,7 +174,7 @@ class StoreRefererListenerTest extends TestCase
     /**
      * Provides the data for the testRefererStoredOnKernelResponse() method.
      *
-     * @return array The test data
+     * @return array
      */
     public function refererStoredOnKernelResponseProvider()
     {
@@ -271,7 +271,7 @@ class StoreRefererListenerTest extends TestCase
     /**
      * Provides the data for the user-less tests.
      *
-     * @return array The test data
+     * @return array
      */
     public function noUserProvider()
     {
@@ -286,10 +286,10 @@ class StoreRefererListenerTest extends TestCase
     /**
      * Returns the session listener object.
      *
-     * @param SessionInterface      $session      The session object
-     * @param TokenStorageInterface $tokenStorage The token storage object
+     * @param SessionInterface      $session
+     * @param TokenStorageInterface $tokenStorage
      *
-     * @return StoreRefererListener The referer listener object
+     * @return StoreRefererListener
      */
     private function getListener(SessionInterface $session = null, TokenStorageInterface $tokenStorage = null)
     {

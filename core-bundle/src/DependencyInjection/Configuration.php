@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
     /**
      * Constructor.
      *
-     * @param bool $debug If kernel debug mode is enabled
+     * @param bool $debug
      */
     public function __construct($debug)
     {
@@ -38,7 +38,7 @@ class Configuration implements ConfigurationInterface
     /**
      * Generates the configuration tree builder.
      *
-     * @return TreeBuilder The tree builder
+     * @return TreeBuilder
      */
     public function getConfigTreeBuilder()
     {

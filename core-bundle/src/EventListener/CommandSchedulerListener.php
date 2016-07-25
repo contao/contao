@@ -35,8 +35,8 @@ class CommandSchedulerListener
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $framework  The Contao framework service
-     * @param Connection               $connection The database connection
+     * @param ContaoFrameworkInterface $framework
+     * @param Connection               $connection
      */
     public function __construct(ContaoFrameworkInterface $framework, Connection $connection)
     {

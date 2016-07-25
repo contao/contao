@@ -199,8 +199,8 @@ class ImageTest extends TestCase
     /**
      * Tests resizing without an important part.
      *
-     * @param array $arguments      The arguments
-     * @param array $expectedResult The expected result
+     * @param array $arguments
+     * @param array $expectedResult
      *
      * @dataProvider getComputeResizeDataWithoutImportantPart
      */
@@ -277,7 +277,7 @@ class ImageTest extends TestCase
     /**
      * Provides the data for the testComputeResizeWithoutImportantPart() method.
      *
-     * @return array The data
+     * @return array
      */
     public function getComputeResizeDataWithoutImportantPart()
     {
@@ -662,8 +662,8 @@ class ImageTest extends TestCase
     /**
      * Tests resizing with an important part.
      *
-     * @param array $arguments      The arguments
-     * @param array $expectedResult The expected result
+     * @param array $arguments
+     * @param array $expectedResult
      *
      * @dataProvider getComputeResizeDataWithImportantPart
      */
@@ -726,7 +726,7 @@ class ImageTest extends TestCase
     /**
      * Provides the data for the testComputeResizeWithImportantPart() method.
      *
-     * @return array The data
+     * @return array
      */
     public function getComputeResizeDataWithImportantPart()
     {
@@ -1008,8 +1008,8 @@ class ImageTest extends TestCase
     /**
      * Tests the getCacheName() method.
      *
-     * @param array  $arguments         The arguments
-     * @param string $expectedCacheName The expected cache name
+     * @param array  $arguments
+     * @param string $expectedCacheName
      *
      * @dataProvider getCacheName
      */
@@ -1075,7 +1075,7 @@ class ImageTest extends TestCase
     /**
      * Provides the data for the testGetCacheName() method.
      *
-     * @return array The data
+     * @return array
      */
     public function getCacheName()
     {
@@ -1182,8 +1182,8 @@ class ImageTest extends TestCase
     /**
      * Tests the legacy get() method.
      *
-     * @param array $arguments      The arguments
-     * @param array $expectedResult The expected result
+     * @param array $arguments
+     * @param array $expectedResult
      *
      * @dataProvider getLegacyGet
      */
@@ -1197,7 +1197,7 @@ class ImageTest extends TestCase
     /**
      * Provides the data for the testLegacyGet() method.
      *
-     * @return array The data
+     * @return array
      */
     public function getLegacyGet()
     {
@@ -1218,8 +1218,8 @@ class ImageTest extends TestCase
     /**
      * Tests the legacy resize() method.
      *
-     * @param array $arguments      The arguments
-     * @param array $expectedResult The expected result
+     * @param array $arguments
+     * @param array $expectedResult
      *
      * @dataProvider getLegacyResize
      */
@@ -1233,7 +1233,7 @@ class ImageTest extends TestCase
     /**
      * Provides the data for the testLegacyGet() method.
      *
-     * @return array The data
+     * @return array
      */
     public function getLegacyResize()
     {
@@ -1562,16 +1562,16 @@ class ImageTest extends TestCase
     /**
      * Returns a custom image path.
      *
-     * @param string $originalPath The original path
-     * @param int    $targetWidth  The target width
-     * @param int    $targetHeight The target height
-     * @param string $resizeMode   The resize mode
-     * @param string $cacheName    The cache name
-     * @param object $fileObj      The file object
-     * @param string $targetPath   The target path
-     * @param object $imageObj     The image object
+     * @param string $originalPath
+     * @param int    $targetWidth
+     * @param int    $targetHeight
+     * @param string $resizeMode
+     * @param string $cacheName
+     * @param object $fileObj
+     * @param string $targetPath
+     * @param object $imageObj
      *
-     * @return string The image path
+     * @return string
      */
     public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj)
     {
@@ -1582,8 +1582,8 @@ class ImageTest extends TestCase
     /**
      * Tests the getPixelValue() method.
      *
-     * @param string $value    The pixel value
-     * @param int    $expected The expected value
+     * @param string $value
+     * @param int    $expected
      *
      * @dataProvider getGetPixelValueData
      */
@@ -1595,7 +1595,7 @@ class ImageTest extends TestCase
     /**
      * Provides the data for the testGetPixelValue() method.
      *
-     * @return array The data
+     * @return array
      */
     public function getGetPixelValueData()
     {

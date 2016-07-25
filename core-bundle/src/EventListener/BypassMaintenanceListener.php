@@ -40,9 +40,9 @@ class BypassMaintenanceListener
     /**
      * Constructor.
      *
-     * @param SessionInterface $session          The session object
-     * @param bool             $disableIpCheck   Whether to disable the IP check
-     * @param string           $requestAttribute The request attribute name
+     * @param SessionInterface $session
+     * @param bool             $disableIpCheck
+     * @param string           $requestAttribute
      */
     public function __construct(SessionInterface $session, $disableIpCheck, $requestAttribute = '_bypass_maintenance')
     {
@@ -54,7 +54,7 @@ class BypassMaintenanceListener
     /**
      * Adds the request attribute to the request.
      *
-     * @param GetResponseEvent $event The event object
+     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -70,9 +70,9 @@ class BypassMaintenanceListener
     /**
      * Checks if there is an authenticated back end user.
      *
-     * @param Request $request The request object
+     * @param Request $request
      *
-     * @return bool True if there is an authenticated back end user
+     * @return bool
      */
     private function hasAuthenticatedBackendUser(Request $request)
     {

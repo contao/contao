@@ -33,7 +33,7 @@ class OutputFromCacheListener
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $framework The Contao framework service
+     * @param ContaoFrameworkInterface $framework
      */
     public function __construct(ContaoFrameworkInterface $framework)
     {
@@ -43,7 +43,7 @@ class OutputFromCacheListener
     /**
      * Forwards the request to the Frontend class and sets the response if any.
      *
-     * @param GetResponseEvent $event The event object
+     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {

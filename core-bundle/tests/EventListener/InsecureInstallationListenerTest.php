@@ -84,7 +84,7 @@ class InsecureInstallationListenerTest extends TestCase
     /**
      * Returns a request object.
      *
-     * @return Request The request object
+     * @return Request
      */
     private function getRequestObject()
     {

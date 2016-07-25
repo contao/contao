@@ -29,7 +29,7 @@ class AddPackagesPass implements CompilerPassInterface
     /**
      * Constructor.
      *
-     * @param string $jsonFile Path to the composer installed.json file
+     * @param string $jsonFile
      */
     public function __construct($jsonFile)
     {
@@ -57,9 +57,9 @@ class AddPackagesPass implements CompilerPassInterface
     /**
      * Extracts the version numbers from the JSON data.
      *
-     * @param array $json The JSON array
+     * @param array $json
      *
-     * @return array The packages array
+     * @return array
      */
     private function getVersions(array $json)
     {

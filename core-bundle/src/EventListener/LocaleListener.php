@@ -33,7 +33,7 @@ class LocaleListener
     /**
      * Constructor.
      *
-     * @param array $availableLocales The available locales
+     * @param array $availableLocales
      */
     public function __construct($availableLocales)
     {
@@ -43,7 +43,7 @@ class LocaleListener
     /**
      * Sets the default locale based on the request or session.
      *
-     * @param GetResponseEvent $event The event object
+     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -64,9 +64,9 @@ class LocaleListener
     /**
      * Returns the locale from the request, the session or the HTTP header.
      *
-     * @param Request $request The request object
+     * @param Request $request
      *
-     * @return string The locale
+     * @return string
      */
     private function getLocale(Request $request)
     {
@@ -84,11 +84,11 @@ class LocaleListener
     /**
      * Formats a string to represent a locale ID.
      *
-     * @param string $locale The locale string
+     * @param string $locale
      *
-     * @return string The formatted locale
+     * @return string
      *
-     * @throw \InvalidArgumentException If the given locale is not supported
+     * @throw \InvalidArgumentException
      */
     private function formatLocaleId($locale)
     {
@@ -109,10 +109,10 @@ class LocaleListener
     /**
      * Creates a new instance with the installed languages.
      *
-     * @param string $defaultLocale The default locale
-     * @param string $rootDir       The kernel root directory
+     * @param string $defaultLocale
+     * @param string $rootDir
      *
-     * @return static The new object instance
+     * @return static
      */
     public static function createWithLocales($defaultLocale, $rootDir)
     {

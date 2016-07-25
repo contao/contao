@@ -97,7 +97,7 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * Creates the file symlinks.
      *
-     * @param string $uploadPath The upload path
+     * @param string $uploadPath
      */
     private function symlinkFiles($uploadPath)
     {
@@ -144,8 +144,8 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * Generates symlinks from a Finder object.
      *
-     * @param Finder $finder  The finder object
-     * @param string $prepend The path to prepend
+     * @param Finder $finder
+     * @param string $prepend
      */
     private function createSymlinksFromFinder(Finder $finder, $prepend)
     {
@@ -163,8 +163,8 @@ class SymlinksCommand extends AbstractLockedCommand
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
      *
-     * @param string $target The symlink target
-     * @param string $link   The symlink path
+     * @param string $target
+     * @param string $link
      */
     private function symlink($target, $link)
     {
@@ -194,9 +194,9 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * Returns a finder instance to find files in the given path.
      *
-     * @param string $path The path
+     * @param string $path
      *
-     * @return Finder The finder object
+     * @return Finder
      */
     private function findIn($path)
     {
@@ -222,10 +222,10 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * Filters nested paths so only the top folder is symlinked.
      *
-     * @param Finder $finder  The finder object
-     * @param string $prepend The path to prepend
+     * @param Finder $finder
+     * @param string $prepend
      *
-     * @return SplFileInfo[] The filtered paths
+     * @return SplFileInfo[]
      */
     private function filterNestedPaths(Finder $finder, $prepend)
     {

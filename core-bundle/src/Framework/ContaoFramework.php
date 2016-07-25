@@ -92,11 +92,11 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Constructor.
      *
-     * @param RequestStack     $requestStack The request stack
-     * @param RouterInterface  $router       The router service
-     * @param SessionInterface $session      The session service
-     * @param string           $rootDir      The kernel root directory
-     * @param int              $errorLevel   The PHP error level
+     * @param RequestStack     $requestStack
+     * @param RouterInterface  $router
+     * @param SessionInterface $session
+     * @param string           $rootDir
+     * @param int              $errorLevel
      */
     public function __construct(
         RequestStack $requestStack,
@@ -123,7 +123,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \LogicException If the container is not set
+     * @throws \LogicException
      */
     public function initialize()
     {
@@ -203,7 +203,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Returns the TL_MODE value.
      *
-     * @return string|null The TL_MODE value or null
+     * @return string|null
      */
     private function getMode()
     {
@@ -221,7 +221,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Returns the referer ID.
      *
-     * @return string|null The referer ID or null
+     * @return string|null
      */
     private function getRefererId()
     {
@@ -235,7 +235,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Returns the route.
      *
-     * @return string|null The route or null
+     * @return string|null
      */
     private function getRoute()
     {
@@ -257,7 +257,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Returns the base path.
      *
-     * @return string|null The base path
+     * @return string|null
      */
     private function getPath()
     {
@@ -412,7 +412,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Handles the request token.
      *
-     * @throws AjaxRedirectResponseException|InvalidRequestTokenException If the token is invalid
+     * @throws AjaxRedirectResponseException|InvalidRequestTokenException
      */
     private function handleRequestToken()
     {
@@ -438,8 +438,8 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Tries to set a php.ini configuration option.
      *
-     * @param string $key   The key
-     * @param mixed  $value The value
+     * @param string $key
+     * @param mixed  $value
      */
     private function iniSet($key, $value)
     {
@@ -451,7 +451,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Checks if the token check can be skipped.
      *
-     * @return bool True if the token check can be skipped
+     * @return bool True
      */
     private function canSkipTokenCheck()
     {

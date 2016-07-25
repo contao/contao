@@ -45,7 +45,7 @@ class MergeHttpHeadersListener
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $contaoFramework The Contao framework
+     * @param ContaoFrameworkInterface $contaoFramework
      */
     public function __construct(ContaoFrameworkInterface $contaoFramework)
     {
@@ -56,7 +56,7 @@ class MergeHttpHeadersListener
     /**
      * Returns the headers.
      *
-     * @return array The headers array
+     * @return array
      */
     public function getHeaders()
     {
@@ -66,7 +66,7 @@ class MergeHttpHeadersListener
     /**
      * Sets the headers.
      *
-     * @param array $headers The headers array
+     * @param array $headers
      */
     public function setHeaders(array $headers)
     {
@@ -122,7 +122,7 @@ class MergeHttpHeadersListener
     /**
      * Adds the Contao headers to the Symfony response.
      *
-     * @param FilterResponseEvent $event The event object
+     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
@@ -136,9 +136,9 @@ class MergeHttpHeadersListener
     /**
      * Merges the HTTP headers.
      *
-     * @param Response $response The response object
+     * @param Response $response
      *
-     * @return Response The response object
+     * @return Response
      */
     private function mergeHttpHeaders(Response $response)
     {

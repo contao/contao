@@ -149,7 +149,7 @@ class ImageSizesTest extends TestCase
     /**
      * Adds an expected method call to the event dispatcher mock object.
      *
-     * @param string $event The event key
+     * @param string $event
      */
     private function expectEvent($event)
     {
@@ -163,7 +163,7 @@ class ImageSizesTest extends TestCase
     /**
      * Adds an expected method call to the database connection mock object.
      *
-     * @param array $imageSizes The image sizes to be returned
+     * @param array $imageSizes
      */
     private function expectImageSizes(array $imageSizes)
     {

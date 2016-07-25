@@ -46,7 +46,7 @@ class ExceptionConverterListener
     /**
      * Maps known exceptions to HTTP exceptions.
      *
-     * @param GetResponseForExceptionEvent $event The event object
+     * @param GetResponseForExceptionEvent $event
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
@@ -65,9 +65,9 @@ class ExceptionConverterListener
     /**
      * Maps the extension to a target class.
      *
-     * @param \Exception $exception The exception object
+     * @param \Exception $exception
      *
-     * @return string|null The class name or null
+     * @return string|null
      */
     private function getTargetClass(\Exception $exception)
     {
@@ -83,10 +83,10 @@ class ExceptionConverterListener
     /**
      * Converts an exception to an HTTP exception.
      *
-     * @param \Exception $exception The exception object
-     * @param string     $target    The target exception
+     * @param \Exception $exception
+     * @param string     $target
      *
-     * @return HttpException|null The HTTP exception or null
+     * @return HttpException|null
      */
     private function convertToHttpException(\Exception $exception, $target)
     {

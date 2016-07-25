@@ -184,9 +184,9 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * Returns the composer event object.
      *
-     * @param array $extra The extra configuration
+     * @param array $extra
      *
-     * @return Event The event object
+     * @return Event
      */
     private function getComposerEvent(array $extra = [])
     {
@@ -198,9 +198,9 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * Mocks the Composer object.
      *
-     * @param PackageInterface $package The package interface
+     * @param PackageInterface $package
      *
-     * @return Composer|\PHPUnit_Framework_MockObject_MockObject The composer object
+     * @return Composer|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockComposer(PackageInterface $package)
     {
@@ -232,7 +232,7 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * Mocks the IO object.
      *
-     * @return IOInterface|\PHPUnit_Framework_MockObject_MockObject The IO object
+     * @return IOInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockIO()
     {
@@ -256,9 +256,9 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * Mocks the package object.
      *
-     * @param array $extras The extra configuration
+     * @param array $extras
      *
-     * @return PackageInterface|\PHPUnit_Framework_MockObject_MockObject The package object
+     * @return PackageInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockPackage(array $extras = [])
     {

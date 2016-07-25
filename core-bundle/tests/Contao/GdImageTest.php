@@ -89,7 +89,7 @@ class GdImageTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests the fromFile() method.
      *
-     * @param string $type The image type
+     * @param string $type
      *
      * @dataProvider getImageTypes
      */
@@ -122,7 +122,7 @@ class GdImageTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests the saveToFile() method.
      *
-     * @param string $type The image type
+     * @param string $type
      *
      * @dataProvider getImageTypes
      */
@@ -311,7 +311,7 @@ class GdImageTest extends \PHPUnit_Framework_TestCase
     /**
      * Provides the image types for the tests.
      *
-     * @return array The image types
+     * @return array
      */
     public function getImageTypes()
     {

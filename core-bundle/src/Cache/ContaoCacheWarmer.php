@@ -65,12 +65,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Constructor.
      *
-     * @param Filesystem               $filesystem The filesystem object
-     * @param ResourceFinderInterface  $finder     The resource finder object
-     * @param FileLocator              $locator    The file locator
-     * @param string                   $rootDir    The root directory
-     * @param Connection               $connection The Doctrine connection
-     * @param ContaoFrameworkInterface $framework  The framework service
+     * @param Filesystem               $filesystem
+     * @param ResourceFinderInterface  $finder
+     * @param FileLocator              $locator
+     * @param string                   $rootDir
+     * @param Connection               $connection
+     * @param ContaoFrameworkInterface $framework
      */
     public function __construct(
         Filesystem $filesystem,
@@ -117,7 +117,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Generates the config cache.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $cacheDir
      */
     private function generateConfigCache($cacheDir)
     {
@@ -134,7 +134,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Generates the cache mapper array.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $cacheDir
      */
     private function generateCacheMapper($cacheDir)
     {
@@ -164,7 +164,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Generates the DCA cache.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $cacheDir
      */
     private function generateDcaCache($cacheDir)
     {
@@ -196,7 +196,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Generates the language cache.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $cacheDir
      */
     private function generateLanguageCache($cacheDir)
     {
@@ -249,7 +249,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Generates the DCA extracts.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $cacheDir
      */
     private function generateDcaExtracts($cacheDir)
     {
@@ -289,7 +289,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Returns the languages which are currently in use.
      *
-     * @return array The languages array
+     * @return array
      */
     private function getLanguagesInUse()
     {
@@ -325,7 +325,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Checks if the installation is complete.
      *
-     * @return bool True if the installation is complete
+     * @return bool
      */
     private function isCompleteInstallation()
     {

@@ -28,9 +28,9 @@ class ContaoToken extends AbstractToken
     /**
      * Constructor.
      *
-     * @param User $user The user object
+     * @param User $user
      *
-     * @throws UsernameNotFoundException If the user is invalid
+     * @throws UsernameNotFoundException
      */
     public function __construct(User $user)
     {
@@ -55,9 +55,9 @@ class ContaoToken extends AbstractToken
     /**
      * Returns the roles depending on the user object.
      *
-     * @param User $user The user object
+     * @param User $user
      *
-     * @return RoleInterface[] The roles
+     * @return RoleInterface[]
      */
     private function getRolesFromUser(User $user)
     {

@@ -28,8 +28,8 @@ class ResponseException extends \RuntimeException
     /**
      * Constructor.
      *
-     * @param Response        $response The Response object
-     * @param \Exception|null $previous The previous exception
+     * @param Response        $response
+     * @param \Exception|null $previous
      */
     public function __construct(Response $response, \Exception $previous = null)
     {
@@ -45,7 +45,7 @@ class ResponseException extends \RuntimeException
     /**
      * Returns the response object.
      *
-     * @return Response The response object
+     * @return Response
      */
     public function getResponse()
     {
