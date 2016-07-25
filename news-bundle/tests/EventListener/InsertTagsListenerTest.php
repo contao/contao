@@ -430,7 +430,7 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a config adapter.
      *
-     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject The config adapter
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockConfigAdapter()
     {
