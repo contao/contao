@@ -243,10 +243,14 @@ class ContaoFramework implements ContaoFrameworkInterface
             return 'console';
         }
 
-        $route = $this->router->generate(
-            $this->request->attributes->get('_route'),
-            $this->request->attributes->get('_route_params')
-        );
+        try {
+            $route = $this->router->generate(
+                $this->request->attributes->get('_route'),
+                $this->request->attributes->get('_route_params')
+            );
+        } catch (\InvalidArgumentException $e) {
+            return null;
+        }
 
         return substr($route, strlen($this->request->getBasePath()) + 1);
     }
