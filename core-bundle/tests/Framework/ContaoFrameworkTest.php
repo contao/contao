@@ -27,6 +27,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
  * @author Christian Schiffler <https://github.com/discordier>
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Dominik Tomasi <https://github.com/dtomasi>
+ * @author Andreas Schempp <https://github.com/aschempp>
  *
  * @preserveGlobalState disabled
  */
@@ -143,7 +144,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertNull(TL_MODE);
         $this->assertEquals($this->getRootDir(), TL_ROOT);
         $this->assertNull(TL_REFERER_ID);
-        $this->assertEquals('console', TL_SCRIPT);
+        $this->assertEquals('', TL_SCRIPT);
         $this->assertNull(TL_PATH);
     }
 
@@ -158,7 +159,11 @@ class ContaoFrameworkTest extends TestCase
         $request->setLocale('de');
 
         $routingLoader = $this->getMock('Symfony\Component\Config\Loader\LoaderInterface');
-        $routingLoader->method('load')->willReturn(new RouteCollection());
+
+        $routingLoader
+            ->method('load')
+            ->willReturn(new RouteCollection())
+        ;
 
         $container = $this->mockContainerWithContaoScopes();
         $container->get('request_stack')->push($request);
