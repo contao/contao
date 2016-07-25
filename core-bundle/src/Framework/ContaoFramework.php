@@ -402,7 +402,11 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         if (file_exists($this->rootDir.'/system/config/initconfig.php')) {
-            @trigger_error('Using the initconfig.php file has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            @trigger_error(
+                'Using the initconfig.php file has been deprecated and will no longer work in Contao 5.0.',
+                E_USER_DEPRECATED
+            );
+
             include $this->rootDir.'/system/config/initconfig.php';
         }
     }
