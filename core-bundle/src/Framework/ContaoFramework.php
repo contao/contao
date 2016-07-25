@@ -235,18 +235,21 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Returns the route.
      *
-     * @return string The route
+     * @return string|null The route or null
      */
     private function getRoute()
     {
         if (null === $this->request) {
-            return 'console';
+            return null;
         }
 
-        $route = $this->router->generate(
-            $this->request->attributes->get('_route'),
-            $this->request->attributes->get('_route_params')
-        );
+        $attributes = $this->request->attributes;
+
+        try {
+            $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
+        } catch (\InvalidArgumentException $e) {
+            return null;
+        }
 
         return substr($route, strlen($this->request->getBasePath()) + 1);
     }
