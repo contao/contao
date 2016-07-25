@@ -37,8 +37,8 @@ class PreviewUrlConvertListener
     /**
      * Constructor.
      *
-     * @param RequestStack             $requestStack The request stack
-     * @param ContaoFrameworkInterface $framework    The Contao framework service
+     * @param RequestStack             $requestStack
+     * @param ContaoFrameworkInterface $framework
      */
     public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework)
     {
@@ -49,7 +49,7 @@ class PreviewUrlConvertListener
     /**
      * Modifies the front end preview URL.
      *
-     * @param PreviewUrlConvertEvent $event The event object
+     * @param PreviewUrlConvertEvent $event
      */
     public function onPreviewUrlConvert(PreviewUrlConvertEvent $event)
     {
@@ -72,9 +72,9 @@ class PreviewUrlConvertListener
     /**
      * Returns the event model.
      *
-     * @param Request $request The request object
+     * @param Request $request
      *
-     * @return CalendarEventsModel|null The event model or null
+     * @return CalendarEventsModel|null
      */
     private function getEventModel(Request $request)
     {
