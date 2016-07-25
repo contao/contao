@@ -91,7 +91,7 @@ class SymlinksCommand extends AbstractLockedCommand
         // Symlink the assets and themes directory
         $this->symlink('assets', 'web/assets');
         $this->symlink('system/themes', 'web/system/themes');
-        $this->symlink('app/logs', 'system/logs');
+        $this->symlink('var/logs', 'system/logs');
     }
 
     /**
