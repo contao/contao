@@ -83,8 +83,6 @@ class InstallationController implements ContainerAwareInterface
             return $this->acceptLicense();
         }
 
-        $installTool->createLocalConfigurationFiles();
-
         if ('' === $installTool->getConfig('installPassword')) {
             return $this->setPassword();
         }

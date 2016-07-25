@@ -75,22 +75,6 @@ class InstallTool
     }
 
     /**
-     * Creates the local configuration files if they do not yet exist.
-     */
-    public function createLocalConfigurationFiles()
-    {
-        // The localconfig.php file is created by the Config class
-        foreach (['dcaconfig', 'initconfig', 'langconfig'] as $file) {
-            if (!file_exists($this->rootDir.'/../system/config/'.$file.'.php')) {
-                file_put_contents(
-                    $this->rootDir.'/../system/config/'.$file.'.php',
-                    '<?php'."\n\n// Put your custom configuration here\n"
-                );
-            }
-        }
-    }
-
-    /**
      * Checks if the license has been accepted.
      *
      * @return bool True if the license has not been accepted yet
