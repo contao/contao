@@ -30,7 +30,7 @@ abstract class AbstractVersionUpdate
     /**
      * Constructor.
      *
-     * @param Connection $connection The database connection
+     * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {
@@ -40,7 +40,7 @@ abstract class AbstractVersionUpdate
     /**
      * Checks whether the update should be run.
      *
-     * @return bool True if the update should be run
+     * @return bool
      */
     abstract public function shouldBeRun();
 

@@ -56,7 +56,7 @@ class InstallationKernel extends \AppKernel
     /**
      * Checks if the real system can be booted.
      *
-     * @return bool True if the real system can be booted
+     * @return bool
      */
     public function canBootRealSystem()
     {
@@ -109,7 +109,7 @@ class InstallationKernel extends \AppKernel
     /**
      * Returns the install tool URL.
      *
-     * @return string The back end login URL
+     * @return string
      */
     private function getInstallToolUrl()
     {

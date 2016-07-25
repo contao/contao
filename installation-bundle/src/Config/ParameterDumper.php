@@ -32,7 +32,7 @@ class ParameterDumper
     /**
      * Constructor.
      *
-     * @param string $rootDir The root directory
+     * @param string $rootDir
      */
     public function __construct($rootDir)
     {
@@ -50,8 +50,8 @@ class ParameterDumper
     /**
      * Sets a parameter.
      *
-     * @param string $name  The parameter name
-     * @param mixed  $value The parameter value
+     * @param string $name
+     * @param mixed  $value
      */
     public function setParameter($name, $value)
     {
@@ -61,7 +61,7 @@ class ParameterDumper
     /**
      * Sets multiple parameters.
      *
-     * @param array $params The parameters array
+     * @param array $params
      */
     public function setParameters(array $params)
     {
