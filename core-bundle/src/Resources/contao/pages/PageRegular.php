@@ -650,6 +650,21 @@ class PageRegular extends \Frontend
 		// Add a placeholder for dynamic <head> tags (see #4203)
 		$strHeadTags = '[[TL_HEAD]]';
 
+		// Add the analytics scripts
+		if ($objLayout->analytics != '')
+		{
+			$arrAnalytics = \StringUtil::deserialize($objLayout->analytics, true);
+
+			foreach ($arrAnalytics as $strTemplate)
+			{
+				if ($strTemplate != '')
+				{
+					$objTemplate = new \FrontendTemplate($strTemplate);
+					$strHeadTags .= $objTemplate->parse();
+				}
+			}
+		}
+
 		// Add the user <head> tags
 		if (($strHead = trim($objLayout->head)) != false)
 		{
@@ -728,21 +743,6 @@ class PageRegular extends \Frontend
 		if ($objLayout->script != '')
 		{
 			$strScripts .= "\n" . trim($objLayout->script) . "\n";
-		}
-
-		// Add the analytics scripts
-		if ($objLayout->analytics != '')
-		{
-			$arrAnalytics = \StringUtil::deserialize($objLayout->analytics, true);
-
-			foreach ($arrAnalytics as $strTemplate)
-			{
-				if ($strTemplate != '')
-				{
-					$objTemplate = new \FrontendTemplate($strTemplate);
-					$strScripts .= $objTemplate->parse();
-				}
-			}
 		}
 
 		$this->Template->mootools = $strScripts;
