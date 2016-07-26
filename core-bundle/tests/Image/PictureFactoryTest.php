@@ -17,6 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\Image;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Model\Collection;
@@ -52,11 +53,7 @@ class PictureFactoryTest extends TestCase
             ->getMock()
         ;
 
-        $pictureMock = $this
-            ->getMockBuilder('Contao\Image\Picture')
-             ->disableOriginalConstructor()
-             ->getMock()
-        ;
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this
             ->getMockBuilder('Contao\Image\PictureGenerator')
@@ -143,6 +140,7 @@ class PictureFactoryTest extends TestCase
                         'zoom' => '50',
                         'sizes' => '100vw',
                         'densities' => '1x, 2x',
+                        'cssClass' => 'my-size',
                     ][$key];
                 })
             )
@@ -214,7 +212,8 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->createPictureFactory($pictureGenerator, $imageFactory, $framework);
         $picture = $pictureFactory->create($path, 1);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertEquals('my-size', $picture->getImg()['class']);
     }
 
     /**
