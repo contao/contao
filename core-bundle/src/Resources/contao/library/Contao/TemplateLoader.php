@@ -92,8 +92,6 @@ class TemplateLoader
 	 * @param string $custom   The custom templates folder (defaults to "templates")
 	 *
 	 * @return string The path to the template file
-	 *
-	 * @throws \Exception If $template does not exist
 	 */
 	public static function getPath($template, $format, $custom='templates')
 	{
@@ -114,13 +112,7 @@ class TemplateLoader
 			}
 		}
 
-		// Load the default template
-		if (isset(self::$files[$template]))
-		{
-			return TL_ROOT . '/' . self::$files[$template] . '/' . $file;
-		}
-
-		throw new \Exception('Could not find template "' . $template . '"');
+		return static::getDefaultPath($template, $format);
 	}
 
 
@@ -141,6 +133,23 @@ class TemplateLoader
 		if (isset(self::$files[$template]))
 		{
 			return TL_ROOT . '/' . self::$files[$template] . '/' . $file;
+		}
+
+		$strRelpath = null;
+
+		try
+		{
+			// Search for the template if it is not in the lookup array (last match wins)
+			foreach (\System::getContainer()->get('contao.resource_finder')->findIn('templates')->name($file) as $file)
+			{
+				$strRelpath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $file->getPathname());
+			}
+		}
+		catch (\InvalidArgumentException $e) {}
+
+		if ($strRelpath !== null)
+		{
+			return TL_ROOT . '/' . $strRelpath;
 		}
 
 		throw new \Exception('Could not find template "' . $template . '"');
