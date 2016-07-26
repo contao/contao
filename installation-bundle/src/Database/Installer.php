@@ -102,7 +102,7 @@ class Installer
      */
     private function compileCommands()
     {
-        $return = ['CREATE' => [], 'DROP' => [], 'ALTER_ADD' => [], 'ALTER_CHANGE' => [], 'ALTER_DROP' => []];
+        $return = ['CREATE' => [], 'ALTER_CHANGE' => [], 'ALTER_ADD' => [], 'DROP' => [], 'ALTER_DROP' => []];
         $fromSchema = $this->connection->getSchemaManager()->createSchema();
         $toSchema = System::getContainer()->get('contao.migrations.schema_provider')->createSchema();
 
@@ -124,7 +124,7 @@ class Installer
                     break;
 
                 case 0 === strpos($sql, 'DROP INDEX'):
-                    $return['ALTER_DROP'][md5($sql)] = $sql;
+                    $return['ALTER_CHANGE'][md5($sql)] = $sql;
                     break;
 
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
