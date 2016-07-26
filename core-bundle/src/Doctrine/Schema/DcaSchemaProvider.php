@@ -57,12 +57,29 @@ class DcaSchemaProvider implements SchemaProviderInterface
         foreach ($config as $tableName => $definitions) {
             $table = $schema->createTable($tableName);
 
-            foreach ($definitions['TABLE_FIELDS'] as $fieldName => $sql) {
-                $this->addColumn($table, $fieldName, strtolower(substr($sql, strlen($fieldName)+3)));
+            if (isset($definitions['SCHEMA_FIELDS'])) {
+                foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $config) {
+                    $options = $config;
+                    unset($options['name'], $options['type']);
+                    $table->addColumn($config['name'], $config['type'], $options);
+                }
             }
 
-            foreach ($definitions['TABLE_CREATE_DEFINITIONS'] as $keyName => $sql) {
-                $this->addIndex($table, $keyName, strtolower($sql));
+            if (isset($definitions['TABLE_FIELDS'])) {
+                foreach ($definitions['TABLE_FIELDS'] as $fieldName => $sql) {
+                    $this->parseColumnSql($table, $fieldName, strtolower(substr($sql, strlen($fieldName) + 3)));
+                }
+            }
+
+            if (isset($definitions['TABLE_CREATE_DEFINITIONS'])) {
+                foreach ($definitions['TABLE_CREATE_DEFINITIONS'] as $keyName => $sql) {
+                    $this->parseIndexSql($table, $keyName, strtolower($sql));
+                }
+            }
+
+            if (isset($definitions['TABLE_OPTIONS'])) {
+                // TODO handle table options
+                //throw new \RuntimeException('Table Options are not supported');
             }
         }
 
@@ -76,7 +93,7 @@ class DcaSchemaProvider implements SchemaProviderInterface
      * @param string $columnName
      * @param string $sql
      */
-    private function addColumn(Table $table, $columnName, $sql)
+    private function parseColumnSql(Table $table, $columnName, $sql)
     {
         list($dbType, $def) = explode(' ', $sql, 2);
 
@@ -167,7 +184,7 @@ class DcaSchemaProvider implements SchemaProviderInterface
      * @param string $keyName
      * @param string $sql
      */
-    private function addIndex(Table $table, $keyName, $sql)
+    private function parseIndexSql(Table $table, $keyName, $sql)
     {
         if ('PRIMARY' === $keyName) {
             if (!preg_match_all('/`([^`]+)`/', $sql, $matches)) {
