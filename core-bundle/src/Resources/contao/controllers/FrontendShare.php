@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -25,7 +24,7 @@ class FrontendShare extends \Frontend
 	/**
 	 * Run the controller
 	 *
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function run()
 	{
