@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
+use Contao\TemplateLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -107,7 +108,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     ) {
         $this->router = $router;
         $this->session = $session;
-        $this->rootDir = dirname($rootDir);
+        $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
         $this->requestStack = $requestStack;
     }
@@ -183,7 +184,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         define('TL_START', microtime(true));
-        define('TL_ROOT', $this->rootDir);
+        define('TL_ROOT', dirname($this->rootDir));
         define('TL_REFERER_ID', $this->getRefererId());
 
         if (!defined('TL_SCRIPT')) {
@@ -288,8 +289,8 @@ class ContaoFramework implements ContaoFrameworkInterface
         // Preload the configuration (see #5872)
         $config->preload();
 
-        // Register the class loader
         ClassLoader::scanAndRegister();
+        TemplateLoader::findTemplates();
 
         $this->initializeLegacySessionAccess();
         $this->setDefaultLanguage();
@@ -404,13 +405,13 @@ class ContaoFramework implements ContaoFrameworkInterface
             }
         }
 
-        if (file_exists($this->rootDir.'/system/config/initconfig.php')) {
+        if (file_exists($this->rootDir.'/../system/config/initconfig.php')) {
             @trigger_error(
                 'Using the initconfig.php file has been deprecated and will no longer work in Contao 5.0.',
                 E_USER_DEPRECATED
             );
 
-            include $this->rootDir.'/system/config/initconfig.php';
+            include $this->rootDir.'/../system/config/initconfig.php';
         }
     }
 

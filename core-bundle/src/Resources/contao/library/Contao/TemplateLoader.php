@@ -154,4 +154,30 @@ class TemplateLoader
 
 		throw new \Exception('Could not find template "' . $template . '"');
 	}
+
+
+	/**
+	 * Find the templates in the Contao resource folders.
+	 */
+	public static function findTemplates()
+	{
+		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
+
+		// Try to load from cache
+		if (file_exists($strCacheDir . '/contao/config/templates.php'))
+		{
+			self::addFiles(include $strCacheDir . '/contao/config/templates.php');
+		}
+		else
+		{
+			try
+			{
+				foreach (\System::getContainer()->get('contao.resource_finder')->findIn('templates')->name('*.html5') as $file)
+				{
+					self::addFile($file->getBasename('.html5'), str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $file->getPath()));
+				}
+			}
+			catch (\InvalidArgumentException $e) {}
+		}
+	}
 }

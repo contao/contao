@@ -38,7 +38,7 @@ class XliffFileLoader extends Loader
      */
     public function __construct($rootDir, $addToGlobals = false)
     {
-        $this->rootDir = dirname($rootDir);
+        $this->rootDir = $rootDir;
         $this->addToGlobals = $addToGlobals;
     }
 
@@ -75,7 +75,7 @@ class XliffFileLoader extends Loader
     {
         $xml = $this->getDomDocumentFromFile($name);
 
-        $return = "\n// ".str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
+        $return = "\n// ".str_replace(strtr(dirname($this->rootDir), '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
         $units = $xml->getElementsByTagName('trans-unit');
 
         /** @var \DOMElement[] $units */
