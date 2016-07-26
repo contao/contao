@@ -104,7 +104,7 @@ class Installer
     {
         $return = ['CREATE' => [], 'ALTER_CHANGE' => [], 'ALTER_ADD' => [], 'DROP' => [], 'ALTER_DROP' => []];
         $fromSchema = $this->connection->getSchemaManager()->createSchema();
-        $toSchema = System::getContainer()->get('contao.migrations.schema_provider')->createSchema();
+        $toSchema = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema();
 
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
