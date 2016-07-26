@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Doctrine\Schema;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Database\Installer;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Migrations\Provider\SchemaProviderInterface;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
@@ -45,6 +44,11 @@ class DcaSchemaProvider implements SchemaProviderInterface
         $this->db = $db;
     }
 
+    /**
+     * Create Doctrine Schema from DCA files.
+     *
+     * @return Schema
+     */
     public function createSchema()
     {
         $schema = new Schema();
@@ -65,6 +69,13 @@ class DcaSchemaProvider implements SchemaProviderInterface
         return $schema;
     }
 
+    /**
+     * Parse column definition and add it to the Schema table.
+     *
+     * @param Table  $table
+     * @param string $columnName
+     * @param string $sql
+     */
     private function addColumn(Table $table, $columnName, $sql)
     {
         list($dbType, $def) = explode(' ', $sql, 2);
@@ -149,6 +160,13 @@ class DcaSchemaProvider implements SchemaProviderInterface
         $table->addColumn($columnName, $type, $options);
     }
 
+    /**
+     * Parse index definition and add it to the Schema table.
+     *
+     * @param Table  $table
+     * @param string $keyName
+     * @param string $sql
+     */
     private function addIndex(Table $table, $keyName, $sql)
     {
         if ('PRIMARY' === $keyName) {
@@ -170,25 +188,32 @@ class DcaSchemaProvider implements SchemaProviderInterface
         foreach (explode(',', $matches[3]) as $column) {
             preg_match('/`([^`]+)`(\((\d+)\))?/', $column, $cm);
 
-            $columns[] = $cm[1];
+            $column = $cm[1];
 
             if (isset($cm[3])) {
-                $options['length'] = $cm[3];
+                $column .= '(' . $cm[3] . ')';
             }
+
+            $columns[$cm[1]] = $column;
         }
 
         if (strpos($matches[1], 'unique') !== false) {
             $table->addUniqueIndex($columns, $matches[2], $options);
         } else {
-            $table->addIndex($columns, $matches[2], $options, $options);
+            $table->addIndex($columns, $matches[2], [], $options);
         }
     }
 
+    /**
+     * Returns SQL definition from Contao Installer.
+     *
+     * @return array
+     */
     private function getSqlDefinitions()
     {
         $this->framework->initialize();
 
-        $installer = new Installer();
+        $installer = $this->framework->createInstance('Contao\Database\Installer');
         $sql_target = $installer->getFromDca();
         $sql_legacy = $installer->getFromFile();
 
