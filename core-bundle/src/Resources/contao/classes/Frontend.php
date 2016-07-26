@@ -487,10 +487,17 @@ abstract class Frontend extends \Controller
 	 */
 	protected function getLoginStatus($strCookie)
 	{
-		$hash = $this->getSessionHash($strCookie);
+		$hash   = $this->getSessionHash($strCookie);
+		$cookie = \Input::cookie($strCookie);
+
+		// Do not set any user cookies if none was sent
+		if ($cookie === null)
+		{
+			return false;
+		}
 
 		// Validate the cookie hash
-		if (\Input::cookie($strCookie) == $hash)
+		if ($cookie == $hash)
 		{
 			// Try to find the session
 			$objSession = \SessionModel::findByHashAndName($hash, $strCookie);
