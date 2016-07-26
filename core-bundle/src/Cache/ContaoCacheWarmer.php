@@ -304,8 +304,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                     strtr($file->getPath(), '\\', '/')
                 );
             }
-        }
-        catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             // ignore
         }
 
