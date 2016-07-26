@@ -2,15 +2,47 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Doctrine\DBAL\Event\SchemaAlterTableEventArgs;
+use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Index;
-use Doctrine\DBAL\Schema\Table;
+use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 
+/**
+ * @author Andreas Schempp <https://github.com/aschempp>
+ */
 class DoctrineSchemaListener
 {
+    /**
+     * @var DcaSchemaProvider
+     */
+    private $provider;
 
+    /**
+     * Constructor.
+     *
+     * @param DcaSchemaProvider $provider
+     */
+    public function __construct(DcaSchemaProvider $provider)
+    {
+        $this->provider = $provider;
+    }
+
+    /**
+     * Add Contao DCA information to Doctrine schema.
+     *
+     * @param GenerateSchemaEventArgs $event
+     */
+    public function postGenerateSchema(GenerateSchemaEventArgs $event)
+    {
+        $this->provider->appendToSchema($event->getSchema());
+    }
+
+    /**
+     * Handle Doctrine schema and override indexes with fixed length.
+     *
+     * @param SchemaIndexDefinitionEventArgs $event
+     */
     public function onSchemaIndexDefinition(SchemaIndexDefinitionEventArgs $event)
     {
         $connection = $event->getConnection();

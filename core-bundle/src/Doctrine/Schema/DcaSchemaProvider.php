@@ -10,48 +10,50 @@
 
 namespace Contao\CoreBundle\Doctrine\Schema;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Migrations\Provider\SchemaProviderInterface;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class DcaSchemaProvider implements SchemaProviderInterface
+class DcaSchemaProvider
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContainerInterface
      */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $db;
+    private $container;
 
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $framework
-     * @param Connection               $db
+     * @param ContainerInterface $container
      */
-    public function __construct(ContaoFrameworkInterface $framework, Connection $db)
+    public function __construct(ContainerInterface $container)
     {
-        $this->framework = $framework;
-        $this->db = $db;
+        $this->container = $container;
     }
 
     /**
-     * Create Doctrine Schema from DCA files.
-     *
-     * @return Schema
+     * @inheritdoc
      */
     public function createSchema()
     {
         $schema = new Schema();
+
+        $this->appendToSchema($schema);
+
+        return $schema;
+    }
+
+    /**
+     * Add DCA information to Doctrine schema.
+     *
+     * @param Schema $schema
+     */
+    public function appendToSchema(Schema $schema)
+    {
         $config = $this->getSqlDefinitions();
 
         foreach ($config as $tableName => $definitions) {
@@ -82,8 +84,6 @@ class DcaSchemaProvider implements SchemaProviderInterface
                 //throw new \RuntimeException('Table Options are not supported');
             }
         }
-
-        return $schema;
     }
 
     /**
@@ -150,7 +150,7 @@ class DcaSchemaProvider implements SchemaProviderInterface
                 break;
         }
 
-        $type = $this->db->getDatabasePlatform()->getDoctrineTypeMapping($type);
+        $type = $this->container->get('database_connection')->getDatabasePlatform()->getDoctrineTypeMapping($type);
         $length = ((int) $length == 0) ? null : (int) $length;
 
         if (preg_match('/default (\'[^\']*\'|\d+)/', $def, $match)) {
@@ -228,9 +228,10 @@ class DcaSchemaProvider implements SchemaProviderInterface
      */
     private function getSqlDefinitions()
     {
-        $this->framework->initialize();
+        $framework = $this->container->get('contao.framework');
+        $framework->initialize();
 
-        $installer = $this->framework->createInstance('Contao\Database\Installer');
+        $installer = $framework->createInstance('Contao\Database\Installer');
         $sql_target = $installer->getFromDca();
         $sql_legacy = $installer->getFromFile();
 
