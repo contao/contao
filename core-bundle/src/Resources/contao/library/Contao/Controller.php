@@ -745,6 +745,11 @@ abstract class Controller extends \System
 			}
 		}
 
+		global $objPage;
+
+		$objLayout = \LayoutModel::findByPk($objPage->layoutId);
+		$blnCombineScripts = ($objLayout === null) ? false : $objLayout->combineScripts;
+
 		$arrReplace['[[TL_BODY]]'] = $strScripts;
 		$strScripts = '';
 
@@ -803,7 +808,17 @@ abstract class Controller extends \System
 		// Create the aggregated style sheet
 		if ($objCombiner->hasEntries())
 		{
-			$strScripts .= \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . "\n";
+			if ($blnCombineScripts)
+			{
+				$strScripts .= \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . "\n";
+			}
+			else
+			{
+				foreach ($objCombiner->getFileUrls() as $strUrl)
+				{
+					$strScripts .= \Template::generateStyleTag($strUrl, 'all') . "\n";
+				}
+			}
 		}
 
 		$arrReplace['[[TL_CSS]]'] = $strScripts;
@@ -837,12 +852,36 @@ abstract class Controller extends \System
 			// Create the aggregated script and add it before the non-static scripts (see #4890)
 			if ($objCombiner->hasEntries())
 			{
-				$strScripts = \Template::generateScriptTag($objCombiner->getCombinedFile()) . "\n" . $strScripts;
+				if ($blnCombineScripts)
+				{
+					$strScripts = \Template::generateScriptTag($objCombiner->getCombinedFile()) . "\n" . $strScripts;
+				}
+				else
+				{
+					$arrReversed = array_reverse($objCombiner->getFileUrls());
+
+					foreach ($arrReversed as $strUrl)
+					{
+						$strScripts = \Template::generateScriptTag($strUrl) . "\n" . $strScripts;
+					}
+				}
 			}
 
 			if ($objCombinerAsync->hasEntries())
 			{
-				$strScripts = \Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . "\n" . $strScripts;
+				if ($blnCombineScripts)
+				{
+					$strScripts = \Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . "\n" . $strScripts;
+				}
+				else
+				{
+					$arrReversed = array_reverse($objCombinerAsync->getFileUrls());
+
+					foreach ($arrReversed as $strUrl)
+					{
+						$strScripts = \Template::generateScriptTag($strUrl, true) . "\n" . $strScripts;
+					}
+				}
 			}
 		}
 
