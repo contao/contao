@@ -80,8 +80,13 @@ class DcaSchemaProvider
             }
 
             if (isset($definitions['TABLE_OPTIONS'])) {
-                // TODO handle table options
-                //throw new \RuntimeException('Table Options are not supported');
+                if (preg_match('/ENGINE=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                    $table->addOption('engine', $match[1]);
+                }
+
+                if (preg_match('/DEFAULT CHARSET=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                    $table->addOption('charset', $match[1]);
+                }
             }
         }
     }
