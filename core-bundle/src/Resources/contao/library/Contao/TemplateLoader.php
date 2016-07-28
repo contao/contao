@@ -92,12 +92,10 @@ class TemplateLoader
 	 * @param string $custom   The custom templates folder (defaults to "templates")
 	 *
 	 * @return string The path to the template file
-	 *
-	 * @throws \Exception If $template does not exist
 	 */
 	public static function getPath($template, $format, $custom='templates')
 	{
-		$file = $template .  '.' . $format;
+		$file = $template . '.' . $format;
 
 		// Check the theme folder first
 		if (file_exists(TL_ROOT . '/' . $custom . '/' . $file))
@@ -114,13 +112,7 @@ class TemplateLoader
 			}
 		}
 
-		// Load the default template
-		if (isset(self::$files[$template]))
-		{
-			return TL_ROOT . '/' . self::$files[$template] . '/' . $file;
-		}
-
-		throw new \Exception('Could not find template "' . $template . '"');
+		return static::getDefaultPath($template, $format);
 	}
 
 
@@ -136,13 +128,56 @@ class TemplateLoader
 	 */
 	public static function getDefaultPath($template, $format)
 	{
-		$file = $template .  '.' . $format;
+		$file = $template . '.' . $format;
 
 		if (isset(self::$files[$template]))
 		{
 			return TL_ROOT . '/' . self::$files[$template] . '/' . $file;
 		}
 
+		$strRelpath = null;
+
+		try
+		{
+			// Search for the template if it is not in the lookup array (last match wins)
+			foreach (\System::getContainer()->get('contao.resource_finder')->findIn('templates')->name($file) as $file)
+			{
+				$strRelpath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $file->getPathname());
+			}
+		}
+		catch (\InvalidArgumentException $e) {}
+
+		if ($strRelpath !== null)
+		{
+			return TL_ROOT . '/' . $strRelpath;
+		}
+
 		throw new \Exception('Could not find template "' . $template . '"');
+	}
+
+
+	/**
+	 * Find the templates in the Contao resource folders.
+	 */
+	public static function initialize()
+	{
+		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
+
+		// Try to load from cache
+		if (file_exists($strCacheDir . '/contao/config/templates.php'))
+		{
+			self::addFiles(include $strCacheDir . '/contao/config/templates.php');
+		}
+		else
+		{
+			try
+			{
+				foreach (\System::getContainer()->get('contao.resource_finder')->findIn('templates')->name('*.html5') as $file)
+				{
+					self::addFile($file->getBasename('.html5'), str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $file->getPath()));
+				}
+			}
+			catch (\InvalidArgumentException $e) {}
+		}
 	}
 }

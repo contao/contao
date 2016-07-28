@@ -83,7 +83,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->filesystem = $filesystem;
         $this->finder = $finder;
         $this->locator = $locator;
-        $this->rootDir = dirname($rootDir);
+        $this->rootDir = $rootDir;
         $this->connection = $connection;
         $this->framework = $framework;
     }
@@ -104,6 +104,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->generateDcaCache($cacheDir);
         $this->generateLanguageCache($cacheDir);
         $this->generateDcaExtracts($cacheDir);
+        $this->generateTemplateMapper($cacheDir);
     }
 
     /**
@@ -284,6 +285,33 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 )
             );
         }
+    }
+
+    /**
+     * Generates the template mapper array.
+     *
+     * @param string $cacheDir The cache directory
+     */
+    private function generateTemplateMapper($cacheDir)
+    {
+        $mapper = [];
+
+        try {
+            foreach ($this->finder->findIn('templates')->name('*.html5') as $file) {
+                $mapper[$file->getBasename('.html5')] = str_replace(
+                    strtr(dirname($this->rootDir), '\\', '/').'/',
+                    '',
+                    strtr($file->getPath(), '\\', '/')
+                );
+            }
+        } catch (\InvalidArgumentException $e) {
+            // ignore
+        }
+
+        $this->filesystem->dumpFile(
+            $cacheDir.'/contao/config/templates.php',
+            sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true))
+        );
     }
 
     /**
