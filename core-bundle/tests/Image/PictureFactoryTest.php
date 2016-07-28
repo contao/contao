@@ -18,6 +18,7 @@ use Contao\Image\Image\Image;
 use Contao\Image\Resize\Resizer;
 use Contao\Image\Resize\ResizeConfiguration;
 use Contao\Image\Picture\PictureConfiguration;
+use Contao\Image\Picture\PictureConfigurationItem;
 use Symfony\Component\Filesystem\Filesystem;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
@@ -214,6 +215,71 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->createPictureFactory($pictureGenerator, $imageFactory, $framework);
 
         $picture = $pictureFactory->create($path, 1);
+
+        $this->assertSame($pictureMock, $picture);
+    }
+
+    /**
+     * Tests the create() method.
+     */
+    public function testCreateWithImageObjectAndPictureConfiguration()
+    {
+        $pictureConfig = (new PictureConfiguration())
+            ->setSize((new PictureConfigurationItem())
+                ->setResizeConfig((new ResizeConfiguration())
+                    ->setWidth(100)
+                    ->setHeight(200)
+                    ->setMode(ResizeConfiguration::MODE_BOX)
+                    ->setZoomLevel(50)
+                )
+                ->setDensities('1x, 2x')
+                ->setSizes('100vw')
+            )
+            ->setSizeItems([
+                (new PictureConfigurationItem())
+                    ->setResizeConfig((new ResizeConfiguration())
+                        ->setWidth(50)
+                        ->setHeight(50)
+                        ->setMode(ResizeConfiguration::MODE_CROP)
+                        ->setZoomLevel(100)
+                    )
+                    ->setDensities('0.5x, 2x')
+                    ->setSizes('50vw')
+                    ->setMedia('(max-width: 900px)')
+            ])
+        ;
+
+        $imageMock = $this->getMockBuilder('Contao\Image\Image\Image')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pictureMock = $this->getMockBuilder('Contao\Image\Picture\Picture')
+             ->disableOriginalConstructor()
+             ->getMock();
+
+        $pictureGenerator = $this->getMockBuilder('Contao\Image\Picture\PictureGenerator')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pictureGenerator->expects($this->any())
+            ->method('generate')
+            ->with(
+                $this->callback(function (Image $image) use ($imageMock) {
+                    $this->assertSame($imageMock, $image);
+
+                    return true;
+                }),
+                $this->callback(function (PictureConfiguration $config) use ($pictureConfig) {
+                    $this->assertSame($pictureConfig, $config);
+
+                    return true;
+                })
+            )
+            ->willReturn($pictureMock);
+
+        $pictureFactory = $this->createPictureFactory($pictureGenerator);
+
+        $picture = $pictureFactory->create($imageMock, $pictureConfig);
 
         $this->assertSame($pictureMock, $picture);
     }

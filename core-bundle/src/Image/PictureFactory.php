@@ -11,11 +11,13 @@
 namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Image\Image\ImageInterface;
 use Contao\Image\Picture\PictureGeneratorInterface;
 use Contao\Image\Picture\PictureConfiguration;
+use Contao\Image\Picture\PictureConfigurationInterface;
+use Contao\Image\Picture\PictureConfigurationItem;
 use Contao\Image\Resize\ResizeConfiguration;
 use Contao\Image\Resize\ResizeOptions;
-use Contao\Image\Picture\PictureConfigurationItem;
 
 /**
  * Creates Picture objects.
@@ -75,9 +77,10 @@ class PictureFactory
     /**
      * Creates a Picture object.
      *
-     * @param string    $path The path to the source image
-     * @param int|array $size The ID of an image size or an array with width
-     *                        height and resize mode
+     * @param string|ImageInterface                   $path The path to the source image or an Image object
+     * @param int|array|PictureConfigurationInterface $size The ID of an image size
+     *                                                      or an array with width height and resize mode
+     *                                                      or a PictureConfiguration object
      *
      * @return Picture The created Picture object
      */
@@ -88,8 +91,19 @@ class PictureFactory
             $config = new PictureConfiguration();
         }
         else {
-            $image = $this->imageFactory->create($path);
-            $config = $this->createConfig($size);
+
+            if (is_object($path) && $path instanceof ImageInterface) {
+                $image = $path;
+            } else {
+                $image = $this->imageFactory->create($path);
+            }
+
+            if (is_object($size) && $size instanceof PictureConfigurationInterface) {
+                $config = $size;
+            } else {
+                $config = $this->createConfig($size);
+            }
+
         }
 
         return $this->pictureGenerator->generate(
