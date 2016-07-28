@@ -25,9 +25,9 @@ trait FrameworkAwareTrait
     /**
      * Returns the framework service.
      *
-     * @return ContaoFrameworkInterface The framework service
+     * @return ContaoFrameworkInterface
      *
-     * @throws \LogicException If the framework service is not set
+     * @throws \LogicException
      */
     public function getFramework()
     {
@@ -41,7 +41,7 @@ trait FrameworkAwareTrait
     /**
      * Sets the framework service.
      *
-     * @param ContaoFrameworkInterface|null $framework The framework service
+     * @param ContaoFrameworkInterface|null $framework
      */
     public function setFramework(ContaoFrameworkInterface $framework = null)
     {

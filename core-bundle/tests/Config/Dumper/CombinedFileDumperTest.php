@@ -88,9 +88,9 @@ class CombinedFileDumperTest extends TestCase
     /**
      * Returns a mocked filesystem object.
      *
-     * @param mixed $expects The value expected to dump
+     * @param mixed $expects
      *
-     * @return Filesystem The filesystem object
+     * @return Filesystem
      */
     private function mockFilesystem($expects)
     {
@@ -111,7 +111,7 @@ class CombinedFileDumperTest extends TestCase
     /**
      * Returns a mocked file loader object.
      *
-     * @return PhpFileLoader The file loader object
+     * @return PhpFileLoader
      */
     private function mockLoader()
     {

@@ -225,8 +225,8 @@ class ToggleViewListenerTest extends TestCase
     /**
      * Checks if a cookie exists and has the correct value.
      *
-     * @param Response $response      The response object
-     * @param string   $expectedValue The expected value
+     * @param Response $response
+     * @param string   $expectedValue
      */
     private function assertCookieValue(Response $response, $expectedValue)
     {
@@ -239,9 +239,9 @@ class ToggleViewListenerTest extends TestCase
     /**
      * Finds the TL_VIEW cookie in a response.
      *
-     * @param Response $response The response object
+     * @param Response $response
      *
-     * @return Cookie|null The cookie object or null
+     * @return Cookie|null
      */
     private function getCookie(Response $response)
     {

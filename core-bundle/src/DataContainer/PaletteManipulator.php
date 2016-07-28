@@ -38,7 +38,7 @@ class PaletteManipulator
     /**
      * Creates a new object instance.
      *
-     * @return static The object instance
+     * @return static
      */
     public static function create()
     {
@@ -50,12 +50,12 @@ class PaletteManipulator
      *
      * If the legend already exists, nothing will be changed.
      *
-     * @param string       $name     The name of the new legend
-     * @param string|array $parent   The parent legend(s) (first match wins)
-     * @param string       $position The position of the new legend
-     * @param bool         $hide     True to collapse the palette by default
+     * @param string       $name
+     * @param string|array $parent
+     * @param string       $position
+     * @param bool         $hide
      *
-     * @return static The object instance
+     * @return static
      */
     public function addLegend($name, $parent, $position = self::POSITION_AFTER, $hide = false)
     {
@@ -76,15 +76,15 @@ class PaletteManipulator
      *
      * If $position is PREPEND or APPEND, pass a legend as parent; otherwise pass a field name.
      *
-     * @param string|array               $name             The name or names of the new field(s)
-     * @param string|array               $parent           The parent legend or legends (first match wins)
-     * @param string                     $position         The position of the new field(s)
-     * @param string|array|\Closure|null $fallback         The fallback palette(s) or a callback
-     * @param string                     $fallbackPosition The fallback position (PREPEND or APPEND to legend)
+     * @param string|array               $name
+     * @param string|array               $parent
+     * @param string                     $position
+     * @param string|array|\Closure|null $fallback
+     * @param string                     $fallbackPosition
      *
-     * @return static The object instance
+     * @return static
      *
-     * @throws \InvalidArgumentException If $position or $fallbackPosition is invalid
+     * @throws \InvalidArgumentException
      */
     public function addField(
         $name,
@@ -113,10 +113,10 @@ class PaletteManipulator
     /**
      * Applies the changes to a palette.
      *
-     * @param string $name  The palette name
-     * @param string $table The DCA table name
+     * @param string $name
+     * @param string $table
      *
-     * @return static The object instance
+     * @return static
      */
     public function applyToPalette($name, $table)
     {
@@ -134,10 +134,10 @@ class PaletteManipulator
     /**
      * Applies the changes to a subpalette.
      *
-     * @param string $name  The subpalette name
-     * @param string $table The DCA table name
+     * @param string $name
+     * @param string $table
      *
-     * @return static The object instance
+     * @return static
      */
     public function applyToSubpalette($name, $table)
     {
@@ -155,10 +155,10 @@ class PaletteManipulator
     /**
      * Applies the changes to a palette string.
      *
-     * @param string $palette     The palette or subpalette string
-     * @param bool   $skipLegends True to ignore legends (e.g. for subpalettes)
+     * @param string $palette
+     * @param bool   $skipLegends
      *
-     * @return string The palette string
+     * @return string
      */
     public function applyToString($palette, $skipLegends = false)
     {
@@ -185,9 +185,9 @@ class PaletteManipulator
     /**
      * Validates the position.
      *
-     * @param string $position The position
+     * @param string $position
      *
-     * @throws \InvalidArgumentException If the position is not valid
+     * @throws \InvalidArgumentException
      */
     private function validatePosition($position)
     {
@@ -206,9 +206,9 @@ class PaletteManipulator
     /**
      * Converts a palette string to a configuration array.
      *
-     * @param string $palette The palette string
+     * @param string $palette
      *
-     * @return array The configuration array
+     * @return array
      */
     private function explode($palette)
     {
@@ -244,9 +244,9 @@ class PaletteManipulator
     /**
      * Converts a configuration array to a palette string.
      *
-     * @param array $config The configuration array
+     * @param array $config
      *
-     * @return string The palette string
+     * @return string
      */
     private function implode(array $config)
     {
@@ -274,8 +274,8 @@ class PaletteManipulator
     /**
      * Adds a new legend to the configuration array.
      *
-     * @param array $config The configuration array
-     * @param array $action The action array
+     * @param array $config
+     * @param array $action
      */
     private function applyLegend(array &$config, array $action)
     {
@@ -318,9 +318,9 @@ class PaletteManipulator
     /**
      * Adds a new field to the configuration array.
      *
-     * @param array $config      The configuration array
-     * @param array $action      The action array
-     * @param bool  $skipLegends True to ignore legends (e.g. for subpalettes)
+     * @param array $config
+     * @param array $action
+     * @param bool  $skipLegends
      */
     private function applyField(array &$config, array $action, $skipLegends = false)
     {
@@ -334,9 +334,9 @@ class PaletteManipulator
     /**
      * Adds fields to a legend.
      *
-     * @param array $config      The configuration array
-     * @param array $action      The action array
-     * @param bool  $skipLegends True to ignore legends (e.g. for subpalettes)
+     * @param array $config
+     * @param array $action
+     * @param bool  $skipLegends
      */
     private function applyFieldToLegend(array &$config, array $action, $skipLegends = false)
     {
@@ -361,9 +361,9 @@ class PaletteManipulator
     /**
      * Adds a field after a field.
      *
-     * @param array $config      The configuration array
-     * @param array $action      The action array
-     * @param bool  $skipLegends True to ignore legends (e.g. for subpalettes)
+     * @param array $config
+     * @param array $action
+     * @param bool  $skipLegends
      */
     private function applyFieldToField(array &$config, array $action, $skipLegends = false)
     {
@@ -389,9 +389,9 @@ class PaletteManipulator
      *
      * Adds a new legend if possible or appends to the last one.
      *
-     * @param array $config      The configuration array
-     * @param array $action      The action array
-     * @param bool  $skipLegends True to ignore legends (e.g. for subpalettes)
+     * @param array $config
+     * @param array $action
+     * @param bool  $skipLegends
      */
     private function applyFallback(array &$config, array $action, $skipLegends = false)
     {
@@ -405,8 +405,8 @@ class PaletteManipulator
     /**
      * Aplies the fallback to a palette.
      *
-     * @param array $config The configuration array
-     * @param array $action Th eaction array
+     * @param array $config
+     * @param array $action
      */
     private function applyFallbackPalette(array &$config, array $action)
     {
@@ -441,10 +441,10 @@ class PaletteManipulator
      *
      * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
      *
-     * @param array  $config The configuration array
-     * @param string $field  The field name
+     * @param array  $config
+     * @param string $field
      *
-     * @return string|false The legend or false
+     * @return string|false
      */
     private function findLegendForField(array &$config, $field)
     {
@@ -460,12 +460,12 @@ class PaletteManipulator
     /**
      * Tries to apply to a parent.
      *
-     * @param array  $config   The configuration array
-     * @param array  $action   The action array
-     * @param string $key      The action key
-     * @param string $position The position key
+     * @param array  $config
+     * @param array  $action
+     * @param string $key
+     * @param string $position
      *
-     * @return bool True if the operation was successful
+     * @return bool
      */
     private function canApplyToParent(array &$config, array $action, $key, $position)
     {

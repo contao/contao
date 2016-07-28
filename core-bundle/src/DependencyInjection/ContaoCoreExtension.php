@@ -84,7 +84,7 @@ class ContaoCoreExtension extends ConfigurableExtension
     /**
      * Adds the container scope listener.
      *
-     * @param ContainerBuilder $container The container builder
+     * @param ContainerBuilder $container
      */
     private function addContainerScopeListener(ContainerBuilder $container)
     {

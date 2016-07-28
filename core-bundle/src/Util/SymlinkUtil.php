@@ -25,9 +25,9 @@ class SymlinkUtil
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
      *
-     * @param string $target  The symlink target
-     * @param string $link    The symlink path
-     * @param string $rootDir The root directory
+     * @param string $target
+     * @param string $link
+     * @param string $rootDir
      */
     public static function symlink($target, $link, $rootDir)
     {
@@ -45,12 +45,12 @@ class SymlinkUtil
     /**
      * Validates a symlink.
      *
-     * @param string $target  The symlink target
-     * @param string $link    The symlink path
-     * @param string $rootDir The root directory
+     * @param string $target
+     * @param string $link
+     * @param string $rootDir
      *
-     * @throws \InvalidArgumentException If the source or target is invalid
-     * @throws \LogicException           If the target exists and is not a symlink
+     * @throws \InvalidArgumentException
+     * @throws \LogicException
      */
     public static function validateSymlink($target, $link, $rootDir)
     {

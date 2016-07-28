@@ -44,8 +44,8 @@ class UserSessionListener
     /**
      * Constructor.
      *
-     * @param SessionInterface $session    The session object
-     * @param Connection       $connection The database connection
+     * @param SessionInterface $session
+     * @param Connection       $connection
      */
     public function __construct(SessionInterface $session, Connection $connection)
     {
@@ -56,7 +56,7 @@ class UserSessionListener
     /**
      * Replaces the current session data with the stored session data.
      *
-     * @param GetResponseEvent $event The event object
+     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -80,7 +80,7 @@ class UserSessionListener
     /**
      * Writes the current session data to the database.
      *
-     * @param FilterResponseEvent $event The event object
+     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
@@ -103,7 +103,7 @@ class UserSessionListener
     /**
      * Returns the user object depending on the container scope.
      *
-     * @return FrontendUser|BackendUser|null The user object
+     * @return FrontendUser|BackendUser|null
      */
     private function getUserObject()
     {
@@ -113,7 +113,7 @@ class UserSessionListener
     /**
      * Returns the session bag.
      *
-     * @return AttributeBagInterface The session bag
+     * @return AttributeBagInterface
      */
     private function getSessionBag()
     {

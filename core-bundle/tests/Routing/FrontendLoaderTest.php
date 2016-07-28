@@ -184,10 +184,10 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
     /**
      * Generates a router using the given RouteCollection.
      *
-     * @param RouteCollection $collection The route collection
-     * @param string          $urlSuffix  The URL suffix
+     * @param RouteCollection $collection
+     * @param string          $urlSuffix
      *
-     * @return Router The router object
+     * @return Router
      */
     private function getRouter(RouteCollection $collection, $urlSuffix = '.html')
     {

@@ -36,7 +36,7 @@ class EnvironmentTest extends TestCase
     /**
      * Returns the normalized root directory.
      *
-     * @return string The normalized root directory
+     * @return string
      */
     public function getRootDir()
     {
@@ -184,7 +184,7 @@ class EnvironmentTest extends TestCase
     /**
      * Overrides the SAPI value.
      *
-     * @param string $sapi The SAPI name
+     * @param string $sapi
      */
     private function setSapi($sapi)
     {

@@ -49,10 +49,10 @@ abstract class AbstractLockedCommand extends ContainerAwareCommand
     /**
      * Executes the command.
      *
-     * @param InputInterface  $input  An InputInterface instance
-     * @param OutputInterface $output An OutputInterface instance
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      *
-     * @return int|null 0 or null if everything went fine, otherwise an error code
+     * @return int|null
      */
     abstract protected function executeLocked(InputInterface $input, OutputInterface $output);
 }
