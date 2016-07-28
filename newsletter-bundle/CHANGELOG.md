@@ -1,5 +1,9 @@
 # Contao newsletter bundle change log
 
+### 4.2.2 (2016-XX-XX)
+
+ * Fix rendering the flash messages when sending a newsletter (see #3).
+
 ### 4.2.1 (2016-07-15)
 
  * Require at least version 4.2.1 of the contao/core-bundle.
