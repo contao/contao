@@ -289,8 +289,8 @@ class ContaoFramework implements ContaoFrameworkInterface
         // Preload the configuration (see #5872)
         $config->preload();
 
+        // Register the class loader
         ClassLoader::scanAndRegister();
-        TemplateLoader::findTemplates();
 
         $this->initializeLegacySessionAccess();
         $this->setDefaultLanguage();
@@ -301,6 +301,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         $this->validateInstallation();
 
         Input::initialize();
+        TemplateLoader::initialize();
 
         $this->setTimezone();
         $this->triggerInitializeSystemHook();

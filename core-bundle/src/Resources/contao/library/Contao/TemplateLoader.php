@@ -159,7 +159,7 @@ class TemplateLoader
 	/**
 	 * Find the templates in the Contao resource folders.
 	 */
-	public static function findTemplates()
+	public static function initialize()
 	{
 		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
 
