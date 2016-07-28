@@ -1,8 +1,10 @@
 # Contao core bundle change log
 
-### 4.2.2 (2016-XX-XX)
+### 4.2.2 (2016-07-28)
 
+ * Adjust the command scheduler default configuration.
  * Check if the tl_cron table exists in the command scheduler (see #541).
+ * Correctly merge the legacy headers so front end users can log in again.
 
 ### 4.2.1 (2016-07-15)
 
