@@ -36,8 +36,8 @@ class ContaoDataCollector extends DataCollector
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container The container object
-     * @param array              $packages  The Composer packages
+     * @param ContainerInterface $container
+     * @param array              $packages
      */
     public function __construct(ContainerInterface $container, array $packages)
     {
@@ -64,7 +64,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the Contao version and build number.
      *
-     * @return string The version number
+     * @return string
      */
     public function getContaoVersion()
     {
@@ -78,7 +78,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the summary.
      *
-     * @return array The summary
+     * @return array
      */
     public function getSummary()
     {
@@ -88,7 +88,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the set classes.
      *
-     * @return array The set classes
+     * @return array
      */
     public function getClassesSet()
     {
@@ -102,7 +102,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the aliased classes.
      *
-     * @return array The aliased classes
+     * @return array
      */
     public function getClassesAliased()
     {
@@ -116,7 +116,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the composerized classes.
      *
-     * @return array The composerized classes
+     * @return array
      */
     public function getClassesComposerized()
     {
@@ -130,7 +130,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the unknown insert tags.
      *
-     * @return array The insert tags
+     * @return array
      */
     public function getUnknownInsertTags()
     {
@@ -140,7 +140,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the unknown insert tag flags.
      *
-     * @return array The insert tag flags
+     * @return array
      */
     public function getUnknownInsertTagFlags()
     {
@@ -150,7 +150,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the additional data added by unknown sources.
      *
-     * @return array The additional data
+     * @return array
      */
     public function getAdditionalData()
     {
@@ -185,9 +185,9 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the debug data as array.
      *
-     * @param string $key The key
+     * @param string $key
      *
-     * @return array The debug data
+     * @return array
      */
     private function getData($key)
     {
@@ -225,7 +225,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the page layout name (front end only).
      *
-     * @return string The page layout name
+     * @return string
      */
     private function getLayoutName()
     {
@@ -241,7 +241,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the template name (front end only).
      *
-     * @return string The template name
+     * @return string
      */
     private function getTemplateName()
     {
@@ -257,7 +257,7 @@ class ContaoDataCollector extends DataCollector
     /**
      * Returns the layout model (front end only).
      *
-     * @return LayoutModel|null The layout model
+     * @return LayoutModel|null
      */
     private function getLayout()
     {

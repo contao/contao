@@ -293,8 +293,6 @@ class FrontendIndex extends \Frontend
 			/** @var PageError404 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 
-			$this->log('The request for page ID "' . $pageId . '" contained unused GET parameters: "' . implode('", "', \Input::getUnusedGet()) . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
-
 			return $objHandler->getResponse();
 		}
 	}

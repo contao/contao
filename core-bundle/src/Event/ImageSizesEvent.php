@@ -34,8 +34,8 @@ class ImageSizesEvent extends Event
     /**
      * Constructor.
      *
-     * @param array            $imageSizes The image sizes
-     * @param BackendUser|null $user       An optional user object
+     * @param array            $imageSizes
+     * @param BackendUser|null $user
      */
     public function __construct(array $imageSizes, BackendUser $user = null)
     {
@@ -46,7 +46,7 @@ class ImageSizesEvent extends Event
     /**
      * Returns the image sizes.
      *
-     * @return array The image sizes
+     * @return array
      */
     public function getImageSizes()
     {
@@ -56,7 +56,7 @@ class ImageSizesEvent extends Event
     /**
      * Sets the image sizes.
      *
-     * @param array $imageSizes The image sizes
+     * @param array $imageSizes
      */
     public function setImageSizes(array $imageSizes)
     {
@@ -66,7 +66,7 @@ class ImageSizesEvent extends Event
     /**
      * Returns the back end user object.
      *
-     * @return BackendUser The back end user object
+     * @return BackendUser
      */
     public function getUser()
     {

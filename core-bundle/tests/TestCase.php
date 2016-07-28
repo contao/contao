@@ -36,7 +36,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Returns the path to the fixtures directory.
      *
-     * @return string The root directory path
+     * @return string
      */
     public function getRootDir()
     {
@@ -46,7 +46,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Returns the path to the fixtures cache directory.
      *
-     * @return string The cache directory path
+     * @return string
      */
     public function getCacheDir()
     {
@@ -56,7 +56,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a Contao kernel.
      *
-     * @return Kernel|\PHPUnit_Framework_MockObject_MockObject The kernel object
+     * @return Kernel|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockKernel()
     {
@@ -106,9 +106,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a router returning the given URL.
      *
-     * @param string $url The URL to return
+     * @param string $url
      *
-     * @return RouterInterface|\PHPUnit_Framework_MockObject_MockObject The router object
+     * @return RouterInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockRouter($url)
     {
@@ -126,7 +126,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a CSRF token manager.
      *
-     * @return CsrfTokenManagerInterface|\PHPUnit_Framework_MockObject_MockObject The token manager object
+     * @return CsrfTokenManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockTokenManager()
     {
@@ -154,7 +154,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a Symfony session containing the Contao attribute bags.
      *
-     * @return SessionInterface The session object
+     * @return SessionInterface
      */
     protected function mockSession()
     {
@@ -178,9 +178,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a container with scopes.
      *
-     * @param string|null $scope An optional scope
+     * @param string|null $scope
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|Container The container object
+     * @return \PHPUnit_Framework_MockObject_MockObject|Container
      */
     protected function mockContainerWithContaoScopes($scope = null)
     {
@@ -221,9 +221,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Returns a ContaoFramework instance.
      *
-     * @param RequestStack    $requestStack The request stack
-     * @param RouterInterface $router       The router object
-     * @param array           $adapters     An optional array of adapters
+     * @param RequestStack    $requestStack
+     * @param RouterInterface $router
+     * @param array           $adapters
      *
      * @return ContaoFramework The object instance
      */
@@ -280,7 +280,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a config adapter.
      *
-     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject The config adapter
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockConfigAdapter()
     {
@@ -332,7 +332,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a request token adapter.
      *
-     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject The request token adapter
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockRequestTokenAdapter()
     {

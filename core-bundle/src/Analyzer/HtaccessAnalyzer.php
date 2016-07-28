@@ -25,9 +25,9 @@ class HtaccessAnalyzer
     /**
      * Stores the file object.
      *
-     * @param \SplFileInfo $file The file object
+     * @param \SplFileInfo $file
      *
-     * @throws \InvalidArgumentException If $file is not a file
+     * @throws \InvalidArgumentException
      */
     public function __construct(\SplFileInfo $file)
     {
@@ -41,9 +41,9 @@ class HtaccessAnalyzer
     /**
      * Creates a new object instance.
      *
-     * @param \SplFileInfo $file The file object
+     * @param \SplFileInfo $file
      *
-     * @return static The object instance
+     * @return static
      */
     public static function create(\SplFileInfo $file)
     {
@@ -53,7 +53,7 @@ class HtaccessAnalyzer
     /**
      * Checks whether the .htaccess file grants access via HTTP.
      *
-     * @return bool True if the .htaccess file grants access via HTTP
+     * @return bool
      */
     public function grantsAccess()
     {
@@ -71,9 +71,9 @@ class HtaccessAnalyzer
     /**
      * Scans a line for an access definition.
      *
-     * @param string $line The current line
+     * @param string $line
      *
-     * @return bool True if the line has an access definition
+     * @return bool
      */
     private function hasRequireGranted($line)
     {
@@ -87,9 +87,9 @@ class HtaccessAnalyzer
     /**
      * Checks whether a line is a comment.
      *
-     * @param string $line The current line
+     * @param string $line
      *
-     * @return bool True if the line is a comment
+     * @return bool
      */
     private function isComment($line)
     {

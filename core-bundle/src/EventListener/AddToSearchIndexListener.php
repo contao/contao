@@ -30,7 +30,7 @@ class AddToSearchIndexListener
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $framework The Contao framework service
+     * @param ContaoFrameworkInterface $framework
      */
     public function __construct(ContaoFrameworkInterface $framework)
     {
@@ -40,7 +40,7 @@ class AddToSearchIndexListener
     /**
      * Forwards the request to the Frontend class if there is a page object.
      *
-     * @param PostResponseEvent $event The event object
+     * @param PostResponseEvent $event
      */
     public function onKernelTerminate(PostResponseEvent $event)
     {

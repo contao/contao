@@ -34,10 +34,10 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
     /**
      * Creates an authentication token.
      *
-     * @param Request $request     The request object
-     * @param string  $providerKey The provider key
+     * @param Request $request
+     * @param string  $providerKey
      *
-     * @return AnonymousToken The token object
+     * @return AnonymousToken
      */
     public function createToken(Request $request, $providerKey)
     {
@@ -47,13 +47,13 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
     /**
      * Authenticates a token.
      *
-     * @param TokenInterface        $token        The token object
-     * @param UserProviderInterface $userProvider The user provider object
-     * @param string                $providerKey  The provider key
+     * @param TokenInterface        $token
+     * @param UserProviderInterface $userProvider
+     * @param string                $providerKey
      *
-     * @return ContaoToken|AnonymousToken The token object
+     * @return ContaoToken|AnonymousToken
      *
-     * @throws AuthenticationException If the token cannot be handled
+     * @throws AuthenticationException
      */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
@@ -81,10 +81,10 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
     /**
      * Checks if the token is supported.
      *
-     * @param TokenInterface $token       The token object
-     * @param string         $providerKey The provider key
+     * @param TokenInterface $token
+     * @param string         $providerKey
      *
-     * @return bool True if the token is supported
+     * @return bool
      */
     public function supportsToken(TokenInterface $token, $providerKey)
     {
@@ -94,11 +94,11 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
     /**
      * Checks if the authentication can be skipped.
      *
-     * @param TokenInterface $token The token object
+     * @param TokenInterface $token
      *
-     * @return bool True if the authentication can be skipped
+     * @return bool
      *
-     * @throws \LogicException If the container object has not been set
+     * @throws \LogicException
      */
     private function canSkipAuthentication(TokenInterface $token)
     {

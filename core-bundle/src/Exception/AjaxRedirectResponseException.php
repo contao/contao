@@ -23,9 +23,9 @@ class AjaxRedirectResponseException extends ResponseException
     /**
      * Constructor.
      *
-     * @param string          $location The target URL
-     * @param int             $status   The response status code (defaults to 204)
-     * @param \Exception|null $previous The previous exception
+     * @param string          $location
+     * @param int             $status
+     * @param \Exception|null $previous
      */
     public function __construct($location, $status = 204, \Exception $previous = null)
     {

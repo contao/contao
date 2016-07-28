@@ -31,9 +31,9 @@ class AddResourcesPathsPass implements CompilerPassInterface
     /**
      * Returns the Contao resources paths as array.
      *
-     * @param ContainerBuilder $container The container object
+     * @param ContainerBuilder $container
      *
-     * @return array The resources paths
+     * @return array
      */
     private function getResourcesPath(ContainerBuilder $container)
     {
@@ -58,9 +58,9 @@ class AddResourcesPathsPass implements CompilerPassInterface
     /**
      * Returns the resources path from the class name.
      *
-     * @param string $class The class name
+     * @param string $class
      *
-     * @return string|null The resources path or null
+     * @return string|null
      */
     private function getResourcesPathFromClassName($class)
     {

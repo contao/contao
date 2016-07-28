@@ -35,35 +35,6 @@ class Automator extends \System
 
 
 	/**
-	 * Check for new \Contao versions
-	 */
-	public function checkForUpdates()
-	{
-		if (!is_numeric(BUILD))
-		{
-			return;
-		}
-
-		// HOOK: proxy module
-		if (Config::get('useProxy')) {
-			$objRequest = new \ProxyRequest();
-		} else {
-			$objRequest = new \Request();
-		}
-
-		$objRequest->send(\Config::get('liveUpdateBase') . (LONG_TERM_SUPPORT ? 'lts-version.txt' : 'version.txt'));
-
-		if (!$objRequest->hasError())
-		{
-			\System::getContainer()->get('contao.cache')->save('latest-version', $objRequest->response);
-		}
-
-		// Add a log entry
-		$this->log('Checked for Contao updates', __METHOD__, TL_CRON);
-	}
-
-
-	/**
 	 * Purge the search tables
 	 */
 	public function purgeSearchTables()

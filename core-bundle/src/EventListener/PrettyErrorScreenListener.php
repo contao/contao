@@ -75,11 +75,11 @@ class PrettyErrorScreenListener
     /**
      * Constructor.
      *
-     * @param bool                     $prettyErrorScreens True to render the error screens
-     * @param \Twig_Environment        $twig               The twig environment
-     * @param ContaoFrameworkInterface $framework          The Contao framework
-     * @param TokenStorageInterface    $tokenStorage       The token storage object
-     * @param LoggerInterface|null     $logger             An optional logger service
+     * @param bool                     $prettyErrorScreens
+     * @param \Twig_Environment        $twig
+     * @param ContaoFrameworkInterface $framework
+     * @param TokenStorageInterface    $tokenStorage
+     * @param LoggerInterface|null     $logger
      */
     public function __construct(
         $prettyErrorScreens,
@@ -98,7 +98,7 @@ class PrettyErrorScreenListener
     /**
      * Map an exception to an error screen.
      *
-     * @param GetResponseForExceptionEvent $event The event object
+     * @param GetResponseForExceptionEvent $event
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
@@ -112,7 +112,7 @@ class PrettyErrorScreenListener
     /**
      * Handles the exception.
      *
-     * @param GetResponseForExceptionEvent $event The event object
+     * @param GetResponseForExceptionEvent $event
      */
     private function handleException(GetResponseForExceptionEvent $event)
     {
@@ -143,7 +143,7 @@ class PrettyErrorScreenListener
     /**
      * Renders a back end exception.
      *
-     * @param GetResponseForExceptionEvent $event The event object
+     * @param GetResponseForExceptionEvent $event
      */
     private function renderBackendException(GetResponseForExceptionEvent $event)
     {
@@ -156,8 +156,8 @@ class PrettyErrorScreenListener
     /**
      * Renders the error screen.
      *
-     * @param int                          $type  The error type
-     * @param GetResponseForExceptionEvent $event The event object
+     * @param int                          $type
+     * @param GetResponseForExceptionEvent $event
      */
     private function renderErrorScreenByType($type, GetResponseForExceptionEvent $event)
     {
@@ -179,9 +179,9 @@ class PrettyErrorScreenListener
     /**
      * Returns the response of a Contao page handler.
      *
-     * @param string $type The error type
+     * @param string $type
      *
-     * @return Response|null The response object or null
+     * @return Response|null
      */
     private function getResponseFromPageHandler($type)
     {
@@ -206,7 +206,7 @@ class PrettyErrorScreenListener
     /**
      * Checks the exception chain for a known exception.
      *
-     * @param GetResponseForExceptionEvent $event The event object
+     * @param GetResponseForExceptionEvent $event
      */
     private function renderErrorScreenByException(GetResponseForExceptionEvent $event)
     {
@@ -226,9 +226,9 @@ class PrettyErrorScreenListener
     /**
      * Maps an exception to a template.
      *
-     * @param \Exception $exception The exception object
+     * @param \Exception $exception
      *
-     * @return string|null The template name or null.
+     * @return string|null
      */
     private function getTemplateForException(\Exception $exception)
     {
@@ -244,9 +244,9 @@ class PrettyErrorScreenListener
     /**
      * Renders a template and returns the response object.
      *
-     * @param string                       $template   The template name
-     * @param int                          $statusCode The status code
-     * @param GetResponseForExceptionEvent $event      The event object
+     * @param string                       $template
+     * @param int                          $statusCode
+     * @param GetResponseForExceptionEvent $event
      */
     private function renderTemplate($template, $statusCode, GetResponseForExceptionEvent $event)
     {
@@ -271,7 +271,7 @@ class PrettyErrorScreenListener
     /**
      * Renders the error template and returns the response object.
      *
-     * @return Response The response object
+     * @return Response
      */
     private function getErrorTemplate()
     {
@@ -307,11 +307,11 @@ class PrettyErrorScreenListener
     /**
      * Returns the template parameters.
      *
-     * @param string                       $view       The name of the view
-     * @param int                          $statusCode The HTTP status code
-     * @param GetResponseForExceptionEvent $event      The event object
+     * @param string                       $view
+     * @param int                          $statusCode
+     * @param GetResponseForExceptionEvent $event
      *
-     * @return array|null The template parameters or null
+     * @return array|null
      */
     private function getTemplateParameters($view, $statusCode, GetResponseForExceptionEvent $event)
     {
@@ -338,7 +338,7 @@ class PrettyErrorScreenListener
     /**
      * Loads the language strings.
      *
-     * @return array|null The language strings or null
+     * @return array|null
      */
     private function loadLanguageStrings()
     {
@@ -356,7 +356,7 @@ class PrettyErrorScreenListener
     /**
      * Logs the exception.
      *
-     * @param \Exception $exception The exception
+     * @param \Exception $exception
      */
     private function logException(\Exception $exception)
     {
@@ -370,7 +370,7 @@ class PrettyErrorScreenListener
     /**
      * Checks if the user is a back end user.
      *
-     * @return bool True if the user is a back end user.
+     * @return bool
      */
     private function isBackendUser()
     {
@@ -392,9 +392,9 @@ class PrettyErrorScreenListener
     /**
      * Returns the status code for an exception.
      *
-     * @param \Exception $exception The exception
+     * @param \Exception $exception
      *
-     * @return int The status code
+     * @return int
      */
     private function getStatusCodeForException(\Exception $exception)
     {

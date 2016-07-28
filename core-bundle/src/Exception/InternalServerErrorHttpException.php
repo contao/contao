@@ -22,9 +22,9 @@ class InternalServerErrorHttpException extends HttpException
     /**
      * Constructor.
      *
-     * @param string|null     $message  The internal exception message
-     * @param \Exception|null $previous The previous exception
-     * @param int             $code     The internal exception code
+     * @param string|null     $message
+     * @param \Exception|null $previous
+     * @param int             $code
      */
     public function __construct($message = null, \Exception $previous = null, $code = 0)
     {

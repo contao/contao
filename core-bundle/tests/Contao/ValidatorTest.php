@@ -24,8 +24,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests the isEmail() method.
      *
-     * @param string $email    The email
-     * @param bool   $expected The expected result
+     * @param string $email
+     * @param bool   $expected
      *
      * @dataProvider emailProvider
      */
@@ -105,7 +105,7 @@ EOF;
     /**
      * Provides the data for the testEmail() method.
      *
-     * @return array The data
+     * @return array
      */
     public function emailProvider()
     {

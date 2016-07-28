@@ -35,7 +35,7 @@ class ContainerScopeListener
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container The container object
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -46,7 +46,7 @@ class ContainerScopeListener
     /**
      * Enters the container scope when a route has been found.
      *
-     * @param GetResponseEvent $event The event object
+     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -58,7 +58,7 @@ class ContainerScopeListener
     /**
      * Leaves the container scope when finishing the request.
      *
-     * @param FinishRequestEvent $event The event object
+     * @param FinishRequestEvent $event
      */
     public function onKernelFinishRequest(FinishRequestEvent $event)
     {
@@ -70,9 +70,9 @@ class ContainerScopeListener
     /**
      * Returns the scope from the event request.
      *
-     * @param KernelEvent $event The event object
+     * @param KernelEvent $event
      *
-     * @return string|null The scope name
+     * @return string|null
      */
     private function getScopeFromEvent(KernelEvent $event)
     {

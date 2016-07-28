@@ -33,8 +33,8 @@ class XliffFileLoader extends Loader
     /**
      * Constructor.
      *
-     * @param string $rootDir      The kernel root directory
-     * @param bool   $addToGlobals True to add the labels to $GLOBALS['TL_LANG']
+     * @param string $rootDir
+     * @param bool   $addToGlobals
      */
     public function __construct($rootDir, $addToGlobals = false)
     {
@@ -45,10 +45,10 @@ class XliffFileLoader extends Loader
     /**
      * Reads the contents of a XLIFF file and returns the PHP code.
      *
-     * @param string      $file A PHP file path
-     * @param string|null $type The resource type
+     * @param string      $file
+     * @param string|null $type
      *
-     * @return string The PHP code without the PHP tags
+     * @return string
      */
     public function load($file, $type = null)
     {
@@ -66,10 +66,10 @@ class XliffFileLoader extends Loader
     /**
      * Converts an XLIFF file into a PHP language file.
      *
-     * @param string $name     The name of the XLIFF file
-     * @param string $language The language code
+     * @param string $name
+     * @param string $language
      *
-     * @return string The PHP code
+     * @return string
      */
     private function convertXlfToPhp($name, $language)
     {
@@ -100,9 +100,9 @@ class XliffFileLoader extends Loader
     /**
      * Returns a DOM document object.
      *
-     * @param string $name The file name
+     * @param string $name
      *
-     * @return \DOMDocument The DOM document object
+     * @return \DOMDocument
      */
     private function getDomDocumentFromFile($name)
     {
@@ -120,10 +120,10 @@ class XliffFileLoader extends Loader
     /**
      * Returns a DOM node list depending on the language.
      *
-     * @param \DOMElement $unit     The DOM element
-     * @param string      $language The language
+     * @param \DOMElement $unit
+     * @param string      $language
      *
-     * @return \DOMNodeList The DOM node list
+     * @return \DOMNodeList
      */
     private function getNodeByLanguage(\DOMElement $unit, $language)
     {
@@ -133,9 +133,9 @@ class XliffFileLoader extends Loader
     /**
      * Removes extra spaces in closing tags.
      *
-     * @param \DOMNode $node The DOM node
+     * @param \DOMNode $node
      *
-     * @return string The fixed value
+     * @return string
      */
     private function fixClosingTags(\DOMNode $node)
     {
@@ -145,9 +145,9 @@ class XliffFileLoader extends Loader
     /**
      * Splits the ID attribute and returns the chunks.
      *
-     * @param \DOMElement $unit The DOM element
+     * @param \DOMElement $unit
      *
-     * @return array The chunks
+     * @return array
      */
     private function getChunksFromUnit(\DOMElement $unit)
     {
@@ -164,12 +164,12 @@ class XliffFileLoader extends Loader
     /**
      * Returns a string representation of the global PHP language array.
      *
-     * @param array $chunks The path fragments
-     * @param mixed $value  The label
+     * @param array $chunks
+     * @param mixed $value
      *
-     * @return string The string representation of the array
+     * @return string
      *
-     * @throws \OutOfBoundsException If less than 2 or more than 4 chunks are given
+     * @throws \OutOfBoundsException
      */
     private function getStringRepresentation(array $chunks, $value)
     {
@@ -208,8 +208,8 @@ class XliffFileLoader extends Loader
     /**
      * Adds the labels to the global PHP language array.
      *
-     * @param array $chunks The path fragments
-     * @param mixed $value  The label
+     * @param array $chunks
+     * @param mixed $value
      */
     private function addGlobal(array $chunks, $value)
     {
@@ -229,9 +229,9 @@ class XliffFileLoader extends Loader
     /**
      * Quotes an array key to be used as PHP string.
      *
-     * @param string $key The key
+     * @param string $key
      *
-     * @return int|string The quoted string
+     * @return int|string
      */
     private function quoteKey($key)
     {
@@ -249,9 +249,9 @@ class XliffFileLoader extends Loader
     /**
      * Quotes a value to be used as PHP string.
      *
-     * @param string $value The value
+     * @param string $value
      *
-     * @return string The quoted string
+     * @return string
      */
     private function quoteValue($value)
     {

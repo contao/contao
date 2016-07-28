@@ -35,9 +35,9 @@ class LanguageHelper implements \ArrayAccess
     /**
      * Returns the current language helper.
      *
-     * @param string $key The key
+     * @param string $key
      *
-     * @return LanguageHelper The language helper object
+     * @return LanguageHelper
      */
     public function __get($key)
     {
@@ -47,9 +47,9 @@ class LanguageHelper implements \ArrayAccess
     /**
      * Returns true.
      *
-     * @param mixed $offset The offset
+     * @param mixed $offset
      *
-     * @return bool True
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -59,7 +59,7 @@ class LanguageHelper implements \ArrayAccess
     /**
      * Creates a sub object with the given name.
      *
-     * @param mixed $offset The offset
+     * @param mixed $offset
      *
      * @return LanguageHelper
      */
@@ -71,8 +71,8 @@ class LanguageHelper implements \ArrayAccess
     /**
      * Throws an exception.
      *
-     * @param mixed $offset The offset
-     * @param mixed $value  The value
+     * @param mixed $offset
+     * @param mixed $value
      *
      * @throws \LogicException
      */
@@ -84,7 +84,7 @@ class LanguageHelper implements \ArrayAccess
     /**
      * Throws an exception.
      *
-     * @param mixed $offset The offset
+     * @param mixed $offset
      *
      * @throws \LogicException
      */
@@ -96,7 +96,7 @@ class LanguageHelper implements \ArrayAccess
     /**
      * Returns the combined stack as string.
      *
-     * @return string The combined stack
+     * @return string
      */
     public function __toString()
     {

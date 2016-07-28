@@ -20,7 +20,7 @@ interface ContaoFrameworkInterface extends \Contao\CoreBundle\ContaoFrameworkInt
     /**
      * Checks if the framework has been initialized.
      *
-     * @return bool True if the framework has been initialized
+     * @return bool
      */
     public function isInitialized();
 
@@ -32,19 +32,19 @@ interface ContaoFrameworkInterface extends \Contao\CoreBundle\ContaoFrameworkInt
     /**
      * Creates a new instance of a given class.
      *
-     * @param string $class The fully qualified class name
-     * @param array  $args  Optional constructor arguments
+     * @param string $class
+     * @param array  $args
      *
-     * @return object The instance
+     * @return object
      */
     public function createInstance($class, $args = []);
 
     /**
      * Returns an adapter class for a given class.
      *
-     * @param string $class The fully qualified class name
+     * @param string $class
      *
-     * @return Adapter The adapter class
+     * @return Adapter
      */
     public function getAdapter($class);
 }

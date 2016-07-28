@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Test\EventListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Doctrine\DBAL\Connection;
 
 /**
  * Tests the CommandSchedulerListener class.
@@ -51,7 +52,7 @@ class CommandSchedulerListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $listener = new CommandSchedulerListener($this->framework);
+        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\CommandSchedulerListener', $listener);
     }
@@ -72,7 +73,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('getAdapter')
         ;
 
-        $listener = new CommandSchedulerListener($this->framework);
+        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
         $listener->onKernelTerminate();
     }
 
@@ -101,7 +102,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->willReturn($this->getMock('Contao\FrontendCron', ['run']))
         ;
 
-        $listener = new CommandSchedulerListener($this->framework);
+        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
         $listener->onKernelTerminate();
     }
 
@@ -154,7 +155,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('createInstance')
         ;
 
-        $listener = new CommandSchedulerListener($this->framework);
+        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
         $listener->onKernelTerminate();
     }
 
@@ -208,7 +209,45 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('createInstance')
         ;
 
-        $listener = new CommandSchedulerListener($this->framework);
+        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
         $listener->onKernelTerminate();
+    }
+
+    /**
+     * Mocks a database connection object.
+     *
+     * @return Connection|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function mockConnection()
+    {
+        $schemaManager = $this->getMock(
+            'Doctrine\DBAL\Schema\MySqlSchemaManager',
+            ['tablesExist'],
+            [],
+            '',
+            false
+        );
+
+        $schemaManager
+            ->expects($this->any())
+            ->method('tablesExist')
+            ->willReturn(true)
+        ;
+
+        $connection = $this->getMock(
+            'Doctrine\DBAL\Connection',
+            ['getSchemaManager'],
+            [],
+            '',
+            false
+        );
+
+        $connection
+            ->expects($this->any())
+            ->method('getSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        return $connection;
     }
 }

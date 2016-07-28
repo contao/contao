@@ -34,7 +34,7 @@ class StoreRefererListener
     /**
      * Constructor.
      *
-     * @param SessionInterface $session The session object
+     * @param SessionInterface $session
      */
     public function __construct(SessionInterface $session)
     {
@@ -44,7 +44,7 @@ class StoreRefererListener
     /**
      * Stores the referer in the session.
      *
-     * @param FilterResponseEvent $event The event object
+     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
@@ -64,7 +64,7 @@ class StoreRefererListener
     /**
      * Stores the back end referer.
      *
-     * @param Request $request The request object
+     * @param Request $request
      */
     private function storeBackendReferer(Request $request)
     {
@@ -91,9 +91,9 @@ class StoreRefererListener
     /**
      * Checks if the back end session can be modified.
      *
-     * @param Request $request The request object
+     * @param Request $request
      *
-     * @return bool True if the back end session can be modified
+     * @return bool
      */
     private function canModifyBackendSession(Request $request)
     {
@@ -110,10 +110,10 @@ class StoreRefererListener
     /**
      * Prepares the back end referer array.
      *
-     * @param string     $refererId The referer ID
-     * @param array|null $referers  The old referer data
+     * @param string     $refererId
+     * @param array|null $referers
      *
-     * @return array The back end referer URLs
+     * @return array
      */
     private function prepareBackendReferer($refererId, array $referers = null)
     {
@@ -136,7 +136,7 @@ class StoreRefererListener
     /**
      * Stores the front end referer.
      *
-     * @param Request $request The request object
+     * @param Request $request
      */
     private function storeFrontendReferer(Request $request)
     {
@@ -157,10 +157,10 @@ class StoreRefererListener
     /**
      * Checks if the front end session can be modified.
      *
-     * @param Request    $request The request object
-     * @param array|null $referer The referer array
+     * @param Request    $request
+     * @param array|null $referer
      *
-     * @return bool True if the front end session can be modified
+     * @return bool
      */
     private function canModifyFrontendSession(Request $request, array $referer = null)
     {
@@ -178,9 +178,9 @@ class StoreRefererListener
     /**
      * Returns the current request URI relative to the base path.
      *
-     * @param Request $request The request object
+     * @param Request $request
      *
-     * @return string The relative request URI
+     * @return string
      */
     private function getRelativeRequestUri(Request $request)
     {
