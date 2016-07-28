@@ -24,9 +24,9 @@ class ConnectionFactory
     /**
      * Returns the database connection object.
      *
-     * @param array $parameters The parameters array
+     * @param array $parameters
      *
-     * @return Connection|null The object instance or null
+     * @return Connection|null
      */
     public static function create(array $parameters)
     {

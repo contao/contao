@@ -56,7 +56,7 @@ class InstallationKernel extends \AppKernel
     /**
      * Checks if the real system can be booted.
      *
-     * @return bool True if the real system can be booted
+     * @return bool
      */
     public function canBootRealSystem()
     {
@@ -71,7 +71,7 @@ class InstallationKernel extends \AppKernel
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         if ($this->canBootRealSystem()) {
-            return new RedirectResponse($this->getBackendLoginUrl());
+            return new RedirectResponse($this->getInstallToolUrl());
         }
 
         $this->boot();
@@ -107,14 +107,14 @@ class InstallationKernel extends \AppKernel
     }
 
     /**
-     * Returns the back end login URL.
+     * Returns the install tool URL.
      *
-     * @return string The back end login URL
+     * @return string
      */
-    private function getBackendLoginUrl()
+    private function getInstallToolUrl()
     {
         $routes = new RouteCollection();
-        $routes->add('contao_backend_login', new Route('/contao/login'));
+        $routes->add('contao_install', new Route('/contao/install'));
 
         $context = new RequestContext();
         $context->fromRequest(Request::createFromGlobals());
@@ -122,6 +122,6 @@ class InstallationKernel extends \AppKernel
 
         $generator = new UrlGenerator($routes, $context);
 
-        return $generator->generate('contao_backend_login');
+        return $generator->generate('contao_install');
     }
 }

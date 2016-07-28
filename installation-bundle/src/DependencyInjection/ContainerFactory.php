@@ -40,9 +40,9 @@ class ContainerFactory
     /**
      * Returns the container object.
      *
-     * @param KernelInterface $kernel The kernel object
+     * @param KernelInterface $kernel
      *
-     * @return ContainerBuilder The object instance
+     * @return ContainerBuilder
      */
     public static function create(KernelInterface $kernel)
     {

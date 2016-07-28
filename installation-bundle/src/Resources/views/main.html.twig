@@ -47,9 +47,9 @@
     <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'template_import'|trans }}</legend>
     <div>
       <h3>{{ 'template_import'|trans }}</h3>
-      {% if import_error %}
+      {% if import_error is defined %}
         <p class="tl_error">{{ import_error }}</p>
-      {% elseif import_date is not empty %}
+      {% elseif import_date is defined %}
         <p class="tl_confirm">{{ 'imported_on'|trans|format(import_date) }}</p>
       {% else %}
         <p class="tl_info">{{ 'import_data_will_be_deleted'|trans }}</p>
@@ -83,7 +83,7 @@
       <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'admin_create'|trans }}</legend>
       <div>
         <h3>{{ 'admin_create'|trans }}</h3>
-        {% if admin_error %}
+        {% if admin_error is defined %}
           <p class="tl_error">{{ admin_error }}</p>
         {% elseif has_admin %}
           <p class="tl_confirm">{{ 'admin_confirm'|trans }}</p>
@@ -95,19 +95,19 @@
               <input type="hidden" name="FORM_SUBMIT" value="tl_admin">
               <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
               <h4><label for="username">{{ 'admin_username'|trans }}</label></h4>
-              {% if admin_username_error %}
+              {% if admin_username_error is defined %}
                 <p class="tl_error">{{ admin_username_error }}</p>
               {% endif %}
-              <input type="text" name="username" id="username" class="tl_text" value="{{ admin_username_value }}">
+              <input type="text" name="username" id="username" class="tl_text" value="{{ admin_username_value|default }}">
               <h4><label for="name">{{ 'admin_name'|trans }}</label></h4>
-              <input type="text" name="name" id="name" class="tl_text" value="{{ admin_name_value }}">
+              <input type="text" name="name" id="name" class="tl_text" value="{{ admin_name_value|default }}">
               <h4><label for="email">{{ 'admin_email'|trans }}</label></h4>
-              {% if admin_email_error %}
+              {% if admin_email_error is defined %}
                 <p class="tl_error">{{ admin_email_error }}</p>
               {% endif %}
-              <input type="email" name="email" id="email" class="tl_text" value="{{ admin_email_value }}">
+              <input type="email" name="email" id="email" class="tl_text" value="{{ admin_email_value|default }}">
               <h4><label for="password">{{ 'password'|trans }}</label></h4>
-              {% if admin_password_error %}
+              {% if admin_password_error is defined %}
                 <p class="tl_error">{{ admin_password_error }}</p>
               {% endif %}
               <input type="password" name="password" id="password" class="tl_text" value="">

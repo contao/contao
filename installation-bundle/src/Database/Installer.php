@@ -48,9 +48,9 @@ class Installer
     /**
      * Constructor.
      *
-     * @param Connection          $connection The database connection
-     * @param ResourceFinder      $finder     The Contao resource finder
-     * @param TranslatorInterface $translator The translator object
+     * @param Connection          $connection
+     * @param ResourceFinder      $finder
+     * @param TranslatorInterface $translator
      */
     public function __construct(Connection $connection, ResourceFinder $finder, TranslatorInterface $translator)
     {
@@ -62,7 +62,7 @@ class Installer
     /**
      * Returns the commands as array.
      *
-     * @return array The commands
+     * @return array
      */
     public function getCommands()
     {
@@ -76,9 +76,9 @@ class Installer
     /**
      * Executes a command.
      *
-     * @param string $hash The hash
+     * @param string $hash
      *
-     * @throws \InvalidArgumentException If the hash is invalid
+     * @throws \InvalidArgumentException
      */
     public function execCommand($hash)
     {
@@ -100,7 +100,7 @@ class Installer
     /**
      * Returns the current database structure.
      *
-     * @return array An array of tables and fields
+     * @return array
      */
     private function getFromDb()
     {
@@ -183,7 +183,7 @@ class Installer
     /**
      * Returns the target database structure from the DCA.
      *
-     * @return array An array of tables and fields
+     * @return array
      */
     private function getFromDca()
     {
@@ -223,7 +223,7 @@ class Installer
     /**
      * Returns the target database structure from the database.sql files.
      *
-     * @return array An array of tables and fields
+     * @return array
      */
     private function getFromFile()
     {
@@ -251,9 +251,9 @@ class Installer
     /**
      * Quotes an identifier.
      *
-     * @param mixed $str The identifier
+     * @param mixed $str
      *
-     * @return mixed The quoted identifier
+     * @return mixed
      */
     private function quote($str)
     {
@@ -263,9 +263,9 @@ class Installer
     /**
      * Quotes an index column.
      *
-     * @param array $tableIndex The index configuration
+     * @param array $tableIndex
      *
-     * @return string The quoted index column
+     * @return string
      */
     private function quoteColumn(array $tableIndex)
     {

@@ -25,7 +25,7 @@ class LibraryLoader
     /**
      * Constructor.
      *
-     * @param string $rootDir The root directory
+     * @param string $rootDir
      */
     public function __construct($rootDir)
     {
@@ -46,7 +46,7 @@ class LibraryLoader
     /**
      * Loads a Contao library class.
      *
-     * @param string $class The class name
+     * @param string $class
      */
     public function load($class)
     {

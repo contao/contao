@@ -46,18 +46,14 @@ class InstallationController implements ContainerAwareInterface
      * @var array
      */
     private $context = [
-        'error' => '',
-        'import_error' => '',
-        'import_date' => '',
         'has_admin' => false,
         'hide_admin' => false,
-        'admin_error' => '',
     ];
 
     /**
      * Handles the installation process.
      *
-     * @return Response The response object
+     * @return Response
      *
      * @Route("/install", name="contao_install")
      */
@@ -150,7 +146,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to accept the license.
      *
-     * @return Response|RedirectResponse The response object
+     * @return Response|RedirectResponse
      */
     private function acceptLicense()
     {
@@ -168,7 +164,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to set the install tool password.
      *
-     * @return Response|RedirectResponse The response object
+     * @return Response|RedirectResponse
      */
     private function setPassword()
     {
@@ -207,7 +203,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to log in.
      *
-     * @return Response|RedirectResponse The response object
+     * @return Response|RedirectResponse
      */
     private function login()
     {
@@ -260,7 +256,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to set up the database connection.
      *
-     * @return Response|RedirectResponse The response object
+     * @return Response|RedirectResponse
      */
     private function setUpDatabaseConnection()
     {
@@ -339,7 +335,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to adjust the database tables.
      *
-     * @return Response|RedirectResponse|null The response object
+     * @return Response|RedirectResponse|null
      */
     private function adjustDatabaseTables()
     {
@@ -369,7 +365,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to import the example website.
      *
-     * @return Response|RedirectResponse|null The response object
+     * @return Response|RedirectResponse|null
      */
     private function importExampleWebsite()
     {
@@ -415,7 +411,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Creates an admin user.
      *
-     * @return Response|RedirectResponse|null The response object
+     * @return Response|RedirectResponse|null
      */
     private function createAdminUser()
     {
@@ -516,10 +512,10 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a template.
      *
-     * @param string $name    The template name
-     * @param array  $context The context array
+     * @param string $name
+     * @param array  $context
      *
-     * @return Response The response object
+     * @return Response
      */
     private function render($name, $context = [])
     {
@@ -534,9 +530,9 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Translate a key.
      *
-     * @param string $key The translation key
+     * @param string $key
      *
-     * @return string The translated string
+     * @return string
      */
     private function trans($key)
     {
@@ -546,7 +542,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Returns a redirect response to reload the page.
      *
-     * @return RedirectResponse The redirect response
+     * @return RedirectResponse
      */
     private function getRedirectResponse()
     {
@@ -556,9 +552,9 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Adds the default values to the context.
      *
-     * @param array $context The context array
+     * @param array $context
      *
-     * @return array The context array
+     * @return array
      */
     private function addDefaultsToContext(array $context)
     {
@@ -586,7 +582,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Returns the request token.
      *
-     * @return string The request token
+     * @return string
      */
     private function getRequestToken()
     {
