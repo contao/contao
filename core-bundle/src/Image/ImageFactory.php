@@ -16,6 +16,7 @@ use Imagine\Image\ImagineInterface;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\Resize\ResizerInterface;
 use Contao\Image\Image\Image;
+use Contao\Image\Image\ImageInterface;
 use Contao\Image\Resize\ResizeConfiguration;
 use Contao\Image\Resize\ResizeConfigurationInterface;
 use Contao\Image\Resize\ResizeOptions;
@@ -104,7 +105,7 @@ class ImageFactory
     /**
      * Creates an Image object.
      *
-     * @param string                                 $path The path to the source image
+     * @param string|ImageInterface                  $path The path to the source image or an Image object
      * @param int|array|ResizeConfigurationInterface $size The ID of an image size
      *                                                     or an array with width, height and resize mode
      *                                                     or a ResizeConfiguration object
@@ -114,19 +115,25 @@ class ImageFactory
      */
     public function create($path, $size = null, $targetPath = null)
     {
-        $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-        if (in_array($fileExtension, ['svg', 'svgz'])) {
-            $imagine = $this->imagineSvg;
+        if (is_object($path) && $path instanceof ImageInterface) {
+            $image = $path;
         } else {
-            $imagine = $this->imagine;
-        }
 
-        if (!in_array($fileExtension, $this->validExtensions)) {
-            throw new \InvalidArgumentException('Image type "' . $fileExtension . '" was not allowed to be processed');
-        }
+            $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-        $image = new Image($imagine, $this->filesystem, (string) $path);
+            if (in_array($fileExtension, ['svg', 'svgz'])) {
+                $imagine = $this->imagineSvg;
+            } else {
+                $imagine = $this->imagine;
+            }
+
+            if (!in_array($fileExtension, $this->validExtensions)) {
+                throw new \InvalidArgumentException('Image type "' . $fileExtension . '" was not allowed to be processed');
+            }
+
+            $image = new Image($imagine, $this->filesystem, (string) $path);
+
+        }
 
         if (is_object($size) && $size instanceof ResizeConfigurationInterface) {
             $resizeConfig = $size;
@@ -136,10 +143,12 @@ class ImageFactory
             list($resizeConfig, $importantPart) = $this->createConfig($size, $image);
         }
 
-        if (null === $importantPart) {
-            $importantPart = $this->createImportantPart($image->getPath());
+        if (!is_object($path) || !($path instanceof ImageInterface)) {
+            if (null === $importantPart) {
+                $importantPart = $this->createImportantPart($image->getPath());
+            }
+            $image->setImportantPart($importantPart);
         }
-        $image->setImportantPart($importantPart);
 
         if ($resizeConfig->isEmpty() && $targetPath === null) {
             return $image;
