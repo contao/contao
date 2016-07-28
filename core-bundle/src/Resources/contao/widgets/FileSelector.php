@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Contao\Image\ResizeConfiguration;
+use Contao\Image\Resize\ResizeConfiguration;
 
 
 /**

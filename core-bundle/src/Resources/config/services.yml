@@ -132,7 +132,7 @@ services:
         class: Contao\ImagineSvg\Imagine
 
     contao.image.resize_calculator:
-        class: Contao\Image\ResizeCalculator
+        class: Contao\Image\Resize\ResizeCalculator
         public: false
 
     contao.image.resizer:
@@ -158,7 +158,7 @@ services:
             - %contao.image.valid_extensions%
 
     contao.image.picture_generator:
-        class: Contao\Image\PictureGenerator
+        class: Contao\Image\Picture\PictureGenerator
         arguments:
             - "@contao.image.resizer"
 
