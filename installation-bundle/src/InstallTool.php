@@ -39,8 +39,8 @@ class InstallTool
     /**
      * Constructor.
      *
-     * @param Connection $connection The database connection
-     * @param string     $rootDir    The root directory
+     * @param Connection $connection
+     * @param string     $rootDir
      */
     public function __construct(Connection $connection, $rootDir)
     {
@@ -51,7 +51,7 @@ class InstallTool
     /**
      * Returns true if the install tool has been locked.
      *
-     * @return bool True if the install tool has been locked
+     * @return bool
      */
     public function isLocked()
     {
@@ -67,7 +67,7 @@ class InstallTool
     /**
      * Returns true if the install tool can write files.
      *
-     * @return bool True if the install tool can write files
+     * @return bool
      */
     public function canWriteFiles()
     {
@@ -77,7 +77,7 @@ class InstallTool
     /**
      * Checks if the license has been accepted.
      *
-     * @return bool True if the license has not been accepted yet
+     * @return bool
      */
     public function shouldAcceptLicense()
     {
@@ -111,7 +111,7 @@ class InstallTool
     /**
      * Sets a database connection object.
      *
-     * @param Connection $connection The connection object
+     * @param Connection $connection
      */
     public function setConnection(Connection $connection)
     {
@@ -121,9 +121,9 @@ class InstallTool
     /**
      * Checks if a database connection can be established.
      *
-     * @param string $name The database name
+     * @param string $name
      *
-     * @return bool True if a database connection can be established
+     * @return bool
      */
     public function canConnectToDatabase($name)
     {
@@ -151,9 +151,9 @@ class InstallTool
     /**
      * Checks if a table exists.
      *
-     * @param string $name The table name
+     * @param string $name
      *
-     * @return bool True if the table exists.
+     * @return bool
      */
     public function hasTable($name)
     {
@@ -163,7 +163,7 @@ class InstallTool
     /**
      * Checks if the installation is fresh.
      *
-     * @return bool True if the installation is fresh
+     * @return bool
      */
     public function isFreshInstallation()
     {
@@ -183,7 +183,7 @@ class InstallTool
     /**
      * Checks if the database is older than version 3.2.
      *
-     * @return bool True if the database is older than version 3.2
+     * @return bool
      */
     public function hasOldDatabase()
     {
@@ -217,7 +217,7 @@ class InstallTool
     /**
      * Returns the available SQL templates.
      *
-     * @return array The SQL templates
+     * @return array
      */
     public function getTemplates()
     {
@@ -240,8 +240,8 @@ class InstallTool
     /**
      * Imports a template.
      *
-     * @param string $template     The template path
-     * @param bool   $preserveData True to preserve the existing data
+     * @param string $template
+     * @param bool   $preserveData
      */
     public function importTemplate($template, $preserveData = false)
     {
@@ -265,7 +265,7 @@ class InstallTool
     /**
      * Checks if there is an admin user.
      *
-     * @return bool True if there is an admin user
+     * @return bool
      */
     public function hasAdminUser()
     {
@@ -285,11 +285,11 @@ class InstallTool
     /**
      * Persists the admin user.
      *
-     * @param string $username The username
-     * @param string $name     The name
-     * @param string $email    The e-mail address
-     * @param string $password The plain text password
-     * @param string $language The language
+     * @param string $username
+     * @param string $name
+     * @param string $email
+     * @param string $password
+     * @param string $language
      */
     public function persistAdminUser($username, $name, $email, $password, $language)
     {
@@ -348,9 +348,9 @@ class InstallTool
     /**
      * Returns a Contao parameter.
      *
-     * @param string $key The key
+     * @param string $key
      *
-     * @return mixed|null The value
+     * @return mixed|null
      */
     public function getConfig($key)
     {
@@ -360,8 +360,8 @@ class InstallTool
     /**
      * Sets a Contao parameter.
      *
-     * @param string $key   The key
-     * @param mixed  $value The value
+     * @param string $key
+     * @param mixed  $value
      */
     public function setConfig($key, $value)
     {
@@ -371,8 +371,8 @@ class InstallTool
     /**
      * Persists a Contao parameter.
      *
-     * @param string $key   The key
-     * @param mixed  $value The value
+     * @param string $key
+     * @param mixed  $value
      */
     public function persistConfig($key, $value)
     {
@@ -384,7 +384,7 @@ class InstallTool
     /**
      * Logs an exception in the current log file.
      *
-     * @param \Exception $e The exception
+     * @param \Exception $e
      */
     public function logException(\Exception $e)
     {

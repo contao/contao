@@ -32,7 +32,7 @@ class InstallToolUser
     /**
      * Constructor.
      *
-     * @param Session $session The session object
+     * @param Session $session
      */
     public function __construct(Session $session)
     {
@@ -42,7 +42,7 @@ class InstallToolUser
     /**
      * Checks if the user is authenticated.
      *
-     * @return bool True if the user is authenticated
+     * @return bool
      */
     public function isAuthenticated()
     {
@@ -59,7 +59,7 @@ class InstallToolUser
     /**
      * Sets the authentication flag.
      *
-     * @param bool $authenticated The authentication status
+     * @param bool $authenticated
      */
     public function setAuthenticated($authenticated)
     {
