@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### 1.1.2 (2016-XX-XX)
+### 1.1.2 (2016-07-28)
 
  * Fix the install tool redirect when the real system is bootable.
 
