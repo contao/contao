@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.2.3 (2016-XX-XX)
+
+ * Correctly reset the filter menu in parent view.
+
 ### 4.2.2 (2016-07-28)
 
  * Adjust the command scheduler default configuration.

@@ -4924,6 +4924,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$data = $objSessionBag->all();
 
 			unset($data['filter'][$this->strTable]);
+			unset($data['filter'][$this->strTable.'_'.CURRENT_ID]);
 			unset($data['sorting'][$this->strTable]);
 			unset($data['search'][$this->strTable]);
 
