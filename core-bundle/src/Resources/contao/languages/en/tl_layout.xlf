@@ -176,6 +176,12 @@
       <trans-unit id="tl_layout.loadingOrder.1">
         <source>Here you can select the loading order of the style sheets.</source>
       </trans-unit>
+      <trans-unit id="tl_layout.combineScripts.0">
+        <source>Combine scripts</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.combineScripts.1">
+        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
+      </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
       </trans-unit>

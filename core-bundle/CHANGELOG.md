@@ -2,6 +2,7 @@
 
 ### 4.3.0-beta1 (2016-XX-XX)
 
- * Automatically find the template files. 
+ * Make script combination optional in case the website supports HTTP/2 (see #484).
+ * Automatically find the template files.
  * Make the legacy configuration files optional (see #521).
  * Move the analytics templates to the head section (see contao/core#8182).

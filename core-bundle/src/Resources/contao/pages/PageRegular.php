@@ -89,6 +89,9 @@ class PageRegular extends \Frontend
 		/** @var ThemeModel $objTheme */
 		$objTheme = $objLayout->getRelated('pid');
 
+		// Store the layout ID
+		$objPage->layoutId = $objLayout->id;
+
 		// Set the layout template and template group
 		$objPage->template = $objLayout->template ?: 'fe_page';
 		$objPage->templateGroup = $objTheme->templates;

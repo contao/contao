@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections,sPosition;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder;{picturefill_legend:hide},picturefill;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
+		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections,sPosition;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder,combineScripts;{picturefill_legend:hide},picturefill;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
 	),
 
 	// Subpalettes
@@ -272,7 +272,16 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'select',
 			'options'                 => array('external_first', 'internal_first'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(16) NOT NULL default ''"
+		),
+		'combineScripts' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['combineScripts'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50 m12'),
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'modules' => array
 		(
