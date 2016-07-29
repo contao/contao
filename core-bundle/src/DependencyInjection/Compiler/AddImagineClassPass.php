@@ -19,8 +19,17 @@ use Imagine\Exception\RuntimeException;
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
-class DetermineImagineImplementation implements CompilerPassInterface
+class AddImagineClassPass implements CompilerPassInterface
 {
+    /**
+     * @var array
+     */
+    private $implementations = [
+        'Imagick',
+        'Gmagick',
+        'Gd',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -36,18 +45,19 @@ class DetermineImagineImplementation implements CompilerPassInterface
      */
     private function getImagineImplementation()
     {
-        foreach (['Imagick', 'Gmagick', 'Gd'] as $name) {
+        foreach ($this->implementations as $name) {
             $class = 'Imagine\\'.$name.'\\Imagine';
 
-            // Tests the Imagine class which throws an exception if the parent PHP implementation is not available.
+            // Will throw an exception if the parent PHP implementation is not available
             try {
                 new $class();
-
-                return $class;
             } catch (RuntimeException $exception) {
+                continue;
             }
+
+            return $class;
         }
 
-        throw new \RuntimeException('No Imagine implementation is available (IMagick, GMagick or GD)');
+        throw new \RuntimeException('No Imagine implementation is available (Imagick, Gmagick or Gd)');
     }
 }
