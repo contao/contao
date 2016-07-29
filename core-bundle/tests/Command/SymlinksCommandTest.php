@@ -83,7 +83,7 @@ class SymlinksCommandTest extends TestCase
         $this->assertContains('web/system/themes', $display);
         $this->assertContains('system/themes', $display);
         $this->assertContains('system/logs', $display);
-        $this->assertContains('app/logs', $display);
+        $this->assertContains('var/logs', $display);
     }
 
     /**

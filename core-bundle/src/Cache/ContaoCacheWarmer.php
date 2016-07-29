@@ -65,12 +65,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Constructor.
      *
-     * @param Filesystem               $filesystem The filesystem object
-     * @param ResourceFinderInterface  $finder     The resource finder object
-     * @param FileLocator              $locator    The file locator
-     * @param string                   $rootDir    The root directory
-     * @param Connection               $connection The Doctrine connection
-     * @param ContaoFrameworkInterface $framework  The framework service
+     * @param Filesystem               $filesystem
+     * @param ResourceFinderInterface  $finder
+     * @param FileLocator              $locator
+     * @param string                   $rootDir
+     * @param Connection               $connection
+     * @param ContaoFrameworkInterface $framework
      */
     public function __construct(
         Filesystem $filesystem,
@@ -83,7 +83,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->filesystem = $filesystem;
         $this->finder = $finder;
         $this->locator = $locator;
-        $this->rootDir = dirname($rootDir);
+        $this->rootDir = $rootDir;
         $this->connection = $connection;
         $this->framework = $framework;
     }
@@ -104,6 +104,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->generateDcaCache($cacheDir);
         $this->generateLanguageCache($cacheDir);
         $this->generateDcaExtracts($cacheDir);
+        $this->generateTemplateMapper($cacheDir);
     }
 
     /**
@@ -117,7 +118,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Generates the config cache.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $cacheDir
      */
     private function generateConfigCache($cacheDir)
     {
@@ -134,7 +135,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Generates the cache mapper array.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $cacheDir
      */
     private function generateCacheMapper($cacheDir)
     {
@@ -164,7 +165,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Generates the DCA cache.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $cacheDir
      */
     private function generateDcaCache($cacheDir)
     {
@@ -196,7 +197,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Generates the language cache.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $cacheDir
      */
     private function generateLanguageCache($cacheDir)
     {
@@ -249,7 +250,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Generates the DCA extracts.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $cacheDir
      */
     private function generateDcaExtracts($cacheDir)
     {
@@ -287,9 +288,36 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
+     * Generates the template mapper array.
+     *
+     * @param string $cacheDir The cache directory
+     */
+    private function generateTemplateMapper($cacheDir)
+    {
+        $mapper = [];
+
+        try {
+            foreach ($this->finder->findIn('templates')->name('*.html5') as $file) {
+                $mapper[$file->getBasename('.html5')] = str_replace(
+                    strtr(dirname($this->rootDir), '\\', '/').'/',
+                    '',
+                    strtr($file->getPath(), '\\', '/')
+                );
+            }
+        } catch (\InvalidArgumentException $e) {
+            // ignore
+        }
+
+        $this->filesystem->dumpFile(
+            $cacheDir.'/contao/config/templates.php',
+            sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true))
+        );
+    }
+
+    /**
      * Returns the languages which are currently in use.
      *
-     * @return array The languages array
+     * @return array
      */
     private function getLanguagesInUse()
     {
@@ -325,7 +353,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Checks if the installation is complete.
      *
-     * @return bool True if the installation is complete
+     * @return bool
      */
     private function isCompleteInstallation()
     {

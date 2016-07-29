@@ -137,7 +137,7 @@ class InsertTags extends \Controller
 					}
 					else
 					{
-						$arrCache[$strTag] = $arrCache[$strTag] = '<span lang="' . $elements[1] . '">';
+						$arrCache[$strTag] = $arrCache[$strTag] = '<span lang="' . \StringUtil::specialchars($elements[1]) . '">';
 					}
 					break;
 
@@ -690,7 +690,7 @@ class InsertTags extends \Controller
 				case 'acronym':
 					if ($elements[1] != '')
 					{
-						$arrCache[$strTag] = '<abbr title="'. $elements[1] .'">';
+						$arrCache[$strTag] = '<abbr title="'. \StringUtil::specialchars($elements[1]) .'">';
 					}
 					else
 					{
@@ -734,7 +734,7 @@ class InsertTags extends \Controller
 									break;
 
 								case 'alt':
-									$alt = \StringUtil::specialchars($value);
+									$alt = $value;
 									break;
 
 								case 'class':
@@ -817,10 +817,10 @@ class InsertTags extends \Controller
 							// Add the image dimensions
 							if (($imgSize = $objFile->imageSize) !== false)
 							{
-								$dimensions = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
+								$dimensions = ' width="' . \StringUtil::specialchars($imgSize[0]) . '" height="' . \StringUtil::specialchars($imgSize[1]) . '"';
 							}
 
-							$arrCache[$strTag] = '<img src="' . TL_FILES_URL . $src . '" ' . $dimensions . ' alt="' . $alt . '"' . (($class != '') ? ' class="' . $class . '"' : '') . '>';
+							$arrCache[$strTag] = '<img src="' . TL_FILES_URL . $src . '" ' . $dimensions . ' alt="' . \StringUtil::specialchars($alt) . '"' . (($class != '') ? ' class="' . \StringUtil::specialchars($class) . '"' : '') . '>';
 						}
 
 						// Picture
@@ -844,14 +844,14 @@ class InsertTags extends \Controller
 						{
 							if (strncmp($rel, 'lightbox', 8) !== 0)
 							{
-								$attribute = ' rel="' . $rel . '"';
+								$attribute = ' rel="' . \StringUtil::specialchars($rel) . '"';
 							}
 							else
 							{
-								$attribute = ' data-lightbox="' . substr($rel, 8) . '"';
+								$attribute = ' data-lightbox="' . \StringUtil::specialchars(substr($rel, 8)) . '"';
 							}
 
-							$arrCache[$strTag] = '<a href="' . TL_FILES_URL . $strFile . '"' . (($alt != '') ? ' title="' . $alt . '"' : '') . $attribute . '>' . $arrCache[$strTag] . '</a>';
+							$arrCache[$strTag] = '<a href="' . TL_FILES_URL . $strFile . '"' . (($alt != '') ? ' title="' . \StringUtil::specialchars($alt) . '"' : '') . $attribute . '>' . $arrCache[$strTag] . '</a>';
 						}
 					}
 					catch (\Exception $e)
@@ -944,7 +944,6 @@ class InsertTags extends \Controller
 					switch ($flag)
 					{
 						case 'addslashes':
-						case 'stripslashes':
 						case 'standardize':
 						case 'ampersand':
 						case 'specialchars':
@@ -961,14 +960,12 @@ class InsertTags extends \Controller
 						case 'rtrim':
 						case 'ltrim':
 						case 'utf8_romanize':
-						case 'strrev':
 						case 'urlencode':
 						case 'rawurlencode':
 							$arrCache[$strTag] = $flag($arrCache[$strTag]);
 							break;
 
 						case 'encodeEmail':
-						case 'decodeEntities':
 							$arrCache[$strTag] = \StringUtil::$flag($arrCache[$strTag]);
 							break;
 

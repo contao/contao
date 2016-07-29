@@ -45,9 +45,9 @@ class UserSessionListenerTest extends TestCase
     /**
      * Tests that the session is replaced upon kernel.request.
      *
-     * @param string $scope          The container scope
-     * @param string $userClass      The user class
-     * @param string $sessionBagName The session bag
+     * @param string $scope
+     * @param string $userClass
+     * @param string $sessionBagName
      *
      * @dataProvider scopeBagProvider
      */
@@ -108,9 +108,9 @@ class UserSessionListenerTest extends TestCase
     /**
      * Tests that the session is stored upon kernel.response.
      *
-     * @param string $scope     The container scope
-     * @param string $userClass The user class
-     * @param string $userTable The table name
+     * @param string $scope
+     * @param string $userClass
+     * @param string $userTable
      *
      * @dataProvider scopeTableProvider
      */
@@ -172,7 +172,7 @@ class UserSessionListenerTest extends TestCase
     /**
      * Tests that the session bag is not requested when there is no user.
      *
-     * @param AnonymousToken $noUserReturn The user token
+     * @param AnonymousToken $noUserReturn
      *
      * @dataProvider noUserProvider
      */
@@ -206,7 +206,7 @@ class UserSessionListenerTest extends TestCase
     /**
      * Tests that neither the session bag nor doctrine is requested when there is no user.
      *
-     * @param AnonymousToken $noUserReturn The user token
+     * @param AnonymousToken $noUserReturn
      *
      * @dataProvider noUserProvider
      */
@@ -417,7 +417,7 @@ class UserSessionListenerTest extends TestCase
     /**
      * Provides the data for the testSessionReplacedOnKernelRequest() method.
      *
-     * @return array The test data
+     * @return array
      */
     public function scopeBagProvider()
     {
@@ -430,7 +430,7 @@ class UserSessionListenerTest extends TestCase
     /**
      * Provides the data for the testSessionStoredOnKernelResponse() method.
      *
-     * @return array The test data
+     * @return array
      */
     public function scopeTableProvider()
     {
@@ -443,7 +443,7 @@ class UserSessionListenerTest extends TestCase
     /**
      * Provides the data for the user-less tests.
      *
-     * @return array The test data
+     * @return array
      */
     public function noUserProvider()
     {
@@ -456,11 +456,11 @@ class UserSessionListenerTest extends TestCase
     /**
      * Returns the session listener object.
      *
-     * @param SessionInterface      $session      The session object
-     * @param Connection            $connection   The database connection
-     * @param TokenStorageInterface $tokenStorage The token storage object
+     * @param SessionInterface      $session
+     * @param Connection            $connection
+     * @param TokenStorageInterface $tokenStorage
      *
-     * @return UserSessionListener The session listener object
+     * @return UserSessionListener
      */
     private function getListener(
         SessionInterface $session = null,

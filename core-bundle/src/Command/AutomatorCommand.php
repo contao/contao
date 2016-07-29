@@ -71,7 +71,7 @@ class AutomatorCommand extends AbstractLockedCommand
      * By using the __toString() method, we ensure that the help text is lazy loaded at
      * a time where the autoloader is available (required by $this->getCommands()).
      *
-     * @return string The help text
+     * @return string
      */
     public function __toString()
     {
@@ -81,8 +81,8 @@ class AutomatorCommand extends AbstractLockedCommand
     /**
      * Runs the Automator.
      *
-     * @param InputInterface  $input  The input object
-     * @param OutputInterface $output The output object
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      */
     private function runAutomator(InputInterface $input, OutputInterface $output)
     {
@@ -95,7 +95,7 @@ class AutomatorCommand extends AbstractLockedCommand
     /**
      * Returns a list of available commands.
      *
-     * @return array The commands array
+     * @return array
      */
     private function getCommands()
     {
@@ -109,7 +109,7 @@ class AutomatorCommand extends AbstractLockedCommand
     /**
      * Generates the command map from the Automator class.
      *
-     * @return array The commands array
+     * @return array
      */
     private function generateCommandMap()
     {
@@ -133,10 +133,10 @@ class AutomatorCommand extends AbstractLockedCommand
     /**
      * Returns the task name from the argument list or via an interactive dialog.
      *
-     * @param InputInterface  $input  The input context
-     * @param OutputInterface $output The output context
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      *
-     * @return string|null The task name or null
+     * @return string|null
      */
     private function getTaskFromInput(InputInterface $input, OutputInterface $output)
     {

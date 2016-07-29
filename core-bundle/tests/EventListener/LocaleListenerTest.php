@@ -37,8 +37,8 @@ class LocaleListenerTest extends TestCase
     /**
      * Tests the onKernelRequest() method with a request attribute.
      *
-     * @param string $locale   The locale
-     * @param string $expected The expected locale
+     * @param string $locale
+     * @param string $expected
      *
      * @dataProvider localeTestData
      */
@@ -63,8 +63,8 @@ class LocaleListenerTest extends TestCase
     /**
      * Tests the onKernelRequest() method with the session locale.
      *
-     * @param string $locale   The locale
-     * @param string $expected The expected locale
+     * @param string $locale
+     * @param string $expected
      *
      * @dataProvider localeTestData
      */
@@ -90,9 +90,9 @@ class LocaleListenerTest extends TestCase
     /**
      * Tests the onKernelRequest() method with an accept language header.
      *
-     * @param string $locale    The locale
-     * @param string $expected  The expected locale
-     * @param array  $available The available languages
+     * @param string $locale
+     * @param string $expected
+     * @param array  $available
      *
      * @dataProvider acceptLanguageTestData
      */
@@ -137,8 +137,8 @@ class LocaleListenerTest extends TestCase
     /**
      * Tests the onKernelRequest() method without session.
      *
-     * @param string $locale   The locale
-     * @param string $expected The expected locale
+     * @param string $locale
+     * @param string $expected
      *
      * @dataProvider localeTestData
      */
@@ -196,7 +196,7 @@ class LocaleListenerTest extends TestCase
     /**
      * Provides the test data for the locale tests.
      *
-     * @return array The test data
+     * @return array
      */
     public function localeTestData()
     {
@@ -213,7 +213,7 @@ class LocaleListenerTest extends TestCase
     /**
      * Provides the test data for the accept language header tests.
      *
-     * @return array The test data
+     * @return array
      */
     public function acceptLanguageTestData()
     {

@@ -42,7 +42,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests an invalid upload path.
      *
-     * @param string $uploadPath The upload path
+     * @param string $uploadPath
      *
      * @dataProvider invalidUploadPathProvider
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
@@ -62,7 +62,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     /**
      * Provides the data for the testInvalidUploadPath() method.
      *
-     * @return array The test data
+     * @return array
      */
     public function invalidUploadPathProvider()
     {

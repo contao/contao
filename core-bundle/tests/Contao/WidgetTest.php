@@ -36,10 +36,10 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests the getPost() method.
      *
-     * @param string $key      The key
-     * @param string $input    The input
-     * @param mixed  $value    The value
-     * @param string $expected The expected value
+     * @param string $key
+     * @param string $input
+     * @param mixed  $value
+     * @param string $expected
      *
      * @dataProvider postProvider
      */
@@ -68,7 +68,7 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
     /**
      * Provides the data for the testGetPost() method.
      *
-     * @return array The data
+     * @return array
      */
     public function postProvider()
     {

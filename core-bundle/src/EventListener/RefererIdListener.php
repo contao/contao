@@ -32,7 +32,7 @@ class RefererIdListener
     /**
      * Constructor.
      *
-     * @param CsrfTokenManagerInterface $tokenManager The token manager service
+     * @param CsrfTokenManagerInterface $tokenManager
      */
     public function __construct(CsrfTokenManagerInterface $tokenManager)
     {
@@ -42,7 +42,7 @@ class RefererIdListener
     /**
      * Adds the referer ID to the request.
      *
-     * @param GetResponseEvent $event The event object
+     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {

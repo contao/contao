@@ -93,7 +93,7 @@ class GdImageTest extends TestCase
     /**
      * Tests the fromFile() method.
      *
-     * @param string $type The image type
+     * @param string $type
      *
      * @dataProvider getImageTypes
      */
@@ -126,7 +126,7 @@ class GdImageTest extends TestCase
     /**
      * Tests the saveToFile() method.
      *
-     * @param string $type The image type
+     * @param string $type
      *
      * @dataProvider getImageTypes
      */
@@ -315,7 +315,7 @@ class GdImageTest extends TestCase
     /**
      * Provides the image types for the tests.
      *
-     * @return array The image types
+     * @return array
      */
     public function getImageTypes()
     {

@@ -27,7 +27,7 @@ class ResourceFinder implements ResourceFinderInterface
     /**
      * Constructor.
      *
-     * @param string|array $paths A path or an array of paths where to look for resources
+     * @param string|array $paths
      */
     public function __construct($paths = [])
     {
@@ -53,11 +53,11 @@ class ResourceFinder implements ResourceFinderInterface
     /**
      * Returns an array of existing subpaths.
      *
-     * @param string $subpath The path to append
+     * @param string $subpath
      *
-     * @return array The subpaths array
+     * @return array
      *
-     * @throws \InvalidArgumentException If the subpath does not exist
+     * @throws \InvalidArgumentException
      */
     private function getExistingSubpaths($subpath)
     {

@@ -28,7 +28,7 @@ class InitializeController extends Controller
     /**
      * Initializes the Contao framework.
      *
-     * @return InitializeControllerResponse The response object
+     * @return InitializeControllerResponse
      *
      * @Route("/_contao/initialize", name="contao_initialize")
      */

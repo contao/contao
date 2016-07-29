@@ -37,8 +37,8 @@ class ContaoUserProvider implements UserProviderInterface
     /**
      * Constructor.
      *
-     * @param ContainerInterface       $container The service container
-     * @param ContaoFrameworkInterface $framework The Contao framework service
+     * @param ContainerInterface
+     * @param ContaoFrameworkInterface
      */
     public function __construct(ContainerInterface $container, ContaoFrameworkInterface $framework)
     {
@@ -49,7 +49,7 @@ class ContaoUserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @return BackendUser|FrontendUser The user object
+     * @return BackendUser|FrontendUser
      */
     public function loadUserByUsername($username)
     {
@@ -87,9 +87,9 @@ class ContaoUserProvider implements UserProviderInterface
     /**
      * Checks if the given username can be mapped to a front end user.
      *
-     * @param string $username The username
+     * @param string $username
      *
-     * @return bool True if the username can be mapped to a front end user
+     * @return bool
      */
     private function isFrontendUsername($username)
     {
@@ -99,9 +99,9 @@ class ContaoUserProvider implements UserProviderInterface
     /**
      * Checks if the given username can be mapped to a back end user.
      *
-     * @param string $username The username
+     * @param string $username
      *
-     * @return bool True if the username can be mapped to a back end user
+     * @return bool
      */
     private function isBackendUsername($username)
     {

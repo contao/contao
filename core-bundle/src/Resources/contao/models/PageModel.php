@@ -87,6 +87,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property array   $subpages
  * @property string  $outputFormat
  * @property string  $outputVariant
+ * @property integer $layoutId
  * @property boolean $hasJQuery
  * @property boolean $hasMooTools
  * @property boolean $isMobile

@@ -23,7 +23,7 @@ interface ContaoFrameworkInterface
     /**
      * Checks if the framework has been initialized.
      *
-     * @return bool True if the framework has been initialized
+     * @return bool
      */
     public function isInitialized();
 

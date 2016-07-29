@@ -114,6 +114,7 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists($this->getCacheDir().'/contao/config/autoload.php');
         $this->assertFileExists($this->getCacheDir().'/contao/config/config.php');
         $this->assertFileExists($this->getCacheDir().'/contao/config/mapping.php');
+        $this->assertFileExists($this->getCacheDir().'/contao/config/templates.php');
         $this->assertFileExists($this->getCacheDir().'/contao/dca');
         $this->assertFileExists($this->getCacheDir().'/contao/dca/tl_test.php');
         $this->assertFileExists($this->getCacheDir().'/contao/languages');

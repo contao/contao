@@ -27,7 +27,7 @@ class PreviewUrlConvertEvent extends Event
     /**
      * Returns the URL.
      *
-     * @return string The URL
+     * @return string
      */
     public function getUrl()
     {
@@ -37,7 +37,7 @@ class PreviewUrlConvertEvent extends Event
     /**
      * Sets the URL.
      *
-     * @param string $url The URL
+     * @param string $url
      */
     public function setUrl($url)
     {

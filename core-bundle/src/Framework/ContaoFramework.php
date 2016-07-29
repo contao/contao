@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
+use Contao\TemplateLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -92,11 +93,11 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Constructor.
      *
-     * @param RequestStack     $requestStack The request stack
-     * @param RouterInterface  $router       The router service
-     * @param SessionInterface $session      The session service
-     * @param string           $rootDir      The kernel root directory
-     * @param int              $errorLevel   The PHP error level
+     * @param RequestStack     $requestStack
+     * @param RouterInterface  $router
+     * @param SessionInterface $session
+     * @param string           $rootDir
+     * @param int              $errorLevel
      */
     public function __construct(
         RequestStack $requestStack,
@@ -107,7 +108,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     ) {
         $this->router = $router;
         $this->session = $session;
-        $this->rootDir = dirname($rootDir);
+        $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
         $this->requestStack = $requestStack;
     }
@@ -123,7 +124,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \LogicException If the container is not set
+     * @throws \LogicException
      */
     public function initialize()
     {
@@ -183,7 +184,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         define('TL_START', microtime(true));
-        define('TL_ROOT', $this->rootDir);
+        define('TL_ROOT', dirname($this->rootDir));
         define('TL_REFERER_ID', $this->getRefererId());
 
         if (!defined('TL_SCRIPT')) {
@@ -203,7 +204,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Returns the TL_MODE value.
      *
-     * @return string|null The TL_MODE value or null
+     * @return string|null
      */
     private function getMode()
     {
@@ -221,7 +222,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Returns the referer ID.
      *
-     * @return string|null The referer ID or null
+     * @return string|null
      */
     private function getRefererId()
     {
@@ -235,18 +236,21 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Returns the route.
      *
-     * @return string The route
+     * @return string|null
      */
     private function getRoute()
     {
         if (null === $this->request) {
-            return 'console';
+            return null;
         }
 
-        $route = $this->router->generate(
-            $this->request->attributes->get('_route'),
-            $this->request->attributes->get('_route_params')
-        );
+        $attributes = $this->request->attributes;
+
+        try {
+            $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
+        } catch (\InvalidArgumentException $e) {
+            return null;
+        }
 
         return substr($route, strlen($this->request->getBasePath()) + 1);
     }
@@ -254,7 +258,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Returns the base path.
      *
-     * @return string|null The base path
+     * @return string|null
      */
     private function getPath()
     {
@@ -297,6 +301,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         $this->validateInstallation();
 
         Input::initialize();
+        TemplateLoader::initialize();
 
         $this->setTimezone();
         $this->triggerInitializeSystemHook();
@@ -401,15 +406,20 @@ class ContaoFramework implements ContaoFrameworkInterface
             }
         }
 
-        if (file_exists($this->rootDir.'/system/config/initconfig.php')) {
-            include $this->rootDir.'/system/config/initconfig.php';
+        if (file_exists($this->rootDir.'/../system/config/initconfig.php')) {
+            @trigger_error(
+                'Using the initconfig.php file has been deprecated and will no longer work in Contao 5.0.',
+                E_USER_DEPRECATED
+            );
+
+            include $this->rootDir.'/../system/config/initconfig.php';
         }
     }
 
     /**
      * Handles the request token.
      *
-     * @throws AjaxRedirectResponseException|InvalidRequestTokenException If the token is invalid
+     * @throws AjaxRedirectResponseException|InvalidRequestTokenException
      */
     private function handleRequestToken()
     {
@@ -435,8 +445,8 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Tries to set a php.ini configuration option.
      *
-     * @param string $key   The key
-     * @param mixed  $value The value
+     * @param string $key
+     * @param mixed  $value
      */
     private function iniSet($key, $value)
     {
@@ -448,7 +458,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Checks if the token check can be skipped.
      *
-     * @return bool True if the token check can be skipped
+     * @return bool True
      */
     private function canSkipTokenCheck()
     {

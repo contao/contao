@@ -742,7 +742,7 @@ class File extends \System
 	 *
 	 * @throws ResponseException
 	 */
-	public function sendToBrowser($filename=null)
+	public function sendToBrowser($filename='')
 	{
 		$response = new BinaryFileResponse(TL_ROOT . '/' . $this->strFile);
 

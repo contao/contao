@@ -121,7 +121,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
     /**
      * Verifies the database connection and prepares the statement.
      *
-     * @throws \RuntimeException if the container has not been injected or the database service is missing
+     * @throws \RuntimeException
      */
     private function createStatement()
     {

@@ -37,8 +37,8 @@ class PreviewUrlCreateEvent extends Event
     /**
      * Constructor.
      *
-     * @param string $key The module key
-     * @param int    $id  The ID
+     * @param string $key
+     * @param int    $id
      */
     public function __construct($key, $id)
     {
@@ -49,7 +49,7 @@ class PreviewUrlCreateEvent extends Event
     /**
      * Returns the ID.
      *
-     * @return int The ID
+     * @return int
      */
     public function getId()
     {
@@ -59,7 +59,7 @@ class PreviewUrlCreateEvent extends Event
     /**
      * Returns the module key.
      *
-     * @return string The module key
+     * @return string
      */
     public function getKey()
     {
@@ -69,7 +69,7 @@ class PreviewUrlCreateEvent extends Event
     /**
      * Returns the query string.
      *
-     * @return string The query string
+     * @return string
      */
     public function getQuery()
     {
@@ -79,7 +79,7 @@ class PreviewUrlCreateEvent extends Event
     /**
      * Sets the query string.
      *
-     * @param string $query The query string
+     * @param string $query
      */
     public function setQuery($query)
     {

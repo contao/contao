@@ -47,6 +47,7 @@ class InstallCommand extends AbstractLockedCommand
      */
     private $emptyDirs = [
         'system',
+        'system/config',
         'templates',
         'web/system',
     ];
@@ -58,7 +59,6 @@ class InstallCommand extends AbstractLockedCommand
         'assets/css',
         'assets/js',
         'system/cache',
-        'system/config',
         'system/modules',
         'system/themes',
         'system/tmp',
@@ -114,7 +114,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * Adds an empty directory.
      *
-     * @param string $path The path
+     * @param string $path
      */
     private function addEmptyDir($path)
     {
@@ -142,7 +142,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * Adds a directory with a .gitignore file.
      *
-     * @param string $path The path
+     * @param string $path
      */
     private function addIgnoredDir($path)
     {

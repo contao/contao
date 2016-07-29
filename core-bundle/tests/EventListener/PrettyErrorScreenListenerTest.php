@@ -127,8 +127,8 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * Tests rendering the Contao page handler.
      *
-     * @param int        $type      The error type
-     * @param \Exception $exception The exception
+     * @param int        $type
+     * @param \Exception $exception
      *
      * @dataProvider getErrorTypes
      */
@@ -304,7 +304,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * Provides the data for the testContaoPageHandler() method.
      *
-     * @return array The error types
+     * @return array
      */
     public function getErrorTypes()
     {
@@ -317,9 +317,9 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * Mocks a token storage object.
      *
-     * @param string $userClass The user class
+     * @param string $userClass
      *
-     * @return TokenStorage|\PHPUnit_Framework_MockObject_MockObject The token storage object
+     * @return TokenStorage|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockTokenStorage($userClass = 'Contao\FrontendUser')
     {

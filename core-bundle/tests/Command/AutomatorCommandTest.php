@@ -106,7 +106,7 @@ class AutomatorCommandTest extends TestCase
 
         $code = $tester->execute([
             'command' => $command->getName(),
-            'task' => 'checkForUpdates',
+            'task' => 'purgeTempFolder',
         ]);
 
         $this->assertEquals(0, $code);
@@ -156,9 +156,9 @@ class AutomatorCommandTest extends TestCase
     /**
      * Converts a string into a stream.
      *
-     * @param string $input The input string
+     * @param string $input
      *
-     * @return resource The stream
+     * @return resource
      */
     private function getStreamFromInput($input)
     {
@@ -172,7 +172,7 @@ class AutomatorCommandTest extends TestCase
     /**
      * Returns the application object.
      *
-     * @return Application The application object
+     * @return Application
      */
     private function getApplication()
     {

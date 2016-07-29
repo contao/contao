@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FrontendCron;
+use Doctrine\DBAL\Connection;
 
 /**
  * Triggers the Contao command scheduler after the response has been sent.
@@ -27,13 +28,20 @@ class CommandSchedulerListener
     private $framework;
 
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $framework The Contao framework service
+     * @param ContaoFrameworkInterface $framework
+     * @param Connection               $connection
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFrameworkInterface $framework, Connection $connection)
     {
         $this->framework = $framework;
+        $this->connection = $connection;
     }
 
     /**
@@ -41,19 +49,28 @@ class CommandSchedulerListener
      */
     public function onKernelTerminate()
     {
-        if (!$this->framework->isInitialized()) {
-            return;
-        }
-
-        /** @var Config $config */
-        $config = $this->framework->getAdapter('Contao\Config');
-
-        if (!$config->isComplete() || $config->get('disableCron')) {
+        if (!$this->framework->isInitialized() || !$this->canRunController()) {
             return;
         }
 
         /** @var FrontendCron $controller */
         $controller = $this->framework->createInstance('Contao\FrontendCron');
         $controller->run();
+    }
+
+    /**
+     * Checks whether the controller can be run.
+     *
+     * @return bool
+     */
+    private function canRunController()
+    {
+        /** @var Config $config */
+        $config = $this->framework->getAdapter('Contao\Config');
+
+        return $config->isComplete()
+            && !$config->get('disableCron')
+            && $this->connection->getSchemaManager()->tablesExist('tl_cron')
+        ;
     }
 }
