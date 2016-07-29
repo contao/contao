@@ -269,12 +269,12 @@ class File extends \System
 							}
 							else
 							{
-								$this->arrImageViewSize = false;
+								$this->arrImageSize = false;
 							}
 						}
 						catch(\Exception $e)
 						{
-							$this->arrImageViewSize = false;
+							$this->arrImageSize = false;
 						}
 					}
 				}
@@ -316,7 +316,7 @@ class File extends \System
 								intval($dimensions->getSize()->getHeight())
 							);
 
-							if (!$this->arrImageViewSize || !$this->arrImageViewSize[0] || !$this->arrImageViewSize[1])
+							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1])
 							{
 								$this->arrImageViewSize = false;
 							}
@@ -545,6 +545,7 @@ class File extends \System
 
 		// Move the temporary file to its destination
 		$return = $this->Files->rename($this->strTmp, $this->strFile);
+
 		$this->strTmp = null;
 
 		// Update the database

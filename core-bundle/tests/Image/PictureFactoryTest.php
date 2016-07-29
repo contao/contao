@@ -16,12 +16,10 @@ use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\Image;
 use Contao\Image\PictureGenerator;
-use Contao\Image\Resizer;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
-use Imagine\Image\ImagineInterface;
-use Symfony\Component\Filesystem\Filesystem;
+use Contao\Model\Collection;
 
 /**
  * Tests the PictureFactory class.
@@ -197,7 +195,7 @@ class PictureFactoryTest extends TestCase
         $imageSizeItemAdapter
             ->expects($this->any())
             ->method('__call')
-            ->willReturn(new \Contao\Model\Collection([$imageSizeItemModel], 'tl_image_size_item'))
+            ->willReturn(new Collection([$imageSizeItemModel], 'tl_image_size_item'))
         ;
 
         $framework
@@ -206,8 +204,8 @@ class PictureFactoryTest extends TestCase
             ->will(
                 $this->returnCallback(function ($key) use ($imageSizeAdapter, $imageSizeItemAdapter) {
                     return [
-                        'Contao\\ImageSizeModel' => $imageSizeAdapter,
-                        'Contao\\ImageSizeItemModel' => $imageSizeItemAdapter,
+                        'Contao\ImageSizeModel' => $imageSizeAdapter,
+                        'Contao\ImageSizeItemModel' => $imageSizeItemAdapter,
                     ][$key];
                 })
             )
@@ -389,7 +387,12 @@ class PictureFactoryTest extends TestCase
                 $this->callback(function (PictureConfiguration $pictureConfig) {
                     $this->assertEquals(100, $pictureConfig->getSize()->getResizeConfig()->getWidth());
                     $this->assertEquals(200, $pictureConfig->getSize()->getResizeConfig()->getHeight());
-                    $this->assertEquals(ResizeConfiguration::MODE_BOX, $pictureConfig->getSize()->getResizeConfig()->getMode());
+
+                    $this->assertEquals(
+                        ResizeConfiguration::MODE_BOX,
+                        $pictureConfig->getSize()->getResizeConfig()->getMode()
+                    );
+
                     $this->assertEquals(0, $pictureConfig->getSize()->getResizeConfig()->getZoomLevel());
                     $this->assertEquals('', $pictureConfig->getSize()->getDensities());
                     $this->assertEquals('', $pictureConfig->getSize()->getSizes());
@@ -441,8 +444,13 @@ class PictureFactoryTest extends TestCase
      *
      * @return PictureFactory
      */
-    private function createPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null, $bypassCache = null, $imagineOptions = null)
-    {
+    private function createPictureFactory(
+        $pictureGenerator = null,
+        $imageFactory = null,
+        $framework = null,
+        $bypassCache = null,
+        $imagineOptions = null
+    ) {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this
                 ->getMockBuilder('Contao\Image\PictureGenerator')

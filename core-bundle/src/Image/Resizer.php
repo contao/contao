@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Image;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Imagine\Gd\Imagine as GdImagine;
 use Contao\Image as LegacyImage;
@@ -132,6 +133,7 @@ class Resizer extends ImageResizer
             }
         }
 
+        /* @var Config $config */
         $config = $this->framework->getAdapter('Contao\Config');
 
         if ($image->getImagine() instanceof GdImagine

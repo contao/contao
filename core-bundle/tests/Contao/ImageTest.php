@@ -79,6 +79,7 @@ class ImageTest extends TestCase
         define('TL_ROOT', self::$rootDir);
 
         $container = $this->mockContainerWithContaoScopes();
+
         $this->addImageServicesToContainer($container, self::$rootDir);
 
         System::setContainer($container);
@@ -716,10 +717,7 @@ class ImageTest extends TestCase
         $imageObj->setZoomLevel($arguments[5]);
         $imageObj->setImportantPart($arguments[6]);
 
-        $this->assertEquals(
-            $expectedResult,
-            $imageObj->computeResize()
-        );
+        $this->assertEquals($expectedResult, $imageObj->computeResize());
     }
 
     /**
@@ -1558,13 +1556,19 @@ class ImageTest extends TestCase
         $imageObj->setTargetPath('target.jpg');
         $imageObj->executeResize();
 
-        $this->assertSame('assets/dummy.jpg%26executeResize_100_100_crop_target.jpg_Contao-Image.jpg', $imageObj->getResizedPath());
+        $this->assertSame(
+            'assets/dummy.jpg%26executeResize_100_100_crop_target.jpg_Contao-Image.jpg',
+            $imageObj->getResizedPath()
+        );
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
         $imageObj->executeResize();
 
-        $this->assertSame('assets/dummy.jpg%26executeResize_200_200_crop__Contao-Image.jpg', $imageObj->getResizedPath());
+        $this->assertSame(
+            'assets/dummy.jpg%26executeResize_200_200_crop__Contao-Image.jpg',
+            $imageObj->getResizedPath()
+        );
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
@@ -1574,7 +1578,10 @@ class ImageTest extends TestCase
         $imageObj->setTargetPath('target.jpg');
         $imageObj->executeResize();
 
-        $this->assertSame('assets/dummy.jpg%26executeResize_200_200_crop_target.jpg_Contao-Image.jpg', $imageObj->getResizedPath());
+        $this->assertSame(
+            'assets/dummy.jpg%26executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
+            $imageObj->getResizedPath()
+        );
 
         unset($GLOBALS['TL_HOOKS']);
     }
@@ -1589,15 +1596,14 @@ class ImageTest extends TestCase
     public static function executeResizeHookCallback($imageObj)
     {
         // Do not include $cacheName as it is dynamic (mtime)
-        $path =
-            'assets/'
+        $path = 'assets/'
             .$imageObj->getOriginalPath()
-            .'&executeResize_'
-            .$imageObj->getTargetWidth().'_'
-            .$imageObj->getTargetHeight().'_'
-            .$imageObj->getResizeMode().'_'
-            .$imageObj->getTargetPath().'_'
-            .str_replace('\\', '-', get_class($imageObj))
+            .'&executeResize'
+            .'_'.$imageObj->getTargetWidth()
+            .'_'.$imageObj->getTargetHeight()
+            .'_'.$imageObj->getResizeMode()
+            .'_'.$imageObj->getTargetPath()
+            .'_'.str_replace('\\', '-', get_class($imageObj))
             .'.jpg'
         ;
 
@@ -1626,19 +1632,30 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(100)->setTargetHeight(100);
         $imageObj->executeResize();
 
-        $this->assertSame('assets/dummy.jpg%26getImage_100_100_crop_Contao-File__Contao-Image.jpg', $imageObj->getResizedPath());
+        $this->assertSame(
+            'assets/dummy.jpg%26getImage_100_100_crop_Contao-File__Contao-Image.jpg',
+            $imageObj->getResizedPath()
+        );
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth(50)->setTargetHeight(50);
         $imageObj->executeResize();
 
-        $this->assertRegExp('(^assets/images/.*dummy.*.jpg$)', $imageObj->getResizedPath(), 'Hook should not get called for cached images');
+        $this->assertRegExp(
+            '(^assets/images/.*dummy.*.jpg$)',
+            $imageObj->getResizedPath(),
+            'Hook should not get called for cached images'
+        );
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
         $imageObj->executeResize();
 
-        $this->assertSame('dummy.jpg', $imageObj->getResizedPath(), 'Hook should not get called if no resize is necessary');
+        $this->assertSame(
+            'dummy.jpg',
+            $imageObj->getResizedPath(),
+            'Hook should not get called if no resize is necessary'
+        );
 
         unset($GLOBALS['TL_HOOKS']);
     }
@@ -1657,19 +1674,26 @@ class ImageTest extends TestCase
      *
      * @return string
      */
-    public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj)
-    {
+    public static function getImageHookCallback(
+        $originalPath,
+        $targetWidth,
+        $targetHeight,
+        $resizeMode,
+        $cacheName,
+        $fileObj,
+        $targetPath,
+        $imageObj
+    ) {
         // Do not include $cacheName as it is dynamic (mtime)
-        $path =
-            'assets/'
+        $path = 'assets/'
             .$originalPath
-            .'&getImage_'
-            .$targetWidth.'_'
-            .$targetHeight.'_'
-            .$resizeMode.'_'
-            .str_replace('\\', '-', get_class($fileObj)).'_'
-            .$targetPath.'_'
-            .str_replace('\\', '-', get_class($imageObj))
+            .'&getImage'
+            .'_'.$targetWidth
+            .'_'.$targetHeight
+            .'_'.$resizeMode
+            .'_'.str_replace('\\', '-', get_class($fileObj))
+            .'_'.$targetPath
+            .'_'.str_replace('\\', '-', get_class($imageObj))
             .'.jpg'
         ;
 

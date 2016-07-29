@@ -19,6 +19,7 @@ use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\ImageSizeItemModel;
+use Contao\ImageSizeModel;
 
 /**
  * Creates Picture objects.
@@ -137,16 +138,15 @@ class PictureFactory implements PictureFactoryInterface
             return $config;
         }
 
-        $config->setSize(
-            $this->createConfigItem(
-                $this->framework->getAdapter('Contao\ImageSizeModel')->findByPk($size[2])
-            )
-        );
+        /* @var ImageSizeModel $imageSizeModel */
+        $imageSizeModel = $this->framework->getAdapter('Contao\ImageSizeModel');
 
-        $imageSizeItems = $this->framework
-            ->getAdapter('Contao\\ImageSizeItemModel')
-            ->findVisibleByPid($size[2], ['order' => 'sorting ASC'])
-        ;
+        $config->setSize($this->createConfigItem($imageSizeModel->findByPk($size[2])));
+
+        /* @var ImageSizeItemModel $imageSizeItemModel */
+        $imageSizeItemModel = $this->framework->getAdapter('Contao\ImageSizeItemModel');
+
+        $imageSizeItems = $imageSizeItemModel->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
 
         if (null !== $imageSizeItems) {
             $configItems = [];
@@ -164,7 +164,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * Creates a picture configuration item.
      *
-     * @param ImageSizeItemModel $imageSize
+     * @param ImageSizeModel|ImageSizeItemModel $imageSize
      *
      * @return PictureConfigurationItem
      */

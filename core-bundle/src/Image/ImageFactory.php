@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\Image;
 
+use Contao\FilesModel;
+use Contao\ImageSizeModel;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\ImagineInterface;
@@ -162,10 +164,9 @@ class ImageFactory implements ImageFactoryInterface
         $config = new ResizeConfiguration();
 
         if (isset($size[2]) && is_numeric($size[2])) {
-            $imageSize = $this->framework
-                ->getAdapter('Contao\\ImageSizeModel')
-                ->findByPk($size[2])
-            ;
+            /* @var ImageSizeModel $imageModel */
+            $imageModel = $this->framework->getAdapter('Contao\ImageSizeModel');
+            $imageSize = $imageModel->findByPk($size[2]);
 
             if (null !== $imageSize) {
                 $config
@@ -237,10 +238,9 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function createImportantPart($path)
     {
-        $file = $this->framework
-            ->getAdapter('Contao\FilesModel')
-            ->findByPath($path)
-        ;
+        /* @var FilesModel $filesModel */
+        $filesModel = $this->framework->getAdapter('Contao\FilesModel');
+        $file = $filesModel->findByPath($path);
 
         if (null === $file || !$file->importantPartWidth || !$file->importantPartHeight) {
             return null;

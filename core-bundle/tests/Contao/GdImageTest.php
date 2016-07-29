@@ -85,8 +85,18 @@ class GdImageTest extends TestCase
         $this->assertTrue(imageistruecolor($image->getResource()));
         $this->assertEquals(100, imagesx($image->getResource()));
         $this->assertEquals(100, imagesy($image->getResource()));
-        $this->assertEquals(127, imagecolorsforindex($image->getResource(), imagecolorat($image->getResource(), 0, 0))['alpha'], 'Image should be transparent');
-        $this->assertEquals(127, imagecolorsforindex($image->getResource(), imagecolorat($image->getResource(), 99, 99))['alpha'], 'Image should be transparent');
+
+        $this->assertEquals(
+            127,
+            imagecolorsforindex($image->getResource(), imagecolorat($image->getResource(), 0, 0))['alpha'],
+            'Image should be transparent'
+        );
+
+        $this->assertEquals(
+            127,
+            imagecolorsforindex($image->getResource(), imagecolorat($image->getResource(), 99, 99))['alpha'],
+            'Image should be transparent'
+        );
     }
 
     /**

@@ -14,9 +14,11 @@ use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\Resizer;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Image\Image;
 use Contao\Image\ImportantPart;
 use Contao\Image\ResizeCalculator;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 use Contao\System;
 use Imagine\Image\ImagineInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -76,11 +78,13 @@ class ImageFactoryTest extends TestCase
             ->method('resize')
             ->with(
                 $this->callback(function ($image) use (&$path) {
+                    /* @var Image $image */
                     $this->assertEquals($path, $image->getPath());
 
                     return true;
                 }),
                 $this->callback(function ($config) {
+                    /* @var ResizeConfiguration $config */
                     $this->assertEquals(100, $config->getWidth());
                     $this->assertEquals(200, $config->getHeight());
                     $this->assertEquals(ResizeConfiguration::MODE_BOX, $config->getMode());
@@ -177,15 +181,18 @@ class ImageFactoryTest extends TestCase
             ->method('resize')
             ->with(
                 $this->callback(function ($image) use ($path) {
+                    /* @var Image $image */
                     $this->assertEquals($path, $image->getPath());
-                    $this->assertEquals(new ImportantPart(
-                        new Point(50, 50),
-                        new Box(25, 25)
-                    ), $image->getImportantPart());
+
+                    $this->assertEquals(
+                        new ImportantPart(new Point(50, 50), new Box(25, 25)),
+                        $image->getImportantPart()
+                    );
 
                     return true;
                 }),
                 $this->callback(function ($config) {
+                    /* @var ResizeConfiguration $config */
                     $this->assertEquals(100, $config->getWidth());
                     $this->assertEquals(200, $config->getHeight());
                     $this->assertEquals(ResizeConfiguration::MODE_BOX, $config->getMode());
@@ -194,6 +201,7 @@ class ImageFactoryTest extends TestCase
                     return true;
                 }),
                 $this->callback(function ($options) {
+                    /* @var ResizeOptions $options */
                     $this->assertEquals(['jpeg_quality' => 80], $options->getImagineOptions());
                     $this->assertEquals($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
 
@@ -381,6 +389,7 @@ class ImageFactoryTest extends TestCase
                     return true;
                 }),
                 $this->callback(function ($options) {
+                    /* @var ResizeOptions $options */
                     $this->assertEquals(['jpeg_quality' => 80], $options->getImagineOptions());
                     $this->assertEquals($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
 
@@ -447,15 +456,18 @@ class ImageFactoryTest extends TestCase
             ->method('resize')
             ->with(
                 $this->callback(function ($image) use ($path, $expected) {
+                    /* @var Image $image */
                     $this->assertEquals($path, $image->getPath());
-                    $this->assertEquals(new ImportantPart(
-                        new Point($expected[0], $expected[1]),
-                        new Box($expected[2], $expected[3])
-                    ), $image->getImportantPart());
+
+                    $this->assertEquals(
+                        new ImportantPart(new Point($expected[0], $expected[1]), new Box($expected[2], $expected[3])),
+                        $image->getImportantPart()
+                    );
 
                     return true;
                 }),
                 $this->callback(function ($config) {
+                    /* @var ResizeConfiguration $config */
                     $this->assertEquals(50, $config->getWidth());
                     $this->assertEquals(50, $config->getHeight());
                     $this->assertEquals(ResizeConfiguration::MODE_CROP, $config->getMode());
@@ -537,16 +549,16 @@ class ImageFactoryTest extends TestCase
     public function getCreateWithLegacyMode()
     {
         return [
-            'Left Top'      => ['left_top', [0, 0, 1, 1]],
-            'Left Center'   => ['left_center', [0, 0, 1, 100]],
-            'Left Bottom'   => ['left_bottom', [0, 99, 1, 1]],
-            'Center Top'    => ['center_top', [0, 0, 100, 1]],
+            'Left Top' => ['left_top', [0, 0, 1, 1]],
+            'Left Center' => ['left_center', [0, 0, 1, 100]],
+            'Left Bottom' => ['left_bottom', [0, 99, 1, 1]],
+            'Center Top' => ['center_top', [0, 0, 100, 1]],
             'Center Center' => ['center_center', [0, 0, 100, 100]],
             'Center Bottom' => ['center_bottom', [0, 99, 100, 1]],
-            'Right Top'     => ['right_top', [99, 0, 1, 1]],
-            'Right Center'  => ['right_center', [99, 0, 1, 100]],
-            'Right Bottom'  => ['right_bottom', [99, 99, 1, 1]],
-            'Invalid'       => ['top_left', [0, 0, 100, 100]],
+            'Right Top' => ['right_top', [99, 0, 1, 1]],
+            'Right Center' => ['right_center', [99, 0, 1, 100]],
+            'Right Bottom' => ['right_bottom', [99, 99, 1, 1]],
+            'Invalid' => ['top_left', [0, 0, 100, 100]],
         ];
     }
 
@@ -636,15 +648,28 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertEquals($this->getRootDir().'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg', $image->getPath());
+        $this->assertEquals(
+            $this->getRootDir().'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg',
+            $image->getPath()
+        );
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertEquals($this->getRootDir().'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg', $image->getPath());
+        $this->assertEquals(
+            $this->getRootDir().'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg',
+            $image->getPath()
+        );
 
-        $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP], $this->getRootDir().'/target.jpg');
+        $image = $imageFactory->create(
+            $path,
+            [200, 200, ResizeConfiguration::MODE_CROP],
+            $this->getRootDir().'/target.jpg'
+        );
 
-        $this->assertEquals($this->getRootDir().'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg', $image->getPath());
+        $this->assertEquals(
+            $this->getRootDir().'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
+            $image->getPath()
+        );
 
         unset($GLOBALS['TL_HOOKS']);
     }
@@ -659,15 +684,14 @@ class ImageFactoryTest extends TestCase
     public static function executeResizeHookCallback($imageObj)
     {
         // Do not include $cacheName as it is dynamic (mtime)
-        $path =
-            'assets/'
+        $path = 'assets/'
             .$imageObj->getOriginalPath()
-            .'&executeResize_'
-            .$imageObj->getTargetWidth().'_'
-            .$imageObj->getTargetHeight().'_'
-            .$imageObj->getResizeMode().'_'
-            .$imageObj->getTargetPath().'_'
-            .str_replace('\\', '-', get_class($imageObj))
+            .'&executeResize'
+            .'_'.$imageObj->getTargetWidth()
+            .'_'.$imageObj->getTargetHeight()
+            .'_'.$imageObj->getResizeMode()
+            .'_'.$imageObj->getTargetPath()
+            .'_'.str_replace('\\', '-', get_class($imageObj))
             .'.jpg'
         ;
 
@@ -744,15 +768,26 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertEquals($this->getRootDir().'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg', $image->getPath());
+        $this->assertEquals(
+            $this->getRootDir().'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg',
+            $image->getPath()
+        );
 
         $image = $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertRegExp('(/images/.*dummy.*.jpg$)', $image->getPath(), 'Hook should not get called for cached images');
+        $this->assertRegExp(
+            '(/images/.*dummy.*.jpg$)',
+            $image->getPath(),
+            'Hook should not get called for cached images'
+        );
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertEquals($this->getRootDir().'/images/dummy.jpg', $image->getPath(), 'Hook should not get called if no resize is necessary');
+        $this->assertEquals(
+            $this->getRootDir().'/images/dummy.jpg',
+            $image->getPath(),
+            'Hook should not get called if no resize is necessary'
+        );
 
         unset($GLOBALS['TL_HOOKS']);
     }
@@ -771,19 +806,26 @@ class ImageFactoryTest extends TestCase
      *
      * @return string The image path
      */
-    public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj)
-    {
+    public static function getImageHookCallback(
+        $originalPath,
+        $targetWidth,
+        $targetHeight,
+        $resizeMode,
+        $cacheName,
+        $fileObj,
+        $targetPath,
+        $imageObj
+    ) {
         // Do not include $cacheName as it is dynamic (mtime)
-        $path =
-            'assets/'
+        $path = 'assets/'
             .$originalPath
-            .'&getImage_'
-            .$targetWidth.'_'
-            .$targetHeight.'_'
-            .$resizeMode.'_'
-            .str_replace('\\', '-', get_class($fileObj)).'_'
-            .$targetPath.'_'
-            .str_replace('\\', '-', get_class($imageObj))
+            .'&getImage'
+            .'_'.$targetWidth
+            .'_'.$targetHeight
+            .'_'.$resizeMode
+            .'_'.str_replace('\\', '-', get_class($fileObj))
+            .'_'.$targetPath
+            .'_'.str_replace('\\', '-', get_class($imageObj))
             .'.jpg'
         ;
 
@@ -907,8 +949,16 @@ class ImageFactoryTest extends TestCase
      *
      * @return ImageFactory
      */
-    private function createImageFactory($resizer = null, $imagine = null, $imagineSvg = null, $filesystem = null, $framework = null, $bypassCache = null, $imagineOptions = null, $validExtensions = null)
-    {
+    private function createImageFactory(
+        $resizer = null,
+        $imagine = null,
+        $imagineSvg = null,
+        $filesystem = null,
+        $framework = null,
+        $bypassCache = null,
+        $imagineOptions = null,
+        $validExtensions = null
+    ) {
         if (null === $resizer) {
             $resizer = $this
                 ->getMockBuilder('Contao\Image\Resizer')
@@ -945,6 +995,15 @@ class ImageFactoryTest extends TestCase
             $validExtensions = ['jpg', 'svg'];
         }
 
-        return new ImageFactory($resizer, $imagine, $imagineSvg, $filesystem, $framework, $bypassCache, $imagineOptions, $validExtensions);
+        return new ImageFactory(
+            $resizer,
+            $imagine,
+            $imagineSvg,
+            $filesystem,
+            $framework,
+            $bypassCache,
+            $imagineOptions,
+            $validExtensions
+        );
     }
 }
