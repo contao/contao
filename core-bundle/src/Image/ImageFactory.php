@@ -28,7 +28,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
-class ImageFactory
+class ImageFactory implements ImageFactoryInterface
 {
     /**
      * @var ResizerInterface
@@ -71,16 +71,7 @@ class ImageFactory
     private $validExtensions;
 
     /**
-     * Constructor.
-     *
-     * @param ResizerInterface         $resizer         The resizer object
-     * @param ImagineInterface         $imagine         The imagine object
-     * @param ImagineInterface         $imagineSvg      The imagine object for SVG files
-     * @param Filesystem               $filesystem      The filesystem object
-     * @param ContaoFrameworkInterface $framework       The Contao framework
-     * @param bool                     $bypassCache     True to bypass the image cache
-     * @param array                    $imagineOptions  The options for Imagine save
-     * @param array                    $validExtensions Valid filename extensions
+     * {@inheritdoc}
      */
     public function __construct(
         ResizerInterface $resizer,
@@ -103,15 +94,7 @@ class ImageFactory
     }
 
     /**
-     * Creates an Image object.
-     *
-     * @param string|ImageInterface                  $path The path to the source image or an Image object
-     * @param int|array|ResizeConfigurationInterface $size The ID of an image size
-     *                                                     or an array with width, height and resize mode
-     *                                                     or a ResizeConfiguration object
-     * @param string    $targetPath                        The absolute target path
-     *
-     * @return Image The created image object
+     * {@inheritdoc}
      */
     public function create($path, $size = null, $targetPath = null)
     {

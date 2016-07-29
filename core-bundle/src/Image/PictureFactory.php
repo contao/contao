@@ -24,7 +24,7 @@ use Contao\Image\Resize\ResizeOptions;
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
-class PictureFactory
+class PictureFactory implements PictureFactoryInterface
 {
     /**
      * @var PictureGeneratorInterface
@@ -32,7 +32,7 @@ class PictureFactory
     private $pictureGenerator;
 
     /**
-     * @var ImageFactory
+     * @var ImageFactoryInterface
      */
     private $imageFactory;
 
@@ -52,17 +52,11 @@ class PictureFactory
     private $imagineOptions;
 
     /**
-     * Constructor.
-     *
-     * @param PictureGeneratorInterface $pictureGenerator The picture generator
-     * @param ImageFactory              $imageFactory     The image factory
-     * @param ContaoFrameworkInterface  $framework        The Contao framework
-     * @param bool                      $bypassCache      True to bypass the image cache
-     * @param array                     $imagineOptions   The options for Imagine save
+     * {@inheritdoc}
      */
     public function __construct(
         PictureGeneratorInterface $pictureGenerator,
-        ImageFactory $imageFactory,
+        ImageFactoryInterface $imageFactory,
         ContaoFrameworkInterface $framework,
         $bypassCache,
         array $imagineOptions
@@ -75,14 +69,7 @@ class PictureFactory
     }
 
     /**
-     * Creates a Picture object.
-     *
-     * @param string|ImageInterface                   $path The path to the source image or an Image object
-     * @param int|array|PictureConfigurationInterface $size The ID of an image size
-     *                                                      or an array with width height and resize mode
-     *                                                      or a PictureConfiguration object
-     *
-     * @return Picture The created Picture object
+     * {@inheritdoc}
      */
     public function create($path, $size = null)
     {

@@ -96,6 +96,7 @@ class ImageFactoryTest extends TestCase
     public function testInstantiation()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Image\ImageFactory', $this->createImageFactory());
+        $this->assertInstanceOf('Contao\CoreBundle\Image\ImageFactoryInterface', $this->createImageFactory());
     }
 
     /**
