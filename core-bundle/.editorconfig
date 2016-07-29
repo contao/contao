@@ -12,3 +12,11 @@ trim_trailing_whitespace = true
 [*.php]
 indent_style = space
 indent_size = 4
+
+[*.yml]
+indent_style = space
+indent_size = 4
+
+[*.twig]
+indent_style = space
+indent_size = 4
