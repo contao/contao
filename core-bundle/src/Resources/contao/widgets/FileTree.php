@@ -171,7 +171,7 @@ class FileTree extends \Widget
 
 								if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
 								{
-									$image = \Image::get($objFiles->path, 80, 60, 'center_center');
+									$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFiles->path, array(80, 60, 'center_center'))->getUrl(TL_ROOT);
 								}
 
 								$arrValues[$objFiles->uuid] = \Image::getHtml($image, '', 'class="gimage" title="' . \StringUtil::specialchars($strInfo) . '"');
@@ -215,7 +215,7 @@ class FileTree extends \Widget
 
 										if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
 										{
-											$image = \Image::get($objSubfiles->path, 80, 60, 'center_center');
+											$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objSubfiles->path, array(80, 60, 'center_center'))->getUrl(TL_ROOT);
 										}
 
 										$arrValues[$objSubfiles->uuid] = \Image::getHtml($image, '', 'class="gimage" title="' . \StringUtil::specialchars($strInfo) . '"');
@@ -245,7 +245,7 @@ class FileTree extends \Widget
 
 									if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
 									{
-										$image = \Image::get($objFiles->path, 80, 60, 'center_center');
+										$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFiles->path, array(80, 60, 'center_center'))->getUrl(TL_ROOT);
 									}
 
 									$arrValues[$objFiles->uuid] = \Image::getHtml($image, '', 'class="gimage removable" title="' . \StringUtil::specialchars($strInfo) . '"');

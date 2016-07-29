@@ -1506,8 +1506,14 @@ abstract class Controller extends \System
 
 		try
 		{
-			$src = \Image::create($arrItem['singleSRC'], $size)->executeResize()->getResizedPath();
-			$picture = \Picture::create($arrItem['singleSRC'], $size)->getTemplateData();
+			$src = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size)->getUrl(TL_ROOT);
+
+			$picture = \System::getContainer()->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size);
+			$picture = array
+			(
+				'img' => $picture->getImg(TL_ROOT),
+				'sources' => $picture->getSources(TL_ROOT)
+			);
 
 			if ($src !== $arrItem['singleSRC'])
 			{

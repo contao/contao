@@ -76,7 +76,10 @@ class PictureTest extends TestCase
         define('TL_FILES_URL', '');
         define('TL_ROOT', self::$rootDir);
 
-        System::setContainer($this->mockContainerWithContaoScopes());
+        $container = $this->mockContainerWithContaoScopes();
+        $this->addImageServicesToContainer($container, self::$rootDir);
+
+        System::setContainer($container);
     }
 
     /**
@@ -289,6 +292,28 @@ class PictureTest extends TestCase
         $this->assertEquals(200, $pictureData['img']['height']);
         $this->assertEquals('dummy%20with%20spaces.jpg', $pictureData['img']['src']);
         $this->assertEquals('dummy%20with%20spaces.jpg', $pictureData['img']['srcset']);
+        $this->assertEquals([], $pictureData['sources']);
+    }
+
+    /**
+     * Tests the getTemplateData() method with an old resize mode.
+     */
+    public function testGetTemplateDataOldResizeMode()
+    {
+        $picture = new Picture(new \File('dummy.jpg'));
+
+        $picture->setImageSize((object) [
+            'width' => 100,
+            'height' => 100,
+            'resizeMode' => 'center_center',
+            'zoom' => 0,
+        ]);
+
+        $pictureData = $picture->getTemplateData();
+
+        $this->assertEquals(100, $pictureData['img']['width']);
+        $this->assertEquals(100, $pictureData['img']['height']);
+        $this->assertEquals($pictureData['img']['src'], $pictureData['img']['srcset'], 'Attributes src and srcset should be equal');
         $this->assertEquals([], $pictureData['sources']);
     }
 }
