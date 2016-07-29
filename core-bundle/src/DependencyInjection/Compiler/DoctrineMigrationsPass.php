@@ -29,22 +29,21 @@ class DoctrineMigrationsPass implements CompilerPassInterface
             return;
         }
 
-        $provider = $container->getDefinition('contao.doctrine.dca_schema_provider');
-
         if ($this->hasOrm($container)) {
+            // Use Doctrine mapping (enhanced by our listeners) for Schema if ORM is installed
             $provider = new Definition(
                 'Doctrine\DBAL\Migrations\Provider\OrmSchemaProvider',
-                [$container->getDefinition('doctrine.orm.default_entity_manager')]
+                [$container->findDefinition('doctrine.orm.default_entity_manager')]
             );
+        } else {
+            // Migrations schema provider must implement interface (that is only available if bundle is installed)
+            $provider = new DefinitionDecorator('contao.doctrine.dca_schema_provider');
+            $provider->setClass('Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider');
 
-            $container->setDefinition('contao.doctrine.schema_provider', $provider);
+            $this->replaceDiffCommand($container, $provider);
         }
 
-        $command = new Definition('Doctrine\Bundle\MigrationsBundle\Command\MigrationsDiffDoctrineCommand');
-        $command->setArguments([$provider]);
-        $command->addTag('console.command');
-
-        $container->setDefinition('contao.command.doctrine_migrations_diff', $command);
+        $container->setDefinition('contao.doctrine.schema_provider', $provider);
     }
 
     /**
@@ -73,5 +72,26 @@ class DoctrineMigrationsPass implements CompilerPassInterface
     private function hasOrm(ContainerBuilder $container)
     {
         return $container->has('doctrine.orm.entity_manager');
+    }
+
+    /**
+     * Registers custom doctrine:schema:diff command that works without ORM.
+     *
+     * @param ContainerBuilder $container
+     * @param Definition       $provider
+     */
+    private function replaceDiffCommand(ContainerBuilder $container, Definition $provider)
+    {
+        $command = new Definition('Contao\CoreBundle\Command\DoctrineMigrationsDiffCommand');
+        $command->setArguments([$provider]);
+        $command->addTag('console.command');
+        $container->setDefinition('contao.command.doctrine_migrations_diff', $command);
+
+        // Necessary if Symfonys compiler pass has already handled "console.command" tags
+        if ($container->hasParameter('console.command.ids')) {
+            $ids = $container->getParameter('console.command.ids');
+            $ids[] = 'contao.command.doctrine_migrations_diff';
+            $container->setParameter('console.command.ids', $ids);
+        }
     }
 }
