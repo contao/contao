@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -37,7 +37,7 @@ class DetermineImagineImplementation implements CompilerPassInterface
     private function getImagineImplementation()
     {
         foreach (['Imagick', 'Gmagick', 'Gd'] as $name) {
-            $class = 'Imagine\\' . $name . '\\Imagine';
+            $class = 'Imagine\\'.$name.'\\Imagine';
 
             // Tests the Imagine class which throws an exception if the parent PHP implementation is not available.
             try {

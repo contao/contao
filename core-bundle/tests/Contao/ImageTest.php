@@ -1568,7 +1568,7 @@ class ImageTest extends TestCase
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
-        file_put_contents(self::$rootDir . '/target.jpg', '');
+        file_put_contents(self::$rootDir.'/target.jpg', '');
         $imageObj->setTargetPath('target.jpg');
         $imageObj->executeResize();
 
@@ -1580,7 +1580,7 @@ class ImageTest extends TestCase
     /**
      * Returns a custom image path.
      *
-     * @param object $imageObj     The image object
+     * @param object $imageObj The image object
      *
      * @return string The image path
      */
@@ -1589,17 +1589,17 @@ class ImageTest extends TestCase
         // Do not include $cacheName as it is dynamic (mtime)
         $path =
             'assets/'
-            . $imageObj->getOriginalPath()
-            . '&executeResize_'
-            . $imageObj->getTargetWidth() . '_'
-            . $imageObj->getTargetHeight() . '_'
-            . $imageObj->getResizeMode() . '_'
-            . $imageObj->getTargetPath() . '_'
-            . str_replace('\\', '-', get_class($imageObj))
-            . '.jpg'
+            .$imageObj->getOriginalPath()
+            .'&executeResize_'
+            .$imageObj->getTargetWidth().'_'
+            .$imageObj->getTargetHeight().'_'
+            .$imageObj->getResizeMode().'_'
+            .$imageObj->getTargetPath().'_'
+            .str_replace('\\', '-', get_class($imageObj))
+            .'.jpg'
         ;
 
-        file_put_contents(TL_ROOT . '/' . $path, '');
+        file_put_contents(TL_ROOT.'/'.$path, '');
 
         return $path;
     }
@@ -1660,18 +1660,18 @@ class ImageTest extends TestCase
         // Do not include $cacheName as it is dynamic (mtime)
         $path =
             'assets/'
-            . $originalPath
-            . '&getImage_'
-            . $targetWidth . '_'
-            . $targetHeight . '_'
-            . $resizeMode . '_'
-            . str_replace('\\', '-', get_class($fileObj)) . '_'
-            . $targetPath . '_'
-            . str_replace('\\', '-', get_class($imageObj))
-            . '.jpg'
+            .$originalPath
+            .'&getImage_'
+            .$targetWidth.'_'
+            .$targetHeight.'_'
+            .$resizeMode.'_'
+            .str_replace('\\', '-', get_class($fileObj)).'_'
+            .$targetPath.'_'
+            .str_replace('\\', '-', get_class($imageObj))
+            .'.jpg'
         ;
 
-        file_put_contents(TL_ROOT . '/' . $path, '');
+        file_put_contents(TL_ROOT.'/'.$path, '');
 
         return $path;
     }

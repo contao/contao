@@ -108,7 +108,7 @@ class MergeHttpHeadersListener
     }
 
     /**
-     * Removes a multi-value header
+     * Removes a multi-value header.
      *
      * @param string $name
      */

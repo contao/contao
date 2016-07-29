@@ -416,7 +416,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $resizer = new Resizer(
             $calculator,
             $filesystem,
-            ($rootDir ?: $this->getRootDir()) . '/' . $container->getParameter('contao.image.target_path'),
+            ($rootDir ?: $this->getRootDir()).'/'.$container->getParameter('contao.image.target_path'),
             $framework
         );
         $resizer->setContaoFramework($framework);

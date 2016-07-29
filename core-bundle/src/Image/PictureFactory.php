@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -76,9 +76,7 @@ class PictureFactory implements PictureFactoryInterface
         if (is_array($size) && isset($size[2]) && substr_count($size[2], '_') === 1) {
             $image = $this->imageFactory->create($path, $size);
             $config = new PictureConfiguration();
-        }
-        else {
-
+        } else {
             if (is_object($path) && $path instanceof ImageInterface) {
                 $image = $path;
             } else {
@@ -90,7 +88,6 @@ class PictureFactory implements PictureFactoryInterface
             } else {
                 $config = $this->createConfig($size);
             }
-
         }
 
         return $this->pictureGenerator->generate(

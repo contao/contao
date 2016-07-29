@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -101,7 +101,6 @@ class ImageFactory implements ImageFactoryInterface
         if (is_object($path) && $path instanceof ImageInterface) {
             $image = $path;
         } else {
-
             $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
             if (in_array($fileExtension, ['svg', 'svgz'])) {
@@ -111,18 +110,16 @@ class ImageFactory implements ImageFactoryInterface
             }
 
             if (!in_array($fileExtension, $this->validExtensions)) {
-                throw new \InvalidArgumentException('Image type "' . $fileExtension . '" was not allowed to be processed');
+                throw new \InvalidArgumentException('Image type "'.$fileExtension.'" was not allowed to be processed');
             }
 
             $image = new Image($imagine, $this->filesystem, (string) $path);
-
         }
 
         if (is_object($size) && $size instanceof ResizeConfigurationInterface) {
             $resizeConfig = $size;
             $importantPart = null;
-        }
-        else {
+        } else {
             list($resizeConfig, $importantPart) = $this->createConfig($size, $image);
         }
 

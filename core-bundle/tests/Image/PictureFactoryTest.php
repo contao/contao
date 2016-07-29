@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -13,15 +13,12 @@ namespace Contao\CoreBundle\Test\Image;
 use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Image\ImportantPart;
 use Contao\Image\Image;
 use Contao\Image\Resizer;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Symfony\Component\Filesystem\Filesystem;
-use Imagine\Image\Box;
-use Imagine\Image\Point;
 
 /**
  * Tests the PictureFactory class.
@@ -84,7 +81,7 @@ class PictureFactoryTest extends TestCase
      */
     public function testCreate()
     {
-        $path = $this->getRootDir() . '/images/dummy.jpg';
+        $path = $this->getRootDir().'/images/dummy.jpg';
 
         $imageMock = $this->getMockBuilder('Contao\Image\Image')
             ->disableOriginalConstructor()
@@ -206,7 +203,7 @@ class PictureFactoryTest extends TestCase
 
         $framework->expects($this->any())
             ->method('getAdapter')
-            ->will($this->returnCallback(function($key) use($imageSizeAdapter, $imageSizeItemAdapter) {
+            ->will($this->returnCallback(function ($key) use ($imageSizeAdapter, $imageSizeItemAdapter) {
                 return [
                     'Contao\\ImageSizeModel' => $imageSizeAdapter,
                     'Contao\\ImageSizeItemModel' => $imageSizeItemAdapter,
@@ -246,7 +243,7 @@ class PictureFactoryTest extends TestCase
                     )
                     ->setDensities('0.5x, 2x')
                     ->setSizes('50vw')
-                    ->setMedia('(max-width: 900px)')
+                    ->setMedia('(max-width: 900px)'),
             ])
         ;
 
@@ -290,7 +287,7 @@ class PictureFactoryTest extends TestCase
      */
     public function testCreateLegacyMode()
     {
-        $path = $this->getRootDir() . '/images/dummy.jpg';
+        $path = $this->getRootDir().'/images/dummy.jpg';
 
         $pictureMock = $this->getMockBuilder('Contao\Image\Picture')
              ->disableOriginalConstructor()
@@ -340,7 +337,7 @@ class PictureFactoryTest extends TestCase
      */
     public function testCreateWithoutMode()
     {
-        $path = $this->getRootDir() . '/images/dummy.jpg';
+        $path = $this->getRootDir().'/images/dummy.jpg';
 
         $imageMock = $this->getMockBuilder('Contao\Image\Image')
              ->disableOriginalConstructor()
