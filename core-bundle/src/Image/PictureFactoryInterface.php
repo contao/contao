@@ -11,9 +11,9 @@
 namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Image\Image\ImageInterface;
-use Contao\Image\Picture\PictureGeneratorInterface;
-use Contao\Image\Picture\PictureConfigurationInterface;
+use Contao\Image\ImageInterface;
+use Contao\Image\PictureGeneratorInterface;
+use Contao\Image\PictureConfigurationInterface;
 
 /**
  * Picture factory interface.

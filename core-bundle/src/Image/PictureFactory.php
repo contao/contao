@@ -11,13 +11,13 @@
 namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Image\Image\ImageInterface;
-use Contao\Image\Picture\PictureGeneratorInterface;
-use Contao\Image\Picture\PictureConfiguration;
-use Contao\Image\Picture\PictureConfigurationInterface;
-use Contao\Image\Picture\PictureConfigurationItem;
-use Contao\Image\Resize\ResizeConfiguration;
-use Contao\Image\Resize\ResizeOptions;
+use Contao\Image\ImageInterface;
+use Contao\Image\PictureGeneratorInterface;
+use Contao\Image\PictureConfiguration;
+use Contao\Image\PictureConfigurationInterface;
+use Contao\Image\PictureConfigurationItem;
+use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 
 /**
  * Creates Picture objects.

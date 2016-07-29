@@ -18,16 +18,16 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image as LegacyImage;
 use Contao\File;
 use Contao\System;
-use Contao\Image\Resize\Resizer as ImageResizer;
-use Contao\Image\Image\ImageInterface;
-use Contao\Image\Resize\ResizeConfigurationInterface;
-use Contao\Image\Resize\ResizeCoordinatesInterface;
-use Contao\Image\Resize\ResizeOptionsInterface;
-use Contao\Image\Image\ImportantPartInterface;
+use Contao\Image\Resizer as ImageResizer;
+use Contao\Image\ImageInterface;
+use Contao\Image\ResizeConfigurationInterface;
+use Contao\Image\ResizeCoordinatesInterface;
+use Contao\Image\ResizeOptionsInterface;
+use Contao\Image\ImportantPartInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Resizes Image objects via Contao\Image\Resize\Resizer and executes legacy hooks.
+ * Resizes Image objects via Contao\Image\Resizer and executes legacy hooks.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */

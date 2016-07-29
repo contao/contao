@@ -10,11 +10,11 @@
 
 namespace Contao;
 
-use Contao\Image\Image\ImportantPart;
-use Contao\Image\Resize\ResizeConfiguration;
-use Contao\Image\Resize\ResizeOptions;
-use Contao\Image\Picture\PictureConfiguration;
-use Contao\Image\Picture\PictureConfigurationItem;
+use Contao\Image\ImportantPart;
+use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
+use Contao\Image\PictureConfiguration;
+use Contao\Image\PictureConfigurationItem;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
