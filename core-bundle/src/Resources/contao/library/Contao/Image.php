@@ -428,12 +428,11 @@ class Image
 		$image = $this->prepareImage();
 		$resizeConfig = $this->prepareResizeConfig();
 
-		if (
-			!System::getContainer()->getParameter('contao.image.bypass_cache') &&
-			$this->getTargetPath() &&
-			!$this->getForceOverride() &&
-			file_exists(TL_ROOT . '/' . $this->getTargetPath()) &&
-			$this->fileObj->mtime <= filemtime(TL_ROOT . '/' . $this->getTargetPath())
+		if (!System::getContainer()->getParameter('contao.image.bypass_cache')
+			&& $this->getTargetPath()
+			&& !$this->getForceOverride()
+			&& file_exists(TL_ROOT . '/' . $this->getTargetPath())
+			&& $this->fileObj->mtime <= filemtime(TL_ROOT . '/' . $this->getTargetPath())
 		) {
 			// HOOK: add custom logic
 			if (isset($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize']))
@@ -441,9 +440,11 @@ class Image
 				foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback)
 				{
 					$return = \System::importStatic($callback[0])->{$callback[1]}($this);
+
 					if (is_string($return))
 					{
 						$this->resizedPath = \System::urlEncode($return);
+
 						return $this;
 					}
 				}
@@ -453,18 +454,22 @@ class Image
 			return $this;
 		}
 
-		$image = \System::getContainer()->get('contao.image.resizer')->resize(
-			$image,
-			$resizeConfig,
-			(new ResizeOptions())
-				->setImagineOptions(\System::getContainer()->getParameter('contao.image.imagine_options'))
-				->setTargetPath($this->targetPath ? TL_ROOT . '/' . $this->targetPath : null)
-				->setBypassCache(\System::getContainer()->getParameter('contao.image.bypass_cache'))
-		);
+		$image = \System::getContainer()
+			->get('contao.image.resizer')
+			->resize(
+				$image,
+				$resizeConfig,
+				(new ResizeOptions())
+					->setImagineOptions(\System::getContainer()->getParameter('contao.image.imagine_options'))
+					->setTargetPath($this->targetPath ? TL_ROOT . '/' . $this->targetPath : null)
+					->setBypassCache(\System::getContainer()->getParameter('contao.image.bypass_cache'))
+			)
+		;
 
 		$this->resizedPath = $image->getPath();
 
-		if (strpos($this->resizedPath, TL_ROOT . '/') === 0 || strpos($this->resizedPath, TL_ROOT . '\\') === 0) {
+		if (strpos($this->resizedPath, TL_ROOT . '/') === 0 || strpos($this->resizedPath, TL_ROOT . '\\') === 0)
+		{
 			$this->resizedPath = substr($this->resizedPath, strlen(TL_ROOT) + 1);
 		}
 
@@ -477,14 +482,13 @@ class Image
 	/**
 	 * Prepare image object.
 	 *
-	 * @return \Contao\CoreBundle\Image\Image
+	 * @return \Contao\Image\Image
 	 */
 	protected function prepareImage()
 	{
 		$imagine = \System::getContainer()->get('contao.image.imagine' . ($this->fileObj->isSvgImage ? '_svg' : ''));
 
 		$image = new NewImage($imagine, \System::getContainer()->get('filesystem'), (string) TL_ROOT . '/' . $this->fileObj->path);
-
 		$image->setImportantPart($this->prepareImportantPart());
 
 		return $image;
@@ -502,7 +506,8 @@ class Image
 
 		if (substr_count($this->resizeMode, '_') === 1)
 		{
-			$importantPart = array(
+			$importantPart = array
+			(
 				'x' => 0,
 				'y' => 0,
 				'width' => $this->fileObj->viewWidth,
@@ -584,14 +589,17 @@ class Image
 	 */
 	public function computeResize()
 	{
-		$resizeCoordinates = \System::getContainer()->get('contao.image.resize_calculator')->calculate(
-			$this->prepareResizeConfig(),
-			new ImageDimensions(
-				new Box($this->fileObj->viewWidth, $this->fileObj->viewHeight),
-				$this->fileObj->viewWidth !== $this->fileObj->width
-			),
-			$this->prepareImportantPart()
-		);
+		$resizeCoordinates = \System::getContainer()
+			->get('contao.image.resize_calculator')
+			->calculate(
+				$this->prepareResizeConfig(),
+				new ImageDimensions(
+					new Box($this->fileObj->viewWidth, $this->fileObj->viewHeight),
+					$this->fileObj->viewWidth !== $this->fileObj->width
+				),
+				$this->prepareImportantPart()
+			)
+		;
 
 		return array
 		(
@@ -725,7 +733,7 @@ class Image
 	 */
 	public static function resize($image, $width, $height, $mode='')
 	{
-		@trigger_error('Image::resize() has been deprecated and will no longer work in Contao 5.0. Use $container->get(\'contao.image.image_factory\')->create() instead.', E_USER_DEPRECATED);
+		@trigger_error('Image::resize() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
 
 		return static::get($image, $width, $height, $mode, $image, true) ? true : false;
 	}
@@ -744,7 +752,7 @@ class Image
 	 */
 	public static function create($image, $size=null)
 	{
-		@trigger_error('Image::create() has been deprecated and will no longer work in Contao 5.0. Use $container->get(\'contao.image.image_factory\')->create() instead.', E_USER_DEPRECATED);
+		@trigger_error('Image::create() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
 
 		if (is_string($image))
 		{
@@ -764,18 +772,22 @@ class Image
 		{
 			$size = $size + array(0, 0, 'crop');
 
-			$imageObj->setTargetWidth($size[0])
-					 ->setTargetHeight($size[1])
-					 ->setResizeMode($size[2]);
+			$imageObj
+				->setTargetWidth($size[0])
+				->setTargetHeight($size[1])
+				->setResizeMode($size[2])
+			;
 		}
 
 		// Load the image size from the database if $size is an ID
 		elseif (($imageSize = \ImageSizeModel::findByPk($size)) !== null)
 		{
-			$imageObj->setTargetWidth($imageSize->width)
-					 ->setTargetHeight($imageSize->height)
-					 ->setResizeMode($imageSize->resizeMode)
-					 ->setZoomLevel($imageSize->zoom);
+			$imageObj
+				->setTargetWidth($imageSize->width)
+				->setTargetHeight($imageSize->height)
+				->setResizeMode($imageSize->resizeMode)
+				->setZoomLevel($imageSize->zoom)
+			;
 		}
 
 		$fileRecord = \FilesModel::findByPath($image->path);
@@ -813,7 +825,7 @@ class Image
 	 */
 	public static function get($image, $width, $height, $mode='', $target=null, $force=false)
 	{
-		@trigger_error('Image::get() has been deprecated and will no longer work in Contao 5.0. Use $container->get(\'contao.image.image_factory\')->create() instead.', E_USER_DEPRECATED);
+		@trigger_error('Image::get() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
 
 		if ($image == '')
 		{

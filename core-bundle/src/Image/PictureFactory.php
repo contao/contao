@@ -18,6 +18,7 @@ use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
+use Contao\ImageSizeItemModel;
 
 /**
  * Creates Picture objects.
@@ -73,7 +74,7 @@ class PictureFactory implements PictureFactoryInterface
      */
     public function create($path, $size = null)
     {
-        if (is_array($size) && isset($size[2]) && substr_count($size[2], '_') === 1) {
+        if (is_array($size) && isset($size[2]) && 1 === substr_count($size[2], '_')) {
             $image = $this->imageFactory->create($path, $size);
             $config = new PictureConfiguration();
         } else {
@@ -99,6 +100,13 @@ class PictureFactory implements PictureFactoryInterface
         );
     }
 
+    /**
+     * Creates a picture configuration.
+     *
+     * @param int|array $size
+     *
+     * @return PictureConfiguration
+     */
     private function createConfig($size)
     {
         if (!is_array($size)) {
@@ -109,15 +117,19 @@ class PictureFactory implements PictureFactoryInterface
 
         if (!isset($size[2]) || !is_numeric($size[2])) {
             $resizeConfig = new ResizeConfiguration();
+
             if (isset($size[0]) && $size[0]) {
                 $resizeConfig->setWidth($size[0]);
             }
+
             if (isset($size[1]) && $size[1]) {
                 $resizeConfig->setHeight($size[1]);
             }
+
             if (isset($size[2]) && $size[2]) {
                 $resizeConfig->setMode($size[2]);
             }
+
             $configItem = new PictureConfigurationItem();
             $configItem->setResizeConfig($resizeConfig);
             $config->setSize($configItem);
@@ -125,27 +137,37 @@ class PictureFactory implements PictureFactoryInterface
             return $config;
         }
 
-        $config->setSize($this->createConfigItem(
-            $this->framework
-                ->getAdapter('Contao\\ImageSizeModel')
-                ->findByPk($size[2])
-        ));
+        $config->setSize(
+            $this->createConfigItem(
+                $this->framework->getAdapter('Contao\ImageSizeModel')->findByPk($size[2])
+            )
+        );
 
         $imageSizeItems = $this->framework
             ->getAdapter('Contao\\ImageSizeItemModel')
-            ->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
+            ->findVisibleByPid($size[2], ['order' => 'sorting ASC'])
+        ;
 
-        if ($imageSizeItems !== null) {
+        if (null !== $imageSizeItems) {
             $configItems = [];
+
             foreach ($imageSizeItems as $imageSizeItem) {
                 $configItems[] = $this->createConfigItem($imageSizeItem);
             }
+
             $config->setSizeItems($configItems);
         }
 
         return $config;
     }
 
+    /**
+     * Creates a picture configuration item.
+     *
+     * @param ImageSizeItemModel $imageSize
+     *
+     * @return PictureConfigurationItem
+     */
     private function createConfigItem($imageSize)
     {
         $configItem = new PictureConfigurationItem();
@@ -156,12 +178,14 @@ class PictureFactory implements PictureFactoryInterface
                 ->setWidth($imageSize->width)
                 ->setHeight($imageSize->height)
                 ->setMode($imageSize->resizeMode)
-                ->setZoomLevel($imageSize->zoom);
+                ->setZoomLevel($imageSize->zoom)
+            ;
 
             $configItem
                 ->setResizeConfig($resizeConfig)
                 ->setSizes($imageSize->sizes)
-                ->setDensities($imageSize->densities);
+                ->setDensities($imageSize->densities)
+            ;
 
             if (isset($imageSize->media)) {
                 $configItem->setMedia($imageSize->media);

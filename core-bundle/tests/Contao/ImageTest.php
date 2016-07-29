@@ -1568,7 +1568,9 @@ class ImageTest extends TestCase
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
+
         file_put_contents(self::$rootDir.'/target.jpg', '');
+
         $imageObj->setTargetPath('target.jpg');
         $imageObj->executeResize();
 

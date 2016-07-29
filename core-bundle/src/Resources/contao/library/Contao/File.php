@@ -248,9 +248,11 @@ class File extends \System
 					{
 						try
 						{
-							$dimensions = System::getContainer()->get('contao.image.image_factory')
+							$dimensions = System::getContainer()
+								->get('contao.image.image_factory')
 								->create(TL_ROOT . '/' . $this->strFile)
-								->getDimensions();
+								->getDimensions()
+							;
 
 							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
 							{
@@ -302,9 +304,11 @@ class File extends \System
 					{
 						try
 						{
-							$dimensions = System::getContainer()->get('contao.image.image_factory')
+							$dimensions = System::getContainer()
+								->get('contao.image.image_factory')
 								->create(TL_ROOT . '/' . $this->strFile)
-								->getDimensions();
+								->getDimensions()
+							;
 
 							$this->arrImageViewSize = array
 							(

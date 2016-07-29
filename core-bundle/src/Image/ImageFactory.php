@@ -127,10 +127,11 @@ class ImageFactory implements ImageFactoryInterface
             if (null === $importantPart) {
                 $importantPart = $this->createImportantPart($image->getPath());
             }
+
             $image->setImportantPart($importantPart);
         }
 
-        if ($resizeConfig->isEmpty() && $targetPath === null) {
+        if ($resizeConfig->isEmpty() && null === $targetPath) {
             return $image;
         }
 
@@ -145,13 +146,12 @@ class ImageFactory implements ImageFactoryInterface
     }
 
     /**
-     * Creates a ResizeConfiguration object.
+     * Creates a resize configuration object from an image size or an array with width, height and resize mode.
      *
-     * @param int|array $size  The ID of an image size or an array with width
-     *                         height and resize mode
-     * @param Image     $image The image instance
+     * @param int|array $size
+     * @param Image     $image
      *
-     * @return array The resize configuration and important part
+     * @return array
      */
     private function createConfig($size, Image $image)
     {
@@ -164,14 +164,16 @@ class ImageFactory implements ImageFactoryInterface
         if (isset($size[2]) && is_numeric($size[2])) {
             $imageSize = $this->framework
                 ->getAdapter('Contao\\ImageSizeModel')
-                ->findByPk($size[2]);
+                ->findByPk($size[2])
+            ;
 
             if (null !== $imageSize) {
                 $config
                     ->setWidth($imageSize->width)
                     ->setHeight($imageSize->height)
                     ->setMode($imageSize->resizeMode)
-                    ->setZoomLevel($imageSize->zoom);
+                    ->setZoomLevel($imageSize->zoom)
+                ;
             }
 
             return [$config, null];
@@ -184,7 +186,7 @@ class ImageFactory implements ImageFactoryInterface
             $config->setHeight($size[1]);
         }
 
-        if (!isset($size[2]) || substr_count($size[2], '_') !== 1) {
+        if (!isset($size[2]) || 1 !== substr_count($size[2], '_')) {
             if (isset($size[2]) && $size[2]) {
                 $config->setMode($size[2]);
             }
@@ -201,26 +203,29 @@ class ImageFactory implements ImageFactoryInterface
 
         list($modeX, $modeY) = explode('_', $size[2]);
 
-        if ($modeX === 'left') {
+        if ('left' === $modeX) {
             $importantPart[2] = 1;
-        } elseif ($modeX === 'right') {
+        } elseif ('right' === $modeX) {
             $importantPart[0] = $importantPart[2] - 1;
             $importantPart[2] = 1;
         }
 
-        if ($modeY === 'top') {
+        if ('top' === $modeY) {
             $importantPart[3] = 1;
-        } elseif ($modeY === 'bottom') {
+        } elseif ('bottom' === $modeY) {
             $importantPart[1] = $importantPart[3] - 1;
             $importantPart[3] = 1;
         }
 
         $config->setMode(ResizeConfigurationInterface::MODE_CROP);
 
-        return [$config, new ImportantPart(
-            new Point($importantPart[0], $importantPart[1]),
-            new Box($importantPart[2], $importantPart[3])
-        )];
+        return [
+            $config,
+            new ImportantPart(
+                new Point($importantPart[0], $importantPart[1]),
+                new Box($importantPart[2], $importantPart[3])
+            ),
+        ];
     }
 
     /**
@@ -233,20 +238,17 @@ class ImageFactory implements ImageFactoryInterface
     private function createImportantPart($path)
     {
         $file = $this->framework
-            ->getAdapter('Contao\\FilesModel')
-            ->findByPath($path);
+            ->getAdapter('Contao\FilesModel')
+            ->findByPath($path)
+        ;
 
-        if (
-            null !== $file &&
-            $file->importantPartWidth &&
-            $file->importantPartHeight
-        ) {
-            return new ImportantPart(
-                new Point((int) $file->importantPartX, (int) $file->importantPartY),
-                new Box((int) $file->importantPartWidth, (int) $file->importantPartHeight)
-            );
+        if (null === $file || !$file->importantPartWidth || !$file->importantPartHeight) {
+            return null;
         }
 
-        return;
+        return new ImportantPart(
+            new Point((int) $file->importantPartX, (int) $file->importantPartY),
+            new Box((int) $file->importantPartWidth, (int) $file->importantPartHeight)
+        );
     }
 }

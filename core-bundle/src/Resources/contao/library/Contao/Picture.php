@@ -230,12 +230,26 @@ class Picture
 		$config->setSizeItems($sizeItems);
 
 		$importantPart = $this->image->getImportantPart();
-		$image->setImportantPart(new ImportantPart(
-			new Point($importantPart['x'], $importantPart['y']),
-			new Box($importantPart['width'], $importantPart['height'])
-		));
 
-		$picture = \System::getContainer()->get('contao.image.picture_generator')->generate($image, $config, (new ResizeOptions())->setImagineOptions(\System::getContainer()->getParameter('contao.image.imagine_options'))->setBypassCache(\System::getContainer()->getParameter('contao.image.bypass_cache')));
+		$image->setImportantPart(
+			new ImportantPart(
+				new Point($importantPart['x'], $importantPart['y']),
+				new Box($importantPart['width'], $importantPart['height'])
+			)
+		);
+
+		$container = \System::getContainer();
+
+		$picture = $container
+			->get('contao.image.picture_generator')
+			->generate(
+				$image,
+				$config,
+				(new ResizeOptions())
+					->setImagineOptions($container->getParameter('contao.image.imagine_options'))
+					->setBypassCache($container->getParameter('contao.image.bypass_cache'))
+			)
+		;
 
 		return array
 		(
@@ -293,7 +307,8 @@ class Picture
 		$resizeConfig
 			->setWidth($imageSize->width)
 			->setHeight($imageSize->height)
-			->setZoomLevel($imageSize->zoom);
+			->setZoomLevel($imageSize->zoom)
+		;
 
 		if ($mode)
 		{
@@ -306,10 +321,12 @@ class Picture
 		{
 			$configItem->setSizes($imageSize->sizes);
 		}
+
 		if (isset($imageSize->densities))
 		{
 			$configItem->setDensities($imageSize->densities);
 		}
+
 		if (isset($imageSize->media))
 		{
 			$configItem->setMedia($imageSize->media);

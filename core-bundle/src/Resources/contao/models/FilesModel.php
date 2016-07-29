@@ -226,7 +226,8 @@ class FilesModel extends \Model
 	 */
 	public static function findByPath($path, array $arrOptions=array())
 	{
-		if (strncmp($path, TL_ROOT . '/', strlen(TL_ROOT) + 1) === 0) {
+		if (strncmp($path, TL_ROOT . '/', strlen(TL_ROOT) + 1) === 0)
+		{
 			$path = substr($path, strlen(TL_ROOT) + 1);
 		}
 

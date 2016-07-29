@@ -59,7 +59,6 @@ class GdImageTest extends TestCase
         parent::setUp();
 
         define('TL_ROOT', self::$rootDir);
-
         System::setContainer($this->mockContainerWithContaoScopes());
     }
 
@@ -133,8 +132,8 @@ class GdImageTest extends TestCase
     public function testSaveToFile($type)
     {
         $file = self::$rootDir.'/test.'.$type;
-        $image = GdImage::fromDimensions(100, 100);
 
+        $image = GdImage::fromDimensions(100, 100);
         $image->saveToFile($file);
 
         $this->assertFileExists($file);

@@ -14,6 +14,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureConfigurationInterface;
+use Contao\Image\PictureInterface;
 
 /**
  * Picture factory interface.
@@ -25,11 +26,11 @@ interface PictureFactoryInterface
     /**
      * Constructor.
      *
-     * @param PictureGeneratorInterface $pictureGenerator The picture generator
-     * @param ImageFactoryInterface     $imageFactory     The image factory
-     * @param ContaoFrameworkInterface  $framework        The Contao framework
-     * @param bool                      $bypassCache      True to bypass the image cache
-     * @param array                     $imagineOptions   The options for Imagine save
+     * @param PictureGeneratorInterface $pictureGenerator
+     * @param ImageFactoryInterface     $imageFactory
+     * @param ContaoFrameworkInterface  $framework
+     * @param bool                      $bypassCache
+     * @param array                     $imagineOptions
      */
     public function __construct(
         PictureGeneratorInterface $pictureGenerator,
@@ -42,12 +43,10 @@ interface PictureFactoryInterface
     /**
      * Creates a Picture object.
      *
-     * @param string|ImageInterface                   $path The path to the source image or an Image object
-     * @param int|array|PictureConfigurationInterface $size The ID of an image size
-     *                                                      or an array with width height and resize mode
-     *                                                      or a PictureConfiguration object
+     * @param string|ImageInterface                   $path
+     * @param int|array|PictureConfigurationInterface $size
      *
-     * @return PictureInterface The created Picture object
+     * @return PictureInterface
      */
     public function create($path, $size = null);
 }

@@ -379,7 +379,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a files model adapter.
      *
-     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject The files model adapter
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockFilesModelAdapter()
     {
@@ -419,7 +419,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ($rootDir ?: $this->getRootDir()).'/'.$container->getParameter('contao.image.target_path'),
             $framework
         );
-        $resizer->setContaoFramework($framework);
+
+        $resizer->setFramework($framework);
 
         $imageFactory = new ImageFactory(
             $resizer,

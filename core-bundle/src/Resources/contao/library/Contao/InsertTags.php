@@ -827,11 +827,13 @@ class InsertTags extends \Controller
 						else
 						{
 							$picture = \System::getContainer()->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $strFile, $size);
+
 							$picture = array
 							(
 								'img' => $picture->getImg(TL_ROOT),
 								'sources' => $picture->getSources(TL_ROOT)
 							);
+
 							$picture['alt'] = $alt;
 							$picture['class'] = $class;
 							$pictureTemplate = new \FrontendTemplate($strTemplate);

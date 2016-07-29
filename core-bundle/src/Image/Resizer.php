@@ -10,8 +10,8 @@
 
 namespace Contao\CoreBundle\Image;
 
+use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Imagine\Gd\Imagine as GdImagine;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image as LegacyImage;
 use Contao\File;
 use Contao\System;
@@ -28,23 +28,12 @@ use Contao\Image\ResizeOptionsInterface;
  */
 class Resizer extends ImageResizer
 {
+    use FrameworkAwareTrait;
+
     /**
      * @var LegacyImage
      */
     private $legacyImage;
-
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-    /**
-     * Set the Contao framework.
-     */
-    public function setContaoFramework(ContaoFrameworkInterface $framework)
-    {
-        $this->framework = $framework;
-    }
 
     /**
      * {@inheritdoc}
@@ -69,20 +58,24 @@ class Resizer extends ImageResizer
             $this->legacyImage = null;
             $legacyPath = $image->getPath();
 
-            if (strpos($legacyPath, TL_ROOT.'/') === 0 || strpos($legacyPath, TL_ROOT.'\\') === 0) {
+            if (0 === strpos($legacyPath, TL_ROOT.'/') || 0 === strpos($legacyPath, TL_ROOT.'\\')) {
                 $legacyPath = substr($legacyPath, strlen(TL_ROOT) + 1);
                 $this->legacyImage = new LegacyImage(new File($legacyPath));
                 $this->legacyImage->setTargetWidth($config->getWidth());
                 $this->legacyImage->setTargetHeight($config->getHeight());
                 $this->legacyImage->setResizeMode($config->getMode());
                 $this->legacyImage->setZoomLevel($config->getZoomLevel());
-                if ($options->getTargetPath() && (
-                    strpos($options->getTargetPath(), TL_ROOT.'/') === 0 ||
-                    strpos($options->getTargetPath(), TL_ROOT.'\\') === 0
-                )) {
+
+                if ($options->getTargetPath()
+                    && (0 === strpos($options->getTargetPath(), TL_ROOT.'/')
+                        || 0 === strpos($options->getTargetPath(), TL_ROOT.'\\')
+                    )
+                ) {
                     $this->legacyImage->setTargetPath(substr($options->getTargetPath(), strlen(TL_ROOT) + 1));
                 }
+
                 $importantPart = $image->getImportantPart();
+
                 $this->legacyImage->setImportantPart([
                     'x' => $importantPart->getPosition()->getX(),
                     'y' => $importantPart->getPosition()->getY(),
@@ -92,9 +85,13 @@ class Resizer extends ImageResizer
             }
         }
 
-        if (isset($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize']) && $this->legacyImage) {
+        if (isset($GLOBALS['TL_HOOKS']['executeResize'])
+            && is_array($GLOBALS['TL_HOOKS']['executeResize'])
+            && $this->legacyImage
+        ) {
             foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback) {
                 $return = System::importStatic($callback[0])->{$callback[1]}($this->legacyImage);
+
                 if (is_string($return)) {
                     return $this->createImage($image, TL_ROOT.'/'.$return);
                 }
@@ -107,9 +104,16 @@ class Resizer extends ImageResizer
     /**
      * {@inheritdoc}
      */
-    protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, $path, array $imagineOptions)
-    {
-        if (isset($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage']) && $this->legacyImage) {
+    protected function executeResize(
+        ImageInterface $image,
+        ResizeCoordinatesInterface $coordinates,
+        $path,
+        array $imagineOptions
+    ) {
+        if (isset($GLOBALS['TL_HOOKS']['getImage'])
+            && is_array($GLOBALS['TL_HOOKS']['getImage'])
+            && $this->legacyImage
+        ) {
             foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback) {
                 $return = System::importStatic($callback[0])->{$callback[1]}(
                     $this->legacyImage->getOriginalPath(),
@@ -121,6 +125,7 @@ class Resizer extends ImageResizer
                     $this->legacyImage->getTargetPath(),
                     $this->legacyImage
                 );
+
                 if (is_string($return)) {
                     return $this->createImage($image, TL_ROOT.'/'.$return);
                 }
@@ -128,12 +133,14 @@ class Resizer extends ImageResizer
         }
 
         $config = $this->framework->getAdapter('Contao\Config');
-        if ($image->getImagine() instanceof GdImagine && (
-            $image->getDimensions()->getSize()->getWidth() > $config->get('gdMaxImgWidth') ||
-            $image->getDimensions()->getSize()->getHeight() > $config->get('gdMaxImgHeight') ||
-            $coordinates->getSize()->getWidth() > $config->get('gdMaxImgWidth') ||
-            $coordinates->getSize()->getHeight() > $config->get('gdMaxImgHeight')
-        )) {
+
+        if ($image->getImagine() instanceof GdImagine
+            && ($image->getDimensions()->getSize()->getWidth() > $config->get('gdMaxImgWidth')
+                || $image->getDimensions()->getSize()->getHeight() > $config->get('gdMaxImgHeight')
+                || $coordinates->getSize()->getWidth() > $config->get('gdMaxImgWidth')
+                || $coordinates->getSize()->getHeight() > $config->get('gdMaxImgHeight')
+            )
+        ) {
             return $this->createImage($image, $image->getPath());
         }
 
