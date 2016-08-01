@@ -101,6 +101,8 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->variableNode('localconfig')
+                ->end()
             ->end()
         ;
 

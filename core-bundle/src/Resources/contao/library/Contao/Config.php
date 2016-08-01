@@ -489,6 +489,15 @@ class Config
 			return;
 		}
 
+		if ($container->hasParameter('contao.localconfig'))
+		{
+			foreach ($container->getParameter('contao.localconfig') as $key=>$value)
+			{
+				$camelCased = lcfirst(strtr(ucwords(strtr($key, array('_'=>' '))), array(' '=>'')));
+				$GLOBALS['TL_CONFIG'][$camelCased] = $value;
+			}
+		}
+
 		$arrMap = array
 		(
 			'dbHost'           => 'database_host',

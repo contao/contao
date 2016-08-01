@@ -78,6 +78,10 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.image.target_path', $mergedConfig['image']['target_path']);
         $container->setParameter('contao.security.disable_ip_check', $mergedConfig['security']['disable_ip_check']);
 
+        if (isset($mergedConfig['localconfig'])) {
+            $container->setParameter('contao.localconfig', $mergedConfig['localconfig']);
+        }
+
         $this->addContainerScopeListener($container);
     }
 
