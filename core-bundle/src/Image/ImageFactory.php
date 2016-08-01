@@ -10,19 +10,19 @@
 
 namespace Contao\CoreBundle\Image;
 
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FilesModel;
 use Contao\ImageSizeModel;
-use Imagine\Image\Box;
-use Imagine\Image\Point;
-use Imagine\Image\ImagineInterface;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Image\ResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
+use Contao\Image\ImportantPart;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
-use Contao\Image\ImportantPart;
+use Contao\Image\ResizerInterface;
+use Imagine\Image\Box;
+use Imagine\Image\ImagineInterface;
+use Imagine\Image\Point;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -150,12 +150,12 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * Creates a resize configuration object from an image size or an array with width, height and resize mode.
      *
-     * @param int|array $size
-     * @param Image     $image
+     * @param int|array|null $size
+     * @param ImageInterface $image
      *
      * @return array
      */
-    private function createConfig($size, Image $image)
+    private function createConfig($size, ImageInterface $image)
     {
         if (!is_array($size)) {
             $size = [0, 0, $size];

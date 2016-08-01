@@ -12,15 +12,15 @@ namespace Contao\CoreBundle\Image;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
-use Imagine\Gd\Imagine as GdImagine;
-use Contao\Image as LegacyImage;
 use Contao\File;
-use Contao\System;
-use Contao\Image\Resizer as ImageResizer;
+use Contao\Image as LegacyImage;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeCoordinatesInterface;
 use Contao\Image\ResizeOptionsInterface;
+use Contao\Image\Resizer as ImageResizer;
+use Contao\System;
+use Imagine\Gd\Imagine as GdImagine;
 
 /**
  * Resizes Image objects via Contao\Image\Resizer and executes legacy hooks.

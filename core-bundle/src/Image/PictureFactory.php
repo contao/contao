@@ -11,15 +11,15 @@
 namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\ImageSizeItemModel;
+use Contao\ImageSizeModel;
 use Contao\Image\ImageInterface;
-use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
+use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
-use Contao\ImageSizeItemModel;
-use Contao\ImageSizeModel;
 
 /**
  * Creates Picture objects.
@@ -104,7 +104,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * Creates a picture configuration.
      *
-     * @param int|array $size
+     * @param int|array|null $size
      *
      * @return PictureConfiguration
      */
@@ -164,7 +164,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * Creates a picture configuration item.
      *
-     * @param ImageSizeModel|ImageSizeItemModel $imageSize
+     * @param ImageSizeModel|ImageSizeItemModel|null $imageSize
      *
      * @return PictureConfigurationItem
      */

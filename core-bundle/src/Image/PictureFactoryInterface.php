@@ -12,8 +12,8 @@ namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\ImageInterface;
-use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureConfigurationInterface;
+use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 
 /**
@@ -43,8 +43,8 @@ interface PictureFactoryInterface
     /**
      * Creates a Picture object.
      *
-     * @param string|ImageInterface                   $path
-     * @param int|array|PictureConfigurationInterface $size
+     * @param string|ImageInterface                        $path
+     * @param int|array|PictureConfigurationInterface|null $size
      *
      * @return PictureInterface
      */
