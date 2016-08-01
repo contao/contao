@@ -216,6 +216,7 @@ class Comments extends \Frontend
 			$arrFields['captcha'] = array
 			(
 				'name'      => 'captcha',
+				'label'     => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
 				'eval'      => array('mandatory'=>true)
 			);
