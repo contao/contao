@@ -52,7 +52,7 @@ class Resizer extends ImageResizer
         )) {
             @trigger_error(
                 'Using the executeResize and getImage hooks has been deprecated and will no longer work in Contao 5.0. '
-                    .'Use the resize service instead.',
+                    .'Replace the contao.image.resizer service instead.',
                 E_USER_DEPRECATED
             );
 

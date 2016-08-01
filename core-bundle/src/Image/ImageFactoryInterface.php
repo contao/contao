@@ -50,8 +50,9 @@ interface ImageFactoryInterface
     /**
      * Creates an Image object.
      *
-     * @param string|ImageInterface                  $path
-     * @param int|array|ResizeConfigurationInterface $size
+     * @param string|ImageInterface                  $path       The path to the source image or an Image object
+     * @param int|array|ResizeConfigurationInterface $size       The ID of an image size, an array with width, height
+     *                                                           and resize mode or a ResizeConfiguration object
      * @param string                                 $targetPath
      *
      * @return ImageInterface

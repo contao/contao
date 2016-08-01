@@ -44,7 +44,7 @@ use Imagine\Image\Point;
  * @author Martin Auswöger <https://github.com/ausi>
  * @author Yanick Witschi <https://github.com/Toflar>
  *
- * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
+ * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
  *             Use the contao.image.picture_factory service instead.
  */
 class Picture
