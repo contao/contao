@@ -728,7 +728,11 @@ class File extends \System
 			return false;
 		}
 
-		$return = \Image::resize($this->strFile, $width, $height, $mode);
+		$return = \System::getContainer()
+			->get('contao.image.image_factory')
+			->create(TL_ROOT . '/' . $this->strFile, array($width, $height, $mode), TL_ROOT . '/' . $this->strFile)
+			->getUrl(TL_ROOT)
+		;
 
 		if ($return)
 		{
