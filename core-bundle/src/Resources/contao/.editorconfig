@@ -1,0 +1,14 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+[*.php]
+indent_style = tab
+
+[*.css]
+indent_style = tab
+
+[*.js]
+indent_style = tab
+
+[*.html5]
+indent_style = space
+indent_size = 2
