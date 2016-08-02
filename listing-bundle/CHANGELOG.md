@@ -1,5 +1,9 @@
 # Contao listing bundle change log
 
+### 4.2.2 (2016-10-31)
+
+ * Add the .editorconfig files.
+
 ### 4.2.1 (2016-07-15)
 
  * Require at least version 4.2.1 of the contao/core-bundle.
