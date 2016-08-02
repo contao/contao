@@ -185,7 +185,7 @@ class Combiner extends \System
 	/**
 	 * Generates the files and returns the URLs.
 	 *
-	 * @return array The file URLS
+	 * @return array The file URLs
 	 */
 	public function getFileUrls()
 	{
