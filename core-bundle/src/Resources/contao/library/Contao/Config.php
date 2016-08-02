@@ -489,12 +489,11 @@ class Config
 			return;
 		}
 
-		if ($container->hasParameter('contao.localconfig'))
+		if ($container->hasParameter('contao.localconfig') && is_array($params = $container->getParameter('contao.localconfig')))
 		{
-			foreach ($container->getParameter('contao.localconfig') as $key=>$value)
+			foreach ($params as $key=>$value)
 			{
-				$camelCased = lcfirst(strtr(ucwords(strtr($key, array('_'=>' '))), array(' '=>'')));
-				$GLOBALS['TL_CONFIG'][$camelCased] = $value;
+				$GLOBALS['TL_CONFIG'][$key] = $value;
 			}
 		}
 
