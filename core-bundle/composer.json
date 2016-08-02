@@ -11,6 +11,9 @@
     ],
     "require": {
         "php": ">=5.5.0",
+        "ext-dom": "*",
+        "ext-gd": "*",
+        "ext-pcre": "*",
         "symfony/framework-bundle": "~2.8|~3.0",
         "symfony/console": "~2.8|~3.0",
         "symfony/filesystem": "~2.8|~3.0",
@@ -39,6 +42,7 @@
         "contao-components/all": "^5.0.2"
     },
     "require-dev": {
+        "ext-fileinfo": "*",
         "composer/composer": "~1.0",
         "friendsofphp/php-cs-fixer": "~1.8",
         "lexik/maintenance-bundle": "~2.0",
