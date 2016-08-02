@@ -78,16 +78,30 @@ class DcaLoader extends \Controller
 		}
 		else
 		{
+			$blnBubble = false;
+
 			try
 			{
 				foreach (\System::getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false) as $file)
 				{
-					include $file;
+					try
+					{
+						include $file;
+					}
+					catch (\InvalidArgumentException $e)
+					{
+						$blnBubble = true;
+						throw $e;
+					}
 				}
 			}
 			catch (\InvalidArgumentException $e)
 			{
-				\System::getContainer()->get('monolog.logger.contao')->notice($e->getMessage(), ['exception' => $e]);
+				// Re-throw the InvalidArgumentException if it has originated from a DCA file
+				if ($blnBubble)
+				{
+					throw $e;
+				}
 			}
 		}
 
