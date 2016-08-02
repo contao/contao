@@ -9,14 +9,6 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.php]
-indent_style = space
-indent_size = 4
-
-[*.yml]
-indent_style = space
-indent_size = 4
-
-[*.twig]
+[*.{php,twig,yml}]
 indent_style = space
 indent_size = 4

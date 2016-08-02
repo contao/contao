@@ -1,12 +1,6 @@
 # EditorConfig is awesome: http://EditorConfig.org
 
-[*.php]
-indent_style = tab
-
-[*.css]
-indent_style = tab
-
-[*.js]
+[*.{css,js,php}]
 indent_style = tab
 
 [*.html5]
