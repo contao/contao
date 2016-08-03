@@ -79,7 +79,6 @@ class ImageTest extends TestCase
         define('TL_ROOT', self::$rootDir);
 
         $container = $this->mockContainerWithContaoScopes();
-
         $this->addImageServicesToContainer($container, self::$rootDir);
 
         System::setContainer($container);

@@ -148,9 +148,9 @@ class ImageFactory implements ImageFactoryInterface
     }
 
     /**
-     * Creates a resize configuration object from an image size or an array with width, height and resize mode.
+     * Creates a resize configuration object.
      *
-     * @param int|array|null $size
+     * @param int|array|null $size  An image size or an array with width, height and resize mode
      * @param ImageInterface $image
      *
      * @return array

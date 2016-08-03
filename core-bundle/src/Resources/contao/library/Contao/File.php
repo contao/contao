@@ -545,7 +545,6 @@ class File extends \System
 
 		// Move the temporary file to its destination
 		$return = $this->Files->rename($this->strTmp, $this->strFile);
-
 		$this->strTmp = null;
 
 		// Update the database
