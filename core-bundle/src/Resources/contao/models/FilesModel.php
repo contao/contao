@@ -231,7 +231,7 @@ class FilesModel extends \Model
 			$path = substr($path, strlen(TL_ROOT) + 1);
 		}
 
-		return static::findBy('path', $path, $arrOptions);
+		return static::findOneBy('path', $path, $arrOptions);
 	}
 
 
