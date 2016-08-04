@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+@trigger_error('Using the Contao\GdImage class has been deprecated and will no longer work in Contao 5.0. Use the Imagine library instead.', E_USER_DEPRECATED);
+
 
 /**
  * GD image class
@@ -26,6 +28,9 @@ namespace Contao;
  *            ->saveToFile('image.jpg');
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
+ *             Use the Imagine library instead.
  */
 class GdImage
 {
@@ -190,7 +195,7 @@ class GdImage
 			case 'jpg':
 			case 'jpeg':
 				imageinterlace($this->gdResource, 1); // see #6529
-				imagejpeg($this->gdResource, $path, (\Config::get('jpgQuality') ?: 80));
+				imagejpeg($this->gdResource, $path, (\System::getContainer()->getParameter('contao.image.imagine_options')['jpeg_quality'] ?: 80));
 				break;
 
 			case 'png':

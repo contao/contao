@@ -511,7 +511,7 @@ abstract class DataContainer extends \Backend
 				{
 					if ($objFile->width > 699 || $objFile->height > 524 || !$objFile->width || !$objFile->height)
 					{
-						$image = rawurldecode(\Image::get($objFile->path, 699, 524, 'box'));
+						$image = rawurldecode(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(699, 524, 'box'))->getUrl(TL_ROOT));
 					}
 					else
 					{

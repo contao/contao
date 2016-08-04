@@ -80,7 +80,6 @@ $GLOBALS['TL_CONFIG']['uploadPath']     = 'files';
 $GLOBALS['TL_CONFIG']['maxFileSize']    = 2048000;
 $GLOBALS['TL_CONFIG']['imageWidth']     = 800;
 $GLOBALS['TL_CONFIG']['imageHeight']    = 600;
-$GLOBALS['TL_CONFIG']['jpgQuality']     = 80;
 $GLOBALS['TL_CONFIG']['gdMaxImgWidth']  = 3000;
 $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
 
@@ -113,7 +112,6 @@ $GLOBALS['TL_CONFIG']['maxImageWidth']        = '';
 $GLOBALS['TL_CONFIG']['defaultUser']          = 0;
 $GLOBALS['TL_CONFIG']['defaultGroup']         = 0;
 $GLOBALS['TL_CONFIG']['defaultChmod']         = ['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'g4', 'g5', 'g6'];
-$GLOBALS['TL_CONFIG']['validImageTypes']      = 'jpg,jpeg,gif,png,tif,tiff,bmp,svg,svgz';
 $GLOBALS['TL_CONFIG']['editableFiles']        = 'htm,html,css,scss,less,js,txt,log,xml,svz,svgz';
 $GLOBALS['TL_CONFIG']['templateFiles']        = 'tpl,html5,xhtml';
 $GLOBALS['TL_CONFIG']['allowedDownload']
