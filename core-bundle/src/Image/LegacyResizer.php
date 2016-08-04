@@ -41,15 +41,9 @@ class LegacyResizer extends ImageResizer
      */
     public function resize(ImageInterface $image, ResizeConfigurationInterface $config, ResizeOptionsInterface $options)
     {
-        if ((
-            isset($GLOBALS['TL_HOOKS']['executeResize']) &&
-            is_array($GLOBALS['TL_HOOKS']['executeResize']) &&
-            count($GLOBALS['TL_HOOKS']['executeResize'])
-        ) || (
-            isset($GLOBALS['TL_HOOKS']['getImage']) &&
-            is_array($GLOBALS['TL_HOOKS']['getImage']) &&
-            count($GLOBALS['TL_HOOKS']['getImage'])
-        )) {
+        if (!empty($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize'])
+            || !empty($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage'])
+        ) {
             @trigger_error(
                 'Using the executeResize and getImage hooks has been deprecated and will no longer work in Contao 5.0. '
                     .'Replace the contao.image.resizer service instead.',
@@ -133,17 +127,19 @@ class LegacyResizer extends ImageResizer
             }
         }
 
-        /* @var Config $config */
-        $config = $this->framework->getAdapter('Contao\Config');
+        if ($image->getImagine() instanceof GdImagine) {
+            /* @var Config $config */
+            $config = $this->framework->getAdapter('Contao\Config');
+            $dimensions = $image->getDimensions();
 
-        if ($image->getImagine() instanceof GdImagine
-            && ($image->getDimensions()->getSize()->getWidth() > $config->get('gdMaxImgWidth')
-                || $image->getDimensions()->getSize()->getHeight() > $config->get('gdMaxImgHeight')
+            // Return the path to the original image if it cannot be handled
+            if ($dimensions->getSize()->getWidth() > $config->get('gdMaxImgWidth')
+                || $dimensions->getSize()->getHeight() > $config->get('gdMaxImgHeight')
                 || $coordinates->getSize()->getWidth() > $config->get('gdMaxImgWidth')
                 || $coordinates->getSize()->getHeight() > $config->get('gdMaxImgHeight')
-            )
-        ) {
-            return $this->createImage($image, $image->getPath());
+            ) {
+                return $this->createImage($image, $image->getPath());
+            }
         }
 
         return parent::executeResize($image, $coordinates, $path, $options);

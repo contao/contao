@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Contao\Image\ResizeConfiguration;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 
 /**
