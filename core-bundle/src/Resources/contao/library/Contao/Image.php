@@ -455,6 +455,7 @@ class Image
 			}
 
 			$this->resizedPath = \System::urlEncode($this->getTargetPath());
+
 			return $this;
 		}
 
@@ -499,7 +500,7 @@ class Image
 			$imagine = \System::getContainer()->get('contao.image.imagine');
 		}
 
-		$image = new NewImage($imagine, \System::getContainer()->get('filesystem'), (string) TL_ROOT . '/' . $this->fileObj->path);
+		$image = new NewImage(TL_ROOT . '/' . $this->fileObj->path, $imagine, \System::getContainer()->get('filesystem'));
 		$image->setImportantPart($this->prepareImportantPart());
 
 		return $image;

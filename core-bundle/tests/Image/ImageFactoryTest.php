@@ -10,21 +10,21 @@
 
 namespace Contao\CoreBundle\Test\Image;
 
-use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Image\ImageFactory;
-use Contao\CoreBundle\Image\Resizer;
+use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Test\TestCase;
 use Contao\Image\Image;
 use Contao\Image\ImportantPart;
 use Contao\Image\ResizeCalculator;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\System;
-use Imagine\Image\ImagineInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Imagine\Image\Box;
-use Imagine\Image\Point;
 use Imagine\Gd\Imagine;
+use Imagine\Image\Box;
+use Imagine\Image\ImagineInterface;
+use Imagine\Image\Point;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Tests the ImageFactory class.
@@ -606,10 +606,9 @@ class ImageFactoryTest extends TestCase
 
         $path = $this->getRootDir().'/images/dummy.jpg';
 
-        $resizer = new Resizer(
-            new ResizeCalculator(),
-            new Filesystem(),
-            $this->getRootDir().'/assets/images'
+        $resizer = new LegacyResizer(
+            $this->getRootDir().'/assets/images',
+            new ResizeCalculator()
         );
 
         $imagine = new Imagine();
@@ -719,10 +718,9 @@ class ImageFactoryTest extends TestCase
 
         $path = $this->getRootDir().'/images/dummy.jpg';
 
-        $resizer = new Resizer(
-            new ResizeCalculator(),
-            new Filesystem(),
-            $this->getRootDir().'/assets/images'
+        $resizer = new LegacyResizer(
+            $this->getRootDir().'/assets/images',
+            new ResizeCalculator()
         );
 
         $imagine = new Imagine();
@@ -853,10 +851,9 @@ class ImageFactoryTest extends TestCase
 
         $path = $this->getRootDir().'/images/dummy.jpg';
 
-        $resizer = new Resizer(
-            new ResizeCalculator(),
-            new Filesystem(),
-            $this->getRootDir().'/assets/images'
+        $resizer = new LegacyResizer(
+            $this->getRootDir().'/assets/images',
+            new ResizeCalculator()
         );
 
         $imagine = new Imagine();
@@ -938,7 +935,7 @@ class ImageFactoryTest extends TestCase
     /**
      * Create an ImageFactory instance helper.
      *
-     * @param Resizer|null                  $resizer
+     * @param LegacyResizer|null            $resizer
      * @param ImagineInterface|null         $imagine
      * @param ImagineInterface|null         $imagineSvg
      * @param Filesystem|null               $filesystem

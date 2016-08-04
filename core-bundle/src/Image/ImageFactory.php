@@ -115,7 +115,7 @@ class ImageFactory implements ImageFactoryInterface
                 throw new \InvalidArgumentException('Image type "'.$fileExtension.'" was not allowed to be processed');
             }
 
-            $image = new Image($imagine, $this->filesystem, (string) $path);
+            $image = new Image((string) $path, $imagine, $this->filesystem);
         }
 
         if (is_object($size) && $size instanceof ResizeConfigurationInterface) {

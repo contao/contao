@@ -27,7 +27,7 @@ use Imagine\Gd\Imagine as GdImagine;
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
-class Resizer extends ImageResizer
+class LegacyResizer extends ImageResizer
 {
     use FrameworkAwareTrait;
 
@@ -109,7 +109,7 @@ class Resizer extends ImageResizer
         ImageInterface $image,
         ResizeCoordinatesInterface $coordinates,
         $path,
-        array $imagineOptions
+        ResizeOptionsInterface $options
     ) {
         if (isset($GLOBALS['TL_HOOKS']['getImage'])
             && is_array($GLOBALS['TL_HOOKS']['getImage'])
@@ -146,6 +146,6 @@ class Resizer extends ImageResizer
             return $this->createImage($image, $image->getPath());
         }
 
-        return parent::executeResize($image, $coordinates, $path, $imagineOptions);
+        return parent::executeResize($image, $coordinates, $path, $options);
     }
 }

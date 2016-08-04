@@ -13,10 +13,10 @@ namespace Contao\CoreBundle\Test;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
-use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\ImageFactory;
-use Contao\CoreBundle\Image\Resizer;
+use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\Image\ResizeCalculator;
 use Contao\Image\PictureGenerator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
@@ -413,11 +413,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $filesystem = new Filesystem();
         $framework = $this->mockContaoFramework();
 
-        $resizer = new Resizer(
-            $calculator,
-            $filesystem,
+        $resizer = new LegacyResizer(
             ($rootDir ?: $this->getRootDir()).'/'.$container->getParameter('contao.image.target_path'),
-            $framework
+            $calculator
         );
 
         $resizer->setFramework($framework);
