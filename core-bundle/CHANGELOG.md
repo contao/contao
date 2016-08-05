@@ -2,6 +2,7 @@
 
 ### 4.2.3 (2016-XX-XX)
 
+ * Improve the exception handling when using the resource locator (see #557).
  * Correctly reset the filter menu in parent view.
 
 ### 4.2.2 (2016-07-28)
