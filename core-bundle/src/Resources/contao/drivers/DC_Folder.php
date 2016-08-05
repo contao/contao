@@ -1253,7 +1253,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 			// Render boxes
 			$class = 'tl_tbox';
-			$blnIsFirst = true;
 
 			foreach ($boxes as $v)
 			{
@@ -1290,13 +1289,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					else
 					{
 						$this->varValue = ($objModel !== null) ? $objModel->$vv : null;
-					}
-
-					// Autofocus the first field
-					if ($blnIsFirst && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'text')
-					{
-						$GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['autofocus'] = 'autofocus';
-						$blnIsFirst = false;
 					}
 
 					// Call load_callback
@@ -1370,13 +1362,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 </div>
 
 </div>
-</form>
-
-<script>
-  window.addEvent(\'domready\', function() {
-    Theme.focusInput("'.$this->strTable.'");
-  });
-</script>';
+</form>';
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = $version . '
@@ -1711,13 +1697,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 </div>
 
 </div>
-</form>
-
-<script>
-  window.addEvent(\'domready\', function() {
-    Theme.focusInput("'.$this->strTable.'");
-  });
-</script>';
+</form>';
 
 			// Set the focus if there is an error
 			if ($this->noReload)
