@@ -161,7 +161,6 @@ class DC_File extends \DataContainer implements \editable
 			// Render boxes
 			$class = 'tl_tbox';
 			$fs = $objSessionBag->get('fieldset_states');
-			$blnIsFirst = true;
 
 			foreach ($boxes as $k=>$v)
 			{
@@ -238,13 +237,6 @@ class DC_File extends \DataContainer implements \editable
 						}
 					}
 
-					// Autofocus the first field
-					if ($blnIsFirst && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'text')
-					{
-						$GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['autofocus'] = 'autofocus';
-						$blnIsFirst = false;
-					}
-
 					// Call load_callback
 					if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback']))
 					{
@@ -312,13 +304,7 @@ class DC_File extends \DataContainer implements \editable
 </div>
 
 </div>
-</form>
-
-<script>
-  window.addEvent(\'domready\', function() {
-    Theme.focusInput("'.$this->strTable.'");
-  });
-</script>';
+</form>';
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = '
