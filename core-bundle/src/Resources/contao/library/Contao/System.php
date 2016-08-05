@@ -389,32 +389,30 @@ abstract class System
 			{
 				try
 				{
-					/** @var SplFileInfo[] $files */
 					$files = static::getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.php', null, false);
-
-					foreach ($files as $file)
-					{
-						include $file;
-					}
 				}
 				catch (\InvalidArgumentException $e)
 				{
-					// There are no .php files
+					$files = array();
+				}
+
+				foreach ($files as $file)
+				{
+					include $file;
 				}
 
 				try
 				{
-					/** @var SplFileInfo[] $files */
 					$files = static::getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.xlf', null, false);
-
-					foreach ($files as $file)
-					{
-						$xlfLoader->load($file, $strCreateLang);
-					}
 				}
 				catch (\InvalidArgumentException $e)
 				{
-					// There are no .xlf files
+					$files = array();
+				}
+
+				foreach ($files as $file)
+				{
+					$xlfLoader->load($file, $strCreateLang);
 				}
 			}
 		}

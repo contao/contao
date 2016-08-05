@@ -80,12 +80,17 @@ class DcaLoader extends \Controller
 		{
 			try
 			{
-				foreach (\System::getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false) as $file)
-				{
-					include $file;
-				}
+				$files = \System::getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false);
 			}
-			catch (\InvalidArgumentException $e) {}
+			catch (\InvalidArgumentException $e)
+			{
+				$files = array();
+			}
+
+			foreach ($files as $file)
+			{
+				include $file;
+			}
 		}
 
 		// HOOK: allow to load custom settings
