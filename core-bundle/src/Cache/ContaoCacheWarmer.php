@@ -297,15 +297,17 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $mapper = [];
 
         try {
-            foreach ($this->finder->findIn('templates')->name('*.html5') as $file) {
-                $mapper[$file->getBasename('.html5')] = str_replace(
-                    strtr(dirname($this->rootDir), '\\', '/').'/',
-                    '',
-                    strtr($file->getPath(), '\\', '/')
-                );
-            }
+            $files = $this->finder->findIn('templates')->name('*.html5');
         } catch (\InvalidArgumentException $e) {
-            // ignore
+            $files = [];
+        }
+
+        foreach ($files as $file) {
+            $mapper[$file->getBasename('.html5')] = str_replace(
+                strtr(dirname($this->rootDir), '\\', '/').'/',
+                '',
+                strtr($file->getPath(), '\\', '/')
+            );
         }
 
         $this->filesystem->dumpFile(

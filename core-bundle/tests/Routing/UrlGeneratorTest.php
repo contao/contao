@@ -13,8 +13,11 @@ namespace Contao\CoreBundle\Test\Routing;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\Routing\Generator\UrlGenerator as ParentUrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Tests the UrlGenerator class.
@@ -37,6 +40,23 @@ class UrlGeneratorTest extends TestCase
     public function testInstantiation()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Routing\UrlGenerator', $this->getGenerator());
+    }
+
+    /**
+     * Tests the setContext() method.
+     */
+    public function testSetContext()
+    {
+        $generator = new UrlGenerator(
+            new ParentUrlGenerator(new RouteCollection(), new RequestContext()),
+            $this->mockContaoFramework(),
+            false
+        );
+
+        $context = new RequestContext();
+        $generator->setContext($context);
+
+        $this->assertSame($context, $generator->getContext());
     }
 
     /**
@@ -201,6 +221,30 @@ class UrlGeneratorTest extends TestCase
     }
 
     /**
+     * Tests setting the context from a domain.
+     */
+    public function testSetContextFromDomain()
+    {
+        $routes = new RouteCollection();
+        $routes->add('contao_index', new Route('/'));
+
+        $generator = new UrlGenerator(
+            new ParentUrlGenerator($routes, new RequestContext()),
+            $this->mockContaoFramework(),
+            false
+        );
+
+        $this->assertEquals(
+            'https://contao.org/',
+            $generator->generate(
+                'index',
+                ['_domain' => 'contao.org:80', '_ssl' => true],
+                UrlGenerator::ABSOLUTE_URL
+           )
+        );
+    }
+
+    /**
      * Returns an UrlGenerator object.
      *
      * @param bool $prependLocale
@@ -255,7 +299,18 @@ class UrlGeneratorTest extends TestCase
         $configAdapter
             ->expects($this->any())
             ->method('get')
-            ->willReturn($useAutoItem)
+            ->willReturnCallback(function ($key) use ($useAutoItem) {
+                switch ($key) {
+                    case 'useAutoItem':
+                        return $useAutoItem;
+
+                    case 'timeZone':
+                        return 'Europe/Berlin';
+
+                    default:
+                        return null;
+                }
+            })
         ;
 
         return new UrlGenerator(

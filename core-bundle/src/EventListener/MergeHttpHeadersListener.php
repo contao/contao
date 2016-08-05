@@ -80,7 +80,7 @@ class MergeHttpHeadersListener
      */
     public function getMultiHeaders()
     {
-        return $this->multiHeaders;
+        return array_values($this->multiHeaders);
     }
 
     /**
