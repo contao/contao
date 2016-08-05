@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Exception;
 
 /**
- * Class PalettePositionException
+ * Class PalettePositionException.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */

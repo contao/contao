@@ -11,7 +11,7 @@
 namespace Contao\CoreBundle\Exception;
 
 /**
- * Class PaletteNotFoundException
+ * Class PaletteNotFoundException.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
