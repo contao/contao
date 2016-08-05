@@ -313,7 +313,6 @@ class Installer extends \Controller
 	{
 		try
 		{
-			/** @var SplFileInfo[] $files */
 			$files = \System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
 		}
 		catch (\InvalidArgumentException $e)
