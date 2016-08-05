@@ -10,8 +10,8 @@
 
 namespace Contao\CoreBundle\DataContainer;
 
-use Contao\CoreBundle\Exception\PalettePositionException;
 use Contao\CoreBundle\Exception\PaletteNotFoundException;
+use Contao\CoreBundle\Exception\PalettePositionException;
 use Contao\StringUtil;
 
 /**
