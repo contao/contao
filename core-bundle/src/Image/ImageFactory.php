@@ -164,7 +164,7 @@ class ImageFactory implements ImageFactoryInterface
         $config = new ResizeConfiguration();
 
         if (isset($size[2]) && is_numeric($size[2])) {
-            /* @var ImageSizeModel $imageModel */
+            /** @var ImageSizeModel $imageModel */
             $imageModel = $this->framework->getAdapter('Contao\ImageSizeModel');
             $imageSize = $imageModel->findByPk($size[2]);
 
@@ -238,7 +238,7 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function createImportantPart($path)
     {
-        /* @var FilesModel $filesModel */
+        /** @var FilesModel $filesModel */
         $filesModel = $this->framework->getAdapter('Contao\FilesModel');
         $file = $filesModel->findByPath($path);
 

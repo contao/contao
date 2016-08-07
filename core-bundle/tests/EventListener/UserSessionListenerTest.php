@@ -99,7 +99,7 @@ class UserSessionListenerTest extends TestCase
         $listener->setContainer($this->mockContainerWithContaoScopes($scope));
         $listener->onKernelRequest($responseEvent);
 
-        /* @var AttributeBagInterface $bag */
+        /** @var AttributeBagInterface $bag */
         $bag = $session->getBag($sessionBagName);
 
         $this->assertSame($sessionValuesToBeSet, $bag->all());
