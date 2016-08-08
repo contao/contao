@@ -27,7 +27,7 @@ use Symfony\Component\Console\Question\Question;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ResetPasswordCommand extends ContainerAwareCommand
+class UserPasswordCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -35,8 +35,8 @@ class ResetPasswordCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('contao:reset-password')
-            ->setDescription('Resets password for a Contao backend user.')
+            ->setName('contao:user:password')
+            ->setDescription('Change the password for a Contao backend user.')
             ->addArgument('username', InputArgument::REQUIRED)
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED)
         ;
@@ -52,6 +52,7 @@ class ResetPasswordCommand extends ContainerAwareCommand
         }
 
         if (null !== $input->getOption('password')) {
+            $output->writeln('<error>Using the password option is not recommended for security reasons!</error>');
             return;
         }
 
