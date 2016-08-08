@@ -53,7 +53,7 @@ class OutputFromCacheListener
 
         $this->framework->initialize();
 
-        /** @var Frontend $frontend */
+        /* @var Frontend $frontend */
         $frontend = $this->framework->getAdapter('Contao\Frontend');
 
         if (null !== ($response = $frontend->getResponseFromCache())) {

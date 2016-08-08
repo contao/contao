@@ -166,7 +166,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao');
         $processed = [];
 
-        /** @var SplFileInfo[] $files */
+        /* @var SplFileInfo[] $files */
         $files = $this->finder->findIn('dca')->files()->name('*.php');
 
         foreach ($files as $file) {
@@ -207,7 +207,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 continue; // the language does not exist
             }
 
-            /** @var SplFileInfo[] $files */
+            /* @var SplFileInfo[] $files */
             foreach ($files as $file) {
                 $name = substr($file->getBasename(), 0, -4);
 
@@ -241,7 +241,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $processed = [];
 
-        /** @var SplFileInfo[] $files */
+        /* @var SplFileInfo[] $files */
         $files = $this->finder->findIn('dca')->files()->name('*.php');
 
         foreach ($files as $file) {

@@ -199,7 +199,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
             ->willReturn($collection)
         ;
 
-        /** @var ContainerInterface|\PHPUnit_Framework_MockObject_MockObject $container */
+        /* @var ContainerInterface|\PHPUnit_Framework_MockObject_MockObject $container */
         $container = $this->getMock(
             'Symfony\Component\DependencyInjection\Container',
             ['get', 'getParameter']

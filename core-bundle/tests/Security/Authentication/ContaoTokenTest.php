@@ -87,7 +87,7 @@ class ContaoTokenTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnauthenticatedUser()
     {
-        /** @var FrontendUser|object $user */
+        /* @var FrontendUser|object $user */
         $user = FrontendUser::getInstance();
         $user->authenticated = false;
 

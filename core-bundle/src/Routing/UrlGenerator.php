@@ -141,7 +141,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $hasAutoItem = false;
         $autoItems = $this->getAutoItems($parameters);
 
-        /** @var Config $config */
+        /* @var Config $config */
         $config = $this->framework->getAdapter('Contao\Config');
 
         $parameters['alias'] = preg_replace_callback(

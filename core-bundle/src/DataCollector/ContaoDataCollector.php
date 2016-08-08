@@ -261,7 +261,7 @@ class ContaoDataCollector extends DataCollector
      */
     private function getLayout()
     {
-        /** @var PageModel $objPage */
+        /* @var PageModel $objPage */
         global $objPage;
 
         if (null === $objPage) {

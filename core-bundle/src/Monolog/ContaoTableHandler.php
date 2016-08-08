@@ -90,10 +90,10 @@ class ContaoTableHandler extends AbstractProcessingHandler
     {
         $this->createStatement();
 
-        /** @var \DateTime $date */
+        /* @var \DateTime $date */
         $date = $record['datetime'];
 
-        /** @var ContaoContext $context */
+        /* @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->statement->execute([
@@ -160,7 +160,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
 
         trigger_error('Using the addLogEntry hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-        /** @var System $system */
+        /* @var System $system */
         $system = $framework->getAdapter('Contao\System');
 
         // Must create variables to allow modification-by-reference in hook

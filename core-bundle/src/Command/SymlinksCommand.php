@@ -127,7 +127,7 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     private function symlinkThemes()
     {
-        /** @var SplFileInfo[] $themes */
+        /* @var SplFileInfo[] $themes */
         $themes = $this->getContainer()->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
@@ -232,7 +232,7 @@ class SymlinksCommand extends AbstractLockedCommand
         $parents = [];
         $files = iterator_to_array($finder);
 
-        /** @var SplFileInfo $file */
+        /* @var SplFileInfo $file */
         foreach ($files as $key => $file) {
             $path = rtrim($prepend.'/'.$file->getRelativePath(), '/');
 

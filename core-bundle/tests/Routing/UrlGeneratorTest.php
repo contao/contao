@@ -259,7 +259,7 @@ class UrlGeneratorTest extends TestCase
      */
     private function getGenerator($prependLocale = false, $returnArgument = 1, $useAutoItem = true)
     {
-        /** @var UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject $router */
+        /* @var UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject $router */
         $router = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
 
         $router
@@ -274,7 +274,7 @@ class UrlGeneratorTest extends TestCase
             ->willReturn(new RequestContext())
         ;
 
-        /** @var Adapter|\PHPUnit_Framework_MockObject_MockObject $configAdapter */
+        /* @var Adapter|\PHPUnit_Framework_MockObject_MockObject $configAdapter */
         $configAdapter = $this
             ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
             ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])

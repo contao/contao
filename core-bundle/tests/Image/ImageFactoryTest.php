@@ -78,13 +78,13 @@ class ImageFactoryTest extends TestCase
             ->method('resize')
             ->with(
                 $this->callback(function ($image) use (&$path) {
-                    /** @var Image $image */
+                    /* @var Image $image */
                     $this->assertEquals($path, $image->getPath());
 
                     return true;
                 }),
                 $this->callback(function ($config) {
-                    /** @var ResizeConfiguration $config */
+                    /* @var ResizeConfiguration $config */
                     $this->assertEquals(100, $config->getWidth());
                     $this->assertEquals(200, $config->getHeight());
                     $this->assertEquals(ResizeConfiguration::MODE_BOX, $config->getMode());
@@ -181,7 +181,7 @@ class ImageFactoryTest extends TestCase
             ->method('resize')
             ->with(
                 $this->callback(function ($image) use ($path) {
-                    /** @var Image $image */
+                    /* @var Image $image */
                     $this->assertEquals($path, $image->getPath());
 
                     $this->assertEquals(
@@ -192,7 +192,7 @@ class ImageFactoryTest extends TestCase
                     return true;
                 }),
                 $this->callback(function ($config) {
-                    /** @var ResizeConfiguration $config */
+                    /* @var ResizeConfiguration $config */
                     $this->assertEquals(100, $config->getWidth());
                     $this->assertEquals(200, $config->getHeight());
                     $this->assertEquals(ResizeConfiguration::MODE_BOX, $config->getMode());
@@ -201,7 +201,7 @@ class ImageFactoryTest extends TestCase
                     return true;
                 }),
                 $this->callback(function ($options) {
-                    /** @var ResizeOptions $options */
+                    /* @var ResizeOptions $options */
                     $this->assertEquals(['jpeg_quality' => 80], $options->getImagineOptions());
                     $this->assertEquals($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
 
@@ -389,7 +389,7 @@ class ImageFactoryTest extends TestCase
                     return true;
                 }),
                 $this->callback(function ($options) {
-                    /** @var ResizeOptions $options */
+                    /* @var ResizeOptions $options */
                     $this->assertEquals(['jpeg_quality' => 80], $options->getImagineOptions());
                     $this->assertEquals($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
 
@@ -456,7 +456,7 @@ class ImageFactoryTest extends TestCase
             ->method('resize')
             ->with(
                 $this->callback(function ($image) use ($path, $expected) {
-                    /** @var Image $image */
+                    /* @var Image $image */
                     $this->assertEquals($path, $image->getPath());
 
                     $this->assertEquals(
@@ -467,7 +467,7 @@ class ImageFactoryTest extends TestCase
                     return true;
                 }),
                 $this->callback(function ($config) {
-                    /** @var ResizeConfiguration $config */
+                    /* @var ResizeConfiguration $config */
                     $this->assertEquals(50, $config->getWidth());
                     $this->assertEquals(50, $config->getHeight());
                     $this->assertEquals(ResizeConfiguration::MODE_CROP, $config->getMode());

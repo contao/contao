@@ -53,7 +53,7 @@ class CommandSchedulerListener
             return;
         }
 
-        /** @var FrontendCron $controller */
+        /* @var FrontendCron $controller */
         $controller = $this->framework->createInstance('Contao\FrontendCron');
         $controller->run();
     }
@@ -65,7 +65,7 @@ class CommandSchedulerListener
      */
     private function canRunController()
     {
-        /** @var Config $config */
+        /* @var Config $config */
         $config = $this->framework->getAdapter('Contao\Config');
 
         return $config->isComplete()

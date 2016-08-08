@@ -87,7 +87,7 @@ class PictureTest extends TestCase
      */
     public function testInstantiation()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /* @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this
             ->getMockBuilder('Contao\File')
             ->setMethods(['__get', 'exists'])
