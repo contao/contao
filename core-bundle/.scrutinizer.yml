@@ -98,7 +98,7 @@ checks:
         missing_arguments: true
         method_calls_on_non_object: true
         line_length:
-            max_length: '120'
+            max_length: '0'
         instanceof_class_exists: true
         function_in_camel_caps: true
         foreach_usable_as_reference: true
