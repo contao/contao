@@ -58,7 +58,10 @@ class StoreRefererListenerTest extends TestCase
         );
 
         $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
-        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+
+        $tokenStorage = $this->getMock(
+            'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+        );
 
         $tokenStorage
             ->expects($this->any())
@@ -102,7 +105,9 @@ class StoreRefererListenerTest extends TestCase
             ->method('set')
         ;
 
-        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage = $this->getMock(
+            'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+        );
 
         $tokenStorage
             ->expects($this->once())
@@ -158,7 +163,10 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
-        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+
+        $tokenStorage = $this->getMock(
+            'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+        );
 
         $tokenStorage
             ->expects($this->any())
@@ -298,7 +306,9 @@ class StoreRefererListenerTest extends TestCase
         }
 
         if (null === $tokenStorage) {
-            $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+            $tokenStorage = $this->getMock(
+                'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+            );
         }
 
         $listener = new StoreRefererListener($session);

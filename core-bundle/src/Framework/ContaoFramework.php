@@ -99,13 +99,8 @@ class ContaoFramework implements ContaoFrameworkInterface
      * @param string           $rootDir
      * @param int              $errorLevel
      */
-    public function __construct(
-        RequestStack $requestStack,
-        RouterInterface $router,
-        SessionInterface $session,
-        $rootDir,
-        $errorLevel
-    ) {
+    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, $rootDir, $errorLevel)
+    {
         $this->router = $router;
         $this->session = $session;
         $this->rootDir = $rootDir;
@@ -407,11 +402,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         if (file_exists($this->rootDir.'/../system/config/initconfig.php')) {
-            @trigger_error(
-                'Using the initconfig.php file has been deprecated and will no longer work in Contao 5.0.',
-                E_USER_DEPRECATED
-            );
-
+            @trigger_error('Using the initconfig.php file has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
             include $this->rootDir.'/../system/config/initconfig.php';
         }
     }

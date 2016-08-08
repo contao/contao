@@ -31,7 +31,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testEmail($email, $expected)
     {
-        $this->assertEquals($expected, Validator::isEmail($email), 'Original: '.$email.' idna: '.Idna::encodeEmail($email));
+        $this->assertEquals(
+            $expected,
+            Validator::isEmail($email),
+            'Original: '.$email.' idna: '.Idna::encodeEmail($email)
+        );
     }
 
     /**

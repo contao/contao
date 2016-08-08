@@ -237,11 +237,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return ContaoFramework The object instance
      */
-    public function mockContaoFramework(
-        RequestStack $requestStack = null,
-        RouterInterface $router = null,
-        array $adapters = []
-    ) {
+    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [])
+    {
         $container = $this->mockContainerWithContaoScopes();
 
         if (null === $requestStack) {

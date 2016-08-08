@@ -37,8 +37,8 @@ class ContaoUserProvider implements UserProviderInterface
     /**
      * Constructor.
      *
-     * @param ContainerInterface
-     * @param ContaoFrameworkInterface
+     * @param ContainerInterface       $container
+     * @param ContaoFrameworkInterface $framework
      */
     public function __construct(ContainerInterface $container, ContaoFrameworkInterface $framework)
     {

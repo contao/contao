@@ -1079,15 +1079,39 @@ class ImageTest extends TestCase
         // expected cache name
         return [
             [
-                [100, 100, 'dummy.jpg', 'crop', 0, 12345678, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]],
+                [
+                    100,
+                    100,
+                    'dummy.jpg',
+                    'crop',
+                    0,
+                    12345678,
+                    ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]
+                ],
                 'assets/images/c/dummy.jpg-fc94db8c.jpg',
             ],
             [
-                [200, 100, 'test.jpg', 'proportional', 50, 87654321, ['x' => 30, 'y' => 20, 'width' => 60, 'height' => 90]],
+                [
+                    200,
+                    100,
+                    'test.jpg',
+                    'proportional',
+                    50,
+                    87654321,
+                    ['x' => 30, 'y' => 20, 'width' => 60, 'height' => 90]
+                ],
                 'assets/images/3/test.jpg-4e7b07e3.jpg',
             ],
             [
-                [100, 200, 'other.jpg', 'center_center', 100, 6666666, ['x' => 10, 'y' => 20, 'width' => 70, 'height' => 20]],
+                [
+                    100,
+                    200,
+                    'other.jpg',
+                    'center_center',
+                    100,
+                    6666666,
+                    ['x' => 10, 'y' => 20, 'width' => 70, 'height' => 20]
+                ],
                 'assets/images/f/other.jpg-1fe4f44f.jpg',
             ],
         ];
@@ -1673,16 +1697,8 @@ class ImageTest extends TestCase
      *
      * @return string
      */
-    public static function getImageHookCallback(
-        $originalPath,
-        $targetWidth,
-        $targetHeight,
-        $resizeMode,
-        $cacheName,
-        $fileObj,
-        $targetPath,
-        $imageObj
-    ) {
+    public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj)
+    {
         // Do not include $cacheName as it is dynamic (mtime)
         $path = 'assets/'
             .$originalPath

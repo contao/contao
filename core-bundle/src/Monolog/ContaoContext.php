@@ -199,14 +199,12 @@ class ContaoContext
      */
     public function __toString()
     {
-        return json_encode(
-            [
-                'func' => $this->func,
-                'action' => $this->action,
-                'username' => $this->username,
-                'ip' => $this->ip,
-                'browser' => $this->browser,
-            ]
-        );
+        return json_encode([
+            'func' => $this->func,
+            'action' => $this->action,
+            'username' => $this->username,
+            'ip' => $this->ip,
+            'browser' => $this->browser,
+        ]);
     }
 }

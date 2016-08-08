@@ -268,6 +268,6 @@ class ContaoDataCollector extends DataCollector
             return null;
         }
 
-        return $objPage->getRelated('layout');
+        return LayoutModel::findByPk($objPage->layoutId);
     }
 }

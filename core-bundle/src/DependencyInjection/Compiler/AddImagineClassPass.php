@@ -25,9 +25,9 @@ class AddImagineClassPass implements CompilerPassInterface
      * @var array
      */
     private $implementations = [
-        'Gd',
-        'Gmagick',
         'Imagick',
+        'Gmagick',
+        'Gd',
     ];
 
     /**
@@ -58,6 +58,6 @@ class AddImagineClassPass implements CompilerPassInterface
             return $class;
         }
 
-        throw new \RuntimeException('No Imagine implementation is available (Gd, Gmagick or Imagick)');
+        throw new \RuntimeException('No Imagine implementation is available (Imagick, Gmagick or Gd)');
     }
 }

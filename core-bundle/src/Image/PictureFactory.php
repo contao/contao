@@ -56,13 +56,8 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct(
-        PictureGeneratorInterface $pictureGenerator,
-        ImageFactoryInterface $imageFactory,
-        ContaoFrameworkInterface $framework,
-        $bypassCache,
-        array $imagineOptions
-    ) {
+    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions)
+    {
         $this->pictureGenerator = $pictureGenerator;
         $this->imageFactory = $imageFactory;
         $this->framework = $framework;
@@ -95,9 +90,7 @@ class PictureFactory implements PictureFactoryInterface
         return $this->pictureGenerator->generate(
             $image,
             $config,
-            (new ResizeOptions())
-                ->setImagineOptions($this->imagineOptions)
-                ->setBypassCache($this->bypassCache)
+            (new ResizeOptions())->setImagineOptions($this->imagineOptions)->setBypassCache($this->bypassCache)
         );
     }
 

@@ -32,13 +32,7 @@ interface PictureFactoryInterface
      * @param bool                      $bypassCache
      * @param array                     $imagineOptions
      */
-    public function __construct(
-        PictureGeneratorInterface $pictureGenerator,
-        ImageFactoryInterface $imageFactory,
-        ContaoFrameworkInterface $framework,
-        $bypassCache,
-        array $imagineOptions
-    );
+    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions);
 
     /**
      * Creates a Picture object.

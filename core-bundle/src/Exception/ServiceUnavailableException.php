@@ -10,11 +10,7 @@
 
 namespace Contao\CoreBundle\Exception;
 
-@trigger_error(
-    'Using the ServiceUnavailableException class has been deprecated and will no longer work in Contao 5.0. Use the '
-        .'Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException class instead.',
-    E_USER_DEPRECATED
-);
+@trigger_error('Using the ServiceUnavailableException class has been deprecated and will no longer work in Contao 5.0. Use the Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException class instead.', E_USER_DEPRECATED);
 
 /**
  * Serivce unavailable exception.

@@ -87,7 +87,9 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage = $this->getMock(
+            'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+        );
 
         $tokenStorage
             ->expects($this->any())
@@ -156,7 +158,9 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage = $this->getMock(
+            'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+        );
 
         $tokenStorage
             ->expects($this->any())
@@ -191,7 +195,9 @@ class UserSessionListenerTest extends TestCase
             ->method('getBag')
         ;
 
-        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage = $this->getMock(
+            'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+        );
 
         $tokenStorage
             ->expects($this->once())
@@ -226,7 +232,9 @@ class UserSessionListenerTest extends TestCase
             ->method('getBag')
         ;
 
-        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage = $this->getMock(
+            'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+        );
 
         $tokenStorage
             ->expects($this->once())
@@ -327,7 +335,9 @@ class UserSessionListenerTest extends TestCase
         ;
 
         /** @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
-        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage = $this->getMock(
+            'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+        );
 
         $tokenStorage
             ->expects($this->any())
@@ -381,7 +391,9 @@ class UserSessionListenerTest extends TestCase
         ;
 
         /** @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
-        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $tokenStorage = $this->getMock(
+            'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+        );
 
         $tokenStorage
             ->expects($this->any())
@@ -462,11 +474,8 @@ class UserSessionListenerTest extends TestCase
      *
      * @return UserSessionListener
      */
-    private function getListener(
-        SessionInterface $session = null,
-        Connection $connection = null,
-        TokenStorageInterface $tokenStorage = null
-    ) {
+    private function getListener(SessionInterface $session = null, Connection $connection = null, TokenStorageInterface $tokenStorage = null)
+    {
         if (null === $session) {
             $session = $this->mockSession();
         }
@@ -476,7 +485,9 @@ class UserSessionListenerTest extends TestCase
         }
 
         if (null === $tokenStorage) {
-            $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+            $tokenStorage = $this->getMock(
+                'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+            );
         }
 
         $listener = new UserSessionListener($session, $connection);

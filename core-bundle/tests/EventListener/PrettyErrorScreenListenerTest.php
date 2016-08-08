@@ -341,7 +341,10 @@ class PrettyErrorScreenListenerTest extends TestCase
         ;
 
         /** @var TokenStorage|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
-        $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage', ['getToken']);
+        $tokenStorage = $this->getMock(
+            'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage',
+            ['getToken']
+        );
 
         $tokenStorage
             ->expects($this->any())

@@ -346,7 +346,9 @@ class ContaoTableProcessorTest extends TestCase
         }
 
         if (null === $tokenStorage) {
-            $tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+            $tokenStorage = $this->getMock(
+                'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+            );
         }
 
         return new ContaoTableProcessor($requestStack, $tokenStorage, $anonymizeIp);

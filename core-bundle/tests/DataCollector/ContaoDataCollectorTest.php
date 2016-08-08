@@ -86,7 +86,10 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testCollectInFrontendScope()
     {
-        $collector = new ContaoDataCollector($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND), []);
+        $collector = new ContaoDataCollector(
+            $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND),
+            []
+        );
 
         $layout = new \stdClass();
         $layout->name = 'Default';

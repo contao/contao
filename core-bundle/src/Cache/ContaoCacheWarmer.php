@@ -72,14 +72,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      * @param Connection               $connection
      * @param ContaoFrameworkInterface $framework
      */
-    public function __construct(
-        Filesystem $filesystem,
-        ResourceFinderInterface $finder,
-        FileLocator $locator,
-        $rootDir,
-        Connection $connection,
-        ContaoFrameworkInterface $framework
-    ) {
+    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, $rootDir, Connection $connection, ContaoFrameworkInterface $framework)
+    {
         $this->filesystem = $filesystem;
         $this->finder = $finder;
         $this->locator = $locator;
@@ -169,12 +163,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     private function generateDcaCache($cacheDir)
     {
-        $dumper = new CombinedFileDumper(
-            $this->filesystem,
-            new PhpFileLoader(),
-            $cacheDir.'/contao'
-        );
-
+        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao');
         $processed = [];
 
         /** @var SplFileInfo[] $files */
@@ -228,11 +217,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
                 $processed[] = $name;
 
-                $subfiles = $this->finder
-                    ->findIn('languages/'.$language)
-                    ->files()
-                    ->name('/^'.$name.'\.(php|xlf)$/')
-                ;
+                $subfiles = $this->finder->findIn('languages/'.$language)->files()->name('/^'.$name.'\.(php|xlf)$/');
 
                 try {
                     $dumper->dump(

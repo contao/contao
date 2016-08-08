@@ -804,16 +804,8 @@ class ImageFactoryTest extends TestCase
      *
      * @return string The image path
      */
-    public static function getImageHookCallback(
-        $originalPath,
-        $targetWidth,
-        $targetHeight,
-        $resizeMode,
-        $cacheName,
-        $fileObj,
-        $targetPath,
-        $imageObj
-    ) {
+    public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj)
+    {
         // Do not include $cacheName as it is dynamic (mtime)
         $path = 'assets/'
             .$originalPath
@@ -946,16 +938,8 @@ class ImageFactoryTest extends TestCase
      *
      * @return ImageFactory
      */
-    private function createImageFactory(
-        $resizer = null,
-        $imagine = null,
-        $imagineSvg = null,
-        $filesystem = null,
-        $framework = null,
-        $bypassCache = null,
-        $imagineOptions = null,
-        $validExtensions = null
-    ) {
+    private function createImageFactory($resizer = null, $imagine = null, $imagineSvg = null, $filesystem = null, $framework = null, $bypassCache = null, $imagineOptions = null, $validExtensions = null)
+    {
         if (null === $resizer) {
             $resizer = $this
                 ->getMockBuilder('Contao\Image\Resizer')

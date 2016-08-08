@@ -36,16 +36,7 @@ interface ImageFactoryInterface
      * @param array                    $imagineOptions
      * @param array                    $validExtensions
      */
-    public function __construct(
-        ResizerInterface $resizer,
-        ImagineInterface $imagine,
-        ImagineInterface $imagineSvg,
-        Filesystem $filesystem,
-        ContaoFrameworkInterface $framework,
-        $bypassCache,
-        array $imagineOptions,
-        array $validExtensions
-    );
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions, array $validExtensions);
 
     /**
      * Creates an Image object.

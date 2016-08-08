@@ -75,16 +75,8 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct(
-        ResizerInterface $resizer,
-        ImagineInterface $imagine,
-        ImagineInterface $imagineSvg,
-        Filesystem $filesystem,
-        ContaoFrameworkInterface $framework,
-        $bypassCache,
-        array $imagineOptions,
-        array $validExtensions
-    ) {
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions, array $validExtensions)
+    {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
         $this->imagineSvg = $imagineSvg;
@@ -112,7 +104,9 @@ class ImageFactory implements ImageFactoryInterface
             }
 
             if (!in_array($fileExtension, $this->validExtensions)) {
-                throw new \InvalidArgumentException('Image type "'.$fileExtension.'" was not allowed to be processed');
+                throw new \InvalidArgumentException(
+                    sprintf('Image type "%s" was not allowed to be processed', $fileExtension)
+                );
             }
 
             $image = new Image((string) $path, $imagine, $this->filesystem);

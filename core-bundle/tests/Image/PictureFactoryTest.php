@@ -444,13 +444,8 @@ class PictureFactoryTest extends TestCase
      *
      * @return PictureFactory
      */
-    private function createPictureFactory(
-        $pictureGenerator = null,
-        $imageFactory = null,
-        $framework = null,
-        $bypassCache = null,
-        $imagineOptions = null
-    ) {
+    private function createPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null, $bypassCache = null, $imagineOptions = null)
+    {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this
                 ->getMockBuilder('Contao\Image\PictureGenerator')

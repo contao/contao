@@ -44,11 +44,7 @@ class LegacyResizer extends ImageResizer
         if (!empty($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize'])
             || !empty($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage'])
         ) {
-            @trigger_error(
-                'Using the executeResize and getImage hooks has been deprecated and will no longer work in Contao 5.0. '
-                    .'Replace the contao.image.resizer service instead.',
-                E_USER_DEPRECATED
-            );
+            @trigger_error('Using the executeResize and getImage hooks has been deprecated and will no longer work in Contao 5.0. Replace the contao.image.resizer service instead.', E_USER_DEPRECATED);
 
             $this->legacyImage = null;
             $legacyPath = $image->getPath();
@@ -99,12 +95,8 @@ class LegacyResizer extends ImageResizer
     /**
      * {@inheritdoc}
      */
-    protected function executeResize(
-        ImageInterface $image,
-        ResizeCoordinatesInterface $coordinates,
-        $path,
-        ResizeOptionsInterface $options
-    ) {
+    protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, $path, ResizeOptionsInterface $options)
+    {
         if (isset($GLOBALS['TL_HOOKS']['getImage'])
             && is_array($GLOBALS['TL_HOOKS']['getImage'])
             && $this->legacyImage

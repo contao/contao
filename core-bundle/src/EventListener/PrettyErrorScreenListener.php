@@ -81,13 +81,8 @@ class PrettyErrorScreenListener
      * @param TokenStorageInterface    $tokenStorage
      * @param LoggerInterface|null     $logger
      */
-    public function __construct(
-        $prettyErrorScreens,
-        \Twig_Environment $twig,
-        ContaoFrameworkInterface $framework,
-        TokenStorageInterface $tokenStorage,
-        LoggerInterface $logger = null
-    ) {
+    public function __construct($prettyErrorScreens, \Twig_Environment $twig, ContaoFrameworkInterface $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
+    {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;

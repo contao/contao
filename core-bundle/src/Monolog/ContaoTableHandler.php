@@ -96,18 +96,16 @@ class ContaoTableHandler extends AbstractProcessingHandler
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
-        $this->statement->execute(
-            [
-                'tstamp' => $date->format('U'),
-                'text' => specialchars((string) $record['formatted']),
-                'source' => (string) $context->getSource(),
-                'action' => (string) $context->getAction(),
-                'username' => (string) $context->getUsername(),
-                'func' => (string) $context->getFunc(),
-                'ip' => (string) $context->getIp(),
-                'browser' => (string) $context->getBrowser(),
-            ]
-        );
+        $this->statement->execute([
+            'tstamp' => $date->format('U'),
+            'text' => specialchars((string) $record['formatted']),
+            'source' => (string) $context->getSource(),
+            'action' => (string) $context->getAction(),
+            'username' => (string) $context->getUsername(),
+            'func' => (string) $context->getFunc(),
+            'ip' => (string) $context->getIp(),
+            'browser' => (string) $context->getBrowser(),
+        ]);
     }
 
     /**
@@ -160,10 +158,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
             return;
         }
 
-        trigger_error(
-            'The "addLogEntry" hook is deprecated in Contao 4.2 and will be removed in Contao 5.',
-            E_USER_DEPRECATED
-        );
+        trigger_error('Using the addLogEntry hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         /** @var System $system */
         $system = $framework->getAdapter('Contao\System');

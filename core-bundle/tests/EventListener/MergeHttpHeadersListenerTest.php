@@ -179,7 +179,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $listener->setMultiHeader(['set-cookie', 'link', 'vary', 'pragma', 'cache-control']);
 
-         $this->assertEquals(
+        $this->assertEquals(
             $listener->getMultiHeaders(),
             [
                 'set-cookie',
@@ -189,5 +189,5 @@ class MergeHttpHeadersListenerTest extends TestCase
                 'cache-control',
             ]
         );
-   }
+    }
 }

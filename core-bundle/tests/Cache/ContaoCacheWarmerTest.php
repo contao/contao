@@ -123,13 +123,40 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists($this->getCacheDir().'/contao/sql');
         $this->assertFileExists($this->getCacheDir().'/contao/sql/tl_test.php');
 
-        $this->assertContains("\$GLOBALS['TL_TEST'] = true;", file_get_contents($this->getCacheDir().'/contao/config/config.php'));
-        $this->assertContains('*/empty.fallback', file_get_contents($this->getCacheDir().'/contao/config/mapping.php'));
-        $this->assertContains('test.com/empty.en', file_get_contents($this->getCacheDir().'/contao/config/mapping.php'));
-        $this->assertContains("'dummy' => 'contao/templates'", file_get_contents($this->getCacheDir().'/contao/config/templates.php'));
-        $this->assertContains("\$GLOBALS['TL_DCA']['tl_test'] = [\n", file_get_contents($this->getCacheDir().'/contao/dca/tl_test.php'));
-        $this->assertContains("\$GLOBALS['TL_LANG']['MSC']['first']", file_get_contents($this->getCacheDir().'/contao/languages/en/default.php'));
-        $this->assertContains("\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);", file_get_contents($this->getCacheDir().'/contao/sql/tl_test.php'));
+        $this->assertContains(
+            "\$GLOBALS['TL_TEST'] = true;",
+            file_get_contents($this->getCacheDir().'/contao/config/config.php')
+        );
+
+        $this->assertContains(
+            '*/empty.fallback',
+            file_get_contents($this->getCacheDir().'/contao/config/mapping.php')
+        );
+
+        $this->assertContains(
+            'test.com/empty.en',
+            file_get_contents($this->getCacheDir().'/contao/config/mapping.php')
+        );
+
+        $this->assertContains(
+            "'dummy' => 'contao/templates'",
+            file_get_contents($this->getCacheDir().'/contao/config/templates.php')
+        );
+
+        $this->assertContains(
+            "\$GLOBALS['TL_DCA']['tl_test'] = [\n",
+            file_get_contents($this->getCacheDir().'/contao/dca/tl_test.php')
+        );
+
+        $this->assertContains(
+            "\$GLOBALS['TL_LANG']['MSC']['first']",
+            file_get_contents($this->getCacheDir().'/contao/languages/en/default.php')
+        );
+
+        $this->assertContains(
+            "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);",
+            file_get_contents($this->getCacheDir().'/contao/sql/tl_test.php')
+        );
     }
 
     /**

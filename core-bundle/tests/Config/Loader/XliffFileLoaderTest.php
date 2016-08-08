@@ -79,14 +79,16 @@ TXT;
         $this->assertEquals(
             $source,
             $loader->load(
-                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf', 'en'
+                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
+                'en'
             )
         );
 
         $this->assertEquals(
             $target,
             $loader->load(
-                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf', 'de'
+                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
+                'de'
             )
         );
     }
@@ -102,7 +104,8 @@ TXT;
         $loader = new XliffFileLoader($this->getRootDir().'/app', true);
 
         $loader->load(
-            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf', 'en'
+            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
+            'en'
         );
 
         $this->assertEquals('This is the first source', $GLOBALS['TL_LANG']['MSC']['first']);
@@ -110,7 +113,8 @@ TXT;
         $this->assertEquals('This is the third source', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
 
         $loader->load(
-            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf', 'de'
+            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
+            'de'
         );
 
         $this->assertEquals('This is the first target', $GLOBALS['TL_LANG']['MSC']['first']);
@@ -128,7 +132,8 @@ TXT;
         $loader = new XliffFileLoader($this->getRootDir().'/app', false);
 
         $loader->load(
-            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/error.xlf', 'en'
+            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/error.xlf',
+            'en'
         );
     }
 }

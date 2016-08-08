@@ -37,7 +37,10 @@ class ContaoCoreBundleTest extends TestCase
     {
         $bundle = new ContaoCoreBundle();
 
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\ContaoCoreExtension', $bundle->getContainerExtension());
+        $this->assertInstanceOf(
+            'Contao\CoreBundle\DependencyInjection\ContaoCoreExtension',
+            $bundle->getContainerExtension()
+        );
     }
 
     /**

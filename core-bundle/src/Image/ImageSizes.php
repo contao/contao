@@ -52,11 +52,8 @@ class ImageSizes
      * @param EventDispatcherInterface $eventDispatcher
      * @param ContaoFrameworkInterface $framework
      */
-    public function __construct(
-        Connection $connection,
-        EventDispatcherInterface $eventDispatcher,
-        ContaoFrameworkInterface $framework
-    ) {
+    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFrameworkInterface $framework)
+    {
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
         $this->framework = $framework;

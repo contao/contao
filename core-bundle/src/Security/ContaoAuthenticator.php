@@ -51,7 +51,7 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
      * @param UserProviderInterface $userProvider
      * @param string                $providerKey
      *
-     * @return ContaoToken|AnonymousToken
+     * @return TokenInterface|ContaoToken|AnonymousToken
      *
      * @throws AuthenticationException
      */
