@@ -131,12 +131,12 @@ class PictureFactory implements PictureFactoryInterface
             return $config;
         }
 
-        /* @var ImageSizeModel $imageSizeModel */
+        /** @var ImageSizeModel $imageSizeModel */
         $imageSizeModel = $this->framework->getAdapter('Contao\ImageSizeModel');
 
         $config->setSize($this->createConfigItem($imageSizeModel->findByPk($size[2])));
 
-        /* @var ImageSizeItemModel $imageSizeItemModel */
+        /** @var ImageSizeItemModel $imageSizeItemModel */
         $imageSizeItemModel = $this->framework->getAdapter('Contao\ImageSizeItemModel');
 
         $imageSizeItems = $imageSizeItemModel->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
