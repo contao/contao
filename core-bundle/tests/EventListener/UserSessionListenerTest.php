@@ -101,7 +101,7 @@ class UserSessionListenerTest extends TestCase
         $listener->setContainer($this->mockContainerWithContaoScopes($scope));
         $listener->onKernelRequest($responseEvent);
 
-        /* @var AttributeBagInterface $bag */
+        /** @var AttributeBagInterface $bag */
         $bag = $session->getBag($sessionBagName);
 
         $this->assertSame($sessionValuesToBeSet, $bag->all());
@@ -334,7 +334,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn(new User('foo', 'bar'))
         ;
 
-        /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        /** @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
         $tokenStorage = $this->getMock(
             'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
         );
@@ -345,7 +345,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        /* @var UserSessionListener|\PHPUnit_Framework_MockObject_MockObject $listener */
+        /** @var UserSessionListener|\PHPUnit_Framework_MockObject_MockObject $listener */
         $listener = $this
             ->getMockBuilder('Contao\CoreBundle\EventListener\UserSessionListener')
             ->disableOriginalConstructor()
@@ -390,7 +390,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn(new User('foo', 'bar'))
         ;
 
-        /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        /** @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
         $tokenStorage = $this->getMock(
             'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
         );
@@ -401,7 +401,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        /* @var UserSessionListener|\PHPUnit_Framework_MockObject_MockObject $listener */
+        /** @var UserSessionListener|\PHPUnit_Framework_MockObject_MockObject $listener */
         $listener = $this
             ->getMockBuilder('Contao\CoreBundle\EventListener\UserSessionListener')
             ->disableOriginalConstructor()

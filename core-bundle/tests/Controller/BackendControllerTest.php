@@ -42,7 +42,7 @@ class BackendControllerTest extends TestCase
             ->getMock()
         ;
 
-        /* @var ContainerBuilder $container */
+        /** @var ContainerBuilder $container */
         $container = $this->mockKernel()->getContainer();
         $container->set('contao.framework', $framework);
 

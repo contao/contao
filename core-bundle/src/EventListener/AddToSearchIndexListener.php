@@ -48,7 +48,7 @@ class AddToSearchIndexListener
             return;
         }
 
-        /* @var Frontend $frontend */
+        /** @var Frontend $frontend */
         $frontend = $this->framework->getAdapter('Contao\Frontend');
         $frontend->indexPageIfApplicable($event->getResponse());
     }

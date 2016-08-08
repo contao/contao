@@ -78,7 +78,7 @@ class XliffFileLoader extends Loader
         $return = "\n// ".str_replace(strtr(dirname($this->rootDir), '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
         $units = $xml->getElementsByTagName('trans-unit');
 
-        /* @var \DOMElement[] $units */
+        /** @var \DOMElement[] $units */
         foreach ($units as $unit) {
             $node = $this->getNodeByLanguage($unit, $language);
 

@@ -186,7 +186,7 @@ class PrettyErrorScreenListener
             return null;
         }
 
-        /* @var PageError404 $pageHandler */
+        /** @var PageError404 $pageHandler */
         $pageHandler = new $GLOBALS['TL_PTY'][$type]();
 
         try {
@@ -278,7 +278,7 @@ class PrettyErrorScreenListener
             return null;
         }
 
-        /* @var Config $config */
+        /** @var Config $config */
         $config = $this->framework->getAdapter('Contao\Config');
 
         $encoded = StringUtil::encodeEmail($config->get('adminEmail'));

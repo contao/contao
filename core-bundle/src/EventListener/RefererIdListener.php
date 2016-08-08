@@ -52,7 +52,7 @@ class RefererIdListener
 
         $request = $event->getRequest();
 
-        /* @var CsrfToken $token */
+        /** @var CsrfToken $token */
         $token = $this->tokenManager->refreshToken('contao_referer_id');
 
         $request->attributes->set('_contao_referer_id', $token->getValue());

@@ -30,7 +30,7 @@ class MergeHttpHeadersListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        /* @var ContaoFrameworkInterface $framework */
+        /** @var ContaoFrameworkInterface $framework */
         $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
         $listener = new MergeHttpHeadersListener($framework);
 
@@ -49,7 +49,7 @@ class MergeHttpHeadersListenerTest extends TestCase
             new Response()
         );
 
-        /* @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
+        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
 
         $framework
@@ -77,7 +77,7 @@ class MergeHttpHeadersListenerTest extends TestCase
             new Response()
         );
 
-        /* @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
+        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
 
         $framework
@@ -111,7 +111,7 @@ class MergeHttpHeadersListenerTest extends TestCase
             $response
         );
 
-        /* @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
+        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
 
         $framework

@@ -45,7 +45,7 @@ class AutomatorCommandTest extends TestCase
 
         $tester = new CommandTester($command);
 
-        /* @var QuestionHelper $helper */
+        /** @var QuestionHelper $helper */
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getStreamFromInput("\n"));
 
@@ -81,7 +81,7 @@ class AutomatorCommandTest extends TestCase
 
         $tester = new CommandTester($command);
 
-        /* @var QuestionHelper $helper */
+        /** @var QuestionHelper $helper */
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getStreamFromInput("\n"));
 
@@ -123,7 +123,7 @@ class AutomatorCommandTest extends TestCase
 
         $tester = new CommandTester($command);
 
-        /* @var QuestionHelper $helper */
+        /** @var QuestionHelper $helper */
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getStreamFromInput("4800\n"));
 

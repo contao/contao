@@ -79,7 +79,7 @@ class OutputFromCacheListenerTest extends TestCase
      */
     public function testFrontendScope()
     {
-        /* @var HttpKernelInterface $kernel */
+        /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
 
         $request = new Request();
@@ -100,7 +100,7 @@ class OutputFromCacheListenerTest extends TestCase
      */
     public function testInvalidScope()
     {
-        /* @var HttpKernelInterface $kernel */
+        /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
 
         $request = new Request();
@@ -121,7 +121,7 @@ class OutputFromCacheListenerTest extends TestCase
      */
     public function testWithoutContainer()
     {
-        /* @var HttpKernelInterface $kernel */
+        /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
 
         $request = new Request();

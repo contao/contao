@@ -240,7 +240,7 @@ class ContaoFrameworkTest extends TestCase
         // Ensure to use the fixtures class
         Config::preload();
 
-        /* @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
+        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
             ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->setConstructorArgs([

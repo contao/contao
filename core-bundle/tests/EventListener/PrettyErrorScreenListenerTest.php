@@ -57,14 +57,14 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         parent::setUp();
 
-        /* @var \Twig_Environment $twig */
+        /** @var \Twig_Environment $twig */
         $twig = $this
             ->getMockBuilder('Twig_Environment')
             ->setConstructorArgs([$this->getMock('Twig_LoaderInterface')])
             ->getMock()
         ;
 
-        /* @var LoggerInterface $logger */
+        /** @var LoggerInterface $logger */
         $logger = $this->getMock('Psr\Log\LoggerInterface');
 
         $this->listener = new PrettyErrorScreenListener(
@@ -89,14 +89,14 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testBackendException()
     {
-        /* @var \Twig_Environment $twig */
+        /** @var \Twig_Environment $twig */
         $twig = $this
             ->getMockBuilder('Twig_Environment')
             ->setConstructorArgs([$this->getMock('Twig_LoaderInterface')])
             ->getMock()
         ;
 
-        /* @var LoggerInterface $logger */
+        /** @var LoggerInterface $logger */
         $logger = $this->getMock('Psr\Log\LoggerInterface');
 
         $this->listener = new PrettyErrorScreenListener(
@@ -213,7 +213,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $count = 0;
 
-        /* @var \Twig_Environment|\PHPUnit_Framework_MockObject_MockObject $twig */
+        /** @var \Twig_Environment|\PHPUnit_Framework_MockObject_MockObject $twig */
         $twig = $this
             ->getMockBuilder('Twig_Environment')
             ->setMethods(['render'])
@@ -231,7 +231,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             })
         ;
 
-        /* @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
+        /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
         $logger = $this->getMock('Psr\Log\LoggerInterface');
         $logger->expects($this->once())->method('critical');
 
@@ -268,7 +268,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             new InternalServerErrorHttpException('', new InsecureInstallationException())
         );
 
-        /* @var PrettyErrorScreenListener|\PHPUnit_Framework_MockObject_MockObject $listener */
+        /** @var PrettyErrorScreenListener|\PHPUnit_Framework_MockObject_MockObject $listener */
         $listener = $this
             ->getMockBuilder('Contao\CoreBundle\EventListener\PrettyErrorScreenListener')
             ->disableOriginalConstructor()
@@ -323,7 +323,7 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     private function mockTokenStorage($userClass = 'Contao\FrontendUser')
     {
-        /* @var AbstractToken|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var AbstractToken|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockForAbstractClass(
             'Symfony\Component\Security\Core\Authentication\Token\AbstractToken',
             [],
@@ -340,7 +340,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturn($this->getMock($userClass))
         ;
 
-        /* @var TokenStorage|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        /** @var TokenStorage|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
         $tokenStorage = $this->getMock(
             'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage',
             ['getToken']

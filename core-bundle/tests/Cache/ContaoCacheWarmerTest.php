@@ -36,7 +36,7 @@ class ContaoCacheWarmerTest extends TestCase
     {
         parent::setUp();
 
-        /* @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
         $connection = $this->getMock('Doctrine\DBAL\Connection', [], [], '', false);
 
         $this->warmer = new ContaoCacheWarmer(
@@ -71,7 +71,7 @@ class ContaoCacheWarmerTest extends TestCase
      */
     public function testWarmUp()
     {
-        /* @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
         $connection = $this->getMock(
             'Doctrine\DBAL\Connection',
             ['prepare', 'execute', 'fetch', 'query'],

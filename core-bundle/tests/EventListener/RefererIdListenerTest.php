@@ -40,7 +40,7 @@ class RefererIdListenerTest extends TestCase
      */
     public function testTokenAddedToRequest()
     {
-        /* @var HttpKernelInterface $kernel */
+        /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
 
         $request = new Request();
@@ -61,7 +61,7 @@ class RefererIdListenerTest extends TestCase
      */
     public function testTokenNotAddedToFrontendRequest()
     {
-        /* @var HttpKernelInterface $kernel */
+        /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
 
         $request = new Request();
@@ -81,7 +81,7 @@ class RefererIdListenerTest extends TestCase
      */
     public function testTokenNotAddedToSubrequest()
     {
-        /* @var HttpKernelInterface $kernel */
+        /** @var HttpKernelInterface $kernel */
         $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
 
         $request = new Request();

@@ -99,7 +99,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /* @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->getMock('Contao\BackendUser');
         $user->imageSizes = serialize(['image_sizes' => '42']);
         $user->isAdmin = true;
@@ -118,7 +118,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /* @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->getMock('Contao\BackendUser');
         $user->isAdmin = false;
 

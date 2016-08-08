@@ -261,7 +261,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $adapters['Contao\FilesModel'] = $this->mockFilesModelAdapter();
         }
 
-        /* @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
+        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
             ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->setConstructorArgs([
