@@ -39,11 +39,6 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testCollectInBackendScope()
     {
-        $collector = new ContaoDataCollector(
-            $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND),
-            ['contao/core-bundle' => '4.0.0']
-        );
-
         $GLOBALS['TL_DEBUG'] = [
             'classes_set' => ['Contao\System'],
             'classes_aliased' => ['ContentText' => 'Contao\ContentText'],
@@ -52,6 +47,11 @@ class ContaoDataCollectorTest extends TestCase
             'unknown_insert_tag_flags' => ['bar'],
             'additional_data' => 'data',
         ];
+
+        $collector = new ContaoDataCollector(
+            $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND),
+            ['contao/core-bundle' => '4.0.0']
+        );
 
         $collector->collect(new Request(), new Response());
 
@@ -86,31 +86,35 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testCollectInFrontendScope()
     {
-        $collector = new ContaoDataCollector(
-            $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND),
-            []
-        );
-
         $layout = new \stdClass();
         $layout->name = 'Default';
         $layout->id = 2;
         $layout->template = 'fe_page';
 
-        global $objPage;
-
-        $objPage = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->setMethods(['getRelated'])
+        $adapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['__call'])
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $objPage
+        $adapter
             ->expects($this->any())
-            ->method('getRelated')
+            ->method('__call')
             ->willReturn($layout)
         ;
 
+        global $objPage;
+
+        $objPage = new \stdClass();
+        $objPage->layoutId = 2;
+
+        $collector = new ContaoDataCollector(
+            $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND),
+            []
+        );
+
+        $collector->setFramework($this->mockContaoFramework(null, null, ['Contao\LayoutModel' => $adapter]));
         $collector->collect(new Request(), new Response());
 
         $this->assertEquals(

@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
+use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
@@ -26,6 +27,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  */
 class ContaoDataCollector extends DataCollector
 {
+    use FrameworkAwareTrait;
     use ScopeAwareTrait;
 
     /**
@@ -268,6 +270,9 @@ class ContaoDataCollector extends DataCollector
             return null;
         }
 
-        return LayoutModel::findByPk($objPage->layoutId);
+        /* @var LayoutModel $layout */
+        $layout = $this->getFramework()->getAdapter('Contao\LayoutModel');
+
+        return $layout->findByPk($objPage->layoutId);
     }
 }
