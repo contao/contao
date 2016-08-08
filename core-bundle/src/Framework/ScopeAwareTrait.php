@@ -109,6 +109,6 @@ trait ScopeAwareTrait
             return false;
         }
 
-        return $scope === $request->attributes->get('_scope');
+        return $request->attributes->get('_scope') === $scope;
     }
 }

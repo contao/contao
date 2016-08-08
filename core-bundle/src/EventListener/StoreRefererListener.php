@@ -170,7 +170,7 @@ class StoreRefererListener
             && !$request->query->has('id')
             && isset($referer['current'])
             && 'contao_frontend' === $request->attributes->get('_route')
-            && $referer['current'] !== $this->getRelativeRequestUri($request)
+            && $this->getRelativeRequestUri($request) !== $referer['current']
             && !$request->isXmlHttpRequest()
         ;
     }

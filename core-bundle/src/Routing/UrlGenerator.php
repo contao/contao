@@ -197,7 +197,7 @@ class UrlGenerator implements UrlGeneratorInterface
     {
         list($host, $port) = explode(':', $parameters['_domain'], 2);
 
-        if ($host === $context->getHost()) {
+        if ($context->getHost() === $host) {
             return;
         }
 
