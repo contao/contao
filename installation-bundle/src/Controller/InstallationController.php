@@ -465,7 +465,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         // Validate the e-mail address (see #6003)
-        if ($email !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) !== $email) {
             $this->context['admin_email_error'] = $this->trans('admin_error_email');
 
             return null;
