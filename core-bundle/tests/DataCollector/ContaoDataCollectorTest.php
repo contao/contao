@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\Test\DataCollector;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\Test\TestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,7 +28,7 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testInstantiation()
     {
-        $collector = new ContaoDataCollector(new ContainerBuilder(), []);
+        $collector = new ContaoDataCollector([]);
 
         $this->assertInstanceOf('Contao\CoreBundle\DataCollector\ContaoDataCollector', $collector);
     }
@@ -48,11 +47,8 @@ class ContaoDataCollectorTest extends TestCase
             'additional_data' => 'data',
         ];
 
-        $collector = new ContaoDataCollector(
-            $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND),
-            ['contao/core-bundle' => '4.0.0']
-        );
-
+        $collector = new ContaoDataCollector(['contao/core-bundle' => '4.0.0']);
+        $collector->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $collector->collect(new Request(), new Response());
 
         $this->assertEquals(['ContentText' => 'Contao\ContentText'], $collector->getClassesAliased());
@@ -109,11 +105,8 @@ class ContaoDataCollectorTest extends TestCase
         $objPage = new \stdClass();
         $objPage->layoutId = 2;
 
-        $collector = new ContaoDataCollector(
-            $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND),
-            []
-        );
-
+        $collector = new ContaoDataCollector([]);
+        $collector->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
         $collector->setFramework($this->mockContaoFramework(null, null, ['Contao\LayoutModel' => $adapter]));
         $collector->collect(new Request(), new Response());
 

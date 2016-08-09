@@ -31,10 +31,10 @@ services:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         public: false
         arguments:
-            - "@service_container"
             - "%kernel.packages%"
         calls:
             - ["setFramework", ["@contao.framework"]]
+            - ["setContainer", ["@service_container"]]
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
 
@@ -124,8 +124,9 @@ services:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
         arguments:
-            - "@service_container"
             - "@contao.framework"
+        calls:
+            - ["setContainer", ["@service_container"]]
 
     contao.image.imagine:
         class: Imagine\Gd\Imagine

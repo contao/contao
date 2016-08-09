@@ -15,7 +15,6 @@ use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -38,12 +37,10 @@ class ContaoDataCollector extends DataCollector
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container
-     * @param array              $packages
+     * @param array $packages
      */
-    public function __construct(ContainerInterface $container, array $packages)
+    public function __construct(array $packages)
     {
-        $this->container = $container;
         $this->packages = $packages;
     }
 
