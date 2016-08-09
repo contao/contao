@@ -24,7 +24,7 @@ class Version430Update extends AbstractVersionUpdate
     {
         $schemaManager = $this->connection->getSchemaManager();
 
-        if (!$schemaManager->tablesExist('tl_layout')) {
+        if (!$schemaManager->tablesExist(['tl_layout'])) {
             return false;
         }
 

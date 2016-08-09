@@ -157,7 +157,7 @@ class InstallTool
      */
     public function hasTable($name)
     {
-        return $this->connection->getSchemaManager()->tablesExist($name);
+        return $this->connection->getSchemaManager()->tablesExist([$name]);
     }
 
     /**

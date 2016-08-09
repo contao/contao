@@ -24,7 +24,7 @@ class Version350Update extends AbstractVersionUpdate
     {
         $schemaManager = $this->connection->getSchemaManager();
 
-        if (!$schemaManager->tablesExist('tl_member')) {
+        if (!$schemaManager->tablesExist(['tl_member'])) {
             return false;
         }
 
