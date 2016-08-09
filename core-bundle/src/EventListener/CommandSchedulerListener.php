@@ -70,7 +70,7 @@ class CommandSchedulerListener
 
         return $config->isComplete()
             && !$config->get('disableCron')
-            && $this->connection->getSchemaManager()->tablesExist('tl_cron')
+            && $this->connection->getSchemaManager()->tablesExist(['tl_cron'])
         ;
     }
 }
