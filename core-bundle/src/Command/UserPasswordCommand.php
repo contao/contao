@@ -23,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
 /**
- * Resets password for a Contao backend user.
+ * Resets password for a Contao back end user.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -36,7 +36,7 @@ class UserPasswordCommand extends ContainerAwareCommand
     {
         $this
             ->setName('contao:user:password')
-            ->setDescription('Change the password for a Contao backend user.')
+            ->setDescription('Change the password for a Contao back end user.')
             ->addArgument('username', InputArgument::REQUIRED)
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED)
         ;
