@@ -93,7 +93,7 @@ class Version400Update extends AbstractVersionUpdate
 
             if (!empty($mootools) && is_array($mootools)) {
                 if (false !== ($key = array_search('moo_slimbox', $mootools))) {
-                    $scripts[] = 'moo_mediabox';
+                    $mootools[] = 'moo_mediabox';
                     unset($mootools[$key]);
 
                     $stmt = $this->connection->prepare('UPDATE tl_layout SET mootools=:mootools WHERE id=:id');

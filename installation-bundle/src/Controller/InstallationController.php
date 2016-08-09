@@ -258,6 +258,7 @@ class InstallationController implements ContainerAwareInterface
      */
     private function setUpDatabaseConnection()
     {
+        $parameters = [];
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
         $parameters['parameters'] = [

@@ -173,11 +173,7 @@ class InstallTool
 
         $statement = $this->connection->query('SELECT COUNT(*) AS count FROM tl_page');
 
-        if ($statement->fetch(\PDO::FETCH_OBJ)->count < 1) {
-            return true;
-        }
-
-        return false;
+        return $statement->fetch(\PDO::FETCH_OBJ)->count < 1;
     }
 
     /**

@@ -30,6 +30,8 @@ class ConnectionFactory
      */
     public static function create(array $parameters)
     {
+        $params = [];
+
         $params['driver'] = 'pdo_mysql';
         $params['host'] = $parameters['parameters']['database_host'];
         $params['port'] = $parameters['parameters']['database_port'];

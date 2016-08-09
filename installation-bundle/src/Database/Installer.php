@@ -253,7 +253,7 @@ class Installer
      *
      * @param mixed $str
      *
-     * @return mixed
+     * @return string
      */
     private function quote($str)
     {
