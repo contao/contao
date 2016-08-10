@@ -1083,7 +1083,7 @@ abstract class Model
 
 		if ($objResult->numRows < 1)
 		{
-			return null;
+			return $arrOptions['return'] == 'Array' ? [] : null;
 		}
 
 		$objResult = static::postFind($objResult);
@@ -1099,6 +1099,12 @@ abstract class Model
 			}
 
 			return static::createModelFromDbResult($objResult);
+		}
+		else if ($arrOptions['return'] == 'Array')
+		{
+			$objCollection = static::createCollectionFromDbResult($objResult, static::$strTable);
+
+			return $objCollection->getModels();
 		}
 		else
 		{
