@@ -30,7 +30,7 @@ class Version430Update extends AbstractVersionUpdate
 
         $columns = $schemaManager->listTableColumns('tl_layout');
 
-        return !isset($columns['combineScripts']);
+        return !isset($columns['combinescripts']);
     }
 
     /**

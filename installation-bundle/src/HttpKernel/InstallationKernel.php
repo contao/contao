@@ -71,17 +71,17 @@ class InstallationKernel extends \AppKernel
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        if ($this->canBootRealSystem()) {
-            return new RedirectResponse($this->getInstallToolUrl());
-        }
-
         $this->boot();
 
         $controller = new InstallationController();
         $controller->setContainer($this->getContainer());
-        $response = $controller->installAction();
+        $controller->runPostInstallCommands();
 
-        return $response;
+        if ($this->canBootRealSystem()) {
+            return new RedirectResponse($this->getInstallToolUrl($request));
+        }
+
+        return $controller->installAction();
     }
 
     /**
@@ -110,15 +110,17 @@ class InstallationKernel extends \AppKernel
     /**
      * Returns the install tool URL.
      *
+     * @param Request $request
+     *
      * @return string
      */
-    private function getInstallToolUrl()
+    private function getInstallToolUrl(Request $request)
     {
         $routes = new RouteCollection();
         $routes->add('contao_install', new Route('/contao/install'));
 
         $context = new RequestContext();
-        $context->fromRequest(Request::createFromGlobals());
+        $context->fromRequest($request);
         $context->setBaseUrl('');
 
         $generator = new UrlGenerator($routes, $context);

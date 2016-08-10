@@ -66,8 +66,6 @@ class InstallationController implements ContainerAwareInterface
 
         $installTool = $this->container->get('contao.install_tool');
 
-        $this->runPostInstallCommands();
-
         if ($installTool->isLocked()) {
             return $this->render('locked.html.twig');
         }
@@ -118,13 +116,9 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Runs the post install commands.
      */
-    private function runPostInstallCommands()
+    public function runPostInstallCommands()
     {
         $rootDir = $this->container->getParameter('kernel.root_dir');
-
-        if (is_dir($rootDir.'/../files') && is_link($rootDir.'/../web/assets')) {
-            return;
-        }
 
         // Install the bundle assets
         $command = new AssetsInstallCommand();
@@ -142,7 +136,7 @@ class InstallationController implements ContainerAwareInterface
         $command->run(new ArgvInput([]), new NullOutput());
 
         // Build the bootstrap.php.cache file
-        ScriptHandler::doBuildBootstrap($this->container->getParameter('kernel.cache_dir'));
+        ScriptHandler::doBuildBootstrap($this->container->getParameter('kernel.cache_dir').'/../..');
     }
 
     /**
@@ -242,12 +236,12 @@ class InstallationController implements ContainerAwareInterface
     private function purgeSymfonyCache()
     {
         $fs = new Filesystem();
-        $rootDir = $this->container->getParameter('kernel.root_dir');
+        $cacheDir = $this->container->getParameter('kernel.cache_dir');
 
         $finder = Finder::create()
             ->directories()
             ->depth('==0')
-            ->in($rootDir.'/cache')
+            ->in($cacheDir.'/..')
         ;
 
         foreach ($finder as $dir) {

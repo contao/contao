@@ -47,11 +47,12 @@ class ContainerFactory
     public static function create(KernelInterface $kernel)
     {
         $rootDir = $kernel->getRootDir();
+        $cacheDir = dirname($rootDir).'/var/cache/'.$kernel->getEnvironment();
         $container = new ContainerBuilder();
 
         // Set up the kernel parameters
         $container->setParameter('kernel.root_dir', $rootDir);
-        $container->setParameter('kernel.cache_dir', $rootDir.'/../var');
+        $container->setParameter('kernel.cache_dir', $cacheDir);
         $container->setParameter('kernel.debug', false);
 
         // Load the parameters.yml file
@@ -154,7 +155,7 @@ class ContainerFactory
         // Add the Contao cache
         $container->set(
             'contao.cache',
-            new FilesystemCache($rootDir.'/cache/install/contao/cache', '', 0022)
+            new FilesystemCache($cacheDir.'/contao/cache', '', 0022)
         );
 
         // Add the installer services
