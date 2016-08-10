@@ -1083,7 +1083,7 @@ abstract class Model
 
 		if ($objResult->numRows < 1)
 		{
-			return $arrOptions['return'] == 'Array' ? [] : null;
+			return $arrOptions['return'] == 'Array' ? array() : null;
 		}
 
 		$objResult = static::postFind($objResult);
