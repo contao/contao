@@ -62,6 +62,7 @@ class InstallationKernel extends \AppKernel
     {
         return file_exists($this->getRootDir().'/config/parameters.yml')
             && file_exists($this->getRootDir().'/../system/config/localconfig.php')
+            && file_exists($this->getRootDir().'/../var/bootstrap.php.cache')
         ;
     }
 

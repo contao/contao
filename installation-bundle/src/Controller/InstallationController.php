@@ -19,6 +19,7 @@ use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
+use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -139,6 +140,9 @@ class InstallationController implements ContainerAwareInterface
         $command = new SymlinksCommand();
         $command->setContainer($this->container);
         $command->run(new ArgvInput([]), new NullOutput());
+
+        // Build the bootstrap.php.cache file
+        ScriptHandler::doBuildBootstrap($this->container->getParameter('kernel.cache_dir'));
     }
 
     /**
