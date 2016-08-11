@@ -234,7 +234,7 @@ class SymlinksCommand extends AbstractLockedCommand
 
         /** @var SplFileInfo $file */
         foreach ($files as $key => $file) {
-            $path = rtrim($prepend.'/'.$file->getRelativePath(), '/');
+            $path = rtrim(strtr($prepend.'/'.$file->getRelativePath(), '\\', '/'), '/');
 
             $chunks = explode('/', $path);
             array_pop($chunks);
@@ -247,7 +247,7 @@ class SymlinksCommand extends AbstractLockedCommand
                         '<fg=yellow;options=bold>%s</>',
                         '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
                     ),
-                    'web/'.strtr($path, '\\', '/'),
+                    'web/'.$path,
                     sprintf('<comment>Skipped because %s has been symlinked already.</comment>', $parent),
                 ];
 
