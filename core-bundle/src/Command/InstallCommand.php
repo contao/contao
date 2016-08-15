@@ -163,10 +163,6 @@ class InstallCommand extends AbstractLockedCommand
      */
     private function addInitializePhp()
     {
-        if ($this->fs->exists($this->rootDir.'/system/initialize.php')) {
-            return;
-        }
-
         $this->fs->dumpFile(
             $this->rootDir.'/system/initialize.php',
             <<<'EOF'
@@ -200,6 +196,6 @@ if (!($response instanceof InitializeControllerResponse)) {
 EOF
         );
 
-        $this->io->text("Added the <comment>system/initialize.php</comment> file.\n");
+        $this->io->text("Added/updated the <comment>system/initialize.php</comment> file.\n");
     }
 }
