@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Autoload;
+namespace Contao\ManagerBundle\Manager\Bundle;
 
 use Contao\ManagerBundle\Exception\UnresolvableLoadingOrderException;
 
@@ -27,9 +27,9 @@ class ConfigResolver
     /**
      * Adds a configuration object
      *
-     * @param ConfigInterface $config The configuration object
+     * @param ConfigInterface $config
      *
-     * @return $this The resolver object
+     * @return $this
      */
     public function add(ConfigInterface $config)
     {
@@ -41,17 +41,17 @@ class ConfigResolver
     /**
      * Returns a bundles map for an environment
      *
-     * @param string $environment The environment
+     * @param bool $development
      *
-     * @return array The bundles map
+     * @return array
      */
-    public function getBundlesMapForEnvironment($environment)
+    public function getBundleConfigs($development)
     {
         $bundles = [];
 
         // Only add bundles which match the environment
         foreach ($this->configs as $config) {
-            if ($this->matchesEnvironment($config->getEnvironments(), $environment)) {
+            if (($development && $config->loadInDevelopment()) || (!$development && $config->loadInProduction())) {
                 $bundles[$config->getName()] = $config;
             }
         }
@@ -67,7 +67,7 @@ class ConfigResolver
     /**
      * Builds the replaces from the configuration objects
      *
-     * @return array The replaces array
+     * @return array
      */
     protected function buildReplaceMap()
     {
@@ -87,11 +87,12 @@ class ConfigResolver
     /**
      * Builds the loading order from the configuration objects
      *
-     * @return array The loading order array
+     * @return array
      */
     protected function buildLoadingOrder()
     {
         // Make sure the core bundle comes first
+        // TODO is this still correct?
         $loadingOrder = [
             'ContaoCoreBundle' => []
         ];
@@ -110,25 +111,12 @@ class ConfigResolver
     }
 
     /**
-     * Checks whether a bundle should be loaded in an environment
-     *
-     * @param array  $environments The bundle environments
-     * @param string $environment  The current environment
-     *
-     * @return bool True if the environment matches the bundle environments
-     */
-    protected function matchesEnvironment(array $environments, $environment)
-    {
-        return 0 === count($environments) || in_array($environment, $environments, true);
-    }
-
-    /**
      * Orders the bundles in a given order
      *
-     * @param array $bundles The bundles array
-     * @param array $ordered The given order
+     * @param array $bundles
+     * @param array $ordered
      *
-     * @return array The ordered bundles
+     * @return array
      */
     protected function order(array $bundles, array $ordered)
     {
@@ -146,10 +134,10 @@ class ConfigResolver
     /**
      * Normalizes the loading order array
      *
-     * @param array $loadingOrder The loading order array
-     * @param array $replace      The replaces map
+     * @param array $loadingOrder
+     * @param array $replace
      *
-     * @return array The normalized loading order array
+     * @return array
      */
     protected function normalizeLoadingOrder(array $loadingOrder, array $replace)
     {
@@ -167,8 +155,8 @@ class ConfigResolver
     /**
      * Replaces the legacy bundle names with their new name
      *
-     * @param array $loadAfter The load-after array
-     * @param array $replace   The replaces array
+     * @param array $loadAfter
+     * @param array $replace
      */
     protected function replaceBundleNames(array &$loadAfter, array $replace)
     {
@@ -182,9 +170,9 @@ class ConfigResolver
     /**
      * Tries to resolve the loading order
      *
-     * @param array $loadingOrder The normalized loading order array
+     * @param array $loadingOrder
      *
-     * @return array The resolved loading order array
+     * @return array
      *
      * @throws UnresolvableLoadingOrderException If the loading order cannot be resolved
      */
@@ -209,9 +197,9 @@ class ConfigResolver
     /**
      * Tries to resolve the loading order
      *
-     * @param array $loadingOrder The normalized loading order array
-     * @param array $ordered      An array of already ordered bundles
-     * @param array $available    An array of available bundles
+     * @param array $loadingOrder
+     * @param array $ordered
+     * @param array $available
      *
      * @return bool True if the order could be resolved
      */
@@ -234,9 +222,9 @@ class ConfigResolver
     /**
      * Checks whether the requirements of a bundle can be resolved
      *
-     * @param array $requires  The requirements array
-     * @param array $available The installed bundle names
-     * @param array $ordered   The normalized order array
+     * @param array $requires
+     * @param array $available
+     * @param array $ordered
      *
      * @return bool True if the requirements can be resolved
      */

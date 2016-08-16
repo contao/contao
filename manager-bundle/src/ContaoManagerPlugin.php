@@ -2,11 +2,11 @@
 
 namespace Contao\ManagerBundle;
 
-use Contao\ManagerBundle\Autoload\AutoloadPluginInterface;
-use Contao\ManagerBundle\Autoload\IniParser;
-use Contao\ManagerBundle\Autoload\JsonParser;
+use Contao\ManagerBundle\Manager\Bundle\BundlePluginInterface;
+use Contao\ManagerBundle\Manager\Bundle\IniParser;
+use Contao\ManagerBundle\Manager\Bundle\JsonParser;
 
-class ContaoManagerPlugin implements AutoloadPluginInterface
+class ContaoManagerPlugin implements BundlePluginInterface
 {
     /**
      * @inheritdoc

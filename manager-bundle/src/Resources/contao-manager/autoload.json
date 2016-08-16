@@ -34,15 +34,15 @@
         },
         {
             "name": "Symfony\\Bundle\\DebugBundle\\DebugBundle",
-            "environments": ["dev", "test"]
+            "development": true
         },
         {
             "name": "Symfony\\Bundle\\WebProfilerBundle\\WebProfilerBundle",
-            "environments": ["dev", "test"]
+            "development": true
         },
         {
             "name": "Sensio\\Bundle\\DistributionBundle\\SensioDistributionBundle",
-            "environments": ["dev", "test"]
+            "development": true
         }
     ]
 }

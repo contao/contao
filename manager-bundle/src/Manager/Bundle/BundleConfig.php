@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Autoload;
+namespace Contao\ManagerBundle\Manager\Bundle;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Config implements ConfigInterface
+class BundleConfig implements ConfigInterface
 {
     /**
      * @var string
@@ -32,12 +32,17 @@ class Config implements ConfigInterface
     /**
      * @var array
      */
-    protected $environments = [];
+    protected $loadAfter = [];
 
     /**
-     * @var array
+     * @var bool
      */
-    protected $loadAfter = [];
+    protected $loadInProduction = true;
+
+    /**
+     * @var bool
+     */
+    protected $loadInDevelopment = true;
 
     /**
      * Constructor.
@@ -48,6 +53,8 @@ class Config implements ConfigInterface
     {
         $this->name = $name;
     }
+
+
 
     /**
      * {@inheritdoc}
@@ -78,24 +85,6 @@ class Config implements ConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getEnvironments()
-    {
-        return $this->environments;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setEnvironments(array $environments)
-    {
-        $this->environments = $environments;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getLoadAfter()
     {
         return $this->loadAfter;
@@ -107,6 +96,42 @@ class Config implements ConfigInterface
     public function setLoadAfter(array $loadAfter)
     {
         $this->loadAfter = $loadAfter;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function loadInProduction()
+    {
+        return $this->loadInProduction;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setLoadInProduction($loadInProduction)
+    {
+        $this->loadInProduction = (bool) $loadInProduction;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function loadInDevelopment()
+    {
+        return $this->loadInDevelopment;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setLoadInDevelopment($loadInDevelopment)
+    {
+        $this->loadInDevelopment = (bool) $loadInDevelopment;
 
         return $this;
     }

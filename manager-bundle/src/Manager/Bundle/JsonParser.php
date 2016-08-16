@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Autoload;
+namespace Contao\ManagerBundle\Manager\Bundle;
 
 /**
  * Converts a JSON configuration file into a configuration array
@@ -28,9 +28,6 @@ class JsonParser implements ParserInterface
 
         if (!empty($json['bundles'])) {
             $this->parseBundles($json['bundles'], $configs);
-        }
-
-            $configs[] = $config;
         }
 
         return $configs;
@@ -85,14 +82,18 @@ class JsonParser implements ParserInterface
                 throw new \RuntimeException(sprintf('Missing name for bundle config (%s)', json_encode($options)));
             }
 
-            $config = new Config($options['name']);
+            $config = new BundleConfig($options['name']);
 
             if (isset($options['replace'])) {
                 $config->setReplace($options['replace']);
             }
 
-            if (isset($options['environments'])) {
-                $config->setEnvironments($options['environments']);
+            if (isset($options['development'])) {
+                if (true === $options['development']) {
+                    $config->setLoadInProduction(false);
+                } elseif (false === $options['development']) {
+                    $config->setLoadInDevelopment(false);
+                }
             }
 
             if (isset($options['load-after'])) {

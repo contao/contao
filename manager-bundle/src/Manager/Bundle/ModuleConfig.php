@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Autoload;
+namespace Contao\ManagerBundle\Manager\Bundle;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -16,17 +16,15 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ModuleConfig extends Config
+class ModuleConfig extends BundleConfig
 {
     /**
      * @inheritdoc
+     *
+     * @throws \LogicException
      */
     public function getBundleInstance(KernelInterface $kernel)
     {
-        try {
-            return new ContaoModuleBundle($this->name, $kernel->getRootDir());
-        } catch (\LogicException $e) {
-            return null;
-        }
+        return new ContaoModuleBundle($this->name, $kernel->getRootDir());
     }
 }

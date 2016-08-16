@@ -10,9 +10,9 @@
 
 namespace Contao\ManagerBundle\HttpKernel;
 
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
-use Contao\ManagerBundle\Autoload\BundleAutoloader;
 use Contao\ManagerBundle\ContaoManagerBundle;
+use Contao\ManagerBundle\Manager\Bundle\BundleAutoloader;
+use Contao\ManagerBundle\Manager\Bundle\ConfigInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -21,7 +21,7 @@ class ContaoKernel extends Kernel
     /**
      * @var array
      */
-    protected $bundlesMap = [];
+    protected $bundleConfigs = [];
 
     /**
      * {@inheritdoc}
@@ -32,7 +32,7 @@ class ContaoKernel extends Kernel
             new ContaoManagerBundle()
         ];
 
-        $this->addAutoloadBundles($bundles);
+        $this->addManagedBundles($bundles);
 
         return $bundles;
     }
@@ -54,25 +54,21 @@ class ContaoKernel extends Kernel
     }
 
     /**
-     * Adds the autoload bundles
+     * Adds the managed bundles
      *
-     * @param array $bundles The bundles array
+     * @param array $bundles
      */
-    public function addAutoloadBundles(&$bundles)
+    public function addManagedBundles(&$bundles)
     {
         $this->loadBundleCache();
 
-        if (0 === count($this->bundlesMap)) {
-            $this->bundlesMap = $this->generateBundlesMap();
+        if (!is_array($this->bundleConfigs) || 0 === count($this->bundleConfigs)) {
+            $this->bundleConfigs = $this->loadBundleConfigs();
             $this->writeBundleCache();
         }
 
-        foreach ($this->bundlesMap as $name => $class) {
-            if (null !== $class) {
-                $bundles[] = new $class();
-            } else {
-                $bundles[] = new ContaoModuleBundle($name, $this->getRootDir());
-            }
+        foreach ($this->bundleConfigs as $config) {
+            $bundles[] = $config->getBundleInstance($this);
         }
     }
 
@@ -91,7 +87,7 @@ class ContaoKernel extends Kernel
 
         file_put_contents(
             $this->getCacheDir() . '/bundles.map',
-            sprintf('<?php return %s;', var_export($this->bundlesMap, true))
+            serialize($this->bundleConfigs)
         );
     }
 
@@ -104,18 +100,22 @@ class ContaoKernel extends Kernel
             return;
         }
 
-        $this->bundlesMap = include $this->getCacheDir() . '/bundles.map';
+        $this->bundleConfigs = unserialize(file_get_contents($this->getCacheDir() . '/bundles.map'));
     }
 
     /**
      * Generates the bundles map
      *
-     * @return array The bundles map
+     * @return ConfigInterface[]
      */
-    protected function generateBundlesMap()
+    protected function loadBundleConfigs()
     {
-        $autoloader = new BundleAutoloader($this->getRootDir());
+        $rootDir = $this->getRootDir();
+        $autoloader = new BundleAutoloader(
+            $rootDir . '/../vendor/composer/installed.json',
+            $rootDir . '/modules'
+        );
 
-        return $autoloader->load($this->getEnvironment());
+        return $autoloader->load('dev' === $this->getEnvironment());
     }
 }
