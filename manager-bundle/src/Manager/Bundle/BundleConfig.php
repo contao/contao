@@ -142,4 +142,16 @@ class BundleConfig implements ConfigInterface
     {
         return new $this->name;
     }
+
+    /**
+     * Creates a new config instance.
+     *
+     * @param string $name
+     *
+     * @return static
+     */
+    public static function create($name)
+    {
+        return new static($name);
+    }
 }
