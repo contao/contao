@@ -75,11 +75,17 @@ class BundleAutoloader
      * Get all instances of manager plugins from Composer's installed.json
      *
      * @return array
+     *
+     * @throws \RuntimeException
      */
     private function getManagerPlugins()
     {
         $plugins = [];
         $json = json_decode(file_get_contents($this->installedJson), true);
+
+        if (null === $json) {
+            throw new \RuntimeException(sprintf('File "%s" cannot be decoded', $this->installedJson));
+        }
 
         foreach ($json as $package) {
             if (isset($package['extra']['contao-manager-plugin'])) {
