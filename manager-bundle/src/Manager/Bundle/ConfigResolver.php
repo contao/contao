@@ -69,7 +69,7 @@ class ConfigResolver
      *
      * @return array
      */
-    protected function buildReplaceMap()
+    private function buildReplaceMap()
     {
         $replace = [];
 
@@ -89,7 +89,7 @@ class ConfigResolver
      *
      * @return array
      */
-    protected function buildLoadingOrder()
+    private function buildLoadingOrder()
     {
         // Make sure the core bundle comes first
         // TODO is this still correct?
@@ -118,7 +118,7 @@ class ConfigResolver
      *
      * @return array
      */
-    protected function order(array $bundles, array $ordered)
+    private function order(array $bundles, array $ordered)
     {
         $return  = [];
 
@@ -139,7 +139,7 @@ class ConfigResolver
      *
      * @return array
      */
-    protected function normalizeLoadingOrder(array $loadingOrder, array $replace)
+    private function normalizeLoadingOrder(array $loadingOrder, array $replace)
     {
         foreach ($loadingOrder as $bundleName => &$loadAfter) {
             if (isset($replace[$bundleName])) {
@@ -158,7 +158,7 @@ class ConfigResolver
      * @param array $loadAfter
      * @param array $replace
      */
-    protected function replaceBundleNames(array &$loadAfter, array $replace)
+    private function replaceBundleNames(array &$loadAfter, array $replace)
     {
         foreach ($loadAfter as &$bundleName) {
             if (isset($replace[$bundleName])) {
@@ -176,7 +176,7 @@ class ConfigResolver
      *
      * @throws UnresolvableLoadingOrderException If the loading order cannot be resolved
      */
-    protected function resolveLoadingOrder(array $loadingOrder)
+    private function resolveLoadingOrder(array $loadingOrder)
     {
         $ordered   = [];
         $available = array_keys($loadingOrder);
@@ -203,7 +203,7 @@ class ConfigResolver
      *
      * @return bool True if the order could be resolved
      */
-    protected function doResolveLoadingOrder(array &$loadingOrder, array &$ordered, array $available)
+    private function doResolveLoadingOrder(array &$loadingOrder, array &$ordered, array $available)
     {
         $failed = true;
 
@@ -228,7 +228,7 @@ class ConfigResolver
      *
      * @return bool True if the requirements can be resolved
      */
-    protected function canBeResolved(array $requires, array $available, array $ordered)
+    private function canBeResolved(array $requires, array $available, array $ordered)
     {
         if (0 === count($requires)) {
             return true;

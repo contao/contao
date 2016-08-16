@@ -58,7 +58,7 @@ class ContaoKernel extends Kernel
      *
      * @param array $bundles
      */
-    public function addManagedBundles(&$bundles)
+    private function addManagedBundles(&$bundles)
     {
         $this->loadBundleCache();
 
@@ -75,7 +75,7 @@ class ContaoKernel extends Kernel
     /**
      * Writes the bundle cache
      */
-    public function writeBundleCache()
+    private function writeBundleCache()
     {
         if ($this->debug) {
             return;
@@ -94,7 +94,7 @@ class ContaoKernel extends Kernel
     /**
      * Loads the bundle cache
      */
-    public function loadBundleCache()
+    private function loadBundleCache()
     {
         if ($this->debug || !is_file($this->getCacheDir() . '/bundles.map')) {
             return;
@@ -108,7 +108,7 @@ class ContaoKernel extends Kernel
      *
      * @return ConfigInterface[]
      */
-    protected function loadBundleConfigs()
+    private function loadBundleConfigs()
     {
         $rootDir = $this->getRootDir();
         $autoloader = new BundleAutoloader(

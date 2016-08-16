@@ -81,7 +81,7 @@ class IniParser implements ParserInterface
      *
      * @throws \RuntimeException If the file cannot be decoded
      */
-    protected function parseIniFile($file)
+    private function parseIniFile($file)
     {
         $ini = parse_ini_file($file, true);
 
