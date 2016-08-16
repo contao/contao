@@ -26,9 +26,7 @@ class JsonParser implements ParserInterface
         $configs = [];
         $json = $this->parseJsonFile($file);
 
-        if (!empty($json['bundles'])) {
-            $this->parseBundles($json['bundles'], $configs);
-        }
+        $this->parseBundles($json, $configs);
 
         return $configs;
     }
@@ -41,7 +39,7 @@ class JsonParser implements ParserInterface
      * @return array The configuration array
      *
      * @throws \InvalidArgumentException If $file is not a file
-     * @throws \RuntimeException         If the file cannot be decoded or there are no bundles
+     * @throws \RuntimeException         If the file cannot be decoded
      */
     private function parseJsonFile($file)
     {
@@ -53,10 +51,6 @@ class JsonParser implements ParserInterface
 
         if (null === $json) {
             throw new \RuntimeException("File $file cannot be decoded");
-        }
-
-        if (empty($json['bundles'])) {
-            throw new \RuntimeException("No bundles defined in $file");
         }
 
         return $json;
