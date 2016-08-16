@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CalendarBundle;
+namespace Contao\CalendarBundle\Manager;
 
 use Contao\ManagerBundle\Manager\Bundle\BundleConfig;
 use Contao\ManagerBundle\Manager\Bundle\BundlePluginInterface;
