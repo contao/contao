@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * Provides methods to access the configuration
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
 class BundleConfig implements ConfigInterface
 {
@@ -53,8 +54,6 @@ class BundleConfig implements ConfigInterface
     {
         $this->name = $name;
     }
-
-
 
     /**
      * {@inheritdoc}

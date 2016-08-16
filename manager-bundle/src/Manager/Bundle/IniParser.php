@@ -50,16 +50,13 @@ class IniParser implements ParserInterface
             if (0 !== count($requires)) {
                 // Recursively load all modules that are required by other modules
                 foreach ($requires as &$module) {
-                    $optional = false;
-
                     if (0 === strpos($module, '*')) {
-                        $optional = true;
                         $module = substr($module, 1);
-                    }
 
-                    // Do not add optional modules that are not installed, ContaoModuleBundle would throw exception
-                    if ($optional && !is_dir($this->modulesDir . '/' . $module)) {
-                        continue;
+                        // Do not add optional modules that are not installed, ContaoModuleBundle would throw exception
+                        if (!is_dir($this->modulesDir . '/' . $module)) {
+                            continue;
+                        }
                     }
 
                     $configs = array_merge($configs, $this->parse($module));
