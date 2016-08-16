@@ -516,26 +516,37 @@ class StringUtil
 	{
 		$strReturn = '';
 
-		// Remove any unwanted tags (especially PHP tags)
-		$strString = strip_tags($strString, \Config::get('allowedTags'));
+		// Remove PHP code from string. Not supported for security reasons.
+		$strString = preg_replace('/<script language="php">.*<\/script>/', '', $strString);
+		$strString = preg_replace('/<(\?|\%)\=?(php)?.*(\%|\?)>/', '', $strString);
+
 		$arrTags = preg_split('/({[^}]+})/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
 		// Replace the tags
 		foreach ($arrTags as $strTag)
 		{
-			if (strncmp($strTag, '{if', 3) === 0)
+			if (strncmp($strTag, '{if', 3) === 0 || strncmp($strTag, '{elseif', 7) === 0)
 			{
-				$strReturn .= preg_replace('/\{if ([A-Za-z0-9_]+)([=!<>]+)([^;$\(\)\[\]\}]+).*\}/i', '<?php if ($arrData[\'$1\'] $2 $3): ?>', $strTag);
+				$strReturn .= preg_replace_callback(
+					'/{(if|elseif) ([^=!<>\s]+)([=!<>]+)([^;$\(\)\[\]\}]+).*\}/i',
+					function (array $matches) use ($arrData)
+					{
+						if (!array_key_exists($matches[2], $arrData))
+						{
+							System::log(sprintf('Tried to evaluate (%s statement) unknown simple token "%s".', $matches[1], $matches[2]), __METHOD__, TL_ERROR);
+							return sprintf('<?php %s (false): ?>', $matches[1]);
+						}
+
+						return sprintf('<?php %s ($arrData[\'%s\'] %s %s): ?>', $matches[1], addslashes($matches[2]), $matches[3], $matches[4]);
+					},
+					$strTag
+				);
 			}
-			elseif (strncmp($strTag, '{elseif', 7) === 0)
-			{
-				$strReturn .= preg_replace('/\{elseif ([A-Za-z0-9_]+)([=!<>]+)([^;$\(\)\[\]\}]+).*\}/i', '<?php elseif ($arrData[\'$1\'] $2 $3): ?>', $strTag);
-			}
-			elseif (strncmp($strTag, '{else', 5) === 0)
+			elseif (strncmp($strTag, '{else}', 6) === 0)
 			{
 				$strReturn .= '<?php else: ?>';
 			}
-			elseif (strncmp($strTag, '{endif', 6) === 0)
+			elseif (strncmp($strTag, '{endif}', 7) === 0)
 			{
 				$strReturn .= '<?php endif; ?>';
 			}
@@ -547,13 +558,27 @@ class StringUtil
 
 		// Replace tokens
 		$strReturn = str_replace('?><br />', '?>', $strReturn);
-		$strReturn = preg_replace('/##([A-Za-z0-9_]+)##/i', '<?= $arrData[\'$1\'] ?>', $strReturn);
-		$strReturn = str_replace("] ?>\n", '] . "\n" ?>' . "\n", $strReturn); // see #7178
+		$strReturn = preg_replace_callback(
+			'/##([^=!<>\s]+)##/',
+			function (array $matches) use ($arrData)
+			{
+				if (!array_key_exists($matches[1], $arrData))
+				{
+					System::log(sprintf('Tried to parse unknown simple token "%s".', $matches[1]), __METHOD__, TL_ERROR);
+					return '##' . $matches[1] . '##';
+				}
+
+				return $arrData[$matches[1]];
+			},
+			$strReturn
+		);
+		$strReturn = str_replace("]; ?>\n", '] . "\n"; ?>' . "\n", $strReturn); // see #7178
 
 		// Eval the code
 		ob_start();
 		$blnEval = eval("?>" . $strReturn);
-		$strReturn = ob_get_clean();
+		$strReturn = ob_get_contents();
+		ob_end_clean();
 
 		// Throw an exception if there is an eval() error
 		if ($blnEval === false)
