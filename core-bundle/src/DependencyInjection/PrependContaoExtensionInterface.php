@@ -8,7 +8,6 @@
  * @license LGPL-3.0+
  */
 
-// TODO: must go to core bundle
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -26,5 +25,5 @@ interface PrependContaoExtensionInterface
      *
      * @param ContainerBuilder $container
      */
-    public function prepend(ContainerBuilder $container);
+    public function prependManagedConfig(array $configs, ContainerBuilder $container);
 }
