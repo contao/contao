@@ -59,7 +59,8 @@ class ContaoManagerExtension extends Extension implements PrependExtensionInterf
     {
         foreach ($container->getExtensions() as $extension) {
             if ($extension instanceof PrependContaoExtensionInterface && !$extension instanceof PrependExtensionInterface) {
-                $extension->prepend($container);
+                // We do not have a managed config yet, so we'll just pass an empty array
+                $extension->prependManagedConfig([], $container);
             }
         }
     }
