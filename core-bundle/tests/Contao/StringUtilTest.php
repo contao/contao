@@ -46,6 +46,20 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the parseSimpleTokens() method throws exception when containing php
+     * code.
+     *
+     * @param string $string
+     *
+     * @expectedException \InvalidArgumentException
+     * @dataProvider parseSimpleTokensThrowsExceptionWhenContainingPhp
+     */
+    public function testParseSimpleTokensThrowsExceptionWhenContainingPhp($string)
+    {
+        StringUtil::parseSimpleTokens($string, []);
+    }
+
+    /**
      * Provides the data for the testParseSimpleTokens() method.
      *
      * @return array
@@ -53,31 +67,6 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function parseSimpleTokensProvider()
     {
         return [
-            'Test PHP code is stripped (<?)' => [
-                'This <? var_dump() ?> is a test.',
-                [],
-                'This  is a test.',
-            ],
-            'Test PHP code is stripped (<?php)' => [
-                'This <?php var_dump() ?> is a test.',
-                [],
-                'This  is a test.',
-            ],
-            'Test PHP code is stripped (<%)' => [
-                'This <% var_dump() ?> is a test.',
-                [],
-                'This  is a test.',
-            ],
-            'Test PHP code is stripped (<%=)' => [
-                'This <%= var_dump() ?> is a test.',
-                [],
-                'This  is a test.',
-            ],
-            'Test PHP code is stripped (<script language="php">)' => [
-                'This <script language="php"> var_dump() </script> is a test.',
-                [],
-                'This  is a test.',
-            ],
             'Test regular token replacement' => [
                 'This is my ##email##',
                 ['email' => 'test@foobar.com'],
@@ -142,6 +131,35 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 'This is my ##dumb token## you know',
                 ['dumb token' => 'foobar'],
                 'This is my ##dumb token## you know',
+            ],
+        ];
+    }
+
+    /**
+     * Provides the data for the testParseSimpleTokens() method.
+     *
+     * @return array
+     */
+    public function parseSimpleTokensThrowsExceptionWhenContainingPhp()
+    {
+        return [
+            '(<?)' => [
+                'This <? var_dump() ?> is a test.',
+            ],
+            '(<?php)' => [
+                'This <?php var_dump() ?> is a test.',
+            ],
+            '(<%)' => [
+                'This <% var_dump() ?> is a test.',
+            ],
+            '(<%=)' => [
+                'This <%= var_dump() ?> is a test.',
+            ],
+            '(<script language="php">)' => [
+                'This <script language="php"> var_dump() </script> is a test.',
+            ],
+            '(<script language=\'php\'>)' => [
+                'This <script language=\'php\'> var_dump() </script> is a test.',
             ],
         ];
     }
