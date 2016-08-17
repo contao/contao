@@ -60,6 +60,20 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the parseSimpleTokens() method throws exception when tokens contain php
+     * code.
+     *
+     * @param array $tokens
+     *
+     * @expectedException \InvalidArgumentException
+     * @dataProvider parseSimpleTokensThrowsExceptionWhenTokensContainingPhp
+     */
+    public function testParseSimpleTokensThrowsExceptionWhenTokensContainingPhp(array $tokens)
+    {
+        StringUtil::parseSimpleTokens('foobar', $tokens);
+    }
+
+    /**
      * Provides the data for the testParseSimpleTokens() method.
      *
      * @return array
@@ -160,6 +174,35 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
             ],
             '(<script language=\'php\'>)' => [
                 'This <script language=\'php\'> var_dump() </script> is a test.',
+            ],
+        ];
+    }
+
+    /**
+     * Provides the data for the testParseSimpleTokens() method.
+     *
+     * @return array
+     */
+    public function parseSimpleTokensThrowsExceptionWhenTokensContainingPhp()
+    {
+        return [
+            '(<?)' => [
+                ['foo' => 'This <? var_dump() ?> is a test.'],
+            ],
+            '(<?php)' => [
+                ['foo' => 'This <?php var_dump() ?> is a test.'],
+            ],
+            '(<%)' => [
+                ['foo' => 'This <% var_dump() ?> is a test.'],
+            ],
+            '(<%=)' => [
+                ['foo' => 'This <%= var_dump() ?> is a test.'],
+            ],
+            '(<script language="php">)' => [
+                ['foo' => 'This <script language="php"> var_dump() </script> is a test.'],
+            ],
+            '(<script language=\'php\'>)' => [
+                ['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.'],
             ],
         ];
     }

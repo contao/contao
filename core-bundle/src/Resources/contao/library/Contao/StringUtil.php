@@ -511,7 +511,7 @@ class StringUtil
 	 * @return string The converted string
 	 *
 	 * @throws \Exception If $strString cannot be parsed
-	 * @throws \InvalidArgumentException If $strString contains php code
+	 * @throws \InvalidArgumentException If $strString or any token in $arrData contains php code
 	 */
 	public static function parseSimpleTokens($strString, $arrData)
 	{
@@ -527,9 +527,19 @@ class StringUtil
 				|| strpos($value, '<script language=\'php\'>') !== false;
 		};
 
+		// Validate subject string
 		if ($containsPhp($strString))
 		{
 			throw new \InvalidArgumentException('PHP Code is not allowed in subject string.');
+		}
+
+		// Validate replacement data
+		foreach ($arrData as $k => $v)
+		{
+			if ($containsPhp($v))
+			{
+				throw new \InvalidArgumentException(sprintf('PHP Code is not allowed in replacement data (Key "%s").', $k));
+			}
 		}
 
 		$arrTags = preg_split('/({[^}]+})/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
