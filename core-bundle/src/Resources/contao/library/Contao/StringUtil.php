@@ -599,8 +599,7 @@ class StringUtil
 		// Eval the code
 		ob_start();
 		$blnEval = eval("?>" . $strReturn);
-		$strReturn = ob_get_contents();
-		ob_end_clean();
+		$strReturn = ob_get_clean();
 
 		// Throw an exception if there is an eval() error
 		if ($blnEval === false)
