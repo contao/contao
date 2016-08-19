@@ -1597,7 +1597,10 @@ fieldset.collapsed > legend {
 		position:fixed;
 		top:0;
 		z-index:2;
-		transition:top .2s ease;
+		transition:transform .2s ease;
+		-webkit-transform:none;
+		transform:none;
+		will-change:transform;
 	}
 	#container {
 		padding-top:60px;
@@ -1611,11 +1614,14 @@ fieldset.collapsed > legend {
 	}
 	#main,#footer {
 		position:relative;
-		left:0;
-		transition:left .2s ease;
+		transition:transform .2s ease;
+		-webkit-transform:none;
+		transform:none;
+		will-change:transform;
 	}
 	.show-navigation #main,.show-navigation #footer {
-		left:215px;
+		-webkit-transform:translateX(215px);
+		transform:translateX(215px);
 	}
 	#main,#footer {
 		width:auto;
@@ -1625,13 +1631,16 @@ fieldset.collapsed > legend {
 	#tl_navigation {
 		position:absolute;
 		top:50px;
-		left:-215px;
 		width:205px;
 		padding:10px 0;
-		transition:left .2s ease;
+		transition:transform .2s ease;
+		-webkit-transform:translateX(-215px);
+		transform:translateX(-215px);
+		will-change:transform;
 	}
 	.show-navigation #tl_navigation {
-		left:10px;
+		-webkit-transform:none;
+		transform:none;
 	}
 	#tl_navigation .tl_level_2 a {
 		padding-top:6px;
@@ -1658,7 +1667,8 @@ fieldset.collapsed > legend {
 		margin-right:10px;
 	}
 	#header.down {
-		top:-42px;
+		-webkit-transform:translateY(-42px);
+		transform:translateY(-42px);
 	}
 	#footer {
 		padding-bottom:18px;
