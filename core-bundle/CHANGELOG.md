@@ -2,6 +2,7 @@
 
 ### 4.2.3 (2016-XX-XX)
 
+ * Do not double URL encode the content syndication links.
  * Use CSS3 transforms instead of transitions to animate the off-canvas navigation.
  * Improve the exception handling when using the resource locator (see #557).
  * Correctly reset the filter menu in parent view.

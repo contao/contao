@@ -226,9 +226,10 @@ class ModuleArticle extends \Module
 		{
 			$request = \Environment::get('indexFreeRequest');
 
+			// URL encoding will be handled by the Symfony router, so do not apply rawurlencode() here anymore
 			$this->Template->print = '#';
-			$this->Template->encUrl = rawurlencode(\Environment::get('base') . \Environment::get('request'));
-			$this->Template->encTitle = rawurlencode($objPage->pageTitle);
+			$this->Template->encUrl = \Environment::get('base') . \Environment::get('request');
+			$this->Template->encTitle = $objPage->pageTitle;
 			$this->Template->href = $request . ((strpos($request, '?') !== false) ? '&amp;' : '?') . 'pdf=' . $this->id;
 
 			$this->Template->printTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printPage']);
