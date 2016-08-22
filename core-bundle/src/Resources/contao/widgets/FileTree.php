@@ -167,7 +167,7 @@ class FileTree extends \Widget
 
 							if ($objFile->isImage)
 							{
-								$image = 'placeholder.png';
+								$image = \Image::getPath('placeholder.svg');
 
 								if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
 								{
@@ -211,7 +211,7 @@ class FileTree extends \Widget
 									// Only show images
 									if ($objFile->isImage)
 									{
-										$image = 'placeholder.png';
+										$image = \Image::getPath('placeholder.svg');
 
 										if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
 										{
@@ -241,7 +241,7 @@ class FileTree extends \Widget
 								// Only show images
 								if ($objFile->isImage)
 								{
-									$image = 'placeholder.png';
+									$image = \Image::getPath('placeholder.svg');
 
 									if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
 									{
