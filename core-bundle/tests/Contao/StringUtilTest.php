@@ -50,12 +50,17 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      * code.
      *
      * @param string $string
+     * @param bool
      *
      * @expectedException \InvalidArgumentException
      * @dataProvider parseSimpleTokensThrowsExceptionWhenContainingPhp
      */
-    public function testParseSimpleTokensThrowsExceptionWhenContainingPhp($string)
+    public function testParseSimpleTokensThrowsExceptionWhenContainingPhp($string, $skip)
     {
+        if ($skip) {
+            $this->markTestSkipped(sprintf('Skipped because PHP version is "%s" and tested opening tags are not interpreted at all.', PHP_VERSION));
+        }
+
         StringUtil::parseSimpleTokens($string, []);
     }
 
@@ -64,12 +69,17 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      * code.
      *
      * @param array $tokens
+     * @param bool
      *
      * @expectedException \InvalidArgumentException
      * @dataProvider parseSimpleTokensThrowsExceptionWhenTokensContainingPhp
      */
-    public function testParseSimpleTokensThrowsExceptionWhenTokensContainingPhp(array $tokens)
+    public function testParseSimpleTokensThrowsExceptionWhenTokensContainingPhp(array $tokens, $skip)
     {
+        if ($skip) {
+            $this->markTestSkipped(sprintf('Skipped because PHP version is "%s" and tested opening tags are not interpreted at all.', PHP_VERSION));
+        }
+
         StringUtil::parseSimpleTokens('foobar', $tokens);
     }
 
@@ -162,23 +172,29 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function parseSimpleTokensThrowsExceptionWhenContainingPhp()
     {
         return [
-            '(<?)' => [
-                'This <? var_dump() ?> is a test.',
-            ],
             '(<?php)' => [
                 'This <?php var_dump() ?> is a test.',
+                false
+            ],
+            '(<?=)' => [
+                'This <?= $var ?> is a test.',
+                false
+            ],
+            '(<?)' => [
+                'This <? var_dump() ?> is a test.',
+                version_compare(PHP_VERSION, '7.0.0', '>=')
             ],
             '(<%)' => [
                 'This <% var_dump() ?> is a test.',
-            ],
-            '(<%=)' => [
-                'This <%= var_dump() ?> is a test.',
+                version_compare(PHP_VERSION, '7.0.0', '>=')
             ],
             '(<script language="php">)' => [
                 'This <script language="php"> var_dump() </script> is a test.',
+                version_compare(PHP_VERSION, '7.0.0', '>=')
             ],
             '(<script language=\'php\'>)' => [
                 'This <script language=\'php\'> var_dump() </script> is a test.',
+                version_compare(PHP_VERSION, '7.0.0', '>=')
             ],
         ];
     }
@@ -191,23 +207,29 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function parseSimpleTokensThrowsExceptionWhenTokensContainingPhp()
     {
         return [
-            '(<?)' => [
-                ['foo' => 'This <? var_dump() ?> is a test.'],
-            ],
             '(<?php)' => [
                 ['foo' => 'This <?php var_dump() ?> is a test.'],
+                false
+            ],
+            '(<?=)' => [
+                ['foo' => 'This <?= $var ?> is a test.'],
+                false
+            ],
+            '(<?)' => [
+                ['foo' => 'This <? var_dump() ?> is a test.'],
+                version_compare(PHP_VERSION, '7.0.0', '>=')
             ],
             '(<%)' => [
                 ['foo' => 'This <% var_dump() ?> is a test.'],
-            ],
-            '(<%=)' => [
-                ['foo' => 'This <%= var_dump() ?> is a test.'],
+                version_compare(PHP_VERSION, '7.0.0', '>=')
             ],
             '(<script language="php">)' => [
                 ['foo' => 'This <script language="php"> var_dump() </script> is a test.'],
+                version_compare(PHP_VERSION, '7.0.0', '>=')
             ],
             '(<script language=\'php\'>)' => [
                 ['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.'],
+                version_compare(PHP_VERSION, '7.0.0', '>=')
             ],
         ];
     }

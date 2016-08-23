@@ -518,27 +518,31 @@ class StringUtil
 		$strReturn = '';
 
 		// Do not allow php code for security reasons.
-		$containsPhp = function($value) {
-			return strpos($value, '<?php') !== false
-				|| strpos($value, '<?') !== false
-				|| strpos($value, '<%') !== false
-				|| strpos($value, '<%=') !== false
-				|| strpos($value, '<script language="php">') !== false
-				|| strpos($value, '<script language=\'php\'>') !== false;
+		$containsInvalidContent = function($value)
+		{
+			$tokens = token_get_all($value);
+			foreach ($tokens as $token)
+			{
+				if ($token[0] !== T_INLINE_HTML)
+				{
+					return true;
+				}
+			}
+			return false;
 		};
 
 		// Validate subject string
-		if ($containsPhp($strString))
+		if ($containsInvalidContent($strString))
 		{
-			throw new \InvalidArgumentException('PHP Code is not allowed in subject string.');
+			throw new \InvalidArgumentException('Your simple token string contains invalid content (probably PHP Code).');
 		}
 
 		// Validate replacement data
 		foreach ($arrData as $k => $v)
 		{
-			if ($containsPhp($v))
+			if ($containsInvalidContent($v))
 			{
-				throw new \InvalidArgumentException(sprintf('PHP Code is not allowed in replacement data (Key "%s").', $k));
+				throw new \InvalidArgumentException(sprintf('Your replacement data (Key "%s") contains invalid content (probably PHP Code).', $k));
 			}
 		}
 
