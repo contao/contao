@@ -86,6 +86,11 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['email' => 'test@foobar.com'],
                 'This is my test@foobar.com',
             ],
+            'Test regular token replacement is non greedy' => [
+                'This is my ##email##,##email2##',
+                ['email' => 'test@foobar.com', 'email2' => 'foo@test.com'],
+                'This is my test@foobar.com,foo@test.com',
+            ],
             'Test token replacement with special characters (-)' => [
                 'This is my ##e-mail##',
                 ['e-mail' => 'test@foobar.com'],

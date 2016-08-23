@@ -581,7 +581,7 @@ class StringUtil
 		// Replace tokens
 		$strReturn = str_replace('?><br />', '?>', $strReturn);
 		$strReturn = preg_replace_callback(
-			'/##([^=!<>\s]+)##/',
+			'/##([^=!<>\s]+?)##/',
 			function (array $matches) use ($arrData)
 			{
 				if (!array_key_exists($matches[1], $arrData))
