@@ -12,6 +12,7 @@ namespace Contao;
 
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
+
 /**
  * Authenticates and initializes user objects
  *
@@ -568,17 +569,17 @@ abstract class User extends \System
 	 */
 	protected function generateSession()
 	{
-		// Regenerate a new session id to harden against session fixation attacks if migration is configured.
-		// This is mostly copy&paste from the default session authentication strategy by symfony.
 		$container = \System::getContainer();
-		switch ($strategy = $container->getParameter('security.authentication.session_strategy.strategy'))
+		$strategy = $container->getParameter('security.authentication.session_strategy.strategy');
+
+		// Regenerate the session id to harden against session fixation attacks
+		switch ($strategy)
 		{
 			case SessionAuthenticationStrategy::NONE:
 				break;
 
 			case SessionAuthenticationStrategy::MIGRATE:
-				// Never destroy the session, this is Contao special, as we have to preserve the current values.
-				$container->get('session')->migrate();
+				$container->get('session')->migrate(false); // do not destroy the old session
 				break;
 
 			case SessionAuthenticationStrategy::INVALIDATE:
