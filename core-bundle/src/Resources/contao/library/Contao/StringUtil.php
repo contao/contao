@@ -532,7 +532,6 @@ class StringUtil
 		};
 
 		// Replace tokens
-		$strString = str_replace('?><br />', '?>', $strString);
 		$strString = preg_replace_callback(
 			'/##([^=!<>\s]+?)##/',
 			function (array $matches) use ($arrData)
