@@ -91,7 +91,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseSimpleTokensThrowsExceptionWhenTryingToCombineTokensForPhp()
     {
-        StringUtil::parseSimpleTokens('This is ##open####open2###close# evil', [
+        StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
             'open'  => '<',
             'open2' => '?php echo "I am evil";',
             'close' => '?>'
