@@ -84,6 +84,21 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the parseSimpleTokens() method throws exception when tokens contain php
+     * code that is generated only after replacing the tokens.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testParseSimpleTokensThrowsExceptionWhenTryingToCombineTokensForPhp()
+    {
+        StringUtil::parseSimpleTokens('This is ##open####open2###close# evil', [
+            'open'  => '<',
+            'open2' => '?php echo "I am evil";',
+            'close' => '?>'
+        ]);
+    }
+
+    /**
      * Provides the data for the testParseSimpleTokens() method.
      *
      * @return array

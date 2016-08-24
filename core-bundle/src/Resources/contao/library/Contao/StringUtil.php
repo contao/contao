@@ -531,6 +531,24 @@ class StringUtil
 			return false;
 		};
 
+		// Replace tokens
+		$strString = str_replace('?><br />', '?>', $strString);
+		$strString = preg_replace_callback(
+			'/##([^=!<>\s]+?)##/',
+			function (array $matches) use ($arrData)
+			{
+				if (!array_key_exists($matches[1], $arrData))
+				{
+					System::log(sprintf('Tried to parse unknown simple token "%s".', $matches[1]), __METHOD__, TL_ERROR);
+					return '##' . $matches[1] . '##';
+				}
+
+				return $arrData[$matches[1]];
+			},
+			$strString
+		);
+		$strString = str_replace("]; ?>\n", '] . "\n"; ?>' . "\n", $strString); // see #7178
+
 		// Validate subject string
 		if ($containsInvalidContent($strString))
 		{
@@ -581,24 +599,6 @@ class StringUtil
 				$strReturn .= $strTag;
 			}
 		}
-
-		// Replace tokens
-		$strReturn = str_replace('?><br />', '?>', $strReturn);
-		$strReturn = preg_replace_callback(
-			'/##([^=!<>\s]+?)##/',
-			function (array $matches) use ($arrData)
-			{
-				if (!array_key_exists($matches[1], $arrData))
-				{
-					System::log(sprintf('Tried to parse unknown simple token "%s".', $matches[1]), __METHOD__, TL_ERROR);
-					return '##' . $matches[1] . '##';
-				}
-
-				return $arrData[$matches[1]];
-			},
-			$strReturn
-		);
-		$strReturn = str_replace("]; ?>\n", '] . "\n"; ?>' . "\n", $strReturn); // see #7178
 
 		// Eval the code
 		ob_start();
