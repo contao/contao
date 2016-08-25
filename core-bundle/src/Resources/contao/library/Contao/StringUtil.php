@@ -538,7 +538,7 @@ class StringUtil
 
 		$evaluateExpression = function($strExpression) use ($arrData)
 		{
-			if (!preg_match('/^([^=!<>\s]+)([=!<>]+)([^;$\(\)\[\]\}]+).*$/i', $strExpression, $arrMatches))
+			if (!preg_match('/^([^=!<>\s]+)([=!<>]+)(.+)$/is', $strExpression, $arrMatches))
 			{
 				return false;
 			}
@@ -549,7 +549,7 @@ class StringUtil
 
 			if (!array_key_exists($strToken, $arrData))
 			{
-				System::log(sprintf('Tried to evaluate (statement) unknown simple token "%s".', $strToken), __METHOD__, TL_ERROR);
+				System::log(sprintf('Tried to evaluate unknown simple token "%s".', $strToken), __METHOD__, TL_ERROR);
 				return false;
 			}
 

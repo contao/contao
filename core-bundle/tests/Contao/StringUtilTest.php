@@ -277,6 +277,16 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['value' => 'foo'],
                 '089',
             ],
+            'Test special value chars \'=!<>;$()[] (match)' => [
+                '{if value=="\'=!<>;$()[]"}match{else}no-match{endif}',
+                ['value' => '\'=!<>;$()[]'],
+                'match',
+            ],
+            'Test special value chars \'=!<>;$()[] (no match)' => [
+                '{if value=="\'=!<>;$()[]"}match{else}no-match{endif}',
+                ['value' => '=!<>;$()[]'],
+                'no-match',
+            ],
         ];
     }
 
