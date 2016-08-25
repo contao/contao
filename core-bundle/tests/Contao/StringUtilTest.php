@@ -176,6 +176,16 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['dumb token' => 'foobar'],
                 'This is my ##dumb token## you know',
             ],
+            'Test if-tags insertion not evaluated' => [
+                '##token##',
+                ['token' => '{if token=="foo"}'],
+                '{if token=="foo"}',
+            ],
+            'Test if-tags insertion not evaluated with multiple tokens' => [
+                '##token1####token2####token3##',
+                ['token1' => '{', 'token2' => 'if', 'token3' => ' token=="foo"}'],
+                '{if token=="foo"}',
+            ],
         ];
     }
 
