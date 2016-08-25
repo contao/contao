@@ -80,7 +80,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped(sprintf('Skipped because PHP version is "%s" and tested opening tags are not interpreted at all.', PHP_VERSION));
         }
 
-        StringUtil::parseSimpleTokens('foobar', $tokens);
+        StringUtil::parseSimpleTokens('##foo##', $tokens);
     }
 
     /**
