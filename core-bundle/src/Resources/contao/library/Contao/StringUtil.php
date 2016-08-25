@@ -517,97 +517,86 @@ class StringUtil
 	{
 		$strReturn = '';
 
-		// Do not allow php code for security reasons.
-		$containsInvalidContent = function($value)
+		$replaceTokens = function($strSubject) use ($arrData)
 		{
-			$tokens = token_get_all($value);
-			foreach ($tokens as $token)
-			{
-				if ($token[0] !== T_INLINE_HTML)
+			// Replace tokens
+			return preg_replace_callback(
+				'/##([^=!<>\s]+?)##/',
+				function (array $matches) use ($arrData)
 				{
-					return true;
-				}
-			}
-			return false;
+					if (!array_key_exists($matches[1], $arrData))
+					{
+						System::log(sprintf('Tried to parse unknown simple token "%s".', $matches[1]), __METHOD__, TL_ERROR);
+						return '##' . $matches[1] . '##';
+					}
+
+					return $arrData[$matches[1]];
+				},
+				$strSubject
+			);
 		};
 
-		// Replace tokens
-		$strString = preg_replace_callback(
-			'/##([^=!<>\s]+?)##/',
-			function (array $matches) use ($arrData)
-			{
-				if (!array_key_exists($matches[1], $arrData))
+		$evaluateExpression = function($strExpression) use ($arrData)
+		{
+			$strEval = preg_replace_callback(
+				'/^([^=!<>\s]+)([=!<>]+)([^;$\(\)\[\]\}]+).*$/i',
+				function (array $matches) use ($arrData)
 				{
-					System::log(sprintf('Tried to parse unknown simple token "%s".', $matches[1]), __METHOD__, TL_ERROR);
-					return '##' . $matches[1] . '##';
-				}
+					if (!array_key_exists($matches[1], $arrData))
+					{
+						System::log(sprintf('Tried to evaluate (statement) unknown simple token "%s".', $matches[1]), __METHOD__, TL_ERROR);
+						return 'return false;';
+					}
 
-				return $arrData[$matches[1]];
-			},
-			$strString
-		);
-		$strString = str_replace("]; ?>\n", '] . "\n"; ?>' . "\n", $strString); // see #7178
+					return sprintf('return $arrData[\'%s\'] %s %s;', addslashes($matches[1]), $matches[2], $matches[3]);
+				},
+				$strExpression
+			);
 
-		// Validate subject string
-		if ($containsInvalidContent($strString))
-		{
-			throw new \InvalidArgumentException('Your simple token string contains invalid content (probably PHP Code).');
-		}
+			return eval($strEval);
+		};
 
-		// Validate replacement data
-		foreach ($arrData as $k => $v)
-		{
-			if ($containsInvalidContent($v))
-			{
-				throw new \InvalidArgumentException(sprintf('Your replacement data (Key "%s") contains invalid content (probably PHP Code).', $k));
-			}
-		}
+		// Parsing stack used to keep track of the nesting level. The last item
+		// ist true if it is inside a matching if-tag
+		$arrStack = [true];
 
-		$arrTags = preg_split('/({[^}]+})/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+		// Tokenize the string into tag and text blocks
+		$arrTags = preg_split('/({[^{}]+}\n?)/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
-		// Replace the tags
+		// Parse tokens
 		foreach ($arrTags as $strTag)
 		{
-			if (strncmp($strTag, '{if', 3) === 0 || strncmp($strTag, '{elseif', 7) === 0)
-			{
-				$strReturn .= preg_replace_callback(
-					'/{(if|elseif) ([^=!<>\s]+)([=!<>]+)([^;$\(\)\[\]\}]+).*\}/i',
-					function (array $matches) use ($arrData)
-					{
-						if (!array_key_exists($matches[2], $arrData))
-						{
-							System::log(sprintf('Tried to evaluate (%s statement) unknown simple token "%s".', $matches[1], $matches[2]), __METHOD__, TL_ERROR);
-							return sprintf('<?php %s (false): ?>', $matches[1]);
-						}
+			// true if it is inside a matching if-tag
+			$blnCurrent = $arrStack[count($arrStack) - 1];
 
-						return sprintf('<?php %s ($arrData[\'%s\'] %s %s): ?>', $matches[1], addslashes($matches[2]), $matches[3], $matches[4]);
-					},
-					$strTag
-				);
+			if (strncmp($strTag, '{if', 3) === 0)
+			{
+				$arrStack[] = $blnCurrent && $evaluateExpression(substr($strTag, 4, -1));
+			}
+			elseif (strncmp($strTag, '{elseif', 7) === 0)
+			{
+				array_pop($arrStack);
+				$arrStack[] = !$blnCurrent && $evaluateExpression(substr($strTag, 8, -1));
 			}
 			elseif (strncmp($strTag, '{else}', 6) === 0)
 			{
-				$strReturn .= '<?php else: ?>';
+				array_pop($arrStack);
+				$arrStack[] = !$blnCurrent && $arrStack[count($arrStack) - 1];
 			}
 			elseif (strncmp($strTag, '{endif}', 7) === 0)
 			{
-				$strReturn .= '<?php endif; ?>';
+				array_pop($arrStack);
 			}
-			else
+			elseif ($blnCurrent)
 			{
-				$strReturn .= $strTag;
+				$strReturn .= $replaceTokens($strTag);
 			}
 		}
 
-		// Eval the code
-		ob_start();
-		$blnEval = eval("?>" . $strReturn);
-		$strReturn = ob_get_clean();
-
-		// Throw an exception if there is an eval() error
-		if ($blnEval === false)
+		// Throw an exception if there is an error
+		if (count($arrStack) !== 1)
 		{
-			throw new \Exception("Error parsing simple tokens ($strReturn)");
+			throw new \Exception("Error parsing simple tokens");
 		}
 
 		// Return the evaled code

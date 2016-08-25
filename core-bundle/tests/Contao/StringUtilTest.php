@@ -60,56 +60,43 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the parseSimpleTokens() method throws exception when containing php
-     * code.
+     * Tests the parseSimpleTokens() method doesn’t execute php code.
      *
      * @param string $string
      * @param bool
      *
-     * @expectedException \InvalidArgumentException
-     * @dataProvider parseSimpleTokensThrowsExceptionWhenContainingPhp
+     * @dataProvider parseSimpleTokensDoesntExecutePhp
      */
-    public function testParseSimpleTokensThrowsExceptionWhenContainingPhp($string, $skip)
+    public function testParseSimpleTokensDoesntExecutePhp($string, $skip)
     {
-        if ($skip) {
-            $this->markTestSkipped(sprintf('Skipped because PHP version is "%s" and tested opening tags are not interpreted at all.', PHP_VERSION));
-        }
-
-        StringUtil::parseSimpleTokens($string, []);
+        $this->assertEquals($string, StringUtil::parseSimpleTokens($string, []));
     }
 
     /**
-     * Tests the parseSimpleTokens() method throws exception when tokens contain php
-     * code.
+     * Tests the parseSimpleTokens() method doesn’t execute php code inside
+     * tokens.
      *
      * @param array $tokens
      * @param bool
      *
-     * @expectedException \InvalidArgumentException
-     * @dataProvider parseSimpleTokensThrowsExceptionWhenTokensContainingPhp
+     * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
      */
-    public function testParseSimpleTokensThrowsExceptionWhenTokensContainingPhp(array $tokens, $skip)
+    public function testParseSimpleTokensDoesntExecutePhpInToken(array $tokens, $skip)
     {
-        if ($skip) {
-            $this->markTestSkipped(sprintf('Skipped because PHP version is "%s" and tested opening tags are not interpreted at all.', PHP_VERSION));
-        }
-
-        StringUtil::parseSimpleTokens('##foo##', $tokens);
+        $this->assertEquals($tokens['foo'], StringUtil::parseSimpleTokens('##foo##', $tokens));
     }
 
     /**
-     * Tests the parseSimpleTokens() method throws exception when tokens contain php
-     * code that is generated only after replacing the tokens.
-     *
-     * @expectedException \InvalidArgumentException
+     * Tests the parseSimpleTokens() method doesn’t execute php code when tokens
+     * contain php code that is generated only after replacing the tokens.
      */
-    public function testParseSimpleTokensThrowsExceptionWhenTryingToCombineTokensForPhp()
+    public function testParseSimpleTokensDoesntExecutePhpInCombinedToken()
     {
-        StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
+        $this->assertEquals('This is <?php echo "I am evil";?> evil', StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
             'open'  => '<',
             'open2' => '?php echo "I am evil";',
             'close' => '?>'
-        ]);
+        ]));
     }
 
     /**
@@ -249,7 +236,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function parseSimpleTokensThrowsExceptionWhenContainingPhp()
+    public function parseSimpleTokensDoesntExecutePhp()
     {
         return [
             '(<?php)' => [
@@ -284,7 +271,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function parseSimpleTokensThrowsExceptionWhenTokensContainingPhp()
+    public function parseSimpleTokensDoesntExecutePhpInToken()
     {
         return [
             '(<?php)' => [
