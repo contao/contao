@@ -46,6 +46,20 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the parseSimpleTokens() method works correctly with newlines.
+     *
+     * @param string $string
+     * @param array $tokens
+     * @param string $expected
+     *
+     * @dataProvider parseSimpleTokensCorrectNewlines
+     */
+    public function testParseSimpleTokensCorrectNewlines($string, array $tokens, $expected)
+    {
+        $this->assertEquals($expected, StringUtil::parseSimpleTokens($string, $tokens));
+    }
+
+    /**
      * Tests the parseSimpleTokens() method throws exception when containing php
      * code.
      *
@@ -185,6 +199,47 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 '##token1####token2####token3##',
                 ['token1' => '{', 'token2' => 'if', 'token3' => ' token=="foo"}'],
                 '{if token=="foo"}',
+            ],
+        ];
+    }
+
+    /**
+     * Provides the data for the testParseSimpleTokensCorrectNewlines() method.
+     *
+     * @return array
+     */
+    public function parseSimpleTokensCorrectNewlines()
+    {
+        return [
+            'Test newlines are kept end of token' => [
+                "This is my ##token##\n",
+                ['token' => "foo"],
+                "This is my foo\n",
+            ],
+            'Test newlines are kept end in token' => [
+                "This is my ##token##",
+                ['token' => "foo\n"],
+                "This is my foo\n",
+            ],
+            'Test newlines are kept end in and after token' => [
+                "This is my ##token##\n",
+                ['token' => "foo\n"],
+                "This is my foo\n\n",
+            ],
+            'Test newlines are kept' => [
+                "This is my \n ##newline## here",
+                ['newline' => "foo\nbar\n"],
+                "This is my \n foo\nbar\n here",
+            ],
+            'Test newlines are removed after if tag' => [
+                "\n{if token=='foo'}\nline2\n{endif}\n",
+                ['token' => "foo"],
+                "\nline2\n",
+            ],
+            'Test newlines are removed after else tag' => [
+                "\n{if token!='foo'}{else}\nline2\n{endif}\n",
+                ['token' => "foo"],
+                "\nline2\n",
             ],
         ];
     }
