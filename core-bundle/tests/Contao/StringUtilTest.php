@@ -20,6 +20,7 @@ use Contao\StringUtil;
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
+ * @author Martin Auswöger <martin@auswoeger.com>
  */
 class StringUtilTest extends \PHPUnit_Framework_TestCase
 {
@@ -100,6 +101,20 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the parseSimpleTokens() method fails for invalid comparisons.
+     *
+     * @dataProvider parseSimpleTokensInvalidComparison
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testParseSimpleTokensInvalidComparison($string)
+    {
+        StringUtil::parseSimpleTokens($string, [
+            'foo' => 'bar',
+        ]);
+    }
+
+    /**
      * Provides the data for the testParseSimpleTokens() method.
      *
      * @return array
@@ -142,6 +157,16 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['email' => 'test@foobar.com'],
                 'This is my ',
             ],
+            'Test comparisons (!=) with regular characters (match)' => [
+                'This is my {if email!=""}match{endif}',
+                ['email' => 'test@foobar.com'],
+                'This is my match',
+            ],
+            'Test comparisons (!=) with regular characters (no match)' => [
+                'This is my {if email!=""}match{endif}',
+                ['email' => ''],
+                'This is my ',
+            ],
             'Test comparisons (>) with regular characters (match)' => [
                 'This is my {if value>0}match{endif}',
                 ['value' => 5],
@@ -149,6 +174,16 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
             ],
             'Test comparisons (>) with regular characters (no match)' => [
                 'This is my {if value>0}hello{endif}',
+                ['value' => -8],
+                'This is my ',
+            ],
+            'Test comparisons (>=) with regular characters (match)' => [
+                'This is my {if value>=0}match{endif}',
+                ['value' => 5],
+                'This is my match',
+            ],
+            'Test comparisons (>=) with regular characters (no match)' => [
+                'This is my {if value>=0}hello{endif}',
                 ['value' => -8],
                 'This is my ',
             ],
@@ -162,6 +197,16 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['value' => 9],
                 'This is my ',
             ],
+            'Test comparisons (<=) with regular characters (match)' => [
+                'This is my {if value<=0}match{endif}',
+                ['value' => -5],
+                'This is my match',
+            ],
+            'Test comparisons (<=) with regular characters (no match)' => [
+                'This is my {if value<=0}hello{endif}',
+                ['value' => 9],
+                'This is my ',
+            ],
             'Test comparisons (<) with special characters (match)' => [
                 'This is my {if val&#ue<0}match{endif}',
                 ['val&#ue' => -5],
@@ -170,6 +215,26 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
             'Test comparisons (<) with special characters (no match)' => [
                 'This is my {if val&#ue<0}match{endif}',
                 ['val&#ue' => 9],
+                'This is my ',
+            ],
+            'Test comparisons (===) with regular characters (match)' => [
+                'This is my {if value===5}match{endif}',
+                ['value' => 5],
+                'This is my match',
+            ],
+            'Test comparisons (===) with regular characters (no match)' => [
+                'This is my {if value===5}match{endif}',
+                ['value' => 5.0],
+                'This is my ',
+            ],
+            'Test comparisons (!==) with regular characters (match)' => [
+                'This is my {if value!==5.0}match{endif}',
+                ['value' => '5'],
+                'This is my match',
+            ],
+            'Test comparisons (!==) with regular characters (no match)' => [
+                'This is my {if value!==5.0}match{endif}',
+                ['value' => 5.0],
                 'This is my ',
             ],
             'Test whitespace in tokens not allowed and ignored' => [
@@ -186,6 +251,31 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 '##token1####token2####token3##',
                 ['token1' => '{', 'token2' => 'if', 'token3' => ' token=="foo"}'],
                 '{if token=="foo"}',
+            ],
+            'Test nested if-tag with " in value (match)' => [
+                '{if value=="f"oo"}1{endif}{if value=="f\"oo"}2{endif}',
+                ['value' => 'f"oo'],
+                '12',
+            ],
+            'Test else (match)' => [
+                'This is my {if value=="foo"}match{else}else-match{endif}',
+                ['value' => 'foo'],
+                'This is my match',
+            ],
+            'Test else (no match)' => [
+                'This is my {if value!="foo"}match{else}else-match{endif}',
+                ['value' => 'foo'],
+                'This is my else-match',
+            ],
+            'Test nested if (match)' => [
+                '0{if value=="foo"}1{if value!="foo"}2{else}3{if value=="foo"}4{else}5{endif}6{endif}7{else}8{endif}9',
+                ['value' => 'foo'],
+                '0134679',
+            ],
+            'Test nested if (no match)' => [
+                '0{if value!="foo"}1{if value=="foo"}2{else}3{if value!="foo"}4{else}5{endif}6{endif}7{else}8{endif}9',
+                ['value' => 'foo'],
+                '089',
             ],
         ];
     }
@@ -298,6 +388,27 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.'],
                 version_compare(PHP_VERSION, '7.0.0', '>=')
             ],
+        ];
+    }
+
+    /**
+     * Provides the data for the testParseSimpleTokens() method.
+     *
+     * @return array
+     */
+    public function parseSimpleTokensInvalidComparison()
+    {
+        return [
+            'PHP constants are not allowed' => ['{if foo==__FILE__}{endif}'],
+            'Not closed string (")' => ['{if foo=="bar}{endif}'],
+            'Not closed string (\')' => ['{if foo==\'bar}{endif}'],
+            'Additional chars after string ("/)' => ['{if foo=="bar"/}{endif}'],
+            'Additional chars after string (\'/)' => ['{if foo==\'bar\'/}{endif}'],
+            'Additional chars after string ("*)' => ['{if foo=="bar"*}{endif}'],
+            'Additional chars after string (\'*)' => ['{if foo==\'bar\'*}{endif}'],
+            'Unknown operator (=)' => ['{if foo="bar"}{endif}'],
+            'Unknown operator (====)' => ['{if foo===="bar"}{endif}'],
+            'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'],
         ];
     }
 }

@@ -538,22 +538,88 @@ class StringUtil
 
 		$evaluateExpression = function($strExpression) use ($arrData)
 		{
-			$strEval = preg_replace_callback(
-				'/^([^=!<>\s]+)([=!<>]+)([^;$\(\)\[\]\}]+).*$/i',
-				function (array $matches) use ($arrData)
+			if (!preg_match('/^([^=!<>\s]+)([=!<>]+)([^;$\(\)\[\]\}]+).*$/i', $strExpression, $arrMatches))
+			{
+				return false;
+			}
+
+			$strToken = $arrMatches[1];
+			$strOperator = $arrMatches[2];
+			$strValue = $arrMatches[3];
+
+			if (!array_key_exists($strToken, $arrData))
+			{
+				System::log(sprintf('Tried to evaluate (statement) unknown simple token "%s".', $strToken), __METHOD__, TL_ERROR);
+				return false;
+			}
+
+			$varTokenValue = $arrData[$strToken];
+
+			if (is_numeric($strValue))
+			{
+				if (strpos($strValue, '.') === false)
 				{
-					if (!array_key_exists($matches[1], $arrData))
-					{
-						System::log(sprintf('Tried to evaluate (statement) unknown simple token "%s".', $matches[1]), __METHOD__, TL_ERROR);
-						return 'return false;';
-					}
+					$varValue = intval($strValue);
+				}
+				else
+				{
+					$varValue = floatval($strValue);
+				}
+			}
+			elseif (strtolower($strValue) === 'true')
+			{
+				$varValue = true;
+			}
+			elseif (strtolower($strValue) === 'false')
+			{
+				$varValue = false;
+			}
+			elseif (strtolower($strValue) === 'null')
+			{
+				$varValue = null;
+			}
+			elseif (substr($strValue, 0, 1) === '"' && substr($strValue, -1) === '"')
+			{
+				$varValue = str_replace('\"', '"', substr($strValue, 1, -1));
+			}
+			elseif (substr($strValue, 0, 1) === "'" && substr($strValue, -1) === "'")
+			{
+				$varValue = str_replace("\'", "'", substr($strValue, 1, -1));
+			}
+			else
+			{
+				throw new \InvalidArgumentException('Unknown data type of comparison value "' . $strValue . '".');
+			}
 
-					return sprintf('return $arrData[\'%s\'] %s %s;', addslashes($matches[1]), $matches[2], $matches[3]);
-				},
-				$strExpression
-			);
+			switch ($strOperator)
+			{
+				case '==':
+					return $varTokenValue == $varValue;
 
-			return eval($strEval);
+				case '!=':
+					return $varTokenValue != $varValue;
+
+				case '===':
+					return $varTokenValue === $varValue;
+
+				case '!==':
+					return $varTokenValue !== $varValue;
+
+				case '<':
+					return $varTokenValue < $varValue;
+
+				case '>':
+					return $varTokenValue > $varValue;
+
+				case '<=':
+					return $varTokenValue <= $varValue;
+
+				case '>=':
+					return $varTokenValue >= $varValue;
+
+				default:
+					throw new \InvalidArgumentException('Unknown simple token comparison operator "' . $strOperator . '".');
+			}
 		};
 
 		// Parsing stack used to keep track of the nesting level. The last item
@@ -561,7 +627,7 @@ class StringUtil
 		$arrStack = [true];
 
 		// Tokenize the string into tag and text blocks
-		$arrTags = preg_split('/({[^{}]+}\n?)/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+		$arrTags = preg_split('/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
 		// Parse tokens
 		foreach ($arrTags as $strTag)
