@@ -17,9 +17,6 @@ use Contao\StringUtil;
  * Tests the StringUtil class.
  *
  * @author Yanick Witschi <https://github.com/toflar>
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  * @author Martin Auswöger <martin@auswoeger.com>
  */
 class StringUtilTest extends \PHPUnit_Framework_TestCase
@@ -29,7 +26,9 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        define('TL_ERROR', 'ERROR');
+        if (!defined('TL_ERROR')) {
+            define('TL_ERROR', 'ERROR');
+        }
     }
 
     /**
