@@ -10,7 +10,9 @@
 
 namespace Contao\CoreBundle\Test\Contao;
 
+use Contao\CoreBundle\Test\TestCase;
 use Contao\StringUtil;
+use Contao\System;
 
 /**
  * Tests the StringUtil class.
@@ -18,7 +20,7 @@ use Contao\StringUtil;
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Martin Auswöger <martin@auswoeger.com>
  */
-class StringUtilTest extends \PHPUnit_Framework_TestCase
+class StringUtilTest extends TestCase
 {
     /**
      * {@inheritdoc}
@@ -28,6 +30,14 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         if (!defined('TL_ERROR')) {
             define('TL_ERROR', 'ERROR');
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
+    {
+        System::setContainer($this->mockContainerWithContaoScopes());
     }
 
     /**
@@ -101,7 +111,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      * Tests that the parseSimpleTokens() method fails for invalid comparisons.
      *
      * @param $string
-     * 
+     *
      * @dataProvider parseSimpleTokensInvalidComparison
      *
      * @expectedException \InvalidArgumentException
