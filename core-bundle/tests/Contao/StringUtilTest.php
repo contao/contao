@@ -144,6 +144,11 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['e#mail' => 'test@foobar.com'],
                 'This is my test@foobar.com',
             ],
+            'Test token replacement with token delimiter (##)' => [
+                'This is my ##e##mail##',
+                ['e##mail' => 'test@foobar.com'],
+                'This is my ##e##mail##',
+            ],
             'Test comparisons (==) with regular characters (match)' => [
                 'This is my {if email==""}match{endif}',
                 ['email' => ''],
