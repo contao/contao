@@ -511,7 +511,7 @@ class StringUtil
 	 * @return string The converted string
 	 *
 	 * @throws \Exception If $strString cannot be parsed
-	 * @throws \InvalidArgumentException If $strString or any token in $arrData contains php code
+	 * @throws \InvalidArgumentException If if-tags are in an incorrect format
 	 */
 	public static function parseSimpleTokens($strString, $arrData)
 	{
