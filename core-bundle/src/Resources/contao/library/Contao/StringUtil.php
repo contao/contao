@@ -511,7 +511,7 @@ class StringUtil
 	 * @return string The converted string
 	 *
 	 * @throws \Exception If $strString cannot be parsed
-	 * @throws \InvalidArgumentException If $strString or any token in $arrData contains php code
+	 * @throws \InvalidArgumentException If if-tags are in an incorrect format
 	 */
 	public static function parseSimpleTokens($strString, $arrData)
 	{
@@ -642,7 +642,7 @@ class StringUtil
 			elseif (strncmp($strTag, '{elseif', 7) === 0)
 			{
 				array_pop($arrStack);
-				$arrStack[] = !$blnCurrent && $evaluateExpression(substr($strTag, 8, -1));
+				$arrStack[] = !$blnCurrent && $arrStack[count($arrStack) - 1] && $evaluateExpression(substr($strTag, 8, -1));
 			}
 			elseif (strncmp($strTag, '{else}', 6) === 0)
 			{
