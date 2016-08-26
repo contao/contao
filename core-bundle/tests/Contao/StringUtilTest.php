@@ -17,9 +17,7 @@ use Contao\StringUtil;
  * Tests the StringUtil class.
  *
  * @author Yanick Witschi <https://github.com/toflar>
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
+ * @author Martin Auswöger <martin@auswoeger.com>
  */
 class StringUtilTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,7 +26,9 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        define('TL_ERROR', 'ERROR');
+        if (!defined('TL_ERROR')) {
+            define('TL_ERROR', 'ERROR');
+        }
     }
 
     /**
@@ -46,55 +46,70 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the parseSimpleTokens() method throws exception when containing php
-     * code.
+     * Tests the parseSimpleTokens() method works correctly with newlines.
+     *
+     * @param string $string
+     * @param array $tokens
+     * @param string $expected
+     *
+     * @dataProvider parseSimpleTokensCorrectNewlines
+     */
+    public function testParseSimpleTokensCorrectNewlines($string, array $tokens, $expected)
+    {
+        $this->assertEquals($expected, StringUtil::parseSimpleTokens($string, $tokens));
+    }
+
+    /**
+     * Tests the parseSimpleTokens() method doesn’t execute php code.
      *
      * @param string $string
      * @param bool
      *
-     * @expectedException \InvalidArgumentException
-     * @dataProvider parseSimpleTokensThrowsExceptionWhenContainingPhp
+     * @dataProvider parseSimpleTokensDoesntExecutePhp
      */
-    public function testParseSimpleTokensThrowsExceptionWhenContainingPhp($string, $skip)
+    public function testParseSimpleTokensDoesntExecutePhp($string, $skip)
     {
-        if ($skip) {
-            $this->markTestSkipped(sprintf('Skipped because PHP version is "%s" and tested opening tags are not interpreted at all.', PHP_VERSION));
-        }
-
-        StringUtil::parseSimpleTokens($string, []);
+        $this->assertEquals($string, StringUtil::parseSimpleTokens($string, []));
     }
 
     /**
-     * Tests the parseSimpleTokens() method throws exception when tokens contain php
-     * code.
+     * Tests the parseSimpleTokens() method doesn’t execute php code inside
+     * tokens.
      *
      * @param array $tokens
      * @param bool
      *
-     * @expectedException \InvalidArgumentException
-     * @dataProvider parseSimpleTokensThrowsExceptionWhenTokensContainingPhp
+     * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
      */
-    public function testParseSimpleTokensThrowsExceptionWhenTokensContainingPhp(array $tokens, $skip)
+    public function testParseSimpleTokensDoesntExecutePhpInToken(array $tokens, $skip)
     {
-        if ($skip) {
-            $this->markTestSkipped(sprintf('Skipped because PHP version is "%s" and tested opening tags are not interpreted at all.', PHP_VERSION));
-        }
-
-        StringUtil::parseSimpleTokens('foobar', $tokens);
+        $this->assertEquals($tokens['foo'], StringUtil::parseSimpleTokens('##foo##', $tokens));
     }
 
     /**
-     * Tests the parseSimpleTokens() method throws exception when tokens contain php
-     * code that is generated only after replacing the tokens.
-     *
-     * @expectedException \InvalidArgumentException
+     * Tests the parseSimpleTokens() method doesn’t execute php code when tokens
+     * contain php code that is generated only after replacing the tokens.
      */
-    public function testParseSimpleTokensThrowsExceptionWhenTryingToCombineTokensForPhp()
+    public function testParseSimpleTokensDoesntExecutePhpInCombinedToken()
     {
-        StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
+        $this->assertEquals('This is <?php echo "I am evil";?> evil', StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
             'open'  => '<',
             'open2' => '?php echo "I am evil";',
             'close' => '?>'
+        ]));
+    }
+
+    /**
+     * Tests the parseSimpleTokens() method fails for invalid comparisons.
+     *
+     * @dataProvider parseSimpleTokensInvalidComparison
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testParseSimpleTokensInvalidComparison($string)
+    {
+        StringUtil::parseSimpleTokens($string, [
+            'foo' => 'bar',
         ]);
     }
 
@@ -141,6 +156,16 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['email' => 'test@foobar.com'],
                 'This is my ',
             ],
+            'Test comparisons (!=) with regular characters (match)' => [
+                'This is my {if email!=""}match{endif}',
+                ['email' => 'test@foobar.com'],
+                'This is my match',
+            ],
+            'Test comparisons (!=) with regular characters (no match)' => [
+                'This is my {if email!=""}match{endif}',
+                ['email' => ''],
+                'This is my ',
+            ],
             'Test comparisons (>) with regular characters (match)' => [
                 'This is my {if value>0}match{endif}',
                 ['value' => 5],
@@ -148,6 +173,16 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
             ],
             'Test comparisons (>) with regular characters (no match)' => [
                 'This is my {if value>0}hello{endif}',
+                ['value' => -8],
+                'This is my ',
+            ],
+            'Test comparisons (>=) with regular characters (match)' => [
+                'This is my {if value>=0}match{endif}',
+                ['value' => 5],
+                'This is my match',
+            ],
+            'Test comparisons (>=) with regular characters (no match)' => [
+                'This is my {if value>=0}hello{endif}',
                 ['value' => -8],
                 'This is my ',
             ],
@@ -161,6 +196,16 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['value' => 9],
                 'This is my ',
             ],
+            'Test comparisons (<=) with regular characters (match)' => [
+                'This is my {if value<=0}match{endif}',
+                ['value' => -5],
+                'This is my match',
+            ],
+            'Test comparisons (<=) with regular characters (no match)' => [
+                'This is my {if value<=0}hello{endif}',
+                ['value' => 9],
+                'This is my ',
+            ],
             'Test comparisons (<) with special characters (match)' => [
                 'This is my {if val&#ue<0}match{endif}',
                 ['val&#ue' => -5],
@@ -171,10 +216,116 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['val&#ue' => 9],
                 'This is my ',
             ],
+            'Test comparisons (===) with regular characters (match)' => [
+                'This is my {if value===5}match{endif}',
+                ['value' => 5],
+                'This is my match',
+            ],
+            'Test comparisons (===) with regular characters (no match)' => [
+                'This is my {if value===5}match{endif}',
+                ['value' => 5.0],
+                'This is my ',
+            ],
+            'Test comparisons (!==) with regular characters (match)' => [
+                'This is my {if value!==5.0}match{endif}',
+                ['value' => '5'],
+                'This is my match',
+            ],
+            'Test comparisons (!==) with regular characters (no match)' => [
+                'This is my {if value!==5.0}match{endif}',
+                ['value' => 5.0],
+                'This is my ',
+            ],
             'Test whitespace in tokens not allowed and ignored' => [
                 'This is my ##dumb token## you know',
                 ['dumb token' => 'foobar'],
                 'This is my ##dumb token## you know',
+            ],
+            'Test if-tags insertion not evaluated' => [
+                '##token##',
+                ['token' => '{if token=="foo"}'],
+                '{if token=="foo"}',
+            ],
+            'Test if-tags insertion not evaluated with multiple tokens' => [
+                '##token1####token2####token3##',
+                ['token1' => '{', 'token2' => 'if', 'token3' => ' token=="foo"}'],
+                '{if token=="foo"}',
+            ],
+            'Test nested if-tag with " in value (match)' => [
+                '{if value=="f"oo"}1{endif}{if value=="f\"oo"}2{endif}',
+                ['value' => 'f"oo'],
+                '12',
+            ],
+            'Test else (match)' => [
+                'This is my {if value=="foo"}match{else}else-match{endif}',
+                ['value' => 'foo'],
+                'This is my match',
+            ],
+            'Test else (no match)' => [
+                'This is my {if value!="foo"}match{else}else-match{endif}',
+                ['value' => 'foo'],
+                'This is my else-match',
+            ],
+            'Test nested if (match)' => [
+                '0{if value=="foo"}1{if value!="foo"}2{else}3{if value=="foo"}4{else}5{endif}6{endif}7{else}8{endif}9',
+                ['value' => 'foo'],
+                '0134679',
+            ],
+            'Test nested if (no match)' => [
+                '0{if value!="foo"}1{if value=="foo"}2{else}3{if value!="foo"}4{else}5{endif}6{endif}7{else}8{endif}9',
+                ['value' => 'foo'],
+                '089',
+            ],
+            'Test special value chars \'=!<>;$()[] (match)' => [
+                '{if value=="\'=!<>;$()[]"}match{else}no-match{endif}',
+                ['value' => '\'=!<>;$()[]'],
+                'match',
+            ],
+            'Test special value chars \'=!<>;$()[] (no match)' => [
+                '{if value=="\'=!<>;$()[]"}match{else}no-match{endif}',
+                ['value' => '=!<>;$()[]'],
+                'no-match',
+            ],
+        ];
+    }
+
+    /**
+     * Provides the data for the testParseSimpleTokensCorrectNewlines() method.
+     *
+     * @return array
+     */
+    public function parseSimpleTokensCorrectNewlines()
+    {
+        return [
+            'Test newlines are kept end of token' => [
+                "This is my ##token##\n",
+                ['token' => "foo"],
+                "This is my foo\n",
+            ],
+            'Test newlines are kept end in token' => [
+                "This is my ##token##",
+                ['token' => "foo\n"],
+                "This is my foo\n",
+            ],
+            'Test newlines are kept end in and after token' => [
+                "This is my ##token##\n",
+                ['token' => "foo\n"],
+                "This is my foo\n\n",
+            ],
+            'Test newlines are kept' => [
+                "This is my \n ##newline## here",
+                ['newline' => "foo\nbar\n"],
+                "This is my \n foo\nbar\n here",
+            ],
+            'Test newlines are removed after if tag' => [
+                "\n{if token=='foo'}\nline2\n{endif}\n",
+                ['token' => "foo"],
+                "\nline2\n",
+            ],
+            'Test newlines are removed after else tag' => [
+                "\n{if token!='foo'}{else}\nline2\n{endif}\n",
+                ['token' => "foo"],
+                "\nline2\n",
             ],
         ];
     }
@@ -184,7 +335,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function parseSimpleTokensThrowsExceptionWhenContainingPhp()
+    public function parseSimpleTokensDoesntExecutePhp()
     {
         return [
             '(<?php)' => [
@@ -219,7 +370,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function parseSimpleTokensThrowsExceptionWhenTokensContainingPhp()
+    public function parseSimpleTokensDoesntExecutePhpInToken()
     {
         return [
             '(<?php)' => [
@@ -246,6 +397,27 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.'],
                 version_compare(PHP_VERSION, '7.0.0', '>=')
             ],
+        ];
+    }
+
+    /**
+     * Provides the data for the testParseSimpleTokens() method.
+     *
+     * @return array
+     */
+    public function parseSimpleTokensInvalidComparison()
+    {
+        return [
+            'PHP constants are not allowed' => ['{if foo==__FILE__}{endif}'],
+            'Not closed string (")' => ['{if foo=="bar}{endif}'],
+            'Not closed string (\')' => ['{if foo==\'bar}{endif}'],
+            'Additional chars after string ("/)' => ['{if foo=="bar"/}{endif}'],
+            'Additional chars after string (\'/)' => ['{if foo==\'bar\'/}{endif}'],
+            'Additional chars after string ("*)' => ['{if foo=="bar"*}{endif}'],
+            'Additional chars after string (\'*)' => ['{if foo==\'bar\'*}{endif}'],
+            'Unknown operator (=)' => ['{if foo="bar"}{endif}'],
+            'Unknown operator (====)' => ['{if foo===="bar"}{endif}'],
+            'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'],
         ];
     }
 }
