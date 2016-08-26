@@ -642,7 +642,7 @@ class StringUtil
 			elseif (strncmp($strTag, '{elseif', 7) === 0)
 			{
 				array_pop($arrStack);
-				$arrStack[] = !$blnCurrent && $evaluateExpression(substr($strTag, 8, -1));
+				$arrStack[] = !$blnCurrent && $arrStack[count($arrStack) - 1] && $evaluateExpression(substr($strTag, 8, -1));
 			}
 			elseif (strncmp($strTag, '{else}', 6) === 0)
 			{

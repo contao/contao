@@ -276,6 +276,16 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
                 ['value' => 'foo'],
                 '089',
             ],
+            'Test nested elseif (match)' => [
+                '0{if value=="bar"}1{elseif value=="foo"}2{else}3{if value=="bar"}4{elseif value=="foo"}5{else}6{endif}7{endif}8',
+                ['value' => 'foo'],
+                '028',
+            ],
+            'Test nested elseif (no match)' => [
+                '0{if value=="bar"}1{elseif value!="foo"}2{else}3{if value=="bar"}4{elseif value!="foo"}5{else}6{endif}7{endif}8',
+                ['value' => 'foo'],
+                '03678',
+            ],
             'Test special value chars \'=!<>;$()[] (match)' => [
                 '{if value=="\'=!<>;$()[]"}match{else}no-match{endif}',
                 ['value' => '\'=!<>;$()[]'],
