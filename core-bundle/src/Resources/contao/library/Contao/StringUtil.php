@@ -510,14 +510,14 @@ class StringUtil
 	 *
 	 * @return string The converted string
 	 *
-	 * @throws \Exception If $strString cannot be parsed
-	 * @throws \InvalidArgumentException If if-tags are in an incorrect format
+	 * @throws \Exception                If $strString cannot be parsed
+	 * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
 	 */
 	public static function parseSimpleTokens($strString, $arrData)
 	{
 		$strReturn = '';
 
-		$replaceTokens = function($strSubject) use ($arrData)
+		$replaceTokens = function ($strSubject) use ($arrData)
 		{
 			// Replace tokens
 			return preg_replace_callback(
@@ -527,6 +527,7 @@ class StringUtil
 					if (!array_key_exists($matches[1], $arrData))
 					{
 						System::log(sprintf('Tried to parse unknown simple token "%s".', $matches[1]), __METHOD__, TL_ERROR);
+
 						return '##' . $matches[1] . '##';
 					}
 
@@ -536,7 +537,7 @@ class StringUtil
 			);
 		};
 
-		$evaluateExpression = function($strExpression) use ($arrData)
+		$evaluateExpression = function ($strExpression) use ($arrData)
 		{
 			if (!preg_match('/^([^=!<>\s]+)([=!<>]+)(.+)$/is', $strExpression, $arrMatches))
 			{
@@ -550,6 +551,7 @@ class StringUtil
 			if (!array_key_exists($strToken, $arrData))
 			{
 				System::log(sprintf('Tried to evaluate unknown simple token "%s".', $strToken), __METHOD__, TL_ERROR);
+
 				return false;
 			}
 
@@ -584,11 +586,11 @@ class StringUtil
 			}
 			elseif (substr($strValue, 0, 1) === "'" && substr($strValue, -1) === "'")
 			{
-				$varValue = str_replace("\'", "'", substr($strValue, 1, -1));
+				$varValue = str_replace("\\'", "'", substr($strValue, 1, -1));
 			}
 			else
 			{
-				throw new \InvalidArgumentException('Unknown data type of comparison value "' . $strValue . '".');
+				throw new \InvalidArgumentException(sprintf('Unknown data type of comparison value "%s".', $strValue));
 			}
 
 			switch ($strOperator)
@@ -618,18 +620,18 @@ class StringUtil
 					return $varTokenValue >= $varValue;
 
 				default:
-					throw new \InvalidArgumentException('Unknown simple token comparison operator "' . $strOperator . '".');
+					throw new \InvalidArgumentException(sprintf('Unknown simple token comparison operator "%s".', $strOperator));
 			}
 		};
 
-		// Parsing stack used to keep track of the nesting level. The last item
-		// ist true if it is inside a matching if-tag
+		// Parsing stack used to keep track of the nesting level
+        // The last item is true if it is inside a matching if-tag
 		$arrStack = [true];
 
 		// Tokenize the string into tag and text blocks
 		$arrTags = preg_split('/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
-		// Parse tokens
+		// Parse the tokens
 		foreach ($arrTags as $strTag)
 		{
 			// true if it is inside a matching if-tag
@@ -662,10 +664,9 @@ class StringUtil
 		// Throw an exception if there is an error
 		if (count($arrStack) !== 1)
 		{
-			throw new \Exception("Error parsing simple tokens");
+			throw new \Exception('Error parsing simple tokens');
 		}
 
-		// Return the evaled code
 		return $strReturn;
 	}
 

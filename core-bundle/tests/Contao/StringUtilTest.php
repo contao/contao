@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Test\Contao;
 
-use Contao\Input;
 use Contao\StringUtil;
 
 /**
@@ -35,7 +34,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
      * Tests the parseSimpleTokens() method.
      *
      * @param string $string
-     * @param array $tokens
+     * @param array  $tokens
      * @param string $expected
      *
      * @dataProvider parseSimpleTokensProvider
@@ -46,10 +45,10 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the parseSimpleTokens() method works correctly with newlines.
+     * Tests that the parseSimpleTokens() method works correctly with newlines.
      *
      * @param string $string
-     * @param array $tokens
+     * @param array  $tokens
      * @param string $expected
      *
      * @dataProvider parseSimpleTokensCorrectNewlines
@@ -60,57 +59,56 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the parseSimpleTokens() method doesn’t execute php code.
+     * Tests that the parseSimpleTokens() method does not execute PHP code.
      *
      * @param string $string
      * @param bool
      *
      * @dataProvider parseSimpleTokensDoesntExecutePhp
      */
-    public function testParseSimpleTokensDoesntExecutePhp($string, $skip)
+    public function testParseSimpleTokensDoesntExecutePhp($string)
     {
         $this->assertEquals($string, StringUtil::parseSimpleTokens($string, []));
     }
 
     /**
-     * Tests the parseSimpleTokens() method doesn’t execute php code inside
-     * tokens.
+     * Tests that the parseSimpleTokens() method does not execute PHP code inside tokens.
      *
      * @param array $tokens
      * @param bool
      *
      * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
      */
-    public function testParseSimpleTokensDoesntExecutePhpInToken(array $tokens, $skip)
+    public function testParseSimpleTokensDoesntExecutePhpInToken(array $tokens)
     {
         $this->assertEquals($tokens['foo'], StringUtil::parseSimpleTokens('##foo##', $tokens));
     }
 
     /**
-     * Tests the parseSimpleTokens() method doesn’t execute php code when tokens
-     * contain php code that is generated only after replacing the tokens.
+     * Tests that the parseSimpleTokens() method does not execute PHP code when tokens
+     * contain PHP code that is generated only after replacing the tokens.
      */
     public function testParseSimpleTokensDoesntExecutePhpInCombinedToken()
     {
         $this->assertEquals('This is <?php echo "I am evil";?> evil', StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
-            'open'  => '<',
+            'open' => '<',
             'open2' => '?php echo "I am evil";',
-            'close' => '?>'
+            'close' => '?>',
         ]));
     }
 
     /**
-     * Tests the parseSimpleTokens() method fails for invalid comparisons.
+     * Tests that the parseSimpleTokens() method fails for invalid comparisons.
      *
+     * @param $string
+     * 
      * @dataProvider parseSimpleTokensInvalidComparison
      *
      * @expectedException \InvalidArgumentException
      */
     public function testParseSimpleTokensInvalidComparison($string)
     {
-        StringUtil::parseSimpleTokens($string, [
-            'foo' => 'bar',
-        ]);
+        StringUtil::parseSimpleTokens($string, ['foo' => 'bar']);
     }
 
     /**
@@ -309,11 +307,11 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         return [
             'Test newlines are kept end of token' => [
                 "This is my ##token##\n",
-                ['token' => "foo"],
+                ['token' => 'foo'],
                 "This is my foo\n",
             ],
             'Test newlines are kept end in token' => [
-                "This is my ##token##",
+                'This is my ##token##',
                 ['token' => "foo\n"],
                 "This is my foo\n",
             ],
@@ -329,12 +327,12 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
             ],
             'Test newlines are removed after if tag' => [
                 "\n{if token=='foo'}\nline2\n{endif}\n",
-                ['token' => "foo"],
+                ['token' => 'foo'],
                 "\nline2\n",
             ],
             'Test newlines are removed after else tag' => [
                 "\n{if token!='foo'}{else}\nline2\n{endif}\n",
-                ['token' => "foo"],
+                ['token' => 'foo'],
                 "\nline2\n",
             ],
         ];
@@ -350,27 +348,27 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         return [
             '(<?php)' => [
                 'This <?php var_dump() ?> is a test.',
-                false
+                false,
             ],
             '(<?=)' => [
                 'This <?= $var ?> is a test.',
-                false
+                false,
             ],
             '(<?)' => [
                 'This <? var_dump() ?> is a test.',
-                version_compare(PHP_VERSION, '7.0.0', '>=')
+                version_compare(PHP_VERSION, '7.0.0', '>='),
             ],
             '(<%)' => [
                 'This <% var_dump() ?> is a test.',
-                version_compare(PHP_VERSION, '7.0.0', '>=') || !in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'])
+                version_compare(PHP_VERSION, '7.0.0', '>=') || !in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true']),
             ],
             '(<script language="php">)' => [
                 'This <script language="php"> var_dump() </script> is a test.',
-                version_compare(PHP_VERSION, '7.0.0', '>=')
+                version_compare(PHP_VERSION, '7.0.0', '>='),
             ],
             '(<script language=\'php\'>)' => [
                 'This <script language=\'php\'> var_dump() </script> is a test.',
-                version_compare(PHP_VERSION, '7.0.0', '>=')
+                version_compare(PHP_VERSION, '7.0.0', '>='),
             ],
         ];
     }
@@ -385,27 +383,27 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         return [
             '(<?php)' => [
                 ['foo' => 'This <?php var_dump() ?> is a test.'],
-                false
+                false,
             ],
             '(<?=)' => [
                 ['foo' => 'This <?= $var ?> is a test.'],
-                false
+                false,
             ],
             '(<?)' => [
                 ['foo' => 'This <? var_dump() ?> is a test.'],
-                version_compare(PHP_VERSION, '7.0.0', '>=')
+                version_compare(PHP_VERSION, '7.0.0', '>='),
             ],
             '(<%)' => [
                 ['foo' => 'This <% var_dump() ?> is a test.'],
-                version_compare(PHP_VERSION, '7.0.0', '>=') || !in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'])
+                version_compare(PHP_VERSION, '7.0.0', '>=') || !in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true']),
             ],
             '(<script language="php">)' => [
                 ['foo' => 'This <script language="php"> var_dump() </script> is a test.'],
-                version_compare(PHP_VERSION, '7.0.0', '>=')
+                version_compare(PHP_VERSION, '7.0.0', '>='),
             ],
             '(<script language=\'php\'>)' => [
                 ['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.'],
-                version_compare(PHP_VERSION, '7.0.0', '>=')
+                version_compare(PHP_VERSION, '7.0.0', '>='),
             ],
         ];
     }
