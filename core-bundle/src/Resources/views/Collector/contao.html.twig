@@ -66,46 +66,6 @@
         {% endif %}
     </div>
 
-    <h2>Unknown insert tags</h2>
-    {% if collector.unknowninserttags %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Insert tag</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for name in collector.unknowninserttags %}
-                    <tr>
-                        <td><pre>{{ '{{' ~ name ~ '}}' }}</pre></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p><em>No unknown insert tags used on the page.</em></p>
-    {% endif %}
-
-    <h2>Unknown insert tag flags</h2>
-    {% if collector.unknowninserttagflags %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Insert tag flag</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for name in collector.unknowninserttagflags %}
-                    <tr>
-                        <td><pre>{{ name }}</pre></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p><em>No unknown insert tag flags used on the page.</em></p>
-    {% endif %}
-
     <h2>Classes set</h2>
     <table>
         <thead>
