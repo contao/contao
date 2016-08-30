@@ -27,6 +27,11 @@ services:
         tags:
             - { name: kernel.cache_warmer }
 
+    contao.controller.esi:
+        class: Contao\CoreBundle\Controller\EsiController
+        arguments:
+            - "@contao.framework"
+
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         public: false
