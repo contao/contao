@@ -651,7 +651,6 @@ abstract class Frontend extends \Controller
 
 
 	/**
-	/**
 	 * Check whether there is a cached version of the page and return a response object
 	 *
 	 * @return Response|null
