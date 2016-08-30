@@ -48,6 +48,12 @@ class AddToSearchIndexListener
             return;
         }
 
+        // Hard coded support for _fragment URIs that should not get indexed.
+        // TODO: remove this listener completely and work towards a real crawler.
+        if (preg_match('/_fragment/', $event->getRequest()->getPathInfo())) {
+            return;
+        }
+
         /** @var Frontend $frontend */
         $frontend = $this->framework->getAdapter('Contao\Frontend');
         $frontend->indexPageIfApplicable($event->getResponse());
