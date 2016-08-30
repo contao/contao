@@ -177,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'protected'                   => 'groups',
 		'createSitemap'               => 'sitemapName',
 		'includeLayout'               => 'layout,mobileLayout',
-		'includeCache'                => 'cache',
+		'includeCache'                => 'cache,clientCache',
 		'includeChmod'                => 'cuser,cgroup,chmod',
 		'published'                   => 'start,stop'
 	),
@@ -508,7 +508,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['includeCache'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
+			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'cache' => array
@@ -520,6 +520,19 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000),
 			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+		),
+		'clientCache' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['clientCache'],
+			'default'                 => 0,
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'select',
+			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000),
+			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'includeChmod' => array
