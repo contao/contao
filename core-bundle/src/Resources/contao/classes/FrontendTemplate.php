@@ -87,7 +87,10 @@ class FrontendTemplate extends \Template
 	{
 		$this->compile($blnCheckRequest);
 
-		return parent::getResponse();
+		$response = parent::getResponse();
+		$this->setCacheHeaders($response);
+
+		return $response;
 	}
 
 
@@ -325,5 +328,39 @@ class FrontendTemplate extends \Template
 		}
 
 		return '<div class="custom">' . "\n" . $sections . "\n" . '</div>' . "\n";
+	}
+
+	/**
+	 * Set the cache headers according to the page settings.
+	 *
+	 * @param Response $response
+	 */
+	private function setCacheHeaders(Response $response)
+	{
+		/** @var $objPage \PageModel */
+		global $objPage;
+
+		if (false === $objPage->cache && false === $objPage->clientCache)
+		{
+			return;
+		}
+
+		// If FE_USER_LOGGED_IN or BE_USER_LOGGED_IN every request is private
+		// Moreover, mobile layout is deprecated and never cached
+		if (true === FE_USER_LOGGED_IN || true === BE_USER_LOGGED_IN || true === $objPage->isMobile)
+		{
+			$response->setPrivate();
+			return;
+		}
+
+		if ($objPage->clientCache > 0)
+		{
+			$response->setMaxAge($objPage->clientCache);
+		}
+
+		if ($objPage->cache > 0)
+		{
+			$response->setSharedMaxAge($objPage->cache);
+		}
 	}
 }
