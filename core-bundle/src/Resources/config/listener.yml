@@ -36,6 +36,7 @@ services:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
             - "@contao.framework"
+            - "%fragment.path%"
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
