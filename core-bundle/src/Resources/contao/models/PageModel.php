@@ -930,14 +930,6 @@ class PageModel extends \Model
 
 		$this->trail = array_reverse($trail);
 
-		// Do not cache protected pages
-		if ($this->protected)
-		{
-			// FIXME: Caching per member group combination is fine.
-			$this->cache = 0;
-			// clientCache is allowed here
-		}
-
 		// Use the global date format if none is set (see #6104)
 		if ($this->dateFormat == '')
 		{

@@ -345,8 +345,9 @@ class FrontendTemplate extends \Template
 		}
 
 		// If FE_USER_LOGGED_IN or BE_USER_LOGGED_IN every request is private
-		// Moreover, mobile layout is deprecated and never cached
-		if (true === FE_USER_LOGGED_IN || true === BE_USER_LOGGED_IN || true === $objPage->isMobile)
+		// Moreover, mobile layout and protected pages are not cached either
+		// TODO: Add support for proxies so they can vary on member context and page layout
+		if (true === FE_USER_LOGGED_IN || true === BE_USER_LOGGED_IN || true === $objPage->isMobile || $objPage->protected)
 		{
 			$response->setPrivate();
 			return;
