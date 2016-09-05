@@ -202,7 +202,7 @@ class Files
 		$this->validate($strOldName, $strNewName);
 
 		// Windows fix: delete the target file
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && file_exists(TL_ROOT . '/' . $strNewName))
+		if (defined('PHP_WINDOWS_VERSION_BUILD') && file_exists(TL_ROOT . '/' . $strNewName) && strcasecmp($strOldName, $strNewName) !== 0)
 		{
 			$this->delete($strNewName);
 		}
