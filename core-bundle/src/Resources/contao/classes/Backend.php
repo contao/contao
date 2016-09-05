@@ -734,16 +734,16 @@ abstract class Backend extends \Controller
 					{
 						$objPage = $val;
 					}
+				}
 
-					if ($objPage instanceof Result && $objPage->numRows < 1)
-					{
-						return;
-					}
+				if ($objPage instanceof Result && $objPage->numRows < 1)
+				{
+					return;
+				}
 
-					if (is_object($objPage) && !($objPage instanceof PageModel))
-					{
-						$objPage = \PageModel::findByPk($objPage->id);
-					}
+				if (is_object($objPage) && !($objPage instanceof PageModel))
+				{
+					$objPage = \PageModel::findByPk($objPage->id);
 				}
 			}
 		}
