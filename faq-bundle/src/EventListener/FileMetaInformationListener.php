@@ -11,13 +11,14 @@
 namespace Contao\FaqBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Database;
-use Contao\Database\Result;
+use Contao\FaqCategoryModel;
+use Contao\PageModel;
 
 /**
  * Provides file meta information for the request.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FileMetaInformationListener
 {
@@ -37,40 +38,43 @@ class FileMetaInformationListener
     }
 
     /**
-     * Returns the page record related to the given table and ID.
+     * Returns the page model related to the given table and ID.
      *
      * @param string $table
      * @param int    $id
      *
-     * @return Result|false
+     * @return PageModel|false|null
      */
     public function onAddFileMetaInformationToRequest($table, $id)
     {
         if ('tl_faq_category' === $table) {
-            return $this->getResult(
-                'SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_faq_category WHERE id=?)',
-                $id
-            );
+            return $this->getPageForFaq($id);
         }
 
         return false;
     }
 
     /**
-     * Fetches the result from the database.
+     * Returns the page model for an FAQ.
      *
-     * @param string $query
-     * @param mixed  $params
+     * @param int $id
      *
-     * @return Result
+     * @return PageModel|false|null
      */
-    private function getResult($query, $params)
+    private function getPageForFaq($id)
     {
         $this->framework->initialize();
 
-        /** @var Database $database */
-        $database = $this->framework->createInstance('Contao\Database');
+        /** @var FaqCategoryModel $categoryAdapter */
+        $categoryAdapter = $this->framework->getAdapter('Contao\FaqCategoryModel');
 
-        return $database->prepare($query)->execute($params);
+        if (null === ($categoryModel = $categoryAdapter->findByPk($id))) {
+            return false;
+        }
+
+        /** @var PageModel $pageModel */
+        $pageModel = $categoryModel->getRelated('jumpTo');
+
+        return $pageModel;
     }
 }
