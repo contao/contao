@@ -1,7 +1,8 @@
 # Contao newsletter bundle change log
 
-### 4.2.2 (2016-XX-XX)
+### 4.2.2 (2016-09-06)
 
+ * Check if a reader page is protected when generating a sitemap (see contao/core#8416).
  * Fix rendering the flash messages when sending a newsletter (see #3).
 
 ### 4.2.1 (2016-07-15)
