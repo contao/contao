@@ -13,6 +13,8 @@ namespace Contao\FaqBundle\Test\EventListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FaqBundle\EventListener\FileMetaInformationListener;
+use Contao\FaqCategoryModel;
+use Contao\PageModel;
 
 /**
  * Tests the FileMetaInformationListener class.
@@ -32,14 +34,14 @@ class FileMetaInformationListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests that the listener returns a database result.
+     * Tests that the listener returns a page model.
      */
-    public function testReturnDatabaseResult()
+    public function testReturnPageModel()
     {
         $listener = new FileMetaInformationListener($this->mockContaoFramework());
 
         $this->assertInstanceOf(
-            'Contao\Database\Result',
+            'Contao\PageModel',
             $listener->onAddFileMetaInformationToRequest('tl_faq_category', 2)
         );
     }
@@ -61,11 +63,45 @@ class FileMetaInformationListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockContaoFramework()
     {
+        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
+        $pageModel = $this
+            ->getMockBuilder('Contao\PageModel')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        /** @var FaqCategoryModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
+        $categoryModel = $this
+            ->getMockBuilder('Contao\FaqCategoryModel')
+            ->setMethods(['getRelated'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $categoryModel
+            ->expects($this->any())
+            ->method('getRelated')
+            ->willReturn($pageModel)
+        ;
+
+        $categoryAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['findByPk'])
+            ->setConstructorArgs(['Contao\FaqCategoryModel'])
+            ->getMock()
+        ;
+
+        $categoryAdapter
+            ->expects($this->any())
+            ->method('findByPk')
+            ->willReturn($categoryModel)
+        ;
+
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
             ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
-            ->setMethods(['isInitialized', 'createInstance'])
+            ->setMethods(['isInitialized', 'getAdapter'])
             ->getMock()
         ;
 
@@ -75,35 +111,10 @@ class FileMetaInformationListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true)
         ;
 
-        $databaseAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['prepare', 'execute'])
-            ->setConstructorArgs(['Contao\Database'])
-            ->getMock()
-        ;
-
-        $databaseAdapter
-            ->expects($this->any())
-            ->method('prepare')
-            ->willReturn($databaseAdapter)
-        ;
-
-        $databaseResult = $this
-            ->getMockBuilder('Contao\Database\Result')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $databaseAdapter
-            ->expects($this->any())
-            ->method('execute')
-            ->willReturn($databaseResult)
-        ;
-
         $framework
             ->expects($this->any())
-            ->method('createInstance')
-            ->willReturn($databaseAdapter)
+            ->method('getAdapter')
+            ->willReturn($categoryAdapter)
         ;
 
         return $framework;
