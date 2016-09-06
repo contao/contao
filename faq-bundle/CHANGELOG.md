@@ -1,5 +1,9 @@
 # Contao FAQ bundle change log
 
+### 4.2.2 (2016-09-06)
+
+ * Check if a reader page is protected when generating a sitemap (see contao/core#8416).
+
 ### 4.2.1 (2016-07-15)
 
  * Fix a whitespace issue in the mod_faqpage.html5 template.
