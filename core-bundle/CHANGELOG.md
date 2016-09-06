@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.2.3 (2016-XX-XX)
+### 4.2.3 (2016-09-06)
 
  * Do not double URL encode the content syndication links.
  * Use CSS3 transforms instead of transitions to animate the off-canvas navigation.
