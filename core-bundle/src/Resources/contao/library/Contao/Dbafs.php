@@ -765,9 +765,7 @@ class Dbafs
 		// Check the excluded folders
 		if (\Config::get('fileSyncExclude') != '')
 		{
-			$arrExempt = array_map(function($e) {
-				return \Config::get('uploadPath') . '/' . $e;
-			}, \StringUtil::trimsplit(',', \Config::get('fileSyncExclude')));
+			$arrExempt = array_map(function ($e) { return \Config::get('uploadPath') . '/' . $e; }, \StringUtil::trimsplit(',', \Config::get('fileSyncExclude')));
 
 			foreach ($arrExempt as $strExempt)
 			{

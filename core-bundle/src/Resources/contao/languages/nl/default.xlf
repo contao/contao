@@ -257,6 +257,10 @@
         <source>Please enter a numeric Google+ ID or vanity name!</source>
         <target>Voer een numeriek Google+ ID of vanity naam in!</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidFieldName">
+        <source>Please enter only the following characters: A-Z0-9[]_-</source>
+        <target>Voer alleen de volgende tekens in: A-Z0-9[]_-</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Tel %d en %d bij elkaar op.</target>

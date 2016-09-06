@@ -251,6 +251,9 @@
         <source>Please enter a numeric Google+ ID or vanity name!</source>
         <target>Ole hyvä ja anna numeerinen Google+ -tunnus tai &quot;vanity name&quot;!</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidFieldName">
+        <source>Please enter only the following characters: A-Z0-9[]_-</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Ole hyvä ja laske %d + %d.</target>

@@ -253,6 +253,9 @@
         <source>Please enter a numeric Google+ ID or vanity name!</source>
         <target>Endatescha ina ID numerica u in num da Google+!</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidFieldName">
+        <source>Please enter only the following characters: A-Z0-9[]_-</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Adi per plaschair %d e %d.</target>

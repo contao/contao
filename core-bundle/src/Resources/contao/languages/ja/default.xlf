@@ -257,6 +257,10 @@
         <source>Please enter a numeric Google+ ID or vanity name!</source>
         <target>Google+の数値のIDかバニティ名を入力してください。</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidFieldName">
+        <source>Please enter only the following characters: A-Z0-9[]_-</source>
+        <target>以下の文字だけ使用してください: A-Z0-9[]_-</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>

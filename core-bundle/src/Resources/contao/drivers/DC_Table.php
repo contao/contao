@@ -1912,7 +1912,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 			$class = 'tl_tbox';
 			$fs = $objSessionBag->get('fieldset_states');
-			$blnIsFirst = true;
 
 			// Render boxes
 			foreach ($boxes as $k=>$v)
@@ -1981,13 +1980,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					$this->strField = $vv;
 					$this->strInputName = $vv;
 					$this->varValue = $objRow->$vv;
-
-					// Autofocus the first field
-					if ($blnIsFirst && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'text')
-					{
-						$GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['autofocus'] = 'autofocus';
-						$blnIsFirst = false;
-					}
 
 					// Convert CSV fields (see #2890)
 					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] && isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['csv']))
@@ -2086,13 +2078,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 </div>
 
 </div>
-</form>
-
-<script>
-  window.addEvent(\'domready\', function() {
-    Theme.focusInput("'.$this->strTable.'");
-  });
-</script>';
+</form>';
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = $version . '
@@ -2359,7 +2345,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 				// Store the active record
 				$this->objActiveRecord = $objRow;
-				$blnIsFirst = true;
 
 				foreach ($this->strPalette as $v)
 				{
@@ -2409,13 +2394,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					if ($objRow->$v !== false)
 					{
 						$this->varValue = $objRow->$v;
-					}
-
-					// Autofocus the first field
-					if ($blnIsFirst && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'text')
-					{
-						$GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['autofocus'] = 'autofocus';
-						$blnIsFirst = false;
 					}
 
 					// Convert CSV fields (see #2890)
@@ -2553,13 +2531,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 </div>
 
 </div>
-</form>
-
-<script>
-  window.addEvent(\'domready\', function() {
-    Theme.focusInput("'.$this->strTable.'");
-  });
-</script>';
+</form>';
 
 			// Set the focus if there is an error
 			if ($this->noReload)
@@ -2800,8 +2772,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
-			$blnIsFirst = true;
-
 			// Begin current row
 			$return .= '
 <div class="'.$class.'">';
@@ -2822,13 +2792,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$this->strField = $v;
 				$this->strInputName = $v;
 				$this->varValue = '';
-
-				// Autofocus the first field
-				if ($blnIsFirst && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'text')
-				{
-					$GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['autofocus'] = 'autofocus';
-					$blnIsFirst = false;
-				}
 
 				// Disable auto-submit
 				$GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['submitOnChange'] = false;
@@ -4924,6 +4887,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$data = $objSessionBag->all();
 
 			unset($data['filter'][$this->strTable]);
+			unset($data['filter'][$this->strTable.'_'.CURRENT_ID]);
 			unset($data['sorting'][$this->strTable]);
 			unset($data['search'][$this->strTable]);
 

@@ -14,6 +14,7 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Psr\Log\NullLogger;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
@@ -214,6 +215,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         $container->set('request_stack', $requestStack);
         $container->set('session', $this->mockSession());
+        $container->set('monolog.logger.contao', new NullLogger());
 
         return $container;
     }

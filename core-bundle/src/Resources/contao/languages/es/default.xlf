@@ -257,6 +257,10 @@
         <source>Please enter a numeric Google+ ID or vanity name!</source>
         <target>Por favor introduzca un ID Google+ o un alias!</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidFieldName">
+        <source>Please enter only the following characters: A-Z0-9[]_-</source>
+        <target>Por favor, introduzca sólo los caracteres siguientes: A-Z0-9[]_-</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Por favor, suma %d y %d.</target>
@@ -1325,6 +1329,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.fePreview">
         <source>Preview</source>
+        <target>Previsualización</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
@@ -1744,6 +1749,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>
+        <target>Notificaciones</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

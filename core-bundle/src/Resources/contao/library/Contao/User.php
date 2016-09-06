@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
+
 
 /**
  * Authenticates and initializes user objects
@@ -567,6 +569,27 @@ abstract class User extends \System
 	 */
 	protected function generateSession()
 	{
+		$container = \System::getContainer();
+		$strategy = $container->getParameter('security.authentication.session_strategy.strategy');
+
+		// Regenerate the session id to harden against session fixation attacks
+		switch ($strategy)
+		{
+			case SessionAuthenticationStrategy::NONE:
+				break;
+
+			case SessionAuthenticationStrategy::MIGRATE:
+				$container->get('session')->migrate(false); // do not destroy the old session
+				break;
+
+			case SessionAuthenticationStrategy::INVALIDATE:
+				$container->get('session')->invalidate();
+				break;
+
+			default:
+				throw new \RuntimeException(sprintf('Invalid session authentication strategy "%s"', $strategy));
+		}
+
 		$time = time();
 
 		// Generate the cookie hash

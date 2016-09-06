@@ -937,7 +937,17 @@ ul.sgallery li {
 .tl_modulewizard .tl_select {
 	width:400px;
 }
-.tl_modulewizard img.mw_enable,.js .tl_modulewizard input.mw_enable {
+.js .tl_modulewizard input.mw_enable {
+	border:0;
+	clip:rect(0 0 0 0);
+	height:1px;
+	margin:-1px;
+	overflow:hidden;
+	padding:0;
+	position:absolute;
+	width:1px;
+}
+.tl_modulewizard img.mw_enable {
 	display:none;
 }
 .js .tl_modulewizard img.mw_enable {
@@ -1257,46 +1267,46 @@ time[title] {
 
 /* Visual hint for TRBL fields - thanks to Eugene Rybyakov */
 .tl_text_trbl,.tl_imageSize_0,.tl_imageSize_1,#ctrl_playerSize input {
-	background:url("icons/hints.svg") no-repeat right 1px top -11px;
+	background:url("icons/hints.svg") no-repeat right 1px top 2px;
 }
 #ctrl_playerSize_1,.tl_imageSize_1 {
-	background-position:right 1px top -39px !important;
+	background-position:right 1px top -28px !important;
 }
 .trbl_top {
-	background-position:right 1px top -68px !important;
+	background-position:right 1px top -59px !important;
 }
 .trbl_right {
-	background-position:right 1px top -95px !important;
+	background-position:right 1px top -89px !important;
 }
 .trbl_bottom {
-	background-position:right 1px top -124px !important;
+	background-position:right 1px top -119px !important;
 }
 .trbl_left {
-	background-position:right 1px top -152px !important;
+	background-position:right 1px top -149px !important;
 }
 #ctrl_shadowsize_top {
-	background-position:right 1px top -180px !important;
+	background-position:right 1px top -179px !important;
 }
 #ctrl_shadowsize_right {
-	background-position:right 1px top -208px !important;
+	background-position:right 1px top -209px !important;
 }
 #ctrl_shadowsize_bottom {
-	background-position:right 1px top -236px !important;
+	background-position:right 1px top -238px !important;
 }
 #ctrl_shadowsize_left {
-	background-position:right 1px top -265px !important;
+	background-position:right 1px top -269px !important;
 }
 #ctrl_borderradius_top {
-	background-position:left -293px !important;
+	background-position:left -299px !important;
 }
 #ctrl_borderradius_right {
-	background-position:right 1px top -321px !important;
+	background-position:right 1px top -329px !important;
 }
 #ctrl_borderradius_bottom {
-	background-position:right 1px top -341px !important;
+	background-position:right 1px top -352px !important;
 }
 #ctrl_borderradius_left {
-	background-position:left -369px !important;
+	background-position:left -382px !important;
 }
 
 /* Error messages */
@@ -1587,7 +1597,10 @@ fieldset.collapsed > legend {
 		position:fixed;
 		top:0;
 		z-index:2;
-		transition:top .2s ease;
+		transition:transform .2s ease;
+		-webkit-transform:none;
+		transform:none;
+		will-change:transform;
 	}
 	#container {
 		padding-top:60px;
@@ -1601,11 +1614,14 @@ fieldset.collapsed > legend {
 	}
 	#main,#footer {
 		position:relative;
-		left:0;
-		transition:left .2s ease;
+		transition:transform .2s ease;
+		-webkit-transform:none;
+		transform:none;
+		will-change:transform;
 	}
 	.show-navigation #main,.show-navigation #footer {
-		left:215px;
+		-webkit-transform:translateX(215px);
+		transform:translateX(215px);
 	}
 	#main,#footer {
 		width:auto;
@@ -1615,13 +1631,16 @@ fieldset.collapsed > legend {
 	#tl_navigation {
 		position:absolute;
 		top:50px;
-		left:-215px;
 		width:205px;
 		padding:10px 0;
-		transition:left .2s ease;
+		transition:transform .2s ease;
+		-webkit-transform:translateX(-215px);
+		transform:translateX(-215px);
+		will-change:transform;
 	}
 	.show-navigation #tl_navigation {
-		left:10px;
+		-webkit-transform:none;
+		transform:none;
 	}
 	#tl_navigation .tl_level_2 a {
 		padding-top:6px;
@@ -1648,7 +1667,8 @@ fieldset.collapsed > legend {
 		margin-right:10px;
 	}
 	#header.down {
-		top:-42px;
+		-webkit-transform:translateY(-42px);
+		transform:translateY(-42px);
 	}
 	#footer {
 		padding-bottom:18px;

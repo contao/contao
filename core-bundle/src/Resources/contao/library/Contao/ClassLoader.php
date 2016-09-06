@@ -231,7 +231,16 @@ class ClassLoader
 		}
 		else
 		{
-			foreach (\System::getContainer()->get('contao.resource_locator')->locate('config/autoload.php', null, false) as $file)
+			try
+			{
+				$files = \System::getContainer()->get('contao.resource_locator')->locate('config/autoload.php', null, false);
+			}
+			catch (\InvalidArgumentException $e)
+			{
+				$files = array();
+			}
+
+			foreach ($files as $file)
 			{
 				include $file;
 			}

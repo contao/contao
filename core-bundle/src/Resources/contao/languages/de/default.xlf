@@ -257,6 +257,10 @@
         <source>Please enter a numeric Google+ ID or vanity name!</source>
         <target>Bitte geben Sie eine numerische Google+-ID oder einen Vanity-Namen ein!</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidFieldName">
+        <source>Please enter only the following characters: A-Z0-9[]_-</source>
+        <target>Bitte geben Sie nur folgende Zeichen ein: A-Z0-9[]_-</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Bitte addieren Sie %d und %d.</target>

@@ -1,5 +1,12 @@
 # Contao core bundle change log
 
+### 4.2.3 (2016-09-06)
+
+ * Do not double URL encode the content syndication links.
+ * Use CSS3 transforms instead of transitions to animate the off-canvas navigation.
+ * Improve the exception handling when using the resource locator (see #557).
+ * Correctly reset the filter menu in parent view.
+
 ### 4.2.2 (2016-07-28)
 
  * Adjust the command scheduler default configuration.

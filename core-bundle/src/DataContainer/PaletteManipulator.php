@@ -10,6 +10,8 @@
 
 namespace Contao\CoreBundle\DataContainer;
 
+use Contao\CoreBundle\Exception\PaletteNotFoundException;
+use Contao\CoreBundle\Exception\PalettePositionException;
 use Contao\StringUtil;
 
 /**
@@ -84,7 +86,7 @@ class PaletteManipulator
      *
      * @return static
      *
-     * @throws \InvalidArgumentException
+     * @throws PalettePositionException
      */
     public function addField(
         $name,
@@ -96,7 +98,7 @@ class PaletteManipulator
         $this->validatePosition($position);
 
         if (self::POSITION_BEFORE === $fallbackPosition || self::POSITION_AFTER === $fallbackPosition) {
-            throw new \InvalidArgumentException('Fallback legend position can only be PREPEND or APPEND');
+            throw new PalettePositionException('Fallback legend position can only be PREPEND or APPEND');
         }
 
         $this->fields[] = [
@@ -123,7 +125,7 @@ class PaletteManipulator
         $palettes = &$GLOBALS['TL_DCA'][$table]['palettes'];
 
         if (!isset($palettes[$name])) {
-            throw new \InvalidArgumentException(sprintf('Palette "%s" not found in table "%s"', $name, $table));
+            throw new PaletteNotFoundException(sprintf('Palette "%s" not found in table "%s"', $name, $table));
         }
 
         $palettes[$name] = $this->applyToString($palettes[$name]);
@@ -144,7 +146,7 @@ class PaletteManipulator
         $subpalettes = &$GLOBALS['TL_DCA'][$table]['subpalettes'];
 
         if (!isset($subpalettes[$name])) {
-            throw new \InvalidArgumentException(sprintf('Subpalette "%s" not found in table "%s"', $name, $table));
+            throw new PaletteNotFoundException(sprintf('Subpalette "%s" not found in table "%s"', $name, $table));
         }
 
         $subpalettes[$name] = $this->applyToString($subpalettes[$name], true);
@@ -187,7 +189,7 @@ class PaletteManipulator
      *
      * @param string $position
      *
-     * @throws \InvalidArgumentException
+     * @throws PalettePositionException
      */
     private function validatePosition($position)
     {
@@ -199,7 +201,7 @@ class PaletteManipulator
         ];
 
         if (!in_array($position, $positions, true)) {
-            throw new \InvalidArgumentException('Invalid legend position');
+            throw new PalettePositionException('Invalid legend position');
         }
     }
 

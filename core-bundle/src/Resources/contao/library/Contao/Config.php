@@ -130,7 +130,16 @@ class Config
 		}
 		else
 		{
-			foreach (\System::getContainer()->get('contao.resource_locator')->locate('config/config.php', null, false) as $file)
+			try
+			{
+				$files = \System::getContainer()->get('contao.resource_locator')->locate('config/config.php', null, false);
+			}
+			catch (\InvalidArgumentException $e)
+			{
+				$files = array();
+			}
+
+			foreach ($files as $file)
 			{
 				include $file;
 			}

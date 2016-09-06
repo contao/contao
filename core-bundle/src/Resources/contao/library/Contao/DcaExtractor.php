@@ -434,17 +434,16 @@ class DcaExtractor extends \Controller
 
 				try
 				{
-					/** @var SplFileInfo[] $files */
 					$files = \System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
-
-					foreach ($files as $file)
-					{
-						$arrSql = array_merge_recursive($arrSql, \SqlFileParser::parse($file));
-					}
 				}
 				catch (\InvalidArgumentException $e)
 				{
-					// No database.sql files found (see #349)
+					$files = array();
+				}
+
+				foreach ($files as $file)
+				{
+					$arrSql = array_merge_recursive($arrSql, \SqlFileParser::parse($file));
 				}
 
 				static::$arrSql = $arrSql;

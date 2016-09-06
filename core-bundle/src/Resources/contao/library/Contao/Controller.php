@@ -1638,15 +1638,20 @@ abstract class Controller extends \System
 
 				$arrEnclosures[] = array
 				(
-					'link'      => $arrMeta['title'],
-					'filesize'  => static::getReadableSize($objFile->filesize),
+					'id'        => $objFiles->id,
+					'uuid'      => $objFiles->uuid,
+					'name'      => $objFile->basename,
 					'title'     => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'link'      => $arrMeta['title'],
+					'caption'   => $arrMeta['caption'],
 					'href'      => $strHref,
-					'enclosure' => $objFiles->path,
+					'filesize'  => static::getReadableSize($objFile->filesize),
 					'icon'      => \Image::getPath($objFile->icon),
 					'mime'      => $objFile->mime,
+					'meta'      => $arrMeta,
 					'extension' => $objFile->extension,
-					'meta'      => $arrMeta
+					'path'      => $objFile->dirname,
+					'enclosure' => $objFiles->path // backwards compatibility
 				);
 			}
 		}
