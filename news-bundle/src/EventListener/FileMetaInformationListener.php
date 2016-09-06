@@ -11,13 +11,15 @@
 namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Database;
-use Contao\Database\Result;
+use Contao\NewsArchiveModel;
+use Contao\NewsModel;
+use Contao\PageModel;
 
 /**
  * Provides file meta information for the request.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FileMetaInformationListener
 {
@@ -37,49 +39,76 @@ class FileMetaInformationListener
     }
 
     /**
-     * Returns the page record related to the given table and ID.
+     * Returns the page model related to the given table and ID.
      *
      * @param string $table
      * @param int    $id
      *
-     * @return Result|false
+     * @return PageModel|false|null
      */
     public function onAddFileMetaInformationToRequest($table, $id)
     {
-        if ('tl_news' === $table) {
-            return $this->getResult(
-                'SELECT * FROM tl_page WHERE id=(
-                    SELECT jumpTo FROM tl_news_archive WHERE id=(SELECT pid FROM tl_news WHERE id=?)
-                )',
-                $id
-            );
-        }
+        switch ($table) {
+            case 'tl_news_archive':
+                return $this->getPageForNewsArchive($id);
 
-        if ('tl_news_archive' === $table) {
-            return $this->getResult(
-                'SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_news_archive WHERE id=?)',
-                $id
-            );
+            case 'tl_news':
+                return $this->getPageForNews($id);
         }
 
         return false;
     }
 
     /**
-     * Fetches the result from the database.
+     * Returns the page model for a news archive.
      *
-     * @param string $query
-     * @param int    $id
+     * @param int $id
      *
-     * @return Result
+     * @return PageModel|false|null
      */
-    private function getResult($query, $id)
+    private function getPageForNewsArchive($id)
     {
         $this->framework->initialize();
 
-        /** @var Database $database */
-        $database = $this->framework->createInstance('Contao\Database');
+        /** @var NewsArchiveModel $archiveAdapter */
+        $archiveAdapter = $this->framework->getAdapter('Contao\NewsArchiveModel');
 
-        return $database->prepare($query)->execute($id);
+        if (null === ($archiveModel = $archiveAdapter->findByPk($id))) {
+            return false;
+        }
+
+        /** @var PageModel $pageModel */
+        $pageModel = $archiveModel->getRelated('jumpTo');
+
+        return $pageModel;
+    }
+
+    /**
+     * Returns the page model for a news item.
+     *
+     * @param int $id
+     *
+     * @return PageModel|false|null
+     */
+    private function getPageForNews($id)
+    {
+        $this->framework->initialize();
+
+        /** @var NewsModel $newsAdapter */
+        $newsAdapter = $this->framework->getAdapter('Contao\NewsModel');
+
+        if (null === ($newsModel = $newsAdapter->findByPk($id))) {
+            return false;
+        }
+
+        /** @var NewsArchiveModel $archiveModel */
+        if (null === ($archiveModel = $newsModel->getRelated('pid'))) {
+            return false;
+        }
+
+        /** @var PageModel $pageModel */
+        $pageModel = $archiveModel->getRelated('jumpTo');
+
+        return $pageModel;
     }
 }
