@@ -139,9 +139,9 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * Returns a ContaoFramework instance.
      *
-     * @param bool $isInitialized The initialization status
+     * @param bool $isInitialized
      *
-     * @return ContaoFrameworkInterface The object instance
+     * @return ContaoFrameworkInterface
      */
     private function mockContaoFramework($isInitialized = true)
     {
