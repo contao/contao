@@ -10,9 +10,12 @@
 
 namespace Contao\CalendarBundle\Test\EventListener;
 
+use Contao\CalendarEventsModel;
+use Contao\CalendarModel;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CalendarBundle\EventListener\FileMetaInformationListener;
+use Contao\PageModel;
 
 /**
  * Tests the FileMetaInformationListener class.
@@ -32,19 +35,19 @@ class FileMetaInformationListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests that the listener returns a database result.
+     * Tests that the listener returns a page model.
      */
-    public function testReturnDatabaseResult()
+    public function testReturnPageModel()
     {
         $listener = new FileMetaInformationListener($this->mockContaoFramework());
 
         $this->assertInstanceOf(
-            'Contao\Database\Result',
+            'Contao\PageModel',
             $listener->onAddFileMetaInformationToRequest('tl_calendar', 2)
         );
 
         $this->assertInstanceOf(
-            'Contao\Database\Result',
+            'Contao\PageModel',
             $listener->onAddFileMetaInformationToRequest('tl_calendar_events', 2)
         );
     }
@@ -66,11 +69,72 @@ class FileMetaInformationListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockContaoFramework()
     {
+        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
+        $pageModel = $this
+            ->getMockBuilder('Contao\PageModel')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        /** @var CalendarModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
+        $calendarModel = $this
+            ->getMockBuilder('Contao\CalendarModel')
+            ->setMethods(['getRelated'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $calendarModel
+            ->expects($this->any())
+            ->method('getRelated')
+            ->willReturn($pageModel)
+        ;
+
+        $calendarAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['findByPk'])
+            ->setConstructorArgs(['Contao\CalendarModel'])
+            ->getMock()
+        ;
+
+        $calendarAdapter
+            ->expects($this->any())
+            ->method('findByPk')
+            ->willReturn($calendarModel)
+        ;
+
+        /** @var CalendarEventsModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
+        $eventsModel = $this
+            ->getMockBuilder('Contao\CalendarEventsModel')
+            ->setMethods(['getRelated'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $eventsModel
+            ->expects($this->any())
+            ->method('getRelated')
+            ->willReturn($calendarModel)
+        ;
+
+        $eventsAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['findByPk'])
+            ->setConstructorArgs(['Contao\CalendarEventsModel'])
+            ->getMock()
+        ;
+
+        $eventsAdapter
+            ->expects($this->any())
+            ->method('findByPk')
+            ->willReturn($eventsModel)
+        ;
+
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
             ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
             ->disableOriginalConstructor()
-            ->setMethods(['isInitialized', 'createInstance'])
+            ->setMethods(['isInitialized', 'getAdapter'])
             ->getMock()
         ;
 
@@ -80,35 +144,21 @@ class FileMetaInformationListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true)
         ;
 
-        $databaseAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['prepare', 'execute'])
-            ->setConstructorArgs(['Contao\Database'])
-            ->getMock()
-        ;
-
-        $databaseAdapter
-            ->expects($this->any())
-            ->method('prepare')
-            ->willReturn($databaseAdapter)
-        ;
-
-        $databaseResult = $this
-            ->getMockBuilder('Contao\Database\Result')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $databaseAdapter
-            ->expects($this->any())
-            ->method('execute')
-            ->willReturn($databaseResult)
-        ;
-
         $framework
             ->expects($this->any())
-            ->method('createInstance')
-            ->willReturn($databaseAdapter)
+            ->method('getAdapter')
+            ->willReturnCallback(function ($key) use ($calendarAdapter, $eventsAdapter) {
+                switch ($key) {
+                    case 'Contao\CalendarModel':
+                        return $calendarAdapter;
+
+                    case 'Contao\CalendarEventsModel':
+                        return $eventsAdapter;
+
+                    default:
+                        return null;
+                }
+            })
         ;
 
         return $framework;
