@@ -10,14 +10,16 @@
 
 namespace Contao\CalendarBundle\EventListener;
 
+use Contao\CalendarEventsModel;
+use Contao\CalendarModel;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Database;
-use Contao\Database\Result;
+use Contao\PageModel;
 
 /**
  * Provides file meta information for the request.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FileMetaInformationListener
 {
@@ -37,49 +39,76 @@ class FileMetaInformationListener
     }
 
     /**
-     * Returns the page record related to the given table and ID.
+     * Returns the page model related to the given table and ID.
      *
      * @param string $table
      * @param int    $id
      *
-     * @return Result|false
+     * @return PageModel|false|null
      */
     public function onAddFileMetaInformationToRequest($table, $id)
     {
-        if ('tl_calendar' === $table) {
-            return $this->getResult(
-                'SELECT * FROM tl_page WHERE id=(SELECT jumpTo FROM tl_calendar WHERE id=?)',
-                $id
-            );
-        }
+        switch ($table) {
+            case 'tl_calendar':
+                return $this->getPageForCalendar($id);
 
-        if ('tl_calendar_events' === $table) {
-            return $this->getResult(
-                'SELECT * FROM tl_page WHERE id=(
-                    SELECT jumpTo FROM tl_calendar WHERE id=(SELECT pid FROM tl_calendar_events WHERE id=?)
-                )',
-                $id
-            );
+            case 'tl_calendar_events':
+                return $this->getPageForEvent($id);
         }
 
         return false;
     }
 
     /**
-     * Fetches the result from the database.
+     * Returns the page model for a calendar.
      *
-     * @param string $query
-     * @param int    $id
+     * @param int $id
      *
-     * @return Result
+     * @return PageModel|false|null
      */
-    private function getResult($query, $id)
+    private function getPageForCalendar($id)
     {
         $this->framework->initialize();
 
-        /** @var Database $database */
-        $database = $this->framework->createInstance('Contao\Database');
+        /** @var CalendarModel $calendarAdapter */
+        $calendarAdapter = $this->framework->getAdapter('Contao\CalendarModel');
 
-        return $database->prepare($query)->execute($id);
+        if (null === ($calendarModel = $calendarAdapter->findByPk($id))) {
+            return false;
+        }
+
+        /** @var PageModel $pageModel */
+        $pageModel = $calendarModel->getRelated('jumpTo');
+
+        return $pageModel;
+    }
+
+    /**
+     * Returns the page model for an event.
+     *
+     * @param int $id
+     *
+     * @return PageModel|false|null
+     */
+    private function getPageForEvent($id)
+    {
+        $this->framework->initialize();
+
+        /** @var CalendarEventsModel $eventsAdapter */
+        $eventsAdapter = $this->framework->getAdapter('Contao\CalendarEventsModel');
+
+        if (null === ($eventsModel = $eventsAdapter->findByPk($id))) {
+            return false;
+        }
+
+        /** @var CalendarModel $calendarModel */
+        if (null === ($calendarModel = $eventsModel->getRelated('pid'))) {
+            return false;
+        }
+
+        /** @var PageModel $pageModel */
+        $pageModel = $calendarModel->getRelated('jumpTo');
+
+        return $pageModel;
     }
 }
