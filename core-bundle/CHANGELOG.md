@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.2.4 (2016-XX-XX)
+
+ * Only regenerate the session ID upon login.
+
 ### 4.2.3 (2016-09-06)
 
  * Do not double URL encode the content syndication links.

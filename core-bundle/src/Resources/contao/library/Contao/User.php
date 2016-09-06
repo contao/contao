@@ -450,7 +450,9 @@ abstract class User extends \System
 		$this->save();
 
 		// Generate the session
+		$this->regenerateSessionId();
 		$this->generateSession();
+
 		$this->log('User "' . $this->username . '" has logged in', __METHOD__, TL_ACCESS);
 
 		// HOOK: post login callback
@@ -565,14 +567,16 @@ abstract class User extends \System
 
 
 	/**
-	 * Generate a session
+	 * Regenerate the session ID
+	 *
+	 * @throws \RuntimeException
 	 */
-	protected function generateSession()
+	protected function regenerateSessionId()
 	{
 		$container = \System::getContainer();
 		$strategy = $container->getParameter('security.authentication.session_strategy.strategy');
 
-		// Regenerate the session id to harden against session fixation attacks
+		// Regenerate the session ID to harden against session fixation attacks
 		switch ($strategy)
 		{
 			case SessionAuthenticationStrategy::NONE:
@@ -589,7 +593,14 @@ abstract class User extends \System
 			default:
 				throw new \RuntimeException(sprintf('Invalid session authentication strategy "%s"', $strategy));
 		}
+	}
 
+
+	/**
+	 * Generate a session
+	 */
+	protected function generateSession()
+	{
 		$time = time();
 
 		// Generate the cookie hash
