@@ -35,6 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.0">
         <source>Activation token</source>
+        <target>Aktivační klíč</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.1">
         <source>The activation token of the subscription.</source>
