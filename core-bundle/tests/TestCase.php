@@ -21,6 +21,7 @@ use Contao\Image\ResizeCalculator;
 use Contao\Image\PictureGenerator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Imagine\Gd\Imagine as ImagineGd;
+use Psr\Log\NullLogger;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
@@ -224,6 +225,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         $container->set('request_stack', $requestStack);
         $container->set('session', $this->mockSession());
+        $container->set('monolog.logger.contao', new NullLogger());
 
         return $container;
     }

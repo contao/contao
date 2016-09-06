@@ -39,7 +39,7 @@ input,select,button,label,img,a.tl_submit,.tl_select {
 /* Font */
 body {
 	font:300 .875rem/1 Roboto,sans-serif;
-	color:#000;
+	color:#222;
 }
 pre,code,.tl_textarea.monospace {
 	font:300 .75rem/1.25 "Roboto Mono",monospace;
@@ -80,7 +80,7 @@ span.mandatory {
 
 /* Basic elements */
 a {
-	color:#000;
+	color:#222;
 	text-decoration:none;
 }
 a:hover,a:focus,a:active {

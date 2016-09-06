@@ -505,7 +505,7 @@ abstract class DataContainer extends \Backend
 
 			if ($objFile->isImage)
 			{
-				$image = 'placeholder.png';
+				$image = \Image::getPath('placeholder.svg');
 
 				if ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth'))
 				{
@@ -529,7 +529,7 @@ abstract class DataContainer extends \Backend
 </div>';
 
 				// Add the script to mark the important part
-				if ($image !== 'placeholder.png')
+				if (basename($image) !== 'placeholder.svg')
 				{
 					$strPreview .= '<script>Backend.editPreviewWizard($(\'' . $ctrl . '\'));</script>';
 

@@ -31,26 +31,23 @@ class FrontendShare extends \Frontend
 		switch (\Input::get('p'))
 		{
 			case 'facebook':
-				$query  = '?u=' . rawurlencode(\Input::get('u', true));
-				$query .= '&t=' . rawurlencode(\Input::get('t', true));
-				$query .= '&display=popup';
-				$query .= '&redirect_uri=http%3A%2F%2Fwww.facebook.com';
-
-				return new RedirectResponse('https://www.facebook.com/sharer/sharer.php' . $query);
-				break;
+				return new RedirectResponse(
+					'https://www.facebook.com/sharer/sharer.php'
+						. '?u=' . rawurlencode(\Input::get('u', true))
+				);
 
 			case 'twitter':
-				$query  = '?url=' . rawurlencode(\Input::get('u', true));
-				$query .= '&text=' . rawurlencode(\Input::get('t', true));
-
-				return new RedirectResponse('https://twitter.com/share' . $query);
-				break;
+				return new RedirectResponse(
+					'https://twitter.com/intent/tweet'
+						. '?url=' . rawurlencode(\Input::get('u', true))
+						. '&text=' . rawurlencode(\Input::get('t', true))
+				);
 
 			case 'gplus':
-				$query  = '?url=' . rawurlencode(\Input::get('u', true));
-
-				return new RedirectResponse('https://plus.google.com/share' . $query);
-				break;
+				return new RedirectResponse(
+					'https://plus.google.com/share'
+						. '?url=' . rawurlencode(\Input::get('u', true))
+				);
 		}
 
 		return new RedirectResponse('../');

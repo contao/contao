@@ -76,7 +76,7 @@
       <?php if ($this->isImage): ?>
         <div id="preview">
           <div class="checkerbox" style="width:<?= $this->width ?>px;height:<?= $this->height ?>px">
-            <img src="<?= $this->href ?>" width="<?= $this->width ?>" height="<?= $this->height ?>" alt="">
+            <img src="<?= $this->dataUri ?>" width="<?= $this->width ?>" height="<?= $this->height ?>" alt="">
           </div>
         </div>
       <?php endif; ?>
