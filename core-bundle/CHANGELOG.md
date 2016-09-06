@@ -6,6 +6,16 @@
  * Use CSS3 transforms instead of transitions to animate the off-canvas navigation.
  * Improve the exception handling when using the resource locator (see #557).
  * Correctly reset the filter menu in parent view.
+ * Support all characters but =!<> and whitespace in simple tokens (see contao/core#8436).
+ * Check the user's permission when generating links in the picker (see contao/core#8407). 
+ * Handle forward pages without target in the navigation modules (see contao/core#8377).
+ * Provide the same template variables for downloads and enclosures (see contao/core#8392).
+ * Handle %n when parsing date formats (see contao/core#8411).
+ * Fix the module wizard's accessibility (see contao/core#8391).
+ * Correctly initialize TinyMCE in sub-palettes in Firefox (see contao/core#3673).
+ * Validate form field names more accurately (see contao/core#8403).
+ * Correctly show the ctime, mtime and atime of a folder (see contao/core#8408).
+ * Correctly index changed pages (see contao/core#8439).
 
 ### 4.2.2 (2016-07-28)
 
