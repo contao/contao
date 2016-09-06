@@ -36,8 +36,8 @@ class PreviewUrlCreateListener
     /**
      * Constructor.
      *
-     * @param RequestStack             $requestStack The request stack
-     * @param ContaoFrameworkInterface $framework    The Contao framework service
+     * @param RequestStack             $requestStack
+     * @param ContaoFrameworkInterface $framework
      */
     public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework)
     {
@@ -48,7 +48,7 @@ class PreviewUrlCreateListener
     /**
      * Adds a query to the front end preview URL.
      *
-     * @param PreviewUrlCreateEvent $event The event object
+     * @param PreviewUrlCreateEvent $event
      */
     public function onPreviewUrlCreate(PreviewUrlCreateEvent $event)
     {
@@ -73,10 +73,10 @@ class PreviewUrlCreateListener
     /**
      * Returns the ID.
      *
-     * @param PreviewUrlCreateEvent $event   The event object
-     * @param Request               $request The request object
+     * @param PreviewUrlCreateEvent $event
+     * @param Request               $request
      *
-     * @return int|string The ID
+     * @return int|string
      */
     private function getId(PreviewUrlCreateEvent $event, Request $request)
     {
@@ -93,7 +93,7 @@ class PreviewUrlCreateListener
      *
      * @param int $id The ID
      *
-     * @return CalendarEventsModel|null The event model or null
+     * @return CalendarEventsModel|null
      */
     private function getEventModel($id)
     {

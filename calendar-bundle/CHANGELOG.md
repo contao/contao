@@ -1,5 +1,11 @@
 # Contao calendar bundle change log
 
+### 4.2.2 (2016-09-06)
+
+ * Check if a reader page is protected when generating a sitemap (see contao/core#8416).
+ * Stop the event recurrence if the upper boundary is reached (see contao/core#8445).
+ * Show upcoming events if the first occurrence is in the past (see contao/core#8447).
+
 ### 4.2.1 (2016-07-15)
 
  * Generate the feed files in the correct folder.
