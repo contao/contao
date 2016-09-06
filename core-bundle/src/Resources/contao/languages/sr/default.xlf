@@ -253,6 +253,9 @@
         <source>Please enter a numeric Google+ ID or vanity name!</source>
         <target>Овде можете унети  ID Google+ профила или екранско име.</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidFieldName">
+        <source>Please enter only the following characters: A-Z0-9[]_-</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Саберите %d and %d.</target>
