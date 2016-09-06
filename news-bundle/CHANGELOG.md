@@ -1,5 +1,9 @@
 # Contao news bundle change log
 
+### 4.2.2 (2016-09-06)
+
+ * Check if a reader page is protected when generating a sitemap (see contao/core#8416).
+
 ### 4.2.1 (2016-07-15)
 
  * Generate the feed files in the correct folder.
