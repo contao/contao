@@ -118,10 +118,7 @@ class InstallationKernel extends \AppKernel
 
         $context = new RequestContext();
         $context->fromRequest(Request::createFromGlobals());
-        $context->setBaseUrl('');
 
-        $generator = new UrlGenerator($routes, $context);
-
-        return $generator->generate('contao_install');
+        return str_replace('/install.php/', '/', (new UrlGenerator($routes, $context))->generate('contao_install'));
     }
 }

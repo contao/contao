@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.1.3 (2016-09-06)
+
+ * Support calling the install tool with the /web fragment (see #25).
+
 ### 1.1.2 (2016-07-28)
 
  * Fix the install tool redirect when the real system is bootable.
