@@ -151,6 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>This website is available via HTTPS.</source>
+        <target>Questo sito è disponibile tramite HTTPS.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

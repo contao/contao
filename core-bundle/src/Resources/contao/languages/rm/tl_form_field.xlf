@@ -175,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.digit.1">
         <source>Allows numeric characters, minus (-) and full stop (.).</source>
+        <target>Lubescha caracters numerics, minus (-), e punct puncts (.).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.alpha.0">
         <source>Alphabetic characters</source>

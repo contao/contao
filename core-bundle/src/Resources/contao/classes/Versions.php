@@ -405,9 +405,14 @@ class Versions extends \Controller
 				$intFrom = \Input::get('from');
 				$from = \StringUtil::deserialize($arrVersions[\Input::get('from')]['data']);
 			}
+			elseif ($objVersions->numRows > $intIndex)
+			{
+				$intFrom = $objVersions->first()->version;
+				$from = \StringUtil::deserialize($arrVersions[$intFrom]['data']);
+			}
 			elseif ($intIndex > 1)
 			{
-				$intFrom = $intIndex-1;
+				$intFrom = $intIndex - 1;
 				$from = \StringUtil::deserialize($arrVersions[$intFrom]['data']);
 			}
 

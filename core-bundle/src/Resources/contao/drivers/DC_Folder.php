@@ -21,6 +21,11 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 /**
  * Provide methods to modify the file system.
  *
+ * @property string  $path
+ * @property string  $extension
+ * @property boolean $createNewVersion
+ * @property boolean $isDbAssisted
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DC_Folder extends \DataContainer implements \listable, \editable
@@ -835,7 +840,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		// Add a log entry
-		$this->log('File or folder "'.$source.'" has been duplicated', __METHOD__, TL_FILES);
+		$this->log('File or folder "'.$source.'" has been copied to "'.$destination.'"', __METHOD__, TL_FILES);
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -1053,7 +1058,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				// Upload the files
 				$arrUploaded = $objUploader->uploadTo($strFolder);
 
-				if (empty($arrUploaded))
+				if (empty($arrUploaded) && !$objUploader->hasError())
 				{
 					\Message::addError($GLOBALS['TL_LANG']['ERR']['emptyUpload']);
 					$this->reload();
@@ -1738,7 +1743,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				if (!$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] && (strlen($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'])))
 				{
 					$options .= '
-  <input type="checkbox" name="all_fields[]" id="all_'.$field.'" class="tl_checkbox" value="'.\StringUtil::specialchars($field).'"> <label for="all_'.$field.'" class="tl_checkbox_label">'.(($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: $GLOBALS['TL_LANG']['MSC'][$field][0]).' <span style="color:#999;padding-left:3px">['.$field.']</span>').'</label><br>';
+  <input type="checkbox" name="all_fields[]" id="all_'.$field.'" class="tl_checkbox" value="'.\StringUtil::specialchars($field).'"> <label for="all_'.$field.'" class="tl_checkbox_label">'.(($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: ($GLOBALS['TL_LANG']['MSC'][$field][0] ?: $field)).' <span style="color:#999;padding-left:3px">['.$field.']</span>').'</label><br>';
 				}
 			}
 
@@ -2594,6 +2599,14 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 			$currentEncoded = $this->urlEncode($currentFile);
 			$return .= "\n  " . '<li class="tl_file click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
+			$thumbnail .= ' <span class="tl_gray">('.$this->getReadableSize($objFile->filesize);
+
+			if ($objFile->width && $objFile->height)
+			{
+				$thumbnail .= ', '.$objFile->width.'x'.$objFile->height.' px';
+			}
+
+			$thumbnail .= ')</span>';
 
 			// Generate the thumbnail
 			if ($objFile->isImage)
@@ -2611,15 +2624,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 						$popupHeight = 625 / $objFile->viewWidth * $objFile->viewHeight + 236;
 					}
 
-					$thumbnail .= ' <span class="tl_gray">('.$this->getReadableSize($objFile->filesize);
-
-					if ($objFile->width && $objFile->height)
-					{
-						$thumbnail .= ', '.$objFile->width.'x'.$objFile->height.' px';
-					}
-
-					$thumbnail .= ')</span>';
-
 					if (\Config::get('thumbnails') && ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')))
 					{
 						$imageObj = \Image::create($currentEncoded, array(400, (($objFile->height && $objFile->height < 50) ? $objFile->height : 50), 'box'));
@@ -2636,10 +2640,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					$popupHeight = 386; // dimensionless SVGs are rendered at 300x150px, so the popup needs to be 150px + 236px high
 				}
-			}
-			else
-			{
-				$thumbnail .= ' <span class="tl_gray">('.$this->getReadableSize($objFile->filesize).')</span>';
 			}
 
 			$strFileNameEncoded = \StringUtil::convertEncoding(\StringUtil::specialchars(basename($currentFile)), \Config::get('characterSet'));

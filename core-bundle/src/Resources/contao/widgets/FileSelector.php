@@ -553,25 +553,25 @@ class FileSelector extends \Widget
 				}
 
 				$return .= "\n    " . '<li class="tl_file toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
+				$thumbnail .= ' <span class="tl_gray">('.$this->getReadableSize($objFile->filesize);
+
+				if ($objFile->width && $objFile->height)
+				{
+					$thumbnail .= ', '.$objFile->width.'x'.$objFile->height.' px';
+				}
+
+				$thumbnail .= ')</span>';
 
 				// Generate thumbnail
-				if ($objFile->isImage && $objFile->viewHeight > 0)
+				if ($objFile->isImage && $objFile->viewHeight > 0 && \Config::get('thumbnails') && ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')))
 				{
-					if ($objFile->width && $objFile->height)
-					{
-						$thumbnail .= ' <span class="tl_gray">(' . $objFile->width . 'x' . $objFile->height . ')</span>';
-					}
+					$imageObj = \Image::create($currentEncoded, array(400, (($objFile->height && $objFile->height < 50) ? $objFile->height : 50), 'box'));
+					$importantPart = $imageObj->getImportantPart();
+					$thumbnail .= '<br>' . \Image::getHtml($imageObj->executeResize()->getResizedPath(), '', 'style="margin:0 0 2px -19px"');
 
-					if (\Config::get('thumbnails') && ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')))
+					if ($importantPart['x'] > 0 || $importantPart['y'] > 0 || $importantPart['width'] < $objFile->width || $importantPart['height'] < $objFile->height)
 					{
-						$imageObj = \Image::create($currentEncoded, array(400, (($objFile->height && $objFile->height < 50) ? $objFile->height : 50), 'box'));
-						$importantPart = $imageObj->getImportantPart();
-						$thumbnail .= '<br>' . \Image::getHtml($imageObj->executeResize()->getResizedPath(), '', 'style="margin:0 0 2px -19px"');
-
-						if ($importantPart['x'] > 0 || $importantPart['y'] > 0 || $importantPart['width'] < $objFile->width || $importantPart['height'] < $objFile->height)
-						{
-							$thumbnail .= ' ' . \Image::getHtml($imageObj->setZoomLevel(100)->setTargetWidth(320)->setTargetHeight((($objFile->height && $objFile->height < 40) ? $objFile->height : 40))->executeResize()->getResizedPath(), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
-						}
+						$thumbnail .= ' ' . \Image::getHtml($imageObj->setZoomLevel(100)->setTargetWidth(320)->setTargetHeight((($objFile->height && $objFile->height < 40) ? $objFile->height : 40))->executeResize()->getResizedPath(), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 					}
 				}
 

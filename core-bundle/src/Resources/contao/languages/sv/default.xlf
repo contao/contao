@@ -2054,12 +2054,10 @@ Detta e-postmeddelande har genererats av Contao. Du kan inte svara på det direk
         <target>Filen %s laddades upp</target>
       </trans-unit>
       <trans-unit id="MSC.fileExceeds">
-        <source>Image %s uploaded successfully, however it is too big to be resized automatically.</source>
-        <target>Bilden %s laddades upp utan problem. Dock är den för stor för att bli omskalad automatiskt.</target>
+        <source>Image %s is too big to be resized automatically.</source>
       </trans-unit>
       <trans-unit id="MSC.fileResized">
-        <source>Image %s uploaded successfully and was scaled down to the maximum dimensions.</source>
-        <target>Bilden %s laddades upp och skalades om till max-dimensionerna.</target>
+        <source>Image %s was scaled down to the maximum dimensions.</source>
       </trans-unit>
       <trans-unit id="MSC.searchLabel">
         <source>Search</source>
@@ -2093,8 +2091,7 @@ Detta e-postmeddelande har genererats av Contao. Du kan inte svara på det direk
         <target>Skriv ut sidan</target>
       </trans-unit>
       <trans-unit id="MSC.printAsPdf">
-        <source>Print article as PDF</source>
-        <target>Spara artikeln som PDF</target>
+        <source>Save article as PDF</source>
       </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
