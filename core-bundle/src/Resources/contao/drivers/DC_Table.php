@@ -20,6 +20,12 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 /**
  * Provide methods to modify the database.
  *
+ * @property integer $id
+ * @property string  $parentTable
+ * @property array   $childTable
+ * @property array   $rootIds
+ * @property boolean $createNewVersion
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -97,12 +103,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * @var boolean
 	 */
 	protected $blnCreateNewVersion = false;
-
-	/**
-	 * True if one of the form fields is uploadable
-	 * @var boolean
-	 */
-	protected $blnUploadable = false;
 
 	/**
 	 * The current back end module
@@ -2587,7 +2587,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if ($field == 'pid' || $field == 'sorting' || (!$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] && (strlen($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback']) || is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback']))))
 				{
 					$options .= '
-  <input type="checkbox" name="all_fields[]" id="all_'.$field.'" class="tl_checkbox" value="'.\StringUtil::specialchars($field).'"> <label for="all_'.$field.'" class="tl_checkbox_label">'.(($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: $GLOBALS['TL_LANG']['MSC'][$field][0]).' <span style="color:#999;padding-left:3px">['.$field.']</span>').'</label><br>';
+  <input type="checkbox" name="all_fields[]" id="all_'.$field.'" class="tl_checkbox" value="'.\StringUtil::specialchars($field).'"> <label for="all_'.$field.'" class="tl_checkbox_label">'.(($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: ($GLOBALS['TL_LANG']['MSC'][$field][0] ?: $field)).' <span style="color:#999;padding-left:3px">['.$field.']</span>').'</label><br>';
 				}
 			}
 
@@ -2900,7 +2900,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if ($field == 'pid' || $field == 'sorting' || (!$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] && (strlen($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback']) || is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback']))))
 				{
 					$options .= '
-  <input type="checkbox" name="all_fields[]" id="all_'.$field.'" class="tl_checkbox" value="'.\StringUtil::specialchars($field).'"> <label for="all_'.$field.'" class="tl_checkbox_label">'.(($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: $GLOBALS['TL_LANG']['MSC'][$field][0]).' <span style="color:#999;padding-left:3px">['.$field.']</span>').'</label><br>';
+  <input type="checkbox" name="all_fields[]" id="all_'.$field.'" class="tl_checkbox" value="'.\StringUtil::specialchars($field).'"> <label for="all_'.$field.'" class="tl_checkbox_label">'.(($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: ($GLOBALS['TL_LANG']['MSC'][$field][0] ?: $field)).' <span style="color:#999;padding-left:3px">['.$field.']</span>').'</label><br>';
 				}
 			}
 
