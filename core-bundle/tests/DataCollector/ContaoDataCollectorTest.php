@@ -42,8 +42,6 @@ class ContaoDataCollectorTest extends TestCase
             'classes_set' => ['Contao\System'],
             'classes_aliased' => ['ContentText' => 'Contao\ContentText'],
             'classes_composerized' => ['ContentImage' => 'Contao\ContentImage'],
-            'unknown_insert_tags' => ['foo'],
-            'unknown_insert_tag_flags' => ['bar'],
             'additional_data' => 'data',
         ];
 
@@ -69,8 +67,6 @@ class ContaoDataCollectorTest extends TestCase
 
         $this->assertEquals('4.0.0', $collector->getContaoVersion());
         $this->assertEquals(['Contao\System'], $collector->getClassesSet());
-        $this->assertEquals(['foo'], $collector->getUnknownInsertTags());
-        $this->assertEquals(['bar'], $collector->getUnknownInsertTagFlags());
         $this->assertEquals(['additional_data' => 'data'], $collector->getAdditionalData());
         $this->assertEquals('contao', $collector->getName());
 

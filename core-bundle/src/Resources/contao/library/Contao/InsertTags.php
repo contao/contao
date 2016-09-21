@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Psr\Log\LogLevel;
+
 
 /**
  * A static class to replace insert tags
@@ -931,10 +933,11 @@ class InsertTags extends \Controller
 							}
 						}
 					}
-					if (\Config::get('debugMode'))
-					{
-						$GLOBALS['TL_DEBUG']['unknown_insert_tags'][] = $strTag;
-					}
+
+					\System::getContainer()
+						->get('monolog.logger.contao')
+						->log(LogLevel::INFO, 'Unknown insert tag: ' . $strTag)
+					;
 					break;
 			}
 
@@ -1024,10 +1027,11 @@ class InsertTags extends \Controller
 									}
 								}
 							}
-							if (\Config::get('debugMode'))
-							{
-								$GLOBALS['TL_DEBUG']['unknown_insert_tag_flags'][] = $flag;
-							}
+
+							\System::getContainer()
+								->get('monolog.logger.contao')
+								->log(LogLevel::INFO, 'Unknown insert tag flag: ' . $flag)
+							;
 							break;
 					}
 				}
