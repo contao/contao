@@ -424,7 +424,14 @@ class PageRegular extends \Frontend
 			{
 				if (($strVersion = $arrPackages['contao-components/mootools']) !== null)
 				{
-					$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $strVersion . '/mootools-yui-compressed.js') . "\n";
+					if (version_compare($strVersion, '1.5.1', '>'))
+					{
+						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $strVersion . '/mootools.min.js') . "\n";
+					}
+					else
+					{
+						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $strVersion . '/mootools-yui-compressed.js') . "\n";
+					}
 
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->mooSource == 'moo_fallback')

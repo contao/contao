@@ -23,9 +23,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
  * @property string  $inputName
  * @property string  $palette
  * @property object  $activeRecord
- * @property boolean $blnUploadable
- * @property array   $root
- * @property array   $rootIds
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -97,6 +94,12 @@ abstract class DataContainer extends \Backend
 	 * @var Model|FilesModel
 	 */
 	protected $objActiveRecord;
+
+	/**
+	 * True if one of the form fields is uploadable
+	 * @var boolean
+	 */
+	protected $blnUploadable = false;
 
 
 	/**
