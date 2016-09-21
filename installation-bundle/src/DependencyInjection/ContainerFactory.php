@@ -41,10 +41,11 @@ class ContainerFactory
      * Returns the container object.
      *
      * @param KernelInterface $kernel
+     * @param Request         $request
      *
      * @return ContainerBuilder
      */
-    public static function create(KernelInterface $kernel)
+    public static function create(KernelInterface $kernel, Request $request)
     {
         $rootDir = $kernel->getRootDir();
         $container = new ContainerBuilder();
@@ -71,7 +72,6 @@ class ContainerFactory
         $container->setParameter('contao.image.target_path', 'assets/images');
 
         // Set up the request stack
-        $request = Request::createFromGlobals();
         $requestStack = new RequestStack();
         $requestStack->push($request);
         $container->set('request_stack', $requestStack);
@@ -94,6 +94,9 @@ class ContainerFactory
         $resolver = new LanguageResolver($requestStack, $translationsDir);
         $locale = $resolver->getLocale();
 
+        // Update the request locale
+        $request->setLocale($locale);
+
         // Set up the translator
         $translator = new Translator($locale);
         $translator->setFallbackLocales(['en']);
@@ -104,7 +107,6 @@ class ContainerFactory
             $translator->addResource('xlf', $translationsDir.'/messages.'.$locale.'.xlf', 'en');
         }
 
-        $container->setParameter('locale', $locale);
         $container->set('translator', $translator);
 
         // Set up Twig
