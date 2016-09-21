@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### 1.1.4 (2016-XX-XX)
+### 1.1.4 (2016-09-21)
 
  * Correctly set the language of the generated user (see #26).
 
