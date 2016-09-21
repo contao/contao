@@ -9,6 +9,10 @@
         <source>Abkhazian</source>
         <target>Abkhazians</target>
       </trans-unit>
+      <trans-unit id="LNG.ae">
+        <source>Avestan</source>
+        <target>Avestan</target>
+      </trans-unit>
       <trans-unit id="LNG.af">
         <source>Afrikaans</source>
         <target>Afrikaans</target>
@@ -17,6 +21,10 @@
         <source>Afrikaans (South Africa)</source>
         <target>Afrikaans (Zuid Afrika)</target>
       </trans-unit>
+      <trans-unit id="LNG.ak">
+        <source>Akan</source>
+        <target>Akan</target>
+      </trans-unit>
       <trans-unit id="LNG.am">
         <source>Amharic</source>
         <target>Amharic</target>
@@ -24,6 +32,10 @@
       <trans-unit id="LNG.am_ET">
         <source>Amharic (Ethiopia)</source>
         <target>Amharic (Ethiopië)</target>
+      </trans-unit>
+      <trans-unit id="LNG.an">
+        <source>Aragonese</source>
+        <target>Aragonees</target>
       </trans-unit>
       <trans-unit id="LNG.ar">
         <source>Arabic</source>
@@ -44,6 +56,10 @@
       <trans-unit id="LNG.as_IN">
         <source>Assamese (India)</source>
         <target>Assamees (India)</target>
+      </trans-unit>
+      <trans-unit id="LNG.av">
+        <source>Avaric</source>
+        <target>Avaric</target>
       </trans-unit>
       <trans-unit id="LNG.ay">
         <source>Aymara</source>
@@ -78,12 +94,16 @@
         <target>Bulgaars (Bulgarije)</target>
       </trans-unit>
       <trans-unit id="LNG.bh">
-        <source>Bihari</source>
-        <target>Bihari</target>
+        <source>Bahrain</source>
+        <target>Bahrein</target>
       </trans-unit>
       <trans-unit id="LNG.bi">
         <source>Bislama</source>
         <target>Bislama</target>
+      </trans-unit>
+      <trans-unit id="LNG.bm">
+        <source>Bambara</source>
+        <target>Bambara</target>
       </trans-unit>
       <trans-unit id="LNG.bn">
         <source>Bengali</source>
@@ -125,6 +145,14 @@
         <source>Catalan (Spain)</source>
         <target>Catalaans (Spanje)</target>
       </trans-unit>
+      <trans-unit id="LNG.ce">
+        <source>Chechen</source>
+        <target>Tsjetsjeens</target>
+      </trans-unit>
+      <trans-unit id="LNG.ch">
+        <source>Chamorro</source>
+        <target>Chamorro</target>
+      </trans-unit>
       <trans-unit id="LNG.co">
         <source>Corsican</source>
         <target>Corsicaans</target>
@@ -140,6 +168,14 @@
       <trans-unit id="LNG.cs_CZ">
         <source>Czech (Czech Republic)</source>
         <target>Tsjechisch (Tsjechische Republiek)</target>
+      </trans-unit>
+      <trans-unit id="LNG.cu">
+        <source>Church Slavic</source>
+        <target>Church Slavic</target>
+      </trans-unit>
+      <trans-unit id="LNG.cv">
+        <source>Chuvash</source>
+        <target>Chuvash</target>
       </trans-unit>
       <trans-unit id="LNG.cy">
         <source>Welsh</source>
@@ -173,6 +209,10 @@
         <source>German (Germany)</source>
         <target>Duits (Duitsland)</target>
       </trans-unit>
+      <trans-unit id="LNG.dv">
+        <source>Divehi</source>
+        <target>Divehi</target>
+      </trans-unit>
       <trans-unit id="LNG.dz">
         <source>Dzongkha</source>
         <target>Dzongkha</target>
@@ -180,6 +220,10 @@
       <trans-unit id="LNG.dz_BT">
         <source>Dzongkha (Bhutan)</source>
         <target>Dzongkha (Bhutan)</target>
+      </trans-unit>
+      <trans-unit id="LNG.ee">
+        <source>Ewe</source>
+        <target>Ewe</target>
       </trans-unit>
       <trans-unit id="LNG.el">
         <source>Greek</source>
@@ -317,6 +361,10 @@
         <source>Persian (Iran)</source>
         <target>Farsi (Iran)</target>
       </trans-unit>
+      <trans-unit id="LNG.ff">
+        <source>Fulah</source>
+        <target>Fulah</target>
+      </trans-unit>
       <trans-unit id="LNG.fi">
         <source>Finnish</source>
         <target>Fins</target>
@@ -326,8 +374,8 @@
         <target>Fins (Finland)</target>
       </trans-unit>
       <trans-unit id="LNG.fj">
-        <source>Fiji</source>
-        <target>Fiji</target>
+        <source>Fijian</source>
+        <target>Fijian</target>
       </trans-unit>
       <trans-unit id="LNG.fo">
         <source>Faroese</source>
@@ -354,12 +402,12 @@
         <target>Frans (Frankrijk)</target>
       </trans-unit>
       <trans-unit id="LNG.fy">
-        <source>Frisian</source>
-        <target>Fries</target>
+        <source>Western Frisian</source>
+        <target>West Fries</target>
       </trans-unit>
       <trans-unit id="LNG.fy_NL">
-        <source>Frisian (Netherlands)</source>
-        <target>Fries (Nederland)</target>
+        <source>Western Frisian (Netherlands)</source>
+        <target>West Fries (Nederland)</target>
       </trans-unit>
       <trans-unit id="LNG.ga">
         <source>Irish</source>
@@ -370,7 +418,7 @@
         <target>Iers (Ierland)</target>
       </trans-unit>
       <trans-unit id="LNG.gd">
-        <source>Scots Gaelic</source>
+        <source>Scottish Gaelic</source>
         <target>Schots Gaelic</target>
       </trans-unit>
       <trans-unit id="LNG.gl">
@@ -393,6 +441,10 @@
         <source>Gujarati (India)</source>
         <target>Gujarati (India)</target>
       </trans-unit>
+      <trans-unit id="LNG.gv">
+        <source>Manx</source>
+        <target>Manx</target>
+      </trans-unit>
       <trans-unit id="LNG.ha">
         <source>Hausa</source>
         <target>Hausa</target>
@@ -413,6 +465,10 @@
         <source>Hindi (India)</source>
         <target>Hindi (India)</target>
       </trans-unit>
+      <trans-unit id="LNG.ho">
+        <source>Hiri Motu</source>
+        <target>Hiri Motu</target>
+      </trans-unit>
       <trans-unit id="LNG.hr">
         <source>Croatian</source>
         <target>Kroatisch</target>
@@ -420,6 +476,10 @@
       <trans-unit id="LNG.hr_HR">
         <source>Croatian (Croatia)</source>
         <target>Kroatisch (Kroatië)</target>
+      </trans-unit>
+      <trans-unit id="LNG.ht">
+        <source>Haitian Creole</source>
+        <target>Haitian Creole</target>
       </trans-unit>
       <trans-unit id="LNG.hu">
         <source>Hungarian</source>
@@ -437,13 +497,13 @@
         <source>Armenian (Armenia)</source>
         <target>Armeens (Armenië)</target>
       </trans-unit>
+      <trans-unit id="LNG.hz">
+        <source>Herero</source>
+        <target>Herero</target>
+      </trans-unit>
       <trans-unit id="LNG.ia">
         <source>Interlingua</source>
         <target>Interlingua</target>
-      </trans-unit>
-      <trans-unit id="LNG.ie">
-        <source>Interlingue</source>
-        <target>Interlingue</target>
       </trans-unit>
       <trans-unit id="LNG.id">
         <source>Indonesian</source>
@@ -453,9 +513,25 @@
         <source>Indonesian (Indonesia)</source>
         <target>Indonesisch (Indonesië)</target>
       </trans-unit>
+      <trans-unit id="LNG.ie">
+        <source>Interlingue</source>
+        <target>Interlingue</target>
+      </trans-unit>
+      <trans-unit id="LNG.ig">
+        <source>Igbo</source>
+        <target>Igbo</target>
+      </trans-unit>
+      <trans-unit id="LNG.ii">
+        <source>Sichuan Yi</source>
+        <target>Sichuan Yi</target>
+      </trans-unit>
       <trans-unit id="LNG.ik">
-        <source>Inupiak</source>
-        <target>Inupiak</target>
+        <source>Inupiaq</source>
+        <target>Inupiaq</target>
+      </trans-unit>
+      <trans-unit id="LNG.io">
+        <source>Ido</source>
+        <target>Ido</target>
       </trans-unit>
       <trans-unit id="LNG.is">
         <source>Icelandic</source>
@@ -478,8 +554,8 @@
         <target>Italiaans (Italië)</target>
       </trans-unit>
       <trans-unit id="LNG.iu">
-        <source>Inuktitut (Eskimo)</source>
-        <target>Inuktitut (Eskimo)</target>
+        <source>Inuktitut</source>
+        <target>Inuktitut</target>
       </trans-unit>
       <trans-unit id="LNG.ja">
         <source>Japanese</source>
@@ -501,6 +577,18 @@
         <source>Georgian (Georgia)</source>
         <target>Georgisch  (Georgië)</target>
       </trans-unit>
+      <trans-unit id="LNG.kg">
+        <source>Kongo</source>
+        <target>Congo</target>
+      </trans-unit>
+      <trans-unit id="LNG.ki">
+        <source>Kikuyu</source>
+        <target>Kikuyu</target>
+      </trans-unit>
+      <trans-unit id="LNG.kj">
+        <source>Kuanyama</source>
+        <target>Kuanyama</target>
+      </trans-unit>
       <trans-unit id="LNG.kk">
         <source>Kazakh</source>
         <target>Kazakhs</target>
@@ -510,12 +598,12 @@
         <target>Kazachs (Kazachstan)</target>
       </trans-unit>
       <trans-unit id="LNG.kl">
-        <source>Greenlandic</source>
-        <target>Groenlands</target>
+        <source>Kalaallisut</source>
+        <target>Kalaallisut</target>
       </trans-unit>
       <trans-unit id="LNG.km">
-        <source>Cambodian</source>
-        <target>Cambodiaans</target>
+        <source>Khmer</source>
+        <target>Khmer</target>
       </trans-unit>
       <trans-unit id="LNG.kn">
         <source>Kannada</source>
@@ -533,6 +621,10 @@
         <source>Korean (Korea)</source>
         <target>Koreaans (Korea)</target>
       </trans-unit>
+      <trans-unit id="LNG.kr">
+        <source>Kanuri</source>
+        <target>Kanuri</target>
+      </trans-unit>
       <trans-unit id="LNG.ks">
         <source>Kashmiri</source>
         <target>Kashmiri</target>
@@ -549,13 +641,33 @@
         <source>Kurdish (Iraq)</source>
         <target>Koerdisch (Irak)</target>
       </trans-unit>
+      <trans-unit id="LNG.kv">
+        <source>Komi</source>
+        <target>Komi</target>
+      </trans-unit>
+      <trans-unit id="LNG.kw">
+        <source>Cornish</source>
+        <target>Cornish</target>
+      </trans-unit>
       <trans-unit id="LNG.ky">
-        <source>Kirghiz</source>
+        <source>Kyrgyz</source>
         <target>Kirgizisch</target>
       </trans-unit>
       <trans-unit id="LNG.la">
         <source>Latin</source>
         <target>Latijn</target>
+      </trans-unit>
+      <trans-unit id="LNG.lb">
+        <source>Luxembourgish</source>
+        <target>Luxemburgs</target>
+      </trans-unit>
+      <trans-unit id="LNG.lg">
+        <source>Ganda</source>
+        <target>Ganda</target>
+      </trans-unit>
+      <trans-unit id="LNG.li">
+        <source>Limburgish</source>
+        <target>Limburgs</target>
       </trans-unit>
       <trans-unit id="LNG.ln">
         <source>Lingala</source>
@@ -577,6 +689,10 @@
         <source>Lithuanian (Lithuania)</source>
         <target>Litouws (Litouwen)</target>
       </trans-unit>
+      <trans-unit id="LNG.lu">
+        <source>Luba-Katanga</source>
+        <target>Luba-Katanga</target>
+      </trans-unit>
       <trans-unit id="LNG.lv">
         <source>Latvian</source>
         <target>Lets</target>
@@ -588,6 +704,10 @@
       <trans-unit id="LNG.mg">
         <source>Malagasy</source>
         <target>Malagasi</target>
+      </trans-unit>
+      <trans-unit id="LNG.mh">
+        <source>Marshallese</source>
+        <target>Marshallees</target>
       </trans-unit>
       <trans-unit id="LNG.mi">
         <source>Maori</source>
@@ -616,10 +736,6 @@
       <trans-unit id="LNG.mn_MN">
         <source>Mongolian (Mongolia)</source>
         <target>Mongools (Mongolië)</target>
-      </trans-unit>
-      <trans-unit id="LNG.mo">
-        <source>Moldavian</source>
-        <target>Moldavisch</target>
       </trans-unit>
       <trans-unit id="LNG.mr">
         <source>Marathi</source>
@@ -657,6 +773,14 @@
         <source>Nauru</source>
         <target>Nauru</target>
       </trans-unit>
+      <trans-unit id="LNG.nb">
+        <source>Norwegian Bokmål</source>
+        <target>Noors Bokmål</target>
+      </trans-unit>
+      <trans-unit id="LNG.nd">
+        <source>North Ndebele</source>
+        <target>Noord-Ndebele</target>
+      </trans-unit>
       <trans-unit id="LNG.ne">
         <source>Nepali</source>
         <target>Nepalees</target>
@@ -664,6 +788,10 @@
       <trans-unit id="LNG.ne_NP">
         <source>Nepali (Nepal)</source>
         <target>Nepalees (Nepal)</target>
+      </trans-unit>
+      <trans-unit id="LNG.ng">
+        <source>Ndonga</source>
+        <target>Ndonga</target>
       </trans-unit>
       <trans-unit id="LNG.nl">
         <source>Dutch</source>
@@ -677,17 +805,33 @@
         <source>Dutch (Netherlands)</source>
         <target>Nederlands (Nederland)</target>
       </trans-unit>
-      <trans-unit id="LNG.no">
-        <source>Norwegian</source>
-        <target>Noors</target>
+      <trans-unit id="LNG.nn">
+        <source>Norwegian Nynorsk</source>
+        <target>Noors Nynorsk</target>
       </trans-unit>
-      <trans-unit id="LNG.no_NO">
-        <source>Norwegian (Norway)</source>
-        <target>Noors (Noorwegen)</target>
+      <trans-unit id="LNG.nr">
+        <source>South Ndebele</source>
+        <target>Zuid Ndebele</target>
+      </trans-unit>
+      <trans-unit id="LNG.nv">
+        <source>Navajo</source>
+        <target>Navajo</target>
+      </trans-unit>
+      <trans-unit id="LNG.ny">
+        <source>Nyanja</source>
+        <target>Nyanja</target>
       </trans-unit>
       <trans-unit id="LNG.oc">
         <source>Occitan</source>
         <target>Occitaans</target>
+      </trans-unit>
+      <trans-unit id="LNG.oj">
+        <source>Ojibwa</source>
+        <target>Ojibwa</target>
+      </trans-unit>
+      <trans-unit id="LNG.om">
+        <source>Oromo</source>
+        <target>Oromo</target>
       </trans-unit>
       <trans-unit id="LNG.or">
         <source>Oriya</source>
@@ -697,6 +841,10 @@
         <source>Oriya (India)</source>
         <target>Oriya (India)</target>
       </trans-unit>
+      <trans-unit id="LNG.os">
+        <source>Ossetic</source>
+        <target>Ossetic</target>
+      </trans-unit>
       <trans-unit id="LNG.pa">
         <source>Punjabi</source>
         <target>Punjabi</target>
@@ -704,6 +852,10 @@
       <trans-unit id="LNG.pa_IN">
         <source>Punjabi (India)</source>
         <target>Punjabi (India)</target>
+      </trans-unit>
+      <trans-unit id="LNG.pi">
+        <source>Pali</source>
+        <target>Pali</target>
       </trans-unit>
       <trans-unit id="LNG.pl">
         <source>Polish</source>
@@ -714,8 +866,8 @@
         <target>Pools (Polen)</target>
       </trans-unit>
       <trans-unit id="LNG.ps">
-        <source>Pashto, Pushto</source>
-        <target>Pashto, Pushto</target>
+        <source>Pashto</source>
+        <target>Pashto</target>
       </trans-unit>
       <trans-unit id="LNG.pt">
         <source>Portuguese</source>
@@ -738,8 +890,8 @@
         <target>Reto-Romaans</target>
       </trans-unit>
       <trans-unit id="LNG.rn">
-        <source>Kirundi</source>
-        <target>Kirundi</target>
+        <source>Rundi</source>
+        <target>Rundi</target>
       </trans-unit>
       <trans-unit id="LNG.ro">
         <source>Romanian</source>
@@ -765,17 +917,21 @@
         <source>Sanskrit</source>
         <target>Sanskriet</target>
       </trans-unit>
+      <trans-unit id="LNG.sc">
+        <source>Sardinian</source>
+        <target>Sardijns</target>
+      </trans-unit>
       <trans-unit id="LNG.sd">
         <source>Sindhi</source>
         <target>Sindhi</target>
       </trans-unit>
+      <trans-unit id="LNG.se">
+        <source>Northern Sami</source>
+        <target>Noord Sami</target>
+      </trans-unit>
       <trans-unit id="LNG.sg">
         <source>Sango</source>
         <target>Sango</target>
-      </trans-unit>
-      <trans-unit id="LNG.sh">
-        <source>Serbo-Croatian</source>
-        <target>Servo-Kroatisch</target>
       </trans-unit>
       <trans-unit id="LNG.si">
         <source>Sinhala</source>
@@ -830,16 +986,16 @@
         <target>Servisch (Servië)</target>
       </trans-unit>
       <trans-unit id="LNG.ss">
-        <source>Siswati</source>
-        <target>Siswati</target>
+        <source>Swati</source>
+        <target>Swati</target>
       </trans-unit>
       <trans-unit id="LNG.st">
-        <source>Sotho</source>
-        <target>Sotho</target>
+        <source>Southern Sotho</source>
+        <target>Zuid Sotho</target>
       </trans-unit>
       <trans-unit id="LNG.st_ZA">
-        <source>Sotho (South Africa)</source>
-        <target>Sotho (Zuid Afrika)</target>
+        <source>Southern Sotho (South Africa)</source>
+        <target>Zuid Sotho (Zuid Afrika)</target>
       </trans-unit>
       <trans-unit id="LNG.su">
         <source>Sudanese</source>
@@ -860,6 +1016,10 @@
       <trans-unit id="LNG.sw">
         <source>Swahili</source>
         <target>Swahili</target>
+      </trans-unit>
+      <trans-unit id="LNG.sw_CD">
+        <source>Swahili (Congo)</source>
+        <target>Swahili (Congo)</target>
       </trans-unit>
       <trans-unit id="LNG.sw_KE">
         <source>Swahili (Kenya)</source>
@@ -909,21 +1069,13 @@
         <source>Turkmen</source>
         <target>Turkmeens</target>
       </trans-unit>
-      <trans-unit id="LNG.tl">
-        <source>Tagalog</source>
-        <target>Tagalog</target>
-      </trans-unit>
-      <trans-unit id="LNG.tl_PH">
-        <source>Tagalog (Philippines)</source>
-        <target>Tagalog (Filipijnen)</target>
-      </trans-unit>
       <trans-unit id="LNG.tn">
-        <source>Setswana</source>
-        <target>Setswana</target>
+        <source>Tswana</source>
+        <target>Tswana</target>
       </trans-unit>
       <trans-unit id="LNG.to">
-        <source>Tonga</source>
-        <target>Tonga</target>
+        <source>Tongan</source>
+        <target>Tongaans</target>
       </trans-unit>
       <trans-unit id="LNG.tr">
         <source>Turkish</source>
@@ -941,13 +1093,9 @@
         <source>Tatar</source>
         <target>Tatar</target>
       </trans-unit>
-      <trans-unit id="LNG.tw">
-        <source>Twi</source>
-        <target>Twi</target>
-      </trans-unit>
       <trans-unit id="LNG.ug">
-        <source>Uigur</source>
-        <target>Uigur</target>
+        <source>Uyghur</source>
+        <target>Oeigoers</target>
       </trans-unit>
       <trans-unit id="LNG.uk">
         <source>Ukrainian</source>
@@ -969,6 +1117,10 @@
         <source>Uzbek</source>
         <target>Oezbeeks</target>
       </trans-unit>
+      <trans-unit id="LNG.ve">
+        <source>Venda</source>
+        <target>Venda</target>
+      </trans-unit>
       <trans-unit id="LNG.vi">
         <source>Vietnamese</source>
         <target>Vietnamees</target>
@@ -980,6 +1132,10 @@
       <trans-unit id="LNG.vo">
         <source>Volapuk</source>
         <target>Volapuk</target>
+      </trans-unit>
+      <trans-unit id="LNG.wa">
+        <source>Walloon</source>
+        <target>Waals</target>
       </trans-unit>
       <trans-unit id="LNG.wo">
         <source>Wolof</source>
