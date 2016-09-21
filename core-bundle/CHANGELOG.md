@@ -2,6 +2,15 @@
 
 ### 4.2.4 (2016-XX-XX)
 
+ * Handle special character passwords in the "close account" module (see contao/core#8455).
+ * Handle broken SVG files in the Image and File class (see contao/core#8470).
+ * Reduce the maximum field length by the file extension length (see contao/core#8472).
+ * Fall back to the field name if there is no label (see contao/core#8461).
+ * Do not assume NULL by default for binary fields (see contao/core#8477).
+ * Correctly render the diff view if not the latest version is active (see contao/core#8481).
+ * Update the list of countries and languages (see contao/core#8453).
+ * Correctly set up the MooTools CDN URL (see contao/core#8458).
+ * Also check the URL length when determining the search URL (see contao/core#8460).
  * Only regenerate the session ID upon login.
 
 ### 4.2.3 (2016-09-06)
