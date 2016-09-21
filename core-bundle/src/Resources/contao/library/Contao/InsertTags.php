@@ -936,7 +936,7 @@ class InsertTags extends \Controller
 
 					\System::getContainer()
 						->get('monolog.logger.contao')
-						->log(LogLevel::INFO, sprintf('The insert tag "%s" could not be replaced.', $strTag))
+						->log(LogLevel::INFO, 'Unknown insert tag: ' . $strTag)
 					;
 					break;
 			}
@@ -1030,7 +1030,7 @@ class InsertTags extends \Controller
 
 							\System::getContainer()
 								->get('monolog.logger.contao')
-								->log(LogLevel::INFO, sprintf('The insert tag flag "%s" could not be resolved.', $flag))
+								->log(LogLevel::INFO, 'Unknown insert tag flag: ' . $flag)
 							;
 							break;
 					}
