@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.2.4 (2016-XX-XX)
+### 4.2.4 (2016-09-21)
 
  * Handle special character passwords in the "close account" module (see contao/core#8455).
  * Handle broken SVG files in the Image and File class (see contao/core#8470).
