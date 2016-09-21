@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.1.4 (2016-09-21)
+
+ * Correctly set the language of the generated user (see #26).
+
 ### 1.1.3 (2016-09-06)
 
  * Support calling the install tool with the /web fragment (see #25).

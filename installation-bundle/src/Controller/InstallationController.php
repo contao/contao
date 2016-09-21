@@ -503,7 +503,7 @@ class InstallationController implements ContainerAwareInterface
             $name,
             $email,
             $password,
-            $this->container->getParameter('locale')
+            $request->getLocale()
         );
 
         return $this->getRedirectResponse();

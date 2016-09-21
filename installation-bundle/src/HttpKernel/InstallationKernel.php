@@ -32,6 +32,11 @@ use Symfony\Component\Routing\RouteCollection;
 class InstallationKernel extends \AppKernel
 {
     /**
+     * @var Request
+     */
+    private $request;
+
+    /**
      * {@inheritdoc}
      */
     public function boot()
@@ -74,6 +79,8 @@ class InstallationKernel extends \AppKernel
             return new RedirectResponse($this->getInstallToolUrl());
         }
 
+        $this->request = $request;
+
         $this->boot();
 
         $controller = new InstallationController();
@@ -100,7 +107,7 @@ class InstallationKernel extends \AppKernel
         Config::preload();
 
         // Create the container
-        $this->container = ContainerFactory::create($this);
+        $this->container = ContainerFactory::create($this, $this->request);
         System::setContainer($this->container);
 
         ClassLoader::scanAndRegister();
