@@ -32,6 +32,11 @@ use Symfony\Component\Routing\RouteCollection;
 class InstallationKernel extends \AppKernel
 {
     /**
+     * @var Request
+     */
+    private $request;
+
+    /**
      * {@inheritdoc}
      */
     public function boot()
@@ -71,15 +76,17 @@ class InstallationKernel extends \AppKernel
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
+        if ($this->canBootRealSystem()) {
+            return new RedirectResponse($this->getInstallToolUrl());
+        }
+
+        $this->request = $request;
+
         $this->boot();
 
         $controller = new InstallationController();
         $controller->setContainer($this->getContainer());
         $controller->runPostInstallCommands();
-
-        if ($this->canBootRealSystem()) {
-            return new RedirectResponse($this->getInstallToolUrl($request));
-        }
 
         return $controller->installAction();
     }
@@ -101,7 +108,7 @@ class InstallationKernel extends \AppKernel
         Config::preload();
 
         // Create the container
-        $this->container = ContainerFactory::create($this);
+        $this->container = ContainerFactory::create($this, $this->request);
         System::setContainer($this->container);
 
         ClassLoader::scanAndRegister();
@@ -110,17 +117,15 @@ class InstallationKernel extends \AppKernel
     /**
      * Returns the install tool URL.
      *
-     * @param Request $request
-     *
      * @return string
      */
-    private function getInstallToolUrl(Request $request)
+    private function getInstallToolUrl()
     {
         $routes = new RouteCollection();
         $routes->add('contao_install', new Route('/contao/install'));
 
         $context = new RequestContext();
-        $context->fromRequest($request);
+        $context->fromRequest($this->request);
         $context->setBaseUrl('');
 
         return str_replace('/install.php/', '/', (new UrlGenerator($routes, $context))->generate('contao_install'));
