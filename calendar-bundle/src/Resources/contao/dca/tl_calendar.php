@@ -191,6 +191,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('notify_admin', 'notify_author', 'notify_both'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_calendar'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
@@ -202,7 +203,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			'inputType'               => 'select',
 			'options'                 => array('ascending', 'descending'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'perPage' => array
@@ -253,7 +254,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property Contao\Calendar $Calendar
- * 
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_calendar extends Backend
