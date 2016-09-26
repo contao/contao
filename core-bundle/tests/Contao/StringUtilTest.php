@@ -309,6 +309,11 @@ class StringUtilTest extends TestCase
                 ['value' => '=!<>;$()[]'],
                 'no-match',
             ],
+            'Test every elseif expression is skipped if first if statement evaluates to true' => [
+                '{if value1=="foobar"}Output 1{elseif value2=="foobar"}Output 2{elseif value3=="foobar"}Output 3{endif}',
+                ['value1' => 'foobar', 'value2' => 'foobar', 'value3' => 'foobar'],
+                'Output 1',
+            ],
         ];
     }
 
