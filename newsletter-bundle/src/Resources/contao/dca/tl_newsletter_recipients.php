@@ -143,7 +143,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'sorting'                 => true,
 			'flag'                    => 1,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>128, 'decodeEntities'=>true),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>128, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_newsletter_recipients', 'checkUniqueRecipient'),
@@ -157,7 +157,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('doNotCopy'=>true),
+			'eval'                    => array('doNotCopy'=>true, 'tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'source' => array

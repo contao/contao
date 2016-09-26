@@ -128,7 +128,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'search'                  => true,
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255),
+			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'jumpTo' => array
@@ -137,7 +137,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
-			'eval'                    => array('fieldType'=>'radio'),
+			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
@@ -147,6 +147,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'default'                 => 'mail_default',
 			'exclude'                 => true,
 			'inputType'               => 'select',
+			'eval'                    => array('tl_class'=>'w50'),
 			'options_callback'        => function ()
 			{
 				return Controller::getTemplateGroup('mail_');
