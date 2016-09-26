@@ -164,7 +164,7 @@ class KeyValueWizard extends \Widget
     <tr>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_key'].'</th>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_value'].'</th>
-      <th></th>
+      <th style="min-width:54px"></th>
     </tr>
   </thead>
   <tbody class="sortable" data-tabindex="'.$tabindex.'">';
@@ -174,8 +174,8 @@ class KeyValueWizard extends \Widget
 		{
 			$return .= '
     <tr>
-      <td><input type="text" name="'.$this->strId.'['.$i.'][key]" id="'.$this->strId.'_key_'.$i.'" class="tl_text_2" tabindex="'.$tabindex++.'" value="'.\StringUtil::specialchars($this->varValue[$i]['key']).'"'.$this->getAttributes().'></td>
-      <td><input type="text" name="'.$this->strId.'['.$i.'][value]" id="'.$this->strId.'_value_'.$i.'" class="tl_text_2" tabindex="'.$tabindex++.'" value="'.\StringUtil::specialchars($this->varValue[$i]['value']).'"'.$this->getAttributes().'></td>';
+      <td><input type="text" name="'.$this->strId.'['.$i.'][key]" id="'.$this->strId.'_key_'.$i.'" class="tl_text" tabindex="'.$tabindex++.'" value="'.\StringUtil::specialchars($this->varValue[$i]['key']).'"'.$this->getAttributes().'></td>
+      <td><input type="text" name="'.$this->strId.'['.$i.'][value]" id="'.$this->strId.'_value_'.$i.'" class="tl_text" tabindex="'.$tabindex++.'" value="'.\StringUtil::specialchars($this->varValue[$i]['value']).'"'.$this->getAttributes().'></td>';
 
 			// Add row buttons
 			$return .= '

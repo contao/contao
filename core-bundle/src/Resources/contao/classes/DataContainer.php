@@ -450,6 +450,11 @@ abstract class DataContainer extends \Backend
 			$this->blnUploadable = true;
 		}
 
+		if ($arrData['inputType'] != 'password')
+		{
+			$arrData['eval']['tl_class'] .= ' widget';
+		}
+
 		// Mark floated single checkboxes
 		if ($arrData['inputType'] == 'checkbox' && !$arrData['eval']['multiple'] && strpos($arrData['eval']['tl_class'], 'w50') !== false)
 		{
@@ -544,8 +549,8 @@ abstract class DataContainer extends \Backend
 			}
 		}
 
-		return $strPreview . '
-<div' . ($arrData['eval']['tl_class'] ? ' class="' . $arrData['eval']['tl_class'] . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass) : '') . '
+		return '<div class="widget">' . $strPreview . '</div>
+<div' . ($arrData['eval']['tl_class'] ? ' class="' . trim($arrData['eval']['tl_class']) . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass) : '') . '
 </div>';
 	}
 

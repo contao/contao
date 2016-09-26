@@ -13,7 +13,7 @@ body {
 
 /* Container */
 #container {
-	width:520px;
+	max-width:520px;
 	margin:5% auto 0;
 	background:#fff;
 }
@@ -29,7 +29,7 @@ body {
 
 /* Front end link */
 #go_to_frontend {
-	margin:0 18px 12px 0;
+	margin:12px 18px 12px 0;
 	text-align:right;
 }
 #go_to_frontend a {
@@ -40,8 +40,8 @@ body {
 
 /* License (do not remove) */
 #tl_license {
-	margin-left:18px;
-	margin-right:18px;
+	margin-left:5%;
+	margin-right:5%;
 }
 #tl_license p {
 	line-height:1.25;
@@ -82,7 +82,7 @@ body {
 
 /* Login form */
 .tl_login_form {
-	width:350px;
+	max-width:350px;
 	margin:32px auto;
 }
 .tl_login_table {
@@ -90,33 +90,20 @@ body {
 	margin:0 0 6px;
 }
 .tl_login_table td:nth-child(2n) {
-	width:180px;
+	width:194px;
 }
 .tl_login_submit_container {
 	padding-top:0;
 	text-align:right;
 }
 
-/* Form fields */
-.tl_text {
-	width:172px;
-}
-.tl_select {
-	width:186px;
-}
-
 /* Handheld */
 @media (max-width:767px) {
 	#container {
-		width:auto;
 		margin-left:10px;
 		margin-right:10px;
 	}
-	#main {
-		width:auto;
-	}
 	.tl_login_form {
-		width:auto;
 		margin-top:18px;
 	}
 	.tl_login_table {
@@ -134,12 +121,6 @@ body {
 	.tl_login_table label {
 		display:block;
 		margin-top:6px;
-	}
-	.tl_text,.tl_select {
-		width:100%;
-		-moz-box-sizing:border-box;
-		-webkit-box-sizing:border-box;
-		box-sizing:border-box;
 	}
 	.tl_login_submit_container {
 		text-align:left;

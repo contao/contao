@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/basic.css">
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/popup.css">
-  <!--[if IE]><link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/iefixes.css"><![endif]-->
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>
@@ -21,7 +20,6 @@
   <script src="<?= TL_ASSETS_URL ?>assets/contao/js/core.min.js"></script>
   <script><?= $this->getDateString() ?></script>
   <?= $this->javascripts ?>
-  <!--[if lt IE 9]><script src="<?= TL_ASSETS_URL ?>assets/html5shiv/js/html5shiv.min.js"></script><![endif]-->
 
 </head>
 <body class="<?= $this->ua ?> popup">

@@ -43,7 +43,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'mode'                    => 1,
 			'fields'                  => array('name'),
 			'flag'                    => 1,
-			'panelLayout'             => 'filter,search,limit',
+			'panelLayout'             => 'filter;search,limit',
 		),
 		'label' => array
 		(
@@ -128,6 +128,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['modules'],
 			'exclude'                 => true,
+			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],

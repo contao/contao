@@ -50,7 +50,7 @@ window.ace && window.addEvent('domready', function() {
     var newHeight
       = editor.getSession().getScreenLength()
       * (editor.renderer.lineHeight || 14);
-    editor.container.style['height'] = Math.max(newHeight, 16) + 'px';
+    editor.container.style['height'] = Math.max(newHeight + 8, 30) + 'px';
     editor.resize();
   };
 

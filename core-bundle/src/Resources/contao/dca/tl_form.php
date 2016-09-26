@@ -219,7 +219,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'search'                  => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_form', 'getAllTables'),
-			'eval'                    => array('chosen'=>true),
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'method' => array

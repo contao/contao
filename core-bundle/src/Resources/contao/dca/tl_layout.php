@@ -109,8 +109,8 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'cols_2cll'                   => 'widthLeft',
 		'cols_2clr'                   => 'widthRight',
 		'cols_3cl'                    => 'widthLeft,widthRight',
-		'addJQuery'                   => 'jSource,jquery',
-		'addMooTools'                 => 'mooSource,mootools',
+		'addJQuery'                   => 'jquery,jSource',
+		'addMooTools'                 => 'mootools,mooSource',
 		'static'                      => 'width,align'
 	),
 
@@ -139,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'sorting'                 => true,
 			'flag'                    => 1,
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'rows' => array
@@ -385,6 +385,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('j_local', 'j_googleapis', 'j_fallback'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
@@ -414,6 +415,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('moo_local', 'moo_googleapis', 'moo_fallback'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'sql'                     => "varchar(16) NOT NULL default ''"
 		),

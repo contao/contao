@@ -51,4 +51,14 @@ dt {
 		margin-left:10px;
 		margin-right:10px;
 	}
+	dl {
+		margin:0 0 9px;
+	}
+	dt,dd {
+		float:none;
+	}
+	dd {
+		margin-left:0;
+		margin-bottom:9px;
+	}
 }

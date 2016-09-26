@@ -13,7 +13,7 @@ body {
 
 /* Header */
 #header {
-	width:758px;
+	max-width:758px;
 	margin:18px auto 0;
 }
 #header h1 {
@@ -32,7 +32,7 @@ body {
 
 /* Container */
 #container {
-	width:760px;
+	max-width:760px;
 	margin:0 auto;
 	background:#fff;
 }
@@ -136,6 +136,7 @@ fieldset p:last-of-type {
 /* Formbody */
 .tl_formbody,.tl_formbody_submit {
 	margin:0;
+	position:relative;
 }
 .tl_submit_container {
 	margin-top:18px;
@@ -179,30 +180,14 @@ fieldset:not(.collapsed) + fieldset {
 }
 
 /* Form fields */
-.tl_text {
-	width:232px !important;
-}
-.tl_select {
-	width:238px !important;
+.tl_text,.tl_select {
+	max-width:260px;
 }
 
 /* Handheld */
 @media (max-width:767px) {
 	#header,#container {
-		width:auto;
 		margin-left:10px;
 		margin-right:10px;
-	}
-	#main {
-		width:auto;
-	}
-	.tl_text,.tl_select {
-		width:100% !important;
-		-moz-box-sizing:border-box;
-		-webkit-box-sizing:border-box;
-		box-sizing:border-box;
-	}
-	.tl_formbody,.tl_formbody_submit {
-		position:relative;
 	}
 }
