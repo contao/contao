@@ -2792,7 +2792,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
       <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
         <option value="name">'.($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (is_array($GLOBALS['TL_LANG']['MSC']['name']) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : $GLOBALS['TL_LANG']['MSC']['name'])).'</option>
       </select>
-      <span> = </span>
+      <span>=</span>
       <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="'.\StringUtil::specialchars($session['search'][$this->strTable]['value']).'">
     </div>';
 	}

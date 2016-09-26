@@ -55,7 +55,7 @@
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
         <fieldset class="tl_tbox nolegend">
-          <div>
+          <div class="w50">
             <h3><label for="ctrl_user"><?= $this->indexLabel ?></label></h3>
             <select name="user" id="ctrl_user" class="tl_select">
               <?php foreach ($this->user as $id=>$name): ?>

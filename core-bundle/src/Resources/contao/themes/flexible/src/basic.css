@@ -133,6 +133,25 @@ p {
 	width:1px;
 }
 
+/* Widgets */
+.widget {
+	margin-left:2%;
+	margin-right:2%;
+	position:relative;
+}
+.widget {
+	letter-spacing:-.31em;
+}
+.widget * {
+	letter-spacing:normal;
+}
+.widget > div {
+	letter-spacing:-.31em;
+}
+.widget > div * {
+	letter-spacing:normal;
+}
+
 /* Forms */
 optgroup {
 	padding-top:3px;
@@ -203,6 +222,15 @@ fieldset.checkbox_container,fieldset.radio_container {
 .tl_textarea.monospace:focus {
 	background:none;
 }
+.tl_text_2,.tl_text_3,.tl_text_4,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
+	margin-right:1%;
+}
+.tl_text_2:last-child,.tl_text_3:last-child,.tl_text_4:last-child,.tl_text_trbl:last-child {
+	margin-right:0;
+}
+.tl_imageSize_0 {
+	margin-left:1%;
+}
 
 /* Select menus */
 select {
@@ -263,6 +291,7 @@ select[multiple] {
 	margin:16px 0 1px;
 }
 .tl_checkbox_single_container label {
+	margin-left:4px;
 	font-weight:500;
 }
 
@@ -348,11 +377,6 @@ a.tl_submit {
 }
 
 /* Floats */
-.widget {
-	margin-left:2%;
-	margin-right:2%;
-	position:relative;
-}
 .clr {
 	clear:both;
 }
@@ -369,6 +393,9 @@ a.tl_submit {
 }
 .wizard .tl_text_2 {
 	width:45%;
+}
+.wizard img {
+	margin-left:4px;
 }
 .long .tl_text,.long .tl_select {
 	width:100%;
@@ -432,17 +459,5 @@ a.tl_submit {
 	}
 	.tip {
 		max-width:80vw;
-	}
-	.tl_text_unit {
-		width:78.8%;
-	}
-	.tl_text_trbl {
-		width:18.8%;
-	}
-	.tl_text_trbl {
-		width:18.8%;
-	}
-	.tl_text_4 {
-		width:23.8%;
 	}
 }
