@@ -76,11 +76,11 @@ class InstallationKernel extends \AppKernel
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
+        $this->request = $request;
+
         if ($this->canBootRealSystem()) {
             return new RedirectResponse($this->getInstallToolUrl());
         }
-
-        $this->request = $request;
 
         $this->boot();
 
