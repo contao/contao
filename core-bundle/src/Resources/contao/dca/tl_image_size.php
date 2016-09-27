@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{expert_legend},sizes,densities'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{expert_legend},cssClass,sizes,densities'
 	),
 
 	// Fields
@@ -136,6 +136,15 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'flag'                    => 1,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NULL"
+		),
+		'cssClass' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['cssClass'],
+			'inputType'               => 'text',
+			'exclude'                 => true,
+			'search'                  => true,
+			'eval'                    => array('maxlength'=>64, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'sizes' => array
 		(

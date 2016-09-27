@@ -14,6 +14,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Image\ImageInterface;
+use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
@@ -70,6 +71,8 @@ class PictureFactory implements PictureFactoryInterface
      */
     public function create($path, $size = null)
     {
+        $attributes = [];
+
         if (is_array($size) && isset($size[2]) && 1 === substr_count($size[2], '_')) {
             $image = $this->imageFactory->create($path, $size);
             $config = new PictureConfiguration();
@@ -83,15 +86,27 @@ class PictureFactory implements PictureFactoryInterface
             if (is_object($size) && $size instanceof PictureConfigurationInterface) {
                 $config = $size;
             } else {
-                $config = $this->createConfig($size);
+                list($config, $attributes) = $this->createConfig($size);
             }
         }
 
-        return $this->pictureGenerator->generate(
+        $picture = $this->pictureGenerator->generate(
             $image,
             $config,
             (new ResizeOptions())->setImagineOptions($this->imagineOptions)->setBypassCache($this->bypassCache)
         );
+
+        if (count($attributes)) {
+            $img = $picture->getImg();
+
+            foreach ($attributes as $attribute => $value) {
+                $img[$attribute] = $value;
+            }
+
+            $picture = new Picture($img, $picture->getSources());
+        }
+
+        return $picture;
     }
 
     /**
@@ -99,7 +114,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @param int|array|null $size
      *
-     * @return PictureConfiguration
+     * @return array<PictureConfiguration,array>
      */
     private function createConfig($size)
     {
@@ -108,6 +123,7 @@ class PictureFactory implements PictureFactoryInterface
         }
 
         $config = new PictureConfiguration();
+        $attributes = [];
 
         if (!isset($size[2]) || !is_numeric($size[2])) {
             $resizeConfig = new ResizeConfiguration();
@@ -126,19 +142,24 @@ class PictureFactory implements PictureFactoryInterface
 
             $configItem = new PictureConfigurationItem();
             $configItem->setResizeConfig($resizeConfig);
+
             $config->setSize($configItem);
 
-            return $config;
+            return [$config, $attributes];
         }
 
         /** @var ImageSizeModel $imageSizeModel */
         $imageSizeModel = $this->framework->getAdapter('Contao\ImageSizeModel');
+        $imageSizes = $imageSizeModel->findByPk($size[2]);
 
-        $config->setSize($this->createConfigItem($imageSizeModel->findByPk($size[2])));
+        $config->setSize($this->createConfigItem($imageSizes));
+
+        if ($imageSizes && $imageSizes->cssClass) {
+            $attributes['class'] = $imageSizes->cssClass;
+        }
 
         /** @var ImageSizeItemModel $imageSizeItemModel */
         $imageSizeItemModel = $this->framework->getAdapter('Contao\ImageSizeItemModel');
-
         $imageSizeItems = $imageSizeItemModel->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
 
         if (null !== $imageSizeItems) {
@@ -151,7 +172,7 @@ class PictureFactory implements PictureFactoryInterface
             $config->setSizeItems($configItems);
         }
 
-        return $config;
+        return [$config, $attributes];
     }
 
     /**
