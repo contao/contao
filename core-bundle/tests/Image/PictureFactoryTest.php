@@ -15,11 +15,11 @@ use Contao\CoreBundle\Test\TestCase;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\Image;
-use Contao\Image\PictureGenerator;
-use Contao\Image\ResizeConfiguration;
 use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
+use Contao\Image\PictureGenerator;
+use Contao\Image\ResizeConfiguration;
 use Contao\Model\Collection;
 
 /**

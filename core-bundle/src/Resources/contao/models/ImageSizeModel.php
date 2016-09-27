@@ -18,6 +18,7 @@ namespace Contao;
  * @property integer $pid
  * @property integer $tstamp
  * @property string  $name
+ * @property string  $cssClass
  * @property string  $sizes
  * @property string  $densities
  * @property integer $width
@@ -32,6 +33,7 @@ namespace Contao;
  * @method static ImageSizeModel|null findOneByPid($val, $opt=array())
  * @method static ImageSizeModel|null findOneByTstamp($val, $opt=array())
  * @method static ImageSizeModel|null findOneByName($val, $opt=array())
+ * @method static ImageSizeModel|null findOneByCssClass($val, $opt=array())
  * @method static ImageSizeModel|null findOneBySizes($val, $opt=array())
  * @method static ImageSizeModel|null findOneByDensities($val, $opt=array())
  * @method static ImageSizeModel|null findOneByWidth($val, $opt=array())
@@ -42,6 +44,7 @@ namespace Contao;
  * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByPid($val, $opt=array())
  * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByTstamp($val, $opt=array())
  * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByName($val, $opt=array())
+ * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByCssClass($val, $opt=array())
  * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findBySizes($val, $opt=array())
  * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByDensities($val, $opt=array())
  * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByWidth($val, $opt=array())
@@ -56,6 +59,7 @@ namespace Contao;
  * @method static integer countByPid($val, $opt=array())
  * @method static integer countByTstamp($val, $opt=array())
  * @method static integer countByName($val, $opt=array())
+ * @method static integer countByCssClass($val, $opt=array())
  * @method static integer countBySizes($val, $opt=array())
  * @method static integer countByDensities($val, $opt=array())
  * @method static integer countByWidth($val, $opt=array())

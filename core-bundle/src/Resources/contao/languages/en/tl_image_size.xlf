@@ -45,10 +45,10 @@
         <source>Here you can define the pixel densities (e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) or width descriptors (e.g. &lt;em&gt;100w, 200w&lt;/em&gt;).</source>
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.0">
-        <source>CSS class</source>
+        <source>CSS classes</source>
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
-        <source>The class(es) will be used in the picture_default template for the &amp;lt;img&amp;gt; tag.</source>
+        <source>The CSS classes will be applied to the image tag.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
