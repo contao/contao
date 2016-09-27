@@ -90,7 +90,7 @@ class PictureFactory implements PictureFactoryInterface
     {
         $attributes = [];
 
-        if (is_object($path) && $path instanceof ImageInterface) {
+        if ($path instanceof ImageInterface) {
             $image = $path;
         } else {
             $image = $this->imageFactory->create($path);
@@ -101,7 +101,7 @@ class PictureFactory implements PictureFactoryInterface
             $size[2] = ResizeConfigurationInterface::MODE_CROP;
         }
 
-        if (is_object($size) && $size instanceof PictureConfigurationInterface) {
+        if ($size instanceof PictureConfigurationInterface) {
             $config = $size;
         } else {
             list($config, $attributes) = $this->createConfig($size);
