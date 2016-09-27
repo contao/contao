@@ -521,7 +521,8 @@ class StringUtil
 		$replaceTokens = function ($strSubject) use ($arrData)
 		{
 			// Replace tokens
-			return preg_replace_callback(
+			return preg_replace_callback
+			(
 				'/##([^=!<>\s]+?)##/',
 				function (array $matches) use ($arrData)
 				{
@@ -631,7 +632,6 @@ class StringUtil
 			}
 		};
 
-		// Parsing stack used to keep track of the nesting level
 		// The last item is true if it is inside a matching if-tag
 		$arrStack = [true];
 
@@ -644,7 +644,7 @@ class StringUtil
 		// Parse the tokens
 		foreach ($arrTags as $strTag)
 		{
-			// true if it is inside a matching if-tag
+			// True if it is inside a matching if-tag
 			$blnCurrent = $arrStack[count($arrStack) - 1];
 			$blnCurrentIf = $arrIfStack[count($arrIfStack) - 1];
 
