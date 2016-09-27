@@ -2,6 +2,7 @@
 
 ### 4.3.0-beta1 (2016-XX-XX)
 
+ * Add CSS classes to image sizes (see #555).
  * Improve the responsiveness of the back end theme.
  * Provide an image service to handle image and picture elements (see #342).
  * Allow to adjust the Contao configuration by adding settings under "contao.localconfig" (see #521).
