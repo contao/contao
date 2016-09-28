@@ -89,6 +89,9 @@ class PageRegular extends \Frontend
 		/** @var ThemeModel $objTheme */
 		$objTheme = $objLayout->getRelated('pid');
 
+		// Set the default image densities
+		\System::getContainer()->get('contao.image.picture_factory')->setDefaultDensities($objTheme->defaultImageDensities);
+
 		// Store the layout ID
 		$objPage->layoutId = $objLayout->id;
 

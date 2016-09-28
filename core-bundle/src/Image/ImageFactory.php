@@ -142,6 +142,44 @@ class ImageFactory implements ImageFactoryInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode)
+    {
+        if (1 !== substr_count($mode, '_')) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
+        }
+
+        $importantPart = [
+            0,
+            0,
+            $image->getDimensions()->getSize()->getWidth(),
+            $image->getDimensions()->getSize()->getHeight(),
+        ];
+
+        list($modeX, $modeY) = explode('_', $mode);
+
+        if ('left' === $modeX) {
+            $importantPart[2] = 1;
+        } elseif ('right' === $modeX) {
+            $importantPart[0] = $importantPart[2] - 1;
+            $importantPart[2] = 1;
+        }
+
+        if ('top' === $modeY) {
+            $importantPart[3] = 1;
+        } elseif ('bottom' === $modeY) {
+            $importantPart[1] = $importantPart[3] - 1;
+            $importantPart[3] = 1;
+        }
+
+        return new ImportantPart(
+            new Point($importantPart[0], $importantPart[1]),
+            new Box($importantPart[2], $importantPart[3])
+        );
+    }
+
+    /**
      * Creates a resize configuration object.
      *
      * @param int|array|null $size  An image size or an array with width, height and resize mode
@@ -189,38 +227,9 @@ class ImageFactory implements ImageFactoryInterface
             return [$config, null];
         }
 
-        $importantPart = [
-            0,
-            0,
-            $image->getDimensions()->getSize()->getWidth(),
-            $image->getDimensions()->getSize()->getHeight(),
-        ];
-
-        list($modeX, $modeY) = explode('_', $size[2]);
-
-        if ('left' === $modeX) {
-            $importantPart[2] = 1;
-        } elseif ('right' === $modeX) {
-            $importantPart[0] = $importantPart[2] - 1;
-            $importantPart[2] = 1;
-        }
-
-        if ('top' === $modeY) {
-            $importantPart[3] = 1;
-        } elseif ('bottom' === $modeY) {
-            $importantPart[1] = $importantPart[3] - 1;
-            $importantPart[3] = 1;
-        }
-
         $config->setMode(ResizeConfigurationInterface::MODE_CROP);
 
-        return [
-            $config,
-            new ImportantPart(
-                new Point($importantPart[0], $importantPart[1]),
-                new Box($importantPart[2], $importantPart[3])
-            ),
-        ];
+        return [$config, $this->getImportantPartFromLegacyMode($image, $size[2])];
     }
 
     /**

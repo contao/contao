@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\ImageInterface;
+use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizerInterface;
 use Imagine\Image\ImagineInterface;
@@ -49,4 +50,15 @@ interface ImageFactoryInterface
      * @return ImageInterface
      */
     public function create($path, $size = null, $targetPath = null);
+
+    /**
+     * Returns the equivalent important part from a legacy resize mode.
+     *
+     * @param ImageInterface $image
+     * @param string         $mode  One of left_top, center_top, right_top, left_center, center_center, right_center,
+     *                              left_bottom, center_bottom, right_bottom
+     *
+     * @return ImportantPartInterface
+     */
+    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode);
 }
