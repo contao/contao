@@ -21,6 +21,7 @@ use Contao\Image\PictureConfigurationItem;
 use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
 
 /**
@@ -56,6 +57,11 @@ class PictureFactory implements PictureFactoryInterface
     private $imagineOptions;
 
     /**
+     * @var string
+     */
+    private $defaultDensities = '';
+
+    /**
      * {@inheritdoc}
      */
     public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions)
@@ -70,25 +76,35 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * {@inheritdoc}
      */
+    public function setDefaultDensities($densities)
+    {
+        $this->defaultDensities = (string) $densities;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function create($path, $size = null)
     {
         $attributes = [];
 
-        if (is_array($size) && isset($size[2]) && 1 === substr_count($size[2], '_')) {
-            $image = $this->imageFactory->create($path, $size);
-            $config = new PictureConfiguration();
+        if ($path instanceof ImageInterface) {
+            $image = $path;
         } else {
-            if ($path instanceof ImageInterface) {
-                $image = $path;
-            } else {
-                $image = $this->imageFactory->create($path);
-            }
+            $image = $this->imageFactory->create($path);
+        }
 
-            if ($size instanceof PictureConfigurationInterface) {
-                $config = $size;
-            } else {
-                list($config, $attributes) = $this->createConfig($size);
-            }
+        if (is_array($size) && isset($size[2]) && 1 === substr_count($size[2], '_')) {
+            $image->setImportantPart($this->imageFactory->getImportantPartFromLegacyMode($image, $size[2]));
+            $size[2] = ResizeConfigurationInterface::MODE_CROP;
+        }
+
+        if ($size instanceof PictureConfigurationInterface) {
+            $config = $size;
+        } else {
+            list($config, $attributes) = $this->createConfig($size);
         }
 
         $picture = $this->pictureGenerator->generate(
@@ -135,6 +151,10 @@ class PictureFactory implements PictureFactoryInterface
 
             $configItem = new PictureConfigurationItem();
             $configItem->setResizeConfig($resizeConfig);
+
+            if ($this->defaultDensities) {
+                $configItem->setDensities($this->defaultDensities);
+            }
 
             $config->setSize($configItem);
 

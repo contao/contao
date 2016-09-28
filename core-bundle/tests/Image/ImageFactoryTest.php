@@ -562,6 +562,53 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
+     * Tests the getImportantPartFromLegacyMode() method.
+     *
+     * @dataProvider getCreateWithLegacyMode
+     */
+    public function testGetImportantPartFromLegacyMode($mode, $expected)
+    {
+        $path = $this->getRootDir().'/images/none.jpg';
+
+        $dimensionsMock = $this->getMock('Contao\Image\ImageDimensionsInterface');
+
+        $dimensionsMock
+            ->expects($this->any())
+            ->method('getSize')
+            ->willReturn(new Box(100, 100))
+        ;
+
+        $imageMock = $this->getMock('Contao\Image\ImageInterface');
+
+        $imageMock
+            ->expects($this->any())
+            ->method('getDimensions')
+            ->willReturn($dimensionsMock)
+        ;
+
+        $imageFactory = $this->createImageFactory();
+
+        $this->assertEquals(
+            new ImportantPart(new Point($expected[0], $expected[1]), new Box($expected[2], $expected[3])),
+            $imageFactory->getImportantPartFromLegacyMode($imageMock, $mode)
+        );
+    }
+
+    /**
+     * Tests the getImportantPartFromLegacyMode() method throws an exception for
+     * invalid resize modes.
+     */
+    public function testGetImportantPartFromLegacyModeInvalidMode()
+    {
+        $imageMock = $this->getMock('Contao\Image\ImageInterface');
+        $imageFactory = $this->createImageFactory();
+
+        $this->setExpectedException('InvalidArgumentException', 'not a legacy resize mode');
+
+        $imageFactory->getImportantPartFromLegacyMode($imageMock, 'invalid');
+    }
+
+    /**
      * Provides the data for the testCreateWithLegacyMode() method.
      *
      * @return array
