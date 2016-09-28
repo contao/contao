@@ -58,21 +58,21 @@ class XliffFileLoaderTest extends TestCase
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app', false);
 
-        $source = <<<TXT
+        $source = <<<'TXT'
 
 // vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf
-\$GLOBALS['TL_LANG']['MSC']['first'] = 'This is the first source';
-\$GLOBALS['TL_LANG']['MSC']['second'][0] = 'This is the second source';
-\$GLOBALS['TL_LANG']['MSC']['third']['with'][1] = 'This is the third source';
+$GLOBALS['TL_LANG']['MSC']['first'] = 'This is the first source';
+$GLOBALS['TL_LANG']['MSC']['second'][0] = 'This is the second source';
+$GLOBALS['TL_LANG']['MSC']['third']['with'][1] = 'This is the third source';
 
 TXT;
 
-        $target = <<<TXT
+        $target = <<<'TXT'
 
 // vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf
-\$GLOBALS['TL_LANG']['MSC']['first'] = 'This is the first target';
-\$GLOBALS['TL_LANG']['MSC']['second'][0] = 'This is the second target';
-\$GLOBALS['TL_LANG']['MSC']['third']['with'][1] = 'This is the third target';
+$GLOBALS['TL_LANG']['MSC']['first'] = 'This is the first target';
+$GLOBALS['TL_LANG']['MSC']['second'][0] = 'This is the second target';
+$GLOBALS['TL_LANG']['MSC']['third']['with'][1] = 'This is the third target';
 
 TXT;
 
