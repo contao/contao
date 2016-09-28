@@ -545,11 +545,13 @@ abstract class DataContainer extends \Backend
 					{
 						$strPreview .= '<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG'][$this->strTable]['edit_preview_help'] . '</p>';
 					}
+
+					$strPreview = '<div class="widget">' . $strPreview . '</div>';
 				}
 			}
 		}
 
-		return '<div class="widget">' . $strPreview . '</div>
+		return $strPreview . '
 <div' . ($arrData['eval']['tl_class'] ? ' class="' . trim($arrData['eval']['tl_class']) . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass) : '') . '
 </div>';
 	}

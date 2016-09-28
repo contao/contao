@@ -194,6 +194,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			{
 				return Backend::getThemes();
 			},
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'uploader' => array

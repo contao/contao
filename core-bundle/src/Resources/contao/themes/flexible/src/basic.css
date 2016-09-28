@@ -140,16 +140,16 @@ p {
 	position:relative;
 }
 .widget {
-	letter-spacing:-.31em;
+	font-size:0;
 }
 .widget * {
-	letter-spacing:normal;
+	font-size:.875rem;
 }
 .widget > div {
-	letter-spacing:-.31em;
+	font-size:0;
 }
 .widget > div * {
-	letter-spacing:normal;
+	font-size:.875rem;
 }
 
 /* Forms */
@@ -208,6 +208,8 @@ fieldset.checkbox_container,fieldset.radio_container {
 	border:1px solid #aaa;
 	padding:6px;
 	border-radius:2px;
+	-moz-appearance:none;
+	-webkit-appearance:none;
 }
 .tl_text:focus,.tl_text_2:focus,.tl_text_3:focus,.tl_text_4:focus,.tl_textarea:focus,.tl_text_unit:focus,.tl_text_trbl:focus,.tl_text_interval:focus {
 	background-color:#ebfdd7;
@@ -234,7 +236,7 @@ fieldset.checkbox_container,fieldset.radio_container {
 
 /* Select menus */
 select {
-	height:30px;
+	min-height:30px;
 	-moz-appearance:none;
 	-webkit-appearance:none;
 	text-transform:none;
@@ -459,5 +461,13 @@ a.tl_submit {
 	}
 	.tip {
 		max-width:80vw;
+	}
+	.tl_checkbox_container .tl_checkbox {
+		margin-top:1px;
+		margin-bottom:1px;
+	}
+	.tl_checkbox_single_container label {
+		position:relative;
+		top:1px;
 	}
 }
