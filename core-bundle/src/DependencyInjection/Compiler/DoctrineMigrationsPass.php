@@ -33,7 +33,7 @@ class DoctrineMigrationsPass implements CompilerPassInterface
             // Use Doctrine mapping (enhanced by our listeners) for Schema if ORM is installed
             $provider = new Definition(
                 'Doctrine\DBAL\Migrations\Provider\OrmSchemaProvider',
-                [$container->findDefinition('doctrine.orm.default_entity_manager')]
+                [$container->findDefinition('doctrine.orm.entity_manager')]
             );
         } else {
             // Migrations schema provider must implement interface (that is only available if bundle is installed)
