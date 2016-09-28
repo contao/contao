@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Image\PictureInterface;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Image\ImageInterface;
@@ -20,6 +19,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\PictureGeneratorInterface;
+use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 
