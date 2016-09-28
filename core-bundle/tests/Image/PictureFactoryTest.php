@@ -412,7 +412,6 @@ class PictureFactoryTest extends TestCase
     public function testCreateWithoutModel()
     {
         $defaultDensities = '';
-
         $path = $this->getRootDir().'/images/dummy.jpg';
 
         $imageMock = $this
@@ -495,6 +494,8 @@ class PictureFactoryTest extends TestCase
 
         $pictureFactory = $this->createPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
+
+        $this->assertSame($pictureMock, $picture);
 
         $defaultDensities = '1x, 2x';
         $pictureFactory->setDefaultDensities($defaultDensities);

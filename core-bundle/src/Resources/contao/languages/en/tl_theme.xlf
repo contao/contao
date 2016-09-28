@@ -62,6 +62,9 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
       </trans-unit>
+      <trans-unit id="tl_theme.image_legend">
+        <source>Image sizes</source>
+      </trans-unit>
       <trans-unit id="tl_theme.vars_legend">
         <source>Global variables</source>
       </trans-unit>

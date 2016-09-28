@@ -564,12 +564,13 @@ class ImageFactoryTest extends TestCase
     /**
      * Tests the getImportantPartFromLegacyMode() method.
      *
+     * @param string $mode
+     * @param string $expected
+     *
      * @dataProvider getCreateWithLegacyMode
      */
     public function testGetImportantPartFromLegacyMode($mode, $expected)
     {
-        $path = $this->getRootDir().'/images/none.jpg';
-
         $dimensionsMock = $this->getMock('Contao\Image\ImageDimensionsInterface');
 
         $dimensionsMock
@@ -595,8 +596,7 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Tests the getImportantPartFromLegacyMode() method throws an exception for
-     * invalid resize modes.
+     * Tests the getImportantPartFromLegacyMode() method throws an exception for invalid resize modes.
      */
     public function testGetImportantPartFromLegacyModeInvalidMode()
     {

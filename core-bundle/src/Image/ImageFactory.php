@@ -16,7 +16,6 @@ use Contao\ImageSizeModel;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
-use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
@@ -148,7 +147,7 @@ class ImageFactory implements ImageFactoryInterface
     public function getImportantPartFromLegacyMode(ImageInterface $image, $mode)
     {
         if (1 !== substr_count($mode, '_')) {
-            throw new \InvalidArgumentException('$mode is not a legacy resize mode "' . $mode . '"');
+            throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
         }
 
         $importantPart = [

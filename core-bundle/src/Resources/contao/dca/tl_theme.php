@@ -146,7 +146,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,author;{config_legend},folders,screenshot,templates;{vars_legend},vars,defaultImageDensities'
+		'default'                     => '{title_legend},name,author;{config_legend},folders,screenshot,templates;{image_legend},defaultImageDensities;{vars_legend},vars'
 	),
 
 	// Fields
