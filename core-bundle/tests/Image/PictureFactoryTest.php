@@ -327,23 +327,29 @@ class PictureFactoryTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with(
-                $this->callback(function (ImageInterface $image) {
-                    return true;
-                }),
-                $this->callback(function (PictureConfigurationInterface $config) {
-                    $this->assertEquals($config->getSizeItems(), []);
-                    $this->assertEquals(
-                        ResizeConfigurationInterface::MODE_CROP,
-                        $config->getSize()->getResizeConfig()->getMode()
-                    );
-                    $this->assertEquals(100, $config->getSize()->getResizeConfig()->getWidth());
-                    $this->assertEquals(200, $config->getSize()->getResizeConfig()->getHeight());
+                $this->callback(
+                    function (ImageInterface $image) {
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (PictureConfigurationInterface $config) {
+                        $this->assertEquals($config->getSizeItems(), []);
+                        $this->assertEquals(
+                            ResizeConfigurationInterface::MODE_CROP,
+                            $config->getSize()->getResizeConfig()->getMode()
+                        );
+                        $this->assertEquals(100, $config->getSize()->getResizeConfig()->getWidth());
+                        $this->assertEquals(200, $config->getSize()->getResizeConfig()->getHeight());
 
-                    return true;
-                }),
-                $this->callback(function (ResizeOptionsInterface $options) {
-                    return true;
-                })
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (ResizeOptionsInterface $options) {
+                        return true;
+                    }
+                )
             )
             ->willReturn($pictureMock)
         ;
