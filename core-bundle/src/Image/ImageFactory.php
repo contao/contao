@@ -92,7 +92,7 @@ class ImageFactory implements ImageFactoryInterface
      */
     public function create($path, $size = null, $targetPath = null)
     {
-        if (is_object($path) && $path instanceof ImageInterface) {
+        if ($path instanceof ImageInterface) {
             $image = $path;
         } else {
             $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
@@ -112,7 +112,7 @@ class ImageFactory implements ImageFactoryInterface
             $image = new Image((string) $path, $imagine, $this->filesystem);
         }
 
-        if (is_object($size) && $size instanceof ResizeConfigurationInterface) {
+        if ($size instanceof ResizeConfigurationInterface) {
             $resizeConfig = $size;
             $importantPart = null;
         } else {

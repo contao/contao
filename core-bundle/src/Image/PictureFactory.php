@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Image\PictureInterface;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Image\ImageInterface;
@@ -77,13 +78,13 @@ class PictureFactory implements PictureFactoryInterface
             $image = $this->imageFactory->create($path, $size);
             $config = new PictureConfiguration();
         } else {
-            if (is_object($path) && $path instanceof ImageInterface) {
+            if ($path instanceof ImageInterface) {
                 $image = $path;
             } else {
                 $image = $this->imageFactory->create($path);
             }
 
-            if (is_object($size) && $size instanceof PictureConfigurationInterface) {
+            if ($size instanceof PictureConfigurationInterface) {
                 $config = $size;
             } else {
                 list($config, $attributes) = $this->createConfig($size);
@@ -96,15 +97,7 @@ class PictureFactory implements PictureFactoryInterface
             (new ResizeOptions())->setImagineOptions($this->imagineOptions)->setBypassCache($this->bypassCache)
         );
 
-        if (count($attributes)) {
-            $img = $picture->getImg();
-
-            foreach ($attributes as $attribute => $value) {
-                $img[$attribute] = $value;
-            }
-
-            $picture = new Picture($img, $picture->getSources());
-        }
+        $picture = $this->addImageAttributes($picture, $attributes);
 
         return $picture;
     }
@@ -207,5 +200,30 @@ class PictureFactory implements PictureFactoryInterface
         }
 
         return $configItem;
+    }
+
+    /**
+     * Adds the image attributes.
+     *
+     * @param PictureInterface $picture
+     * @param array            $attributes
+     *
+     * @return PictureInterface
+     */
+    private function addImageAttributes(PictureInterface $picture, array $attributes)
+    {
+        if (empty($attributes)) {
+            return $picture;
+        }
+
+        $img = $picture->getImg();
+
+        foreach ($attributes as $attribute => $value) {
+            $img[$attribute] = $value;
+        }
+
+        $picture = new Picture($img, $picture->getSources());
+
+        return $picture;
     }
 }
