@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  *
- * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
  */
 class InitializeControllerResponse extends Response
 {

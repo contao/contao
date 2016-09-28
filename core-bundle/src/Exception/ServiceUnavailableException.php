@@ -17,8 +17,8 @@ namespace Contao\CoreBundle\Exception;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.0.
- *             Use the Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException instead.
+ * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.0; use the
+ *             Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException instead
  */
 class ServiceUnavailableException extends \RuntimeException
 {

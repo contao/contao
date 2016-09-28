@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Framework;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  *
- * @internal Do not instantiate this class in your code. Use ContaoFramework::getAdapter() instead.
+ * @internal Do not instantiate this class in your code; use ContaoFramework::getAdapter() instead
  */
 class Adapter
 {
