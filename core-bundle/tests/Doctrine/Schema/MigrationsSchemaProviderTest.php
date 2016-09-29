@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Test\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider;
+use Doctrine\DBAL\Platforms\MySqlPlatform;
 
 /**
  * Tests the DcaSchemaProvider class.
@@ -24,8 +25,15 @@ class MigrationsSchemaProviderTest extends DcaSchemaProviderTest
      */
     public function testInstantiation()
     {
-        $event = new MigrationsSchemaProvider($this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'));
+        $provider = new MigrationsSchemaProvider($this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'));
 
-        $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider', $event);
+        $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider', $provider);
+    }
+
+    protected function getProvider(array $dca = [], array $file = [])
+    {
+        return new MigrationsSchemaProvider(
+            $this->mockContainerWithDatabaseInstaller($dca, $file)
+        );
     }
 }

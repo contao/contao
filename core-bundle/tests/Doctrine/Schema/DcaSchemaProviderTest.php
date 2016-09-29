@@ -14,6 +14,7 @@ use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Test\TestCase;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the DcaSchemaProvider class.
@@ -41,91 +42,174 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertCount(0, $schema->getTableNames());
     }
 
-    public function testTableFields()
+    /**
+     * @dataProvider createSchemaProvider
+     */
+    public function testCreateSchema(array $dca = [], array $sql = [])
     {
-        $provider = $this->getProvider(
-            [
-                'tl_member' => [
-                    'TABLE_FIELDS' => [
-                        'id' => "`id` int(10) NOT NULL default '0'",
-                        'pid' => '`pid` int(10) NULL',
-                        'title' => "`title` varchar(128) NOT NULL default ''",
-                        'teaser' => '`teaser` tinytext NULL',
-                        'description' => '`description` text NULL',
-                        'content' => '`content` mediumtext NULL',
-                        'price' => "`price` decimal(6,2) NOT NULL default '0.00'",
-                        'thumb' => '`thumb` tinyblob NULL',
-                        'image' => '`image` blob NULL',
-                        'attachment' => '`attachment` mediumblob NULL',
-                        'published' => "`published` char(1) NOT NULL default ''",
-                    ]
-                ]
-            ]
-        );
-
-        $this->assertSchema($provider->createSchema());
-    }
-
-    public function testDatabaseFile()
-    {
-        $provider = $this->getProvider(
-            [],
-            [
-                'tl_member' => [
-                    'TABLE_FIELDS' => [
-                        'id' => "`id` int(10) NOT NULL default '0'",
-                        'pid' => '`pid` int(10) NULL',
-                        'title' => "`title` varchar(128) NOT NULL default ''",
-                        'teaser' => '`teaser` tinytext NULL',
-                        'description' => '`description` text NULL',
-                        'content' => '`content` mediumtext NULL',
-                        'price' => "`price` decimal(6,2) NOT NULL default '0.00'",
-                        'thumb' => '`thumb` tinyblob NULL',
-                        'image' => '`image` blob NULL',
-                        'attachment' => '`attachment` mediumblob NULL',
-                        'published' => "`published` char(1) NOT NULL default ''",
-                    ],
-                    'TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8'
-                ]
-            ]
-        );
+        $provider = $this->getProvider($dca, $sql);
 
         $schema = $provider->createSchema();
 
-        $this->assertSchema($schema);
+        $this->assertCount(1, $schema->getTableNames());
+        $this->assertTrue($schema->hasTable('tl_member'));
 
-        $this->assertEquals('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
-        $this->assertEquals('utf8', $schema->getTable('tl_member')->getOption('charset'));
+        $table = $schema->getTable('tl_member');
+
+        $this->assertTrue($table->hasColumn('id'));
+        $this->assertEquals('integer', $table->getColumn('id')->getType()->getName());
+        $this->assertEquals(true, $table->getColumn('id')->getNotnull());
+        $this->assertEquals(0, $table->getColumn('id')->getDefault());
+        $this->assertEquals(false, $table->getColumn('id')->getFixed());
+
+        $this->assertTrue($table->hasColumn('pid'));
+        $this->assertEquals('integer', $table->getColumn('pid')->getType()->getName());
+        $this->assertEquals(false, $table->getColumn('pid')->getNotnull());
+        $this->assertEquals(false, $table->getColumn('pid')->getFixed());
+
+        $this->assertTrue($table->hasColumn('title'));
+        $this->assertEquals('string', $table->getColumn('title')->getType()->getName());
+        $this->assertEquals(true, $table->getColumn('title')->getNotnull());
+        $this->assertEquals('', $table->getColumn('title')->getDefault());
+        $this->assertEquals(false, $table->getColumn('title')->getFixed());
+        $this->assertEquals(128, $table->getColumn('title')->getLength());
+
+        $this->assertTrue($table->hasColumn('teaser'));
+        $this->assertEquals('text', $table->getColumn('teaser')->getType()->getName());
+        $this->assertEquals(false, $table->getColumn('teaser')->getNotnull());
+        $this->assertEquals(false, $table->getColumn('teaser')->getFixed());
+        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_TINYTEXT, $table->getColumn('teaser')->getLength());
+
+        $this->assertTrue($table->hasColumn('description'));
+        $this->assertEquals('text', $table->getColumn('description')->getType()->getName());
+        $this->assertEquals(false, $table->getColumn('description')->getNotnull());
+        $this->assertEquals(false, $table->getColumn('description')->getFixed());
+        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_TEXT, $table->getColumn('description')->getLength());
+
+        $this->assertTrue($table->hasColumn('content'));
+        $this->assertEquals('text', $table->getColumn('content')->getType()->getName());
+        $this->assertEquals(false, $table->getColumn('content')->getNotnull());
+        $this->assertEquals(false, $table->getColumn('content')->getFixed());
+        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('content')->getLength());
+
+
+        $this->assertTrue($table->hasColumn('price'));
+        $this->assertEquals('decimal', $table->getColumn('price')->getType()->getName());
+        $this->assertEquals(true, $table->getColumn('price')->getNotnull());
+        $this->assertEquals('0.00', $table->getColumn('price')->getDefault());
+        $this->assertEquals(false, $table->getColumn('price')->getFixed());
+        $this->assertEquals(6, $table->getColumn('price')->getPrecision());
+        $this->assertEquals(2, $table->getColumn('price')->getScale());
+
+        $this->assertTrue($table->hasColumn('thumb'));
+        $this->assertEquals('blob', $table->getColumn('thumb')->getType()->getName());
+        $this->assertEquals(false, $table->getColumn('thumb')->getNotnull());
+        $this->assertEquals(false, $table->getColumn('thumb')->getFixed());
+        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_TINYBLOB, $table->getColumn('thumb')->getLength());
+
+        $this->assertTrue($table->hasColumn('image'));
+        $this->assertEquals('blob', $table->getColumn('image')->getType()->getName());
+        $this->assertEquals(false, $table->getColumn('image')->getNotnull());
+        $this->assertEquals(false, $table->getColumn('image')->getFixed());
+        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_BLOB, $table->getColumn('image')->getLength());
+
+        $this->assertTrue($table->hasColumn('attachment'));
+        $this->assertEquals('blob', $table->getColumn('attachment')->getType()->getName());
+        $this->assertEquals(false, $table->getColumn('attachment')->getNotnull());
+        $this->assertEquals(false, $table->getColumn('attachment')->getFixed());
+        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB, $table->getColumn('attachment')->getLength());
+
+        $this->assertTrue($table->hasColumn('published'));
+        $this->assertEquals('string', $table->getColumn('published')->getType()->getName());
+        $this->assertEquals(true, $table->getColumn('published')->getNotnull());
+        $this->assertEquals('', $table->getColumn('title')->getDefault());
+        $this->assertEquals(true, $table->getColumn('published')->getFixed());
     }
 
-    public function testSchemaFields()
+    public function createSchemaProvider()
     {
-        $provider = $this->getProvider(
+        return [
+
+            // Test table fields SQL string from DCA file
             [
-                'tl_member' => [
-                    'SCHEMA_FIELDS' => [
-                        ['name' => 'id', 'type' => 'integer'],
-                        ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
-                        ['name' => 'title', 'type' => 'string', 'length' => 128],
-                        ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYTEXT],
-                        ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TEXT],
-                        ['name' => 'content', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT],
-                        ['name' => 'price', 'type' => 'decimal', 'precision' => 6, 'scale' => 2, 'default' => '0.00'],
-                        ['name' => 'thumb', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYBLOB],
-                        ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_BLOB],
-                        ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB],
-                        ['name' => 'published', 'type' => 'string', 'fixed' => true, 'length' => 1],
+                [
+                    'tl_member' => [
+                        'TABLE_FIELDS' => [
+                            'id' => "`id` int(10) NOT NULL default '0'",
+                            'pid' => '`pid` int(10) NULL',
+                            'title' => "`title` varchar(128) NOT NULL default ''",
+                            'teaser' => '`teaser` tinytext NULL',
+                            'description' => '`description` text NULL',
+                            'content' => '`content` mediumtext NULL',
+                            'price' => "`price` decimal(6,2) NOT NULL default '0.00'",
+                            'thumb' => '`thumb` tinyblob NULL',
+                            'image' => '`image` blob NULL',
+                            'attachment' => '`attachment` mediumblob NULL',
+                            'published' => "`published` char(1) NOT NULL default ''",
+                        ]
+                    ]
+                ]
+            ],
+
+            // Test schema definition from DCA file
+            [
+                [
+                    'tl_member' => [
+                        'SCHEMA_FIELDS' => [
+                            ['name' => 'id', 'type' => 'integer'],
+                            ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
+                            ['name' => 'title', 'type' => 'string', 'length' => 128],
+                            ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYTEXT],
+                            ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TEXT],
+                            ['name' => 'content', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT],
+                            ['name' => 'price', 'type' => 'decimal', 'precision' => 6, 'scale' => 2, 'default' => '0.00'],
+                            ['name' => 'thumb', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYBLOB],
+                            ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_BLOB],
+                            ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB],
+                            ['name' => 'published', 'type' => 'string', 'fixed' => true, 'length' => 1],
+                        ]
+                    ]
+                ]
+            ],
+
+            // Test table fields from database.sql file
+            [
+                [],
+                [
+                    'tl_member' => [
+                        'TABLE_FIELDS' => [
+                            'id' => "`id` int(10) NOT NULL default '0'",
+                            'pid' => '`pid` int(10) NULL',
+                            'title' => "`title` varchar(128) NOT NULL default ''",
+                            'teaser' => '`teaser` tinytext NULL',
+                            'description' => '`description` text NULL',
+                            'content' => '`content` mediumtext NULL',
+                            'price' => "`price` decimal(6,2) NOT NULL default '0.00'",
+                            'thumb' => '`thumb` tinyblob NULL',
+                            'image' => '`image` blob NULL',
+                            'attachment' => '`attachment` mediumblob NULL',
+                            'published' => "`published` char(1) NOT NULL default ''",
+                        ],
                     ]
                 ]
             ]
-        );
-
-        $this->assertSchema($provider->createSchema());
+        ];
     }
 
     public function testTableOptions()
     {
         $provider = $this->getProvider(['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8']]);
+
+        $schema = $provider->createSchema();
+
+        $this->assertCount(1, $schema->getTableNames());
+        $this->assertTrue($schema->hasTable('tl_member'));
+
+        $this->assertEquals('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
+        $this->assertEquals('utf8', $schema->getTable('tl_member')->getOption('charset'));
+
+
+        $provider = $this->getProvider([], ['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8']]);
 
         $schema = $provider->createSchema();
 
@@ -147,85 +231,98 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertEquals('Latin1', $schema->getTable('tl_member')->getOption('charset'));
     }
 
-    private function assertSchema(Schema $schema)
+    public function testTableCreateDefinitions()
     {
+        $provider = $this->getProvider(
+            [
+                'tl_member' => [
+                    'TABLE_FIELDS' => [
+                        'id' => "`id` int(10) NOT NULL default '0'",
+                        'pid' => '`pid` int(10) NULL',
+                        'username' => "`username` varchar(128) NOT NULL default ''",
+                        'firstname' => "`firstname` varchar(128) NOT NULL default ''",
+                        'lastname' => "`lastname` varchar(128) NOT NULL default ''",
+                    ],
+                    'TABLE_CREATE_DEFINITIONS' => [
+                        'PRIMARY' => 'PRIMARY KEY (`id`)',
+                        'pid' => 'KEY `pid` (`pid`)',
+                        'username' => 'UNIQUE KEY `username` (`username`)',
+                        'name' => 'KEY `name` (`firstname`, `lastname`)',
+                    ]
+                ]
+            ]
+        );
+
+        $schema = $provider->createSchema();
+
         $this->assertCount(1, $schema->getTableNames());
         $this->assertTrue($schema->hasTable('tl_member'));
 
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('id'));
-        $this->assertEquals('integer', $schema->getTable('tl_member')->getColumn('id')->getType()->getName());
-        $this->assertEquals(true, $schema->getTable('tl_member')->getColumn('id')->getNotnull());
-        $this->assertEquals(0, $schema->getTable('tl_member')->getColumn('id')->getDefault());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('id')->getFixed());
+        $table = $schema->getTable('tl_member');
 
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('pid'));
-        $this->assertEquals('integer', $schema->getTable('tl_member')->getColumn('pid')->getType()->getName());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('pid')->getNotnull());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('pid')->getFixed());
+        $this->assertTrue($table->hasIndex('PRIMARY'));
+        $this->assertTrue($table->getIndex('PRIMARY')->isPrimary());
+        $this->assertEquals(['id'], $table->getIndex('PRIMARY')->getColumns());
 
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('title'));
-        $this->assertEquals('string', $schema->getTable('tl_member')->getColumn('title')->getType()->getName());
-        $this->assertEquals(true, $schema->getTable('tl_member')->getColumn('title')->getNotnull());
-        $this->assertEquals('', $schema->getTable('tl_member')->getColumn('title')->getDefault());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('title')->getFixed());
-        $this->assertEquals(128, $schema->getTable('tl_member')->getColumn('title')->getLength());
+        $this->assertTrue($table->hasIndex('pid'));
+        $this->assertFalse($table->getIndex('pid')->isUnique());
+        $this->assertEquals(['pid'], $table->getIndex('pid')->getColumns());
 
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('teaser'));
-        $this->assertEquals('text', $schema->getTable('tl_member')->getColumn('teaser')->getType()->getName());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('teaser')->getNotnull());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('teaser')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_TINYTEXT, $schema->getTable('tl_member')->getColumn('teaser')->getLength());
+        $this->assertTrue($table->hasIndex('username'));
+        $this->assertTrue($table->getIndex('username')->isUnique());
+        $this->assertEquals(['username'], $table->getIndex('username')->getColumns());
 
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('description'));
-        $this->assertEquals('text', $schema->getTable('tl_member')->getColumn('description')->getType()->getName());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('description')->getNotnull());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('description')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_TEXT, $schema->getTable('tl_member')->getColumn('description')->getLength());
-
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('content'));
-        $this->assertEquals('text', $schema->getTable('tl_member')->getColumn('content')->getType()->getName());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('content')->getNotnull());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('content')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT, $schema->getTable('tl_member')->getColumn('content')->getLength());
-
-
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('price'));
-        $this->assertEquals('decimal', $schema->getTable('tl_member')->getColumn('price')->getType()->getName());
-        $this->assertEquals(true, $schema->getTable('tl_member')->getColumn('price')->getNotnull());
-        $this->assertEquals('0.00', $schema->getTable('tl_member')->getColumn('price')->getDefault());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('price')->getFixed());
-        $this->assertEquals(6, $schema->getTable('tl_member')->getColumn('price')->getPrecision());
-        $this->assertEquals(2, $schema->getTable('tl_member')->getColumn('price')->getScale());
-
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('thumb'));
-        $this->assertEquals('blob', $schema->getTable('tl_member')->getColumn('thumb')->getType()->getName());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('thumb')->getNotnull());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('thumb')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_TINYBLOB, $schema->getTable('tl_member')->getColumn('thumb')->getLength());
-
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('image'));
-        $this->assertEquals('blob', $schema->getTable('tl_member')->getColumn('image')->getType()->getName());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('image')->getNotnull());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('image')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_BLOB, $schema->getTable('tl_member')->getColumn('image')->getLength());
-
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('attachment'));
-        $this->assertEquals('blob', $schema->getTable('tl_member')->getColumn('attachment')->getType()->getName());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('attachment')->getNotnull());
-        $this->assertEquals(false, $schema->getTable('tl_member')->getColumn('attachment')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB, $schema->getTable('tl_member')->getColumn('attachment')->getLength());
-
-        $this->assertTrue($schema->getTable('tl_member')->hasColumn('published'));
-        $this->assertEquals('string', $schema->getTable('tl_member')->getColumn('published')->getType()->getName());
-        $this->assertEquals(true, $schema->getTable('tl_member')->getColumn('published')->getNotnull());
-        $this->assertEquals('', $schema->getTable('tl_member')->getColumn('title')->getDefault());
-        $this->assertEquals(true, $schema->getTable('tl_member')->getColumn('published')->getFixed());
+        $this->assertTrue($table->hasIndex('name'));
+        $this->assertFalse($table->getIndex('name')->isUnique());
+        $this->assertEquals(['firstname', 'lastname'], $table->getIndex('name')->getColumns());
     }
 
-    private function getProvider(array $dca = [], array $file = [])
+    public function testIndexWithKeyLength()
+    {
+        $provider = $this->getProvider(
+            [
+                'tl_files' => [
+                    'TABLE_FIELDS' => [
+                        'path' => "`path` varchar(1022) NOT NULL default ''",
+                    ],
+                    'TABLE_CREATE_DEFINITIONS' => [
+                        'path' => 'KEY `path` (`path`(333))',
+                    ]
+                ]
+            ]
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertCount(1, $schema->getTableNames());
+        $this->assertTrue($schema->hasTable('tl_files'));
+
+        $table = $schema->getTable('tl_files');
+
+        $this->assertTrue($table->hasColumn('path'));
+        $this->assertEquals('string', $table->getColumn('path')->getType()->getName());
+        $this->assertEquals(1022, $table->getColumn('path')->getLength());
+
+        $this->assertTrue($table->hasIndex('path'));
+        $this->assertFalse($table->getIndex('path')->isUnique());
+        $this->assertEquals(['path(333)'], $table->getIndex('path')->getColumns());
+    }
+
+    protected function getProvider(array $dca = [], array $file = [])
+    {
+        return new DcaSchemaProvider(
+            $this->mockContainerWithDatabaseInstaller($dca, $file)
+        );
+    }
+
+    protected function mockContainerWithDatabaseInstaller(array $dca = [], array $file = [])
     {
         $connection = $this->getMock('Doctrine\DBAL\Connection', ['getDatabasePlatform'], [], '', false);
-        $connection->method('getDatabasePlatform')->willReturn(new MySqlPlatform());
+        $connection->expects($this->any())->method('getDatabasePlatform')->willReturn(new MySqlPlatform());
+
+        $installer = $this->getMock('Contao\Database\Installer', ['getFromDca', 'getFromFile']);
+        $installer->expects($this->any())->method('getFromDca')->willReturn($dca);
+        $installer->expects($this->any())->method('getFromFile')->willReturn($file);
 
         $container = $this->mockContainerWithContaoScopes();
 
@@ -235,22 +332,12 @@ class DcaSchemaProviderTest extends TestCase
                 null,
                 null,
                 [],
-                ['Contao\Database\Installer' => $this->mockInstaller($dca, $file)]
+                ['Contao\Database\Installer' => $installer]
             )
         );
 
         $container->set('database_connection', $connection);
 
-        return new DcaSchemaProvider($container);
-    }
-
-    private function mockInstaller(array $dca = [], array $file = [])
-    {
-        $installer = $this->getMock('Contao\Database\Installer', ['getFromDca', 'getFromFile']);
-
-        $installer->method('getFromDca')->willReturn($dca);
-        $installer->method('getFromFile')->willReturn($file);
-
-        return $installer;
+        return $container;
     }
 }
