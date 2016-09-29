@@ -148,7 +148,7 @@ p {
 .widget > div {
 	font-size:0;
 }
-.widget > div * {
+.widget > div > * {
 	font-size:.875rem;
 }
 

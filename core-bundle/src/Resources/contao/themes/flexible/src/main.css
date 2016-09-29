@@ -1011,6 +1011,7 @@ ul.sgallery li {
 	cursor:pointer;
 }
 .tl_metawizard_new .tl_select {
+	margin-right:4px;
 	max-width:200px;
 }
 .tl_metawizard_new .tl_submit {
