@@ -80,67 +80,7 @@ class TableWizard extends \Widget
 	public function generate()
 	{
 		$arrColButtons = array('ccopy', 'cmovel', 'cmover', 'cdelete');
-		$arrRowButtons = array('rcopy', 'rdrag', 'rup', 'rdown', 'rdelete');
-
-		$strCommand = 'cmd_' . $this->strField;
-
-		// Change the order
-		if (\Input::get($strCommand) && is_numeric(\Input::get('cid')) && \Input::get('id') == $this->currentRecord)
-		{
-			$this->import('Database');
-
-			switch (\Input::get($strCommand))
-			{
-					case 'ccopy':
-					for ($i=0, $c=count($this->varValue); $i<$c; $i++)
-					{
-						$this->varValue[$i] = array_duplicate($this->varValue[$i], \Input::get('cid'));
-					}
-					break;
-
-				case 'cmovel':
-					for ($i=0, $c=count($this->varValue); $i<$c; $i++)
-					{
-						$this->varValue[$i] = array_move_up($this->varValue[$i], \Input::get('cid'));
-					}
-					break;
-
-				case 'cmover':
-					for ($i=0, $c=count($this->varValue); $i<$c; $i++)
-					{
-						$this->varValue[$i] = array_move_down($this->varValue[$i], \Input::get('cid'));
-					}
-					break;
-
-				case 'cdelete':
-					for ($i=0, $c=count($this->varValue); $i<$c; $i++)
-					{
-						$this->varValue[$i] = array_delete($this->varValue[$i], \Input::get('cid'));
-					}
-					break;
-
-				case 'rcopy':
-					$this->varValue = array_duplicate($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'rup':
-					$this->varValue = array_move_up($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'rdown':
-					$this->varValue = array_move_down($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'rdelete':
-					$this->varValue = array_delete($this->varValue, \Input::get('cid'));
-					break;
-			}
-
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET " . $this->strField . "=? WHERE id=?")
-						   ->execute(serialize($this->varValue), $this->currentRecord);
-
-			$this->redirect(preg_replace('/&(amp;)?cid=[^&]*/i', '', preg_replace('/&(amp;)?' . preg_quote($strCommand, '/') . '=[^&]*/i', '', \Environment::get('request'))));
-		}
+		$arrRowButtons = array('rcopy', 'rdelete', 'rdrag');
 
 		// Make sure there is at least an empty array
 		if (!is_array($this->varValue) || empty($this->varValue))
@@ -171,7 +111,7 @@ class TableWizard extends \Widget
 			// Add column buttons
 			foreach ($arrColButtons as $button)
 			{
-				$return .= '<a href="'.$this->addToUrl('&amp;'.$strCommand.'='.$button.'&amp;cid='.$i.'&amp;id='.$this->currentRecord).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_'.$button]).'" onclick="Backend.tableWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false">'.\Image::getHtml(substr($button, 1).'.svg', $GLOBALS['TL_LANG']['MSC']['tw_'.$button], 'class="tl_tablewizard_img"').'</a> ';
+				$return .= ' ' . \Image::getHtml(substr($button, 1).'.svg', '', 'class="tl_tablewizard_img" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_'.$button]) . '" onclick="Backend.tableWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false"');
 			}
 
 			$return .= '</td>';
@@ -202,15 +142,13 @@ class TableWizard extends \Widget
 			// Add row buttons
 			foreach ($arrRowButtons as $button)
 			{
-				$class = ($button == 'rup' || $button == 'rdown') ? ' class="button-move"' : '';
-
 				if ($button == 'rdrag')
 				{
-					$return .= \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['move']) . '"');
+					$return .= ' ' . \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['move']) . '"');
 				}
 				else
 				{
-					$return .= '<a href="'.$this->addToUrl('&amp;'.$strCommand.'='.$button.'&amp;cid='.$i.'&amp;id='.$this->currentRecord).'"' . $class . ' title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_'.$button]).'" onclick="Backend.tableWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false">'.\Image::getHtml(substr($button, 1).'.svg', $GLOBALS['TL_LANG']['MSC']['tw_'.$button], 'class="tl_tablewizard_img"').'</a> ';
+					$return .= ' ' . \Image::getHtml(substr($button, 1).'.svg', '', 'class="tl_tablewizard_img" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_'.$button]) . '" onclick="Backend.tableWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false"');
 				}
 			}
 

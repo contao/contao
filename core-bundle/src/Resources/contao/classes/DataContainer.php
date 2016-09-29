@@ -716,10 +716,11 @@ abstract class DataContainer extends \Backend
 				if ($dir == 'up')
 				{
 					$return .= ((is_numeric($strPrevious) && (!in_array($arrRow['id'], $arrRootIds) || empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$arrRow['id']).'&amp;sid='.intval($strPrevious).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : \Image::getHtml('up_.svg')).' ';
-					continue;
 				}
-
-				$return .= ((is_numeric($strNext) && (!in_array($arrRow['id'], $arrRootIds) || empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$arrRow['id']).'&amp;sid='.intval($strNext).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : \Image::getHtml('down_.svg')).' ';
+				else
+				{
+					$return .= ((is_numeric($strNext) && (!in_array($arrRow['id'], $arrRootIds) || empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$arrRow['id']).'&amp;sid='.intval($strNext).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : \Image::getHtml('down_.svg')).' ';
+				}
 			}
 		}
 

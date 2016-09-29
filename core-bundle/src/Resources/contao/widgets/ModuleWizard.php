@@ -41,31 +41,7 @@ class ModuleWizard extends \Widget
 	{
 		$this->import('Database');
 
-		$arrButtons = array('edit', 'copy', 'delete', 'enable', 'drag', 'up', 'down');
-		$strCommand = 'cmd_' . $this->strField;
-
-		// Change the order
-		if (\Input::get($strCommand) && is_numeric(\Input::get('cid')) && \Input::get('id') == $this->currentRecord)
-		{
-			switch (\Input::get($strCommand))
-			{
-				case 'copy':
-					$this->varValue = array_duplicate($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'up':
-					$this->varValue = array_move_up($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'down':
-					$this->varValue = array_move_down($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'delete':
-					$this->varValue = array_delete($this->varValue, \Input::get('cid'));
-					break;
-			}
-		}
+		$arrButtons = array('edit', 'copy', 'delete', 'enable', 'drag');
 
 		// Get all modules of the current theme
 		$objModules = $this->Database->prepare("SELECT id, name, type FROM tl_module WHERE pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?) ORDER BY name")
@@ -136,19 +112,6 @@ class ModuleWizard extends \Widget
 			}
 		}
 
-		// Save the value
-		if (\Input::get($strCommand) || \Input::post('FORM_SUBMIT') == $this->strTable)
-		{
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET " . $this->strField . "=? WHERE id=?")
-						   ->execute(serialize($this->varValue), $this->currentRecord);
-
-			// Reload the page
-			if (is_numeric(\Input::get('cid')) && \Input::get('id') == $this->currentRecord)
-			{
-				$this->redirect(preg_replace('/&(amp;)?cid=[^&]*/i', '', preg_replace('/&(amp;)?' . preg_quote($strCommand, '/') . '=[^&]*/i', '', \Environment::get('request'))));
-			}
-		}
-
 		// Initialize the tab index
 		if (!\Cache::has('tabindex'))
 		{
@@ -198,23 +161,21 @@ class ModuleWizard extends \Widget
 			// Add buttons
 			foreach ($arrButtons as $button)
 			{
-				$class = ($button == 'up' || $button == 'down') ? ' class="button-move"' : '';
-
 				if ($button == 'edit')
 				{
 					$return .= ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->varValue[$i]['mod'] . '&amp;popup=1&amp;rt=' . REQUEST_TOKEN . '&amp;nb=1" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link" ' . (($this->varValue[$i]['mod'] > 0) ? '' : ' style="display:none"') . ' onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">'.\Image::getHtml('edit.svg').'</a>' . \Image::getHtml('edit_.svg', '', 'class="module_image"' . (($this->varValue[$i]['mod'] > 0) ? ' style="display:none"' : ''));
 				}
 				elseif ($button == 'drag')
 				{
-					$return .= ' ' . \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['move']) . '"');
+					$return .= ' ' . \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '"');
 				}
 				elseif ($button == 'enable')
 				{
-					$return .= ' ' . \Image::getHtml((($this->varValue[$i]['enable']) ? 'visible.svg' : 'invisible.svg'), '', 'class="mw_enable" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '"') . '<input name="'.$this->strId.'['.$i.'][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" tabindex="'.$tabindex++.'" onfocus="Backend.getScrollOffset()"'. (($this->varValue[$i]['enable']) ? ' checked' : '').'>';
+					$return .= ' ' . \Image::getHtml((($this->varValue[$i]['enable']) ? 'visible.svg' : 'invisible.svg'), '', 'class="mw_enable" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '"') . '<input name="'.$this->strId.'['.$i.'][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" tabindex="'.$tabindex++.'" onfocus="Backend.getScrollOffset()"'. (($this->varValue[$i]['enable']) ? ' checked' : '').'>';
 				}
 				else
 				{
-					$return .= ' <a href="'.$this->addToUrl('&amp;'.$strCommand.'='.$button.'&amp;cid='.$i.'&amp;id='.$this->currentRecord).'"' . $class . ' title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_'.$button]).'" onclick="Backend.moduleWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false">'.\Image::getHtml($button.'.svg', $GLOBALS['TL_LANG']['MSC']['mw_'.$button], 'class="tl_listwizard_img"').'</a>';
+					$return .= ' ' . \Image::getHtml($button.'.svg', '', 'class="tl_listwizard_img" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_'.$button]) . '" onclick="Backend.moduleWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false"');
 				}
 			}
 

@@ -136,7 +136,7 @@ class MetaWizard extends \Widget
 			foreach ($this->varValue as $lang=>$meta)
 			{
 				$return .= '
-    <li class="' . (($count%2 == 0) ? 'even' : 'odd') . '" data-language="' . $lang . '">';
+    <li class="' . (($count % 2 == 0) ? 'even' : 'odd') . '" data-language="' . $lang . '">';
 
 				$return .= '<span class="lang">' . (isset($languages[$lang]) ? $languages[$lang] : $lang) . ' ' . \Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" onclick="Backend.metaDelete(this)"') . '</span>';
 
