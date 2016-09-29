@@ -520,12 +520,14 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testGetAdapter()
     {
-        $framework = $this->mockContaoFramework(
-            null,
-            null,
-            ['LegacyClass' => new Adapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass')]
-        );
+        $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass';
+        $adapter = $this->mockContaoFramework()->getAdapter($class);
 
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $framework->getAdapter('LegacyClass'));
+        $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $adapter);
+
+        $ref = new \ReflectionClass('Contao\CoreBundle\Framework\Adapter');
+        $prop = $ref->getProperty('class');
+        $prop->setAccessible(true);
+        $this->assertEquals($class, $prop->getValue($adapter));
     }
 }
