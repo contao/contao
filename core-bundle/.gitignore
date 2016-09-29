@@ -1,2 +1,6 @@
-# Vendor
+# Composer
 /vendor/
+composer.lock
+
+# PHPUnit
+phpunit.xml
