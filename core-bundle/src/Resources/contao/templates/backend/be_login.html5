@@ -28,14 +28,12 @@
   <div id="container" class="cf">
     <div id="main">
       <h1>Contao</h1>
+      <p class="tl_info" id="javascript"><?= $this->jsDisabled ?></p>
       <form action="<?= $this->action ?>" class="tl_login_form" method="post">
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="tl_login">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
           <?= $this->messages ?>
-          <?php if ($this->noCookies): ?>
-            <p class="tl_error"><?= $this->noCookies ?></p>
-          <?php endif; ?>
           <table class="tl_login_table">
             <tr>
               <td<?= $this->uClass ?>><label for="username"><?= $this->username ?></label></td>
