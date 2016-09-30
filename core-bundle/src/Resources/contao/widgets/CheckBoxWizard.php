@@ -80,34 +80,9 @@ class CheckBoxWizard extends \Widget
 	 */
 	public function generate()
 	{
-		$arrButtons = array('up', 'down');
-		$strCommand = 'cmd_' . $this->strField;
-
 		if (!is_array($this->varValue))
 		{
 			$this->varValue = array($this->varValue);
-		}
-
-		// Change the order
-		if (\Input::get($strCommand) && is_numeric(\Input::get('cid')) && \Input::get('id') == $this->currentRecord)
-		{
-			$this->import('Database');
-
-			switch (\Input::get($strCommand))
-			{
-				case 'up':
-					$this->varValue = array_move_up($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'down':
-					$this->varValue = array_move_down($this->varValue, \Input::get('cid'));
-					break;
-			}
-
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET " . $this->strField . "=? WHERE id=?")
-						   ->execute(serialize($this->varValue), $this->currentRecord);
-
-			$this->redirect(preg_replace('/&(amp;)?cid=[^&]*/i', '', preg_replace('/&(amp;)?' . preg_quote($strCommand, '/') . '=[^&]*/i', '', \Environment::get('request'))));
 		}
 
 		// Sort options
@@ -136,14 +111,7 @@ class CheckBoxWizard extends \Widget
 		// Generate options and add buttons
 		foreach ($this->arrOptions as $i=>$arrOption)
 		{
-			$strButtons = \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['move']) . '"');
-
-			foreach ($arrButtons as $strButton)
-			{
-				$strButtons .= '<a href="'.$this->addToUrl('&amp;'.$strCommand.'='.$strButton.'&amp;cid='.$i.'&amp;id='.$this->currentRecord).'" class="button-move" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move_'.$strButton][1]).'" onclick="Backend.checkboxWizard(this,\''.$strButton.'\',\'ctrl_'.$this->strId.'\');return false">'.\Image::getHtml($strButton.'.svg', $GLOBALS['TL_LANG']['MSC']['move_'.$strButton][0], 'class="tl_checkbox_wizard_img"').'</a> ';
-			}
-
-			$arrOptions[] = $this->generateCheckbox($arrOption, $i, $strButtons);
+			$arrOptions[] = $this->generateCheckbox($arrOption, $i, \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '"') . ' ');
 		}
 
 		// Add a "no entries found" message if there are no options

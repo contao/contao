@@ -27,9 +27,17 @@ body {
 	font-size:1.125rem;
 }
 
+/* JS warning */
+#javascript {
+	margin:18px 5%;
+}
+.js #javascript {
+	display:none;
+}
+
 /* Front end link */
 #go_to_frontend {
-	margin:12px 18px 12px 0;
+	margin:12px 18px;
 	text-align:right;
 }
 #go_to_frontend a {

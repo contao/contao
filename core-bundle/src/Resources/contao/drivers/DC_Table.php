@@ -3677,7 +3677,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			$session[$node][\Input::get('ptg')] = (isset($session[$node][\Input::get('ptg')]) && $session[$node][\Input::get('ptg')] == 1) ? 0 : 1;
 			$objSessionBag->replace($session);
-
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', \Environment::get('request')));
 		}
 
@@ -4336,7 +4335,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 							// Drag handle
 							if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
 							{
-								$return .= ' ' . \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . sprintf($GLOBALS['TL_LANG'][$this->strTable]['cut'][1], $row[$i]['id']) . '"');
+								$return .= ' ' . \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['cut'][1], $row[$i]['id'])) . '"');
 							}
 						}
 					}

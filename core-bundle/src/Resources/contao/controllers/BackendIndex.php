@@ -76,12 +76,6 @@ class BackendIndex extends \Backend
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_login');
 
-		// Show a cookie warning
-		if (\Input::get('referer', true) != '' && empty($_COOKIE))
-		{
-			$objTemplate->noCookies = $GLOBALS['TL_LANG']['MSC']['noCookies'];
-		}
-
 		$strHeadline = sprintf($GLOBALS['TL_LANG']['MSC']['loginTo'], \Config::get('websiteTitle'));
 
 		$objTemplate->theme = \Backend::getTheme();
@@ -103,6 +97,7 @@ class BackendIndex extends \Backend
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
+		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
 
 		return $objTemplate->getResponse();
 	}

@@ -91,38 +91,7 @@ class OptionWizard extends \Widget
 	 */
 	public function generate()
 	{
-		$arrButtons = array('copy', 'drag', 'up', 'down', 'delete');
-		$strCommand = 'cmd_' . $this->strField;
-
-		// Change the order
-		if (\Input::get($strCommand) && is_numeric(\Input::get('cid')) && \Input::get('id') == $this->currentRecord)
-		{
-			$this->import('Database');
-
-			switch (\Input::get($strCommand))
-			{
-				case 'copy':
-					array_insert($this->varValue, \Input::get('cid'), array($this->varValue[\Input::get('cid')]));
-					break;
-
-				case 'up':
-					$this->varValue = array_move_up($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'down':
-					$this->varValue = array_move_down($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'delete':
-					$this->varValue = array_delete($this->varValue, \Input::get('cid'));
-					break;
-			}
-
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET " . $this->strField . "=? WHERE id=?")
-						   ->execute(serialize($this->varValue), $this->currentRecord);
-
-			$this->redirect(preg_replace('/&(amp;)?cid=[^&]*/i', '', preg_replace('/&(amp;)?' . preg_quote($strCommand, '/') . '=[^&]*/i', '', \Environment::get('request'))));
-		}
+		$arrButtons = array('copy', 'delete', 'drag');
 
 		// Make sure there is at least an empty array
 		if (!is_array($this->varValue) || !$this->varValue[0])
@@ -167,15 +136,13 @@ class OptionWizard extends \Widget
 
 			foreach ($arrButtons as $button)
 			{
-				$class = ($button == 'up' || $button == 'down') ? ' class="button-move"' : '';
-
 				if ($button == 'drag')
 				{
-					$return .= \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['move']) . '"');
+					$return .= ' ' . \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '"');
 				}
 				else
 				{
-					$return .= '<a href="'.$this->addToUrl('&amp;'.$strCommand.'='.$button.'&amp;cid='.$i.'&amp;id='.$this->currentRecord).'"' . $class . ' title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_'.$button]).'" onclick="Backend.optionsWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false">'.\Image::getHtml($button.'.svg', $GLOBALS['TL_LANG']['MSC']['ow_'.$button]).'</a> ';
+					$return .= ' ' . \Image::getHtml($button.'.svg', '', 'title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_'.$button]) . '" onclick="Backend.optionsWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false"');
 				}
 			}
 

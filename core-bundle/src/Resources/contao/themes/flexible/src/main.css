@@ -902,6 +902,7 @@ ul.sgallery li {
 .tl_modulewizard img {
 	position:relative;
 	top:1px;
+	cursor:pointer;
 }
 .js .tl_modulewizard input.mw_enable {
 	border:0;
@@ -918,7 +919,7 @@ ul.sgallery li {
 }
 .js .tl_modulewizard img.mw_enable {
 	display:inline;
-	cursor:pointer;
+	margin-right:1px;
 }
 
 /* Options wizard */
@@ -941,6 +942,7 @@ ul.sgallery li {
 .tl_optionwizard img {
 	position:relative;
 	top:1px;
+	cursor:pointer;
 }
 
 /* Table wizard */
@@ -957,6 +959,9 @@ ul.sgallery li {
 }
 .tl_tablewizard td.tcontainer {
 	vertical-align:top;
+}
+.tl_tablewizard img {
+	cursor:pointer;
 }
 
 /* List wizard */
@@ -1080,20 +1085,7 @@ ul.sgallery li {
 	margin:0 6px 6px 0;
 }
 .drag-handle {
-	cursor:move;
-	display:none;
-}
-.js .drag-handle {
-	display:inline;
-}
-.js .button-move {
-	width:0;
-	height:0;
-	left:-1000px;
-	top:-1000px;
-	position:absolute;
-	overflow:hidden;
-	display:inline;
+	cursor:move !important;
 }
 ul.sortable li {
 	cursor:move;
