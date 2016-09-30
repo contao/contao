@@ -35,6 +35,9 @@ th,td {
 input,select,button,label,img,a.tl_submit,.tl_select {
 	vertical-align:middle;
 }
+button {
+	cursor:pointer;
+}
 
 /* Font */
 body {

@@ -79,36 +79,33 @@ class ListWizard extends \Widget
 			\Cache::set('tabindex', 1);
 		}
 
-		$tabindex = \Cache::get('tabindex');
-		$return = '<ul id="ctrl_'.$this->strId.'" class="tl_listwizard" data-tabindex="'.$tabindex.'">';
+		$return = '<ul id="ctrl_'.$this->strId.'" class="tl_listwizard">';
 
 		// Add input fields
 		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
 		{
 			$return .= '
-    <li><input type="text" name="'.$this->strId.'[]" class="tl_text" tabindex="'.$tabindex++.'" value="'.\StringUtil::specialchars($this->varValue[$i]).'"' . $this->getAttributes() . '> ';
+    <li><input type="text" name="'.$this->strId.'[]" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]).'"' . $this->getAttributes() . '> ';
 
 			// Add buttons
 			foreach ($arrButtons as $button)
 			{
 				if ($button == 'drag')
 				{
-					$return .= ' ' . \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '"');
+					$return .= ' <button type="button" class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '">' . \Image::getHtml('drag.svg') . '</button>';
 				}
 				else
 				{
-					$return .= ' ' . \Image::getHtml($button.'.svg', '', 'class="tl_listwizard_img" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_'.$button]) . '" onclick="Backend.listWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false"');
+					$return .= ' <button type="button" data-command="' . $button . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_'.$button]) . '">' . \Image::getHtml($button.'.svg') . '</button>';
 				}
 			}
 
 			$return .= '</li>';
 		}
 
-		// Store the tab index
-		\Cache::set('tabindex', $tabindex);
-
 		return $return.'
-  </ul>';
+  </ul>
+  <script>Backend.listWizard("ctrl_'.$this->strId.'")</script>';
 	}
 
 

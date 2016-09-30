@@ -968,6 +968,12 @@ ul.sgallery li {
 .tl_listwizard .tl_text {
 	width:78%;
 }
+.tl_listwizard button {
+	margin:0;
+	padding:0;
+	border:0;
+	background:none;
+}
 
 /* Checkbox wizard */
 .tl_checkbox_wizard .fixed {
@@ -1085,7 +1091,7 @@ ul.sgallery li {
 	margin:0 6px 6px 0;
 }
 .drag-handle {
-	cursor:move !important;
+	cursor:move;
 }
 ul.sortable li {
 	cursor:move;

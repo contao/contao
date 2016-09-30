@@ -924,7 +924,7 @@
         <source>Locked</source>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop</source>
+        <source>Move the item via drag and drop or the up and down keys</source>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
