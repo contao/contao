@@ -883,6 +883,14 @@ ul.sgallery li {
 	border:1px solid #fff;
 }
 
+/* Wizards */
+.tl_modulewizard button,.tl_optionwizard button,.tl_tablewizard button,.tl_listwizard button,.tl_checkbox_wizard button,.tl_metawizard button {
+	margin:0;
+	padding:0;
+	border:0;
+	background:none;
+}
+
 /* Module wizard */
 .tl_modulewizard {
 	margin-top:2px;
@@ -902,7 +910,6 @@ ul.sgallery li {
 .tl_modulewizard img {
 	position:relative;
 	top:1px;
-	cursor:pointer;
 }
 .js .tl_modulewizard input.mw_enable {
 	border:0;
@@ -942,7 +949,6 @@ ul.sgallery li {
 .tl_optionwizard img {
 	position:relative;
 	top:1px;
-	cursor:pointer;
 }
 
 /* Table wizard */
@@ -960,19 +966,10 @@ ul.sgallery li {
 .tl_tablewizard td.tcontainer {
 	vertical-align:top;
 }
-.tl_tablewizard img {
-	cursor:pointer;
-}
 
 /* List wizard */
 .tl_listwizard .tl_text {
 	width:78%;
-}
-.tl_listwizard button {
-	margin:0;
-	padding:0;
-	border:0;
-	background:none;
 }
 
 /* Checkbox wizard */
@@ -1019,7 +1016,6 @@ ul.sgallery li {
 	position:absolute;
 	right:0;
 	top:-1px;
-	cursor:pointer;
 }
 .tl_metawizard_new .tl_select {
 	margin-right:4px;
