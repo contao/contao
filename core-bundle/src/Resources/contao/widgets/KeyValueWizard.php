@@ -120,7 +120,7 @@ class KeyValueWizard extends \Widget
 		}
 
 		// Begin the table
-		$return = '<table class="tl_optionwizard" id="ctrl_'.$this->strId.'">
+		$return = '<table id="ctrl_'.$this->strId.'" class="tl_optionswizard">
   <thead>
     <tr>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_key'].'</th>

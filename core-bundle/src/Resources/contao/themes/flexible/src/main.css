@@ -671,6 +671,12 @@ table.tl_listing {
 	text-align:right;
 	margin-left:12px;
 }
+.tl_content_right button {
+	margin:0;
+	padding:0;
+	border:0;
+	background:none;
+}
 .cte_type {
 	margin-bottom:9px;
 	font-size:.75rem;
@@ -884,7 +890,7 @@ ul.sgallery li {
 }
 
 /* Wizards */
-.tl_modulewizard button,.tl_optionwizard button,.tl_tablewizard button,.tl_listwizard button,.tl_checkbox_wizard button,.tl_metawizard button {
+.tl_modulewizard button,.tl_optionswizard button,.tl_tablewizard button,.tl_listwizard button,.tl_checkbox_wizard button,.tl_metawizard button {
 	margin:0;
 	padding:0;
 	border:0;
@@ -930,23 +936,23 @@ ul.sgallery li {
 }
 
 /* Options wizard */
-.tl_optionwizard {
+.tl_optionswizard {
 	margin-top:2px;
 }
-.tl_optionwizard label {
+.tl_optionswizard label {
 	margin-right:3px;
 }
-.tl_optionwizard td {
+.tl_optionswizard td {
 	padding:0 4px 0 0;
 }
-.tl_optionwizard th {
+.tl_optionswizard th {
 	font-weight:300;
 	padding:0 4px 1px 0;
 }
-.tl_optionwizard .fw_checkbox {
+.tl_optionswizard .fw_checkbox {
 	margin:0 1px;
 }
-.tl_optionwizard img {
+.tl_optionswizard img {
 	position:relative;
 	top:1px;
 }

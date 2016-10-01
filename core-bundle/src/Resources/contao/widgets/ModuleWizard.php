@@ -23,7 +23,7 @@ class ModuleWizard extends \Widget
 	 * Submit user input
 	 * @var boolean
 	 */
-	protected $blnSubmitInput = false;
+	protected $blnSubmitInput = true;
 
 	/**
 	 * Template
@@ -112,14 +112,6 @@ class ModuleWizard extends \Widget
 			}
 		}
 
-		// Initialize the tab index
-		if (!\Cache::has('tabindex'))
-		{
-			\Cache::set('tabindex', 1);
-		}
-
-		$tabindex = \Cache::get('tabindex');
-
 		// Add the label and the return wizard
 		$return = '<table id="ctrl_'.$this->strId.'" class="tl_modulewizard">
   <thead>
@@ -129,7 +121,7 @@ class ModuleWizard extends \Widget
     <th></th>
   </tr>
   </thead>
-  <tbody class="sortable" data-tabindex="'.$tabindex.'">';
+  <tbody class="sortable">';
 
 		// Add the input fields
 		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
@@ -144,7 +136,7 @@ class ModuleWizard extends \Widget
 
 			$return .= '
   <tr>
-    <td><select name="'.$this->strId.'['.$i.'][mod]" class="tl_select tl_chosen" tabindex="'.$tabindex++.'" onfocus="Backend.getScrollOffset()" onchange="Backend.updateModuleLink(this)">'.$options.'</select></td>';
+    <td><select name="'.$this->strId.'['.$i.'][mod]" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()" onchange="Backend.updateModuleLink(this)">'.$options.'</select></td>';
 
 			$options = '';
 
@@ -155,7 +147,7 @@ class ModuleWizard extends \Widget
 			}
 
 			$return .= '
-    <td><select name="'.$this->strId.'['.$i.'][col]" class="tl_select_column" tabindex="'.$tabindex++.'" onfocus="Backend.getScrollOffset()">'.$options.'</select></td>
+    <td><select name="'.$this->strId.'['.$i.'][col]" class="tl_select_column" onfocus="Backend.getScrollOffset()">'.$options.'</select></td>
     <td>';
 
 			// Add buttons
@@ -167,15 +159,15 @@ class ModuleWizard extends \Widget
 				}
 				elseif ($button == 'drag')
 				{
-					$return .= ' ' . \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '"');
+					$return .= ' <button type="button" class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '">' . \Image::getHtml('drag.svg') . '</button>';
 				}
 				elseif ($button == 'enable')
 				{
-					$return .= ' ' . \Image::getHtml((($this->varValue[$i]['enable']) ? 'visible.svg' : 'invisible.svg'), '', 'class="mw_enable" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '"') . '<input name="'.$this->strId.'['.$i.'][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" tabindex="'.$tabindex++.'" onfocus="Backend.getScrollOffset()"'. (($this->varValue[$i]['enable']) ? ' checked' : '').'>';
+					$return .= ' <button type="button" data-command="enable" class="mw_enable" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '">' . \Image::getHtml((($this->varValue[$i]['enable']) ? 'visible.svg' : 'invisible.svg')) . '</button><input name="'.$this->strId.'['.$i.'][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" onfocus="Backend.getScrollOffset()"'. (($this->varValue[$i]['enable']) ? ' checked' : '').'>';
 				}
 				else
 				{
-					$return .= ' ' . \Image::getHtml($button.'.svg', '', 'class="tl_listwizard_img" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_'.$button]) . '" onclick="Backend.moduleWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false"');
+					$return .= ' <button type="button" data-command="' . $button . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_'.$button]) . '">' . \Image::getHtml($button.'.svg') . '</button>';
 				}
 			}
 
@@ -183,11 +175,9 @@ class ModuleWizard extends \Widget
   </tr>';
 		}
 
-		// Store the tab index
-		\Cache::set('tabindex', $tabindex);
-
 		return $return.'
   </tbody>
-  </table>';
+  </table>
+  <script>Backend.moduleWizard("ctrl_'.$this->strId.'")</script>';
 	}
 }

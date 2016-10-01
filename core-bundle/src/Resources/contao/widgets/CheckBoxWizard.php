@@ -111,7 +111,7 @@ class CheckBoxWizard extends \Widget
 		// Generate options and add buttons
 		foreach ($this->arrOptions as $i=>$arrOption)
 		{
-			$arrOptions[] = $this->generateCheckbox($arrOption, $i, \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '"') . ' ');
+			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '">' . \Image::getHtml('drag.svg') . '</button> ');
 		}
 
 		// Add a "no entries found" message if there are no options
@@ -121,7 +121,7 @@ class CheckBoxWizard extends \Widget
 			$blnCheckAll = false;
 		}
 
-		return sprintf('<fieldset id="ctrl_%s" class="tl_checkbox_container tl_checkbox_wizard%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s<div class="sortable">%s</div></fieldset>%s',
+		return sprintf('<fieldset id="ctrl_%s" class="tl_checkbox_container tl_checkbox_wizard%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s<div class="sortable">%s</div></fieldset>%s<script>Backend.checkboxWizard("ctrl_%s")</script>',
 						$this->strId,
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
 						($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
@@ -131,7 +131,8 @@ class CheckBoxWizard extends \Widget
 						$this->strName,
 						($blnCheckAll ? '<span class="fixed"><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')"> <label for="check_all_' . $this->strId . '" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : ''),
 						implode('', $arrOptions),
-						$this->wizard);
+						$this->wizard,
+						$this->strId);
 	}
 
 
