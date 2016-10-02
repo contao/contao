@@ -2,6 +2,7 @@
 
 ### 4.3.0-beta1 (2016-XX-XX)
 
+ * Make all wizards sortable via keyboard (see #583).
  * Add CSS classes to image sizes (see #555).
  * Improve the responsiveness of the back end theme.
  * Provide an image service to handle image and picture elements (see #342).

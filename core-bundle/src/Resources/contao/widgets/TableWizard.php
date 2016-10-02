@@ -88,14 +88,6 @@ class TableWizard extends \Widget
 			$this->varValue = array(array(''));
 		}
 
-		// Initialize the tab index
-		if (!\Cache::has('tabindex'))
-		{
-			\Cache::set('tabindex', 1);
-		}
-
-		$tabindex = \Cache::get('tabindex');
-
 		// Begin the table
 		$return = '<div id="tl_tablewizard">
   <table id="ctrl_'.$this->strId.'" class="tl_tablewizard">
@@ -111,7 +103,7 @@ class TableWizard extends \Widget
 			// Add column buttons
 			foreach ($arrColButtons as $button)
 			{
-				$return .= ' ' . \Image::getHtml(substr($button, 1).'.svg', '', 'class="tl_tablewizard_img" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_'.$button]) . '" onclick="Backend.tableWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false"');
+				$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_'.$button]) . '">' . \Image::getHtml(substr($button, 1).'.svg') . '</button>';
 			}
 
 			$return .= '</td>';
@@ -121,7 +113,7 @@ class TableWizard extends \Widget
       <td></td>
     </tr>
   </thead>
-  <tbody class="sortable" data-tabindex="'.$tabindex.'">';
+  <tbody class="sortable">';
 
 		// Add rows
 		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
@@ -133,7 +125,7 @@ class TableWizard extends \Widget
 			for ($j=0, $d=count($this->varValue[$i]); $j<$d; $j++)
 			{
 				$return .= '
-      <td class="tcontainer"><textarea name="'.$this->strId.'['.$i.']['.$j.']" class="tl_textarea noresize" tabindex="'.$tabindex++.'" rows="'.$this->intRows.'" cols="'.$this->intCols.'"'.$this->getAttributes().'>'.\StringUtil::specialchars($this->varValue[$i][$j]).'</textarea></td>';
+      <td class="tcontainer"><textarea name="'.$this->strId.'['.$i.']['.$j.']" class="tl_textarea noresize" rows="'.$this->intRows.'" cols="'.$this->intCols.'"'.$this->getAttributes().'>'.\StringUtil::specialchars($this->varValue[$i][$j]).'</textarea></td>';
 			}
 
 			$return .= '
@@ -144,11 +136,11 @@ class TableWizard extends \Widget
 			{
 				if ($button == 'rdrag')
 				{
-					$return .= ' ' . \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['move']) . '"');
+					$return .= ' <button type="button" class="drag-handle" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['move']) . '">' . \Image::getHtml('drag.svg') . '</button>';
 				}
 				else
 				{
-					$return .= ' ' . \Image::getHtml(substr($button, 1).'.svg', '', 'class="tl_tablewizard_img" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_'.$button]) . '" onclick="Backend.tableWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false"');
+					$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_'.$button]) . '">' . \Image::getHtml(substr($button, 1).'.svg') . '</button>';
 				}
 			}
 
@@ -156,14 +148,11 @@ class TableWizard extends \Widget
     </tr>';
 		}
 
-		// Store the tab index
-		\Cache::set('tabindex', $tabindex);
-
 		$return .= '
   </tbody>
   </table>
   </div>
-  <script>Backend.tableWizardResize()</script>';
+  <script>Backend.tableWizard("ctrl_'.$this->strId.'")</script>';
 
 		return $return;
 	}
