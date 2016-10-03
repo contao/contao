@@ -166,20 +166,16 @@ class UserPasswordCommandTest extends TestCase
      */
     public function testDatabaseUpdate($username, $password)
     {
-        $passwordConstraint = new \PHPUnit_Framework_Constraint_Callback(
-            function ($value) use ($password) {
-                $this->assertArrayHasKey('password', $value);
-
-                return Encryption::verify($password, $value['password']);
-            }
-        );
-
         /** @var \PHPUnit_Framework_MockObject_MockObject $connection */
         $connection = $this->container->get('database_connection');
         $connection
             ->expects($this->once())
             ->method('update')
-            ->with('tl_user', $passwordConstraint, ['username' => $username])
+            ->with(
+                'tl_user',
+                ['password' => 'HA$HED-' . $password . '-HA$HED'],
+                ['username' => $username]
+            )
             ->willReturn(1)
         ;
 
@@ -216,7 +212,7 @@ class UserPasswordCommandTest extends TestCase
             ->method('hash')
             ->willReturnCallback(
                 function ($password) {
-                    return Encryption::hash($password);
+                    return 'HA$HED-' . $password . '-HA$HED';
                 }
             )
         ;
