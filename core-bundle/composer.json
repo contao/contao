@@ -42,7 +42,8 @@
         "true/punycode": "~1.0",
         "contao/image": "^0.3",
         "contao/imagine-svg": "^0.1",
-        "contao-components/all": "~6.0"
+        "contao-components/all": "~6.0",
+        "contao-components/contao": "dev-release/6.0.0 as 6.0.0"
     },
     "require-dev": {
         "ext-fileinfo": "*",
