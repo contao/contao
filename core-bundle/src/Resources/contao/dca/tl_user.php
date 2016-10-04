@@ -704,7 +704,7 @@ class tl_user extends Backend
 		}
 
 		return '
-<div>
+<div class="widget">
   <fieldset class="tl_checkbox_container">
     <legend>'.$GLOBALS['TL_LANG']['tl_user']['session'][0].'</legend>
     <input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" style="color:#a6a6a6"><em>'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</em></label><br>
