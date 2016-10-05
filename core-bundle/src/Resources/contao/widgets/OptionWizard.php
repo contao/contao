@@ -100,14 +100,14 @@ class OptionWizard extends \Widget
 		}
 
 		// Begin the table
-		$return = '<table id="ctrl_'.$this->strId.'" class="tl_optionswizard">
+		$return = '<table id="ctrl_'.$this->strId.'" class="tl_optionwizard">
   <thead>
     <tr>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_value'].'</th>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_label'].'</th>
       <th></th>
       <th></th>
-      <th style="min-width:54px"></th>
+      <th></th>
     </tr>
   </thead>
   <tbody class="sortable">';
@@ -124,7 +124,7 @@ class OptionWizard extends \Widget
 
 			// Add row buttons
 			$return .= '
-      <td style="white-space:nowrap">';
+      <td>';
 
 			foreach ($arrButtons as $button)
 			{

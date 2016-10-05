@@ -890,7 +890,7 @@ ul.sgallery li {
 }
 
 /* Wizards */
-.tl_modulewizard button,.tl_optionswizard button,.tl_tablewizard button,.tl_listwizard button,.tl_checkbox_wizard button,.tl_metawizard button {
+.tl_modulewizard button,.tl_optionwizard button,.tl_tablewizard button,.tl_listwizard button,.tl_checkbox_wizard button,.tl_metawizard button,.tl_sectionwizard button {
 	margin:0;
 	padding:0;
 	border:0;
@@ -906,11 +906,11 @@ ul.sgallery li {
 	padding:0 6px 0 0;
 }
 .tl_modulewizard th {
+	font-size:.75rem;
 	font-weight:300;
 	padding:0 6px 1px 0;
 }
 .tl_modulewizard td:last-child {
-	padding-left:3px;
 	white-space:nowrap;
 }
 .tl_modulewizard img {
@@ -936,25 +936,29 @@ ul.sgallery li {
 }
 
 /* Options wizard */
-.tl_optionswizard {
+.tl_optionwizard {
 	margin-top:2px;
 }
-.tl_optionswizard label {
+.tl_optionwizard label {
 	margin-right:3px;
 }
-.tl_optionswizard td {
-	padding:0 4px 0 0;
+.tl_optionwizard td {
+	padding:0 6px 0 0;
 }
-.tl_optionswizard th {
+.tl_optionwizard th {
+	font-size:.75rem;
 	font-weight:300;
-	padding:0 4px 1px 0;
+	padding:0 6px 1px 0;
 }
-.tl_optionswizard .fw_checkbox {
-	margin:0 1px;
+.tl_optionwizard td:last-child {
+	white-space:nowrap;
 }
-.tl_optionswizard img {
+.tl_optionwizard img {
 	position:relative;
 	top:1px;
+}
+.tl_optionwizard .fw_checkbox {
+	margin:0 1px;
 }
 
 /* Table wizard */
@@ -968,6 +972,11 @@ ul.sgallery li {
 }
 .tl_tablewizard thead td {
 	padding-bottom:3px;
+	text-align:center;
+	white-space:nowrap;
+}
+.tl_tablewizard tbody td:last-child {
+	white-space:nowrap;
 }
 .tl_tablewizard td.tcontainer {
 	vertical-align:top;
@@ -1030,6 +1039,23 @@ ul.sgallery li {
 .tl_metawizard_new .tl_submit {
 	padding-top:6px;
 	padding-bottom:6px;
+}
+
+/* Section wizard */
+.tl_sectionwizard {
+	margin-top:2px;
+}
+.tl_sectionwizard td {
+	position:relative;
+	padding:0 6px 0 0;
+}
+.tl_sectionwizard th {
+	font-size:.75rem;
+	font-weight:300;
+	padding:0 6px 1px 0;
+}
+.tl_sectionwizard td:last-child {
+	white-space:nowrap;
 }
 
 /* Paste/sort hint */

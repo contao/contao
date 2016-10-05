@@ -98,7 +98,7 @@ class TableWizard extends \Widget
 		for ($i=0, $c=count($this->varValue[0]); $i<$c; $i++)
 		{
 			$return .= '
-      <td style="text-align:center; white-space:nowrap">';
+      <td>';
 
 			// Add column buttons
 			foreach ($arrColButtons as $button)
@@ -129,7 +129,7 @@ class TableWizard extends \Widget
 			}
 
 			$return .= '
-      <td style="white-space:nowrap">';
+      <td>';
 
 			// Add row buttons
 			foreach ($arrRowButtons as $button)

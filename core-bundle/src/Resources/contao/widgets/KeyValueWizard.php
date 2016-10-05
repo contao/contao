@@ -120,12 +120,12 @@ class KeyValueWizard extends \Widget
 		}
 
 		// Begin the table
-		$return = '<table id="ctrl_'.$this->strId.'" class="tl_optionswizard">
+		$return = '<table id="ctrl_'.$this->strId.'" class="tl_optionwizard">
   <thead>
     <tr>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_key'].'</th>
       <th>'.$GLOBALS['TL_LANG']['MSC']['ow_value'].'</th>
-      <th style="min-width:54px"></th>
+      <th></th>
     </tr>
   </thead>
   <tbody class="sortable">';
@@ -140,7 +140,7 @@ class KeyValueWizard extends \Widget
 
 			// Add row buttons
 			$return .= '
-      <td style="white-space:nowrap;padding-left:3px">';
+      <td>';
 
 			foreach ($arrButtons as $button)
 			{
