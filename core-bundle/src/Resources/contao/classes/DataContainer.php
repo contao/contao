@@ -465,12 +465,6 @@ abstract class DataContainer extends \Backend
 			$arrData['eval']['tl_class'] .= ' inline';
 		}
 
-		// No 2-column layout in "edit all" mode
-		if (\Input::get('act') == 'editAll' || \Input::get('act') == 'overrideAll')
-		{
-			$arrData['eval']['tl_class'] = str_replace(array('w50', 'clr', 'wizard', 'long', 'm12', 'cbx'), '', $arrData['eval']['tl_class']);
-		}
-
 		$updateMode = '';
 
 		// Replace the textarea with an RTE instance
@@ -495,7 +489,7 @@ abstract class DataContainer extends \Backend
 		{
 			$updateMode = '
 </div>
-<div>
+<div class="widget">
   <fieldset class="tl_radio_container">
   <legend>' . $GLOBALS['TL_LANG']['MSC']['updateMode'] . '</legend>
     <input type="radio" name="'.$this->strInputName.'_update" id="opt_'.$this->strInputName.'_update_1" class="tl_radio" value="add" onfocus="Backend.getScrollOffset()"> <label for="opt_'.$this->strInputName.'_update_1">' . $GLOBALS['TL_LANG']['MSC']['updateAdd'] . '</label><br>

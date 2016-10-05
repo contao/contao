@@ -1689,7 +1689,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$return = '
 
 <form action="'.ampersand(\Environment::get('request'), true).'" id="'.$this->strTable.'" class="tl_form" method="post">
-<div class="tl_formbody_edit">
+<div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="'.$this->strTable.'">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">'.($this->noReload ? '
 
