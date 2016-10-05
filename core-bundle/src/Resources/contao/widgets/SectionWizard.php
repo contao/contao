@@ -33,6 +33,24 @@ class SectionWizard extends \Widget
 
 
 	/**
+	 * Standardize the ID
+	 *
+	 * @param mixed $varInput
+	 *
+	 * @return mixed
+	 */
+	protected function validator($varInput)
+	{
+		if (isset($varInput['id']))
+		{
+			$varInput['id'] = \StringUtil::standardize($varInput['id']);
+		}
+
+		return parent::validator($varInput);
+	}
+
+
+	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string

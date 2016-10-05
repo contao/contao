@@ -768,7 +768,7 @@
         <source>Title</source>
       </trans-unit>
       <trans-unit id="MSC.sw_id">
-        <source>CSS ID</source>
+        <source>ID</source>
       </trans-unit>
       <trans-unit id="MSC.sw_template">
         <source>Template</source>
