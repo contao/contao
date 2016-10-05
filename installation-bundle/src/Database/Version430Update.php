@@ -38,6 +38,28 @@ class Version430Update extends AbstractVersionUpdate
      */
     public function run()
     {
+        $statement = $this->connection->query("SELECT id, sections, sPosition FROM tl_layout WHERE sections!=''");
+
+        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
+            $sections = \StringUtil::trimsplit(',', $layout->sections);
+
+            if (!empty($sections) && is_array($sections)) {
+                $set = array();
+
+                foreach ($sections as $section) {
+                    $set[$section] = [
+                        'title' => $section,
+                        'id' => $section,
+                        'template' => 'block_section',
+                        'position' => $layout->sPosition,
+                    ];
+                }
+
+                $stmt = $this->connection->prepare('UPDATE tl_layout SET sections=:sections WHERE id=:id');
+                $stmt->execute([':sections' => serialize(array_values($set)), ':id' => $layout->id]);
+            }
+        }
+
         $this->connection->query("ALTER TABLE `tl_layout` ADD `combineScripts` char(1) NOT NULL default ''");
         $this->connection->query("UPDATE tl_layout SET combineScripts='1'");
     }
