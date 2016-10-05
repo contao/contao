@@ -675,12 +675,16 @@ class tl_article extends Backend
 
 			while ($objLayout->next())
 			{
-				$arrCustom = StringUtil::trimsplit(',', $objLayout->sections);
+				$arrCustom = StringUtil::deserialize($objLayout->sections);
 
 				// Add the custom layout sections
 				if (!empty($arrCustom) && is_array($arrCustom))
 				{
-					$arrSections = array_merge($arrSections, $arrCustom);
+					foreach ($arrCustom as $v)
+					{
+						$arrSections[] = $v['id'];
+						$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
+					}
 				}
 			}
 		}

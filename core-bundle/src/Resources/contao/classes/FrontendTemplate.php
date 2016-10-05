@@ -20,7 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
  * @property string  $keywords
  * @property string  $content
  * @property array   $sections
- * @property string  $sPosition
+ * @property array   $positions
+ * @property array   $matches
  * @property string  $tag
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -194,10 +195,23 @@ class FrontendTemplate extends \Template
 		}
 
 		// The key does not match
-		if ($key && $this->sPosition != $key)
+		if ($key && !isset($this->positions[$key]))
 		{
 			return;
 		}
+
+		$matches = array();
+
+		foreach ($this->positions[$key] as $id=>$section)
+		{
+			if (isset($this->sections[$id]))
+			{
+				$section['content'] = $this->sections[$id];
+				$matches[$id] = $section;
+			}
+		}
+
+		$this->matches = $matches;
 
 		if ($template === null)
 		{
@@ -380,7 +394,7 @@ class FrontendTemplate extends \Template
 	{
 		@trigger_error('Using FrontendTemplate::getCustomSections() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::sections() instead.', E_USER_DEPRECATED);
 
-		if ($strKey != '' && $this->sPosition != $strKey)
+		if ($strKey != '' && !isset($this->positions[$strKey]))
 		{
 			return '';
 		}
@@ -402,9 +416,12 @@ class FrontendTemplate extends \Template
 		$sections = '';
 
 		// Standardize the IDs (thanks to Tsarma) (see #4251)
-		foreach ($this->sections as $k=>$v)
+		foreach ($this->positions[$strKey] as $sect)
 		{
-			$sections .= "\n" . '<' . $tag . ' id="' . \StringUtil::standardize($k, true) . '">' . "\n" . '<div class="inside">' . "\n" . $v . "\n" . '</div>' . "\n" . '</' . $tag . '>' . "\n";
+			if (isset($this->sections[$sect['id']]))
+			{
+				$sections .= "\n" . '<' . $tag . ' id="' . \StringUtil::standardize($sect['id'], true) . '">' . "\n" . '<div class="inside">' . "\n" . $this->sections[$sect['id']] . "\n" . '</div>' . "\n" . '</' . $tag . '>' . "\n";
+			}
 		}
 
 		if ($sections == '')

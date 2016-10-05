@@ -70,12 +70,20 @@ class ModuleWizard extends \Widget
 
 		// Show all columns and filter in PageRegular (see #3273)
 		$cols = array('header', 'left', 'right', 'main', 'footer');
-		$arrSections = \StringUtil::trimsplit(',', $objRow->sections);
 
-		// Add custom page sections
-		if (!empty($arrSections) && is_array($arrSections))
+		// Add custom layout sections
+		if ($objRow->sections != '')
 		{
-			$cols = array_merge($cols, $arrSections);
+			$arrSections = \StringUtil::deserialize($objRow->sections);
+
+			if (!empty($arrSections) && is_array($arrSections))
+			{
+				foreach ($arrSections as $v)
+				{
+					$cols[$v['id']] = $v['id'];
+					$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
+				}
+			}
 		}
 
 		// Get the new value
@@ -143,7 +151,7 @@ class ModuleWizard extends \Widget
 			// Add columns
 			foreach ($cols as $v)
 			{
-				$options .= '<option value="'.\StringUtil::specialchars($v).'"'.static::optionSelected($v, $this->varValue[$i]['col']).'>'. ((isset($GLOBALS['TL_LANG']['COLS'][$v]) && !is_array($GLOBALS['TL_LANG']['COLS'][$v])) ? $GLOBALS['TL_LANG']['COLS'][$v] : $v) .'</option>';
+				$options .= '<option value="'.\StringUtil::specialchars($v).'"'.static::optionSelected($v, $this->varValue[$i]['col']).'>'.$GLOBALS['TL_LANG']['COLS'][$v].'</option>';
 			}
 
 			$return .= '

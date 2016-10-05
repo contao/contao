@@ -25,7 +25,6 @@ namespace Contao;
  * @property string  $widthLeft
  * @property string  $widthRight
  * @property string  $sections
- * @property string  $sPosition
  * @property string  $framework
  * @property string  $stylesheet
  * @property string  $external
@@ -69,7 +68,6 @@ namespace Contao;
  * @method static LayoutModel|null findOneByWidthLeft($val, $opt=array())
  * @method static LayoutModel|null findOneByWidthRight($val, $opt=array())
  * @method static LayoutModel|null findOneBySections($val, $opt=array())
- * @method static LayoutModel|null findOneBySPosition($val, $opt=array())
  * @method static LayoutModel|null findOneByFramework($val, $opt=array())
  * @method static LayoutModel|null findOneByStylesheet($val, $opt=array())
  * @method static LayoutModel|null findOneByExternal($val, $opt=array())
@@ -109,7 +107,6 @@ namespace Contao;
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByWidthLeft($val, $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByWidthRight($val, $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findBySections($val, $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findBySPosition($val, $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByFramework($val, $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByStylesheet($val, $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByExternal($val, $opt=array())
@@ -153,7 +150,6 @@ namespace Contao;
  * @method static integer countByWidthLeft($val, $opt=array())
  * @method static integer countByWidthRight($val, $opt=array())
  * @method static integer countBySections($val, $opt=array())
- * @method static integer countBySPosition($val, $opt=array())
  * @method static integer countByFramework($val, $opt=array())
  * @method static integer countByStylesheet($val, $opt=array())
  * @method static integer countByExternal($val, $opt=array())

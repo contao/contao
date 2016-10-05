@@ -870,7 +870,6 @@ class tl_module extends Backend
 	 */
 	public function getLayoutSections()
 	{
-		$arrCustom = array();
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
 
 		// Check for custom layout sections
@@ -878,18 +877,20 @@ class tl_module extends Backend
 
 		while ($objLayout->next())
 		{
-			$arrCustom = array_merge($arrCustom, StringUtil::trimsplit(',', $objLayout->sections));
+			$arrCustom = StringUtil::deserialize($objLayout->sections);
+
+			// Add the custom layout sections
+			if (!empty($arrCustom) && is_array($arrCustom))
+			{
+				foreach ($arrCustom as $v)
+				{
+					$arrSections[] = $v['id'];
+					$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
+				}
+			}
 		}
 
-		$arrCustom = array_unique($arrCustom);
-
-		// Add the custom layout sections
-		if (!empty($arrCustom) && is_array($arrCustom))
-		{
-			$arrSections = array_merge($arrSections, $arrCustom);
-		}
-
-		return $arrSections;
+		return array_values(array_unique($arrSections));
 	}
 
 

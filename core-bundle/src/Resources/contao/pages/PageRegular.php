@@ -477,7 +477,23 @@ class PageRegular extends \Frontend
 
 		// Initialize the custom layout sections
 		$this->Template->sections = array();
-		$this->Template->sPosition = $objLayout->sPosition;
+		$this->Template->positions = array();
+
+		if ($objLayout->sections != '')
+		{
+			$arrPositions = array();
+			$arrSections = \StringUtil::deserialize($objLayout->sections);
+
+			if (!empty($arrSections) && is_array($arrSections))
+			{
+				foreach ($arrSections as $v)
+				{
+					$arrPositions[$v['position']][$v['id']] = $v;
+				}
+			}
+
+			$this->Template->positions = $arrPositions;
+		}
 
 		// Default settings
 		$this->Template->layout = $objLayout;
