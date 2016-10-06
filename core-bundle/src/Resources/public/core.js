@@ -890,7 +890,7 @@ var Backend =
 	 */
 	openModalIframe: function(options) {
 		var opt = options || {};
-		var max = (window.getSize().y-180).toInt();
+		var max = (window.getSize().y - 186).toInt();
 		if (!opt.height || opt.height > max) opt.height = max;
 		var M = new SimpleModal({
 			'width': opt.width,
@@ -913,7 +913,7 @@ var Backend =
 	 */
 	openModalSelector: function(options) {
 		var opt = options || {},
-			max = (window.getSize().y-180).toInt();
+			max = (window.getSize().y - 186).toInt();
 		if (!opt.height || opt.height > max) opt.height = max;
 		var M = new SimpleModal({
 			'width': opt.width,
@@ -928,7 +928,7 @@ var Backend =
 		});
 		M.addButton(Contao.lang.apply, 'btn primary', function() {
 			var frm = window.frames['simple-modal-iframe'],
-				val = [], inp, field, i;
+				val = [], ul, inp, field, act, it, i;
 			if (frm === undefined) {
 				alert('Could not find the SimpleModal frame');
 				return;
@@ -937,20 +937,20 @@ var Backend =
 				alert(Contao.lang.picker);
 				return; // see #5704
 			}
-			inp = frm.document.getElementById('tl_select').getElementsByTagName('input');
+			ul = frm.document.getElementById(opt.id);
+			inp = ul.getElementsByTagName('input');
 			for (i=0; i<inp.length; i++) {
 				if (!inp[i].checked || inp[i].id.match(/^check_all_/)) continue;
 				if (!inp[i].id.match(/^reset_/)) val.push(inp[i].get('value'));
 			}
-			if (opt.tag) {
-				$(opt.tag).value = val.join(',');
-				if (frm.document.location.href.indexOf('contao/page?') != -1) {
-					$(opt.tag).value = '{{link_url::' + $(opt.tag).value + '}}';
+			if (opt.tag && (field = $(opt.tag))) {
+				field.value = val.join(',');
+				if (it = ul.get('data-inserttag')) {
+					field.value = '{{' + it + '::' + field.value + '}}';
 				}
 				opt.self.set('href', opt.self.get('href').replace(/&value=[^&]*/, '&value=' + val.join(',')));
-			} else if (opt.id && (field = $('ctrl_' + opt.id))) {
+			} else if (opt.id && (field = $('ctrl_' + opt.id)) && (act = ul.get('data-callback'))) {
 				field.value = val.join("\t");
-				var act = (frm.document.location.href.indexOf('contao/page?') != -1) ? 'reloadPagetree' : 'reloadFiletree';
 				new Request.Contao({
 					field: field,
 					evalScripts: false,
