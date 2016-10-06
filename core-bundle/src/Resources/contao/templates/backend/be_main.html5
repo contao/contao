@@ -24,8 +24,8 @@
   <script src="<?= TL_ASSETS_URL ?>assets/chosen/js/chosen.min.js"></script>
   <script src="<?= TL_ASSETS_URL ?>assets/simplemodal/js/simplemodal.min.js"></script>
   <script src="<?= TL_ASSETS_URL ?>assets/datepicker/js/datepicker.min.js"></script>
-  <script src="<?= TL_ASSETS_URL ?>assets/contao/js/mootao.min.js"></script>
-  <script src="<?= TL_ASSETS_URL ?>assets/contao/js/core.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>bundles/contaocore/mootao.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>bundles/contaocore/core.min.js"></script>
   <script src="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/hover.js"></script>
   <script><?= $this->getDateString() ?></script>
   <?= $this->javascripts ?>
