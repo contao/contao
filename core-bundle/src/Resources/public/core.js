@@ -948,8 +948,7 @@ var Backend =
 					$(opt.tag).value = '{{link_url::' + $(opt.tag).value + '}}';
 				}
 				opt.self.set('href', opt.self.get('href').replace(/&value=[^&]*/, '&value=' + val.join(',')));
-			} else {
-				field = $('ctrl_' + opt.id);
+			} else if (opt.id && (field = $('ctrl_' + opt.id))) {
 				field.value = val.join("\t");
 				var act = (frm.document.location.href.indexOf('contao/page?') != -1) ? 'reloadPagetree' : 'reloadFiletree';
 				new Request.Contao({
