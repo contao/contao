@@ -21,6 +21,7 @@
         "contao/installation-bundle": "~1.1"
     },
     "require-dev": {
+        "composer/composer": "~1.0",
         "phpunit/phpunit": "~4.5",
         "symfony/phpunit-bridge": "~2.8|~3.0"
     },
@@ -34,7 +35,6 @@
             "Contao\\ManagerBundle\\Test\\": "tests/"
         }
     },
-    "bin": ["bin/contao-console"],
     "extra": {
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManagerPlugin"
     }

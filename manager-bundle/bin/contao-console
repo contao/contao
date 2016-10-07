@@ -17,11 +17,7 @@ ini_set('error_reporting', -1);
 ini_set('display_startup_errors', 1);
 ini_set('display_errors', 1);
 
-if (is_dir($vendor = __DIR__.'/../vendor')) {
-    require($vendor.'/autoload.php');
-} elseif (is_dir($vendor = __DIR__.'/../../../../vendor')) {
-    require($vendor.'/autoload.php');
-} else {
+if (!include(__DIR__ . '/../../../../vendor/autoload.php')) {
     die(
         'You must set up the project dependencies, run the following commands:'.PHP_EOL.
         'curl -s http://getcomposer.org/installer | php'.PHP_EOL.
@@ -30,5 +26,6 @@ if (is_dir($vendor = __DIR__.'/../vendor')) {
 }
 
 $kernel = new ContaoKernel('prod', true);
+$kernel->setRootDir(__DIR__ . '/../../../../system');
 $application = new Application($kernel);
 $application->run();
