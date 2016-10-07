@@ -18,11 +18,15 @@
 
     <script>
       window.addEvent('domready', function() {
-        var urls = $$('.page_url'),
-            completed = 0;
-        urls.each(function(el) {
-          el.getAttribute('data-url') && new Request({
-            url: el.getAttribute('data-url'),
+        var queue = new Request.Queue({
+          onEnd: function() {
+            $('index_loading').setStyle('display', 'none');
+            $('index_complete').setStyle('display', 'block');
+          },
+          stopOnFailure: false
+        });
+        $$('.page_url').each(function(el, i) {
+          el.getAttribute('data-url') && queue.addRequest(i, new Request({
             onSuccess: function() {
               el.addClass('tl_green');
             },
@@ -30,13 +34,11 @@
               el.addClass('tl_red');
               el.set('text', '[' + xhr.status + '] ' + el.get('text'));
             },
-            onComplete: function() {
-              if (++completed >= urls.length) {
-                $('index_loading').setStyle('display', 'none');
-                $('index_complete').setStyle('display', 'block');
-              }
-            }
-          }).get();
+            url: el.getAttribute('data-url')
+          }));
+        });
+        Object.each(queue.requests, function(req) {
+          req.get();
         });
       });
     </script>
