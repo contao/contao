@@ -10,10 +10,12 @@
 
 namespace Contao\ManagerBundle\HttpKernel;
 
+use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerBundle\Manager\Bundle\BundleAutoloader;
 use Contao\ManagerBundle\Manager\Bundle\ConfigInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
 class ContaoKernel extends Kernel
@@ -22,6 +24,11 @@ class ContaoKernel extends Kernel
      * @var array
      */
     protected $bundleConfigs = [];
+
+    /**
+     * @var PluginLoader
+     */
+    private $pluginLoader;
 
     /**
      * {@inheritdoc}
@@ -60,11 +67,48 @@ class ContaoKernel extends Kernel
     }
 
     /**
+     * Loads Contao Manager plugins from Composer's installed.json
+     *
+     * @param string $installedJson
+     */
+    public function loadPlugins($installedJson)
+    {
+        $this->pluginLoader = new PluginLoader($installedJson);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function prepareContainer(ContainerBuilder $container)
+    {
+        // Set plugin loader so it's available in ContainerBuilder
+        if ($this->pluginLoader) {
+            $container->set('contao_manager.plugin_loader', $this->pluginLoader);
+            $container->setParameter('contao_manager.plugins', $this->pluginLoader->getClasses());
+        }
+
+        parent::prepareContainer($container);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function initializeContainer()
+    {
+        parent::initializeContainer();
+
+        // Set plugin loader again so it's available at runtime (synthetic service)
+        if ($this->pluginLoader) {
+            $this->container->set('contao_manager.plugin_loader', $this->pluginLoader);
+        }
     }
 
     /**
@@ -124,9 +168,13 @@ class ContaoKernel extends Kernel
      */
     private function loadBundleConfigs()
     {
+        if (null === $this->pluginLoader) {
+            return [];
+        }
+
         $rootDir = $this->getRootDir();
         $autoloader = new BundleAutoloader(
-            $rootDir . '/../vendor/composer/installed.json',
+            $this->pluginLoader->getInstances(),
             $rootDir . '/modules'
         );
 

@@ -66,11 +66,11 @@ class EntryPointCommand extends AbstractLockedCommand
         $force = (bool) $input->getOption('force');
 
         $pathToSystem = rtrim($this->fs->makePathRelative($varDir, $webDir), '/');
-        $pathToAutoload = rtrim($this->fs->makePathRelative($vendorDir, $webDir), '/') . '/autoload.php';
+        $pathToVendor = rtrim($this->fs->makePathRelative($vendorDir, $webDir), '/');
 
-        $this->addAppPhp($webDir, $pathToSystem, $pathToAutoload, $force);
-        $this->addAppDevPhp($webDir, $pathToSystem, $pathToAutoload, $force);
-        $this->addInstallPhp($webDir, $pathToSystem, $pathToAutoload, $force);
+        $this->addAppPhp($webDir, $pathToSystem, $pathToVendor, $force);
+        $this->addAppDevPhp($webDir, $pathToSystem, $pathToVendor, $force);
+        $this->addInstallPhp($webDir, $pathToSystem, $pathToVendor, $force);
 
         return 0;
     }
@@ -85,10 +85,10 @@ class EntryPointCommand extends AbstractLockedCommand
      *
      * @param string $webDir
      * @param string $pathToSystem
-     * @param string $pathToAutoload
+     * @param string $pathToVendor
      * @param bool   $force
      */
-    private function addAppPhp($webDir, $pathToSystem, $pathToAutoload, $force = false)
+    private function addAppPhp($webDir, $pathToSystem, $pathToVendor, $force = false)
     {
         if ($this->fs->exists($webDir.'/app.php') && !$force) {
             return;
@@ -115,12 +115,13 @@ use Symfony\\Component\\HttpFoundation\\Request;
 /**
  * @var Composer\\Autoload\\ClassLoader
  */
-\$loader = require __DIR__.'/$pathToAutoload';
+\$loader = require __DIR__.'/$pathToVendor/autoload.php';
 
 AnnotationRegistry::registerLoader([\$loader, 'loadClass']);
 
 \$kernel = new ContaoKernel('prod', false);
 \$kernel->setRootDir(__DIR__ . '/$pathToSystem');
+\$kernel->loadPlugins(__DIR__ . '/$pathToVendor/composer/installed.json');
 \$kernel->loadClassCache();
 
 // Enable the Symfony reverse proxy
@@ -144,10 +145,10 @@ EOF
      *
      * @param string $webDir
      * @param string $pathToSystem
-     * @param string $pathToAutoload
+     * @param string $pathToVendor
      * @param bool   $force
      */
-    private function addAppDevPhp($webDir, $pathToSystem, $pathToAutoload, $force = false)
+    private function addAppDevPhp($webDir, $pathToSystem, $pathToVendor, $force = false)
     {
         if ($this->fs->exists($webDir.'/app_dev.php') && !$force) {
             return;
@@ -204,13 +205,14 @@ unset(\$accessKey);
 /**
  * @var Composer\\Autoload\\ClassLoader
  */
-\$loader = require __DIR__.'/$pathToAutoload';
+\$loader = require __DIR__.'/$pathToVendor/autoload.php';
 
 AnnotationRegistry::registerLoader([\$loader, 'loadClass']);
 Debug::enable();
 
 \$kernel = new ContaoKernel('dev', true);
 \$kernel->setRootDir(__DIR__ . '/$pathToSystem');
+\$kernel->loadPlugins(__DIR__ . '/$pathToVendor/composer/installed.json');
 \$kernel->loadClassCache();
 
 // Handle the request
@@ -231,10 +233,10 @@ EOF
      *
      * @param string $webDir
      * @param string $pathToSystem
-     * @param string $pathToAutoload
+     * @param string $pathToVendor
      * @param bool   $force
      */
-    private function addInstallPhp($webDir, $pathToSystem, $pathToAutoload, $force = false)
+    private function addInstallPhp($webDir, $pathToSystem, $pathToVendor, $force = false)
     {
         if ($this->fs->exists($webDir.'/install.php') && !$force) {
             return;
@@ -262,10 +264,11 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 /**
  * @var Composer\\Autoload\\ClassLoader
  */
-\$loader = require __DIR__.'/$pathToAutoload';
+\$loader = require __DIR__.'/$pathToVendor/autoload.php';
 
 \$kernel = new ManagedInstallationKernel('dev', false);
 \$kernel->setRootDir(__DIR__ . '/$pathToSystem');
+\$kernel->loadPlugins(__DIR__ . '/$pathToVendor/composer/installed.json');
 \$kernel->loadClassCache();
 
 // Handle the request

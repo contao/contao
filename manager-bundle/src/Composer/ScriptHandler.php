@@ -53,7 +53,7 @@ class ScriptHandler
         $consoleInstalled = static::installContaoConsole(
             static::findContaoConsole($composer),
             $binDir . '/console',
-            $fs->findShortestPath($binDir, $vendorDir, true) . '/autoload.php',
+            $fs->findShortestPath($binDir, $vendorDir, true),
             $fs->findShortestPath($binDir, $varDir, true)
         );
 
@@ -73,15 +73,15 @@ class ScriptHandler
         }
     }
 
-    private static function installContaoConsole($filePath, $installTo, $autoloadPath, $kernelRootDir)
+    private static function installContaoConsole($filePath, $installTo, $vendorDir, $kernelRootDir)
     {
         if (!is_file($filePath)) {
             throw new \UnderflowException(sprintf('%s is not a valid file.', $filePath));
         }
 
         $content = str_replace(
-            ['../../../../vendor/autoload.php', '../../../../system'],
-            [$autoloadPath, $kernelRootDir],
+            ['../../../../vendor', '../../../../system'],
+            [$vendorDir, $kernelRootDir],
             file_get_contents($filePath)
         );
 

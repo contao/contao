@@ -10,6 +10,8 @@
 
 namespace Contao\ManagerBundle\Manager\Bundle;
 
+use Contao\ManagerBundle\ContaoManager\PluginLoader;
+
 /**
  * Finds the autoload bundles
  *
@@ -18,9 +20,9 @@ namespace Contao\ManagerBundle\Manager\Bundle;
 class BundleAutoloader
 {
     /**
-     * @var string
+     * @var array
      */
-    private $installedJson;
+    private $plugins;
 
     /**
      * @var string
@@ -30,21 +32,15 @@ class BundleAutoloader
     /**
      * Constructor
      *
-     * @param string $installedJson
+     * @param array $plugins
      * @param string $modulesDir
      *
      * @throws \InvalidArgumentException If the installed.json does not exist
      */
-    public function __construct($installedJson, $modulesDir)
+    public function __construct($plugins, $modulesDir)
     {
         $this->modulesDir = $modulesDir;
-        $this->installedJson = $installedJson;
-
-        if (!is_file($installedJson)) {
-            throw new \InvalidArgumentException(
-                sprintf('Composer installed.json was not found at "%s"', $installedJson)
-            );
-        }
+        $this->plugins = $plugins;
     }
 
     /**
@@ -60,7 +56,7 @@ class BundleAutoloader
         $jsonParser = new JsonParser();
         $iniParser = new IniParser($this->modulesDir);
 
-        foreach ($this->getManagerPlugins() as $plugin) {
+        foreach ($this->plugins as $plugin) {
             if ($plugin instanceof BundlePluginInterface) {
                 foreach ($plugin->getAutoloadConfigs($jsonParser, $iniParser) as $config) {
                     $resolver->add($config);
@@ -69,30 +65,5 @@ class BundleAutoloader
         }
 
         return $resolver->getBundleConfigs($development);
-    }
-
-    /**
-     * Get all instances of manager plugins from Composer's installed.json
-     *
-     * @return array
-     *
-     * @throws \RuntimeException
-     */
-    private function getManagerPlugins()
-    {
-        $plugins = [];
-        $json = json_decode(file_get_contents($this->installedJson), true);
-
-        if (null === $json) {
-            throw new \RuntimeException(sprintf('File "%s" cannot be decoded', $this->installedJson));
-        }
-
-        foreach ($json as $package) {
-            if (isset($package['extra']['contao-manager-plugin'])) {
-                $plugins[] = new $package['extra']['contao-manager-plugin'];
-            }
-        }
-
-        return $plugins;
     }
 }
