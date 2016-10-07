@@ -42,7 +42,21 @@ class ContaoKernel extends Kernel
      */
     public function getRootDir()
     {
-        return dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/system';
+        if (null === $this->rootDir) {
+            $this->rootDir = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/system';
+        }
+
+        return $this->rootDir;
+    }
+
+    /**
+     * Sets the application root dir.
+     *
+     * @param string $dir
+     */
+    public function setRootDir($dir)
+    {
+        $this->rootDir = realpath($dir) ?: null;
     }
 
     /**
