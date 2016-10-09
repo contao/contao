@@ -36,6 +36,6 @@
         }
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManagerPlugin"
+        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     }
 }

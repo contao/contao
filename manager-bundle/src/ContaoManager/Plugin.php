@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle;
+namespace Contao\ManagerBundle\ContaoManager;
 
 use Contao\ManagerBundle\Manager\Bundle\BundlePluginInterface;
 use Contao\ManagerBundle\Manager\Bundle\IniParser;
@@ -19,13 +19,13 @@ use Contao\ManagerBundle\Manager\Bundle\JsonParser;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoManagerPlugin implements BundlePluginInterface
+class Plugin implements BundlePluginInterface
 {
     /**
      * @inheritdoc
      */
     public function getAutoloadConfigs(JsonParser $jsonParser, IniParser $iniParser)
     {
-        return $jsonParser->parse(__DIR__ . '/Resources/contao-manager/bundles.json');
+        return $jsonParser->parse(__DIR__ . '/../Resources/contao-manager/bundles.json');
     }
 }
