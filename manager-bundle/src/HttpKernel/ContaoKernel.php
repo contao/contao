@@ -81,7 +81,9 @@ class ContaoKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
+        if (file_exists($this->getRootDir() . '/config/parameters.yml')) {
+            $loader->load($this->getRootDir() . '/config/parameters.yml');
+        }
     }
 
     /**
