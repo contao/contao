@@ -1,3 +1,10 @@
 services:
     contao_manager.plugin_loader:
         synthetic: true
+
+    contao_manager.routing_loader:
+        class: Contao\ManagerBundle\Routing\RouteLoader
+        arguments:
+            - "@routing.loader"
+            - "@contao_manager.plugin_loader"
+            - "@kernel"

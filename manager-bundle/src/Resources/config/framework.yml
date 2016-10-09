@@ -8,7 +8,8 @@ parameters:
 framework:
     secret: "%secret%"
     router:
-        resource: "%kernel.root_dir%/config/routing_%kernel.environment%.yml"
+        resource: "contao_manager.routing_loader:loadFromPlugins"
+        type: service
         strict_requirements: "%kernel.debug%"
     templating:
         engines: ['twig']
