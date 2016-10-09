@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CalendarBundle\Manager;
+namespace Contao\CalendarBundle\ContaoManager;
 
 use Contao\ManagerBundle\Manager\Bundle\BundleConfig;
 use Contao\ManagerBundle\Manager\Bundle\BundlePluginInterface;
@@ -20,7 +20,7 @@ use Contao\ManagerBundle\Manager\Bundle\JsonParser;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoManagerPlugin implements BundlePluginInterface
+class Plugin implements BundlePluginInterface
 {
     /**
      * @inheritdoc
