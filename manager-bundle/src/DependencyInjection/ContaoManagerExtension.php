@@ -10,8 +10,8 @@
 
 namespace Contao\ManagerBundle\DependencyInjection;
 
+use Contao\ManagerBundle\ContaoManager\Config\ConfigPluginInterface;
 use Symfony\Component\Config\FileLocator;
-use Contao\CoreBundle\DependencyInjection\PrependContaoExtensionInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -48,7 +48,7 @@ class ContaoManagerExtension extends Extension implements PrependExtensionInterf
         $coreLoader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../../core-bundle/src/Resources/config'));
         $coreLoader->load('security.yml');
 
-        $this->prependBundles($container);
+        $this->prependPlugins($container);
     }
 
     public function load(array $configs, ContainerBuilder $container)
@@ -61,12 +61,16 @@ class ContaoManagerExtension extends Extension implements PrependExtensionInterf
         $loader->load('services.yml');
     }
 
-    private function prependBundles(ContainerBuilder $container)
+    private function prependPlugins(ContainerBuilder $container)
     {
-        foreach ($container->getExtensions() as $extension) {
-            if ($extension instanceof PrependContaoExtensionInterface && !$extension instanceof PrependExtensionInterface) {
+        if (!$container->has('contao_manager.plugin_loader')) {
+            return;
+        }
+
+        foreach ($container->get('contao_manager.plugin_loader')->getInstances() as $plugin) {
+            if ($plugin instanceof ConfigPluginInterface) {
                 // We do not have a managed config yet, so we'll just pass an empty array
-                $extension->prependManagedConfig([], $container);
+                $plugin->prependConfig([], $container);
             }
         }
     }
