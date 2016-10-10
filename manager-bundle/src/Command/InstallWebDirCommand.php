@@ -97,7 +97,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     private function addFiles($webDir, $pathToSystem, $pathToVendor, $force = false)
     {
-        $finder = Finder::create()->files()->in(__DIR__ . '/../Resources/web');
+        $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__ . '/../Resources/web');
 
         foreach ($finder as $file) {
             if ($this->fs->exists($webDir.'/'.$file->getRelativePathname()) && !$force) {
