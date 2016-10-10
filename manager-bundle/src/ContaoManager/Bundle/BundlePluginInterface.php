@@ -23,5 +23,5 @@ interface BundlePluginInterface
      *
      * @return ConfigInterface[]
      */
-    public function getAutoloadConfigs(JsonParser $jsonParser, IniParser $iniParser);
+    public function getBundles(JsonParser $jsonParser, IniParser $iniParser);
 }

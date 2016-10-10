@@ -10,6 +10,8 @@
 
 namespace Contao\ManagerBundle\ContaoManager\Bundle;
 
+use Contao\ManagerBundle\ContaoManager\PluginLoader;
+
 /**
  * Finds the autoload bundles
  *
@@ -18,9 +20,9 @@ namespace Contao\ManagerBundle\ContaoManager\Bundle;
 class BundleAutoloader
 {
     /**
-     * @var array
+     * @var PluginLoader
      */
-    private $plugins;
+    private $pluginLoader;
 
     /**
      * @var string
@@ -30,15 +32,15 @@ class BundleAutoloader
     /**
      * Constructor
      *
-     * @param array $plugins
+     * @param PluginLoader $pluginLoader
      * @param string $modulesDir
      *
      * @throws \InvalidArgumentException If the installed.json does not exist
      */
-    public function __construct($plugins, $modulesDir)
+    public function __construct(PluginLoader $pluginLoader, $modulesDir)
     {
         $this->modulesDir = $modulesDir;
-        $this->plugins = $plugins;
+        $this->pluginLoader = $pluginLoader;
     }
 
     /**
@@ -54,11 +56,12 @@ class BundleAutoloader
         $jsonParser = new JsonParser();
         $iniParser = new IniParser($this->modulesDir);
 
-        foreach ($this->plugins as $plugin) {
-            if ($plugin instanceof BundlePluginInterface) {
-                foreach ($plugin->getAutoloadConfigs($jsonParser, $iniParser) as $config) {
-                    $resolver->add($config);
-                }
+        /** @var BundlePluginInterface[] $plugins */
+        $plugins = $this->pluginLoader->getInstancesOf(PluginLoader::BUNDLE_PLUGINS);
+
+        foreach ($plugins as $plugin) {
+            foreach ($plugin->getBundles($jsonParser, $iniParser) as $config) {
+                $resolver->add($config);
             }
         }
 

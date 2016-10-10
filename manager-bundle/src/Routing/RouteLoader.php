@@ -54,18 +54,18 @@ class RouteLoader
      */
     public function loadFromPlugins()
     {
-        $collection = new RouteCollection();
-
-        foreach (array_reverse($this->pluginLoader->getInstances()) as $plugin) {
-            if ($plugin instanceof RoutingPluginInterface) {
+        return array_reduce(
+            $this->pluginLoader->getInstancesOf(PluginLoader::ROUTING_PLUGINS, true),
+            function (RouteCollection $collection, RoutingPluginInterface $plugin) {
                 $routes = $plugin->getRouteCollection($this->loader->getResolver(), $this->kernel);
 
                 if ($routes instanceof RouteCollection) {
                     $collection->addCollection($routes);
                 }
-            }
-        }
 
-        return $collection;
+                return $collection;
+            },
+            new RouteCollection()
+        );
     }
 }

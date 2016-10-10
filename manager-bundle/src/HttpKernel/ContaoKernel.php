@@ -172,13 +172,13 @@ class ContaoKernel extends Kernel
      */
     private function loadBundleConfigs()
     {
-        if (null === $this->pluginLoader) {
+        if (!$this->pluginLoader instanceof PluginLoader) {
             return [];
         }
 
         $rootDir = $this->getRootDir();
         $autoloader = new BundleAutoloader(
-            $this->pluginLoader->getInstances(),
+            $this->pluginLoader,
             $rootDir . '/modules'
         );
 

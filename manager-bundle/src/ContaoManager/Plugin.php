@@ -31,7 +31,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * @inheritdoc
      */
-    public function getAutoloadConfigs(JsonParser $jsonParser, IniParser $iniParser)
+    public function getBundles(JsonParser $jsonParser, IniParser $iniParser)
     {
         return $jsonParser->parse(__DIR__ . '/../Resources/contao-manager/bundles.json');
     }

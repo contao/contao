@@ -11,6 +11,7 @@
 namespace Contao\ManagerBundle\DependencyInjection;
 
 use Contao\ManagerBundle\ContaoManager\Config\ConfigPluginInterface;
+use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Adds the bundle services to the container.
+ * Prepends plugin configs and the bundle services to the container.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -33,14 +34,18 @@ class ContaoManagerExtension extends Extension implements PrependExtensionInterf
             return;
         }
 
-        foreach ($container->get('contao_manager.plugin_loader')->getInstances() as $plugin) {
-            if ($plugin instanceof ConfigPluginInterface) {
-                // We do not have a managed config yet, so we'll just pass an empty array
-                $plugin->prependConfig([], $container);
-            }
+        /** @var ConfigPluginInterface[] $plugins */
+        $plugins = $container->get('contao_manager.plugin_loader')->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
+        $config = $this->getConfig();
+
+        foreach ($plugins as $plugin) {
+            $plugin->prependConfig($config, $container);
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader(
@@ -49,5 +54,16 @@ class ContaoManagerExtension extends Extension implements PrependExtensionInterf
         );
 
         $loader->load('services.yml');
+    }
+
+    /**
+     * Gets the configuration from Contao Manager.
+     *
+     * @return array
+     */
+    private function getConfig()
+    {
+        // TODO: We do not have a managed config yet, so we'll just pass an empty array
+        return [];
     }
 }

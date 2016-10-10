@@ -17,6 +17,10 @@ namespace Contao\ManagerBundle\ContaoManager;
  */
 class PluginLoader
 {
+    const BUNDLE_PLUGINS = 'Contao\ManagerBundle\ContaoManager\Bundle\BundlePluginInterface';
+    const CONFIG_PLUGINS = 'Contao\ManagerBundle\ContaoManager\Config\ConfigPluginInterface';
+    const ROUTING_PLUGINS = 'Contao\ManagerBundle\ContaoManager\Routing\RoutingPluginInterface';
+
     /**
      * @var array
      */
@@ -65,6 +69,26 @@ class PluginLoader
         }
 
         return $this->plugins;
+    }
+
+    /**
+     * Gets instances of manager plugins of given type (see class constants).
+     *
+     * @param string $type
+     * @param bool   $reverseOrder
+     *
+     * @return array
+     */
+    public function getInstancesOf($type, $reverseOrder = false)
+    {
+        $plugins = array_filter(
+            $this->getInstances(),
+            function ($plugin) use ($type) {
+                return is_a($plugin, $type);
+            }
+        );
+
+        return $reverseOrder ? array_reverse($plugins) : $plugins;
     }
 
     /**
