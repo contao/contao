@@ -22,6 +22,11 @@ class PluginLoader
     const ROUTING_PLUGINS = 'Contao\ManagerBundle\ContaoManager\Routing\RoutingPluginInterface';
 
     /**
+     * @var string
+     */
+    private $installedJson;
+
+    /**
      * @var array
      */
     private $classes = [];
@@ -38,7 +43,7 @@ class PluginLoader
      */
     public function __construct($installedJson)
     {
-        $this->load($installedJson);
+        $this->installedJson = $installedJson;
     }
 
     /**
@@ -48,6 +53,8 @@ class PluginLoader
      */
     public function getClasses()
     {
+        $this->load();
+
         return $this->classes;
     }
 
@@ -58,15 +65,7 @@ class PluginLoader
      */
     public function getInstances()
     {
-        if (null !== $this->plugins) {
-            return $this->plugins;
-        }
-
-        $this->plugins = [];
-
-        foreach ($this->classes as $class) {
-            $this->plugins[] = new $class;
-        }
+        $this->load();
 
         return $this->plugins;
     }
@@ -94,30 +93,33 @@ class PluginLoader
     /**
      * Loads plugin classes from Composer's installed.json
      *
-     * @param string $installedJson
-     *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      *
      * @todo implement loading order
      */
-    private function load($installedJson)
+    private function load()
     {
-        if (!is_file($installedJson)) {
+        if (null !== $this->plugins) {
+            return;
+        }
+
+        if (!is_file($this->installedJson)) {
             throw new \InvalidArgumentException(
-                sprintf('Composer installed.json was not found at "%s"', $installedJson)
+                sprintf('Composer installed.json was not found at "%s"', $this->installedJson)
             );
         }
 
-        $json = json_decode(file_get_contents($installedJson), true);
+        $json = json_decode(file_get_contents($this->installedJson), true);
 
         if (null === $json) {
-            throw new \RuntimeException(sprintf('File "%s" cannot be decoded', $installedJson));
+            throw new \RuntimeException(sprintf('File "%s" cannot be decoded', $this->installedJson));
         }
 
         foreach ($json as $package) {
             if (isset($package['extra']['contao-manager-plugin'])) {
-                $this->classes[] = $package['extra']['contao-manager-plugin'];
+                $this->classes[$package['name']] = $package['extra']['contao-manager-plugin'];
+                $this->plugins[$package['name']] = $package['extra']['contao-manager-plugin'];
             }
         }
     }
