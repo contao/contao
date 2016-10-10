@@ -8,9 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Manager\Bundle;
-
-use Contao\ManagerBundle\ContaoManager\PluginLoader;
+namespace Contao\ManagerBundle\ContaoManager\Bundle;
 
 /**
  * Finds the autoload bundles

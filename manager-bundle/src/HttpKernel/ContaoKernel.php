@@ -10,10 +10,10 @@
 
 namespace Contao\ManagerBundle\HttpKernel;
 
+use Contao\ManagerBundle\ContaoManager\Bundle\BundleAutoloader;
+use Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface;
 use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Contao\ManagerBundle\ContaoManagerBundle;
-use Contao\ManagerBundle\Manager\Bundle\BundleAutoloader;
-use Contao\ManagerBundle\Manager\Bundle\ConfigInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
