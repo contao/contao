@@ -50,27 +50,25 @@ class ScriptHandler
         $fs->ensureDirectoryExists($binDir);
         $fs->ensureDirectoryExists($varDir);
 
-        $consoleInstalled = static::installContaoConsole(
+        static::installContaoConsole(
             static::findContaoConsole($composer),
             $binDir . '/console',
             $fs->findShortestPath($binDir, $vendorDir, true),
             $fs->findShortestPath($binDir, $varDir, true)
         );
 
-        if ($consoleInstalled) {
-            $event->getIO()->write(' Added the console entry point.', false);
+        $event->getIO()->write(' Added the console entry point.', false);
 
-            self::executeCommand(
-                sprintf(
-                    '%s/console contao:generate-entry-points --ansi --web-dir=%s --var-dir=%s --vendor-dir=%s --force',
-                    escapeshellarg($extra['symfony-bin-dir']),
-                    escapeshellarg($extra['symfony-web-dir']),
-                    escapeshellarg($extra['symfony-var-dir']),
-                    escapeshellarg($fs->findShortestPath(getcwd(), $vendorDir, true))
-                ),
-                $event
-            );
-        }
+        self::executeCommand(
+            sprintf(
+                '%s/console contao:install-web-dir --ansi --web-dir=%s --var-dir=%s --vendor-dir=%s --force',
+                escapeshellarg($extra['symfony-bin-dir']),
+                escapeshellarg($extra['symfony-web-dir']),
+                escapeshellarg($extra['symfony-var-dir']),
+                escapeshellarg($fs->findShortestPath(getcwd(), $vendorDir, true))
+            ),
+            $event
+        );
     }
 
     private static function installContaoConsole($filePath, $installTo, $vendorDir, $kernelRootDir)
@@ -86,12 +84,11 @@ class ScriptHandler
         );
 
         if (file_put_contents($installTo, $content) > 0) {
-            chmod($installTo, 0755);
-
-            return true;
+            @chmod($installTo, 0755);
+            return;
         }
 
-        return false;
+        throw new \UnderflowException('Contao console script could not be installed.');
     }
 
     private static function findContaoConsole(Composer $composer)
@@ -102,7 +99,7 @@ class ScriptHandler
             }
         }
 
-        throw new \UnderflowException('Contao console script could not be installed');
+        throw new \UnderflowException('Contao console script was not found.');
     }
 
     /**
