@@ -25,6 +25,7 @@ class ScriptHandler extends BaseScriptHandler
     const BIN_DIR = 'bin';
     const VAR_DIR = 'var';
     const WEB_DIR = 'web';
+    const VENDOR_DIR = 'vendor';
 
     /**
      * @var string[]
@@ -46,17 +47,18 @@ class ScriptHandler extends BaseScriptHandler
     public static function addEntryPoints(Event $event)
     {
         $composer = $event->getComposer();
-        $vendorPath = $composer->getConfig()->get('vendor-dir');
 
         if (null === static::$symfonyDirs) {
             static::loadSymfonyDirs($composer);
         }
 
+        $binDir = static::getPath(static::BIN_DIR);
+
         static::installContaoConsole(
             static::findContaoConsole($composer),
-            static::getSymfonyDir(static::BIN_DIR) . '/console',
-            static::getSymfonyDir(static::BIN_DIR, $vendorPath),
-            static::getSymfonyDir(static::BIN_DIR, static::getSymfonyDir(static::VAR_DIR))
+            $binDir . '/console',
+            static::getPath(static::VENDOR_DIR, $binDir),
+            static::getPath(static::VAR_DIR, $binDir)
         );
 
         $event->getIO()->write(' Added the console entry point.', false);
@@ -64,9 +66,9 @@ class ScriptHandler extends BaseScriptHandler
         static::executeCommand(
             sprintf(
                 'contao:install-web-dir --web-dir=%s --var-dir=%s --vendor-dir=%s --force',
-                escapeshellarg(static::getSymfonyDir(static::WEB_DIR, getcwd())),
-                escapeshellarg(static::getSymfonyDir(static::VAR_DIR, getcwd())),
-                escapeshellarg(static::$filesystem->findShortestPath(getcwd(), $vendorPath, true))
+                escapeshellarg(static::getPath(static::WEB_DIR, getcwd())),
+                escapeshellarg(static::getPath(static::VAR_DIR, getcwd())),
+                escapeshellarg(static::getPath(static::VENDOR_DIR, getcwd()))
             ),
             $event
         );
@@ -81,7 +83,7 @@ class ScriptHandler extends BaseScriptHandler
             static::loadSymfonyDirs($event->getComposer());
         }
 
-        return static::getSymfonyDir(static::BIN_DIR, getcwd()) . '/console';
+        return static::getPath(static::BIN_DIR, getcwd()) . '/console';
     }
 
     /**
@@ -131,13 +133,14 @@ class ScriptHandler extends BaseScriptHandler
     }
 
     /**
-     * Gets the absolute path to a directory by given name (see class constants).
+     * Gets the path to a directory by given name (see class constants).
      *
-     * @param string $name
+     * @param string      $name
+     * @param string|null $relativeFrom
      *
      * @return string
      */
-    private static function getSymfonyDir($name, $relativeTo = null)
+    private static function getPath($name, $relativeFrom = null)
     {
         if (null === static::$symfonyDirs) {
             throw new \UnderflowException('Symfony directories are not loaded.');
@@ -147,8 +150,8 @@ class ScriptHandler extends BaseScriptHandler
             throw new \InvalidArgumentException(sprintf('"%s" is not a valid Symfony directory name.', $name));
         }
 
-        if (null !== $relativeTo) {
-            return static::$filesystem->findShortestPath($relativeTo, static::$symfonyDirs[$name], true);
+        if (null !== $relativeFrom) {
+            return static::$filesystem->findShortestPath($relativeFrom, static::$symfonyDirs[$name], true);
         }
 
         return static::$symfonyDirs[$name];
@@ -183,6 +186,7 @@ class ScriptHandler extends BaseScriptHandler
             static::BIN_DIR => getcwd() . '/' . trim($extra['symfony-bin-dir'], '/'),
             static::VAR_DIR => getcwd() . '/' . trim($extra['symfony-var-dir'], '/'),
             static::WEB_DIR => getcwd() . '/' . trim($extra['symfony-web-dir'], '/'),
+            static::VENDOR_DIR => $composer->getConfig()->get('vendor-dir'),
         ];
 
         static::$filesystem = $filesystem;
