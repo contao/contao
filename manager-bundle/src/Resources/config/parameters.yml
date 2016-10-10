@@ -1,0 +1,6 @@
+parameters:
+    database_host: localhost
+    database_port: ~
+    database_user: ~
+    database_password: ~
+    database_name: ~
