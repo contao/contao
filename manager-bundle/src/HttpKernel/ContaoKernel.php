@@ -11,7 +11,6 @@
 namespace Contao\ManagerBundle\HttpKernel;
 
 use Contao\ManagerBundle\ContaoManager\Bundle\BundleAutoloader;
-use Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface;
 use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -20,11 +19,6 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class ContaoKernel extends Kernel
 {
-    /**
-     * @var array
-     */
-    protected $bundleConfigs = [];
-
     /**
      * @var PluginLoader
      */
@@ -39,7 +33,7 @@ class ContaoKernel extends Kernel
             new ContaoManagerBundle()
         ];
 
-        $this->addManagedBundles($bundles);
+        $this->addBundlesFromPlugins($bundles);
 
         return $bundles;
     }
@@ -116,72 +110,28 @@ class ContaoKernel extends Kernel
     }
 
     /**
-     * Adds the managed bundles
+     * Adds bundles from plugins to the given array.
      *
      * @param array $bundles
      */
-    private function addManagedBundles(&$bundles)
-    {
-        $this->loadBundleCache();
-
-        if (!is_array($this->bundleConfigs) || 0 === count($this->bundleConfigs)) {
-            $this->bundleConfigs = $this->loadBundleConfigs();
-            $this->writeBundleCache();
-        }
-
-        foreach ($this->bundleConfigs as $config) {
-            $bundles[] = $config->getBundleInstance($this);
-        }
-    }
-
-    /**
-     * Writes the bundle cache
-     */
-    private function writeBundleCache()
-    {
-        if ($this->debug) {
-            return;
-        }
-
-        if (!@mkdir($this->getCacheDir(), 0777, true) && !is_dir($this->getCacheDir())) {
-            throw new \RuntimeException('Could not create cache dir at ' . $this->getCacheDir());
-        }
-
-        file_put_contents(
-            $this->getCacheDir() . '/bundles.map',
-            serialize($this->bundleConfigs)
-        );
-    }
-
-    /**
-     * Loads the bundle cache
-     */
-    private function loadBundleCache()
-    {
-        if ($this->debug || !is_file($this->getCacheDir() . '/bundles.map')) {
-            return;
-        }
-
-        $this->bundleConfigs = unserialize(file_get_contents($this->getCacheDir() . '/bundles.map'));
-    }
-
-    /**
-     * Generates the bundles map
-     *
-     * @return ConfigInterface[]
-     */
-    private function loadBundleConfigs()
+    private function addBundlesFromPlugins(&$bundles)
     {
         if (!$this->pluginLoader instanceof PluginLoader) {
-            return [];
+            return;
         }
 
-        $rootDir = $this->getRootDir();
         $autoloader = new BundleAutoloader(
             $this->pluginLoader,
-            $rootDir . '/modules'
+            $this->getRootDir() . '/modules'
         );
 
-        return $autoloader->load('dev' === $this->getEnvironment());
+        $configs = $autoloader->getBundleConfigs(
+            'dev' === $this->getEnvironment(),
+            $this->debug ? null : $this->getCacheDir() . '/bundles.map'
+        );
+
+        foreach ($configs as $config) {
+            $bundles[] = $config->getBundleInstance($this);
+        }
     }
 }

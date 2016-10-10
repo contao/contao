@@ -62,6 +62,8 @@ class IniParser implements ParserInterface
                     $configs = array_merge($configs, $this->parse($module));
                 }
 
+                unset($module);
+
                 $config->setLoadAfter($requires);
             }
         }
