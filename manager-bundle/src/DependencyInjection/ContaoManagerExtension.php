@@ -29,40 +29,6 @@ class ContaoManagerExtension extends Extension implements PrependExtensionInterf
      */
     public function prepend(ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-
-        $loader->load('framework.yml');
-        $loader->load('twig.yml');
-        $loader->load('doctrine.yml');
-        $loader->load('swiftmailer.yml');
-        $loader->load('monolog.yml');
-
-        if (in_array('Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle', $container->getParameter('kernel.bundles'), true)) {
-            $loader->load('lexik_maintenance.yml');
-        }
-
-        if ('dev' === $container->getParameter('kernel.environment')) {
-            $loader->load('web_profiler.yml');
-        }
-
-        $coreLoader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../../core-bundle/src/Resources/config'));
-        $coreLoader->load('security.yml');
-
-        $this->prependPlugins($container);
-    }
-
-    public function load(array $configs, ContainerBuilder $container)
-    {
-        $loader = new YamlFileLoader(
-            $container,
-            new FileLocator(__DIR__.'/../Resources/config')
-        );
-
-        $loader->load('services.yml');
-    }
-
-    private function prependPlugins(ContainerBuilder $container)
-    {
         if (!$container->has('contao_manager.plugin_loader')) {
             return;
         }
@@ -73,5 +39,15 @@ class ContaoManagerExtension extends Extension implements PrependExtensionInterf
                 $plugin->prependConfig([], $container);
             }
         }
+    }
+
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $loader = new YamlFileLoader(
+            $container,
+            new FileLocator(__DIR__.'/../Resources/config')
+        );
+
+        $loader->load('services.yml');
     }
 }

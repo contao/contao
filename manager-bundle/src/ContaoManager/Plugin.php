@@ -10,20 +10,23 @@
 
 namespace Contao\ManagerBundle\ContaoManager;
 
+use Contao\ManagerBundle\ContaoManager\Config\ConfigPluginInterface;
+use Contao\ManagerBundle\ContaoManager\Routing\RoutingPluginInterface;
 use Contao\ManagerBundle\Manager\Bundle\BundlePluginInterface;
 use Contao\ManagerBundle\Manager\Bundle\IniParser;
 use Contao\ManagerBundle\Manager\Bundle\JsonParser;
-use Contao\ManagerBundle\ContaoManager\Routing\RoutingPluginInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
-
 /**
  * Plugin for the Contao Manager.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class Plugin implements BundlePluginInterface, RoutingPluginInterface
+class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface
 {
     /**
      * @inheritdoc
@@ -31,6 +34,31 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
     public function getAutoloadConfigs(JsonParser $jsonParser, IniParser $iniParser)
     {
         return $jsonParser->parse(__DIR__ . '/../Resources/contao-manager/bundles.json');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function prependConfig(array $configs, ContainerBuilder $container)
+    {
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+
+        $loader->load('framework.yml');
+        $loader->load('twig.yml');
+        $loader->load('doctrine.yml');
+        $loader->load('swiftmailer.yml');
+        $loader->load('monolog.yml');
+
+        if (in_array('Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle', $container->getParameter('kernel.bundles'), true)) {
+            $loader->load('lexik_maintenance.yml');
+        }
+
+        if ('dev' === $container->getParameter('kernel.environment')) {
+            $loader->load('web_profiler.yml');
+        }
+
+        $coreLoader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../../core-bundle/src/Resources/config'));
+        $coreLoader->load('security.yml');
     }
 
     /**
