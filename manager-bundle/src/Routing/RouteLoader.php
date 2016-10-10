@@ -56,7 +56,7 @@ class RouteLoader
     {
         $collection = new RouteCollection();
 
-        foreach ($this->pluginLoader->getInstances() as $plugin) {
+        foreach (array_reverse($this->pluginLoader->getInstances()) as $plugin) {
             if ($plugin instanceof RoutingPluginInterface) {
                 $routes = $plugin->getRouteCollection($this->loader->getResolver(), $this->kernel);
 
