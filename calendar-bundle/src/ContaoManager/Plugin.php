@@ -10,10 +10,10 @@
 
 namespace Contao\CalendarBundle\ContaoManager;
 
-use Contao\ManagerBundle\Manager\Bundle\BundleConfig;
-use Contao\ManagerBundle\Manager\Bundle\BundlePluginInterface;
-use Contao\ManagerBundle\Manager\Bundle\IniParser;
-use Contao\ManagerBundle\Manager\Bundle\JsonParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\BundleConfig;
+use Contao\ManagerBundle\ContaoManager\Bundle\BundlePluginInterface;
+use Contao\ManagerBundle\ContaoManager\Bundle\IniParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\JsonParser;
 
 /**
  * Plugin for the Contao Manager.
