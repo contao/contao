@@ -13,16 +13,29 @@ namespace Contao\ManagerBundle\Composer;
 use Composer\Composer;
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
-use Symfony\Component\Process\PhpExecutableFinder;
-use Symfony\Component\Process\Process;
+use Contao\CoreBundle\Composer\ScriptHandler as BaseScriptHandler;
 
 /**
  * Sets up the Contao Managed Edition.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ScriptHandler
+class ScriptHandler extends BaseScriptHandler
 {
+    const BIN_DIR = 'bin';
+    const VAR_DIR = 'var';
+    const WEB_DIR = 'web';
+
+    /**
+     * @var string[]
+     */
+    private static $symfonyDirs;
+
+    /**
+     * @var Filesystem
+     */
+    private static $filesystem;
+
     /**
      * Adds the web and console entry points.
      *
@@ -32,45 +45,53 @@ class ScriptHandler
      */
     public static function addEntryPoints(Event $event)
     {
-        $fs = new Filesystem();
         $composer = $event->getComposer();
-        $vendorDir = $composer->getConfig()->get('vendor-dir');
-        $extra = array_merge(
-            [
-                'symfony-bin-dir' => 'system/bin',
-                'symfony-web-dir' => 'web',
-                'symfony-var-dir' => 'system'
-            ],
-            $composer->getPackage()->getExtra()
-        );
+        $vendorPath = $composer->getConfig()->get('vendor-dir');
 
-        $binDir = getcwd() . '/' . trim($extra['symfony-bin-dir'], '/');
-        $varDir = getcwd() . '/' . trim($extra['symfony-var-dir'], '/');
-
-        $fs->ensureDirectoryExists($binDir);
-        $fs->ensureDirectoryExists($varDir);
+        if (null === static::$symfonyDirs) {
+            static::loadSymfonyDirs($composer);
+        }
 
         static::installContaoConsole(
             static::findContaoConsole($composer),
-            $binDir . '/console',
-            $fs->findShortestPath($binDir, $vendorDir, true),
-            $fs->findShortestPath($binDir, $varDir, true)
+            static::getSymfonyDir(static::BIN_DIR) . '/console',
+            static::getSymfonyDir(static::BIN_DIR, $vendorPath),
+            static::getSymfonyDir(static::BIN_DIR, static::getSymfonyDir(static::VAR_DIR))
         );
 
         $event->getIO()->write(' Added the console entry point.', false);
 
-        self::executeCommand(
+        static::executeCommand(
             sprintf(
-                '%s/console contao:install-web-dir --ansi --web-dir=%s --var-dir=%s --vendor-dir=%s --force',
-                escapeshellarg($extra['symfony-bin-dir']),
-                escapeshellarg($extra['symfony-web-dir']),
-                escapeshellarg($extra['symfony-var-dir']),
-                escapeshellarg($fs->findShortestPath(getcwd(), $vendorDir, true))
+                'contao:install-web-dir --web-dir=%s --var-dir=%s --vendor-dir=%s --force',
+                escapeshellarg(static::getSymfonyDir(static::WEB_DIR, getcwd())),
+                escapeshellarg(static::getSymfonyDir(static::VAR_DIR, getcwd())),
+                escapeshellarg(static::$filesystem->findShortestPath(getcwd(), $vendorPath, true))
             ),
             $event
         );
     }
 
+    /**
+     * @inheritdoc
+     */
+    protected static function getConsoleScript(Event $event)
+    {
+        if (null === static::$symfonyDirs) {
+            static::loadSymfonyDirs($event->getComposer());
+        }
+
+        return static::getSymfonyDir(static::BIN_DIR, getcwd()) . '/console';
+    }
+
+    /**
+     * Installs the console and replaces given paths to adjust for installation.
+     *
+     * @param string $filePath
+     * @param string $installTo
+     * @param string $vendorDir
+     * @param string $kernelRootDir
+     */
     private static function installContaoConsole($filePath, $installTo, $vendorDir, $kernelRootDir)
     {
         if (!is_file($filePath)) {
@@ -91,6 +112,13 @@ class ScriptHandler
         throw new \UnderflowException('Contao console script could not be installed.');
     }
 
+    /**
+     * Finds the Contao console script in the manager bundle from Composer.
+     *
+     * @param Composer $composer
+     *
+     * @return string
+     */
     private static function findContaoConsole(Composer $composer)
     {
         foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
@@ -103,31 +131,64 @@ class ScriptHandler
     }
 
     /**
-     * Executes a command.
+     * Gets the absolute path to a directory by given name (see class constants).
      *
-     * @param string $cmd   The command
-     * @param Event  $event The event object
+     * @param string $name
      *
-     * @throws \RuntimeException If the PHP executable cannot be found or the command cannot be executed
+     * @return string
      */
-    private static function executeCommand($cmd, Event $event)
+    private static function getSymfonyDir($name, $relativeTo = null)
     {
-        $phpFinder = new PhpExecutableFinder();
-
-        if (false === ($phpPath = $phpFinder->find())) {
-            throw new \RuntimeException('The php executable could not be found.');
+        if (null === static::$symfonyDirs) {
+            throw new \UnderflowException('Symfony directories are not loaded.');
         }
 
-        $process = new Process(sprintf('%s %s', $phpPath, $cmd));
+        if (!array_key_exists($name, static::$symfonyDirs)) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid Symfony directory name.', $name));
+        }
 
-        $process->run(
-            function ($type, $buffer) use ($event) {
-                $event->getIO()->write($buffer, false);
-            }
+        if (null !== $relativeTo) {
+            return static::$filesystem->findShortestPath($relativeTo, static::$symfonyDirs[$name], true);
+        }
+
+        return static::$symfonyDirs[$name];
+    }
+
+    /**
+     * Loads Symfony default directories or from Composer's extra section.
+     *
+     * @param Composer   $composer
+     * @param Filesystem $filesystem
+     */
+    private static function loadSymfonyDirs(Composer $composer, Filesystem $filesystem = null)
+    {
+        if (null !== static::$symfonyDirs) {
+            throw new \RuntimeException('Symfony directores already loaded.');
+        }
+
+        if (null === $filesystem) {
+            $filesystem = new Filesystem();
+        }
+
+        $extra = array_merge(
+            [
+                'symfony-bin-dir' => 'system/bin',
+                'symfony-web-dir' => 'web',
+                'symfony-var-dir' => 'system'
+            ],
+            $composer->getPackage()->getExtra()
         );
 
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command.', $cmd));
+        static::$symfonyDirs = [
+            static::BIN_DIR => getcwd() . '/' . trim($extra['symfony-bin-dir'], '/'),
+            static::VAR_DIR => getcwd() . '/' . trim($extra['symfony-var-dir'], '/'),
+            static::WEB_DIR => getcwd() . '/' . trim($extra['symfony-web-dir'], '/'),
+        ];
+
+        static::$filesystem = $filesystem;
+
+        foreach (static::$symfonyDirs as $dir) {
+            $filesystem->ensureDirectoryExists($dir);
         }
     }
 }
