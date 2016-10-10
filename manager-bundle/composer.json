@@ -36,6 +36,9 @@
         }
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
+        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
+        "branch-alias": {
+            "dev-develop": "1.0.x-dev"
+        }
     }
 }
