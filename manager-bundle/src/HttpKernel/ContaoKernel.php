@@ -10,7 +10,7 @@
 
 namespace Contao\ManagerBundle\HttpKernel;
 
-use Contao\ManagerBundle\ContaoManager\Bundle\BundleAutoloader;
+use Contao\ManagerBundle\ContaoManager\Bundle\BundleLoader;
 use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -120,7 +120,7 @@ class ContaoKernel extends Kernel
             return;
         }
 
-        $autoloader = new BundleAutoloader(
+        $autoloader = new BundleLoader(
             $this->pluginLoader,
             $this->getRootDir() . '/modules'
         );

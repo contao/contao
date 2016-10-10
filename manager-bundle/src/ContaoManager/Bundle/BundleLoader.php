@@ -14,11 +14,12 @@ use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Finds the autoload bundles
+ * Finds bundles from Contao Manager plugins.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
-class BundleAutoloader
+class BundleLoader
 {
     /**
      * @var PluginLoader
