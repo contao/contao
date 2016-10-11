@@ -346,7 +346,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_module', 'getForms'),
-			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),

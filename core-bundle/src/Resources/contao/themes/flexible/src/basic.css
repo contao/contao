@@ -429,7 +429,10 @@ a.tl_submit {
 .long {
 	width:96%; /* see #6320 */
 }
-.wizard .tl_text {
+.wizard > a {
+	vertical-align:middle;
+}
+.wizard .tl_text,.wizard .tl_select {
 	width:90%;
 }
 .wizard .tl_text_2 {

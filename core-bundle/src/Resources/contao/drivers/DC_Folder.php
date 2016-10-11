@@ -470,9 +470,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Submit buttons
 			$arrButtons = array();
 
-			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
+			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
 			{
-				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirmFile'].'\')">'.$GLOBALS['TL_LANG']['MSC']['deleteSelected'].'</button>';
+				$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['editSelected'].'</button>';
 			}
 
 			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
@@ -485,9 +485,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['copySelected'].'</button>';
 			}
 
-			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
+			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
 			{
-				$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['editSelected'].'</button>';
+				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirmFile'].'\')">'.$GLOBALS['TL_LANG']['MSC']['deleteSelected'].'</button>';
 			}
 
 			// Call the buttons_callback (see #4691)
@@ -507,12 +507,30 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				}
 			}
 
+			if (count($arrButtons) < 3)
+			{
+				$strButtons = implode(' ', $arrButtons);
+			}
+			else
+			{
+				$strButtons = array_shift($arrButtons) . ' ';
+				$strButtons .= '<div class="split-button">';
+				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . \Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+				foreach ($arrButtons as $strButton)
+				{
+					$strButtons .= '<li>' . $strButton . '</li>';
+				}
+
+				$strButtons .= '</ul></div>';
+			}
+
 			$return .= '
 
 <div class="tl_formbody_submit" style="text-align:right">
 
 <div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
+  ' . $strButtons . '
 </div>
 
 </div>
@@ -846,6 +864,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Redirect
 		if (!$blnDoNotRedirect)
 		{
+			// Switch to edit mode
+			if (is_file(TL_ROOT . '/' . $destination))
+			{
+				$this->redirect($this->switchToEdit($destination));
+			}
+
 			$this->redirect($this->getReferer());
 		}
 	}
@@ -1135,6 +1159,24 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 		}
 
+		if (count($arrButtons) < 3)
+		{
+			$strButtons = implode(' ', $arrButtons);
+		}
+		else
+		{
+			$strButtons = array_shift($arrButtons) . ' ';
+			$strButtons .= '<div class="split-button">';
+			$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . \Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+			foreach ($arrButtons as $strButton)
+			{
+				$strButtons .= '<li>' . $strButton . '</li>';
+			}
+
+			$strButtons .= '</ul></div>';
+		}
+
 		// Display the upload form
 		return '
 <div id="tl_buttons">
@@ -1158,7 +1200,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <div class="tl_formbody_submit">
 
 <div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
+  ' . $strButtons . '
 </div>
 
 </div>
@@ -1339,7 +1381,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Submit buttons
 		$arrButtons = array();
 		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['save'].'</button>';
-		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['saveNclose'].'</button>';
+
+		if (!\Input::get('nb'))
+		{
+			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['saveNclose'].'</button>';
+		}
 
 		// Call the buttons_callback (see #4691)
 		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback']))
@@ -1358,6 +1404,24 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 		}
 
+		if (count($arrButtons) < 3)
+		{
+			$strButtons = implode(' ', $arrButtons);
+		}
+		else
+		{
+			$strButtons = array_shift($arrButtons) . ' ';
+			$strButtons .= '<div class="split-button">';
+			$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . \Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+			foreach ($arrButtons as $strButton)
+			{
+				$strButtons .= '<li>' . $strButton . '</li>';
+			}
+
+			$strButtons .= '</ul></div>';
+		}
+
 		// Add the buttons and end the form
 		$return .= '
 </div>
@@ -1365,7 +1429,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <div class="tl_formbody_submit">
 
 <div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
+  ' . $strButtons . '
 </div>
 
 </div>
@@ -1685,6 +1749,24 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				}
 			}
 
+			if (count($arrButtons) < 3)
+			{
+				$strButtons = implode(' ', $arrButtons);
+			}
+			else
+			{
+				$strButtons = array_shift($arrButtons) . ' ';
+				$strButtons .= '<div class="split-button">';
+				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . \Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+				foreach ($arrButtons as $strButton)
+				{
+					$strButtons .= '<li>' . $strButton . '</li>';
+				}
+
+				$strButtons .= '</ul></div>';
+			}
+
 			// Add the form
 			$return = '
 
@@ -1700,7 +1782,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <div class="tl_formbody_submit">
 
 <div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
+  ' . $strButtons . '
 </div>
 
 </div>
@@ -1968,6 +2050,24 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 		}
 
+		if (count($arrButtons) < 3)
+		{
+			$strButtons = implode(' ', $arrButtons);
+		}
+		else
+		{
+			$strButtons = array_shift($arrButtons) . ' ';
+			$strButtons .= '<div class="split-button">';
+			$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . \Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+			foreach ($arrButtons as $strButton)
+			{
+				$strButtons .= '<li>' . $strButton . '</li>';
+			}
+
+			$strButtons .= '</ul></div>';
+		}
+
 		// Add the form
 		return $version . '
 <div id="tl_buttons">
@@ -1990,7 +2090,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <div class="tl_formbody_submit">
 
 <div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
+  ' . $strButtons . '
 </div>
 
 </div>

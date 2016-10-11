@@ -636,10 +636,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		// Return table
 		return '
-<div id="tl_buttons">' . (!\Input::get('popup') ? '
-<a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>' : '') . '
-</div>
-
 <table class="tl_show">'.$return.'
 </table>';
 	}
@@ -2038,22 +2034,25 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		if (!\Input::get('nb'))
 		{
 			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['saveNclose'].'</button>';
-		}
 
-		if (!\Input::get('popup') && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'])
-		{
-			$arrButtons['saveNcreate'] = '<button type="submit" name="saveNcreate" id="saveNcreate" class="tl_submit" accesskey="n">'.$GLOBALS['TL_LANG']['MSC']['saveNcreate'].'</button>';
-			$arrButtons['saveNduplicate'] = '<button type="submit" name="saveNduplicate" id="saveNduplicate" class="tl_submit" accesskey="d">'.$GLOBALS['TL_LANG']['MSC']['saveNduplicate'].'</button>';
-		}
+			if (!\Input::get('nc'))
+			{
+				if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'])
+				{
+					$arrButtons['saveNcreate'] = '<button type="submit" name="saveNcreate" id="saveNcreate" class="tl_submit" accesskey="n">'.$GLOBALS['TL_LANG']['MSC']['saveNcreate'].'</button>';
+					$arrButtons['saveNduplicate'] = '<button type="submit" name="saveNduplicate" id="saveNduplicate" class="tl_submit" accesskey="d">'.$GLOBALS['TL_LANG']['MSC']['saveNduplicate'].'</button>';
+				}
 
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'])
-		{
-			$arrButtons['saveNedit'] = '<button type="submit" name="saveNedit" id="saveNedit" class="tl_submit" accesskey="e">'.$GLOBALS['TL_LANG']['MSC']['saveNedit'].'</button>';
-		}
+				if ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'])
+				{
+					$arrButtons['saveNedit'] = '<button type="submit" name="saveNedit" id="saveNedit" class="tl_submit" accesskey="e">'.$GLOBALS['TL_LANG']['MSC']['saveNedit'].'</button>';
+				}
 
-		if (!\Input::get('popup') && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4 || strlen($this->ptable) || $GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit']))
-		{
-			$arrButtons['saveNback'] = '<button type="submit" name="saveNback" id="saveNback" class="tl_submit" accesskey="g">'.$GLOBALS['TL_LANG']['MSC']['saveNback'].'</button>';
+				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4 || strlen($this->ptable) || $GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'])
+				{
+					$arrButtons['saveNback'] = '<button type="submit" name="saveNback" id="saveNback" class="tl_submit" accesskey="g">'.$GLOBALS['TL_LANG']['MSC']['saveNback'].'</button>';
+				}
+			}
 		}
 
 		// Call the buttons_callback (see #4691)
@@ -2568,6 +2567,24 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
+			if (count($arrButtons) < 3)
+			{
+				$strButtons = implode(' ', $arrButtons);
+			}
+			else
+			{
+				$strButtons = array_shift($arrButtons) . ' ';
+				$strButtons .= '<div class="split-button">';
+				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . \Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+				foreach ($arrButtons as $strButton)
+				{
+					$strButtons .= '<li>' . $strButton . '</li>';
+				}
+
+				$strButtons .= '</ul></div>';
+			}
+
 			// Add the form
 			$return = '
 
@@ -2583,7 +2600,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 <div class="tl_formbody_submit">
 
 <div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
+  ' . $strButtons . '
 </div>
 
 </div>
@@ -2883,6 +2900,24 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
+			if (count($arrButtons) < 3)
+			{
+				$strButtons = implode(' ', $arrButtons);
+			}
+			else
+			{
+				$strButtons = array_shift($arrButtons) . ' ';
+				$strButtons .= '<div class="split-button">';
+				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . \Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+				foreach ($arrButtons as $strButton)
+				{
+					$strButtons .= '<li>' . $strButton . '</li>';
+				}
+
+				$strButtons .= '</ul></div>';
+			}
+
 			// Add the form
 			$return = '
 
@@ -2898,7 +2933,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 <div class="tl_formbody_submit">
 
 <div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
+  ' . $strButtons . '
 </div>
 
 </div>
@@ -3576,14 +3611,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Submit buttons
 			$arrButtons = array();
 
-			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
+			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
 			{
-				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirm'].'\')">'.$GLOBALS['TL_LANG']['MSC']['deleteSelected'].'</button>';
-			}
-
-			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
-			{
-				$arrButtons['cut'] = '<button type="submit" name="cut" id="cut" class="tl_submit" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['moveSelected'].'</button>';
+				$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['editSelected'].'</button>';
+				$arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">'.$GLOBALS['TL_LANG']['MSC']['overrideSelected'].'</button>';
 			}
 
 			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'])
@@ -3591,10 +3622,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['copySelected'].'</button>';
 			}
 
-			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
+			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
 			{
-				$arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">'.$GLOBALS['TL_LANG']['MSC']['overrideSelected'].'</button>';
-				$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['editSelected'].'</button>';
+				$arrButtons['cut'] = '<button type="submit" name="cut" id="cut" class="tl_submit" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['moveSelected'].'</button>';
+			}
+
+			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
+			{
+				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirm'].'\')">'.$GLOBALS['TL_LANG']['MSC']['deleteSelected'].'</button>';
 			}
 
 			// Call the buttons_callback (see #4691)
@@ -3614,12 +3649,30 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
+			if (count($arrButtons) < 3)
+			{
+				$strButtons = implode(' ', $arrButtons);
+			}
+			else
+			{
+				$strButtons = array_shift($arrButtons) . ' ';
+				$strButtons .= '<div class="split-button">';
+				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . \Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+				foreach ($arrButtons as $strButton)
+				{
+					$strButtons .= '<li>' . $strButton . '</li>';
+				}
+
+				$strButtons .= '</ul></div>';
+			}
+
 			$return .= '
 
 <div class="tl_formbody_submit" style="text-align:right">
 
 <div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
+  ' . $strButtons . '
 </div>
 
 </div>
@@ -4045,7 +4098,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$return .= '
 <div class="tl_content_right">'.((\Input::get('act') == 'select') ? '
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">' : ($blnClipboard ? ' <a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$objParent->id . (!$blnMultiboard ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][0]).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a>' : ((!$GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] && $this->User->canEditFieldsOf($this->ptable)) ? '
-<a href="'.preg_replace('/&(amp;)?table=[^& ]*/i', (($this->ptable != '') ? '&amp;table='.$this->ptable : ''), $this->addToUrl('act=edit')).'" class="edit" title="'.\StringUtil::specialchars(isset($GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1]) ? $GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1] : $GLOBALS['TL_LANG'][$this->strTable]['editheader'][1]).'">'.$imageEditHeader.'</a>' : '') . (($blnHasSorting && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? ' <a href="'.$this->addToUrl('act=create&amp;mode=2&amp;pid='.$objParent->id.'&amp;id='.$this->intId).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pastenew'][0]).'">'.$imagePasteNew.'</a>' : ''))) . '
+<a href="'.preg_replace('/&(amp;)?table=[^& ]*/i', (($this->ptable != '') ? '&amp;table='.$this->ptable : ''), $this->addToUrl('act=edit'.(\Input::get('nb') ? '&amp;nc=1' : ''))).'" class="edit" title="'.\StringUtil::specialchars(isset($GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1]) ? $GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1] : $GLOBALS['TL_LANG'][$this->strTable]['editheader'][1]).'">'.$imageEditHeader.'</a>' : '') . (($blnHasSorting && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? ' <a href="'.$this->addToUrl('act=create&amp;mode=2&amp;pid='.$objParent->id.'&amp;id='.$this->intId).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pastenew'][0]).'">'.$imagePasteNew.'</a>' : ''))) . '
 </div>';
 
 			// Format header fields
@@ -4371,7 +4424,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 							// Create new button
 							if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'])
 							{
-								$return .= ' <a href="'.$this->addToUrl('act=create&amp;mode=1&amp;pid='.$row[$i]['id'].'&amp;id='.$objParent->id).'" title="'.\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pastenew'][1], $row[$i]['id'])).'">'.$imagePasteNew.'</a>';
+								$return .= ' <a href="'.$this->addToUrl('act=create&amp;mode=1&amp;pid='.$row[$i]['id'].'&amp;id='.$objParent->id.(\Input::get('nb') ? '&amp;nc=1' : '')).'" title="'.\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pastenew'][1], $row[$i]['id'])).'">'.$imagePasteNew.'</a>';
 							}
 
 							// Prevent circular references
@@ -4445,14 +4498,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Submit buttons
 			$arrButtons = array();
 
-			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
+			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
 			{
-				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirm'].'\')">'.$GLOBALS['TL_LANG']['MSC']['deleteSelected'].'</button>';
-			}
-
-			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
-			{
-				$arrButtons['cut'] = '<button type="submit" name="cut" id="cut" class="tl_submit" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['moveSelected'].'</button>';
+				$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['editSelected'].'</button>';
+				$arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">'.$GLOBALS['TL_LANG']['MSC']['overrideSelected'].'</button>';
 			}
 
 			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'])
@@ -4460,10 +4509,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['copySelected'].'</button>';
 			}
 
-			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
+			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
 			{
-				$arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">'.$GLOBALS['TL_LANG']['MSC']['overrideSelected'].'</button>';
-				$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['editSelected'].'</button>';
+				$arrButtons['cut'] = '<button type="submit" name="cut" id="cut" class="tl_submit" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['moveSelected'].'</button>';
+			}
+
+			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
+			{
+				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirm'].'\')">'.$GLOBALS['TL_LANG']['MSC']['deleteSelected'].'</button>';
 			}
 
 			// Call the buttons_callback (see #4691)
@@ -4483,12 +4536,30 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
+			if (count($arrButtons) < 3)
+			{
+				$strButtons = implode(' ', $arrButtons);
+			}
+			else
+			{
+				$strButtons = array_shift($arrButtons) . ' ';
+				$strButtons .= '<div class="split-button">';
+				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . \Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+				foreach ($arrButtons as $strButton)
+				{
+					$strButtons .= '<li>' . $strButton . '</li>';
+				}
+
+				$strButtons .= '</ul></div>';
+			}
+
 			$return .= '
 
 <div class="tl_formbody_submit" style="text-align:right">
 
 <div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
+  ' . $strButtons . '
 </div>
 
 </div>
@@ -4874,9 +4945,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				// Submit buttons
 				$arrButtons = array();
 
-				if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
+				if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
 				{
-					$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirm'].'\')">'.$GLOBALS['TL_LANG']['MSC']['deleteSelected'].'</button>';
+					$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['editSelected'].'</button>';
+					$arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">'.$GLOBALS['TL_LANG']['MSC']['overrideSelected'].'</button>';
 				}
 
 				if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'])
@@ -4884,10 +4956,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['copySelected'].'</button>';
 				}
 
-				if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'])
+				if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
 				{
-					$arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">'.$GLOBALS['TL_LANG']['MSC']['overrideSelected'].'</button>';
-					$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['editSelected'].'</button>';
+					$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirm'].'\')">'.$GLOBALS['TL_LANG']['MSC']['deleteSelected'].'</button>';
 				}
 
 				// Call the buttons_callback (see #4691)
@@ -4907,12 +4978,30 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					}
 				}
 
+				if (count($arrButtons) < 3)
+				{
+					$strButtons = implode(' ', $arrButtons);
+				}
+				else
+				{
+					$strButtons = array_shift($arrButtons) . ' ';
+					$strButtons .= '<div class="split-button">';
+					$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . \Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+					foreach ($arrButtons as $strButton)
+					{
+						$strButtons .= '<li>' . $strButton . '</li>';
+					}
+
+					$strButtons .= '</ul></div>';
+				}
+
 				$return .= '
 
 <div class="tl_formbody_submit" style="text-align:right">
 
 <div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
+  ' . $strButtons . '
 </div>
 
 </div>

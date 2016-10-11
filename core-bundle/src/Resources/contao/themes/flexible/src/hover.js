@@ -217,7 +217,7 @@ var Theme = {
 	 * Set up the split button toggle
 	 */
 	setupSplitButtonToggle: function() {
-		var toggle = $('sbtog');
+		var toggle = $('sbtog'), timer;
 		if (!toggle) return;
 
 		toggle.addEvent('click', function(e) {
@@ -226,10 +226,17 @@ var Theme = {
 		});
 
 		if (!('ontouchmove' in window)) {
-			toggle.addEvent('mouseenter', function(e) {
-				toggle.getParent('.split-button').getElement('ul').removeClass('invisible');
-				e.stopPropagation();
-			});
+			toggle
+				.addEvent('mouseenter', function(e) {
+					timer = setTimeout(function() {
+						toggle.getParent('.split-button').getElement('ul').removeClass('invisible');
+						e.stopPropagation();
+					}, 150);
+				})
+				.addEvent('mouseleave', function() {
+					clearTimeout(timer);
+				})
+			;
 		}
 
 		$(document.body).addEvent('click', function() {

@@ -653,10 +653,9 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	)
 );
 
-// Disable certain operations in the modal dialog
+// Disable the articles link in the modal window
 if (Input::get('popup'))
 {
-	unset($GLOBALS['TL_DCA']['tl_page']['list']['operations']['show']);
 	unset($GLOBALS['TL_DCA']['tl_page']['list']['operations']['articles']);
 }
 

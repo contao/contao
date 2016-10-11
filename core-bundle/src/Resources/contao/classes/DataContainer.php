@@ -690,7 +690,7 @@ abstract class DataContainer extends \Backend
 				}
 				else
 				{
-					$return .= '<a href="'.$this->addToUrl($v['href'].'&amp;id='.$arrRow['id']).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.\Image::getHtml($v['icon'], $label).'</a> ';
+					$return .= '<a href="'.$this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].(\Input::get('nb') ? '&amp;nc=1' : '')).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.\Image::getHtml($v['icon'], $label).'</a> ';
 				}
 
 				continue;
