@@ -13,7 +13,7 @@ html {
 }
 
 /* General */
-body,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,figure,form,fieldset,legend,p,blockquote,table {
+body,button,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,figure,form,fieldset,legend,p,blockquote,table {
 	margin:0;
 	padding:0;
 }
@@ -371,6 +371,42 @@ a.tl_submit {
 	background:#e9e9e9;
 	color:#999;
 	box-shadow:none;
+}
+
+/* Split buttons */
+.split-button {
+	display:inline-block;
+	position:relative;
+}
+.split-button ul {
+	position:absolute;
+	bottom:20px;
+	width:100%;
+	background:#fff;
+	border:1px solid #aaa;
+	border-radius:2px;
+	box-sizing:border-box;
+	margin-bottom:1em;
+}
+.split-button ul button {
+	border:0;
+	width:100%;
+	text-align:left;
+}
+.split-button ul .tl_submit:hover {
+	box-shadow:none;
+	background:#eee;
+}
+.split-button > button[type="submit"] {
+	border-radius:2px 0 0 2px;
+}
+.split-button > button[type="button"] {
+	padding:7px 5px;
+	background:#fff;
+	border:1px solid #aaa;
+	border-left:0;
+	border-radius:0 2px 2px 0;
+	box-sizing:border-box;
 }
 
 /* Placeholders */

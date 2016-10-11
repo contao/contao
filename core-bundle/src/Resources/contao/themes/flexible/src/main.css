@@ -348,11 +348,13 @@ input[type=search]::-webkit-search-decoration {
 .tl_tbox.theme_import h3,.tl_tbox.theme_import h4,.tl_tbox.theme_import p {
 	line-height:1.3;
 }
+.tl_help,.tl_help * {
+	font-size:.75rem;
+}
 .tl_help,.tl_help a {
 	margin-bottom:0;
 	padding:1px 0;
 	line-height:1.25;
-	font-size:.75rem;
 	color:#999;
 }
 .tl_help a:hover,.tl_help a:focus,.tl_help a:active {
@@ -747,7 +749,7 @@ table.tl_listing {
 }
 .tl_listing .tl_left {
 	float:left;
-	width:calc(100% - 220px);
+	width:calc(100% - 240px);
 	margin-left:40px;
 	text-indent:-40px;
 	box-sizing:border-box;

@@ -211,6 +211,30 @@ var Theme = {
 				}
 			})
 		;
+	},
+
+	/**
+	 * Set up the split button toggle
+	 */
+	setupSplitButtonToggle: function() {
+		var toggle = $('sbtog');
+		if (!toggle) return;
+
+		toggle.addEvent('click', function(e) {
+			toggle.getParent('.split-button').getElement('ul').toggleClass('invisible');
+			e.stopPropagation();
+		});
+
+		if (!('ontouchmove' in window)) {
+			toggle.addEvent('mouseenter', function(e) {
+				toggle.getParent('.split-button').getElement('ul').removeClass('invisible');
+				e.stopPropagation();
+			});
+		}
+
+		$(document.body).addEvent('click', function() {
+			toggle.getParent('.split-button').getElement('ul').addClass('invisible');
+		});
 	}
 };
 
@@ -221,6 +245,7 @@ window.addEvent('domready', function() {
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
 	Theme.hideMenuOnScroll();
+	Theme.setupSplitButtonToggle();
 });
 
 // Respond to Ajax changes
