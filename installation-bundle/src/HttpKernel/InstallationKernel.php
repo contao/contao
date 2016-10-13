@@ -86,7 +86,6 @@ class InstallationKernel extends \AppKernel
 
         $controller = new InstallationController();
         $controller->setContainer($this->getContainer());
-        $controller->runPostInstallCommands();
 
         return $controller->installAction();
     }

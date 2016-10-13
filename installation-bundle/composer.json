@@ -13,7 +13,8 @@
         "php": ">=5.5.0",
         "symfony/framework-bundle": "~2.8|~3.0",
         "contao/core-bundle": "^4.2.1",
-        "sensio/distribution-bundle": "~5.0"
+        "sensio/distribution-bundle": "~5.0",
+        "sensiolabs/ansi-to-html": "~1.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~1.8"

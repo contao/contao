@@ -282,6 +282,10 @@
         <source>old_database_explanation</source>
         <target>You need at least Contao 3.2 to upgrade to Contao 4.</target>
       </trans-unit>
+      <trans-unit id="71">
+        <source>console_explanation</source>
+        <target>A post installation task could not be completed!</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

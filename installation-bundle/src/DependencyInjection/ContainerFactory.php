@@ -19,6 +19,7 @@ use Contao\InstallationBundle\InstallTool;
 use Contao\InstallationBundle\InstallToolUser;
 use Contao\InstallationBundle\Translation\LanguageResolver;
 use Doctrine\Common\Cache\FilesystemCache;
+use SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -115,6 +116,7 @@ class ContainerFactory
         $twigLoader->addPath(__DIR__.'/../Resources/views', 'ContaoInstallation');
 
         $twig = new \Twig_Environment($twigLoader);
+        $twig->addExtension(new AnsiExtension());
 
         $twig->addFunction(new \Twig_SimpleFunction('asset', function ($path) use ($request) {
             return '/'.ltrim($request->getBasePath().'/'.$path, '/');

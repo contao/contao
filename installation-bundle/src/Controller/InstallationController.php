@@ -22,8 +22,11 @@ use Patchwork\Utf8;
 use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
@@ -60,6 +63,10 @@ class InstallationController implements ContainerAwareInterface
      */
     public function installAction()
     {
+        if (null !== ($response = $this->runPostInstallCommands())) {
+            return $response;
+        }
+
         if ($this->container->has('contao.framework')) {
             $this->container->get('contao.framework')->initialize();
         }
@@ -115,28 +122,64 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Runs the post install commands.
+     *
+     * @return Response
      */
     public function runPostInstallCommands()
     {
         $rootDir = $this->container->getParameter('kernel.root_dir');
 
-        // Install the bundle assets
-        $command = new AssetsInstallCommand();
-        $command->setContainer($this->container);
-        $command->run(new ArgvInput(['assets:install', '--relative', $rootDir.'/../web']), new NullOutput());
+        $response = $this->runCommand(
+            new AssetsInstallCommand(),
+            new ArgvInput(['assets:install', '--relative', $rootDir.'/../web'])
+        );
+
+        if (null !== $response) {
+            return $response;
+        }
 
         // Add the Contao directories
-        $command = new InstallCommand();
-        $command->setContainer($this->container);
-        $command->run(new ArgvInput([]), new NullOutput());
+        if (null !== ($response = $this->runCommand(new InstallCommand()))) {
+            return $response;
+        }
 
         // Generate the symlinks
-        $command = new SymlinksCommand();
-        $command->setContainer($this->container);
-        $command->run(new ArgvInput([]), new NullOutput());
+        if (null !== ($response = $this->runCommand(new SymlinksCommand()))) {
+            return $response;
+        }
 
         // Build the bootstrap.php.cache file
         ScriptHandler::doBuildBootstrap($this->container->getParameter('kernel.cache_dir').'/../..');
+
+        return null;
+    }
+
+    /**
+     * Runs a command and returns a response if there was an error.
+     *
+     * @param ContainerAwareCommand $command
+     * @param InputInterface|null   $input
+     *
+     * @return Response|null
+     */
+    private function runCommand(ContainerAwareCommand $command, InputInterface $input = null)
+    {
+        if (null === $input) {
+            $input = new ArgvInput([]);
+        }
+
+        $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
+
+        $command->setContainer($this->container);
+        $status = $command->run($input, $output);
+
+        if ($status > 0) {
+            return $this->render('console.html.twig', [
+                'output' => $output->fetch(),
+            ]);
+        }
+
+        return null;
     }
 
     /**
