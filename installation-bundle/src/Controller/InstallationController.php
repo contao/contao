@@ -123,7 +123,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Runs the post install commands.
      *
-     * @return Response
+     * @return Response|null
      */
     public function runPostInstallCommands()
     {
