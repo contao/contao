@@ -43,6 +43,11 @@ class SymlinksCommand extends AbstractLockedCommand
     private $rootDir;
 
     /**
+     * @var int
+     */
+    private $statusCode = 0;
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -68,7 +73,7 @@ class SymlinksCommand extends AbstractLockedCommand
             $this->io->table(['', 'Symlink', 'Target / Error'], $this->rows);
         }
 
-        return 0;
+        return $this->statusCode;
     }
 
     /**
@@ -183,6 +188,8 @@ class SymlinksCommand extends AbstractLockedCommand
                 $target,
             ];
         } catch (\Exception $e) {
+            $this->statusCode = 1;
+
             $this->rows[] = [
                 sprintf(
                     '<fg=red;options=bold>%s</>',

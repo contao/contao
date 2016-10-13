@@ -184,10 +184,23 @@ fieldset:not(.collapsed) + fieldset {
 	max-width:260px;
 }
 
+/* Console output */
+.console-wrapper {
+	max-width:724px;
+	overflow:auto;
+	background:black;
+	margin:.5em 0 1em;
+	padding:0 .5em;
+	box-sizing:border-box;
+}
+
 /* Handheld */
 @media (max-width:767px) {
 	#header,#container {
 		margin-left:10px;
 		margin-right:10px;
+	}
+	.console-wrapper {
+		max-width:calc(100vw - 56px);
 	}
 }
