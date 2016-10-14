@@ -36,6 +36,7 @@ services:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
             - "@contao.framework"
+            - "%fragment.path%"
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
@@ -82,15 +83,6 @@ services:
             - "@contao.framework"
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 256 }
-
-    contao.listener.output_from_cache:
-        class: Contao\CoreBundle\EventListener\OutputFromCacheListener
-        arguments:
-            - "@contao.framework"
-        calls:
-            - ["setContainer", ["@service_container"]]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     contao.listener.pretty_error_screens:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener

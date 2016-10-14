@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Psr\Log\LogLevel;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 
 /**
@@ -114,9 +116,11 @@ class InsertTags extends \Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[0] == 'file' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || in_array('uncached', $flags))
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || ($elements[0] == 'file' && !\Validator::isStringUuid($elements[1])) || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || in_array('uncached', $flags))
 				{
-					$strBuffer .= '{{' . $strTag . '}}';
+					/** @var FragmentHandler $fragmentHandler */
+					$fragmentHandler = \System::getContainer()->get('fragment.handler');
+					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction', ['insertTag' => '{{' . $strTag . '}}']), 'esi');
 					continue;
 				}
 			}

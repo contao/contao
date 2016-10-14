@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Yanick Witschi <https://github.com/toflar>
  */
 class AddToSearchIndexListener
 {
@@ -28,13 +29,20 @@ class AddToSearchIndexListener
     private $framework;
 
     /**
+     * @var string
+     */
+    private $fragmentPath;
+
+    /**
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
+     * @param string                   $fragmentPath
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFrameworkInterface $framework, $fragmentPath = '_fragment')
     {
         $this->framework = $framework;
+        $this->fragmentPath = $fragmentPath;
     }
 
     /**
@@ -45,6 +53,11 @@ class AddToSearchIndexListener
     public function onKernelTerminate(PostResponseEvent $event)
     {
         if (!$this->framework->isInitialized()) {
+            return;
+        }
+
+        // Do not index fragments
+        if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $event->getRequest()->getPathInfo())) {
             return;
         }
 
