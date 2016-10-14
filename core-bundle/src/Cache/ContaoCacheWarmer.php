@@ -94,7 +94,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->framework->initialize();
 
         $this->generateConfigCache($cacheDir);
-        $this->generateCacheMapper($cacheDir);
         $this->generateDcaCache($cacheDir);
         $this->generateLanguageCache($cacheDir);
         $this->generateDcaExtracts($cacheDir);
@@ -124,36 +123,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         $dumper->dump($this->locator->locate('config/autoload.php', null, false), 'config/autoload.php');
         $dumper->dump($this->locator->locate('config/config.php', null, false), 'config/config.php');
-    }
-
-    /**
-     * Generates the cache mapper array.
-     *
-     * @param string $cacheDir
-     */
-    private function generateCacheMapper($cacheDir)
-    {
-        $mapper = [];
-        $pages = PageModel::findPublishedRootPages();
-
-        if (null === $pages) {
-            return;
-        }
-
-        foreach ($pages as $page) {
-            $base = ($page->dns ?: '*');
-
-            if ($page->fallback) {
-                $mapper[$base.'/empty.fallback'] = $base.'/empty.'.$page->language;
-            }
-
-            $mapper[$base.'/empty.'.$page->language] = $base.'/empty.'.$page->language;
-        }
-
-        $this->filesystem->dumpFile(
-            $cacheDir.'/contao/config/mapping.php',
-            sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true))
-        );
     }
 
     /**
