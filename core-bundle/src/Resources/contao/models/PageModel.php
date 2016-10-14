@@ -52,6 +52,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer $mobileLayout
  * @property boolean $includeCache
  * @property integer $cache
+ * @property integer $clientCache
  * @property boolean $includeChmod
  * @property integer $cuser
  * @property integer $cgroup
@@ -792,6 +793,7 @@ class PageModel extends \Model
 		$this->layout = $this->includeLayout ? $this->layout : false;
 		$this->mobileLayout = $this->includeLayout ? $this->mobileLayout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
+		$this->clientCache = $this->includeCache ? $this->clientCache : false;
 
 		$pid = $this->pid;
 		$type = $this->type;
@@ -840,9 +842,10 @@ class PageModel extends \Model
 					}
 
 					// Cache
-					if ($objParentPage->includeCache && $this->cache === false)
+					if ($objParentPage->includeCache)
 					{
-						$this->cache = $objParentPage->cache;
+						$this->cache = $this->cache ?: $objParentPage->cache;
+						$this->clientCache = $this->clientCache ?: $objParentPage->clientCache;
 					}
 
 					// Layout
@@ -924,12 +927,6 @@ class PageModel extends \Model
 		}
 
 		$this->trail = array_reverse($trail);
-
-		// Do not cache protected pages
-		if ($this->protected)
-		{
-			$this->cache = 0;
-		}
 
 		// Use the global date format if none is set (see #6104)
 		if ($this->dateFormat == '')
