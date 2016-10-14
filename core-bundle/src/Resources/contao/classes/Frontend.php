@@ -655,14 +655,12 @@ abstract class Frontend extends \Controller
 	 *
 	 * @return Response|null
 	 *
-	 * @deprecated This method will always return null and does not have any effect
-	 *             anymore. Caching is achieved using proper caching headers on
-	 *             the response which can be handled by any reverse proxy.
-	 *             Will be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
+	 *             Use proper response caching headers instead.
 	 */
 	public static function getResponseFromCache()
 	{
-		@trigger_error('Using Frontend::getResponseFromCache() has been deprecated and will no longer work in Contao 5.0. It will always return null and have no effect. Use proper response headers for caching instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Frontend::getResponseFromCache() has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.', E_USER_DEPRECATED);
 
 		return null;
 	}

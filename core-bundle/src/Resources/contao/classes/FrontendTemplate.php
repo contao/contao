@@ -88,10 +88,7 @@ class FrontendTemplate extends \Template
 	{
 		$this->compile($blnCheckRequest);
 
-		$response = parent::getResponse();
-		$this->setCacheHeaders($response);
-
-		return $response;
+		return $this->setCacheHeaders(parent::getResponse());
 	}
 
 
@@ -256,12 +253,11 @@ class FrontendTemplate extends \Template
 	 * Add the template output to the cache and add the cache headers
 	 *
 	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
-	 *             It has no effect at all anymore.
 	 *             Use proper response caching headers instead.
 	 */
 	protected function addToCache()
 	{
-		@trigger_error('Using FrontendTemplate::addToCache() has been deprecated and will no longer work in Contao 5.0. It has no effect at all anymore. Use proper response caching headers instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendTemplate::addToCache() has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.', E_USER_DEPRECATED);
 	}
 
 
@@ -347,29 +343,29 @@ class FrontendTemplate extends \Template
 		return '<div class="custom">' . "\n" . $sections . "\n" . '</div>' . "\n";
 	}
 
+
 	/**
 	 * Set the cache headers according to the page settings.
 	 *
-	 * @param Response $response
+	 * @param Response $response The response object
+	 *
+	 * @return Response The response object
 	 */
 	private function setCacheHeaders(Response $response)
 	{
 		/** @var $objPage \PageModel */
 		global $objPage;
 
-		if (false === $objPage->cache && false === $objPage->clientCache)
+		if ($objPage->cache === false && $objPage->clientCache === false)
 		{
-			$response->setPrivate();
-			return;
+			return $response->setPrivate();
 		}
 
-		// If FE_USER_LOGGED_IN or BE_USER_LOGGED_IN every request is private
-		// Moreover, mobile layout and protected pages are not cached either
+		// Do not cache the response if a user is logged in or the page is protected or uses a mobile layout
 		// TODO: Add support for proxies so they can vary on member context and page layout
-		if (true === FE_USER_LOGGED_IN || true === BE_USER_LOGGED_IN || true === $objPage->isMobile || $objPage->protected)
+		if (FE_USER_LOGGED_IN === true || BE_USER_LOGGED_IN === true || $objPage->isMobile === true || $objPage->protected)
 		{
-			$response->setPrivate();
-			return;
+			return $response->setPrivate();
 		}
 
 		if ($objPage->clientCache > 0)
@@ -381,5 +377,7 @@ class FrontendTemplate extends \Template
 		{
 			$response->setSharedMaxAge($objPage->cache);
 		}
+
+		return $response;
 	}
 }

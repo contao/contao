@@ -302,9 +302,6 @@
       <trans-unit id="tl_settings.modules_legend">
         <source>Inactive extensions</source>
       </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Command scheduler</source>
-      </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
       </trans-unit>

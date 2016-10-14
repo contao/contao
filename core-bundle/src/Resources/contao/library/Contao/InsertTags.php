@@ -9,10 +9,10 @@
  */
 
 namespace Contao;
-use Symfony\Component\HttpKernel\Controller\ControllerReference;
-use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 use Psr\Log\LogLevel;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 
 /**
@@ -120,10 +120,7 @@ class InsertTags extends \Controller
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = \System::getContainer()->get('fragment.handler');
-					$strBuffer .= $fragmentHandler->render(new ControllerReference(
-						'contao.controller.insert_tags:renderAction',
-						['insertTag' => '{{' . $strTag . '}}']
-					), 'esi');
+					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction', ['insertTag' => '{{' . $strTag . '}}']), 'esi');
 					continue;
 				}
 			}

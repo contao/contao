@@ -37,6 +37,7 @@ class AddToSearchIndexListener
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
+     * @param string                   $fragmentPath
      */
     public function __construct(ContaoFrameworkInterface $framework, $fragmentPath = '_fragment')
     {
@@ -55,7 +56,7 @@ class AddToSearchIndexListener
             return;
         }
 
-        if (preg_match('/' . preg_quote($this->fragmentPath, '/') .'/', $event->getRequest()->getPathInfo())) {
+        if (preg_match('/'.preg_quote($this->fragmentPath, '/').'/', $event->getRequest()->getPathInfo())) {
             return;
         }
 

@@ -11,9 +11,9 @@
 namespace Contao\CoreBundle\Test\Controller;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Test\TestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests the InsertTagsController class.
@@ -41,20 +41,30 @@ class InsertTagsControllerTest extends TestCase
             ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
             ->setMethods(['replace'])
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
+
         $insertTagAdapter
             ->expects($this->any())
             ->method('replace')
-            ->willReturn('3858f62230ac3c915f300c664312c63f');
+            ->willReturn('3858f62230ac3c915f300c664312c63f')
+        ;
 
         $controller = new InsertTagsController($this->mockFramework($insertTagAdapter));
         $response = $controller->renderAction('{{request_token}}');
 
-        $this->assertInstanceOf(Response::class, $response);
-        $this->assertSame('3858f62230ac3c915f300c664312c63f', $response->getContent());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
+        $this->assertSame('3858f62230ac3c915f300c664312c63f', $response->getContent());
     }
 
+    /**
+     * Returns a ContaoFramework instance.
+     *
+     * @param Adapter $adapter
+     *
+     * @return ContaoFramework The object instance
+     */
     private function mockFramework($adapter)
     {
         $container = $this->mockContainerWithContaoScopes();
@@ -70,16 +80,21 @@ class InsertTagsControllerTest extends TestCase
                 error_reporting(),
             ])
             ->setMethods(['initialize', 'createInstance'])
-            ->getMock();
+            ->getMock()
+        ;
 
         $framework
             ->expects($this->once())
-            ->method('initialize');
+            ->method('initialize')
+        ;
 
         $framework
             ->expects($this->any())
             ->method('createInstance')
-            ->willReturn($adapter);
+            ->willReturn($adapter)
+        ;
+
+        $framework->setContainer($container);
 
         return $framework;
     }
