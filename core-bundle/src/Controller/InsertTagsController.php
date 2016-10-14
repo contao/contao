@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Handles insert tags requests.
+ * Handles insert tag requests.
  *
  * Do not just call this Controller directly! It is supposed to be used within ESI requests that are protected by
  * the fragment uri signer of Symfony. If you call it directly, make sure you check for all permissions needed because
