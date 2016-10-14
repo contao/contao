@@ -56,7 +56,8 @@ class AddToSearchIndexListener
             return;
         }
 
-        if (preg_match('/'.preg_quote($this->fragmentPath, '/').'/', $event->getRequest()->getPathInfo())) {
+        // Do not index fragments
+        if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $event->getRequest()->getPathInfo())) {
             return;
         }
 
