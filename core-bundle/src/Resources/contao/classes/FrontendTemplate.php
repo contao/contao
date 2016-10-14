@@ -342,6 +342,7 @@ class FrontendTemplate extends \Template
 
 		if (false === $objPage->cache && false === $objPage->clientCache)
 		{
+			$response->setPrivate();
 			return;
 		}
 
