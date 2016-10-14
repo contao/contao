@@ -242,11 +242,12 @@ class FrontendTemplate extends \Template
 	 * Add the template output to the cache and add the cache headers
 	 *
 	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
+	 *             It has no effect at all anymore.
 	 *             Use proper response caching headers instead.
 	 */
 	protected function addToCache()
 	{
-		@trigger_error('Using FrontendTemplate::addToCache() has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendTemplate::addToCache() has been deprecated and will no longer work in Contao 5.0. It has no effect at all anymore. Use proper response caching headers instead.', E_USER_DEPRECATED);
 	}
 
 

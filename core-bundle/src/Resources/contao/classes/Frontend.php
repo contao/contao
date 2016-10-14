@@ -662,7 +662,7 @@ abstract class Frontend extends \Controller
 	 */
 	public static function getResponseFromCache()
 	{
-		@trigger_error('Using Frontend::getResponseFromCache() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using Frontend::getResponseFromCache() has been deprecated and will no longer work in Contao 5.0. It will always return null and have no effect. Use proper response headers for caching instead.', E_USER_DEPRECATED);
 
 		return null;
 	}
