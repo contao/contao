@@ -16,12 +16,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Handles the Contao ESI requests. This might be subject to change
- * in the very near future which is why this class is declared final.
+ * Handles insert tags requests. Do not just call this Controller directly!
+ * It is supposed to be used within ESI requests that are protected by
+ * the fragment uri signer of Symfony. If you call it directly, make sure
+ * you check for all permissions needed because insert tags can contain
+ * arbitrary data!
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-final class EsiController extends Controller
+class InsertTagsController extends Controller
 {
     /**
      * @var ContaoFrameworkInterface
@@ -29,7 +32,7 @@ final class EsiController extends Controller
     private $framework;
 
     /**
-     * EsiController constructor.
+     * InsertTagsController constructor.
      *
      * @param $framework
      */
@@ -39,11 +42,11 @@ final class EsiController extends Controller
     }
 
     /**
-     * Renders non cacheable insert tags (such as {{request_token}}).
+     * Renders insert tags.
      *
      * @param string $insertTag
      */
-    public function renderNonCacheableInsertTag($insertTag)
+    public function renderAction($insertTag)
     {
         $this->framework->initialize();
 
@@ -52,7 +55,7 @@ final class EsiController extends Controller
 
         $response = new Response($result);
 
-        // Never cache non cacheable insert tags
+        // Never cache these responses
         $response->setPrivate();
 
         return $response;

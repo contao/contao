@@ -10,26 +10,26 @@
 
 namespace Contao\CoreBundle\Test\Controller;
 
-use Contao\CoreBundle\Controller\EsiController;
+use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Tests the EsiController class.
+ * Tests the InsertTagsController class.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class EsiControllerTest extends TestCase
+class InsertTagsControllerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $controller = new EsiController($this->mockContaoFramework());
+        $controller = new InsertTagsController($this->mockContaoFramework());
 
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\EsiController', $controller);
+        $this->assertInstanceOf('Contao\CoreBundle\Controller\InsertTagsController', $controller);
     }
 
     /**
@@ -47,8 +47,8 @@ class EsiControllerTest extends TestCase
             ->method('replace')
             ->willReturn('3858f62230ac3c915f300c664312c63f');
 
-        $controller = new EsiController($this->mockFramework($insertTagAdapter));
-        $response = $controller->renderNonCacheableInsertTag('{{request_token}}');
+        $controller = new InsertTagsController($this->mockFramework($insertTagAdapter));
+        $response = $controller->renderAction('{{request_token}}');
 
         $this->assertInstanceOf(Response::class, $response);
         $this->assertSame('3858f62230ac3c915f300c664312c63f', $response->getContent());
