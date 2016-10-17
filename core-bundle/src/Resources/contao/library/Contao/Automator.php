@@ -153,12 +153,14 @@ class Automator extends \System
 
 	/**
 	 * Purge the page cache
+	 *
+	 * @todo Replace this with a more sophisticated invalidation routine
 	 */
 	public function purgePageCache()
 	{
 		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
 
-		$objFolder = new \Folder($strCacheDir . '/contao/html');
+		$objFolder = new \Folder($strCacheDir . '/http_cache');
 		$objFolder->purge();
 
 		// Add a log entry
