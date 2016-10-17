@@ -13,8 +13,11 @@ namespace Contao\CoreBundle\Test\Routing;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\Routing\Generator\UrlGenerator as ParentUrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Tests the UrlGenerator class.
@@ -198,6 +201,30 @@ class UrlGeneratorTest extends TestCase
     public function testThrowsExceptionOnMissingParameter()
     {
         $this->getGenerator()->generate('foo/{article}');
+    }
+
+    /**
+     * Tests setting the context from a domain.
+     */
+    public function testSetContextFromDomain()
+    {
+        $routes = new RouteCollection();
+        $routes->add('contao_index', new Route('/'));
+
+        $generator = new UrlGenerator(
+            new ParentUrlGenerator($routes, new RequestContext()),
+            $this->mockContaoFramework(),
+            false
+        );
+
+        $this->assertEquals(
+            'https://contao.org/',
+            $generator->generate(
+                'index',
+                ['_domain' => 'contao.org:443', '_ssl' => true],
+                UrlGenerator::ABSOLUTE_URL
+           )
+        );
     }
 
     /**
