@@ -242,7 +242,7 @@ class UrlGeneratorTest extends TestCase
             'https://contao.org/',
             $generator->generate(
                 'index',
-                ['_domain' => 'contao.org:80', '_ssl' => true],
+                ['_domain' => 'contao.org:443', '_ssl' => true],
                 UrlGenerator::ABSOLUTE_URL
            )
         );

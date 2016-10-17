@@ -2,6 +2,7 @@
 
 ### 4.3.0-beta1 (2016-XX-XX)
 
+ * Correctly set host and scheme in the URL generator (see #592).
  * Add the "save and duplicate" button (see contao/core#8510).
  * Add more flexible custom layout sections (see contao/core#6630).
  * Make all wizards sortable via keyboard (see #583).
