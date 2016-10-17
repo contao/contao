@@ -1534,10 +1534,11 @@ fieldset.collapsed > legend {
 	#tmenu .burger {
 		display:inline;
 	}
-	#tmenu .burger img {
-		cursor:pointer;
-		padding-left:9px;
-		margin-top:-2px;
+	#tmenu .burger button {
+		margin:0;
+		padding:7px 9px 8px;
+		border:0;
+		background:none;
 	}
 }
 

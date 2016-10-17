@@ -1257,11 +1257,17 @@ var Backend =
 			offset: {x:15, y:42}
 		});
 
-		// Navigation links
+		// Top navigation links
 		new Tips.Contao($$('#tmenu a[title]').filter(function(i) {
 			return i.title != '';
 		}), {
 			offset: {x:2, y:42}
+		});
+
+		new Tips.Contao($$('#tmenu button[title]').filter(function(i) {
+			return i.title != '';
+		}), {
+			offset: {x:-14, y:42}
 		});
 
 		// Navigation groups

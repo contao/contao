@@ -174,9 +174,18 @@ var Theme = {
 	 */
 	setupMenuToggle: function() {
 		var burger = $('burger');
-		burger && burger.addEvent('click', function() {
-			document.body.toggleClass('show-navigation');
-		});
+		if (!burger) return;
+
+		burger
+			.addEvent('click', function(e) {
+				document.body.toggleClass('show-navigation');
+			})
+			.addEvent('keydown', function(e) {
+				if (e.event.keyCode == 27) {
+					document.body.toggleClass('show-navigation');
+				}
+			})
+		;
 	},
 
 	/**
