@@ -236,10 +236,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      * @param RequestStack|null    $requestStack
      * @param RouterInterface|null $router
      * @param array                $adapters
+     * @param array                $instances
      *
      * @return ContaoFramework The object instance
      */
-    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [])
+    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [], array $instances = [])
     {
         $container = $this->mockContainerWithContaoScopes();
 
@@ -273,7 +274,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                 $this->getRootDir().'/app',
                 error_reporting(),
             ])
-            ->setMethods(['getAdapter'])
+            ->setMethods(['getAdapter', 'createInstance'])
             ->getMock()
         ;
 
@@ -282,6 +283,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($adapters) {
                 return $adapters[$key];
+            })
+        ;
+
+        $framework
+            ->expects($this->any())
+            ->method('createInstance')
+            ->willReturnCallback(function ($key) use ($instances) {
+                return $instances[$key];
             })
         ;
 

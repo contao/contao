@@ -43,6 +43,14 @@ services:
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
 
+    contao.doctrine.dca_schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
+        arguments:
+            - "@service_container"
+
+    contao.doctrine.schema_provider:
+        alias: contao.doctrine.dca_schema_provider
+
     contao.image.image_sizes:
         class: Contao\CoreBundle\Image\ImageSizes
         arguments:
