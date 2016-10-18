@@ -28,7 +28,7 @@
                   {% for md5, command in commands %}
                     <tr>
                       <td class="tl_col_1"><input type="checkbox" name="sql[]" id="sql_{{ loop.parent.loop.index }}_{{ loop.index }}" class="tl_checkbox {{ category }}" value="{{ md5 }}"{% if 'DROP' not in command or 'DROP INDEX' in command %} checked="checked"{% endif %}></td>
-                      <td class="tl_col_2"><pre><label for="sql_{{ loop.parent.loop.index }}_{{ loop.index }}">{{ command }}</label></pre></td>
+                      <td class="tl_col_2"><pre><label for="sql_{{ loop.parent.loop.index }}_{{ loop.index }}">{% if 'CREATE' in command %}{{ command|doctrine_pretty_query }}{% else %}{{ command }}{% endif %}</label></pre></td>
                     </tr>
                   {% endfor %}
                 {% endif %}

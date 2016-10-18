@@ -44,7 +44,7 @@ class Version430Update extends AbstractVersionUpdate
             $sections = \StringUtil::trimsplit(',', $layout->sections);
 
             if (!empty($sections) && is_array($sections)) {
-                $set = array();
+                $set = [];
 
                 foreach ($sections as $section) {
                     $set[$section] = [
