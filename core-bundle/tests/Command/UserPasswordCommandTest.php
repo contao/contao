@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Test\Command;
 
 use Contao\CoreBundle\Command\UserPasswordCommand;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Console\Application;

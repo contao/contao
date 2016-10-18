@@ -39,8 +39,13 @@ class UserPasswordCommand extends ContainerAwareCommand
         $this
             ->setName('contao:user:password')
             ->setDescription('Changes the password of a Contao back end user.')
-            ->addArgument('username', InputArgument::REQUIRED)
-            ->addOption('password', 'p', InputOption::VALUE_REQUIRED)
+            ->addArgument('username', InputArgument::REQUIRED, 'The username of the back end user')
+            ->addOption(
+                'password',
+                'p',
+                InputOption::VALUE_REQUIRED,
+                'The new password (using this option is not recommended for security reasons)'
+            )
         ;
     }
 
@@ -54,9 +59,6 @@ class UserPasswordCommand extends ContainerAwareCommand
         }
 
         if (null !== $input->getOption('password')) {
-            $io = new SymfonyStyle($input, $output);
-            $io->note('Using the password option is not recommended for security reasons!');
-
             return;
         }
 
@@ -94,6 +96,9 @@ class UserPasswordCommand extends ContainerAwareCommand
         if (0 === $affected) {
             throw new InvalidArgumentException(sprintf('Invalid username: %s', $input->getArgument('username')));
         }
+
+        $io = new SymfonyStyle($input, $output);
+        $io->success('The password has been changed successfully.');
 
         return 0;
     }
