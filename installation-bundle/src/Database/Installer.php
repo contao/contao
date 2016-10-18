@@ -98,341 +98,65 @@ class Installer
     }
 
     /**
-     * Returns the current database structure.
-     *
-     * @return array
-     */
-    private function getFromDb()
-    {
-        $tables = $this->connection->fetchAll("SHOW TABLE STATUS LIKE 'tl_%'");
-
-        if (empty($tables)) {
-            return [];
-        }
-
-        $return = [];
-
-        foreach ($tables as $table) {
-            $sql = $this->connection
-                ->getDatabasePlatform()
-                ->getListTableColumnsSQL($table['Name'], $this->connection->getDatabase())
-            ;
-
-            $columns = $this->connection->fetchAll($sql);
-
-            foreach ($columns as $column) {
-                $field = [
-                    'name' => $this->quote($column['Field']),
-                    'type' => $column['Type'],
-                ];
-
-                if (isset($column['Collation']) && $column['Collation'] !== $table['Collation']) {
-                    $field['collation'] = 'COLLATE '.$column['Collation'];
-                }
-
-                $field['null'] = ('YES' === $column['Null']) ? 'NULL' : 'NOT NULL';
-
-                if (!empty($column['Extra'])) {
-                    $field['extra'] = $column['Extra'];
-                }
-
-                if (isset($column['Default'])) {
-                    $field['default'] = 'default '.$this->connection->quote($column['Default']);
-                }
-
-                $return[$table['Name']]['TABLE_FIELDS'][$column['Field']] = trim(implode(' ', $field));
-            }
-
-            $sql = $this->connection
-                ->getDatabasePlatform()
-                ->getListTableIndexesSQL($table['Name'], $this->connection->getDatabase())
-            ;
-
-            $tmp = [];
-            $indexes = $this->connection->fetchAll($sql);
-
-            foreach ($indexes as $index) {
-                $name = $index['Key_name'];
-
-                if (isset($tmp[$name])) {
-                    $tmp[$name]['columns'][] = $this->quoteColumn($index);
-                    continue;
-                }
-
-                if ('PRIMARY' === $name) {
-                    $tmp[$name]['key'] = 'PRIMARY KEY ';
-                } elseif ('0' === $index['Non_Unique']) {
-                    $tmp[$name]['key'] = 'UNIQUE KEY '.$this->quote($name);
-                } else {
-                    $tmp[$name]['key'] = 'KEY '.$this->quote($name);
-                }
-
-                $tmp[$name]['columns'] = [$this->quoteColumn($index)];
-            }
-
-            foreach ($tmp as $name => $conf) {
-                $return[$table['Name']]['TABLE_CREATE_DEFINITIONS'][$name] =
-                    $conf['key'].' ('.implode(', ', $conf['columns']).')'
-                ;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Returns the target database structure from the DCA.
-     *
-     * @return array
-     */
-    private function getFromDca()
-    {
-        $return = [];
-        $processed = [];
-
-        /** @var SplFileInfo[] $files */
-        $files = $this->finder->findIn('dca')->depth(0)->files()->name('*.php');
-
-        foreach ($files as $file) {
-            if (in_array($file->getBasename(), $processed)) {
-                continue;
-            }
-
-            $processed[] = $file->getBasename();
-
-            $table = $file->getBasename('.php');
-            $extract = DcaExtractor::getInstance($table);
-
-            if ($extract->isDbTable()) {
-                $return[$table] = $extract->getDbInstallerArray();
-            }
-        }
-
-        ksort($return);
-
-        // HOOK: allow third-party developers to modify the array (see #3281)
-        if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDca']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromDca'])) {
-            foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback) {
-                $return = System::importStatic($callback[0])->{$callback[1]}($return);
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Returns the target database structure from the database.sql files.
-     *
-     * @return array
-     */
-    private function getFromFile()
-    {
-        $return = [];
-
-        /** @var SplFileInfo[] $files */
-        $files = $this->finder->findIn('config')->depth(0)->files()->name('database.sql');
-
-        foreach ($files as $file) {
-            $return = array_replace_recursive($return, SqlFileParser::parse($file));
-        }
-
-        ksort($return);
-
-        // HOOK: allow third-party developers to modify the array (see #3281)
-        if (isset($GLOBALS['TL_HOOKS']['sqlGetFromFile']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromFile'])) {
-            foreach ($GLOBALS['TL_HOOKS']['sqlGetFromFile'] as $callback) {
-                $return = System::importStatic($callback[0])->{$callback[1]}($return);
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Quotes an identifier.
-     *
-     * @param mixed $str
-     *
-     * @return string
-     */
-    private function quote($str)
-    {
-        return $this->connection->quoteIdentifier($str);
-    }
-
-    /**
-     * Quotes an index column.
-     *
-     * @param array $tableIndex
-     *
-     * @return string
-     */
-    private function quoteColumn(array $tableIndex)
-    {
-        $column = $this->quote($tableIndex['Column_Name']);
-
-        if (!empty($tableIndex['Sub_Part'])) {
-            $column .= '('.$tableIndex['Sub_Part'].')';
-        }
-
-        return $column;
-    }
-
-    /**
      * Compiles the command required to update the database.
      */
     private function compileCommands()
     {
-        $create = [];
-        $drop = [];
-        $return = [];
+        $return = ['CREATE' => [], 'ALTER_CHANGE' => [], 'ALTER_ADD' => [], 'DROP' => [], 'ALTER_DROP' => []];
+        $fromSchema = $this->connection->getSchemaManager()->createSchema();
+        $toSchema = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema();
 
-        $sqlCurrent = $this->getFromDb();
-        $sqlTarget = $this->getFromDca();
-        $sqlLegacy = $this->getFromFile();
+        $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
-        // Manually merge the legacy definitions (see #4766)
-        if (!empty($sqlLegacy)) {
-            foreach ($sqlLegacy as $table => $categories) {
-                foreach ($categories as $category => $fields) {
-                    if (is_array($fields)) {
-                        foreach ($fields as $name => $sql) {
-                            $sqlTarget[$table][$category][$name] = $sql;
-                        }
-                    } else {
-                        $sqlTarget[$table][$category] = $fields;
-                    }
-                }
-            }
-        }
+        foreach ($diff as $sql) {
+            switch (true) {
+                case 0 === strpos($sql, 'CREATE TABLE '):
+                    $return['CREATE'][md5($sql)] = $sql;
+                    break;
 
-        // Create tables
-        foreach (array_diff(array_keys($sqlTarget), array_keys($sqlCurrent)) as $table) {
-            $create[] = $table;
-            $definitions = '';
+                case 0 === strpos($sql, 'DROP TABLE '):
+                    $return['DROP'][md5($sql)] = $sql;
+                    break;
 
-            if (!empty($sqlTarget[$table]['TABLE_CREATE_DEFINITIONS'])) {
-                $definitions = ",\n  ".implode(",\n  ", $sqlTarget[$table]['TABLE_CREATE_DEFINITIONS']);
-            }
+                case 0 === strpos($sql, 'CREATE INDEX '):
+                case 0 === strpos($sql, 'CREATE UNIQUE INDEX '):
+                    $return['ALTER_ADD'][md5($sql)] = $sql;
+                    break;
 
-            $command = sprintf(
-                "CREATE TABLE %s (\n  %s%s\n)%s;",
-                $this->quote($table),
-                implode(",\n  ", $sqlTarget[$table]['TABLE_FIELDS']),
-                $definitions,
-                $sqlTarget[$table]['TABLE_OPTIONS']
-            );
+                case 0 === strpos($sql, 'DROP INDEX'):
+                    $return['ALTER_CHANGE'][md5($sql)] = $sql;
+                    break;
 
-            $return['CREATE'][md5($command)] = $command;
-        }
+                case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
+                    $prefix = $matches[1];
+                    $sql = substr($sql, strlen($prefix));
+                    $parts = array_map('trim', explode(',', $sql));
 
-        // Drop tables
-        foreach (array_diff(array_keys($sqlCurrent), array_keys($sqlTarget)) as $table) {
-            $drop[] = $table;
-            $command = sprintf('DROP TABLE %s;', $this->quote($table));
-            $return['DROP'][md5($command)] = $command;
-        }
+                    foreach ($parts as $part) {
+                        $command = $prefix . ' ' . $part;
 
-        // Add or change columns
-        foreach ($sqlTarget as $table => $categories) {
-            if (in_array($table, $create)) {
-                continue;
-            }
+                        switch (true) {
+                            case 0 === strpos($part, 'DROP '):
+                                $return['ALTER_DROP'][md5($command)] = $command;
+                                break;
 
-            if (is_array($categories['TABLE_FIELDS'])) {
-                foreach ($categories['TABLE_FIELDS'] as $name => $sql) {
-                    if (!isset($sqlCurrent[$table]['TABLE_FIELDS'][$name])) {
-                        $command = sprintf(
-                            'ALTER TABLE %s ADD %s;',
-                            $this->quote($table),
-                            $sql
-                        );
+                            case 0 === strpos($part, 'ADD '):
+                                $return['ALTER_ADD'][md5($command)] = $command;
+                                break;
 
-                        $return['ALTER_ADD'][md5($command)] = $command;
-                    } elseif ($sqlCurrent[$table]['TABLE_FIELDS'][$name] != $sql) {
-                        $command = sprintf(
-                            'ALTER TABLE %s CHANGE %s %s;',
-                            $this->quote($table),
-                            $this->quote($name),
-                            $sql
-                        );
+                            case 0 === strpos($part, 'CHANGE '):
+                            case 0 === strpos($part, 'RENAME '):
+                                $return['ALTER_CHANGE'][md5($command)] = $command;
+                                break;
 
-                        $return['ALTER_CHANGE'][md5($command)] = $command;
-                    }
-                }
-            }
-
-            if (is_array($categories['TABLE_CREATE_DEFINITIONS'])) {
-                foreach ($categories['TABLE_CREATE_DEFINITIONS'] as $name => $sql) {
-                    if (!isset($sqlCurrent[$table]['TABLE_CREATE_DEFINITIONS'][$name])) {
-                        $command = sprintf(
-                            'ALTER TABLE %s ADD %s;',
-                            $this->quote($table),
-                            $sql
-                        );
-
-                        $return['ALTER_ADD'][md5($command)] = $command;
-                    } elseif (
-                        $sqlCurrent[$table]['TABLE_CREATE_DEFINITIONS'][$name] != str_replace('FULLTEXT ', '', $sql)
-                    ) {
-                        $command = sprintf(
-                            'ALTER TABLE %s DROP INDEX %s, ADD %s;',
-                            $this->quote($table),
-                            $this->quote($name),
-                            $sql
-                        );
-
-                        $return['ALTER_CHANGE'][md5($command)] = $command;
-                    }
-                }
-            }
-
-            // Move auto_increment fields to the end of the array
-            if (is_array($return['ALTER_ADD'])) {
-                foreach (preg_grep('/auto_increment/i', $return['ALTER_ADD']) as $key => $sql) {
-                    unset($return['ALTER_ADD'][$key]);
-                    $return['ALTER_ADD'][$key] = $sql;
-                }
-            }
-
-            if (is_array($return['ALTER_CHANGE'])) {
-                foreach (preg_grep('/auto_increment/i', $return['ALTER_CHANGE']) as $key => $sql) {
-                    unset($return['ALTER_CHANGE'][$key]);
-                    $return['ALTER_CHANGE'][$key] = $sql;
-                }
-            }
-        }
-
-        // Drop fields
-        foreach ($sqlCurrent as $table => $categories) {
-            if (!in_array($table, $drop)) {
-                if (is_array($categories['TABLE_CREATE_DEFINITIONS'])) {
-                    foreach ($categories['TABLE_CREATE_DEFINITIONS'] as $name => $sql) {
-                        if (!isset($sqlTarget[$table]['TABLE_CREATE_DEFINITIONS'][$name])) {
-                            $command = sprintf(
-                                'ALTER TABLE %s DROP INDEX %s;',
-                                $this->quote($table),
-                                $this->quote($name)
-                            );
-
-                            $return['ALTER_DROP'][md5($command)] = $command;
+                            default:
+                                throw new \RuntimeException(sprintf('Unsupported SQL schema diff "%s"', $command));
                         }
                     }
-                }
+                    break;
 
-                if (is_array($categories['TABLE_FIELDS'])) {
-                    foreach ($categories['TABLE_FIELDS'] as $name => $sql) {
-                        if (!isset($sqlTarget[$table]['TABLE_FIELDS'][$name])) {
-                            $command = sprintf(
-                                'ALTER TABLE %s DROP %s;',
-                                $this->quote($table),
-                                $this->quote($name)
-                            );
-
-                            $return['ALTER_DROP'][md5($command)] = $command;
-                        }
-                    }
-                }
+                default:
+                    throw new \RuntimeException(sprintf('Unsupported SQL schema diff "%s"', $sql));
             }
         }
 
