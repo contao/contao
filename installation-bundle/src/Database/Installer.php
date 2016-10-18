@@ -11,17 +11,15 @@
 namespace Contao\InstallationBundle\Database;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\DcaExtractor;
-use Contao\SqlFileParser;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Handles the database installation.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
 class Installer
 {
@@ -94,7 +92,7 @@ class Installer
             }
         }
 
-        throw new \InvalidArgumentException('Invalid hash '.$hash);
+        throw new \InvalidArgumentException(sprintf('Invalid hash: %s', $hash));
     }
 
     /**
@@ -102,7 +100,14 @@ class Installer
      */
     private function compileCommands()
     {
-        $return = ['CREATE' => [], 'ALTER_CHANGE' => [], 'ALTER_ADD' => [], 'DROP' => [], 'ALTER_DROP' => []];
+        $return = [
+            'CREATE' => [],
+            'ALTER_CHANGE' => [],
+            'ALTER_ADD' => [],
+            'DROP' => [],
+            'ALTER_DROP' => [],
+        ];
+
         $fromSchema = $this->connection->getSchemaManager()->createSchema();
         $toSchema = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema();
 
@@ -133,7 +138,7 @@ class Installer
                     $parts = array_map('trim', explode(',', $sql));
 
                     foreach ($parts as $part) {
-                        $command = $prefix . ' ' . $part;
+                        $command = $prefix.' '.$part;
 
                         switch (true) {
                             case 0 === strpos($part, 'DROP '):
@@ -150,16 +155,16 @@ class Installer
                                 break;
 
                             default:
-                                throw new \RuntimeException(sprintf('Unsupported SQL schema diff "%s"', $command));
+                                throw new \RuntimeException(sprintf('Unsupported SQL schema diff: %s', $command));
                         }
                     }
                     break;
 
                 default:
-                    throw new \RuntimeException(sprintf('Unsupported SQL schema diff "%s"', $sql));
+                    throw new \RuntimeException(sprintf('Unsupported SQL schema diff: %s', $sql));
             }
         }
 
-        $this->commands = $return;
+        $this->commands = array_filter($return);
     }
 }
