@@ -233,9 +233,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Returns a ContaoFramework instance.
      *
-     * @param RequestStack    $requestStack
-     * @param RouterInterface $router
-     * @param array           $adapters
+     * @param RequestStack|null    $requestStack
+     * @param RouterInterface|null $router
+     * @param array                $adapters
      *
      * @return ContaoFramework The object instance
      */
@@ -293,9 +293,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a config adapter.
      *
+     * @param int|null $minPasswordLength
+     *
      * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockConfigAdapter()
+    protected function mockConfigAdapter($minPasswordLength = null)
     {
         $configAdapter = $this
             ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
@@ -325,7 +327,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $configAdapter
             ->expects($this->any())
             ->method('get')
-            ->willReturnCallback(function ($key) {
+            ->willReturnCallback(function ($key) use ($minPasswordLength) {
                 switch ($key) {
                     case 'characterSet':
                         return 'UTF-8';
@@ -336,6 +338,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                     case 'gdMaxImgWidth':
                     case 'gdMaxImgHeight':
                         return 3000;
+
+                    case 'minPasswordLength':
+                        return $minPasswordLength;
 
                     default:
                         return null;

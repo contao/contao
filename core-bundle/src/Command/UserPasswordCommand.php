@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\Encryption;
 use Patchwork\Utf8;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,9 +22,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Resets password for a Contao back end user.
+ * Changes the password of a Contao back end user.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
@@ -36,31 +38,33 @@ class UserPasswordCommand extends ContainerAwareCommand
     {
         $this
             ->setName('contao:user:password')
-            ->setDescription('Change the password for a Contao back end user.')
+            ->setDescription('Changes the password of a Contao back end user.')
             ->addArgument('username', InputArgument::REQUIRED)
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED)
         ;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         if (null === $input->getArgument('username')) {
-            throw new RuntimeException('You must enter a username on the command.');
+            throw new InvalidArgumentException('Please provide the username as argument.');
         }
 
         if (null !== $input->getOption('password')) {
-            $output->writeln('<error>Using the password option is not recommended for security reasons!</error>');
+            $io = new SymfonyStyle($input, $output);
+            $io->note('Using the password option is not recommended for security reasons!');
+
             return;
         }
 
-        $password = $this->askForPassword('Please enter a password:', $input, $output);
-        $confirm  = $this->askForPassword('Please confirm the password:', $input, $output);
+        $password = $this->askForPassword('Please enter the new password:', $input, $output);
+        $confirm = $this->askForPassword('Please confirm the password:', $input, $output);
 
         if ($password !== $confirm) {
-            throw new RuntimeException('Your passwords do not match');
+            throw new RuntimeException('The passwords do not match.');
         }
 
         $input->setOption('password', $password);
@@ -88,14 +92,14 @@ class UserPasswordCommand extends ContainerAwareCommand
         ;
 
         if (0 === $affected) {
-            throw new RuntimeException(sprintf('User "%s" was not found.', $input->getArgument('username')));
+            throw new InvalidArgumentException(sprintf('Invalid username: %s', $input->getArgument('username')));
         }
 
         return 0;
     }
 
     /**
-     * Ask question with given label and hidden input.
+     * Asks a question with the given label and hides the input.
      *
      * @param string          $label
      * @param InputInterface  $input
@@ -116,13 +120,13 @@ class UserPasswordCommand extends ContainerAwareCommand
     }
 
     /**
-     * Validates password length and creates hash of password.
+     * Validates the password length and creates the password hash.
      *
      * @param string $password
      *
      * @return string
      *
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     private function validateAndHashPassword($password)
     {
@@ -134,7 +138,9 @@ class UserPasswordCommand extends ContainerAwareCommand
         $passwordLength = $config->get('minPasswordLength') ?: 8;
 
         if (Utf8::strlen($password) < $passwordLength) {
-            throw new RuntimeException(sprintf('Password must be at least %s characters.', $passwordLength));
+            throw new InvalidArgumentException(
+                sprintf('The password must be at least %s characters long.', $passwordLength)
+            );
         }
 
         /** @var Encryption $encryption */

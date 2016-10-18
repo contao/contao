@@ -11,8 +11,9 @@
 namespace Contao\CoreBundle\Test\Command;
 
 use Contao\CoreBundle\Command\UserPasswordCommand;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Test\TestCase;
-use Contao\Encryption;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,6 +37,9 @@ class UserPasswordCommandTest extends TestCase
      */
     protected $container;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         $framework = $this->mockContaoFramework();
@@ -58,6 +62,9 @@ class UserPasswordCommandTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Command\UserPasswordCommand', $this->command);
     }
 
+    /**
+     * Tests the command configuration.
+     */
     public function testConfiguration()
     {
         $this->assertEquals('contao:user:password', $this->command->getName());
@@ -70,16 +77,19 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage enter a username
+     * Tests the command without a username.
+     *
+     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Please provide the username as argument.
      */
     public function testExceptionWhenMissingUsername()
     {
-        (new CommandTester($this->command))
-            ->execute([])
-        ;
+        (new CommandTester($this->command))->execute([]);
     }
 
+    /**
+     * Tests the command without a password.
+     */
     public function testExitCodeWithoutPassword()
     {
         $code = (new CommandTester($this->command))
@@ -93,8 +103,10 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage 8 characters
+     * Tests the minimum password length.
+     *
+     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
+     * @expectedExceptionMessage The password must be at least 8 characters long.
      */
     public function testMinimumPasswordLength()
     {
@@ -110,8 +122,10 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage 16 characters
+     * Tests a custom minimum password length.
+     *
+     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
+     * @expectedExceptionMessage The password must be at least 16 characters long.
      */
     public function testCustomPasswordLength()
     {
@@ -136,7 +150,9 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * Tests an invalid username.
+     *
+     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
      * @expectedExceptionMessage foobar
      * @expectedExceptionMessage not found
      */
@@ -162,18 +178,24 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
+     * Tests the database update.
+     *
+     * @param string $username
+     * @param string $password
+     *
      * @dataProvider usernamePasswordProvider
      */
     public function testDatabaseUpdate($username, $password)
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject $connection */
         $connection = $this->container->get('database_connection');
+
         $connection
             ->expects($this->once())
             ->method('update')
             ->with(
                 'tl_user',
-                ['password' => 'HA$HED-' . $password . '-HA$HED'],
+                ['password' => 'HA$HED-'.$password.'-HA$HED'],
                 ['username' => $username]
             )
             ->willReturn(1)
@@ -190,29 +212,44 @@ class UserPasswordCommandTest extends TestCase
         ;
     }
 
+    /**
+     * Provides username and password data.
+     *
+     * @return array
+     */
     public function usernamePasswordProvider()
     {
         return [
             [
                 'foobar',
-                '12345678'
+                '12345678',
             ],
             [
                 'k.jones',
-                'kevinjones'
+                'kevinjones',
             ],
         ];
     }
 
+    /**
+     * Returns a ContaoFramework instance.
+     *
+     * @param RequestStack|null    $requestStack
+     * @param RouterInterface|null $router
+     * @param array                $adapters
+     *
+     * @return ContaoFramework
+     */
     public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [])
     {
         $encryption = $this->getMock('Contao\CoreBundle\Framework\Adapter', ['hash'], ['Contao\Encryption']);
+
         $encryption
             ->expects($this->any())
             ->method('hash')
             ->willReturnCallback(
                 function ($password) {
-                    return 'HA$HED-' . $password . '-HA$HED';
+                    return 'HA$HED-'.$password.'-HA$HED';
                 }
             )
         ;
@@ -220,59 +257,5 @@ class UserPasswordCommandTest extends TestCase
         $adapters['Contao\Encryption'] = $encryption;
 
         return parent::mockContaoFramework($requestStack, $router, $adapters);
-    }
-
-    protected function mockConfigAdapter($minPasswordLength = null)
-    {
-        $configAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $configAdapter
-            ->expects($this->any())
-            ->method('isComplete')
-            ->willReturn(true)
-        ;
-
-        $configAdapter
-            ->expects($this->any())
-            ->method('preload')
-            ->willReturn(null)
-        ;
-
-        $configAdapter
-            ->expects($this->any())
-            ->method('getInstance')
-            ->willReturn(null)
-        ;
-
-        $configAdapter
-            ->expects($this->any())
-            ->method('get')
-            ->willReturnCallback(function ($key) use ($minPasswordLength) {
-                switch ($key) {
-                    case 'characterSet':
-                        return 'UTF-8';
-
-                    case 'timeZone':
-                        return 'Europe/Berlin';
-
-                    case 'gdMaxImgWidth':
-                    case 'gdMaxImgHeight':
-                        return 3000;
-
-                    case 'minPasswordLength':
-                        return $minPasswordLength;
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        return $configAdapter;
     }
 }
