@@ -38,7 +38,6 @@ class UserPasswordCommand extends ContainerAwareCommand
     {
         $this
             ->setName('contao:user:password')
-            ->setDescription('Changes the password of a Contao back end user.')
             ->addArgument('username', InputArgument::REQUIRED, 'The username of the back end user')
             ->addOption(
                 'password',
@@ -46,6 +45,7 @@ class UserPasswordCommand extends ContainerAwareCommand
                 InputOption::VALUE_REQUIRED,
                 'The new password (using this option is not recommended for security reasons)'
             )
+            ->setDescription('Changes the password of a Contao back end user.')
         ;
     }
 
