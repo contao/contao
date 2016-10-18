@@ -63,12 +63,12 @@ class InstallationController implements ContainerAwareInterface
      */
     public function installAction()
     {
-        if (null !== ($response = $this->runPostInstallCommands())) {
-            return $response;
-        }
-
         if ($this->container->has('contao.framework')) {
             $this->container->get('contao.framework')->initialize();
+        }
+
+        if (null !== ($response = $this->runPostInstallCommands())) {
+            return $response;
         }
 
         $installTool = $this->container->get('contao.install_tool');
