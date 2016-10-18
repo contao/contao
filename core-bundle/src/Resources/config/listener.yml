@@ -56,6 +56,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
+    contao.listener.doctrine_schema:
+        class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
+        arguments:
+            - "@contao.doctrine.dca_schema_provider"
+        tags:
+            - { name: doctrine.event_listener, event: onSchemaIndexDefinition }
+            - { name: doctrine.event_listener, event: postGenerateSchema }
+
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
         tags:
