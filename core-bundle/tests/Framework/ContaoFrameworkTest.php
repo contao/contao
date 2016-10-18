@@ -497,7 +497,16 @@ class ContaoFrameworkTest extends TestCase
     public function testCreateInstance()
     {
         $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass';
-        $instance = $this->mockContaoFramework()->createInstance($class, [1, 2]);
+
+        $instance = $this
+            ->mockContaoFramework(
+                null,
+                null,
+                [],
+                [$class => new $class(1, 2)]
+            )
+            ->createInstance($class, [1, 2])
+        ;
 
         $this->assertInstanceOf($class, $instance);
         $this->assertEquals([1, 2], $instance->constructorArgs);
@@ -509,7 +518,16 @@ class ContaoFrameworkTest extends TestCase
     public function testCreateInstanceSingelton()
     {
         $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacySingletonClass';
-        $instance = $this->mockContaoFramework()->createInstance($class, [1, 2]);
+
+        $instance = $this
+            ->mockContaoFramework(
+                null,
+                null,
+                [],
+                [$class => $class::getInstance(1, 2)]
+            )
+            ->createInstance($class, [1, 2])
+        ;
 
         $this->assertInstanceOf($class, $instance);
         $this->assertEquals([1, 2], $instance->constructorArgs);
@@ -521,13 +539,22 @@ class ContaoFrameworkTest extends TestCase
     public function testGetAdapter()
     {
         $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass';
-        $adapter = $this->mockContaoFramework()->getAdapter($class);
+
+        $adapter = $this
+            ->mockContaoFramework(
+                null,
+                null,
+                [$class => new Adapter($class)]
+            )
+            ->getAdapter($class)
+        ;
 
         $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $adapter);
 
-        $ref = new \ReflectionClass('Contao\CoreBundle\Framework\Adapter');
+        $ref = new \ReflectionClass($adapter);
         $prop = $ref->getProperty('class');
         $prop->setAccessible(true);
+
         $this->assertEquals($class, $prop->getValue($adapter));
     }
 }

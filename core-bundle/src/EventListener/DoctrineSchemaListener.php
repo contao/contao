@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of Contao.
+ *
+ * Copyright (c) 2005-2016 Leo Feyer
+ *
+ * @license LGPL-3.0+
+ */
+
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
@@ -29,7 +37,7 @@ class DoctrineSchemaListener
     }
 
     /**
-     * Add Contao DCA information to Doctrine schema.
+     * Adds the Contao DCA information to the Doctrine schema.
      *
      * @param GenerateSchemaEventArgs $event
      */
@@ -39,7 +47,7 @@ class DoctrineSchemaListener
     }
 
     /**
-     * Handle Doctrine schema and override indexes with fixed length.
+     * Handles the Doctrine schema and overrides the indexes with a fixed length.
      *
      * @param SchemaIndexDefinitionEventArgs $event
      */
@@ -48,7 +56,7 @@ class DoctrineSchemaListener
         $connection = $event->getConnection();
         $data = $event->getTableIndex();
 
-        if (!$connection->getDatabasePlatform() instanceof MySqlPlatform || 'PRIMARY' === $data['name']) {
+        if (!($connection->getDatabasePlatform() instanceof MySqlPlatform) || 'PRIMARY' === $data['name']) {
             return;
         }
 
@@ -58,11 +66,21 @@ class DoctrineSchemaListener
 
         if (null !== $index['Sub_part']) {
             $columns = [];
+
             foreach ($data['columns'] as $col) {
                 $columns[$col] = sprintf('%s(%s)', $col, $index['Sub_part']);
             }
 
-            $event->setIndex(new Index($data['name'], $columns, $data['unique'], $data['primary'], $data['flags'], $data['options']));
+            $event->setIndex(
+                new Index(
+                    $data['name'],
+                    $columns,
+                    $data['unique'],
+                    $data['primary'],
+                    $data['flags'],
+                    $data['options'])
+            );
+
             $event->preventDefault();
         }
     }

@@ -13,8 +13,7 @@ namespace Contao\CoreBundle\Test\Doctrine\Schema;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Test\TestCase;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\DBAL\Schema\Schema;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Tests the DcaSchemaProvider class.
@@ -33,23 +32,25 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', $provider);
     }
 
+    /**
+     * Tests that the schema is empty.
+     */
     public function testEmptySchema()
     {
-        $provider = $this->getProvider();
-
-        $schema = $provider->createSchema();
-
-        $this->assertCount(0, $schema->getTableNames());
+        $this->assertCount(0, $this->getProvider()->createSchema()->getTableNames());
     }
 
     /**
+     * Tests creating a schema.
+     *
+     * @param array $dca
+     * @param array $sql
+     *
      * @dataProvider createSchemaProvider
      */
     public function testCreateSchema(array $dca = [], array $sql = [])
     {
-        $provider = $this->getProvider($dca, $sql);
-
-        $schema = $provider->createSchema();
+        $schema = $this->getProvider($dca, $sql)->createSchema();
 
         $this->assertCount(1, $schema->getTableNames());
         $this->assertTrue($schema->hasTable('tl_member'));
@@ -92,7 +93,6 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertEquals(false, $table->getColumn('content')->getFixed());
         $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('content')->getLength());
 
-
         $this->assertTrue($table->hasColumn('price'));
         $this->assertEquals('decimal', $table->getColumn('price')->getType()->getName());
         $this->assertEquals(true, $table->getColumn('price')->getNotnull());
@@ -126,6 +126,11 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertEquals(true, $table->getColumn('published')->getFixed());
     }
 
+    /**
+     * Provides the data for the schema test.
+     *
+     * @return array
+     */
     public function createSchemaProvider()
     {
         return [
@@ -146,9 +151,9 @@ class DcaSchemaProviderTest extends TestCase
                             'image' => '`image` blob NULL',
                             'attachment' => '`attachment` mediumblob NULL',
                             'published' => "`published` char(1) NOT NULL default ''",
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
 
             // Test schema definition from DCA file
@@ -167,9 +172,9 @@ class DcaSchemaProviderTest extends TestCase
                             ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_BLOB],
                             ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB],
                             ['name' => 'published', 'type' => 'string', 'fixed' => true, 'length' => 1],
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
 
             // Test table fields from database.sql file
@@ -190,16 +195,18 @@ class DcaSchemaProviderTest extends TestCase
                             'attachment' => '`attachment` mediumblob NULL',
                             'published' => "`published` char(1) NOT NULL default ''",
                         ],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
+    /**
+     * Test the table options.
+     */
     public function testTableOptions()
     {
         $provider = $this->getProvider(['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8']]);
-
         $schema = $provider->createSchema();
 
         $this->assertCount(1, $schema->getTableNames());
@@ -207,10 +214,8 @@ class DcaSchemaProviderTest extends TestCase
 
         $this->assertEquals('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
         $this->assertEquals('utf8', $schema->getTable('tl_member')->getOption('charset'));
-
 
         $provider = $this->getProvider([], ['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8']]);
-
         $schema = $provider->createSchema();
 
         $this->assertCount(1, $schema->getTableNames());
@@ -219,9 +224,7 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertEquals('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
         $this->assertEquals('utf8', $schema->getTable('tl_member')->getOption('charset'));
 
-
         $provider = $this->getProvider(['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=InnoDB DEFAULT CHARSET=Latin1']]);
-
         $schema = $provider->createSchema();
 
         $this->assertCount(1, $schema->getTableNames());
@@ -231,6 +234,9 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertEquals('Latin1', $schema->getTable('tl_member')->getOption('charset'));
     }
 
+    /**
+     * Tests the table create definitions.
+     */
     public function testTableCreateDefinitions()
     {
         $provider = $this->getProvider(
@@ -248,8 +254,8 @@ class DcaSchemaProviderTest extends TestCase
                         'pid' => 'KEY `pid` (`pid`)',
                         'username' => 'UNIQUE KEY `username` (`username`)',
                         'name' => 'KEY `name` (`firstname`, `lastname`)',
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 
@@ -277,6 +283,9 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertEquals(['firstname', 'lastname'], $table->getIndex('name')->getColumns());
     }
 
+    /**
+     * Tests adding an index with a key length.
+     */
     public function testIndexWithKeyLength()
     {
         $provider = $this->getProvider(
@@ -287,8 +296,8 @@ class DcaSchemaProviderTest extends TestCase
                     ],
                     'TABLE_CREATE_DEFINITIONS' => [
                         'path' => 'KEY `path` (`path`(333))',
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 
@@ -308,6 +317,14 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertEquals(['path(333)'], $table->getIndex('path')->getColumns());
     }
 
+    /**
+     * Returns a DCA schema provider.
+     *
+     * @param array $dca
+     * @param array $file
+     *
+     * @return DcaSchemaProvider
+     */
     protected function getProvider(array $dca = [], array $file = [])
     {
         return new DcaSchemaProvider(
@@ -315,6 +332,14 @@ class DcaSchemaProviderTest extends TestCase
         );
     }
 
+    /**
+     * Returns a container with database installer.
+     *
+     * @param array $dca
+     * @param array $file
+     *
+     * @return Container|\PHPUnit_Framework_MockObject_MockObject
+     */
     protected function mockContainerWithDatabaseInstaller(array $dca = [], array $file = [])
     {
         $connection = $this->getMock('Doctrine\DBAL\Connection', ['getDatabasePlatform'], [], '', false);

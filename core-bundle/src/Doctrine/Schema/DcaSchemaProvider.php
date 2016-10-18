@@ -3,9 +3,9 @@
 /*
  * This file is part of Contao.
  *
- *  Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
- *  @license LGPL-3.0+
+ * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Doctrine\Schema;
@@ -36,7 +36,7 @@ class DcaSchemaProvider
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function createSchema()
     {
@@ -48,7 +48,7 @@ class DcaSchemaProvider
     }
 
     /**
-     * Add DCA information to Doctrine schema.
+     * Adds the DCA data to the Doctrine schema.
      *
      * @param Schema $schema
      */
@@ -92,7 +92,7 @@ class DcaSchemaProvider
     }
 
     /**
-     * Parse column definition and add it to the Schema table.
+     * Parses the column definition and adds it to the schema table.
      *
      * @param Table  $table
      * @param string $columnName
@@ -115,6 +115,7 @@ class DcaSchemaProvider
             case 'binary':
                 $fixed = true;
                 break;
+
             case 'float':
             case 'double':
             case 'real':
@@ -126,24 +127,31 @@ class DcaSchemaProvider
                     $length = null;
                 }
                 break;
+
             case 'tinytext':
                 $length = MySqlPlatform::LENGTH_LIMIT_TINYTEXT;
                 break;
+
             case 'text':
                 $length = MySqlPlatform::LENGTH_LIMIT_TEXT;
                 break;
+
             case 'mediumtext':
                 $length = MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT;
                 break;
+
             case 'tinyblob':
                 $length = MySqlPlatform::LENGTH_LIMIT_TINYBLOB;
                 break;
+
             case 'blob':
                 $length = MySqlPlatform::LENGTH_LIMIT_BLOB;
                 break;
+
             case 'mediumblob':
                 $length = MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB;
                 break;
+
             case 'tinyint':
             case 'smallint':
             case 'mediumint':
@@ -156,25 +164,25 @@ class DcaSchemaProvider
         }
 
         $type = $this->container->get('database_connection')->getDatabasePlatform()->getDoctrineTypeMapping($type);
-        $length = ((int) $length == 0) ? null : (int) $length;
+        $length = (0 === (int) $length) ? null : (int) $length;
 
         if (preg_match('/default (\'[^\']*\'|\d+)/', $def, $match)) {
             $default = trim($match[1], "'");
         }
 
-        $options = array(
-            'length'        => $length,
-            'unsigned'      => (bool) (strpos($def, 'unsigned') !== false),
-            'fixed'         => (bool) $fixed,
-            'default'       => $default,
-            'notnull'       => strpos($def, 'not null') !== false,
-            'scale'         => null,
-            'precision'     => null,
-            'autoincrement' => strpos($def, 'auto_increment') !== false,
-            'comment'       => null,
-        );
+        $options = [
+            'length' => $length,
+            'unsigned' => false !== strpos($def, 'unsigned'),
+            'fixed' => (bool) $fixed,
+            'default' => $default,
+            'notnull' => false !== strpos($def, 'not null'),
+            'scale' => null,
+            'precision' => null,
+            'autoincrement' => false !== strpos($def, 'auto_increment'),
+            'comment' => null,
+        ];
 
-        if ($scale !== null && $precision !== null) {
+        if (null !== $scale && null !== $precision) {
             $options['scale'] = $scale;
             $options['precision'] = $precision;
         }
@@ -183,7 +191,7 @@ class DcaSchemaProvider
     }
 
     /**
-     * Parse index definition and add it to the Schema table.
+     * Parses the index definition and adds it to the schema table.
      *
      * @param Table  $table
      * @param string $keyName
@@ -197,6 +205,7 @@ class DcaSchemaProvider
             }
 
             $table->setPrimaryKey($matches[1]);
+
             return;
         }
 
@@ -213,13 +222,13 @@ class DcaSchemaProvider
             $column = $cm[1];
 
             if (isset($cm[3])) {
-                $column .= '(' . $cm[3] . ')';
+                $column .= '('.$cm[3].')';
             }
 
             $columns[$cm[1]] = $column;
         }
 
-        if (strpos($matches[1], 'unique') !== false) {
+        if (false !== strpos($matches[1], 'unique')) {
             $table->addUniqueIndex($columns, $matches[2], $options);
         } else {
             $table->addIndex($columns, $matches[2], [], $options);
@@ -227,7 +236,7 @@ class DcaSchemaProvider
     }
 
     /**
-     * Returns SQL definition from Contao Installer.
+     * Returns the SQL definitions from the Contao installer.
      *
      * @return array
      */
@@ -237,11 +246,12 @@ class DcaSchemaProvider
         $framework->initialize();
 
         $installer = $framework->createInstance('Contao\Database\Installer');
+
         $sql_target = $installer->getFromDca();
         $sql_legacy = $installer->getFromFile();
 
         // Manually merge the legacy definitions (see #4766)
-        if (0 !== count($sql_legacy)) {
+        if (!empty($sql_legacy)) {
             foreach ($sql_legacy as $table => $categories) {
                 foreach ($categories as $category => $fields) {
                     if (is_array($fields)) {

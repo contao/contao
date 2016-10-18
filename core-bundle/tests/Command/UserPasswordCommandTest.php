@@ -11,13 +11,11 @@
 namespace Contao\CoreBundle\Test\Command;
 
 use Contao\CoreBundle\Command\UserPasswordCommand;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Tests the UserPasswordCommandTest class.
@@ -41,7 +39,14 @@ class UserPasswordCommandTest extends TestCase
      */
     public function setUp()
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->mockContaoFramework(
+            null,
+            null,
+            [
+                'Contao\Encryption' => $this->mockEncryptionAdapter(),
+            ]
+        );
+
         $connection = $this->getMock('Doctrine\DBAL\Connection', [], [], '', false);
 
         $this->container = $this->mockContainerWithContaoScopes();
@@ -128,9 +133,16 @@ class UserPasswordCommandTest extends TestCase
      */
     public function testCustomPasswordLength()
     {
-        $container = $this->mockContainerWithContaoScopes();
-        $framework = $this->mockContaoFramework(null, null, ['Contao\Config' => $this->mockConfigAdapter(16)]);
+        $framework = $this->mockContaoFramework(
+            null,
+            null,
+            [
+                'Contao\Config' => $this->mockConfigAdapter(16),
+                'Contao\Encryption' => $this->mockEncryptionAdapter(),
+            ]
+        );
 
+        $container = $this->mockContainerWithContaoScopes();
         $container->set('contao.framework', $framework);
 
         $command = new UserPasswordCommand();
@@ -231,15 +243,11 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks an encryption adapter.
      *
-     * @param RequestStack|null    $requestStack
-     * @param RouterInterface|null $router
-     * @param array                $adapters
-     *
-     * @return ContaoFramework
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [])
+    protected function mockEncryptionAdapter()
     {
         $encryption = $this->getMock('Contao\CoreBundle\Framework\Adapter', ['hash'], ['Contao\Encryption']);
 
@@ -253,8 +261,6 @@ class UserPasswordCommandTest extends TestCase
             )
         ;
 
-        $adapters['Contao\Encryption'] = $encryption;
-
-        return parent::mockContaoFramework($requestStack, $router, $adapters);
+        return $encryption;
     }
 }

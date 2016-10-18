@@ -11,9 +11,6 @@
 namespace Contao\CoreBundle\Test\Command;
 
 use Contao\CoreBundle\Command\DoctrineMigrationsDiffCommand;
-use Contao\CoreBundle\Command\VersionCommand;
-use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the DoctrineMigrationsDiffCommand class.
@@ -30,9 +27,11 @@ class DoctrineMigrationsDiffCommandTest extends \PHPUnit_Framework_TestCase
         $command = new DoctrineMigrationsDiffCommand();
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\DoctrineMigrationsDiffCommand', $command);
-
     }
 
+    /**
+     * Tests the command name.
+     */
     public function testName()
     {
         $command = new DoctrineMigrationsDiffCommand();

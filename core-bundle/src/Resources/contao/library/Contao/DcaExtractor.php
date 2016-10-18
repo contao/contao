@@ -310,7 +310,7 @@ class DcaExtractor extends \Controller
 			{
 				if (!isset($v['name']))
 				{
-			 		$v['name'] = $k;
+					$v['name'] = $k;
 				}
 
 				$return['SCHEMA_FIELDS'][$k] = $v;

@@ -240,7 +240,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return ContaoFramework The object instance
      */
-    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [], array $instances = null)
+    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [], array $instances = [])
     {
         $container = $this->mockContainerWithContaoScopes();
 
@@ -264,46 +264,35 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $adapters['Contao\FilesModel'] = $this->mockFilesModelAdapter();
         }
 
-        if (null === $instances) {
-            $framework = new ContaoFramework(
+        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
+        $framework = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->setConstructorArgs([
                 $requestStack,
                 $router,
                 $this->mockSession(),
-                $this->getRootDir() . '/app',
-                error_reporting()
-            );
-        } else {
-            /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-            $framework = $this
-                ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-                ->setConstructorArgs(
-                    [
-                        $requestStack,
-                        $router,
-                        $this->mockSession(),
-                        $this->getRootDir() . '/app',
-                        error_reporting(),
-                    ]
-                )
-                ->setMethods(['createInstance'])
-                ->getMock()
-            ;
+                $this->getRootDir().'/app',
+                error_reporting(),
+            ])
+            ->setMethods(['getAdapter', 'createInstance'])
+            ->getMock()
+        ;
 
-            $framework
-                ->expects($this->any())
-                ->method('createInstance')
-                ->willReturnCallback(
-                    function ($key) use ($instances) {
-                        return $instances[$key];
-                    }
-                )
-            ;
-        }
+        $framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->willReturnCallback(function ($key) use ($adapters) {
+                return $adapters[$key];
+            })
+        ;
 
-        $ref = new \ReflectionClass('Contao\CoreBundle\Framework\ContaoFramework');
-        $prop = $ref->getProperty('adapterCache');
-        $prop->setAccessible(true);
-        $prop->setValue($framework, $adapters);
+        $framework
+            ->expects($this->any())
+            ->method('createInstance')
+            ->willReturnCallback(function ($key) use ($instances) {
+                return $instances[$key];
+            })
+        ;
 
         $framework->setContainer($container);
 

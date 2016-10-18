@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Command;
 use Doctrine\Bundle\MigrationsBundle\Command\DoctrineCommand;
 use Doctrine\Bundle\MigrationsBundle\Command\Helper\DoctrineCommandHelper;
 use Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -25,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DoctrineMigrationsDiffCommand extends DiffCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -35,14 +36,19 @@ class DoctrineMigrationsDiffCommand extends DiffCommand
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        DoctrineCommandHelper::setApplicationConnection($this->getApplication(), $input->getOption('db-configuration'));
+        /** @var Application $application */
+        $application = $this->getApplication();
 
-        $configuration = $this->getMigrationConfiguration($input, $output);
-        DoctrineCommand::configureMigrations($this->getApplication()->getKernel()->getContainer(), $configuration);
+        DoctrineCommandHelper::setApplicationConnection($application, $input->getOption('db-configuration'));
+
+        DoctrineCommand::configureMigrations(
+            $application->getKernel()->getContainer(),
+            $this->getMigrationConfiguration($input, $output)
+        );
 
         parent::execute($input, $output);
     }
