@@ -104,12 +104,52 @@ class DcaSchemaProvider
 
         $type = strtok(strtolower($dbType), '(), ');
         $length = strtok('(), ');
-
-        $fixed = null;
+        $fixed = false;
         $scale = null;
         $precision = null;
         $default = null;
 
+        $this->setLengthAndPrecisionByType($type, $dbType, $length, $scale, $precision, $fixed);
+
+        $type = $this->container->get('database_connection')->getDatabasePlatform()->getDoctrineTypeMapping($type);
+        $length = (0 === (int) $length) ? null : (int) $length;
+
+        if (preg_match('/default (\'[^\']*\'|\d+)/', $def, $match)) {
+            $default = trim($match[1], "'");
+        }
+
+        $options = [
+            'length' => $length,
+            'unsigned' => false !== strpos($def, 'unsigned'),
+            'fixed' => $fixed,
+            'default' => $default,
+            'notnull' => false !== strpos($def, 'not null'),
+            'scale' => null,
+            'precision' => null,
+            'autoincrement' => false !== strpos($def, 'auto_increment'),
+            'comment' => null,
+        ];
+
+        if (null !== $scale && null !== $precision) {
+            $options['scale'] = $scale;
+            $options['precision'] = $precision;
+        }
+
+        $table->addColumn($columnName, $type, $options);
+    }
+
+    /**
+     * Sets the length, scale, precision and fixed values by field type.
+     *
+     * @param string $type
+     * @param string $dbType
+     * @param int    $length
+     * @param int    $scale
+     * @param int    $precision
+     * @param bool   $fixed
+     */
+    private function setLengthAndPrecisionByType($type, $dbType, &$length, &$scale, &$precision, &$fixed)
+    {
         switch ($type) {
             case 'char':
             case 'binary':
@@ -122,9 +162,9 @@ class DcaSchemaProvider
             case 'numeric':
             case 'decimal':
                 if (preg_match('([A-Za-z]+\(([0-9]+)\,([0-9]+)\))', $dbType, $match)) {
+                    $length = null;
                     $precision = $match[1];
                     $scale = $match[2];
-                    $length = null;
                 }
                 break;
 
@@ -162,32 +202,6 @@ class DcaSchemaProvider
                 $length = null;
                 break;
         }
-
-        $type = $this->container->get('database_connection')->getDatabasePlatform()->getDoctrineTypeMapping($type);
-        $length = (0 === (int) $length) ? null : (int) $length;
-
-        if (preg_match('/default (\'[^\']*\'|\d+)/', $def, $match)) {
-            $default = trim($match[1], "'");
-        }
-
-        $options = [
-            'length' => $length,
-            'unsigned' => false !== strpos($def, 'unsigned'),
-            'fixed' => (bool) $fixed,
-            'default' => $default,
-            'notnull' => false !== strpos($def, 'not null'),
-            'scale' => null,
-            'precision' => null,
-            'autoincrement' => false !== strpos($def, 'auto_increment'),
-            'comment' => null,
-        ];
-
-        if (null !== $scale && null !== $precision) {
-            $options['scale'] = $scale;
-            $options['precision'] = $precision;
-        }
-
-        $table->addColumn($columnName, $type, $options);
     }
 
     /**
@@ -247,24 +261,24 @@ class DcaSchemaProvider
 
         $installer = $framework->createInstance('Contao\Database\Installer');
 
-        $sql_target = $installer->getFromDca();
-        $sql_legacy = $installer->getFromFile();
+        $sqlTarget = $installer->getFromDca();
+        $sqlLegacy = $installer->getFromFile();
 
         // Manually merge the legacy definitions (see #4766)
-        if (!empty($sql_legacy)) {
-            foreach ($sql_legacy as $table => $categories) {
+        if (!empty($sqlLegacy)) {
+            foreach ($sqlLegacy as $table => $categories) {
                 foreach ($categories as $category => $fields) {
                     if (is_array($fields)) {
                         foreach ($fields as $name => $sql) {
-                            $sql_target[$table][$category][$name] = $sql;
+                            $sqlTarget[$table][$category][$name] = $sql;
                         }
                     } else {
-                        $sql_target[$table][$category] = $fields;
+                        $sqlTarget[$table][$category] = $fields;
                     }
                 }
             }
         }
 
-        return $sql_target;
+        return $sqlTarget;
     }
 }
