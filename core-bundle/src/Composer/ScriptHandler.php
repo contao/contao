@@ -81,10 +81,11 @@ class ScriptHandler
 
         $process = new Process(
             sprintf(
-                '%s bin/console%s %s',
+                '%s bin/console%s %s%s',
                 $phpPath,
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
-                $cmd
+                $cmd,
+                static::getVerbosityFlag($event)
             )
         );
 
@@ -96,6 +97,32 @@ class ScriptHandler
 
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command.', $cmd));
+        }
+    }
+
+    /**
+     * Returns the verbosity flag depending on the console IO verbosity.
+     *
+     * @param Event $event
+     *
+     * @return string
+     */
+    private static function getVerbosityFlag(Event $event)
+    {
+        $io = $event->getIO();
+
+        switch (true) {
+            case $io->isVerbose():
+                return ' -v';
+
+            case $io->isVeryVerbose():
+                return ' -vv';
+
+            case $io->isDebug():
+                return ' -vvv';
+
+            default:
+                return '';
         }
     }
 
