@@ -1739,7 +1739,8 @@ abstract class Controller extends \System
 			}
 			else
 			{
-				define($strConstant, '//' . preg_replace('@https?://@', '', $url) . \Environment::get('path') . '/');
+				$strProtocol = ($objPage->rootUseSSL || \Environment::get('ssl')) ? 'https://' : 'http://';
+				define($strConstant, $strProtocol . preg_replace('@https?://@', '', $url) . \Environment::get('path') . '/');
 			}
 		}
 
