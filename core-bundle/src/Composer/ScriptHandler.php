@@ -85,7 +85,7 @@ class ScriptHandler
                 $phpPath,
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
-                static::getVerbosityFlag($event)
+                self::getVerbosityFlag($event)
             )
         );
 
