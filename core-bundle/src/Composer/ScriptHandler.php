@@ -85,7 +85,7 @@ class ScriptHandler
                 $phpPath,
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
-                static::determineVerbosity($event)
+                static::getVerbosityFlag($event)
             )
         );
 
@@ -101,27 +101,29 @@ class ScriptHandler
     }
 
     /**
-     * Determine the verbosity of the console IO of the passed event.
+     * Returns the verbosity flag depending on the console IO verbosity.
      *
      * @param Event $event
      *
      * @return string
      */
-    private static function determineVerbosity(Event $event)
+    private static function getVerbosityFlag(Event $event)
     {
         $io = $event->getIO();
 
-        if ($io->isDebug()) {
-            return ' -vvv';
-        }
-        if ($io->isVeryVerbose()) {
-            return ' -vv';
-        }
-        if ($io->isVerbose()) {
-            return ' -v';
-        }
+        switch (true) {
+            case $io->isVerbose():
+                return ' -v';
 
-        return '';
+            case $io->isVeryVerbose():
+                return ' -vv';
+
+            case $io->isDebug():
+                return ' -vvv';
+
+            default:
+                return '';
+        }
     }
 
     /**
