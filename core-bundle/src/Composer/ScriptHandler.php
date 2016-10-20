@@ -81,10 +81,11 @@ class ScriptHandler
 
         $process = new Process(
             sprintf(
-                '%s bin/console%s %s',
+                '%s bin/console%s %s%s',
                 $phpPath,
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
-                $cmd
+                $cmd,
+                static::determineVerbosity($event)
             )
         );
 
@@ -97,6 +98,30 @@ class ScriptHandler
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command.', $cmd));
         }
+    }
+
+    /**
+     * Determine the verbosity of the console IO of the passed event.
+     *
+     * @param Event $event
+     *
+     * @return string
+     */
+    private static function determineVerbosity(Event $event)
+    {
+        $io = $event->getIO();
+
+        if ($io->isDebug()) {
+            return ' -vvv';
+        }
+        if ($io->isVeryVerbose()) {
+            return ' -vv';
+        }
+        if ($io->isVerbose()) {
+            return ' -v';
+        }
+
+        return '';
     }
 
     /**
