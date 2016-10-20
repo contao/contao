@@ -1,5 +1,11 @@
 # Contao core bundle change log
 
+### 4.2.5 (2016-XX-XX)
+
+ * Correctly set host and scheme in the URL generator (see #592).
+ * Correctly reload the page and file trees in "edit multiple" mode.
+ * Correctly normalize the paths in the symlink command.
+
 ### 4.2.4 (2016-09-21)
 
  * Handle special character passwords in the "close account" module (see contao/core#8455).
