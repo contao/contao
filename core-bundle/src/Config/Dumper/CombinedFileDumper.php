@@ -39,7 +39,7 @@ class CombinedFileDumper implements DumperInterface
     /**
      * @var string
      */
-    private $header = '<?php '; // add one space to prevent the "unexpected $end" error
+    private $header = "<?php\n"; // add a line-break to prevent the "unexpected $end" error
 
     /**
      * Constructor.

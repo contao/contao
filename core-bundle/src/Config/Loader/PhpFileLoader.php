@@ -52,7 +52,7 @@ class PhpFileLoader extends Loader
             $code = substr($code, 0, -2);
         }
 
-        return rtrim($code)."\n";
+        return sprintf("\nnamespace {%s\n\n}\n", rtrim($code));
     }
 
     /**
