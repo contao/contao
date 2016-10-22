@@ -67,12 +67,13 @@ class PhpFileLoaderTest extends TestCase
     public function testLoad()
     {
         $this->assertEquals(
-            "\n\n\$GLOBALS['TL_TEST'] = true;\n",
+            "\nnamespace {\n\n\$GLOBALS['TL_TEST'] = true;\n\n}\n",
             $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php')
         );
 
         $content = <<<'EOF'
 
+namespace {
 
 $GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
@@ -90,6 +91,8 @@ $GLOBALS['TL_DCA']['tl_test'] = [
     ],
 ];
 
+}
+
 EOF;
 
         $this->assertEquals(
@@ -98,7 +101,7 @@ EOF;
         );
 
         $this->assertEquals(
-            "\n\n\$GLOBALS['TL_TEST'] = true;\n",
+            "\nnamespace {\n\n\$GLOBALS['TL_TEST'] = true;\n\n}\n",
             $this->loader->load(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php'
             )
