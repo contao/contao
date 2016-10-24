@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.1.6 (2016-XX-XX)
+
+ * Validate the database name (see contao/core-bundle#593).
+
 ### 1.1.5 (2016-09-26)
 
  * Store the request object as early as possible.

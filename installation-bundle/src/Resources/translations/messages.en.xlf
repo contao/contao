@@ -282,6 +282,10 @@
         <source>old_database_explanation</source>
         <target>You need at least Contao 3.2 to upgrade to Contao 4.</target>
       </trans-unit>
+      <trans-unit id="71">
+        <source>database_name_error</source>
+        <target>Please enter only the following characters: A-Za-z0-9$_</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
