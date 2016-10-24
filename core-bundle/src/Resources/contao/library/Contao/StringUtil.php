@@ -312,7 +312,14 @@ class StringUtil
 	 */
 	public static function encodeEmail($strString)
 	{
-		foreach (static::extractEmail($strString) as $strEmail)
+		if (strpos($strString, '@') === false)
+		{
+			return $strString;
+		}
+
+		$arrEmails = static::extractEmail($strString, \Config::get('allowedTags'));
+
+		foreach ($arrEmails as $strEmail)
 		{
 			$strEncoded = '';
 			$arrCharacters = Utf8::str_split($strEmail);
@@ -332,25 +339,58 @@ class StringUtil
 	/**
 	 * Extract all e-mail addresses from a string
 	 *
-	 * @param string $strString The string
+	 * @param string $strString      The string
+	 * @param string $strAllowedTags A list of allowed HTML tags
 	 *
 	 * @return array The e-mail addresses
 	 */
-	public static function extractEmail($strString)
+	public static function extractEmail($strString, $strAllowedTags='')
 	{
 		$arrEmails = array();
 
-		preg_match_all('/(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', $strString, $arrEmails);
-
-		foreach ($arrEmails[0] as $strKey=>$strEmail)
+		if (strpos($strString, '@') === false)
 		{
-			if (!\Validator::isEmail($strEmail))
+			return $arrEmails;
+		}
+
+		// Find all mailto: addresses
+		preg_match_all('/mailto:(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', $strString, $matches);
+
+		foreach ($matches[0] as &$strEmail)
+		{
+			$strEmail = str_replace('mailto:', '', $strEmail);
+
+			if (\Validator::isEmail($strEmail))
 			{
-				unset($arrEmails[0][$strKey]);
+				$arrEmails[] = $strEmail;
 			}
 		}
 
-		return array_values($arrEmails[0]);
+		// Encode opening arrow brackets (see #3998)
+		$strString = preg_replace_callback('@</?([^\s<>/]*)@', function ($matches) use ($strAllowedTags)
+		{
+			if ($matches[1] == '' || strpos(strtolower($strAllowedTags), '<' . strtolower($matches[1]) . '>') === false)
+			{
+				$matches[0] = str_replace('<', '&lt;', $matches[0]);
+			}
+
+			return $matches[0];
+		}, $strString);
+
+		// Find all addresses in the plain text
+		preg_match_all('/(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', strip_tags($strString), $matches);
+
+		foreach ($matches[0] as &$strEmail)
+		{
+			$strEmail = str_replace('&lt;', '<', $strEmail);
+
+			if (\Validator::isEmail($strEmail))
+			{
+				$arrEmails[] = $strEmail;
+			}
+		}
+
+		return array_unique($arrEmails);
 	}
 
 

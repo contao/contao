@@ -46,6 +46,7 @@ We also support IDNA domains as in test@exämple.com, test@ä-.xe, test@subexamp
 And we support unicode characters in the local part (RFC 6531) as in niceändsimple@example.com, véry.çommon@example.com, a.lîttle.lengthy.but.fiñe@dept.example.com, dîsposable.style.émail.with+symbol@example.com, other.émail-with-dash@example.com, "verî.uñusual.@.uñusual.com"@example.com, "verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com, üñîçøðé@example.com, "üñîçøðé"@example.com or ǅǼ੧ఘⅧ⒇৪@example.com.
 Of course also with IP addresses: üser@[255.255.255.255], üser@[IPv6:2001:db8:1ff::a0b:dbd0], üser@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344], üser@[IPv6:2001::7344] or üser@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255] and unicode characters in the local part: tést@exämple.com, tést@ä-.xe, tést@subexample.wizard, tést@wähwähwäh.ümläüts.de, "tés@t"@wähwähwäh.ümläüts.de. New TLDs? No problem: tést@example.photography or tést@sub-domain.example.photography.
 And hopefully we do not match invalid addresses such as test..child@example.com, test@sub.-example.com, test@_smtp_.example.com, test@sub..example.com, test@subexamplecom, Abc.example.com, a"b(c)d,e:f;gi[j\k]l@example.com, this is"not\allowed@example.com, this\ still\"not\allowed@example.com, (comment)test@iana.org, test@[1.2.3.4, @ or test@.
+Also, we should correctly parse <a href="mailto:tricky@example.com">tricky@example.com</a>, <a href="mailto:more-tricky@example.com">write us</a> and <strong>even-more-tricky@example.com</strong>.
 EOF;
 
         $expected = [
@@ -92,9 +93,12 @@ EOF;
             '"tés@t"@wähwähwäh.ümläüts.de',
             'tést@example.photography',
             'tést@sub-domain.example.photography',
+            'tricky@example.com',
+            'more-tricky@example.com',
+            'even-more-tricky@example.com',
         ];
 
-        $actual = StringUtil::extractEmail($text);
+        $actual = StringUtil::extractEmail($text, '<a><strong>');
 
         sort($actual);
         sort($expected);
