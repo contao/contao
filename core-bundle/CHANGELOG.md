@@ -2,6 +2,7 @@
 
 ### 4.2.5 (2016-XX-XX)
 
+ * Do not parse front end templates twice (see #599).
  * Correctly set host and scheme in the URL generator (see #592).
  * Correctly reload the page and file trees in "edit multiple" mode.
  * Correctly normalize the paths in the symlink command.

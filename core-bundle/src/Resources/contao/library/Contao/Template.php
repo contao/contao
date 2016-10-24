@@ -329,7 +329,7 @@ abstract class Template extends \Controller
 	 *
 	 * @return string The route
 	 */
-	public function route($strName, $arrParams = array())
+	public function route($strName, $arrParams=array())
 	{
 		$strUrl = \System::getContainer()->get('router')->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
