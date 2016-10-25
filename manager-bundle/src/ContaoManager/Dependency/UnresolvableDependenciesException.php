@@ -8,11 +8,11 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Exception;
+namespace Contao\ManagerBundle\ContaoManager\Dependency;
 
 /**
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class UnresolvableLoadingOrderException extends \RuntimeException
+class UnresolvableDependenciesException extends \RuntimeException
 {
 }

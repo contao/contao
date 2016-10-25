@@ -10,7 +10,7 @@
 
 namespace Contao\ManagerBundle\ContaoManager\Bundle;
 
-use Contao\ManagerBundle\Exception\UnresolvableLoadingOrderException;
+use Contao\ManagerBundle\ContaoManager\Dependency\DependencyResolverTrait;
 
 /**
  * Resolves the bundles map from the configuration objects
@@ -19,6 +19,8 @@ use Contao\ManagerBundle\Exception\UnresolvableLoadingOrderException;
  */
 class ConfigResolver
 {
+    use DependencyResolverTrait;
+
     /**
      * @var ConfigInterface[]
      */
@@ -59,7 +61,7 @@ class ConfigResolver
         $loadingOrder    = $this->buildLoadingOrder();
         $replaces        = $this->buildReplaceMap();
         $normalizedOrder = $this->normalizeLoadingOrder($loadingOrder, $replaces);
-        $resolvedOrder   = $this->resolveLoadingOrder($normalizedOrder);
+        $resolvedOrder   = $this->orderByDependencies($normalizedOrder);
 
         return $this->order($bundles, $resolvedOrder);
     }
@@ -165,75 +167,5 @@ class ConfigResolver
                 $bundleName = $replace[$bundleName];
             }
         }
-    }
-
-    /**
-     * Tries to resolve the loading order
-     *
-     * @param array $loadingOrder
-     *
-     * @return array
-     *
-     * @throws UnresolvableLoadingOrderException If the loading order cannot be resolved
-     */
-    private function resolveLoadingOrder(array $loadingOrder)
-    {
-        $ordered   = [];
-        $available = array_keys($loadingOrder);
-
-        while (0 !== count($loadingOrder)) {
-            $success = $this->doResolveLoadingOrder($loadingOrder, $ordered, $available);
-
-            if (false === $success) {
-                throw new UnresolvableLoadingOrderException(
-                    "The bundle loading order could not be resolved.\n" . print_r($loadingOrder, true)
-                );
-            }
-        }
-
-        return $ordered;
-    }
-
-    /**
-     * Tries to resolve the loading order
-     *
-     * @param array $loadingOrder
-     * @param array $ordered
-     * @param array $available
-     *
-     * @return bool True if the order could be resolved
-     */
-    private function doResolveLoadingOrder(array &$loadingOrder, array &$ordered, array $available)
-    {
-        $failed = true;
-
-        foreach ($loadingOrder as $name => $requires) {
-            if (true === $this->canBeResolved($requires, $available, $ordered)) {
-                $failed    = false;
-                $ordered[] = $name;
-
-                unset($loadingOrder[$name]);
-            }
-        }
-
-        return !$failed;
-    }
-
-    /**
-     * Checks whether the requirements of a bundle can be resolved
-     *
-     * @param array $requires
-     * @param array $available
-     * @param array $ordered
-     *
-     * @return bool True if the requirements can be resolved
-     */
-    private function canBeResolved(array $requires, array $available, array $ordered)
-    {
-        if (0 === count($requires)) {
-            return true;
-        }
-
-        return (0 === count(array_diff(array_intersect($requires, $available), $ordered)));
     }
 }

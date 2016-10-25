@@ -10,6 +10,10 @@
 
 namespace Contao\ManagerBundle\ContaoManager;
 
+use Contao\ManagerBundle\ContaoManager\Dependency\DependencyResolverTrait;
+use Contao\ManagerBundle\ContaoManager\Dependency\DependentPluginInterface;
+use Contao\ManagerBundle\ContaoManager\Dependency\UnresolvableDependenciesException;
+
 /**
  * Finds Contao manager plugins from Composer's installed.json
  *
@@ -17,6 +21,8 @@ namespace Contao\ManagerBundle\ContaoManager;
  */
 class PluginLoader
 {
+    use DependencyResolverTrait;
+
     const BUNDLE_PLUGINS = 'Contao\ManagerBundle\ContaoManager\Bundle\BundlePluginInterface';
     const CONFIG_PLUGINS = 'Contao\ManagerBundle\ContaoManager\Config\ConfigPluginInterface';
     const ROUTING_PLUGINS = 'Contao\ManagerBundle\ContaoManager\Routing\RoutingPluginInterface';
@@ -78,8 +84,7 @@ class PluginLoader
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     *
-     * @todo implement loading order
+     * @throws UnresolvableDependenciesException
      */
     private function load()
     {
@@ -93,6 +98,7 @@ class PluginLoader
             );
         }
 
+        $plugins = [];
         $json = json_decode(file_get_contents($this->installedJson), true);
 
         if (null === $json) {
@@ -101,8 +107,40 @@ class PluginLoader
 
         foreach ($json as $package) {
             if (isset($package['extra']['contao-manager-plugin'])) {
-                $this->plugins[$package['name']] = new $package['extra']['contao-manager-plugin'];
+                $plugins[$package['name']] = new $package['extra']['contao-manager-plugin'];
             }
+        }
+
+        $this->orderPlugins($plugins);
+    }
+
+    /**
+     * @param array $plugins
+     *
+     * @throws UnresolvableDependenciesException
+     */
+    private function orderPlugins(array $plugins)
+    {
+        $this->plugins = [];
+
+        $dependencies = [];
+        $packages = array_keys($plugins);
+
+        // Load the manager bundle first
+        array_unshift($packages, 'contao/manager-bundle');
+        $packages = array_unique($packages);
+
+        // Walk through the packages
+        foreach ($packages as $packageName) {
+            $dependencies[$packageName] = [];
+
+            if ($plugins[$packageName] instanceof DependentPluginInterface) {
+                $dependencies[$packageName] = $plugins[$packageName]->getPackageDependencies();
+            }
+        }
+
+        foreach ($this->orderByDependencies($dependencies) as $packageName) {
+            $this->plugins[$packageName] = $plugins[$packageName];
         }
     }
 }
