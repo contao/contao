@@ -1,5 +1,6 @@
 services:
     contao_manager.plugin_loader:
+        class: Contao\ManagerBundle\ContaoManager\PluginLoader
         synthetic: true
 
     contao_manager.routing_loader:
