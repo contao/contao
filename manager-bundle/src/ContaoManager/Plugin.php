@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
+
 /**
  * Plugin for the Contao Manager.
  *

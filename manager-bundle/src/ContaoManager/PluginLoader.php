@@ -29,11 +29,6 @@ class PluginLoader
     /**
      * @var array
      */
-    private $classes = [];
-
-    /**
-     * @var array
-     */
     private $plugins;
 
     /**
@@ -44,18 +39,6 @@ class PluginLoader
     public function __construct($installedJson)
     {
         $this->installedJson = $installedJson;
-    }
-
-    /**
-     * Gets list of manager plugin classes.
-     *
-     * @return array
-     */
-    public function getClasses()
-    {
-        $this->load();
-
-        return $this->classes;
     }
 
     /**
@@ -91,7 +74,7 @@ class PluginLoader
     }
 
     /**
-     * Loads plugin classes from Composer's installed.json
+     * Loads plugins from Composer's installed.json
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -118,8 +101,7 @@ class PluginLoader
 
         foreach ($json as $package) {
             if (isset($package['extra']['contao-manager-plugin'])) {
-                $this->classes[$package['name']] = $package['extra']['contao-manager-plugin'];
-                $this->plugins[$package['name']] = $package['extra']['contao-manager-plugin'];
+                $this->plugins[$package['name']] = new $package['extra']['contao-manager-plugin'];
             }
         }
     }

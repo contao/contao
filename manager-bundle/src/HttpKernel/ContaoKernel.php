@@ -90,7 +90,6 @@ class ContaoKernel extends Kernel
         // Set plugin loader so it's available in ContainerBuilder
         if ($this->pluginLoader) {
             $container->set('contao_manager.plugin_loader', $this->pluginLoader);
-            $container->setParameter('contao_manager.plugins', $this->pluginLoader->getClasses());
         }
 
         parent::prepareContainer($container);
