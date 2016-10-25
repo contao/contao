@@ -25,7 +25,7 @@ class Plugin implements BundlePluginInterface
     /**
      * @inheritdoc
      */
-    public function getAutoloadConfigs(JsonParser $jsonParser, IniParser $iniParser)
+    public function getBundles(JsonParser $jsonParser, IniParser $iniParser)
     {
         return [
             BundleConfig::create('Contao\CalendarBundle\ContaoCalendarBundle')
