@@ -2,6 +2,7 @@
 
 ### 4.2.5 (2016-XX-XX)
 
+ * Correctly determine the form field names in the file manager (see #600).
  * Correctly show the maximum file size in the form upload widget (see #595).
  * Correctly encode e-mail addresses in the text element (see #594).
  * Do not parse front end templates twice (see #599).
