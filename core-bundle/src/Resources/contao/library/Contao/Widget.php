@@ -738,7 +738,7 @@ abstract class Widget extends \Controller
 		}
 		elseif ($varValue != '')
 		{
-			return ' ' . $strKey . '="' . $varValue . '"';
+			return ' ' . $strKey . '="' . \StringUtil::specialchars($varValue) . '"';
 		}
 
 		return '';
@@ -1437,13 +1437,14 @@ abstract class Widget extends \Controller
 			return '';
 		}
 
-		$type = preg_replace('/^([A-Za-z]+)(\(| ).*$/', '$1', $sql);
-
-		if (strpos($sql, 'NULL') !== false && strpos($sql, 'NOT NULL') === false)
+		if (stripos($sql, 'NOT NULL') === false)
 		{
 			return null;
 		}
-		elseif (in_array($type, array('int', 'integer', 'tinyint', 'smallint', 'mediumint', 'bigint', 'float', 'double', 'dec', 'decimal')))
+
+		$type = strtolower(preg_replace('/^([A-Za-z]+)(\(| ).*$/', '$1', $sql));
+
+		if (in_array($type, array('int', 'integer', 'tinyint', 'smallint', 'mediumint', 'bigint', 'float', 'double', 'dec', 'decimal')))
 		{
 			return 0;
 		}

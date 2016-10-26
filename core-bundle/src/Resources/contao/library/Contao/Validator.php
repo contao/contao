@@ -165,7 +165,7 @@ class Validator
 	 */
 	public static function isUrl($varValue)
 	{
-		return preg_match('/^[\w\/.*+?$#%:,;{}()[\]@&!=~-]+$/u', \Idna::encodeUrl($varValue));
+		return preg_match('/^[\w\/.*+?$#%:,;{}()[\]@&!=~|-]+$/u', \Idna::encodeUrl($varValue));
 	}
 
 
