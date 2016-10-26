@@ -106,7 +106,8 @@ class FormFileUpload extends \Widget implements \uploadable
 		}
 
 		$file = $_FILES[$this->strName];
-		$maxlength_kb = $this->getReadableSize($this->maxlength);
+		$maxlength_kb = $this->getMaximumUploadSize();
+		$maxlength_kb_readable = $this->getReadableSize($maxlength_kb);
 
 		// Sanitize the filename
 		try
@@ -133,7 +134,7 @@ class FormFileUpload extends \Widget implements \uploadable
 		{
 			if ($file['error'] == 1 || $file['error'] == 2)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb));
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
 			}
 			elseif ($file['error'] == 3)
 			{
@@ -150,9 +151,9 @@ class FormFileUpload extends \Widget implements \uploadable
 		}
 
 		// File is too big
-		if ($this->maxlength > 0 && $file['size'] > $this->maxlength)
+		if ($file['size'] > $maxlength_kb)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb));
+			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
 			unset($_FILES[$this->strName]);
 
 			return;
@@ -306,5 +307,38 @@ class FormFileUpload extends \Widget implements \uploadable
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
 						$this->getAttributes(),
 						$this->strTagEnding);
+	}
+
+
+	/**
+	 * Return the maximum upload file size in bytes
+	 *
+	 * @return string
+	 */
+	protected function getMaximumUploadSize()
+	{
+		if ($this->maxlength > 0)
+		{
+			return $this->maxlength;
+		}
+
+		// Get the upload_max_filesize from the php.ini
+		$upload_max_filesize = ini_get('upload_max_filesize');
+
+		// Convert the value to bytes
+		if (stripos($upload_max_filesize, 'K') !== false)
+		{
+			$upload_max_filesize = round($upload_max_filesize * 1024);
+		}
+		elseif (stripos($upload_max_filesize, 'M') !== false)
+		{
+			$upload_max_filesize = round($upload_max_filesize * 1024 * 1024);
+		}
+		elseif (stripos($upload_max_filesize, 'G') !== false)
+		{
+			$upload_max_filesize = round($upload_max_filesize * 1024 * 1024 * 1024);
+		}
+
+		return min($upload_max_filesize, \Config::get('maxFileSize'));
 	}
 }
