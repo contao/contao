@@ -2,7 +2,15 @@
 
 ### 4.2.5 (2016-XX-XX)
 
- * Cache the `PageModel::findPublishedFallbackByHostname()` results (see contao/core#8544).
+ * Unlock members after password change (see contao/core#8545).
+ * Register an alias for the language fallback page model (see contao/core#8544).
+ * Correctly calculate the maximum length of tl_files.name (see contao/core#8536).
+ * Correctly add the headline if a content element is versionized (see contao/core#8502).
+ * Optimize the DCA sorting filter for date fields (see contao/core#8485).
+ * Do not show version entries of deleted files (see contao/core#8480).
+ * Redirect the empty URL depending on language and alias name (see contao/core#8498).
+ * Apply `specialchars()` to widget attributes (see contao/core#8505).
+ * Queue the requests when rebuilding the search index (see contao/core#8449).
  * Correctly determine the form field names in the file manager (see #600).
  * Correctly show the maximum file size in the form upload widget (see #595).
  * Correctly encode e-mail addresses in the text element (see #594).
