@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.1">
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
-        <target>Изаберите страницу читача догађаја на коју ће посетиоци бити преусмерени кликом на догађај.</target>
+        <target>Изаберите страницу читача дешавања на коју ће посетиоци бити преусмерени кликом на дешавање.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.0">
         <source>Enable comments</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.1">
         <source>Allow visitors to comment events.</source>
-        <target>Дозволи посетиоцима да коментаришу догађај.</target>
+        <target>Дозволи посетиоцима да коментаришу дешавање.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify.0">
         <source>Notify</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>По основној поставци, коментари се сортирају у растућем редоследу, почев од најстаријег.</target>
+        <target>По основној поставци, коментари се сортирају у растућем редоследу, почевши од најстаријег.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.0">
         <source>Comments per page</source>
@@ -55,15 +55,15 @@
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Одобравање коментара прије него што постану видљиви на сајту.</target>
+        <target>Коментаре је потребно одобрити пре него што постану видљиви на сајту.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.0">
         <source>Allow BBCode</source>
-        <target>Дозволити BBCode</target>
+        <target>Дозволи BBCode</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Дозволити корисницима да користе BBCode у својим коментарима.</target>
+        <target>Корисници ће моћи да користе BBCode у својим коментарима.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.0">
         <source>Require login to comment</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>Дозволи само аутентификованим корисницима да пишу коментаре.</target>
+        <target>Дозволи само пријављеним корисницима да пишу коментаре.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
         <source>Disable the security question</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.groups.1">
         <source>These groups will be able to see the events in this calendar.</source>
-        <target>Ове групе ће моћи да виде догађаје у овом календару.</target>
+        <target>Ове групе ће моћи да виде дешавања у овом календару.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.0">
         <source>Revision date</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.notify_author">
         <source>Author of the event</source>
-        <target>Аутор догађаја</target>
+        <target>Аутор дешавања</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_both">
         <source>Author and system administrator</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.source_teaser">
         <source>Event teasers</source>
-        <target>Најављивач догађаја</target>
+        <target>Најављивач дешавања</target>
       </trans-unit>
       <trans-unit id="tl_calendar.source_text">
         <source>Full articles</source>

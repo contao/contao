@@ -1,5 +1,9 @@
 # Contao calendar bundle change log
 
+### 4.2.3 (2016-10-27)
+
+ * Show running events in the event list again (see contao/core#8497).
+
 ### 4.2.2 (2016-09-06)
 
  * Check if a reader page is protected when generating a sitemap (see contao/core#8416).
