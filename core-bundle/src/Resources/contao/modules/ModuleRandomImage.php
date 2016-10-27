@@ -101,7 +101,8 @@ class ModuleRandomImage extends \Module
 					'id'        => $objFiles->id,
 					'name'      => $objFile->basename,
 					'singleSRC' => $objFiles->path,
-					'alt'       => $arrMeta['title'],
+					'title'     => \StringUtil::specialchars($arrMeta['title']),
+					'alt'       => \StringUtil::specialchars($arrMeta['alt']),
 					'imageUrl'  => $arrMeta['link'],
 					'caption'   => $arrMeta['caption']
 				);
@@ -146,7 +147,8 @@ class ModuleRandomImage extends \Module
 						'id'        => $objSubfiles->id,
 						'name'      => $objFile->basename,
 						'singleSRC' => $objSubfiles->path,
-						'alt'       => $arrMeta['title'],
+						'title'     => \StringUtil::specialchars($arrMeta['title']),
+						'alt'       => \StringUtil::specialchars($arrMeta['alt']),
 						'imageUrl'  => $arrMeta['link'],
 						'caption'   => $arrMeta['caption']
 					);

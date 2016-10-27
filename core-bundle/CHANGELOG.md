@@ -2,6 +2,7 @@
 
 ### 4.3.0-beta1 (2016-XX-XX)
 
+ * Add a "title" field to the meta wizard (see #601).
  * Support using namespaces and use statements in DCA and config files (see contao/core#8530).
  * Make the back end navigation keyboard navigable (see contao/core#8526).
  * Correctly set host and scheme in the URL generator (see #592).

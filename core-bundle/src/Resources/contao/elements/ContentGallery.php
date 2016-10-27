@@ -132,7 +132,8 @@ class ContentGallery extends \ContentElement
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
 					'singleSRC' => $objFiles->path,
-					'alt'       => $arrMeta['title'],
+					'title'     => \StringUtil::specialchars($arrMeta['title']),
+					'alt'       => \StringUtil::specialchars($arrMeta['alt']),
 					'imageUrl'  => $arrMeta['link'],
 					'caption'   => $arrMeta['caption']
 				);
@@ -192,7 +193,8 @@ class ContentGallery extends \ContentElement
 						'uuid'      => $objSubfiles->uuid,
 						'name'      => $objFile->basename,
 						'singleSRC' => $objSubfiles->path,
-						'alt'       => $arrMeta['title'],
+						'title'     => \StringUtil::specialchars($arrMeta['title']),
+						'alt'       => \StringUtil::specialchars($arrMeta['alt']),
 						'imageUrl'  => $arrMeta['link'],
 						'caption'   => $arrMeta['caption']
 					);

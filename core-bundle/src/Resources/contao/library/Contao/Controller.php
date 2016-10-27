@@ -1536,7 +1536,12 @@ abstract class Controller extends \System
 		}
 
 		$picture['alt'] = \StringUtil::specialchars($arrItem['alt']);
-		$picture['title'] = \StringUtil::specialchars($arrItem['title']);
+
+		// Only add the title if the image is not part of an image link
+		if (empty($arrItem['imageUrl']) && empty($arrItem['fullsize']))
+		{
+			$picture['title'] = \StringUtil::specialchars($arrItem['title']);
+		}
 
 		$objTemplate->picture = $picture;
 
@@ -1547,7 +1552,7 @@ abstract class Controller extends \System
 		}
 
 		// Float image
-		if ($arrItem['floating'] != '')
+		if ($arrItem['floating'])
 		{
 			$objTemplate->floatClass = ' float_' . $arrItem['floating'];
 		}
@@ -1556,7 +1561,7 @@ abstract class Controller extends \System
 		$strHrefKey = ($objTemplate->href != '') ? 'imageHref' : 'href';
 
 		// Image link
-		if ($arrItem['imageUrl'] != '' && TL_MODE == 'FE')
+		if ($arrItem['imageUrl'] && TL_MODE == 'FE')
 		{
 			$objTemplate->$strHrefKey = $arrItem['imageUrl'];
 			$objTemplate->attributes = '';
@@ -1592,7 +1597,7 @@ abstract class Controller extends \System
 		$objTemplate->src = TL_FILES_URL . $src;
 		$objTemplate->alt = \StringUtil::specialchars($arrItem['alt']);
 		$objTemplate->title = \StringUtil::specialchars($arrItem['title']);
-		$objTemplate->linkTitle = $objTemplate->title;
+		$objTemplate->linkTitle = \StringUtil::specialchars($arrItem['linkTitle'] ?: $arrItem['title']);
 		$objTemplate->fullsize = $arrItem['fullsize'] ? true : false;
 		$objTemplate->addBefore = ($arrItem['floating'] != 'below');
 		$objTemplate->margin = static::generateMargin($arrMargin);
