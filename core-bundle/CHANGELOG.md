@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.2.5 (2016-XX-XX)
+### 4.2.5 (2016-10-27)
 
  * Unlock members after password change (see contao/core#8545).
  * Register an alias for the language fallback page model (see contao/core#8544).
