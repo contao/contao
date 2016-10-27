@@ -1,157 +1,157 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_layout.php" source-language="en" target-language="sr">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_layout.php" source-language="en" target-language="da">
     <body>
       <trans-unit id="tl_layout.name.0">
         <source>Title</source>
-        <target>Назив</target>
+        <target>Overskrift</target>
       </trans-unit>
       <trans-unit id="tl_layout.name.1">
         <source>Please enter the layout title.</source>
-        <target>Унесите назив Изгеда</target>
+        <target>Angiv venligst et unikt layoutnavn.</target>
       </trans-unit>
       <trans-unit id="tl_layout.fallback.0">
         <source>Default layout</source>
-        <target>Подразумевани Изглед</target>
+        <target>Standardlayout</target>
       </trans-unit>
       <trans-unit id="tl_layout.fallback.1">
         <source>Make the layout the default layout.</source>
-        <target>Постави Изглед као подразумевани Изглед</target>
+        <target>Hvis du vælger denne mulighed, vil layoutet blive brugt som suppleant.</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
-        <target>Редови</target>
+        <target>Sidehoved og sidefod</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.1">
         <source>Please choose the number of rows.</source>
-        <target>Изаберите број редова</target>
+        <target>Vælg venligst antallet af rækker</target>
       </trans-unit>
       <trans-unit id="tl_layout.1rw.0">
         <source>Main row only</source>
-        <target>Само главни ред</target>
+        <target>Kun grundrække</target>
       </trans-unit>
       <trans-unit id="tl_layout.1rw.1">
         <source>Show only one row.</source>
-        <target>Прикажи само један ред</target>
+        <target>Vis kun en række.</target>
       </trans-unit>
       <trans-unit id="tl_layout.2rwh.0">
         <source>Header and main row</source>
-        <target>Заглавље и главни ред</target>
+        <target>Hoved og grund række</target>
       </trans-unit>
       <trans-unit id="tl_layout.2rwh.1">
         <source>Show a header above the main row.</source>
-        <target>Прикажи заглавље изнад главног реда.</target>
+        <target>Vis en hovedrække over grundrækken</target>
       </trans-unit>
       <trans-unit id="tl_layout.2rwf.0">
         <source>Main row and footer</source>
-        <target>Главни ред и подножје</target>
+        <target>Grundrække og fodrække</target>
       </trans-unit>
       <trans-unit id="tl_layout.2rwf.1">
         <source>Show a footer below the main row.</source>
-        <target>Прикажи подножје испод главног реда.</target>
+        <target>Vis en fodrække under grundrækken.</target>
       </trans-unit>
       <trans-unit id="tl_layout.3rw.0">
         <source>Header, main row and footer</source>
-        <target>Заглавље, главни ред и подножје</target>
+        <target>Hoved, grund og fod -række</target>
       </trans-unit>
       <trans-unit id="tl_layout.3rw.1">
         <source>Show a header above and a footer below the main row.</source>
-        <target>Прикажи заглавље изнад и подножје испод главног реда.</target>
+        <target>Vis en hovedrække over samt en fodrække under grundrækken.</target>
       </trans-unit>
       <trans-unit id="tl_layout.headerHeight.0">
         <source>Header height</source>
-        <target>Висина заглавља</target>
+        <target>Højde på sidehoved</target>
       </trans-unit>
       <trans-unit id="tl_layout.headerHeight.1">
         <source>Please enter the height of the page header.</source>
-        <target>Унесите висину заглавља странице.</target>
+        <target>Angiv venligst højden på sidehovedet.</target>
       </trans-unit>
       <trans-unit id="tl_layout.footerHeight.0">
         <source>Footer height</source>
-        <target>Висина подножја</target>
+        <target>Højde på sidefod</target>
       </trans-unit>
       <trans-unit id="tl_layout.footerHeight.1">
         <source>Please enter the height of the page footer.</source>
-        <target>Унесите висину подножја странице.</target>
+        <target>Angiv venligst højden på sidefoden.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cols.0">
         <source>Columns</source>
-        <target>Колоне</target>
+        <target>Spalter</target>
       </trans-unit>
       <trans-unit id="tl_layout.cols.1">
         <source>Please choose the number of columns.</source>
-        <target>Изаберите број колона.</target>
+        <target>Vælg venligst antal spalter.</target>
       </trans-unit>
       <trans-unit id="tl_layout.1cl.0">
         <source>Main column only</source>
-        <target>Само главна колона</target>
+        <target>Kun grundspalte</target>
       </trans-unit>
       <trans-unit id="tl_layout.1cl.1">
         <source>Show only one column.</source>
-        <target>Прикажи само једну колону.</target>
+        <target>kun hovedspalten vises.</target>
       </trans-unit>
       <trans-unit id="tl_layout.2cll.0">
         <source>Left and main column</source>
-        <target>Лева и главна колона</target>
+        <target>To spalter med grundspalten på højre side</target>
       </trans-unit>
       <trans-unit id="tl_layout.2cll.1">
         <source>Show two columns with the main column on the right side.</source>
-        <target>Прикажи две колоне са главном колоном десно.</target>
+        <target>hovedspalten vises på den højre side, ved siden af den venstre spalte.</target>
       </trans-unit>
       <trans-unit id="tl_layout.2clr.0">
         <source>Main and right column</source>
-        <target>Главна и десна колона</target>
+        <target>To spalter med hovedspalten på venstre side</target>
       </trans-unit>
       <trans-unit id="tl_layout.2clr.1">
         <source>Show two columns with the main column on the left side.</source>
-        <target>Прикажи две колоне са главном колоном лево.</target>
+        <target>hovedspalten vises på den venstre side, ved siden af den højre spalte.</target>
       </trans-unit>
       <trans-unit id="tl_layout.3cl.0">
         <source>Main, left and right column</source>
-        <target>Главна, лева и десна колона</target>
+        <target>Tre spalter med hovedspalten i midten</target>
       </trans-unit>
       <trans-unit id="tl_layout.3cl.1">
         <source>Show three columns with the main column in the middle.</source>
-        <target>Прикажи три колоне са главном колоном у средини.</target>
+        <target>hovedspalten vises i midten, i mellem den venstre og den højre spalte.</target>
       </trans-unit>
       <trans-unit id="tl_layout.widthLeft.0">
         <source>Left column width</source>
-        <target>Ширина леве колоне</target>
+        <target>Bredde på venstre spalte</target>
       </trans-unit>
       <trans-unit id="tl_layout.widthLeft.1">
         <source>Please enter the width of the left column.</source>
-        <target>Унесите ширину леве колоне.</target>
+        <target>Angiv venligst bredden på den venstre spalte.</target>
       </trans-unit>
       <trans-unit id="tl_layout.widthRight.0">
         <source>Right column width</source>
-        <target>Ширина десне колоне</target>
+        <target>Bredde på højre spalte</target>
       </trans-unit>
       <trans-unit id="tl_layout.widthRight.1">
         <source>Please enter the width of the right column.</source>
-        <target>Унесите ширину десне колоне.</target>
+        <target>Angiv venligst bredden på den højre spalte.</target>
       </trans-unit>
       <trans-unit id="tl_layout.sections.0">
         <source>Custom layout sections</source>
-        <target>Додатне секције Изгледа</target>
+        <target>Brugerdefinerede layoutsektioner</target>
       </trans-unit>
       <trans-unit id="tl_layout.sections.1">
         <source>Here you can enter a comma separated list of custom layout sections.</source>
-        <target>Унесите, запетом раздвојене, додатне секције Изгледа.</target>
+        <target>Her kan du angive en kommasepareret liste over tilpassede layoutsektioner. Du kan så bruge disse sektioner modulet &lt;em&gt;sidelayout&lt;/em&gt; ud over &lt;em&gt;sidehoved&lt;/em&gt;, &lt;em&gt;venstre&lt;/em&gt;, &lt;em&gt;hoved&lt;/em&gt;, &lt;em&gt;højre&lt;/em&gt; and &lt;em&gt;sidefod&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.sPosition.0">
         <source>Custom sections position</source>
-        <target>Позиција додатних секција</target>
+        <target>Brugerdefinerede sektionspositioner</target>
       </trans-unit>
       <trans-unit id="tl_layout.sPosition.1">
         <source>Please select the position of the custom layout sections.</source>
-        <target>Изаберите позицију за додатне секције Изгледа.</target>
+        <target>Væg venligst positionen for dine brugerdefinerede layoutsektioner.</target>
       </trans-unit>
       <trans-unit id="tl_layout.stylesheet.0">
         <source>Internal style sheets</source>
-        <target>Интерни стилови</target>
+        <target>Internt stilark</target>
       </trans-unit>
       <trans-unit id="tl_layout.stylesheet.1">
         <source>Here you can add internal style sheets to the layout.</source>
-        <target>Овде можете додати интерне стилове изгледу.</target>
+        <target>Her kan du tilføje interne stilark til layoutet.</target>
       </trans-unit>
       <trans-unit id="tl_layout.framework.0">
         <source>CSS framework</source>
@@ -159,47 +159,47 @@
       </trans-unit>
       <trans-unit id="tl_layout.framework.1">
         <source>Here you can activate the components of the Contao CSS framework.</source>
-        <target>Овде можете да активирате компоненте Contao CSS framework-а.</target>
+        <target>Har kan du aktivere komponenter fra Contao CSS frameworket.</target>
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.0">
         <source>Layout builder</source>
-        <target>Генератор Изгледа</target>
+        <target>Layout bygger</target>
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.1">
         <source>Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!</source>
-        <target>Генерисање CSS изгледа базирано на подешавањима изгледа станице. Ова компонента је неопходна да би генератор изгледа странице радио!</target>
+        <target>Generer et CSS layout baseret på side-layout indstillingerne. Denne komponent er krævet for at side layoutgeneratoren kan virke!</target>
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.0">
         <source>Responsive layout</source>
-        <target>Респонзивни изглед</target>
+        <target>Responsive layout</target>
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.1">
         <source>Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.</source>
-        <target>Додавање мета viewport тага у заглавље странице и скалирање изгледа заснованог на  CSS-у у зависности од величине уређаја.</target>
+        <target>Tilføjer et meta viewport tag til sidens header og skalerer CSS layoutet baseret på enhedens bredte.</target>
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.0">
         <source>12-column grid</source>
-        <target>Мрежа са 12 колона</target>
+        <target>12 kolonners gitter</target>
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.1">
         <source>Adds a responsive 12-column grid that is triggered by the CSS classes &quot;grid1&quot; to &quot;grid12&quot; and &quot;offset1&quot; to &quot;offset12&quot;.</source>
-        <target>Додавање мреже са 12 колона која се тригерује са класама CSS-а &quot;grid1&quot; до &quot;grid12&quot; и &quot;offset1&quot; до &quot;offset12&quot;.</target>
+        <target>Tilføjer et responsive 12-kolonners grid der aktiveres af følgende CSS classes &quot;grid1&quot; til &quot;grid12&quot; samt &quot;offset1&quot; til &quot;offset12&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.reset.css.0">
         <source>CSS reset</source>
-        <target>Ресет CSS-а</target>
+        <target>CSS reset</target>
       </trans-unit>
       <trans-unit id="tl_layout.reset.css.1">
         <source>Removes the inconsistent default styling of HTML elements in different browsers.</source>
-        <target>Уклањање неконзистентних подразумеваних стилова елемената HTML у различитим интернет прегледачима.</target>
+        <target>Fjerner forskelighederne på standard stylingen af HTML elementer i forskellige browsere.</target>
       </trans-unit>
       <trans-unit id="tl_layout.form.css.0">
         <source>Basic forms</source>
-        <target>Основне форме</target>
+        <target>Basis formularer</target>
       </trans-unit>
       <trans-unit id="tl_layout.form.css.1">
         <source>Adds basic form elements and buttons formatting.</source>
-        <target>Додавање основних форми и форматирање дугмади.</target>
+        <target>Tilføjer basis formular formatering af elementer og knapper.</target>
       </trans-unit>
       <trans-unit id="tl_layout.icons.css.0">
         <source>Basic icons</source>
@@ -209,75 +209,75 @@
       </trans-unit>
       <trans-unit id="tl_layout.external.0">
         <source>External style sheets</source>
-        <target>Вањски стилови</target>
+        <target>Ekstern stilark</target>
       </trans-unit>
       <trans-unit id="tl_layout.external.1">
         <source>Here you can add external CSS, SCSS or LESS files from the file system.</source>
-        <target>Овде можете додати вањске CSS, SCSS или LESS фајлове из фајл система.</target>
+        <target>Her kan du tilføje externe CSS, SCSS eller LESS filer fra fil systemet.</target>
       </trans-unit>
       <trans-unit id="tl_layout.orderExt.0">
         <source>Sort order</source>
-        <target>Начин сортирања</target>
+        <target>Rækkefølge</target>
       </trans-unit>
       <trans-unit id="tl_layout.orderExt.1">
         <source>The sort order of the style sheets.</source>
-        <target>Редослед сортирања стилова.</target>
+        <target>Rækkefølgen på style sheetsne.</target>
       </trans-unit>
       <trans-unit id="tl_layout.loadingOrder.0">
         <source>Loading order</source>
-        <target>Редослед учитавања</target>
+        <target>Rækkefølge for indlæsning</target>
       </trans-unit>
       <trans-unit id="tl_layout.loadingOrder.1">
         <source>Here you can select the loading order of the style sheets.</source>
-        <target>Овде можете дефинисати редослед учитавања стилова.</target>
+        <target>Her kan du vælge rækkefølgen for indlæsning af stilark</target>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
-        <target>Учитај прво вањске стилове</target>
+        <target>Indlæs ekstern stilark først</target>
       </trans-unit>
       <trans-unit id="tl_layout.internal_first">
         <source>Load internal style sheets first</source>
-        <target>Учитај прво интерне стилове</target>
+        <target>Indlæs interne stilark først</target>
       </trans-unit>
       <trans-unit id="tl_layout.webfonts.0">
         <source>Google web fonts</source>
-        <target>Google web фонтови</target>
+        <target>Google web fonts</target>
       </trans-unit>
       <trans-unit id="tl_layout.webfonts.1">
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
-        <target>Овде можете да додате Google web фонтове на ваш сајт. Специфицирајте фамилије фонтова без базног URL-а (нпр. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
+        <target>Her kan du tilføje Google web fonts til dit website. Angiv font families uden base URL (f.eks. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
-        <target>Прикључени модули</target>
+        <target>Inkluderede moduler</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>Ако је JavaScript онемогућен, будите сигурни да сте сачували измене пре него што промените редослед у листи.</target>
+        <target>Tildel venligst hver modul til et sideelement. Brug knapper til at tilføje, flytte eller fjerne et modul. Hvis du arbejder uden hjælp fra JavaScript, bør du gemme dine ændringer før du ændrer rækkefølgen.</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
-        <target>Шаблон странице</target>
+        <target>Layoutskabelon</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.1">
         <source>Here you can select the page template.</source>
-        <target>Овде можете изабрати шаблон странице.</target>
+        <target>Vælg venligst en layoutskabelon. Standardskabelonen kaldes &lt;em&gt;fe_page&lt;/em&gt;. Hvis du vil tilføje dine egne skabeloner, så upload dem til &lt;em&gt;templates&lt;/em&gt;-mappen (filendelsen skal være &lt;em&gt;tpl&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_layout.doctype.0">
         <source>Output format</source>
-        <target>Излазни формат</target>
+        <target>Dokumenttypedefinition</target>
       </trans-unit>
       <trans-unit id="tl_layout.doctype.1">
         <source>Here you can set the output format.</source>
-        <target>Овде можете подесити излазни формат.</target>
+        <target>Vælg venligst en DTD.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>
-        <target>Класа &quot;body&quot;</target>
+        <target>Body klasse</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.1">
         <source>Here you can add custom classes to the &amp;lt;body&amp;gt; tag.</source>
-        <target>Овде можете додати произвољну класу за &amp;lt;body&amp;gt; тагови.</target>
+        <target>Har kan du tilføje dine egne classes til &amp;lt;body&amp;gt; tagget.</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.0">
         <source>Viewport</source>
@@ -285,15 +285,15 @@
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
         <source>Here you can overwrite the viewport content (defaults to &lt;em&gt;width=device-width,initial-scale=1.0&lt;/em&gt;).</source>
-        <target>Овде можете прегазити viewport садржај (подразумевано &lt;em&gt;width=device-width,initial-scale=1.0&lt;/em&gt;).</target>
+        <target>Her kan du overskrive viewport content (standard &lt;em&gt;width=device-width,initial-scale=1.0&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>
-        <target>Title таг</target>
+        <target>Title tag</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
         <source>Here you can overwrite the title tag (defaults to &lt;em&gt;{{page::pageTitle}} - {{page::rootPageTitle}}&lt;/em&gt;).</source>
-        <target>Овде можете прегазити title таг (подразумевано &lt;em&gt;{{page::pageTitle}} - {{page::rootPageTitle}}&lt;/em&gt;).</target>
+        <target>Her kan du overskrive sidetitel tagget (standard er &lt;em&gt;{{page::pageTitle}} - {{page::rootPageTitle}}&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
@@ -301,71 +301,71 @@
       </trans-unit>
       <trans-unit id="tl_layout.onload.1">
         <source>Here you can add a body &lt;em&gt;onload&lt;/em&gt; attribute.</source>
-        <target>Овде можете додати атрибут за body &lt;em&gt;onload&lt;/em&gt;.</target>
+        <target>Her kan du tilføje en body &lt;em&gt;onload&lt;/em&gt; attribute.</target>
       </trans-unit>
       <trans-unit id="tl_layout.head.0">
         <source>Additional &amp;lt;head&amp;gt; tags</source>
-        <target>Додатни &amp;lt;head&amp;gt; тагови</target>
+        <target>Yderligere -tags</target>
       </trans-unit>
       <trans-unit id="tl_layout.head.1">
         <source>Here you can add individual tags to the &amp;lt;head&amp;gt; section of the page.</source>
-        <target>Овде можете додати појединачне тагове за &amp;lt;head&amp;gt; секцију странице.</target>
+        <target>Her kan du tilføje individuelle tags til &amp;lt;head&amp;gt; sektionen på siden.</target>
       </trans-unit>
       <trans-unit id="tl_layout.addJQuery.0">
         <source>Include jQuery</source>
-        <target>Прикључи jQuery</target>
+        <target>Inkluder jQuery</target>
       </trans-unit>
       <trans-unit id="tl_layout.addJQuery.1">
         <source>Include the jQuery library in the layout.</source>
-        <target>Прикључи jQuery библиотеку Изгледу.</target>
+        <target>Inkluder jQuery library i layoutet</target>
       </trans-unit>
       <trans-unit id="tl_layout.jSource.0">
         <source>jQuery source</source>
-        <target>Извор jQuery</target>
+        <target>jQuery source</target>
       </trans-unit>
       <trans-unit id="tl_layout.jSource.1">
         <source>Here you can select from where to load the jQuery script.</source>
-        <target>Овде можете изабрати одакле се учитава скрипта са jQuery-ем.</target>
+        <target>Her kan du vælge hvor du vil indlæse jQuery fra.</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
-        <target>Шаблон за jQuery</target>
+        <target>jQuery skabeloner</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery.1">
         <source>Here you can select one or more jQuery templates.</source>
-        <target>Овде можете одабрати један или више шаблона за jQuery</target>
+        <target>Her kan du vælge en eller flere jQuery skabeloner.</target>
       </trans-unit>
       <trans-unit id="tl_layout.addMooTools.0">
         <source>Include MooTools</source>
-        <target>Прикључи MooTools</target>
+        <target>Inkluder MooTools</target>
       </trans-unit>
       <trans-unit id="tl_layout.addMooTools.1">
         <source>Include the MooTools library in the layout.</source>
-        <target>Прикључи MooTools библиотеку Изгледу.</target>
+        <target>Inkluder MooTools library i layoutet</target>
       </trans-unit>
       <trans-unit id="tl_layout.mooSource.0">
         <source>MooTools source</source>
-        <target>Извор MooTools</target>
+        <target>MooTools kilde</target>
       </trans-unit>
       <trans-unit id="tl_layout.mooSource.1">
         <source>Here you can select from where to load the MooTools scripts.</source>
-        <target>Овде можете изабрати одакле се учитава скрипта са MooTools-ем.</target>
+        <target>Du kan enten anvende det lokale MooTool skript eller indlæse det fra en anden server</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools.0">
         <source>MooTools templates</source>
-        <target>Шаблони MooTools-а</target>
+        <target>Mootools JavaScript</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools.1">
         <source>Here you can select one or more MooTools templates.</source>
-        <target>Овде можете одабрати један или више шаблона за MooTools.</target>
+        <target>Hvis du vil køre en mootools-harmonika på dit websted, skal du tilføje en JavaScript-skabelon som starter effekten. Du kan vælge JavaScript-skabelon her. Mootools-skabeloner starter med &lt;em&gt;moo_&lt;/em&gt; (filendelsen &lt;em&gt;tpl&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_layout.picturefill.0">
         <source>Load the image polyfill</source>
-        <target>Учитај image polyfill</target>
+        <target>Indlæs image polyfill</target>
       </trans-unit>
       <trans-unit id="tl_layout.picturefill.1">
         <source>Include the image polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) in the layout.</source>
-        <target>Уметни image polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) у изглед.</target>
+        <target>Inkluder image polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) i layoutet.</target>
       </trans-unit>
       <trans-unit id="tl_layout.scripts.0">
         <source>JavaScript templates</source>
@@ -375,78 +375,78 @@
       </trans-unit>
       <trans-unit id="tl_layout.analytics.0">
         <source>Analytics templates</source>
-        <target>Аналитички шаблони</target>
+        <target>Analytics skabeloner</target>
       </trans-unit>
       <trans-unit id="tl_layout.analytics.1">
         <source>Here you can select one or more analytics templates.</source>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>
-        <target>Додатни JavaScript код</target>
+        <target>Brugertilpasset Javascript kode</target>
       </trans-unit>
       <trans-unit id="tl_layout.script.1">
         <source>The JavaScript code which will be inserted at the bottom of the page.</source>
-        <target>JavaScript код који ће бити уметнут на дну странице.</target>
+        <target>Javascriptet koden bliver indsat i bunden af siden.</target>
       </trans-unit>
       <trans-unit id="tl_layout.static.0">
         <source>Static layout</source>
-        <target>Статички изглед</target>
+        <target>Statisk layout</target>
       </trans-unit>
       <trans-unit id="tl_layout.static.1">
         <source>Create a static layout with a fixed width and alignment.</source>
-        <target>Креирај статички изглед са фиксном ширином и поравнањем.</target>
+        <target>Opret et statisk sidelayout med en fast bredde og justering.</target>
       </trans-unit>
       <trans-unit id="tl_layout.width.0">
         <source>Overall width</source>
-        <target>Укупна ширина</target>
+        <target>Samlede bredde</target>
       </trans-unit>
       <trans-unit id="tl_layout.width.1">
         <source>The overall width will be applied to the wrapper element.</source>
-        <target>Укупна ширина биће примењена на елемент &quot;wrapper&quot;.</target>
+        <target>Indtast venligst den samlede bredde som bliver tildelt til omslagselement (eng.: wrapper).</target>
       </trans-unit>
       <trans-unit id="tl_layout.align.0">
         <source>Alignment</source>
-        <target>Поравнање</target>
+        <target>Justering af webstedet</target>
       </trans-unit>
       <trans-unit id="tl_layout.align.1">
         <source>Please select the alignment of the page.</source>
-        <target>Изаберите поравнање странице.</target>
+        <target>Vælg venligst justeringen af webstedet.</target>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
         <source>Title</source>
-        <target>Назив</target>
+        <target>Overskrift</target>
       </trans-unit>
       <trans-unit id="tl_layout.header_legend">
         <source>Rows</source>
-        <target>Редови</target>
+        <target>Sidehoved og sidefod</target>
       </trans-unit>
       <trans-unit id="tl_layout.column_legend">
         <source>Columns</source>
-        <target>Колоне</target>
+        <target>Spalter</target>
       </trans-unit>
       <trans-unit id="tl_layout.sections_legend">
         <source>Custom sections</source>
-        <target>Додатне секције</target>
+        <target>Brugertilpassede sektioner</target>
       </trans-unit>
       <trans-unit id="tl_layout.webfonts_legend">
         <source>Web fonts</source>
-        <target>Web фонтови</target>
+        <target>Web fonts</target>
       </trans-unit>
       <trans-unit id="tl_layout.style_legend">
         <source>Style sheets</source>
-        <target>Стилови</target>
+        <target>Style sheets</target>
       </trans-unit>
       <trans-unit id="tl_layout.picturefill_legend">
         <source>Responsive images</source>
-        <target>Респонзивне слике</target>
+        <target>Responsiv billede</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
-        <target>ФронтЕнд модули</target>
+        <target>Forside moduler</target>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
-        <target>Напредна подешавања</target>
+        <target>Ekspert indstillinger</target>
       </trans-unit>
       <trans-unit id="tl_layout.script_legend">
         <source>JavaScript</source>
@@ -454,7 +454,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.static_legend">
         <source>Static layout</source>
-        <target>Статички изглед</target>
+        <target>Statisk layout</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery_legend">
         <source>jQuery</source>
@@ -462,7 +462,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.j_local">
         <source>Local file</source>
-        <target>Локални фајл</target>
+        <target>Lokal fil</target>
       </trans-unit>
       <trans-unit id="tl_layout.j_googleapis">
         <source>CDN (code.jquery.com)</source>
@@ -470,7 +470,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.j_fallback">
         <source>CDN with local fallback</source>
-        <target>CDN са локалном резервом</target>
+        <target>CDN med lokalt fallback</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
@@ -478,7 +478,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.moo_local">
         <source>Local file</source>
-        <target>Локални фајл</target>
+        <target>Lokal fil</target>
       </trans-unit>
       <trans-unit id="tl_layout.moo_googleapis">
         <source>CDN (googleapis.com)</source>
@@ -486,7 +486,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.moo_fallback">
         <source>CDN with local fallback</source>
-        <target>CDN са локалном резервом</target>
+        <target>CDN med lokalt fallback</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
@@ -494,31 +494,31 @@
       </trans-unit>
       <trans-unit id="tl_layout.top">
         <source>Before the wrapper</source>
-        <target>Прије wrapper-а</target>
+        <target>Før indpakningen</target>
       </trans-unit>
       <trans-unit id="tl_layout.before">
         <source>After the page header</source>
-        <target>После заглавља странице</target>
+        <target>Efter sidehovedet</target>
       </trans-unit>
       <trans-unit id="tl_layout.main">
         <source>Inside the main column</source>
-        <target>У главној колони</target>
+        <target>I hovedspalten</target>
       </trans-unit>
       <trans-unit id="tl_layout.after">
         <source>Before the page footer</source>
-        <target>Прије подножја странице</target>
+        <target>Inden sidefoden</target>
       </trans-unit>
       <trans-unit id="tl_layout.bottom">
         <source>After the wrapper</source>
-        <target>После wrapper-а</target>
+        <target>Efter indpakningen</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit_styles">
         <source>Edit the style sheets</source>
-        <target>Уреди стилове</target>
+        <target>Rediger style sheets</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit_module">
         <source>Edit the module</source>
-        <target>Уреди модул</target>
+        <target>Rediger modulet</target>
       </trans-unit>
       <trans-unit id="tl_layout.analytics_google">
         <source>Google Analytics</source>
@@ -529,59 +529,59 @@
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New layout</source>
-        <target>Нови Изглед</target>
+        <target>Nyt layout</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new layout</source>
-        <target>Креирај нови Изглед</target>
+        <target>Opret et nyt layout</target>
       </trans-unit>
       <trans-unit id="tl_layout.show.0">
         <source>Layout details</source>
-        <target>Детаљи Изгледа</target>
+        <target>Layoutdetaljer</target>
       </trans-unit>
       <trans-unit id="tl_layout.show.1">
         <source>Show the details of layout ID %s</source>
-        <target>Прикажи детаље Изгледа ID %s</target>
+        <target>Vis detaljer for layout-ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit.0">
         <source>Edit layout</source>
-        <target>Уреди Изглед</target>
+        <target>Rediger layout</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit.1">
         <source>Edit layout ID %s</source>
-        <target>Уреди Изглед ID %s</target>
+        <target>Rediger layout-ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut.0">
         <source>Move layout</source>
-        <target>Помери Изглед</target>
+        <target>Flyt layout</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut.1">
         <source>Move layout ID %s</source>
-        <target>Помери Изглед ID %s</target>
+        <target>Flyt layout ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy.0">
         <source>Duplicate layout</source>
-        <target>Копирај Изглед</target>
+        <target>Dupliker layout</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy.1">
         <source>Duplicate layout ID %s</source>
-        <target>Копирај Изглед ID %s</target>
+        <target>Dupliker layout-ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.delete.0">
         <source>Delete layout</source>
-        <target>Обриши Изглед</target>
+        <target>Slet layout</target>
       </trans-unit>
       <trans-unit id="tl_layout.delete.1">
         <source>Delete layout ID %s</source>
-        <target>Обриши Изглед ID %s</target>
+        <target>Slet layout-ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.editheader.0">
         <source>Edit theme</source>
-        <target>Уреди тему</target>
+        <target>Rediger temaet</target>
       </trans-unit>
       <trans-unit id="tl_layout.editheader.1">
         <source>Edit the theme settings</source>
-        <target>Уреди подешавања теме</target>
+        <target>Rediger temaets indstillinger</target>
       </trans-unit>
     </body>
   </file>
