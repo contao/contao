@@ -30,6 +30,13 @@ class FrontendTemplate extends \Template
 {
 
 	/**
+	 * Unsued $_GET check
+	 * @var boolean
+	 */
+	protected $blnCheckRequest = false;
+
+
+	/**
 	 * Add a hook to modify the template output
 	 *
 	 * @return string The template markup
@@ -71,7 +78,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function output($blnCheckRequest=false)
 	{
-		$this->compile($blnCheckRequest);
+		$this->blnCheckRequest = $blnCheckRequest;
 
 		parent::output();
 	}
@@ -86,7 +93,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function getResponse($blnCheckRequest=false)
 	{
-		$this->compile($blnCheckRequest);
+		$this->blnCheckRequest = $blnCheckRequest;
 
 		return $this->setCacheHeaders(parent::getResponse());
 	}
@@ -95,13 +102,11 @@ class FrontendTemplate extends \Template
 	/**
 	 * Compile the template
 	 *
-	 * @param bool $blnCheckRequest If true, check for unsued $_GET parameters
-	 *
 	 * @throws \UnusedArgumentsException If there are unused $_GET parameters
 	 *
 	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
-	protected function compile($blnCheckRequest=false)
+	protected function compile()
 	{
 		$this->keywords = '';
 		$arrKeywords = \StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS']);
@@ -143,7 +148,7 @@ class FrontendTemplate extends \Template
 		}
 
 		// Check whether all $_GET parameters have been used (see #4277)
-		if ($blnCheckRequest && \Input::hasUnusedGet())
+		if ($this->blnCheckRequest && \Input::hasUnusedGet())
 		{
 			throw new \UnusedArgumentsException();
 		}

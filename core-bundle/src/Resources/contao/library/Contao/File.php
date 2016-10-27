@@ -608,7 +608,7 @@ class File extends \System
 	 */
 	public static function putContent($strFile, $strContent)
 	{
-		$objFile = new static($strFile, true);
+		$objFile = new static($strFile);
 		$objFile->write($strContent);
 		$objFile->close();
 	}
