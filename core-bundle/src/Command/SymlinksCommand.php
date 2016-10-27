@@ -168,6 +168,9 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     private function symlink($target, $link)
     {
+        $target = strtr($target, '\\', '/');
+        $link = strtr($link, '\\', '/');
+
         try {
             SymlinkUtil::symlink($target, $link, $this->rootDir);
 
@@ -176,8 +179,8 @@ class SymlinksCommand extends AbstractLockedCommand
                     '<fg=green;options=bold>%s</>',
                     '\\' === DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94" // HEAVY CHECK MARK (U+2714)
                 ),
-                strtr($link, '\\', '/'),
-                strtr($target, '\\', '/'),
+                $link,
+                $target,
             ];
         } catch (\Exception $e) {
             $this->rows[] = [
@@ -185,7 +188,7 @@ class SymlinksCommand extends AbstractLockedCommand
                     '<fg=red;options=bold>%s</>',
                     '\\' === DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" // HEAVY BALLOT X (U+2718)
                 ),
-                strtr($link, '\\', '/'),
+                $link,
                 sprintf('<error>%s</error>', $e->getMessage()),
             ];
         }
@@ -204,8 +207,8 @@ class SymlinksCommand extends AbstractLockedCommand
             ->ignoreDotFiles(false)
             ->sort(
                 function (SplFileInfo $a, SplFileInfo $b) {
-                    $countA = substr_count($a->getRelativePath(), '/');
-                    $countB = substr_count($b->getRelativePath(), '/');
+                    $countA = substr_count(strtr($a->getRelativePath(), '\\', '/'), '/');
+                    $countB = substr_count(strtr($b->getRelativePath(), '\\', '/'), '/');
 
                     if ($countA === $countB) {
                         return 0;
@@ -248,7 +251,7 @@ class SymlinksCommand extends AbstractLockedCommand
                         '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
                     ),
                     'web/'.$path,
-                    sprintf('<comment>Skipped because %s has been symlinked already.</comment>', $parent),
+                    sprintf('<comment>Skipped because %s will be symlinked.</comment>', $parent),
                 ];
 
                 unset($files[$key]);

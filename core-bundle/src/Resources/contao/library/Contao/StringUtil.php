@@ -312,7 +312,14 @@ class StringUtil
 	 */
 	public static function encodeEmail($strString)
 	{
-		foreach (static::extractEmail($strString) as $strEmail)
+		if (strpos($strString, '@') === false)
+		{
+			return $strString;
+		}
+
+		$arrEmails = static::extractEmail($strString, \Config::get('allowedTags'));
+
+		foreach ($arrEmails as $strEmail)
 		{
 			$strEncoded = '';
 			$arrCharacters = Utf8::str_split($strEmail);
@@ -332,25 +339,58 @@ class StringUtil
 	/**
 	 * Extract all e-mail addresses from a string
 	 *
-	 * @param string $strString The string
+	 * @param string $strString      The string
+	 * @param string $strAllowedTags A list of allowed HTML tags
 	 *
 	 * @return array The e-mail addresses
 	 */
-	public static function extractEmail($strString)
+	public static function extractEmail($strString, $strAllowedTags='')
 	{
 		$arrEmails = array();
 
-		preg_match_all('/(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', $strString, $arrEmails);
-
-		foreach ($arrEmails[0] as $strKey=>$strEmail)
+		if (strpos($strString, '@') === false)
 		{
-			if (!\Validator::isEmail($strEmail))
+			return $arrEmails;
+		}
+
+		// Find all mailto: addresses
+		preg_match_all('/mailto:(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', $strString, $matches);
+
+		foreach ($matches[0] as &$strEmail)
+		{
+			$strEmail = str_replace('mailto:', '', $strEmail);
+
+			if (\Validator::isEmail($strEmail))
 			{
-				unset($arrEmails[0][$strKey]);
+				$arrEmails[] = $strEmail;
 			}
 		}
 
-		return array_values($arrEmails[0]);
+		// Encode opening arrow brackets (see #3998)
+		$strString = preg_replace_callback('@</?([^\s<>/]*)@', function ($matches) use ($strAllowedTags)
+		{
+			if ($matches[1] == '' || strpos(strtolower($strAllowedTags), '<' . strtolower($matches[1]) . '>') === false)
+			{
+				$matches[0] = str_replace('<', '&lt;', $matches[0]);
+			}
+
+			return $matches[0];
+		}, $strString);
+
+		// Find all addresses in the plain text
+		preg_match_all('/(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', strip_tags($strString), $matches);
+
+		foreach ($matches[0] as &$strEmail)
+		{
+			$strEmail = str_replace('&lt;', '<', $strEmail);
+
+			if (\Validator::isEmail($strEmail))
+			{
+				$arrEmails[] = $strEmail;
+			}
+		}
+
+		return array_unique($arrEmails);
 	}
 
 
@@ -521,7 +561,8 @@ class StringUtil
 		$replaceTokens = function ($strSubject) use ($arrData)
 		{
 			// Replace tokens
-			return preg_replace_callback(
+			return preg_replace_callback
+			(
 				'/##([^=!<>\s]+?)##/',
 				function (array $matches) use ($arrData)
 				{
@@ -631,9 +672,11 @@ class StringUtil
 			}
 		};
 
-		// Parsing stack used to keep track of the nesting level
-        // The last item is true if it is inside a matching if-tag
+		// The last item is true if it is inside a matching if-tag
 		$arrStack = [true];
+
+		// The last item is true if any if/elseif at that level was true
+		$arrIfStack = [true];
 
 		// Tokenize the string into tag and text blocks
 		$arrTags = preg_split('/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
@@ -641,26 +684,35 @@ class StringUtil
 		// Parse the tokens
 		foreach ($arrTags as $strTag)
 		{
-			// true if it is inside a matching if-tag
+			// True if it is inside a matching if-tag
 			$blnCurrent = $arrStack[count($arrStack) - 1];
+			$blnCurrentIf = $arrIfStack[count($arrIfStack) - 1];
 
 			if (strncmp($strTag, '{if', 3) === 0)
 			{
-				$arrStack[] = $blnCurrent && $evaluateExpression(substr($strTag, 4, -1));
+				$blnExpression = $evaluateExpression(substr($strTag, 4, -1));
+				$arrStack[] = $blnCurrent && $blnExpression;
+				$arrIfStack[] = $blnExpression;
 			}
 			elseif (strncmp($strTag, '{elseif', 7) === 0)
 			{
+				$blnExpression = $evaluateExpression(substr($strTag, 8, -1));
 				array_pop($arrStack);
-				$arrStack[] = !$blnCurrent && $arrStack[count($arrStack) - 1] && $evaluateExpression(substr($strTag, 8, -1));
+				array_pop($arrIfStack);
+				$arrStack[] = !$blnCurrentIf && $arrStack[count($arrStack) - 1] && $blnExpression;
+				$arrIfStack[] = $blnCurrentIf || $blnExpression;
 			}
 			elseif (strncmp($strTag, '{else}', 6) === 0)
 			{
 				array_pop($arrStack);
-				$arrStack[] = !$blnCurrent && $arrStack[count($arrStack) - 1];
+				array_pop($arrIfStack);
+				$arrStack[] = !$blnCurrentIf && $arrStack[count($arrStack) - 1];
+				$arrIfStack[] = true;
 			}
 			elseif (strncmp($strTag, '{endif}', 7) === 0)
 			{
 				array_pop($arrStack);
+				array_pop($arrIfStack);
 			}
 			elseif ($blnCurrent)
 			{

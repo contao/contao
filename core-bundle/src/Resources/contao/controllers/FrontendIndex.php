@@ -202,7 +202,7 @@ class FrontendIndex extends \Frontend
 		}
 
 		// Check wether the language matches the root page language
-		if (\Config::get('addLanguageToUrl') && \Input::get('language') != $objPage->rootLanguage)
+		if (\Config::get('addLanguageToUrl') && isset($_GET['language']) && \Input::get('language') != $objPage->rootLanguage)
 		{
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}

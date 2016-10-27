@@ -275,7 +275,8 @@ abstract class DataContainer extends \Backend
 		// Validate the field
 		if (\Input::post('FORM_SUBMIT') == $this->strTable)
 		{
-			$key = (\Input::get('act') == 'editAll') ? 'FORM_FIELDS_' . $this->intId : 'FORM_FIELDS';
+			$suffix = ($this instanceof DC_Folder ? md5($this->intId) : $this->intId);
+			$key = (\Input::get('act') == 'editAll') ? 'FORM_FIELDS_' . $suffix : 'FORM_FIELDS';
 
 			// Calculate the current palette
 			$postPaletteFields = implode(',', \Input::post($key));
@@ -307,17 +308,23 @@ abstract class DataContainer extends \Backend
 			{
 				foreach ($newPaletteFields as $k=>$v)
 				{
-					$newPaletteFields[$k] = $v . '_' . $this->intId;
+					$newPaletteFields[$k] = $v . '_' . $suffix;
 				}
 
 				if ($this->User->isAdmin)
 				{
-					$newPaletteFields['pid'] = 'pid_' . $this->intId;
-					$newPaletteFields['sorting'] = 'sorting_' . $this->intId;
+					$newPaletteFields['pid'] = 'pid_' . $suffix;
+					$newPaletteFields['sorting'] = 'sorting_' . $suffix;
 				}
 			}
 
 			$paletteFields = array_intersect($postPaletteFields, $newPaletteFields);
+
+			// Deprecated since Contao 4.2, to be removed in Contao 5.0
+			if (!isset($_POST[$this->strInputName]) && in_array($this->strInputName, $paletteFields))
+			{
+				@trigger_error('Using FORM_FIELDS has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.', E_USER_DEPRECATED);
+			}
 
 			// Validate and save the field
 			if (in_array($this->strInputName, $paletteFields) || \Input::get('act') == 'overrideAll')

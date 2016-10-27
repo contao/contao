@@ -287,6 +287,7 @@
       </trans-unit>
       <trans-unit id="tl_member.su.0">
         <source>Preview</source>
+        <target>پیش‌نمایش</target>
       </trans-unit>
       <trans-unit id="tl_member.su.1">
         <source>Preview the front end as member ID %s</source>

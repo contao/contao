@@ -1,6 +1,21 @@
 Deprecated features
 ===================
 
+### FORM_FIELDS
+
+Using the `FORM_FIELDS` mechanism to determine which form fields have been
+submitted has been deprecated in Contao 4.0 and will no longer work in Contao
+5.0. Make sure to always submit at least an empty string in your widget.
+
+```html
+<!-- Wrong: the input will only be submitted if checked -->
+<input type="checkbox" name="foo" value="bar">
+
+<!-- Right: the input will always be submitted -->
+<input type="hidden" name="foo" value=""><input type="checkbox" name="foo" value="bar">
+```
+
+
 ### Page handler without getResponse()
 
 Using a custom page handler without a `getResponse()` method has been

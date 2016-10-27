@@ -75,7 +75,7 @@ class SymlinksCommandTest extends TestCase
         $this->assertContains('web/system/modules/foobar/html', $display);
         $this->assertContains('system/modules/foobar/html', $display);
         $this->assertContains('web/system/modules/foobar/html/foo', $display);
-        $this->assertContains('Skipped because system/modules/foobar/html has been symlinked already.', $display);
+        $this->assertContains('Skipped because system/modules/foobar/html will be symlinked.', $display);
         $this->assertContains('system/themes/flexible', $display);
         $this->assertContains('vendor/contao/test-bundle/Resources/contao/themes/flexible', $display);
         $this->assertContains('web/assets', $display);

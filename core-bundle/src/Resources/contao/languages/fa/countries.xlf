@@ -103,6 +103,7 @@
       </trans-unit>
       <trans-unit id="CNT.bl">
         <source>St. Barthélemy</source>
+        <target>سنت بارتلمی</target>
       </trans-unit>
       <trans-unit id="CNT.bm">
         <source>Bermuda</source>
@@ -110,6 +111,7 @@
       </trans-unit>
       <trans-unit id="CNT.bn">
         <source>Brunei</source>
+        <target>برونئی</target>
       </trans-unit>
       <trans-unit id="CNT.bo">
         <source>Bolivia</source>
@@ -117,6 +119,7 @@
       </trans-unit>
       <trans-unit id="CNT.bq">
         <source>Caribbean Netherlands</source>
+        <target>جزایر کارائیب هلند</target>
       </trans-unit>
       <trans-unit id="CNT.br">
         <source>Brazil</source>
@@ -156,6 +159,7 @@
       </trans-unit>
       <trans-unit id="CNT.cd">
         <source>Congo - Kinshasa</source>
+        <target>کنگو - کینشاسا</target>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic</source>
@@ -163,6 +167,7 @@
       </trans-unit>
       <trans-unit id="CNT.cg">
         <source>Congo - Brazzaville</source>
+        <target>کنگو - برازاویل</target>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
@@ -194,6 +199,7 @@
       </trans-unit>
       <trans-unit id="CNT.cp">
         <source>Clipperton Island</source>
+        <target>جزیره کلیپرتون</target>
       </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
@@ -229,6 +235,7 @@
       </trans-unit>
       <trans-unit id="CNT.dg">
         <source>Diego Garcia</source>
+        <target>دیگو گارسیا</target>
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>
@@ -252,6 +259,7 @@
       </trans-unit>
       <trans-unit id="CNT.ea">
         <source>Ceuta and Melilla</source>
+        <target>سبته و ملیله</target>
       </trans-unit>
       <trans-unit id="CNT.ec">
         <source>Ecuador</source>
@@ -291,6 +299,7 @@
       </trans-unit>
       <trans-unit id="CNT.fk">
         <source>Falkland Islands</source>
+        <target>جزایر فالکلند</target>
       </trans-unit>
       <trans-unit id="CNT.fm">
         <source>Micronesia</source>
@@ -362,6 +371,7 @@
       </trans-unit>
       <trans-unit id="CNT.gs">
         <source>South Georgia and South Sandwich Islands</source>
+        <target>جزایر جورجیای جنوبی و ساندویچ جنوبی</target>
       </trans-unit>
       <trans-unit id="CNT.gt">
         <source>Guatemala</source>
@@ -405,6 +415,7 @@
       </trans-unit>
       <trans-unit id="CNT.ic">
         <source>Canary Islands</source>
+        <target>جزایر قناری</target>
       </trans-unit>
       <trans-unit id="CNT.id">
         <source>Indonesia</source>
@@ -484,6 +495,7 @@
       </trans-unit>
       <trans-unit id="CNT.kn">
         <source>St. Kitts and Nevis</source>
+        <target>سنت کیتس و نویس</target>
       </trans-unit>
       <trans-unit id="CNT.kp">
         <source>North Korea</source>
@@ -507,6 +519,7 @@
       </trans-unit>
       <trans-unit id="CNT.la">
         <source>Laos</source>
+        <target>لائوس</target>
       </trans-unit>
       <trans-unit id="CNT.lb">
         <source>Lebanon</source>
@@ -514,6 +527,7 @@
       </trans-unit>
       <trans-unit id="CNT.lc">
         <source>St. Lucia</source>
+        <target>سنت لوسیا</target>
       </trans-unit>
       <trans-unit id="CNT.li">
         <source>Liechtenstein</source>
@@ -557,6 +571,7 @@
       </trans-unit>
       <trans-unit id="CNT.md">
         <source>Moldova</source>
+        <target>مولدووا</target>
       </trans-unit>
       <trans-unit id="CNT.me">
         <source>Montenegro</source>
@@ -564,6 +579,7 @@
       </trans-unit>
       <trans-unit id="CNT.mf">
         <source>St. Martin</source>
+        <target>سنت مارتین</target>
       </trans-unit>
       <trans-unit id="CNT.mg">
         <source>Madagascar</source>
@@ -719,9 +735,11 @@
       </trans-unit>
       <trans-unit id="CNT.pm">
         <source>St. Pierre and Miquelon</source>
+        <target>سنت پیر و ماژلان</target>
       </trans-unit>
       <trans-unit id="CNT.pn">
         <source>Pitcairn Islands</source>
+        <target>جزیره پیتکارین</target>
       </trans-unit>
       <trans-unit id="CNT.pr">
         <source>Puerto Rico</source>
@@ -729,6 +747,7 @@
       </trans-unit>
       <trans-unit id="CNT.ps">
         <source>Palestine</source>
+        <target>فلستین</target>
       </trans-unit>
       <trans-unit id="CNT.pt">
         <source>Portugal</source>
@@ -760,6 +779,7 @@
       </trans-unit>
       <trans-unit id="CNT.ru">
         <source>Russia</source>
+        <target>روسیه</target>
       </trans-unit>
       <trans-unit id="CNT.rw">
         <source>Rwanda</source>
@@ -791,6 +811,7 @@
       </trans-unit>
       <trans-unit id="CNT.sh">
         <source>St. Helena</source>
+        <target>سنت هلن</target>
       </trans-unit>
       <trans-unit id="CNT.si">
         <source>Slovenia</source>
@@ -838,9 +859,11 @@
       </trans-unit>
       <trans-unit id="CNT.sx">
         <source>Sint Maarten</source>
+        <target>سنت مارتن</target>
       </trans-unit>
       <trans-unit id="CNT.sy">
         <source>Syria</source>
+        <target>سوریه</target>
       </trans-unit>
       <trans-unit id="CNT.sz">
         <source>Swaziland</source>
@@ -848,6 +871,7 @@
       </trans-unit>
       <trans-unit id="CNT.ta">
         <source>Tristan da Cunha</source>
+        <target>تریستان</target>
       </trans-unit>
       <trans-unit id="CNT.tc">
         <source>Turks and Caicos Islands</source>
@@ -923,6 +947,7 @@
       </trans-unit>
       <trans-unit id="CNT.um">
         <source>U.S. Outlying Islands</source>
+        <target>جزایر حاشیه‌ای ایالات متحده</target>
       </trans-unit>
       <trans-unit id="CNT.us">
         <source>United States</source>
@@ -938,9 +963,11 @@
       </trans-unit>
       <trans-unit id="CNT.va">
         <source>Vatican City</source>
+        <target>شهر واتیکان</target>
       </trans-unit>
       <trans-unit id="CNT.vc">
         <source>St. Vincent and Grenadines</source>
+        <target>سنت وینسنت و گرنادین</target>
       </trans-unit>
       <trans-unit id="CNT.ve">
         <source>Venezuela</source>
@@ -948,9 +975,11 @@
       </trans-unit>
       <trans-unit id="CNT.vg">
         <source>British Virgin Islands</source>
+        <target>جزایر ویرجین بریتانیا</target>
       </trans-unit>
       <trans-unit id="CNT.vi">
         <source>U.S. Virgin Islands</source>
+        <target>جزایر ویرجین ایالات متحده</target>
       </trans-unit>
       <trans-unit id="CNT.vn">
         <source>Vietnam</source>

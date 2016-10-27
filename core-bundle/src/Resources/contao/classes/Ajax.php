@@ -267,7 +267,7 @@ class Ajax extends \Backend
 			case 'reloadPagetree':
 			case 'reloadFiletree':
 				$intId = \Input::get('id');
-				$strField = $dc->field = \Input::post('name');
+				$strField = $dc->inputName = \Input::post('name');
 
 				// Handle the keys in "edit multiple" mode
 				if (\Input::get('act') == 'editAll')
@@ -275,6 +275,8 @@ class Ajax extends \Backend
 					$intId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', $strField);
 					$strField = preg_replace('/(.*)_[0-9a-zA-Z]+$/', '$1', $strField);
 				}
+
+				$dc->field = $strField;
 
 				// The field does not exist
 				if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]))
@@ -362,7 +364,7 @@ class Ajax extends \Backend
 				$strClass = $GLOBALS['BE_FFL'][$strKey];
 
 				/** @var FileTree|PageTree $objWidget */
-				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
+				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->inputName, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
 

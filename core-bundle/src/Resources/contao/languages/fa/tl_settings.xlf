@@ -155,11 +155,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
-        <target>عدم بازگردانی نشانی‌های وب خالی</target>
+        <target>عدم تغییر مسیر نشانی‌های وب خالی</target>
       </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.1">
         <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
-        <target>برای نشانی وب خالی، وب‌سایت را به جای بازگردانی به برگه ریشه زبانی، نمایش می‌دهد (توصیه نمی‌شود).</target>
+        <target>برای نشانی وب خالی، وب‌سایت را به جای تغییر مسیر به برگه ریشه زبانی، نمایش می‌دهد (توصیه نمی‌شود).</target>
       </trans-unit>
       <trans-unit id="tl_settings.useAutoItem.0">
         <source>Enable auto_item</source>
@@ -191,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
         <source>Do not check the request token when a form is submitted (insecure!).</source>
+        <target>توکن درخواستی را وقتی فرمی ارسال می‌شود بررسی نخواهد کرد (ناامن!)</target>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>

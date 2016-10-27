@@ -325,6 +325,12 @@ abstract class Frontend extends \Controller
 		{
 			$accept_language = \Environment::get('httpAcceptLanguage');
 
+			// Always load the language fall back root if "doNotRedirectEmpty" is enabled
+			if (\Config::get('addLanguageToUrl') && \Config::get('doNotRedirectEmpty'))
+			{
+				$accept_language = '-';
+			}
+
 			// Find the matching root pages (thanks to Andreas Schempp)
 			$objRootPage = \PageModel::findFirstPublishedRootByHostAndLanguage($host, $accept_language);
 
@@ -336,14 +342,27 @@ abstract class Frontend extends \Controller
 			}
 
 			// Redirect to the language root (e.g. en/)
-			if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty') && \Environment::get('relativeRequest') == '')
+			if (\Config::get('addLanguageToUrl'))
 			{
-				$arrParams = array('_locale' => $objRootPage->language);
+				if (!\Config::get('doNotRedirectEmpty') && \Environment::get('relativeRequest') == '')
+				{
+					$arrParams = array('_locale' => $objRootPage->language);
 
-				$strUrl = \System::getContainer()->get('router')->generate('contao_index', $arrParams);
-				$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+					$strUrl = \System::getContainer()->get('router')->generate('contao_index', $arrParams);
+					$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
-				static::redirect($strUrl, 301);
+					static::redirect($strUrl, 301);
+				}
+			}
+			else
+			{
+				$objPage = \PageModel::findFirstPublishedRegularByPid($objRootPage->id);
+
+				// Redirect if it is not the language fall back page and the alias is "index" (see #8498)
+				if ($objPage !== null && (!$objRootPage->fallback || $objPage->alias != 'index'))
+				{
+					static::redirect($objPage->getFrontendUrl(), 302);
+				}
 			}
 		}
 

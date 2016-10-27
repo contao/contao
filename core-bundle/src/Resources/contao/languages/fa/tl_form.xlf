@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.0">
         <source>Redirect page</source>
-        <target>برگه بازگردانی</target>
+        <target>برگه‌ی تغییر مسیر</target>
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected after submitting the form.</source>
-        <target>لطفا برگه‌ای را که کاربران بعد از ارسال فرم باید بازگردانی شوند را انتخاب نمایید.</target>
+        <target>لطفا برگه‌ای را که کاربران بعد از ارسال فرم باید تغییر مسیر شوند را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.0">
         <source>Send form data via e-mail</source>
@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_form.title_legend">
         <source>Title and redirect page</source>
-        <target>عنوان و برگه بازگردانی</target>
+        <target>عنوان و برگه تغییر مسیر</target>
       </trans-unit>
       <trans-unit id="tl_form.email_legend">
         <source>Send form data</source>
