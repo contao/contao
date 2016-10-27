@@ -67,19 +67,9 @@ class FrontendIndex extends \Frontend
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
-		return $this->renderPageByIdOrAlias($pageId);
-	}
-
-
-	/**
-	 * @param mixed $pageId
-	 *
-	 * @return Response
-	 */
-	public function renderPageByIdOrAlias($pageId)
-	{
 		return $this->renderPage(\PageModel::findPublishedByIdOrAlias($pageId));
 	}
+
 
 	public function renderPage(\PageModel $pageModel = null)
 	{
