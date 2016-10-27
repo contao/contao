@@ -71,7 +71,7 @@ class FrontendIndex extends \Frontend
 	}
 
 
-	public function renderPage(\PageModel $pageModel = null)
+	public function renderPage($pageModel = null)
 	{
 		global $objPage;
 
