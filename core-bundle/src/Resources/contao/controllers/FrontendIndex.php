@@ -47,8 +47,6 @@ class FrontendIndex extends \Frontend
 	 */
 	public function run()
 	{
-		global $objPage;
-
 		$pageId = $this->getPageIdFromUrl();
 		$objRootPage = null;
 
@@ -69,8 +67,25 @@ class FrontendIndex extends \Frontend
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
-		// Get the current page object(s)
-		$objPage = \PageModel::findPublishedByIdOrAlias($pageId);
+		return $this->renderPageByIdOrAlias($pageId);
+	}
+
+
+	/**
+	 * @param mixed $pageId
+	 *
+	 * @return Response
+	 */
+	public function renderPageByIdOrAlias($pageId)
+	{
+		return $this->renderPage(\PageModel::findPublishedByIdOrAlias($pageId));
+	}
+
+	public function renderPage(\PageModel $pageModel = null)
+	{
+		global $objPage;
+
+		$objPage = $pageModel;
 
 		// Check the URL and language of each page if there are multiple results
 		if ($objPage !== null && $objPage->count() > 1)
