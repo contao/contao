@@ -561,7 +561,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true, 'mandatory'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'load_callback' => array
+			(
+				array('tl_module', 'setMultiSrcFlags')
+			)
 		),
 		'orderSRC' => array
 		(
@@ -997,5 +1001,28 @@ class tl_module extends Backend
 	public function listModule($row)
 	{
 		return '<div style="float:left">'. $row['name'] .' <span style="color:#999;padding-left:3px">['. (isset($GLOBALS['TL_LANG']['FMD'][$row['type']][0]) ? $GLOBALS['TL_LANG']['FMD'][$row['type']][0] : $row['type']) .']</span>' . "</div>\n";
+	}
+
+
+	/**
+	 * Dynamically add flags to the "multiSRC" field
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function setMultiSrcFlags($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord)
+		{
+			if ($dc->activeRecord->type == 'randomImage')
+			{
+				$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isGallery'] = true;
+				$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
+			}
+		}
+
+		return $varValue;
 	}
 }
