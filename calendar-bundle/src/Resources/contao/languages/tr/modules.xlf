@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MOD.calendar.1">
         <source>Manage events and display them in a calendar or event list</source>
-        <target>Etkinlikleri yöneterek, takvim ya da etkinlik listesi düzeninde görüntüler</target>
+        <target>Etkinlikleri yönetip, takvim ya da etkinlik listesi düzeninde görüntüler</target>
       </trans-unit>
       <trans-unit id="MOD.tl_calendar_feed">
         <source>Calendar feeds</source>
