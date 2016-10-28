@@ -15,8 +15,8 @@ namespace Contao;
  * Parent class for news modules.
  *
  * @property string $news_template
- * @property mixed  news_metaFields
- * 
+ * @property mixed  $news_metaFields
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class ModuleNews extends \Module
@@ -31,7 +31,7 @@ abstract class ModuleNews extends \Module
 	 */
 	protected function sortOutProtected($arrArchives)
 	{
-		if (BE_USER_LOGGED_IN || !is_array($arrArchives) || empty($arrArchives))
+		if (!is_array($arrArchives) || empty($arrArchives))
 		{
 			return $arrArchives;
 		}
