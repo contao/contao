@@ -166,7 +166,7 @@ class Comments extends \Frontend
 		$this->import('FrontendUser', 'User');
 
 		// Access control
-		if ($objConfig->requireLogin && !BE_USER_LOGGED_IN && !FE_USER_LOGGED_IN)
+		if ($objConfig->requireLogin && !FE_USER_LOGGED_IN)
 		{
 			$objTemplate->requireLogin = true;
 			$objTemplate->login = $GLOBALS['TL_LANG']['MSC']['com_login'];
