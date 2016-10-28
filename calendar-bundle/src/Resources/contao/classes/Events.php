@@ -61,7 +61,7 @@ abstract class Events extends \Module
 	 */
 	protected function sortOutProtected($arrCalendars)
 	{
-		if (BE_USER_LOGGED_IN || !is_array($arrCalendars) || empty($arrCalendars))
+		if (!is_array($arrCalendars) || empty($arrCalendars))
 		{
 			return $arrCalendars;
 		}
