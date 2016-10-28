@@ -16,41 +16,40 @@ html,body {
 	padding:3px 6px;
 	overflow:hidden;
 	background:#eaeaea;
-}
-
-/* Left */
-#left {
-	width:17%;
-	float:left;
-	padding:9px 3px;
-}
-
-/* Right */
-#right {
-	width:82%;
-	float:right;
 	text-align:right;
 }
+
+/* Headline */
+h1 {
+	float:left;
+	margin:10px 0 0 3px;
+	font-size:.875rem;
+	font-weight:300;
+}
+
+/* Close */
 .close {
 	font-size:1rem;
 	color:#999;
 	font-weight:500;
 	padding:0 3px;
+	vertical-align:middle;
 }
 .close:hover {
 	color:#666;
 }
 
-/* Select menus */
-.tl_select {
-	width:100px;
-	margin-right:1px;
-}
-
 /* Form elements */
+.tl_select {
+	width:24%;
+	max-width:100px;
+}
 .tl_text.user {
-	width:180px;
-	margin-right:9px;
+	width:24%;
+	max-width:180px;
+}
+label {
+	margin-left:9px;
 }
 
 /* Paragraphs */
@@ -58,15 +57,16 @@ p {
 	margin-bottom:0;
 }
 
-/* Hide the labels on small devices */
-@media (max-width:1023px) {
-	label {
+/* Tablet */
+@media (max-width:991px) {
+	h1 {
 		display:none;
 	}
-	#left {
-		width:23%;
-	}
-	#right {
-		width:76%;
+}
+
+/* Handheld */
+@media (max-width:767px) {
+	label {
+		display:none;
 	}
 }
