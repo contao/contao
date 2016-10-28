@@ -3,7 +3,7 @@
 ### 4.3.0-beta1 (2016-XX-XX)
 
  * Allow to select a custom form template (see contao/core#8454).
- * Do not show protected elements if "show published elements" is enabled (see contao/core#8149).
+ * Do not show protected elements if "show unpublished elements" is enabled (see contao/core#8149).
  * Scroll form error messages into view (see contao/core#8044).
  * Add a "title" field to the meta wizard (see #601).
  * Support using namespaces and use statements in DCA and config files (see contao/core#8530).
