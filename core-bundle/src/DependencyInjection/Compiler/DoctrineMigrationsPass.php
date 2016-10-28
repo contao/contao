@@ -82,16 +82,18 @@ class DoctrineMigrationsPass implements CompilerPassInterface
      */
     private function replaceDiffCommand(ContainerBuilder $container, Definition $provider)
     {
+        $serviceId = 'console.command.contao_corebundle_command_doctrinemigrationsdiffcommand';
+
         $command = new Definition('Contao\CoreBundle\Command\DoctrineMigrationsDiffCommand');
         $command->setArguments([$provider]);
         $command->addTag('console.command');
 
-        $container->setDefinition('contao.command.doctrine_migrations_diff', $command);
+        $container->setDefinition($serviceId, $command);
 
         // Required if Symfony's compiler pass has already handled the "console.command" tags
         if ($container->hasParameter('console.command.ids')) {
             $ids = $container->getParameter('console.command.ids');
-            $ids[] = 'contao.command.doctrine_migrations_diff';
+            $ids[] = $serviceId;
 
             $container->setParameter('console.command.ids', $ids);
         }
