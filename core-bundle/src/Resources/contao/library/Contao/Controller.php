@@ -635,7 +635,7 @@ abstract class Controller extends \System
 		$blnReturn = true;
 
 		// Only apply the restrictions in the front end
-		if (TL_MODE == 'FE' && !BE_USER_LOGGED_IN)
+		if (TL_MODE == 'FE')
 		{
 			// Protected element
 			if ($objElement->protected)

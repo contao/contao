@@ -221,13 +221,13 @@ class FrontendIndex extends \Frontend
 		}
 
 		// Authenticate the user
-		if (!$this->User->authenticate() && $objPage->protected && !BE_USER_LOGGED_IN)
+		if (!$this->User->authenticate() && $objPage->protected)
 		{
 			throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
 		}
 
 		// Check the user groups if the page is protected
-		if ($objPage->protected && !BE_USER_LOGGED_IN)
+		if ($objPage->protected)
 		{
 			$arrGroups = $objPage->groups; // required for empty()
 
