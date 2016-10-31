@@ -38,20 +38,6 @@ class DoctrineMigrationsDiffCommand extends DiffCommand
     /**
      * {@inheritdoc}
      */
-    public function isEnabled()
-    {
-        /** @var Application $application */
-        $application = $this->getApplication();
-
-        return in_array(
-            'Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle',
-            $application->getKernel()->getBundles()
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var Application $application */
