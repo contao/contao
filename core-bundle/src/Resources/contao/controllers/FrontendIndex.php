@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -67,11 +68,23 @@ class FrontendIndex extends \Frontend
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
-		return $this->renderPage(\PageModel::findPublishedByIdOrAlias($pageId));
+		$pageModel = \PageModel::findPublishedByIdOrAlias($pageId);
+
+		// Throw a 404 error if the page could not be found
+		if ($pageModel === null)
+		{
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+		}
+
+		return $this->renderPage($pageModel);
 	}
 
-
-	public function renderPage($pageModel = null)
+	/**
+	 * @param \PageModel|\Model\Collection $pageModel
+	 *
+	 * @return RedirectResponse|Response
+	 */
+	public function renderPage($pageModel)
 	{
 		global $objPage;
 
@@ -137,16 +150,10 @@ class FrontendIndex extends \Frontend
 			}
 		}
 
-		// Throw a 404 error if the page could not be found
-		if ($objPage === null)
-		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
-		}
-
 		// Throw a 500 error if the result is still ambiguous
 		if ($objPage instanceof Model\Collection && $objPage->count() > 1)
 		{
-			$this->log('More than one page matches page ID "' . $pageId . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
+			$this->log('More than one page matches ' . \Environment::get('base') . \Environment::get('request'), __METHOD__, TL_ERROR);
 			throw new \LogicException('More than one page found: ' . \Environment::get('uri'));
 		}
 
@@ -219,7 +226,7 @@ class FrontendIndex extends \Frontend
 			if ($objPage->domain != \Environment::get('host'))
 			{
 				$this->User->authenticate();
-				$this->log('Page ID "' . $pageId . '" was requested via "' . \Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
+				$this->log('Page ID "' . $objPage->id . '" was requested via "' . \Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
 
 				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
@@ -238,7 +245,7 @@ class FrontendIndex extends \Frontend
 
 			if (!is_array($arrGroups) || empty($arrGroups) || !count(array_intersect($arrGroups, $this->User->groups)))
 			{
-				$this->log('Page ID "' . $pageId . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
+				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
 				throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
 			}
 		}
@@ -265,7 +272,7 @@ class FrontendIndex extends \Frontend
 					/** @var PageError403 $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY']['error_403']();
 
-					return $objHandler->getResponse($objRootPage);
+					return $objHandler->getResponse(\PageModel::findByPk($objPage->rootId));
 					break;
 
 				default:
