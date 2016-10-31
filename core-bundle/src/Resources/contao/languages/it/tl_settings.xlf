@@ -121,14 +121,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Non chiudere gli elementi e le altre risorse una volta visti in anteprima nel backend.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.0">
-        <source>Cache mode</source>
-        <target>Modalità cache</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.1">
-        <source>Here you can select the cache mode.</source>
-        <target>Selezionare la modalità cache</target>
-      </trans-unit>
       <trans-unit id="tl_settings.sslProxyDomain.0">
         <source>SSL proxy domain</source>
         <target>Dominio SSL proxy</target>
@@ -209,14 +201,6 @@
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Inserisci una lista separata da virgole delle estensioni dei file che è possibile scaricare. Per motivi di sicurezza lo scaricamento dei file è limitato alla cartella dei files e alle sottocartelle.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.0">
-        <source>Image file types</source>
-        <target>Estensoni file immagine</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.1">
-        <source>Here you can enter a comma separated list of file types that can be handled by the image class.</source>
-        <target>Inserisci una lista separata da virgole delle estensioni delle immagini supportate. Non includere tipi di file che non possono essere gestiti da Contao o da tuoi script.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.editableFiles.0">
         <source>Editable file types</source>
         <target>Tipi di file modificabili</target>
@@ -240,14 +224,6 @@
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
         <target>E' possibile definire la larghezza massima delle immagini e dei file multimediali. Se la larghezza dell'elemento contenuto eccede questo valore verrà ridotta automaticamente.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.0">
-        <source>JPG thumbnail quality</source>
-        <target>Qualità delle miniature</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.1">
-        <source>Here you can enter the JPG thumbnail quality in percent.</source>
-        <target>Inserire la qualità delle miniature in percentuale (si applica solo alle immagini di tipo jpeg)</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -424,10 +400,6 @@
       <trans-unit id="tl_settings.modules_legend">
         <source>Inactive extensions</source>
         <target>Moduli disattivati</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Command scheduler</source>
-        <target>Comando di scheduler</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>

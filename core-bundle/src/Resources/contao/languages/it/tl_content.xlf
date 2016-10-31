@@ -407,12 +407,15 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube.1">
         <source>Please enter the YouTube video ID (e.g. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</source>
+        <target>Inserisci l'ID del video di YouTube (es: &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.0">
         <source>Vimeo ID</source>
+        <target>ID del video di Vimeo</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
         <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;95674578&lt;/em&gt;).</source>
+        <target>Inserisci l'ID del video di VImeo (es: &lt;em&gt;95674578&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>

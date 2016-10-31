@@ -202,20 +202,22 @@
         <target>Cette présentation sera utilisée si le visiteur utilise un appareil mobile.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
-        <source>Set cache timeout</source>
-        <target>Mise en cache</target>
+        <source>Set cache timeouts</source>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
-        <source>Set a cache timeout value for the page and its subpages.</source>
-        <target>Autoriser la mise en cache de la page et ses sous-pages.</target>
+        <source>Set cache timeout values for the page and its subpages.</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Cache timeout</source>
-        <target>Durée de vie du cache</target>
+        <source>Server cache timeout</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>After this period, the cached version of the page will expire.</source>
-        <target>Après cette période, la version mise en cache de la page expirera.</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Client cache timeout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>

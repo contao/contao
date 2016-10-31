@@ -257,6 +257,10 @@
         <source>Please enter a numeric Google+ ID or vanity name!</source>
         <target>Por favor introduzca un ID Google+ o un alias!</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidFieldName">
+        <source>Please enter only the following characters: A-Z0-9[]_-</source>
+        <target>Por favor, introduzca sólo los caracteres siguientes: A-Z0-9[]_-</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Por favor, suma %d y %d.</target>
@@ -994,6 +998,10 @@
         <target>Habilitar/deshabilitar el módulo</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
+        <source>Title</source>
+        <target>Título</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_alt">
         <source>Alternate text</source>
         <target>Texto alternativo</target>
       </trans-unit>
@@ -1012,6 +1020,21 @@
       <trans-unit id="MSC.aw_new">
         <source>Add language</source>
         <target>Añadir idoma</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_title">
+        <source>Title</source>
+        <target>Título</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_id">
+        <source>ID</source>
+        <target>ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_template">
+        <source>Template</source>
+      </trans-unit>
+      <trans-unit id="MSC.sw_position">
+        <source>Position</source>
+        <target>Posición</target>
       </trans-unit>
       <trans-unit id="MSC.image_sizes">
         <source>Predefined dimensions</source>
@@ -1226,8 +1249,7 @@
         <target>Cerrado</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop</source>
-        <target>Mover el elemento a través de arrastrar y soltar</target>
+        <source>Move the item via drag and drop or the up and down keys</source>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1325,14 +1347,14 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.fePreview">
         <source>Preview</source>
+        <target>Previsualización</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
         <target>Vista previa de la web en una nueva ventana</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
-        <source>Front end user</source>
-        <target>Usuario del front end</target>
+        <source>Member</source>
       </trans-unit>
       <trans-unit id="MSC.backToTop">
         <source>Back to top</source>
@@ -1349,6 +1371,9 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>Volver a la página de inicio del Back End</target>
+      </trans-unit>
+      <trans-unit id="MSC.burgerTitle">
+        <source>Toggle navigation</source>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
@@ -1461,6 +1486,9 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
         <target>Guardar y nuevo</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveNduplicate">
+        <source>Save and duplicate</source>
       </trans-unit>
       <trans-unit id="MSC.continue">
         <source>Continue</source>
@@ -1744,6 +1772,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>
+        <target>Notificaciones</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
@@ -1833,9 +1862,8 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <source>Help wizard</source>
         <target>Asistente de ayuda</target>
       </trans-unit>
-      <trans-unit id="MSC.noCookies">
-        <source>You have to allow cookies to use Contao.</source>
-        <target>Debe permitir el uso de cookies para utilizar Contao.</target>
+      <trans-unit id="MSC.jsDisabled">
+        <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -2070,12 +2098,10 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <target>Archivo %s transferido con éxito</target>
       </trans-unit>
       <trans-unit id="MSC.fileExceeds">
-        <source>Image %s uploaded successfully, however it is too big to be resized automatically.</source>
-        <target>La imagen %s se cargo satisfactoriamente, sin embargo es demasiado grande para ajustar el tamaño de manera automática.</target>
+        <source>Image %s is too big to be resized automatically.</source>
       </trans-unit>
       <trans-unit id="MSC.fileResized">
-        <source>Image %s uploaded successfully and was scaled down to the maximum dimensions.</source>
-        <target>El archivo %s ha sido transferido y reescalado a la dimensiones máximas permitidas</target>
+        <source>Image %s was scaled down to the maximum dimensions.</source>
       </trans-unit>
       <trans-unit id="MSC.searchLabel">
         <source>Search</source>
@@ -2110,8 +2136,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <target>Imprimir esta página</target>
       </trans-unit>
       <trans-unit id="MSC.printAsPdf">
-        <source>Print article as PDF</source>
-        <target>Imprimir artículo como PDF</target>
+        <source>Save article as PDF</source>
       </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
@@ -2304,6 +2329,29 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       <trans-unit id="COLS.footer">
         <source>Footer</source>
         <target>Pie de página</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.top">
+        <source>Before the wrapper</source>
+        <target>Antes del contenedor</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.before">
+        <source>After the page header</source>
+        <target>Despues del encabezado</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.main">
+        <source>Inside the main column</source>
+        <target>En la columna principal</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.after">
+        <source>Before the page footer</source>
+        <target>Antes del pie de página (footer)</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.bottom">
+        <source>After the wrapper</source>
+        <target>Despues del contenedor</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.manual">
+        <source>Manual output</source>
       </trans-unit>
     </body>
   </file>

@@ -49,6 +49,14 @@
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
         <target>テーマのスタイルシートの広域変数を設定できます。(例:&lt;em&gt;$red&lt;/em&gt; → &lt;em&gt;c00&lt;/em&gt; や &lt;em&gt;$margin&lt;/em&gt; → &lt;em&gt;12px&lt;/em&gt;)</target>
       </trans-unit>
+      <trans-unit id="tl_theme.defaultImageDensities.0">
+        <source>Default image pixel densities</source>
+        <target>画像の画素密度の初期値</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.defaultImageDensities.1">
+        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+        <target>画素密度をの初期値を指定できます。例: &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;</target>
+      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>ソースファイル</target>
@@ -72,6 +80,10 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>構成</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.image_legend">
+        <source>Image sizes</source>
+        <target>画像サイズ</target>
       </trans-unit>
       <trans-unit id="tl_theme.vars_legend">
         <source>Global variables</source>

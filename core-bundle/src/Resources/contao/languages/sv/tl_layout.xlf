@@ -134,16 +134,7 @@
         <target>Egna layoutsektioner</target>
       </trans-unit>
       <trans-unit id="tl_layout.sections.1">
-        <source>Here you can enter a comma separated list of custom layout sections.</source>
-        <target>Här kan du skriva in en kommaseparerad lista med egna layoutsektioner. Du kan använda dessa sektioner i modulen &lt;em&gt;Sidlayout&lt;/em&gt;.</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.sPosition.0">
-        <source>Custom sections position</source>
-        <target>Placering av egna layoutsektioner</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.sPosition.1">
-        <source>Please select the position of the custom layout sections.</source>
-        <target>Välj position för egna layoutsektioner.</target>
+        <source>Here you can define custom layout sections.</source>
       </trans-unit>
       <trans-unit id="tl_layout.stylesheet.0">
         <source>Internal style sheets</source>
@@ -232,6 +223,12 @@
       <trans-unit id="tl_layout.loadingOrder.1">
         <source>Here you can select the loading order of the style sheets.</source>
         <target>Här kan du välja inläsningsordning för stilmallarna.</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.combineScripts.0">
+        <source>Combine scripts</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.combineScripts.1">
+        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
@@ -496,26 +493,6 @@
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
         <target>HTML</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.top">
-        <source>Before the wrapper</source>
-        <target>Före omslaget</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.before">
-        <source>After the page header</source>
-        <target>Efter sidhuvudsektionen</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.main">
-        <source>Inside the main column</source>
-        <target>I huvudkolumnen</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.after">
-        <source>Before the page footer</source>
-        <target>Före sidfotsektionen</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.bottom">
-        <source>After the wrapper</source>
-        <target>Efter omslaget</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit_styles">
         <source>Edit the style sheets</source>

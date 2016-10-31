@@ -54,8 +54,16 @@
         <target>Pixeldichte/Skalierungsfaktor</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.1">
-        <source>Here you can define the pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
-        <target>Hier können Sie die Pixeldichten definieren, z.B. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
+        <source>Here you can define the pixel densities (e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) or width descriptors (e.g. &lt;em&gt;100w, 200w&lt;/em&gt;).</source>
+        <target>Hier können Sie die Pixeldichten (z.B. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) oder die Breitenbeschreibungen (z.B. &lt;em&gt;100w, 200w&lt;/em&gt;) definieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cssClass.0">
+        <source>CSS classes</source>
+        <target>CSS-Klassen</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cssClass.1">
+        <source>The CSS classes will be applied to the image tag.</source>
+        <target>Die CSS-Klassen werden dem Image-Tag zugewiesen.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>

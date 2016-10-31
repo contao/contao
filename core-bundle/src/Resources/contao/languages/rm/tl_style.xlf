@@ -623,7 +623,7 @@
       </trans-unit>
       <trans-unit id="tl_style.pastenew.0">
         <source>Add new at the top</source>
-        <target>Crear sura ina nova definiziun da formataziun</target>
+        <target>Crear sura in nov element</target>
       </trans-unit>
       <trans-unit id="tl_style.pastenew.1">
         <source>Add new after format definition ID %s</source>

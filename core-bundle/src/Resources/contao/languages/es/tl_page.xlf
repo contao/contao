@@ -202,20 +202,22 @@
         <target>Este diseño será utilizado si el visitante esta accediendo desde un dispositivo móvil.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
-        <source>Set cache timeout</source>
-        <target>Asignar un valor timeout cache</target>
+        <source>Set cache timeouts</source>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
-        <source>Set a cache timeout value for the page and its subpages.</source>
-        <target>Establezca un valor de tiempo de espera de caché de la página y sus subpáginas.</target>
+        <source>Set cache timeout values for the page and its subpages.</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Cache timeout</source>
-        <target>Cache timeout</target>
+        <source>Server cache timeout</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>After this period, the cached version of the page will expire.</source>
-        <target>Dentro del periodo de cache timeout, una página será cargada de la tabla de cache. Esto disminuirá el tiempo de carga de tus páginas.</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Client cache timeout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
