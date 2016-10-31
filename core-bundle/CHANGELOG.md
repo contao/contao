@@ -2,6 +2,7 @@
 
 ### 4.3.0-beta1 (2016-XX-XX)
 
+ * Set the secure cookie flag when using SSL (see contao/core#8474).
  * Allow to select a custom form template (see contao/core#8454).
  * Do not show protected elements if "show unpublished elements" is enabled (see contao/core#8149).
  * Scroll form error messages into view (see contao/core#8044).

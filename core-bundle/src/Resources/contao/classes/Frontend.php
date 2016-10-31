@@ -548,7 +548,7 @@ abstract class Frontend extends \Controller
 		}
 
 		// Remove the cookie if it is invalid to enable loading cached pages
-		$this->setCookie($strCookie, $hash, (time() - 86400), null, null, false, true);
+		$this->setCookie($strCookie, $hash, (time() - 86400), null, null, \Environment::get('ssl'), true);
 
 		return false;
 	}

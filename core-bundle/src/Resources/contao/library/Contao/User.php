@@ -297,7 +297,7 @@ abstract class User extends \System
 		$this->Database->prepare("UPDATE tl_session SET tstamp=$time WHERE hash=?")
 					   ->execute($this->strHash);
 
-		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);
+		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
 
 		// HOOK: post authenticate callback
 		if (isset($GLOBALS['TL_HOOKS']['postAuthenticate']) && is_array($GLOBALS['TL_HOOKS']['postAuthenticate']))
@@ -615,7 +615,7 @@ abstract class User extends \System
 					   ->execute($this->intId, $time, $this->strCookie, \System::getContainer()->get('session')->getId(), $this->strIp, $this->strHash);
 
 		// Set the authentication cookie
-		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);
+		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
 	}
 
 
@@ -653,7 +653,7 @@ abstract class User extends \System
 					   ->execute($this->strHash);
 
 		// Remove cookie and hash
-		$this->setCookie($this->strCookie, $this->strHash, ($time - 86400), null, null, false, true);
+		$this->setCookie($this->strCookie, $this->strHash, ($time - 86400), null, null, \Environment::get('ssl'), true);
 		$this->strHash = '';
 
 		\System::getContainer()->get('session')->invalidate();

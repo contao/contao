@@ -96,7 +96,7 @@ class RebuildIndex extends \Backend implements \executable
 			$this->Automator->purgeSearchTables();
 
 			// Hide unpublished elements
-			$this->setCookie('FE_PREVIEW', 0, ($time - 86400));
+			$this->setCookie('FE_PREVIEW', 0, ($time - 86400), null, null, \Environment::get('ssl'), true);
 
 			// Calculate the hash
 			$strHash = $this->getSessionHash('FE_USER_AUTH');
@@ -113,15 +113,15 @@ class RebuildIndex extends \Backend implements \executable
 							   ->execute(\Input::get('user'), $time, 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
 
 				// Set the cookie
-				$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, false, true);
+				$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
 			}
 
 			// Log out the front end user
 			else
 			{
 				// Unset the cookies
-				$this->setCookie('FE_USER_AUTH', $strHash, ($time - 86400), null, null, false, true);
-				$this->setCookie('FE_AUTO_LOGIN', \Input::cookie('FE_AUTO_LOGIN'), ($time - 86400), null, null, false, true);
+				$this->setCookie('FE_USER_AUTH', $strHash, ($time - 86400), null, null, \Environment::get('ssl'), true);
+				$this->setCookie('FE_AUTO_LOGIN', \Input::cookie('FE_AUTO_LOGIN'), ($time - 86400), null, null, \Environment::get('ssl'), true);
 			}
 
 			$strBuffer = '';

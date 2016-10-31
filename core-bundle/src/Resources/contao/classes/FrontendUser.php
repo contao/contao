@@ -156,7 +156,7 @@ class FrontendUser extends \User
 			}
 
 			// Remove the cookie if it is invalid to enable loading cached pages
-			$this->setCookie('FE_AUTO_LOGIN', $strCookie, (time() - 86400), null, null, false, true);
+			$this->setCookie('FE_AUTO_LOGIN', $strCookie, (time() - 86400), null, null, \Environment::get('ssl'), true);
 		}
 
 		return false;
@@ -186,7 +186,7 @@ class FrontendUser extends \User
 			$this->autologin = $strToken;
 			$this->save();
 
-			$this->setCookie('FE_AUTO_LOGIN', $strToken, ($time + \Config::get('autologin')), null, null, false, true);
+			$this->setCookie('FE_AUTO_LOGIN', $strToken, ($time + \Config::get('autologin')), null, null, \Environment::get('ssl'), true);
 		}
 
 		return true;
@@ -215,7 +215,7 @@ class FrontendUser extends \User
 		}
 
 		// Remove the auto login cookie
-		$this->setCookie('FE_AUTO_LOGIN', $this->autologin, (time() - 86400), null, null, false, true);
+		$this->setCookie('FE_AUTO_LOGIN', $this->autologin, (time() - 86400), null, null, \Environment::get('ssl'), true);
 
 		return true;
 	}
