@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.3.0-beta1 (2016-XX-XX)
+### 4.3.0-RC1 (2016-10-31)
 
  * Set the secure cookie flag when using SSL (see contao/core#8474).
  * Allow to select a custom form template (see contao/core#8454).
