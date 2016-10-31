@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -43,8 +42,6 @@ class FrontendIndex extends \Frontend
 	 * Run the controller
 	 *
 	 * @return Response
-	 *
-	 * @throws AccessDeniedException
 	 */
 	public function run()
 	{
@@ -80,9 +77,15 @@ class FrontendIndex extends \Frontend
 	}
 
 	/**
-	 * @param \PageModel|\Model\Collection $pageModel
+	 * Render a page
 	 *
-	 * @return RedirectResponse|Response
+	 * @param Model\Collection|PageModel[]|PageModel $pageModel
+	 *
+	 * @return Response
+	 *
+	 * @throws \LogicException
+	 * @throws PageNotFoundException
+	 * @throws AccessDeniedException
 	 */
 	public function renderPage($pageModel)
 	{
