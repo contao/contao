@@ -272,7 +272,7 @@ class FrontendIndex extends \Frontend
 					/** @var PageError403 $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY']['error_403']();
 
-					return $objHandler->getResponse(\PageModel::findByPk($objPage->rootId));
+					return $objHandler->getResponse($objPage->rootId);
 					break;
 
 				default:
