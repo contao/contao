@@ -27,3 +27,6 @@ services:
         class: Contao\CoreBundle\Command\VersionCommand
         tags:
             -  { name: console.command }
+
+    console.command.contao_corebundle_command_doctrinemigrationsdiffcommand:
+        synthetic: true # prevent auto-registration by Bundle::registerCommands
