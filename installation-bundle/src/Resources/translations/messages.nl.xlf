@@ -351,6 +351,10 @@
         <target>U dient op zijn minst over Contao 3.2 te beschikken om om te kunnen upgraden naar Contao 4.</target>
         
       </trans-unit>
+      <trans-unit id="71">
+        <source>console_explanation</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

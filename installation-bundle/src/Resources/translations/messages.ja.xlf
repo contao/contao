@@ -351,6 +351,11 @@
         <target>Contao 4にアップグレードするには少なくともContao 3.2が必要です。</target>
         
       </trans-unit>
+      <trans-unit id="71">
+        <source>console_explanation</source>
+        <target>インストールの後の処理を完了できませんでした!</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -351,6 +351,11 @@
         <target>Sie benötigen mindestens Contao 3.2, um das Update auf Contao 4 durchzuführen.</target>
         
       </trans-unit>
+      <trans-unit id="71">
+        <source>console_explanation</source>
+        <target>Eine Installationsaufgabe konnte nicht abgeschlossen werden!</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

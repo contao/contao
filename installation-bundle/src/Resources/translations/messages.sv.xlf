@@ -350,6 +350,10 @@
         <target>Du behöver minst Contao 3.2 för att kunna uppgradera till Contao 4.</target>
         
       </trans-unit>
+      <trans-unit id="71">
+        <source>console_explanation</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

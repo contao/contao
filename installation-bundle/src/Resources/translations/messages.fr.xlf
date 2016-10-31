@@ -351,6 +351,10 @@
         <target>Vous devez avoir au moins Contao 3.2 pour effectuer une mise à niveau vers Contao 4.</target>
         
       </trans-unit>
+      <trans-unit id="71">
+        <source>console_explanation</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
