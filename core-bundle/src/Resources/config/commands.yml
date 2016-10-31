@@ -6,9 +6,6 @@ services:
         tags:
             -  { name: console.command }
 
-    console.command.contao_corebundle_command_doctrinemigrationsdiffcommand:
-        synthetic: true # prevent auto-registration by Bundle::registerCommands
-
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
         calls:
@@ -30,3 +27,6 @@ services:
         class: Contao\CoreBundle\Command\VersionCommand
         tags:
             -  { name: console.command }
+
+    console.command.contao_corebundle_command_doctrinemigrationsdiffcommand:
+        synthetic: true # prevent auto-registration by Bundle::registerCommands
