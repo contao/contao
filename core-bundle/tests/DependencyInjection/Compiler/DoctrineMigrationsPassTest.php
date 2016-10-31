@@ -12,8 +12,10 @@ namespace Contao\CoreBundle\Test\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
 use Contao\CoreBundle\Test\TestCase;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Tests the DoctrineMigrationsPass class.
@@ -37,14 +39,13 @@ class DoctrineMigrationsPassTest extends TestCase
      */
     public function testWithoutMigrationsBundle()
     {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.bundles', []);
+        $container = $this->createContainerBuilder();
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
 
         $this->assertFalse($container->hasDefinition('contao.doctrine.schema_provider'));
-        $this->assertFalse($container->hasDefinition('contao.command.doctrine_migrations_diff'));
+        $this->assertFalse($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
     }
 
     /**
@@ -52,14 +53,14 @@ class DoctrineMigrationsPassTest extends TestCase
      */
     public function testWithOrm()
     {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.bundles', ['Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle']);
+        $container = $this->createContainerBuilder(['Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle']);
         $container->setDefinition('doctrine.orm.entity_manager', new Definition());
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
 
         $this->assertTrue($container->hasDefinition('contao.doctrine.schema_provider'));
+        $this->assertFalse($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
 
         $this->assertEquals(
             'Doctrine\DBAL\Migrations\Provider\OrmSchemaProvider',
@@ -72,8 +73,7 @@ class DoctrineMigrationsPassTest extends TestCase
      */
     public function testWithoutOrm()
     {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.bundles', ['Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle']);
+        $container = $this->createContainerBuilder(['Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle']);
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
@@ -85,11 +85,12 @@ class DoctrineMigrationsPassTest extends TestCase
             $container->getDefinition('contao.doctrine.schema_provider')->getClass()
         );
 
-        $this->assertTrue($container->hasDefinition('contao.command.doctrine_migrations_diff'));
+        $this->assertTrue($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
+        $this->assertFalse($container->getDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID)->isSynthetic());
 
         $this->assertEquals(
             'Contao\CoreBundle\Command\DoctrineMigrationsDiffCommand',
-            $container->getDefinition('contao.command.doctrine_migrations_diff')->getClass()
+            $container->getDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID)->getClass()
         );
     }
 
@@ -98,8 +99,7 @@ class DoctrineMigrationsPassTest extends TestCase
      */
     public function testAddsCommandId()
     {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.bundles', ['Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle']);
+        $container = $this->createContainerBuilder(['Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle']);
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
@@ -113,8 +113,30 @@ class DoctrineMigrationsPassTest extends TestCase
         $this->assertTrue($container->hasParameter('console.command.ids'));
 
         $this->assertContains(
-            'contao.command.doctrine_migrations_diff',
+            DoctrineMigrationsPass::DIFF_COMMAND_ID,
             $container->getParameter('console.command.ids')
         );
+    }
+
+    /**
+     * Creates a ContainerBuilder and loads the commands.yml file.
+     *
+     * @param array $bundles
+     *
+     * @return ContainerBuilder
+     */
+    private function createContainerBuilder(array $bundles = [])
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.bundles', $bundles);
+
+        $loader = new YamlFileLoader(
+            $container,
+            new FileLocator(__DIR__.'/../../../src/Resources/config')
+        );
+
+        $loader->load('commands.yml');
+
+        return $container;
     }
 }

@@ -20,11 +20,15 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
  */
 class DoctrineMigrationsPass implements CompilerPassInterface
 {
+    const DIFF_COMMAND_ID = 'console.command.contao_corebundle_command_doctrinemigrationsdiffcommand';
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
+        $container->removeDefinition(static::DIFF_COMMAND_ID);
+
         if (!$this->hasMigrationsBundle($container)) {
             return;
         }
@@ -40,7 +44,7 @@ class DoctrineMigrationsPass implements CompilerPassInterface
             $provider = new DefinitionDecorator('contao.doctrine.dca_schema_provider');
             $provider->setClass('Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider');
 
-            $this->replaceDiffCommand($container, $provider);
+            $this->registerDiffCommand($container, $provider);
         }
 
         $container->setDefinition('contao.doctrine.schema_provider', $provider);
@@ -80,20 +84,18 @@ class DoctrineMigrationsPass implements CompilerPassInterface
      * @param ContainerBuilder $container
      * @param Definition       $provider
      */
-    private function replaceDiffCommand(ContainerBuilder $container, Definition $provider)
+    private function registerDiffCommand(ContainerBuilder $container, Definition $provider)
     {
-        $serviceId = 'console.command.contao_corebundle_command_doctrinemigrationsdiffcommand';
-
         $command = new Definition('Contao\CoreBundle\Command\DoctrineMigrationsDiffCommand');
         $command->setArguments([$provider]);
         $command->addTag('console.command');
 
-        $container->setDefinition($serviceId, $command);
+        $container->setDefinition(static::DIFF_COMMAND_ID, $command);
 
         // Required if Symfony's compiler pass has already handled the "console.command" tags
         if ($container->hasParameter('console.command.ids')) {
             $ids = $container->getParameter('console.command.ids');
-            $ids[] = $serviceId;
+            $ids[] = static::DIFF_COMMAND_ID;
 
             $container->setParameter('console.command.ids', $ids);
         }
