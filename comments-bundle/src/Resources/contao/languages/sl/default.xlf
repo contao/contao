@@ -27,6 +27,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_login">
         <source>You need to be logged in to add comments.</source>
+        <target>Za komentiranje morate biti prijavljeni.</target>
       </trans-unit>
       <trans-unit id="MSC.com_by">
         <source>Comment by</source>
@@ -60,9 +61,21 @@
 View: %s
 Edit: %s
 </source>
+        <target>%s je ustvaril nov komentar na vaši spletni strani.
+
+---
+
+%s
+
+---
+
+Poglej: %s
+Uredi: %s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <target>Ta komentar je potrebno objaviti v vmesniku, preden se bo pojavil na spletni strani.</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>
