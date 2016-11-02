@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.3.0 (2016-11-XX)
+
+ * Store relative paths in the template loader cache (see #607).
+
 ### 4.3.0-RC1 (2016-10-31)
 
  * Set the secure cookie flag when using SSL (see contao/core#8474).
