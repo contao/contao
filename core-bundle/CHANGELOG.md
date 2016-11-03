@@ -2,7 +2,7 @@
 
 ### 4.3.0 (2016-11-XX)
 
- * Store relative paths in the template loader cache (see #607).
+ * Store absolute paths in the template loader cache (see #607).
 
 ### 4.3.0-RC1 (2016-10-31)
 
