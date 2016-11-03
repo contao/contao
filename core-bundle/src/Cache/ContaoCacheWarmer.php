@@ -256,13 +256,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
 
         foreach ($files as $file) {
-            $mapper[$file->getBasename('.html5')] = rtrim(
-                $this->filesystem->makePathRelative(
-                    strtr($file->getPath(), '\\', '/'),
-                    strtr(dirname($this->rootDir), '\\', '/')
-                ),
-                '/'
-            );
+            $mapper[$file->getBasename('.html5')] = strtr($file->getPath(), '\\', '/');
         }
 
         $this->filesystem->dumpFile(
