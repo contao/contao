@@ -12,6 +12,7 @@ namespace Contao\ManagerBundle\Composer;
 
 use Composer\Composer;
 use Composer\Script\Event;
+use Composer\Util\Filesystem;
 use Contao\CoreBundle\Composer\ScriptHandler as BaseScriptHandler;
 
 /**
@@ -52,6 +53,9 @@ class ScriptHandler extends BaseScriptHandler
      */
     private static function installContaoConsole($filePath, $installTo)
     {
+        $filesystem = new Filesystem();
+        $filesystem->ensureDirectoryExists(dirname($installTo));
+
         if (!is_file($filePath)) {
             throw new \UnderflowException(sprintf('%s is not a valid file.', $filePath));
         }
