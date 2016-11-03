@@ -18,10 +18,9 @@ interface BundlePluginInterface
     /**
      * Gets a list of autoload configurations for this bundle.
      *
-     * @param JsonParser $jsonParser
-     * @param IniParser  $iniParser
+     * @param ParserInterface $parser
      *
      * @return ConfigInterface[]
      */
-    public function getBundles(JsonParser $jsonParser, IniParser $iniParser);
+    public function getBundles(ParserInterface $parser);
 }

@@ -10,11 +10,10 @@
 
 namespace Contao\ManagerBundle\ContaoManager;
 
+use Contao\ManagerBundle\ContaoManager\Bundle\ParserInterface;
 use Contao\ManagerBundle\ContaoManager\Config\ConfigPluginInterface;
 use Contao\ManagerBundle\ContaoManager\Routing\RoutingPluginInterface;
 use Contao\ManagerBundle\ContaoManager\Bundle\BundlePluginInterface;
-use Contao\ManagerBundle\ContaoManager\Bundle\IniParser;
-use Contao\ManagerBundle\ContaoManager\Bundle\JsonParser;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -32,9 +31,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * @inheritdoc
      */
-    public function getBundles(JsonParser $jsonParser, IniParser $iniParser)
+    public function getBundles(ParserInterface $parser)
     {
-        return $jsonParser->parse(__DIR__ . '/../Resources/contao-manager/bundles.json');
+        return $parser->parse(__DIR__ . '/../Resources/contao-manager/bundles.json');
     }
 
     /**

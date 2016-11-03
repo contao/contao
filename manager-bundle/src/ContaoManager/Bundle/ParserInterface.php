@@ -19,11 +19,22 @@ namespace Contao\ManagerBundle\ContaoManager\Bundle;
 interface ParserInterface
 {
     /**
-     * Parses a configuration file
+     * Parses a configuration file.
      *
-     * @param string $file The absolute file path
+     * @param string      $resource
+     * @param string|null $type
      *
      * @return ConfigInterface[]
+     *
+     * @throws \Exception
      */
-    public function parse($file);
+    public function parse($resource, $type = null);
+
+    /**
+     * Returns whether this class supports the given config file.
+     *
+     * @param string      $resource
+     * @param string|null $type
+     */
+    public function supports($resource, $type = null);
 }

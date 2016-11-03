@@ -101,14 +101,16 @@ class BundleLoader
     private function loadFromPlugins($development, $cacheFile)
     {
         $resolver = new ConfigResolver();
-        $jsonParser = new JsonParser();
-        $iniParser = new IniParser($this->modulesDir);
+        $parser   = new DelegatingParser();
+
+        $parser->addParser(new JsonParser());
+        $parser->addParser(new IniParser($this->modulesDir));
 
         /** @var BundlePluginInterface[] $plugins */
         $plugins = $this->pluginLoader->getInstancesOf(PluginLoader::BUNDLE_PLUGINS);
 
         foreach ($plugins as $plugin) {
-            foreach ($plugin->getBundles($jsonParser, $iniParser) as $config) {
+            foreach ($plugin->getBundles($parser) as $config) {
                 $resolver->add($config);
             }
         }

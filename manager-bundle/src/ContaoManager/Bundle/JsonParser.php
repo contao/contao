@@ -21,14 +21,22 @@ class JsonParser implements ParserInterface
     /**
      * {@inheritdoc}
      */
-    public function parse($file)
+    public function parse($resource, $type = null)
     {
         $configs = [];
-        $json = $this->parseJsonFile($file);
+        $json = $this->parseJsonFile($resource);
 
         $this->parseBundles($json, $configs);
 
         return $configs;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function supports($resource, $type = null)
+    {
+        return is_string($resource) && 'json' === pathinfo($resource, PATHINFO_EXTENSION);
     }
 
     /**

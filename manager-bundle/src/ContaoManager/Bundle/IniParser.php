@@ -36,13 +36,13 @@ class IniParser implements ParserInterface
     /**
      * {@inheritdoc}
      */
-    public function parse($file)
+    public function parse($resource, $type = null)
     {
         $configs = [];
-        $config = new ModuleConfig($file);
+        $config = new ModuleConfig($resource);
         $configs[] = $config;
 
-        $path = $this->modulesDir . '/' . $file . '/config/autoload.ini';
+        $path = $this->modulesDir . '/' . $resource . '/config/autoload.ini';
 
         if (file_exists($path)) {
             $requires = $this->parseIniFile($path);
@@ -69,6 +69,14 @@ class IniParser implements ParserInterface
         }
 
         return $configs;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function supports($resource, $type = null)
+    {
+        return 'ini' === $type || is_dir($this->modulesDir . '/' . (string) $resource);
     }
 
     /**
