@@ -12,8 +12,7 @@ namespace Contao\CalendarBundle\ContaoManager;
 
 use Contao\ManagerBundle\ContaoManager\Bundle\BundleConfig;
 use Contao\ManagerBundle\ContaoManager\Bundle\BundlePluginInterface;
-use Contao\ManagerBundle\ContaoManager\Bundle\IniParser;
-use Contao\ManagerBundle\ContaoManager\Bundle\JsonParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\ParserInterface;
 
 /**
  * Plugin for the Contao Manager.
@@ -25,7 +24,7 @@ class Plugin implements BundlePluginInterface
     /**
      * @inheritdoc
      */
-    public function getBundles(JsonParser $jsonParser, IniParser $iniParser)
+    public function getBundles(ParserInterface $parser)
     {
         return [
             BundleConfig::create('Contao\CalendarBundle\ContaoCalendarBundle')
