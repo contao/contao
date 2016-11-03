@@ -44,7 +44,7 @@ class ContaoKernel extends Kernel
     public function getRootDir()
     {
         if (null === $this->rootDir) {
-            $this->rootDir = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/system';
+            $this->rootDir = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/app';
         }
 
         return $this->rootDir;
@@ -58,6 +58,22 @@ class ContaoKernel extends Kernel
     public function setRootDir($dir)
     {
         $this->rootDir = realpath($dir) ?: null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCacheDir()
+    {
+        return dirname($this->getRootDir()).'/var/cache/'.$this->getEnvironment();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogDir()
+    {
+        return dirname($this->getRootDir()).'/var/logs';
     }
 
     /**
@@ -121,7 +137,7 @@ class ContaoKernel extends Kernel
 
         $autoloader = new BundleLoader(
             $this->pluginLoader,
-            $this->getRootDir() . '/modules'
+            dirname($this->getRootDir()) . '/system/modules'
         );
 
         $configs = $autoloader->getBundleConfigs(

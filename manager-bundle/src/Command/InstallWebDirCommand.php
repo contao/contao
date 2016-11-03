@@ -44,10 +44,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $this
             ->setName('contao:install-web-dir')
             ->setDescription('Generates entry points in /web directory.')
-            ->addArgument('root-dir', InputArgument::OPTIONAL, 'The installation root directory (defaults to the current working directory).', getcwd())
-            ->addOption('web-dir', '', InputOption::VALUE_REQUIRED, 'Relative path to web directory (defaults to "web")', 'web')
-            ->addOption('var-dir', '', InputOption::VALUE_REQUIRED, 'Relative path to var directory (defaults to "var")', 'var')
-            ->addOption('vendor-dir', '', InputOption::VALUE_REQUIRED, 'Relative path to the Composer vendor directory (defaults to "vendor")', 'vendor')
+            ->addArgument('path', InputArgument::OPTIONAL, 'The installation root directory (defaults to the current working directory).', getcwd())
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Overwrite files if they exist.')
         ;
     }
@@ -60,16 +57,18 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $rootDir = $input->getArgument('root-dir');
-        $webDir = $this->absolutePath($rootDir, $input->getOption('web-dir'));
-        $varDir = $this->absolutePath($rootDir, $input->getOption('var-dir'));
-        $vendorDir = $this->absolutePath($rootDir, $input->getOption('vendor-dir'));
+        $baseDir = $input->getArgument('path');
+        $webDir = $this->absolutePath($baseDir, 'web');
+        $rootDir = $this->absolutePath($baseDir, 'app');
+        $vendorDir = $this->absolutePath($baseDir, 'vendor');
         $force = (bool) $input->getOption('force');
 
-        $pathToSystem = rtrim($this->fs->makePathRelative($varDir, $webDir), '/');
-        $pathToVendor = rtrim($this->fs->makePathRelative($vendorDir, $webDir), '/');
-
-        $this->addFiles($webDir, $pathToSystem, $pathToVendor, $force);
+        $this->addFiles(
+            $webDir,
+            rtrim($this->fs->makePathRelative($rootDir, $webDir), '/'),
+            rtrim($this->fs->makePathRelative($vendorDir, $webDir), '/'),
+            $force
+        );
 
         return 0;
     }
@@ -77,25 +76,25 @@ class InstallWebDirCommand extends AbstractLockedCommand
     /**
      * Create an absolute path from root and relative directory.
      *
-     * @param string $rootDir
+     * @param string $baseDir
      * @param string $path
      *
      * @return string
      */
-    private function absolutePath($rootDir, $path)
+    private function absolutePath($baseDir, $path)
     {
-        return realpath(rtrim($rootDir, '/') . '/' . trim($path, '/'));
+        return realpath(rtrim($baseDir, '/') . '/' . trim($path, '/'));
     }
 
     /**
      * Adds files from Resources/web to the application's web directory.
      *
      * @param string $webDir
-     * @param string $pathToSystem
-     * @param string $pathToVendor
+     * @param string $rootDir
+     * @param string $vendorDir
      * @param bool   $force
      */
-    private function addFiles($webDir, $pathToSystem, $pathToVendor, $force = false)
+    private function addFiles($webDir, $rootDir, $vendorDir, $force = false)
     {
         $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__ . '/../Resources/web');
 
@@ -105,8 +104,8 @@ class InstallWebDirCommand extends AbstractLockedCommand
             }
 
             $content = str_replace(
-                ['{system-dir}', '{vendor-dir}'],
-                [$pathToSystem, $pathToVendor],
+                ['{root-dir}', '{vendor-dir}'],
+                [$rootDir, $vendorDir],
                 file_get_contents($file->getPathname())
             );
 

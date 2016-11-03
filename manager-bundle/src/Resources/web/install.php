@@ -19,7 +19,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 $loader = require __DIR__.'/{vendor-dir}/autoload.php';
 
 $kernel = new ManagedInstallationKernel('dev', false);
-$kernel->setRootDir(__DIR__ . '/{system-dir}');
+$kernel->setRootDir(__DIR__ . '/{root-dir}');
 $kernel->loadPlugins(__DIR__ . '/{vendor-dir}/composer/installed.json');
 $kernel->loadClassCache();
 
