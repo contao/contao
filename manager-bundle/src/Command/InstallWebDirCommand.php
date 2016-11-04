@@ -83,7 +83,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     private function absolutePath($baseDir, $path)
     {
-        return realpath(rtrim($baseDir, '/') . '/' . trim($path, '/'));
+        return rtrim($baseDir, '/') . '/' . trim($path, '/');
     }
 
     /**
