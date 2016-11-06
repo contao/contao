@@ -381,7 +381,7 @@ a.tl_submit {
 .split-button ul {
 	position:absolute;
 	bottom:20px;
-	width:100%;
+	min-width:100%;
 	background:#fff;
 	border:1px solid #aaa;
 	border-radius:2px;
@@ -392,10 +392,14 @@ a.tl_submit {
 	border:0;
 	width:100%;
 	text-align:left;
+	white-space:nowrap;
 }
 .split-button ul .tl_submit:hover {
 	box-shadow:none;
 	background:#eee;
+}
+.split-button > button:first-of-type {
+	min-width:118px;
 }
 .split-button > button[type="submit"] {
 	border-radius:2px 0 0 2px;
