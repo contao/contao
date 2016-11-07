@@ -112,6 +112,11 @@ class PluginLoader
         }
 
         $this->orderPlugins($plugins);
+
+        // Instantiate a global plugin to load AppBundle or other customizations
+        if (class_exists('ContaoManagerPlugin')) {
+            $this->plugins['app'] = new \ContaoManagerPlugin();
+        }
     }
 
     /**

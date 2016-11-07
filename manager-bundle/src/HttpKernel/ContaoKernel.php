@@ -146,7 +146,12 @@ class ContaoKernel extends Kernel
         );
 
         foreach ($configs as $config) {
-            $bundles[] = $config->getBundleInstance($this);
+            $bundles[$config->getName()] = $config->getBundleInstance($this);
+        }
+
+        // Autoload AppBundle for convenience
+        if (isset($bundles['AppBundle\AppBundle']) && class_exists('AppBundle\AppBundle')) {
+            $bundles['AppBundle\AppBundle'] = new \AppBundle\AppBundle();
         }
     }
 }
