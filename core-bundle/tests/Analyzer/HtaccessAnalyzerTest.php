@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\HttpKernel\Bundle;
+namespace Contao\CoreBundle\Test\Analyzer;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Test\TestCase;
