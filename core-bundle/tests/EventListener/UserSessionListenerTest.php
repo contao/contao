@@ -125,17 +125,11 @@ class UserSessionListenerTest extends TestCase
             new Response()
         );
 
-        $connection = $this->getMock('Doctrine\DBAL\Connection', ['prepare', 'execute'], [], '', false);
+        $connection = $this->getMock('Doctrine\DBAL\Connection', ['update'], [], '', false);
 
         $connection
             ->expects($this->once())
-            ->method('prepare')
-            ->willReturnSelf()
-        ;
-
-        $connection
-            ->expects($this->once())
-            ->method('execute')
+            ->method('update')
         ;
 
         $user = $this

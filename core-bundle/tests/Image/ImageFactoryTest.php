@@ -441,9 +441,12 @@ class ImageFactoryTest extends TestCase
     /**
      * Tests the create() method.
      *
+     * @param string $mode
+     * @param array  $expected
+     *
      * @dataProvider getCreateWithLegacyMode
      */
-    public function testCreateWithLegacyMode($mode, $expected)
+    public function testCreateWithLegacyMode($mode, array $expected)
     {
         $path = $this->getRootDir().'/images/none.jpg';
 

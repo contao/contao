@@ -94,10 +94,11 @@ class UserSessionListener
             return;
         }
 
-        $this->connection
-            ->prepare('UPDATE '.$user->getTable().' SET session=? WHERE id=?')
-            ->execute([serialize($this->getSessionBag()->all()), $user->id])
-        ;
+        $this->connection->update(
+            $user->getTable(),
+            ['session' => serialize($this->getSessionBag()->all())],
+            ['id' => $user->id]
+        );
     }
 
     /**
