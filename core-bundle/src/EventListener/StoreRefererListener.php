@@ -14,6 +14,8 @@ use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Stores the referer in the session.
@@ -24,7 +26,6 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 class StoreRefererListener
 {
     use ScopeAwareTrait;
-    use UserAwareTrait;
 
     /**
      * @var SessionInterface
@@ -32,13 +33,20 @@ class StoreRefererListener
     private $session;
 
     /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    /**
      * Constructor.
      *
-     * @param SessionInterface $session
+     * @param SessionInterface      $session
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage)
     {
         $this->session = $session;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -48,7 +56,13 @@ class StoreRefererListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->hasUser() || !$this->isContaoMasterRequest($event)) {
+        if (!$this->isContaoMasterRequest($event)) {
+            return;
+        }
+
+        $token = $this->tokenStorage->getToken();
+
+        if (null === $token || $token instanceof AnonymousToken) {
             return;
         }
 
