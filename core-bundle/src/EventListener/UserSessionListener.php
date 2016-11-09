@@ -16,7 +16,6 @@ use Contao\FrontendUser;
 use Contao\User;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -135,16 +134,19 @@ class UserSessionListener
     /**
      * Returns the session bag.
      *
-     * @return SessionBagInterface|AttributeBagInterface
+     * @return AttributeBagInterface
      */
     private function getSessionBag()
     {
         if ($this->isBackendScope()) {
-            $bag = 'contao_backend';
+            $name = 'contao_backend';
         } else {
-            $bag = 'contao_frontend';
+            $name = 'contao_frontend';
         }
 
-        return $this->session->getBag($bag);
+        /** @var AttributeBagInterface $bag */
+        $bag = $this->session->getBag($name);
+
+        return $bag;
     }
 }
