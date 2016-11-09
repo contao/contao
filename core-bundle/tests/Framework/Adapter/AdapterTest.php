@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Adapter;
+namespace Contao\CoreBundle\Test\Framework\Adapter;
 
 use Contao\CoreBundle\Framework\Adapter;
 

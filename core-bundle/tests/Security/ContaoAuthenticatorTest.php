@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Security\Authentication;
+namespace Contao\CoreBundle\Test\Security;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;

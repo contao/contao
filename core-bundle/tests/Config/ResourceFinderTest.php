@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Controller;
+namespace Contao\CoreBundle\Test\Config;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Test\TestCase;
