@@ -52,7 +52,7 @@ class AutomatorCommand extends AbstractLockedCommand
      */
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $this->getFramework()->initialize();
+        $this->framework->initialize();
 
         try {
             $this->runAutomator($input, $output);
@@ -113,7 +113,7 @@ class AutomatorCommand extends AbstractLockedCommand
      */
     private function generateCommandMap()
     {
-        $this->getFramework()->initialize();
+        $this->framework->initialize();
 
         $commands = [];
 
