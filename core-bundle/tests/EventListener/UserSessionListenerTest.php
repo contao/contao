@@ -37,9 +37,7 @@ class UserSessionListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $listener = $this->getListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $this->getListener());
     }
 
     /**
@@ -200,6 +198,7 @@ class UserSessionListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, null, $tokenStorage);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelRequest($responseEvent);
     }
 
@@ -249,6 +248,7 @@ class UserSessionListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, $connection, $tokenStorage);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -271,6 +271,7 @@ class UserSessionListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelRequest($responseEvent);
     }
 
@@ -306,6 +307,7 @@ class UserSessionListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, $connection);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -342,12 +344,14 @@ class UserSessionListenerTest extends TestCase
         /** @var UserSessionListener|\PHPUnit_Framework_MockObject_MockObject $listener */
         $listener = $this
             ->getMockBuilder('Contao\CoreBundle\EventListener\UserSessionListener')
-            ->disableOriginalConstructor()
+            ->setConstructorArgs([
+                $this->mockSession(),
+                $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
+                $tokenStorage
+            ])
             ->setMethods(['hasUser', 'isContaoMasterRequest'])
             ->getMock()
         ;
-
-        $listener->setTokenStorage($tokenStorage);
 
         $listener
             ->expects($this->any())
@@ -361,6 +365,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelRequest($responseEvent);
     }
 
@@ -398,12 +403,14 @@ class UserSessionListenerTest extends TestCase
         /** @var UserSessionListener|\PHPUnit_Framework_MockObject_MockObject $listener */
         $listener = $this
             ->getMockBuilder('Contao\CoreBundle\EventListener\UserSessionListener')
-            ->disableOriginalConstructor()
+            ->setConstructorArgs([
+                $this->mockSession(),
+                $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
+                $tokenStorage
+            ])
             ->setMethods(['hasUser', 'isContaoMasterRequest'])
             ->getMock()
         ;
-
-        $listener->setTokenStorage($tokenStorage);
 
         $listener
             ->expects($this->any())
@@ -417,6 +424,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -484,9 +492,6 @@ class UserSessionListenerTest extends TestCase
             );
         }
 
-        $listener = new UserSessionListener($session, $connection);
-        $listener->setTokenStorage($tokenStorage);
-
-        return $listener;
+        return new UserSessionListener($session, $connection, $tokenStorage);
     }
 }

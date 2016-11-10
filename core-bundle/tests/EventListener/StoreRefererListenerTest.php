@@ -33,9 +33,7 @@ class StoreRefererListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $listener = $this->getListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\StoreRefererListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\StoreRefererListener', $this->getListener());
     }
 
     /**
@@ -116,6 +114,7 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, $tokenStorage);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -139,6 +138,7 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -311,9 +311,6 @@ class StoreRefererListenerTest extends TestCase
             );
         }
 
-        $listener = new StoreRefererListener($session);
-        $listener->setTokenStorage($tokenStorage);
-
-        return $listener;
+        return new StoreRefererListener($session, $tokenStorage);
     }
 }
