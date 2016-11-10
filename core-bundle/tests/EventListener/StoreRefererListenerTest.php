@@ -18,7 +18,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -311,6 +313,8 @@ class StoreRefererListenerTest extends TestCase
             );
         }
 
-        return new StoreRefererListener($session, $tokenStorage);
+        $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
+
+        return new StoreRefererListener($session, $tokenStorage, $trustResolver);
     }
 }

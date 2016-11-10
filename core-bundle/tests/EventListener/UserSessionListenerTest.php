@@ -21,7 +21,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\User;
 
@@ -347,16 +349,11 @@ class UserSessionListenerTest extends TestCase
             ->setConstructorArgs([
                 $this->mockSession(),
                 $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
-                $tokenStorage
+                $tokenStorage,
+                new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class)
             ])
-            ->setMethods(['hasUser', 'isContaoMasterRequest'])
+            ->setMethods(['isContaoMasterRequest'])
             ->getMock()
-        ;
-
-        $listener
-            ->expects($this->any())
-            ->method('hasUser')
-            ->willReturn(true)
         ;
 
         $listener
@@ -406,16 +403,11 @@ class UserSessionListenerTest extends TestCase
             ->setConstructorArgs([
                 $this->mockSession(),
                 $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
-                $tokenStorage
+                $tokenStorage,
+                new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class)
             ])
-            ->setMethods(['hasUser', 'isContaoMasterRequest'])
+            ->setMethods(['isContaoMasterRequest'])
             ->getMock()
-        ;
-
-        $listener
-            ->expects($this->any())
-            ->method('hasUser')
-            ->willReturn(true)
         ;
 
         $listener
@@ -492,6 +484,8 @@ class UserSessionListenerTest extends TestCase
             );
         }
 
-        return new UserSessionListener($session, $connection, $tokenStorage);
+        $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
+
+        return new UserSessionListener($session, $connection, $tokenStorage, $trustResolver);
     }
 }
