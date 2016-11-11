@@ -350,7 +350,7 @@ class UserSessionListenerTest extends TestCase
                 $this->mockSession(),
                 $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
                 $tokenStorage,
-                new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class)
+                new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class),
             ])
             ->setMethods(['isContaoMasterRequest'])
             ->getMock()
@@ -404,7 +404,7 @@ class UserSessionListenerTest extends TestCase
                 $this->mockSession(),
                 $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
                 $tokenStorage,
-                new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class)
+                new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class),
             ])
             ->setMethods(['isContaoMasterRequest'])
             ->getMock()

@@ -60,12 +60,8 @@ class UserSessionListener
      * @param TokenStorageInterface                $tokenStorage
      * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
      */
-    public function __construct(
-        SessionInterface $session,
-        Connection $connection,
-        TokenStorageInterface $tokenStorage,
-        AuthenticationTrustResolverInterface $authenticationTrustResolver
-    ) {
+    public function __construct(SessionInterface $session, Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver)
+    {
         $this->session = $session;
         $this->connection = $connection;
         $this->tokenStorage = $tokenStorage;

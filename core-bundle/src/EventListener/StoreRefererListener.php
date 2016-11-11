@@ -49,11 +49,8 @@ class StoreRefererListener
      * @param TokenStorageInterface                $tokenStorage
      * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
      */
-    public function __construct(
-        SessionInterface $session,
-        TokenStorageInterface $tokenStorage,
-        AuthenticationTrustResolverInterface $authenticationTrustResolver
-    ) {
+    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver)
+    {
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
         $this->authenticationTrustResolver = $authenticationTrustResolver;
