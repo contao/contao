@@ -1059,12 +1059,12 @@ ul.sgallery li {
 }
 .tl_sectionwizard td {
 	position:relative;
-	padding:0 6px 0 0;
+	padding:0 4px 0 0;
 }
 .tl_sectionwizard th {
 	font-size:.75rem;
 	font-weight:300;
-	padding:0 6px 1px 0;
+	padding:0 4px 1px 0;
 }
 .tl_sectionwizard td:last-child {
 	white-space:nowrap;
@@ -1184,7 +1184,7 @@ ul.sortable button[disabled]:hover {
 }
 .ace_editor,.ace_editor * {
 	font-family:"Roboto Mono",monospace !important;
-	font-size:.75rem;
+	font-size:.75rem !important;
 	color:inherit;
 }
 .ace-fullsize {

@@ -480,8 +480,9 @@ abstract class DataContainer extends \Backend
 			list ($file, $type) = explode('|', $arrData['eval']['rte'], 2);
 
 			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate("be_$file");
+			$objTemplate = new \BackendTemplate('be_' . $file);
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
+			$objTemplate->type = $type;
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			$objTemplate->language = \Backend::getTinyMceLanguage();
