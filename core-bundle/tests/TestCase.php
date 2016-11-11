@@ -59,7 +59,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getCacheDir()
     {
-        return $this->getRootDir().'/app/cache';
+        return $this->getRootDir().'/var/cache';
     }
 
     /**

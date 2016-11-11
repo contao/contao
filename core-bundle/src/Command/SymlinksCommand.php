@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -20,7 +21,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Symlinks the public resources into the /web directory.
+ * Symlinks the public resources into the web directory.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
@@ -43,6 +44,11 @@ class SymlinksCommand extends AbstractLockedCommand
     private $rootDir;
 
     /**
+     * @var string
+     */
+    private $webDir;
+
+    /**
      * @var int
      */
     private $statusCode = 0;
@@ -54,7 +60,10 @@ class SymlinksCommand extends AbstractLockedCommand
     {
         $this
             ->setName('contao:symlinks')
-            ->setDescription('Symlinks the public resources into the /web directory.')
+            ->setDefinition([
+                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
+            ])
+            ->setDescription('Symlinks the public resources into the web directory.')
         ;
     }
 
@@ -65,6 +74,7 @@ class SymlinksCommand extends AbstractLockedCommand
     {
         $this->io = new SymfonyStyle($input, $output);
         $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
+        $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->generateSymlinks();
 
@@ -77,7 +87,7 @@ class SymlinksCommand extends AbstractLockedCommand
     }
 
     /**
-     * Generates the symlinks in the web/ directory.
+     * Generates the symlinks in the web directory.
      */
     private function generateSymlinks()
     {
@@ -85,18 +95,23 @@ class SymlinksCommand extends AbstractLockedCommand
         $uploadPath = $this->getContainer()->getParameter('contao.upload_path');
 
         // Remove the base folders in the document root
-        $fs->remove($this->rootDir.'/web/'.$uploadPath);
-        $fs->remove($this->rootDir.'/web/system/modules');
-        $fs->remove($this->rootDir.'/web/vendor');
+        $fs->remove($this->rootDir.'/'.$this->webDir.'/'.$uploadPath);
+        $fs->remove($this->rootDir.'/'.$this->webDir.'/system/modules');
+        $fs->remove($this->rootDir.'/'.$this->webDir.'/vendor');
 
         $this->symlinkFiles($uploadPath);
         $this->symlinkModules();
         $this->symlinkThemes();
 
         // Symlink the assets and themes directory
-        $this->symlink('assets', 'web/assets');
-        $this->symlink('system/themes', 'web/system/themes');
-        $this->symlink('var/logs', 'system/logs');
+        $this->symlink('assets', $this->webDir.'/assets');
+        $this->symlink('system/themes', $this->webDir.'/system/themes');
+
+        // Symlinks the logs directory
+        $this->symlink(
+            str_replace($this->rootDir.'/', '', $this->getContainer()->getParameter('kernel.logs_dir')),
+            'system/logs'
+        );
     }
 
     /**
@@ -158,7 +173,7 @@ class SymlinksCommand extends AbstractLockedCommand
 
         foreach ($files as $file) {
             $path = rtrim($prepend.'/'.$file->getRelativePath(), '/');
-            $this->symlink($path, 'web/'.$path);
+            $this->symlink($path, $this->webDir.'/'.$path);
         }
     }
 
@@ -257,7 +272,7 @@ class SymlinksCommand extends AbstractLockedCommand
                         '<fg=yellow;options=bold>%s</>',
                         '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
                     ),
-                    'web/'.$path,
+                    $this->webDir.'/'.$path,
                     sprintf('<comment>Skipped because %s will be symlinked.</comment>', $parent),
                 ];
 

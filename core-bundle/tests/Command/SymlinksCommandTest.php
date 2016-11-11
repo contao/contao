@@ -55,6 +55,7 @@ class SymlinksCommandTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
+        $container->setParameter('kernel.logs_dir', $this->getRootDir().'/var/logs');
         $container->setParameter('contao.upload_path', 'app');
 
         $container->set(

@@ -2,6 +2,7 @@
 
 ### 4.3.0 (2016-11-XX)
 
+ * Do not hardcode paths in the contao:install and contao:symlinks commands.
  * Store absolute paths in the template loader cache (see #607).
 
 ### 4.3.0-RC1 (2016-10-31)
