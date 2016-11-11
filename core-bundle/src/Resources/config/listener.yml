@@ -122,6 +122,7 @@ services:
         arguments:
             - "@session"
             - "@security.token_storage"
+            - "@security.authentication.trust_resolver"
         calls:
             - ["setContainer", ["@service_container"]]
         tags:
@@ -142,6 +143,7 @@ services:
             - "@session"
             - "@database_connection"
             - "@security.token_storage"
+            - "@security.authentication.trust_resolver"
         calls:
             - ["setContainer", ["@service_container"]]
         tags:
