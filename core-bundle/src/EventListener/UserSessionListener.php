@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -48,17 +48,28 @@ class UserSessionListener
     protected $tokenStorage;
 
     /**
+     * @var AuthenticationTrustResolverInterface
+     */
+    private $authenticationTrustResolver;
+
+    /**
      * Constructor.
      *
-     * @param SessionInterface      $session
-     * @param Connection            $connection
-     * @param TokenStorageInterface $tokenStorage
+     * @param SessionInterface                     $session
+     * @param Connection                           $connection
+     * @param TokenStorageInterface                $tokenStorage
+     * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
      */
-    public function __construct(SessionInterface $session, Connection $connection, TokenStorageInterface $tokenStorage)
-    {
+    public function __construct(
+        SessionInterface $session,
+        Connection $connection,
+        TokenStorageInterface $tokenStorage,
+        AuthenticationTrustResolverInterface $authenticationTrustResolver
+    ) {
         $this->session = $session;
         $this->connection = $connection;
         $this->tokenStorage = $tokenStorage;
+        $this->authenticationTrustResolver = $authenticationTrustResolver;
     }
 
     /**
@@ -74,7 +85,7 @@ class UserSessionListener
 
         $token = $this->tokenStorage->getToken();
 
-        if (null === $token || $token instanceof AnonymousToken) {
+        if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
             return;
         }
 
@@ -104,7 +115,7 @@ class UserSessionListener
 
         $token = $this->tokenStorage->getToken();
 
-        if (null === $token || $token instanceof AnonymousToken) {
+        if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
             return;
         }
 
