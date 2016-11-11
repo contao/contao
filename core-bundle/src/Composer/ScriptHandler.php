@@ -81,11 +81,12 @@ class ScriptHandler
 
         $process = new Process(
             sprintf(
-                '%s %s/console%s %s%s',
+                '%s %s/console %s %s%s%s',
                 $phpPath,
                 self::getBinDir($event),
-                $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
+                self::getWebDir($event),
+                $event->getIO()->isDecorated() ? ' --ansi' : '',
                 self::getVerbosityFlag($event)
             )
         );
@@ -99,6 +100,39 @@ class ScriptHandler
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command.', $cmd));
         }
+    }
+
+    /**
+     * Returns the bin directory.
+     *
+     * @param Event $event
+     *
+     * @return string
+     */
+    private static function getBinDir(Event $event)
+    {
+        $extra = $event->getComposer()->getPackage()->getExtra();
+
+        // Symfony assumes the new directory structure if symfony-var-dir is set
+        if (isset($extra['symfony-var-dir']) && is_dir($extra['symfony-var-dir'])) {
+            return isset($extra['symfony-bin-dir']) ? $extra['symfony-bin-dir'] : 'bin';
+        }
+
+        return isset($extra['symfony-app-dir']) ? $extra['symfony-app-dir'] : 'app';
+    }
+
+    /**
+     * Returns the web directory.
+     *
+     * @param Event $event
+     *
+     * @return string
+     */
+    private static function getWebDir(Event $event)
+    {
+        $extra = $event->getComposer()->getPackage()->getExtra();
+
+        return isset($extra['symfony-web-dir']) ? $extra['symfony-web-dir'] : 'web';
     }
 
     /**
@@ -125,25 +159,6 @@ class ScriptHandler
             default:
                 return '';
         }
-    }
-
-    /**
-     * Returns the bin directory.
-     *
-     * @param Event $event
-     *
-     * @return string
-     */
-    private static function getBinDir(Event $event)
-    {
-        $extra = $event->getComposer()->getPackage()->getExtra();
-
-        // Symfony assumes the new directory structure if symfony-var-dir is set
-        if (isset($extra['symfony-var-dir']) && is_dir($extra['symfony-var-dir'])) {
-            return isset($extra['symfony-bin-dir']) ? $extra['symfony-bin-dir'] : 'bin';
-        }
-
-        return isset($extra['symfony-app-dir']) ? $extra['symfony-app-dir'] : 'app';
     }
 
     /**
