@@ -81,8 +81,9 @@ class ScriptHandler
 
         $process = new Process(
             sprintf(
-                '%s bin/console%s %s%s',
+                '%s %s/console%s %s%s',
                 $phpPath,
+                self::getBinDir($event),
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
                 self::getVerbosityFlag($event)
@@ -124,6 +125,25 @@ class ScriptHandler
             default:
                 return '';
         }
+    }
+
+    /**
+     * Returns the bin directory.
+     *
+     * @param Event $event
+     *
+     * @return string
+     */
+    private static function getBinDir(Event $event)
+    {
+        $extra = $event->getComposer()->getPackage()->getExtra();
+
+        // Symfony assumes the new directory structure if symfony-var-dir is set
+        if (isset($extra['symfony-var-dir']) && is_dir($extra['symfony-var-dir'])) {
+            return isset($extra['symfony-bin-dir']) ? $extra['symfony-bin-dir'] : 'bin';
+        }
+
+        return isset($extra['symfony-app-dir']) ? $extra['symfony-app-dir'] : 'app';
     }
 
     /**
