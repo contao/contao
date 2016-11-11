@@ -14,7 +14,7 @@ use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -38,15 +38,22 @@ class StoreRefererListener
     protected $tokenStorage;
 
     /**
+     * @var AuthenticationTrustResolverInterface
+     */
+    private $authenticationTrustResolver;
+
+    /**
      * Constructor.
      *
-     * @param SessionInterface      $session
-     * @param TokenStorageInterface $tokenStorage
+     * @param SessionInterface                     $session
+     * @param TokenStorageInterface                $tokenStorage
+     * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
      */
-    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage)
+    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver)
     {
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
+        $this->authenticationTrustResolver = $authenticationTrustResolver;
     }
 
     /**
@@ -62,7 +69,7 @@ class StoreRefererListener
 
         $token = $this->tokenStorage->getToken();
 
-        if (null === $token || $token instanceof AnonymousToken) {
+        if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
             return;
         }
 
