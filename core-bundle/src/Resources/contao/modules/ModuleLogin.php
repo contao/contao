@@ -178,14 +178,16 @@ class ModuleLogin extends \Module
 			return;
 		}
 
-		$blnHasError = false;
+		// Check the flash bag for login errors
+		$flashBag = \System::getContainer()->get('session')->getFlashBag();
+		$key = 'contao.' . TL_MODE . '.error';
 
-		if (isset($_SESSION['MESSAGES'][TL_MODE]['TL_ERROR']))
+		if ($flashBag->has($key))
 		{
-			$blnHasError = true;
-			$_SESSION['LOGIN_ERROR'] = $_SESSION['MESSAGES'][TL_MODE]['TL_ERROR'][0];
-			unset($_SESSION['MESSAGES'][TL_MODE]['TL_ERROR']);
+			$_SESSION['LOGIN_ERROR'] = $flashBag->get($key)[0];
 		}
+
+		$blnHasError = false;
 
 		if (isset($_SESSION['LOGIN_ERROR']))
 		{
