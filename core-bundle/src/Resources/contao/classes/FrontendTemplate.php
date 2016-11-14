@@ -130,9 +130,6 @@ class FrontendTemplate extends \Template
 			}
 		}
 
-		// Unset only after the output has been cached (see #7824)
-		unset($_SESSION['LOGIN_ERROR']);
-
 		// Replace insert tags
 		$this->strBuffer = $this->replaceInsertTags($this->strBuffer);
 		$this->strBuffer = $this->replaceDynamicScriptTags($this->strBuffer); // see #4203
