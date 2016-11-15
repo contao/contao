@@ -61,7 +61,9 @@
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
     },
     "conflict": {
-        "contao/core": "*"
+        "contao/core": "*",
+        "doctrine/orm": "<2.4",
+        "doctrine/doctrine-migrations-bundle": "<1.1"
     },
     "autoload": {
         "psr-4": {
