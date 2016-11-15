@@ -228,7 +228,7 @@ class DcaSchemaProvider
         }
 
         $columns = [];
-        $options = [];
+        $flags = [];
 
         foreach (explode(',', $matches[3]) as $column) {
             preg_match('/`([^`]+)`(\((\d+)\))?/', $column, $cm);
@@ -243,9 +243,13 @@ class DcaSchemaProvider
         }
 
         if (false !== strpos($matches[1], 'unique')) {
-            $table->addUniqueIndex($columns, $matches[2], $options);
+            $table->addUniqueIndex($columns, $matches[2]);
         } else {
-            $table->addIndex($columns, $matches[2], [], $options);
+            if (false !== strpos($matches[1], 'fulltext')) {
+                $flags[] = 'fulltext';
+            }
+
+            $table->addIndex($columns, $matches[2], $flags);
         }
     }
 
