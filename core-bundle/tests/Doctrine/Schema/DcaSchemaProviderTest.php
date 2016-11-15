@@ -317,6 +317,9 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertEquals(['path(333)'], $table->getIndex('path')->getColumns());
     }
 
+    /**
+     * Tests adding a fulltext index.
+     */
     public function testFulltextIndex()
     {
         $provider = $this->getProvider(
