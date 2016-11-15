@@ -77,14 +77,14 @@ class JsonParser implements ParserInterface
         foreach ($bundles as $options) {
             // Only one value given, must be class name
             if (!is_array($options)) {
-                $options = ['name' => $options];
+                $options = ['bundle' => $options];
             }
 
-            if (!isset($options['name'])) {
-                throw new \RuntimeException(sprintf('Missing name for bundle config (%s)', json_encode($options)));
+            if (!isset($options['bundle'])) {
+                throw new \RuntimeException(sprintf('Missing class name for bundle config (%s)', json_encode($options)));
             }
 
-            $config = new BundleConfig($options['name']);
+            $config = new BundleConfig($options['bundle']);
 
             if (isset($options['replace'])) {
                 $config->setReplace($options['replace']);
