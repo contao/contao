@@ -44,16 +44,7 @@ class PurgeData extends \Backend implements \executable
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_purge_data');
 		$objTemplate->isActive = $this->isActive();
-
-		// Confirmation message
-		if ($_SESSION['CLEAR_CACHE_CONFIRM'] != '')
-		{
-			$objTemplate->message = sprintf('<p class="tl_confirm">%s</p>' . "\n", $_SESSION['CLEAR_CACHE_CONFIRM']);
-			$_SESSION['CLEAR_CACHE_CONFIRM'] = '';
-		}
-
-		// Add potential error messages
-		$objTemplate->message .= \Message::generateUnwrapped();
+		$objTemplate->message = \Message::generateUnwrapped();
 
 		// Run the jobs
 		if (\Input::post('FORM_SUBMIT') == 'tl_purge')
@@ -73,7 +64,7 @@ class PurgeData extends \Backend implements \executable
 				}
 			}
 
-			$_SESSION['CLEAR_CACHE_CONFIRM'] = $GLOBALS['TL_LANG']['tl_maintenance']['cacheCleared'];
+			\Message::addConfirmation($GLOBALS['TL_LANG']['tl_maintenance']['cacheCleared']);
 			$this->reload();
 		}
 
