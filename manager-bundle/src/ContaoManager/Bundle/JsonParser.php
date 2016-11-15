@@ -84,6 +84,10 @@ class JsonParser implements ParserInterface
                 throw new \RuntimeException(sprintf('Missing class name for bundle config (%s)', json_encode($options)));
             }
 
+            if ($options['optional'] && !class_exists($options['bundle'])) {
+                continue;
+            }
+
             $config = new BundleConfig($options['bundle']);
 
             if (isset($options['replace'])) {
