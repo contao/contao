@@ -317,6 +317,39 @@ class DcaSchemaProviderTest extends TestCase
         $this->assertEquals(['path(333)'], $table->getIndex('path')->getColumns());
     }
 
+    public function testFulltextIndex()
+    {
+        $provider = $this->getProvider(
+            [
+                'tl_search' => [
+                    'TABLE_FIELDS' => [
+                        'text' => "`text` mediumtext NULL",
+                    ],
+                    'TABLE_CREATE_DEFINITIONS' => [
+                        'text' => 'FULLTEXT KEY `text` (`text`)',
+                    ],
+                ],
+            ]
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertCount(1, $schema->getTableNames());
+        $this->assertTrue($schema->hasTable('tl_search'));
+
+        $table = $schema->getTable('tl_search');
+
+        $this->assertTrue($table->hasColumn('text'));
+        $this->assertEquals('text', $table->getColumn('text')->getType()->getName());
+        $this->assertEquals(false, $table->getColumn('text')->getNotnull());
+        $this->assertEquals(false, $table->getColumn('text')->getFixed());
+        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('text')->getLength());
+
+        $this->assertTrue($table->hasIndex('text'));
+        $this->assertFalse($table->getIndex('text')->isUnique());
+        $this->assertEquals(['fulltext'], $table->getIndex('text')->getFlags());
+    }
+
     /**
      * Returns a DCA schema provider.
      *
