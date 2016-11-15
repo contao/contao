@@ -41,7 +41,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     public function prependConfig(array $configs, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/contao-manager'));
 
         $loader->load('framework.yml');
         $loader->load('twig.yml');
