@@ -8,7 +8,9 @@ $GLOBALS['TL_CSS'][] = 'assets/mediaelement/css/mediaelementplayer.min.css|stati
 <script src="<?= TL_ASSETS_URL ?>assets/mediaelement/js/mediaelement-and-player.min.js"></script>
 <script>
   jQuery(function($) {
-    $('video,audio').mediaelementplayer({
+    $('video,audio').filter(function() {
+        return $(this).parents('picture').length === 0;
+    }).mediaelementplayer({
       // Put custom options here
       pluginPath: '<?= Environment::get('path') ?>/assets/mediaelement/',
       flashName: 'legacy/flashmediaelement.swf',
