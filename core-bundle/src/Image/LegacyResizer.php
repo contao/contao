@@ -121,7 +121,7 @@ class LegacyResizer extends ImageResizer
 
         if ($image->getImagine() instanceof GdImagine) {
             /** @var Config $config */
-            $config = $this->framework->getAdapter('Contao\Config');
+            $config = $this->framework->getAdapter(Config::class);
             $dimensions = $image->getDimensions();
 
             // Return the path to the original image if it cannot be handled
