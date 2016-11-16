@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\Image\ImageDimensions;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -248,11 +249,12 @@ class File extends \System
 					{
 						try
 						{
-							$dimensions = System::getContainer()
-								->get('contao.image.image_factory')
-								->create(TL_ROOT . '/' . $this->strFile)
-								->getDimensions()
-							;
+							$dimensions = new ImageDimensions(
+								System::getContainer()
+									->get('contao.image.imagine_svg')
+									->open(TL_ROOT . '/' . $this->strFile)
+									->getSize()
+							);
 
 							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
 							{
@@ -304,11 +306,12 @@ class File extends \System
 					{
 						try
 						{
-							$dimensions = System::getContainer()
-								->get('contao.image.image_factory')
-								->create(TL_ROOT . '/' . $this->strFile)
-								->getDimensions()
-							;
+							$dimensions = new ImageDimensions(
+								System::getContainer()
+									->get('contao.image.imagine_svg')
+									->open(TL_ROOT . '/' . $this->strFile)
+									->getSize()
+							);
 
 							$this->arrImageViewSize = array
 							(
