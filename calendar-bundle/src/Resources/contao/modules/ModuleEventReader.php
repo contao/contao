@@ -240,7 +240,10 @@ class ModuleEventReader extends \Events
 				return $strDetails;
 			};
 
-			$objTemplate->hasDetails = (\ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0);
+			$objTemplate->hasDetails = function () use ($id)
+			{
+				return \ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
+			};
 		}
 
 		$objTemplate->addImage = false;
