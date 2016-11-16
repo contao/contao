@@ -39,7 +39,5 @@
             "dev-release/4.3.0": "4.3.x-dev",
             "dev-develop": "4.4.x-dev"
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
