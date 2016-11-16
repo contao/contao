@@ -87,7 +87,7 @@ class InsertTagsListener
         $this->framework->initialize();
 
         /** @var NewsFeedModel $adapter */
-        $adapter = $this->framework->getAdapter('Contao\NewsFeedModel');
+        $adapter = $this->framework->getAdapter(NewsFeedModel::class);
 
         if (null === ($feed = $adapter->findByPk($feedId))) {
             return '';
@@ -109,7 +109,7 @@ class InsertTagsListener
         $this->framework->initialize();
 
         /** @var NewsModel $adapter */
-        $adapter = $this->framework->getAdapter('Contao\NewsModel');
+        $adapter = $this->framework->getAdapter(NewsModel::class);
 
         if (null === ($news = $adapter->findByIdOrAlias($idOrAlias))) {
             return '';
@@ -195,7 +195,7 @@ class InsertTagsListener
         }
 
         /** @var Config $config */
-        $config = $this->framework->getAdapter('Contao\Config');
+        $config = $this->framework->getAdapter(Config::class);
 
         return $targetPage->getFrontendUrl(
             ($config->get('useAutoItem') ? '/' : '/items/').($news->alias ?: $news->id)
