@@ -19,6 +19,11 @@ namespace Contao\ManagerBundle\ContaoManager\Bundle;
 class IniParser implements ParserInterface
 {
     /**
+     * @var array
+     */
+    private $loaded = [];
+
+    /**
      * @var string
      */
     private $modulesDir;
@@ -42,6 +47,8 @@ class IniParser implements ParserInterface
         $config = new ModuleConfig($resource);
         $configs[] = $config;
 
+        $this->loaded[$resource] = true;
+
         $path = $this->modulesDir . '/' . $resource . '/config/autoload.ini';
 
         if (file_exists($path)) {
@@ -59,7 +66,9 @@ class IniParser implements ParserInterface
                         }
                     }
 
-                    $configs = array_merge($configs, $this->parse($module));
+                    if (!isset($this->loaded[$module])) {
+                        $configs = array_merge($configs, $this->parse($module));
+                    }
                 }
 
                 unset($module);
