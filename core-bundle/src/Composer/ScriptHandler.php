@@ -71,7 +71,7 @@ class ScriptHandler
      *
      * @throws \RuntimeException
      */
-    protected static function executeCommand($cmd, Event $event)
+    private static function executeCommand($cmd, Event $event)
     {
         $phpFinder = new PhpExecutableFinder();
 
