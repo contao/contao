@@ -55,8 +55,8 @@ class ParameterDumper
     /**
      * Constructor.
      *
-     * @param string     $rootDir
-     * @param Filesystem $filesystem
+     * @param string          $rootDir
+     * @param Filesystem|null $filesystem
      */
     public function __construct($rootDir, Filesystem $filesystem = null)
     {
