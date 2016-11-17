@@ -1,0 +1,13 @@
+[
+    {
+        "bundle": "Contao\\CoreBundle\\ContaoCoreBundle"
+    },
+    {
+        "bundle": "Foo\\BarBundle\\FooBarBundle",
+        "development": true
+    },
+    {
+        "bundle": "Bar\\FooBundle\\BarFooBundle",
+        "development": false
+    }
+]

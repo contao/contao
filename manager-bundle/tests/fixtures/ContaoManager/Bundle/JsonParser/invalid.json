@@ -1,0 +1,4 @@
+[
+    {
+        "class": "Contao\\CoreBundle\\ContaoCoreBundle",
+        "I am invalid JSON

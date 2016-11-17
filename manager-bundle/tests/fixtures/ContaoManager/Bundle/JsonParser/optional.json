@@ -1,0 +1,12 @@
+[
+    "Contao\\ManagerBundle\\ContaoManagerBundle",
+    {
+        "bundle": "Contao\\CoreBundle\\ContaoCoreBundle",
+        "replace": ["core"],
+        "load-after" :["Foo\\BarBundle\\FooBarBundle"]
+    },
+    {
+        "bundle": "Foo\\BarBundle\\FooBarBundle",
+        "optional": true
+    }
+]

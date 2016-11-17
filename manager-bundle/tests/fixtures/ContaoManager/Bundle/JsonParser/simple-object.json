@@ -1,0 +1,7 @@
+[
+    {
+        "bundle": "Contao\\CoreBundle\\ContaoCoreBundle",
+        "replace": [],
+        "load-after" :[]
+    }
+]
