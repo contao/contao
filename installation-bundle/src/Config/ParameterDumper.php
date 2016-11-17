@@ -34,23 +34,7 @@ class ParameterDumper
     /**
      * @var array
      */
-    private $parameters = [
-        'parameters' => [
-            'database_host' => 'localhost',
-            'database_port' => 3306,
-            'database_user' => null,
-            'database_password' => null,
-            'database_name' => null,
-            'mailer_transport' => 'mail',
-            'mailer_host' => '127.0.0.1',
-            'mailer_user' => null,
-            'mailer_password' => null,
-            'mailer_port' => 25,
-            'mailer_encryption' => null,
-            'prepend_locale' => false,
-            'secret' => 'ThisTokenIsNotSoSecretChangeIt',
-        ],
-    ];
+    private $parameters = ['parameters' => []];
 
     /**
      * Constructor.
