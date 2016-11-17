@@ -13,9 +13,9 @@
           <input type="hidden" name="FORM_SUBMIT" value="tl_database_login">
           <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
           <h4><label for="dbHost">{{ 'database_host'|trans }}</label></h4>
-          <input type="text" name="dbHost" id="dbHost" class="tl_text" value="{{ parameters.database_host }}">
+          <input type="text" name="dbHost" id="dbHost" class="tl_text" value="{{ parameters.database_host|default('localhost') }}">
           <h4><label for="dbPort">{{ 'database_port'|trans }}</label></h4>
-          <input type="text" name="dbPort" id="dbPort" class="tl_text" value="{{ parameters.database_port }}">
+          <input type="text" name="dbPort" id="dbPort" class="tl_text" value="{{ parameters.database_port|default(3306) }}">
           <h4><label for="dbUser">{{ 'database_user'|trans }}</label></h4>
           <input type="text" name="dbUser" id="dbUser" class="tl_text" value="{{ parameters.database_user }}">
           <h4><label for="dbPassword">{{ 'database_password'|trans }}</label></h4>
