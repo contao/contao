@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-use Contao\InstallationBundle\HttpKernel\ManagedInstallationKernel;
+use Contao\InstallationBundle\HttpKernel\InstallationKernel;
 use Symfony\Component\HttpFoundation\Request;
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED);
@@ -18,7 +18,9 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED);
  */
 $loader = require __DIR__.'/{vendor-dir}/autoload.php';
 
-$kernel = new ManagedInstallationKernel('dev', false);
+class AppKernel extends \Contao\ManagerBundle\HttpKernel\ContaoKernel {}
+
+$kernel = new InstallationKernel('dev', false);
 $kernel->setRootDir(__DIR__ . '/{root-dir}');
 $kernel->loadPlugins(__DIR__ . '/{vendor-dir}/composer/installed.json');
 $kernel->loadClassCache();
