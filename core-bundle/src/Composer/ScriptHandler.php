@@ -79,15 +79,10 @@ class ScriptHandler
             throw new \RuntimeException('The php executable could not be found.');
         }
 
-        if (false === file_exists($consolePath = static::getConsoleScript($event))) {
-            throw new \RuntimeException('The Symfony console could not be found.');
-        }
-
         $process = new Process(
             sprintf(
-                '%s %s%s %s%s',
+                '%s bin/console%s %s%s',
                 $phpPath,
-                $consolePath,
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
                 self::getVerbosityFlag($event)
@@ -129,18 +124,6 @@ class ScriptHandler
             default:
                 return '';
         }
-    }
-
-    /**
-     * Allows the console script to be overridden in child classes.
-     *
-     * @param Event $event
-     *
-     * @return string
-     */
-    protected static function getConsoleScript(Event $event)
-    {
-        return 'bin/console';
     }
 
     /**
