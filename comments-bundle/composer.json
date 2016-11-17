@@ -38,9 +38,9 @@
         "preferred-install": "dist"
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
         "branch-alias": {
             "dev-develop": "4.3.x-dev"
-        }
+        },
+        "contao-manager-plugin": "Contao\\CommentsBundle\\ContaoManager\\Plugin"
     }
 }
