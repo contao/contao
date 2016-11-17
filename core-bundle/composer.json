@@ -48,6 +48,7 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "~1.0",
+        "contao/manager-bundle": "~1.0",
         "doctrine/orm": "~2.5",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "friendsofphp/php-cs-fixer": "~1.8",
@@ -55,8 +56,7 @@
         "monolog/monolog": "~1.11",
         "phpunit/phpunit": "~4.5",
         "satooshi/php-coveralls": "~0.6",
-        "symfony/phpunit-bridge": "~2.8|~3.0",
-        "contao/manager-bundle": "~1.0"
+        "symfony/phpunit-bridge": "~2.8|~3.0"
     },
     "suggest": {
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
@@ -90,11 +90,10 @@
         "preferred-install": "dist"
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin",
         "branch-alias": {
             "dev-release/4.3.0": "4.3.x-dev",
-            "dev-manager-bundle": "4.3.x-dev",
             "dev-develop": "4.4.x-dev"
-        }
+        },
+        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     }
 }
