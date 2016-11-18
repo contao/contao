@@ -14,6 +14,9 @@
         "symfony/framework-bundle": "~2.8|~3.0",
         "contao/core-bundle": "^4.2.1"
     },
+    "require-dev": {
+        "contao/manager-bundle": "~1.0@dev"
+    },
     "conflict": {
         "contao/core": "*"
     },
@@ -36,7 +39,9 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-develop": "4.3.x-dev"
-        }
+            "dev-release/4.3.0": "4.3.x-dev",
+            "dev-develop": "4.4.x-dev"
+        },
+        "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
     }
 }
