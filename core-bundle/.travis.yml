@@ -11,6 +11,7 @@ sudo: false
 
 env:
   global:
+    - COMPOSER_ALLOW_XDEBUG=0
     - SYMFONY_DEPRECATIONS_HELPER='weak'
 
 matrix:
@@ -18,24 +19,24 @@ matrix:
     - php: 5.5
     - php: 5.6
     - php: 7.0
-      env: COVERAGE='--coverage-clover build/logs/clover.xml'
     - php: 7.0
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
+    - php: 7.0
+      env: TESTSUITE='--testsuite latest' COVERAGE='--coverage-clover build/logs/clover.xml'
     - php: 7.1
+  allow_failures:
+    - php: 7.1 # TODO: remove when PHP 7.1 stable is released
   fast_finish: true
 
 before_install:
-  - if [[ "$(php -m | grep xdebug)" != "" ]]; then xdebug=1; fi
-  - if [[ $xdebug ]]; then cp $HOME/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini /tmp; fi
-  - if [[ $xdebug ]]; then phpenv config-rm xdebug.ini; fi
+  - composer selfupdate --snapshot # TODO: remove when Composer 1.3 stable is released
 
 before_script:
   - travis_wait composer update $COMPOSER_FLAGS --no-interaction
-  - if [[ $COVERAGE && $xdebug ]]; then phpenv config-add /tmp/xdebug.ini; fi
 
 script:
   - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi
-  - php vendor/bin/phpunit $COVERAGE
+  - php vendor/bin/phpunit $TESTSUITE $COVERAGE
 
 after_script:
   - if [[ $COVERAGE ]]; then php vendor/bin/coveralls; fi
