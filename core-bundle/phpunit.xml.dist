@@ -14,6 +14,7 @@
     <testsuites>
         <testsuite name="latest">
             <directory>./tests</directory>
+            <file>./tests/ContaoCoreBundleTest.php</file>
             <exclude>./tests/Contao</exclude>
             <exclude>./tests/Fixtures</exclude>
         </testsuite>
@@ -27,6 +28,9 @@
             <directory>./src</directory>
             <exclude>
                 <directory>./src/Resources</directory>
+                <!-- exclude files with symbols and side-effects -->
+                <file>./src/EventListener/UserAwareTrait.php</file>
+                <file>./src/Exception/ServiceUnavailableException.php</file>
             </exclude>
         </whitelist>
     </filter>
