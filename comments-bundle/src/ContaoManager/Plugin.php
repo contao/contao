@@ -22,7 +22,7 @@ use Contao\ManagerBundle\ContaoManager\Bundle\ParserInterface;
 class Plugin implements BundlePluginInterface
 {
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getBundles(ParserInterface $parser)
     {
