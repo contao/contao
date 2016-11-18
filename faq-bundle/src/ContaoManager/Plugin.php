@@ -22,14 +22,14 @@ use Contao\ManagerBundle\ContaoManager\Bundle\ParserInterface;
 class Plugin implements BundlePluginInterface
 {
     /**
-     * @inheritdoc
+     * @{inheritdoc}
      */
     public function getBundles(ParserInterface $parser)
     {
         return [
             BundleConfig::create('Contao\FaqBundle\ContaoFaqBundle')
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle'])
-                ->setReplace(['faq'])
+                ->setReplace(['faq']),
         ];
     }
 }
