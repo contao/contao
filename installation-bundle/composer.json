@@ -18,7 +18,7 @@
         "sensiolabs/ansi-to-html": "~1.1"
     },
     "require-dev": {
-        "contao/manager-bundle": "~1.0",
+        "contao/manager-bundle": "~1.0@dev",
         "friendsofphp/php-cs-fixer": "~1.8"
     },
     "conflict": {
