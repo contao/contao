@@ -15,7 +15,7 @@
         "contao/core-bundle": "^4.2.1"
     },
     "require-dev": {
-        "contao/manager-bundle": "~1.0"
+        "contao/manager-bundle": "~1.0@dev"
     },
     "conflict": {
         "contao/core": "*"
