@@ -15,14 +15,14 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Plugin for Contao Manager
+ * Plugin for the Contao Manager.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
 class Plugin implements RoutingPluginInterface
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
