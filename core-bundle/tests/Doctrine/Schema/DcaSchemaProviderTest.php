@@ -326,7 +326,7 @@ class DcaSchemaProviderTest extends TestCase
             [
                 'tl_search' => [
                     'TABLE_FIELDS' => [
-                        'text' => "`text` mediumtext NULL",
+                        'text' => '`text` mediumtext NULL',
                     ],
                     'TABLE_CREATE_DEFINITIONS' => [
                         'text' => 'FULLTEXT KEY `text` (`text`)',
