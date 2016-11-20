@@ -24,17 +24,6 @@ use Contao\Image\PictureInterface;
 interface PictureFactoryInterface
 {
     /**
-     * Constructor.
-     *
-     * @param PictureGeneratorInterface $pictureGenerator
-     * @param ImageFactoryInterface     $imageFactory
-     * @param ContaoFrameworkInterface  $framework
-     * @param bool                      $bypassCache
-     * @param array                     $imagineOptions
-     */
-    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions);
-
-    /**
      * Sets the default densities for generating pictures.
      *
      * @param string $densities

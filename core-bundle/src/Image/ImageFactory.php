@@ -73,7 +73,16 @@ class ImageFactory implements ImageFactoryInterface
     private $validExtensions;
 
     /**
-     * {@inheritdoc}
+     * Constructor.
+     *
+     * @param ResizerInterface         $resizer
+     * @param ImagineInterface         $imagine
+     * @param ImagineInterface         $imagineSvg
+     * @param Filesystem               $filesystem
+     * @param ContaoFrameworkInterface $framework
+     * @param bool                     $bypassCache
+     * @param array                    $imagineOptions
+     * @param array                    $validExtensions
      */
     public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions, array $validExtensions)
     {
