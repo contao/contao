@@ -10,10 +10,8 @@
 
 namespace Contao\CoreBundle\Image;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfigurationInterface;
-use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 
 /**
