@@ -10,13 +10,9 @@
 
 namespace Contao\CoreBundle\Image;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeConfigurationInterface;
-use Contao\Image\ResizerInterface;
-use Imagine\Image\ImagineInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Image factory interface.
