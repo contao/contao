@@ -365,7 +365,7 @@ class FrontendTemplate extends \Template
 
 		// Do not cache the response if a user is logged in or the page is protected or uses a mobile layout
 		// TODO: Add support for proxies so they can vary on member context and page layout
-		if (FE_USER_LOGGED_IN === true || BE_USER_LOGGED_IN === true || $objPage->isMobile || $objPage->protected)
+		if (FE_USER_LOGGED_IN === true || BE_USER_LOGGED_IN === true || $objPage->isMobile || $objPage->protected || $this->hasAuthenticatedBackendUser())
 		{
 			return $response->setPrivate();
 		}

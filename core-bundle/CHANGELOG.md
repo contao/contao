@@ -2,6 +2,7 @@
 
 ### 4.3.0 (2016-11-XX)
 
+ * Do not cache pages if a back end user is logged in (see #628).
  * Correctly show error messages in the login module (see #610).
  * Do not hardcode paths in the contao:install and contao:symlinks commands.
  * Store absolute paths in the template loader cache (see #607).
