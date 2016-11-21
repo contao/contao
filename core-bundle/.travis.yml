@@ -12,7 +12,8 @@ sudo: false
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
-    - SYMFONY_DEPRECATIONS_HELPER='weak'
+    - COMPOSER_ROOT_VERSION=${TRAVIS_TAG:-dev-$TRAVIS_BRANCH}
+    - SYMFONY_DEPRECATIONS_HELPER=weak
 
 matrix:
   include:
