@@ -78,6 +78,9 @@
             "src/Resources/contao/languages",
             "src/Resources/contao/templates",
             "src/Resources/contao/themes"
+        ],
+        "files": [
+            "src/Resources/functions/utf8_bootup.php"
         ]
     },
     "autoload-dev": {
