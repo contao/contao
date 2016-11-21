@@ -354,6 +354,52 @@ class DcaSchemaProviderTest extends TestCase
     }
 
     /**
+     * Tests parsing an invalid primary key.
+     *
+     * @expectedException \RuntimeException
+     */
+    public function testInvalidPrimaryKey()
+    {
+        $provider = $this->getProvider(
+            [
+                'tl_member' => [
+                    'TABLE_FIELDS' => [
+                        'id' => "`id` int(10) NOT NULL default '0'",
+                    ],
+                    'TABLE_CREATE_DEFINITIONS' => [
+                        'PRIMARY' => 'PRIMARY KEY (id)',
+                    ],
+                ],
+            ]
+        );
+
+        $provider->createSchema();
+    }
+
+    /**
+     * Tests parsing an invalid key.
+     *
+     * @expectedException \RuntimeException
+     */
+    public function testInvalidKey()
+    {
+        $provider = $this->getProvider(
+            [
+                'tl_files' => [
+                    'TABLE_FIELDS' => [
+                        'path' => "`path` varchar(1022) NOT NULL default ''",
+                    ],
+                    'TABLE_CREATE_DEFINITIONS' => [
+                        'path' => 'KEY path (path)',
+                    ],
+                ],
+            ]
+        );
+
+        $provider->createSchema();
+    }
+
+    /**
      * Returns a DCA schema provider.
      *
      * @param array $dca

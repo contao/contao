@@ -165,6 +165,93 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the getBinDir() method.
+     *
+     * @param array  $extra
+     * @param string $expected
+     *
+     * @dataProvider binDirProvider
+     */
+    public function testGetBinDir(array $extra, $expected)
+    {
+        $reflection = new \ReflectionClass('Contao\CoreBundle\Composer\ScriptHandler');
+        $method = $reflection->getMethod('getBinDir');
+        $method->setAccessible(true);
+
+        $event = $this->getComposerEvent($extra);
+
+        $this->assertEquals($expected, $method->invokeArgs($reflection, [$event]));
+    }
+
+    /**
+     * Provides the bin dir data.
+     *
+     * @return array
+     */
+    public function binDirProvider()
+    {
+        return [
+            [
+                [],
+                'app',
+            ],
+            [
+                ['symfony-app-dir' => 'foo/bar'],
+                'foo/bar',
+            ],
+            [
+                ['symfony-var-dir' => __DIR__],
+                'bin',
+            ],
+            [
+                [
+                    'symfony-var-dir' => __DIR__,
+                    'symfony-bin-dir' => 'app',
+                ],
+                'app',
+            ],
+        ];
+    }
+
+    /**
+     * Tests the getWebDir() method.
+     *
+     * @param array  $extra
+     * @param string $expected
+     *
+     * @dataProvider webDirProvider
+     */
+    public function testGetWebDir(array $extra, $expected)
+    {
+        $reflection = new \ReflectionClass('Contao\CoreBundle\Composer\ScriptHandler');
+        $method = $reflection->getMethod('getWebDir');
+        $method->setAccessible(true);
+
+        $event = $this->getComposerEvent($extra);
+
+        $this->assertEquals($expected, $method->invokeArgs($reflection, [$event]));
+    }
+
+    /**
+     * Provides the web dir data.
+     *
+     * @return array
+     */
+    public function webDirProvider()
+    {
+        return [
+            [
+                [],
+                'web',
+            ],
+            [
+                ['symfony-web-dir' => 'foo/bar'],
+                'foo/bar',
+            ],
+        ];
+    }
+
+    /**
      * Asserts that the random secret environment variable is not set.
      */
     private function assertRandomSecretDoesNotExist()

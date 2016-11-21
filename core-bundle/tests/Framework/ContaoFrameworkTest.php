@@ -496,17 +496,11 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testCreateInstance()
     {
-        $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass';
+        $reflection = new \ReflectionClass('Contao\CoreBundle\Framework\ContaoFramework');
+        $framework = $reflection->newInstanceWithoutConstructor();
 
-        $instance = $this
-            ->mockContaoFramework(
-                null,
-                null,
-                [],
-                [$class => new $class(1, 2)]
-            )
-            ->createInstance($class, [1, 2])
-        ;
+        $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass';
+        $instance = $framework->createInstance($class, [1, 2]);
 
         $this->assertInstanceOf($class, $instance);
         $this->assertEquals([1, 2], $instance->constructorArgs);
@@ -517,17 +511,11 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testCreateInstanceSingelton()
     {
-        $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacySingletonClass';
+        $reflection = new \ReflectionClass('Contao\CoreBundle\Framework\ContaoFramework');
+        $framework = $reflection->newInstanceWithoutConstructor();
 
-        $instance = $this
-            ->mockContaoFramework(
-                null,
-                null,
-                [],
-                [$class => $class::getInstance(1, 2)]
-            )
-            ->createInstance($class, [1, 2])
-        ;
+        $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacySingletonClass';
+        $instance = $framework->createInstance($class, [1, 2]);
 
         $this->assertInstanceOf($class, $instance);
         $this->assertEquals([1, 2], $instance->constructorArgs);

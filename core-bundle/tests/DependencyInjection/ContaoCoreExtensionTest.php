@@ -41,6 +41,7 @@ class ContaoCoreExtensionTest extends \PHPUnit_Framework_TestCase
         $params = [
             'contao' => [
                 'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
             ],
         ];
 

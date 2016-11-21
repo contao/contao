@@ -246,6 +246,15 @@ class UrlGeneratorTest extends TestCase
                 UrlGenerator::ABSOLUTE_URL
            )
         );
+
+        $this->assertEquals(
+            'http://contao.org/',
+            $generator->generate(
+                'index',
+                ['_domain' => 'contao.org:80'],
+                UrlGenerator::ABSOLUTE_URL
+           )
+        );
     }
 
     /**
