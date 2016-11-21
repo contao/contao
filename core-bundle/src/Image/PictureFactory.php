@@ -62,7 +62,13 @@ class PictureFactory implements PictureFactoryInterface
     private $defaultDensities = '';
 
     /**
-     * {@inheritdoc}
+     * Constructor.
+     *
+     * @param PictureGeneratorInterface $pictureGenerator
+     * @param ImageFactoryInterface     $imageFactory
+     * @param ContaoFrameworkInterface  $framework
+     * @param bool                      $bypassCache
+     * @param array                     $imagineOptions
      */
     public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions)
     {

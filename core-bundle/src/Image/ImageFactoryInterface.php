@@ -10,13 +10,9 @@
 
 namespace Contao\CoreBundle\Image;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeConfigurationInterface;
-use Contao\Image\ResizerInterface;
-use Imagine\Image\ImagineInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Image factory interface.
@@ -25,20 +21,6 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 interface ImageFactoryInterface
 {
-    /**
-     * Constructor.
-     *
-     * @param ResizerInterface         $resizer
-     * @param ImagineInterface         $imagine
-     * @param ImagineInterface         $imagineSvg
-     * @param Filesystem               $filesystem
-     * @param ContaoFrameworkInterface $framework
-     * @param bool                     $bypassCache
-     * @param array                    $imagineOptions
-     * @param array                    $validExtensions
-     */
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions, array $validExtensions);
-
     /**
      * Creates an Image object.
      *
