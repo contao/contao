@@ -21,6 +21,7 @@ use Contao\Image\ResizeCalculator;
 use Contao\Image\PictureGenerator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Imagine\Gd\Imagine as ImagineGd;
+use Imagine\Image\ImageInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
@@ -199,7 +200,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->setParameter('kernel.debug', false);
         $container->setParameter('contao.image.bypass_cache', false);
         $container->setParameter('contao.image.target_path', 'assets/images');
-        $container->setParameter('contao.image.imagine_options', ['jpeg_quality' => 80]);
+        $container->setParameter('contao.image.imagine_options', [
+            'jpeg_quality' => 80,
+            'interlace' => ImageInterface::INTERLACE_PLANE,
+        ]);
         $container->setParameter('contao.image.valid_extensions', ['jpg', 'svg', 'svgz']);
 
         $container->set(
