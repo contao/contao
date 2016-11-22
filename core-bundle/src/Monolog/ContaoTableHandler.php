@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Monolog;
 
+use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Statement;
 use Monolog\Formatter\LineFormatter;
@@ -98,7 +99,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
 
         $this->statement->execute([
             'tstamp' => $date->format('U'),
-            'text' => specialchars((string) $record['formatted']),
+            'text' => StringUtil::specialchars((string) $record['formatted']),
             'source' => (string) $context->getSource(),
             'action' => (string) $context->getAction(),
             'username' => (string) $context->getUsername(),

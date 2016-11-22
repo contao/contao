@@ -243,7 +243,16 @@ class UrlGeneratorTest extends TestCase
             $generator->generate(
                 'index',
                 ['_domain' => 'contao.org:443', '_ssl' => true],
-                UrlGenerator::ABSOLUTE_URL
+                UrlGeneratorInterface::ABSOLUTE_URL
+           )
+        );
+
+        $this->assertEquals(
+            'http://contao.org/',
+            $generator->generate(
+                'index',
+                ['_domain' => 'contao.org'],
+                UrlGeneratorInterface::ABSOLUTE_URL
            )
         );
 
@@ -252,9 +261,48 @@ class UrlGeneratorTest extends TestCase
             $generator->generate(
                 'index',
                 ['_domain' => 'contao.org:80'],
-                UrlGenerator::ABSOLUTE_URL
+                UrlGeneratorInterface::ABSOLUTE_URL
            )
         );
+    }
+
+    /**
+     * Tests that the context is not modified if the hostname is set.
+     *
+     * To tests this case, we omit the _ssl parameter and set the scheme to "https" in the context. If the
+     * generator still returns a HTTPS URL, we know that the context has not been modified.
+     */
+    public function testContextNotModifiedIfHostnameIsSet()
+    {
+        $routes = new RouteCollection();
+        $routes->add('contao_index', new Route('/'));
+
+        $context = new RequestContext();
+        $context->setHost('contao.org');
+        $context->setScheme('https');
+
+        $generator = new UrlGenerator(
+            new ParentUrlGenerator($routes, $context),
+            $this->mockContaoFramework(),
+            false
+        );
+
+        $this->assertEquals(
+            'https://contao.org/',
+            $generator->generate(
+                'index',
+                ['_domain' => 'contao.org'],
+                UrlGeneratorInterface::ABSOLUTE_URL
+           )
+        );
+    }
+
+    /**
+     * Tests the generator with non-array parameters.
+     */
+    public function testWithNonArrayParameters()
+    {
+        $this->assertEquals('foo', $this->getGenerator()->generate('foo', 'bar')['alias']);
     }
 
     /**
