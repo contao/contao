@@ -11,6 +11,7 @@
 namespace Contao\ManagerBundle\ContaoManager\Bundle;
 
 use Contao\ManagerBundle\ContaoManager\Dependency\DependencyResolverTrait;
+use Contao\ManagerBundle\ContaoManager\Dependency\UnresolvableDependenciesException;
 
 /**
  * Resolves the bundles map from the configuration objects
@@ -46,6 +47,8 @@ class ConfigResolver
      * @param bool $development
      *
      * @return array
+     *
+     * @throws UnresolvableDependenciesException
      */
     public function getBundleConfigs($development)
     {
