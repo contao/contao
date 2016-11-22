@@ -23,7 +23,7 @@ matrix:
     - php: 7.0
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
     - php: 7.0
-      env: TESTSUITE='--testsuite latest' COVERAGE='--coverage-clover build/logs/clover.xml'
+      env: COVERAGE='--testsuite latest --coverage-clover build/logs/clover.xml'
     - php: 7.1
   allow_failures:
     - php: 7.1 # TODO: remove when PHP 7.1 stable is released
@@ -37,7 +37,7 @@ before_script:
 
 script:
   - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi
-  - php vendor/bin/phpunit $TESTSUITE $COVERAGE
+  - php vendor/bin/phpunit $COVERAGE
 
 after_script:
   - if [[ $COVERAGE ]]; then php vendor/bin/coveralls; fi

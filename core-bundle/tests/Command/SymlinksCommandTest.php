@@ -46,6 +46,7 @@ class SymlinksCommandTest extends TestCase
         $command = new SymlinksCommand('contao:symlinks');
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\SymlinksCommand', $command);
+        $this->assertEquals('contao:symlinks', $command->getName());
     }
 
     /**
