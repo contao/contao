@@ -58,8 +58,11 @@ class ContaoManagerExtensionTest extends \PHPUnit_Framework_TestCase
     public function testPrependDoesNothingWhenNoPluginLoader()
     {
         $container = $this->getMock(ContainerBuilder::class);
-        $container->expects($this->never())
-                    ->method('get');
+
+        $container
+            ->expects($this->never())
+            ->method('get')
+        ;
 
         $this->extension->prepend($container);
     }
