@@ -200,11 +200,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->setParameter('kernel.debug', false);
         $container->setParameter('contao.image.bypass_cache', false);
         $container->setParameter('contao.image.target_path', 'assets/images');
+        $container->setParameter('contao.image.valid_extensions', ['jpg', 'svg', 'svgz']);
+
         $container->setParameter('contao.image.imagine_options', [
             'jpeg_quality' => 80,
             'interlace' => ImageInterface::INTERLACE_PLANE,
         ]);
-        $container->setParameter('contao.image.valid_extensions', ['jpg', 'svg', 'svgz']);
 
         $container->set(
             'contao.resource_finder',
