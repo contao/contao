@@ -107,7 +107,7 @@ class PluginLoader
 
         foreach ($json as $package) {
             if (isset($package['extra']['contao-manager-plugin'])) {
-                $plugins[$package['name']] = new $package['extra']['contao-manager-plugin'];
+                $plugins[$package['name']] = new $package['extra']['contao-manager-plugin']();
             }
         }
 
