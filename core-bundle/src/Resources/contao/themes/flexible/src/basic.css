@@ -381,12 +381,14 @@ a.tl_submit {
 }
 .split-button ul {
 	position:absolute;
+	right:0;
 	bottom:20px;
 	min-width:100%;
 	background:#fff;
 	border:1px solid #aaa;
 	border-radius:2px;
 	box-sizing:border-box;
+	padding:3px 0;
 	margin-bottom:1em;
 }
 .split-button ul button {
@@ -395,20 +397,54 @@ a.tl_submit {
 	text-align:left;
 	white-space:nowrap;
 }
+.split-button ul .tl_submit {
+	margin-top:0;
+	margin-bottom:0;
+}
 .split-button ul .tl_submit:hover {
 	box-shadow:none;
 	background:#eee;
+}
+.split-button ul:before {
+	content:"";
+	display:block;
+	height:0;
+	width:0;
+	position:absolute;
+	right:4px;
+	bottom:-12px;
+	z-index:89;
+	border:inset 6px;
+	border-top-style:solid;
+	border-color:#fff transparent transparent;
+}
+.split-button ul:after {
+	content:"";
+	display:block;
+	height:0;
+	width:0;
+	position:absolute;
+	right:3px;
+	bottom:-14px;
+	z-index:88;
+	border:inset 7px;
+	border-top-style:solid;
+	border-color:#aaa transparent transparent;
 }
 .split-button > button[type="submit"] {
 	border-radius:2px 0 0 2px;
 }
 .split-button > button[type="button"] {
-	padding:7px 5px;
+	padding:7px 4px;
 	background:#fff;
 	border:1px solid #aaa;
 	border-left:0;
 	border-radius:0 2px 2px 0;
 	box-sizing:border-box;
+}
+.split-button > button[type="button"]:focus {
+	outline:none;
+	background-color:#f9f9f9;
 }
 
 /* Placeholders */
