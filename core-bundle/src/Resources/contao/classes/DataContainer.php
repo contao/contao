@@ -23,6 +23,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
  * @property string  $inputName
  * @property string  $palette
  * @property object  $activeRecord
+ * @property array   $rootIds
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -64,6 +65,12 @@ abstract class DataContainer extends \Backend
 	 * @var string
 	 */
 	protected $strPalette;
+
+	/**
+	 * IDs of all root records
+	 * @var array
+	 */
+	protected $root;
 
 	/**
 	 * WHERE clause of the database query

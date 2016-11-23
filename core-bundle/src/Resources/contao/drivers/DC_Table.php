@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * @property integer $id
  * @property string  $parentTable
  * @property array   $childTable
- * @property array   $rootIds
  * @property boolean $createNewVersion
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -43,12 +42,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 * @var array
 	 */
 	protected $ctable;
-
-	/**
-	 * IDs of all root records
-	 * @var array
-	 */
-	protected $root;
 
 	/**
 	 * ID of the button container
