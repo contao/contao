@@ -249,6 +249,7 @@ class File extends \System
 				if (empty($this->arrImageSize))
 				{
 					$strCacheKey = $this->strFile . '|' . $this->mtime;
+
 					if (isset(static::$arrImageSizeCache[$strCacheKey]))
 					{
 						$this->arrImageSize = static::$arrImageSizeCache[$strCacheKey];
@@ -286,6 +287,7 @@ class File extends \System
 							$this->arrImageSize = false;
 						}
 					}
+
 					if (!isset(static::$arrImageSizeCache[$strCacheKey]))
 					{
 						static::$arrImageSizeCache[$strCacheKey] = $this->arrImageSize;
