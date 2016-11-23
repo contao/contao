@@ -22,6 +22,7 @@ use Contao\Image\ResizeOptions;
 use Contao\System;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Symfony\Component\Filesystem\Filesystem;
@@ -211,7 +212,11 @@ class ImageFactoryTest extends TestCase
                 $this->callback(
                     function ($options) {
                         /* @var ResizeOptions $options */
-                        $this->assertEquals(['jpeg_quality' => 80], $options->getImagineOptions());
+                        $this->assertEquals([
+                            'jpeg_quality' => 80,
+                            'interlace' => ImageInterface::INTERLACE_PLANE,
+                        ], $options->getImagineOptions());
+
                         $this->assertEquals($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
 
                         return true;
@@ -405,7 +410,11 @@ class ImageFactoryTest extends TestCase
                 $this->callback(
                     function ($options) {
                         /* @var ResizeOptions $options */
-                        $this->assertEquals(['jpeg_quality' => 80], $options->getImagineOptions());
+                        $this->assertEquals([
+                            'jpeg_quality' => 80,
+                            'interlace' => ImageInterface::INTERLACE_PLANE,
+                        ], $options->getImagineOptions());
+
                         $this->assertEquals($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
 
                         return true;
@@ -1039,7 +1048,10 @@ class ImageFactoryTest extends TestCase
         }
 
         if (null === $imagineOptions) {
-            $imagineOptions = ['jpeg_quality' => 80];
+            $imagineOptions = [
+                'jpeg_quality' => 80,
+                'interlace' => ImageInterface::INTERLACE_PLANE,
+            ];
         }
 
         if (null === $validExtensions) {
