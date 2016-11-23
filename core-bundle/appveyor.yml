@@ -3,6 +3,9 @@ shallow_clone: true
 platform: x86
 clone_folder: c:\projects\contao
 
+cache:
+  - '%LOCALAPPDATA%\Composer\files'
+
 init:
   - SET PATH=c:\php;%PATH%
   - SET SYMFONY_DEPRECATIONS_HELPER=weak

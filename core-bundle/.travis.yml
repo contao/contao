@@ -25,8 +25,6 @@ matrix:
     - php: 7.0
       env: COVERAGE='--testsuite latest --coverage-clover build/logs/clover.xml'
     - php: 7.1
-  allow_failures:
-    - php: 7.1 # TODO: remove when PHP 7.1 stable is released
   fast_finish: true
 
 before_install:
