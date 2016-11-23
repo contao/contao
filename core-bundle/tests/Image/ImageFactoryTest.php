@@ -216,6 +216,7 @@ class ImageFactoryTest extends TestCase
                             'jpeg_quality' => 80,
                             'interlace' => ImageInterface::INTERLACE_PLANE,
                         ], $options->getImagineOptions());
+
                         $this->assertEquals($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
 
                         return true;
@@ -413,6 +414,7 @@ class ImageFactoryTest extends TestCase
                             'jpeg_quality' => 80,
                             'interlace' => ImageInterface::INTERLACE_PLANE,
                         ], $options->getImagineOptions());
+
                         $this->assertEquals($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
 
                         return true;
