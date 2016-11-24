@@ -10,6 +10,7 @@
 
 namespace Contao\ManagerBundle\Test\DependencyInjection;
 
+use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -52,11 +53,32 @@ class ContaoManagerExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the prepend() method.
+     * Tests the prepend() method does nothing if no plugin loader is there.
      */
-    public function testPrepend()
+    public function testPrependDoesNothingWhenNoPluginLoader()
     {
-        // TODO: add assertions
+        $container = $this->getMock(ContainerBuilder::class);
+
+        $container
+            ->expects($this->never())
+            ->method('get')
+        ;
+
+        $this->extension->prepend($container);
+    }
+
+    /**
+     * Tests the prepend() method calls the prependConfig() method of the plugins.
+     */
+    public function testPrependCallsPluginPrependConfig()
+    {
+        $pluginLoader = new PluginLoader(__DIR__ . '/../Fixtures/DependencyInjection/installed.json');
+        $container = new ContainerBuilder();
+        $container->set('contao_manager.plugin_loader', $pluginLoader);
+
+        $this->extension->prepend($container);
+
+        $this->assertTrue($container->hasDefinition('foo'));
     }
 
     /**
