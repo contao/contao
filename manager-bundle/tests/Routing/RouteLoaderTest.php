@@ -65,7 +65,7 @@ class RouteLoaderTest extends \PHPUnit_Framework_TestCase
         $pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
-            ->with(PluginLoader::ROUTING_PLUGINS)
+            ->with(PluginLoader::ROUTING_PLUGINS, true)
             ->willReturn([$plugin1, $plugin2])
         ;
 
