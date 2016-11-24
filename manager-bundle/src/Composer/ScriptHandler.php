@@ -13,7 +13,6 @@ namespace Contao\ManagerBundle\Composer;
 use Composer\Composer;
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
-use Contao\CoreBundle\Composer\ScriptHandler as CoreBundleScriptHandler;
 use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler as DistributionBundleScriptHandler;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -39,11 +38,11 @@ class ScriptHandler
         static::addConsoleEntryPoint($event);
         static::addWebEntryPoints($event);
 
-        DistributionBundleScriptHandler::clearCache($event);
-        DistributionBundleScriptHandler::installAssets($event);
+        static::executeCommand('cache:clear --env=prod', $event);
+        static::executeCommand('assets:install --symlink --relative --env=prod', $event);
 
-        CoreBundleScriptHandler::addDirectories($event);
-        CoreBundleScriptHandler::generateSymlinks($event);
+        static::executeCommand('contao:install --env=prod', $event);
+        static::executeCommand('contao:symlinks --env=prod', $event);
     }
 
     /**
