@@ -13,11 +13,13 @@ namespace Contao\ManagerBundle\Test\Command;
 use Contao\ManagerBundle\Command\InstallWebDirCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Tests the InstallWebDirCommand class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Yanick Witschi <https://github.com/toflar>
  */
 class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,24 +29,31 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
     private $command;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
+     * @var string
+     */
+    private $tmpdir;
+
+    /**
+     * @var Finder
+     */
+    private $webFiles;
+
+    /**
      * {@inheritdoc}
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->command = new InstallWebDirCommand('contao:install-web-dir');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-
-        $fs = new Filesystem();
-        $fs->remove(__DIR__ . '/web');
+        $this->command = new InstallWebDirCommand();
+        $this->filesystem = new Filesystem();
+        $this->tmpdir = sys_get_temp_dir() . '/' . uniqid('InstallWebDirCommand_', false);
+        $this->webFiles = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__ . '/../../src/Resources/web');
     }
 
     /**
@@ -52,29 +61,32 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\Command\InstallWebDirCommand', $this->command);
+        $this->assertInstanceOf(InstallWebDirCommand::class, $this->command);
     }
 
     /**
      * Tests the command name.
      */
-    public function testName()
+    public function testNameAndArguments()
     {
         $this->assertEquals('contao:install-web-dir', $this->command->getName());
+        $this->assertTrue($this->command->getDefinition()->hasArgument('path'));
+        $this->assertTrue($this->command->getDefinition()->hasOption('force'));
     }
 
     public function testCommandRegular()
     {
+        foreach ($this->webFiles as $file) {
+            $this->assertFileNotExists($this->tmpdir . '/web/' . $file->getFilename());
+        }
+
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => __DIR__]);
+        $commandTester->execute(['path' => $this->tmpdir]);
 
-        $output = $commandTester->getDisplay();
+        foreach ($this->webFiles as $file) {
+            $this->assertFileExists($this->tmpdir . '/web/' . $file->getFilename());
 
-        foreach (['.htaccess', 'app.php', 'install.php'] as $file) {
-            $this->assertContains('Added the ' . $file . ' file.', $output);
-            $this->assertFileExists(__DIR__ . '/web/' . $file);
-
-            $expectedString = file_get_contents(__DIR__ . '/../../src/Resources/web/' . $file);
+            $expectedString = file_get_contents($file->getPathname());
 
             $expectedString = str_replace(
                 ['{root-dir}', '{vendor-dir}'],
@@ -82,65 +94,42 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
                 $expectedString
             );
 
-            $this->assertStringEqualsFile(__DIR__ . '/web/' . $file, $expectedString);
+            $this->assertStringEqualsFile($this->tmpdir . '/web/' . $file->getFilename(), $expectedString);
         }
     }
 
     public function testCommandDoesNothingWithoutForce()
     {
-        // Files added
+        foreach ($this->webFiles as $file) {
+            $this->filesystem->dumpFile($this->tmpdir . '/web/' . $file->getFilename(), 'foobar-content');
+        }
+
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => __DIR__]);
+        $commandTester->execute(['path' => $this->tmpdir]);
 
-        // Temporarily edit app.php with dummy content to see if --force works
-        $appPath = __DIR__ . '/../../src/Resources/web/app.php';
-        $original = file_get_contents($appPath);
-        $tmp = $original . PHP_EOL . 'foobar-content';
-        file_put_contents($appPath, $tmp);
-
-        // Test without --force
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => __DIR__]);
-
-        // Assert
-        $expectedString = str_replace(
-            ['{root-dir}', '{vendor-dir}'],
-            ['../app', '../vendor'],
-            $original // Should still be the same as the original
-        );
-
-        $this->assertStringEqualsFile(__DIR__ . '/web/app.php', $expectedString);
-
-        // Restore
-        file_put_contents($appPath, $original);
+        foreach ($this->webFiles as $file) {
+            $this->assertStringEqualsFile($this->tmpdir . '/web/' . $file->getFilename(), 'foobar-content');
+        }
     }
 
     public function testCommandOverwritesWithForce()
     {
-        // Files added
+        foreach ($this->webFiles as $file) {
+            $this->filesystem->dumpFile($this->tmpdir . '/web/' . $file->getFilename(), 'foobar-content');
+        }
+
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => __DIR__]);
+        $commandTester->execute(['path' => $this->tmpdir, '--force' => null]);
 
-        // Temporarily edit app.php with dummy content to see if --force works
-        $appPath = __DIR__ . '/../../src/Resources/web/app.php';
-        $original = file_get_contents($appPath);
-        $tmp = $original . PHP_EOL . 'foobar-content';
-        file_put_contents($appPath, $tmp);
+        foreach ($this->webFiles as $file) {
+            // Assert
+            $expectedString = str_replace(
+                ['{root-dir}', '{vendor-dir}'],
+                ['../app', '../vendor'],
+                $file->getContents()
+            );
 
-        // Test with --force
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => __DIR__, '--force' => null]);
-
-        // Assert
-        $expectedString = str_replace(
-            ['{root-dir}', '{vendor-dir}'],
-            ['../app', '../vendor'],
-            $tmp // Should match the new content
-        );
-
-        $this->assertStringEqualsFile(__DIR__ . '/web/app.php', $expectedString);
-
-        // Restore
-        file_put_contents($appPath, $original);
+            $this->assertStringEqualsFile($this->tmpdir . '/web/' . $file->getFilename(), $expectedString);
+        }
     }
 }
