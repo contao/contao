@@ -13,14 +13,15 @@ namespace Contao\ManagerBundle\Composer;
 use Composer\Composer;
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
-use Contao\CoreBundle\Composer\ScriptHandler as BaseScriptHandler;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 
 /**
  * Sets up the Contao Managed Edition.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ScriptHandler extends BaseScriptHandler
+class ScriptHandler
 {
     /**
      * Adds the web and console entry points.
@@ -86,5 +87,68 @@ class ScriptHandler extends BaseScriptHandler
         }
 
         throw new \UnderflowException('Contao console script was not found.');
+    }
+
+    /**
+     * Executes a command.
+     *
+     * @param string $cmd
+     * @param Event  $event
+     *
+     * @throws \RuntimeException
+     */
+    private static function executeCommand($cmd, Event $event)
+    {
+        $phpFinder = new PhpExecutableFinder();
+
+        if (false === ($phpPath = $phpFinder->find())) {
+            throw new \RuntimeException('The php executable could not be found.');
+        }
+
+        $process = new Process(
+            sprintf(
+                '%s bin/console%s %s%s',
+                $phpPath,
+                $event->getIO()->isDecorated() ? ' --ansi' : '',
+                $cmd,
+                self::getVerbosityFlag($event)
+            )
+        );
+
+        $process->run(
+            function ($type, $buffer) use ($event) {
+                $event->getIO()->write($buffer, false);
+            }
+        );
+
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command.', $cmd));
+        }
+    }
+
+    /**
+     * Returns the verbosity flag depending on the console IO verbosity.
+     *
+     * @param Event $event
+     *
+     * @return string
+     */
+    private static function getVerbosityFlag(Event $event)
+    {
+        $io = $event->getIO();
+
+        switch (true) {
+            case $io->isVerbose():
+                return ' -v';
+
+            case $io->isVeryVerbose():
+                return ' -vv';
+
+            case $io->isDebug():
+                return ' -vvv';
+
+            default:
+                return '';
+        }
     }
 }
