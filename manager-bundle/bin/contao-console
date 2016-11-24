@@ -10,6 +10,7 @@
  */
 
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Debug\Debug;
@@ -20,6 +21,9 @@ set_time_limit(0);
  * @var Composer\Autoload\ClassLoader $loader
  */
 $loader = require __DIR__ . '/../../../../vendor/autoload.php';
+include_once __DIR__.'/../var/bootstrap.php.cache';
+
+AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
 $input = new ArgvInput();
 $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');
