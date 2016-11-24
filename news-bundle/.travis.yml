@@ -12,7 +12,7 @@ sudo: false
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
-    - SYMFONY_DEPRECATIONS_HELPER='weak'
+    - SYMFONY_DEPRECATIONS_HELPER=weak
 
 matrix:
   include:
@@ -24,8 +24,6 @@ matrix:
     - php: 7.0
       env: COVERAGE='--coverage-clover build/logs/clover.xml'
     - php: 7.1
-  allow_failures:
-    - php: 7.1 # TODO: remove when PHP 7.1 stable is released
   fast_finish: true
 
 before_install:
