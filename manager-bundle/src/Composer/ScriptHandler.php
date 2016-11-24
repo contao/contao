@@ -38,7 +38,8 @@ class ScriptHandler
         static::addConsoleEntryPoint($event);
         static::addWebEntryPoints($event);
 
-        static::executeCommand('cache:clear --env=prod', $event);
+        static::executeCommand('cache:clear --no-warmup --env=prod', $event);
+        static::executeCommand('cache:warmup --env=prod', $event);
         static::executeCommand('assets:install --symlink --relative --env=prod', $event);
 
         static::executeCommand('contao:install --env=prod', $event);
