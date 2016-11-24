@@ -33,10 +33,12 @@ class ScriptHandler
     public static function initializeApplication(Event $event)
     {
         static::addAppDirectory();
+
+        DistributionBundleScriptHandler::doBuildBootstrap(getcwd() . '/var');
+
         static::addConsoleEntryPoint($event);
         static::addWebEntryPoints($event);
 
-        DistributionBundleScriptHandler::buildBootstrap($event);
         DistributionBundleScriptHandler::clearCache($event);
         DistributionBundleScriptHandler::installAssets($event);
 

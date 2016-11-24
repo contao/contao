@@ -16,7 +16,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 /**
  * @var Composer\Autoload\ClassLoader
  */
-$loader = require __DIR__.'/{root-dir}/autoload.php';
+$loader = require __DIR__.'/{vendor-dir}/autoload.php';
 
 class AppKernel extends \Contao\ManagerBundle\HttpKernel\ContaoKernel {}
 
