@@ -26,6 +26,7 @@ class RouteLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $loader = $this->getMock(LoaderInterface::class);
         $kernel = $this->getMock(KernelInterface::class);
+
         $pluginLoader = $this->getMockBuilder(PluginLoader::class)
             ->disableOriginalConstructor()
             ->getMock()
@@ -36,6 +37,7 @@ class RouteLoaderTest extends \PHPUnit_Framework_TestCase
             $pluginLoader,
             $kernel
         );
+
         $this->assertInstanceOf('Contao\ManagerBundle\Routing\RouteLoader', $routeLoader);
     }
 
@@ -43,37 +45,29 @@ class RouteLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $loaderResolver = $this->getMock(LoaderResolverInterface::class);
         $loader = $this->getMock(LoaderInterface::class);
+
         $loader
             ->expects($this->exactly(2))
             ->method('getResolver')
-            ->willReturn($loaderResolver);
+            ->willReturn($loaderResolver)
+        ;
+
         $kernel = $this->getMock(KernelInterface::class);
 
-        $routeCollection1 = new RouteCollection();
-        $routeCollection1->add('foo', new Route('/foo/path'));
-        $routeCollection2 = new RouteCollection();
-        $routeCollection2->add('foo2', new Route('/foo2/path2'));
-
-        $plugin1 = $this->getMock(RoutingPluginInterface::class);
-        $plugin1
-            ->expects($this->once())
-            ->method('getRouteCollection')
-            ->willReturn($routeCollection1);
-        $plugin2 = $this->getMock(RoutingPluginInterface::class);
-        $plugin2
-            ->expects($this->once())
-            ->method('getRouteCollection')
-            ->willReturn($routeCollection2);
+        $plugin1 = $this->mockRoutePlugin('foo', '/foo/path');
+        $plugin2 = $this->mockRoutePlugin('foo2', '/foo2/path2');
 
         $pluginLoader = $this->getMockBuilder(PluginLoader::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
+
         $pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
             ->with(PluginLoader::ROUTING_PLUGINS)
-            ->willReturn([$plugin1, $plugin2]);
+            ->willReturn([$plugin1, $plugin2])
+        ;
 
         $routeLoader = new RouteLoader(
             $loader,
@@ -88,5 +82,21 @@ class RouteLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($collection->get('foo2'));
         $this->assertInstanceOf(Route::class, $collection->get('foo'));
         $this->assertInstanceOf(Route::class, $collection->get('foo2'));
+    }
+
+    private function mockRoutePlugin($routeName, $routePath)
+    {
+        $collection = new RouteCollection();
+        $collection->add($routeName, new Route($routePath));
+
+        $plugin = $this->getMock(RoutingPluginInterface::class);
+
+        $plugin
+            ->expects($this->atLeastOnce())
+            ->method('getRouteCollection')
+            ->willReturn($collection)
+        ;
+
+        return $plugin;
     }
 }
