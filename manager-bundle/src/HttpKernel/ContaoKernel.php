@@ -87,6 +87,10 @@ class ContaoKernel extends Kernel
      */
     public function loadPlugins($installedJson)
     {
+        if (file_exists($this->getRootDir() . '/ContaoManagerPlugin.php')) {
+            include_once $this->getRootDir() . '/ContaoManagerPlugin.php';
+        }
+
         $this->pluginLoader = new PluginLoader($installedJson);
     }
 
