@@ -33,10 +33,10 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         $this->parser = new IniParser(self::FIXTURES_DIR);
     }
 
-    public function testInstanceOf()
+    public function testInstantiation()
     {
-        $this->assertInstanceOf(IniParser::class, $this->parser);
-        $this->assertInstanceOf(ParserInterface::class, $this->parser);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Parser\IniParser', $this->parser);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface', $this->parser);
     }
 
     public function testSupports()

@@ -30,9 +30,9 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
         $this->resolver = new ConfigResolver();
     }
 
-    public function testInstanceOf()
+    public function testInstantiation()
     {
-        $this->assertInstanceOf(ConfigResolver::class, $this->resolver);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigResolver', $this->resolver);
     }
 
     public function testAddIsFluent()

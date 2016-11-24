@@ -34,10 +34,10 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
         $this->parser = new JsonParser();
     }
 
-    public function testInstanceOf()
+    public function testInstantiation()
     {
-        $this->assertInstanceOf(JsonParser::class, $this->parser);
-        $this->assertInstanceOf(ParserInterface::class, $this->parser);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Parser\JsonParser', $this->parser);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface', $this->parser);
     }
 
     public function testSupports()

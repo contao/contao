@@ -15,11 +15,11 @@ use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigResolverInterface;
 
 class ConfigResolverFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInstanceOf()
+    public function testInstantiation()
     {
         $factory = new ConfigResolverFactory();
 
-        $this->assertInstanceOf(ConfigResolverFactory::class, $factory);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigResolverFactory', $factory);
     }
 
     public function testCreate()

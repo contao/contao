@@ -21,12 +21,12 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 {
     const FIXTURES_DIR = __DIR__ . '/../../../Fixtures/ContaoManager/Bundle/Config';
 
-    public function testInstanceOf()
+    public function testInstantiation()
     {
         $config = new BundleConfig('foobar');
 
-        $this->assertInstanceOf(BundleConfig::class, $config);
-        $this->assertInstanceOf(ConfigInterface::class, $config);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Config\BundleConfig', $config);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigInterface', $config);
     }
 
     public function testStaticCreate()

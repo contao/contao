@@ -61,7 +61,7 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf(InstallWebDirCommand::class, $this->command);
+        $this->assertInstanceOf('Contao\ManagerBundle\Command\InstallWebDirCommand', $this->command);
     }
 
     /**

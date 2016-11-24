@@ -30,10 +30,10 @@ class DelegatingParserTest extends \PHPUnit_Framework_TestCase
         $this->parser = new DelegatingParser();
     }
 
-    public function testInstanceOf()
+    public function testInstantiation()
     {
-        $this->assertInstanceOf(DelegatingParser::class, $this->parser);
-        $this->assertInstanceOf(ParserInterface::class, $this->parser);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Parser\DelegatingParser', $this->parser);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface', $this->parser);
     }
 
     public function testSupportsWithoutParsers()

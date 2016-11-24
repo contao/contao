@@ -21,7 +21,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class BundleLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInstanceOf()
+    public function testInstantiation()
     {
         $bundleLoader = new BundleLoader(
             $this->mockPluginLoader($this->never()),
@@ -29,7 +29,7 @@ class BundleLoaderTest extends \PHPUnit_Framework_TestCase
             $this->mockParser()
         );
 
-        $this->assertInstanceOf(BundleLoader::class, $bundleLoader);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\BundleLoader', $bundleLoader);
     }
 
     /**
