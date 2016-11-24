@@ -13,6 +13,8 @@ namespace Contao\ManagerBundle\Composer;
 use Composer\Composer;
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
+use Contao\CoreBundle\Composer\ScriptHandler as CoreBundleScriptHandler;
+use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler as DistributionBundleScriptHandler;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -24,14 +26,42 @@ use Symfony\Component\Process\Process;
 class ScriptHandler
 {
     /**
-     * Adds the web and console entry points.
+     * Runs all Composer tasks to initialize a Contao Managed Edition.
+     *
+     * @param Event $event
+     */
+    public static function initializeApplication(Event $event)
+    {
+        static::addAppDirectory();
+        static::addConsoleEntryPoint($event);
+        static::addWebEntryPoints($event);
+
+        DistributionBundleScriptHandler::buildBootstrap($event);
+        DistributionBundleScriptHandler::clearCache($event);
+        DistributionBundleScriptHandler::installAssets($event);
+
+        CoreBundleScriptHandler::addDirectories($event);
+        CoreBundleScriptHandler::generateSymlinks($event);
+    }
+
+    /**
+     * Adds the app directory if it does not exist.
+     */
+    public static function addAppDirectory()
+    {
+        $filesystem = new Filesystem();
+        $filesystem->ensureDirectoryExists(getcwd() . '/app');
+    }
+
+    /**
+     * Adds the console entry point.
      *
      * @param Event $event The event object
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
-    public static function addEntryPoints(Event $event)
+    public static function addConsoleEntryPoint(Event $event)
     {
         $composer = $event->getComposer();
 
@@ -41,7 +71,17 @@ class ScriptHandler
         );
 
         $event->getIO()->write(' Added the console entry point.', false);
+    }
 
+    /**
+     * Adds the web entry points.
+     *
+     * @param Event $event The event object
+     *
+     * @throws \RuntimeException
+     */
+    public static function addWebEntryPoints(Event $event)
+    {
         static::executeCommand('contao:install-web-dir --force', $event);
     }
 
