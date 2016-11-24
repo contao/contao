@@ -11,6 +11,10 @@
 namespace Contao\ManagerBundle\HttpKernel;
 
 use Contao\ManagerBundle\ContaoManager\Bundle\BundleLoader;
+use Contao\ManagerBundle\ContaoManager\Bundle\ConfigResolverFactory;
+use Contao\ManagerBundle\ContaoManager\Bundle\DelegatingParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\IniParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\JsonParser;
 use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -135,12 +139,13 @@ class ContaoKernel extends Kernel
             return;
         }
 
-        $autoloader = new BundleLoader(
-            $this->pluginLoader,
-            dirname($this->getRootDir()) . '/system/modules'
-        );
+        $parser = new DelegatingParser();
+        $parser->addParser(new JsonParser());
+        $parser->addParser(new IniParser(dirname($this->getRootDir()) . '/system/modules'));
 
-        $configs = $autoloader->getBundleConfigs(
+        $bundleLoader = new BundleLoader($this->pluginLoader, new ConfigResolverFactory(), $parser);
+
+        $configs = $bundleLoader->getBundleConfigs(
             'dev' === $this->getEnvironment(),
             $this->debug ? null : $this->getCacheDir() . '/bundles.map'
         );

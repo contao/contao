@@ -27,9 +27,14 @@ class BundleLoader
     private $pluginLoader;
 
     /**
-     * @var string
+     * @var ConfigResolverFactory
      */
-    protected $modulesDir;
+    private $resolverFactory;
+
+    /**
+     * @var ParserInterface
+     */
+    private $parser;
 
     /**
      * @var Filesystem
@@ -39,14 +44,20 @@ class BundleLoader
     /**
      * Constructor
      *
-     * @param PluginLoader $pluginLoader
-     * @param string       $modulesDir
-     * @param Filesystem   $filesystem
+     * @param PluginLoader          $pluginLoader
+     * @param ConfigResolverFactory $resolverFactory
+     * @param ParserInterface       $parser
+     * @param Filesystem            $filesystem
      */
-    public function __construct(PluginLoader $pluginLoader, $modulesDir, Filesystem $filesystem = null)
-    {
-        $this->modulesDir = $modulesDir;
+    public function __construct(
+        PluginLoader $pluginLoader,
+        ConfigResolverFactory $resolverFactory,
+        ParserInterface $parser,
+        Filesystem $filesystem = null
+    ) {
         $this->pluginLoader = $pluginLoader;
+        $this->resolverFactory = $resolverFactory;
+        $this->parser = $parser;
         $this->filesystem = $filesystem;
 
         if (null === $this->filesystem) {
@@ -100,17 +111,13 @@ class BundleLoader
      */
     private function loadFromPlugins($development, $cacheFile)
     {
-        $resolver = new ConfigResolver();
-        $parser   = new DelegatingParser();
-
-        $parser->addParser(new JsonParser());
-        $parser->addParser(new IniParser($this->modulesDir));
+        $resolver = $this->resolverFactory->create();
 
         /** @var BundlePluginInterface[] $plugins */
         $plugins = $this->pluginLoader->getInstancesOf(PluginLoader::BUNDLE_PLUGINS);
 
         foreach ($plugins as $plugin) {
-            foreach ($plugin->getBundles($parser) as $config) {
+            foreach ($plugin->getBundles($this->parser) as $config) {
                 $resolver->add($config);
             }
         }
