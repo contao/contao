@@ -17,7 +17,7 @@
         "sensio/distribution-bundle": "~5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "doctrine/doctrine-bundle": "~1.6",
-        "contao/core-bundle": "~4.3",
+        "contao/core-bundle": "4.3.*",
         "contao/installation-bundle": "~1.2"
     },
     "require-dev": {
@@ -38,7 +38,7 @@
     "extra": {
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
         "branch-alias": {
-            "dev-develop": "1.0.x-dev"
+            "dev-develop": "0.2.x-dev"
         }
     }
 }
