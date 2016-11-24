@@ -17,8 +17,8 @@
         "sensio/distribution-bundle": "~5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "doctrine/doctrine-bundle": "~1.6",
-        "contao/core-bundle": "~4.2",
-        "contao/installation-bundle": "~1.1"
+        "contao/core-bundle": "~4.3",
+        "contao/installation-bundle": "~1.2"
     },
     "require-dev": {
         "composer/composer": "~1.0",
