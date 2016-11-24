@@ -45,6 +45,8 @@ $image = $container
 ;
 ```
 
+For more information see: https://github.com/contao/image/blob/master/README.md
+
 
 ### FORM_FIELDS
 
