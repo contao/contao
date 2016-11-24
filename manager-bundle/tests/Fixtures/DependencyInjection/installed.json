@@ -1,9 +1,0 @@
-[
-    {
-        "name": "contao/manager-bundle",
-        "version": "1.0.0",
-        "extra": {
-            "contao-manager-plugin": "Contao\\ManagerBundle\\Test\\DependencyInjection\\TestPlugin"
-        }
-    }
-]

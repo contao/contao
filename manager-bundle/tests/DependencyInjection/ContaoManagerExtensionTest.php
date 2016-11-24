@@ -10,6 +10,7 @@
 
 namespace Contao\ManagerBundle\Test\DependencyInjection;
 
+use Contao\ManagerBundle\ContaoManager\Config\ConfigPluginInterface;
 use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -60,6 +61,13 @@ class ContaoManagerExtensionTest extends \PHPUnit_Framework_TestCase
         $container = $this->getMock(ContainerBuilder::class);
 
         $container
+            ->expects($this->atLeastOnce())
+            ->method('has')
+            ->with('contao_manager.plugin_loader')
+            ->willReturn(false)
+        ;
+
+        $container
             ->expects($this->never())
             ->method('get')
         ;
@@ -72,13 +80,23 @@ class ContaoManagerExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testPrependCallsPluginPrependConfig()
     {
-        $pluginLoader = new PluginLoader(__DIR__ . '/../Fixtures/DependencyInjection/installed.json');
         $container = new ContainerBuilder();
+
+        $pluginLoader = $this->getMockBuilder(PluginLoader::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $pluginLoader
+            ->expects($this->atLeastOnce())
+            ->method('getInstancesOf')
+            ->with(PluginLoader::CONFIG_PLUGINS)
+            ->willReturn([$this->mockConfigPlugin($container), $this->mockConfigPlugin($container)])
+        ;
+
         $container->set('contao_manager.plugin_loader', $pluginLoader);
 
         $this->extension->prepend($container);
-
-        $this->assertTrue($container->hasDefinition('foo'));
     }
 
     /**
@@ -92,5 +110,18 @@ class ContaoManagerExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($container->has('contao_manager.plugin_loader'));
         $this->assertTrue($container->has('contao_manager.routing_loader'));
+    }
+
+    private function mockConfigPlugin(ContainerBuilder $container)
+    {
+        $plugin = $this->getMock(ConfigPluginInterface::class);
+
+        $plugin
+            ->expects($this->once())
+            ->method('prependConfig')
+            ->with([], $container)
+        ;
+
+        return $plugin;
     }
 }
