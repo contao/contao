@@ -107,6 +107,12 @@ class PluginLoader
 
         foreach ($json as $package) {
             if (isset($package['extra']['contao-manager-plugin'])) {
+                if (!class_exists($package['extra']['contao-manager-plugin'])) {
+                    throw new \RuntimeException(
+                        sprintf('Contao Manager Plugin "%s" was not found.', $package['extra']['contao-manager-plugin'])
+                    );
+                }
+
                 $plugins[$package['name']] = new $package['extra']['contao-manager-plugin']();
             }
         }
@@ -133,8 +139,10 @@ class PluginLoader
         $packages = array_keys($plugins);
 
         // Load the manager bundle first
-        array_unshift($packages, 'contao/manager-bundle');
-        $packages = array_unique($packages);
+        if (isset($plugins['contao/manager-bundle'])) {
+            array_unshift($packages, 'contao/manager-bundle');
+            $packages = array_unique($packages);
+        }
 
         // Walk through the packages
         foreach ($packages as $packageName) {

@@ -1,0 +1,16 @@
+[
+    {
+        "name": "foo/bar-bundle",
+        "version": "1.0.0",
+        "extra": {
+            "contao-manager-plugin": "Foo\\Bar\\FooBarPlugin"
+        }
+    },
+    {
+        "name": "contao/manager-bundle",
+        "version": "1.0.0",
+        "extra": {
+            "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
+        }
+    }
+]
