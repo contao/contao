@@ -8,7 +8,9 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\ContaoManager\Bundle;
+namespace Contao\ManagerBundle\ContaoManager\Bundle\Parser;
+
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigInterface;
 
 /**
  * Configuration parser interface

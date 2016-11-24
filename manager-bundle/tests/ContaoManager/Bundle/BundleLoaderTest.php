@@ -8,11 +8,11 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Test\Autoload;
+namespace Contao\ManagerBundle\Test\ContaoManager\Bundle;
 
 use Contao\ManagerBundle\ContaoManager\Bundle\BundleLoader;
-use Contao\ManagerBundle\ContaoManager\Bundle\ConfigResolverFactory;
-use Contao\ManagerBundle\ContaoManager\Bundle\ParserInterface;
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigResolverFactory;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface;
 use Contao\ManagerBundle\ContaoManager\PluginLoader;
 
 class BundleLoaderTest extends \PHPUnit_Framework_TestCase

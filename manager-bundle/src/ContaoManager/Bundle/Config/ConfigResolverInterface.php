@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\ContaoManager\Bundle;
+namespace Contao\ManagerBundle\ContaoManager\Bundle\Config;
 
 use Contao\ManagerBundle\ContaoManager\Dependency\UnresolvableDependenciesException;
 

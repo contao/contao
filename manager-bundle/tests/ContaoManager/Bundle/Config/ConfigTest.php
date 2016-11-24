@@ -8,17 +8,19 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Test\Autoload;
+namespace Contao\ManagerBundle\Test\ContaoManager\Bundle\Config;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
-use Contao\ManagerBundle\ContaoManager\Bundle\BundleConfig;
-use Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface;
-use Contao\ManagerBundle\ContaoManager\Bundle\ModuleConfig;
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\BundleConfig;
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigInterface;
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ModuleConfig;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
+    const FIXTURES_DIR = __DIR__ . '/../../../Fixtures/ContaoManager/Bundle/Config';
+
     public function testInstanceOf()
     {
         $config = new BundleConfig('foobar');
@@ -114,7 +116,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $kernel = $this->getMock(KernelInterface::class);
         $kernel
             ->method('getRootDir')
-            ->willReturn(__DIR__ . '/../../Fixtures/ContaoManager/Bundle/Config/app')
+            ->willReturn(self::FIXTURES_DIR . '/app')
         ;
 
         $config = ModuleConfig::create('foobar');
@@ -123,7 +125,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(ContaoModuleBundle::class, $bundle);
         $this->assertEquals(
-            __DIR__ . '/../../Fixtures/ContaoManager/Bundle/Config/system/modules/foobar',
+            self::FIXTURES_DIR . '/system/modules/foobar',
             $bundle->getPath()
         );
     }
@@ -136,7 +138,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $kernel = $this->getMock(KernelInterface::class);
         $kernel
             ->method('getRootDir')
-            ->willReturn(__DIR__ . '/../../Fixtures/ContaoManager/Bundle/Config/app')
+            ->willReturn(self::FIXTURES_DIR . '/app')
         ;
 
         $config = ModuleConfig::create('barfoo');

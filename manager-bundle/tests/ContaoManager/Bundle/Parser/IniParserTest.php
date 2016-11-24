@@ -8,13 +8,16 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Test\Autoload;
+namespace Contao\ManagerBundle\Test\ContaoManager\Bundle\Parser;
 
-use Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface;
-use Contao\ManagerBundle\ContaoManager\Bundle\IniParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigInterface;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\IniParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface;
 
 class IniParserTest extends \PHPUnit_Framework_TestCase
 {
+    const FIXTURES_DIR = __DIR__ . '/../../../Fixtures/ContaoManager/Bundle/IniParser';
+
     /**
      * @var IniParser
      */
@@ -27,13 +30,13 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->parser = new IniParser(__DIR__ . '/../../Fixtures/ContaoManager/Bundle/IniParser');
+        $this->parser = new IniParser(self::FIXTURES_DIR);
     }
 
     public function testInstanceOf()
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\IniParser', $this->parser);
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ParserInterface', $this->parser);
+        $this->assertInstanceOf(IniParser::class, $this->parser);
+        $this->assertInstanceOf(ParserInterface::class, $this->parser);
     }
 
     public function testSupports()
@@ -49,7 +52,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         $configs = $this->parser->parse('with-requires');
 
         $this->assertCount(4, $configs);
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[0]);
+        $this->assertInstanceOf(ConfigInterface::class, $configs[0]);
 
         $this->assertEquals('with-requires', $configs[0]->getName());
         $this->assertEquals([], $configs[0]->getReplace());
@@ -64,7 +67,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         $configs = $this->parser->parse('without-ini');
 
         $this->assertCount(1, $configs);
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[0]);
+        $this->assertInstanceOf(ConfigInterface::class, $configs[0]);
 
         $this->assertEquals('without-ini', $configs[0]->getName());
         $this->assertEquals([], $configs[0]->getReplace());
@@ -79,7 +82,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         $configs = $this->parser->parse('without-requires');
 
         $this->assertCount(1, $configs);
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[0]);
+        $this->assertInstanceOf(ConfigInterface::class, $configs[0]);
 
         $this->assertEquals('without-requires', $configs[0]->getName());
         $this->assertEquals([], $configs[0]->getReplace());
@@ -94,7 +97,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         $configs = $this->parser->parse('foobar');
 
         $this->assertCount(1, $configs);
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[0]);
+        $this->assertInstanceOf(ConfigInterface::class, $configs[0]);
 
         $this->assertEquals('foobar', $configs[0]->getName());
         $this->assertEquals([], $configs[0]->getReplace());
@@ -109,8 +112,8 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         $configs = $this->parser->parse('recursion1');
 
         $this->assertCount(2, $configs);
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[0]);
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[1]);
+        $this->assertInstanceOf(ConfigInterface::class, $configs[0]);
+        $this->assertInstanceOf(ConfigInterface::class, $configs[1]);
 
         $this->assertEquals(['recursion2'], $configs[0]->getLoadAfter());
         $this->assertEquals(['recursion1'], $configs[1]->getLoadAfter());
@@ -129,7 +132,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         \PHPUnit_Framework_Error_Notice::$enabled = false;
         error_reporting(0);
 
-        $this->setExpectedException('RuntimeException', 'File ' . __DIR__ . '/../../Fixtures/ContaoManager/Bundle/IniParser/broken-ini/config/autoload.ini cannot be decoded');
+        $this->setExpectedException('RuntimeException', 'File ' . self::FIXTURES_DIR . '/broken-ini/config/autoload.ini cannot be decoded');
         $this->parser->parse('broken-ini');
     }
 }

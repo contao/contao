@@ -10,7 +10,7 @@
 
 namespace Contao\ManagerBundle\ContaoManager;
 
-use Contao\ManagerBundle\ContaoManager\Bundle\ParserInterface;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface;
 use Contao\ManagerBundle\ContaoManager\Config\ConfigPluginInterface;
 use Contao\ManagerBundle\ContaoManager\Routing\RoutingPluginInterface;
 use Contao\ManagerBundle\ContaoManager\Bundle\BundlePluginInterface;

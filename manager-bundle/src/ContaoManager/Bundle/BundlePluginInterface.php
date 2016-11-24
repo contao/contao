@@ -10,6 +10,9 @@
 
 namespace Contao\ManagerBundle\ContaoManager\Bundle;
 
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigInterface;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface;
+
 /**
  * @author Andreas Schempp <https://github.com/aschempp>
  */

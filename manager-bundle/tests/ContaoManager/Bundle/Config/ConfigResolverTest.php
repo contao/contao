@@ -8,10 +8,10 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Test\Autoload;
+namespace Contao\ManagerBundle\Test\ContaoManager\Bundle\Config;
 
-use Contao\ManagerBundle\ContaoManager\Bundle\BundleConfig;
-use Contao\ManagerBundle\ContaoManager\Bundle\ConfigResolver;
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\BundleConfig;
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigResolver;
 
 class ConfigResolverTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,14 +32,14 @@ class ConfigResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testInstanceOf()
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigResolver', $this->resolver);
+        $this->assertInstanceOf(ConfigResolver::class, $this->resolver);
     }
 
     public function testAddIsFluent()
     {
         $result = $this->resolver->add(new BundleConfig('foobar'));
 
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigResolver', $result);
+        $this->assertInstanceOf(ConfigResolver::class, $result);
     }
 
     /**

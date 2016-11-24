@@ -8,14 +8,17 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Test\Autoload;
+namespace Contao\ManagerBundle\Test\ContaoManager\Bundle\Parser;
 
-use Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface;
-use Contao\ManagerBundle\ContaoManager\Bundle\JsonParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigInterface;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\JsonParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface;
 use Symfony\Component\Finder\SplFileInfo;
 
 class JsonParserTest extends \PHPUnit_Framework_TestCase
 {
+    const FIXTURES_DIR = __DIR__ . '/../../../Fixtures/ContaoManager/Bundle/JsonParser';
+
     /**
      * @var JsonParser
      */
@@ -33,8 +36,8 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
 
     public function testInstanceOf()
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\JsonParser', $this->parser);
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ParserInterface', $this->parser);
+        $this->assertInstanceOf(JsonParser::class, $this->parser);
+        $this->assertInstanceOf(ParserInterface::class, $this->parser);
     }
 
     public function testSupports()
@@ -47,14 +50,14 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseSimpleObject()
     {
-        $configs = $this->parser->parse(__DIR__ . '/../../Fixtures/ContaoManager/Bundle/JsonParser/simple-object.json');
+        $configs = $this->parser->parse(self::FIXTURES_DIR . '/simple-object.json');
 
         $this->assertCount(1, $configs);
 
         /** @var ConfigInterface $config */
         $config = reset($configs);
 
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $config);
+        $this->assertInstanceOf(ConfigInterface::class, $config);
         $this->assertEquals('Contao\CoreBundle\ContaoCoreBundle', $config->getName());
         $this->assertEquals([], $config->getReplace());
         $this->assertTrue($config->loadInProduction());
@@ -64,14 +67,14 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseSimpleString()
     {
-        $configs = $this->parser->parse(__DIR__ . '/../../Fixtures/ContaoManager/Bundle/JsonParser/simple-string.json');
+        $configs = $this->parser->parse(self::FIXTURES_DIR . '/simple-string.json');
 
         $this->assertCount(1, $configs);
 
         /** @var ConfigInterface $config */
         $config = reset($configs);
 
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $config);
+        $this->assertInstanceOf(ConfigInterface::class, $config);
         $this->assertEquals('Contao\CoreBundle\ContaoCoreBundle', $config->getName());
         $this->assertEquals([], $config->getReplace());
         $this->assertTrue($config->loadInProduction());
@@ -82,19 +85,19 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
     public function testParseDevelopmentAndProduction()
     {
         /** @var ConfigInterface[] $configs */
-        $configs = $this->parser->parse(__DIR__ . '/../../Fixtures/ContaoManager/Bundle/JsonParser/dev-prod.json');
+        $configs = $this->parser->parse(self::FIXTURES_DIR . '/dev-prod.json');
 
         $this->assertCount(3, $configs);
 
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[0]);
+        $this->assertInstanceOf(ConfigInterface::class, $configs[0]);
         $this->assertTrue($configs[0]->loadInProduction());
         $this->assertTrue($configs[0]->loadInDevelopment());
 
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[1]);
+        $this->assertInstanceOf(ConfigInterface::class, $configs[1]);
         $this->assertFalse($configs[1]->loadInProduction());
         $this->assertTrue($configs[1]->loadInDevelopment());
 
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[2]);
+        $this->assertInstanceOf(ConfigInterface::class, $configs[2]);
         $this->assertTrue($configs[2]->loadInProduction());
         $this->assertFalse($configs[2]->loadInDevelopment());
     }
@@ -102,11 +105,11 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
     public function testParseOptional()
     {
         /** @var ConfigInterface[] $configs */
-        $configs = $this->parser->parse(__DIR__ . '/../../Fixtures/ContaoManager/Bundle/JsonParser/optional.json');
+        $configs = $this->parser->parse(self::FIXTURES_DIR . '/optional.json');
 
         $this->assertCount(2, $configs);
 
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[1]);
+        $this->assertInstanceOf(ConfigInterface::class, $configs[1]);
         $this->assertEquals('Contao\CoreBundle\ContaoCoreBundle', $configs[1]->getName());
         $this->assertEquals(['core'], $configs[1]->getReplace());
         $this->assertTrue($configs[1]->loadInProduction());
@@ -119,7 +122,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseNoBundle()
     {
-        $this->parser->parse(__DIR__ . '/../../Fixtures/ContaoManager/Bundle/JsonParser/no-bundle.json');
+        $this->parser->parse(self::FIXTURES_DIR . '/no-bundle.json');
     }
 
     /**
@@ -127,7 +130,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseMissingFile()
     {
-        $this->parser->parse(__DIR__ . '/../../Fixtures/ContaoManager/Bundle/JsonParser/missing.json');
+        $this->parser->parse(self::FIXTURES_DIR . '/missing.json');
     }
 
     /**
@@ -135,7 +138,7 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseInvalidJson()
     {
-        $this->parser->parse(__DIR__ . '/../../Fixtures/ContaoManager/Bundle/JsonParser/invalid.json');
+        $this->parser->parse(self::FIXTURES_DIR . '/invalid.json');
     }
 
     /**

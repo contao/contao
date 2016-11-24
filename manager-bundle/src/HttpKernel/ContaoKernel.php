@@ -11,10 +11,10 @@
 namespace Contao\ManagerBundle\HttpKernel;
 
 use Contao\ManagerBundle\ContaoManager\Bundle\BundleLoader;
-use Contao\ManagerBundle\ContaoManager\Bundle\ConfigResolverFactory;
-use Contao\ManagerBundle\ContaoManager\Bundle\DelegatingParser;
-use Contao\ManagerBundle\ContaoManager\Bundle\IniParser;
-use Contao\ManagerBundle\ContaoManager\Bundle\JsonParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigResolverFactory;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\DelegatingParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\IniParser;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\JsonParser;
 use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -155,9 +155,9 @@ class ContaoKernel extends Kernel
         }
 
         // Autoload AppBundle for convenience
-        $app = 'AppBundle\AppBundle';
-        if (isset($bundles[$app]) && class_exists($app)) {
-            $bundles[$app] = new $app();
+        $appBundle = 'AppBundle\AppBundle';
+        if (isset($bundles[$appBundle]) && class_exists($appBundle)) {
+            $bundles[$appBundle] = new $appBundle();
         }
     }
 }

@@ -10,6 +10,9 @@
 
 namespace Contao\ManagerBundle\ContaoManager\Bundle;
 
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigInterface;
+use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigResolverFactory;
+use Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface;
 use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Symfony\Component\Filesystem\Filesystem;
 
