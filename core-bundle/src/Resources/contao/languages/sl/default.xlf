@@ -1,297 +1,293 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="ru">
+  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="sl">
     <body>
       <trans-unit id="ERR.general">
         <source>An error occurred!</source>
-        <target>Произошла ошибка!</target>
+        <target>Pojavila se je napaka!</target>
       </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>
-        <target>Эта запись уже существует!</target>
+        <target>Ta vnos že obstaja!</target>
       </trans-unit>
       <trans-unit id="ERR.mandatory">
         <source>Field &quot;%s&quot; must not be empty!</source>
-        <target>Поле &quot;%s&quot; не должно быть пустым!</target>
+        <target>Prosimo izpolnite polje &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.mdtryNoLabel">
         <source>This field must not be empty!</source>
-        <target>Это поле не должно оставаться пустым!</target>
+        <target>To polje ne sme ostati prazno!</target>
       </trans-unit>
       <trans-unit id="ERR.minlength">
         <source>Field &quot;%s&quot; has to be at least %d characters long!</source>
-        <target>Поле &quot;%s&quot; должно быть длиной не менее %d символов!</target>
+        <target>Polje &quot;%s&quot; mora vsebovati vsaj %d znakov!</target>
       </trans-unit>
       <trans-unit id="ERR.maxlength">
         <source>Field &quot;%s&quot; must not be longer than %d characters!</source>
-        <target>Поле &quot;%s&quot; должно быть длиной не более %d символов!</target>
+        <target>Polje &quot;%s&quot; ne sme biti daljše od %d črk!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
         <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Поле &quot;%s&quot; должно быть не менее %d!</target>
+        <target>Polje &quot;%s&quot; mora biti najmanj %d!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
         <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Поле &quot;%s&quot; должно быть не более %d!</target>
+        <target>Polje &quot;%s&quot; mora biti večje kot %d!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
-        <target>Введите только цифры!</target>
+        <target>Prosimo vnesite samo številke!</target>
       </trans-unit>
       <trans-unit id="ERR.natural">
         <source>Please enter natural numbers only!</source>
-        <target>Введите только натуральные числа!</target>
+        <target>Prosim vpišite samo naravna števila.</target>
       </trans-unit>
       <trans-unit id="ERR.prcnt">
         <source>Please enter a percentage between 0 and 100!</source>
-        <target>Введите проценты от 0 до 100!</target>
+        <target>Prosimo vnesite odstotek med 0 in 100!</target>
       </trans-unit>
       <trans-unit id="ERR.alpha">
         <source>Please enter alphabetic characters only!</source>
-        <target>Введите только буквенные символы!</target>
+        <target>Prosimo vnesite samo črkovne znake!</target>
       </trans-unit>
       <trans-unit id="ERR.alnum">
         <source>Please enter alphanumeric characters only!</source>
-        <target>Введите только цифровые символы!</target>
+        <target>Prosimo vnesite samo alfanumerične znake!</target>
       </trans-unit>
       <trans-unit id="ERR.phone">
         <source>Please enter a valid phone number!</source>
-        <target>Введите действующий телефонный номер!</target>
+        <target>Prosimo vpišite veljavno telefonsko številko!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
         <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>По соображениям безопасности, вы не должны использовать здесь следующие символы: =&lt;&gt;&amp;/()#</target>
+        <target>Zaradi varnostnih razlogov lahko uporabite samo določene znake (=&amp;/()#)!</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
-        <target>Введите действующий e-mail адрес!</target>
+        <target>Prosimo vpišite veljaven e-poštni naslov!</target>
       </trans-unit>
       <trans-unit id="ERR.emails">
         <source>There is at least one invalid e-mail address!</source>
-        <target>Есть как минимум один неверный e-mail адрес!</target>
+        <target>Vnesen je bil najmanj en neveljaven e-mail naslov!</target>
       </trans-unit>
       <trans-unit id="ERR.url">
         <source>Please enter a valid URL format and encode special characters!</source>
-        <target>Введите URL в правильном формате и кодировке!</target>
+        <target>Prosimo vpišite veljaven URL format in kodirane posebne znake!</target>
       </trans-unit>
       <trans-unit id="ERR.locale">
         <source>Please enter a valid locale such as &quot;en&quot; or &quot;en_US&quot;!</source>
-        <target>Введите язык, напр. &quot;en&quot; или &quot;en_US&quot;!</target>
+        <target>Prosim, vnesite veljavno jezikovno kodo (locale), kot na primer &quot;en&quot; ali &quot;en_US&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.language">
         <source>Please enter a valid language code such as &quot;en&quot; or &quot;en-US&quot;!</source>
-        <target>Введите язык, напр. &quot;en&quot; или &quot;en_US&quot;!</target>
+        <target>Prosim, vnesite veljavno jezikovno kodo, kot na primer &quot;en&quot; ali &quot;en-US&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.alias">
         <source>Please enter only alphanumeric characters and the following special characters: .-_</source>
-        <target>Введите только буквы, цифры и следующие специальные символы: .-_</target>
+        <target>Prosim, vnesite le alfanumerične znake in sledeče posebne znake: .-_</target>
       </trans-unit>
       <trans-unit id="ERR.folderalias">
         <source>Please enter only alphanumeric characters and the following special characters: .-/_</source>
-        <target>Введите только буквы, цифры и следующие специальные символы: .-/_</target>
+        <target>Prosim, vnesite le alfanumerične znake in sledeče posebne znake: .-/_</target>
       </trans-unit>
       <trans-unit id="ERR.date">
         <source>Please enter the date as &quot;%s&quot;!</source>
-        <target>Введите дату как &quot;%s&quot;!</target>
+        <target>Prosimo vnesite datum v obliki &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.time">
         <source>Please enter the time as &quot;%s&quot;!</source>
-        <target>Введите время как &quot;%s&quot;!</target>
+        <target>Prosimo vnesite čas v obliki &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.dateTime">
         <source>Please enter date and time as &quot;%s&quot;!</source>
-        <target>Введите дату и время как &quot;%s&quot;!</target>
+        <target>Prosimo vnesite datum in čas v obliki &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidDate">
         <source>Invalid date &quot;%s&quot;!</source>
-        <target>Неверная дата &quot;%s&quot;!</target>
+        <target>Neveljaven datum &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.noSpace">
         <source>Field &quot;%s&quot; must not contain any whitespace characters!</source>
-        <target>Поле &quot;%s&quot; не должно содержать пробелов!</target>
+        <target>Polje &quot;%s&quot; ne sme vsebovati presledkov!</target>
       </trans-unit>
       <trans-unit id="ERR.filename">
         <source>The name of at least one uploaded file contains invalid characters or exceeds the maximum length of 255 characters!</source>
-        <target>Имя одного или нескольких загружаемых файлов содержит недопустимые символы или длина имени превышает 255 символов!</target>
+        <target>Naziv najmanj ene od naloženih datotek vsebuje neveljavne znake ali prekoračuje največjo dovoljeno dolžino 255 znakov!</target>
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
-        <target>Максимальный размер файла для загрузки %s. (см. настройки Contao или php.ini)!</target>
+        <target>Največja dovoljena velikost za prenos datoteke je %s kB!</target>
       </trans-unit>
       <trans-unit id="ERR.filetype">
         <source>File type &quot;%s&quot; is not allowed to be uploaded!</source>
-        <target>Тип файла &quot;%s&quot; не разрешен для загрузки!</target>
+        <target>Datoteka tipa &quot;%s&quot; ni dovoljena za prenos!</target>
       </trans-unit>
       <trans-unit id="ERR.filepartial">
         <source>File %s was only partially uploaded!</source>
-        <target>Файл %s был загружен частично!</target>
+        <target>Datoteka %s je bila samo delno prenešena!</target>
       </trans-unit>
       <trans-unit id="ERR.filewidth">
         <source>File %s exceeds the maximum image width of %d pixels!</source>
-        <target>В файле %s превышена максимальная ширина изображения в %d пикселей!</target>
+        <target>Datoteka %s presega največjo dovoljeno širino slike %d px!</target>
       </trans-unit>
       <trans-unit id="ERR.fileheight">
         <source>File %s exceeds the maximum image height of %d pixels!</source>
-        <target>В файле %s превышена максимальная высота изображения в %d пикселей!</target>
+        <target>Datoteka %s presega največjo dovoljeno višino slike %d px!</target>
       </trans-unit>
       <trans-unit id="ERR.fileerror">
         <source>Error %s occurred when uploading file %s!</source>
-        <target>Произошла ошибка %s при загрузке файла %s!</target>
+        <target>Prišlo je do napake %s pri nalaganju datoteke %s!</target>
       </trans-unit>
       <trans-unit id="ERR.filetarget">
         <source>Cannot move %s to %s because the target exists!</source>
-        <target>Невозможно переместить %s в %s потому, что цель уже существует!</target>
+        <target>Premik %s v %s ni mogoč, ker ciljna datoteka že obstaja!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
-        <target>Доступ запрещен! Текущий адрес хоста (%s) не соответствует представленному адресу (%s)!</target>
+        <target>Dostop zavrnjen! Trenutni gostiteljev naslov (%s) ni identičen željenemu gostiteljevemu naslovu (%s)</target>
       </trans-unit>
       <trans-unit id="ERR.invalidPass">
         <source>Invalid password!</source>
-        <target>Неверный пароль!</target>
+        <target>Napačno geslo!</target>
       </trans-unit>
       <trans-unit id="ERR.passwordLength">
         <source>A password has to be at least %d characters long!</source>
-        <target>Пароль должен содержать минимум %d символов!</target>
+        <target>Geslo mora vsebovati vsaj %d znakov!</target>
       </trans-unit>
       <trans-unit id="ERR.passwordName">
         <source>Your username and password must not be the same!</source>
-        <target>Логин не должен совпадать с паролем!</target>
+        <target>Uporabniško ime in geslo ne smeta biti enaka!</target>
       </trans-unit>
       <trans-unit id="ERR.passwordMatch">
         <source>The passwords did not match!</source>
-        <target>Пароли не совпадают!</target>
+        <target>Gesli se ne ujemata!</target>
       </trans-unit>
       <trans-unit id="ERR.accountLocked">
         <source>This account has been locked! You can log in again in %d minutes.</source>
-        <target>Эта учетная запись заблокирована! Вы сможете зайти через %d мин.</target>
+        <target>Račun je bil zaklenjen! Ponovno se lahko vpišete čez %d minut.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
-        <target>Ошибка авторизации! (Имя пользователя и пароль чувствительны к регистру)</target>
+        <target>Prijava ni uspela (opomba: uporabniška imena in gesla so občutljiva na velikost črk)!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidColor">
         <source>Invalid color format!</source>
-        <target>Неверный цветовой формат!</target>
+        <target>Neveljavna barvna definicija!</target>
       </trans-unit>
       <trans-unit id="ERR.all_fields">
         <source>Please select at least one field!</source>
-        <target>Выберите хотя бы одно поле!</target>
+        <target>Izberite vsaj eno polje!</target>
       </trans-unit>
       <trans-unit id="ERR.emptyUpload">
         <source>Please select at least one file!</source>
-        <target>Выберите хотя бы один файл!</target>
+        <target>Prosim, izberite vsaj eno datoteko!</target>
       </trans-unit>
       <trans-unit id="ERR.aliasExists">
         <source>The alias &quot;%s&quot; already exists!</source>
-        <target>Алиас страницы &quot;%s&quot; уже существует!</target>
+        <target>Vzdevek &quot;%s&quot; že obstaja!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
-        <target>Каталог &quot;%s&quot; не может быть импортирован!</target>
+        <target>Mape &quot;%s&quot; ni mogoče uvoziti!</target>
       </trans-unit>
       <trans-unit id="ERR.notWriteable">
         <source>The file &quot;%s&quot; is not writeable and can therefore not be updated!</source>
-        <target>Файл &quot;%s&quot; не доступен для записи и поэтому не может быть обновлен!</target>
+        <target>Datoteka &quot;%s&quot; ni zapisljiva. Vaših sprememb ni bilo mogoče izvesti!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidName">
         <source>This file or folder name is invalid!</source>
-        <target>Неверное имя файла или каталога!</target>
+        <target>Datoteka ali mapa ni veljavna!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidFile">
         <source>The file or folder &quot;%s&quot; is invalid!</source>
-        <target>Неверное имя файла или каталога &quot;%s&quot;!</target>
+        <target>Datoteka ali mapa &quot;%s&quot; ni veljavna!</target>
       </trans-unit>
       <trans-unit id="ERR.fileExists">
         <source>The file &quot;%s&quot; already exists!</source>
-        <target>Файл &quot;%s&quot; уже существует!</target>
+        <target>Datoteja &quot;%s&quot; že obstaja!</target>
       </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
-        <target>Неверный объект переадресации (циклическая ссылка)!</target>
+        <target>Napačen preusmeritveni cilj (krožni sklic)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
-        <target>В одном из имеющихся активных корней веб-сайта, у которого в настройках DNS не указано 'Имя домена', не включена опция 'Резервный язык'.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
-        <target>Ни в одном из имеющихся активных корней веб-сайта &lt;strong&gt;%s&lt;/strong&gt; не включена в настройках DNS опция 'Резервный язык'.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
-        <target>Вы можете определить только один корень веб-сайта на домен, в качестве резервного языка.</target>
+        <target>Nastavite lahko le eno izvorno stran na domeno kot nadomestni jezik.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
-        <target>Страницей верхнего уровня должен быть корень веб-сайта!</target>
+        <target>Strani v vrhnjem nivoju so lahko le tipa izvor spletne strani.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages in the site structure which are not website root pages.</source>
-        <target>В структуре сайта имеются страницы верхнего уровня, которые не являются корневыми страницами веб-сайта.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>Ссылка, которую вы пытались открыть не может быть проверена. Если вы нажали на ссылку самостоятельно или получили её от доверенного лица, можете подтвердить процесс ниже.</target>
+        <target>Povezave, katero hočete odpreti, ni bilo mogoče preveriti. Če ste sami kliknili na povezavo, ali povezavo dobili od zaupljive osebe, lahko potrdite proces spodaj.</target>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
-        <target>Форма не может быть отправлена</target>
+        <target>Obrazca ni bilo mogoče poslati</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
-        <target>Ответьте на контрольный вопрос!</target>
+        <target>Prosimo, odgovorite na varnostno vprašanje!</target>
       </trans-unit>
       <trans-unit id="ERR.download">
         <source>File &quot;%s&quot; is not available for download!</source>
-        <target>Файл &quot;%s&quot; не доступен для загрузки!</target>
+        <target>Datoteka &quot;%s&quot; ni na voljo za prenos!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
         <source>Invalid option: %s</source>
-        <target>Неверная настройка: %s</target>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
-        <target>Не найдена запись базы данных для %s. Синхронизируйте файловую систему.</target>
+        <target>Za %s ne obstaja vnos v podatkovni bazi. Prosim, sinhronizirajte datotečni sistem.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidGoogleId">
         <source>Please enter a numeric Google+ ID or vanity name!</source>
-        <target>Введите ID своего профиля Google+ или его короткое имя!</target>
+        <target>Vpišite numerični Google+ ID ali izbrano ime!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
-        <target>Введите только следующие символы: A-Z0-9[]_-</target>
+        <target>Prosim, vnesite le sledeče znake: A-Z0-0[]_-</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
-        <target>Пожалуйста, прибавьте %d к %d.</target>
+        <target>Seštejte %d in %d.</target>
       </trans-unit>
       <trans-unit id="SEC.question2">
         <source>What is the sum of %d and %d?</source>
-        <target>Что будет являться суммой %d и %d?</target>
+        <target>Kakšna je vsota %d in %d?</target>
       </trans-unit>
       <trans-unit id="SEC.question3">
         <source>Please calculate %d plus %d.</source>
-        <target>Пожалуйста, сложите %d и %d.</target>
+        <target>Izračunajte %d plus %s.</target>
       </trans-unit>
       <trans-unit id="CTE.texts">
         <source>Text elements</source>
-        <target>Текстовые элементы</target>
+        <target>Elementi teksta</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
-        <target>Заголовок</target>
+        <target>Naslov</target>
       </trans-unit>
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
-        <target>Создает заголовок (h1 - h6).</target>
+        <target>Generira naslov (h1 - h6).</target>
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
-        <target>Текст</target>
+        <target>Tekst</target>
       </trans-unit>
       <trans-unit id="CTE.text.1">
         <source>Generates a rich text element.</source>
-        <target>Создает элемент форматированного текста.</target>
+        <target>Generira obogateno besedilo.</target>
       </trans-unit>
       <trans-unit id="CTE.html.0">
         <source>HTML</source>
@@ -299,135 +295,135 @@
       </trans-unit>
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
-        <target>Позволяет добавить пользовательский HTML-код.</target>
+        <target>Omogoča dodajanje HTML kode po meri.</target>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
-        <target>List (Список)</target>
+        <target>Seznam</target>
       </trans-unit>
       <trans-unit id="CTE.list.1">
         <source>Generates an ordered or unordered list.</source>
-        <target>Создает отсортированный или неупорядоченный список.</target>
+        <target>Generira razvrščen ali nerazvrščen seznam.</target>
       </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
-        <target>Таблица</target>
+        <target>Tabela</target>
       </trans-unit>
       <trans-unit id="CTE.table.1">
         <source>Generates an optionally sortable table.</source>
-        <target>Создает таблицу с поддержкой сортировки.</target>
+        <target>Generira tabelo. Opcijsko z razvrščanjem.</target>
       </trans-unit>
       <trans-unit id="CTE.accordion">
         <source>Accordion</source>
-        <target>Раздвижная панель (Accordion)</target>
+        <target>Harmonika</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
         <source>Wrapper start</source>
-        <target>Начало wrapper (обёртки)</target>
+        <target>Začetek ovoja</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
-        <target>Открывает раздвижную панель.</target>
+        <target>Generira začetni del ovoja harmonike.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
         <source>Wrapper stop</source>
-        <target>Конец wrapper (обёртки)</target>
+        <target>Konec ovoja</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
-        <target>Закрывает раздвижную панель.</target>
+        <target>Generira zaključni del ovoja harmonike.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
         <source>Single element</source>
-        <target>Единичный элемент</target>
+        <target>Samostojen element</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
-        <target>Создает единичный элемент раздвижной панели</target>
+        <target>Generira samostojen element harmonike.</target>
       </trans-unit>
       <trans-unit id="CTE.code.0">
         <source>Code</source>
-        <target>Код</target>
+        <target>Koda</target>
       </trans-unit>
       <trans-unit id="CTE.code.1">
         <source>Highlights code snippets and prints them to the screen.</source>
-        <target>Выделяет фрагменты кода и выводит их на экран.</target>
+        <target>Osvetli odlomek kode in ga prikaže na ekranu</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.0">
         <source>Markdown</source>
-        <target>Маркдаун (Markdown)</target>
+        <target>Označba</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a markdown text.</source>
-        <target>Создает HTML-код из маркдаун-текста.</target>
+        <target>Ustvari HTML kode iz markdown teksta</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
-        <target>Слайдер контента</target>
+        <target>Drsnik vsebine</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
         <source>Wrapper start</source>
-        <target>Начало wrapper (обёртки)</target>
+        <target>Začetek ovoja</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
-        <target>Открывает слайдер.</target>
+        <target>Generira začetni del ovoja drsnika.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
         <source>Wrapper stop</source>
-        <target>Конец wrapper (обёртки)</target>
+        <target>Konec ovoja</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
-        <target>Закрывает слайдер.</target>
+        <target>Generira zaključni del ovoja drsnika.</target>
       </trans-unit>
       <trans-unit id="CTE.links">
         <source>Link elements</source>
-        <target>Элементы ссылки</target>
+        <target>Elementi povezave</target>
       </trans-unit>
       <trans-unit id="CTE.hyperlink.0">
         <source>Hyperlink</source>
-        <target>Гиперссылка</target>
+        <target>Hiperpovezava</target>
       </trans-unit>
       <trans-unit id="CTE.hyperlink.1">
         <source>Generates a link to another website.</source>
-        <target>Создает гиперссылку на другой веб-сайт.</target>
+        <target>Generira povezavo na drugo spletno mesto.</target>
       </trans-unit>
       <trans-unit id="CTE.toplink.0">
         <source>Top link</source>
-        <target>Ссылка 'Наверх страницы'</target>
+        <target>Povezava na vrh</target>
       </trans-unit>
       <trans-unit id="CTE.toplink.1">
         <source>Generates a link to jump to the top of the page.</source>
-        <target>Создает ссылку для быстрого перехода к верхней части страницы.</target>
+        <target>Generira povezavo za skok na vrh strani.</target>
       </trans-unit>
       <trans-unit id="CTE.media">
         <source>Media elements</source>
-        <target>Мультимедиа элементы</target>
+        <target>Medijski elementi</target>
       </trans-unit>
       <trans-unit id="CTE.image.0">
         <source>Image</source>
-        <target>Изображение</target>
+        <target>Slika</target>
       </trans-unit>
       <trans-unit id="CTE.image.1">
         <source>Generates a stand-alone image.</source>
-        <target>Создает отдельно стоящее изображение.</target>
+        <target>Generira samostojno sliko.</target>
       </trans-unit>
       <trans-unit id="CTE.gallery.0">
         <source>Gallery</source>
-        <target>Галерея изображений</target>
+        <target>Galerija</target>
       </trans-unit>
       <trans-unit id="CTE.gallery.1">
         <source>Generates a lightbox image gallery.</source>
-        <target>Создает лайтбокс галерею изображений, с возможностью полноразмерного просмотра.</target>
+        <target>Generira &quot;lightbox&quot; galerijo slik.</target>
       </trans-unit>
       <trans-unit id="CTE.player.0">
         <source>Video/audio</source>
-        <target>Видео/аудио</target>
+        <target>Video/avdio</target>
       </trans-unit>
       <trans-unit id="CTE.player.1">
         <source>Generates a video or audio player.</source>
-        <target>Создает видео или аудио проигрыватель.</target>
+        <target>Ustvari video ali avdio predvajalnik.</target>
       </trans-unit>
       <trans-unit id="CTE.youtube.0">
         <source>YouTube</source>
@@ -435,355 +431,352 @@
       </trans-unit>
       <trans-unit id="CTE.youtube.1">
         <source>Adds a YouTube video.</source>
-        <target>Добавляет видео с YouTube.</target>
+        <target>Doda YouTube video.</target>
       </trans-unit>
       <trans-unit id="CTE.vimeo.0">
         <source>Vimeo</source>
-        <target>Vimeo</target>
       </trans-unit>
       <trans-unit id="CTE.vimeo.1">
         <source>Adds a Vimeo video.</source>
-        <target>Добавляет видео с Vimeo.</target>
       </trans-unit>
       <trans-unit id="CTE.files">
         <source>File elements</source>
-        <target>Элементы файла</target>
+        <target>Elementi datotek</target>
       </trans-unit>
       <trans-unit id="CTE.download.0">
         <source>Download</source>
-        <target>Загрузка одного файла с веб-сайта</target>
+        <target>Prenos</target>
       </trans-unit>
       <trans-unit id="CTE.download.1">
         <source>Generates a link to download a file.</source>
-        <target>Создает гиперссылку на файл для загрузки с веб-сайта.</target>
+        <target>Generira povezavo na datoteko za prenos.</target>
       </trans-unit>
       <trans-unit id="CTE.downloads.0">
         <source>Downloads</source>
-        <target>Загрузка нескольких файлов с веб-сайта</target>
+        <target>Prenosi</target>
       </trans-unit>
       <trans-unit id="CTE.downloads.1">
         <source>Generates multiple links to download files.</source>
-        <target>Создает гиперссылки на несколько файлов для их загрузки с веб-сайта.</target>
+        <target>Generira povezave na datoteke za prenos</target>
       </trans-unit>
       <trans-unit id="CTE.includes">
         <source>Include elements</source>
-        <target>Элементы вложения</target>
+        <target>Vključi elemente</target>
       </trans-unit>
       <trans-unit id="CTE.article.0">
         <source>Article</source>
-        <target>Статья</target>
+        <target>Članek</target>
       </trans-unit>
       <trans-unit id="CTE.article.1">
         <source>Includes another article.</source>
-        <target>Позволяет включать статью в другую статью.</target>
+        <target>Vključi članek.</target>
       </trans-unit>
       <trans-unit id="CTE.alias.0">
         <source>Content element</source>
-        <target>Элемент контента</target>
+        <target>Element vsebine</target>
       </trans-unit>
       <trans-unit id="CTE.alias.1">
         <source>Includes another content element.</source>
-        <target>Позволяет включать иные элементы контента в статью.</target>
+        <target>Vključi element vsebine.</target>
       </trans-unit>
       <trans-unit id="CTE.form.0">
         <source>Form</source>
-        <target>Форма</target>
+        <target>Obrazec</target>
       </trans-unit>
       <trans-unit id="CTE.form.1">
         <source>Includes a form.</source>
-        <target>Позволяет внедрять формы в статью.</target>
+        <target>Vključi obrazec.</target>
       </trans-unit>
       <trans-unit id="CTE.module.0">
         <source>Module</source>
-        <target>Модуль</target>
+        <target>Modul</target>
       </trans-unit>
       <trans-unit id="CTE.module.1">
         <source>Includes a front end module.</source>
-        <target>Позволяет внедрять модули внешнего интерфейса в статью.</target>
+        <target>Vključi modul (front end).</target>
       </trans-unit>
       <trans-unit id="CTE.teaser.0">
         <source>Article teaser</source>
-        <target>Анонс статьи</target>
+        <target>Osnutek članka</target>
       </trans-unit>
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
-        <target>Позволяет показать текст анонса определённой статьи.</target>
+        <target>Prikaže uvodni tekst članka.</target>
       </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
-        <target>Постоянная страница</target>
+        <target>Navadna stran</target>
       </trans-unit>
       <trans-unit id="PTY.regular.1">
         <source>A regular page contains articles and content elements. It is the default page type.</source>
-        <target>Постоянная страница содержит статьи и элементы контента. Это тип страницы по умолчанию.</target>
+        <target>Navadna stran vsebuje članke in vsebinske elemente. Je tip privzete strani.</target>
       </trans-unit>
       <trans-unit id="PTY.redirect.0">
         <source>External redirect</source>
-        <target>Переадресация на внешний URL</target>
+        <target>Zunanja preusmeritev</target>
       </trans-unit>
       <trans-unit id="PTY.redirect.1">
         <source>This type of page automatically redirects visitors to an external website. It works like a hyperlink.</source>
-        <target>Тип страницы автоматически перенаправляет посетителей на внешний веб-сайт. Работает как гиперссылка.</target>
+        <target>Ta tip strani avtomatično preusmeri uporabnika na zunanjo spletno stran. Deluje podobno kot hiperpovezava.</target>
       </trans-unit>
       <trans-unit id="PTY.forward.0">
         <source>Internal redirect</source>
-        <target>Переадресация на другую страницу</target>
+        <target>Notranja preusmeritev</target>
       </trans-unit>
       <trans-unit id="PTY.forward.1">
         <source>This type of page automatically forwards visitors to another page within the site structure.</source>
-        <target>Тип страницы автоматически переправляет посетителей на другую страницу в структуре веб-сайта.</target>
+        <target>Ta tip strani avtomatično preusmeri uporabnika na določeno podstran znotraj spletnega mesta.</target>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
-        <target>Корень веб-сайта</target>
+        <target>Izvor spletne strani</target>
       </trans-unit>
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website within the site structure.</source>
-        <target>Этот тип страницы является отправной точкой нового веб-сайта в структуре веб-сайта.</target>
+        <target>Ta tip strani označi začetno točko nove spletne strani.</target>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
-        <target>Выход</target>
+        <target>Odjava</target>
       </trans-unit>
       <trans-unit id="PTY.logout.1">
         <source>This type of page automatically logs out the user.</source>
-        <target>Этот тип страницы автоматически завершает сеанс пользователя.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
-        <target>Ошибка 403 (доступ запрещен)</target>
+        <target>Napaka 403 (dostop zavrnjen)</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
         <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>Страница выводится, когда пользователь пытается получить доступ к защищенной странице без разрешения.</target>
+        <target>Če bo uporabnik zahteval zaščiteno stran brez dovoljenja, se bo naložila stran &quot;napaka 403&quot;.</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
-        <target>Ошибка 404 (страница не найдена)</target>
+        <target>Napaka 404 (ne najdem strani)</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
         <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>Страница выводится, когда пользователь пытается получить доступ к несуществующей странице.</target>
+        <target>Če bo uporabnik zahteval neobstoječo stran, se bo naložila stran &quot;napaka 404&quot;.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
-        <target>Разрешения на операции с файлами</target>
+        <target>Dovoljenja datotek</target>
       </trans-unit>
       <trans-unit id="FOP.fop.1">
         <source>Here you can select the file operations you want to allow.</source>
-        <target>Выберите разрешения на операции с файлами.</target>
+        <target>Tukaj lahko izberete opracije datotek, ki jih želite dovoliti.</target>
       </trans-unit>
       <trans-unit id="FOP.f1">
         <source>Upload files to the server</source>
-        <target>Загрузить файлы на сервер</target>
+        <target>Naloži datoteke na strežnik</target>
       </trans-unit>
       <trans-unit id="FOP.f2">
         <source>Edit, copy or move files and folders</source>
-        <target>Редактирование, копирование или перемещение файлов и каталогов</target>
+        <target>Uredi, kopiraj ali premakni datoteke in mape</target>
       </trans-unit>
       <trans-unit id="FOP.f3">
         <source>Delete single files and empty folders</source>
-        <target>Удалить одиночные файлы или пустой каталог</target>
+        <target>Izbriši samostojne datoteke in prazne mape</target>
       </trans-unit>
       <trans-unit id="FOP.f4">
         <source>Delete folders including all files and subfolders (!)</source>
-        <target>Удалить каталог, включая все файлы и подкаталоги (!)</target>
+        <target>Izbriši mape, vključno z datotekami in podmapami (!)</target>
       </trans-unit>
       <trans-unit id="FOP.f5">
         <source>Edit files in the source editor</source>
-        <target>Редактировать файлы в редакторе кода</target>
+        <target>Uredi datoteke v urejevalniku izvorne kode</target>
       </trans-unit>
       <trans-unit id="FOP.f6">
         <source>Synchronize the file system with the database</source>
-        <target>Синхронизировать файловую систему и базу данных</target>
+        <target>Sinhroniziraj datotečni sistem s podatkovno bazo.</target>
       </trans-unit>
       <trans-unit id="CHMOD.editpage">
         <source>Edit page</source>
-        <target>Редактировать страницу</target>
+        <target>Uredi stran</target>
       </trans-unit>
       <trans-unit id="CHMOD.editnavigation">
         <source>Edit page hierarchy</source>
-        <target>Редактировать иерархию страниц</target>
+        <target>Uredi hierarhijo strani</target>
       </trans-unit>
       <trans-unit id="CHMOD.deletepage">
         <source>Delete page</source>
-        <target>Удалить страницу</target>
+        <target>Izbriši stran</target>
       </trans-unit>
       <trans-unit id="CHMOD.editarticles">
         <source>Edit articles</source>
-        <target>Редактировать статьи</target>
+        <target>Uredi članek</target>
       </trans-unit>
       <trans-unit id="CHMOD.movearticles">
         <source>Edit article hierarchy</source>
-        <target>Редактировать иерархию статей</target>
+        <target>Uredi hierarhijo člankov</target>
       </trans-unit>
       <trans-unit id="CHMOD.deletearticles">
         <source>Delete articles</source>
-        <target>Удалить статьи</target>
+        <target>Izbriši članek</target>
       </trans-unit>
       <trans-unit id="CHMOD.cuser">
         <source>Owner</source>
-        <target>Владелец</target>
+        <target>Lastnik</target>
       </trans-unit>
       <trans-unit id="CHMOD.cgroup">
         <source>Group</source>
-        <target>Группа</target>
+        <target>Skupina</target>
       </trans-unit>
       <trans-unit id="CHMOD.cworld">
         <source>Everybody</source>
-        <target>Любой</target>
+        <target>Vsi</target>
       </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
-        <target>Воскресенье</target>
+        <target>Nedelja</target>
       </trans-unit>
       <trans-unit id="DAYS.1">
         <source>Monday</source>
-        <target>Понедельник</target>
+        <target>Ponedeljek</target>
       </trans-unit>
       <trans-unit id="DAYS.2">
         <source>Tuesday</source>
-        <target>Вторник</target>
+        <target>Torek</target>
       </trans-unit>
       <trans-unit id="DAYS.3">
         <source>Wednesday</source>
-        <target>Среда</target>
+        <target>Sreda</target>
       </trans-unit>
       <trans-unit id="DAYS.4">
         <source>Thursday</source>
-        <target>Четверг</target>
+        <target>Četrtek</target>
       </trans-unit>
       <trans-unit id="DAYS.5">
         <source>Friday</source>
-        <target>Пятница</target>
+        <target>Petek</target>
       </trans-unit>
       <trans-unit id="DAYS.6">
         <source>Saturday</source>
-        <target>Суббота</target>
+        <target>Sobota</target>
       </trans-unit>
       <trans-unit id="DAYS_SHORT.0">
         <source>Sun</source>
-        <target>Вс</target>
+        <target>Ned</target>
       </trans-unit>
       <trans-unit id="DAYS_SHORT.1">
         <source>Mon</source>
-        <target>Пн</target>
+        <target>Pon</target>
       </trans-unit>
       <trans-unit id="DAYS_SHORT.2">
         <source>Tue</source>
-        <target>Вт</target>
+        <target>Tor</target>
       </trans-unit>
       <trans-unit id="DAYS_SHORT.3">
         <source>Wed</source>
-        <target>Ср</target>
+        <target>Sre</target>
       </trans-unit>
       <trans-unit id="DAYS_SHORT.4">
         <source>Thu</source>
-        <target>Чт</target>
+        <target>Čet</target>
       </trans-unit>
       <trans-unit id="DAYS_SHORT.5">
         <source>Fri</source>
-        <target>Пт</target>
+        <target>Pet</target>
       </trans-unit>
       <trans-unit id="DAYS_SHORT.6">
         <source>Sat</source>
-        <target>Сб</target>
+        <target>Sob</target>
       </trans-unit>
       <trans-unit id="MONTHS.0">
         <source>January</source>
-        <target>Январь</target>
+        <target>Januar</target>
       </trans-unit>
       <trans-unit id="MONTHS.1">
         <source>February</source>
-        <target>Февраль</target>
+        <target>Februar</target>
       </trans-unit>
       <trans-unit id="MONTHS.2">
         <source>March</source>
-        <target>Март</target>
+        <target>Marec</target>
       </trans-unit>
       <trans-unit id="MONTHS.3">
         <source>April</source>
-        <target>Апрель</target>
+        <target>April</target>
       </trans-unit>
       <trans-unit id="MONTHS.4">
         <source>May</source>
-        <target>Май</target>
+        <target>Maj</target>
       </trans-unit>
       <trans-unit id="MONTHS.5">
         <source>June</source>
-        <target>Июнь</target>
+        <target>Junij</target>
       </trans-unit>
       <trans-unit id="MONTHS.6">
         <source>July</source>
-        <target>Июль</target>
+        <target>Julij</target>
       </trans-unit>
       <trans-unit id="MONTHS.7">
         <source>August</source>
-        <target>Август</target>
+        <target>Avgust</target>
       </trans-unit>
       <trans-unit id="MONTHS.8">
         <source>September</source>
-        <target>Сентябрь</target>
+        <target>September</target>
       </trans-unit>
       <trans-unit id="MONTHS.9">
         <source>October</source>
-        <target>Октябрь</target>
+        <target>Oktober</target>
       </trans-unit>
       <trans-unit id="MONTHS.10">
         <source>November</source>
-        <target>Ноябрь</target>
+        <target>November</target>
       </trans-unit>
       <trans-unit id="MONTHS.11">
         <source>December</source>
-        <target>Декабрь</target>
+        <target>December</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.0">
         <source>Jan</source>
-        <target>Янв</target>
+        <target>Jan</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.1">
         <source>Feb</source>
-        <target>Фев</target>
+        <target>Feb</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.2">
         <source>Mar</source>
-        <target>Мар</target>
+        <target>Mar</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.3">
         <source>Apr</source>
-        <target>Апр</target>
+        <target>Apr</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.4">
         <source>May</source>
-        <target>Май</target>
+        <target>Maj</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.5">
         <source>Jun</source>
-        <target>Июн</target>
+        <target>Jun</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.6">
         <source>Jul</source>
-        <target>Июл</target>
+        <target>Jul</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.7">
         <source>Aug</source>
-        <target>Авг</target>
+        <target>Avg</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.8">
         <source>Sep</source>
-        <target>Сен</target>
+        <target>Sep</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.9">
         <source>Oct</source>
-        <target>Окт</target>
+        <target>Okt</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.10">
         <source>Nov</source>
-        <target>Ноя</target>
+        <target>Nov</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.11">
         <source>Dec</source>
-        <target>Дек</target>
+        <target>Dec</target>
       </trans-unit>
       <trans-unit id="MSC.dayShortLength">
         <source>3</source>
@@ -799,23 +792,23 @@
       </trans-unit>
       <trans-unit id="MSC.titleFormat">
         <source>%B %d%o, %Y</source>
-        <target>%B %d%o, %Y</target>
+        <target>l, dS od F Y</target>
       </trans-unit>
       <trans-unit id="MSC.url.0">
         <source>Link target</source>
-        <target>URL назначения</target>
+        <target>Cilj povezave</target>
       </trans-unit>
       <trans-unit id="MSC.url.1">
         <source>Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.</source>
-        <target>Введите URL назначения, включая сетевой протокол (http://…), а для e-mail адреса (mailto:…).</target>
+        <target>Prosimo vnesite naslov spletne strani (http://...), in e-mail naslov (mailto:...) ali vstavite oznako.</target>
       </trans-unit>
       <trans-unit id="MSC.target.0">
         <source>Open in new window</source>
-        <target>Открыть в новом окне</target>
+        <target>Odpri v novem oknu</target>
       </trans-unit>
       <trans-unit id="MSC.target.1">
         <source>Open the link in a new browser window.</source>
-        <target>Открыть ссылку в новом окне браузера.</target>
+        <target>Odpri povezavo v novem oknu.</target>
       </trans-unit>
       <trans-unit id="MSC.textDirection">
         <source>ltr</source>
@@ -831,199 +824,199 @@
       </trans-unit>
       <trans-unit id="MSC.separator.0">
         <source>Separator</source>
-        <target>Разделитель</target>
+        <target>Ločilo</target>
       </trans-unit>
       <trans-unit id="MSC.separator.1">
         <source>Please choose a field delimiter.</source>
-        <target>Выберите знак, который разделяет значения.</target>
+        <target>Prosimo izberite ločilo polja.</target>
       </trans-unit>
       <trans-unit id="MSC.source.0">
         <source>Source files</source>
-        <target>Исходные файлы</target>
+        <target>Izvorne datoteke</target>
       </trans-unit>
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
-        <target>Выберите CSV-файлы для импорта.</target>
+        <target>Prosimo izberite iz imenika datotek, CSV datoteke za uvoz.</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
-        <target>Запятая</target>
+        <target>Vejica</target>
       </trans-unit>
       <trans-unit id="MSC.semicolon">
         <source>Semicolon</source>
-        <target>Точка с запятой</target>
+        <target>Podpičje</target>
       </trans-unit>
       <trans-unit id="MSC.tabulator">
         <source>Tabulator</source>
-        <target>Табулятор</target>
+        <target>Tabulator</target>
       </trans-unit>
       <trans-unit id="MSC.linebreak">
         <source>Line break</source>
-        <target>Разрыв строки</target>
+        <target>Prelom vrstice</target>
       </trans-unit>
       <trans-unit id="MSC.lw_import.0">
         <source>CSV import</source>
-        <target>CSV импорт</target>
+        <target>CSV uvoz</target>
       </trans-unit>
       <trans-unit id="MSC.lw_import.1">
         <source>Import list items from a CSV file</source>
-        <target>Импорт списка элементов из CSV-файла</target>
+        <target>Uvozite elemente s seznama CSV datoteke</target>
       </trans-unit>
       <trans-unit id="MSC.lw_copy">
         <source>Duplicate the element</source>
-        <target>Дублировать элемент</target>
+        <target>Dupliciraj element</target>
       </trans-unit>
       <trans-unit id="MSC.lw_up">
         <source>Move the element one position up</source>
-        <target>Переместить элемент на одну позицию вверх</target>
+        <target>Premakni element za eno pozicijo gor</target>
       </trans-unit>
       <trans-unit id="MSC.lw_down">
         <source>Move the element one position down</source>
-        <target>Переместить элемент на одну позицию вниз</target>
+        <target>Premakni element za eno pozicijo dol</target>
       </trans-unit>
       <trans-unit id="MSC.lw_delete">
         <source>Delete the element</source>
-        <target>Удалить элемент</target>
+        <target>Izbriši element</target>
       </trans-unit>
       <trans-unit id="MSC.tw_import.0">
         <source>CSV import</source>
-        <target>CSV импорт</target>
+        <target>CSV uvoz</target>
       </trans-unit>
       <trans-unit id="MSC.tw_import.1">
         <source>Import table items from a CSV file</source>
-        <target>Импорт элементов таблицы из CSV-файла</target>
+        <target>Uvozi elemente tabele iz CSV datoteke</target>
       </trans-unit>
       <trans-unit id="MSC.tw_expand">
         <source>Increase the input field size</source>
-        <target>Увеличить размер поля ввода</target>
+        <target>Povečaj velikost vnosnega polja</target>
       </trans-unit>
       <trans-unit id="MSC.tw_shrink">
         <source>Decrease the input field size</source>
-        <target>Уменьшить размер поля ввода</target>
+        <target>Zmanjšaj velikost vnosnega polja</target>
       </trans-unit>
       <trans-unit id="MSC.tw_rcopy">
         <source>Duplicate the row</source>
-        <target>Дублировать строку</target>
+        <target>Podvoji kolono</target>
       </trans-unit>
       <trans-unit id="MSC.tw_rup">
         <source>Move the row one position up</source>
-        <target>Переместить строку на одну позицию вверх</target>
+        <target>Premakni vrstico za eno pozicijo gor</target>
       </trans-unit>
       <trans-unit id="MSC.tw_rdown">
         <source>Move the row one position down</source>
-        <target>Переместить строку на одну позицию вниз</target>
+        <target>Premakni vrstico za eno pozicijo dol</target>
       </trans-unit>
       <trans-unit id="MSC.tw_rdelete">
         <source>Delete the row</source>
-        <target>Удалить строку</target>
+        <target>Izbriši vrstico</target>
       </trans-unit>
       <trans-unit id="MSC.tw_ccopy">
         <source>Duplicate the column</source>
-        <target>Дублировать колонку</target>
+        <target>Podvoji kolono</target>
       </trans-unit>
       <trans-unit id="MSC.tw_cmovel">
         <source>Move the column one position left</source>
-        <target>Переместить колонку на одну позицию влево</target>
+        <target>Premakni kolono za eno pozicijo gor</target>
       </trans-unit>
       <trans-unit id="MSC.tw_cmover">
         <source>Move the column one position right</source>
-        <target>Переместить колонку на одну позицию вправо</target>
+        <target>Premakni kolono za eno pozicijo dol</target>
       </trans-unit>
       <trans-unit id="MSC.tw_cdelete">
         <source>Delete the column</source>
-        <target>Удалить колонку</target>
+        <target>Izbriši kolono</target>
       </trans-unit>
       <trans-unit id="MSC.ow_copy">
         <source>Duplicate the row</source>
-        <target>Дублировать строку</target>
+        <target>Podvoji kolono</target>
       </trans-unit>
       <trans-unit id="MSC.ow_up">
         <source>Move the row one position up</source>
-        <target>Переместить строку на одну позицию вверх</target>
+        <target>Premakni vrstico za eno pozicijo gor</target>
       </trans-unit>
       <trans-unit id="MSC.ow_down">
         <source>Move the row one position down</source>
-        <target>Переместить строку на одну позицию вниз</target>
+        <target>Premakni vrstico za eno pozicijo dol</target>
       </trans-unit>
       <trans-unit id="MSC.ow_delete">
         <source>Delete the row</source>
-        <target>Удалить строку</target>
+        <target>Izbriši vrstico</target>
       </trans-unit>
       <trans-unit id="MSC.ow_value">
         <source>Value</source>
-        <target>Значение</target>
+        <target>Vrednost</target>
       </trans-unit>
       <trans-unit id="MSC.ow_label">
         <source>Label</source>
-        <target>Метка</target>
+        <target>Nalepka</target>
       </trans-unit>
       <trans-unit id="MSC.ow_key">
         <source>Key</source>
-        <target>Ключ</target>
+        <target>Ključ</target>
       </trans-unit>
       <trans-unit id="MSC.ow_default">
         <source>Default</source>
-        <target>По умолчанию</target>
+        <target>Privzeto</target>
       </trans-unit>
       <trans-unit id="MSC.ow_group">
         <source>Group</source>
-        <target>Группа</target>
+        <target>Skupina</target>
       </trans-unit>
       <trans-unit id="MSC.mw_copy">
         <source>Duplicate the row</source>
-        <target>Дублировать строку</target>
+        <target>Podvoji kolono</target>
       </trans-unit>
       <trans-unit id="MSC.mw_up">
         <source>Move the row one position up</source>
-        <target>Переместить строку на одну позицию вверх</target>
+        <target>Premakni vrstico za eno pozicijo gor</target>
       </trans-unit>
       <trans-unit id="MSC.mw_down">
         <source>Move the row one position down</source>
-        <target>Переместить строку на одну позицию вниз</target>
+        <target>Premakni vrstico za eno pozicijo dol</target>
       </trans-unit>
       <trans-unit id="MSC.mw_delete">
         <source>Delete the row</source>
-        <target>Удалить строку</target>
+        <target>Izbriši vrstico</target>
       </trans-unit>
       <trans-unit id="MSC.mw_module">
         <source>Module</source>
-        <target>Модуль</target>
+        <target>Modul</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Column</source>
-        <target>Колонка</target>
+        <target>Kolona</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
-        <target>Включить/отключить модуль</target>
+        <target>Omogoči/onemogoči modul</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>
-        <target>Название</target>
+        <target>Naziv</target>
       </trans-unit>
       <trans-unit id="MSC.aw_alt">
         <source>Alternate text</source>
-        <target>Альтернативный текст</target>
+        <target>Alternativno besedilo</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
-        <target>Ссылка</target>
+        <target>Povezava</target>
       </trans-unit>
       <trans-unit id="MSC.aw_caption">
         <source>Caption</source>
-        <target>Подпись</target>
+        <target>Napis</target>
       </trans-unit>
       <trans-unit id="MSC.aw_delete">
         <source>Delete the language</source>
-        <target>Удалить язык</target>
+        <target>Izbriši jezik</target>
       </trans-unit>
       <trans-unit id="MSC.aw_new">
         <source>Add language</source>
-        <target>Добавить язык</target>
+        <target>Dodaj jezik</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
-        <target>Название</target>
+        <target>Naziv</target>
       </trans-unit>
       <trans-unit id="MSC.sw_id">
         <source>ID</source>
@@ -1031,123 +1024,122 @@
       </trans-unit>
       <trans-unit id="MSC.sw_template">
         <source>Template</source>
-        <target>Шаблон</target>
       </trans-unit>
       <trans-unit id="MSC.sw_position">
         <source>Position</source>
-        <target>Position (Позиционирование)</target>
+        <target>Pozicija</target>
       </trans-unit>
       <trans-unit id="MSC.image_sizes">
         <source>Predefined dimensions</source>
-        <target>Предопределенные размеры</target>
+        <target>Vnaprej določene dimenzije</target>
       </trans-unit>
       <trans-unit id="MSC.relative">
         <source>Relative dimensions</source>
-        <target>Относительные размеры</target>
+        <target>Relativne dimenzije</target>
       </trans-unit>
       <trans-unit id="MSC.proportional.0">
         <source>Proportional</source>
-        <target>Пропорционально</target>
+        <target>Proporcionalno</target>
       </trans-unit>
       <trans-unit id="MSC.proportional.1">
         <source>The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>Более длинная сторона изображения скорректирована относительно заданного размера и изображение изменено пропорционально.</target>
+        <target>Daljša stranica slike se prilagodi na podane dimenzije in slika spremeni velikost proporcionalno.</target>
       </trans-unit>
       <trans-unit id="MSC.box.0">
         <source>Fit the box</source>
-        <target>Установить поле</target>
+        <target>Se prilega oknu</target>
       </trans-unit>
       <trans-unit id="MSC.box.1">
         <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>Более короткая сторона изображения скорректирована относительно заданного размера и изображение изменено пропорционально.</target>
+        <target>Krajša stranica se prilagodi na podane dimenzije in slika spremeni velikost proporcionalno.</target>
       </trans-unit>
       <trans-unit id="MSC.exact.0">
         <source>Exact dimensions</source>
-        <target>Точный размер</target>
+        <target>Točne dimenzije</target>
       </trans-unit>
       <trans-unit id="MSC.exact.1">
         <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
-        <target>Изображение будет преобразовано до данного размера. При необходимости оно будет обрезано.</target>
+        <target>Slika bo spremenjena po danih dimenzijah. Če je potrebno, bo obrezana.</target>
       </trans-unit>
       <trans-unit id="MSC.crop.0">
         <source>Important part</source>
-        <target>Важная часть</target>
+        <target>Pomemben del</target>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
         <source>Preserves the important part of an image as specified in the file manager.</source>
-        <target>Сохраняет важную часть изображения, как указано в файл-менеджере.</target>
+        <target>Ohrani pomembni del slike, kot je bilo določeno v upravljalcu datotek.</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
-        <target>Лево | Верх (Left | Top)</target>
+        <target>Levo | zgoraj</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.1">
         <source>Preserves the left part of a landscape image and the top part of a portrait image.</source>
-        <target>Сохраняет левую часть альбомного изображения и верхнюю часть портретного изображения.</target>
+        <target>Ohrani levi del ležeče slike in zgornji del pokončne slike.</target>
       </trans-unit>
       <trans-unit id="MSC.center_top.0">
         <source>Center | Top</source>
-        <target>Центр | Верх (Center | Top)</target>
+        <target>Sredina | zgoraj</target>
       </trans-unit>
       <trans-unit id="MSC.center_top.1">
         <source>Preserves the center part of a landscape image and the top part of a portrait image.</source>
-        <target>Сохраняет центральную часть альбомного изображения и верхнюю часть портретного изображения.</target>
+        <target>Ohrani osrednji del ležeče slike in zgornji del pokončne slike.</target>
       </trans-unit>
       <trans-unit id="MSC.right_top.0">
         <source>Right | Top</source>
-        <target>Право | Верх (Right | Top)</target>
+        <target>Desno | zgoraj</target>
       </trans-unit>
       <trans-unit id="MSC.right_top.1">
         <source>Preserves the right part of a landscape image and the top part of a portrait image.</source>
-        <target>Сохраняет правую часть альбомного изображения и верхнюю часть портретного изображения.</target>
+        <target>Ohrani desni del ležeče slike in zgornji del pokončne slike.</target>
       </trans-unit>
       <trans-unit id="MSC.left_center.0">
         <source>Left | Center</source>
-        <target>Лево | Центр (Left | Center)</target>
+        <target>Levo | sredina</target>
       </trans-unit>
       <trans-unit id="MSC.left_center.1">
         <source>Preserves the left part of a landscape image and the center part of a portrait image.</source>
-        <target>Сохраняет левую часть альбомного изображения и центральную часть портретного изображения.</target>
+        <target>Ohrani levi del ležeče slike in osrednji del pokončne slike.</target>
       </trans-unit>
       <trans-unit id="MSC.center_center.0">
         <source>Center | Center</source>
-        <target>Центр | Центр (Center | Center)</target>
+        <target>Sredina | sredina</target>
       </trans-unit>
       <trans-unit id="MSC.center_center.1">
         <source>Preserves the center part of a landscape image and the center part of a portrait image.</source>
-        <target>Сохраняет центральную часть альбомного изображения и центральную часть портретного изображения.</target>
+        <target>Ohrani osrednji del ležeče slike in osrednji del pokončne slike.</target>
       </trans-unit>
       <trans-unit id="MSC.right_center.0">
         <source>Right | Center</source>
-        <target>Право | Центр (Right | Center)</target>
+        <target>Desno | sredina</target>
       </trans-unit>
       <trans-unit id="MSC.right_center.1">
         <source>Preserves the right part of a landscape image and the center part of a portrait image.</source>
-        <target>Сохраняет правую часть альбомного изображения и центральную часть портретного изображения.</target>
+        <target>Ohrani desni del ležeče slike in sredinski del pokončne slike.</target>
       </trans-unit>
       <trans-unit id="MSC.left_bottom.0">
         <source>Left | Bottom</source>
-        <target>Лево | Низ (Left | Bottom)</target>
+        <target>Levo | spodaj</target>
       </trans-unit>
       <trans-unit id="MSC.left_bottom.1">
         <source>Preserves the left part of a landscape image and the bottom part of a portrait image.</source>
-        <target>Сохраняет левую часть альбомного изображения и нижнюю часть портретного изображения.</target>
+        <target>Ohrani levi del ležeče slike in osrednji del pokončne slike.</target>
       </trans-unit>
       <trans-unit id="MSC.center_bottom.0">
         <source>Center | Bottom</source>
-        <target>Центр | Низ (Center | Bottom)</target>
+        <target>Sredina | spodaj</target>
       </trans-unit>
       <trans-unit id="MSC.center_bottom.1">
         <source>Preserves the center part of a landscape image and the bottom part of a portrait image.</source>
-        <target>Сохраняет центральную часть альбомного изображения и нижнюю часть портретного изображения.</target>
+        <target>Ohrani osrednji del ležeče slike in spodnji del pokončne slike.</target>
       </trans-unit>
       <trans-unit id="MSC.right_bottom.0">
         <source>Right | Bottom</source>
-        <target>Право | Низ (Right | Bottom)</target>
+        <target>Desno | spodaj</target>
       </trans-unit>
       <trans-unit id="MSC.right_bottom.1">
         <source>Preserves the right part of a landscape image and the bottom part of a portrait image.</source>
-        <target>Сохраняет правую часть альбомного изображения и нижнюю часть портретного изображения.</target>
+        <target>Ohrani desni del ležeče slike in spodnji del pokončne slike.</target>
       </trans-unit>
       <trans-unit id="MSC.id.0">
         <source>ID</source>
@@ -1155,155 +1147,152 @@
       </trans-unit>
       <trans-unit id="MSC.id.1">
         <source>Note that changing the ID can break data integrity!</source>
-        <target>Внимание, изменение идентификатора (ID) может привести к нарушению целостности данных!</target>
+        <target>Imejte v mislih, da zamenjava ID-ja lahko uniči povezavo podatkov</target>
       </trans-unit>
       <trans-unit id="MSC.pid.0">
         <source>Parent ID</source>
-        <target>Родительский ID</target>
+        <target>Nadrejeni ID</target>
       </trans-unit>
       <trans-unit id="MSC.pid.1">
         <source>Note that changing the parent ID can break data integrity!</source>
-        <target>Внимание, изменение родительского идентификатора (ID) может привести к нарушению целостности данных!</target>
+        <target>Imejte v mislih, da zamenjava parent ID-ja lahko uniči povezavo podatkov</target>
       </trans-unit>
       <trans-unit id="MSC.sorting.0">
         <source>Sorting value</source>
-        <target>Сортировка значений</target>
+        <target>Vrednost razvrščanja</target>
       </trans-unit>
       <trans-unit id="MSC.sorting.1">
         <source>The sorting value is usually assigned automatically.</source>
-        <target>Сортировка значений используется для выстраивания записей в нужном порядке.</target>
+        <target>Vrednost razvrščanja je ponavadi določena avtomatično.</target>
       </trans-unit>
       <trans-unit id="MSC.all.0">
         <source>Edit multiple</source>
-        <target>Редактировать все</target>
+        <target>Uredi vse zapise</target>
       </trans-unit>
       <trans-unit id="MSC.all.1">
         <source>Edit multiple records at once</source>
-        <target>Редактировать несколько записей одновременно</target>
+        <target>Uredi vse zapise</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
-        <target>Переопределить несколько</target>
+        <target>Prepiši več</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
         <source>Override multiple records at once</source>
-        <target>Переопределить несколько записей сразу</target>
+        <target>Prepiše več vnosov naenkrat</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
-        <target>Доступные поля</target>
+        <target>Razpoložljiva polja</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.1">
         <source>Please select the fields you want to edit.</source>
-        <target>Выберите поля, которые хотите отредактировать.</target>
+        <target>Prosimo izberite polja, ki jih želite urediti.</target>
       </trans-unit>
       <trans-unit id="MSC.password.0">
         <source>Password</source>
-        <target>Пароль</target>
+        <target>Geslo</target>
       </trans-unit>
       <trans-unit id="MSC.password.1">
         <source>Please enter a password.</source>
-        <target>Введите пароль.</target>
+        <target>Prosimo vnesite geslo.</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirmation</source>
-        <target>Подтвердите пароль</target>
+        <target>Ponovno vnesite geslo</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
-        <target>Подтвердите пароль.</target>
+        <target>Prosimo ponovno vnesite geslo.</target>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
-        <target>Дата добавления</target>
+        <target>Datum dodan</target>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.1">
         <source>Date added: %s</source>
-        <target>Дата добавления: %s</target>
+        <target>Datum dodan: %s</target>
       </trans-unit>
       <trans-unit id="MSC.lastLogin.0">
         <source>Previous login</source>
-        <target>Предыдущий вход</target>
+        <target>Prejšnja prijava</target>
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
         <source>Your previous login was %s. Welcome back!</source>
-        <target>Ваш предыдущий вход был %s. С возвращением!</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
-        <target>Последний вход</target>
+        <target>Zadnja prijava</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.1">
         <source>Last login: %s</source>
-        <target>Последний вход: %s</target>
+        <target>Zadnja prijava: %s</target>
       </trans-unit>
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
-        <target>Вероятно, это ваш первый вход в систему. Добро пожаловать в Contao!</target>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
-        <target>Попыток входа</target>
+        <target>Poskusi prijav</target>
       </trans-unit>
       <trans-unit id="MSC.locked">
         <source>Locked</source>
-        <target>Заблокирован</target>
+        <target>Zaklenjeno</target>
       </trans-unit>
       <trans-unit id="MSC.move">
         <source>Move the item via drag and drop or the up and down keys</source>
-        <target>Переместите элемент с помощью перетаскивания или клавиш вверх и вниз</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
-        <target>Переместить вверх</target>
+        <target>Premakni gor</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.1">
         <source>Move the item one position up</source>
-        <target>Переместить на одну позицию вверх</target>
+        <target>Premakni za eno pozicijo gor</target>
       </trans-unit>
       <trans-unit id="MSC.move_down.0">
         <source>Move down</source>
-        <target>Переместить вниз</target>
+        <target>Premakni dol</target>
       </trans-unit>
       <trans-unit id="MSC.move_down.1">
         <source>Move the item one position down</source>
-        <target>Переместить на одну позицию вниз</target>
+        <target>Premakni za eno pozicijo dol</target>
       </trans-unit>
       <trans-unit id="MSC.staticFiles.0">
         <source>Files URL</source>
-        <target>URL файлов</target>
+        <target>URL datoteke</target>
       </trans-unit>
       <trans-unit id="MSC.staticFiles.1">
         <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>URL файлов применяется к каталогу &lt;em&gt;files&lt;/em&gt; и всем эскизам изображений (оптимизация скорости страниц).</target>
+        <target>URL datotek se nanaša na &lt;em&gt;tl_files&lt;/em&gt; mapo in tudi vse male sličice (optimizacija strani za hitrost).</target>
       </trans-unit>
       <trans-unit id="MSC.staticPlugins.0">
         <source>Assets URL</source>
-        <target>URL ресурсов</target>
+        <target>URL vtičnikov</target>
       </trans-unit>
       <trans-unit id="MSC.staticPlugins.1">
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>URL ресурсов применяется к каталогу &lt;em&gt;assets&lt;/em&gt; и всем ресурсам внутри (оптимизация скорости страниц).</target>
+        <target>URL vtičnikov se nanaša na vse vire v &lt;em&gt;plugins&lt;/em&gt; mapi (optimizacija strani za hitrost).</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
-        <target>Комбинации клавиш панели управления</target>
+        <target>Bližnjice na tipkovnici, na voljo v administraciji</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Узнайте больше об ускорении рабочего процесса при помощи &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Обзор комбинаций клавиш&quot; target=&quot;_blank&quot;&gt;комбинаций клавиш&lt;/a&gt;.</target>
+        <target>Več o načinu pohitritve dela preberite članek o&lt;a href=&quot;https://docs.contao.org/books/manual/current/en/02-administration-area/keyboard-shortcuts.html&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot;&gt;bližnjicah na tipkovnici&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
-        <target>Переключить все</target>
+        <target>Razširi/skrči vse</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.1">
         <source>Expand or collapse all nodes</source>
-        <target>Развернуть или свернуть все узлы</target>
+        <target>Razširi ali skrči vse</target>
       </trans-unit>
       <trans-unit id="MSC.lockedAccount.0">
         <source>A Contao account has been locked</source>
-        <target>Учетная запись Contao заблокирована</target>
+        <target>Contao račun je bil zaklenjen</target>
       </trans-unit>
       <trans-unit id="MSC.lockedAccount.1">
         <source>The following Contao account has been locked for security reasons.
@@ -1316,1052 +1305,1033 @@ The account has been locked for %d minutes, because the user has entered an inva
 
 This e-mail has been generated by Contao. You can not reply to it directly.
 </source>
-        <target>Следующая учетная запись Contao была заблокирована по соображениям безопасности.
+        <target>Sledeči Contao račun je bil zakljenen zaradi varnostnih razlogov.
 
-Имя пользователя: %s
-Реальное имя: %s
-Веб-сайт: %s
+Uporabniško ime: %s
+Pravo ime: %s
+Spletno mesto: %s
 
-Учетная запись заблокирована на %d минут, так как пользователь ввел неверный пароль три раза подряд. После истечения этого периода времени, учетная запись будет автоматически разблокирована.
+Račun je zakljenjen za %s minut, ker je uporabnik trikrat zapored vpisal nepravilno geslo. Po poteku tega časa se bo račun avtomatično odklenil.
 
-Это письмо создано автоматически Contao. Вы не сможете ответить на него.
-</target>
+To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na sporočilo.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleMobile.0">
         <source>Mobile version</source>
-        <target>Мобильная версия</target>
+        <target>Mobilna različica</target>
       </trans-unit>
       <trans-unit id="MSC.toggleMobile.1">
         <source>Go to the mobile version</source>
-        <target>Перейти к мобильной версии</target>
+        <target>Pojdi na različico za mobilne naprave</target>
       </trans-unit>
       <trans-unit id="MSC.toggleDesktop.0">
         <source>Desktop version</source>
-        <target>Полная версия</target>
+        <target>Različica za namizne naprave</target>
       </trans-unit>
       <trans-unit id="MSC.toggleDesktop.1">
         <source>Go to the desktop version</source>
-        <target>Перейти к полной версии</target>
+        <target>Pojdi na različico za namizne naprave</target>
       </trans-unit>
       <trans-unit id="MSC.feLink">
         <source>Go to front end</source>
-        <target>Перейти к внешнему интерфейсу</target>
+        <target>Pojdi na spletno mesto</target>
       </trans-unit>
       <trans-unit id="MSC.fePreview">
         <source>Preview</source>
-        <target>Предпросмотр</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
-        <target>Предпросмотр веб-сайта в новом окне</target>
+        <target>Predogled spletne strani v novem oknu</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>
-        <target>Участник</target>
       </trans-unit>
       <trans-unit id="MSC.backToTop">
         <source>Back to top</source>
-        <target>Наверх</target>
+        <target>Nazaj na vrh</target>
       </trans-unit>
       <trans-unit id="MSC.backToTopTitle">
         <source>Go to the top of the page</source>
-        <target>Перейти наверх</target>
+        <target>Pojdi na vrh strani</target>
       </trans-unit>
       <trans-unit id="MSC.home">
         <source>Home</source>
-        <target>Главная страница</target>
+        <target>Domov</target>
       </trans-unit>
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
-        <target>Перейти к главной странице панели управления</target>
+        <target>Nazaj na začetno stran v administraciji</target>
       </trans-unit>
       <trans-unit id="MSC.burgerTitle">
         <source>Toggle navigation</source>
-        <target>Переключить навигацию</target>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
-        <target>Пользователь</target>
+        <target>Uporabnik</target>
       </trans-unit>
       <trans-unit id="MSC.loginTo">
         <source>Log into %s</source>
-        <target>Панель управления: %s</target>
+        <target>Prijavi se v %s</target>
       </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
-        <target>Вход</target>
+        <target>Prijava</target>
       </trans-unit>
       <trans-unit id="MSC.logoutBT">
         <source>Logout</source>
-        <target>Выход</target>
+        <target>Odjava</target>
       </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
-        <target>Закрыть текущую сессию</target>
+        <target>Prekini trenutno sejo (session)</target>
       </trans-unit>
       <trans-unit id="MSC.backBT">
         <source>Go back</source>
-        <target>Назад</target>
+        <target>Nazaj</target>
       </trans-unit>
       <trans-unit id="MSC.backBTTitle">
         <source>Back to the previous page</source>
-        <target>Вернуться на предыдущую страницу</target>
+        <target>Nazaj na prejšnjo stran</target>
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
-        <target>Отмена</target>
+        <target>Prekliči</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete entry ID %s?</source>
-        <target>Вы действительно хотите удалить запись ID %s?</target>
+        <target>Ali želite resnično izbrisati vnos ID %s?</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
-        <target>Вы действительно хотите удалить выбранные записи?</target>
+        <target>Ali želite resnično izbrisati izbrane zapise?</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirmFile">
         <source>Do you really want to delete file or folder %s?</source>
-        <target>Вы действительно хотите удалить файл или каталог %s?</target>
+        <target>Ali resnično želite zbrisati datoteko ali direktorij %s?</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirmFile">
         <source>Do you really want to delete the selected resources?</source>
-        <target>Вы действительно хотите удалить выбранные ресурсы?</target>
+        <target>Ali želite resnično zbrisati izbrane vire?</target>
       </trans-unit>
       <trans-unit id="MSC.filterRecords">
         <source>Records</source>
-        <target>Записи</target>
+        <target>Zapisi</target>
       </trans-unit>
       <trans-unit id="MSC.filterAll">
         <source>All</source>
-        <target>Все</target>
+        <target>Vsi</target>
       </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
-        <target>Показать детали записи %s</target>
+        <target>Prikaži podrobnosti o zapisu %s</target>
       </trans-unit>
       <trans-unit id="MSC.editRecord">
         <source>Edit record %s</source>
-        <target>Редактировать запись %s</target>
+        <target>Uredi zapis %s</target>
       </trans-unit>
       <trans-unit id="MSC.all_info">
         <source>Edit selected records of table %s</source>
-        <target>Редактировать выбранные записи в таблице %s</target>
+        <target>Uredi vse aktivne zapise v tabeli %s</target>
       </trans-unit>
       <trans-unit id="MSC.showOnly">
         <source>Show</source>
-        <target>Показать</target>
+        <target>Prikaži</target>
       </trans-unit>
       <trans-unit id="MSC.sortBy">
         <source>Sort</source>
-        <target>Сортировать</target>
+        <target>Razvrsti</target>
       </trans-unit>
       <trans-unit id="MSC.filter">
         <source>Filter</source>
-        <target>Фильтр</target>
+        <target>Filtriraj</target>
       </trans-unit>
       <trans-unit id="MSC.search">
         <source>Search</source>
-        <target>Найти</target>
+        <target>Išči</target>
       </trans-unit>
       <trans-unit id="MSC.noResult">
         <source>No records found.</source>
-        <target>Записи не найдены.</target>
+        <target>Ni najdenih zapisov.</target>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
-        <target>Не синхронизированные каталоги не включены в результаты поиска.</target>
       </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
-        <target>Сохранить</target>
+        <target>Shrani</target>
       </trans-unit>
       <trans-unit id="MSC.saveNclose">
         <source>Save and close</source>
-        <target>Сохранить и закрыть</target>
+        <target>Shrani in zapri</target>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit</source>
-        <target>Сохранить и отредактировать</target>
+        <target>Shrani in uredi</target>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
-        <target>Сохранить и вернуться</target>
+        <target>Shrani in pojdi nazaj</target>
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
-        <target>Сохранить и создать</target>
+        <target>Shrani in novo</target>
       </trans-unit>
       <trans-unit id="MSC.saveNduplicate">
         <source>Save and duplicate</source>
-        <target>Сохранить и дублировать</target>
       </trans-unit>
       <trans-unit id="MSC.continue">
         <source>Continue</source>
-        <target>Продолжить</target>
+        <target>Nadaljuj</target>
       </trans-unit>
       <trans-unit id="MSC.close">
         <source>Close</source>
-        <target>Закрыть</target>
+        <target>Zapri</target>
       </trans-unit>
       <trans-unit id="MSC.skipNavigation">
         <source>Skip navigation</source>
-        <target>Пропустить навигацию</target>
+        <target>Preskoči navigacijo</target>
       </trans-unit>
       <trans-unit id="MSC.selectAll">
         <source>Select all</source>
-        <target>Выбрать всё</target>
+        <target>Izberi vse</target>
       </trans-unit>
       <trans-unit id="MSC.pw_new">
         <source>Change password</source>
-        <target>Сменить пароль</target>
+        <target>Spremeni geslo</target>
       </trans-unit>
       <trans-unit id="MSC.pw_change">
         <source>Please enter a new password.</source>
-        <target>Введите новый пароль.</target>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
-        <target>Пароль был обновлен.</target>
+        <target>Geslo je bilo posodobljeno.</target>
       </trans-unit>
       <trans-unit id="MSC.fallback">
         <source>default</source>
-        <target>по умолчанию</target>
+        <target>privzeto</target>
       </trans-unit>
       <trans-unit id="MSC.view">
         <source>View in a new window</source>
-        <target>Посмотреть в новом окне</target>
+        <target>Odpri v novem oknu</target>
       </trans-unit>
       <trans-unit id="MSC.fullsize">
         <source>Open full size image in a new window</source>
-        <target>Открыть изображение в полный размер, в новом окне</target>
+        <target>Odpri originalno sliko v novem oknu</target>
       </trans-unit>
       <trans-unit id="MSC.datepicker">
         <source>Date picker</source>
-        <target>Выбор даты</target>
+        <target>Izbirnik datuma</target>
       </trans-unit>
       <trans-unit id="MSC.colorpicker">
         <source>Color picker</source>
-        <target>Палитра цветов</target>
+        <target>Izbira barve (zahteva JavaScript)</target>
       </trans-unit>
       <trans-unit id="MSC.pagepicker">
         <source>Page picker</source>
-        <target>Выберите страницы</target>
+        <target>Izbira strani (zahteva JavaScript)</target>
       </trans-unit>
       <trans-unit id="MSC.filepicker">
         <source>File picker</source>
-        <target>Выберите файлы</target>
+        <target>Izbira datoteke (zahteva JavaScript)</target>
       </trans-unit>
       <trans-unit id="MSC.ppHeadline">
         <source>Contao pages</source>
-        <target>Страницы Contao</target>
+        <target>TYPOlight strani</target>
       </trans-unit>
       <trans-unit id="MSC.fpHeadline">
         <source>Contao files</source>
-        <target>Файлы Contao</target>
+        <target>TYPOlight datoteke</target>
       </trans-unit>
       <trans-unit id="MSC.yes">
         <source>yes</source>
-        <target>да</target>
+        <target>da</target>
       </trans-unit>
       <trans-unit id="MSC.no">
         <source>no</source>
-        <target>нет</target>
+        <target>ne</target>
       </trans-unit>
       <trans-unit id="MSC.goBack">
         <source>Go back</source>
-        <target>Назад</target>
+        <target>Nazaj</target>
       </trans-unit>
       <trans-unit id="MSC.reload">
         <source>Reload</source>
-        <target>Обновить</target>
+        <target>Osveži</target>
       </trans-unit>
       <trans-unit id="MSC.above">
         <source>above</source>
-        <target>выше</target>
+        <target>nad</target>
       </trans-unit>
       <trans-unit id="MSC.below">
         <source>below</source>
-        <target>ниже</target>
+        <target>pod</target>
       </trans-unit>
       <trans-unit id="MSC.date">
         <source>Date</source>
-        <target>Дата</target>
+        <target>Datum</target>
       </trans-unit>
       <trans-unit id="MSC.tstamp">
         <source>Revision date</source>
-        <target>Дата изменения</target>
+        <target>Datum revizije</target>
       </trans-unit>
       <trans-unit id="MSC.entry">
         <source>%s entry</source>
-        <target>записей &lt;strong&gt;%s&lt;/strong&gt;</target>
+        <target>%s zapis</target>
       </trans-unit>
       <trans-unit id="MSC.entries">
         <source>%s entries</source>
-        <target>записей &lt;strong&gt;%s&lt;/strong&gt;</target>
+        <target>%s zapisi</target>
       </trans-unit>
       <trans-unit id="MSC.files">
         <source>%s file(s)</source>
-        <target>файлов &lt;strong&gt;%s&lt;/strong&gt;</target>
+        <target>št. datotek: %s</target>
       </trans-unit>
       <trans-unit id="MSC.left">
         <source>left</source>
-        <target>слева</target>
+        <target>levo</target>
       </trans-unit>
       <trans-unit id="MSC.center">
         <source>center</source>
-        <target>по центру</target>
+        <target>sredina</target>
       </trans-unit>
       <trans-unit id="MSC.right">
         <source>right</source>
-        <target>справа</target>
+        <target>desno</target>
       </trans-unit>
       <trans-unit id="MSC.justify">
         <source>justified</source>
-        <target>по ширине</target>
+        <target>obojestransko</target>
       </trans-unit>
       <trans-unit id="MSC.filetree">
         <source>File system</source>
-        <target>Файловая система</target>
+        <target>Datotečni sistem</target>
       </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
-        <target>Мужчина</target>
+        <target>Moški</target>
       </trans-unit>
       <trans-unit id="MSC.female">
         <source>Female</source>
-        <target>Женщина</target>
+        <target>Ženska</target>
       </trans-unit>
       <trans-unit id="MSC.fileSize">
         <source>File size</source>
-        <target>Размер файла</target>
+        <target>Velikost datoteke</target>
       </trans-unit>
       <trans-unit id="MSC.fileCreated">
         <source>Created</source>
-        <target>Создан</target>
+        <target>Ustvarjeno</target>
       </trans-unit>
       <trans-unit id="MSC.fileModified">
         <source>Last modified</source>
-        <target>Последнее изменение</target>
+        <target>Nazadnje spremenjeno</target>
       </trans-unit>
       <trans-unit id="MSC.fileAccessed">
         <source>Last accessed</source>
-        <target>Последний доступ</target>
+        <target>Nazadnje obiskano</target>
       </trans-unit>
       <trans-unit id="MSC.fileDownload">
         <source>Download the file</source>
-        <target>Загрузить файл</target>
+        <target>Prenesite datoteko</target>
       </trans-unit>
       <trans-unit id="MSC.fileUuid">
         <source>Unique ID</source>
-        <target>Уникальный ID</target>
+        <target>Unikatni ID</target>
       </trans-unit>
       <trans-unit id="MSC.fileImageSize">
         <source>Width/height in pixel</source>
-        <target>Ширина/высота в пикселах</target>
+        <target>Širina/višina v pikslih</target>
       </trans-unit>
       <trans-unit id="MSC.filePath">
         <source>Relative path</source>
-        <target>Относительный путь</target>
+        <target>Relativna pot</target>
       </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
-        <target>Версия</target>
+        <target>Različica</target>
       </trans-unit>
       <trans-unit id="MSC.restore">
         <source>Restore</source>
-        <target>Восстановление</target>
+        <target>Razveljavi</target>
       </trans-unit>
       <trans-unit id="MSC.backendModules">
         <source>Back end modules</source>
-        <target>Модули панели управления</target>
+        <target>Moduli v administraciji</target>
       </trans-unit>
       <trans-unit id="MSC.welcomeTo">
         <source>%s back end</source>
-        <target>Панель управления: %s</target>
+        <target>%s administrativno okolje</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
-        <target>Доступна Contao версии %s.</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
-        <target>Сейчас включен режим обслуживания.</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceDisabled">
         <source>The maintenance mode is currently disabled.</source>
-        <target>Сейчас режим обслуживания отключен.</target>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
-        <target>Переход на новую строку</target>
+        <target>Prelom vrstic</target>
       </trans-unit>
       <trans-unit id="MSC.saveAlert">
         <source>ATTENTION! You will lose any unsaved changes. Continue?</source>
-        <target>Внимание! Все не сохраненные изменения будут потеряны. Продолжить?</target>
+        <target>OPOZORILO! Izgubili boste vse neshranjene podatke. Nadaljujem?</target>
       </trans-unit>
       <trans-unit id="MSC.toggleNodes">
         <source>Toggle all nodes</source>
-        <target>Все узлы</target>
+        <target>Razširi/Skrči</target>
       </trans-unit>
       <trans-unit id="MSC.expandNode">
         <source>Expand node</source>
-        <target>Развернуть узел</target>
+        <target>Razširi</target>
       </trans-unit>
       <trans-unit id="MSC.collapseNode">
         <source>Collapse node</source>
-        <target>Свернуть узел</target>
+        <target>Skrči</target>
       </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
-        <target>Загрузка данных</target>
+        <target>Pridobivam podatke</target>
       </trans-unit>
       <trans-unit id="MSC.deleteSelected">
         <source>Delete</source>
-        <target>Удалить</target>
+        <target>Izbriši</target>
       </trans-unit>
       <trans-unit id="MSC.editSelected">
         <source>Edit</source>
-        <target>Редактировать</target>
+        <target>Uredi</target>
       </trans-unit>
       <trans-unit id="MSC.overrideSelected">
         <source>Override</source>
-        <target>Заменить</target>
+        <target>Povozi</target>
       </trans-unit>
       <trans-unit id="MSC.moveSelected">
         <source>Move</source>
-        <target>Переместить</target>
+        <target>Premakni</target>
       </trans-unit>
       <trans-unit id="MSC.copySelected">
         <source>Copy</source>
-        <target>Копировать</target>
+        <target>Kopiraj</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
-        <target>Создать алиасы</target>
+        <target>Ustvarite bližnjico</target>
       </trans-unit>
       <trans-unit id="MSC.changeSelected">
         <source>Change selection</source>
-        <target>Изменить выбор</target>
+        <target>Spremeni izbrano</target>
       </trans-unit>
       <trans-unit id="MSC.resetSelected">
         <source>Reset selection</source>
-        <target>Отменить выбор</target>
+        <target>Ponastavi izbrano</target>
       </trans-unit>
       <trans-unit id="MSC.filePicker">
         <source>Switch to file picker</source>
-        <target>Переключить выбор файлов</target>
+        <target>Prehod na izbiro datotek</target>
       </trans-unit>
       <trans-unit id="MSC.pagePicker">
         <source>Switch to page picker</source>
-        <target>Переключить выбор страниц</target>
+        <target>Prehod na izbiro strani</target>
       </trans-unit>
       <trans-unit id="MSC.fileManager">
         <source>Open the file manager</source>
-        <target>Открыть файл-менеджер</target>
+        <target>Odpri upravljalca datotek</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
         <source>Modify the site structure</source>
-        <target>Изменить структуру веб-сайта</target>
+        <target>Spremenite strukturo strani</target>
       </trans-unit>
       <trans-unit id="MSC.filePickerHome">
         <source>Back to the file picker</source>
-        <target>Вернуться к выбору файлов</target>
+        <target>Nazaj na izbiro datoteke</target>
       </trans-unit>
       <trans-unit id="MSC.pagePickerHome">
         <source>Back to the page picker</source>
-        <target>Вернуться к выбору страниц</target>
+        <target>Nazaj na izbiro strani</target>
       </trans-unit>
       <trans-unit id="MSC.pickerNoSelection">
         <source>Please go back to the page or file picker and make a selection before you close the dialog.</source>
-        <target>Вернитесь к выбору страниц или файлов и сделайте выбор перед закрытием диалогового окна.</target>
+        <target>Prosimo vrnite se na izbiro strani ali datoteke in izberite želen element, preden zaprete pogovorno okno.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>
-        <target>Уведомления</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
-        <target>Очистить буфер обмена</target>
+        <target>Odstrani lepljenje</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
         <source>Unpublished elements</source>
-        <target>Неопубликованные элементы</target>
+        <target>Neobjavljeni elementi</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>
-        <target>скрыть</target>
+        <target>skrij</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenShow">
         <source>show</source>
-        <target>показать</target>
+        <target>prikaži</target>
       </trans-unit>
       <trans-unit id="MSC.apply">
         <source>Apply</source>
-        <target>Применить</target>
+        <target>Uporabi</target>
       </trans-unit>
       <trans-unit id="MSC.applyTitle">
         <source>Apply the changes</source>
-        <target>Применить изменения</target>
+        <target>Uveljavi spremembe</target>
       </trans-unit>
       <trans-unit id="MSC.reset">
         <source>Reset</source>
-        <target>Сброс</target>
       </trans-unit>
       <trans-unit id="MSC.resetTitle">
         <source>Reset the filters</source>
-        <target>Сбросить фильтры</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
-        <target>Обязательное поле</target>
+        <target>Zahtevano polje</target>
       </trans-unit>
       <trans-unit id="MSC.create">
         <source>Create</source>
-        <target>Создать</target>
+        <target>Ustvari</target>
       </trans-unit>
       <trans-unit id="MSC.delete">
         <source>Delete</source>
-        <target>Удалить</target>
+        <target>Izbriši</target>
       </trans-unit>
       <trans-unit id="MSC.protected">
         <source>protected</source>
-        <target>Защищенный</target>
+        <target>zaščiteno</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>guests only</source>
-        <target>Только для гостей</target>
+        <target>samo za goste</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
-        <target>Режим обновления</target>
+        <target>Posodobitveni način</target>
       </trans-unit>
       <trans-unit id="MSC.updateAdd">
         <source>Add the selected values</source>
-        <target>Добавить выбранные значения</target>
+        <target>Dodaj izbrane skupine</target>
       </trans-unit>
       <trans-unit id="MSC.updateRemove">
         <source>Remove the selected values</source>
-        <target>Удалить выбранные значения</target>
+        <target>Odstrani izbrane skupine</target>
       </trans-unit>
       <trans-unit id="MSC.updateReplace">
         <source>Replace the existing entries</source>
-        <target>Заменить существующие записи</target>
+        <target>Zamenjaj obstoječi vnos</target>
       </trans-unit>
       <trans-unit id="MSC.ascending">
         <source>ascending</source>
-        <target>по возрастанию</target>
+        <target>naraščujoče</target>
       </trans-unit>
       <trans-unit id="MSC.descending">
         <source>descending</source>
-        <target>по убыванию</target>
+        <target>padajoče</target>
       </trans-unit>
       <trans-unit id="MSC.default">
         <source>Default</source>
-        <target>По умолчанию</target>
+        <target>Privzeto</target>
       </trans-unit>
       <trans-unit id="MSC.helpWizard">
         <source>Open the help wizard</source>
-        <target>Мастер помощи</target>
+        <target>Čarovnik za pomoč</target>
       </trans-unit>
       <trans-unit id="MSC.helpWizardTitle">
         <source>Help wizard</source>
-        <target>Мастер помощи</target>
+        <target>Čarovnik pomoči</target>
       </trans-unit>
       <trans-unit id="MSC.jsDisabled">
         <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
-        <target>Вероятно, в вашем браузере отключен JavaScript. Панель управления Contao не сможет работать без JavaScript как положено.</target>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
-        <target>%s (скопировано)</target>
+        <target>%s (kopija)</target>
       </trans-unit>
       <trans-unit id="MSC.name">
         <source>Name</source>
-        <target>Имя</target>
+        <target>Naziv</target>
       </trans-unit>
       <trans-unit id="MSC.emailAddress">
         <source>E-mail address</source>
-        <target>E-mail адрес</target>
+        <target>Naslov elektronske pošte</target>
       </trans-unit>
       <trans-unit id="MSC.register">
         <source>Register</source>
-        <target>Регистрация</target>
+        <target>Pošlji</target>
       </trans-unit>
       <trans-unit id="MSC.resendActivation">
         <source>The activation mail has been re-sent to your e-mail address.</source>
-        <target>Письмо с активацией было повторно отправлено на ваш адрес электронной почты.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
-        <target>Ваша учетная запись активирована.</target>
+        <target>Vaš račun je bil aktiviran.</target>
       </trans-unit>
       <trans-unit id="MSC.accountError">
         <source>Unable to process the current request.</source>
-        <target>Невозможно обработать текущий запрос.</target>
+        <target>Zahteve ne morem izvesti.</target>
       </trans-unit>
       <trans-unit id="MSC.emailSubject">
         <source>Your registration on %s</source>
-        <target>Ваша регистрация на %s</target>
+        <target>Vaša registracija na %s</target>
       </trans-unit>
       <trans-unit id="MSC.adminSubject">
         <source>New registration on %s</source>
-        <target>Новая регистрация на %s</target>
+        <target>Contao :: Nova registracija na %s</target>
       </trans-unit>
       <trans-unit id="MSC.adminText">
         <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
-        <target>Новый участник (ID %s) зарегистрирован на веб-сайте. %s Если e-mail активация не разрешена, следует активировать учетную запись вручную, через панель управления.</target>
+        <target>Nov član (ID %s) se je registriral na vašo spletno stran. %s Če niste dovolili e-mail aktivacije potem morate ta račun aktivirati ročno v administraciji.</target>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
         <source>Request password</source>
-        <target>Запрос пароля</target>
+        <target>Zahtevaj geslo</target>
       </trans-unit>
       <trans-unit id="MSC.setNewPassword">
         <source>Set new password</source>
-        <target>Установить новый пароль</target>
+        <target>Ustvari novo geslo</target>
       </trans-unit>
       <trans-unit id="MSC.newPasswordSet">
         <source>Your password has been updated.</source>
-        <target>Ваш пароль был обновлен.</target>
+        <target>Vaše geslo je bilo posodobljeno</target>
       </trans-unit>
       <trans-unit id="MSC.passwordSubject">
         <source>Your password request for %s</source>
-        <target>Запрос пароля для %s</target>
+        <target>Vaš zahtevek za geslo za %s</target>
       </trans-unit>
       <trans-unit id="MSC.accountNotFound">
         <source>No matching account found</source>
-        <target>Учетная запись не найдена</target>
+        <target>Uporabniški račun ne obstaja</target>
       </trans-unit>
       <trans-unit id="MSC.oldPassword">
         <source>Old password</source>
-        <target>Старый пароль</target>
+        <target>Staro geslo</target>
       </trans-unit>
       <trans-unit id="MSC.newPassword">
         <source>New password</source>
-        <target>Новый пароль</target>
+        <target>Novo geslo</target>
       </trans-unit>
       <trans-unit id="MSC.changePassword">
         <source>Change password</source>
-        <target>Сменить пароль</target>
+        <target>Spremeni geslo</target>
       </trans-unit>
       <trans-unit id="MSC.oldPasswordWrong">
         <source>The old password is not correct</source>
-        <target>Старый пароль не верен</target>
+        <target>Staro geslo ni pravilno</target>
       </trans-unit>
       <trans-unit id="MSC.securityQuestion">
         <source>Security question</source>
-        <target>Контрольный вопрос</target>
+        <target>Varnostno vprašanje</target>
       </trans-unit>
       <trans-unit id="MSC.closeAccount">
         <source>Close account</source>
-        <target>Закрыть учетную запись</target>
+        <target>Izbriši račun</target>
       </trans-unit>
       <trans-unit id="MSC.changeSelection">
         <source>Change selection</source>
-        <target>Изменить выбор</target>
+        <target>Spremeni izbrano</target>
       </trans-unit>
       <trans-unit id="MSC.currentlySelected">
         <source>Selected</source>
-        <target>Выбрано</target>
+        <target>Izbrano</target>
       </trans-unit>
       <trans-unit id="MSC.selectNode">
         <source>Only show this node</source>
-        <target>Показать только этот узел</target>
+        <target>Prikaži samo tega</target>
       </trans-unit>
       <trans-unit id="MSC.selectAllNodes">
         <source>Show all nodes</source>
-        <target>Показать все узлы</target>
+        <target>Prikaži vse</target>
       </trans-unit>
       <trans-unit id="MSC.showDifferences">
         <source>Show differences</source>
-        <target>Показать отличия</target>
+        <target>Prikaži spremembe</target>
       </trans-unit>
       <trans-unit id="MSC.recordOfTable">
         <source>Record %s of table %s</source>
-        <target>Запись %s таблицы %s</target>
       </trans-unit>
       <trans-unit id="MSC.editElement">
         <source>Edit the element</source>
-        <target>Редактировать элемент</target>
+        <target>Uredi element</target>
       </trans-unit>
       <trans-unit id="MSC.table">
         <source>Table</source>
-        <target>Таблица</target>
+        <target>Tabela</target>
       </trans-unit>
       <trans-unit id="MSC.ptable">
         <source>Parent table</source>
-        <target>Родительская таблица</target>
+        <target>Nadrejena tabela</target>
       </trans-unit>
       <trans-unit id="MSC.description">
         <source>Description</source>
-        <target>Описание</target>
+        <target>Opis</target>
       </trans-unit>
       <trans-unit id="MSC.noVersions">
         <source>Currently there are no versions.</source>
-        <target>На данный момент новых версий нет.</target>
+        <target>Trenutno ne obstaja nobena različica.</target>
       </trans-unit>
       <trans-unit id="MSC.latestChanges">
         <source>Latest changes</source>
-        <target>Последние изменения</target>
+        <target>Zadnje spremembe</target>
       </trans-unit>
       <trans-unit id="MSC.identicalVersions">
         <source>The two selected versions are identical.</source>
-        <target>Две выбранные версии идентичны.</target>
+        <target>Obe izbrani različici sta identični.</target>
       </trans-unit>
       <trans-unit id="MSC.selectNewPosition">
         <source>Next, please choose the (new) position of the element</source>
-        <target>Выберите (новое) расположение элемента</target>
+        <target>Nadalje, prosim izberite (novo) pozicijo elementa</target>
       </trans-unit>
       <trans-unit id="MSC.go">
         <source>Go</source>
-        <target>Перейти</target>
+        <target>Potrdi</target>
       </trans-unit>
       <trans-unit id="MSC.quicknav">
         <source>Quick navigation</source>
-        <target>Быстрая навигация</target>
+        <target>Hitra navigacija</target>
       </trans-unit>
       <trans-unit id="MSC.quicklink">
         <source>Quick link</source>
-        <target>Быстрая ссылка</target>
+        <target>Hitra povezava</target>
       </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
-        <target>Имя пользователя</target>
+        <target>Uporabniško ime</target>
       </trans-unit>
       <trans-unit id="MSC.login">
         <source>Login</source>
-        <target>Вход</target>
+        <target>Prijava</target>
       </trans-unit>
       <trans-unit id="MSC.logout">
         <source>Logout</source>
-        <target>Выход</target>
+        <target>Odjava</target>
       </trans-unit>
       <trans-unit id="MSC.loggedInAs">
         <source>You are logged in as %s.</source>
-        <target>Вы вошли как %s.</target>
+        <target>Prijavljeni ste kot %s.</target>
       </trans-unit>
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
-        <target>Введите имя пользователя и пароль!</target>
+        <target>Vnesite uporabniško ime in geslo.</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
-        <target>Подтвердите пароль</target>
+        <target>Ponovno vnesite geslo</target>
       </trans-unit>
       <trans-unit id="MSC.sMatches">
         <source>%s occurrences for %s</source>
-        <target>%s вариантов для %s</target>
+        <target>%s zadetkov za %s</target>
       </trans-unit>
       <trans-unit id="MSC.sEmpty">
         <source>No matches for &lt;strong&gt;%s&lt;/strong&gt;</source>
-        <target>Нет совпадений для &lt;strong&gt;%s&lt;/strong&gt;</target>
+        <target>Ni zadetkov za &lt;strong&gt;%s&lt;/strong&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.sResults">
         <source>Results %s - %s of %s for &lt;strong&gt;%s&lt;/strong&gt;</source>
-        <target>Результаты %s - %s из %s для &lt;strong&gt;%s&lt;/strong&gt;</target>
+        <target>Rezultati %s - %s od %s za &lt;strong&gt;%s&lt;/strong&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.sNoResult">
         <source>Your search for &lt;strong&gt;%s&lt;/strong&gt; returned no results.</source>
-        <target>Ваш поиск &lt;strong&gt;%s&lt;/strong&gt; не принес результатов.</target>
+        <target>Ni zadetkov za &lt;strong&gt;%s&lt;/strong&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
-        <target>секунды</target>
+        <target>sekund</target>
       </trans-unit>
       <trans-unit id="MSC.up">
         <source>Up</source>
-        <target>Вверх</target>
+        <target>Gor</target>
       </trans-unit>
       <trans-unit id="MSC.first">
         <source>&amp;#171; First</source>
-        <target>&amp;#171; Первая</target>
+        <target>« Prva</target>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
-        <target>Предыдущая</target>
+        <target>Nazaj</target>
       </trans-unit>
       <trans-unit id="MSC.next">
         <source>Next</source>
-        <target>Следующая</target>
+        <target>Naprej</target>
       </trans-unit>
       <trans-unit id="MSC.last">
         <source>Last &amp;#187;</source>
-        <target>Последняя &amp;#187;</target>
+        <target>Zadnja »</target>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
-        <target>На страницу %s</target>
+        <target>Pojdi na stran %s</target>
       </trans-unit>
       <trans-unit id="MSC.totalPages">
         <source>Page %s of %s</source>
-        <target>Страница %s из %s</target>
+        <target>Stran %s od %s</target>
       </trans-unit>
       <trans-unit id="MSC.global">
         <source>global</source>
-        <target>глобальный</target>
+        <target>globalno</target>
       </trans-unit>
       <trans-unit id="MSC.fileUploaded">
         <source>File %s uploaded successfully.</source>
-        <target>Файл %s успешно загружен</target>
+        <target>Datoteka %s je bila uspešno naložena.</target>
       </trans-unit>
       <trans-unit id="MSC.fileExceeds">
         <source>Image %s is too big to be resized automatically.</source>
-        <target>Изображение %s слишком большое для автоматического изменения размера.</target>
+        <target>Slika %s je prevelika, da bi bila avtomatično zmanjšana.</target>
       </trans-unit>
       <trans-unit id="MSC.fileResized">
         <source>Image %s was scaled down to the maximum dimensions.</source>
-        <target>Изображение %s уменьшено до максимально допустимых размеров.</target>
+        <target>Slika %s je bila pomanjšana na maksimalne dimenzije.</target>
       </trans-unit>
       <trans-unit id="MSC.searchLabel">
         <source>Search</source>
-        <target>Найти</target>
+        <target>Išči</target>
       </trans-unit>
       <trans-unit id="MSC.keywords">
         <source>Keywords</source>
-        <target>Ключевые слова</target>
+        <target>Ključne besede</target>
       </trans-unit>
       <trans-unit id="MSC.options">
         <source>Options</source>
-        <target>Настройки</target>
+        <target>Možnosti</target>
       </trans-unit>
       <trans-unit id="MSC.matchAll">
         <source>match all words</source>
-        <target>Все слова</target>
+        <target>ujemanje vseh besed</target>
       </trans-unit>
       <trans-unit id="MSC.matchAny">
         <source>match any word</source>
-        <target>Любое слово</target>
+        <target>ujemanje katerihkoli besed</target>
       </trans-unit>
       <trans-unit id="MSC.saveData">
         <source>Save data</source>
-        <target>Сохранить данные</target>
+        <target>Shrani podatke</target>
       </trans-unit>
       <trans-unit id="MSC.savedData">
         <source>Your data has been saved.</source>
-        <target>Ваши данные были сохранены.</target>
+        <target>Vaši podatki so bili shranjeni.</target>
       </trans-unit>
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>
-        <target>Печать страницы</target>
+        <target>Natisni to stran</target>
       </trans-unit>
       <trans-unit id="MSC.printAsPdf">
         <source>Save article as PDF</source>
-        <target>Сохранить в PDF</target>
+        <target>Shrani članek kot PDF</target>
       </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
-        <target>Поделиться в Facebook</target>
+        <target>Povej naprej na Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
         <source>Share on Twitter</source>
-        <target>Добавить в Twitter</target>
+        <target>Povej naprej na Twitter</target>
       </trans-unit>
       <trans-unit id="MSC.gplusShare">
         <source>Share on Google+</source>
-        <target>Поделиться в Google+</target>
+        <target>Deli na Google+</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
-        <target>Пожалуйста, подождите</target>
+        <target>Prosimo počakajte</target>
       </trans-unit>
       <trans-unit id="MSC.loading">
         <source>Loading …</source>
-        <target>Загрузка...</target>
+        <target>Nalagam...</target>
       </trans-unit>
       <trans-unit id="MSC.more">
         <source>Read more …</source>
-        <target>Подробнее...</target>
+        <target>Beri naprej ...</target>
       </trans-unit>
       <trans-unit id="MSC.readMore">
         <source>Read the article: %s</source>
-        <target>Прочитать полностью статью: %s</target>
+        <target>Beri novico: %s</target>
       </trans-unit>
       <trans-unit id="MSC.targetPage">
         <source>Target page</source>
-        <target>Целевая страница</target>
+        <target>Ciljna stran</target>
       </trans-unit>
       <trans-unit id="MSC.invalidPage">
         <source>Sorry, item &quot;%s&quot; does not exist.</source>
-        <target>К сожалению, &quot;%s&quot; не существует.</target>
+        <target>Žal &quot;%s&quot; ne obstaja.</target>
       </trans-unit>
       <trans-unit id="MSC.list_orderBy">
         <source>Order by %s</source>
-        <target>Сортировать по %s</target>
+        <target>Razvrsti po %s</target>
       </trans-unit>
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
-        <target>Результатов на странице</target>
+        <target>Rezultatov na stran</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
-        <target>Опубликовано</target>
+        <target>Objavljeno</target>
       </trans-unit>
       <trans-unit id="MSC.unpublished">
         <source>Unpublished</source>
-        <target>Не опубликовано</target>
+        <target>Neobjavljeno</target>
       </trans-unit>
       <trans-unit id="MSC.addComment">
         <source>Add a comment</source>
-        <target>Добавить комментарий</target>
+        <target>Dodaj komentar</target>
       </trans-unit>
       <trans-unit id="MSC.autologin">
         <source>Remember me</source>
-        <target>Запомнить меня</target>
+        <target>Zapomni si me</target>
       </trans-unit>
       <trans-unit id="MSC.createdOn">
         <source>Created on</source>
-        <target>Создан</target>
+        <target>Ustvarjeno</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
         <source>Activation token</source>
-        <target>Токен активации</target>
+        <target>Aktivacijski žeton</target>
       </trans-unit>
       <trans-unit id="MSC.relevance">
         <source>%s relevance</source>
-        <target>Релевантность %s</target>
+        <target>%s relevantnost</target>
       </trans-unit>
       <trans-unit id="MSC.invalidTokenUrl">
         <source>Invalid token</source>
-        <target>Неверный токен</target>
+        <target>Neveljaven žeton</target>
       </trans-unit>
       <trans-unit id="MSC.dragItemsHint">
         <source>Drag the items to re-order them</source>
-        <target>Перетащите элементы для изменения их порядка</target>
+        <target>Premakni elemente za poljubno razvrstitev</target>
       </trans-unit>
       <trans-unit id="MSC.templatesTheme">
         <source>Theme %s</source>
-        <target>Тема %s</target>
+        <target>Tema %s</target>
       </trans-unit>
       <trans-unit id="MSC.location">
         <source>Location</source>
-        <target>Расположение</target>
+        <target>Lokacija</target>
       </trans-unit>
       <trans-unit id="MSC.download">
         <source>Download %s</source>
-        <target>Загрузка %s</target>
+        <target>Prenesite %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to store file meta information.</source>
-        <target>Вы должны добавить корневую страницу в структуру сайта для хранения файлов мета информации.</target>
+        <target>Potrebno je dodati korensko stran v strukturi strani, da bi shranili datoteko z meta informacijami.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
-        <target>Байт</target>
+        <target>Byte</target>
       </trans-unit>
       <trans-unit id="UNITS.1">
         <source>KiB</source>
-        <target>КиБ</target>
+        <target>KiB</target>
       </trans-unit>
       <trans-unit id="UNITS.2">
         <source>MiB</source>
-        <target>МиБ</target>
+        <target>MiB</target>
       </trans-unit>
       <trans-unit id="UNITS.3">
         <source>GiB</source>
-        <target>ГиБ</target>
+        <target>GiB</target>
       </trans-unit>
       <trans-unit id="UNITS.4">
         <source>TiB</source>
-        <target>ТиБ</target>
+        <target>TiB</target>
       </trans-unit>
       <trans-unit id="UNITS.5">
         <source>PiB</source>
-        <target>ПиБ</target>
+        <target>PiB</target>
       </trans-unit>
       <trans-unit id="UNITS.6">
         <source>EiB</source>
-        <target>ЭиБ</target>
+        <target>EiB</target>
       </trans-unit>
       <trans-unit id="UNITS.7">
         <source>ZiB</source>
-        <target>ЗиБ</target>
+        <target>ZiB</target>
       </trans-unit>
       <trans-unit id="UNITS.8">
         <source>YiB</source>
-        <target>ЙиБ</target>
+        <target>YiB</target>
       </trans-unit>
       <trans-unit id="CONFIRM.do">
         <source>Module</source>
-        <target>Модуль</target>
+        <target>Modul</target>
       </trans-unit>
       <trans-unit id="CONFIRM.table">
         <source>Affected table</source>
-        <target>Задействованная таблица</target>
+        <target>Spremenjena tabela</target>
       </trans-unit>
       <trans-unit id="CONFIRM.act">
         <source>Action</source>
-        <target>Действие</target>
+        <target>Dejanje</target>
       </trans-unit>
       <trans-unit id="CONFIRM.id">
         <source>Affected record</source>
-        <target>Задействованная запись</target>
+        <target>Spremenjen vnos</target>
       </trans-unit>
       <trans-unit id="DP.select_a_time">
         <source>Select a time</source>
-        <target>Выберите время</target>
+        <target>Izberite čas</target>
       </trans-unit>
       <trans-unit id="DP.use_mouse_wheel">
         <source>Use the mouse wheel to quickly change value</source>
-        <target>Используйте колесо мыши для быстрого изменения значения</target>
+        <target>Uporabite miškino kolo za hitro spreminjanje vrednosti</target>
       </trans-unit>
       <trans-unit id="DP.time_confirm_button">
         <source>OK</source>
-        <target>OK</target>
+        <target>V redu</target>
       </trans-unit>
       <trans-unit id="DP.apply_range">
         <source>Apply</source>
-        <target>Применить</target>
+        <target>Uporabi</target>
       </trans-unit>
       <trans-unit id="DP.cancel">
         <source>Cancel</source>
-        <target>Отмена</target>
+        <target>Prekliči</target>
       </trans-unit>
       <trans-unit id="DP.week">
         <source>Wk</source>
-        <target>Неделя</target>
+        <target>Wk</target>
       </trans-unit>
       <trans-unit id="COLS.header">
         <source>Header</source>
-        <target>Верхний колонтитул</target>
+        <target>Glava</target>
       </trans-unit>
       <trans-unit id="COLS.left">
         <source>Left column</source>
-        <target>Левая колонка</target>
+        <target>Levi stolpec</target>
       </trans-unit>
       <trans-unit id="COLS.main">
         <source>Main column</source>
-        <target>Основная колонка</target>
+        <target>Glavni stolpec</target>
       </trans-unit>
       <trans-unit id="COLS.right">
         <source>Right column</source>
-        <target>Правая колонка</target>
+        <target>Desni stolpec</target>
       </trans-unit>
       <trans-unit id="COLS.footer">
         <source>Footer</source>
-        <target>Нижний колонтитул</target>
+        <target>Noga</target>
       </trans-unit>
       <trans-unit id="SECTIONS.top">
         <source>Before the wrapper</source>
-        <target>Перед wrapper (обёрткой)</target>
       </trans-unit>
       <trans-unit id="SECTIONS.before">
         <source>After the page header</source>
-        <target>После верхнего колонтитула</target>
+        <target>Za glavo strani</target>
       </trans-unit>
       <trans-unit id="SECTIONS.main">
         <source>Inside the main column</source>
-        <target>Основная колонка</target>
+        <target>Znotraj glavnega stolpca</target>
       </trans-unit>
       <trans-unit id="SECTIONS.after">
         <source>Before the page footer</source>
-        <target>Перед нижним колонтитулом</target>
+        <target>Pred nogo strani</target>
       </trans-unit>
       <trans-unit id="SECTIONS.bottom">
         <source>After the wrapper</source>
-        <target>После wrapper (обёртки)</target>
       </trans-unit>
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
-        <target>Ручной вывод</target>
       </trans-unit>
     </body>
   </file>

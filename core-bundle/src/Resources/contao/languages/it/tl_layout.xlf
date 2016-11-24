@@ -135,6 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.sections.1">
         <source>Here you can define custom layout sections.</source>
+        <target>Qui è possibile definire sezioni personalizzate del layout </target>
       </trans-unit>
       <trans-unit id="tl_layout.stylesheet.0">
         <source>Internal style sheets</source>
