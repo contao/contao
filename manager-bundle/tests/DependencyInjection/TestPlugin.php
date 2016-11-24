@@ -15,13 +15,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * Dummy Plugin
+ * Dummy Plugin.
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
 class TestPlugin implements ConfigPluginInterface
 {
-
     /**
      * Allows a plugin to prepend Container extension configurations.
      *
