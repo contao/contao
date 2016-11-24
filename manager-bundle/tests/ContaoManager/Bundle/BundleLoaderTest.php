@@ -167,6 +167,7 @@ class BundleLoaderTest extends \PHPUnit_Framework_TestCase
         $mock
             ->expects($expects)
             ->method('getInstancesOf')
+            ->with(PluginLoader::BUNDLE_PLUGINS)
             ->willReturn($plugins)
         ;
 
