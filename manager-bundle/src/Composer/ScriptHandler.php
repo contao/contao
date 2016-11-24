@@ -29,6 +29,7 @@ class ScriptHandler
      * @param Event $event The event object
      *
      * @throws \RuntimeException
+     * @throws \InvalidArgumentException
      */
     public static function addEntryPoints(Event $event)
     {
@@ -49,8 +50,9 @@ class ScriptHandler
      *
      * @param string $filePath
      * @param string $installTo
-     * @param string $vendorDir
-     * @param string $kernelRootDir
+     *
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
     private static function installContaoConsole($filePath, $installTo)
     {
@@ -58,7 +60,7 @@ class ScriptHandler
         $filesystem->ensureDirectoryExists(dirname($installTo));
 
         if (!is_file($filePath)) {
-            throw new \UnderflowException(sprintf('%s is not a valid file.', $filePath));
+            throw new \InvalidArgumentException(sprintf('%s is not a valid file.', $filePath));
         }
 
         $content = str_replace('../../../../', '../', file_get_contents($filePath));
@@ -68,7 +70,7 @@ class ScriptHandler
             return;
         }
 
-        throw new \UnderflowException('Contao console script could not be installed.');
+        throw new \RuntimeException('Contao console script could not be installed.');
     }
 
     /**
@@ -77,6 +79,8 @@ class ScriptHandler
      * @param Composer $composer
      *
      * @return string
+     *
+     * @throws \RuntimeException
      */
     private static function findContaoConsole(Composer $composer)
     {
@@ -86,7 +90,7 @@ class ScriptHandler
             }
         }
 
-        throw new \UnderflowException('Contao console script was not found.');
+        throw new \RuntimeException('Contao console script was not found.');
     }
 
     /**
