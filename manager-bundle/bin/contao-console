@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-/**
+/*
  * This file is part of Contao.
  *
  * Copyright (c) 2005-2016 Leo Feyer
@@ -11,22 +11,26 @@
 
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Debug\Debug;
 
 set_time_limit(0);
-ini_set('error_reporting', -1);
-ini_set('display_startup_errors', 1);
-ini_set('display_errors', 1);
 
-if (!include(__DIR__ . '/../../../../vendor/autoload.php')) {
-    die(
-        'You must set up the project dependencies, run the following commands:'.PHP_EOL.
-        'curl -s http://getcomposer.org/installer | php'.PHP_EOL.
-        'php composer.phar install'.PHP_EOL
-    );
+/**
+ * @var Composer\Autoload\ClassLoader $loader
+ */
+$loader = require __DIR__.'/../app/autoload.php';
+
+$input = new ArgvInput();
+$env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');
+$debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-debug', '']) && $env !== 'prod';
+
+if ($debug) {
+    Debug::enable();
 }
 
-$kernel = new ContaoKernel('prod', true);
+$kernel = new ContaoKernel($env, $debug);
 $kernel->setRootDir(__DIR__ . '/../../../../app');
 $kernel->loadPlugins(__DIR__ . '/../../../../vendor/composer/installed.json');
 $application = new Application($kernel);
-$application->run();
+$application->run($input);

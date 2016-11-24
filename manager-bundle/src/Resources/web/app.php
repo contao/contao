@@ -16,7 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @var Composer\Autoload\ClassLoader
  */
-$loader = require __DIR__.'/{vendor-dir}/autoload.php';
+$loader = require __DIR__.'/{root-dir}/autoload.php';
+include_once __DIR__.'/{root-dir}/../var/bootstrap.php.cache';
 
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
@@ -27,6 +28,7 @@ $kernel->loadClassCache();
 
 // Enable the Symfony reverse proxy
 $kernel = new ContaoCache($kernel);
+Request::enableHttpMethodParameterOverride();
 
 // Handle the request
 $request = Request::createFromGlobals();
