@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.3.0 (2016-11-XX)
+### 4.3.0 (2016-11-25)
 
  * Do not cache pages if a back end user is logged in (see #628).
  * Correctly show error messages in the login module (see #610).

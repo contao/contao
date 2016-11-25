@@ -47,7 +47,7 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "~1.0",
-        "contao/manager-plugin": "~1.0@dev",
+        "contao/manager-plugin": "~1.0",
         "doctrine/orm": "~2.5",
         "doctrine/doctrine-migrations-bundle": "~1.1",
         "friendsofphp/php-cs-fixer": "~1.8",
@@ -95,7 +95,6 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-release/4.3.0": "4.3.x-dev",
             "dev-develop": "4.4.x-dev"
         },
         "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
