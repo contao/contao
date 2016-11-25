@@ -11,7 +11,7 @@
 namespace Contao\CalendarBundle\Test\ContaoManager;
 
 use Contao\CalendarBundle\ContaoManager\Plugin;
-use Contao\ManagerBundle\ContaoManager\Bundle\Config\BundleConfig;
+use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 
 /**
  * Tests the Plugin class.
@@ -35,12 +35,12 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetBundles()
     {
-        $parser = $this->getMock('Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface');
+        $parser = $this->getMock('Contao\ManagerPlugin\Bundle\Parser\ParserInterface');
 
         /** @var BundleConfig $config */
         $config = (new Plugin())->getBundles($parser)[0];
 
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Config\BundleConfig', $config);
+        $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\Config\BundleConfig', $config);
         $this->assertEquals('Contao\CalendarBundle\ContaoCalendarBundle', $config->getName());
         $this->assertEquals(['Contao\CoreBundle\ContaoCoreBundle'], $config->getLoadAfter());
         $this->assertEquals(['calendar'], $config->getReplace());
