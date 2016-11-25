@@ -12,12 +12,13 @@
     "require": {
         "php": ">=5.5.0",
         "symfony/framework-bundle": "~2.8|~3.0",
-        "contao/core-bundle": "^4.2.3"
+        "contao/core-bundle": "~4.3"
     },
     "require-dev": {
+        "contao/manager-plugin": "~1.0",
         "friendsofphp/php-cs-fixer": "~1.8",
         "phpunit/phpunit": "~4.5",
-        "satooshi/php-coveralls": "~0.6",
+        "satooshi/php-coveralls": "~1.0",
         "symfony/phpunit-bridge": "~2.8|~3.0"
     },
     "conflict": {
@@ -47,7 +48,8 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-develop": "4.3.x-dev"
-        }
+            "dev-develop": "4.4.x-dev"
+        },
+        "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     }
 }

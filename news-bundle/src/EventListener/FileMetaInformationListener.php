@@ -71,7 +71,7 @@ class FileMetaInformationListener
         $this->framework->initialize();
 
         /** @var NewsArchiveModel $archiveAdapter */
-        $archiveAdapter = $this->framework->getAdapter('Contao\NewsArchiveModel');
+        $archiveAdapter = $this->framework->getAdapter(NewsArchiveModel::class);
 
         if (null === ($archiveModel = $archiveAdapter->findByPk($id))) {
             return false;
@@ -95,7 +95,7 @@ class FileMetaInformationListener
         $this->framework->initialize();
 
         /** @var NewsModel $newsAdapter */
-        $newsAdapter = $this->framework->getAdapter('Contao\NewsModel');
+        $newsAdapter = $this->framework->getAdapter(NewsModel::class);
 
         if (null === ($newsModel = $newsAdapter->findByPk($id))) {
             return false;
