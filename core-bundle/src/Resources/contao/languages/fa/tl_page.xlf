@@ -59,27 +59,27 @@
       </trans-unit>
       <trans-unit id="tl_page.redirect.0">
         <source>Redirect type</source>
-        <target>گونه‌ی بازگردانی</target>
+        <target>گونه‌ی تغییر مسیر</target>
       </trans-unit>
       <trans-unit id="tl_page.redirect.1">
         <source>Please choose the redirect type.</source>
-        <target>لطفا گونه‌ی بازگردانی را انتخاب نمایید.</target>
+        <target>لطفا گونه‌ی تغییر مسیر را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
-        <target>برگه بازگردانی</target>
+        <target>برگه‌ی تغییر مسیر</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
-        <target>لطفا برگه مقصد را که می‌خواهید بازگردانی به آن برگه صورت گیرد، از ساختار درختی زیر انتخاب نمایید.</target>
+        <target>لطفا برگه مقصد را که می‌خواهید تغییر مسیر به آن برگه صورت گیرد، از ساختار درختی زیر انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.0">
         <source>Redirect to last page visited</source>
-        <target>بازگردانی به آخرین برگه دیده شده</target>
+        <target>تغییر مسیر به آخرین برگه دیده شده</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>بازگردانی به عقب کاربر به آخرین برگه دیده شده به جای برگه بازگردانی.</target>
+        <target>تغییر مسیر به عقب کاربر به آخرین برگه دیده شده به جای برگه تغییر مسیر.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_page.autoforward.1">
         <source>Redirect visitors to another page (e.g. a login page).</source>
-        <target>بازگردانی بازدیدکنندگان به برگه دیگر (برای نمونه برگه ورود)</target>
+        <target>تغییر مسیر بازدیدکنندگان به برگه دیگر (برای نمونه برگه ورود)</target>
       </trans-unit>
       <trans-unit id="tl_page.protected.0">
         <source>Protect page</source>
@@ -202,20 +202,22 @@
         <target>این چیدمان زمانی که کاربران از موبایل استفاده می‌کنند بکار گرفته خواهد شد.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
-        <source>Set cache timeout</source>
-        <target>تنظیم زمان انقضاء برای نهانگاه</target>
+        <source>Set cache timeouts</source>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
-        <source>Set a cache timeout value for the page and its subpages.</source>
-        <target>تنظیم مقدار زمان انقضاء برای برگه و زیربرگه‌هایش.</target>
+        <source>Set cache timeout values for the page and its subpages.</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Cache timeout</source>
-        <target>زمان انقضاء نهانگاه</target>
+        <source>Server cache timeout</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>After this period, the cached version of the page will expire.</source>
-        <target>بعد از این زمان، نسخه نهانگاه برگه منقضی خواهد شد.</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Client cache timeout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
@@ -343,7 +345,7 @@
       </trans-unit>
       <trans-unit id="tl_page.redirect_legend">
         <source>Redirect settings</source>
-        <target>تنظیمات بازگردانی</target>
+        <target>تنظیمات تغییر مسیر</target>
       </trans-unit>
       <trans-unit id="tl_page.dns_legend">
         <source>DNS settings</source>
@@ -399,11 +401,11 @@
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
-        <target>301 بازگردانی دائمی</target>
+        <target>تغییر مسیر دائمی 301</target>
       </trans-unit>
       <trans-unit id="tl_page.temporary">
         <source>302 Temporary redirect</source>
-        <target>302 بازگردانی موقت</target>
+        <target>تغییر مسیر موقت 302</target>
       </trans-unit>
       <trans-unit id="tl_page.map_default">
         <source>Default</source>

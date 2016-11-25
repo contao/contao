@@ -59,7 +59,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'filesize' => array
 		(
-			'sql'                     => "double unsigned NOT NULL default '0'"
+			'sql'                     => "double NOT NULL default '0'" // see doctrine/dbal#1018
 		),
 		'checksum' => array
 		(

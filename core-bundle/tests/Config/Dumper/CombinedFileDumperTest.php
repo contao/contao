@@ -54,6 +54,21 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
+     * Tests dumping a file with namespace declaration.
+     */
+    public function testDumpWithNamespace()
+    {
+        $dumper = new CombinedFileDumper(
+            $this->mockFilesystem("<?php\n\nnamespace {\necho 'test';\n\n}\n"),
+            $this->mockLoader(),
+            $this->getCacheDir(),
+            true
+        );
+
+        $dumper->dump(['test.php'], 'test.php');
+    }
+
+    /**
      * Tests setting a valid header.
      */
     public function testValidHeader()

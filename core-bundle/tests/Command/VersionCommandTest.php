@@ -29,6 +29,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
         $command = new VersionCommand('contao:version');
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\VersionCommand', $command);
+        $this->assertEquals('contao:version', $command->getName());
     }
 
     /**

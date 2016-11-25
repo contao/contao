@@ -37,9 +37,6 @@ use Imagine\Image\Point;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Martin Auswöger <https://github.com/ausi>
  * @author Yanick Witschi <https://github.com/Toflar>
- *
- * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
- *             Use the contao.image.image_factory service instead.
  */
 class Image
 {
@@ -120,7 +117,7 @@ class Image
 	 */
 	public function __construct(File $file)
 	{
-		@trigger_error('Using the Contao\Image class has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+		@trigger_error('Using new Contao\Image() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
 
 		// Check whether the file exists
 		if (!$file->exists())

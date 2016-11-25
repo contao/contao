@@ -45,7 +45,8 @@ class DoctrineMigrationsPassTest extends TestCase
         $pass->process($container);
 
         $this->assertFalse($container->hasDefinition('contao.doctrine.schema_provider'));
-        $this->assertFalse($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
+        $this->assertTrue($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
+        $this->assertTrue($container->getDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID)->isSynthetic());
     }
 
     /**
@@ -60,7 +61,8 @@ class DoctrineMigrationsPassTest extends TestCase
         $pass->process($container);
 
         $this->assertTrue($container->hasDefinition('contao.doctrine.schema_provider'));
-        $this->assertFalse($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
+        $this->assertTrue($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
+        $this->assertTrue($container->getDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID)->isSynthetic());
 
         $this->assertEquals(
             'Doctrine\DBAL\Migrations\Provider\OrmSchemaProvider',

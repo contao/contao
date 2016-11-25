@@ -119,4 +119,28 @@ class ContaoDataCollectorTest extends TestCase
             $collector->getSummary()
         );
     }
+
+    /**
+     * Tests that an empty array is returned if $this->data is not an array.
+     */
+    public function testWithNonArrayData()
+    {
+        $collector = new ContaoDataCollector([]);
+        $collector->unserialize('N;');
+
+        $this->assertEquals([], $collector->getAdditionalData());
+    }
+
+    /**
+     * Tests that an empty array is returned if the key is unknown.
+     */
+    public function testWithUnknownKey()
+    {
+        $collector = new ContaoDataCollector([]);
+
+        $method = new \ReflectionMethod($collector, 'getData');
+        $method->setAccessible(true);
+
+        $this->assertEquals([], $method->invokeArgs($collector, ['foo']));
+    }
 }

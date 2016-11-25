@@ -211,9 +211,11 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
+        <target>Nessuna delle pagine root del sito (che non ha una impostazione DNS esplicita) è impostata come Lingua predefinita</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
+        <target>Nessuna delle pagine root sito &lt;strong&gt;%s &lt;/ strong&gt; ha impostata la lingua predefinita.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -225,6 +227,7 @@
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages in the site structure which are not website root pages.</source>
+        <target>Ci sono pagine di livello superiore nella struttura del sito che non sono le pagine del sito web di root.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -253,6 +256,10 @@
       <trans-unit id="ERR.invalidGoogleId">
         <source>Please enter a numeric Google+ ID or vanity name!</source>
         <target>Indicare l'ID numerico del profilo Google+ o il nome vanity!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidFieldName">
+        <source>Please enter only the following characters: A-Z0-9[]_-</source>
+        <target>Inserire solo i seguenti caratteri: A-Z0-9[]_-</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -991,6 +998,10 @@
         <target>Attiva/disattiva il modulo</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
+        <source>Title</source>
+        <target>Nome del modulo</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_alt">
         <source>Alternate text</source>
         <target>Testo alternativo</target>
       </trans-unit>
@@ -1009,6 +1020,22 @@
       <trans-unit id="MSC.aw_new">
         <source>Add language</source>
         <target>Aggiungi una lingua</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_title">
+        <source>Title</source>
+        <target>Nome del modulo</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_id">
+        <source>ID</source>
+        <target>ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_template">
+        <source>Template</source>
+        <target>Template</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_position">
+        <source>Position</source>
+        <target>Posizione</target>
       </trans-unit>
       <trans-unit id="MSC.image_sizes">
         <source>Predefined dimensions</source>
@@ -1200,6 +1227,7 @@
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
         <source>Your previous login was %s. Welcome back!</source>
+        <target>Il precedente login è avvenuto il %s. Bentornato!</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1211,6 +1239,7 @@
       </trans-unit>
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
+        <target>Questo sembra essere il primo login. Benvenuto in Contao!</target>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1221,8 +1250,8 @@
         <target>Bloccato</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop</source>
-        <target>Sposta l'elemento trascinandolo in modalità drag &amp; drop</target>
+        <source>Move the item via drag and drop or the up and down keys</source>
+        <target>Sposta l'elemento trascinandolo in modalità drag &amp; drop oppure utilizza le frecce direzione in alto o in basso</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1320,14 +1349,15 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.fePreview">
         <source>Preview</source>
+        <target>Anteprima</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
         <target>Anteprima del sito web in una nuova finestra</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
-        <source>Front end user</source>
-        <target>Utente frontend</target>
+        <source>Member</source>
+        <target>Membro</target>
       </trans-unit>
       <trans-unit id="MSC.backToTop">
         <source>Back to top</source>
@@ -1344,6 +1374,10 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>Torna alla pagina iniziale del backend</target>
+      </trans-unit>
+      <trans-unit id="MSC.burgerTitle">
+        <source>Toggle navigation</source>
+        <target>Modifica navigazione</target>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
@@ -1457,6 +1491,10 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <source>Save and new</source>
         <target>Salva e aggiungi nuovo elemento</target>
       </trans-unit>
+      <trans-unit id="MSC.saveNduplicate">
+        <source>Save and duplicate</source>
+        <target>Salva e duplica</target>
+      </trans-unit>
       <trans-unit id="MSC.continue">
         <source>Continue</source>
         <target>Continua</target>
@@ -1479,6 +1517,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.pw_change">
         <source>Please enter a new password.</source>
+        <target>Inserire una nuova password.</target>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1738,6 +1777,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>
+        <target>Notifiche</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
@@ -1827,9 +1867,9 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <source>Help wizard</source>
         <target>Aiuto guidato</target>
       </trans-unit>
-      <trans-unit id="MSC.noCookies">
-        <source>You have to allow cookies to use Contao.</source>
-        <target>Occorre abilitare i cookie per poter utilizzare Contao.</target>
+      <trans-unit id="MSC.jsDisabled">
+        <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
+        <target>JavaScript sembra essere disattivato nel tuo browser. Il back-end di Contao non funzionerà correttamente senza JavaScript.</target>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -2064,12 +2104,12 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <target>File %s caricato con successo</target>
       </trans-unit>
       <trans-unit id="MSC.fileExceeds">
-        <source>Image %s uploaded successfully, however it is too big to be resized automatically.</source>
-        <target>Il caricamento dell'immagine %s è avvenuta con successo, tuttavia è troppo grande per essere ridimensionata automaticamente.</target>
+        <source>Image %s is too big to be resized automatically.</source>
+        <target>L'immagine %s è troppo grande per essere ridimensionata automaticamente.</target>
       </trans-unit>
       <trans-unit id="MSC.fileResized">
-        <source>Image %s uploaded successfully and was scaled down to the maximum dimensions.</source>
-        <target>File %s caricato e ridotto alla massime dimensioni consentite</target>
+        <source>Image %s was scaled down to the maximum dimensions.</source>
+        <target>L'immagine %s è stata ridotta alle massime dimensioni consentite.</target>
       </trans-unit>
       <trans-unit id="MSC.searchLabel">
         <source>Search</source>
@@ -2104,8 +2144,8 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <target>Stampa la pagina</target>
       </trans-unit>
       <trans-unit id="MSC.printAsPdf">
-        <source>Print article as PDF</source>
-        <target>Stampa articolo come PDF</target>
+        <source>Save article as PDF</source>
+        <target>Salva l'articolo in PDF</target>
       </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
@@ -2298,6 +2338,30 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       <trans-unit id="COLS.footer">
         <source>Footer</source>
         <target>Piè pagina</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.top">
+        <source>Before the wrapper</source>
+        <target>Prima del wrapper</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.before">
+        <source>After the page header</source>
+        <target>Dopo l'intestazione della pagina</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.main">
+        <source>Inside the main column</source>
+        <target>Nella colonna principale</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.after">
+        <source>Before the page footer</source>
+        <target>Prima del piè pagina</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.bottom">
+        <source>After the wrapper</source>
+        <target>Dopo il wrapper</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.manual">
+        <source>Manual output</source>
+        <target>Output manuale</target>
       </trans-unit>
     </body>
   </file>

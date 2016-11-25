@@ -246,7 +246,7 @@ class ContaoDataCollector extends DataCollector
         }
 
         /** @var LayoutModel $layout */
-        $layout = $this->getFramework()->getAdapter('Contao\LayoutModel');
+        $layout = $this->framework->getAdapter(LayoutModel::class);
 
         return $layout->findByPk($objPage->layoutId);
     }

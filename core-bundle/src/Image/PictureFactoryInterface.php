@@ -10,10 +10,8 @@
 
 namespace Contao\CoreBundle\Image;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfigurationInterface;
-use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 
 /**
@@ -23,17 +21,6 @@ use Contao\Image\PictureInterface;
  */
 interface PictureFactoryInterface
 {
-    /**
-     * Constructor.
-     *
-     * @param PictureGeneratorInterface $pictureGenerator
-     * @param ImageFactoryInterface     $imageFactory
-     * @param ContaoFrameworkInterface  $framework
-     * @param bool                      $bypassCache
-     * @param array                     $imagineOptions
-     */
-    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions);
-
     /**
      * Sets the default densities for generating pictures.
      *

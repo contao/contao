@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Command;
+namespace Contao\CoreBundle\Test\Cache;
 
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
@@ -128,7 +128,10 @@ class ContaoCacheWarmerTest extends TestCase
         );
 
         $this->assertContains(
-            "'dummy' => 'contao/templates'",
+            sprintf(
+                "'dummy' => '%s/vendor/contao/test-bundle/Resources/contao/templates'",
+                strtr($this->getRootDir(), '\\', '/')
+            ),
             file_get_contents($this->getCacheDir().'/contao/config/templates.php')
         );
 
@@ -154,5 +157,45 @@ class ContaoCacheWarmerTest extends TestCase
     public function testIsOptional()
     {
         $this->assertTrue($this->warmer->isOptional());
+    }
+
+    /**
+     * Tests that no cache is created if the installation is incomplete.
+     */
+    public function testIncompleteInstallation()
+    {
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->getMock('Doctrine\DBAL\Connection', ['query'], [], '', false);
+
+        $connection
+            ->expects($this->any())
+            ->method('query')
+            ->willThrowException(new \Exception())
+        ;
+
+        $framework = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->setMethods(['initialize'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $framework
+            ->expects($this->never())
+            ->method('initialize')
+        ;
+
+        $warmer = new ContaoCacheWarmer(
+            new Filesystem(),
+            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao'),
+            new FileLocator($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao'),
+            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao',
+            $connection,
+            $framework
+        );
+
+        $warmer->warmUp($this->getCacheDir());
+
+        $this->assertFileNotExists($this->getCacheDir().'/contao');
     }
 }

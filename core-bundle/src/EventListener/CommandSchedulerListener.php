@@ -66,7 +66,7 @@ class CommandSchedulerListener
     private function canRunController()
     {
         /** @var Config $config */
-        $config = $this->framework->getAdapter('Contao\Config');
+        $config = $this->framework->getAdapter(Config::class);
 
         return $config->isComplete()
             && !$config->get('disableCron')

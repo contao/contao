@@ -18,6 +18,8 @@ use Contao\System;
  * Tests the Environment class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @group legacy
  */
 class EnvironmentTest extends TestCase
 {

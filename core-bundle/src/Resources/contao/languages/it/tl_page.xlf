@@ -151,6 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>This website is available via HTTPS.</source>
+        <target>Questo sito è disponibile tramite HTTPS.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
@@ -201,20 +202,28 @@
         <target>Questo layout sarà utilizzato per gli utenti che utilizzano un dispositivo mobile.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
-        <source>Set cache timeout</source>
-        <target>Memorizza una copia in memoria cache</target>
+        <source>Set cache timeouts</source>
+        <target>Imposta il timeout della cache</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
-        <source>Set a cache timeout value for the page and its subpages.</source>
-        <target>Abilita il salvataggio di una copia della pagina e delle sue sottopagine. Questa opzione potrebbe velocizzare il caricamento della pagina nel frontend</target>
+        <source>Set cache timeout values for the page and its subpages.</source>
+        <target>Imposta il timeout della cache per la pagina e relative sottopagine</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Cache timeout</source>
-        <target>Scadenza copie cache</target>
+        <source>Server cache timeout</source>
+        <target>Server cache timeout</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>After this period, the cached version of the page will expire.</source>
-        <target>Inserisci il periodo di validità delle pagine salvate nella memoria cache.</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+        <target>Il numero di secondi dopo i quali la pagina deve essere considerata scaduta nella cache condivisa.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Client cache timeout</source>
+        <target>Client cache timeout</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
+        <target>Il numero di secondi dopo i quali la pagina deve essere considerata scaduta nella cache del browser.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>

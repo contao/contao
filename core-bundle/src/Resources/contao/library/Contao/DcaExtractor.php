@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\Finder\SplFileInfo;
-
 
 /**
  * Extracts DCA information and cache it

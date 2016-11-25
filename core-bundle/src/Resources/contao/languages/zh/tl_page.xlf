@@ -202,20 +202,22 @@
         <target>如果访问者使用移动设备，将使用此布局。</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
-        <source>Set cache timeout</source>
-        <target>设置缓存超时</target>
+        <source>Set cache timeouts</source>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
-        <source>Set a cache timeout value for the page and its subpages.</source>
-        <target>为页面和其子页面设置缓存超时时间。</target>
+        <source>Set cache timeout values for the page and its subpages.</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Cache timeout</source>
-        <target>缓存超时</target>
+        <source>Server cache timeout</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>After this period, the cached version of the page will expire.</source>
-        <target>在这段时间后，页面的缓存版本将会过期。</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Client cache timeout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>

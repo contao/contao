@@ -18,7 +18,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -33,9 +35,7 @@ class StoreRefererListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $listener = $this->getListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\StoreRefererListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\StoreRefererListener', $this->getListener());
     }
 
     /**
@@ -116,6 +116,7 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, $tokenStorage);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -139,6 +140,7 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -311,9 +313,8 @@ class StoreRefererListenerTest extends TestCase
             );
         }
 
-        $listener = new StoreRefererListener($session);
-        $listener->setTokenStorage($tokenStorage);
+        $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
 
-        return $listener;
+        return new StoreRefererListener($session, $tokenStorage, $trustResolver);
     }
 }

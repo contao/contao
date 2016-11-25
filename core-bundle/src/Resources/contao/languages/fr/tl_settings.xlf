@@ -121,14 +121,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Ne pas masquer les éléments lors de la prévisualisation dans le back office.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.0">
-        <source>Cache mode</source>
-        <target>Mode du cache</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.1">
-        <source>Here you can select the cache mode.</source>
-        <target>Sélectionner le mode du cache</target>
-      </trans-unit>
       <trans-unit id="tl_settings.sslProxyDomain.0">
         <source>SSL proxy domain</source>
         <target>Domaine du server proxy SSL</target>
@@ -209,14 +201,6 @@
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Saisir une liste, séparée par des virgules, des extensions de fichiers pouvant être téléchargés.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.0">
-        <source>Image file types</source>
-        <target>Types d'image valides</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.1">
-        <source>Here you can enter a comma separated list of file types that can be handled by the image class.</source>
-        <target>Saisir une liste, séparée par des virgules, des extensions de fichiers pouvant être manipulés par la classe image.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.editableFiles.0">
         <source>Editable file types</source>
         <target>Types de fichiers pouvant être édités</target>
@@ -240,14 +224,6 @@
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
         <target>Si la largeur d'une image ou d'un film dépasse cette valeur, elle sera ajustée automatiquement.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.0">
-        <source>JPG thumbnail quality</source>
-        <target>Qualité des vignettes JPG</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.1">
-        <source>Here you can enter the JPG thumbnail quality in percent.</source>
-        <target>Choisir la qualité des vignettes JPG en pourcentage.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -424,10 +400,6 @@
       <trans-unit id="tl_settings.modules_legend">
         <source>Inactive extensions</source>
         <target>Modules inactifs</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Command scheduler</source>
-        <target>Planificateur de commandes</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>

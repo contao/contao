@@ -1,6 +1,13 @@
 # Contao core bundle change log
 
-### 4.3.0-beta1 (2016-XX-XX)
+### 4.3.0 (2016-11-25)
+
+ * Do not cache pages if a back end user is logged in (see #628).
+ * Correctly show error messages in the login module (see #610).
+ * Do not hardcode paths in the contao:install and contao:symlinks commands.
+ * Store absolute paths in the template loader cache (see #607).
+
+### 4.3.0-RC1 (2016-10-31)
 
  * Set the secure cookie flag when using SSL (see contao/core#8474).
  * Allow to select a custom form template (see contao/core#8454).

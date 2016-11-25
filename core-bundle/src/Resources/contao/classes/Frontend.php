@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 
 /**
@@ -341,10 +340,10 @@ abstract class Frontend extends \Controller
 				throw new NoRootPageFoundException('No root page found');
 			}
 
-			// Redirect to the language root (e.g. en/)
-			if (\Config::get('addLanguageToUrl'))
+			// Redirect to the website root or language root (e.g. en/)
+			if (\Environment::get('relativeRequest') == '')
 			{
-				if (!\Config::get('doNotRedirectEmpty') && \Environment::get('relativeRequest') == '')
+				if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty'))
 				{
 					$arrParams = array('_locale' => $objRootPage->language);
 
@@ -353,15 +352,15 @@ abstract class Frontend extends \Controller
 
 					static::redirect($strUrl, 301);
 				}
-			}
-			else
-			{
-				$objPage = \PageModel::findFirstPublishedRegularByPid($objRootPage->id);
-
-				// Redirect if it is not the language fall back page and the alias is "index" (see #8498)
-				if ($objPage !== null && (!$objRootPage->fallback || $objPage->alias != 'index'))
+				else
 				{
-					static::redirect($objPage->getFrontendUrl(), 302);
+					$objPage = \PageModel::findFirstPublishedByPid($objRootPage->id);
+
+					// Redirect if it is not the language fall back page and the alias is "index" (see #8498)
+					if ($objPage !== null && (!$objRootPage->fallback || $objPage->alias != 'index'))
+					{
+						static::redirect($objPage->getFrontendUrl(), 302);
+					}
 				}
 			}
 		}

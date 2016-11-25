@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -100,6 +101,9 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->integerNode('jpeg_quality')
                                     ->defaultValue(80)
+                                ->end()
+                                ->scalarNode('interlace')
+                                    ->defaultValue(ImageInterface::INTERLACE_PLANE)
                                 ->end()
                             ->end()
                         ->end()

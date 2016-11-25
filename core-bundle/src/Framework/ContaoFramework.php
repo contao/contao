@@ -279,7 +279,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         System::setContainer($this->container);
 
         /** @var Config $config */
-        $config = $this->getAdapter('Contao\Config');
+        $config = $this->getAdapter(Config::class);
 
         // Preload the configuration (see #5872)
         $config->preload();
@@ -368,7 +368,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         /** @var Config $config */
-        $config = $this->getAdapter('Contao\Config');
+        $config = $this->getAdapter(Config::class);
 
         // Show the "incomplete installation" message
         if (!$config->isComplete()) {
@@ -384,7 +384,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     private function setTimezone()
     {
         /** @var Config $config */
-        $config = $this->getAdapter('Contao\Config');
+        $config = $this->getAdapter(Config::class);
 
         $this->iniSet('date.timezone', $config->get('timeZone'));
         date_default_timezone_set($config->get('timeZone'));
@@ -415,7 +415,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     private function handleRequestToken()
     {
         /** @var RequestToken $requestToken */
-        $requestToken = $this->getAdapter('Contao\RequestToken');
+        $requestToken = $this->getAdapter(RequestToken::class);
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         if (!defined('REQUEST_TOKEN')) {

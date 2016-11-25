@@ -121,14 +121,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>バックエンドのプレビューで要素を折り畳みません。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.0">
-        <source>Cache mode</source>
-        <target>キャッシュのモード</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.1">
-        <source>Here you can select the cache mode.</source>
-        <target>キャッシュのモードを選択します。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.sslProxyDomain.0">
         <source>SSL proxy domain</source>
         <target>SSLプロキシのドメイン</target>
@@ -209,14 +201,6 @@
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>ダウンロードできるファイル形式をコンマで区切ったリストで入力します。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.0">
-        <source>Image file types</source>
-        <target>画像のファイル形式</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.1">
-        <source>Here you can enter a comma separated list of file types that can be handled by the image class.</source>
-        <target>画像のクラスライブラリで処理してよいファイル形式をコンマで区切ったリストで入力します。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.editableFiles.0">
         <source>Editable file types</source>
         <target>編集できるファイル形式</target>
@@ -240,14 +224,6 @@
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
         <target>この値を画像や動画の幅が超えると、自動的に幅を調整します。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.0">
-        <source>JPG thumbnail quality</source>
-        <target>JPEGのサムネイルの品質</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.1">
-        <source>Here you can enter the JPG thumbnail quality in percent.</source>
-        <target>JPEGのサムネイルの品質をパーセントで入力します。</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -424,10 +400,6 @@
       <trans-unit id="tl_settings.modules_legend">
         <source>Inactive extensions</source>
         <target>機能拡張の停止</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Command scheduler</source>
-        <target>コマンドスケジューラー</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>

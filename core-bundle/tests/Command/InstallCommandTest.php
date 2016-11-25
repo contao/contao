@@ -54,6 +54,7 @@ class InstallCommandTest extends TestCase
         $command = new InstallCommand('contao:install');
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\InstallCommand', $command);
+        $this->assertEquals('contao:install', $command->getName());
     }
 
     /**

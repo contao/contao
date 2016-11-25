@@ -46,6 +46,7 @@ class SymlinksCommandTest extends TestCase
         $command = new SymlinksCommand('contao:symlinks');
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\SymlinksCommand', $command);
+        $this->assertEquals('contao:symlinks', $command->getName());
     }
 
     /**
@@ -55,6 +56,7 @@ class SymlinksCommandTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
+        $container->setParameter('kernel.logs_dir', $this->getRootDir().'/var/logs');
         $container->setParameter('contao.upload_path', 'app');
 
         $container->set(

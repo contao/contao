@@ -54,8 +54,16 @@
         <target>画素密度/倍率</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.1">
-        <source>Here you can define the pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
-        <target>画素密度を指定できます。例: &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;</target>
+        <source>Here you can define the pixel densities (e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) or width descriptors (e.g. &lt;em&gt;100w, 200w&lt;/em&gt;).</source>
+        <target>画素密度(例: &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;)またはwidth記述子(例: &lt;em&gt;100w, 200w&lt;/em&gt;)を指定できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cssClass.0">
+        <source>CSS classes</source>
+        <target>CSSのクラス</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cssClass.1">
+        <source>The CSS classes will be applied to the image tag.</source>
+        <target>このCSSのクラスを画像のタグに適用します。</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>

@@ -139,7 +139,7 @@ class UserPasswordCommand extends ContainerAwareCommand
         $framework->initialize();
 
         /** @var Config $confirm */
-        $config = $framework->getAdapter('Contao\Config');
+        $config = $framework->getAdapter(Config::class);
         $passwordLength = $config->get('minPasswordLength') ?: 8;
 
         if (Utf8::strlen($password) < $passwordLength) {
@@ -149,7 +149,7 @@ class UserPasswordCommand extends ContainerAwareCommand
         }
 
         /** @var Encryption $encryption */
-        $encryption = $framework->getAdapter('Contao\Encryption');
+        $encryption = $framework->getAdapter(Encryption::class);
 
         return $encryption->hash($password);
     }

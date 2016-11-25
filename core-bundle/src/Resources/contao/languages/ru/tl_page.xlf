@@ -202,20 +202,28 @@
         <target>Макет будет использован, если посетитель использует мобильные устройства.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
-        <source>Set cache timeout</source>
-        <target>Установить время кэширования</target>
+        <source>Set cache timeouts</source>
+        <target>Время кэширования</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
-        <source>Set a cache timeout value for the page and its subpages.</source>
+        <source>Set cache timeout values for the page and its subpages.</source>
         <target>Установите значение времени кэширования страницы и ее подстраниц.</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Cache timeout</source>
-        <target>Время кэширования</target>
+        <source>Server cache timeout</source>
+        <target>Время кэширования сервера</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>After this period, the cached version of the page will expire.</source>
-        <target>В заданный период кэширования, страница будет загружена из кэша.</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+        <target>Количество секунд, после чего страница больше не должна считаться новой совместно используемыми кэшами.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Client cache timeout</source>
+        <target>Время кэширования клиента</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
+        <target>Количество секунд, после чего страница больше не должна считаться новой браузером.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>

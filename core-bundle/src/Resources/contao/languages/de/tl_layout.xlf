@@ -134,16 +134,8 @@
         <target>Eigene Layoutbereiche</target>
       </trans-unit>
       <trans-unit id="tl_layout.sections.1">
-        <source>Here you can enter a comma separated list of custom layout sections.</source>
-        <target>Hier können Sie eine kommagetrennte Liste eigener Layoutbereiche eingeben.</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.sPosition.0">
-        <source>Custom sections position</source>
-        <target>Position der Layoutbereiche</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.sPosition.1">
-        <source>Please select the position of the custom layout sections.</source>
-        <target>Bitte wählen Sie die Position der eigenen Layoutbereiche aus.</target>
+        <source>Here you can define custom layout sections.</source>
+        <target>Hier können Sie eigene Layoutbereiche definieren.</target>
       </trans-unit>
       <trans-unit id="tl_layout.stylesheet.0">
         <source>Internal style sheets</source>
@@ -232,6 +224,14 @@
       <trans-unit id="tl_layout.loadingOrder.1">
         <source>Here you can select the loading order of the style sheets.</source>
         <target>Hier können Sie die Ladereihenfolge der Stylesheets festlegen.</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.combineScripts.0">
+        <source>Combine scripts</source>
+        <target>Skripte zusammenfassen</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.combineScripts.1">
+        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
+        <target>Die .css- und .js-Dateien zusammenfassen (für HTTP/2 nicht aktivieren).</target>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
@@ -496,26 +496,6 @@
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
         <target>HTML</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.top">
-        <source>Before the wrapper</source>
-        <target>Vor dem umschließenden Element</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.before">
-        <source>After the page header</source>
-        <target>Unterhalb der Kopfzeile</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.main">
-        <source>Inside the main column</source>
-        <target>In der Hauptspalte</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.after">
-        <source>Before the page footer</source>
-        <target>Oberhalb der Fußzeile</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.bottom">
-        <source>After the wrapper</source>
-        <target>Nach dem umschließenden Element</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit_styles">
         <source>Edit the style sheets</source>

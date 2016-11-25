@@ -73,7 +73,16 @@ class ImageFactory implements ImageFactoryInterface
     private $validExtensions;
 
     /**
-     * {@inheritdoc}
+     * Constructor.
+     *
+     * @param ResizerInterface         $resizer
+     * @param ImagineInterface         $imagine
+     * @param ImagineInterface         $imagineSvg
+     * @param Filesystem               $filesystem
+     * @param ContaoFrameworkInterface $framework
+     * @param bool                     $bypassCache
+     * @param array                    $imagineOptions
+     * @param array                    $validExtensions
      */
     public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions, array $validExtensions)
     {
@@ -197,7 +206,7 @@ class ImageFactory implements ImageFactoryInterface
 
         if (isset($size[2]) && is_numeric($size[2])) {
             /** @var ImageSizeModel $imageModel */
-            $imageModel = $this->framework->getAdapter('Contao\ImageSizeModel');
+            $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
             $imageSize = $imageModel->findByPk($size[2]);
 
             if (null !== $imageSize) {
@@ -242,7 +251,7 @@ class ImageFactory implements ImageFactoryInterface
     private function createImportantPart($path)
     {
         /** @var FilesModel $filesModel */
-        $filesModel = $this->framework->getAdapter('Contao\FilesModel');
+        $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($path);
 
         if (null === $file || !$file->importantPartWidth || !$file->importantPartHeight) {

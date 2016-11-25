@@ -27,8 +27,6 @@ class DoctrineMigrationsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $container->removeDefinition(static::DIFF_COMMAND_ID);
-
         if (!$this->hasMigrationsBundle($container)) {
             return;
         }

@@ -121,9 +121,10 @@ services:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
         arguments:
             - "@session"
+            - "@security.token_storage"
+            - "@security.authentication.trust_resolver"
         calls:
             - ["setContainer", ["@service_container"]]
-            - ["setTokenStorage", ["@security.token_storage"]]
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
@@ -141,9 +142,10 @@ services:
         arguments:
             - "@session"
             - "@database_connection"
+            - "@security.token_storage"
+            - "@security.authentication.trust_resolver"
         calls:
             - ["setContainer", ["@service_container"]]
-            - ["setTokenStorage", ["@security.token_storage"]]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

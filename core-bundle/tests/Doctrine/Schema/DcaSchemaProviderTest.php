@@ -318,6 +318,88 @@ class DcaSchemaProviderTest extends TestCase
     }
 
     /**
+     * Tests adding a fulltext index.
+     */
+    public function testFulltextIndex()
+    {
+        $provider = $this->getProvider(
+            [
+                'tl_search' => [
+                    'TABLE_FIELDS' => [
+                        'text' => '`text` mediumtext NULL',
+                    ],
+                    'TABLE_CREATE_DEFINITIONS' => [
+                        'text' => 'FULLTEXT KEY `text` (`text`)',
+                    ],
+                ],
+            ]
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertCount(1, $schema->getTableNames());
+        $this->assertTrue($schema->hasTable('tl_search'));
+
+        $table = $schema->getTable('tl_search');
+
+        $this->assertTrue($table->hasColumn('text'));
+        $this->assertEquals('text', $table->getColumn('text')->getType()->getName());
+        $this->assertEquals(false, $table->getColumn('text')->getNotnull());
+        $this->assertEquals(false, $table->getColumn('text')->getFixed());
+        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('text')->getLength());
+
+        $this->assertTrue($table->hasIndex('text'));
+        $this->assertFalse($table->getIndex('text')->isUnique());
+        $this->assertEquals(['fulltext'], $table->getIndex('text')->getFlags());
+    }
+
+    /**
+     * Tests parsing an invalid primary key.
+     *
+     * @expectedException \RuntimeException
+     */
+    public function testInvalidPrimaryKey()
+    {
+        $provider = $this->getProvider(
+            [
+                'tl_member' => [
+                    'TABLE_FIELDS' => [
+                        'id' => "`id` int(10) NOT NULL default '0'",
+                    ],
+                    'TABLE_CREATE_DEFINITIONS' => [
+                        'PRIMARY' => 'PRIMARY KEY (id)',
+                    ],
+                ],
+            ]
+        );
+
+        $provider->createSchema();
+    }
+
+    /**
+     * Tests parsing an invalid key.
+     *
+     * @expectedException \RuntimeException
+     */
+    public function testInvalidKey()
+    {
+        $provider = $this->getProvider(
+            [
+                'tl_files' => [
+                    'TABLE_FIELDS' => [
+                        'path' => "`path` varchar(1022) NOT NULL default ''",
+                    ],
+                    'TABLE_CREATE_DEFINITIONS' => [
+                        'path' => 'KEY path (path)',
+                    ],
+                ],
+            ]
+        );
+
+        $provider->createSchema();
+    }
+
+    /**
      * Returns a DCA schema provider.
      *
      * @param array $dca

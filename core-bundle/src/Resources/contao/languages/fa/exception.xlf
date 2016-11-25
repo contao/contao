@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
         <source>Search the &lt;code&gt;app/logs&lt;/code&gt; folder for the current log file and find the associated error message (usually the last one).</source>
+        <target>پوشه‌ی &lt;code&gt;app/logs&lt;/code&gt; را جستجو کنید و پیغام خطای مربوطه (معمولا آخرین سطر) را پیدا کنید.</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>اجرای اسکریپت متوقف شد، زیرا چیزی درست کار نمی‌کند. پیغام خطای واقعی مخفی با این پیغام به دلایل امنیتی مخفی شده است و می‌تواند در  پرونده‌ی گزارش پیدا شود (بالا را ببینید). اگر شما پیغام خطاء را نفهمیدید یا ندانستید چگونه مشکل را برطرف نمایید، &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;سوالات متداول کانتائو&lt;/a&gt; را جستجو نمایید و یا از &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;برگه پشتیبانی کانتائو&lt;/a&gt; بازدید نمایید.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -61,6 +63,7 @@
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
         <source>Please open the Contao install tool (&lt;code&gt;/install.php&lt;/code&gt;) in your browser.</source>
+        <target>لطفا ابزار نصب کانتائو &lt;code&gt;/install.php&lt;/code&gt; را در مرورگرتان باز کنید.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
@@ -88,7 +91,7 @@
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
         <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
-        <target>اگر شما به صراحت زبانی را نهاده‌اید، سعی کنید و ببینید که شما بازگردانی شده‌اید. در غیر این صورت &lt;a href=&quot;%s&quot;&gt;با مدیر وب تماس بگیرید&lt;/a&gt;  و اجازه دهید که او بداند که اینجا چیز نادرستی وجود دارد.</target>
+        <target>اگر شما به صراحت زبانی را نهاده‌اید، سعی کنید و ببینید که شما تغییر مسیر شده‌اید. در غیر این صورت &lt;a href=&quot;%s&quot;&gt;با مدیر وب تماس بگیرید&lt;/a&gt;  و اجازه دهید که او بداند که اینجا چیز نادرستی وجود دارد.</target>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
         <source>No layout specified</source>

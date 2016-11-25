@@ -50,20 +50,10 @@ $GLOBALS['TL_CONFIG']['disableRefererCheck']   = false;
 $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = [];
 
 // Database
-$GLOBALS['TL_CONFIG']['dbDriver']    = '';
-$GLOBALS['TL_CONFIG']['dbUser']      = '';
-$GLOBALS['TL_CONFIG']['dbPass']      = '';
-$GLOBALS['TL_CONFIG']['dbHost']      = 'localhost';
-$GLOBALS['TL_CONFIG']['dbDatabase']  = '';
-$GLOBALS['TL_CONFIG']['dbPort']      = 3306;
-$GLOBALS['TL_CONFIG']['dbSocket']    = '';
-$GLOBALS['TL_CONFIG']['dbPconnect']  = false;
 $GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8';
 $GLOBALS['TL_CONFIG']['dbCollation'] = 'utf8_general_ci';
-$GLOBALS['TL_CONFIG']['dbSqlMode']   = '';
 
 // Encryption
-$GLOBALS['TL_CONFIG']['encryptionKey']    = '';
 $GLOBALS['TL_CONFIG']['encryptionMode']   = 'cfb';
 $GLOBALS['TL_CONFIG']['encryptionCipher'] = 'rijndael-256';
 $GLOBALS['TL_CONFIG']['bcryptCost']       = 10;
@@ -76,20 +66,11 @@ $GLOBALS['TL_CONFIG']['uploadTypes']
 	. 'mp3,mp4,m4a,m4v,webm,ogg,ogv,wma,wmv,ram,rm,mov,fla,flv,swf,'
 	. 'ttf,ttc,otf,eot,woff,woff2,'
 	. 'css,scss,less,js,html,htm,txt,zip,rar,7z,cto';
-$GLOBALS['TL_CONFIG']['uploadPath']     = 'files';
 $GLOBALS['TL_CONFIG']['maxFileSize']    = 2048000;
 $GLOBALS['TL_CONFIG']['imageWidth']     = 800;
 $GLOBALS['TL_CONFIG']['imageHeight']    = 600;
 $GLOBALS['TL_CONFIG']['gdMaxImgWidth']  = 3000;
 $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
-
-// SMTP settings
-$GLOBALS['TL_CONFIG']['useSMTP']  = false;
-$GLOBALS['TL_CONFIG']['smtpHost'] = 'localhost';
-$GLOBALS['TL_CONFIG']['smtpUser'] = '';
-$GLOBALS['TL_CONFIG']['smtpPass'] = '';
-$GLOBALS['TL_CONFIG']['smtpEnc']  = '';
-$GLOBALS['TL_CONFIG']['smtpPort'] = 25;
 
 // Timeout values
 $GLOBALS['TL_CONFIG']['undoPeriod']     = 86400;
@@ -130,7 +111,6 @@ $GLOBALS['TL_CONFIG']['disableInsertTags']    = false;
 $GLOBALS['TL_CONFIG']['rootFiles']            = [];
 $GLOBALS['TL_CONFIG']['fileSyncExclude']      = '';
 $GLOBALS['TL_CONFIG']['doNotCollapse']        = false;
-$GLOBALS['TL_CONFIG']['urlSuffix']            = '.html';
 $GLOBALS['TL_CONFIG']['exampleWebsite']       = '';
 $GLOBALS['TL_CONFIG']['minPasswordLength']    = 8;
 $GLOBALS['TL_CONFIG']['autologin']            = 7776000;
@@ -138,7 +118,6 @@ $GLOBALS['TL_CONFIG']['staticFiles']          = '';
 $GLOBALS['TL_CONFIG']['staticPlugins']        = '';
 $GLOBALS['TL_CONFIG']['disableCron']          = false;
 $GLOBALS['TL_CONFIG']['coreOnlyMode']         = false;
-$GLOBALS['TL_CONFIG']['addLanguageToUrl']     = false;
 $GLOBALS['TL_CONFIG']['doNotRedirectEmpty']   = false;
 $GLOBALS['TL_CONFIG']['useAutoItem']          = true;
 $GLOBALS['TL_CONFIG']['privacyAnonymizeIp']   = true;

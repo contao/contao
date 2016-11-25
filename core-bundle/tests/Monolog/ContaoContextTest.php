@@ -35,6 +35,7 @@ class ContaoContextTest extends TestCase
     {
         $context = new ContaoContext('foo');
 
+        $this->assertEquals('foo', $context->getFunc());
         $this->assertNull($context->getAction());
         $this->assertNull($context->getUsername());
         $this->assertNull($context->getIp());
@@ -57,5 +58,15 @@ class ContaoContextTest extends TestCase
             ]),
             (string) $context
         );
+    }
+
+    /**
+     * Tests passing an empty function name.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testEmptyFunctionName()
+    {
+        new ContaoContext('');
     }
 }

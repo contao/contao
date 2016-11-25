@@ -62,7 +62,13 @@ class PictureFactory implements PictureFactoryInterface
     private $defaultDensities = '';
 
     /**
-     * {@inheritdoc}
+     * Constructor.
+     *
+     * @param PictureGeneratorInterface $pictureGenerator
+     * @param ImageFactoryInterface     $imageFactory
+     * @param ContaoFrameworkInterface  $framework
+     * @param bool                      $bypassCache
+     * @param array                     $imagineOptions
      */
     public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions)
     {
@@ -162,7 +168,7 @@ class PictureFactory implements PictureFactoryInterface
         }
 
         /** @var ImageSizeModel $imageSizeModel */
-        $imageSizeModel = $this->framework->getAdapter('Contao\ImageSizeModel');
+        $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
         $imageSizes = $imageSizeModel->findByPk($size[2]);
 
         $config->setSize($this->createConfigItem($imageSizes));
@@ -172,7 +178,7 @@ class PictureFactory implements PictureFactoryInterface
         }
 
         /** @var ImageSizeItemModel $imageSizeItemModel */
-        $imageSizeItemModel = $this->framework->getAdapter('Contao\ImageSizeItemModel');
+        $imageSizeItemModel = $this->framework->getAdapter(ImageSizeItemModel::class);
         $imageSizeItems = $imageSizeItemModel->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
 
         if (null !== $imageSizeItems) {

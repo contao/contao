@@ -123,19 +123,19 @@
       </trans-unit>
       <trans-unit id="tl_module.jumpTo.0">
         <source>Redirect page</source>
-        <target>برگه بازگردانی</target>
+        <target>برگه‌ی تغییر مسیر</target>
       </trans-unit>
       <trans-unit id="tl_module.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
-        <target>لطفا برگه‌ای که بازدیدکنندگان بعد از کلیک پیوند یا ارسال یک فرم باید بازگردانی شوند را انتخاب نمایید.</target>
+        <target>لطفا برگه‌ای که بازدیدکنندگان بعد از کلیک پیوند یا ارسال یک فرم باید تغییر مسیر شوند را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
-        <target>بازگردانی به آخرین برگه دیده شده</target>
+        <target>تغییر مسیر به آخرین برگه دیده شده</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>بازگردانی به عقب کاربر به آخرین برگه دیده شده به جای برگه بازگردانی.</target>
+        <target>تغییر مسیر به عقب کاربر به آخرین برگه دیده شده به جای برگه تغییر مسیر.</target>
       </trans-unit>
       <trans-unit id="tl_module.cols.0">
         <source>Number of columns</source>
@@ -567,7 +567,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
         <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>لطفا برگه‌ای را که می خواهید بعد از فعال‌سازی حساب کاربری، کاربر به آنجا بازگردانی گردد را انتخاب نمایید.</target>
+        <target>لطفا برگه‌ای را که می خواهید بعد از فعال‌سازی حساب کاربری، کاربر به آنجا تغییر مسیر گردد را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -599,7 +599,7 @@
       </trans-unit>
       <trans-unit id="tl_module.redirect_legend">
         <source>Redirect settings</source>
-        <target>تنظیمات بازگردانی</target>
+        <target>تنظیمات تغییر مسیر</target>
       </trans-unit>
       <trans-unit id="tl_module.template_legend">
         <source>Template settings</source>

@@ -18,6 +18,8 @@ use Contao\Validator;
  * Tests the Validator class.
  *
  * @author Christian Schiffler <https://github.com/discordier>
+ *
+ * @group legacy
  */
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {

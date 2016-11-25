@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\Image\Image as ContaoImage;
+use Contao\Image\ImageDimensions;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -102,6 +104,12 @@ class File extends \System
 	 * @var array
 	 */
 	protected $arrImageSize = array();
+
+	/**
+	 * Image size runtime cache
+	 * @var array
+	 */
+	protected static $arrImageSizeCache = array();
 
 	/**
 	 * Image view size
@@ -240,7 +248,13 @@ class File extends \System
 			case 'imageSize':
 				if (empty($this->arrImageSize))
 				{
-					if ($this->isGdImage)
+					$strCacheKey = $this->strFile . '|' . $this->mtime;
+
+					if (isset(static::$arrImageSizeCache[$strCacheKey]))
+					{
+						$this->arrImageSize = static::$arrImageSizeCache[$strCacheKey];
+					}
+					elseif ($this->isGdImage)
 					{
 						$this->arrImageSize = @getimagesize(TL_ROOT . '/' . $this->strFile);
 					}
@@ -248,11 +262,7 @@ class File extends \System
 					{
 						try
 						{
-							$dimensions = System::getContainer()
-								->get('contao.image.image_factory')
-								->create(TL_ROOT . '/' . $this->strFile)
-								->getDimensions()
-							;
+							$dimensions = (new ContaoImage(TL_ROOT . '/' . $this->strFile, System::getContainer()->get('contao.image.imagine_svg')))->getDimensions();
 
 							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
 							{
@@ -276,6 +286,11 @@ class File extends \System
 						{
 							$this->arrImageSize = false;
 						}
+					}
+
+					if (!isset(static::$arrImageSizeCache[$strCacheKey]))
+					{
+						static::$arrImageSizeCache[$strCacheKey] = $this->arrImageSize;
 					}
 				}
 				return $this->arrImageSize;
@@ -304,11 +319,12 @@ class File extends \System
 					{
 						try
 						{
-							$dimensions = System::getContainer()
-								->get('contao.image.image_factory')
-								->create(TL_ROOT . '/' . $this->strFile)
-								->getDimensions()
-							;
+							$dimensions = new ImageDimensions(
+								System::getContainer()
+									->get('contao.image.imagine_svg')
+									->open(TL_ROOT . '/' . $this->strFile)
+									->getSize()
+							);
 
 							$this->arrImageViewSize = array
 							(

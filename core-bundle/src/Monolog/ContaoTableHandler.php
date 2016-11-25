@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Monolog;
 
+use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Statement;
 use Monolog\Formatter\LineFormatter;
@@ -98,7 +99,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
 
         $this->statement->execute([
             'tstamp' => $date->format('U'),
-            'text' => specialchars((string) $record['formatted']),
+            'text' => StringUtil::specialchars((string) $record['formatted']),
             'source' => (string) $context->getSource(),
             'action' => (string) $context->getAction(),
             'username' => (string) $context->getUsername(),
@@ -161,7 +162,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
         trigger_error('Using the addLogEntry hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         /** @var System $system */
-        $system = $framework->getAdapter('Contao\System');
+        $system = $framework->getAdapter(System::class);
 
         // Must create variables to allow modification-by-reference in hook
         $func = $context->getFunc();

@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Command;
+namespace Contao\CoreBundle\Test\Cache;
 
 use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use Contao\CoreBundle\Test\TestCase;

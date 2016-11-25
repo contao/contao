@@ -105,6 +105,14 @@
         <source>Store the submitted data in the database.</source>
         <target>Uloží zadaná data do databáze.</target>
       </trans-unit>
+      <trans-unit id="tl_form.customTpl.0">
+        <source>Form template</source>
+        <target>Předloha formuláře</target>
+      </trans-unit>
+      <trans-unit id="tl_form.customTpl.1">
+        <source>Here you can select the form template.</source>
+        <target>Zde můžete zvolit předlohu formuláře.</target>
+      </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>
         <target>Cílová tabulka</target>
@@ -180,6 +188,10 @@
       <trans-unit id="tl_form.config_legend">
         <source>Form configuration</source>
         <target>Konfigurace formuláře</target>
+      </trans-unit>
+      <trans-unit id="tl_form.template_legend">
+        <source>Template settings</source>
+        <target>Předloha komentáře</target>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
         <source>New form</source>

@@ -114,11 +114,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     private function generateConfigCache($cacheDir)
     {
-        $dumper = new CombinedFileDumper(
-            $this->filesystem,
-            new PhpFileLoader(),
-            $cacheDir.'/contao'
-        );
+        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
 
         $dumper->dump($this->locator->locate('config/autoload.php', null, false), 'config/autoload.php');
         $dumper->dump($this->locator->locate('config/config.php', null, false), 'config/config.php');
@@ -131,7 +127,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     private function generateDcaCache($cacheDir)
     {
-        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao');
+        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
         $processed = [];
 
         /** @var SplFileInfo[] $files */
@@ -256,11 +252,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
 
         foreach ($files as $file) {
-            $mapper[$file->getBasename('.html5')] = str_replace(
-                strtr(dirname($this->rootDir), '\\', '/').'/',
-                '',
-                strtr($file->getPath(), '\\', '/')
-            );
+            $mapper[$file->getBasename('.html5')] = strtr($file->getPath(), '\\', '/');
         }
 
         $this->filesystem->dumpFile(

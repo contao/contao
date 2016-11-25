@@ -121,14 +121,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>عنصر‌ها را در پیش‌نمایش بخش مدیریت جمع نمی‌کند.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.0">
-        <source>Cache mode</source>
-        <target>حال نهانگاه</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.1">
-        <source>Here you can select the cache mode.</source>
-        <target>اینجا می‌توانید نوع نهان‌گاه را انتخاب نمایید.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.sslProxyDomain.0">
         <source>SSL proxy domain</source>
         <target>دامنه پروکسی اس‌اس‌ال</target>
@@ -155,11 +147,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
-        <target>عدم بازگردانی نشانی‌های وب خالی</target>
+        <target>عدم تغییر مسیر نشانی‌های وب خالی</target>
       </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.1">
         <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
-        <target>برای نشانی وب خالی، وب‌سایت را به جای بازگردانی به برگه ریشه زبانی، نمایش می‌دهد (توصیه نمی‌شود).</target>
+        <target>برای نشانی وب خالی، وب‌سایت را به جای تغییر مسیر به برگه ریشه زبانی، نمایش می‌دهد (توصیه نمی‌شود).</target>
       </trans-unit>
       <trans-unit id="tl_settings.useAutoItem.0">
         <source>Enable auto_item</source>
@@ -191,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
         <source>Do not check the request token when a form is submitted (insecure!).</source>
+        <target>توکن درخواستی را وقتی فرمی ارسال می‌شود بررسی نخواهد کرد (ناامن!)</target>
       </trans-unit>
       <trans-unit id="tl_settings.lockPeriod.0">
         <source>Account locking time</source>
@@ -207,14 +200,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>اینجا باید فهرست جدا شده با کامل از گونه‌های پرونده قابل دانلود را وارد نمایید.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.0">
-        <source>Image file types</source>
-        <target>گونه‌های پرونده تصویر</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.1">
-        <source>Here you can enter a comma separated list of file types that can be handled by the image class.</source>
-        <target>اینجا می‌توانید فهرست جداشده با کاما از گونه‌های پرونده که می‌تواند توسط کلاس تصویر به کار گرفته شود را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.editableFiles.0">
         <source>Editable file types</source>
@@ -239,14 +224,6 @@
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
         <target>اگر عرض تصویر یا ویدیو از این مقدار بیشتر باشد، به صورت خودکار تنظیم خواهد شد.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.0">
-        <source>JPG thumbnail quality</source>
-        <target>کیفیت تصویر بندانگشتی JPG</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.1">
-        <source>Here you can enter the JPG thumbnail quality in percent.</source>
-        <target>اینجا می‌توانید کیفیت تصویر بندانگشتی JPG را به صورت درصد وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -423,10 +400,6 @@
       <trans-unit id="tl_settings.modules_legend">
         <source>Inactive extensions</source>
         <target>افزونه‌های غیرفعال</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Command scheduler</source>
-        <target>زمان‌بندی دستور</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>

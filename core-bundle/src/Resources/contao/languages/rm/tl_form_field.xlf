@@ -175,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.digit.1">
         <source>Allows numeric characters, minus (-) and full stop (.).</source>
+        <target>Lubescha caracters numerics, minus (-), e punct puncts (.).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.alpha.0">
         <source>Alphabetic characters</source>
@@ -538,7 +539,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Add new at the top</source>
-        <target>Crear sura ina nova definiziun da formataziun</target>
+        <target>Crear sura in nov element</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Add new after field ID %s</source>

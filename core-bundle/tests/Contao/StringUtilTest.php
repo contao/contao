@@ -19,6 +19,8 @@ use Contao\System;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Martin Auswöger <martin@auswoeger.com>
+ *
+ * @group legacy
  */
 class StringUtilTest extends TestCase
 {

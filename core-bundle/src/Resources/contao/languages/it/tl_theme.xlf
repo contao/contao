@@ -49,6 +49,14 @@
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
         <target>E' possibile definire delle variabili globali che potranno essere utilizzate nei CSS (e.g. &lt;em&gt;$rosso&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margine&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;)</target>
       </trans-unit>
+      <trans-unit id="tl_theme.defaultImageDensities.0">
+        <source>Default image pixel densities</source>
+        <target>Default densità pixel dell'immagine</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.defaultImageDensities.1">
+        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+        <target>In questo punto è possibile definire la densità in pixel di default, es. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
+      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>File sorgente</target>
@@ -72,6 +80,10 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>Configurazione</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.image_legend">
+        <source>Image sizes</source>
+        <target>Dimensioni immagine</target>
       </trans-unit>
       <trans-unit id="tl_theme.vars_legend">
         <source>Global variables</source>

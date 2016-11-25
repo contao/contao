@@ -395,12 +395,19 @@ class Automator extends \System
 	 */
 	public function generateSymlinks()
 	{
-		$container = \System::getContainer();
-
 		$command = new SymlinksCommand();
-		$command->setContainer($container);
+		$command->setContainer(\System::getContainer());
+		$status = $command->run(new ArgvInput(array()), new NullOutput());
 
-		$command->run(new ArgvInput(array()), new NullOutput());
+		// Add a log entry
+		if ($status > 0)
+		{
+			$this->log('The symlinks could not be regenerated', __METHOD__, TL_ERROR);
+		}
+		else
+		{
+			$this->log('Regenerated the symlinks', __METHOD__, TL_CRON);
+		}
 	}
 
 

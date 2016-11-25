@@ -3,9 +3,9 @@
 
   <h2 class="sub_headline sub_headline_index"><?= $this->indexHeadline ?></h2>
 
-  <?php if ($this->indexMessage): ?>
+  <?php if ($this->message): ?>
     <div class="tl_message">
-      <p class="tl_error"><?= $this->indexMessage ?></p>
+      <?= $this->message ?>
     </div>
   <?php endif; ?>
 

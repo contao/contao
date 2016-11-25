@@ -165,7 +165,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'options_callback'        => array('tl_form_field', 'getFields'),
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'name' => array
 		(

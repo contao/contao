@@ -21,7 +21,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\User;
 
@@ -37,9 +39,7 @@ class UserSessionListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $listener = $this->getListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $this->getListener());
     }
 
     /**
@@ -125,17 +125,11 @@ class UserSessionListenerTest extends TestCase
             new Response()
         );
 
-        $connection = $this->getMock('Doctrine\DBAL\Connection', ['prepare', 'execute'], [], '', false);
+        $connection = $this->getMock('Doctrine\DBAL\Connection', ['update'], [], '', false);
 
         $connection
             ->expects($this->once())
-            ->method('prepare')
-            ->willReturnSelf()
-        ;
-
-        $connection
-            ->expects($this->once())
-            ->method('execute')
+            ->method('update')
         ;
 
         $user = $this
@@ -206,6 +200,7 @@ class UserSessionListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, null, $tokenStorage);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelRequest($responseEvent);
     }
 
@@ -255,6 +250,7 @@ class UserSessionListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, $connection, $tokenStorage);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -277,6 +273,7 @@ class UserSessionListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelRequest($responseEvent);
     }
 
@@ -312,6 +309,7 @@ class UserSessionListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, $connection);
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -348,17 +346,14 @@ class UserSessionListenerTest extends TestCase
         /** @var UserSessionListener|\PHPUnit_Framework_MockObject_MockObject $listener */
         $listener = $this
             ->getMockBuilder('Contao\CoreBundle\EventListener\UserSessionListener')
-            ->disableOriginalConstructor()
-            ->setMethods(['hasUser', 'isContaoMasterRequest'])
+            ->setConstructorArgs([
+                $this->mockSession(),
+                $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
+                $tokenStorage,
+                new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class),
+            ])
+            ->setMethods(['isContaoMasterRequest'])
             ->getMock()
-        ;
-
-        $listener->setTokenStorage($tokenStorage);
-
-        $listener
-            ->expects($this->any())
-            ->method('hasUser')
-            ->willReturn(true)
         ;
 
         $listener
@@ -367,6 +362,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelRequest($responseEvent);
     }
 
@@ -404,17 +400,14 @@ class UserSessionListenerTest extends TestCase
         /** @var UserSessionListener|\PHPUnit_Framework_MockObject_MockObject $listener */
         $listener = $this
             ->getMockBuilder('Contao\CoreBundle\EventListener\UserSessionListener')
-            ->disableOriginalConstructor()
-            ->setMethods(['hasUser', 'isContaoMasterRequest'])
+            ->setConstructorArgs([
+                $this->mockSession(),
+                $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
+                $tokenStorage,
+                new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class),
+            ])
+            ->setMethods(['isContaoMasterRequest'])
             ->getMock()
-        ;
-
-        $listener->setTokenStorage($tokenStorage);
-
-        $listener
-            ->expects($this->any())
-            ->method('hasUser')
-            ->willReturn(true)
         ;
 
         $listener
@@ -423,6 +416,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
+        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -490,9 +484,8 @@ class UserSessionListenerTest extends TestCase
             );
         }
 
-        $listener = new UserSessionListener($session, $connection);
-        $listener->setTokenStorage($tokenStorage);
+        $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
 
-        return $listener;
+        return new UserSessionListener($session, $connection, $tokenStorage, $trustResolver);
     }
 }

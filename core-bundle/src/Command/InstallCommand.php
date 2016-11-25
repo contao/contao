@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Command;
 
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -43,13 +44,18 @@ class InstallCommand extends AbstractLockedCommand
     private $rootDir;
 
     /**
+     * @var string
+     */
+    private $webDir;
+
+    /**
      * @var array
      */
     private $emptyDirs = [
         'system',
         'system/config',
         'templates',
-        'web/system',
+        '%s/system',
     ];
 
     /**
@@ -62,8 +68,8 @@ class InstallCommand extends AbstractLockedCommand
         'system/modules',
         'system/themes',
         'system/tmp',
-        'web/share',
-        'web/system/cron',
+        '%s/share',
+        '%s/system/cron',
     ];
 
     /**
@@ -73,6 +79,9 @@ class InstallCommand extends AbstractLockedCommand
     {
         $this
             ->setName('contao:install')
+            ->setDefinition([
+                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
+            ])
             ->setDescription('Installs the required Contao directories')
         ;
     }
@@ -85,6 +94,7 @@ class InstallCommand extends AbstractLockedCommand
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
         $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
+        $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->addEmptyDirs();
         $this->addIgnoredDirs();
@@ -105,7 +115,7 @@ class InstallCommand extends AbstractLockedCommand
     private function addEmptyDirs()
     {
         foreach ($this->emptyDirs as $path) {
-            $this->addEmptyDir($this->rootDir.'/'.$path);
+            $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
         $this->addEmptyDir($this->rootDir.'/'.$this->getContainer()->getParameter('contao.upload_path'));
@@ -133,7 +143,7 @@ class InstallCommand extends AbstractLockedCommand
     private function addIgnoredDirs()
     {
         foreach ($this->ignoredDirs as $path) {
-            $this->addIgnoredDir($this->rootDir.'/'.$path);
+            $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
         $this->addIgnoredDir($this->rootDir.'/'.$this->getContainer()->getParameter('contao.image.target_path'));

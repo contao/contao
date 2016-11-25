@@ -24,11 +24,7 @@ class AddImagineClassPass implements CompilerPassInterface
     /**
      * @var array
      */
-    private $implementations = [
-        'Imagick',
-        'Gmagick',
-        'Gd',
-    ];
+    private $magicks = ['Imagick', 'Gmagick'];
 
     /**
      * {@inheritdoc}
@@ -39,25 +35,25 @@ class AddImagineClassPass implements CompilerPassInterface
     }
 
     /**
-     * Returns the available Imagine implementation, one of Imagick, Gmagick or Gd.
+     * Returns the available Imagine implementation.
      *
-     * @return string The class name of the available Imagine implementation
+     * @return string
      */
     private function getImagineImplementation()
     {
-        foreach ($this->implementations as $name) {
-            $class = 'Imagine\\'.$name.'\\Imagine';
+        foreach ($this->magicks as $name) {
+            $class = 'Imagine\\'.$name.'\Imagine';
 
-            // Will throw an exception if the parent PHP implementation is not available
+            // Will throw an exception if the PHP implementation is not available
             try {
                 new $class();
-            } catch (RuntimeException $exception) {
+            } catch (RuntimeException $e) {
                 continue;
             }
 
             return $class;
         }
 
-        throw new \RuntimeException('No Imagine implementation is available (Imagick, Gmagick or Gd)');
+        return 'Imagine\Gd\Imagine'; // see #616
     }
 }

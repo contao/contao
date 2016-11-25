@@ -202,20 +202,28 @@
         <target>このレイアウトは携帯端末のユーザーに使用します。</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
-        <source>Set cache timeout</source>
+        <source>Set cache timeouts</source>
         <target>キャッシュの有効期間を設定</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
-        <source>Set a cache timeout value for the page and its subpages.</source>
-        <target>ページと下位のページにキャッシュの有効期間を設定します。</target>
+        <source>Set cache timeout values for the page and its subpages.</source>
+        <target>ページと下位のページのキャッシュの有効期間を設定します。</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Cache timeout</source>
-        <target>キャッシュの有効期間</target>
+        <source>Server cache timeout</source>
+        <target>サーバー側のキャッシュの有効期間</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>After this period, the cached version of the page will expire.</source>
-        <target>この期間を過ぎると、ページのキャッシュしたバージョンは期限切れとなります。</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+        <target>共有キャッシュがページが最新でないと判断する秒数です。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Client cache timeout</source>
+        <target>クライアント側のキャッシュの有効期間</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
+        <target>ブラウザーがページが最新でないと判断する秒数です。</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
