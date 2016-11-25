@@ -61,9 +61,21 @@
 View: %s
 Edit: %s
 </source>
+        <target>%s 已经在网站中创建了一个新的评论
+
+---
+
+%s
+
+---
+
+查看: %s
+编辑: %s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <target>这条评论在后台发布后，将会出现在网站上!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>

@@ -27,6 +27,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_login">
         <source>You need to be logged in to add comments.</source>
+        <target>Du skal være logget ind for at kunne tilføje en kommentar.</target>
       </trans-unit>
       <trans-unit id="MSC.com_by">
         <source>Comment by</source>
