@@ -23,6 +23,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
+ * @group legacy
  */
 class GdImageTest extends TestCase
 {

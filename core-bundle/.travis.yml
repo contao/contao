@@ -12,7 +12,6 @@ sudo: false
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
-    - COMPOSER_ROOT_VERSION=${TRAVIS_TAG:-dev-$TRAVIS_BRANCH}
     - SYMFONY_DEPRECATIONS_HELPER=weak
 
 matrix:
@@ -23,7 +22,7 @@ matrix:
     - php: 7.0
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
     - php: 7.0
-      env: COVERAGE='--testsuite latest --coverage-clover build/logs/clover.xml'
+      env: COVERAGE='--exclude-group legacy --coverage-clover build/logs/clover.xml'
     - php: 7.1
   fast_finish: true
 

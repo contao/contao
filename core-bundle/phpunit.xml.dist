@@ -12,15 +12,9 @@
     </php>
 
     <testsuites>
-        <testsuite name="latest">
+        <testsuite name="Contao Core Bundle">
             <directory>./tests</directory>
-            <directory>./tests/ContaoManager</directory>
-            <file>./tests/ContaoCoreBundleTest.php</file>
-            <exclude>./tests/Contao</exclude>
             <exclude>./tests/Fixtures</exclude>
-        </testsuite>
-        <testsuite name="legacy">
-            <directory>./tests/Contao</directory>
         </testsuite>
     </testsuites>
 
