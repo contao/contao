@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.0">
         <source>Activation token</source>
+        <target>Aktivacijski žeton</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.1">
         <source>The activation token of the subscription.</source>
+        <target>Aktivacijski žeton naročnine.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.confirmed.0">
         <source>Confirmation date</source>
