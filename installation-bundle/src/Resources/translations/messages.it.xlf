@@ -353,6 +353,7 @@
       </trans-unit>
       <trans-unit id="71">
         <source>console_explanation</source>
+        <target>Il task post installazione non è stato completato!</target>
         
       </trans-unit>
     </body>
