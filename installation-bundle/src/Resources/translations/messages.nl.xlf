@@ -352,6 +352,11 @@
         
       </trans-unit>
       <trans-unit id="71">
+        <source>database_name_error</source>
+        <target>Alleen de volgende karakters gebruiken: A-Za-z0-9$_</target>
+        
+      </trans-unit>
+      <trans-unit id="72">
         <source>console_explanation</source>
         
       </trans-unit>

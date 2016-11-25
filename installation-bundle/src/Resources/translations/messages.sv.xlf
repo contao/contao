@@ -351,6 +351,10 @@
         
       </trans-unit>
       <trans-unit id="71">
+        <source>database_name_error</source>
+        
+      </trans-unit>
+      <trans-unit id="72">
         <source>console_explanation</source>
         
       </trans-unit>

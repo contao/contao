@@ -352,6 +352,11 @@
         
       </trans-unit>
       <trans-unit id="71">
+        <source>database_name_error</source>
+        <target>Введите только следующие символы: A-Za-z0-9$_</target>
+        
+      </trans-unit>
+      <trans-unit id="72">
         <source>console_explanation</source>
         <target>Заключительная задача установки не может быть завершена!</target>
         

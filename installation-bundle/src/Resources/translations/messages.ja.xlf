@@ -352,6 +352,11 @@
         
       </trans-unit>
       <trans-unit id="71">
+        <source>database_name_error</source>
+        <target>以下の文字だけ使用してください: A-Za-z0-9$_</target>
+        
+      </trans-unit>
+      <trans-unit id="72">
         <source>console_explanation</source>
         <target>インストールの後の処理を完了できませんでした!</target>
         
