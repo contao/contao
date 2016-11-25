@@ -201,7 +201,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['template'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'eval'                    => array('includeBlankOption'=>true),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'options_callback'        => function ()
 			{
 				return Controller::getTemplateGroup('mail_');
