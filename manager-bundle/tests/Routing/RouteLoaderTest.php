@@ -3,8 +3,8 @@
 
 namespace Contao\ManagerBundle\Test\HttpKernel;
 
-use Contao\ManagerBundle\ContaoManager\PluginLoader;
-use Contao\ManagerBundle\ContaoManager\Routing\RoutingPluginInterface;
+use Contao\ManagerPlugin\PluginLoader;
+use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Contao\ManagerBundle\Routing\RouteLoader;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;

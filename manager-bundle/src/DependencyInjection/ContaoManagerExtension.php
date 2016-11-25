@@ -10,8 +10,8 @@
 
 namespace Contao\ManagerBundle\DependencyInjection;
 
-use Contao\ManagerBundle\ContaoManager\Config\ConfigPluginInterface;
-use Contao\ManagerBundle\ContaoManager\PluginLoader;
+use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Contao\ManagerPlugin\PluginLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;

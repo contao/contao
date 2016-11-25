@@ -10,8 +10,8 @@
 
 namespace Contao\ManagerBundle\Routing;
 
-use Contao\ManagerBundle\ContaoManager\PluginLoader;
-use Contao\ManagerBundle\ContaoManager\Routing\RoutingPluginInterface;
+use Contao\ManagerPlugin\PluginLoader;
+use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;

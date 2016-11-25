@@ -10,8 +10,8 @@
 
 namespace Contao\ManagerBundle\Test\DependencyInjection;
 
-use Contao\ManagerBundle\ContaoManager\Config\ConfigPluginInterface;
-use Contao\ManagerBundle\ContaoManager\PluginLoader;
+use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

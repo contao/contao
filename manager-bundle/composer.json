@@ -17,6 +17,7 @@
         "sensio/distribution-bundle": "~5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "doctrine/doctrine-bundle": "~1.6",
+        "contao/manager-plugin": "~1.0",
         "contao/core-bundle": "4.3.*",
         "contao/installation-bundle": "~1.2"
     },
@@ -40,5 +41,7 @@
         "branch-alias": {
             "dev-develop": "1.1.x-dev"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

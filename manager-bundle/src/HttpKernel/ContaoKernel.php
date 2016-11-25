@@ -10,13 +10,13 @@
 
 namespace Contao\ManagerBundle\HttpKernel;
 
-use Contao\ManagerBundle\ContaoManager\Bundle\BundleLoader;
-use Contao\ManagerBundle\ContaoManager\Bundle\Config\ConfigResolverFactory;
-use Contao\ManagerBundle\ContaoManager\Bundle\Parser\DelegatingParser;
-use Contao\ManagerBundle\ContaoManager\Bundle\Parser\IniParser;
-use Contao\ManagerBundle\ContaoManager\Bundle\Parser\JsonParser;
-use Contao\ManagerBundle\ContaoManager\PluginLoader;
 use Contao\ManagerBundle\ContaoManagerBundle;
+use Contao\ManagerPlugin\Bundle\BundleLoader;
+use Contao\ManagerPlugin\Bundle\Config\ConfigResolverFactory;
+use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
+use Contao\ManagerPlugin\Bundle\Parser\IniParser;
+use Contao\ManagerPlugin\Bundle\Parser\JsonParser;
+use Contao\ManagerPlugin\PluginLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
