@@ -61,7 +61,7 @@ abstract class Events extends \Module
 	 */
 	protected function sortOutProtected($arrCalendars)
 	{
-		if (BE_USER_LOGGED_IN || !is_array($arrCalendars) || empty($arrCalendars))
+		if (!is_array($arrCalendars) || empty($arrCalendars))
 		{
 			return $arrCalendars;
 		}
@@ -334,7 +334,10 @@ abstract class Events extends \Module
 				return $strDetails;
 			};
 
-			$arrEvent['hasDetails'] = (\ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0);
+			$arrEvent['hasDetails'] = function () use ($id)
+			{
+				return \ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
+			};
 		}
 
 		// Get todays start and end timestamp

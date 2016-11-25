@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="MSC.cal_events">
         <source>%d event(s)</source>
-        <target>%d догађаја(а)</target>
+        <target>%d дешавање(а)</target>
       </trans-unit>
       <trans-unit id="MSC.cal_previous">
         <source>&amp;lt;</source>

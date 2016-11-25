@@ -25,6 +25,7 @@ use Patchwork\Utf8;
  * @property string $cal_format
  * @property bool   $cal_ignoreDynamic
  * @property int    $cal_readerModule
+ * @property bool   $cal_hideRunning
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -182,7 +183,7 @@ class ModuleEventlist extends \Events
 					}
 
 					// Skip occurrences in the past but show running events (see #8497)
-					if ($event['repeatEnd'] && strtotime($event['datetime']) < $intStart)
+					if (($this->cal_hideRunning || $event['repeatEnd']) && strtotime($event['datetime']) < $intStart)
 					{
 						continue;
 					}

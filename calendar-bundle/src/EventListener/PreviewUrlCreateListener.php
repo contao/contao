@@ -98,7 +98,7 @@ class PreviewUrlCreateListener
     private function getEventModel($id)
     {
         /** @var CalendarEventsModel $adapter */
-        $adapter = $this->framework->getAdapter('Contao\CalendarEventsModel');
+        $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
         return $adapter->findByPk($id);
     }

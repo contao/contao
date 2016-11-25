@@ -64,7 +64,7 @@ class PreviewUrlConvertListener
         }
 
         /** @var Events $eventsAdapter */
-        $eventsAdapter = $this->framework->getAdapter('Contao\Events');
+        $eventsAdapter = $this->framework->getAdapter(Events::class);
 
         $event->setUrl($request->getSchemeAndHttpHost().'/'.$eventsAdapter->generateEventUrl($eventModel));
     }
@@ -83,7 +83,7 @@ class PreviewUrlConvertListener
         }
 
         /** @var CalendarEventsModel $adapter */
-        $adapter = $this->framework->getAdapter('Contao\CalendarEventsModel');
+        $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
         return $adapter->findByPk($request->query->get('calendar'));
     }

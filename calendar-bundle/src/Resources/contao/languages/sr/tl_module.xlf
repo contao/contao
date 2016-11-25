@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.1">
         <source>Show events only once even if they span multiple days.</source>
-        <target>Прикажи дешавање само једном, чак и ако траје више дана.</target>
+        <target>Прикажи догађај само једном, чак иако траје више дана.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.0">
         <source>Week start day</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.1">
         <source>Here you can choose the week start day.</source>
-        <target>Овде можете изабрати којим даном почиње недеља.</target>
+        <target>Овде можете изабрати којим даном почиње седмица.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.0">
         <source>Event list format</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.1">
         <source>Automatically switch to the event reader if an event has been selected.</source>
-        <target>Аутоматски пређи на читач догађаја ако је одабран догађај.</target>
+        <target>Аутоматски пређи на читач дешавања ако је одабрано дешавање.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.0">
         <source>Number of events</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_upcoming">
         <source>Upcoming events</source>
-        <target>Надолазећа дешавања</target>
+        <target>Предстојећа дешавања</target>
       </trans-unit>
       <trans-unit id="tl_module.next_7">
         <source>+ 1 week</source>
@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_module.past_7">
         <source>- 1 week</source>
-        <target>-1 недељу</target>
+        <target>-1 недеља</target>
       </trans-unit>
       <trans-unit id="tl_module.past_14">
         <source>- 2 weeks</source>
@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_module.past_all">
         <source>All past events</source>
-        <target>Сви претходни догађаји</target>
+        <target>Сва претходна дешавања</target>
       </trans-unit>
     </body>
   </file>

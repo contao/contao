@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.alias.0">
         <source>Event alias</source>
-        <target>Алиас догађаја</target>
+        <target>Алиас дешавања</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.alias.1">
         <source>The event alias is a unique reference to the event which can be called instead of its numeric ID.</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.addImage.1">
         <source>Add an image to the event.</source>
-        <target>Додај слику догађају.</target>
+        <target>Додај слику дешавању.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.0">
         <source>Repeat event</source>
@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the event.</source>
-        <target>Изаберите страницу на коју ће посетиоци бити преусмерени кликом на дешавање.</target>
+        <target>Изаберите страницу на коју ће посетиоци бити преусмерени кликом на догађај.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.0">
         <source>Article</source>
@@ -195,7 +195,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the event.</source>
-        <target>Изаберите чланак на који ће посетиоци бити преусмерени кликом на дешавање.</target>
+        <target>Изаберите чланак на који ће посетиоци бити преусмерени кликом на догађај.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cssClass.0">
         <source>CSS class</source>
@@ -379,7 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.1">
         <source>Paste after event ID %s</source>
-        <target>Налепи након дешавања ID %s</target>
+        <target>Налепи након догађаја ID %s</target>
       </trans-unit>
     </body>
   </file>
