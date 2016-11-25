@@ -1,17 +1,10 @@
 # Contao comments bundle change log
 
-### 4.2.1 (2016-07-15)
+### 4.3.0 (2016-11-25)
 
- * Fix the message markup of the comments form.
+ * No changes.
 
-### 4.2.0 (2016-06-18)
+### 4.3.0-RC1 (2016-10-31)
 
- * Correctly validate and decode IDNA e-mail addresses (see contao/core#8306).
-
-### 4.2.0-RC1 (2016-05-18)
-
- * Add the URI when throwing 403 and 404 exceptions (see contao/core#369).
-
-### 4.2.0-beta1 (2016-04-25)
-
- * Add an SVG icon and adjust to the new back end theme (see contao/core#4608).
+ * Do not show protected elements if "show unpublished elements" is enabled (see contao/core#8149).
+ * Adjust the mod_comment_form.html5 template (see contao/core-bundle#519).

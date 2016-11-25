@@ -166,7 +166,7 @@ class Comments extends \Frontend
 		$this->import('FrontendUser', 'User');
 
 		// Access control
-		if ($objConfig->requireLogin && !BE_USER_LOGGED_IN && !FE_USER_LOGGED_IN)
+		if ($objConfig->requireLogin && !FE_USER_LOGGED_IN)
 		{
 			$objTemplate->requireLogin = true;
 			$objTemplate->login = $GLOBALS['TL_LANG']['MSC']['com_login'];
@@ -216,6 +216,7 @@ class Comments extends \Frontend
 			$arrFields['captcha'] = array
 			(
 				'name'      => 'captcha',
+				'label'     => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
 				'eval'      => array('mandatory'=>true)
 			);
