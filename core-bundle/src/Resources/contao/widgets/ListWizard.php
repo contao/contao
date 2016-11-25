@@ -65,38 +65,7 @@ class ListWizard extends \Widget
 	 */
 	public function generate()
 	{
-		$arrButtons = array('copy', 'drag', 'up', 'down', 'delete');
-		$strCommand = 'cmd_' . $this->strField;
-
-		// Change the order
-		if (\Input::get($strCommand) && is_numeric(\Input::get('cid')) && \Input::get('id') == $this->currentRecord)
-		{
-			$this->import('Database');
-
-			switch (\Input::get($strCommand))
-			{
-				case 'copy':
-					$this->varValue = array_duplicate($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'up':
-					$this->varValue = array_move_up($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'down':
-					$this->varValue = array_move_down($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'delete':
-					$this->varValue = array_delete($this->varValue, \Input::get('cid'));
-					break;
-			}
-
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET " . $this->strField . "=? WHERE id=?")
-						   ->execute(serialize($this->varValue), $this->currentRecord);
-
-			$this->redirect(preg_replace('/&(amp;)?cid=[^&]*/i', '', preg_replace('/&(amp;)?' . preg_quote($strCommand, '/') . '=[^&]*/i', '', \Environment::get('request'))));
-		}
+		$arrButtons = array('copy', 'delete', 'drag');
 
 		// Make sure there is at least an empty array
 		if (!is_array($this->varValue) || empty($this->varValue))
@@ -110,38 +79,33 @@ class ListWizard extends \Widget
 			\Cache::set('tabindex', 1);
 		}
 
-		$tabindex = \Cache::get('tabindex');
-		$return = '<ul id="ctrl_'.$this->strId.'" class="tl_listwizard" data-tabindex="'.$tabindex.'">';
+		$return = '<ul id="ctrl_'.$this->strId.'" class="tl_listwizard">';
 
 		// Add input fields
 		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
 		{
 			$return .= '
-    <li><input type="text" name="'.$this->strId.'[]" class="tl_text" tabindex="'.$tabindex++.'" value="'.\StringUtil::specialchars($this->varValue[$i]).'"' . $this->getAttributes() . '> ';
+    <li><input type="text" name="'.$this->strId.'[]" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]).'"' . $this->getAttributes() . '> ';
 
 			// Add buttons
 			foreach ($arrButtons as $button)
 			{
-				$class = ($button == 'up' || $button == 'down') ? ' class="button-move"' : '';
-
 				if ($button == 'drag')
 				{
-					$return .= \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['move']) . '"');
+					$return .= ' <button type="button" class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '">' . \Image::getHtml('drag.svg') . '</button>';
 				}
 				else
 				{
-					$return .= '<a href="'.$this->addToUrl('&amp;'.$strCommand.'='.$button.'&amp;cid='.$i.'&amp;id='.$this->currentRecord).'"' . $class . ' title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_'.$button]).'" onclick="Backend.listWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false">'.\Image::getHtml($button.'.svg', $GLOBALS['TL_LANG']['MSC']['lw_'.$button], 'class="tl_listwizard_img"').'</a> ';
+					$return .= ' <button type="button" data-command="' . $button . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_'.$button]) . '">' . \Image::getHtml($button.'.svg') . '</button>';
 				}
 			}
 
 			$return .= '</li>';
 		}
 
-		// Store the tab index
-		\Cache::set('tabindex', $tabindex);
-
 		return $return.'
-  </ul>';
+  </ul>
+  <script>Backend.listWizard("ctrl_'.$this->strId.'")</script>';
 	}
 
 

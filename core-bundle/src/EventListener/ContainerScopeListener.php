@@ -22,8 +22,7 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  *
- * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
- *             Use the _scope request attribute instead.
+ * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0; use the _scope request attribute instead
  */
 class ContainerScopeListener
 {

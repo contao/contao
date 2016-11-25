@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections,sPosition;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder;{picturefill_legend:hide},picturefill;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
+		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder,combineScripts;{picturefill_legend:hide},picturefill;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
 	),
 
 	// Subpalettes
@@ -109,8 +109,8 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'cols_2cll'                   => 'widthLeft',
 		'cols_2clr'                   => 'widthRight',
 		'cols_3cl'                    => 'widthLeft,widthRight',
-		'addJQuery'                   => 'jSource,jquery',
-		'addMooTools'                 => 'mooSource,mootools',
+		'addJQuery'                   => 'jquery,jSource',
+		'addMooTools'                 => 'mootools,mooSource',
 		'static'                      => 'width,align'
 	),
 
@@ -139,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'sorting'                 => true,
 			'flag'                    => 1,
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'rows' => array
@@ -205,20 +205,8 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['sections'],
 			'exclude'                 => true,
 			'search'                  => true,
-			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50'),
+			'inputType'               => 'sectionWizard',
 			'sql'                     => "varchar(1022) NOT NULL default ''"
-		),
-		'sPosition' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['sPosition'],
-			'default'                 => 'main',
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options'                 => array('top', 'before', 'main', 'after', 'bottom'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'framework' => array
 		(
@@ -272,7 +260,16 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'select',
 			'options'                 => array('external_first', 'internal_first'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(16) NOT NULL default ''"
+		),
+		'combineScripts' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['combineScripts'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50 m12'),
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'modules' => array
 		(
@@ -376,6 +373,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('j_local', 'j_googleapis', 'j_fallback'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
@@ -405,6 +403,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('moo_local', 'moo_googleapis', 'moo_fallback'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
@@ -637,7 +636,7 @@ class tl_layout extends Backend
 	 */
 	public function styleSheetLink(DataContainer $dc)
 	{
-		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])).'\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', '', 'style="vertical-align:text-bottom"') . '</a>';
+		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])).'\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', '', 'style="vertical-align:text-bottom"') . '</a>';
 	}
 
 

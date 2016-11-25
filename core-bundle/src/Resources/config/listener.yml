@@ -36,6 +36,7 @@ services:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
             - "@contao.framework"
+            - "%fragment.path%"
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
@@ -54,6 +55,14 @@ services:
             - "@database_connection"
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+    contao.listener.doctrine_schema:
+        class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
+        arguments:
+            - "@contao.doctrine.dca_schema_provider"
+        tags:
+            - { name: doctrine.event_listener, event: onSchemaIndexDefinition }
+            - { name: doctrine.event_listener, event: postGenerateSchema }
 
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
@@ -83,15 +92,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 256 }
 
-    contao.listener.output_from_cache:
-        class: Contao\CoreBundle\EventListener\OutputFromCacheListener
-        arguments:
-            - "@contao.framework"
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
     contao.listener.pretty_error_screens:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
         arguments:
@@ -108,7 +108,7 @@ services:
         arguments:
             - "@contao.referer_id.manager"
         calls:
-            - [setContainer, ["@service_container"]]
+            - ["setContainer", ["@service_container"]]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
 
@@ -121,9 +121,10 @@ services:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
         arguments:
             - "@session"
+            - "@security.token_storage"
+            - "@security.authentication.trust_resolver"
         calls:
-            - [setContainer, ["@service_container"]]
-            - [setTokenStorage, ["@security.token_storage"]]
+            - ["setContainer", ["@service_container"]]
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
@@ -132,7 +133,7 @@ services:
         arguments:
             - "@contao.framework"
         calls:
-            - [setContainer, ["@service_container"]]
+            - ["setContainer", ["@service_container"]]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
@@ -141,9 +142,10 @@ services:
         arguments:
             - "@session"
             - "@database_connection"
+            - "@security.token_storage"
+            - "@security.authentication.trust_resolver"
         calls:
-            - [setContainer, ["@service_container"]]
-            - [setTokenStorage, ["@security.token_storage"]]
+            - ["setContainer", ["@service_container"]]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

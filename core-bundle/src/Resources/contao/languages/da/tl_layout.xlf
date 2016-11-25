@@ -134,16 +134,7 @@
         <target>Brugerdefinerede layoutsektioner</target>
       </trans-unit>
       <trans-unit id="tl_layout.sections.1">
-        <source>Here you can enter a comma separated list of custom layout sections.</source>
-        <target>Her kan du angive en kommasepareret liste over tilpassede layoutsektioner. Du kan så bruge disse sektioner modulet &lt;em&gt;sidelayout&lt;/em&gt; ud over &lt;em&gt;sidehoved&lt;/em&gt;, &lt;em&gt;venstre&lt;/em&gt;, &lt;em&gt;hoved&lt;/em&gt;, &lt;em&gt;højre&lt;/em&gt; and &lt;em&gt;sidefod&lt;/em&gt;.</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.sPosition.0">
-        <source>Custom sections position</source>
-        <target>Brugerdefinerede sektionspositioner</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.sPosition.1">
-        <source>Please select the position of the custom layout sections.</source>
-        <target>Væg venligst positionen for dine brugerdefinerede layoutsektioner.</target>
+        <source>Here you can define custom layout sections.</source>
       </trans-unit>
       <trans-unit id="tl_layout.stylesheet.0">
         <source>Internal style sheets</source>
@@ -230,6 +221,12 @@
       <trans-unit id="tl_layout.loadingOrder.1">
         <source>Here you can select the loading order of the style sheets.</source>
         <target>Her kan du vælge rækkefølgen for indlæsning af stilark</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.combineScripts.0">
+        <source>Combine scripts</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.combineScripts.1">
+        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
@@ -491,26 +488,6 @@
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
         <target>HTML</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.top">
-        <source>Before the wrapper</source>
-        <target>Før indpakningen</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.before">
-        <source>After the page header</source>
-        <target>Efter sidehovedet</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.main">
-        <source>Inside the main column</source>
-        <target>I hovedspalten</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.after">
-        <source>Before the page footer</source>
-        <target>Inden sidefoden</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.bottom">
-        <source>After the wrapper</source>
-        <target>Efter indpakningen</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit_styles">
         <source>Edit the style sheets</source>

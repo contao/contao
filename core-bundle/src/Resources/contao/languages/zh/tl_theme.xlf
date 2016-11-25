@@ -49,6 +49,14 @@
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
         <target>您可以在这里定义该主题中样式表的全局变量 (如：&lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;)。</target>
       </trans-unit>
+      <trans-unit id="tl_theme.defaultImageDensities.0">
+        <source>Default image pixel densities</source>
+        <target>默认图片像素密度</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.defaultImageDensities.1">
+        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+        <target>在这里定义默认像素密度，如：&lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
+      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>源文件</target>
@@ -72,6 +80,10 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>配置</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.image_legend">
+        <source>Image sizes</source>
+        <target>图片尺寸</target>
       </trans-unit>
       <trans-unit id="tl_theme.vars_legend">
         <source>Global variables</source>

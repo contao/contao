@@ -1,13 +1,13 @@
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ error.error }}
+    {{ error.error|default('An error occurred') }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.errorOccurred }}</p>
+    <p>{{ error.errorOccurred|default('An error occurred while executing this script. Something does not work properly. Additionally an error occurred while trying to display the error message.') }}</p>
 {% endblock %}
 {% block howToFix %}
-    <p>{{ error.errorFixOne|raw }}</p>
+    <p>{{ error.errorFixOne|default('Search the <code>app/logs</code> folder for the current log file and find the associated error message (usually the last one).')|raw }}</p>
 {% endblock %}
 {% block explain %}
-    <p>{{ error.errorExplain|raw }}</p>
+    <p>{{ error.errorExplain|default('The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the <a href="https://contao.org/faq.html">Contao FAQs</a> or visit the <a href="https://contao.org/support.html">Contao support page</a>.')|raw }}</p>
 {% endblock %}

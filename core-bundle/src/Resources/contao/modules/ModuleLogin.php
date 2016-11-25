@@ -27,6 +27,12 @@ class ModuleLogin extends \Module
 	 */
 	protected $strTemplate = 'mod_login';
 
+	/**
+	 * Flash type
+	 * @var string
+	 */
+	protected $strFlashType = 'contao.' . TL_MODE . '.error';
+
 
 	/**
 	 * Display a login form
@@ -61,7 +67,7 @@ class ModuleLogin extends \Module
 			// Check whether username and password are set
 			if (empty($_POST['username']) || empty($_POST['password']))
 			{
-				$_SESSION['LOGIN_ERROR'] = $GLOBALS['TL_LANG']['MSC']['emptyField'];
+				\System::getContainer()->get('session')->getFlashBag()->set($this->strFlashType, $GLOBALS['TL_LANG']['MSC']['emptyField']);
 				$this->reload();
 			}
 
@@ -178,22 +184,14 @@ class ModuleLogin extends \Module
 			return;
 		}
 
-		$blnHasError = false;
+		$flashBag = \System::getContainer()->get('session')->getFlashBag();
 
-		if (isset($_SESSION['MESSAGES'][TL_MODE]['TL_ERROR']))
+		if ($flashBag->has($this->strFlashType))
 		{
-			$blnHasError = true;
-			$_SESSION['LOGIN_ERROR'] = $_SESSION['MESSAGES'][TL_MODE]['TL_ERROR'][0];
-			unset($_SESSION['MESSAGES'][TL_MODE]['TL_ERROR']);
+			$this->Template->hasError = true;
+			$this->Template->message = $flashBag->get($this->strFlashType)[0];
 		}
 
-		if (isset($_SESSION['LOGIN_ERROR']))
-		{
-			$blnHasError = true;
-			$this->Template->message = $_SESSION['LOGIN_ERROR'];
-		}
-
-		$this->Template->hasError = $blnHasError;
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));

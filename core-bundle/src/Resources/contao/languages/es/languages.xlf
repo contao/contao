@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="LNG.cu">
         <source>Church Slavic</source>
-        <target>Eslavo de la iglesia</target>
+        <target>eslavo</target>
       </trans-unit>
       <trans-unit id="LNG.cv">
         <source>Chuvash</source>
@@ -419,7 +419,7 @@
       </trans-unit>
       <trans-unit id="LNG.gd">
         <source>Scottish Gaelic</source>
-        <target>Gaélico escocés</target>
+        <target>Gaélico Escocés</target>
       </trans-unit>
       <trans-unit id="LNG.gl">
         <source>Galician</source>
@@ -647,7 +647,7 @@
       </trans-unit>
       <trans-unit id="LNG.kw">
         <source>Cornish</source>
-        <target>Cornish</target>
+        <target>Lenguaje de Cornualles</target>
       </trans-unit>
       <trans-unit id="LNG.ky">
         <source>Kyrgyz</source>
@@ -806,7 +806,8 @@
       </trans-unit>
       <trans-unit id="LNG.nn">
         <source>Norwegian Nynorsk</source>
-        <target>Nynorsk noruego</target>
+        <target>
+Nynorsk noruego</target>
       </trans-unit>
       <trans-unit id="LNG.nr">
         <source>South Ndebele</source>
@@ -1070,7 +1071,8 @@
       </trans-unit>
       <trans-unit id="LNG.tn">
         <source>Tswana</source>
-        <target>Tsuana</target>
+        <target>
+Tsuana</target>
       </trans-unit>
       <trans-unit id="LNG.to">
         <source>Tongan</source>

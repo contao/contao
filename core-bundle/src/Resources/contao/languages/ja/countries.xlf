@@ -303,7 +303,7 @@
       </trans-unit>
       <trans-unit id="CNT.fm">
         <source>Micronesia</source>
-        <target>ミクロネシア</target>
+        <target>ミクロネシア連邦</target>
       </trans-unit>
       <trans-unit id="CNT.fo">
         <source>Faroe Islands</source>
@@ -947,7 +947,7 @@
       </trans-unit>
       <trans-unit id="CNT.um">
         <source>U.S. Outlying Islands</source>
-        <target>アメリカ領有小離島</target>
+        <target>合衆国領有小離島</target>
       </trans-unit>
       <trans-unit id="CNT.us">
         <source>United States</source>

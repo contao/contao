@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Stores and restores the user session.
@@ -29,7 +31,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class UserSessionListener
 {
     use ScopeAwareTrait;
-    use UserAwareTrait;
 
     /**
      * @var SessionInterface
@@ -42,15 +43,29 @@ class UserSessionListener
     private $connection;
 
     /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    /**
+     * @var AuthenticationTrustResolverInterface
+     */
+    private $authenticationTrustResolver;
+
+    /**
      * Constructor.
      *
-     * @param SessionInterface $session
-     * @param Connection       $connection
+     * @param SessionInterface                     $session
+     * @param Connection                           $connection
+     * @param TokenStorageInterface                $tokenStorage
+     * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
      */
-    public function __construct(SessionInterface $session, Connection $connection)
+    public function __construct(SessionInterface $session, Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver)
     {
         $this->session = $session;
         $this->connection = $connection;
+        $this->tokenStorage = $tokenStorage;
+        $this->authenticationTrustResolver = $authenticationTrustResolver;
     }
 
     /**
@@ -60,7 +75,13 @@ class UserSessionListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$this->hasUser() || !$this->isContaoMasterRequest($event)) {
+        if (!$this->isContaoMasterRequest($event)) {
+            return;
+        }
+
+        $token = $this->tokenStorage->getToken();
+
+        if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
             return;
         }
 
@@ -84,7 +105,13 @@ class UserSessionListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->hasUser() || !$this->isContaoMasterRequest($event)) {
+        if (!$this->isContaoMasterRequest($event)) {
+            return;
+        }
+
+        $token = $this->tokenStorage->getToken();
+
+        if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
             return;
         }
 
@@ -94,10 +121,11 @@ class UserSessionListener
             return;
         }
 
-        $this->connection
-            ->prepare('UPDATE '.$user->getTable().' SET session=? WHERE id=?')
-            ->execute([serialize($this->getSessionBag()->all()), $user->id])
-        ;
+        $this->connection->update(
+            $user->getTable(),
+            ['session' => serialize($this->getSessionBag()->all())],
+            ['id' => $user->id]
+        );
     }
 
     /**
@@ -118,11 +146,14 @@ class UserSessionListener
     private function getSessionBag()
     {
         if ($this->isBackendScope()) {
-            $bag = 'contao_backend';
+            $name = 'contao_backend';
         } else {
-            $bag = 'contao_frontend';
+            $name = 'contao_frontend';
         }
 
-        return $this->session->getBag($bag);
+        /** @var AttributeBagInterface $bag */
+        $bag = $this->session->getBag($name);
+
+        return $bag;
     }
 }

@@ -43,12 +43,10 @@ class FrontendIndex extends \Frontend
 	 *
 	 * @return Response
 	 *
-	 * @throws AccessDeniedException
+	 * @throws PageNotFoundException
 	 */
 	public function run()
 	{
-		global $objPage;
-
 		$pageId = $this->getPageIdFromUrl();
 		$objRootPage = null;
 
@@ -69,8 +67,33 @@ class FrontendIndex extends \Frontend
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
-		// Get the current page object(s)
-		$objPage = \PageModel::findPublishedByIdOrAlias($pageId);
+		$pageModel = \PageModel::findPublishedByIdOrAlias($pageId);
+
+		// Throw a 404 error if the page could not be found
+		if ($pageModel === null)
+		{
+			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+		}
+
+		return $this->renderPage($pageModel);
+	}
+
+	/**
+	 * Render a page
+	 *
+	 * @param Model\Collection|PageModel[]|PageModel $pageModel
+	 *
+	 * @return Response
+	 *
+	 * @throws \LogicException
+	 * @throws PageNotFoundException
+	 * @throws AccessDeniedException
+	 */
+	public function renderPage($pageModel)
+	{
+		global $objPage;
+
+		$objPage = $pageModel;
 
 		// Check the URL and language of each page if there are multiple results
 		if ($objPage !== null && $objPage->count() > 1)
@@ -132,16 +155,10 @@ class FrontendIndex extends \Frontend
 			}
 		}
 
-		// Throw a 404 error if the page could not be found
-		if ($objPage === null)
-		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
-		}
-
 		// Throw a 500 error if the result is still ambiguous
 		if ($objPage instanceof Model\Collection && $objPage->count() > 1)
 		{
-			$this->log('More than one page matches page ID "' . $pageId . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
+			$this->log('More than one page matches ' . \Environment::get('base') . \Environment::get('request'), __METHOD__, TL_ERROR);
 			throw new \LogicException('More than one page found: ' . \Environment::get('uri'));
 		}
 
@@ -214,26 +231,26 @@ class FrontendIndex extends \Frontend
 			if ($objPage->domain != \Environment::get('host'))
 			{
 				$this->User->authenticate();
-				$this->log('Page ID "' . $pageId . '" was requested via "' . \Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
+				$this->log('Page ID "' . $objPage->id . '" was requested via "' . \Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
 
 				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
 		}
 
 		// Authenticate the user
-		if (!$this->User->authenticate() && $objPage->protected && !BE_USER_LOGGED_IN)
+		if (!$this->User->authenticate() && $objPage->protected)
 		{
 			throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
 		}
 
 		// Check the user groups if the page is protected
-		if ($objPage->protected && !BE_USER_LOGGED_IN)
+		if ($objPage->protected)
 		{
 			$arrGroups = $objPage->groups; // required for empty()
 
 			if (!is_array($arrGroups) || empty($arrGroups) || !count(array_intersect($arrGroups, $this->User->groups)))
 			{
-				$this->log('Page ID "' . $pageId . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
+				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
 				throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
 			}
 		}
@@ -260,7 +277,7 @@ class FrontendIndex extends \Frontend
 					/** @var PageError403 $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY']['error_403']();
 
-					return $objHandler->getResponse($objRootPage);
+					return $objHandler->getResponse($objPage->rootId);
 					break;
 
 				default:

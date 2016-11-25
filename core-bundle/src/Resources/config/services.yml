@@ -22,19 +22,34 @@ services:
             - "@contao.resource_finder"
             - "@contao.resource_locator"
             - "%kernel.root_dir%"
-            - "@doctrine.dbal.default_connection"
+            - "@database_connection"
             - "@contao.framework"
         tags:
             - { name: kernel.cache_warmer }
+
+    contao.controller.insert_tags:
+        class: Contao\CoreBundle\Controller\InsertTagsController
+        arguments:
+            - "@contao.framework"
 
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         public: false
         arguments:
-            - "@service_container"
             - "%kernel.packages%"
+        calls:
+            - ["setFramework", ["@contao.framework"]]
+            - ["setContainer", ["@service_container"]]
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
+
+    contao.doctrine.dca_schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
+        arguments:
+            - "@service_container"
+
+    contao.doctrine.schema_provider:
+        alias: contao.doctrine.dca_schema_provider
 
     contao.image.image_sizes:
         class: Contao\CoreBundle\Image\ImageSizes
@@ -122,8 +137,55 @@ services:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
         arguments:
-            - "@service_container"
             - "@contao.framework"
+        calls:
+            - ["setContainer", ["@service_container"]]
+
+    contao.image.imagine:
+        class: Imagine\Gd\Imagine
+
+    contao.image.imagine_svg:
+        class: Contao\ImagineSvg\Imagine
+
+    contao.image.resize_calculator:
+        class: Contao\Image\ResizeCalculator
+        public: false
+
+    contao.image.resizer:
+        class: Contao\CoreBundle\Image\LegacyResizer
+        public: false
+        arguments:
+            - "%kernel.root_dir%/../%contao.image.target_path%"
+            - "@contao.image.resize_calculator"
+            - "@filesystem"
+        calls:
+            - ["setFramework", ["@contao.framework"]]
+
+    contao.image.image_factory:
+        class: Contao\CoreBundle\Image\ImageFactory
+        arguments:
+            - "@contao.image.resizer"
+            - "@contao.image.imagine"
+            - "@contao.image.imagine_svg"
+            - "@filesystem"
+            - "@contao.framework"
+            - "%contao.image.bypass_cache%"
+            - "%contao.image.imagine_options%"
+            - "%contao.image.valid_extensions%"
+
+    contao.image.picture_generator:
+        class: Contao\Image\PictureGenerator
+        arguments:
+            - "@contao.image.resizer"
+
+    contao.image.picture_factory:
+        class: Contao\CoreBundle\Image\PictureFactory
+        arguments:
+            - "@contao.image.picture_generator"
+            - "@contao.image.image_factory"
+            - "@contao.framework"
+            - "%contao.image.bypass_cache%"
+            - "%contao.image.imagine_options%"
 
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag

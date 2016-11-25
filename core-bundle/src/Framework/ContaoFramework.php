@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
+use Contao\TemplateLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -32,7 +33,7 @@ use Symfony\Component\Routing\RouterInterface;
  * @author Dominik Tomasi <https://github.com/dtomasi>
  * @author Andreas Schempp <https://github.com/aschempp>
  *
- * @internal Do not instantiate this class in your code. Use the "contao.framework" service instead.
+ * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
  */
 class ContaoFramework implements ContaoFrameworkInterface
 {
@@ -98,16 +99,11 @@ class ContaoFramework implements ContaoFrameworkInterface
      * @param string           $rootDir
      * @param int              $errorLevel
      */
-    public function __construct(
-        RequestStack $requestStack,
-        RouterInterface $router,
-        SessionInterface $session,
-        $rootDir,
-        $errorLevel
-    ) {
+    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, $rootDir, $errorLevel)
+    {
         $this->router = $router;
         $this->session = $session;
-        $this->rootDir = dirname($rootDir);
+        $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
         $this->requestStack = $requestStack;
     }
@@ -174,7 +170,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     /**
      * Sets the Contao constants.
      *
-     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
      */
     private function setConstants()
     {
@@ -183,7 +179,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         define('TL_START', microtime(true));
-        define('TL_ROOT', $this->rootDir);
+        define('TL_ROOT', dirname($this->rootDir));
         define('TL_REFERER_ID', $this->getRefererId());
 
         if (!defined('TL_SCRIPT')) {
@@ -283,7 +279,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         System::setContainer($this->container);
 
         /** @var Config $config */
-        $config = $this->getAdapter('Contao\Config');
+        $config = $this->getAdapter(Config::class);
 
         // Preload the configuration (see #5872)
         $config->preload();
@@ -300,6 +296,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         $this->validateInstallation();
 
         Input::initialize();
+        TemplateLoader::initialize();
 
         $this->setTimezone();
         $this->triggerInitializeSystemHook();
@@ -371,7 +368,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         /** @var Config $config */
-        $config = $this->getAdapter('Contao\Config');
+        $config = $this->getAdapter(Config::class);
 
         // Show the "incomplete installation" message
         if (!$config->isComplete()) {
@@ -387,7 +384,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     private function setTimezone()
     {
         /** @var Config $config */
-        $config = $this->getAdapter('Contao\Config');
+        $config = $this->getAdapter(Config::class);
 
         $this->iniSet('date.timezone', $config->get('timeZone'));
         date_default_timezone_set($config->get('timeZone'));
@@ -404,8 +401,9 @@ class ContaoFramework implements ContaoFrameworkInterface
             }
         }
 
-        if (file_exists($this->rootDir.'/system/config/initconfig.php')) {
-            include $this->rootDir.'/system/config/initconfig.php';
+        if (file_exists($this->rootDir.'/../system/config/initconfig.php')) {
+            @trigger_error('Using the initconfig.php file has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            include $this->rootDir.'/../system/config/initconfig.php';
         }
     }
 
@@ -417,7 +415,7 @@ class ContaoFramework implements ContaoFrameworkInterface
     private function handleRequestToken()
     {
         /** @var RequestToken $requestToken */
-        $requestToken = $this->getAdapter('Contao\RequestToken');
+        $requestToken = $this->getAdapter(RequestToken::class);
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         if (!defined('REQUEST_TOKEN')) {

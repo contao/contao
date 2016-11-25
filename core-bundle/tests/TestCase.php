@@ -13,10 +13,19 @@ namespace Contao\CoreBundle\Test;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Image\LegacyResizer;
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\Image\ResizeCalculator;
+use Contao\Image\PictureGenerator;
+use Contao\ImagineSvg\Imagine as ImagineSvg;
+use Imagine\Gd\Imagine as ImagineGd;
+use Imagine\Image\ImageInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -51,7 +60,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getCacheDir()
     {
-        return $this->getRootDir().'/app/cache';
+        return $this->getRootDir().'/var/cache';
     }
 
     /**
@@ -191,6 +200,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->setParameter('kernel.debug', false);
         $container->setParameter('contao.image.bypass_cache', false);
         $container->setParameter('contao.image.target_path', 'assets/images');
+        $container->setParameter('contao.image.valid_extensions', ['jpg', 'svg', 'svgz']);
+
+        $container->setParameter('contao.image.imagine_options', [
+            'jpeg_quality' => 80,
+            'interlace' => ImageInterface::INTERLACE_PLANE,
+        ]);
 
         $container->set(
             'contao.resource_finder',
@@ -223,17 +238,15 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Returns a ContaoFramework instance.
      *
-     * @param RequestStack    $requestStack
-     * @param RouterInterface $router
-     * @param array           $adapters
+     * @param RequestStack|null    $requestStack
+     * @param RouterInterface|null $router
+     * @param array                $adapters
+     * @param array                $instances
      *
      * @return ContaoFramework The object instance
      */
-    public function mockContaoFramework(
-        RequestStack $requestStack = null,
-        RouterInterface $router = null,
-        array $adapters = []
-    ) {
+    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [], array $instances = [])
+    {
         $container = $this->mockContainerWithContaoScopes();
 
         if (null === $requestStack) {
@@ -252,6 +265,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $adapters['Contao\RequestToken'] = $this->mockRequestTokenAdapter();
         }
 
+        if (!isset($adapters['Contao\FilesModel'])) {
+            $adapters['Contao\FilesModel'] = $this->mockFilesModelAdapter();
+        }
+
         /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
             ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
@@ -262,7 +279,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                 $this->getRootDir().'/app',
                 error_reporting(),
             ])
-            ->setMethods(['getAdapter'])
+            ->setMethods(['getAdapter', 'createInstance'])
             ->getMock()
         ;
 
@@ -274,6 +291,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             })
         ;
 
+        $framework
+            ->expects($this->any())
+            ->method('createInstance')
+            ->willReturnCallback(function ($key) use ($instances) {
+                return $instances[$key];
+            })
+        ;
+
         $framework->setContainer($container);
 
         return $framework;
@@ -282,9 +307,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Mocks a config adapter.
      *
+     * @param int|null $minPasswordLength
+     *
      * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockConfigAdapter()
+    protected function mockConfigAdapter($minPasswordLength = null)
     {
         $configAdapter = $this
             ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
@@ -314,13 +341,20 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $configAdapter
             ->expects($this->any())
             ->method('get')
-            ->willReturnCallback(function ($key) {
+            ->willReturnCallback(function ($key) use ($minPasswordLength) {
                 switch ($key) {
                     case 'characterSet':
                         return 'UTF-8';
 
                     case 'timeZone':
                         return 'Europe/Berlin';
+
+                    case 'gdMaxImgWidth':
+                    case 'gdMaxImgHeight':
+                        return 3000;
+
+                    case 'minPasswordLength':
+                        return $minPasswordLength;
 
                     default:
                         return null;
@@ -358,5 +392,84 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         ;
 
         return $rtAdapter;
+    }
+
+    /**
+     * Mocks a files model adapter.
+     *
+     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockFilesModelAdapter()
+    {
+        $adapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['__call'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $adapter
+            ->expects($this->any())
+            ->method('__call')
+            ->willReturn(null)
+        ;
+
+        return $adapter;
+    }
+
+    /**
+     * Adds image services to the container.
+     *
+     * @param Container $container
+     * @param string    $rootDir
+     */
+    protected function addImageServicesToContainer(Container $container, $rootDir = null)
+    {
+        $imagine = new ImagineGd();
+        $imagineSvg = new ImagineSvg();
+        $calculator = new ResizeCalculator();
+        $filesystem = new Filesystem();
+        $framework = $this->mockContaoFramework();
+
+        $resizer = new LegacyResizer(
+            ($rootDir ?: $this->getRootDir()).'/'.$container->getParameter('contao.image.target_path'),
+            $calculator
+        );
+
+        $resizer->setFramework($framework);
+
+        $imageFactory = new ImageFactory(
+            $resizer,
+            $imagine,
+            $imagineSvg,
+            $filesystem,
+            $framework,
+            $container->getParameter('contao.image.bypass_cache'),
+            $container->getParameter('contao.image.imagine_options'),
+            $container->getParameter('contao.image.valid_extensions')
+        );
+
+        $pictureGenerator = new PictureGenerator(
+            $resizer,
+            $container->getParameter('contao.image.bypass_cache'),
+            ($rootDir ?: $this->getRootDir())
+        );
+
+        $pictureFactory = new PictureFactory(
+            $pictureGenerator,
+            $imageFactory,
+            $framework,
+            $container->getParameter('contao.image.bypass_cache'),
+            $container->getParameter('contao.image.imagine_options')
+        );
+
+        $container->set('filesystem', $filesystem);
+        $container->set('contao.image.imagine', $imagine);
+        $container->set('contao.image.imagine_svg', $imagineSvg);
+        $container->set('contao.image.resize_calculator', $calculator);
+        $container->set('contao.image.resizer', $resizer);
+        $container->set('contao.image.image_factory', $imageFactory);
+        $container->set('contao.image.picture_generator', $pictureGenerator);
+        $container->set('contao.image.picture_factory', $pictureFactory);
     }
 }

@@ -1,11 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?= $this->language ?>" lang="<?= $this->language ?>">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html lang="<?= $this->language ?>">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=<?= $this->charset ?>" />
+  <meta http-equiv="Content-Type" content="text/html; charset=<?= $this->charset ?>">
   <title><?= $this->title ?> - Contao Open Source CMS <?= VERSION ?></title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
 </head>
 <frameset rows="41,*" frameborder="0" framespacing="0">
-  <frame src="<?= $this->switchHref; ?>" name="switch" frameborder="0" scrolling="no" noresize="noresize" />
-  <frame src="<?= $this->url ?>" name="website" frameborder="0" noresize="noresize" />
+  <frame src="<?= $this->switchHref; ?>" name="switch" frameborder="0" scrolling="no" noresize="noresize">
+  <frame src="<?= $this->url ?>" name="website" frameborder="0" noresize="noresize">
 </frameset>
 </html>

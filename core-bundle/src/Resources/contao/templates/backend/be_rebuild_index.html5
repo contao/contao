@@ -3,9 +3,9 @@
 
   <h2 class="sub_headline sub_headline_index"><?= $this->indexHeadline ?></h2>
 
-  <?php if ($this->indexMessage): ?>
+  <?php if ($this->message): ?>
     <div class="tl_message">
-      <p class="tl_error"><?= $this->indexMessage ?></p>
+      <?= $this->message ?>
     </div>
   <?php endif; ?>
 
@@ -56,7 +56,7 @@
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
         <fieldset class="tl_tbox nolegend">
-          <div>
+          <div class="w50">
             <h3><label for="ctrl_user"><?= $this->indexLabel ?></label></h3>
             <select name="user" id="ctrl_user" class="tl_select">
               <?php foreach ($this->user as $id=>$name): ?>

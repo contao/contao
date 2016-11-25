@@ -52,6 +52,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer $mobileLayout
  * @property boolean $includeCache
  * @property integer $cache
+ * @property integer $clientCache
  * @property boolean $includeChmod
  * @property integer $cuser
  * @property integer $cgroup
@@ -87,6 +88,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property array   $subpages
  * @property string  $outputFormat
  * @property string  $outputVariant
+ * @property integer $layoutId
  * @property boolean $hasJQuery
  * @property boolean $hasMooTools
  * @property boolean $isMobile
@@ -565,7 +567,7 @@ class PageModel extends \Model
 	{
 		$time = \Date::floorToMinute();
 
-		$objSubpages = \Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ((FE_USER_LOGGED_IN && !BE_USER_LOGGED_IN) ? " AND p2.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'" . ($time + 60) . "') AND p2.published='1'" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ((FE_USER_LOGGED_IN && !BE_USER_LOGGED_IN) ? " AND p1.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'" . ($time + 60) . "') AND p1.published='1'" : "") . " ORDER BY p1.sorting")
+		$objSubpages = \Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . (FE_USER_LOGGED_IN ? " AND p2.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'" . ($time + 60) . "') AND p2.published='1'" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . (FE_USER_LOGGED_IN ? " AND p1.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'" . ($time + 60) . "') AND p1.published='1'" : "") . " ORDER BY p1.sorting")
 											   ->execute($intPid);
 
 		if ($objSubpages->numRows < 1)
@@ -595,7 +597,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ") AND $t.type!='root' AND $t.type!='error_403' AND $t.type!='error_404'");
 
-		if (FE_USER_LOGGED_IN && !BE_USER_LOGGED_IN)
+		if (FE_USER_LOGGED_IN)
 		{
 			$arrColumns[] = "$t.guests=''";
 		}
@@ -628,7 +630,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_403' AND $t.type!='error_404'");
 
-		if (FE_USER_LOGGED_IN && !BE_USER_LOGGED_IN)
+		if (FE_USER_LOGGED_IN)
 		{
 			$arrColumns[] = "$t.guests=''";
 		}
@@ -836,6 +838,7 @@ class PageModel extends \Model
 		$this->layout = $this->includeLayout ? $this->layout : false;
 		$this->mobileLayout = $this->includeLayout ? $this->mobileLayout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
+		$this->clientCache = $this->includeCache ? $this->clientCache : false;
 
 		$pid = $this->pid;
 		$type = $this->type;
@@ -884,9 +887,10 @@ class PageModel extends \Model
 					}
 
 					// Cache
-					if ($objParentPage->includeCache && $this->cache === false)
+					if ($objParentPage->includeCache)
 					{
-						$this->cache = $objParentPage->cache;
+						$this->cache = $this->cache ?: $objParentPage->cache;
+						$this->clientCache = $this->clientCache ?: $objParentPage->clientCache;
 					}
 
 					// Layout
@@ -968,12 +972,6 @@ class PageModel extends \Model
 		}
 
 		$this->trail = array_reverse($trail);
-
-		// Do not cache protected pages
-		if ($this->protected)
-		{
-			$this->cache = 0;
-		}
 
 		// Use the global date format if none is set (see #6104)
 		if ($this->dateFormat == '')

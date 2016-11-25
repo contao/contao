@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'breadcrumb'                  => '{title_legend},name,headline,type;{nav_legend},showHidden;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'quicknav'                    => '{title_legend},name,headline,type;{nav_legend},customLabel,showLevel,hardLimit,showProtected,showHidden;{reference_legend:hide},rootPage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'quicklink'                   => '{title_legend},name,headline,type;{nav_legend},pages,customLabel;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
-		'booknav'                     => '{title_legend},name,headline,type;{nav_legend},showProtected,showHidden,rootPage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
+		'booknav'                     => '{title_legend},name,headline,type;{nav_legend},rootPage,showProtected,showHidden;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'articlenav'                  => '{title_legend},name,headline,type;{config_legend},loadFirst;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'sitemap'                     => '{title_legend},name,headline,type;{nav_legend},showProtected,showHidden;{reference_legend:hide},rootPage;{template_legend:hide},navigationTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'login'                       => '{title_legend},name,headline,type;{config_legend},autologin;{redirect_legend},jumpTo,redirectBack;{template_legend:hide},cols,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
@@ -118,7 +118,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'search'                      => '{title_legend},name,headline,type;{config_legend},queryType,fuzzy,contextLength,totalLength,perPage,searchType;{redirect_legend:hide},jumpTo;{reference_legend:hide},rootPage;{template_legend:hide},searchTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'articlelist'                 => '{title_legend},name,headline,type;{config_legend},skipFirst,inColumn;{reference_legend:hide},defineRoot;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'flash'                       => '{title_legend},name,headline,type;{config_legend},size,transparent,flashvars,altContent;{source_legend},source;{interact_legend:hide},interactive;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
-		'randomImage'                 => '{title_legend},name,headline,type;{config_legend},imgSize,useCaption,fullsize;{source_legend},multiSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
+		'randomImage'                 => '{title_legend},name,headline,type;{source_legend},multiSRC;{config_legend},imgSize,useCaption,fullsize;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'html'                        => '{title_legend},name,type;{html_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID'
 	),
@@ -160,7 +160,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'flag'                    => 1,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'headline' => array
@@ -170,7 +170,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'search'                  => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
-			'eval'                    => array('maxlength'=>200, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>200, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'type' => array
@@ -346,7 +346,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_module', 'getForms'),
-			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
@@ -561,7 +561,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true, 'mandatory'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'load_callback' => array
+			(
+				array('tl_module', 'setMultiSrcFlags')
+			)
 		),
 		'orderSRC' => array
 		(
@@ -653,6 +657,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('close_deactivate', 'close_delete'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
@@ -869,7 +874,6 @@ class tl_module extends Backend
 	 */
 	public function getLayoutSections()
 	{
-		$arrCustom = array();
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
 
 		// Check for custom layout sections
@@ -877,18 +881,20 @@ class tl_module extends Backend
 
 		while ($objLayout->next())
 		{
-			$arrCustom = array_merge($arrCustom, StringUtil::trimsplit(',', $objLayout->sections));
+			$arrCustom = StringUtil::deserialize($objLayout->sections);
+
+			// Add the custom layout sections
+			if (!empty($arrCustom) && is_array($arrCustom))
+			{
+				foreach ($arrCustom as $v)
+				{
+					$arrSections[] = $v['id'];
+					$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
+				}
+			}
 		}
 
-		$arrCustom = array_unique($arrCustom);
-
-		// Add the custom layout sections
-		if (!empty($arrCustom) && is_array($arrCustom))
-		{
-			$arrSections = array_merge($arrSections, $arrCustom);
-		}
-
-		return $arrSections;
+		return array_values(array_unique($arrSections));
 	}
 
 
@@ -995,5 +1001,28 @@ class tl_module extends Backend
 	public function listModule($row)
 	{
 		return '<div style="float:left">'. $row['name'] .' <span style="color:#999;padding-left:3px">['. (isset($GLOBALS['TL_LANG']['FMD'][$row['type']][0]) ? $GLOBALS['TL_LANG']['FMD'][$row['type']][0] : $row['type']) .']</span>' . "</div>\n";
+	}
+
+
+	/**
+	 * Dynamically add flags to the "multiSRC" field
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function setMultiSrcFlags($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord)
+		{
+			if ($dc->activeRecord->type == 'randomImage')
+			{
+				$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isGallery'] = true;
+				$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
+			}
+		}
+
+		return $varValue;
 	}
 }

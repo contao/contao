@@ -54,8 +54,16 @@
         <target>像素 densities/scale 因素</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.1">
-        <source>Here you can define the pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
-        <target>您可以在这里定义像素densities, 如：&lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;。</target>
+        <source>Here you can define the pixel densities (e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) or width descriptors (e.g. &lt;em&gt;100w, 200w&lt;/em&gt;).</source>
+        <target>在这里定义像素densities (如：&lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) 或宽度descriptors  (如：&lt;em&gt;100w, 200w&lt;/em&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cssClass.0">
+        <source>CSS classes</source>
+        <target>CSS类</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cssClass.1">
+        <source>The CSS classes will be applied to the image tag.</source>
+        <target>CSS类会被应用到图片标签.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>

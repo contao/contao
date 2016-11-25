@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Security\Authentication;
+namespace Contao\CoreBundle\Test\Security;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
@@ -87,7 +87,10 @@ class ContaoAuthenticatorTest extends TestCase
     {
         $authenticator = new ContaoAuthenticator();
         $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
-        $authenticator->authenticateToken(new PreAuthenticatedToken('foo', 'bar', 'console'), $this->mockUserProvider(), 'console');
+
+        $authenticator->authenticateToken(
+            new PreAuthenticatedToken('foo', 'bar', 'console'), $this->mockUserProvider(), 'console'
+        );
     }
 
     /**
@@ -98,7 +101,10 @@ class ContaoAuthenticatorTest extends TestCase
     public function testAuthenticateTokenWithoutContainer()
     {
         $authenticator = new ContaoAuthenticator();
-        $authenticator->authenticateToken(new AnonymousToken('frontend', 'anon.'), $this->mockUserProvider(), 'frontend');
+
+        $authenticator->authenticateToken(
+            new AnonymousToken('frontend', 'anon.'), $this->mockUserProvider(), 'frontend'
+        );
     }
 
     /**
@@ -110,7 +116,10 @@ class ContaoAuthenticatorTest extends TestCase
 
         $this->assertTrue($authenticator->supportsToken(new ContaoToken($this->mockUser()), 'frontend'));
         $this->assertTrue($authenticator->supportsToken(new AnonymousToken('anon.', 'foo'), 'frontend'));
-        $this->assertFalse($authenticator->supportsToken(new PreAuthenticatedToken('foo', 'bar', 'console'), 'console'));
+
+        $this->assertFalse(
+            $authenticator->supportsToken(new PreAuthenticatedToken('foo', 'bar', 'console'), 'console')
+        );
     }
 
     /**

@@ -35,7 +35,6 @@ namespace Contao;
  * @property string  $meta
  *
  * @method static FilesModel|null findByIdOrAlias($val, $opt=array())
- * @method static FilesModel|null findByPath($val, $opt=array())
  * @method static FilesModel|null findOneBy($col, $val, $opt=array())
  * @method static FilesModel|null findOneByPid($val, $opt=array())
  * @method static FilesModel|null findOneByTstamp($val, $opt=array())
@@ -214,6 +213,25 @@ class FilesModel extends \Model
 		}
 
 		return static::findBy(array("$t.uuid IN(" . implode(",", $arrUuids) . ")"), null, $arrOptions);
+	}
+
+
+	/**
+	 * Find a file by its path
+	 *
+	 * @param string $path       The path
+	 * @param array  $arrOptions An optional options array
+	 *
+	 * @return FilesModel|null The model or null if there is no file
+	 */
+	public static function findByPath($path, array $arrOptions=array())
+	{
+		if (strncmp($path, TL_ROOT . '/', strlen(TL_ROOT) + 1) === 0)
+		{
+			$path = substr($path, strlen(TL_ROOT) + 1);
+		}
+
+		return static::findOneBy('path', $path, $arrOptions);
 	}
 
 

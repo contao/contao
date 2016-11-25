@@ -991,6 +991,10 @@
         <target>Włącz/wyłącz moduł</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
+        <source>Title</source>
+        <target>Nagłówek</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_alt">
         <source>Alternate text</source>
         <target>Tekst alternatywny</target>
       </trans-unit>
@@ -1009,6 +1013,21 @@
       <trans-unit id="MSC.aw_new">
         <source>Add language</source>
         <target>Dodaj język</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_title">
+        <source>Title</source>
+        <target>Nagłówek</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_id">
+        <source>ID</source>
+        <target>ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_template">
+        <source>Template</source>
+      </trans-unit>
+      <trans-unit id="MSC.sw_position">
+        <source>Position</source>
+        <target>Pozycja</target>
       </trans-unit>
       <trans-unit id="MSC.image_sizes">
         <source>Predefined dimensions</source>
@@ -1221,8 +1240,7 @@
         <target>Zablokowane</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop</source>
-        <target>Przenieś rekord metodą przeciągnij i upuść</target>
+        <source>Move the item via drag and drop or the up and down keys</source>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1326,8 +1344,7 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
         <target>Podgląd strony w nowym oknie</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
-        <source>Front end user</source>
-        <target>Użytkownik serwisu</target>
+        <source>Member</source>
       </trans-unit>
       <trans-unit id="MSC.backToTop">
         <source>Back to top</source>
@@ -1344,6 +1361,9 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>Powrót do strony startowej panelu</target>
+      </trans-unit>
+      <trans-unit id="MSC.burgerTitle">
+        <source>Toggle navigation</source>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
@@ -1455,6 +1475,9 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
         <target>Zachowaj i nowy</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveNduplicate">
+        <source>Save and duplicate</source>
       </trans-unit>
       <trans-unit id="MSC.continue">
         <source>Continue</source>
@@ -1821,9 +1844,8 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
         <source>Help wizard</source>
         <target>Okienko pomocy</target>
       </trans-unit>
-      <trans-unit id="MSC.noCookies">
-        <source>You have to allow cookies to use Contao.</source>
-        <target>Musisz zaakceptować cisteczka (cookies) aby używać Contao.</target>
+      <trans-unit id="MSC.jsDisabled">
+        <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -2287,6 +2309,29 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
       <trans-unit id="COLS.footer">
         <source>Footer</source>
         <target>Stopka</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.top">
+        <source>Before the wrapper</source>
+        <target>Przed wrapperem</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.before">
+        <source>After the page header</source>
+        <target>Po sekcji Header</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.main">
+        <source>Inside the main column</source>
+        <target>W głównej kolumnie</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.after">
+        <source>Before the page footer</source>
+        <target>Przed sekcją Footer</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.bottom">
+        <source>After the wrapper</source>
+        <target>Po wrapperze</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.manual">
+        <source>Manual output</source>
       </trans-unit>
     </body>
   </file>

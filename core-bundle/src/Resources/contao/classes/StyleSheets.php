@@ -72,6 +72,7 @@ class StyleSheets extends \Backend
 		// Make sure the dcaconfig.php file is loaded
 		if (file_exists(TL_ROOT . '/system/config/dcaconfig.php'))
 		{
+			@trigger_error('Using the dcaconfig.php file has been deprecated and will no longer work in Contao 5.0. Create one or more DCA files in app/Resources/contao/dca instead.', E_USER_DEPRECATED);
 			include TL_ROOT . '/system/config/dcaconfig.php';
 		}
 

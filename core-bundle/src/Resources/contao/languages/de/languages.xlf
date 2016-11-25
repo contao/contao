@@ -567,7 +567,7 @@
       </trans-unit>
       <trans-unit id="LNG.jv">
         <source>Javanese</source>
-        <target>Javanisch</target>
+        <target>Javanesisch</target>
       </trans-unit>
       <trans-unit id="LNG.ka">
         <source>Georgian</source>
@@ -1059,11 +1059,11 @@
       </trans-unit>
       <trans-unit id="LNG.th_TH">
         <source>Thai (Thailand)</source>
-        <target>Thai (Thailand)</target>
+        <target>Thailändisch (Thailand)</target>
       </trans-unit>
       <trans-unit id="LNG.ti">
         <source>Tigrinya</source>
-        <target>Tigrinya</target>
+        <target>Tigrinnisch</target>
       </trans-unit>
       <trans-unit id="LNG.tk">
         <source>Turkmen</source>

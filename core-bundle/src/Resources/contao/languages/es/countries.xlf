@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="CNT.cp">
         <source>Clipperton Island</source>
-        <target>Islas Clipperton</target>
+        <target>Islas de Clipperton</target>
       </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
@@ -735,7 +735,7 @@
       </trans-unit>
       <trans-unit id="CNT.pm">
         <source>St. Pierre and Miquelon</source>
-        <target>San Pierre y Miquelon</target>
+        <target>St. Pierre y Miquelon</target>
       </trans-unit>
       <trans-unit id="CNT.pn">
         <source>Pitcairn Islands</source>
@@ -811,7 +811,7 @@
       </trans-unit>
       <trans-unit id="CNT.sh">
         <source>St. Helena</source>
-        <target>Santa Elena</target>
+        <target>St. Helena</target>
       </trans-unit>
       <trans-unit id="CNT.si">
         <source>Slovenia</source>

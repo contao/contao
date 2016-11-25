@@ -18,6 +18,8 @@ use Contao\Validator;
  * Tests the Validator class.
  *
  * @author Christian Schiffler <https://github.com/discordier>
+ *
+ * @group legacy
  */
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +33,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testEmail($email, $expected)
     {
-        $this->assertEquals($expected, Validator::isEmail($email), 'Original: '.$email.' idna: '.Idna::encodeEmail($email));
+        $this->assertEquals(
+            $expected,
+            Validator::isEmail($email),
+            'Original: '.$email.' idna: '.Idna::encodeEmail($email)
+        );
     }
 
     /**

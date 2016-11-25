@@ -16,6 +16,14 @@
                 <source>This is the third source</source>
                 <target>This is the third target</target>
             </trans-unit>
+            <trans-unit id="tl_layout.responsive.css.1">
+                <source>This is the fourth source</source>
+                <target>This is the fourth target</target>
+            </trans-unit>
+            <trans-unit id="MSC.fifth">
+                <source>This is the\nfifth source</source>
+                <target>This is the\nfifth target</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

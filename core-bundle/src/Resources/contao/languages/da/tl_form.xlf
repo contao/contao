@@ -105,6 +105,14 @@
         <source>Store the submitted data in the database.</source>
         <target>Hvis du vælger denne mulighed, vil indsendte værdier blive gemt og genindsat i deres formularfelter.</target>
       </trans-unit>
+      <trans-unit id="tl_form.customTpl.0">
+        <source>Form template</source>
+        <target>Formularskabelon</target>
+      </trans-unit>
+      <trans-unit id="tl_form.customTpl.1">
+        <source>Here you can select the form template.</source>
+        <target>Vælg en formularskabelon. Standardskabelonen kaldes &lt;em&gt;member_default&lt;/em&gt;. Hvis du vil tilføje dine egne skabeloner, så upload dem til &lt;em&gt;templates&lt;/em&gt;-mappen (filendelsen skal være &lt;em&gt;tpl&lt;/em&gt;).</target>
+      </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>
         <target>Modtagelsestabel</target>
@@ -180,6 +188,10 @@
       <trans-unit id="tl_form.config_legend">
         <source>Form configuration</source>
         <target>Form konfiguration</target>
+      </trans-unit>
+      <trans-unit id="tl_form.template_legend">
+        <source>Template settings</source>
+        <target>Skabelon indstillinger</target>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
         <source>New form</source>

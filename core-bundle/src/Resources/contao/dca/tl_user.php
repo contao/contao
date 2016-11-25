@@ -148,7 +148,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'sorting'                 => true,
 			'flag'                    => 1,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'unique'=>true, 'maxlength'=>64),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'unique'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) COLLATE utf8_bin NULL"
 		),
 		'name' => array
@@ -159,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'sorting'                 => true,
 			'flag'                    => 1,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'email' => array
@@ -194,6 +194,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			{
 				return Backend::getThemes();
 			},
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'uploader' => array
@@ -703,7 +704,7 @@ class tl_user extends Backend
 		}
 
 		return '
-<div>
+<div class="widget">
   <fieldset class="tl_checkbox_container">
     <legend>'.$GLOBALS['TL_LANG']['tl_user']['session'][0].'</legend>
     <input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" style="color:#a6a6a6"><em>'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</em></label><br>

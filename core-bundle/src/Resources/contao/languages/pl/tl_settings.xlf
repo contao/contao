@@ -121,14 +121,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Nie zwijaj elementów zawartości i innych zasobów podczas podglądu w panelu admina.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.0">
-        <source>Cache mode</source>
-        <target>Tryb pamięci podręcznej</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.1">
-        <source>Here you can select the cache mode.</source>
-        <target>Tu możesz wybrać tryb pamięci podręcznej.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.sslProxyDomain.0">
         <source>SSL proxy domain</source>
         <target>Domena proxy SSL</target>
@@ -208,14 +200,6 @@
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Wprowadź oddzielone przecinkami rozszerzenia plików, które chcesz udostępniać do pobierania w swoim serwisie. Z przyczyn bezpieczeństwa pobieranie plików ograniczone jest do katalogu &quot;tl_files&quot; i jego podkatalogów.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.0">
-        <source>Image file types</source>
-        <target>Poprawne typy plików graficznych</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.1">
-        <source>Here you can enter a comma separated list of file types that can be handled by the image class.</source>
-        <target>Wprowadź oddzielone przecinkami rozszerzenia plików graficznych, które chcesz aby były obsługiwane. Nie wprowadzaj takich rodzajów plików, które nie sa obsługiwane przez Contao lub przez twoje własne skrypty.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.editableFiles.0">
         <source>Editable file types</source>
         <target>Edytowalne typy plików</target>
@@ -239,14 +223,6 @@
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
         <target>Jeśli szerokość obrazka lub filmiku będzie większa niż podana wartość, plik zostanie przeskalowany do podanej wartości automatycznie.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.0">
-        <source>JPG thumbnail quality</source>
-        <target>Jakość miniaturek</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.1">
-        <source>Here you can enter the JPG thumbnail quality in percent.</source>
-        <target>Wprowadź jakość miniaturek w procentach (dotyczy tylko plików JPG).</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -423,10 +399,6 @@
       <trans-unit id="tl_settings.modules_legend">
         <source>Inactive extensions</source>
         <target>Nieaktywne rozszerzenia</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Command scheduler</source>
-        <target>Automatyczne zadania</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>

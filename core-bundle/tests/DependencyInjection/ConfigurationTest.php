@@ -36,7 +36,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     public function testInstantiation()
     {
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Configuration', $this->configuration);
-        $this->assertInstanceOf('Symfony\Component\Config\Definition\Builder\TreeBuilder', $this->configuration->getConfigTreeBuilder());
+
+        $this->assertInstanceOf(
+            'Symfony\Component\Config\Definition\Builder\TreeBuilder',
+            $this->configuration->getConfigTreeBuilder()
+        );
     }
 
     /**

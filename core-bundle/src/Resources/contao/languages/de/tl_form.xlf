@@ -105,6 +105,14 @@
         <source>Store the submitted data in the database.</source>
         <target>Übermittelte Formulardaten in der Datenbank speichern.</target>
       </trans-unit>
+      <trans-unit id="tl_form.customTpl.0">
+        <source>Form template</source>
+        <target>Formulartemplate</target>
+      </trans-unit>
+      <trans-unit id="tl_form.customTpl.1">
+        <source>Here you can select the form template.</source>
+        <target>Hier können Sie das Formulartemplate auswählen.</target>
+      </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>
         <target>Zieltabelle</target>
@@ -180,6 +188,10 @@
       <trans-unit id="tl_form.config_legend">
         <source>Form configuration</source>
         <target>Formular-Konfiguration</target>
+      </trans-unit>
+      <trans-unit id="tl_form.template_legend">
+        <source>Template settings</source>
+        <target>Template-Einstellungen</target>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
         <source>New form</source>

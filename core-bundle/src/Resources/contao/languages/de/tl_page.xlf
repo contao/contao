@@ -202,20 +202,28 @@
         <target>Dieses Layout wird verwendet, wenn der Besucher ein mobiles Endgerät nutzt.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
-        <source>Set cache timeout</source>
-        <target>Cachezeit festlegen</target>
+        <source>Set cache timeouts</source>
+        <target>Cachezeiten festlegen</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
-        <source>Set a cache timeout value for the page and its subpages.</source>
-        <target>Eine Cachezeit für die Seite und ihre Unterseiten festlegen.</target>
+        <source>Set cache timeout values for the page and its subpages.</source>
+        <target>Cachezeiten für die Seite und ihre Unterseiten festlegen.</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Cache timeout</source>
-        <target>Cachezeit</target>
+        <source>Server cache timeout</source>
+        <target>Server-Cachezeit</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>After this period, the cached version of the page will expire.</source>
-        <target>Nach Ablauf dieser Zeitdauer verfällt die zwischengespeicherte Version der Seite.</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+        <target>Der Zeitraum in Sekunden, nach dem die Seite von einem gemeinsam genutzten Cache als veraltet eingestuft werden soll.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Client cache timeout</source>
+        <target>Client-Cachezeit</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
+        <target>Der Zeitraum in Sekunden, nach dem die Seite vom Browser als veraltet eingestuft werden soll.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>

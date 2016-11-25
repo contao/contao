@@ -226,7 +226,8 @@ $GLOBALS['BE_FFL'] = array
 	'keyValueWizard' => 'KeyValueWizard',
 	'imageSize'      => 'ImageSize',
 	'timePeriod'     => 'TimePeriod',
-	'metaWizard'     => 'MetaWizard'
+	'metaWizard'     => 'MetaWizard',
+	'sectionWizard'  => 'SectionWizard'
 );
 
 
@@ -320,7 +321,7 @@ $GLOBALS['TL_PURGE'] = array
 		'pages' => array
 		(
 			'callback' => array('Automator', 'purgePageCache'),
-			'affected' => array('%s/contao/html')
+			'affected' => array('%s/http_cache')
 		),
 		'search' => array
 		(

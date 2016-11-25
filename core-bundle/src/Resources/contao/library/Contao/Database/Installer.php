@@ -12,17 +12,12 @@ namespace Contao\Database;
 
 use Symfony\Component\Finder\SplFileInfo;
 
-@trigger_error('Using the Contao\Database\Installer class has been deprecated and will no longer work in Contao 5.0. Use the Installer class from the contao/installation-bundle instead.', E_USER_DEPRECATED);
-
 
 /**
  * Compares the existing database structure with the DCA table settings and
  * calculates the queries needed to update the database.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
- *             Use the Installer class from the contao/installation-bundle instead.
  */
 class Installer extends \Controller
 {
@@ -40,9 +35,13 @@ class Installer extends \Controller
 	 * Generate a HTML form with queries and return it as string
 	 *
 	 * @return string The form HTML markup
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 */
 	public function generateSqlForm()
 	{
+		@trigger_error('Using the Contao\Database\Installer::generateSqlForm() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$count = 0;
 		$return = '';
 		$sql_command = $this->compileCommands();
@@ -290,6 +289,8 @@ class Installer extends \Controller
 			}
 		}
 
+		ksort($return);
+
 		// HOOK: allow third-party developers to modify the array (see #6425)
 		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDca']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromDca']))
 		{
@@ -311,69 +312,17 @@ class Installer extends \Controller
 	 */
 	public function getFromFile()
 	{
-		try
-		{
-			$files = \System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
-		}
-		catch (\InvalidArgumentException $e)
-		{
-			return array();
-		}
-
-		$table = '';
 		$return = array();
+
+		/** @var SplFileInfo[] $files */
+		$files = \System::getContainer()->get('contao.resource_finder')->findIn('config')->depth(0)->files()->name('database.sql');
 
 		foreach ($files as $file)
 		{
-			$data = file($file);
-
-			foreach ($data as $k=>$v)
-			{
-				$key_name = array();
-				$subpatterns = array();
-
-				// Unset comments and empty lines
-				if (preg_match('/^[#-]+/', $v) || !strlen(trim($v)))
-				{
-					unset($data[$k]);
-					continue;
-				}
-
-				// Store the table names
-				if (preg_match('/^CREATE TABLE `([^`]+)`/i', $v, $subpatterns))
-				{
-					$table = $subpatterns[1];
-				}
-				// Get the table options
-				elseif ($table != '' && preg_match('/^\)([^;]+);/', $v, $subpatterns))
-				{
-					$return[$table]['TABLE_OPTIONS'] = $subpatterns[1];
-					$table = '';
-				}
-				// Add the fields
-				elseif ($table != '')
-				{
-					preg_match('/^[^`]*`([^`]+)`/', trim($v), $key_name);
-					$first = preg_replace('/\s[^\n\r]+/', '', $key_name[0]);
-					$key = $key_name[1];
-
-					// Create definitions
-					if (in_array($first, array('KEY', 'PRIMARY', 'PRIMARY KEY', 'FOREIGN', 'FOREIGN KEY', 'INDEX', 'UNIQUE', 'FULLTEXT', 'CHECK')))
-					{
-						if (strncmp($first, 'PRIMARY', 7) === 0)
-						{
-							$key = 'PRIMARY';
-						}
-
-						$return[$table]['TABLE_CREATE_DEFINITIONS'][$key] = preg_replace('/,$/', '', trim($v));
-					}
-					else
-					{
-						$return[$table]['TABLE_FIELDS'][$key] = preg_replace('/,$/', '', trim($v));
-					}
-				}
-			}
+			$return = array_replace_recursive($return, \SqlFileParser::parse($file));
 		}
+
+		ksort($return);
 
 		// HOOK: allow third-party developers to modify the array (see #3281)
 		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromFile']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromFile']))
@@ -459,7 +408,7 @@ class Installer extends \Controller
 					$return[$table]['TABLE_FIELDS'][$name] = trim(implode(' ', $field));
 				}
 
-				// Indices
+				// Indexes
 				if (isset($field['index']) && $field['index_fields'])
 				{
 					// Quote the field names

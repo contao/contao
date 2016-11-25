@@ -201,20 +201,22 @@
         <target>Quest layout vegn utilisà sch'il visitader utilisescha in apparat mobil.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
-        <source>Set cache timeout</source>
-        <target>Definir il temp da cache</target>
+        <source>Set cache timeouts</source>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
-        <source>Set a cache timeout value for the page and its subpages.</source>
-        <target>Definir in temp da cache per la pagina e sias sutpaginas</target>
+        <source>Set cache timeout values for the page and its subpages.</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Cache timeout</source>
-        <target>Temp da cache</target>
+        <source>Server cache timeout</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>After this period, the cached version of the page will expire.</source>
-        <target>Suenter quest temp scroda la versiun en il cache da la pagina.</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Client cache timeout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>

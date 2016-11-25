@@ -990,6 +990,10 @@
         <target>Aktiver eller deaktiver modulet</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
+        <source>Title</source>
+        <target>Overskrift</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_alt">
         <source>Alternate text</source>
         <target>Alternativ beskrivelse</target>
       </trans-unit>
@@ -1008,6 +1012,21 @@
       <trans-unit id="MSC.aw_new">
         <source>Add language</source>
         <target>Tilføj sprog</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_title">
+        <source>Title</source>
+        <target>Overskrift</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_id">
+        <source>ID</source>
+        <target>ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_template">
+        <source>Template</source>
+      </trans-unit>
+      <trans-unit id="MSC.sw_position">
+        <source>Position</source>
+        <target>Position</target>
       </trans-unit>
       <trans-unit id="MSC.image_sizes">
         <source>Predefined dimensions</source>
@@ -1219,8 +1238,7 @@
         <target>Aflåst</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop</source>
-        <target>Flyt objektet vha. træk og slip</target>
+        <source>Move the item via drag and drop or the up and down keys</source>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1323,8 +1341,7 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
         <target>Eksempel på websitet i et nyt vindue</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
-        <source>Front end user</source>
-        <target>Frontend bruger</target>
+        <source>Member</source>
       </trans-unit>
       <trans-unit id="MSC.backToTop">
         <source>Back to top</source>
@@ -1341,6 +1358,9 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>Tilbage til back end start siden</target>
+      </trans-unit>
+      <trans-unit id="MSC.burgerTitle">
+        <source>Toggle navigation</source>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
@@ -1452,6 +1472,9 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
         <target>Gem og ny</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveNduplicate">
+        <source>Save and duplicate</source>
       </trans-unit>
       <trans-unit id="MSC.continue">
         <source>Continue</source>
@@ -1818,9 +1841,8 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
         <source>Help wizard</source>
         <target>Hjælpeguiden</target>
       </trans-unit>
-      <trans-unit id="MSC.noCookies">
-        <source>You have to allow cookies to use Contao.</source>
-        <target>Du skal acceptere cookies for at benytte Contao.</target>
+      <trans-unit id="MSC.jsDisabled">
+        <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -2287,6 +2309,29 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
       <trans-unit id="COLS.footer">
         <source>Footer</source>
         <target>Sidefod (footer)</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.top">
+        <source>Before the wrapper</source>
+        <target>Før indpakningen</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.before">
+        <source>After the page header</source>
+        <target>Efter sidehovedet</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.main">
+        <source>Inside the main column</source>
+        <target>I hovedspalten</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.after">
+        <source>Before the page footer</source>
+        <target>Inden sidefoden</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.bottom">
+        <source>After the wrapper</source>
+        <target>Efter indpakningen</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.manual">
+        <source>Manual output</source>
       </trans-unit>
     </body>
   </file>

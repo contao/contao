@@ -81,13 +81,8 @@ class PrettyErrorScreenListener
      * @param TokenStorageInterface    $tokenStorage
      * @param LoggerInterface|null     $logger
      */
-    public function __construct(
-        $prettyErrorScreens,
-        \Twig_Environment $twig,
-        ContaoFrameworkInterface $framework,
-        TokenStorageInterface $tokenStorage,
-        LoggerInterface $logger = null
-    ) {
+    public function __construct($prettyErrorScreens, \Twig_Environment $twig, ContaoFrameworkInterface $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
+    {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
@@ -258,50 +253,14 @@ class PrettyErrorScreenListener
         $parameters = $this->getTemplateParameters($view, $statusCode, $event);
 
         if (null === $parameters) {
-            $event->setResponse($this->getErrorTemplate());
+            $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
         } else {
             try {
                 $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
             } catch (\Twig_Error $e) {
-                $event->setResponse($this->getErrorTemplate());
+                $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
             }
         }
-    }
-
-    /**
-     * Renders the error template and returns the response object.
-     *
-     * @return Response
-     */
-    private function getErrorTemplate()
-    {
-        $parameters = [
-            'statusCode' => 500,
-            'statusName' => 'Internal Server Error',
-            'error' => [
-                'error' => 'An error occurred',
-                'matter' => 'What\'s the matter?',
-                'errorOccurred' => 'An error occurred while executing this script. Something does not work properly. '
-                    .'Additionally an error occurred while trying to display the error message.',
-                'howToFix' => 'How can I fix the issue?',
-                'errorFixOne' => 'Search the <code>app/logs</code> folder for the current log file and find the '
-                    .'associated error message (usually the last one).',
-                'more' => 'Tell me more, please',
-                'errorExplain' => 'The script execution stopped, because something does not work properly. The '
-                    .'actual error message is hidden by this notice for security reasons and can be '
-                    .'found in the current log file (see above). If you do not understand the error message or do '
-                    .'not know how to fix the problem, search the '
-                    .'<a href="https://contao.org/faq.html">Contao FAQs</a> or visit the '
-                    .'<a href="https://contao.org/support.html">Contao support page</a>.',
-                'hint' => 'To customize this notice, create a custom Twig template overriding %s.',
-            ],
-            'template' => '@ContaoCore/Error/error.html.twig',
-            'base' => '',
-            'adminEmail' => '',
-            'exception' => '',
-        ];
-
-        return new Response($this->twig->render('@ContaoCore/Error/error.html.twig', $parameters), 500);
     }
 
     /**
@@ -320,7 +279,7 @@ class PrettyErrorScreenListener
         }
 
         /** @var Config $config */
-        $config = $this->framework->getAdapter('Contao\Config');
+        $config = $this->framework->getAdapter(Config::class);
 
         $encoded = StringUtil::encodeEmail($config->get('adminEmail'));
 

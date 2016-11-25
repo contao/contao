@@ -122,14 +122,6 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
         <source>Do not collapse elements in the back end preview.</source>
         <target>Kollapsa inte innehållselementen och andra resurser när dom förhandsvisas i backend.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.0">
-        <source>Cache mode</source>
-        <target>Cache-läge</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.1">
-        <source>Here you can select the cache mode.</source>
-        <target>Här kan du välja cache-läge.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.sslProxyDomain.0">
         <source>SSL proxy domain</source>
         <target>SSL proxy-domän</target>
@@ -209,14 +201,6 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Ange en kommaseparerad lista med filändelser som är godkända för nedladdning. &lt;br /&gt;Av säkerhetsskäl är filnedladdning begränsat till den mapp som filen finns i och dess undermappar.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.0">
-        <source>Image file types</source>
-        <target>Godkända filtyper för bilder</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.1">
-        <source>Here you can enter a comma separated list of file types that can be handled by the image class.</source>
-        <target>Ange en kommaseparerad lista med filändelser som är godkända för bilder. &lt;br /&gt;Inkludera inte filtyper som inte kan hanteras av Contao eller dina egna skript.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.editableFiles.0">
         <source>Editable file types</source>
         <target>Redigerbara filtyper</target>
@@ -240,14 +224,6 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
         <target>Om bredden på en bild eller film överstiger detta värde, kommer objekten automatiskt att skalas ner.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.0">
-        <source>JPG thumbnail quality</source>
-        <target>Kvalitet på tumnaglar</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.1">
-        <source>Here you can enter the JPG thumbnail quality in percent.</source>
-        <target>Ange kvaliteten på tumnaglarna i procent (används enbart på JPG).</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -424,10 +400,6 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
       <trans-unit id="tl_settings.modules_legend">
         <source>Inactive extensions</source>
         <target>Inaktiva backendmoduler</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Command scheduler</source>
-        <target>Kommandoplaneraren</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>

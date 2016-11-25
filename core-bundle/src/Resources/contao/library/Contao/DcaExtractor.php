@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\Finder\SplFileInfo;
-
 
 /**
  * Extracts DCA information and cache it
@@ -306,7 +304,19 @@ class DcaExtractor extends \Controller
 		// Fields
 		foreach ($this->arrFields as $k=>$v)
 		{
-			$return['TABLE_FIELDS'][$k] = '`' . $k . '` ' . $v;
+			if (is_array($v))
+			{
+				if (!isset($v['name']))
+				{
+					$v['name'] = $k;
+				}
+
+				$return['SCHEMA_FIELDS'][$k] = $v;
+			}
+			else
+			{
+				$return['TABLE_FIELDS'][$k] = '`' . $k . '` ' . $v;
+			}
 		}
 
 		$quote = function ($item) { return '`' . $item . '`'; };

@@ -10,6 +10,10 @@
 
 namespace Contao;
 
+use Psr\Log\LogLevel;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+
 
 /**
  * A static class to replace insert tags
@@ -112,9 +116,11 @@ class InsertTags extends \Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[0] == 'file' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || in_array('uncached', $flags))
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || ($elements[0] == 'file' && !\Validator::isStringUuid($elements[1])) || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || in_array('uncached', $flags))
 				{
-					$strBuffer .= '{{' . $strTag . '}}';
+					/** @var FragmentHandler $fragmentHandler */
+					$fragmentHandler = \System::getContainer()->get('fragment.handler');
+					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction', ['insertTag' => '{{' . $strTag . '}}']), 'esi');
 					continue;
 				}
 			}
@@ -811,8 +817,7 @@ class InsertTags extends \Controller
 						if (strtolower($elements[0]) == 'image')
 						{
 							$dimensions = '';
-							$imageObj = \Image::create($strFile, array($width, $height, $mode));
-							$src = $imageObj->executeResize()->getResizedPath();
+							$src = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl(TL_ROOT);
 							$objFile = new \File(rawurldecode($src));
 
 							// Add the image dimensions
@@ -827,7 +832,14 @@ class InsertTags extends \Controller
 						// Picture
 						else
 						{
-							$picture = \Picture::create($strFile, array(0, 0, $size))->getTemplateData();
+							$picture = \System::getContainer()->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $strFile, $size);
+
+							$picture = array
+							(
+								'img' => $picture->getImg(TL_ROOT),
+								'sources' => $picture->getSources(TL_ROOT)
+							);
+
 							$picture['alt'] = $alt;
 							$picture['class'] = $class;
 							$pictureTemplate = new \FrontendTemplate($strTemplate);
@@ -925,10 +937,11 @@ class InsertTags extends \Controller
 							}
 						}
 					}
-					if (\Config::get('debugMode'))
-					{
-						$GLOBALS['TL_DEBUG']['unknown_insert_tags'][] = $strTag;
-					}
+
+					\System::getContainer()
+						->get('monolog.logger.contao')
+						->log(LogLevel::INFO, 'Unknown insert tag: ' . $strTag)
+					;
 					break;
 			}
 
@@ -1018,10 +1031,11 @@ class InsertTags extends \Controller
 									}
 								}
 							}
-							if (\Config::get('debugMode'))
-							{
-								$GLOBALS['TL_DEBUG']['unknown_insert_tag_flags'][] = $flag;
-							}
+
+							\System::getContainer()
+								->get('monolog.logger.contao')
+								->log(LogLevel::INFO, 'Unknown insert tag flag: ' . $flag)
+							;
 							break;
 					}
 				}

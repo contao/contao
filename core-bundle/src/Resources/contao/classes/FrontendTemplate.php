@@ -20,7 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
  * @property string  $keywords
  * @property string  $content
  * @property array   $sections
- * @property string  $sPosition
+ * @property array   $positions
+ * @property array   $matches
  * @property string  $tag
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -94,7 +95,7 @@ class FrontendTemplate extends \Template
 	{
 		$this->blnCheckRequest = $blnCheckRequest;
 
-		return parent::getResponse();
+		return $this->setCacheHeaders(parent::getResponse());
 	}
 
 
@@ -129,15 +130,8 @@ class FrontendTemplate extends \Template
 			}
 		}
 
-		// Add the output to the cache
-		$this->addToCache();
-
-		// Unset only after the output has been cached (see #7824)
-		unset($_SESSION['LOGIN_ERROR']);
-
-		// Replace insert tags and then re-replace the request_token tag in case a form element has been loaded via insert tag
-		$this->strBuffer = $this->replaceInsertTags($this->strBuffer, false);
-		$this->strBuffer = str_replace(array('{{request_token}}', '[{]', '[}]'), array(REQUEST_TOKEN, '{{', '}}'), $this->strBuffer);
+		// Replace insert tags
+		$this->strBuffer = $this->replaceInsertTags($this->strBuffer);
 		$this->strBuffer = $this->replaceDynamicScriptTags($this->strBuffer); // see #4203
 
 		// HOOK: allow to modify the compiled markup (see #4291)
@@ -199,10 +193,23 @@ class FrontendTemplate extends \Template
 		}
 
 		// The key does not match
-		if ($key && $this->sPosition != $key)
+		if ($key && !isset($this->positions[$key]))
 		{
 			return;
 		}
+
+		$matches = array();
+
+		foreach ($this->positions[$key] as $id=>$section)
+		{
+			if (isset($this->sections[$id]))
+			{
+				$section['content'] = $this->sections[$id];
+				$matches[$id] = $section;
+			}
+		}
+
+		$this->matches = $matches;
 
 		if ($template === null)
 		{
@@ -246,98 +253,13 @@ class FrontendTemplate extends \Template
 
 	/**
 	 * Add the template output to the cache and add the cache headers
+	 *
+	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
+	 *             Use proper response caching headers instead.
 	 */
 	protected function addToCache()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		$intCache = 0;
-
-		// Decide whether the page shall be cached
-		if (!isset($_GET['file']) && !isset($_GET['token']) && empty($_POST) && !BE_USER_LOGGED_IN && !FE_USER_LOGGED_IN && !$_SESSION['DISABLE_CACHE'] && !isset($_SESSION['LOGIN_ERROR']) && !\Message::hasMessages() && intval($objPage->cache) > 0 && !$objPage->protected)
-		{
-			$intCache = time() + intval($objPage->cache);
-		}
-
-		// Server-side cache
-		if ($intCache > 0 && (\Config::get('cacheMode') == 'both' || \Config::get('cacheMode') == 'server'))
-		{
-			// If the request string is empty, use a special cache tag which considers the page language
-			if (\Environment::get('relativeRequest') == '')
-			{
-				$strCacheKey = \Environment::get('host') . '/empty.' . $objPage->language;
-			}
-			else
-			{
-				$strCacheKey = \Environment::get('host') . '/' . \Environment::get('relativeRequest');
-			}
-
-			// HOOK: add custom logic
-			if (isset($GLOBALS['TL_HOOKS']['getCacheKey']) && is_array($GLOBALS['TL_HOOKS']['getCacheKey']))
-			{
-				foreach ($GLOBALS['TL_HOOKS']['getCacheKey'] as $callback)
-				{
-					$this->import($callback[0]);
-					$strCacheKey = $this->{$callback[0]}->{$callback[1]}($strCacheKey);
-				}
-			}
-
-			// Add a suffix if there is a mobile layout (see #7826)
-			if ($objPage->mobileLayout > 0)
-			{
-				if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
-				{
-					$strCacheKey .= '.mobile';
-				}
-				else
-				{
-					$strCacheKey .= '.desktop';
-				}
-			}
-
-			// Replace insert tags for caching
-			$strBuffer = $this->replaceInsertTags($this->strBuffer);
-			$strBuffer = $this->replaceDynamicScriptTags($strBuffer); // see #4203
-
-			// Add the cache file header
-			$strHeader = sprintf
-			(
-				"<?php /* %s */ \$expire = %d; \$content = %s; \$type = %s; \$files = %s; \$assets = %s; ?>\n",
-				$strCacheKey,
-				(int) $intCache,
-				var_export($this->strContentType, true),
-				var_export($objPage->type, true),
-				var_export(TL_FILES_URL, true),
-				var_export(TL_ASSETS_URL, true)
-			);
-
-			$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
-
-			// Create the cache file
-			$strMd5CacheKey = md5($strCacheKey);
-			$objFile = new \File($strCachePath . '/contao/html/' . substr($strMd5CacheKey, 0, 1) . '/' . $strMd5CacheKey . '.html');
-			$objFile->write($strHeader);
-			$objFile->append($this->minifyHtml($strBuffer), '');
-			$objFile->close();
-		}
-
-		// Client-side cache
-		if (!headers_sent())
-		{
-			if ($intCache > 0 && (\Config::get('cacheMode') == 'both' || \Config::get('cacheMode') == 'browser'))
-			{
-				header('Cache-Control: private, max-age=' . ($intCache - time()));
-				header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
-				header('Expires: ' . gmdate('D, d M Y H:i:s', $intCache) . ' GMT');
-			}
-			else
-			{
-				header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-				header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-				header('Expires: Fri, 06 Jun 1975 15:10:00 GMT');
-			}
-		}
+		@trigger_error('Using FrontendTemplate::addToCache() has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.', E_USER_DEPRECATED);
 	}
 
 
@@ -385,7 +307,7 @@ class FrontendTemplate extends \Template
 	{
 		@trigger_error('Using FrontendTemplate::getCustomSections() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::sections() instead.', E_USER_DEPRECATED);
 
-		if ($strKey != '' && $this->sPosition != $strKey)
+		if ($strKey != '' && !isset($this->positions[$strKey]))
 		{
 			return '';
 		}
@@ -407,9 +329,12 @@ class FrontendTemplate extends \Template
 		$sections = '';
 
 		// Standardize the IDs (thanks to Tsarma) (see #4251)
-		foreach ($this->sections as $k=>$v)
+		foreach ($this->positions[$strKey] as $sect)
 		{
-			$sections .= "\n" . '<' . $tag . ' id="' . \StringUtil::standardize($k, true) . '">' . "\n" . '<div class="inside">' . "\n" . $v . "\n" . '</div>' . "\n" . '</' . $tag . '>' . "\n";
+			if (isset($this->sections[$sect['id']]))
+			{
+				$sections .= "\n" . '<' . $tag . ' id="' . \StringUtil::standardize($sect['id'], true) . '">' . "\n" . '<div class="inside">' . "\n" . $this->sections[$sect['id']] . "\n" . '</div>' . "\n" . '</' . $tag . '>' . "\n";
+			}
 		}
 
 		if ($sections == '')
@@ -418,5 +343,43 @@ class FrontendTemplate extends \Template
 		}
 
 		return '<div class="custom">' . "\n" . $sections . "\n" . '</div>' . "\n";
+	}
+
+
+	/**
+	 * Set the cache headers according to the page settings.
+	 *
+	 * @param Response $response The response object
+	 *
+	 * @return Response The response object
+	 */
+	private function setCacheHeaders(Response $response)
+	{
+		/** @var $objPage \PageModel */
+		global $objPage;
+
+		if ($objPage->cache === false && $objPage->clientCache === false)
+		{
+			return $response->setPrivate();
+		}
+
+		// Do not cache the response if a user is logged in or the page is protected or uses a mobile layout
+		// TODO: Add support for proxies so they can vary on member context and page layout
+		if (FE_USER_LOGGED_IN === true || BE_USER_LOGGED_IN === true || $objPage->isMobile || $objPage->protected || $this->hasAuthenticatedBackendUser())
+		{
+			return $response->setPrivate();
+		}
+
+		if ($objPage->clientCache > 0)
+		{
+			$response->setMaxAge($objPage->clientCache);
+		}
+
+		if ($objPage->cache > 0)
+		{
+			$response->setSharedMaxAge($objPage->cache);
+		}
+
+		return $response;
 	}
 }

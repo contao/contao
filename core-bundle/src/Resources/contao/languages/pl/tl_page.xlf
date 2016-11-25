@@ -200,20 +200,22 @@
         <target>Ten układ strony zostanie użyty dla odwiedzających z urządzeń mobilnych.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
-        <source>Set cache timeout</source>
-        <target>Ustal wartość pamięci podręcznej</target>
+        <source>Set cache timeouts</source>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
-        <source>Set a cache timeout value for the page and its subpages.</source>
-        <target>Domyślnie strona używa tej samej wartości pamięci podręcznej jak strona nadrzędna. Jeśli wybierzesz tą opcję, możesz ustalić nową wartość dla tej strony i jej podstron.</target>
+        <source>Set cache timeout values for the page and its subpages.</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Cache timeout</source>
-        <target>Pamięć podręczna</target>
+        <source>Server cache timeout</source>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>After this period, the cached version of the page will expire.</source>
-        <target>Podczas ustalonego okresu pamięci podręcznej, strona będzie ładowana z tabeli pamięci podręcznej jako statyczny plik HTML. Zmniejszy to czas ładowania się twoich stron.</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Client cache timeout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>

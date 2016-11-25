@@ -14,7 +14,7 @@ window.ace && window.addEvent('domready', function() {
   // Create a div to apply the editor to
   var div = document.createElement('div');
   div.id = '<?= $this->selector ?>_div';
-  div.className = ta.get('class');
+  div.className = ta.className;
   ta.parentNode.insertBefore(div, ta.nextSibling);
 
   // Hide the textarea
@@ -49,8 +49,8 @@ window.ace && window.addEvent('domready', function() {
   var updateHeight = function() {
     var newHeight
       = editor.getSession().getScreenLength()
-      * (editor.renderer.lineHeight || 14);
-    editor.container.style['height'] = Math.max(newHeight, 16) + 'px';
+      * (editor.renderer.lineHeight || 16);
+    editor.container.style['height'] = Math.max(newHeight + 8, 30) + 'px';
     editor.resize();
   };
 

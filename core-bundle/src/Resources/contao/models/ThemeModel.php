@@ -22,6 +22,7 @@ namespace Contao;
  * @property string  $screenshot
  * @property string  $templates
  * @property string  $vars
+ * @property string  $defaultImageDensities
  *
  * @method static ThemeModel|null findById($id, $opt=array())
  * @method static ThemeModel|null findByPk($id, $opt=array())
@@ -34,6 +35,7 @@ namespace Contao;
  * @method static ThemeModel|null findOneByScreenshot($val, $opt=array())
  * @method static ThemeModel|null findOneByTemplates($val, $opt=array())
  * @method static ThemeModel|null findOneByVars($val, $opt=array())
+ * @method static ThemeModel|null findOneByDefaultImageDensities($val, $opt=array())
  *
  * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByTstamp($val, $opt=array())
  * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByName($val, $opt=array())
@@ -42,6 +44,7 @@ namespace Contao;
  * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByScreenshot($val, $opt=array())
  * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByTemplates($val, $opt=array())
  * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByVars($val, $opt=array())
+ * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByDefaultImageDensities($val, $opt=array())
  * @method static Model\Collection|ThemeModel[]|ThemeModel|null findMultipleByIds($val, $opt=array())
  * @method static Model\Collection|ThemeModel[]|ThemeModel|null findBy($col, $val, $opt=array())
  * @method static Model\Collection|ThemeModel[]|ThemeModel|null findAll($opt=array())
@@ -54,6 +57,7 @@ namespace Contao;
  * @method static integer countByScreenshot($val, $opt=array())
  * @method static integer countByTemplates($val, $opt=array())
  * @method static integer countByVars($val, $opt=array())
+ * @method static integer countByDefaultImageDensities($val, $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

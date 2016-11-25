@@ -12,13 +12,9 @@
     </php>
 
     <testsuites>
-        <testsuite name="latest">
+        <testsuite name="Contao Core Bundle">
             <directory>./tests</directory>
-            <exclude>./tests/Contao</exclude>
             <exclude>./tests/Fixtures</exclude>
-        </testsuite>
-        <testsuite name="legacy">
-            <directory>./tests/Contao</directory>
         </testsuite>
     </testsuites>
 
@@ -27,6 +23,9 @@
             <directory>./src</directory>
             <exclude>
                 <directory>./src/Resources</directory>
+                <!-- exclude files with symbols and side-effects -->
+                <file>./src/EventListener/UserAwareTrait.php</file>
+                <file>./src/Exception/ServiceUnavailableException.php</file>
             </exclude>
         </whitelist>
     </filter>

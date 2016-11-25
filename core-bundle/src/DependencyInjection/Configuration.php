@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -91,6 +92,21 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('target_path')
                             ->defaultValue('assets/images')
                         ->end()
+                        ->arrayNode('valid_extensions')
+                            ->prototype('scalar')->end()
+                            ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz'])
+                        ->end()
+                        ->arrayNode('imagine_options')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->integerNode('jpeg_quality')
+                                    ->defaultValue(80)
+                                ->end()
+                                ->scalarNode('interlace')
+                                    ->defaultValue(ImageInterface::INTERLACE_PLANE)
+                                ->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
                 ->arrayNode('security')
@@ -100,6 +116,8 @@ class Configuration implements ConfigurationInterface
                             ->defaultFalse()
                         ->end()
                     ->end()
+                ->end()
+                ->variableNode('localconfig')
                 ->end()
             ->end()
         ;

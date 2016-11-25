@@ -6,30 +6,20 @@
   <title><?= $this->title ?> - Contao Open Source CMS <?= VERSION ?></title>
   <base href="<?= $this->base ?>">
   <meta name="generator" content="Contao Open Source CMS">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
   <meta name="referrer" content="origin">
 
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
-  <link rel="stylesheet" href="<?php
-    $objCombiner = new Combiner();
-    $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/main.css');
-    echo $objCombiner->getCombinedFile();
-  ?>">
-  <!--[if IE]><link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/iefixes.css"><![endif]-->
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/basic.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/main.css">
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>
-  <script src="<?php
-    $objCombiner = new Combiner();
-    $objCombiner->add('assets/mootools/js/mootools.min.js');
-    $objCombiner->add('assets/contao/js/mootao.min.js');
-    $objCombiner->add('assets/contao/js/core.min.js');
-    echo $objCombiner->getCombinedFile();
-  ?>"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/mootools/js/mootools.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>bundles/contaocore/mootao.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>bundles/contaocore/core.min.js"></script>
   <script><?= $this->getDateString() ?></script>
   <?= $this->javascripts ?>
-  <!--[if lt IE 9]><script src="<?= TL_ASSETS_URL ?>assets/html5shiv/js/html5shiv.min.js"></script><![endif]-->
 
 </head>
 <body class="<?= $this->ua ?> popup">

@@ -1,6 +1,15 @@
 API changes
 ===========
 
+Version 4.* to 4.3
+------------------
+
+### Form template
+
+The form template `form.html5` has been renamed to `form_wrapper.html5`, so it
+can be overridden with a custom template in the form settings.
+
+
 Version 3.* to 4.0
 ------------------
 

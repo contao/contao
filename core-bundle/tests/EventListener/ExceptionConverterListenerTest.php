@@ -104,7 +104,11 @@ class ExceptionConverterListenerTest extends TestCase
         $exception = $event->getException();
 
         $this->assertInstanceOf('Contao\CoreBundle\Exception\InternalServerErrorHttpException', $exception);
-        $this->assertInstanceOf('Contao\CoreBundle\Exception\IncompleteInstallationException', $exception->getPrevious());
+
+        $this->assertInstanceOf(
+            'Contao\CoreBundle\Exception\IncompleteInstallationException',
+            $exception->getPrevious()
+        );
     }
 
     /**
@@ -251,7 +255,11 @@ class ExceptionConverterListenerTest extends TestCase
         $exception = $event->getException();
 
         $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException', $exception);
-        $this->assertInstanceOf('Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException', $exception->getPrevious());
+
+        $this->assertInstanceOf(
+            'Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException',
+            $exception->getPrevious()
+        );
     }
 
     /**

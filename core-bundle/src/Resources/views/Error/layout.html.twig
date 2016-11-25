@@ -6,8 +6,8 @@
         <meta charset="utf-8">
         <title>{% block title %}{{ statusCode }} Error{% endblock %}</title>
         <meta name="generator" content="Contao Open Source CMS">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <link href="//fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet" type="text/css">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300">
         {% block style %}
             <style>
                 html {
@@ -137,17 +137,17 @@
                             {% block main %}
                                 {% set _block = block('matter') %}
                                 {% if _block|trim is not empty %}
-                                    <h2>{{ error.matter }}</h2>
+                                    <h2>{{ error.matter|default("What's the matter?") }}</h2>
                                     {{ _block|raw }}
                                 {% endif %}
                                 {% set _block = block('howToFix') %}
                                 {% if _block|trim is not empty %}
-                                    <h2>{{ error.howToFix }}</h2>
+                                    <h2>{{ error.howToFix|default('How can I fix the issue?') }}</h2>
                                     {{ _block|raw }}
                                 {% endif %}
                                 {% set _block = block('explain') %}
                                 {% if _block|trim is not empty %}
-                                    <h3>{{ error.more }}</h3>
+                                    <h3>{{ error.more|default('Tell me more, please') }}</h3>
                                     {{ _block|raw }}
                                 {% endif %}
                             {% endblock %}
@@ -159,7 +159,7 @@
     </div>
     <div id="footer">
         <div class="wrap">
-            {% block hint %}{{ error.hint|format(template)|raw }}{% endblock %}
+            {% block hint %}{{ error.hint|default('To customize this notice, create a custom Twig template overriding @ContaoCore/Error/error.html.twig.')|format(template)|raw }}{% endblock %}
         </div>
     </div>
 </body>

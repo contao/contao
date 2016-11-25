@@ -165,6 +165,116 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the getBinDir() method.
+     *
+     * @param array  $extra
+     * @param string $expected
+     *
+     * @dataProvider binDirProvider
+     */
+    public function testGetBinDir(array $extra, $expected)
+    {
+        $method = new \ReflectionMethod($this->handler, 'getBinDir');
+        $method->setAccessible(true);
+
+        $this->assertEquals($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
+    }
+
+    /**
+     * Provides the bin dir data.
+     *
+     * @return array
+     */
+    public function binDirProvider()
+    {
+        return [
+            [
+                [],
+                'app',
+            ],
+            [
+                ['symfony-app-dir' => 'foo/bar'],
+                'foo/bar',
+            ],
+            [
+                ['symfony-var-dir' => __DIR__],
+                'bin',
+            ],
+            [
+                [
+                    'symfony-var-dir' => __DIR__,
+                    'symfony-bin-dir' => 'app',
+                ],
+                'app',
+            ],
+        ];
+    }
+
+    /**
+     * Tests the getWebDir() method.
+     *
+     * @param array  $extra
+     * @param string $expected
+     *
+     * @dataProvider webDirProvider
+     */
+    public function testGetWebDir(array $extra, $expected)
+    {
+        $method = new \ReflectionMethod($this->handler, 'getWebDir');
+        $method->setAccessible(true);
+
+        $this->assertEquals($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
+    }
+
+    /**
+     * Provides the web dir data.
+     *
+     * @return array
+     */
+    public function webDirProvider()
+    {
+        return [
+            [
+                [],
+                'web',
+            ],
+            [
+                ['symfony-web-dir' => 'foo/bar'],
+                'foo/bar',
+            ],
+        ];
+    }
+
+    /**
+     * Tests the getVerbosityFlag() method.
+     */
+    public function testGetVerbosityFlag()
+    {
+        $method = new \ReflectionMethod($this->handler, 'getVerbosityFlag');
+        $method->setAccessible(true);
+
+        $this->assertEquals(
+            '',
+            $method->invokeArgs($this->handler, [$this->getComposerEvent()])
+        );
+
+        $this->assertEquals(
+            ' -v',
+            $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVerbose')])
+        );
+
+        $this->assertEquals(
+            ' -vv',
+            $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVeryVerbose')])
+        );
+
+        $this->assertEquals(
+            ' -vvv',
+            $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isDebug')])
+        );
+    }
+
+    /**
      * Asserts that the random secret environment variable is not set.
      */
     private function assertRandomSecretDoesNotExist()
@@ -184,15 +294,16 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * Returns the composer event object.
      *
-     * @param array $extra
+     * @param array       $extra
+     * @param string|null $method
      *
      * @return Event
      */
-    private function getComposerEvent(array $extra = [])
+    private function getComposerEvent(array $extra = [], $method = null)
     {
         $package = $this->mockPackage($extra);
 
-        return new Event('', $this->mockComposer($package), $this->mockIO());
+        return new Event('', $this->mockComposer($package), $this->mockIO($method));
     }
 
     /**
@@ -232,23 +343,17 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * Mocks the IO object.
      *
+     * @param string|null $method
+     *
      * @return IOInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockIO()
+    private function mockIO($method = null)
     {
         $io = $this->getMock('Composer\IO\IOInterface');
 
-        $io
-            ->expects($this->any())
-            ->method('isVerbose')
-            ->willReturn(true)
-        ;
-
-        $io
-            ->expects($this->any())
-            ->method('isVeryVerbose')
-            ->willReturn(true)
-        ;
+        if (null !== $method) {
+            $io->expects($this->any())->method($method)->willReturn(true);
+        }
 
         return $io;
     }

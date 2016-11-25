@@ -10,11 +10,11 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
+use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -26,6 +26,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  */
 class ContaoDataCollector extends DataCollector
 {
+    use FrameworkAwareTrait;
     use ScopeAwareTrait;
 
     /**
@@ -36,12 +37,10 @@ class ContaoDataCollector extends DataCollector
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container
-     * @param array              $packages
+     * @param array $packages
      */
-    public function __construct(ContainerInterface $container, array $packages)
+    public function __construct(array $packages)
     {
-        $this->container = $container;
         $this->packages = $packages;
     }
 
@@ -128,26 +127,6 @@ class ContaoDataCollector extends DataCollector
     }
 
     /**
-     * Returns the unknown insert tags.
-     *
-     * @return array
-     */
-    public function getUnknownInsertTags()
-    {
-        return $this->getData('unknown_insert_tags');
-    }
-
-    /**
-     * Returns the unknown insert tag flags.
-     *
-     * @return array
-     */
-    public function getUnknownInsertTagFlags()
-    {
-        return $this->getData('unknown_insert_tag_flags');
-    }
-
-    /**
      * Returns the additional data added by unknown sources.
      *
      * @return array
@@ -166,9 +145,7 @@ class ContaoDataCollector extends DataCollector
             $data['classes_set'],
             $data['classes_aliased'],
             $data['classes_composerized'],
-            $data['database_queries'],
-            $data['unknown_insert_tags'],
-            $data['unknown_insert_tag_flags']
+            $data['database_queries']
         );
 
         return $data;
@@ -268,6 +245,9 @@ class ContaoDataCollector extends DataCollector
             return null;
         }
 
-        return $objPage->getRelated('layout');
+        /** @var LayoutModel $layout */
+        $layout = $this->framework->getAdapter(LayoutModel::class);
+
+        return $layout->findByPk($objPage->layoutId);
     }
 }

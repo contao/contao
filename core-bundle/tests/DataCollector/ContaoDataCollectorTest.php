@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\Test\DataCollector;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\Test\TestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,7 +28,7 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testInstantiation()
     {
-        $collector = new ContaoDataCollector(new ContainerBuilder(), []);
+        $collector = new ContaoDataCollector([]);
 
         $this->assertInstanceOf('Contao\CoreBundle\DataCollector\ContaoDataCollector', $collector);
     }
@@ -39,20 +38,15 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testCollectInBackendScope()
     {
-        $collector = new ContaoDataCollector(
-            $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND),
-            ['contao/core-bundle' => '4.0.0']
-        );
-
         $GLOBALS['TL_DEBUG'] = [
             'classes_set' => ['Contao\System'],
             'classes_aliased' => ['ContentText' => 'Contao\ContentText'],
             'classes_composerized' => ['ContentImage' => 'Contao\ContentImage'],
-            'unknown_insert_tags' => ['foo'],
-            'unknown_insert_tag_flags' => ['bar'],
             'additional_data' => 'data',
         ];
 
+        $collector = new ContaoDataCollector(['contao/core-bundle' => '4.0.0']);
+        $collector->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $collector->collect(new Request(), new Response());
 
         $this->assertEquals(['ContentText' => 'Contao\ContentText'], $collector->getClassesAliased());
@@ -73,8 +67,6 @@ class ContaoDataCollectorTest extends TestCase
 
         $this->assertEquals('4.0.0', $collector->getContaoVersion());
         $this->assertEquals(['Contao\System'], $collector->getClassesSet());
-        $this->assertEquals(['foo'], $collector->getUnknownInsertTags());
-        $this->assertEquals(['bar'], $collector->getUnknownInsertTagFlags());
         $this->assertEquals(['additional_data' => 'data'], $collector->getAdditionalData());
         $this->assertEquals('contao', $collector->getName());
 
@@ -86,28 +78,32 @@ class ContaoDataCollectorTest extends TestCase
      */
     public function testCollectInFrontendScope()
     {
-        $collector = new ContaoDataCollector($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND), []);
-
         $layout = new \stdClass();
         $layout->name = 'Default';
         $layout->id = 2;
         $layout->template = 'fe_page';
 
-        global $objPage;
-
-        $objPage = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->setMethods(['getRelated'])
+        $adapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->setMethods(['__call'])
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $objPage
+        $adapter
             ->expects($this->any())
-            ->method('getRelated')
+            ->method('__call')
             ->willReturn($layout)
         ;
 
+        global $objPage;
+
+        $objPage = new \stdClass();
+        $objPage->layoutId = 2;
+
+        $collector = new ContaoDataCollector([]);
+        $collector->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
+        $collector->setFramework($this->mockContaoFramework(null, null, ['Contao\LayoutModel' => $adapter]));
         $collector->collect(new Request(), new Response());
 
         $this->assertEquals(
@@ -122,5 +118,29 @@ class ContaoDataCollectorTest extends TestCase
             ],
             $collector->getSummary()
         );
+    }
+
+    /**
+     * Tests that an empty array is returned if $this->data is not an array.
+     */
+    public function testWithNonArrayData()
+    {
+        $collector = new ContaoDataCollector([]);
+        $collector->unserialize('N;');
+
+        $this->assertEquals([], $collector->getAdditionalData());
+    }
+
+    /**
+     * Tests that an empty array is returned if the key is unknown.
+     */
+    public function testWithUnknownKey()
+    {
+        $collector = new ContaoDataCollector([]);
+
+        $method = new \ReflectionMethod($collector, 'getData');
+        $method->setAccessible(true);
+
+        $this->assertEquals([], $method->invokeArgs($collector, ['foo']));
     }
 }

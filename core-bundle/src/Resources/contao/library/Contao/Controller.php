@@ -635,7 +635,7 @@ abstract class Controller extends \System
 		$blnReturn = true;
 
 		// Only apply the restrictions in the front end
-		if (TL_MODE == 'FE' && !BE_USER_LOGGED_IN)
+		if (TL_MODE == 'FE')
 		{
 			// Protected element
 			if ($objElement->protected)
@@ -745,6 +745,11 @@ abstract class Controller extends \System
 			}
 		}
 
+		global $objPage;
+
+		$objLayout = \LayoutModel::findByPk($objPage->layoutId);
+		$blnCombineScripts = ($objLayout === null) ? false : $objLayout->combineScripts;
+
 		$arrReplace['[[TL_BODY]]'] = $strScripts;
 		$strScripts = '';
 
@@ -803,7 +808,17 @@ abstract class Controller extends \System
 		// Create the aggregated style sheet
 		if ($objCombiner->hasEntries())
 		{
-			$strScripts .= \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . "\n";
+			if ($blnCombineScripts)
+			{
+				$strScripts .= \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . "\n";
+			}
+			else
+			{
+				foreach ($objCombiner->getFileUrls() as $strUrl)
+				{
+					$strScripts .= \Template::generateStyleTag($strUrl, 'all') . "\n";
+				}
+			}
 		}
 
 		$arrReplace['[[TL_CSS]]'] = $strScripts;
@@ -837,12 +852,36 @@ abstract class Controller extends \System
 			// Create the aggregated script and add it before the non-static scripts (see #4890)
 			if ($objCombiner->hasEntries())
 			{
-				$strScripts = \Template::generateScriptTag($objCombiner->getCombinedFile()) . "\n" . $strScripts;
+				if ($blnCombineScripts)
+				{
+					$strScripts = \Template::generateScriptTag($objCombiner->getCombinedFile()) . "\n" . $strScripts;
+				}
+				else
+				{
+					$arrReversed = array_reverse($objCombiner->getFileUrls());
+
+					foreach ($arrReversed as $strUrl)
+					{
+						$strScripts = \Template::generateScriptTag($strUrl) . "\n" . $strScripts;
+					}
+				}
 			}
 
 			if ($objCombinerAsync->hasEntries())
 			{
-				$strScripts = \Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . "\n" . $strScripts;
+				if ($blnCombineScripts)
+				{
+					$strScripts = \Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . "\n" . $strScripts;
+				}
+				else
+				{
+					$arrReversed = array_reverse($objCombinerAsync->getFileUrls());
+
+					foreach ($arrReversed as $strUrl)
+					{
+						$strScripts = \Template::generateScriptTag($strUrl, true) . "\n" . $strScripts;
+					}
+				}
 			}
 		}
 
@@ -1467,8 +1506,14 @@ abstract class Controller extends \System
 
 		try
 		{
-			$src = \Image::create($arrItem['singleSRC'], $size)->executeResize()->getResizedPath();
-			$picture = \Picture::create($arrItem['singleSRC'], $size)->getTemplateData();
+			$src = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size)->getUrl(TL_ROOT);
+			$picture = \System::getContainer()->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size);
+
+			$picture = array
+			(
+				'img' => $picture->getImg(TL_ROOT),
+				'sources' => $picture->getSources(TL_ROOT)
+			);
 
 			if ($src !== $arrItem['singleSRC'])
 			{
@@ -1491,7 +1536,12 @@ abstract class Controller extends \System
 		}
 
 		$picture['alt'] = \StringUtil::specialchars($arrItem['alt']);
-		$picture['title'] = \StringUtil::specialchars($arrItem['title']);
+
+		// Only add the title if the image is not part of an image link
+		if (empty($arrItem['imageUrl']) && empty($arrItem['fullsize']))
+		{
+			$picture['title'] = \StringUtil::specialchars($arrItem['title']);
+		}
 
 		$objTemplate->picture = $picture;
 
@@ -1502,7 +1552,7 @@ abstract class Controller extends \System
 		}
 
 		// Float image
-		if ($arrItem['floating'] != '')
+		if ($arrItem['floating'])
 		{
 			$objTemplate->floatClass = ' float_' . $arrItem['floating'];
 		}
@@ -1511,7 +1561,7 @@ abstract class Controller extends \System
 		$strHrefKey = ($objTemplate->href != '') ? 'imageHref' : 'href';
 
 		// Image link
-		if ($arrItem['imageUrl'] != '' && TL_MODE == 'FE')
+		if ($arrItem['imageUrl'] && TL_MODE == 'FE')
 		{
 			$objTemplate->$strHrefKey = $arrItem['imageUrl'];
 			$objTemplate->attributes = '';
@@ -1547,7 +1597,7 @@ abstract class Controller extends \System
 		$objTemplate->src = TL_FILES_URL . $src;
 		$objTemplate->alt = \StringUtil::specialchars($arrItem['alt']);
 		$objTemplate->title = \StringUtil::specialchars($arrItem['title']);
-		$objTemplate->linkTitle = $objTemplate->title;
+		$objTemplate->linkTitle = \StringUtil::specialchars($arrItem['linkTitle'] ?: $arrItem['title']);
 		$objTemplate->fullsize = $arrItem['fullsize'] ? true : false;
 		$objTemplate->addBefore = ($arrItem['floating'] != 'below');
 		$objTemplate->margin = static::generateMargin($arrMargin);
@@ -1694,7 +1744,8 @@ abstract class Controller extends \System
 			}
 			else
 			{
-				define($strConstant, '//' . preg_replace('@https?://@', '', $url) . \Environment::get('path') . '/');
+				$strProtocol = (($objPage !== null && $objPage->rootUseSSL) || \Environment::get('ssl')) ? 'https://' : 'http://';
+				define($strConstant, $strProtocol . preg_replace('@https?://@', '', $url) . \Environment::get('path') . '/');
 			}
 		}
 

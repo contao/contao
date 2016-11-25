@@ -6,41 +6,29 @@
   <title><?= $this->title ?> - Contao Open Source CMS <?= VERSION ?></title>
   <base href="<?= $this->base ?>">
   <meta name="generator" content="Contao Open Source CMS">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
   <meta name="referrer" content="origin">
 
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
-  <link rel="stylesheet" href="<?php
-    $objCombiner = new Combiner();
-    $objCombiner->add('assets/colorpicker/css/mooRainbow.min.css');
-    $objCombiner->add('assets/chosen/css/chosen.min.css');
-    $objCombiner->add('assets/stylect/css/stylect.min.css');
-    $objCombiner->add('assets/simplemodal/css/simplemodal.min.css');
-    $objCombiner->add('assets/datepicker/css/datepicker.min.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/main.css');
-    echo $objCombiner->getCombinedFile();
-  ?>">
-  <!--[if IE]><link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/iefixes.css"><![endif]-->
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>assets/colorpicker/css/mooRainbow.min.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>assets/chosen/css/chosen.min.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>assets/simplemodal/css/simplemodal.min.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>assets/datepicker/css/datepicker.min.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/basic.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/main.css">
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>
-  <script src="<?php
-    $objCombiner = new Combiner();
-    $objCombiner->add('assets/mootools/js/mootools.min.js');
-    $objCombiner->add('assets/colorpicker/js/mooRainbow.min.js');
-    $objCombiner->add('assets/chosen/js/chosen.min.js');
-    $objCombiner->add('assets/stylect/js/stylect.min.js');
-    $objCombiner->add('assets/simplemodal/js/simplemodal.min.js');
-    $objCombiner->add('assets/datepicker/js/datepicker.min.js');
-    $objCombiner->add('assets/contao/js/mootao.min.js');
-    $objCombiner->add('assets/contao/js/core.min.js');
-    $objCombiner->add('system/themes/'. $this->theme .'/hover.js');
-    echo $objCombiner->getCombinedFile();
-  ?>"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/mootools/js/mootools.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/colorpicker/js/mooRainbow.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/chosen/js/chosen.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/simplemodal/js/simplemodal.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/datepicker/js/datepicker.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>bundles/contaocore/mootao.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>bundles/contaocore/core.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/hover.js"></script>
   <script><?= $this->getDateString() ?></script>
   <?= $this->javascripts ?>
-  <!--[if lt IE 9]><script src="<?= TL_ASSETS_URL ?>assets/html5shiv/js/html5shiv.min.js"></script><![endif]-->
 
 </head>
 <body id="top" class="<?= $this->ua ?><?php if ($this->isPopup) echo ' popup'; ?>">
@@ -56,7 +44,7 @@
           <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>TL_REFERER_ID]) ?>" class="icon-profile" title="<?= StringUtil::specialchars($this->username) ?>"><?= $this->username ?></a></li>
           <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= StringUtil::specialchars($this->preview) ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
           <li><a href="<?= $this->route('contao_backend_login') ?>" class="icon-logout" title="<?= StringUtil::specialchars($this->logout) ?>" accesskey="q"><?= $this->logout ?></a></li>
-          <li class="burger"><?= Image::getHtml('burger.svg', '', 'id="burger"') ?></li>
+          <li class="burger"><button type="button" title="<?= StringUtil::specialchars($this->burger) ?>" id="burger"><?= Image::getHtml('burger.svg') ?></button></li>
         </ul>
       </div>
     </div>
@@ -65,7 +53,7 @@
   <div id="container" class="cf">
     <?php if (!$this->isPopup): ?>
       <div id="left">
-        <div id="tl_navigation">
+        <nav id="tl_navigation" role="navigation">
           <a href="<?= $this->request ?>#skipNavigation" class="invisible"><?= $this->skipNavigation ?></a>
           <ul class="tl_level_1">
             <?php foreach ($this->modules as $strGroup=>$arrModules): ?>
@@ -82,7 +70,7 @@
             <?php endforeach; ?>
           </ul>
           <a id="skipNavigation" class="invisible">&nbsp;</a>
-        </div>
+        </nav>
       </div>
     <?php endif; ?>
 

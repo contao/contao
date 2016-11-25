@@ -31,6 +31,7 @@ use Patchwork\Utf8;
  * @property string  $subject
  * @property boolean $storeValues
  * @property string  $targetTable
+ * @property string  $customTpl
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -59,7 +60,7 @@ class Form extends \Hybrid
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'form';
+	protected $strTemplate = 'form_wrapper';
 
 	/**
 	 * Form usages during same request
@@ -86,6 +87,11 @@ class Form extends \Hybrid
 			$objTemplate->href = 'contao/main.php?do=form&amp;table=tl_form_field&amp;id=' . $this->id;
 
 			return $objTemplate->parse();
+		}
+
+		if ($this->customTpl != '' && TL_MODE == 'FE')
+		{
+			$this->strTemplate = $this->customTpl;
 		}
 
 		return parent::generate();

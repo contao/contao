@@ -88,13 +88,8 @@ class PaletteManipulator
      *
      * @throws PalettePositionException
      */
-    public function addField(
-        $name,
-        $parent,
-        $position = self::POSITION_AFTER,
-        $fallback = null,
-        $fallbackPosition = self::POSITION_APPEND
-    ) {
+    public function addField($name, $parent, $position = self::POSITION_AFTER, $fallback = null, $fallbackPosition = self::POSITION_APPEND)
+    {
         $this->validatePosition($position);
 
         if (self::POSITION_BEFORE === $fallbackPosition || self::POSITION_AFTER === $fallbackPosition) {

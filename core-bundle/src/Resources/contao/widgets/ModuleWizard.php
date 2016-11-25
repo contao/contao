@@ -23,7 +23,7 @@ class ModuleWizard extends \Widget
 	 * Submit user input
 	 * @var boolean
 	 */
-	protected $blnSubmitInput = false;
+	protected $blnSubmitInput = true;
 
 	/**
 	 * Template
@@ -41,31 +41,7 @@ class ModuleWizard extends \Widget
 	{
 		$this->import('Database');
 
-		$arrButtons = array('edit', 'copy', 'delete', 'enable', 'drag', 'up', 'down');
-		$strCommand = 'cmd_' . $this->strField;
-
-		// Change the order
-		if (\Input::get($strCommand) && is_numeric(\Input::get('cid')) && \Input::get('id') == $this->currentRecord)
-		{
-			switch (\Input::get($strCommand))
-			{
-				case 'copy':
-					$this->varValue = array_duplicate($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'up':
-					$this->varValue = array_move_up($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'down':
-					$this->varValue = array_move_down($this->varValue, \Input::get('cid'));
-					break;
-
-				case 'delete':
-					$this->varValue = array_delete($this->varValue, \Input::get('cid'));
-					break;
-			}
-		}
+		$arrButtons = array('edit', 'copy', 'delete', 'enable', 'drag');
 
 		// Get all modules of the current theme
 		$objModules = $this->Database->prepare("SELECT id, name, type FROM tl_module WHERE pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?) ORDER BY name")
@@ -94,12 +70,20 @@ class ModuleWizard extends \Widget
 
 		// Show all columns and filter in PageRegular (see #3273)
 		$cols = array('header', 'left', 'right', 'main', 'footer');
-		$arrSections = \StringUtil::trimsplit(',', $objRow->sections);
 
-		// Add custom page sections
-		if (!empty($arrSections) && is_array($arrSections))
+		// Add custom layout sections
+		if ($objRow->sections != '')
 		{
-			$cols = array_merge($cols, $arrSections);
+			$arrSections = \StringUtil::deserialize($objRow->sections);
+
+			if (!empty($arrSections) && is_array($arrSections))
+			{
+				foreach ($arrSections as $v)
+				{
+					$cols[$v['id']] = $v['id'];
+					$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
+				}
+			}
 		}
 
 		// Get the new value
@@ -136,27 +120,6 @@ class ModuleWizard extends \Widget
 			}
 		}
 
-		// Save the value
-		if (\Input::get($strCommand) || \Input::post('FORM_SUBMIT') == $this->strTable)
-		{
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET " . $this->strField . "=? WHERE id=?")
-						   ->execute(serialize($this->varValue), $this->currentRecord);
-
-			// Reload the page
-			if (is_numeric(\Input::get('cid')) && \Input::get('id') == $this->currentRecord)
-			{
-				$this->redirect(preg_replace('/&(amp;)?cid=[^&]*/i', '', preg_replace('/&(amp;)?' . preg_quote($strCommand, '/') . '=[^&]*/i', '', \Environment::get('request'))));
-			}
-		}
-
-		// Initialize the tab index
-		if (!\Cache::has('tabindex'))
-		{
-			\Cache::set('tabindex', 1);
-		}
-
-		$tabindex = \Cache::get('tabindex');
-
 		// Add the label and the return wizard
 		$return = '<table id="ctrl_'.$this->strId.'" class="tl_modulewizard">
   <thead>
@@ -166,7 +129,7 @@ class ModuleWizard extends \Widget
     <th></th>
   </tr>
   </thead>
-  <tbody class="sortable" data-tabindex="'.$tabindex.'">';
+  <tbody class="sortable">';
 
 		// Add the input fields
 		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
@@ -181,40 +144,38 @@ class ModuleWizard extends \Widget
 
 			$return .= '
   <tr>
-    <td><select name="'.$this->strId.'['.$i.'][mod]" class="tl_select tl_chosen" tabindex="'.$tabindex++.'" onfocus="Backend.getScrollOffset()" onchange="Backend.updateModuleLink(this)">'.$options.'</select></td>';
+    <td><select name="'.$this->strId.'['.$i.'][mod]" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()" onchange="Backend.updateModuleLink(this)">'.$options.'</select></td>';
 
 			$options = '';
 
 			// Add columns
 			foreach ($cols as $v)
 			{
-				$options .= '<option value="'.\StringUtil::specialchars($v).'"'.static::optionSelected($v, $this->varValue[$i]['col']).'>'. ((isset($GLOBALS['TL_LANG']['COLS'][$v]) && !is_array($GLOBALS['TL_LANG']['COLS'][$v])) ? $GLOBALS['TL_LANG']['COLS'][$v] : $v) .'</option>';
+				$options .= '<option value="'.\StringUtil::specialchars($v).'"'.static::optionSelected($v, $this->varValue[$i]['col']).'>'.$GLOBALS['TL_LANG']['COLS'][$v].'</option>';
 			}
 
 			$return .= '
-    <td><select name="'.$this->strId.'['.$i.'][col]" class="tl_select_column" tabindex="'.$tabindex++.'" onfocus="Backend.getScrollOffset()">'.$options.'</select></td>
+    <td><select name="'.$this->strId.'['.$i.'][col]" class="tl_select_column" onfocus="Backend.getScrollOffset()">'.$options.'</select></td>
     <td>';
 
 			// Add buttons
 			foreach ($arrButtons as $button)
 			{
-				$class = ($button == 'up' || $button == 'down') ? ' class="button-move"' : '';
-
 				if ($button == 'edit')
 				{
-					$return .= ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->varValue[$i]['mod'] . '&amp;popup=1&amp;rt=' . REQUEST_TOKEN . '&amp;nb=1" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link" ' . (($this->varValue[$i]['mod'] > 0) ? '' : ' style="display:none"') . ' onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">'.\Image::getHtml('edit.svg').'</a>' . \Image::getHtml('edit_.svg', '', 'class="module_image"' . (($this->varValue[$i]['mod'] > 0) ? ' style="display:none"' : ''));
+					$return .= ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->varValue[$i]['mod'] . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link" ' . (($this->varValue[$i]['mod'] > 0) ? '' : ' style="display:none"') . ' onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">'.\Image::getHtml('edit.svg').'</a>' . \Image::getHtml('edit_.svg', '', 'class="module_image"' . (($this->varValue[$i]['mod'] > 0) ? ' style="display:none"' : ''));
 				}
 				elseif ($button == 'drag')
 				{
-					$return .= ' ' . \Image::getHtml('drag.svg', '', 'class="drag-handle" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['move']) . '"');
+					$return .= ' <button type="button" class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '">' . \Image::getHtml('drag.svg') . '</button>';
 				}
 				elseif ($button == 'enable')
 				{
-					$return .= ' ' . \Image::getHtml((($this->varValue[$i]['enable']) ? 'visible.svg' : 'invisible.svg'), '', 'class="mw_enable" title="' . sprintf($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '"') . '<input name="'.$this->strId.'['.$i.'][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" tabindex="'.$tabindex++.'" onfocus="Backend.getScrollOffset()"'. (($this->varValue[$i]['enable']) ? ' checked' : '').'>';
+					$return .= ' <button type="button" data-command="enable" class="mw_enable" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '">' . \Image::getHtml((($this->varValue[$i]['enable']) ? 'visible.svg' : 'invisible.svg')) . '</button><input name="'.$this->strId.'['.$i.'][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" onfocus="Backend.getScrollOffset()"'. (($this->varValue[$i]['enable']) ? ' checked' : '').'>';
 				}
 				else
 				{
-					$return .= ' <a href="'.$this->addToUrl('&amp;'.$strCommand.'='.$button.'&amp;cid='.$i.'&amp;id='.$this->currentRecord).'"' . $class . ' title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_'.$button]).'" onclick="Backend.moduleWizard(this,\''.$button.'\',\'ctrl_'.$this->strId.'\');return false">'.\Image::getHtml($button.'.svg', $GLOBALS['TL_LANG']['MSC']['mw_'.$button], 'class="tl_listwizard_img"').'</a>';
+					$return .= ' <button type="button" data-command="' . $button . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_'.$button]) . '">' . \Image::getHtml($button.'.svg') . '</button>';
 				}
 			}
 
@@ -222,11 +183,9 @@ class ModuleWizard extends \Widget
   </tr>';
 		}
 
-		// Store the tab index
-		\Cache::set('tabindex', $tabindex);
-
 		return $return.'
   </tbody>
-  </table>';
+  </table>
+  <script>Backend.moduleWizard("ctrl_'.$this->strId.'")</script>';
 	}
 }

@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('sendViaEmail', 'storeValues'),
-		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},allowTags;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{expert_legend:hide},method,novalidate,attributes,formID'
+		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},allowTags;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
 	),
 
 	// Subpalettes
@@ -219,7 +219,16 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'search'                  => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_form', 'getAllTables'),
-			'eval'                    => array('chosen'=>true),
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(64) NOT NULL default ''"
+		),
+		'customTpl' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['customTpl'],
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'options_callback'        => array('tl_form', 'getFormWrapperTemplates'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'method' => array
@@ -467,6 +476,17 @@ class tl_form extends Backend
 	public function getAllTables()
 	{
 		return $this->Database->listTables();
+	}
+
+
+	/**
+	 * Return all form wrapper templates as array
+	 *
+	 * @return array
+	 */
+	public function getFormWrapperTemplates()
+	{
+		return $this->getTemplateGroup('form_wrapper_');
 	}
 
 

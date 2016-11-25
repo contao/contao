@@ -6,62 +6,45 @@
   <title>Contao Open Source CMS <?= VERSION ?></title>
   <base href="<?= $this->base ?>">
   <meta name="generator" content="Contao Open Source CMS">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
   <meta name="referrer" content="origin">
 
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
-  <link rel="stylesheet" href="<?php
-    $objCombiner = new Combiner();
-    $objCombiner->add('assets/stylect/css/stylect.min.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/switch.css');
-    echo $objCombiner->getCombinedFile();
-  ?>">
-  <!--[if IE]><link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/iefixes.css"><![endif]-->
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/basic.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/switch.css">
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>
-  <script src="<?php
-    $objCombiner = new Combiner();
-    $objCombiner->add('assets/mootools/js/mootools.min.js');
-    $objCombiner->add('assets/stylect/js/stylect.min.js');
-    echo $objCombiner->getCombinedFile();
-  ?>"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/mootools/js/mootools.min.js"></script>
   <script><?= $this->getDateString() ?></script>
   <?= $this->javascripts ?>
-  <!--[if lt IE 9]><script src="<?= TL_ASSETS_URL ?>assets/html5shiv/js/html5shiv.min.js"></script><![endif]-->
 
 </head>
 <body class="<?= $this->ua ?>">
 
   <div id="container" class="cf">
-    <div id="left">
-      <p><?= $this->fePreview ?></p>
-    </div>
-
-    <div id="right">
-      <form action="<?= $this->action ?>" method="post">
-        <div class="formbody">
-          <input type="hidden" name="FORM_SUBMIT" value="tl_switch">
-          <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-          <?php if ($this->isAdmin): ?>
-            <label for="ctrl_user"><?= $this->feUser ?>:</label>
-            <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="<?= $this->username ?>" value="<?= $this->user ?>" autocomplete="off">
-            <datalist id="userlist">
-              <option value="-"></option>
-            </datalist>
-          <?php endif; ?>
-          <label for="ctrl_unpublished"><?= $this->hiddenElements ?>:</label>
-          <select name="unpublished" id="ctrl_unpublished" class="tl_select">
-            <option value="hide"><?= $this->lblHide ?></option>
-            <option value="show"<?php if ($this->show) echo ' selected="selected"'; ?>><?= $this->lblShow ?></option>
-          </select>
-          <button type="submit" class="tl_submit"><?= $this->apply ?></button>
-          <button type="button" class="tl_submit" onclick="parent.frames[1].location.reload()"><?= $this->reload ?></button>
-          <a href="javascript:parent.location.href=parent.frames[1].location.href" class="close">&times;</a>
-        </div>
-      </form>
-    </div>
+    <h1><?= $this->fePreview ?></h1>
+    <form action="<?= $this->action ?>" method="post">
+      <div class="formbody">
+        <input type="hidden" name="FORM_SUBMIT" value="tl_switch">
+        <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+        <?php if ($this->isAdmin): ?>
+          <label for="ctrl_user"><?= $this->feUser ?>:</label>
+          <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="<?= $this->username ?>" value="<?= $this->user ?>" autocomplete="off">
+          <datalist id="userlist">
+            <option value="-"></option>
+          </datalist>
+        <?php endif; ?>
+        <label for="ctrl_unpublished"><?= $this->hiddenElements ?>:</label>
+        <select name="unpublished" id="ctrl_unpublished" class="tl_select">
+          <option value="hide"><?= $this->lblHide ?></option>
+          <option value="show"<?php if ($this->show) echo ' selected="selected"'; ?>><?= $this->lblShow ?></option>
+        </select>
+        <button type="submit" class="tl_submit"><?= $this->apply ?></button>
+        <button type="button" class="tl_submit" onclick="parent.frames[1].location.reload()"><?= $this->reload ?></button>
+        <a href="javascript:parent.location.href=parent.frames[1].location.href" class="close">&times;</a>
+      </div>
+    </form>
   </div>
 
   <?php if ($this->update): ?>

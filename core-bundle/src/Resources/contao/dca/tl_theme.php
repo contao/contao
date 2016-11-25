@@ -146,7 +146,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,author;{config_legend},folders,screenshot,templates;{vars_legend},vars'
+		'default'                     => '{title_legend},name,author;{config_legend},folders,screenshot,templates;{image_legend:hide},defaultImageDensities;{vars_legend},vars'
 	),
 
 	// Fields
@@ -204,7 +204,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_theme', 'getTemplateFolders'),
-			'eval'                    => array('includeBlankOption'=>true),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'vars' => array
@@ -213,6 +213,15 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'inputType'               => 'keyValueWizard',
 			'exclude'                 => true,
 			'sql'                     => "text NULL"
+		),
+		'defaultImageDensities' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['defaultImageDensities'],
+			'inputType'               => 'text',
+			'explanation'             => 'imageSizeDensities',
+			'exclude'                 => true,
+			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		)
 	)
 );
@@ -284,7 +293,7 @@ class tl_theme extends Backend
 
 			if ($objFile !== null)
 			{
-				$label = Image::getHtml(Image::get($objFile->path, 160, 120, 'center_top'), '', 'class="theme_preview"') . ' ' . $label;
+				$label = Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(160, 120, 'center_top'))->getUrl(TL_ROOT), '', 'class="theme_preview"') . ' ' . $label;
 			}
 		}
 

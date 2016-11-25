@@ -177,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'protected'                   => 'groups',
 		'createSitemap'               => 'sitemapName',
 		'includeLayout'               => 'layout,mobileLayout',
-		'includeCache'                => 'cache',
+		'includeCache'                => 'cache,clientCache',
 		'includeChmod'                => 'cuser,cgroup,chmod',
 		'published'                   => 'start,stop'
 	),
@@ -209,7 +209,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'alias' => array
@@ -218,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50 clr'),
 			'save_callback' => array
 			(
 				array('tl_page', 'generateAlias')
@@ -520,6 +520,19 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000),
 			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+		),
+		'clientCache' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['clientCache'],
+			'default'                 => 0,
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'select',
+			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000),
+			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'includeChmod' => array
@@ -653,10 +666,9 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	)
 );
 
-// Disable certain operations in the modal dialog
+// Disable the articles link in the modal window
 if (Input::get('popup'))
 {
-	unset($GLOBALS['TL_DCA']['tl_page']['list']['operations']['show']);
 	unset($GLOBALS['TL_DCA']['tl_page']['list']['operations']['articles']);
 }
 

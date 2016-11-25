@@ -133,4 +133,61 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('content', $allHeaders[0]);
         $this->assertSame('new-content', $allHeaders[1]);
     }
+
+    /**
+     * Tests that multi-value headers can be added and removed.
+     */
+    public function testAddingAndRemovingMultiHeaders()
+    {
+        $listener = new MergeHttpHeadersListener($this->mockContaoFramework());
+
+        $this->assertEquals(
+            $listener->getMultiHeaders(),
+            [
+                'set-cookie',
+                'link',
+                'vary',
+                'pragma',
+                'cache-control',
+            ]
+        );
+
+        $listener->removeMultiHeader('cache-control');
+
+        $this->assertEquals(
+            $listener->getMultiHeaders(),
+            [
+                'set-cookie',
+                'link',
+                'vary',
+                'pragma',
+            ]
+        );
+
+        $listener->addMultiHeader('dummy');
+
+        $this->assertEquals(
+            $listener->getMultiHeaders(),
+            [
+                'set-cookie',
+                'link',
+                'vary',
+                'pragma',
+                'dummy',
+            ]
+        );
+
+        $listener->setMultiHeader(['set-cookie', 'link', 'vary', 'pragma', 'cache-control']);
+
+        $this->assertEquals(
+            $listener->getMultiHeaders(),
+            [
+                'set-cookie',
+                'link',
+                'vary',
+                'pragma',
+                'cache-control',
+            ]
+        );
+    }
 }

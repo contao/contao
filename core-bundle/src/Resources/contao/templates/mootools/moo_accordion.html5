@@ -1,25 +1,23 @@
 
 <script>
   window.addEvent('domready', function() {
-    new Fx.Accordion($$('div.toggler'), $$('div.accordion'), {
+    new Fx.Accordion($$('.toggler'), $$('.accordion'), {
       opacity: false,
       alwaysHide: true,
       onActive: function(tog, el) {
-        el.setProperty('aria-hidden', 'false');
         tog.addClass('active');
-        tog.getNext('div').fade('in');
         tog.setProperty('aria-expanded', 'true');
+        el.setProperty('aria-hidden', 'false');
         return false;
       },
       onBackground: function(tog, el) {
-        el.setProperty('aria-hidden', 'true');
         tog.removeClass('active');
-        tog.getNext('div').fade('out');
         tog.setProperty('aria-expanded', 'false');
+        el.setProperty('aria-hidden', 'true');
         return false;
       }
     });
-    $$('div.toggler').each(function(el) {
+    $$('.toggler').each(function(el) {
       el.setProperty('role', 'tab');
       el.setProperty('tabindex', 0);
       el.addEvents({
@@ -42,10 +40,10 @@
         }
       });
     });
-    $$('div.ce_accordion').each(function(el) {
+    $$('.ce_accordion').each(function(el) {
       el.setProperty('role', 'tablist');
     });
-    $$('div.accordion').each(function(el) {
+    $$('.accordion').each(function(el) {
       el.setProperty('role', 'tabpanel');
     });
   });

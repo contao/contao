@@ -76,7 +76,13 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.error_level', $mergedConfig['error_level']);
         $container->setParameter('contao.image.bypass_cache', $mergedConfig['image']['bypass_cache']);
         $container->setParameter('contao.image.target_path', $mergedConfig['image']['target_path']);
+        $container->setParameter('contao.image.valid_extensions', $mergedConfig['image']['valid_extensions']);
+        $container->setParameter('contao.image.imagine_options', $mergedConfig['image']['imagine_options']);
         $container->setParameter('contao.security.disable_ip_check', $mergedConfig['security']['disable_ip_check']);
+
+        if (isset($mergedConfig['localconfig'])) {
+            $container->setParameter('contao.localconfig', $mergedConfig['localconfig']);
+        }
 
         $this->addContainerScopeListener($container);
     }

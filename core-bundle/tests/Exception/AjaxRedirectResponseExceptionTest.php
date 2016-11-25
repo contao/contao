@@ -39,7 +39,7 @@ class AjaxRedirectResponseExceptionTest extends \PHPUnit_Framework_TestCase
         $response = $exception->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('http://example.org', $response->headers->get('X-Ajax-Location'));
     }
 }

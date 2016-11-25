@@ -222,6 +222,7 @@ class BackendMain extends \Backend
 		$this->Template->loadingData = $GLOBALS['TL_LANG']['MSC']['loadingData'];
 		$this->Template->isPopup = \Input::get('popup');
 		$this->Template->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
+		$this->Template->burger = $GLOBALS['TL_LANG']['MSC']['burgerTitle'];
 
 		$strSystemMessages = \Backend::getSystemMessages();
 		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');

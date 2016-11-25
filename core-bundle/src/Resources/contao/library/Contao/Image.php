@@ -10,6 +10,14 @@
 
 namespace Contao;
 
+use Contao\Image\Image as NewImage;
+use Contao\Image\ImportantPart;
+use Contao\Image\ImageDimensions;
+use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
+
 
 /**
  * Resizes images
@@ -103,9 +111,14 @@ class Image
 	 * @param File $file A file instance of the original image
 	 *
 	 * @throws \InvalidArgumentException If the file does not exists or cannot be processed
+	 *
+	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
+	 *             Use the contao.image.image_factory service instead.
 	 */
 	public function __construct(File $file)
 	{
+		@trigger_error('Using new Contao\Image() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+
 		// Check whether the file exists
 		if (!$file->exists())
 		{
@@ -413,214 +426,168 @@ class Image
 	 */
 	public function executeResize()
 	{
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback)
+		$image = $this->prepareImage();
+		$resizeConfig = $this->prepareResizeConfig();
+
+		if (!System::getContainer()->getParameter('contao.image.bypass_cache')
+			&& $this->getTargetPath()
+			&& !$this->getForceOverride()
+			&& file_exists(TL_ROOT . '/' . $this->getTargetPath())
+			&& $this->fileObj->mtime <= filemtime(TL_ROOT . '/' . $this->getTargetPath())
+		) {
+			// HOOK: add custom logic
+			if (isset($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize']))
 			{
-				$return = \System::importStatic($callback[0])->{$callback[1]}($this);
-
-				if (is_string($return))
+				foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback)
 				{
-					$this->resizedPath = \System::urlEncode($return);
+					$return = \System::importStatic($callback[0])->{$callback[1]}($this);
 
-					return $this;
-				}
-			}
-		}
+					if (is_string($return))
+					{
+						$this->resizedPath = \System::urlEncode($return);
 
-		$importantPart = $this->getImportantPart();
-
-		$widthMatches = ($this->fileObj->width == $this->getTargetWidth() || !$this->getTargetWidth());
-		$heightMatches = ($this->fileObj->height == $this->getTargetHeight() || !$this->getTargetHeight());
-		$zoomMatches = (($importantPart['x'] === 0 && $importantPart['y'] === 0 && $importantPart['width'] === $this->fileObj->viewWidth && $importantPart['height'] === $this->fileObj->viewHeight) || !$this->getZoomLevel());
-
-		// No resizing required
-		if ($widthMatches && $heightMatches && $zoomMatches)
-		{
-			// Return the target image (thanks to Tristan Lins) (see #4166)
-			if ($this->getTargetPath())
-			{
-				// Copy the source image if the target image does not exist or is older than the source image
-				if (!file_exists(TL_ROOT . '/' . $this->getTargetPath()) || $this->fileObj->mtime > filemtime(TL_ROOT . '/' . $this->getTargetPath()))
-				{
-					\Files::getInstance()->copy($this->getOriginalPath(), $this->getTargetPath());
-				}
-
-				$this->resizedPath = \System::urlEncode($this->getTargetPath());
-
-				return $this;
-			}
-
-			$this->resizedPath = \System::urlEncode($this->getOriginalPath());
-
-			return $this;
-		}
-
-		// Check whether the image exists already
-		if (!System::getContainer()->getParameter('contao.image.bypass_cache'))
-		{
-			// Custom target (thanks to Tristan Lins) (see #4166)
-			if ($this->getTargetPath() && !$this->getForceOverride())
-			{
-				if (file_exists(TL_ROOT . '/' . $this->getTargetPath()) && $this->fileObj->mtime <= filemtime(TL_ROOT . '/' . $this->getTargetPath()))
-				{
-					$this->resizedPath = \System::urlEncode($this->getTargetPath());
-
-					return $this;
+						return $this;
+					}
 				}
 			}
 
-			// Regular cache file
-			if (file_exists(TL_ROOT . '/' . $this->getCacheName()))
-			{
-				// Copy the cached file if it exists
-				if ($this->getTargetPath())
-				{
-					\Files::getInstance()->copy($this->getCacheName(), $this->getTargetPath());
-					$this->resizedPath = \System::urlEncode($this->getTargetPath());
-
-					return $this;
-				}
-
-				$this->resizedPath = \System::urlEncode($this->getCacheName());
-
-				return $this;
-			}
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback)
-			{
-				$return = \System::importStatic($callback[0])->{$callback[1]}($this->getOriginalPath(), $this->getTargetWidth(), $this->getTargetHeight(), $this->getResizeMode(), $this->getCacheName(), $this->fileObj, $this->getTargetPath(), $this);
-
-				if (is_string($return))
-				{
-					$this->resizedPath = \System::urlEncode($return);
-
-					return $this;
-				}
-			}
-		}
-
-		$svgNotPossible = ($this->fileObj->isSvgImage && (!extension_loaded('dom') || !$this->fileObj->viewWidth || !$this->fileObj->viewHeight));
-		$gdNotPossible = ($this->fileObj->isGdImage && (!extension_loaded('gd') || $this->fileObj->width > \Config::get('gdMaxImgWidth') || $this->fileObj->height > \Config::get('gdMaxImgHeight') || $this->getTargetWidth() > \Config::get('gdMaxImgWidth') || $this->getTargetHeight() > \Config::get('gdMaxImgHeight')));
-
-		// Return the path to the original image if it cannot be handled
-		if (!$this->fileObj->isImage || $svgNotPossible || $gdNotPossible)
-		{
-			$this->resizedPath = \System::urlEncode($this->getOriginalPath());
-
-			return $this;
-		}
-
-		// Create the resized image
-		if ($this->fileObj->isSvgImage)
-		{
-			$this->executeResizeSvg();
-		}
-		else
-		{
-			$this->executeResizeGd();
-		}
-
-		// Resize the original image
-		if ($this->getTargetPath())
-		{
-			\Files::getInstance()->copy($this->getCacheName(), $this->getTargetPath());
 			$this->resizedPath = \System::urlEncode($this->getTargetPath());
 
 			return $this;
 		}
 
-		$this->resizedPath = \System::urlEncode($this->getCacheName());
+		$image = \System::getContainer()
+			->get('contao.image.resizer')
+			->resize(
+				$image,
+				$resizeConfig,
+				(new ResizeOptions())
+					->setImagineOptions(\System::getContainer()->getParameter('contao.image.imagine_options'))
+					->setTargetPath($this->targetPath ? TL_ROOT . '/' . $this->targetPath : null)
+					->setBypassCache(\System::getContainer()->getParameter('contao.image.bypass_cache'))
+			)
+		;
+
+		$this->resizedPath = $image->getPath();
+
+		if (strpos($this->resizedPath, TL_ROOT . '/') === 0 || strpos($this->resizedPath, TL_ROOT . '\\') === 0)
+		{
+			$this->resizedPath = substr($this->resizedPath, strlen(TL_ROOT) + 1);
+		}
+
+		$this->resizedPath = \System::urlEncode($this->resizedPath);
 
 		return $this;
 	}
 
 
 	/**
-	 * Resize an GD image
+	 * Prepare image object.
 	 *
-	 * @return boolean False if the target image cannot be created, otherwise true
+	 * @return \Contao\Image\Image
 	 */
-	protected function executeResizeGd()
+	protected function prepareImage()
 	{
-		$sourceImage = \GdImage::fromFile($this->fileObj);
+		if ($this->fileObj->isSvgImage)
+		{
+			$imagine = \System::getContainer()->get('contao.image.imagine_svg');
+		}
+		else
+		{
+			$imagine = \System::getContainer()->get('contao.image.imagine');
+		}
 
-		$coordinates = $this->computeResize();
-		$newImage = \GdImage::fromDimensions($coordinates['width'], $coordinates['height']);
+		$image = new NewImage(TL_ROOT . '/' . $this->fileObj->path, $imagine, \System::getContainer()->get('filesystem'));
+		$image->setImportantPart($this->prepareImportantPart());
 
-		$sourceImage->copyTo($newImage, $coordinates['target_x'], $coordinates['target_y'], $coordinates['target_width'], $coordinates['target_height']);
-
-		$newImage->saveToFile(TL_ROOT . '/' . $this->getCacheName());
+		return $image;
 	}
 
 
 	/**
-	 * Resize an SVG image
+	 * Prepare important part object.
+	 *
+	 * @return ImportantPart
 	 */
-	protected function executeResizeSvg()
+	protected function prepareImportantPart()
 	{
-		$doc = new \DOMDocument();
+		$importantPart = $this->getImportantPart();
 
-		if ($this->fileObj->extension == 'svgz')
+		if (substr_count($this->resizeMode, '_') === 1)
 		{
-			$status = $doc->loadXML(gzdecode($this->fileObj->getContent()), LIBXML_NOERROR);
-		}
-		else
-		{
-			$status = $doc->loadXML($this->fileObj->getContent(), LIBXML_NOERROR);
-		}
+			$importantPart = array
+			(
+				'x' => 0,
+				'y' => 0,
+				'width' => $this->fileObj->viewWidth,
+				'height' => $this->fileObj->viewHeight,
+			);
 
-		if ($status !== true)
-		{
-			return;
-		}
+			$mode = explode('_', $this->resizeMode);
 
-		$svgElement = $doc->documentElement;
-
-		// Set the viewBox attribute from the original dimensions
-		if (!$svgElement->hasAttribute('viewBox'))
-		{
-			$origWidth = floatval($svgElement->getAttribute('width'));
-			$origHeight = floatval($svgElement->getAttribute('height'));
-
-			if ($origWidth && $origHeight)
+			if ($mode[0] === 'left')
 			{
-				$svgElement->setAttribute('viewBox', '0 0 ' . $origWidth . ' ' . $origHeight);
+				$importantPart['width'] = 1;
+			}
+			elseif ($mode[0] === 'right')
+			{
+				$importantPart['x'] = $importantPart['width'] - 1;
+				$importantPart['width'] = 1;
+			}
+
+			if ($mode[1] === 'top')
+			{
+				$importantPart['height'] = 1;
+			}
+			elseif ($mode[1] === 'bottom')
+			{
+				$importantPart['y'] = $importantPart['height'] - 1;
+				$importantPart['height'] = 1;
 			}
 		}
 
-		$coordinates = $this->computeResize();
-
-		$svgElement->setAttribute('x', $coordinates['target_x']);
-		$svgElement->setAttribute('y', $coordinates['target_y']);
-		$svgElement->setAttribute('width', $coordinates['target_width']);
-		$svgElement->setAttribute('height', $coordinates['target_height']);
-
-		$svgWrapElement = $doc->createElementNS('http://www.w3.org/2000/svg', 'svg');
-		$svgWrapElement->setAttribute('version', '1.1');
-		$svgWrapElement->setAttribute('width', $coordinates['width']);
-		$svgWrapElement->setAttribute('height', $coordinates['height']);
-		$svgWrapElement->appendChild($svgElement);
-
-		$doc->appendChild($svgWrapElement);
-
-		if ($this->fileObj->extension == 'svgz')
+		if (!$importantPart['width'] || !$importantPart['height'])
 		{
-			$xml = gzencode($doc->saveXML());
+			return null;
+		}
+
+		return new ImportantPart(
+			new Point($importantPart['x'], $importantPart['y']),
+			new Box($importantPart['width'], $importantPart['height'])
+		);
+	}
+
+
+	/**
+	 * Prepare resize configuration object.
+	 *
+	 * @return ResizeConfiguration
+	 */
+	protected function prepareResizeConfig()
+	{
+		$resizeConfig = new ResizeConfiguration();
+		$resizeConfig->setWidth($this->targetWidth);
+		$resizeConfig->setHeight($this->targetHeight);
+		$resizeConfig->setZoomLevel($this->zoomLevel);
+
+		if (substr_count($this->resizeMode, '_') === 1)
+		{
+			$resizeConfig->setMode(ResizeConfiguration::MODE_CROP);
+			$resizeConfig->setZoomLevel(0);
 		}
 		else
 		{
-			$xml = $doc->saveXML();
+			try
+			{
+				$resizeConfig->setMode($this->resizeMode);
+			}
+			catch (\InvalidArgumentException $exception)
+			{
+				$resizeConfig->setMode(ResizeConfiguration::MODE_CROP);
+			}
 		}
 
-		$objCacheFile = new \File($this->getCacheName());
-		$objCacheFile->write($xml);
-		$objCacheFile->close();
+		return $resizeConfig;
 	}
 
 
@@ -631,189 +598,26 @@ class Image
 	 */
 	public function computeResize()
 	{
-		$width = $this->getTargetWidth();
-		$height = $this->getTargetHeight();
-		$originalWidth = $this->fileObj->viewWidth;
-		$originalHeight = $this->fileObj->viewHeight;
-		$mode = $this->getResizeMode();
-		$zoom = $this->getZoomLevel();
-		$importantPart = $this->getImportantPart();
-
-		// Backwards compatibility for old modes
-		// left_top, center_top, right_top, left_center, center_center, right_center, left_bottom, center_bottom, right_bottom
-		if ($mode && substr_count($mode, '_') === 1)
-		{
-			$zoom = 0;
-			$importantPart = array('x'=>0, 'y'=>0, 'width'=>$originalWidth, 'height'=>$originalHeight);
-
-			$mode = explode('_', $mode);
-
-			if ($mode[0] === 'left')
-			{
-				$importantPart['width'] = 1;
-			}
-			elseif ($mode[0] === 'right')
-			{
-				$importantPart['x'] = $originalWidth - 1;
-				$importantPart['width'] = 1;
-			}
-
-			if ($mode[1] === 'top')
-			{
-				$importantPart['height'] = 1;
-			}
-			elseif ($mode[1] === 'bottom')
-			{
-				$importantPart['y'] = $originalHeight - 1;
-				$importantPart['height'] = 1;
-			}
-		}
-
-		$zoom = max(0, min(1, (int) $zoom / 100));
-
-		$zoomedImportantPart = array
-		(
-			'x' => $importantPart['x'] * $zoom,
-			'y' => $importantPart['y'] * $zoom,
-			'width' => $originalWidth - (($originalWidth - $importantPart['width'] - $importantPart['x']) * $zoom) - ($importantPart['x'] * $zoom),
-			'height' => $originalHeight - (($originalHeight - $importantPart['height'] - $importantPart['y']) * $zoom) - ($importantPart['y'] * $zoom),
-		);
-
-		// If no dimensions are specified, use the zoomed original width
-		if (!$width && !$height)
-		{
-			$width = $zoomedImportantPart['width'];
-		}
-
-		if ($mode === 'proportional' && $width && $height)
-		{
-			if ($zoomedImportantPart['width'] >= $zoomedImportantPart['height'])
-			{
-				$height = null;
-			}
-			else
-			{
-				$width = null;
-			}
-		}
-		elseif ($mode === 'box' && $width && $height)
-		{
-			if ($zoomedImportantPart['height'] * $width / $zoomedImportantPart['width'] <= $height)
-			{
-				$height = null;
-			}
-			else
-			{
-				$width = null;
-			}
-		}
-
-		// Crop mode
-		if ($width && $height)
-		{
-			// Calculate the image part for zoom 0
-			$leastZoomed = array
-			(
-				'x' => 0,
-				'y' => 0,
-				'width' => $originalWidth,
-				'height' => $originalHeight,
-			);
-
-			if ($originalHeight * $width / $originalWidth <= $height)
-			{
-				$leastZoomed['width'] = $originalHeight * $width / $height;
-
-				if ($leastZoomed['width'] > $importantPart['width'])
-				{
-					$leastZoomed['x'] = ($originalWidth - $leastZoomed['width']) * $importantPart['x'] / ($originalWidth - $importantPart['width']);
-				}
-				else
-				{
-					$leastZoomed['x'] = $importantPart['x'] + (($importantPart['width'] - $leastZoomed['width']) / 2);
-				}
-			}
-			else
-			{
-				$leastZoomed['height'] = $originalWidth * $height / $width;
-
-				if ($leastZoomed['height'] > $importantPart['height'])
-				{
-					$leastZoomed['y'] = ($originalHeight - $leastZoomed['height']) * $importantPart['y'] / ($originalHeight - $importantPart['height']);
-				}
-				else
-				{
-					$leastZoomed['y'] = $importantPart['y'] + (($importantPart['height'] - $leastZoomed['height']) / 2);
-				}
-			}
-
-			// Calculate the image part for zoom 100
-			$mostZoomed = $importantPart;
-
-			if ($importantPart['height'] * $width / $importantPart['width'] <= $height)
-			{
-				$mostZoomed['height'] = $height * $importantPart['width'] / $width;
-
-				if ($originalHeight > $importantPart['height'])
-				{
-					$mostZoomed['y'] -= ($mostZoomed['height'] - $importantPart['height']) * $importantPart['y'] / ($originalHeight - $importantPart['height']);
-				}
-			}
-			else
-			{
-				$mostZoomed['width'] = $width * $mostZoomed['height'] / $height;
-
-				if ($originalWidth > $importantPart['width'])
-				{
-					$mostZoomed['x'] -= ($mostZoomed['width'] - $importantPart['width']) * $importantPart['x'] / ($originalWidth - $importantPart['width']);
-				}
-			}
-
-			if ($mostZoomed['width'] > $leastZoomed['width'])
-			{
-				$mostZoomed = $leastZoomed;
-			}
-
-			// Apply zoom
-			foreach (array('x', 'y', 'width', 'height') as $key)
-			{
-				$zoomedImportantPart[$key] = ($mostZoomed[$key] * $zoom) + ($leastZoomed[$key] * (1 - $zoom));
-			}
-
-			$targetX = -$zoomedImportantPart['x'] * $width / $zoomedImportantPart['width'];
-			$targetY = -$zoomedImportantPart['y'] * $height / $zoomedImportantPart['height'];
-			$targetWidth = $originalWidth * $width / $zoomedImportantPart['width'];
-			$targetHeight = $originalHeight * $height / $zoomedImportantPart['height'];
-		}
-		else
-		{
-			// Calculate the height if only the width is given
-			if ($width)
-			{
-				$height = max($zoomedImportantPart['height'] * $width / $zoomedImportantPart['width'], 1);
-			}
-
-			// Calculate the width if only the height is given
-			elseif ($height)
-			{
-				$width = max($zoomedImportantPart['width'] * $height / $zoomedImportantPart['height'], 1);
-			}
-
-			// Apply zoom
-			$targetWidth = $originalWidth / $zoomedImportantPart['width'] * $width;
-			$targetHeight = $originalHeight / $zoomedImportantPart['height'] * $height;
-			$targetX = -$zoomedImportantPart['x'] * $targetWidth / $originalWidth;
-			$targetY = -$zoomedImportantPart['y'] * $targetHeight / $originalHeight;
-		}
+		$resizeCoordinates = \System::getContainer()
+			->get('contao.image.resize_calculator')
+			->calculate(
+				$this->prepareResizeConfig(),
+				new ImageDimensions(
+					new Box($this->fileObj->viewWidth, $this->fileObj->viewHeight),
+					$this->fileObj->viewWidth !== $this->fileObj->width
+				),
+				$this->prepareImportantPart()
+			)
+		;
 
 		return array
 		(
-			'width' => (int) round($width),
-			'height' => (int) round($height),
-			'target_x' => (int) round($targetX),
-			'target_y' => (int) round($targetY),
-			'target_width' => (int) round($targetWidth),
-			'target_height' => (int) round($targetHeight),
+			'width' => $resizeCoordinates->getCropSize()->getWidth(),
+			'height' => $resizeCoordinates->getCropSize()->getHeight(),
+			'target_x' => -$resizeCoordinates->getCropStart()->getX(),
+			'target_y' => -$resizeCoordinates->getCropStart()->getY(),
+			'target_width' => $resizeCoordinates->getSize()->getWidth(),
+			'target_height' => $resizeCoordinates->getSize()->getHeight(),
 		);
 	}
 
@@ -932,9 +736,14 @@ class Image
 	 * @param string  $mode   The resize mode
 	 *
 	 * @return boolean True if the image could be resized successfully
+	 *
+	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
+	 *             Use the contao.image.image_factory service instead.
 	 */
 	public static function resize($image, $width, $height, $mode='')
 	{
+		@trigger_error('Using Image::resize() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+
 		return static::get($image, $width, $height, $mode, $image, true) ? true : false;
 	}
 
@@ -946,9 +755,14 @@ class Image
 	 * @param array|integer $size  The image size as array (width, height, resize mode) or an tl_image_size ID
 	 *
 	 * @return static The created image instance
+	 *
+	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
+	 *             Use the contao.image.image_factory service instead.
 	 */
 	public static function create($image, $size=null)
 	{
+		@trigger_error('Using Image::create() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+
 		if (is_string($image))
 		{
 			$image = new \File(rawurldecode($image));
@@ -967,18 +781,22 @@ class Image
 		{
 			$size = $size + array(0, 0, 'crop');
 
-			$imageObj->setTargetWidth($size[0])
-					 ->setTargetHeight($size[1])
-					 ->setResizeMode($size[2]);
+			$imageObj
+				->setTargetWidth($size[0])
+				->setTargetHeight($size[1])
+				->setResizeMode($size[2])
+			;
 		}
 
 		// Load the image size from the database if $size is an ID
 		elseif (($imageSize = \ImageSizeModel::findByPk($size)) !== null)
 		{
-			$imageObj->setTargetWidth($imageSize->width)
-					 ->setTargetHeight($imageSize->height)
-					 ->setResizeMode($imageSize->resizeMode)
-					 ->setZoomLevel($imageSize->zoom);
+			$imageObj
+				->setTargetWidth($imageSize->width)
+				->setTargetHeight($imageSize->height)
+				->setResizeMode($imageSize->resizeMode)
+				->setZoomLevel($imageSize->zoom)
+			;
 		}
 
 		$fileRecord = \FilesModel::findByPath($image->path);
@@ -1010,9 +828,14 @@ class Image
 	 * @param boolean $force        Override existing target images
 	 *
 	 * @return string|null The path of the resized image or null
+	 *
+	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
+	 *             Use the contao.image.image_factory service instead.
 	 */
 	public static function get($image, $width, $height, $mode='', $target=null, $force=false)
 	{
+		@trigger_error('Using Image::get() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+
 		if ($image == '')
 		{
 			return null;
@@ -1044,9 +867,14 @@ class Image
 	 * @param string $size The size string
 	 *
 	 * @return integer The pixel value
+	 *
+	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
+	 *             Use the contao.image.image_factory service instead.
 	 */
 	public static function getPixelValue($size)
 	{
+		@trigger_error('Using Image::getPixelValue() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$value = preg_replace('/[^0-9.-]+/', '', $size);
 		$unit = preg_replace('/[^acehimnprtvwx%]/', '', $size);
 
@@ -1087,8 +915,6 @@ class Image
 				break;
 
 			case '%':
-				@trigger_error('Using Image::getPixelValue() with a percentage value has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-
 				return (int) round($value * 16 / 100);
 				break;
 		}

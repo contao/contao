@@ -41,13 +41,13 @@ class ContaoCoreExtensionTest extends \PHPUnit_Framework_TestCase
         $params = [
             'contao' => [
                 'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
             ],
         ];
 
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
 
-        $this->assertTrue($container->has('contao.listener.output_from_cache'));
         $this->assertTrue($container->has('contao.listener.add_to_search_index'));
     }
 

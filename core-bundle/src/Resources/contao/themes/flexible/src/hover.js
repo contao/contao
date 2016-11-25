@@ -151,7 +151,7 @@ var Theme = {
 			}
 
 			// Single line height
-			var line = dummy.clientHeight;
+			var line = Math.max(dummy.clientHeight, 30);
 
 			// Respond to the "input" event
 			el.addEvent('input', function() {
@@ -159,7 +159,7 @@ var Theme = {
 					.replace(/</g, '&lt;')
 					.replace(/>/g, '&gt;')
 					.replace(/\n|\r\n/g, '<br>X'));
-				var height = Math.max(line, dummy.getSize().y) + 2;
+				var height = Math.max(line, dummy.getSize().y + 2);
 				if (this.clientHeight != height) this.tween('height', height);
 			}).set('tween', { 'duration':100 }).setStyle('height', line + 'px');
 
@@ -174,9 +174,18 @@ var Theme = {
 	 */
 	setupMenuToggle: function() {
 		var burger = $('burger');
-		burger && burger.addEvent('click', function() {
-			document.body.toggleClass('show-navigation');
-		});
+		if (!burger) return;
+
+		burger
+			.addEvent('click', function(e) {
+				document.body.toggleClass('show-navigation');
+			})
+			.addEvent('keydown', function(e) {
+				if (e.event.keyCode == 27) {
+					document.body.toggleClass('show-navigation');
+				}
+			})
+		;
 	},
 
 	/**
@@ -211,6 +220,23 @@ var Theme = {
 				}
 			})
 		;
+	},
+
+	/**
+	 * Set up the split button toggle
+	 */
+	setupSplitButtonToggle: function() {
+		var toggle = $('sbtog');
+		if (!toggle) return;
+
+		toggle.addEvent('click', function(e) {
+			toggle.getParent('.split-button').getElement('ul').toggleClass('invisible');
+			e.stopPropagation();
+		});
+
+		$(document.body).addEvent('click', function() {
+			toggle.getParent('.split-button').getElement('ul').addClass('invisible');
+		});
 	}
 };
 
@@ -221,6 +247,7 @@ window.addEvent('domready', function() {
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
 	Theme.hideMenuOnScroll();
+	Theme.setupSplitButtonToggle();
 });
 
 // Respond to Ajax changes

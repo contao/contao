@@ -42,7 +42,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'mode'                    => 4,
 			'fields'                  => array('sorting'),
-			'panelLayout'             => 'filter,search,limit',
+			'panelLayout'             => 'filter;search,limit',
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
 			'child_record_callback'   => array('tl_form_field', 'listFormFields')
 		),
@@ -163,9 +163,9 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_form_field', 'getFields'),
-			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true),
+			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'name' => array
 		(
@@ -173,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'fieldname', 'spaceToUnderscore'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'fieldname', 'spaceToUnderscore'=>true, 'maxlength'=>64, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'label' => array
@@ -216,6 +216,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['mandatory'],
 			'exclude'                 => true,
+			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
@@ -389,7 +390,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['slabel'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'imageSubmit' => array

@@ -121,14 +121,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Sammenfold ikke indholdselementer og andre ressourcer, når de vises som eksempel i back end.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.0">
-        <source>Cache mode</source>
-        <target>Cache tilstand</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cacheMode.1">
-        <source>Here you can select the cache mode.</source>
-        <target>Her kan du vælge cache tilstand.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.sslProxyDomain.0">
         <source>SSL proxy domain</source>
         <target>SSL proxy domæne</target>
@@ -208,14 +200,6 @@
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Angiv en kommasepareret liste over filendelser for de filtyper, der skal kunne hentes. Af sikkerhedsgrunde er fil-downloads begrænsede til fil-mappen og dens undermapper.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.0">
-        <source>Image file types</source>
-        <target>Gyldige filtyper for billeder</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.validImageTypes.1">
-        <source>Here you can enter a comma separated list of file types that can be handled by the image class.</source>
-        <target>Angiv venligst en kommasepareret liste over filendelser for understøttede filetyper. Inkluder ikke filtyper som ikke kan håndteres af TYPOlight eller dine egne scripts.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.editableFiles.0">
         <source>Editable file types</source>
         <target>Redigerbare filtyper</target>
@@ -239,14 +223,6 @@
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
         <target>Her kan du definere den maksimale billedbredde og bredde af mediefiler. Hvis bredden af et indholdselement overskriver denne værdi, vil det blive skaleret ned automatisk.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.0">
-        <source>JPG thumbnail quality</source>
-        <target>Miniaturebilleders kvalitet</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.jpgQuality.1">
-        <source>Here you can enter the JPG thumbnail quality in percent.</source>
-        <target>Angiv miniaturebilledernes kvalitet i procent (gælder kun for JPG).</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -423,10 +399,6 @@
       <trans-unit id="tl_settings.modules_legend">
         <source>Inactive extensions</source>
         <target>Inaktive udvidelser</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Command scheduler</source>
-        <target>Kommando planlægning</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>

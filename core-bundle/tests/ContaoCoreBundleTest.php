@@ -37,7 +37,10 @@ class ContaoCoreBundleTest extends TestCase
     {
         $bundle = new ContaoCoreBundle();
 
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\ContaoCoreExtension', $bundle->getContainerExtension());
+        $this->assertInstanceOf(
+            'Contao\CoreBundle\DependencyInjection\ContaoCoreExtension',
+            $bundle->getContainerExtension()
+        );
     }
 
     /**
@@ -61,7 +64,10 @@ class ContaoCoreBundleTest extends TestCase
         $this->assertEquals(
             [
                 'Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass',
+                'Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass',
                 'Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass',
+                'Contao\CoreBundle\DependencyInjection\Compiler\AddImagineClassPass',
+                'Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass',
             ],
             $classes
         );

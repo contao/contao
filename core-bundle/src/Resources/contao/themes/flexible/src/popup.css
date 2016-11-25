@@ -39,3 +39,21 @@ body {
 	position:relative;
 	top:-1px;
 }
+
+@media (max-width:767px) {
+	#preview .checkerbox,#preview .checkerbox img {
+		max-width:100%;
+		height:auto !important;
+	}
+}
+
+@media (max-width:459px) {
+	.tl_help_table {
+		margin-left:0;
+		margin-right:0;
+	}
+	#preview {
+		margin-left:12px;
+		margin-right:12px;
+	}
+}

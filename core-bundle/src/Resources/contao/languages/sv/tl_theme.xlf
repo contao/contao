@@ -49,6 +49,12 @@
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
         <target>Här kan du definiera globala variabler för stilmallar i temat (t.ex. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; eller &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
       </trans-unit>
+      <trans-unit id="tl_theme.defaultImageDensities.0">
+        <source>Default image pixel densities</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.defaultImageDensities.1">
+        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>Källfiler</target>
@@ -72,6 +78,10 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>Konfiguration</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.image_legend">
+        <source>Image sizes</source>
+        <target>Bildstorlekar</target>
       </trans-unit>
       <trans-unit id="tl_theme.vars_legend">
         <source>Global variables</source>

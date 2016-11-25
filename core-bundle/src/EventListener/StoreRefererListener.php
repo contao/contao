@@ -14,6 +14,8 @@ use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Stores the referer in the session.
@@ -24,7 +26,6 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 class StoreRefererListener
 {
     use ScopeAwareTrait;
-    use UserAwareTrait;
 
     /**
      * @var SessionInterface
@@ -32,13 +33,27 @@ class StoreRefererListener
     private $session;
 
     /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    /**
+     * @var AuthenticationTrustResolverInterface
+     */
+    private $authenticationTrustResolver;
+
+    /**
      * Constructor.
      *
-     * @param SessionInterface $session
+     * @param SessionInterface                     $session
+     * @param TokenStorageInterface                $tokenStorage
+     * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver)
     {
         $this->session = $session;
+        $this->tokenStorage = $tokenStorage;
+        $this->authenticationTrustResolver = $authenticationTrustResolver;
     }
 
     /**
@@ -48,7 +63,13 @@ class StoreRefererListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->hasUser() || !$this->isContaoMasterRequest($event)) {
+        if (!$this->isContaoMasterRequest($event)) {
+            return;
+        }
+
+        $token = $this->tokenStorage->getToken();
+
+        if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
             return;
         }
 
@@ -170,7 +191,7 @@ class StoreRefererListener
             && !$request->query->has('id')
             && isset($referer['current'])
             && 'contao_frontend' === $request->attributes->get('_route')
-            && $referer['current'] !== $this->getRelativeRequestUri($request)
+            && $this->getRelativeRequestUri($request) !== $referer['current']
             && !$request->isXmlHttpRequest()
         ;
     }

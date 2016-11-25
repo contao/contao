@@ -178,7 +178,7 @@ class ModuleSearch extends \Module
 			$query_endtime = microtime(true);
 
 			// Sort out protected pages
-			if (\Config::get('indexProtected') && !BE_USER_LOGGED_IN)
+			if (\Config::get('indexProtected'))
 			{
 				$this->import('FrontendUser', 'User');
 

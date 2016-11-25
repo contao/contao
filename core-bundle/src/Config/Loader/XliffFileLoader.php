@@ -38,7 +38,7 @@ class XliffFileLoader extends Loader
      */
     public function __construct($rootDir, $addToGlobals = false)
     {
-        $this->rootDir = dirname($rootDir);
+        $this->rootDir = $rootDir;
         $this->addToGlobals = $addToGlobals;
     }
 
@@ -75,14 +75,14 @@ class XliffFileLoader extends Loader
     {
         $xml = $this->getDomDocumentFromFile($name);
 
-        $return = "\n// ".str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
+        $return = "\n// ".str_replace(strtr(dirname($this->rootDir), '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
         $units = $xml->getElementsByTagName('trans-unit');
 
         /** @var \DOMElement[] $units */
         foreach ($units as $unit) {
             $node = $this->getNodeByLanguage($unit, $language);
 
-            if ($node === null || $node->item(0) === null) {
+            if (null === $node || null === $node->item(0)) {
                 continue;
             }
 
@@ -235,7 +235,7 @@ class XliffFileLoader extends Loader
      */
     private function quoteKey($key)
     {
-        if ($key === '0') {
+        if ('0' === $key) {
             return 0;
         }
 
@@ -257,7 +257,7 @@ class XliffFileLoader extends Loader
     {
         $value = str_replace("\n", '\n', $value);
 
-        if (strpos($value, '\n') !== false) {
+        if (false !== strpos($value, '\n')) {
             return '"'.str_replace(['$', '"'], ['\\$', '\\"'], $value).'"';
         }
 

@@ -45,9 +45,24 @@ class CombinedFileDumperTest extends TestCase
     public function testDump()
     {
         $dumper = new CombinedFileDumper(
-            $this->mockFilesystem("<?php \necho 'test';\n"),
+            $this->mockFilesystem("<?php\n\necho 'test';\n"),
             $this->mockLoader(),
             $this->getCacheDir()
+        );
+
+        $dumper->dump(['test.php'], 'test.php');
+    }
+
+    /**
+     * Tests dumping a file with namespace declaration.
+     */
+    public function testDumpWithNamespace()
+    {
+        $dumper = new CombinedFileDumper(
+            $this->mockFilesystem("<?php\n\nnamespace {\necho 'test';\n\n}\n"),
+            $this->mockLoader(),
+            $this->getCacheDir(),
+            true
         );
 
         $dumper->dump(['test.php'], 'test.php');
@@ -59,12 +74,12 @@ class CombinedFileDumperTest extends TestCase
     public function testValidHeader()
     {
         $dumper = new CombinedFileDumper(
-            $this->mockFilesystem("<?php \necho 'foo';\necho 'test';\n"),
+            $this->mockFilesystem("<?php\necho 'foo';\necho 'test';\n"),
             $this->mockLoader(),
             $this->getCacheDir()
         );
 
-        $dumper->setHeader("<?php \necho 'foo';");
+        $dumper->setHeader("<?php\necho 'foo';");
         $dumper->dump(['test.php'], 'test.php');
     }
 

@@ -14,7 +14,7 @@ body {
 
 /* Table */
 .tl_help_table {
-	margin:0 18px 18px;
+	margin:0 9px 18px;
 }
 .tl_help_table td {
 	padding:12px 0;
@@ -37,4 +37,11 @@ td.headline {
 }
 tr:first-child td.headline {
 	padding-top:12px;
+}
+
+@media (max-width:459px) {
+	.tl_help_table {
+		margin-left:0;
+		margin-right:0;
+	}
 }

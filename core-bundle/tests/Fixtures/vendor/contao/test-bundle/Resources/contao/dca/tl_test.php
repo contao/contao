@@ -15,3 +15,5 @@ $GLOBALS['TL_DCA']['tl_test'] = [
         ],
     ],
 ];
+
+?>

@@ -183,6 +183,55 @@ class Combiner extends \System
 
 
 	/**
+	 * Generates the files and returns the URLs.
+	 *
+	 * @return array The file URLs
+	 */
+	public function getFileUrls()
+	{
+		$return = array();
+		$strTarget = substr($this->strMode, 1);
+
+		foreach ($this->arrFiles as $arrFile)
+		{
+			$content = file_get_contents(TL_ROOT . '/' . $arrFile['name']);
+
+			// Compile SCSS/LESS files into temporary files
+			if ($arrFile['extension'] == self::SCSS || $arrFile['extension'] == self::LESS)
+			{
+				$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
+
+				$objFile = new \File($strPath);
+				$objFile->write($this->handleScssLess($content, $arrFile));
+				$objFile->close();
+
+				$return[] = $strPath;
+			}
+			else
+			{
+				$name = $arrFile['name'];
+
+				// Strip the web/ prefix (see #328)
+				if (strncmp($name, 'web/', 4) === 0)
+				{
+					$name = substr($name, 4);
+				}
+
+				// Add the media query (see #7070)
+				if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
+				{
+					$name .= '" media="' . $arrFile['media'];
+				}
+
+				$return[] = $name;
+			}
+		}
+
+		return $return;
+	}
+
+
+	/**
 	 * Generate the combined file and return its path
 	 *
 	 * @param string $strUrl An optional URL to prepend
@@ -191,6 +240,44 @@ class Combiner extends \System
 	 */
 	public function getCombinedFile($strUrl=null)
 	{
+		if (\Config::get('debugMode'))
+		{
+			return $this->getDebugMarkup();
+		}
+
+		return $this->getCombinedFileUrl($strUrl);
+	}
+
+
+	/**
+	 * Generates the debug markup.
+	 *
+	 * @return string The debug markup
+	 */
+	protected function getDebugMarkup()
+	{
+		$return = $this->getFileUrls();
+
+		if ($this->strMode == self::JS)
+		{
+			return implode('"></script><script src="', $return);
+		}
+		else
+		{
+			return implode('"><link rel="stylesheet" href="', $return);
+		}
+	}
+
+
+	/**
+	 * Generate the combined file and return its path
+	 *
+	 * @param string $strUrl An optional URL to prepend
+	 *
+	 * @return string The path to the combined file
+	 */
+	protected function getCombinedFileUrl($strUrl=null)
+	{
 		if ($strUrl === null)
 		{
 			$strUrl = TL_ASSETS_URL;
@@ -198,56 +285,6 @@ class Combiner extends \System
 
 		$strTarget = substr($this->strMode, 1);
 		$strKey = substr(md5($this->strKey), 0, 12);
-
-		// Do not combine the files in debug mode (see #6450)
-		if (\Config::get('debugMode'))
-		{
-			$return = array();
-
-			foreach ($this->arrFiles as $arrFile)
-			{
-				$content = file_get_contents(TL_ROOT . '/' . $arrFile['name']);
-
-				// Compile SCSS/LESS files into temporary files
-				if ($arrFile['extension'] == self::SCSS || $arrFile['extension'] == self::LESS)
-				{
-					$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
-
-					$objFile = new \File($strPath);
-					$objFile->write($this->handleScssLess($content, $arrFile));
-					$objFile->close();
-
-					$return[] = $strPath;
-				}
-				else
-				{
-					$name = $arrFile['name'];
-
-					// Strip the web/ prefix (see #328)
-					if (strncmp($name, 'web/', 4) === 0)
-					{
-						$name = substr($name, 4);
-					}
-
-					// Add the media query (see #7070)
-					if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
-					{
-						$name .= '" media="' . $arrFile['media'];
-					}
-
-					$return[] = $name;
-				}
-			}
-
-			if ($this->strMode == self::JS)
-			{
-				return implode('"></script><script src="', $return);
-			}
-			else
-			{
-				return implode('"><link rel="stylesheet" href="', $return);
-			}
-		}
 
 		// Load the existing file
 		if (file_exists(TL_ROOT . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))

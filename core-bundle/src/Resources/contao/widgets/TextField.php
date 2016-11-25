@@ -187,9 +187,9 @@ class TextField extends \Widget
 									$this->getAttributes());
 		}
 
-		return sprintf('<div id="ctrl_%s"%s>%s</div>%s',
+		return sprintf('<div id="ctrl_%s" class="tl_text_field%s">%s</div>%s',
 						$this->strId,
-						(($this->strClass != '') ? ' class="' . $this->strClass . '"' : ''),
+						(($this->strClass != '') ? ' ' . $this->strClass : ''),
 						implode(' ', $arrFields),
 						$this->wizard);
 	}

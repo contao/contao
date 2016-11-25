@@ -998,6 +998,10 @@
         <target>Das Modul aktivieren/deaktivieren</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
+        <source>Title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_alt">
         <source>Alternate text</source>
         <target>Alternativer Text</target>
       </trans-unit>
@@ -1016,6 +1020,22 @@
       <trans-unit id="MSC.aw_new">
         <source>Add language</source>
         <target>Sprache hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_title">
+        <source>Title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_id">
+        <source>ID</source>
+        <target>ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_template">
+        <source>Template</source>
+        <target>Template</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_position">
+        <source>Position</source>
+        <target>Position</target>
       </trans-unit>
       <trans-unit id="MSC.image_sizes">
         <source>Predefined dimensions</source>
@@ -1230,8 +1250,8 @@
         <target>Gesperrt</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop</source>
-        <target>Das Element durch Ziehen und Ablegen verschieben</target>
+        <source>Move the item via drag and drop or the up and down keys</source>
+        <target>Das Element durch Ziehen und Ablegen oder mittels der Pfeiltasten verschieben</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1336,8 +1356,8 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <target>Vorschau der Webseite in einem neuen Fenster</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
-        <source>Front end user</source>
-        <target>Frontend-Benutzer</target>
+        <source>Member</source>
+        <target>Mitglied</target>
       </trans-unit>
       <trans-unit id="MSC.backToTop">
         <source>Back to top</source>
@@ -1354,6 +1374,10 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>Zurück zur Backend-Startseite</target>
+      </trans-unit>
+      <trans-unit id="MSC.burgerTitle">
+        <source>Toggle navigation</source>
+        <target>Navigation umschalten</target>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
@@ -1466,6 +1490,10 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
         <target>Speichern und neu</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveNduplicate">
+        <source>Save and duplicate</source>
+        <target>Speichern und duplizieren</target>
       </trans-unit>
       <trans-unit id="MSC.continue">
         <source>Continue</source>
@@ -1839,9 +1867,9 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <source>Help wizard</source>
         <target>Hilfe-Assistent</target>
       </trans-unit>
-      <trans-unit id="MSC.noCookies">
-        <source>You have to allow cookies to use Contao.</source>
-        <target>Für die Nutzung von Contao müssen Cookies erlaubt sein.</target>
+      <trans-unit id="MSC.jsDisabled">
+        <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
+        <target>JavaScript scheint in Ihrem Browser deaktiviert zu sein. Das Contao-Backend funktioniert ohne JavaScript nur eingeschränkt.</target>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -2310,6 +2338,30 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       <trans-unit id="COLS.footer">
         <source>Footer</source>
         <target>Fußzeile</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.top">
+        <source>Before the wrapper</source>
+        <target>Vor dem umschließenden Element</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.before">
+        <source>After the page header</source>
+        <target>Unterhalb der Kopfzeile</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.main">
+        <source>Inside the main column</source>
+        <target>In der Hauptspalte</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.after">
+        <source>Before the page footer</source>
+        <target>Oberhalb der Fußzeile</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.bottom">
+        <source>After the wrapper</source>
+        <target>Nach dem umschließenden Element</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.manual">
+        <source>Manual output</source>
+        <target>Manuelle Ausgabe</target>
       </trans-unit>
     </body>
   </file>

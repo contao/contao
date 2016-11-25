@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Command;
+namespace Contao\CoreBundle\Test\Cache;
 
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
@@ -113,7 +113,7 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists($this->getCacheDir().'/contao/config');
         $this->assertFileExists($this->getCacheDir().'/contao/config/autoload.php');
         $this->assertFileExists($this->getCacheDir().'/contao/config/config.php');
-        $this->assertFileExists($this->getCacheDir().'/contao/config/mapping.php');
+        $this->assertFileExists($this->getCacheDir().'/contao/config/templates.php');
         $this->assertFileExists($this->getCacheDir().'/contao/dca');
         $this->assertFileExists($this->getCacheDir().'/contao/dca/tl_test.php');
         $this->assertFileExists($this->getCacheDir().'/contao/languages');
@@ -122,12 +122,33 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists($this->getCacheDir().'/contao/sql');
         $this->assertFileExists($this->getCacheDir().'/contao/sql/tl_test.php');
 
-        $this->assertContains("\$GLOBALS['TL_TEST'] = true;", file_get_contents($this->getCacheDir().'/contao/config/config.php'));
-        $this->assertContains('*/empty.fallback', file_get_contents($this->getCacheDir().'/contao/config/mapping.php'));
-        $this->assertContains('test.com/empty.en', file_get_contents($this->getCacheDir().'/contao/config/mapping.php'));
-        $this->assertContains("\$GLOBALS['TL_DCA']['tl_test'] = [\n", file_get_contents($this->getCacheDir().'/contao/dca/tl_test.php'));
-        $this->assertContains("\$GLOBALS['TL_LANG']['MSC']['first']", file_get_contents($this->getCacheDir().'/contao/languages/en/default.php'));
-        $this->assertContains("\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);", file_get_contents($this->getCacheDir().'/contao/sql/tl_test.php'));
+        $this->assertContains(
+            "\$GLOBALS['TL_TEST'] = true;",
+            file_get_contents($this->getCacheDir().'/contao/config/config.php')
+        );
+
+        $this->assertContains(
+            sprintf(
+                "'dummy' => '%s/vendor/contao/test-bundle/Resources/contao/templates'",
+                strtr($this->getRootDir(), '\\', '/')
+            ),
+            file_get_contents($this->getCacheDir().'/contao/config/templates.php')
+        );
+
+        $this->assertContains(
+            "\$GLOBALS['TL_DCA']['tl_test'] = [\n",
+            file_get_contents($this->getCacheDir().'/contao/dca/tl_test.php')
+        );
+
+        $this->assertContains(
+            "\$GLOBALS['TL_LANG']['MSC']['first']",
+            file_get_contents($this->getCacheDir().'/contao/languages/en/default.php')
+        );
+
+        $this->assertContains(
+            "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);",
+            file_get_contents($this->getCacheDir().'/contao/sql/tl_test.php')
+        );
     }
 
     /**
@@ -136,5 +157,45 @@ class ContaoCacheWarmerTest extends TestCase
     public function testIsOptional()
     {
         $this->assertTrue($this->warmer->isOptional());
+    }
+
+    /**
+     * Tests that no cache is created if the installation is incomplete.
+     */
+    public function testIncompleteInstallation()
+    {
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->getMock('Doctrine\DBAL\Connection', ['query'], [], '', false);
+
+        $connection
+            ->expects($this->any())
+            ->method('query')
+            ->willThrowException(new \Exception())
+        ;
+
+        $framework = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->setMethods(['initialize'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $framework
+            ->expects($this->never())
+            ->method('initialize')
+        ;
+
+        $warmer = new ContaoCacheWarmer(
+            new Filesystem(),
+            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao'),
+            new FileLocator($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao'),
+            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao',
+            $connection,
+            $framework
+        );
+
+        $warmer->warmUp($this->getCacheDir());
+
+        $this->assertFileNotExists($this->getCacheDir().'/contao');
     }
 }

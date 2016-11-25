@@ -218,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['meta'],
 			'inputType'               => 'metaWizard',
-			'eval'                    => array('allowHtml'=>true, 'metaFields'=>array('title'=>'maxlength="255"', 'link'=>'maxlength="255"', 'caption'=>'maxlength="255"')),
+			'eval'                    => array('allowHtml'=>true, 'metaFields'=>array('title'=>'maxlength="255"', 'alt'=>'maxlength="255"', 'link'=>'maxlength="255"', 'caption'=>'maxlength="255"')),
 			'sql'                     => "blob NULL"
 		)
 	)
@@ -629,14 +629,7 @@ class tl_files extends Backend
 	 */
 	public function showFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Input::get('popup'))
-		{
-			return '';
-		}
-		else
-		{
-			return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="'.StringUtil::specialchars($title).'"'.$attributes.' onclick="Backend.openModalIframe({\'width\':'.$row['popupWidth'].',\'title\':\''.str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])).'\',\'url\':this.href,\'height\':'.$row['popupHeight'].'});return false">'.Image::getHtml($icon, $label).'</a> ';
-		}
+		return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="'.StringUtil::specialchars($title).'"'.$attributes.' onclick="Backend.openModalIframe({\'width\':'.$row['popupWidth'].',\'title\':\''.str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])).'\',\'url\':this.href,\'height\':'.$row['popupHeight'].'});return false">'.Image::getHtml($icon, $label).'</a> ';
 	}
 
 

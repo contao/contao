@@ -211,11 +211,11 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
-        <target>Nessuna delle pagine root del sito attive (che non ha una impostazione DNS esplicita) è impostata come Lingua predefinita</target>
+        <target>Nessuna delle pagine root del sito (che non ha una impostazione DNS esplicita) è impostata come Lingua predefinita</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
-        <target>Nessuna delle pagine root sito &lt;strong&gt;% s &lt;/ strong&gt; ha impostata la lingua predefinita.</target>
+        <target>Nessuna delle pagine root sito &lt;strong&gt;%s &lt;/ strong&gt; ha impostata la lingua predefinita.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -998,6 +998,10 @@
         <target>Attiva/disattiva il modulo</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
+        <source>Title</source>
+        <target>Nome del modulo</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_alt">
         <source>Alternate text</source>
         <target>Testo alternativo</target>
       </trans-unit>
@@ -1016,6 +1020,22 @@
       <trans-unit id="MSC.aw_new">
         <source>Add language</source>
         <target>Aggiungi una lingua</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_title">
+        <source>Title</source>
+        <target>Nome del modulo</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_id">
+        <source>ID</source>
+        <target>ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_template">
+        <source>Template</source>
+        <target>Template</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_position">
+        <source>Position</source>
+        <target>Posizione</target>
       </trans-unit>
       <trans-unit id="MSC.image_sizes">
         <source>Predefined dimensions</source>
@@ -1230,8 +1250,8 @@
         <target>Bloccato</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop</source>
-        <target>Sposta l'elemento trascinandolo in modalità drag &amp; drop</target>
+        <source>Move the item via drag and drop or the up and down keys</source>
+        <target>Sposta l'elemento trascinandolo in modalità drag &amp; drop oppure utilizza le frecce direzione in alto o in basso</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1336,8 +1356,8 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <target>Anteprima del sito web in una nuova finestra</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
-        <source>Front end user</source>
-        <target>Utente frontend</target>
+        <source>Member</source>
+        <target>Membro</target>
       </trans-unit>
       <trans-unit id="MSC.backToTop">
         <source>Back to top</source>
@@ -1354,6 +1374,10 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
         <target>Torna alla pagina iniziale del backend</target>
+      </trans-unit>
+      <trans-unit id="MSC.burgerTitle">
+        <source>Toggle navigation</source>
+        <target>Modifica navigazione</target>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
@@ -1466,6 +1490,10 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
         <target>Salva e aggiungi nuovo elemento</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveNduplicate">
+        <source>Save and duplicate</source>
+        <target>Salva e duplica</target>
       </trans-unit>
       <trans-unit id="MSC.continue">
         <source>Continue</source>
@@ -1839,9 +1867,9 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <source>Help wizard</source>
         <target>Aiuto guidato</target>
       </trans-unit>
-      <trans-unit id="MSC.noCookies">
-        <source>You have to allow cookies to use Contao.</source>
-        <target>Occorre abilitare i cookie per poter utilizzare Contao.</target>
+      <trans-unit id="MSC.jsDisabled">
+        <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
+        <target>JavaScript sembra essere disattivato nel tuo browser. Il back-end di Contao non funzionerà correttamente senza JavaScript.</target>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -2310,6 +2338,30 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       <trans-unit id="COLS.footer">
         <source>Footer</source>
         <target>Piè pagina</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.top">
+        <source>Before the wrapper</source>
+        <target>Prima del wrapper</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.before">
+        <source>After the page header</source>
+        <target>Dopo l'intestazione della pagina</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.main">
+        <source>Inside the main column</source>
+        <target>Nella colonna principale</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.after">
+        <source>Before the page footer</source>
+        <target>Prima del piè pagina</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.bottom">
+        <source>After the wrapper</source>
+        <target>Dopo il wrapper</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.manual">
+        <source>Manual output</source>
+        <target>Output manuale</target>
       </trans-unit>
     </body>
   </file>

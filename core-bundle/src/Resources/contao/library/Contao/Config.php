@@ -498,6 +498,14 @@ class Config
 			return;
 		}
 
+		if ($container->hasParameter('contao.localconfig') && is_array($params = $container->getParameter('contao.localconfig')))
+		{
+			foreach ($params as $key=>$value)
+			{
+				$GLOBALS['TL_CONFIG'][$key] = $value;
+			}
+		}
+
 		$arrMap = array
 		(
 			'dbHost'           => 'database_host',
@@ -524,6 +532,16 @@ class Config
 			{
 				$GLOBALS['TL_CONFIG'][$strKey] = $container->getParameter($strParam);
 			}
+		}
+
+		if ($container->hasParameter('contao.image.valid_extensions'))
+		{
+			$GLOBALS['TL_CONFIG']['validImageTypes'] = implode(',', $container->getParameter('contao.image.valid_extensions'));
+		}
+
+		if ($container->hasParameter('contao.image.imagine_options'))
+		{
+			$GLOBALS['TL_CONFIG']['jpgQuality'] = $container->getParameter('contao.image.imagine_options')['jpeg_quality'];
 		}
 	}
 
