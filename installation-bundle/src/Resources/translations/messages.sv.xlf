@@ -350,6 +350,14 @@
         <target>Du behöver minst Contao 3.2 för att kunna uppgradera till Contao 4.</target>
         
       </trans-unit>
+      <trans-unit id="71">
+        <source>database_name_error</source>
+        
+      </trans-unit>
+      <trans-unit id="72">
+        <source>console_explanation</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

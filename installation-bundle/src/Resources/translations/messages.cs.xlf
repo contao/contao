@@ -351,6 +351,14 @@
         <target>Musíte mít přinejmenším Contao 3.2, abyste mohli aktualizovat na Contao 4.</target>
         
       </trans-unit>
+      <trans-unit id="71">
+        <source>database_name_error</source>
+        
+      </trans-unit>
+      <trans-unit id="72">
+        <source>console_explanation</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

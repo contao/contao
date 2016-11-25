@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>由于安全原因，连续输入超过3次错误密码安装工具会被锁定，请在命令行中运行&lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt;来解除锁定。</target>
+        <target>由于安全原因，连续输入超过3次错误密码安装工具会被锁定，请在命令行中运行&lt;code&gt;bin/console doctrine:cache:clear contao.cache&lt;/code&gt;来解除锁定。</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -28,7 +28,7 @@
       </trans-unit>
       <trans-unit id="6">
         <source>file_permissions_explanation</source>
-        <target>您的服务器不支持通过PHP访问文件; 最有可能的情况是PHP作为Apache模块运行在不同用户，请联系服务器管理员来修复问题。</target>
+        <target>您的服务器不支持通过PHP存取文件; 最有可能的情况是PHP作为Apache模块运行在不同用户下，请联系服务器管理员来修复问题。</target>
         
       </trans-unit>
       <trans-unit id="7">
@@ -348,7 +348,15 @@
       </trans-unit>
       <trans-unit id="70">
         <source>old_database_explanation</source>
-        <target>至少需要升级Contao从3.2到4.</target>
+        <target>至少需要升级Contao从版本3.2到版本4.</target>
+        
+      </trans-unit>
+      <trans-unit id="71">
+        <source>database_name_error</source>
+        
+      </trans-unit>
+      <trans-unit id="72">
+        <source>console_explanation</source>
         
       </trans-unit>
     </body>

@@ -19,10 +19,14 @@ use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
+use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
@@ -63,9 +67,11 @@ class InstallationController implements ContainerAwareInterface
             $this->container->get('contao.framework')->initialize();
         }
 
-        $installTool = $this->container->get('contao.install_tool');
+        if (null !== ($response = $this->runPostInstallCommands())) {
+            return $response;
+        }
 
-        $this->runPostInstallCommands();
+        $installTool = $this->container->get('contao.install_tool');
 
         if ($installTool->isLocked()) {
             return $this->render('locked.html.twig');
@@ -79,8 +85,6 @@ class InstallationController implements ContainerAwareInterface
             return $this->acceptLicense();
         }
 
-        $installTool->createLocalConfigurationFiles();
-
         if ('' === $installTool->getConfig('installPassword')) {
             return $this->setPassword();
         }
@@ -91,7 +95,7 @@ class InstallationController implements ContainerAwareInterface
 
         $this->purgeSymfonyCache();
 
-        if (!$installTool->canConnectToDatabase($this->container->getParameter('database_name'))) {
+        if (!$installTool->canConnectToDatabase($this->getContainerParameter('database_name'))) {
             return $this->setUpDatabaseConnection();
         }
 
@@ -118,29 +122,64 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Runs the post install commands.
+     *
+     * @return Response|null
      */
-    private function runPostInstallCommands()
+    public function runPostInstallCommands()
     {
-        $rootDir = $this->container->getParameter('kernel.root_dir');
+        $rootDir = $this->getContainerParameter('kernel.root_dir');
 
-        if (is_dir($rootDir.'/../files') && is_link($rootDir.'/../web/assets')) {
-            return;
+        $response = $this->runCommand(
+            new AssetsInstallCommand(),
+            new ArgvInput(['assets:install', '--relative', $rootDir.'/../web'])
+        );
+
+        if (null !== $response) {
+            return $response;
         }
 
-        // Install the bundle assets
-        $command = new AssetsInstallCommand();
-        $command->setContainer($this->container);
-        $command->run(new ArgvInput(['assets:install', '--relative', $rootDir.'/../web']), new NullOutput());
-
         // Add the Contao directories
-        $command = new InstallCommand();
-        $command->setContainer($this->container);
-        $command->run(new ArgvInput([]), new NullOutput());
+        if (null !== ($response = $this->runCommand(new InstallCommand()))) {
+            return $response;
+        }
 
         // Generate the symlinks
-        $command = new SymlinksCommand();
+        if (null !== ($response = $this->runCommand(new SymlinksCommand()))) {
+            return $response;
+        }
+
+        // Build the bootstrap.php.cache file
+        ScriptHandler::doBuildBootstrap($this->getContainerParameter('kernel.cache_dir').'/../..');
+
+        return null;
+    }
+
+    /**
+     * Runs a command and returns a response if there was an error.
+     *
+     * @param ContainerAwareCommand $command
+     * @param InputInterface|null   $input
+     *
+     * @return Response|null
+     */
+    private function runCommand(ContainerAwareCommand $command, InputInterface $input = null)
+    {
+        if (null === $input) {
+            $input = new ArgvInput([]);
+        }
+
+        $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
+
         $command->setContainer($this->container);
-        $command->run(new ArgvInput([]), new NullOutput());
+        $status = $command->run($input, $output);
+
+        if ($status > 0) {
+            return $this->render('console.html.twig', [
+                'output' => $output->fetch(),
+            ]);
+        }
+
+        return null;
     }
 
     /**
@@ -240,12 +279,12 @@ class InstallationController implements ContainerAwareInterface
     private function purgeSymfonyCache()
     {
         $fs = new Filesystem();
-        $rootDir = $this->container->getParameter('kernel.root_dir');
+        $cacheDir = $this->getContainerParameter('kernel.cache_dir');
 
         $finder = Finder::create()
             ->directories()
             ->depth('==0')
-            ->in($rootDir.'/cache')
+            ->in($cacheDir.'/..')
         ;
 
         foreach ($finder as $dir) {
@@ -260,14 +299,15 @@ class InstallationController implements ContainerAwareInterface
      */
     private function setUpDatabaseConnection()
     {
+        $parameters = [];
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
         $parameters['parameters'] = [
-            'database_host' => $this->container->getParameter('database_host'),
-            'database_port' => $this->container->getParameter('database_port'),
-            'database_user' => $this->container->getParameter('database_user'),
-            'database_password' => $this->container->getParameter('database_password'),
-            'database_name' => $this->container->getParameter('database_name'),
+            'database_host' => $this->getContainerParameter('database_host'),
+            'database_port' => $this->getContainerParameter('database_port'),
+            'database_user' => $this->getContainerParameter('database_user'),
+            'database_password' => $this->getContainerParameter('database_password'),
+            'database_name' => $this->getContainerParameter('database_name'),
         ];
 
         if ('tl_database_login' !== $request->request->get('FORM_SUBMIT')) {
@@ -278,7 +318,7 @@ class InstallationController implements ContainerAwareInterface
             'database_host' => $request->request->get('dbHost'),
             'database_port' => $request->request->get('dbPort'),
             'database_user' => $request->request->get('dbUser'),
-            'database_password' => $this->container->getParameter('database_password'),
+            'database_password' => $this->getContainerParameter('database_password'),
             'database_name' => $request->request->get('dbName'),
         ];
 
@@ -303,7 +343,7 @@ class InstallationController implements ContainerAwareInterface
             ));
         }
 
-        $dumper = new ParameterDumper($this->container->getParameter('kernel.root_dir'));
+        $dumper = new ParameterDumper($this->getContainerParameter('kernel.root_dir'));
         $dumper->setParameters($parameters);
         $dumper->dump();
 
@@ -474,7 +514,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         // Validate the e-mail address (see #6003)
-        if ($email !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) !== $email) {
             $this->context['admin_email_error'] = $this->trans('admin_error_email');
 
             return null;
@@ -599,8 +639,24 @@ class InstallationController implements ContainerAwareInterface
 
         return $this->container
             ->get('security.csrf.token_manager')
-            ->getToken($this->container->getParameter('contao.csrf_token_name'))
+            ->getToken($this->getContainerParameter('contao.csrf_token_name'))
             ->getValue()
         ;
+    }
+
+    /**
+     * Returns a parameter from the container.
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    private function getContainerParameter($name)
+    {
+        if ($this->container->hasParameter($name)) {
+            return $this->container->getParameter($name);
+        }
+
+        return null;
     }
 }

@@ -75,22 +75,6 @@ class InstallTool
     }
 
     /**
-     * Creates the local configuration files if they do not yet exist.
-     */
-    public function createLocalConfigurationFiles()
-    {
-        // The localconfig.php file is created by the Config class
-        foreach (['dcaconfig', 'initconfig', 'langconfig'] as $file) {
-            if (!file_exists($this->rootDir.'/../system/config/'.$file.'.php')) {
-                file_put_contents(
-                    $this->rootDir.'/../system/config/'.$file.'.php',
-                    '<?php'."\n\n// Put your custom configuration here\n"
-                );
-            }
-        }
-    }
-
-    /**
      * Checks if the license has been accepted.
      *
      * @return bool
@@ -173,7 +157,7 @@ class InstallTool
      */
     public function hasTable($name)
     {
-        return $this->connection->getSchemaManager()->tablesExist($name);
+        return $this->connection->getSchemaManager()->tablesExist([$name]);
     }
 
     /**
@@ -189,11 +173,7 @@ class InstallTool
 
         $statement = $this->connection->query('SELECT COUNT(*) AS count FROM tl_page');
 
-        if ($statement->fetch(\PDO::FETCH_OBJ)->count < 1) {
-            return true;
-        }
-
-        return false;
+        return $statement->fetch(\PDO::FETCH_OBJ)->count < 1;
     }
 
     /**

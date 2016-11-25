@@ -67,6 +67,7 @@ class InstallationKernel extends \AppKernel
     {
         return file_exists($this->getRootDir().'/config/parameters.yml')
             && file_exists($this->getRootDir().'/../system/config/localconfig.php')
+            && file_exists($this->getRootDir().'/../var/bootstrap.php.cache')
         ;
     }
 
@@ -85,9 +86,8 @@ class InstallationKernel extends \AppKernel
 
         $controller = new InstallationController();
         $controller->setContainer($this->getContainer());
-        $response = $controller->installAction();
 
-        return $response;
+        return $controller->installAction();
     }
 
     /**
@@ -124,7 +124,8 @@ class InstallationKernel extends \AppKernel
         $routes->add('contao_install', new Route('/contao/install'));
 
         $context = new RequestContext();
-        $context->fromRequest(Request::createFromGlobals());
+        $context->fromRequest($this->request);
+        $context->setBaseUrl('');
 
         return str_replace('/install.php/', '/', (new UrlGenerator($routes, $context))->generate('contao_install'));
     }

@@ -19,6 +19,7 @@ use Contao\InstallationBundle\InstallTool;
 use Contao\InstallationBundle\InstallToolUser;
 use Contao\InstallationBundle\Translation\LanguageResolver;
 use Doctrine\Common\Cache\FilesystemCache;
+use SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -48,23 +49,29 @@ class ContainerFactory
     public static function create(KernelInterface $kernel, Request $request)
     {
         $rootDir = $kernel->getRootDir();
-        $container = new ContainerBuilder();
+        $cacheDir = dirname($rootDir).'/var/cache/'.$kernel->getEnvironment();
+        $logsDir = dirname($rootDir).'/var/logs';
 
-        // Set up the kernel parameters
+        $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $rootDir);
-        $container->setParameter('kernel.cache_dir', $rootDir.'/cache/install');
+        $container->setParameter('kernel.cache_dir', $cacheDir);
+        $container->setParameter('kernel.logs_dir', $logsDir);
         $container->setParameter('kernel.debug', false);
+
+        $parameters = [];
 
         // Load the parameters.yml file
         if (file_exists($rootDir.'/config/parameters.yml')) {
             $parameters = Yaml::parse(file_get_contents($rootDir.'/config/parameters.yml'));
-        } else {
+        } elseif (file_exists($rootDir.'/config/parameters.yml.dist')) {
             $parameters = Yaml::parse(file_get_contents($rootDir.'/config/parameters.yml.dist'));
         }
 
         // Add the parameters to the container
-        foreach ($parameters['parameters'] as $name => $value) {
-            $container->setParameter($name, $value);
+        if (!empty($parameters['parameters'])) {
+            foreach ($parameters['parameters'] as $name => $value) {
+                $container->setParameter($name, $value);
+            }
         }
 
         // Add the Contao parameters
@@ -114,6 +121,7 @@ class ContainerFactory
         $twigLoader->addPath(__DIR__.'/../Resources/views', 'ContaoInstallation');
 
         $twig = new \Twig_Environment($twigLoader);
+        $twig->addExtension(new AnsiExtension());
 
         $twig->addFunction(new \Twig_SimpleFunction('asset', function ($path) use ($request) {
             return '/'.ltrim($request->getBasePath().'/'.$path, '/');
@@ -156,7 +164,7 @@ class ContainerFactory
         // Add the Contao cache
         $container->set(
             'contao.cache',
-            new FilesystemCache($rootDir.'/cache/install/contao/cache', '', 0022)
+            new FilesystemCache($cacheDir.'/contao/cache', '', 0022)
         );
 
         // Add the installer services

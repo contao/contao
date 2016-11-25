@@ -16,7 +16,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, run &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt; on the command line.</target>
+        <target>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, run &lt;code&gt;bin/console doctrine:cache:clear contao.cache&lt;/code&gt; on the command line.</target>
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
@@ -285,6 +285,10 @@
       <trans-unit id="71">
         <source>database_name_error</source>
         <target>Please enter only the following characters: A-Za-z0-9$_</target>
+      </trans-unit>
+      <trans-unit id="72">
+        <source>console_explanation</source>
+        <target>A post installation task could not be completed!</target>
       </trans-unit>
     </body>
   </file>
