@@ -351,6 +351,15 @@
         <target>Vous devez avoir au moins Contao 3.2 pour effectuer une mise à niveau vers Contao 4.</target>
         
       </trans-unit>
+      <trans-unit id="71">
+        <source>database_name_error</source>
+        <target>Veuillez saisir uniquement les caractères suivants : A-Za-z0-9$_</target>
+        
+      </trans-unit>
+      <trans-unit id="72">
+        <source>console_explanation</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

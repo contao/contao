@@ -50,23 +50,28 @@ class ContainerFactory
     {
         $rootDir = $kernel->getRootDir();
         $cacheDir = dirname($rootDir).'/var/cache/'.$kernel->getEnvironment();
-        $container = new ContainerBuilder();
+        $logsDir = dirname($rootDir).'/var/logs';
 
-        // Set up the kernel parameters
+        $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $rootDir);
         $container->setParameter('kernel.cache_dir', $cacheDir);
+        $container->setParameter('kernel.logs_dir', $logsDir);
         $container->setParameter('kernel.debug', false);
+
+        $parameters = [];
 
         // Load the parameters.yml file
         if (file_exists($rootDir.'/config/parameters.yml')) {
             $parameters = Yaml::parse(file_get_contents($rootDir.'/config/parameters.yml'));
-        } else {
+        } elseif (file_exists($rootDir.'/config/parameters.yml.dist')) {
             $parameters = Yaml::parse(file_get_contents($rootDir.'/config/parameters.yml.dist'));
         }
 
         // Add the parameters to the container
-        foreach ($parameters['parameters'] as $name => $value) {
-            $container->setParameter($name, $value);
+        if (!empty($parameters['parameters'])) {
+            foreach ($parameters['parameters'] as $name => $value) {
+                $container->setParameter($name, $value);
+            }
         }
 
         // Add the Contao parameters

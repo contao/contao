@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>Zaradi varnostnih razlogov je bilo namestitveno orodje zakljenjeno zaradi vnosa napačnega gesla več kot trikrat zapovrstjo. Za odklep zaženite &lt;code&gt;app/console doctrine:cache:clear contato.cache&lt;/code&gt; v ukazni vrstici.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -348,6 +349,16 @@
       <trans-unit id="70">
         <source>old_database_explanation</source>
         <target>Potrebujete najmanj Contao 3.2 za nadgradnjo v Contao 4.</target>
+        
+      </trans-unit>
+      <trans-unit id="71">
+        <source>database_name_error</source>
+        <target>Prosimo vnesite le sledeče znake: A-Za-z0-9$_</target>
+        
+      </trans-unit>
+      <trans-unit id="72">
+        <source>console_explanation</source>
+        <target>Naloge po zaključku namestitve ni bilo mogoče dokončati.</target>
         
       </trans-unit>
     </body>

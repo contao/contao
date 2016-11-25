@@ -95,7 +95,7 @@ class InstallationController implements ContainerAwareInterface
 
         $this->purgeSymfonyCache();
 
-        if (!$installTool->canConnectToDatabase($this->container->getParameter('database_name'))) {
+        if (!$installTool->canConnectToDatabase($this->getContainerParameter('database_name'))) {
             return $this->setUpDatabaseConnection();
         }
 
@@ -127,7 +127,7 @@ class InstallationController implements ContainerAwareInterface
      */
     public function runPostInstallCommands()
     {
-        $rootDir = $this->container->getParameter('kernel.root_dir');
+        $rootDir = $this->getContainerParameter('kernel.root_dir');
 
         $response = $this->runCommand(
             new AssetsInstallCommand(),
@@ -149,7 +149,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         // Build the bootstrap.php.cache file
-        ScriptHandler::doBuildBootstrap($this->container->getParameter('kernel.cache_dir').'/../..');
+        ScriptHandler::doBuildBootstrap($this->getContainerParameter('kernel.cache_dir').'/../..');
 
         return null;
     }
@@ -279,7 +279,7 @@ class InstallationController implements ContainerAwareInterface
     private function purgeSymfonyCache()
     {
         $fs = new Filesystem();
-        $cacheDir = $this->container->getParameter('kernel.cache_dir');
+        $cacheDir = $this->getContainerParameter('kernel.cache_dir');
 
         $finder = Finder::create()
             ->directories()
@@ -303,11 +303,11 @@ class InstallationController implements ContainerAwareInterface
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
         $parameters['parameters'] = [
-            'database_host' => $this->container->getParameter('database_host'),
-            'database_port' => $this->container->getParameter('database_port'),
-            'database_user' => $this->container->getParameter('database_user'),
-            'database_password' => $this->container->getParameter('database_password'),
-            'database_name' => $this->container->getParameter('database_name'),
+            'database_host' => $this->getContainerParameter('database_host'),
+            'database_port' => $this->getContainerParameter('database_port'),
+            'database_user' => $this->getContainerParameter('database_user'),
+            'database_password' => $this->getContainerParameter('database_password'),
+            'database_name' => $this->getContainerParameter('database_name'),
         ];
 
         if ('tl_database_login' !== $request->request->get('FORM_SUBMIT')) {
@@ -318,9 +318,16 @@ class InstallationController implements ContainerAwareInterface
             'database_host' => $request->request->get('dbHost'),
             'database_port' => $request->request->get('dbPort'),
             'database_user' => $request->request->get('dbUser'),
-            'database_password' => $this->container->getParameter('database_password'),
+            'database_password' => $this->getContainerParameter('database_password'),
             'database_name' => $request->request->get('dbName'),
         ];
+
+        if (!preg_match('/^[A-Za-z0-9$_]+$/', $request->request->get('dbName'))) {
+            return $this->render('database.html.twig', array_merge(
+                $parameters,
+                ['database_name_error' => $this->trans('database_name_error')]
+            ));
+        }
 
         if ('*****' !== $request->request->get('dbPassword')) {
             $parameters['parameters']['database_password'] = $request->request->get('dbPassword');
@@ -336,7 +343,7 @@ class InstallationController implements ContainerAwareInterface
             ));
         }
 
-        $dumper = new ParameterDumper($this->container->getParameter('kernel.root_dir'));
+        $dumper = new ParameterDumper($this->getContainerParameter('kernel.root_dir'));
         $dumper->setParameters($parameters);
         $dumper->dump();
 
@@ -632,8 +639,24 @@ class InstallationController implements ContainerAwareInterface
 
         return $this->container
             ->get('security.csrf.token_manager')
-            ->getToken($this->container->getParameter('contao.csrf_token_name'))
+            ->getToken($this->getContainerParameter('contao.csrf_token_name'))
             ->getValue()
         ;
+    }
+
+    /**
+     * Returns a parameter from the container.
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    private function getContainerParameter($name)
+    {
+        if ($this->container->hasParameter($name)) {
+            return $this->container->getParameter($name);
+        }
+
+        return null;
     }
 }

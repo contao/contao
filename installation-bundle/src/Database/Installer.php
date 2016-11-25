@@ -125,6 +125,7 @@ class Installer
 
                 case 0 === strpos($sql, 'CREATE INDEX '):
                 case 0 === strpos($sql, 'CREATE UNIQUE INDEX '):
+                case 0 === strpos($sql, 'CREATE FULLTEXT INDEX '):
                     $return['ALTER_ADD'][md5($sql)] = $sql;
                     break;
 
