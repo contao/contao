@@ -69,7 +69,7 @@ class InsertTagsListener
         $this->framework->initialize();
 
         /** @var FaqModel $adapter */
-        $adapter = $this->framework->getAdapter('Contao\FaqModel');
+        $adapter = $this->framework->getAdapter(FaqModel::class);
 
         $faq = $adapter->findByIdOrAlias($elements[1]);
 
@@ -97,7 +97,7 @@ class InsertTagsListener
         }
 
         /** @var Config $config */
-        $config = $this->framework->getAdapter('Contao\Config');
+        $config = $this->framework->getAdapter(Config::class);
 
         return $jumpTo->getFrontendUrl(($config->get('useAutoItem') ? '/' : '/items/').($faq->alias ?: $faq->id));
     }

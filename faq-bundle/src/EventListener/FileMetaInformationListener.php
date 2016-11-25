@@ -66,7 +66,7 @@ class FileMetaInformationListener
         $this->framework->initialize();
 
         /** @var FaqCategoryModel $categoryAdapter */
-        $categoryAdapter = $this->framework->getAdapter('Contao\FaqCategoryModel');
+        $categoryAdapter = $this->framework->getAdapter(FaqCategoryModel::class);
 
         if (null === ($categoryModel = $categoryAdapter->findByPk($id))) {
             return false;
