@@ -36,7 +36,7 @@ $legacyLoader = function ($class) {
         return;
     }
 
-    if (strpos($class, '\\') !== false && 0 !== strncmp($class, 'Contao\\', 7)) {
+    if (false !== strpos($class, '\\') && 0 !== strncmp($class, 'Contao\\', 7)) {
         return;
     }
 

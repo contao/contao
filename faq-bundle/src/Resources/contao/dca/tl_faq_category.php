@@ -168,6 +168,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 			'inputType'               => 'select',
 			'options'                 => array('notify_admin', 'notify_author', 'notify_both'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_faq_category'],
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
 		'sortOrder' => array
@@ -178,7 +179,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 			'inputType'               => 'select',
 			'options'                 => array('ascending', 'descending'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(12) NOT NULL default ''"
 		),
 		'perPage' => array

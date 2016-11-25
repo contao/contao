@@ -151,7 +151,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'sorting'                 => true,
 			'flag'                    => 1,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'long'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'alias' => array

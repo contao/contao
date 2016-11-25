@@ -3,11 +3,18 @@ shallow_clone: true
 platform: x86
 clone_folder: c:\projects\contao
 
+cache:
+  - '%LOCALAPPDATA%\Composer\files'
+
+init:
+  - SET PATH=c:\php;%PATH%
+  - SET SYMFONY_DEPRECATIONS_HELPER=weak
+
 install:
-  - cinst -y OpenSSL.Light
-  - SET PATH=C:\Program Files\OpenSSL;%PATH%
-  - cinst -y php
-  - cd c:\tools\php
+  - mkdir c:\php && cd c:\php
+  - appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-5.6.27-Win32-VC11-x86.zip
+  - 7z x php-5.6.27-Win32-VC11-x86.zip -y >nul
+  - del *.zip
   - copy php.ini-production php.ini
   - echo date.timezone="UTC" >> php.ini
   - echo extension_dir=ext >> php.ini
@@ -25,10 +32,9 @@ install:
   - echo extension=php_sockets.dll >> php.ini
   - echo extension=php_xmlrpc.dll >> php.ini
   - echo extension=php_xsl.dll >> php.ini
-  - SET PATH=c:\tools\php;%PATH%
   - cd c:\projects\contao
   - php -r "readfile('http://getcomposer.org/installer');" | php
-  - php composer.phar install --no-progress --no-interaction --ansi
+  - php composer.phar update --no-progress --no-interaction --ansi
 
 test_script:
   - cd c:\projects\contao
