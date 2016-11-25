@@ -107,7 +107,7 @@ class ScriptHandler
 
         $content = str_replace('../../../../', '../', file_get_contents($filePath));
 
-        if (file_put_contents($installTo, $content) > 0) {
+        if (@file_put_contents($installTo, $content) > 0) {
             @chmod($installTo, 0755);
             return;
         }
