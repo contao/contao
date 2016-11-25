@@ -11,7 +11,7 @@
 namespace Contao\NewsBundle\Test\ContaoManager;
 
 use Contao\NewsBundle\ContaoManager\Plugin;
-use Contao\ManagerBundle\ContaoManager\Bundle\Config\BundleConfig;
+use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 
 /**
  * Tests the Plugin class.
@@ -35,12 +35,12 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetBundles()
     {
-        $parser = $this->getMock('Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface');
+        $parser = $this->getMock('Contao\ManagerPlugin\Bundle\Parser\ParserInterface');
 
         /** @var BundleConfig $config */
         $config = (new Plugin())->getBundles($parser)[0];
 
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\Config\BundleConfig', $config);
+        $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\Config\BundleConfig', $config);
         $this->assertEquals('Contao\NewsBundle\ContaoNewsBundle', $config->getName());
         $this->assertEquals(['Contao\CoreBundle\ContaoCoreBundle'], $config->getLoadAfter());
         $this->assertEquals(['news'], $config->getReplace());

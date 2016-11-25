@@ -10,9 +10,9 @@
 
 namespace Contao\NewsBundle\ContaoManager;
 
-use Contao\ManagerBundle\ContaoManager\Bundle\Config\BundleConfig;
-use Contao\ManagerBundle\ContaoManager\Bundle\BundlePluginInterface;
-use Contao\ManagerBundle\ContaoManager\Bundle\Parser\ParserInterface;
+use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
+use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
+use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 
 /**
  * Plugin for the Contao Manager.
