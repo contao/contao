@@ -87,7 +87,7 @@ class InsertTagsListener
         $this->framework->initialize();
 
         /** @var CalendarFeedModel $adapter */
-        $adapter = $this->framework->getAdapter('Contao\CalendarFeedModel');
+        $adapter = $this->framework->getAdapter(CalendarFeedModel::class);
 
         if (null === ($feed = $adapter->findByPk($feedId))) {
             return '';
@@ -109,7 +109,7 @@ class InsertTagsListener
         $this->framework->initialize();
 
         /** @var CalendarEventsModel $adapter */
-        $adapter = $this->framework->getAdapter('Contao\CalendarEventsModel');
+        $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
         if (null === ($event = $adapter->findByIdOrAlias($idOrAlias))) {
             return '';
@@ -195,7 +195,7 @@ class InsertTagsListener
         }
 
         /** @var Config $config */
-        $config = $this->framework->getAdapter('Contao\Config');
+        $config = $this->framework->getAdapter(Config::class);
 
         return $targetPage->getFrontendUrl(
             ($config->get('useAutoItem') ? '/' : '/events/').($event->alias ?: $event->id)

@@ -71,7 +71,7 @@ class FileMetaInformationListener
         $this->framework->initialize();
 
         /** @var CalendarModel $calendarAdapter */
-        $calendarAdapter = $this->framework->getAdapter('Contao\CalendarModel');
+        $calendarAdapter = $this->framework->getAdapter(CalendarModel::class);
 
         if (null === ($calendarModel = $calendarAdapter->findByPk($id))) {
             return false;
@@ -95,7 +95,7 @@ class FileMetaInformationListener
         $this->framework->initialize();
 
         /** @var CalendarEventsModel $eventsAdapter */
-        $eventsAdapter = $this->framework->getAdapter('Contao\CalendarEventsModel');
+        $eventsAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
         if (null === ($eventsModel = $eventsAdapter->findByPk($id))) {
             return false;
