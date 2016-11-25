@@ -59,7 +59,7 @@ class GeneratePageListener
         $this->framework->initialize();
 
         /** @var NewsFeedModel $adapter */
-        $adapter = $this->framework->getAdapter('Contao\NewsFeedModel');
+        $adapter = $this->framework->getAdapter(NewsFeedModel::class);
 
         if (!(($feeds = $adapter->findByIds($newsfeeds)) instanceof Collection)) {
             return;
@@ -76,10 +76,10 @@ class GeneratePageListener
     private function addFeedMarkupToPageHeader(Collection $feeds)
     {
         /** @var Template $template */
-        $template = $this->framework->getAdapter('Contao\Template');
+        $template = $this->framework->getAdapter(Template::class);
 
         /** @var Environment $environment */
-        $environment = $this->framework->getAdapter('Contao\Environment');
+        $environment = $this->framework->getAdapter(Environment::class);
 
         foreach ($feeds as $feed) {
             $GLOBALS['TL_HEAD'][] = $template->generateFeedTag(

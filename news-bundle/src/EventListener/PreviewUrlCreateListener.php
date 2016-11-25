@@ -98,7 +98,7 @@ class PreviewUrlCreateListener
     private function getNewsModel($id)
     {
         /** @var NewsModel $adapter */
-        $adapter = $this->framework->getAdapter('Contao\NewsModel');
+        $adapter = $this->framework->getAdapter(NewsModel::class);
 
         return $adapter->findByPk($id);
     }

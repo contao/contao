@@ -64,7 +64,7 @@ class PreviewUrlConvertListener
         }
 
         /** @var News $newsAdapter */
-        $newsAdapter = $this->framework->getAdapter('Contao\News');
+        $newsAdapter = $this->framework->getAdapter(News::class);
 
         $event->setUrl($request->getSchemeAndHttpHost().'/'.$newsAdapter->generateNewsUrl($news));
     }
@@ -83,7 +83,7 @@ class PreviewUrlConvertListener
         }
 
         /** @var NewsModel $adapter */
-        $adapter = $this->framework->getAdapter('Contao\NewsModel');
+        $adapter = $this->framework->getAdapter(NewsModel::class);
 
         return $adapter->findByPk($request->query->get('news'));
     }
