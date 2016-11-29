@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.3.1 (2016-XX-XX)
+
+ * Correctly symlink the logs directory under Windows (see #634).
+
 ### 4.3.0 (2016-11-25)
 
  * Do not cache pages if a back end user is logged in (see #628).

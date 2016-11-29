@@ -108,10 +108,7 @@ class SymlinksCommand extends AbstractLockedCommand
         $this->symlink('system/themes', $this->webDir.'/system/themes');
 
         // Symlinks the logs directory
-        $this->symlink(
-            str_replace($this->rootDir.'/', '', $this->getContainer()->getParameter('kernel.logs_dir')),
-            'system/logs'
-        );
+        $this->symlink($this->getRelativePath($this->getContainer()->getParameter('kernel.logs_dir')), 'system/logs');
     }
 
     /**
@@ -151,7 +148,7 @@ class SymlinksCommand extends AbstractLockedCommand
         $themes = $this->getContainer()->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
-            $path = str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($theme->getPathname(), '\\', '/'));
+            $path = $this->getRelativePath($theme->getPathname());
 
             if (0 === strpos($path, 'system/modules/')) {
                 continue;
@@ -283,5 +280,17 @@ class SymlinksCommand extends AbstractLockedCommand
         }
 
         return array_values($files);
+    }
+
+    /**
+     * Returns the path relative to the root directory.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    private function getRelativePath($path)
+    {
+        return str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($path, '\\', '/'));
     }
 }
