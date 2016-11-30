@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 
 /**
  * Automatically loads template files based on a mapper array
@@ -132,15 +134,7 @@ class TemplateLoader
 
 		if (isset(self::$files[$template]))
 		{
-			$filesystem = \System::getContainer()->get('filesystem');
-
-			// Make the paths absolute (backwards compatibility)
-			if (!$filesystem->isAbsolutePath(self::$files[$template]))
-			{
-				return TL_ROOT . '/' . self::$files[$template];
-			}
-
-			return self::$files[$template] . '/' . $file;
+			return TL_ROOT . '/' . self::$files[$template] . '/' . $file;
 		}
 
 		$strPath = null;
@@ -169,6 +163,7 @@ class TemplateLoader
 	 */
 	public static function initialize()
 	{
+		$objFilesystem = new Filesystem();
 		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
 
 		// Try to load from cache
@@ -182,7 +177,7 @@ class TemplateLoader
 			{
 				foreach (\System::getContainer()->get('contao.resource_finder')->findIn('templates')->name('*.html5') as $file)
 				{
-					self::addFile($file->getBasename('.html5'), $file->getPath());
+					self::addFile($file->getBasename('.html5'), rtrim($objFilesystem->makePathRelative($file->getPath(), TL_ROOT), '/'));
 				}
 			}
 			catch (\InvalidArgumentException $e) {}
