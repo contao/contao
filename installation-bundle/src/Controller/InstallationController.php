@@ -148,8 +148,8 @@ class InstallationController implements ContainerAwareInterface
             return $response;
         }
 
-        // Build the bootstrap.php.cache file
-        ScriptHandler::doBuildBootstrap($this->getContainerParameter('kernel.cache_dir').'/../..');
+        // Build the bootstrap.php.cache file (use dirname() instead of ../../ here)
+        ScriptHandler::doBuildBootstrap(dirname(dirname($this->getContainerParameter('kernel.cache_dir'))));
 
         return null;
     }
