@@ -19,7 +19,6 @@ use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
-use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -147,9 +146,6 @@ class InstallationController implements ContainerAwareInterface
         if (null !== ($response = $this->runCommand(new SymlinksCommand()))) {
             return $response;
         }
-
-        // Build the bootstrap.php.cache file (use dirname() instead of ../../ here)
-        ScriptHandler::doBuildBootstrap(dirname(dirname($this->getContainerParameter('kernel.cache_dir'))));
 
         return null;
     }
