@@ -280,7 +280,7 @@ h2.sub_headline {
 	padding-right:3px;
 }
 .tl_panel .active,.tl_panel_bottom .active,#search .active {
-	background:#ffd;
+	background-color:#ffd;
 }
 .tl_filter {
 	width:100%;
