@@ -13,7 +13,6 @@ namespace Contao\ManagerBundle\Composer;
 use Composer\Composer;
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
-use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler as DistributionBundleScriptHandler;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -32,9 +31,6 @@ class ScriptHandler
     public static function initializeApplication(Event $event)
     {
         static::addAppDirectory();
-
-        DistributionBundleScriptHandler::doBuildBootstrap(getcwd() . '/var');
-
         static::addConsoleEntryPoint($event);
         static::addWebEntryPoints($event);
 
