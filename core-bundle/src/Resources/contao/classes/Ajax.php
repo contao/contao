@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\Response;
@@ -432,7 +433,15 @@ class Ajax extends \Backend
 
 			// DropZone file upload
 			case 'fileupload':
-				$dc->move();
+				try
+				{
+					$dc->move();
+				}
+				catch (AjaxRedirectResponseException $e)
+				{
+					// ignore the redirect (see #637)
+				}
+
 				throw new NoContentResponseException();
 
 			// HOOK: pass unknown actions to callback functions
