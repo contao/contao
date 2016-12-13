@@ -539,18 +539,20 @@ class Newsletter extends \Backend
 <input type="hidden" name="MAX_FILE_SIZE" value="'.\Config::get('maxFileSize').'">
 
 <fieldset class="tl_tbox nolegend">
-<div>
-  <h3><label for="separator">'.$GLOBALS['TL_LANG']['MSC']['separator'][0].'</label></h3>
-  <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
-    <option value="comma">'.$GLOBALS['TL_LANG']['MSC']['comma'].'</option>
-    <option value="semicolon">'.$GLOBALS['TL_LANG']['MSC']['semicolon'].'</option>
-    <option value="tabulator">'.$GLOBALS['TL_LANG']['MSC']['tabulator'].'</option>
-    <option value="linebreak">'.$GLOBALS['TL_LANG']['MSC']['linebreak'].'</option>
-  </select>'.(($GLOBALS['TL_LANG']['MSC']['separator'][1] != '') ? '
-  <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['separator'][1].'</p>' : '').'
-  <h3>'.$GLOBALS['TL_LANG']['MSC']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['MSC']['source'][1]) ? '
-  <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['source'][1].'</p>' : '').'
-</div>
+  <div class="widget w50">
+    <h3><label for="separator">'.$GLOBALS['TL_LANG']['MSC']['separator'][0].'</label></h3>
+    <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
+      <option value="comma">'.$GLOBALS['TL_LANG']['MSC']['comma'].'</option>
+      <option value="semicolon">'.$GLOBALS['TL_LANG']['MSC']['semicolon'].'</option>
+      <option value="tabulator">'.$GLOBALS['TL_LANG']['MSC']['tabulator'].'</option>
+      <option value="linebreak">'.$GLOBALS['TL_LANG']['MSC']['linebreak'].'</option>
+    </select>'.(($GLOBALS['TL_LANG']['MSC']['separator'][1] != '') ? '
+    <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['separator'][1].'</p>' : '').'
+  </div>
+  <div class="widget clr">
+    <h3>'.$GLOBALS['TL_LANG']['MSC']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['MSC']['source'][1]) ? '
+    <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['source'][1].'</p>' : '').'
+  </div>
 </fieldset>
 
 </div>
