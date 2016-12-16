@@ -318,13 +318,6 @@ class InstallationController implements ContainerAwareInterface
             'database_name' => $request->request->get('dbName'),
         ];
 
-        if (!preg_match('/^[A-Za-z0-9$_]+$/', $request->request->get('dbName'))) {
-            return $this->render('database.html.twig', array_merge(
-                $parameters,
-                ['database_name_error' => $this->trans('database_name_error')]
-            ));
-        }
-
         if ('*****' !== $request->request->get('dbPassword')) {
             $parameters['parameters']['database_password'] = $request->request->get('dbPassword');
         }
