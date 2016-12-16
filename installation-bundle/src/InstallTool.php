@@ -15,7 +15,6 @@ use Contao\Config;
 use Contao\Encryption;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Exception\ConnectionException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -133,7 +132,7 @@ class InstallTool
 
         try {
             $this->connection->connect();
-        } catch (ConnectionException $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
