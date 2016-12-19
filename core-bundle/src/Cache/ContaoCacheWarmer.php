@@ -116,8 +116,17 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
 
-        $dumper->dump($this->locator->locate('config/autoload.php', null, false), 'config/autoload.php');
-        $dumper->dump($this->locator->locate('config/config.php', null, false), 'config/config.php');
+        try {
+            $dumper->dump($this->locator->locate('config/autoload.php', null, false), 'config/autoload.php');
+        } catch (\InvalidArgumentException $e) {
+            // Ignore, no autoload.php existed in any bundle
+        }
+
+        try {
+            $dumper->dump($this->locator->locate('config/config.php', null, false), 'config/config.php');
+        } catch (\InvalidArgumentException $e) {
+            // Ignore, no config.php existed in any bundle
+        }
     }
 
     /**
