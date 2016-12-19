@@ -29,7 +29,7 @@ function log_message($strMessage, $strLog=null)
 		$strLog = 'prod-' . date('Y-m-d') . '.log';
 	}
 
-	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, TL_ROOT . '/app/logs/' . $strLog);
+	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, TL_ROOT . '/var/logs/' . $strLog);
 }
 
 
