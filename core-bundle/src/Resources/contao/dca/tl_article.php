@@ -649,6 +649,17 @@ class tl_article extends Backend
 					continue;
 				}
 
+				$arrCustom = StringUtil::deserialize($objLayout->sections);
+
+				// Add the custom layout sections
+				if (!empty($arrCustom) && is_array($arrCustom))
+				{
+					foreach ($arrCustom as $v)
+					{
+						$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
+					}
+				}
+
 				$arrModules = StringUtil::deserialize($objLayout->modules);
 
 				if (empty($arrModules) || !is_array($arrModules))
@@ -689,7 +700,16 @@ class tl_article extends Backend
 			}
 		}
 
-		return array_values(array_unique($arrSections));
+		$arrSections = array_flip(array_values(array_unique($arrSections)));
+
+		foreach (array_keys($arrSections) as $k)
+		{
+			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
+		}
+
+		asort($arrSections);
+
+		return $arrSections;
 	}
 
 

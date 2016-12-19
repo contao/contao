@@ -2,6 +2,7 @@
 
 ### 4.3.1 (2016-XX-XX)
 
+ * Always show the section title instead of its ID (see #640).
  * Correctly handle DropZone file uploads (see #637).
  * Fix the markup of the CSV importers (see #645).
  * Correctly symlink the logs directory under Windows (see #634).

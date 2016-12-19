@@ -894,7 +894,16 @@ class tl_module extends Backend
 			}
 		}
 
-		return array_values(array_unique($arrSections));
+		$arrSections = array_flip(array_values(array_unique($arrSections)));
+
+		foreach (array_keys($arrSections) as $k)
+		{
+			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
+		}
+
+		asort($arrSections);
+
+		return $arrSections;
 	}
 
 
