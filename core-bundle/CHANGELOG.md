@@ -2,6 +2,7 @@
 
 ### 4.3.1 (2016-XX-XX)
 
+ * Preserve uppercase characters in custom sections IDs (see #639).
  * Always show the section title instead of its ID (see #640).
  * Correctly handle DropZone file uploads (see #637).
  * Fix the markup of the CSV importers (see #645).
