@@ -185,9 +185,7 @@ if (!defined('TL_SCRIPT')) {
     die('Your script is not compatible with Contao 4.');
 }
 
-/**
- * @var Composer\Autoload\ClassLoader
- */
+/** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__ . '/../app/autoload.php';
 
 $kernel = new AppKernel('prod', false);
