@@ -119,13 +119,13 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         try {
             $dumper->dump($this->locator->locate('config/autoload.php', null, false), 'config/autoload.php');
         } catch (\InvalidArgumentException $e) {
-            // Ignore, no autoload.php existed in any bundle
+            // No autoload.php files found
         }
 
         try {
             $dumper->dump($this->locator->locate('config/config.php', null, false), 'config/config.php');
         } catch (\InvalidArgumentException $e) {
-            // Ignore, no config.php existed in any bundle
+            // No config.php files found
         }
     }
 
@@ -139,8 +139,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
         $processed = [];
 
-        /** @var SplFileInfo[] $files */
-        $files = $this->finder->findIn('dca')->files()->name('*.php');
+        try {
+            /** @var SplFileInfo[] $files */
+            $files = $this->finder->findIn('dca')->files()->name('*.php');
+        } catch (\InvalidArgumentException $e) {
+            return; // no DCA files found
+        }
 
         foreach ($files as $file) {
             if (in_array($file->getBasename(), $processed)) {
@@ -214,8 +218,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $processed = [];
 
-        /** @var SplFileInfo[] $files */
-        $files = $this->finder->findIn('dca')->files()->name('*.php');
+        try {
+            /** @var SplFileInfo[] $files */
+            $files = $this->finder->findIn('dca')->files()->name('*.php');
+        } catch (\InvalidArgumentException $e) {
+            return; // no DCA files found
+        }
 
         foreach ($files as $file) {
             if (in_array($file->getBasename(), $processed)) {
