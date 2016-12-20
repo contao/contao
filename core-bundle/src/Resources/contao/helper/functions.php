@@ -29,7 +29,19 @@ function log_message($strMessage, $strLog=null)
 		$strLog = 'prod-' . date('Y-m-d') . '.log';
 	}
 
-	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, TL_ROOT . '/var/logs/' . $strLog);
+	$strLogsDir = null;
+
+	if (($container = System::getContainer()) !== null)
+	{
+		$strLogsDir = $container->getParameter('kernel.logs_dir');
+	}
+
+	if (!$strLogsDir)
+	{
+		$strLogsDir = TL_ROOT . '/var/logs';
+	}
+
+	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, $strLogsDir . '/' . $strLog);
 }
 
 
