@@ -274,7 +274,7 @@ class Newsletter extends \Backend
 <div class="w50 widget">
   <h3><label for="ctrl_start">' . $GLOBALS['TL_LANG']['tl_newsletter']['start'][0] . '</label></h3>
   <input type="text" name="start" id="ctrl_start" value="0" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['start'][1] && \Config::get('showHelp')) ? '
-  <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['start'][1] . '</p>' : '') . '
+  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_newsletter']['start'][1], $objNewsletter->id) . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
