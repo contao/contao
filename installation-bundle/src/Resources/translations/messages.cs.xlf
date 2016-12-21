@@ -352,11 +352,8 @@
         
       </trans-unit>
       <trans-unit id="71">
-        <source>database_name_error</source>
-        
-      </trans-unit>
-      <trans-unit id="72">
         <source>console_explanation</source>
+        <target>Bohužel nemůže být provedena jedna z instalačních úloh!</target>
         
       </trans-unit>
     </body>

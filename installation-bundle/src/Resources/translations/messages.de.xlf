@@ -352,11 +352,6 @@
         
       </trans-unit>
       <trans-unit id="71">
-        <source>database_name_error</source>
-        <target>Bitte geben Sie nur folgende Zeichen ein: A-Za-z0-9$_</target>
-        
-      </trans-unit>
-      <trans-unit id="72">
         <source>console_explanation</source>
         <target>Eine Installationsaufgabe konnte nicht abgeschlossen werden!</target>
         
