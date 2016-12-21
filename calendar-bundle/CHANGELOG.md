@@ -1,5 +1,10 @@
 # Contao calendar bundle change log
 
+### 4.3.1 (2016-12-21)
+
+ * Add the missing w50 classes.
+ * Correctly show running repeated events in the event list (see contao/core#8588).
+
 ### 4.3.0 (2016-11-25)
 
  * Only evaluate `hasDetails()` and `hasText()` upon the first call.
