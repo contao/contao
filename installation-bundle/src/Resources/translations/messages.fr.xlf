@@ -352,12 +352,8 @@
         
       </trans-unit>
       <trans-unit id="71">
-        <source>database_name_error</source>
-        <target>Veuillez saisir uniquement les caractères suivants : A-Za-z0-9$_</target>
-        
-      </trans-unit>
-      <trans-unit id="72">
         <source>console_explanation</source>
+        <target>Une tâche de post-installation n'a pas pu être terminée !</target>
         
       </trans-unit>
     </body>

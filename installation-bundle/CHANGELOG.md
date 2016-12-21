@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### 1.2.1 (2016-XX-XX)
+### 1.2.1 (2016-12-21)
 
  * Do not restrict the database name characters (see contao/core-bundle#593).
  * Do not check for the bootstrap.php.cache file (see #47).
