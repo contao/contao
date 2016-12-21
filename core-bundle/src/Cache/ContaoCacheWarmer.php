@@ -21,6 +21,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
@@ -302,11 +303,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * Locates a file.
+     * Returns the config files.
      *
      * @param string $name
      *
-     * @return array
+     * @return string|array
      */
     private function findConfigFiles($name)
     {
@@ -320,7 +321,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Returns the DCA files.
      *
-     * @return SplFileInfo[]
+     * @return Finder|SplFileInfo[]
      */
     private function findDcaFiles()
     {
@@ -336,7 +337,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      *
      * @param string $language
      *
-     * @return SplFileInfo[]
+     * @return Finder|SplFileInfo[]
      */
     private function findLanguageFiles($language)
     {
@@ -350,7 +351,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Returns the template files.
      *
-     * @return SplFileInfo[]
+     * @return Finder|SplFileInfo[]
      */
     private function findTemplateFiles()
     {
