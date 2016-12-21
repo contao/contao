@@ -12,9 +12,11 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
 use Patchwork\Utf8;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -1085,6 +1087,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				if (empty($arrUploaded) && !$objUploader->hasError())
 				{
+					if ($blnIsAjax)
+					{
+						throw new ResponseException(new Response($GLOBALS['TL_LANG']['ERR']['emptyUpload'], 400));
+					}
+
 					\Message::addError($GLOBALS['TL_LANG']['ERR']['emptyUpload']);
 					$this->reload();
 				}
@@ -1126,6 +1133,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Redirect or reload
 			if (!$objUploader->hasError())
 			{
+				if ($blnIsAjax)
+				{
+					throw new ResponseException(new Response(\Message::generateUnwrapped(), 201));
+				}
+
 				// Do not purge the html folder (see #2898)
 				if (isset($_POST['uploadNback']) && !$objUploader->hasResized())
 				{
