@@ -116,17 +116,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
 
-        try {
-            $dumper->dump($this->locator->locate('config/autoload.php', null, false), 'config/autoload.php');
-        } catch (\InvalidArgumentException $e) {
-            // No autoload.php files found
-        }
-
-        try {
-            $dumper->dump($this->locator->locate('config/config.php', null, false), 'config/config.php');
-        } catch (\InvalidArgumentException $e) {
-            // No config.php files found
-        }
+        $dumper->dump($this->findConfigFiles('autoload.php'), 'config/autoload.php');
+        $dumper->dump($this->findConfigFiles('config.php'), 'config/config.php');
     }
 
     /**
@@ -138,13 +129,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
         $processed = [];
-
-        try {
-            /** @var SplFileInfo[] $files */
-            $files = $this->finder->findIn('dca')->files()->name('*.php');
-        } catch (\InvalidArgumentException $e) {
-            return; // no DCA files found
-        }
+        $files = $this->findDcaFiles();
 
         foreach ($files as $file) {
             if (in_array($file->getBasename(), $processed)) {
@@ -177,14 +162,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         foreach ($this->getLanguagesInUse() as $language) {
             $processed = [];
+            $files = $this->findLanguageFiles($language);
 
-            try {
-                $files = $this->finder->findIn('languages/'.$language)->files()->name('/\.(php|xlf)$/');
-            } catch (\InvalidArgumentException $e) {
-                continue; // the language does not exist
-            }
-
-            /** @var SplFileInfo[] $files */
             foreach ($files as $file) {
                 $name = substr($file->getBasename(), 0, -4);
 
@@ -217,13 +196,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private function generateDcaExtracts($cacheDir)
     {
         $processed = [];
-
-        try {
-            /** @var SplFileInfo[] $files */
-            $files = $this->finder->findIn('dca')->files()->name('*.php');
-        } catch (\InvalidArgumentException $e) {
-            return; // no DCA files found
-        }
+        $files = $this->findDcaFiles();
 
         foreach ($files as $file) {
             if (in_array($file->getBasename(), $processed)) {
@@ -261,12 +234,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private function generateTemplateMapper($cacheDir)
     {
         $mapper = [];
-
-        try {
-            $files = $this->finder->findIn('templates')->name('*.html5');
-        } catch (\InvalidArgumentException $e) {
-            $files = [];
-        }
+        $files = $this->findTemplateFiles();
 
         foreach ($files as $file) {
             $mapper[$file->getBasename('.html5')] = rtrim(
@@ -331,5 +299,65 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
 
         return true;
+    }
+
+    /**
+     * Locates a file.
+     *
+     * @param string $name
+     *
+     * @return array
+     */
+    private function findConfigFiles($name)
+    {
+        try {
+            return $this->locator->locate('config/'.$name, null, false);
+        } catch (\InvalidArgumentException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Returns the DCA files.
+     *
+     * @return SplFileInfo[]
+     */
+    private function findDcaFiles()
+    {
+        try {
+            return $this->finder->findIn('dca')->files()->name('*.php');
+        } catch (\InvalidArgumentException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Returns the language files.
+     *
+     * @param string $language
+     *
+     * @return SplFileInfo[]
+     */
+    private function findLanguageFiles($language)
+    {
+        try {
+            return $this->finder->findIn('languages/'.$language)->files()->name('/\.(php|xlf)$/');
+        } catch (\InvalidArgumentException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Returns the template files.
+     *
+     * @return SplFileInfo[]
+     */
+    private function findTemplateFiles()
+    {
+        try {
+            return $this->finder->findIn('templates')->name('*.html5');
+        } catch (\InvalidArgumentException $e) {
+            return [];
+        }
     }
 }
