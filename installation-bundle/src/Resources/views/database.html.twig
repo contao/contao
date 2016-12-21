@@ -21,9 +21,6 @@
           <h4><label for="dbPassword">{{ 'database_password'|trans }}</label></h4>
           <input type="password" name="dbPassword" id="dbPassword" class="tl_text" value="{% if parameters.database_password %}*****{% endif %}">
           <h4><label for="dbName">{{ 'database_name'|trans }}</label></h4>
-          {% if database_name_error %}
-            <p class="tl_error">{{ database_name_error }}</p>
-          {% endif %}
           <input type="text" name="dbName" id="dbName" class="tl_text" value="{{ parameters.database_name }}">
         </div>
         <div class="tl_formbody_submit">

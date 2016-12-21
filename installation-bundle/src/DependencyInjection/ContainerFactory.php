@@ -49,8 +49,8 @@ class ContainerFactory
     public static function create(KernelInterface $kernel, Request $request)
     {
         $rootDir = $kernel->getRootDir();
-        $cacheDir = dirname($rootDir).'/var/cache/'.$kernel->getEnvironment();
-        $logsDir = dirname($rootDir).'/var/logs';
+        $cacheDir = $kernel->getCacheDir();
+        $logsDir = $kernel->getLogDir();
 
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $rootDir);

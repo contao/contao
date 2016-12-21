@@ -19,7 +19,6 @@ use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
-use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -147,9 +146,6 @@ class InstallationController implements ContainerAwareInterface
         if (null !== ($response = $this->runCommand(new SymlinksCommand()))) {
             return $response;
         }
-
-        // Build the bootstrap.php.cache file
-        ScriptHandler::doBuildBootstrap($this->getContainerParameter('kernel.cache_dir').'/../..');
 
         return null;
     }
@@ -321,13 +317,6 @@ class InstallationController implements ContainerAwareInterface
             'database_password' => $this->getContainerParameter('database_password'),
             'database_name' => $request->request->get('dbName'),
         ];
-
-        if (!preg_match('/^[A-Za-z0-9$_]+$/', $request->request->get('dbName'))) {
-            return $this->render('database.html.twig', array_merge(
-                $parameters,
-                ['database_name_error' => $this->trans('database_name_error')]
-            ));
-        }
 
         if ('*****' !== $request->request->get('dbPassword')) {
             $parameters['parameters']['database_password'] = $request->request->get('dbPassword');

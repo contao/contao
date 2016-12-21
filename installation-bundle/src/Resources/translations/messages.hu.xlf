@@ -1,359 +1,359 @@
 <?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="tr">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="hu">
     <body>
       <trans-unit id="1">
         <source>install_tool</source>
-        <target>Contao kurulum aracı</target>
+        <target>Contao telepítő eszközök</target>
         
       </trans-unit>
       <trans-unit id="2">
         <source>an_error_occurred</source>
-        <target>Bir sorun çıktı!</target>
+        <target>Hiba történt</target>
         
       </trans-unit>
       <trans-unit id="3">
         <source>locked_headline</source>
-        <target>Contao kurulum aracı kilitlenmiş!</target>
+        <target>A Telepítő eszköz le van zárva.</target>
         
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Kurulum aracı parolayı üç kez üst üste yanlış yazdığınızdan güvenlik nedeniyle kilitlendi. Kilidi açmak için komut satırına &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt; komutunu yazın.</target>
+        <target>Biztonsági okokból a telepítési eszköz zárolva lett, miután rossz jelszó került megadásra több mint háromszor egymás után. Feloldáshoz, futtassa &lt;code&gt;bin/console doctrine:cache:clear contao.cache&lt;/ code&gt; a parancssorban.</target>
         
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
-        <target>PHP dosya yazma izni verilmemiş!</target>
+        <target>PHP nem engedélyezi a fájlok írását!</target>
         
       </trans-unit>
       <trans-unit id="6">
         <source>file_permissions_explanation</source>
-        <target>Sunucunuz PHP üzerinden dosya erişimini desteklemiyor; büyük olasılıkla PHP Apache modülü olarak farklı bir kullanıcı adı altında çalışıyor. Lütfen sunucu yöneticisiyle görüşerek bu sorunu çözmesini isteyin.</target>
+        <target>A szerver nem támogatja a fájlok PHP hozzáférését; valószínűleg a PHP az Apache egy másik felhasználója alatt fut. Kérje meg a rendszergazdáját, hogy javítsa ki a hibát.</target>
         
       </trans-unit>
       <trans-unit id="7">
         <source>file_permissions_warning</source>
-        <target>&lt;strong&gt;Bu sorunu dosya ve klasörleri herkes için yazılabilir duruma getirerek kendiniz düzeltmeye çalışmayın!&lt;/strong&gt;</target>
+        <target>&lt;strong&gt;Ne próbálja meg úgy javítani, hogy mindenki számára írhatóvá teszi a fájlokat és könyvtárakat&lt;/strong&gt;</target>
         
       </trans-unit>
       <trans-unit id="8">
         <source>accept_license</source>
-        <target>Lisansı onayla</target>
+        <target>Licensz elfogadása</target>
         
       </trans-unit>
       <trans-unit id="9">
         <source>set_password</source>
-        <target>Kurulum aracı parolası</target>
+        <target>Telepítő eszköz jelszó</target>
         
       </trans-unit>
       <trans-unit id="10">
         <source>set_password_hint</source>
-        <target>Yetkisiz oturum açmayı engellemek için bir parola yazın.</target>
+        <target>Jelszó megadása a jogosulatlan hozzáférés megakadályozására.</target>
         
       </trans-unit>
       <trans-unit id="11">
         <source>password</source>
-        <target>Parola</target>
+        <target>Jelszó</target>
         
       </trans-unit>
       <trans-unit id="12">
         <source>confirmation</source>
-        <target>Parola Onayı</target>
+        <target>Megerősítés</target>
         
       </trans-unit>
       <trans-unit id="13">
         <source>save_password</source>
-        <target>Parolayı kaydet</target>
+        <target>Jelszó mentése</target>
         
       </trans-unit>
       <trans-unit id="14">
         <source>password_confirmation_mismatch</source>
-        <target>Parola ve onayı aynı değil!</target>
+        <target>A jelszó nem egyezik meg a megerősítéssel!</target>
         
       </trans-unit>
       <trans-unit id="15">
         <source>password_too_short</source>
-        <target>Parola en az %d karakter uzunluğunda olmalıdır!</target>
+        <target>A jelszónak legalább %d karakter hosszúnak kel lenni!</target>
         
       </trans-unit>
       <trans-unit id="16">
         <source>login</source>
-        <target>Kurulum aracı oturumu açma</target>
+        <target>Telepítő eszköz belépés</target>
         
       </trans-unit>
       <trans-unit id="17">
         <source>login_explanation</source>
-        <target>Lütfen kurulum aracı parolasını yazın. Kurulum aracı parolası Contao yönetim bölümü parolasından farklıdır.</target>
+        <target>Adja meg a telepítő eszköz jelszavát. A telepítő eszköz jelszava nem azonos a Contao back end jelszavával.</target>
         
       </trans-unit>
       <trans-unit id="18">
         <source>allow_cookies</source>
-        <target>Contao kullanabilmek için çerezlere izin vermelisiniz.</target>
+        <target>Engedélyezze a cookie-kat a Contao használatához</target>
         
       </trans-unit>
       <trans-unit id="19">
         <source>login</source>
-        <target>Oturum Aç</target>
+        <target>Bejelentkezés</target>
         
       </trans-unit>
       <trans-unit id="20">
         <source>invalid_password</source>
-        <target>Parola geçersiz!</target>
+        <target>Hibás jelszó!</target>
         
       </trans-unit>
       <trans-unit id="21">
         <source>database_connection</source>
-        <target>Veritabanı bağlantısı</target>
+        <target>Adatbázis kapcsolat</target>
         
       </trans-unit>
       <trans-unit id="22">
         <source>database_connected</source>
-        <target>Veritabanı bağlantısı kuruldu.</target>
+        <target>Adatbázis kapcsolat rendben.</target>
         
       </trans-unit>
       <trans-unit id="23">
         <source>database_could_not_connect</source>
-        <target>Veritabanı bağlantısı kurulamadı!</target>
+        <target>Nem sikerült kapcsolódni az adatbázishoz!</target>
         
       </trans-unit>
       <trans-unit id="24">
         <source>database_connection_explain</source>
-        <target>Lütfen veritabanı bağlantısı bilgilerini yazın.</target>
+        <target>Adja meg az adatbázis kapcsolat paramétereit.</target>
         
       </trans-unit>
       <trans-unit id="25">
         <source>database_host</source>
-        <target>Sunucu</target>
+        <target>Kiszolgáló</target>
         
       </trans-unit>
       <trans-unit id="26">
         <source>database_port</source>
-        <target>Kapı numarası</target>
+        <target>Port száma</target>
         
       </trans-unit>
       <trans-unit id="27">
         <source>database_user</source>
-        <target>Kullanıcı adı</target>
+        <target>Felhasználó név</target>
         
       </trans-unit>
       <trans-unit id="28">
         <source>database_password</source>
-        <target>Parola</target>
+        <target>Jelszó</target>
         
       </trans-unit>
       <trans-unit id="29">
         <source>database_name</source>
-        <target>Veritabanı adı</target>
+        <target>Adatbázis neve</target>
         
       </trans-unit>
       <trans-unit id="30">
         <source>save_settings</source>
-        <target>Ayarları kaydet</target>
+        <target>Beállítások mentése</target>
         
       </trans-unit>
       <trans-unit id="31">
         <source>update_tables</source>
-        <target>Veritabanını güncelle</target>
+        <target>Adatbázis frissítése</target>
         
       </trans-unit>
       <trans-unit id="32">
         <source>update_tables_explain</source>
-        <target>Lütfen güncelleme yardımcısının yalnız &lt;code&gt;tl_&lt;/code&gt; ile başlayan tabloları işleyeceğini unutmayın.</target>
+        <target>Vegye figyelembe, hogy a frissítési asszisztens csak a  &lt;code&gt;tl_&lt;/code&gt; kezdetű táblákat kezeli.</target>
         
       </trans-unit>
       <trans-unit id="33">
         <source>update_tables_confirm</source>
-        <target>Veritabanı güncel.</target>
+        <target>Az adatbázis naprakész.</target>
         
       </trans-unit>
       <trans-unit id="34">
         <source>update_save</source>
-        <target>Veritabanını güncelle</target>
+        <target>Adatbázis frissítése</target>
         
       </trans-unit>
       <trans-unit id="35">
         <source>CREATE</source>
-        <target>Tabloları oluştur</target>
+        <target>Táblák létrehozása</target>
         
       </trans-unit>
       <trans-unit id="36">
         <source>ALTER_ADD</source>
-        <target>Sütunları ekle</target>
+        <target>Oszlopok hozzáadása</target>
         
       </trans-unit>
       <trans-unit id="37">
         <source>ALTER_CHANGE</source>
-        <target>Sütunları değiştir</target>
+        <target>Oszlopok cseréje</target>
         
       </trans-unit>
       <trans-unit id="38">
         <source>ALTER_DROP</source>
-        <target>Sütunları sil</target>
+        <target>Oszlopok eldobása</target>
         
       </trans-unit>
       <trans-unit id="39">
         <source>DROP</source>
-        <target>Tabloları sil</target>
+        <target>Táblák eldobása</target>
         
       </trans-unit>
       <trans-unit id="40">
         <source>select_all</source>
-        <target>Tümünü seç</target>
+        <target>Mindet kijelöl</target>
         
       </trans-unit>
       <trans-unit id="41">
         <source>template_import</source>
-        <target>Bir kalıp al</target>
+        <target>Sablon importálása</target>
         
       </trans-unit>
       <trans-unit id="42">
         <source>template_import_explain</source>
-        <target>Buraya &lt;code&gt;templates&lt;/code&gt; klasöründen bir &lt;code&gt;.sql&lt;/code&gt; dosyası yükleyebilirsiniz. Tüm varolan veriler silinir! Yalnız kalıbı yüklemek istiyorsanız, yönetim bölümündeki kalıp yönetimi bölümünü kullanın.</target>
+        <target>Itt lehet importálni egy &lt;code&gt;.sql&lt;/ code&gt; fájlt a &lt;code&gt;templates&lt;/ code&gt; könyvtárból. Minden meglévő adat törlésre kerül! Ha csak témát szeretne importálni, használja a Contao admin panel Téma kezelőjét.</target>
         
       </trans-unit>
       <trans-unit id="43">
         <source>import_exception</source>
-        <target>Alma işlemi tamamlanamadı! Veritabanınızın güncelliğini ve yüklemeye çalıştığınız kalıp dosyasının kurulu Contao sürümünüzle uyumluluğunu kontrol edin.</target>
+        <target>Az importálás nem sikerült! Az adatbázis naprakész és a Téma fájl kompatibilis a Contao verziójával?</target>
         
       </trans-unit>
       <trans-unit id="44">
         <source>import_empty_source</source>
-        <target>Lütfen bir kalıp dosyası seçin!</target>
+        <target>Kérjük, válasszon egy sablon fájl!</target>
         
       </trans-unit>
       <trans-unit id="45">
         <source>import_data_will_be_deleted</source>
-        <target>Tüm varolan veriler silinecek!</target>
+        <target>A meglévő adatok törlésre kerülnek!</target>
         
       </trans-unit>
       <trans-unit id="46">
         <source>imported_on</source>
-        <target>Kalıp %s üzerine yüklendi.</target>
+        <target>A Téma importálva a %s oldalon</target>
         
       </trans-unit>
       <trans-unit id="47">
         <source>templates</source>
-        <target>Kalıplar</target>
+        <target>Sablonok</target>
         
       </trans-unit>
       <trans-unit id="48">
         <source>do_not_truncate</source>
-        <target>Tablolar budanmasın</target>
+        <target>Nem sikerült a táblák ürítése</target>
         
       </trans-unit>
       <trans-unit id="49">
         <source>import_confirm</source>
-        <target>Tüm varolan veriler silinecek! Devam etmek istediğinize emin misiniz?</target>
+        <target>A meglévő adatok törlésre kerülnek! Valóban folytatni akarja?</target>
         
       </trans-unit>
       <trans-unit id="50">
         <source>template_save</source>
-        <target>Kalıp al</target>
+        <target>Sablon importálása</target>
         
       </trans-unit>
       <trans-unit id="51">
         <source>admin_create</source>
-        <target>Yönetim kullanıcısı oluştur</target>
+        <target>Adminisztrátor létrehozása</target>
         
       </trans-unit>
       <trans-unit id="52">
         <source>admin_create_explain</source>
-        <target>Contao yönetim bölümüne oturum açabilecek bir yönetim kullanıcısı buradan oluşturulabilir.</target>
+        <target>Itt hozhat létre admin felhasználót a Contao admin panel bejelentkezéshez.</target>
         
       </trans-unit>
       <trans-unit id="53">
         <source>admin_confirm</source>
-        <target>Yönetim kullanıcısı oluşturuldu.</target>
+        <target>Adminisztrátor létrehozva.</target>
         
       </trans-unit>
       <trans-unit id="54">
         <source>admin_username</source>
-        <target>Kullanıcı adı</target>
+        <target>Felhasználó név</target>
         
       </trans-unit>
       <trans-unit id="55">
         <source>admin_name</source>
-        <target>Ad</target>
+        <target>Név</target>
         
       </trans-unit>
       <trans-unit id="56">
         <source>admin_email</source>
-        <target>E-Posta</target>
+        <target>E-mail</target>
         
       </trans-unit>
       <trans-unit id="57">
         <source>admin_save</source>
-        <target>Yönetim kullanıcısı oluştur</target>
+        <target>Adminisztrátor létrehozása</target>
         
       </trans-unit>
       <trans-unit id="58">
         <source>admin_error_extnd</source>
-        <target>Güvenlik nedeniyle şu karakterler burada kullanılamaz: #()/&lt;=&gt; </target>
+        <target>Biztonsági okokból nem tudja használni a következő karaktereket: # () / &lt;=&gt;</target>
         
       </trans-unit>
       <trans-unit id="59">
         <source>admin_error_no_space</source>
-        <target>Kullanıcı adında boşluk karakteri bulunamaz!</target>
+        <target>A felhasználónév nem tartalmazhat szóköz karaktert!</target>
         
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_email</source>
-        <target>Lütfen geçerli bir e-posta adresi yazın!</target>
+        <target>Adjon meg egy érvényes email címet!</target>
         
       </trans-unit>
       <trans-unit id="61">
         <source>admin_error_password_match</source>
-        <target>Parola ile onayı aynı değil!</target>
+        <target>A jelszavak nem egyeznek!</target>
         
       </trans-unit>
       <trans-unit id="62">
         <source>admin_error_password_user</source>
-        <target>Kullanıcı adı ile parola aynı olamaz!</target>
+        <target>A felhasználónév és a jelszó nem lehet azonos!</target>
         
       </trans-unit>
       <trans-unit id="63">
         <source>admin_error</source>
-        <target>Lütfen yönetim kullanıcısı oluşturmak için tüm alanları doldurun!</target>
+        <target>Kérem töltse ki az összes mezőt az adminisztrátor létrehozásához!</target>
         
       </trans-unit>
       <trans-unit id="64">
         <source>congratulations</source>
-        <target>Tebrikler!</target>
+        <target>Gratulálunk!</target>
         
       </trans-unit>
       <trans-unit id="65">
         <source>congratulations_explain</source>
-        <target>Contao yüklendi.</target>
+        <target>Sikeresen telepítette a Contao rendszert.</target>
         
       </trans-unit>
       <trans-unit id="66">
         <source>installation_complete</source>
-        <target>Yükleme tamamlandı</target>
+        <target>Telepítés elkészült!</target>
         
       </trans-unit>
       <trans-unit id="67">
         <source>installation_complete_explain</source>
-        <target>Lütfen şimdi Contao yönetim bölümüne oturum açarak sistem ayarlarını denetleyin.</target>
+        <target>Most lépjen be a Contao Admin panelra és ellenőrizze a beállításokat.</target>
         
       </trans-unit>
       <trans-unit id="68">
         <source>back_end</source>
-        <target>Contao yönetim bölümü</target>
+        <target>Contao admin panel</target>
         
       </trans-unit>
       <trans-unit id="69">
         <source>old_database</source>
-        <target>Veritabanı çok eski!</target>
+        <target>Az adatbázis túl régi!</target>
         
       </trans-unit>
       <trans-unit id="70">
         <source>old_database_explanation</source>
-        <target>Contao 4 sürümüne en az Contao 3.2 sürümünden güncellenebilir.</target>
+        <target>Legalább Contao 3.2 szükséges a Contao 4 frissítéséhez.</target>
         
       </trans-unit>
       <trans-unit id="71">
         <source>console_explanation</source>
-        <target>Kurulum sonrası işlemlerinden biri tamamlanamadı!</target>
+        <target>A telepítés utáni feladatok nem kötelezőek!</target>
         
       </trans-unit>
     </body>
