@@ -2662,7 +2662,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				// Do not display buttons for mounted folders
 				if ($this->User->isAdmin || !in_array($currentFolder, $this->User->filemounts))
 				{
-					$return .= (\Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_'.md5($currentEncoded).'" class="tl_tree_checkbox" value="'.$currentEncoded.'">' : $this->generateButtons(array('id'=>$currentEncoded, 'popupWidth'=>600, 'popupHeight'=>123, 'fileNameEncoded'=>$strFolderNameEncoded), $this->strTable);
+					$return .= (\Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_'.md5($currentEncoded).'" class="tl_tree_checkbox" value="'.$currentEncoded.'">' : $this->generateButtons(array('id'=>$currentEncoded, 'popupWidth'=>600, 'popupHeight'=>160, 'fileNameEncoded'=>$strFolderNameEncoded), $this->strTable);
 				}
 
 				// Upload button
