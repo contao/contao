@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.3.1 (2016-XX-XX)
+### 4.3.1 (2016-12-22)
 
  * Preserve uppercase characters in custom sections IDs (see #639).
  * Always show the section title instead of its ID (see #640).
