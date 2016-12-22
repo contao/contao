@@ -246,8 +246,7 @@
         <target>El archivo &quot;%s&quot; no esta disponible para descarga</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid option: %s</source>
-        <target>Opción no valida: %s</target>
+        <source>Invalid option value!</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>

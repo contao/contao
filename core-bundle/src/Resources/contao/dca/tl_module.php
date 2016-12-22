@@ -483,7 +483,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'select',
 			'options'                 => array('internal', 'external'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-			'eval'                    => array('submitOnChange'=>true),
+			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'singleSRC' => array
@@ -499,7 +499,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['url'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'interactive' => array
@@ -894,7 +894,16 @@ class tl_module extends Backend
 			}
 		}
 
-		return array_values(array_unique($arrSections));
+		$arrSections = array_flip(array_values(array_unique($arrSections)));
+
+		foreach (array_keys($arrSections) as $k)
+		{
+			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
+		}
+
+		asort($arrSections);
+
+		return $arrSections;
 	}
 
 

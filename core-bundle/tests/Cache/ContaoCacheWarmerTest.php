@@ -128,10 +128,7 @@ class ContaoCacheWarmerTest extends TestCase
         );
 
         $this->assertContains(
-            sprintf(
-                "'dummy' => '%s/vendor/contao/test-bundle/Resources/contao/templates'",
-                strtr($this->getRootDir(), '\\', '/')
-            ),
+            "'dummy' => 'contao/templates'",
             file_get_contents($this->getCacheDir().'/contao/config/templates.php')
         );
 
@@ -157,6 +154,50 @@ class ContaoCacheWarmerTest extends TestCase
     public function testIsOptional()
     {
         $this->assertTrue($this->warmer->isOptional());
+    }
+
+    /**
+     * Tests caching a bundle without Contao resources.
+     */
+    public function testEmptyBundle()
+    {
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->getMock(
+            'Doctrine\DBAL\Connection',
+            ['prepare', 'execute', 'fetch', 'query'],
+            [],
+            '',
+            false
+        );
+
+        $connection
+            ->expects($this->any())
+            ->method('prepare')
+            ->willReturn($connection)
+        ;
+
+        $class1 = new \stdClass();
+        $class1->language = 'en-US';
+
+        $class2 = new \stdClass();
+        $class2->language = 'en';
+
+        $connection
+            ->expects($this->exactly(3))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls($class1, $class2, false)
+        ;
+
+        $warmer = new ContaoCacheWarmer(
+            new Filesystem(),
+            new ResourceFinder($this->getRootDir().'/vendor/contao/empty-bundle/Resources/contao'),
+            new FileLocator($this->getRootDir().'/vendor/contao/empty-bundle/Resources/contao'),
+            $this->getRootDir().'/vendor/contao/empty-bundle/Resources/contao',
+            $connection,
+            $this->mockContaoFramework()
+        );
+
+        $warmer->warmUp($this->getCacheDir());
     }
 
     /**

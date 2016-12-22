@@ -246,8 +246,7 @@
         <target>文件 &quot;%s&quot; 当前不可下载!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid option: %s</source>
-        <target>无效选项: %s</target>
+        <source>Invalid option value!</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>

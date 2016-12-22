@@ -243,7 +243,7 @@
         <target>Filen &quot;%s&quot; är inte tillgänglig för nedladdning!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid option: %s</source>
+        <source>Invalid option value!</source>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>

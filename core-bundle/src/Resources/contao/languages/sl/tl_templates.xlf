@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.invalid">
         <source>Invalid source or target directory &quot;%s&quot;!</source>
+        <target>Neveljaven izvorni ali ciljni direktorij &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="tl_templates.new_tpl.0">
         <source>New template</source>
@@ -62,12 +63,15 @@
       </trans-unit>
       <trans-unit id="tl_templates.compare.1">
         <source>Compare &quot;%s&quot; with another template</source>
+        <target>Primerjaj &quot;%s&quot; z drugo predlogo</target>
       </trans-unit>
       <trans-unit id="tl_templates.overridesAnotherTpl">
         <source>This template overrides &quot;%s&quot;.</source>
+        <target>Ta predloga prepiše &quot;%s&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_templates.pleaseSelect">
         <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
+        <target>Izberite predlogo iz seznama zgorj in kliknite &quot;Prikaži razlike&quot;.</target>
       </trans-unit>
     </body>
   </file>
