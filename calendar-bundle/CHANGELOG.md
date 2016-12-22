@@ -1,5 +1,9 @@
 # Contao calendar bundle change log
 
+### 4.3.2 (2016-12-22)
+
+ * Correctly show running repeated events in the event list (see #7).
+
 ### 4.3.1 (2016-12-21)
 
  * Add the missing w50 classes.

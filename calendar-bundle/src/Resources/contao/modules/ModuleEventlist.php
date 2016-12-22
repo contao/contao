@@ -183,7 +183,7 @@ class ModuleEventlist extends \Events
 					}
 
 					// Skip occurrences in the past but show running events (see #8497)
-					if (($this->cal_hideRunning || $event['repeatEnd']) && strtotime($event['end']) < $intStart)
+					if (($this->cal_hideRunning || $event['repeatEnd']) && $event['end'] < $intStart)
 					{
 						continue;
 					}
