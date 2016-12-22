@@ -135,6 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.sections.1">
         <source>Here you can define custom layout sections.</source>
+        <target>Zde můžete zadat vlastní oblasti vzhledu</target>
       </trans-unit>
       <trans-unit id="tl_layout.stylesheet.0">
         <source>Internal style sheets</source>
@@ -226,9 +227,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.0">
         <source>Combine scripts</source>
+        <target>Sloučit skripty</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
         <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
+        <target>Sloučit soubory .css a .js (nepovolujte pro HTTP/2)</target>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
