@@ -156,6 +156,9 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertTrue($this->warmer->isOptional());
     }
 
+    /**
+     * Tests caching a bundle without Contao resources.
+     */
     public function testEmptyBundle()
     {
         /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
