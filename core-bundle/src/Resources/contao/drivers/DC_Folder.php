@@ -12,9 +12,11 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
 use Patchwork\Utf8;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -475,6 +477,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['editSelected'].'</button>';
 			}
 
+			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
+			{
+				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirmFile'].'\')">'.$GLOBALS['TL_LANG']['MSC']['deleteSelected'].'</button>';
+			}
+
 			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
 			{
 				$arrButtons['cut'] = '<button type="submit" name="cut" id="cut" class="tl_submit" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['moveSelected'].'</button>';
@@ -483,11 +490,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'])
 			{
 				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['copySelected'].'</button>';
-			}
-
-			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'])
-			{
-				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirmFile'].'\')">'.$GLOBALS['TL_LANG']['MSC']['deleteSelected'].'</button>';
 			}
 
 			// Call the buttons_callback (see #4691)
@@ -1085,6 +1087,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				if (empty($arrUploaded) && !$objUploader->hasError())
 				{
+					if ($blnIsAjax)
+					{
+						throw new ResponseException(new Response($GLOBALS['TL_LANG']['ERR']['emptyUpload'], 400));
+					}
+
 					\Message::addError($GLOBALS['TL_LANG']['ERR']['emptyUpload']);
 					$this->reload();
 				}
@@ -1126,6 +1133,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Redirect or reload
 			if (!$objUploader->hasError())
 			{
+				if ($blnIsAjax)
+				{
+					throw new ResponseException(new Response(\Message::generateUnwrapped(), 201));
+				}
+
 				// Do not purge the html folder (see #2898)
 				if (isset($_POST['uploadNback']) && !$objUploader->hasResized())
 				{
@@ -2662,7 +2674,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				// Do not display buttons for mounted folders
 				if ($this->User->isAdmin || !in_array($currentFolder, $this->User->filemounts))
 				{
-					$return .= (\Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_'.md5($currentEncoded).'" class="tl_tree_checkbox" value="'.$currentEncoded.'">' : $this->generateButtons(array('id'=>$currentEncoded, 'popupWidth'=>600, 'popupHeight'=>123, 'fileNameEncoded'=>$strFolderNameEncoded), $this->strTable);
+					$return .= (\Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_'.md5($currentEncoded).'" class="tl_tree_checkbox" value="'.$currentEncoded.'">' : $this->generateButtons(array('id'=>$currentEncoded, 'popupWidth'=>600, 'popupHeight'=>160, 'fileNameEncoded'=>$strFolderNameEncoded), $this->strTable);
 				}
 
 				// Upload button

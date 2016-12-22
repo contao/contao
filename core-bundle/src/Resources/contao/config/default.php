@@ -89,7 +89,7 @@ $GLOBALS['TL_CONFIG']['useCE']      = true;
 $GLOBALS['TL_CONFIG']['loginCount']           = 3;
 $GLOBALS['TL_CONFIG']['resultsPerPage']       = 30;
 $GLOBALS['TL_CONFIG']['maxResultsPerPage']    = 500;
-$GLOBALS['TL_CONFIG']['maxImageWidth']        = '';
+$GLOBALS['TL_CONFIG']['maxImageWidth']        = 0;
 $GLOBALS['TL_CONFIG']['defaultUser']          = 0;
 $GLOBALS['TL_CONFIG']['defaultGroup']         = 0;
 $GLOBALS['TL_CONFIG']['defaultChmod']         = ['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'g4', 'g5', 'g6'];
@@ -102,10 +102,6 @@ $GLOBALS['TL_CONFIG']['allowedDownload']
 	. 'mp3,mp4,m4a,m4v,webm,ogg,ogv,wma,wmv,ram,rm,mov,'
 	. 'zip,rar,7z';
 $GLOBALS['TL_CONFIG']['installPassword']      = '';
-$GLOBALS['TL_CONFIG']['liveUpdateBase']       = 'https://update.contao.org/service/';
-$GLOBALS['TL_CONFIG']['repository_wsdl']      = 'https://contao.org/services/repository.wsdl';
-$GLOBALS['TL_CONFIG']['repository_languages'] = 'en,de';
-$GLOBALS['TL_CONFIG']['repository_listsize']  = 10;
 $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
 $GLOBALS['TL_CONFIG']['disableInsertTags']    = false;
 $GLOBALS['TL_CONFIG']['rootFiles']            = [];

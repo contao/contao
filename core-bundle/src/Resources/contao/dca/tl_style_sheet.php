@@ -155,7 +155,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'flag'                    => 1,
-			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'alnum', 'maxlength'=>64, 'spaceToUnderscore'=>true),
+			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'alnum', 'maxlength'=>64, 'spaceToUnderscore'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_style_sheet', 'romanizeName')

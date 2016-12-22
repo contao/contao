@@ -246,8 +246,8 @@
         <target>Файл &quot;%s&quot; не доступен для загрузки!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid option: %s</source>
-        <target>Неверная настройка: %s</target>
+        <source>Invalid option value!</source>
+        <target>Неверное значение параметра!</target>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>

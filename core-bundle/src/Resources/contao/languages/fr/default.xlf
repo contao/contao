@@ -246,8 +246,8 @@
         <target>Le fichier &quot;%s&quot; n'est pas disponible en téléchargement.</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid option: %s</source>
-        <target>Option non valide : %s</target>
+        <source>Invalid option value!</source>
+        <target>Valeur de l'option non valide</target>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -1357,6 +1357,7 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>
+        <target>Membre</target>
       </trans-unit>
       <trans-unit id="MSC.backToTop">
         <source>Back to top</source>

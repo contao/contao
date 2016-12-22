@@ -66,6 +66,10 @@ $GLOBALS['TL_LANG']['MSC']['second'][0] = 'This is the second source';
 $GLOBALS['TL_LANG']['MSC']['third']['with'][1] = 'This is the third source';
 $GLOBALS['TL_LANG']['tl_layout']['responsive.css'][1] = 'This is the fourth source';
 $GLOBALS['TL_LANG']['MSC']['fifth'] = "This is the\nfifth source";
+$GLOBALS['TL_LANG']['MSC']['only_source'] = 'This is the source';
+$GLOBALS['TL_LANG']['MSC']['in_group_1'] = 'This is in group 1 source';
+$GLOBALS['TL_LANG']['MSC']['in_group_2'] = 'This is in group 2 source';
+$GLOBALS['TL_LANG']['MSC']['second_file'] = 'This is the target';
 
 TXT;
 
@@ -77,6 +81,10 @@ $GLOBALS['TL_LANG']['MSC']['second'][0] = 'This is the second target';
 $GLOBALS['TL_LANG']['MSC']['third']['with'][1] = 'This is the third target';
 $GLOBALS['TL_LANG']['tl_layout']['responsive.css'][1] = 'This is the fourth target';
 $GLOBALS['TL_LANG']['MSC']['fifth'] = "This is the\nfifth target";
+$GLOBALS['TL_LANG']['MSC']['only_target'] = 'This is the target';
+$GLOBALS['TL_LANG']['MSC']['in_group_1'] = 'This is in group 1 target';
+$GLOBALS['TL_LANG']['MSC']['in_group_2'] = 'This is in group 2 target';
+$GLOBALS['TL_LANG']['MSC']['second_file'] = 'This is the source';
 
 TXT;
 

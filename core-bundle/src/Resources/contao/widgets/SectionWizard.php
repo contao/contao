@@ -43,7 +43,7 @@ class SectionWizard extends \Widget
 	{
 		if (isset($varInput['id']))
 		{
-			$varInput['id'] = \StringUtil::standardize($varInput['id']);
+			$varInput['id'] = \StringUtil::standardize($varInput['id'], true);
 		}
 
 		return parent::validator($varInput);

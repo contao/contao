@@ -1,5 +1,13 @@
 # Contao core bundle change log
 
+### 4.3.1 (2016-12-22)
+
+ * Preserve uppercase characters in custom sections IDs (see #639).
+ * Always show the section title instead of its ID (see #640).
+ * Correctly handle DropZone file uploads (see #637).
+ * Fix the markup of the CSV importers (see #645).
+ * Correctly symlink the logs directory under Windows (see #634).
+
 ### 4.3.0 (2016-11-25)
 
  * Do not cache pages if a back end user is logged in (see #628).

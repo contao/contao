@@ -151,6 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>This website is available via HTTPS.</source>
+        <target>Tato webová stránka je dostupná přes HTTPS.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
@@ -202,21 +203,27 @@
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
+        <target>Zadejte vypršení meziúložiště</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
         <source>Set cache timeout values for the page and its subpages.</source>
+        <target>Určí lhůtu pro stránky a jejich podstránky.</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
         <source>Server cache timeout</source>
+        <target>Vypršení úložiště na serveru</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+        <target>Počet sekund, po nichž má být stránka označená jako zastaralá při používání sdíleného meziúložiště.</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Client cache timeout</source>
+        <target>Vypšení uživatelského meziúložiště</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
+        <target>Počet sekund, po nichž má být stránka označená za zastaralou ze strany prohlížeče.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>

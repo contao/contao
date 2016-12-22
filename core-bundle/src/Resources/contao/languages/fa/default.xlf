@@ -243,8 +243,8 @@
         <target>پرونده «%s» برای بارگیری در دسترس نیست!</target>
       </trans-unit>
       <trans-unit id="ERR.invalid">
-        <source>Invalid option: %s</source>
-        <target>گزینه‌ی اشتباه: %s</target>
+        <source>Invalid option value!</source>
+        <target>مقدار گزینه‌ی نامعتبر!</target>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>

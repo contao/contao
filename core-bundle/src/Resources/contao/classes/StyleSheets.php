@@ -1325,8 +1325,10 @@ class StyleSheets extends \Backend
 <input type="hidden" name="MAX_FILE_SIZE" value="'.\Config::get('maxFileSize').'">
 
 <div class="tl_tbox">
-  <h3>'.$GLOBALS['TL_LANG']['tl_style_sheet']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['tl_style_sheet']['source'][1]) ? '
-  <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_style_sheet']['source'][1].'</p>' : '').'
+  <div class="widget">
+    <h3>'.$GLOBALS['TL_LANG']['tl_style_sheet']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['tl_style_sheet']['source'][1]) ? '
+    <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_style_sheet']['source'][1].'</p>' : '').'
+  </div>
 </div>
 
 </div>

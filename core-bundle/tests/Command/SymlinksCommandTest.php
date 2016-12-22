@@ -106,4 +106,25 @@ class SymlinksCommandTest extends TestCase
 
         $lock->release();
     }
+
+    /**
+     * Tests the getRelativePath() method.
+     */
+    public function testGetRelativePath()
+    {
+        $command = new SymlinksCommand('contao:symlinks');
+
+        // Use \ as directory separator in $rootDir
+        $rootDir = new \ReflectionProperty(SymlinksCommand::class, 'rootDir');
+        $rootDir->setAccessible(true);
+        $rootDir->setValue($command, strtr($this->getRootDir(), '/', '\\'));
+
+        // Use / as directory separator in $path
+        $method = new \ReflectionMethod(SymlinksCommand::class, 'getRelativePath');
+        $method->setAccessible(true);
+        $relativePath = $method->invoke($command, $this->getRootDir().'/var/logs');
+
+        // The path should be normalized and shortened
+        $this->assertEquals('var/logs', $relativePath);
+    }
 }

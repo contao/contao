@@ -673,6 +673,63 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
+     * Tests the create() method.
+     */
+    public function testCreateImportantPartOutOfBounds()
+    {
+        $path = $this->getRootDir().'/images/dummy.jpg';
+
+        $framework = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $filesModel = $this->getMock('Contao\FilesModel');
+
+        $filesModel
+            ->expects($this->any())
+            ->method('__get')
+            ->will(
+                $this->returnCallback(function ($key) {
+                    return [
+                        'importantPartX' => '50',
+                        'importantPartY' => '50',
+                        'importantPartWidth' => '175',
+                        'importantPartHeight' => '175',
+                    ][$key];
+                })
+            )
+        ;
+
+        $filesAdapter = $this
+            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $filesAdapter
+            ->expects($this->any())
+            ->method('__call')
+            ->willReturn($filesModel)
+        ;
+
+        $framework
+            ->expects($this->any())
+            ->method('getAdapter')
+            ->willReturn($filesAdapter)
+        ;
+
+        $imageFactory = $this->createImageFactory(null, null, null, null, $framework);
+        $image = $imageFactory->create($path);
+
+        $this->assertEquals(
+            new ImportantPart(new Point(0, 0), new Box(200, 200)),
+            $image->getImportantPart()
+        );
+    }
+
+    /**
      * Tests the executeResize hook.
      *
      * @runInSeparateProcess

@@ -229,14 +229,44 @@ var Theme = {
 		var toggle = $('sbtog');
 		if (!toggle) return;
 
+		var ul = toggle.getParent('.split-button').getElement('ul'),
+			tab, timer;
+
 		toggle.addEvent('click', function(e) {
-			toggle.getParent('.split-button').getElement('ul').toggleClass('invisible');
+			tab = false;
+			ul.toggleClass('invisible');
+			toggle.toggleClass('active');
 			e.stopPropagation();
 		});
 
 		$(document.body).addEvent('click', function() {
-			toggle.getParent('.split-button').getElement('ul').addClass('invisible');
+			tab = false;
+			ul.addClass('invisible');
+			toggle.removeClass('active');
 		});
+
+		$(document.body).addEvent('keydown', function(e) {
+			tab = (e.event.keyCode == 9);
+		});
+
+		[toggle].append(ul.getElements('button')).each(function(el) {
+			el.addEvent('focus', function() {
+				if (!tab) return;
+				ul.removeClass('invisible');
+				toggle.addClass('active');
+				clearTimeout(timer);
+			});
+
+			el.addEvent('blur', function() {
+				if (!tab) return;
+				timer = setTimeout(function() {
+					ul.addClass('invisible');
+					toggle.removeClass('active');
+				}, 100);
+			});
+		});
+
+		toggle.set('tabindex', '-1');
 	}
 };
 
