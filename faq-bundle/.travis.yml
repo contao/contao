@@ -27,7 +27,7 @@ matrix:
   fast_finish: true
 
 before_install:
-  - composer selfupdate --snapshot # TODO: remove when Composer 1.3 stable is released
+  - composer selfupdate
 
 before_script:
   - travis_wait composer update $COMPOSER_FLAGS --no-interaction
