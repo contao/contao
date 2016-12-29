@@ -70,6 +70,8 @@ class InstallWebDirCommand extends AbstractLockedCommand
             $force
         );
 
+        $this->renameHtaccess($webDir);
+
         return 0;
     }
 
@@ -115,6 +117,18 @@ class InstallWebDirCommand extends AbstractLockedCommand
             );
 
             $this->io->text(sprintf('Added the <comment>%s</comment> file.', $file->getFilename()));
+        }
+    }
+
+    /**
+     * Renames .htaccess.default file to .htaccess if the file does not exist.
+     *
+     * @param string $webDir
+     */
+    private function renameHtaccess($webDir)
+    {
+        if (!file_exists($webDir.'/.htaccess') && file_exists($webDir.'/.htaccess.default')) {
+            $this->fs->rename($webDir.'/.htaccess.default', $webDir.'/.htaccess');
         }
     }
 }
