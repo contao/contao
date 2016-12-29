@@ -34,12 +34,12 @@ class ScriptHandler
         static::addConsoleEntryPoint($event);
         static::addWebEntryPoints($event);
 
-        static::executeCommand('cache:clear --no-warmup --env=prod', $event);
-        static::executeCommand('cache:warmup --env=prod', $event);
-        static::executeCommand('assets:install --symlink --relative --env=prod', $event);
+        static::executeCommand('cache:clear --no-warmup', $event);
+        static::executeCommand('cache:warmup', $event);
+        static::executeCommand('assets:install --symlink --relative', $event);
 
-        static::executeCommand('contao:install --env=prod', $event);
-        static::executeCommand('contao:symlinks --env=prod', $event);
+        static::executeCommand('contao:install', $event);
+        static::executeCommand('contao:symlinks', $event);
     }
 
     /**
@@ -149,7 +149,7 @@ class ScriptHandler
 
         $process = new Process(
             sprintf(
-                '%s bin/console%s %s%s',
+                '%s bin/console%s %s%s --env=prod',
                 $phpPath,
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
