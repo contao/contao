@@ -13,9 +13,7 @@ use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @var Composer\Autoload\ClassLoader
- */
+/** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__.'/{vendor-dir}/autoload.php';
 
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
