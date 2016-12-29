@@ -12,9 +12,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 /**
@@ -83,42 +81,5 @@ class ContaoCoreExtension extends ConfigurableExtension
         if (isset($mergedConfig['localconfig'])) {
             $container->setParameter('contao.localconfig', $mergedConfig['localconfig']);
         }
-
-        $this->addContainerScopeListener($container);
-    }
-
-    /**
-     * Adds the container scope listener.
-     *
-     * @param ContainerBuilder $container
-     */
-    private function addContainerScopeListener(ContainerBuilder $container)
-    {
-        if (!method_exists('Symfony\Component\DependencyInjection\Container', 'enterScope')) {
-            return;
-        }
-
-        $definition = new Definition('Contao\CoreBundle\EventListener\ContainerScopeListener');
-        $definition->addArgument(new Reference('service_container'));
-
-        $definition->addTag(
-            'kernel.event_listener',
-            [
-                'event' => 'kernel.request',
-                'method' => 'onKernelRequest',
-                'priority' => 30,
-            ]
-        );
-
-        $definition->addTag(
-            'kernel.event_listener',
-            [
-                'event' => 'kernel.finish_request',
-                'method' => 'onKernelFinishRequest',
-                'priority' => -254,
-            ]
-        );
-
-        $container->setDefinition('contao.listener.container_scope', $definition);
     }
 }

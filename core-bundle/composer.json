@@ -14,14 +14,14 @@
         "ext-dom": "*",
         "ext-gd": "*",
         "ext-pcre": "*",
-        "symfony/framework-bundle": "~2.8|~3.0",
-        "symfony/console": "~2.8|~3.0",
-        "symfony/filesystem": "~2.8|~3.0",
-        "symfony/finder": "~2.8|~3.0",
-        "symfony/http-foundation": "~2.8|~3.0",
-        "symfony/security": "~2.8|~3.0",
+        "symfony/framework-bundle": "~3.2",
+        "symfony/console": "~3.2",
+        "symfony/filesystem": "~3.2",
+        "symfony/finder": "~3.2",
+        "symfony/http-foundation": "~3.2",
+        "symfony/security": "~3.2",
         "symfony/swiftmailer-bundle": "~2.3",
-        "symfony/yaml": "~2.8|~3.0",
+        "symfony/yaml": "~3.2",
         "sensio/framework-extra-bundle": "^3.0.2",
         "psr/log": "~1.0",
         "twig/twig": "~1.20",
@@ -56,7 +56,7 @@
         "monolog/monolog": "~1.11",
         "phpunit/phpunit": "~4.5",
         "satooshi/php-coveralls": "~1.0",
-        "symfony/phpunit-bridge": "~2.8|~3.0"
+        "symfony/phpunit-bridge": "~3.2"
     },
     "suggest": {
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
