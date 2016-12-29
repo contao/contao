@@ -160,7 +160,7 @@ class ContaoKernel extends Kernel
 
         // Autoload AppBundle for convenience
         $appBundle = 'AppBundle\AppBundle';
-        if (isset($bundles[$appBundle]) && class_exists($appBundle)) {
+        if (!isset($bundles[$appBundle]) && class_exists($appBundle)) {
             $bundles[$appBundle] = new $appBundle();
         }
     }
