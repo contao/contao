@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.2.2 (2017-XX-XX)
+
+ * Also create a kernel secret if there is no secret at all (see #37).
+
 ### 1.2.1 (2016-12-21)
 
  * Do not restrict the database name characters (see contao/core-bundle#593).
