@@ -33,7 +33,7 @@
       </trans-unit>
       <trans-unit id="7">
         <source>file_permissions_warning</source>
-        <target>&lt;strong&gt;Не пытайтесь исправить это самостоятельно предоставляя файлам и каталогам права доступа на запись 'для всех'!&lt;/strong&gt;</target>
+        <target>&lt;strong&gt;Не пытайтесь исправить это самостоятельно, предоставляя файлам и каталогам права доступа на запись 'для всех'!&lt;/strong&gt;</target>
         
       </trans-unit>
       <trans-unit id="8">
