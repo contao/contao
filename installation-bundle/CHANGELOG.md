@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### 1.2.2 (2017-XX-XX)
+### 1.2.2 (2017-01-05)
 
  * Fix the database.html.twig template (see #39).
  * Also create a kernel secret if there is no secret at all (see #37).
