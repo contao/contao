@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.3.2 (2017-XX-XX)
+
+ * Correctly handle nested public folders when symlinking a folder.
+
 ### 4.3.1 (2016-12-22)
 
  * Preserve uppercase characters in custom sections IDs (see #639).
