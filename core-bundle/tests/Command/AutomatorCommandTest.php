@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\Test\Command;
 use Contao\CoreBundle\Command\AutomatorCommand;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\LockHandler;
 
@@ -45,10 +44,7 @@ class AutomatorCommandTest extends TestCase
         $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
-
-        /** @var QuestionHelper $helper */
-        $helper = $command->getHelper('question');
-        $helper->setInputStream($this->getStreamFromInput("\n"));
+        $tester->setInputs(["\n"]);
 
         $code = $tester->execute(['command' => $command->getName()]);
 
@@ -81,10 +77,7 @@ class AutomatorCommandTest extends TestCase
         $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
-
-        /** @var QuestionHelper $helper */
-        $helper = $command->getHelper('question');
-        $helper->setInputStream($this->getStreamFromInput("\n"));
+        $tester->setInputs(["\n"]);
 
         $code = $tester->execute(['command' => $command->getName()]);
 
@@ -123,10 +116,7 @@ class AutomatorCommandTest extends TestCase
         $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
-
-        /** @var QuestionHelper $helper */
-        $helper = $command->getHelper('question');
-        $helper->setInputStream($this->getStreamFromInput("4800\n"));
+        $tester->setInputs(["4800\n"]);
 
         $code = $tester->execute(['command' => $command->getName()]);
 
@@ -152,22 +142,6 @@ class AutomatorCommandTest extends TestCase
 
         $this->assertEquals(1, $code);
         $this->assertContains('Invalid task "fooBar" (see help contao:automator)', $tester->getDisplay());
-    }
-
-    /**
-     * Converts a string into a stream.
-     *
-     * @param string $input
-     *
-     * @return resource
-     */
-    private function getStreamFromInput($input)
-    {
-        $stream = fopen('php://memory', 'r+', false);
-        fputs($stream, $input);
-        rewind($stream);
-
-        return $stream;
     }
 
     /**
