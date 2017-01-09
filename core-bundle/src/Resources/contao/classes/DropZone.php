@@ -20,7 +20,7 @@ class DropZone extends \FileUpload
 {
 
 	/**
-	 * Generate the markup for the default uploader
+	 * Generate the markup for the DropZone uploader
 	 *
 	 * @return string
 	 */
@@ -42,22 +42,24 @@ class DropZone extends \FileUpload
   <div class="fallback">
     <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" onfocus="Backend.getScrollOffset()" multiple>
   </div>
-  <div class="dz-container">
+  <div class="dropzone">
     <div class="dz-default dz-message">
       <span>' . $GLOBALS['TL_LANG']['tl_files']['dropzone'] . '</span>
     </div>
-    <div class="dropzone-previews"></div>
+    <span class="dropzone-previews"></span>
   </div>
   <script>
+    Dropzone.autoDiscover = false;
     window.addEvent("domready", function() {
       new Dropzone("#tl_files", {
         paramName: "' . $this->strName . '",
         maxFilesize: ' . $intMaxSize . ',
         acceptedFiles: "' . $strAccepted . '",
         previewsContainer: ".dropzone-previews",
+        clickable: ".dropzone",
         uploadMultiple: true
-      }).on("drop", function() {
-        $$(".dz-message").setStyle("padding", "12px 18px 0");
+      }).on("addedfile", function() {
+        $$(".dz-message").setStyle("display", "none");
       });
       $$("div.tl_formbody_submit").setStyle("display", "none");
     });

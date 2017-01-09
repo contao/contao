@@ -1457,15 +1457,11 @@ fieldset.collapsed > legend {
 }
 
 /* DropZone */
-.dz-container {
+.dropzone {
 	margin:2px 0;
-	padding:6px;
-	border:3px dashed #ddd;
-}
-.dz-message {
-	cursor:pointer;
-	padding:36px 18px;
-	transition:all .15s linear;
+	min-height:auto !important;
+	border:3px dashed #ddd !important;
+	border-radius:2px;
 }
 .dz-message span {
 	font-size:1.3125rem;
