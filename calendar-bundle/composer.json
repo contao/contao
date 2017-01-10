@@ -11,15 +11,15 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "symfony/framework-bundle": "~2.8|~3.0",
-        "contao/core-bundle": "~4.3"
+        "symfony/framework-bundle": "^3.2",
+        "contao/core-bundle": "^4.3"
     },
     "require-dev": {
-        "contao/manager-plugin": "~1.0",
-        "friendsofphp/php-cs-fixer": "~1.8",
-        "phpunit/phpunit": "~4.5",
-        "satooshi/php-coveralls": "~1.0",
-        "symfony/phpunit-bridge": "~2.8|~3.0"
+        "contao/manager-plugin": "^1.0",
+        "friendsofphp/php-cs-fixer": "^1.8",
+        "phpunit/phpunit": "^4.5",
+        "satooshi/php-coveralls": "^1.0",
+        "symfony/phpunit-bridge": "^3.2"
     },
     "conflict": {
         "contao/core": "*"
