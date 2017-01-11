@@ -49,14 +49,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $loader->load('doctrine.yml');
         $loader->load('swiftmailer.yml');
         $loader->load('monolog.yml');
-
-        if (in_array(
-            'Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle',
-            $container->getParameter('kernel.bundles'),
-            true)
-        ) {
-            $loader->load('lexik_maintenance.yml');
-        }
+        $loader->load('lexik_maintenance.yml');
 
         if ('dev' === $container->getParameter('kernel.environment')) {
             $loader->load('web_profiler.yml');
