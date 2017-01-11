@@ -44,6 +44,11 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
     private $webFiles;
 
     /**
+     * @var array
+     */
+    private $optionalFiles;
+
+    /**
      * {@inheritdoc}
      */
     public function setUp()
@@ -54,6 +59,11 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
         $this->filesystem = new Filesystem();
         $this->tmpdir = sys_get_temp_dir().'/'.uniqid('InstallWebDirCommand_', false);
         $this->webFiles = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../../src/Resources/web');
+
+        $ref = new \ReflectionClass(InstallWebDirCommand::class);
+        $prop = $ref->getProperty('optionalFiles');
+        $prop->setAccessible(true);
+        $this->optionalFiles = $prop->getValue($this->command);
     }
 
     /**
@@ -71,7 +81,6 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('contao:install-web-dir', $this->command->getName());
         $this->assertTrue($this->command->getDefinition()->hasArgument('path'));
-        $this->assertTrue($this->command->getDefinition()->hasOption('force'));
     }
 
     public function testCommandRegular()
@@ -83,12 +92,9 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->tmpdir]);
 
-        // FIXME
-        $this->markTestIncomplete('Cannot assert that .htaccess.default exists, because it has been renamed to .htaccess');
 
-        /*
         foreach ($this->webFiles as $file) {
-            $this->assertFileExists($this->tmpdir.'/web/'.$file->getFilename());
+            $this->assertFileExists($this->tmpdir.'/web/'.$file->getRelativePathname());
 
             $expectedString = file_get_contents($file->getPathname());
 
@@ -98,53 +104,25 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
                 $expectedString
             );
 
-            $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), $expectedString);
+            $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getRelativePathname(), $expectedString);
         }
-        */
     }
 
-    public function testCommandDoesNothingWithoutForce()
+    public function testCommandDoesNotOverrideOptionals()
     {
         foreach ($this->webFiles as $file) {
-            $this->filesystem->dumpFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
+            $this->filesystem->dumpFile($this->tmpdir.'/web/'.$file->getRelativePathname(), 'foobar-content');
         }
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->tmpdir]);
 
-        // FIXME
-        $this->markTestIncomplete('Cannot assert that .htaccess.default exists, because it has been renamed to .htaccess');
-
-        /*
         foreach ($this->webFiles as $file) {
-            $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
+            if (in_array($file->getRelativePathname(), $this->optionalFiles, true)) {
+                $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
+            } else {
+                $this->assertStringNotEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
+            }
         }
-        */
-    }
-
-    public function testCommandOverwritesWithForce()
-    {
-        foreach ($this->webFiles as $file) {
-            $this->filesystem->dumpFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
-        }
-
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->tmpdir, '--force' => null]);
-
-        // FIXME
-        $this->markTestIncomplete('Cannot assert that .htaccess.default exists, because it has been renamed to .htaccess');
-
-        /*
-        foreach ($this->webFiles as $file) {
-            // Assert
-            $expectedString = str_replace(
-                ['{root-dir}', '{vendor-dir}'],
-                ['../app', '../vendor'],
-                $file->getContents()
-            );
-
-            $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), $expectedString);
-        }
-        */
     }
 }

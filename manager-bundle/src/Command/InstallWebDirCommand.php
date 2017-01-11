@@ -13,7 +13,6 @@ namespace Contao\ManagerBundle\Command;
 use Contao\CoreBundle\Command\AbstractLockedCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
@@ -37,6 +36,14 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private $io;
 
     /**
+     * Files that should not be copied if they exist in the web directory.
+     * @var array
+     */
+    private $optionalFiles = [
+        '.htaccess'
+    ];
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -50,7 +57,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
                 'The installation root directory (defaults to the current working directory).',
                 getcwd()
             )
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Overwrite files if they exist.')
         ;
     }
 
@@ -66,16 +72,12 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $webDir = $this->absolutePath($baseDir, 'web');
         $rootDir = $this->absolutePath($baseDir, 'app');
         $vendorDir = $this->absolutePath($baseDir, 'vendor');
-        $force = (bool) $input->getOption('force');
 
         $this->addFiles(
             $webDir,
             rtrim($this->fs->makePathRelative($rootDir, $webDir), '/'),
-            rtrim($this->fs->makePathRelative($vendorDir, $webDir), '/'),
-            $force
+            rtrim($this->fs->makePathRelative($vendorDir, $webDir), '/')
         );
-
-        $this->renameHtaccess($webDir);
 
         return 0;
     }
@@ -99,14 +101,15 @@ class InstallWebDirCommand extends AbstractLockedCommand
      * @param string $webDir
      * @param string $rootDir
      * @param string $vendorDir
-     * @param bool   $force
      */
-    private function addFiles($webDir, $rootDir, $vendorDir, $force = false)
+    private function addFiles($webDir, $rootDir, $vendorDir)
     {
         $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/web');
 
         foreach ($finder as $file) {
-            if ($this->fs->exists($webDir.'/'.$file->getRelativePathname()) && !$force) {
+            if (in_array($file->getRelativePathname(), $this->optionalFiles, true)
+                && $this->fs->exists($webDir . '/' . $file->getRelativePathname())
+            ) {
                 continue;
             }
 
@@ -122,18 +125,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
             );
 
             $this->io->text(sprintf('Added the <comment>%s</comment> file.', $file->getFilename()));
-        }
-    }
-
-    /**
-     * Renames .htaccess.default file to .htaccess if the file does not exist.
-     *
-     * @param string $webDir
-     */
-    private function renameHtaccess($webDir)
-    {
-        if (!file_exists($webDir.'/.htaccess') && file_exists($webDir.'/.htaccess.default')) {
-            $this->fs->rename($webDir.'/.htaccess.default', $webDir.'/.htaccess');
         }
     }
 }
