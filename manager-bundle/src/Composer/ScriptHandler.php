@@ -48,7 +48,7 @@ class ScriptHandler
     public static function addAppDirectory()
     {
         $filesystem = new Filesystem();
-        $filesystem->ensureDirectoryExists(getcwd() . '/app');
+        $filesystem->ensureDirectoryExists(getcwd().'/app');
     }
 
     /**
@@ -65,7 +65,7 @@ class ScriptHandler
 
         static::installContaoConsole(
             static::findContaoConsole($composer),
-            getcwd() . '/bin/console'
+            getcwd().'/bin/console'
         );
 
         $event->getIO()->write(' Added the console entry point.', false);
@@ -105,6 +105,7 @@ class ScriptHandler
 
         if (@file_put_contents($installTo, $content) > 0) {
             @chmod($installTo, 0755);
+
             return;
         }
 
@@ -124,7 +125,7 @@ class ScriptHandler
     {
         foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
             if ('contao/manager-bundle' === $package->getName()) {
-                return $composer->getInstallationManager()->getInstallPath($package) . '/bin/contao-console';
+                return $composer->getInstallationManager()->getInstallPath($package).'/bin/contao-console';
             }
         }
 

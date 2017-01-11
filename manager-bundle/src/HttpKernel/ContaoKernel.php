@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of Contao.
  *
  * Copyright (c) 2005-2016 Leo Feyer
@@ -21,6 +21,9 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
+/**
+ * @author Andreas Schempp <https://github.com/aschempp>
+ */
 class ContaoKernel extends Kernel
 {
     /**
@@ -34,7 +37,7 @@ class ContaoKernel extends Kernel
     public function registerBundles()
     {
         $bundles = [
-            new ContaoManagerBundle()
+            new ContaoManagerBundle(),
         ];
 
         $this->addBundlesFromPlugins($bundles);
@@ -48,7 +51,7 @@ class ContaoKernel extends Kernel
     public function getRootDir()
     {
         if (null === $this->rootDir) {
-            $this->rootDir = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/app';
+            $this->rootDir = dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/app';
         }
 
         return $this->rootDir;
@@ -81,14 +84,14 @@ class ContaoKernel extends Kernel
     }
 
     /**
-     * Loads Contao Manager plugins from Composer's installed.json
+     * Loads Contao Manager plugins from Composer's installed.json.
      *
      * @param string $installedJson
      */
     public function loadPlugins($installedJson)
     {
-        if (file_exists($this->getRootDir() . '/ContaoManagerPlugin.php')) {
-            include_once $this->getRootDir() . '/ContaoManagerPlugin.php';
+        if (file_exists($this->getRootDir().'/ContaoManagerPlugin.php')) {
+            include_once $this->getRootDir().'/ContaoManagerPlugin.php';
         }
 
         $this->pluginLoader = new PluginLoader($installedJson);
@@ -99,15 +102,15 @@ class ContaoKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__ . '/../Resources/contao-manager/parameters.yml');
+        $loader->load(__DIR__.'/../Resources/contao-manager/parameters.yml');
 
-        if (file_exists($this->getRootDir() . '/config/parameters.yml')) {
-            $loader->load($this->getRootDir() . '/config/parameters.yml');
+        if (file_exists($this->getRootDir().'/config/parameters.yml')) {
+            $loader->load($this->getRootDir().'/config/parameters.yml');
         }
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function prepareContainer(ContainerBuilder $container)
     {
@@ -120,7 +123,7 @@ class ContaoKernel extends Kernel
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function initializeContainer()
     {
@@ -145,13 +148,13 @@ class ContaoKernel extends Kernel
 
         $parser = new DelegatingParser();
         $parser->addParser(new JsonParser());
-        $parser->addParser(new IniParser(dirname($this->getRootDir()) . '/system/modules'));
+        $parser->addParser(new IniParser(dirname($this->getRootDir()).'/system/modules'));
 
         $bundleLoader = new BundleLoader($this->pluginLoader, new ConfigResolverFactory(), $parser);
 
         $configs = $bundleLoader->getBundleConfigs(
             'dev' === $this->getEnvironment(),
-            $this->debug ? null : $this->getCacheDir() . '/bundles.map'
+            $this->debug ? null : $this->getCacheDir().'/bundles.map'
         );
 
         foreach ($configs as $config) {
@@ -160,6 +163,7 @@ class ContaoKernel extends Kernel
 
         // Autoload AppBundle for convenience
         $appBundle = 'AppBundle\AppBundle';
+
         if (!isset($bundles[$appBundle]) && class_exists($appBundle)) {
             $bundles[$appBundle] = new $appBundle();
         }

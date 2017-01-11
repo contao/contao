@@ -6,19 +6,17 @@ parameters:
 
 # Framework configuration
 framework:
+    esi: { enabled: true }
+    translator: { fallbacks: ["%locale%"] }
     secret: "%secret%"
     router:
         resource: "contao_manager.routing_loader:loadFromPlugins"
         type: service
         strict_requirements: "%kernel.debug%"
+    csrf_protection: ~
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
     session:
         handler_id: ~
-    csrf_protection: ~
-    translator: { fallbacks: ["%locale%"] }
-
-# Contao configuration
-contao:
-    encryption_key: "%secret%"
+    fragments: { path: /_fragment }

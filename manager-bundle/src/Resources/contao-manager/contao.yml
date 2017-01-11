@@ -1,0 +1,3 @@
+# Contao configuration
+contao:
+    encryption_key: "%secret%"

@@ -29,27 +29,32 @@ use Symfony\Component\Routing\RouteCollection;
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getBundles(ParserInterface $parser)
     {
-        return $parser->parse(__DIR__ . '/../Resources/contao-manager/bundles.json');
+        return $parser->parse(__DIR__.'/../Resources/contao-manager/bundles.json');
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function prependConfig(array $configs, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/contao-manager'));
 
         $loader->load('framework.yml');
+        $loader->load('contao.yml');
         $loader->load('twig.yml');
         $loader->load('doctrine.yml');
         $loader->load('swiftmailer.yml');
         $loader->load('monolog.yml');
 
-        if (in_array('Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle', $container->getParameter('kernel.bundles'), true)) {
+        if (in_array(
+            'Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle',
+            $container->getParameter('kernel.bundles'),
+            true)
+        ) {
             $loader->load('lexik_maintenance.yml');
         }
 
@@ -57,12 +62,16 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $loader->load('web_profiler.yml');
         }
 
-        $coreLoader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../../core-bundle/src/Resources/config'));
+        $coreLoader = new YamlFileLoader(
+            $container,
+            new FileLocator(__DIR__.'/../../../core-bundle/src/Resources/config')
+        );
+
         $coreLoader->load('security.yml');
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
@@ -71,9 +80,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         $collections = [];
+
         $files = [
             '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
-            '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml'
+            '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
         ];
 
         foreach ($files as $prefix => $file) {

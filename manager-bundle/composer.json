@@ -11,19 +11,20 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "symfony/symfony": "~2.8|~3.0",
-        "symfony/monolog-bundle": "~2.8",
-        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/symfony": "^3.2",
+        "symfony/monolog-bundle": "^2.8",
+        "symfony/swiftmailer-bundle": "^2.3",
         "sensio/framework-extra-bundle": "^3.0.2",
-        "doctrine/doctrine-bundle": "~1.6",
-        "contao/manager-plugin": "~1.0",
+        "doctrine/doctrine-bundle": "^1.6",
+        "contao/manager-plugin": "^1.0",
         "contao/core-bundle": "4.3.*",
-        "contao/installation-bundle": "~1.2"
+        "contao/installation-bundle": "^1.2"
     },
     "require-dev": {
-        "composer/composer": "~1.0",
-        "phpunit/phpunit": "~4.5",
-        "symfony/phpunit-bridge": "~2.8|~3.0"
+        "composer/composer": "^1.0",
+        "friendsofphp/php-cs-fixer": "^1.8",
+        "phpunit/phpunit": "^4.5",
+        "symfony/phpunit-bridge": "^3.2"
     },
     "autoload": {
         "psr-4": {
@@ -36,9 +37,9 @@
         }
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
         "branch-alias": {
             "dev-develop": "1.0.x-dev"
-        }
+        },
+        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     }
 }

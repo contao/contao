@@ -1,8 +1,9 @@
+# Lexik configuration
 lexik_maintenance:
     authorized:
         path: ^/contao($|/)
         attributes:
             _bypass_maintenance: true
     driver:
-        class:   "Lexik\\Bundle\\MaintenanceBundle\\Drivers\\FileDriver"
+        class: "Lexik\\Bundle\\MaintenanceBundle\\Drivers\\FileDriver"
         options: { file_path: "%kernel.root_dir%/cache/lock" }
