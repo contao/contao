@@ -13,9 +13,7 @@ EOF;
 Symfony\CS\Fixer\Contrib\HeaderCommentFixer::setHeader($header);
 
 $finder = Symfony\CS\Finder\DefaultFinder::create()
-    ->exclude('Fixtures')
-    ->exclude('Resources')
-    ->in([__DIR__ . '/src', __DIR__ . '/tests'])
+    ->in([__DIR__ . '/bin', __DIR__ . '/src', __DIR__ . '/tests'])
 ;
 
 return Symfony\CS\Config\Config::create()
