@@ -20,29 +20,65 @@ basis for your application.
 Installation
 ------------
 
-Edit your `composer.json` file and add the following requirement:
+Edit your `composer.json` file and add the following:
 
 ```json
 "require": {
-    "contao/core-bundle": "~4.2"
+    "contao/core-bundle": "^4.4"
 }
+"config": {
+    "component-dir": "assets"
+},
+"post-install-cmd": [
+    "Contao\\CoreBundle\\Composer\\ScriptHandler::addDirectories",
+    "Contao\\CoreBundle\\Composer\\ScriptHandler::generateSymlinks"
+],
+"post-update-cmd": [
+    "Contao\\CoreBundle\\Composer\\ScriptHandler::addDirectories",
+    "Contao\\CoreBundle\\Composer\\ScriptHandler::generateSymlinks"
+]
 ```
 
-Edit your `app/config/config.yml` file and add the following:
+Then run `php composer.phar update` to install the vendor files.
+
+
+Activation
+-------------
+
+Remove the `parameters.yml` import from your `app/config/config.yml` file:
 
 ```yml
-# Contao configuration
-contao:
-    # Required parameters
-    prepend_locale: true
-    encryption_key: "%kernel.secret%"
+imports:
+    - { resource: parameters.yml } # <-- remove this line
+    - { resource: security.yml }
+```
 
-    # Optional parameters
-    url_suffix:           .html
-    upload_path:          files
-    csrf_token_name:      contao_csrf_token
-    pretty_error_screens: true
-    error_level:          8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
+Then add the following to your `app/AppKernel.php` file:
+
+```php
+// app/AppKernel.php
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+            new Knp\Bundle\TimeBundle\KnpTimeBundle(),
+            new Contao\CoreBundle\ContaoCoreBundle(),
+        );
+    }
+
+    public function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        $rootDir = $this->getRootDir();
+
+        if (file_exists($rootDir.'/config/parameters.yml')) {
+            $loader->load($rootDir.'/config/parameters.yml');
+        }
+
+        $loader->load($rootDir.'/config/config_'.$this->getEnvironment().'.yml');
+    }
+}
 ```
 
 Add the Contao routes to your `app/config/routing.yml` file:
@@ -52,43 +88,64 @@ ContaoCoreBundle:
     resource: "@ContaoCoreBundle/Resources/config/routing.yml"
 ```
 
-Add the following entries to your `app/config/security.yml` file:
+Import the Contao `security.yml` file in your `app/config/security.yml` file:
 
 ```yml
 imports:
     - { resource: "@ContaoCoreBundle/Resources/config/security.yml" }
 ```
 
+Edit your `app/config/config.yml` file and add the following:
 
-Meta package
-------------
+```yml
+# Contao configuration
+contao:
+    # Required parameters
+    prepend_locale: "%prepend_locale%"
 
-There is a meta package at [contao/contao][4], which you can require in your
-`composer.json` to install all the default bundles at once:
-
-```json
-"require": {
-    "contao/contao": "~4.2"
-}
+    # Optional parameters
+    root_dir:             "%kernel.root_dir%/.."
+    encryption_key:       "%kernel.secret%"
+    url_suffix:           .html
+    upload_path:          files
+    csrf_token_name:      contao_csrf_token
+    pretty_error_screens: true
+    error_level:          8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
+    image:
+        bypass_cache:     false
+        target_path:      assets/images
+        valid_extensions: ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz']
+        imagine_options:
+            jpeg_quality: 80
+            interlace:    plane
+    security:
+        disable_ip_check: false
 ```
 
-This is the same as:
+You can also overwrite any parameter stored in the `localconfig.php` file:
 
-```json
-"require": {
-    "contao/calendar-bundle": "~4.2",
-    "contao/comments-bundle": "~4.2",
-    "contao/core-bundle": "~4.2",
-    "contao/faq-bundle": "~4.2",
-    "contao/installation-bundle": "~1.1",
-    "contao/listing-bundle": "~4.2",
-    "contao/news-bundle": "~4.2",
-    "contao/newsletter-bundle": "~4.2"
-}
+```yml
+# Contao configuration
+contao:
+    localconfig:
+        adminEmail: foo@bar.com
+        dateFormat: Y-m-d
 ```
+
+
+License
+-------
+
+Contao is licensed under the terms of the LGPLv3.
+
+
+Getting support
+---------------
+
+Visit the [support page][4] to learn about the available support options.
 
 
 [1]: https://contao.org
-[2]: http://symfony.com/
+[2]: https://symfony.com
 [3]: https://github.com/contao/standard-edition
-[4]: https://github.com/contao/contao
+[4]: https://contao.org/en/support.html
