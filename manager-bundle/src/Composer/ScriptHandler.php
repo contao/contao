@@ -58,7 +58,7 @@ class ScriptHandler
      */
     public static function addWebEntryPoints(Event $event)
     {
-        static::executeCommand('contao:install-web-dir --force', $event);
+        static::executeCommand('contao:install-web-dir', $event);
     }
 
     /**
