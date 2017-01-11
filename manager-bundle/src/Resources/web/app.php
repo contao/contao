@@ -19,8 +19,8 @@ $loader = require __DIR__.'/{vendor-dir}/autoload.php';
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
 $kernel = new ContaoKernel('prod', false);
-$kernel->setRootDir(__DIR__ . '/{root-dir}');
-$kernel->loadPlugins(__DIR__ . '/{vendor-dir}/composer/installed.json');
+$kernel->setRootDir(__DIR__.'/{root-dir}');
+$kernel->loadPlugins(__DIR__.'/{vendor-dir}/composer/installed.json');
 
 // Enable the Symfony reverse proxy
 $kernel = new ContaoCache($kernel);

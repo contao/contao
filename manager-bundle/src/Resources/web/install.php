@@ -16,11 +16,13 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 /** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__.'/{vendor-dir}/autoload.php';
 
-class AppKernel extends \Contao\ManagerBundle\HttpKernel\ContaoKernel {}
+class AppKernel extends \Contao\ManagerBundle\HttpKernel\ContaoKernel
+{
+}
 
 $kernel = new InstallationKernel('prod', false);
-$kernel->setRootDir(__DIR__ . '/{root-dir}');
-$kernel->loadPlugins(__DIR__ . '/{vendor-dir}/composer/installed.json');
+$kernel->setRootDir(__DIR__.'/{root-dir}');
+$kernel->loadPlugins(__DIR__.'/{vendor-dir}/composer/installed.json');
 
 // Handle the request
 $request = Request::createFromGlobals();

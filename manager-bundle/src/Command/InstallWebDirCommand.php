@@ -44,7 +44,12 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $this
             ->setName('contao:install-web-dir')
             ->setDescription('Generates entry points in /web directory.')
-            ->addArgument('path', InputArgument::OPTIONAL, 'The installation root directory (defaults to the current working directory).', getcwd())
+            ->addArgument(
+                'path',
+                InputArgument::OPTIONAL,
+                'The installation root directory (defaults to the current working directory).',
+                getcwd()
+            )
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Overwrite files if they exist.')
         ;
     }
@@ -85,7 +90,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     private function absolutePath($baseDir, $path)
     {
-        return rtrim($baseDir, '/') . '/' . trim($path, '/');
+        return rtrim($baseDir, '/').'/'.trim($path, '/');
     }
 
     /**
@@ -98,7 +103,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     private function addFiles($webDir, $rootDir, $vendorDir, $force = false)
     {
-        $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__ . '/../Resources/web');
+        $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/web');
 
         foreach ($finder as $file) {
             if ($this->fs->exists($webDir.'/'.$file->getRelativePathname()) && !$force) {

@@ -47,19 +47,19 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testAddConsoleEntryPoint()
     {
-        $tmpdir = sys_get_temp_dir() . '/' . uniqid('ScriptHandler_', false);
+        $tmpdir = sys_get_temp_dir().'/'.uniqid('ScriptHandler_', false);
         $fs = new Filesystem();
         $event = new Event('', $this->mockComposer(dirname(dirname(__DIR__))), $this->getMock(IOInterface::class));
 
         $fs->ensureDirectoryExists($tmpdir);
         chdir($tmpdir);
 
-        $content = str_replace('../../../../', '../', file_get_contents(__DIR__ . '/../../bin/contao-console'));
+        $content = str_replace('../../../../', '../', file_get_contents(__DIR__.'/../../bin/contao-console'));
 
         ScriptHandler::addConsoleEntryPoint($event);
 
-        $this->assertFileExists($tmpdir . '/bin/console');
-        $this->assertStringEqualsFile($tmpdir . '/bin/console', $content);
+        $this->assertFileExists($tmpdir.'/bin/console');
+        $this->assertStringEqualsFile($tmpdir.'/bin/console', $content);
     }
 
     /**
@@ -79,15 +79,15 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddConsoleEntryPointExceptionWhenWritingFails()
     {
-        $tmpdir = sys_get_temp_dir() . '/' . uniqid('ScriptHandler_', false);
+        $tmpdir = sys_get_temp_dir().'/'.uniqid('ScriptHandler_', false);
         $fs = new Filesystem();
         $event = new Event('', $this->mockComposer(dirname(dirname(__DIR__))), $this->getMock(IOInterface::class));
 
-        $fs->ensureDirectoryExists($tmpdir . '/bin');
+        $fs->ensureDirectoryExists($tmpdir.'/bin');
         chdir($tmpdir);
 
-        touch($tmpdir . '/bin/console');
-        chmod($tmpdir . '/bin/console', 0000);
+        touch($tmpdir.'/bin/console');
+        chmod($tmpdir.'/bin/console', 0000);
 
         ScriptHandler::addConsoleEntryPoint($event);
     }

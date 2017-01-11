@@ -4,10 +4,10 @@ doctrine:
         default_connection: default
         connections:
             default:
-                driver:   pdo_mysql
-                host:     "%database_host%"
-                port:     "%database_port%"
-                user:     "%database_user%"
+                driver: pdo_mysql
+                host: "%database_host%"
+                port: "%database_port%"
+                user: "%database_user%"
                 password: "%database_password%"
-                dbname:   "%database_name%"
-                charset:  UTF8
+                dbname: "%database_name%"
+                charset: UTF8
