@@ -17,8 +17,16 @@ use Symfony\Component\Debug\Debug;
 
 set_time_limit(0);
 
+if (file_exists(__DIR__.'/../autoload.php')) {
+    // Composer bin directory
+    $vendorRoot = dirname(__DIR__);
+} else {
+    // Package bin directory
+    $vendorRoot = dirname(dirname(dirname(__DIR__)));
+}
+
 /** @var Composer\Autoload\ClassLoader $loader */
-$loader = require __DIR__.'/../../../../vendor/autoload.php';
+$loader = require $vendorRoot.'/autoload.php';
 
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
@@ -31,7 +39,7 @@ if ($debug) {
 }
 
 $kernel = new ContaoKernel($env, $debug);
-$kernel->setRootDir(__DIR__.'/../../../../app');
-$kernel->loadPlugins(__DIR__.'/../../../../vendor/composer/installed.json');
+$kernel->setRootDir($vendorRoot.'/../app');
+$kernel->loadPlugins($vendorRoot.'/composer/installed.json');
 $application = new Application($kernel);
 $application->run($input);

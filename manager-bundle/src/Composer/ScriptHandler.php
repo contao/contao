@@ -10,7 +10,6 @@
 
 namespace Contao\ManagerBundle\Composer;
 
-use Composer\Composer;
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -31,7 +30,6 @@ class ScriptHandler
     public static function initializeApplication(Event $event)
     {
         static::addAppDirectory();
-        static::addConsoleEntryPoint($event);
         static::addWebEntryPoints($event);
 
         static::executeCommand('cache:clear --no-warmup', $event);
@@ -52,26 +50,6 @@ class ScriptHandler
     }
 
     /**
-     * Adds the console entry point.
-     *
-     * @param Event $event The event object
-     *
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
-     */
-    public static function addConsoleEntryPoint(Event $event)
-    {
-        $composer = $event->getComposer();
-
-        static::installContaoConsole(
-            static::findContaoConsole($composer),
-            getcwd().'/bin/console'
-        );
-
-        $event->getIO()->write(' Added the console entry point.', false);
-    }
-
-    /**
      * Adds the web entry points.
      *
      * @param Event $event The event object
@@ -81,55 +59,6 @@ class ScriptHandler
     public static function addWebEntryPoints(Event $event)
     {
         static::executeCommand('contao:install-web-dir --force', $event);
-    }
-
-    /**
-     * Installs the console and replaces given paths to adjust for installation.
-     *
-     * @param string $filePath
-     * @param string $installTo
-     *
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
-     */
-    private static function installContaoConsole($filePath, $installTo)
-    {
-        $filesystem = new Filesystem();
-        $filesystem->ensureDirectoryExists(dirname($installTo));
-
-        if (!is_file($filePath)) {
-            throw new \InvalidArgumentException(sprintf('%s is not a valid file.', $filePath));
-        }
-
-        $content = str_replace('../../../../', '../', file_get_contents($filePath));
-
-        if (@file_put_contents($installTo, $content) > 0) {
-            @chmod($installTo, 0755);
-
-            return;
-        }
-
-        throw new \RuntimeException('Contao console script could not be installed.');
-    }
-
-    /**
-     * Finds the Contao console script in the manager bundle from Composer.
-     *
-     * @param Composer $composer
-     *
-     * @return string
-     *
-     * @throws \RuntimeException
-     */
-    private static function findContaoConsole(Composer $composer)
-    {
-        foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
-            if ('contao/manager-bundle' === $package->getName()) {
-                return $composer->getInstallationManager()->getInstallPath($package).'/bin/contao-console';
-            }
-        }
-
-        throw new \RuntimeException('Contao console script was not found.');
     }
 
     /**
@@ -150,7 +79,7 @@ class ScriptHandler
 
         $process = new Process(
             sprintf(
-                '%s bin/console%s %s%s --env=prod',
+                '%s vendor/bin/contao-console%s %s%s --env=prod',
                 $phpPath,
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,

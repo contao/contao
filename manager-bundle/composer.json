@@ -37,6 +37,9 @@
             "Contao\\ManagerBundle\\Test\\": "tests/"
         }
     },
+    "bin": [
+        "bin/contao-console"
+    ],
     "extra": {
         "branch-alias": {
             "dev-develop": "1.0.x-dev"
