@@ -423,7 +423,7 @@ class Automator extends \System
 			$container->get('filesystem'),
 			$container->get('contao.resource_finder'),
 			$container->get('contao.resource_locator'),
-			$container->getParameter('kernel.root_dir'),
+			$container->getParameter('contao.root_dir'),
 			$container->get('database_connection'),
 			$container->get('contao.framework')
 		);

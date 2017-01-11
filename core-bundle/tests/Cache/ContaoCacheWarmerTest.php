@@ -128,7 +128,7 @@ class ContaoCacheWarmerTest extends TestCase
         );
 
         $this->assertContains(
-            "'dummy' => 'contao/templates'",
+            "'dummy' => 'templates'",
             file_get_contents($this->getCacheDir().'/contao/config/templates.php')
         );
 

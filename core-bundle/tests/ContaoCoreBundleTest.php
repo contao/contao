@@ -49,27 +49,22 @@ class ContaoCoreBundleTest extends TestCase
     public function testBuild()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.root_dir', $this->getRootDir());
+        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
 
         $bundle = new ContaoCoreBundle();
         $bundle->build($container);
 
         $classes = [];
 
-        foreach ($container->getCompilerPassConfig()->getBeforeOptimizationPasses() as $pass) {
+        foreach ($container->getCompilerPassConfig()->getPasses() as $pass) {
             $reflection = new \ReflectionClass($pass);
             $classes[] = $reflection->getName();
         }
 
-        $this->assertEquals(
-            [
-                'Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass',
-                'Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass',
-                'Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass',
-                'Contao\CoreBundle\DependencyInjection\Compiler\AddImagineClassPass',
-                'Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass',
-            ],
-            $classes
-        );
+        $this->assertContains('Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass', $classes);
+        $this->assertContains('Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass', $classes);
+        $this->assertContains('Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass', $classes);
+        $this->assertContains('Contao\CoreBundle\DependencyInjection\Compiler\AddImagineClassPass', $classes);
+        $this->assertContains('Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass', $classes);
     }
 }

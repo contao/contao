@@ -11,9 +11,10 @@
 namespace Contao\CoreBundle\Test\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\Configuration;
+use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Config\Definition\Processor;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     /**
      * @var Configuration
@@ -27,7 +28,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration(false);
+        $this->configuration = new Configuration(false, $this->getRootDir());
     }
 
     /**

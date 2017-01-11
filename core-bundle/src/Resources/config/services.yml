@@ -21,7 +21,7 @@ services:
             - "@filesystem"
             - "@contao.resource_finder"
             - "@contao.resource_locator"
-            - "%kernel.root_dir%"
+            - "%contao.root_dir%"
             - "@database_connection"
             - "@contao.framework"
         tags:
@@ -64,7 +64,7 @@ services:
             - "@request_stack"
             - "@router"
             - "@session"
-            - "%kernel.root_dir%"
+            - "%contao.root_dir%"
             - "%contao.error_level%"
         calls:
             - ["setContainer", ["@service_container"]]
@@ -155,7 +155,7 @@ services:
         class: Contao\CoreBundle\Image\LegacyResizer
         public: false
         arguments:
-            - "%kernel.root_dir%/../%contao.image.target_path%"
+            - "%contao.root_dir%/%contao.image.target_path%"
             - "@contao.image.resize_calculator"
             - "@filesystem"
         calls:

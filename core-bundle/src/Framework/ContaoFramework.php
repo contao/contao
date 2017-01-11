@@ -179,7 +179,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         define('TL_START', microtime(true));
-        define('TL_ROOT', dirname($this->rootDir));
+        define('TL_ROOT', $this->rootDir);
         define('TL_REFERER_ID', $this->getRefererId());
 
         if (!defined('TL_SCRIPT')) {
@@ -401,9 +401,9 @@ class ContaoFramework implements ContaoFrameworkInterface
             }
         }
 
-        if (file_exists($this->rootDir.'/../system/config/initconfig.php')) {
+        if (file_exists($this->rootDir.'/system/config/initconfig.php')) {
             @trigger_error('Using the initconfig.php file has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-            include $this->rootDir.'/../system/config/initconfig.php';
+            include $this->rootDir.'/system/config/initconfig.php';
         }
     }
 

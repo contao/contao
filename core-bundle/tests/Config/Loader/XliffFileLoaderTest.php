@@ -56,7 +56,7 @@ class XliffFileLoaderTest extends TestCase
      */
     public function testLoadIntoString()
     {
-        $loader = new XliffFileLoader($this->getRootDir().'/app', false);
+        $loader = new XliffFileLoader($this->getRootDir(), false);
 
         $source = <<<'TXT'
 

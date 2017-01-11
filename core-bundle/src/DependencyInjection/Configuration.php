@@ -27,13 +27,20 @@ class Configuration implements ConfigurationInterface
     private $debug;
 
     /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
      * Constructor.
      *
-     * @param bool $debug
+     * @param bool   $debug
+     * @param string $rootDir
      */
-    public function __construct($debug)
+    public function __construct($debug, $rootDir)
     {
         $this->debug = (bool) $debug;
+        $this->rootDir = $rootDir;
     }
 
     /**
@@ -48,6 +55,15 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('root_dir')
+                    ->cannotBeEmpty()
+                    ->defaultValue($this->resolveRootDir($this->rootDir.'/..'))
+                    ->validate()
+                        ->always(function ($value) {
+                            return $this->resolveRootDir($value);
+                        })
+                    ->end()
+                ->end()
                 ->booleanNode('prepend_locale')
                     ->defaultFalse()
                 ->end()
@@ -123,5 +139,25 @@ class Configuration implements ConfigurationInterface
         ;
 
         return $treeBuilder;
+    }
+
+    /**
+     * Resolves the Contao root directory.
+     *
+     * @param string $value
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function resolveRootDir($value)
+    {
+        $path = realpath($value);
+
+        if (false === $path) {
+            throw new \InvalidArgumentException(sprintf('%s is not a resolvable path', $value));
+        }
+
+        return $path;
     }
 }

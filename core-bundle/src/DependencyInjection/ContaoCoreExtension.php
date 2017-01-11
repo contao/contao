@@ -48,7 +48,10 @@ class ContaoCoreExtension extends ConfigurableExtension
         // Add the resource to the container
         parent::getConfiguration($config, $container);
 
-        return new Configuration($container->getParameter('kernel.debug'));
+        return new Configuration(
+            $container->getParameter('kernel.debug'),
+            $container->getParameter('kernel.root_dir')
+        );
     }
 
     /**
@@ -65,6 +68,7 @@ class ContaoCoreExtension extends ConfigurableExtension
             $loader->load($file);
         }
 
+        $container->setParameter('contao.root_dir', $mergedConfig['root_dir']);
         $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
         $container->setParameter('contao.encryption_key', $mergedConfig['encryption_key']);
         $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
