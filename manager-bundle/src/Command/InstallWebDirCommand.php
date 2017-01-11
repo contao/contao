@@ -37,10 +37,11 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
     /**
      * Files that should not be copied if they exist in the web directory.
+     *
      * @var array
      */
     private $optionalFiles = [
-        '.htaccess'
+        '.htaccess',
     ];
 
     /**
@@ -108,7 +109,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
         foreach ($finder as $file) {
             if (in_array($file->getRelativePathname(), $this->optionalFiles, true)
-                && $this->fs->exists($webDir . '/' . $file->getRelativePathname())
+                && $this->fs->exists($webDir.'/'.$file->getRelativePathname())
             ) {
                 continue;
             }

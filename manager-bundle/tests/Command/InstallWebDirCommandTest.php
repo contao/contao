@@ -92,7 +92,6 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->tmpdir]);
 
-
         foreach ($this->webFiles as $file) {
             $this->assertFileExists($this->tmpdir.'/web/'.$file->getRelativePathname());
 
