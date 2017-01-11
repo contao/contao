@@ -18,7 +18,8 @@
         "doctrine/doctrine-bundle": "^1.6",
         "contao/manager-plugin": "^1.0",
         "contao/core-bundle": "4.3.*",
-        "contao/installation-bundle": "^1.2"
+        "contao/installation-bundle": "^1.2",
+        "lexik/maintenance-bundle": "^2.0"
     },
     "require-dev": {
         "composer/composer": "^1.0",

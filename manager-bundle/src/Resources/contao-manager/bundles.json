@@ -8,10 +8,7 @@
     "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle",
     "Knp\\Bundle\\TimeBundle\\KnpTimeBundle",
     "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
-    {
-        "bundle": "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
-        "optional": true
-    },
+    "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
     {
         "bundle": "Contao\\CoreBundle\\ContaoCoreBundle",
         "replace": ["core"],
