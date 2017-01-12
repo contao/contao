@@ -12,6 +12,7 @@ namespace Contao\InstallationBundle\Controller;
 
 use Contao\CoreBundle\Command\InstallCommand;
 use Contao\CoreBundle\Command\SymlinksCommand;
+use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\Encryption;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
@@ -62,12 +63,16 @@ class InstallationController implements ContainerAwareInterface
      */
     public function installAction()
     {
-        if ($this->container->has('contao.framework')) {
-            $this->container->get('contao.framework')->initialize();
-        }
-
         if (null !== ($response = $this->runPostInstallCommands())) {
             return $response;
+        }
+
+        if ($this->container->has('contao.framework')) {
+            try {
+                $this->container->get('contao.framework')->initialize();
+            } catch (IncompleteInstallationException $e) {
+                // ignore
+            }
         }
 
         $installTool = $this->container->get('contao.install_tool');
