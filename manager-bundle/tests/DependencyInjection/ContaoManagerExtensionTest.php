@@ -95,6 +95,7 @@ class ContaoManagerExtensionTest extends \PHPUnit_Framework_TestCase
         ;
 
         $container->set('contao_manager.plugin_loader', $pluginLoader);
+        $container->setParameter('kernel.root_dir', __DIR__.'/../Fixtures/app');
 
         $this->extension->prepend($container);
     }
