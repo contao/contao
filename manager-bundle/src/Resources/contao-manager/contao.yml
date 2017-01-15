@@ -1,3 +1,7 @@
+parameters:
+    prepend_locale: true
+
 # Contao configuration
 contao:
     encryption_key: "%secret%"
+    prepend_locale: "%prepend_locale%"
