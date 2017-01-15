@@ -12,6 +12,8 @@ namespace Contao\ManagerBundle\Test\HttpKernel;
 
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Contao\ManagerPlugin\Bundle\BundleLoader;
+use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -52,9 +54,27 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
      */
     public function testRegisterBundles()
     {
-        // TODO: call loadPlugins() with a JSON string and add a test plugin
+        /** @var BundleLoader|\PHPUnit_Framework_MockObject_MockObject $bundleLoader */
+        $bundleLoader = $this->getMockBuilder(BundleLoader::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
-        $this->assertEquals([new ContaoManagerBundle()], $this->kernel->registerBundles());
+        $bundleLoader
+            ->expects($this->once())
+            ->method('getBundleConfigs')
+            ->willReturn(
+                [
+                    new BundleConfig(ContaoManagerBundle::class),
+                ]
+            )
+        ;
+
+        $this->kernel->setBundleLoader($bundleLoader);
+
+        $bundles = $this->kernel->registerBundles();
+
+        $this->assertArrayHasKey(ContaoManagerBundle::class, $bundles);
     }
 
     /**

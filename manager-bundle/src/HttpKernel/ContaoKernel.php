@@ -10,7 +10,6 @@
 
 namespace Contao\ManagerBundle\HttpKernel;
 
-use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
 use Contao\ManagerPlugin\Bundle\Config\ConfigResolverFactory;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
@@ -30,6 +29,11 @@ class ContaoKernel extends Kernel
      * @var PluginLoader
      */
     private $pluginLoader;
+
+    /**
+     * @var BundleLoader
+     */
+    private $bundleLoader;
 
     /**
      * {@inheritdoc}
@@ -106,6 +110,34 @@ class ContaoKernel extends Kernel
     }
 
     /**
+     * Gets the bundle loader.
+     *
+     * @return BundleLoader
+     */
+    public function getBundleLoader()
+    {
+        if (null === $this->bundleLoader) {
+            $parser = new DelegatingParser();
+            $parser->addParser(new JsonParser());
+            $parser->addParser(new IniParser(dirname($this->getRootDir()).'/system/modules'));
+
+            $this->bundleLoader = new BundleLoader($this->getPluginLoader(), new ConfigResolverFactory(), $parser);
+        }
+
+        return $this->bundleLoader;
+    }
+
+    /**
+     * Sets the bundle loader.
+     *
+     * @param BundleLoader $bundleLoader
+     */
+    public function setBundleLoader(BundleLoader $bundleLoader)
+    {
+        $this->bundleLoader = $bundleLoader;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -144,13 +176,7 @@ class ContaoKernel extends Kernel
      */
     private function addBundlesFromPlugins(&$bundles)
     {
-        $parser = new DelegatingParser();
-        $parser->addParser(new JsonParser());
-        $parser->addParser(new IniParser(dirname($this->getRootDir()).'/system/modules'));
-
-        $bundleLoader = new BundleLoader($this->getPluginLoader(), new ConfigResolverFactory(), $parser);
-
-        $configs = $bundleLoader->getBundleConfigs(
+        $configs = $this->getBundleLoader()->getBundleConfigs(
             'dev' === $this->getEnvironment(),
             $this->debug ? null : $this->getCacheDir().'/bundles.map'
         );
