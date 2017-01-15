@@ -54,13 +54,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         if ('dev' === $container->getParameter('kernel.environment')) {
             $loader->load('web_profiler.yml');
         }
-
-        $coreLoader = new YamlFileLoader(
-            $container,
-            new FileLocator(__DIR__.'/../../../core-bundle/src/Resources/config')
-        );
-
-        $coreLoader->load('security.yml');
     }
 
     /**
