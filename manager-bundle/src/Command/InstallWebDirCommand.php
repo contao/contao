@@ -93,7 +93,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
                 continue;
             }
 
-            $this->fs->copy($file->getPathname(), $webDir . '/' . $file->getRelativePathname());
+            $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
 
             $this->io->text(sprintf('Added the <comment>%s</comment> file.', $file->getFilename()));
         }
