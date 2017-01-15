@@ -86,15 +86,30 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the registerContainerConfiguration() method.
+     * Tests the registerContainerConfiguration() method loads the parameters.yml.
      */
     public function testRegisterContainerConfiguration()
     {
         $container = new ContainerBuilder();
         $loader = new YamlFileLoader($container, new FileLocator());
 
+        $this->kernel->setRootDir(__DIR__.'/../Fixtures');
         $this->kernel->registerContainerConfiguration($loader);
 
         $this->assertEquals('localhost', $container->getParameter('database_host'));
+    }
+
+    /**
+     * Tests the registerContainerConfiguration() method does nothing if parameters.yml is not available.
+     */
+    public function testRegisterContainerConfigurationIgnoresMissingParametersYml()
+    {
+        $container = new ContainerBuilder();
+        $loader = new YamlFileLoader($container, new FileLocator());
+
+        $this->kernel->setRootDir(sys_get_temp_dir());
+        $this->kernel->registerContainerConfiguration($loader);
+
+        $this->assertEmpty($container->getParameterBag()->all());
     }
 }
