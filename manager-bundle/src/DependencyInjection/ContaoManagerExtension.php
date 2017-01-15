@@ -40,6 +40,14 @@ class ContaoManagerExtension extends Extension implements PrependExtensionInterf
         foreach ($plugins as $plugin) {
             $plugin->prependConfig([], $container);
         }
+
+        if (file_exists($container->getParameter('kernel.root_dir').'/config/config.yml')) {
+            $loader = new YamlFileLoader(
+                $container,
+                new FileLocator($container->getParameter('kernel.root_dir').'/config')
+            );
+
+            $loader->load('config.yml');
         }
     }
 
