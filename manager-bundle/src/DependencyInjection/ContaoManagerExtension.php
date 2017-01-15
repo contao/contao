@@ -36,10 +36,10 @@ class ContaoManagerExtension extends Extension implements PrependExtensionInterf
 
         /** @var ConfigPluginInterface[] $plugins */
         $plugins = $container->get('contao_manager.plugin_loader')->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
-        $config = $this->getConfig();
 
         foreach ($plugins as $plugin) {
-            $plugin->prependConfig($config, $container);
+            $plugin->prependConfig([], $container);
+        }
         }
     }
 
@@ -54,16 +54,5 @@ class ContaoManagerExtension extends Extension implements PrependExtensionInterf
         );
 
         $loader->load('services.yml');
-    }
-
-    /**
-     * Gets the configuration from Contao Manager.
-     *
-     * @return array
-     */
-    private function getConfig()
-    {
-        // TODO: We do not have a managed config yet, so we'll just pass an empty array
-        return [];
     }
 }
