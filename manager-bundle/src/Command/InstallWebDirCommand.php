@@ -70,40 +70,19 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $this->io = new SymfonyStyle($input, $output);
 
         $baseDir = $input->getArgument('path');
-        $webDir = $this->absolutePath($baseDir, 'web');
-        $rootDir = $this->absolutePath($baseDir, 'app');
-        $vendorDir = $this->absolutePath($baseDir, 'vendor');
+        $webDir = rtrim($baseDir, '/').'/web';
 
-        $this->addFiles(
-            $webDir,
-            rtrim($this->fs->makePathRelative($rootDir, $webDir), '/'),
-            rtrim($this->fs->makePathRelative($vendorDir, $webDir), '/')
-        );
+        $this->addFiles($webDir);
 
         return 0;
-    }
-
-    /**
-     * Create an absolute path from root and relative directory.
-     *
-     * @param string $baseDir
-     * @param string $path
-     *
-     * @return string
-     */
-    private function absolutePath($baseDir, $path)
-    {
-        return rtrim($baseDir, '/').'/'.trim($path, '/');
     }
 
     /**
      * Adds files from Resources/web to the application's web directory.
      *
      * @param string $webDir
-     * @param string $rootDir
-     * @param string $vendorDir
      */
-    private function addFiles($webDir, $rootDir, $vendorDir)
+    private function addFiles($webDir)
     {
         $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/web');
 
@@ -114,16 +93,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
                 continue;
             }
 
-            $content = str_replace(
-                ['{root-dir}', '{vendor-dir}'],
-                [$rootDir, $vendorDir],
-                file_get_contents($file->getPathname())
-            );
-
-            $this->fs->dumpFile(
-                $webDir.'/'.$file->getRelativePathname(),
-                $content
-            );
+            $this->fs->copy($file->getPathname(), $webDir . '/' . $file->getRelativePathname());
 
             $this->io->text(sprintf('Added the <comment>%s</comment> file.', $file->getFilename()));
         }

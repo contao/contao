@@ -14,15 +14,15 @@ use Symfony\Component\HttpFoundation\Request;
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
 /** @var Composer\Autoload\ClassLoader */
-$loader = require __DIR__.'/{vendor-dir}/autoload.php';
+$loader = require __DIR__.'/../vendor/autoload.php';
 
 class AppKernel extends \Contao\ManagerBundle\HttpKernel\ContaoKernel
 {
 }
 
 $kernel = new InstallationKernel('prod', false);
-$kernel->setRootDir(__DIR__.'/{root-dir}');
-$kernel->loadPlugins(__DIR__.'/{vendor-dir}/composer/installed.json');
+$kernel->setRootDir(dirname(__DIR__).'/app');
+$kernel->loadPlugins(__DIR__.'/../vendor/composer/installed.json');
 
 // Handle the request
 $request = Request::createFromGlobals();
