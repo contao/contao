@@ -36,9 +36,7 @@ class ContaoKernel extends Kernel
      */
     public function registerBundles()
     {
-        $bundles = [
-            new ContaoManagerBundle(),
-        ];
+        $bundles = [];
 
         $this->addBundlesFromPlugins($bundles);
 

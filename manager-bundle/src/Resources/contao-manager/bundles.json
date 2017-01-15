@@ -9,6 +9,7 @@
     "Knp\\Bundle\\TimeBundle\\KnpTimeBundle",
     "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
     "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
+    "Contao\\ManagerBundle\\ContaoManagerBundle",
     {
         "bundle": "Contao\\CoreBundle\\ContaoCoreBundle",
         "replace": ["core"],
@@ -22,7 +23,8 @@
             "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle",
             "Knp\\Bundle\\TimeBundle\\KnpTimeBundle",
             "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
-            "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle"
+            "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
+            "Contao\\ManagerBundle\\ContaoManagerBundle"
         ]
     },
     {
