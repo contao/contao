@@ -40,6 +40,5 @@ if ($debug) {
 
 $kernel = new ContaoKernel($env, $debug);
 $kernel->setRootDir($vendorRoot.'/../app');
-$kernel->loadPlugins($vendorRoot.'/composer/installed.json');
 $application = new Application($kernel);
 $application->run($input);

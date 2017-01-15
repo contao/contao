@@ -82,17 +82,27 @@ class ContaoKernel extends Kernel
     }
 
     /**
-     * Loads Contao Manager plugins from Composer's installed.json.
+     * Gets the class to load Contao Manager plugins.
      *
-     * @param string $installedJson
+     * @return PluginLoader
      */
-    public function loadPlugins($installedJson)
+    public function getPluginLoader()
     {
-        if (file_exists($this->getRootDir().'/ContaoManagerPlugin.php')) {
-            include_once $this->getRootDir().'/ContaoManagerPlugin.php';
+        if (null === $this->pluginLoader) {
+            $this->pluginLoader = new PluginLoader($this->getRootDir().'/../vendor/composer/installed.json');
         }
 
-        $this->pluginLoader = new PluginLoader($installedJson);
+        return $this->pluginLoader;
+    }
+
+    /**
+     * Sets the class to load Contao Manager plugins.
+     *
+     * @param PluginLoader $pluginLoader
+     */
+    public function setPluginLoader(PluginLoader $pluginLoader)
+    {
+        $this->pluginLoader = $pluginLoader;
     }
 
     /**
@@ -111,9 +121,7 @@ class ContaoKernel extends Kernel
     protected function prepareContainer(ContainerBuilder $container)
     {
         // Set plugin loader so it's available in ContainerBuilder
-        if ($this->pluginLoader) {
-            $container->set('contao_manager.plugin_loader', $this->pluginLoader);
-        }
+        $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
 
         parent::prepareContainer($container);
     }
@@ -126,9 +134,7 @@ class ContaoKernel extends Kernel
         parent::initializeContainer();
 
         // Set plugin loader again so it's available at runtime (synthetic service)
-        if ($this->pluginLoader) {
-            $this->container->set('contao_manager.plugin_loader', $this->pluginLoader);
-        }
+        $this->getContainer()->set('contao_manager.plugin_loader', $this->getPluginLoader());
     }
 
     /**
@@ -138,15 +144,11 @@ class ContaoKernel extends Kernel
      */
     private function addBundlesFromPlugins(&$bundles)
     {
-        if (!$this->pluginLoader instanceof PluginLoader) {
-            return;
-        }
-
         $parser = new DelegatingParser();
         $parser->addParser(new JsonParser());
         $parser->addParser(new IniParser(dirname($this->getRootDir()).'/system/modules'));
 
-        $bundleLoader = new BundleLoader($this->pluginLoader, new ConfigResolverFactory(), $parser);
+        $bundleLoader = new BundleLoader($this->getPluginLoader(), new ConfigResolverFactory(), $parser);
 
         $configs = $bundleLoader->getBundleConfigs(
             'dev' === $this->getEnvironment(),

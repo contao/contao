@@ -20,7 +20,6 @@ AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
 $kernel = new ContaoKernel('prod', false);
 $kernel->setRootDir(dirname(__DIR__).'/app');
-$kernel->loadPlugins(__DIR__.'/../vendor/composer/installed.json');
 
 // Enable the Symfony reverse proxy
 $kernel = new ContaoCache($kernel);

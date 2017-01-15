@@ -22,7 +22,6 @@ class AppKernel extends \Contao\ManagerBundle\HttpKernel\ContaoKernel
 
 $kernel = new InstallationKernel('prod', false);
 $kernel->setRootDir(dirname(__DIR__).'/app');
-$kernel->loadPlugins(__DIR__.'/../vendor/composer/installed.json');
 
 // Handle the request
 $request = Request::createFromGlobals();
