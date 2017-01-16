@@ -153,6 +153,10 @@ class ContaoKernel extends Kernel
             $plugin->registerContainerConfiguration($loader, []);
         }
 
+        if (file_exists($this->getRootDir().'/config/parameters.yml')) {
+            $loader->load($this->getRootDir().'/config/parameters.yml');
+        }
+
         if (file_exists($this->getRootDir().'/config/config.yml')) {
             $loader->load($this->getRootDir().'/config/config.yml');
         }
