@@ -23,7 +23,8 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'enableVersioning'            => true,
 		'onload_callback' => array
 		(
-			array('tl_module', 'checkPermission')
+			array('tl_module', 'checkPermission'),
+			array('tl_module', 'addCustomLayoutSectionReferences')
 		),
 		'sql' => array
 		(
@@ -888,22 +889,15 @@ class tl_module extends Backend
 			{
 				foreach ($arrCustom as $v)
 				{
-					$arrSections[] = $v['id'];
-					$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
+					if (!empty($v['id']))
+					{
+						$arrSections[] = $v['id'];
+					}
 				}
 			}
 		}
 
-		$arrSections = array_flip(array_values(array_unique($arrSections)));
-
-		foreach (array_keys($arrSections) as $k)
-		{
-			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
-		}
-
-		asort($arrSections);
-
-		return $arrSections;
+		return Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
 	}
 
 
