@@ -14,10 +14,9 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -64,21 +63,21 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * {@inheritdoc}
      */
-    public function prependConfig(array $configs, ContainerBuilder $container)
+    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/contao-manager'));
+        $loader->load('@ContaoManagerBundle/Resources/contao-manager/framework.yml');
+        $loader->load('@ContaoManagerBundle/Resources/contao-manager/contao.yml');
+        $loader->load('@ContaoManagerBundle/Resources/contao-manager/twig.yml');
+        $loader->load('@ContaoManagerBundle/Resources/contao-manager/doctrine.yml');
+        $loader->load('@ContaoManagerBundle/Resources/contao-manager/swiftmailer.yml');
+        $loader->load('@ContaoManagerBundle/Resources/contao-manager/monolog.yml');
+        $loader->load('@ContaoManagerBundle/Resources/contao-manager/lexik_maintenance.yml');
 
-        $loader->load('framework.yml');
-        $loader->load('contao.yml');
-        $loader->load('twig.yml');
-        $loader->load('doctrine.yml');
-        $loader->load('swiftmailer.yml');
-        $loader->load('monolog.yml');
-        $loader->load('lexik_maintenance.yml');
-
-        if ('dev' === $container->getParameter('kernel.environment')) {
-            $loader->load('web_profiler.yml');
-        }
+        $loader->load(function(ContainerBuilder $container) use ($loader) {
+            if ('dev' === $container->getParameter('kernel.environment')) {
+                $loader->load('@ContaoManagerBundle/Resources/contao-manager/web_profiler.yml');
+            }
+        });
     }
 
     /**
