@@ -202,6 +202,13 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         $this->kernel->registerContainerConfiguration($loader);
     }
 
+    /**
+     * Returns the config plugin.
+     *
+     * @param LoaderInterface $loader
+     *
+     * @return ConfigPluginInterface
+     */
     private function mockConfigPlugin(LoaderInterface $loader)
     {
         $plugin = $this->getMock(ConfigPluginInterface::class);
