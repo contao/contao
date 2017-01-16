@@ -66,6 +66,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
     {
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/framework.yml');
+        $loader->load('@ContaoManagerBundle/Resources/contao-manager/security.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/contao.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/twig.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/doctrine.yml');
