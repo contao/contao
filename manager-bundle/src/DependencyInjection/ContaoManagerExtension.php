@@ -10,11 +10,8 @@
 
 namespace Contao\ManagerBundle\DependencyInjection;
 
-use Contao\ManagerPlugin\Config\ConfigPluginInterface;
-use Contao\ManagerPlugin\PluginLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -23,34 +20,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoManagerExtension extends Extension implements PrependExtensionInterface
+class ContaoManagerExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function prepend(ContainerBuilder $container)
-    {
-        if (!$container->has('contao_manager.plugin_loader')) {
-            return;
-        }
-
-        /** @var ConfigPluginInterface[] $plugins */
-        $plugins = $container->get('contao_manager.plugin_loader')->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
-
-        foreach ($plugins as $plugin) {
-            $plugin->prependConfig([], $container);
-        }
-
-        if (file_exists($container->getParameter('kernel.root_dir').'/config/config.yml')) {
-            $loader = new YamlFileLoader(
-                $container,
-                new FileLocator($container->getParameter('kernel.root_dir').'/config')
-            );
-
-            $loader->load('config.yml');
-        }
-    }
-
     /**
      * {@inheritdoc}
      */
