@@ -99,7 +99,7 @@ class ModuleWizard extends \Widget
 		// Make sure there is at least an empty array
 		if (!is_array($this->varValue) || !$this->varValue[0])
 		{
-			$this->varValue = array('');
+			$this->varValue = array(array('mod'=>0, 'col'=>'main'));
 		}
 		else
 		{
