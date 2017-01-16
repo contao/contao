@@ -16,9 +16,9 @@
         "symfony/swiftmailer-bundle": "^2.3",
         "sensio/framework-extra-bundle": "^3.0.2",
         "doctrine/doctrine-bundle": "^1.6",
-        "contao/manager-plugin": "^2.0@dev",
-        "contao/core-bundle": "4.3.*",
-        "contao/installation-bundle": "1.2.*",
+        "contao/manager-plugin": "^0.2@dev",
+        "contao/core-bundle": "^4.3.2@dev",
+        "contao/installation-bundle": "^1.2.3@dev",
         "lexik/maintenance-bundle": "^2.0"
     },
     "require-dev": {
@@ -26,6 +26,14 @@
         "friendsofphp/php-cs-fixer": "^1.8",
         "phpunit/phpunit": "^4.5",
         "symfony/phpunit-bridge": "^3.2"
+    },
+    "conflict": {
+        "contao/calendar-bundle": "<4.3.3",
+        "contao/comments-bundle": "<4.3.1",
+        "contao/faq-bundle": "<4.3.1",
+        "contao/listing-bundle": "<4.3.1",
+        "contao/news-bundle": "<4.3.1",
+        "contao/newsletter-bundle": "<4.3.2"
     },
     "autoload": {
         "psr-4": {
@@ -42,7 +50,7 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-develop": "1.0.x-dev"
+            "dev-develop": "4.3.x-dev"
         },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     }
