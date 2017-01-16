@@ -14,7 +14,10 @@ use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
+use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Contao\ManagerPlugin\PluginLoader;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
@@ -37,7 +40,20 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
+        /** @var PluginLoader|\PHPUnit_Framework_MockObject_MockObject $pluginLoader */
+        $pluginLoader = $this->getMockBuilder(PluginLoader::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $pluginLoader
+            ->expects($this->any())
+            ->method('getInstancesOf')
+            ->willReturn([])
+        ;
+
         $this->kernel = new ContaoKernel('test', true);
+        $this->kernel->setPluginLoader($pluginLoader);
     }
 
     /**
@@ -108,12 +124,12 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests the registerContainerConfiguration() method loads the parameters.yml.
      */
-    public function testRegisterContainerConfiguration()
+    public function testRegisterContainerConfigurationLoadsParametersYml()
     {
         $container = new ContainerBuilder();
         $loader = new YamlFileLoader($container, new FileLocator());
 
-        $this->kernel->setRootDir(__DIR__.'/../Fixtures');
+        $this->kernel->setRootDir(__DIR__.'/../Fixtures/HttpKernel/WithParametersYml');
         $this->kernel->registerContainerConfiguration($loader);
 
         $this->assertEquals('localhost', $container->getParameter('database_host'));
@@ -131,5 +147,71 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         $this->kernel->registerContainerConfiguration($loader);
 
         $this->assertEmpty($container->getParameterBag()->all());
+    }
+
+    /**
+     * Tests the registerContainerConfiguration() method loads the config.yml.
+     */
+    public function testRegisterContainerConfigurationLoadsConfigYml()
+    {
+        $container = new ContainerBuilder();
+        $loader = new YamlFileLoader($container, new FileLocator());
+
+        $this->kernel->setRootDir(__DIR__.'/../Fixtures/HttpKernel/WithConfigYml');
+        $this->kernel->registerContainerConfiguration($loader);
+
+        $this->assertEquals('localhost', $container->getParameter('database_host'));
+    }
+
+    /**
+     * Tests the registerContainerConfiguration() method does nothing if config.yml is not available.
+     */
+    public function testRegisterContainerConfigurationIgnoresMissingConfigYml()
+    {
+        $container = new ContainerBuilder();
+        $loader = new YamlFileLoader($container, new FileLocator());
+
+        $this->kernel->setRootDir(sys_get_temp_dir());
+        $this->kernel->registerContainerConfiguration($loader);
+
+        $this->assertEmpty($container->getParameterBag()->all());
+    }
+
+    /**
+     * Tests the registerContainerConfiguration() method loads plugin configuration.
+     */
+    public function testRegisterContainerConfigurationLoadsPlugins()
+    {
+        $loader = $this->getMock(LoaderInterface::class);
+
+        /** @var PluginLoader|\PHPUnit_Framework_MockObject_MockObject $pluginLoader */
+        $pluginLoader = $this->getMockBuilder(PluginLoader::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $pluginLoader
+            ->expects($this->atLeastOnce())
+            ->method('getInstancesOf')
+            ->with(PluginLoader::CONFIG_PLUGINS)
+            ->willReturn([$this->mockConfigPlugin($loader), $this->mockConfigPlugin($loader)])
+        ;
+
+        $this->kernel->setPluginLoader($pluginLoader);
+        $this->kernel->setRootDir(sys_get_temp_dir());
+        $this->kernel->registerContainerConfiguration($loader);
+    }
+
+    private function mockConfigPlugin(LoaderInterface $loader)
+    {
+        $plugin = $this->getMock(ConfigPluginInterface::class);
+
+        $plugin
+            ->expects($this->once())
+            ->method('registerContainerConfiguration')
+            ->with($loader, [])
+        ;
+
+        return $plugin;
     }
 }

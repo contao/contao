@@ -1,0 +1,2 @@
+parameters:
+    database_host: localhost

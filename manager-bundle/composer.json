@@ -16,7 +16,7 @@
         "symfony/swiftmailer-bundle": "^2.3",
         "sensio/framework-extra-bundle": "^3.0.2",
         "doctrine/doctrine-bundle": "^1.6",
-        "contao/manager-plugin": "^2.0",
+        "contao/manager-plugin": "^2.0@dev",
         "contao/core-bundle": "4.3.*",
         "contao/installation-bundle": "1.2.*",
         "lexik/maintenance-bundle": "^2.0"
