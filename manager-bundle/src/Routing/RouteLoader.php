@@ -54,7 +54,8 @@ class RouteLoader
      */
     public function loadFromPlugins()
     {
-        return array_reduce(
+        /** @var RouteCollection $collection */
+        $collection = array_reduce(
             $this->pluginLoader->getInstancesOf(PluginLoader::ROUTING_PLUGINS, true),
             function (RouteCollection $collection, RoutingPluginInterface $plugin) {
                 $routes = $plugin->getRouteCollection($this->loader->getResolver(), $this->kernel);
@@ -67,5 +68,11 @@ class RouteLoader
             },
             new RouteCollection()
         );
+
+        if ($catchAll = $collection->get('contao_catch_all')) {
+            $collection->add('contao_catch_all', $catchAll);
+        }
+
+        return $collection;
     }
 }
