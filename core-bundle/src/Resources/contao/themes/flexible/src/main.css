@@ -289,6 +289,9 @@ h2.sub_headline {
 	max-width:14.65%;
 	margin-left:.35%;
 }
+.tl_submit_panel + .tl_filter {
+	width:86%;
+}
 .tl_limit {
 	width:22%;
 }

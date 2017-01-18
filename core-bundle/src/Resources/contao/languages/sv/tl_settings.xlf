@@ -49,14 +49,6 @@
         <source>Please select the server time zone.</source>
         <target>Välj tidszon för din webbserver.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.websitePath.0">
-        <source>Relative path to the Contao directory</source>
-        <target>Relativ sökväg till Contao-mappen</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websitePath.1">
-        <source>The relative path to the Contao directory is usually set automatically by the install tool.</source>
-        <target>Den relativa sökvägen till Contao katalogen är vanligtvis automatiskt genererad av installationsverktyget.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.characterSet.0">
         <source>Character set</source>
         <target>Teckenavkodning</target>
@@ -397,10 +389,6 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
         <source>Search engine settings</source>
         <target>Sökmotorinställningar</target>
       </trans-unit>
-      <trans-unit id="tl_settings.modules_legend">
-        <source>Inactive extensions</source>
-        <target>Inaktiva backendmoduler</target>
-      </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
         <target>Timeout-värden</target>
@@ -409,29 +397,9 @@ Notera att exkluderade resurser inte kan användas i innehållselement som t.ex.
         <source>Default access rights</source>
         <target>Standardåtkomstvärden</target>
       </trans-unit>
-      <trans-unit id="tl_settings.static_legend">
-        <source>Static resources</source>
-        <target>Statiska resurser</target>
-      </trans-unit>
       <trans-unit id="tl_settings.edit">
         <source>Edit the local configuration</source>
         <target>Redigera den lokala konfigurationen</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.both">
-        <source>Use the server and the browser cache</source>
-        <target>Använd serverns- och webbläsarens cache</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.server">
-        <source>Use only the server cache</source>
-        <target>Använd enbart serverns cache</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.browser">
-        <source>Use only the browser cache</source>
-        <target>Använd enbart webbläsarens cache</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.none">
-        <source>Disable caching</source>
-        <target>Avaktivera cache-funktionen</target>
       </trans-unit>
     </body>
   </file>

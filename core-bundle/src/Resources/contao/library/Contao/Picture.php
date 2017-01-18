@@ -249,8 +249,8 @@ class Picture
 
 		return array
 		(
-			'img' => $picture->getImg(TL_ROOT),
-			'sources' => $picture->getSources(TL_ROOT),
+			'img' => $picture->getImg(TL_ROOT, TL_FILES_URL),
+			'sources' => $picture->getSources(TL_ROOT, TL_FILES_URL),
 		);
 	}
 

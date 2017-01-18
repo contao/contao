@@ -49,14 +49,6 @@
         <source>Please select the server time zone.</source>
         <target>Angiv din tidszone.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.websitePath.0">
-        <source>Relative path to the Contao directory</source>
-        <target>Relativ sti til TYPOlight-mappen</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websitePath.1">
-        <source>The relative path to the Contao directory is usually set automatically by the install tool.</source>
-        <target>Angiv den relative sti til mappen med TYPOlight-filerne (f.eks. hvis tilgår TYPOlights backend via &lt;em&gt;www.ditdomæne.dk/ditwebsted/typolight&lt;/em&gt; bliver den relative sti &lt;em&gt;&gt;/ditwebsted&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.characterSet.0">
         <source>Character set</source>
         <target>Tegnsæt</target>
@@ -396,10 +388,6 @@
         <source>Search engine settings</source>
         <target>Indstillinger for søgemaskiner</target>
       </trans-unit>
-      <trans-unit id="tl_settings.modules_legend">
-        <source>Inactive extensions</source>
-        <target>Inaktive udvidelser</target>
-      </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
         <target>Timeout værdier</target>
@@ -408,29 +396,9 @@
         <source>Default access rights</source>
         <target>Standard adgangsrettigheder</target>
       </trans-unit>
-      <trans-unit id="tl_settings.static_legend">
-        <source>Static resources</source>
-        <target>Statiske resourcer</target>
-      </trans-unit>
       <trans-unit id="tl_settings.edit">
         <source>Edit the local configuration</source>
         <target>Ændr lokal konfiguration</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.both">
-        <source>Use the server and the browser cache</source>
-        <target>Brug serverens og browserens cache</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.server">
-        <source>Use only the server cache</source>
-        <target>Brug kun serverens cache</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.browser">
-        <source>Use only the browser cache</source>
-        <target>Brug kun browserens cache</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.none">
-        <source>Disable caching</source>
-        <target>Deaktiver caching</target>
       </trans-unit>
     </body>
   </file>

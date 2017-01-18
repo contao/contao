@@ -1,5 +1,15 @@
 # Contao core bundle change log
 
+### 4.3.2 (2017-01-18)
+
+ * Correctly handle nested public folders when symlinking a folder.
+ * Correctly handle SVGZ files in the file manager (see contao/core#8624).
+ * Prevent an endless redirect loop if the page alias is "/" (see contao/core#8560).
+ * Correctly parse German dates with two digit years in MooTools (see contao/core#8593).
+ * Correctly add new resources to the user/group permissions (see contao/core#8583).
+ * Trigger the auto-submit function in the date picker (see contao/core#8603).
+ * Call the load callback when loading page/file picker nodes (see contao/core#7702).
+
 ### 4.3.1 (2016-12-22)
 
  * Preserve uppercase characters in custom sections IDs (see #639).

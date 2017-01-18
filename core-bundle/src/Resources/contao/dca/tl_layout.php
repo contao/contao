@@ -23,7 +23,8 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'enableVersioning'            => true,
 		'onload_callback' => array
 		(
-			array('tl_layout', 'checkPermission')
+			array('tl_layout', 'checkPermission'),
+			array('tl_layout', 'addCustomLayoutSectionReferences')
 		),
 		'sql' => array
 		(

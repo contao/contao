@@ -258,22 +258,26 @@ class SymlinksCommand extends AbstractLockedCommand
         foreach ($files as $key => $file) {
             $path = rtrim(strtr($prepend.'/'.$file->getRelativePath(), '\\', '/'), '/');
 
-            $chunks = explode('/', $path);
-            array_pop($chunks);
+            if (!empty($parents)) {
+                $parent = dirname($path);
 
-            $parent = implode('/', $chunks);
+                while (false !== strpos($parent, '/')) {
+                    if (in_array($parent, $parents)) {
+                        $this->rows[] = [
+                            sprintf(
+                                '<fg=yellow;options=bold>%s</>',
+                                '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
+                            ),
+                            $this->webDir.'/'.$path,
+                            sprintf('<comment>Skipped because %s will be symlinked.</comment>', $parent),
+                        ];
 
-            if (in_array($parent, $parents)) {
-                $this->rows[] = [
-                    sprintf(
-                        '<fg=yellow;options=bold>%s</>',
-                        '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
-                    ),
-                    $this->webDir.'/'.$path,
-                    sprintf('<comment>Skipped because %s will be symlinked.</comment>', $parent),
-                ];
+                        unset($files[$key]);
+                        break;
+                    }
 
-                unset($files[$key]);
+                    $parent = dirname($parent);
+                }
             }
 
             $parents[] = $path;

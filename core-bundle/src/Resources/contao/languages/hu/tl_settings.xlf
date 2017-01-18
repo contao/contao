@@ -49,14 +49,6 @@
         <source>Please select the server time zone.</source>
         <target>Válassza ki a szerver időzónáját.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.websitePath.0">
-        <source>Relative path to the Contao directory</source>
-        <target>Contao könyvtárának relatív útvonala</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websitePath.1">
-        <source>The relative path to the Contao directory is usually set automatically by the install tool.</source>
-        <target>A Contao könyvtár relatív útvonalát általában automatikusan beállítja a telepítő eszköz.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.characterSet.0">
         <source>Character set</source>
         <target>Karakterkészlet</target>
@@ -396,10 +388,6 @@
         <source>Search engine settings</source>
         <target>Kereső motor beállítások</target>
       </trans-unit>
-      <trans-unit id="tl_settings.modules_legend">
-        <source>Inactive extensions</source>
-        <target>Kikapcsolt kiterjesztések</target>
-      </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
         <target>Időtúllépési értékek</target>
@@ -408,29 +396,9 @@
         <source>Default access rights</source>
         <target>Alapértelmezett hozzáférési jogok</target>
       </trans-unit>
-      <trans-unit id="tl_settings.static_legend">
-        <source>Static resources</source>
-        <target>Statikus források</target>
-      </trans-unit>
       <trans-unit id="tl_settings.edit">
         <source>Edit the local configuration</source>
         <target>A helyi konfiguráció szerkesztése</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.both">
-        <source>Use the server and the browser cache</source>
-        <target>A szerver és a böngésző gyorsítótár használata</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.server">
-        <source>Use only the server cache</source>
-        <target>Csak a szerver gyorsítótár használata</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.browser">
-        <source>Use only the browser cache</source>
-        <target>Csak a böngésző gyorsítótár használata</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.none">
-        <source>Disable caching</source>
-        <target>Gyorsítótár kikapcsolása</target>
       </trans-unit>
     </body>
   </file>

@@ -1065,6 +1065,54 @@ abstract class Backend extends \Controller
 
 
 	/**
+	 * Convert an array of layout section IDs to an associative array with IDs and labels
+	 *
+	 * @param array $arrSections
+	 *
+	 * @return array
+	 */
+	public static function convertLayoutSectionIdsToAssociativeArray($arrSections)
+	{
+		$arrSections = array_flip(array_values(array_unique($arrSections)));
+
+		foreach (array_keys($arrSections) as $k)
+		{
+			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
+		}
+
+		asort($arrSections);
+
+		return $arrSections;
+	}
+
+
+	/**
+	 * Add the custom layout section references
+	 */
+	public function addCustomLayoutSectionReferences()
+	{
+		$objLayout = $this->Database->getInstance()->query("SELECT sections FROM tl_layout WHERE sections!=''");
+
+		while ($objLayout->next())
+		{
+			$arrCustom = \StringUtil::deserialize($objLayout->sections);
+
+			// Add the custom layout sections
+			if (!empty($arrCustom) && is_array($arrCustom))
+			{
+				foreach ($arrCustom as $v)
+				{
+					if (!empty($v['id']))
+					{
+						$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
+					}
+				}
+			}
+		}
+	}
+
+
+	/**
 	 * Get all allowed pages and return them as string
 	 *
 	 * @return string

@@ -211,9 +211,11 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
+        <target>Nobena izmed aktivnih korenskih strani brez posebej določenih DNS nastavitev nima nastavljenega nadomestnega jezika.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
+        <target>Nobena izmed aktivnih korenskih strani za &lt;strong&gt;%s&lt;/strong&gt; nima nastavljenega nadomestnega jezika.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -225,6 +227,7 @@
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages in the site structure which are not website root pages.</source>
+        <target>V vrhnjem nivoju strukture so nastavljeni strani, ki niso korenske strani.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -435,9 +438,11 @@
       </trans-unit>
       <trans-unit id="CTE.vimeo.0">
         <source>Vimeo</source>
+        <target>Vimeo</target>
       </trans-unit>
       <trans-unit id="CTE.vimeo.1">
         <source>Adds a Vimeo video.</source>
+        <target>Doda Vimeo video</target>
       </trans-unit>
       <trans-unit id="CTE.files">
         <source>File elements</source>
@@ -541,6 +546,7 @@
       </trans-unit>
       <trans-unit id="PTY.logout.1">
         <source>This type of page automatically logs out the user.</source>
+        <target>Ta vrsta strani avtomatično odjavi uporabnika.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -1219,6 +1225,7 @@
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
         <source>Your previous login was %s. Welcome back!</source>
+        <target>Zadnja prijava je bila %s. Dobrodošli nazaj!</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1230,6 +1237,7 @@
       </trans-unit>
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
+        <target>Kaže, da je to vaša prva prijava. Dobrodošli v Contao!</target>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1337,6 +1345,7 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.fePreview">
         <source>Preview</source>
+        <target>Predogled</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
         <source>Preview of the website in a new window</source>
@@ -1454,6 +1463,7 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
+        <target>Nesinhronizirani direktoriji niso vključeni v iskalne rezultate.</target>
       </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
@@ -1500,6 +1510,7 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.pw_change">
         <source>Please enter a new password.</source>
+        <target>Prosim, vnesite novo geslo</target>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1663,12 +1674,15 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
+        <target>Na voljo je Contao različica %s.</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
+        <target>Trenutno je omogočen način za vzdrževanje.</target>
       </trans-unit>
       <trans-unit id="MSC.maintenanceDisabled">
         <source>The maintenance mode is currently disabled.</source>
+        <target>Način za vzdrževanje je trenutno onemogočen.</target>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1756,6 +1770,7 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>
+        <target>Obvestila</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
@@ -1783,9 +1798,11 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.reset">
         <source>Reset</source>
+        <target>Resetiraj</target>
       </trans-unit>
       <trans-unit id="MSC.resetTitle">
         <source>Reset the filters</source>
+        <target>Resetiraj filtre</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -1864,6 +1881,7 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.resendActivation">
         <source>The activation mail has been re-sent to your e-mail address.</source>
+        <target>Aktivacijsko e-sporočilo je bilo ponovno poslano na vaš e-naslov.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
@@ -1951,6 +1969,7 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       </trans-unit>
       <trans-unit id="MSC.recordOfTable">
         <source>Record %s of table %s</source>
+        <target>Zapis %s v tabeli %s</target>
       </trans-unit>
       <trans-unit id="MSC.editElement">
         <source>Edit the element</source>

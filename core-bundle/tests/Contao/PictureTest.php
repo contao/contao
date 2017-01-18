@@ -74,7 +74,7 @@ class PictureTest extends TestCase
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
         define('TL_ERROR', 'ERROR');
-        define('TL_FILES_URL', '');
+        define('TL_FILES_URL', 'http://example.com/');
         define('TL_ROOT', self::$rootDir);
 
         $container = $this->mockContainerWithContaoScopes();
@@ -142,8 +142,8 @@ class PictureTest extends TestCase
 
         $this->assertEquals(200, $pictureData['img']['width']);
         $this->assertEquals(200, $pictureData['img']['height']);
-        $this->assertEquals('dummy.jpg', $pictureData['img']['src']);
-        $this->assertEquals('dummy.jpg', $pictureData['img']['srcset']);
+        $this->assertEquals('http://example.com/dummy.jpg', $pictureData['img']['src']);
+        $this->assertEquals('http://example.com/dummy.jpg', $pictureData['img']['srcset']);
         $this->assertEquals([], $pictureData['sources']);
     }
 
@@ -314,8 +314,8 @@ class PictureTest extends TestCase
 
         $this->assertEquals(200, $pictureData['img']['width']);
         $this->assertEquals(200, $pictureData['img']['height']);
-        $this->assertEquals('dummy%20with%20spaces.jpg', $pictureData['img']['src']);
-        $this->assertEquals('dummy%20with%20spaces.jpg', $pictureData['img']['srcset']);
+        $this->assertEquals('http://example.com/dummy%20with%20spaces.jpg', $pictureData['img']['src']);
+        $this->assertEquals('http://example.com/dummy%20with%20spaces.jpg', $pictureData['img']['srcset']);
         $this->assertEquals([], $pictureData['sources']);
     }
 
