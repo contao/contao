@@ -74,7 +74,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/monolog.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/lexik_maintenance.yml');
 
-        $loader->load(function(ContainerBuilder $container) use ($loader) {
+        $loader->load(function (ContainerBuilder $container) use ($loader) {
             if ('dev' === $container->getParameter('kernel.environment')) {
                 $loader->load('@ContaoManagerBundle/Resources/contao-manager/web_profiler.yml');
             }
