@@ -330,18 +330,38 @@ class tl_calendar extends Backend
 
 					if (is_array($arrNew['tl_calendar']) && in_array(Input::get('id'), $arrNew['tl_calendar']))
 					{
-						// Add permissions on user level
-						if ($this->User->inherit == 'custom' || !$this->User->groups[0])
+						// Add the permissions on group level
+						if ($this->User->inherit != 'custom')
+						{
+							$objGroup = $this->Database->execute("SELECT id, calendars, calendarp FROM tl_user_group WHERE id IN(" . implode(',', array_map('intval', $this->User->groups)) . ")");
+
+							while ($objGroup->next())
+							{
+								$arrCalendarp = StringUtil::deserialize($objGroup->calendarp);
+
+								if (is_array($arrCalendarp) && in_array('create', $arrCalendarp))
+								{
+									$arrCalendars = StringUtil::deserialize($objGroup->calendars, true);
+									$arrCalendars[] = Input::get('id');
+
+									$this->Database->prepare("UPDATE tl_user_group SET calendars=? WHERE id=?")
+												   ->execute(serialize($arrCalendars), $objGroup->id);
+								}
+							}
+						}
+
+						// Add the permissions on user level
+						if ($this->User->inherit != 'group')
 						{
 							$objUser = $this->Database->prepare("SELECT calendars, calendarp FROM tl_user WHERE id=?")
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrCalendarp = StringUtil::deserialize($objUser->calendarp);
+							$arrCalendarp = StringUtil::deserialize($objGroup->calendarp);
 
 							if (is_array($arrCalendarp) && in_array('create', $arrCalendarp))
 							{
-								$arrCalendars = StringUtil::deserialize($objUser->calendars);
+								$arrCalendars = StringUtil::deserialize($objGroup->calendars, true);
 								$arrCalendars[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET calendars=? WHERE id=?")
@@ -349,26 +369,7 @@ class tl_calendar extends Backend
 							}
 						}
 
-						// Add permissions on group level
-						elseif ($this->User->groups[0] > 0)
-						{
-							$objGroup = $this->Database->prepare("SELECT calendars, calendarp FROM tl_user_group WHERE id=?")
-													   ->limit(1)
-													   ->execute($this->User->groups[0]);
-
-							$arrCalendarp = StringUtil::deserialize($objGroup->calendarp);
-
-							if (is_array($arrCalendarp) && in_array('create', $arrCalendarp))
-							{
-								$arrCalendars = StringUtil::deserialize($objGroup->calendars);
-								$arrCalendars[] = Input::get('id');
-
-								$this->Database->prepare("UPDATE tl_user_group SET calendars=? WHERE id=?")
-											   ->execute(serialize($arrCalendars), $this->User->groups[0]);
-							}
-						}
-
-						// Add new element to the user object
+						// Add the new element to the user object
 						$root[] = Input::get('id');
 						$this->User->calendars = $root;
 					}
